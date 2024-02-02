@@ -311,12 +311,12 @@ export class PopupAddCardsComponent implements OnInit, AfterViewInit {
       .subscribe((res: any) => {
         if (res) {
           this.parameter = JSON.parse(res);
-          const createNewfeedStr = this.parameter.createNewfeed || '0';
+          const createNewfeedStr = this.parameter?.createNewfeed || '0';
           this.createNewfeed = createNewfeedStr == '1';
-          if (this.parameter.MaxSendControl === '1') {
+          if (this.parameter?.MaxSendControl === '1') {
             this.getCountCardSend(this.user.userID, this.cardType);
           }
-          if (this.parameter.MaxPointControl === '1') {
+          if (this.parameter?.MaxPointControl === '1') {
             this.api
               .execSv(
                 'SYS',
@@ -362,8 +362,8 @@ export class PopupAddCardsComponent implements OnInit, AfterViewInit {
                   }
                 }
               });
-            // if (this.parameter.ActiveCoins) {
-            //   this.getCountPointSend(this.user.userID, this.cardType, this.parameter.ActiveCoins);
+            // if (this.parameter?.ActiveCoins) {
+            //   this.getCountPointSend(this.user.userID, this.cardType, this.parameter?.ActiveCoins);
             // }
           }
           this.dt.detectChanges();
@@ -627,7 +627,7 @@ export class PopupAddCardsComponent implements OnInit, AfterViewInit {
           // this.userReciver = data;
           // this.userReciverName = e.component.itemsSelected[0].UserName;
           // this.form.patchValue({ receiver: this.userReciver });
-          // if (this.parameter.MaxReceiveControl == '1') {
+          // if (this.parameter?.MaxReceiveControl == '1') {
           //   this.getCountCardRecive(data, this.cardType);
           // }
           // this.checkValidateWallet(this.userReciver);
@@ -707,7 +707,7 @@ export class PopupAddCardsComponent implements OnInit, AfterViewInit {
       return;
     }
     if (this.parameter) {
-      switch (this.parameter.RuleSelected) {
+      switch (this.parameter?.RuleSelected) {
         case '0':
           break;
         case '1':
@@ -772,25 +772,25 @@ export class PopupAddCardsComponent implements OnInit, AfterViewInit {
 
       // if(this.parameter){
       //   // max send
-      //   if(this.parameter.MaxSendControl === "1")
+      //   if(this.parameter?.MaxSendControl === "1")
       //   {
-      //     if(this.countCardSend > this.parameter.MaxSends){
+      //     if(this.countCardSend > this.parameter?.MaxSends){
       //       this.notifySV.notify("Bạn đã gửi tối đa số phiểu cho phép");
       //       return;
       //     }
       //   }
       //   // max recive
-      //   if(this.parameter.MaxReceiveControl === "1")
+      //   if(this.parameter?.MaxReceiveControl === "1")
       //   {
-      //     if(this.countCardReive > this.parameter.MaxReceives){
+      //     if(this.countCardReive > this.parameter?.MaxReceives){
       //       this.notifySV.notify("Người nhận đã nhận tối đa số phiểu cho phép");
       //       return;
       //     }
       //   }
       //   // max point
-      //   if(this.parameter.MaxPointControl === "1")
+      //   if(this.parameter?.MaxPointControl === "1")
       //   {
-      //     if(this.givePoint > this.parameter.MaxPoints){
+      //     if(this.givePoint > this.parameter?.MaxPoints){
       //       this.notifySV.notify("Tặng quá số xu cho phép");
       //       return;
       //     }
@@ -929,16 +929,16 @@ export class PopupAddCardsComponent implements OnInit, AfterViewInit {
   }
 
   checkPolicyPoint(data) {
-    if (this.parameter.MaxPointPerOnceControl === '1') {
-      if (data > this.parameter.MaxPointPerOnce) {
+    if (this.parameter?.MaxPointPerOnceControl === '1') {
+      if (data > this.parameter?.MaxPointPerOnce) {
         this.cointsError = 'Vượt quá số xu cho phép tặng trong 1 lần';
         this.givePoint = 0;
         return false;
       }
     }
-    if (data && this.parameter.MaxPointControl === '1') {
+    if (data && this.parameter?.MaxPointControl === '1') {
       let unitName = '';
-      switch (this.parameter.MaxPointPeriod) {
+      switch (this.parameter?.MaxPointPeriod) {
         case '1':
           unitName = 'tuần';
           break;
@@ -954,11 +954,11 @@ export class PopupAddCardsComponent implements OnInit, AfterViewInit {
       }
       if(
           (this.reduceCoCoins + data < 0) ||
-          (this.reduceCoCoins + data > Number.parseInt(this.parameter.MaxPoints))
+          (this.reduceCoCoins + data > Number.parseInt(this.parameter?.MaxPoints))
         ) {
         this.cointsError =
           'Vượt quá số xu cho phép tặng: ' +
-          this.parameter.MaxPoints +
+          this.parameter?.MaxPoints +
           ' xu/' +
           unitName + ' (Hiện tại bạn đã tặng: ' + -this.reduceCoCoins + ' xu/' + unitName + ')';
         this.givePoint = 0;
