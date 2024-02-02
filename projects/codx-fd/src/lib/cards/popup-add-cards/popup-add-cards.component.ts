@@ -167,26 +167,41 @@ export class PopupAddCardsComponent implements OnInit, AfterViewInit {
     this.user = this.auth.userValue;
   }
   ngAfterViewInit(): void {
-    this.tabInfo = [
-      {
-        icon: 'icon-article',
-        text: 'Nội dung thiệp',
-        name: 'InfoCard',
-        subName: 'Info Card',
-        subText: 'Info Card',
-      },
-      {
-        icon: 'icon-i-gift',
-        text: 'Tặng quà/xu',
-        name: 'GiftAndPoint',
-        subName: 'Gift And Point',
-        subText: 'Gift And Point',
-      }
-    ];
-    this.tabContent = [
-      this.templateContentCard,
-      this.templateGiftAndPoint
-    ];
+    if(this.cardType != this.CARDTYPE_EMNUM.Radio) {
+      this.tabInfo = [
+        {
+          icon: 'icon-article',
+          text: 'Nội dung thiệp',
+          name: 'InfoCard',
+          subName: 'Info Card',
+          subText: 'Info Card',
+        },
+        {
+          icon: 'icon-i-gift',
+          text: 'Tặng quà/xu',
+          name: 'GiftAndPoint',
+          subName: 'Gift And Point',
+          subText: 'Gift And Point',
+        }
+      ];
+      this.tabContent = [
+        this.templateContentCard,
+        this.templateGiftAndPoint
+      ];
+    } else {
+      this.tabInfo = [
+        {
+          icon: 'icon-article',
+          text: 'Nội dung thiệp',
+          name: 'InfoCard',
+          subName: 'Info Card',
+          subText: 'Info Card',
+        }
+      ];
+      this.tabContent = [
+        this.templateContentCard,
+      ];
+    }
   }
 
   ngOnInit(): void {
@@ -215,6 +230,10 @@ export class PopupAddCardsComponent implements OnInit, AfterViewInit {
           this.givePoint = res.point;
           this.form.patchValue({ coins: this.givePoint });
           this.lstShare = res.listShare;
+          if(this.lstShare.length > 0) {
+            this.shareControl = this.lstShare[0].objectType;
+            this.objectType = this.lstShare[0].objectType;
+          }
           this.dt.detectChanges();
         }
       });

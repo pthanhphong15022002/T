@@ -909,4 +909,9 @@ export class CM_Contracts {
   emailTemplate: string;
   mssgCode: string;
   expirationAlertTime: number;
+  
+  disposalNewAddress: string; 
+  disposalNewContac: string; 
+  disposalEmail: string; 
+  disposalPhone: string;
 }

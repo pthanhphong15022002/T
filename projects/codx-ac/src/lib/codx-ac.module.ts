@@ -123,6 +123,7 @@ import { AssetJournalsComponent } from './vouchers/asset-journals/asset-journals
 import { AssetJournalsAddComponent } from './vouchers/asset-journals/asset-journals-add/asset-journals-add.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { RunDepreciationComponent } from './periodic/rundepreciation/rundepreciation.component';
+import { NewvoucherComponent } from './share/add-newvoucher/newvoucher.component';
 export const routes: Routes = [
   {
     path: '',
@@ -483,6 +484,7 @@ export const routes: Routes = [
     AssetJournalsAddComponent,
     CategoriesComponent,
     RunDepreciationComponent,
+    NewvoucherComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
