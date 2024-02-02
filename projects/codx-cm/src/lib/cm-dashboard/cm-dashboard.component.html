@@ -1947,8 +1947,9 @@
         name="lblChartExtend"
         formName="CMInOutDashboard"
         gridViewName="grvCMInOutDashboard"
-        default="Diện tích bán mới /mở rộng"
+        default="Diện tích bán mới /mở rộng "
       ></codx-label>
+      <span class="fw-bold" [innerHTML]="year"></span>
     </div>
 
     <table style="table-layout: fixed" class="table mb-0">
@@ -2066,7 +2067,7 @@
               name="lblTableLiquidation"
               formName="CMInOutDashboard"
               gridViewName="grvCMInOutDashboard"
-              default="Tổng số DN"
+              default="Tổng số diện tích thanh lý"
             ></codx-label>
           </th>
           <th class="w-15 border-bottom text-center">
@@ -2074,7 +2075,7 @@
               name="lblTableDNTN"
               formName="CMInOutDashboard"
               gridViewName="grvCMInOutDashboard"
-              default="DNTN"
+              default="Diện tích thanh lý"
             ></codx-label>
           </th>
           <th class="w-15 border-bottom text-center">
@@ -2082,7 +2083,7 @@
               name="lblTableDNNN"
               formName="CMInOutDashboard"
               gridViewName="grvCMInOutDashboard"
-              default="DNNN"
+              default="Diện tích giảm"
             ></codx-label>
           </th>
         </tr>
@@ -2132,8 +2133,8 @@
             xName="quarterName"
             columnSpacing="0.25"
             columnWidth="1"
-            yName="totalRentalArea"
             [name]="titleRentalAreaOut"
+            yName="totalRentalArea"
           ></e-series>
           <e-series
             [dataSource]="listAreaOut"
@@ -2142,7 +2143,7 @@
             columnSpacing="0.25"
             columnWidth="1"
             yName="totalUpAndDownArea"
-            [name]="titleUpAndDownAreaOut"
+            [name]="titleUpAndDownAreaIn"
           ></e-series>
         </e-series-collection>
       </ejs-chart>
@@ -2160,7 +2161,7 @@
         name="lblChartCompareInQTSC"
         formName="CMInOutDashboard"
         gridViewName="grvCMInOutDashboard"
-        default="Số liệu DN ra QTSC"
+        default="Số liệu DN vào QTSC"
       ></codx-label>
       <codx-label
         *ngIf="!isQTSC"
@@ -2168,7 +2169,7 @@
         name="lblChartCompareInAll"
         formName="CMInOutDashboard"
         gridViewName="grvCMInOutDashboard"
-        default="Số liệu DN ra Toàn Khu"
+        default="Số liệu DN vào Toàn Khu"
       ></codx-label>
       <span
         class="fw-bold"
