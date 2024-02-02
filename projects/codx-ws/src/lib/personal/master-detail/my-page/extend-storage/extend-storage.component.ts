@@ -78,16 +78,17 @@ export class ExtendStorageComponent implements OnInit {
     // this.codxService.navigate('', '/ws/personal/WS006');
   }
 
-  detailStorage(recID: any) {
+  detailStorage(data: any) {
     var option = new DialogModel();
     option.IsFull = true;
+    option.zIndex = 1010;
     this.callfc.openForm(
       DetailStorageComponent,
       '',
       null,
       null,
       '',
-      recID,
+      data,
       '',
       option
     );

@@ -278,16 +278,17 @@ export class MyPageComponent implements OnInit {
       });
   }
 
-  detailStorage(recID: any) {
+  detailStorage(data: any) {
     var option = new DialogModel();
     option.IsFull = true;
+    option.zIndex = 100;
     this.callfc.openForm(
       DetailStorageComponent,
       '',
       null,
       null,
       '',
-      recID,
+      data,
       '',
       option
     );

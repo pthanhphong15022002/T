@@ -86,6 +86,7 @@ import { SearchingComponent as SearchingESComponent } from 'projects/codx-es/src
 import { CodxCoModule } from 'projects/codx-co/src/public-api';
 import { CodxWpModule } from 'projects/codx-wp/src/public-api';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
+import { DetailNotebookComponent } from './personal/master-detail/my-page/detail-notebook/detail-notebook.component';
 //import { CodxWpV2Module } from 'projects/codx-wp/src/lib/codx-wp-v2.module';
 const routes: Routes = [
   {
@@ -391,6 +392,7 @@ const routes: Routes = [
     CvInformationComponent,
     CvEvaluateComponent,
     CodxViewWsComponent,
+    DetailNotebookComponent,
   ],
   exports: [RouterModule],
   imports: [
