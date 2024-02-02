@@ -10,6 +10,7 @@ import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { CashreceiptsAddComponent } from './cashreceipts-add/cashreceipts-add.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
 
 @Component({
   selector: 'lib-cashreceipts',
@@ -46,7 +47,7 @@ export class CashreceiptsComponent extends UIComponent {
   bankPayID: any;
   bankNamePay: any;
   bankReceiveName: any;
-  viewActive:number = ViewType.listdetail;
+  viewActive: number = ViewType.listdetail;
   ViewType = ViewType;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
@@ -108,7 +109,7 @@ export class CashreceiptsComponent extends UIComponent {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
           collapsed: true,
-          widthLeft:'23%'
+          widthLeft: '23%'
         },
       },
       {
@@ -136,18 +137,18 @@ export class CashreceiptsComponent extends UIComponent {
 
         },
 
-        request:{service:'AC'},
-        subModel:{
-          entityName:'AC_CashReceiptsLines',
-          formName:'CashReceiptsLines',
-          gridviewName:'grvCashReceiptsLines',
-          parentField:'TransID',
-          parentNameField:'VoucherNo',
-          hideMoreFunc:true,
-          request:{
+        request: { service: 'AC' },
+        subModel: {
+          entityName: 'AC_CashReceiptsLines',
+          formName: 'CashReceiptsLines',
+          gridviewName: 'grvCashReceiptsLines',
+          parentField: 'TransID',
+          parentNameField: 'VoucherNo',
+          hideMoreFunc: true,
+          request: {
             service: 'AC',
           },
-          idField:'recID'
+          idField: 'recID'
         }
       },
     ];
@@ -222,7 +223,7 @@ export class CashreceiptsComponent extends UIComponent {
   }
 
   //#endregion
-  
+
   //#region Function
   /**
    * *Hàm thêm mới chứng từ
@@ -233,7 +234,7 @@ export class CashreceiptsComponent extends UIComponent {
       .subscribe((res) => {
         if (res != null) {
           res.isAdd = true;
-          if(this.dataDefault == null) this.dataDefault = {...res};
+          if (this.dataDefault == null) this.dataDefault = { ...res };
           let data = {
             headerText: this.headerText, //? tiêu đề voucher
             journal: { ...this.journal }, //?  data journal
@@ -254,10 +255,10 @@ export class CashreceiptsComponent extends UIComponent {
           dialog.closed.subscribe((res) => {
             if (res && res?.event) {
               if (res?.event?.type === 'discard') {
-                if(this.view.dataService.data.length == 0){
+                if (this.view.dataService.data.length == 0) {
                   this.itemSelected = undefined;
                   this.detectorRef.detectChanges();
-                } 
+                }
               }
             }
           })
@@ -271,7 +272,7 @@ export class CashreceiptsComponent extends UIComponent {
    */
   editVoucher(dataEdit) {
     delete dataEdit.isReadOnly;
-    this.view.dataService.dataSelected = {...dataEdit};
+    this.view.dataService.dataSelected = { ...dataEdit };
     this.view.dataService
       .edit(dataEdit)
       .pipe(takeUntil(this.destroy$))
@@ -297,10 +298,10 @@ export class CashreceiptsComponent extends UIComponent {
         dialog.closed.subscribe((res) => {
           if (res && res?.event) {
             if (res?.event?.type === 'discard') {
-              if(this.view.dataService.data.length == 0){
+              if (this.view.dataService.data.length == 0) {
                 this.itemSelected = undefined;
                 this.detectorRef.detectChanges();
-              } 
+              }
             }
           }
         })
@@ -313,90 +314,125 @@ export class CashreceiptsComponent extends UIComponent {
    * @param dataCopy : data chứng từ sao chép
    */
   copyVoucher(dataCopy) {
-    // this.view.dataService.dataSelected = dataCopy;
-    // this.view.dataService
-    //   .copy((o) => this.setDefault(dataCopy, 'copy'))
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res != null) {
-    //       res.isCopy = true;
-    //       let datas = { ...res };
-    //       this.view.dataService
-    //         .saveAs(datas)
-    //         .pipe(takeUntil(this.destroy$))
-    //         .subscribe((res) => {
-    //           if (res) {
-    //             let data = {
-    //               headerText: this.headerText, //? tiêu đề voucher
-    //               journal: { ...this.journal }, //?  data journal
-    //               oData: { ...datas }, //?  data của cashpayment
-    //               hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-    //               baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-    //               legalName: this.legalName, //? tên company
-    //             };
-    //             let optionSidebar = new SidebarModel();
-    //             optionSidebar.DataService = this.view?.dataService;
-    //             optionSidebar.FormModel = this.view?.formModel;
-    //             let dialog = this.callfc.openSide(
-    //               CashreceiptsAddComponent,
-    //               data,
-    //               optionSidebar,
-    //               this.view.funcID
-    //             );
-    //             dialog.closed.subscribe((res) => {
-    //               if (res && res?.event) {
-    //                 if (res?.event?.type === 'discard') {
-    //                   if(this.view.dataService.data.length == 0){
-    //                     this.itemSelected = undefined;
-    //                     this.detectorRef.detectChanges();
-    //                   } 
-    //                 }
-    //               }
-    //             })
-    //             this.view.dataService
-    //               .add(datas)
-    //               .pipe(takeUntil(this.destroy$))
-    //               .subscribe();
-    //           }
-    //         });
-    //     }
-    //   });
     this.view.dataService.dataSelected = dataCopy;
-    this.view.dataService
-      .copy((o) => this.setDefault(dataCopy, 'copy'))
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res != null) {
-          res.isCopy = true;
-          let data = {
-            headerText: this.headerText,
-            journal: { ...this.journal },
-            oData: { ...res },
-            hideFields: [...this.hideFields],
-            baseCurr: this.baseCurr,
-            legalName: this.legalName,
-          };
-          let optionSidebar = new SidebarModel();
-          optionSidebar.DataService = this.view?.dataService;
-          optionSidebar.FormModel = this.view?.formModel;
-          let dialog = this.callfc.openSide(
-            CashreceiptsAddComponent,
-            data,
-            optionSidebar,
-            this.view.funcID
-          );
-          dialog.closed.subscribe((res) => {
-            if (res && res?.event) {
-              if (res?.event?.type === 'discard') {
-                if(this.view.dataService.data.length == 0){
-                  this.itemSelected = undefined;
-                  this.detectorRef.detectChanges();
-                } 
+    let newdataCopy = { ...dataCopy };
+    if (this.journal && this.journal.assignRule == '0') {
+      let data = {
+        currentVoucherNo: newdataCopy.voucherNo
+      }
+      let opt = new DialogModel();
+      let dataModel = new FormModel();
+      opt.FormModel = dataModel;
+      let dialog = this.callfc.openForm(
+        NewvoucherComponent,
+        'Nhập số chứng từ mới',
+        null,
+        null,
+        '',
+        data,
+        '',
+        opt
+      );
+      dialog.closed.subscribe((res) => {
+        if (res && res?.event) {
+          let newvoucherNo = res?.event;
+          newdataCopy.voucherNo = newvoucherNo;
+          this.view.dataService
+            .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res: any) => {
+              if (res != null) {
+                res.isCopy = true;
+                let datas = { ...res };
+                this.view.dataService
+                  .saveAs(datas)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe((res) => {
+                    if (res) {
+                      let data = {
+                        headerText: this.headerText,
+                        journal: { ...this.journal },
+                        oData: { ...datas },
+                        hideFields: [...this.hideFields],
+                        baseCurr: this.baseCurr,
+                      };
+                      let optionSidebar = new SidebarModel();
+                      optionSidebar.DataService = this.view?.dataService;
+                      optionSidebar.FormModel = this.view?.formModel;
+                      let dialog2 = this.callfc.openSide(
+                        CashreceiptsAddComponent,
+                        data,
+                        optionSidebar,
+                        this.view.funcID
+                      );
+                      dialog2.closed.subscribe((res) => {
+                        if (res && res?.event) {
+                          if (res?.event?.type === 'discard') {
+                            if (this.view.dataService.data.length == 0) {
+                              this.itemSelected = undefined;
+                              this.detectorRef.detectChanges();
+                            }
+                          }
+                        }
+                      })
+                      this.view.dataService
+                        .add(datas)
+                        .pipe(takeUntil(this.destroy$))
+                        .subscribe();
+                    }
+                  });
               }
-            }
-          })
+            });
         }
-      });
+      })
+    } else {
+      this.view.dataService
+        .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res: any) => {
+          if (res != null) {
+            res.isCopy = true;
+            let datas = { ...res };
+            this.view.dataService
+              .saveAs(datas)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((res) => {
+                if (res) {
+                  let data = {
+                    headerText: this.headerText,
+                    journal: { ...this.journal },
+                    oData: { ...datas },
+                    hideFields: [...this.hideFields],
+                    baseCurr: this.baseCurr,
+                  };
+                  let optionSidebar = new SidebarModel();
+                  optionSidebar.DataService = this.view?.dataService;
+                  optionSidebar.FormModel = this.view?.formModel;
+                  let dialog2 = this.callfc.openSide(
+                    CashreceiptsAddComponent,
+                    data,
+                    optionSidebar,
+                    this.view.funcID
+                  );
+                  dialog2.closed.subscribe((res) => {
+                    if (res && res?.event) {
+                      if (res?.event?.type === 'discard') {
+                        if (this.view.dataService.data.length == 0) {
+                          this.itemSelected = undefined;
+                          this.detectorRef.detectChanges();
+                        }
+                      }
+                    }
+                  })
+                  this.view.dataService
+                    .add(datas)
+                    .pipe(takeUntil(this.destroy$))
+                    .subscribe();
+                }
+              });
+          }
+        });
+    }
   }
 
   /**
@@ -406,10 +442,10 @@ export class CashreceiptsComponent extends UIComponent {
   deleteVoucher(dataDelete) {
     this.view.dataService.delete([dataDelete], true).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
       if (res && !res?.error) {
-        if(this.view.dataService.data.length == 0){
+        if (this.view.dataService.data.length == 0) {
           this.itemSelected = undefined;
           this.detectorRef.detectChanges();
-        } 
+        }
       }
     });
   }
@@ -476,10 +512,10 @@ export class CashreceiptsComponent extends UIComponent {
    * @param data
    * @returns 
    */
-  changeMFDetail(event: any,type:any = '') {
+  changeMFDetail(event: any, type: any = '') {
     let data = this.view.dataService.dataSelected;
     if (data) {
-      this.acService.changeMFCashReceipt(event,data,type,this.journal,this.view.formModel);
+      this.acService.changeMFCashReceipt(event, data, type, this.journal, this.view.formModel);
     }
   }
 
@@ -506,7 +542,7 @@ export class CashreceiptsComponent extends UIComponent {
   }
 
   viewChanged(view) {
-    if(view && view?.view?.type == this.viewActive) return;
+    if (view && view?.view?.type == this.viewActive) return;
     this.viewActive = view?.view?.type;
     this.detectorRef.detectChanges();
   }
@@ -532,7 +568,7 @@ export class CashreceiptsComponent extends UIComponent {
             '',
             '',
             null,
-            JSON.stringify({ParentID:data.journalNo})
+            JSON.stringify({ ParentID: data.journalNo })
           )
           .pipe(takeUntil(this.destroy$))
           .subscribe((result: any) => {
@@ -586,7 +622,7 @@ export class CashreceiptsComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data,text])
+      .exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -603,7 +639,7 @@ export class CashreceiptsComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'PostVourcherAsync', [data,text])
+      .exec('AC', 'CashReceiptsBusiness', 'PostVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -620,7 +656,7 @@ export class CashreceiptsComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'UnPostVourcherAsync', [data,text])
+      .exec('AC', 'CashReceiptsBusiness', 'UnPostVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -651,7 +687,7 @@ export class CashreceiptsComponent extends UIComponent {
    * *Hàm call set default data khi thêm mới chứng từ
    * @returns
    */
-  setDefault(data:any,action: any = '') {
+  setDefault(data: any, action: any = '') {
     return this.api.exec('AC', 'CashReceiptsBusiness', 'SetDefaultAsync', [
       data,
       this.journal,
@@ -668,9 +704,9 @@ export class CashreceiptsComponent extends UIComponent {
    */
   printVoucher(data: any, reportID: any, reportType: string = 'V') {
     let params = {
-      Recs:data?.recID,
+      Recs: data?.recID,
     }
-    this.shareService.printReport(reportID,reportType,params,this.view?.formModel);    
+    this.shareService.printReport(reportID, reportType, params, this.view?.formModel);
   }
 
   /**
