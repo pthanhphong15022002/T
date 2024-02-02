@@ -407,31 +407,6 @@ export class SalesinvoicesAddComponent extends UIComponent {
   }
 
   /**
-   * *Hàm xử lí change lưới VATInvoices
-   * @param event 
-   */
-  valueChangeLineVATInvoices(event: any) {
-    let oLine = event.data;
-    if (event.field.toLowerCase() === 'goods') {
-      oLine.itemID = event?.itemData?.ItemID;
-      this.detectorRef.detectChanges();
-    }
-    this.eleGridVatInvoices.startProcess();
-    this.api.exec('AC', 'VATInvoicesBusiness', 'ValueChangeAsync', [
-      'AC_SalesInvoices',
-      this.formSalesInvoice.data,
-      oLine,
-      event.field
-    ]).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
-      if (res) {
-        Object.assign(oLine, res);
-        this.detectorRef.detectChanges();
-        this.eleGridVatInvoices.endProcess();
-      }
-    })
-  }
-
-  /**
    * *Hàm thêm dòng cho các lưới
    * @returns
    */
@@ -575,9 +550,6 @@ export class SalesinvoicesAddComponent extends UIComponent {
       case '1':
         this.addLine();
         break;
-      case '2':
-        this.addLineVatInvoices();
-        break;
     }
   }
 
@@ -604,18 +576,6 @@ export class SalesinvoicesAddComponent extends UIComponent {
   }
 
   /**
-   * *Hàm thêm dòng hóa đơn GTGT
-   */
-  addLineVatInvoices() {
-    let model = new AC_VATInvoices();
-    let oLine = Util.camelizekeyObj(model);
-    oLine.transID = this.formSalesInvoice.data.recID;
-    oLine.objectID = this.formSalesInvoice.data.objectID;
-    oLine.objectName = this.formSalesInvoice.data.objectName;
-    this.eleGridVatInvoices.addRow(oLine, this.eleGridVatInvoices.dataSource.length);
-  }
-
-  /**
    * *Hàm các sự kiện của lưới cashpayment
    * @param event
    */
@@ -637,37 +597,6 @@ export class SalesinvoicesAddComponent extends UIComponent {
           let element = document.getElementById('btnAddSale'); //? focus lại nút thêm dòng
           element.focus();
         }, 100);
-        break;
-    }
-  }
-
-  /**
-   * *Hàm các sự kiện của lưới cashpayment
-   * @param event
-   */
-  onActionGridVatInvoice(event: any) {
-    switch (event.type) {
-      case 'autoAdd': //? tự động thêm dòng
-        this.onAddLine('2');
-        break;
-      case 'add':
-      case 'update':
-        this.setInvoiceNo();
-        this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();
-        break;
-      case 'closeEdit': //? khi thoát dòng
-        if (this.eleGridVatInvoices && this.eleGridVatInvoices.rowDataSelected) {
-          this.eleGridVatInvoices.rowDataSelected = null;
-        }
-        if (this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false; //? trường save row nhưng chưa tới actioncomplete
-        setTimeout(() => {
-          let element = document.getElementById('btnAddVAT'); //? focus lại nút thêm dòng
-          element.focus();
-        }, 100);
-        break;
-      case 'delete':
-        this.setInvoiceNo();
-        this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();
         break;
     }
   }

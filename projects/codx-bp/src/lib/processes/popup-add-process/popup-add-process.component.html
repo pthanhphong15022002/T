@@ -217,7 +217,7 @@
               </codx-label>
             </div>
             <div
-              class="right d-flex"
+              class="right d-flex align-items-center"
               [ngClass]="
                 currentTab == 0
                   ? 'justify-content-between'
@@ -515,5 +515,7 @@
   </div>
 </ng-template>
 
-<ng-template #tmpResult></ng-template>
+<ng-template #tmpResult>
+  <lib-add-file-from-process-default [data]="data" [formModel]="dialog?.formModel"></lib-add-file-from-process-default>
+</ng-template>
 

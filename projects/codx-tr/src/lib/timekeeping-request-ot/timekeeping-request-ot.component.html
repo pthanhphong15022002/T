@@ -161,7 +161,7 @@
 <!-- Content schedule left -->
 <ng-template #resourceHeader let-data>
   <div class="container">
-    <div class="d-flex pb-1">
+    <div class="d-flex align-items-center pb-1">
       <codx-img
         [width]="35"
         class="me-4"
@@ -171,18 +171,10 @@
         [objectType]="'HR_Employees'"
       >
       </codx-img>
-      <div class="text-wrap">
-        <div class="text-dark fw-bold">
-          <span>
-            {{ data.resourceData.employeeName }}
-          </span>
-        </div>
-        <span
-          class="text-gray-500 fs-7"
-          *ngIf="data.resourceData?.positionName"
-        >
-          {{ data.resourceData?.positionName }}
-        </span>
+      <div class="d-flex flex-column">
+        <div class="fw-bold fs-6 line-clamp line-clamp-1 mb-1">{{data?.resourceData?.employeeName}}</div>
+        <div class="text-dark mb-1">{{data?.resourceData?.employeeID}}</div>
+        <div class="text-gray-600 fs-7 mb-1">{{data?.resourceData?.positionName}}</div>
       </div>
     </div>
   </div>

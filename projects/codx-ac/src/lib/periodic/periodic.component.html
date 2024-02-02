@@ -30,6 +30,10 @@
     <div *ngIf="numbreadcumb == 0" class="d-flex align-items-center">
       <codx-searchbar class="me-1 w-300px"></codx-searchbar>
     </div>
+    <!-- <div *ngIf="numbreadcumb == 1" class="d-flex align-items-center">
+      <codx-mfunc [formModel]="formModel" [isToolBar]="true" type="view"
+          (changeDataMF)="changeDataMF($event,'M')" (clickMF)="clickMF($event)"></codx-mfunc>
+    </div> -->
   </div>
   <div *ngIf="numbreadcumb == 0" class="h-100 bg-body rounded-3">
     <codx-listview class="p-3" [selectFirst]="true" [itemTemplate]="templateListCard"

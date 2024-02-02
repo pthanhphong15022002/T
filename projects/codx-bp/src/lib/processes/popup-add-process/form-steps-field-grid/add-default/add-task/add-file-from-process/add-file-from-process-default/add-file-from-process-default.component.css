@@ -1,0 +1,58 @@
+.row-grid-collapse
+{
+    color: #BEBEBE;
+}
+
+.grid-collapse
+{
+    position: relative;
+    .accordion-item
+    {
+        border-top: none !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-radius: 0;
+    }
+    .accordion-button
+    {
+        padding: 0 !important;
+    }
+    .accordion-button::after
+    {
+        position: absolute !important;
+        left: 0 !important;
+        background-image: var(--bs-accordion-btn-icon) !important;
+    }
+    .accordion-button:not(.collapsed),.accordion-button.collapsed
+    {
+        color: black !important;
+        background-color: white;
+        margin: 0 13px;
+        width: 15px;
+    }
+    .accordion-body
+    {
+        padding: 7px 0px 0px 0px !important;
+    }
+}
+
+.grid-collapse-default
+{
+    .accordion-item
+    {
+        border: none !important;
+    }
+    .accordion-button:not(.collapsed) , .accordion-button.collapsed
+    {
+        color: #BEBEBE !important;
+        background-color: white;
+    }
+    .accordion-button::after
+    {
+        width: 0 !important;
+    }
+    .accordion-body
+    {
+        padding: 0 17px;
+    }
+}
