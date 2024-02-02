@@ -103,6 +103,7 @@ export class ContractsComponent extends UIComponent {
   className = 'ContractsBusiness';
   assemblyName = 'ERM.Business.CM';
   methodLoadData = 'GetListContractsAsync';
+  contactPerson;
 
   fmQuotations: FormModel = {
     funcID: 'CM02021',
@@ -1760,13 +1761,23 @@ export class ContractsComponent extends UIComponent {
     this.liquidation.debtClosingOn = new Date();
     this.liquidation.disposalID = this.liquidation?.contractID;
     this.liquidation.pmtMethodID = 'CK';
+    let b = data?.datas;
+    this.contractService
+    .getContactByRecID(this.liquidation?.contactID)
+    .subscribe((res) => {
+      if (res) {
+        this.liquidation.disposalNewContac = res?.contactName;
+        this.liquidation.disposalEmail = res?.personalEmail;
+        this.liquidation.disposalPhone = res?.mobile;
+      }
+    });
     let opt = new DialogModel();
     opt.zIndex = 1015;
     this.popupLiquidation = this.callFunc.openForm(
       this.liquidationTmp,
       '',
       500,
-      600,
+      800,
       '',
       null,
       '',
