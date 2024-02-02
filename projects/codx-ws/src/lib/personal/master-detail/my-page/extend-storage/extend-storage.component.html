@@ -9,7 +9,12 @@
   [dataValue]="user?.userID"
   [itemTemplateList]="itemTemplateList"
   [viewList]="viewList"
+  [tmpHeader]="tmpHeader"
+  [emtry]="emtryStorages"
   (btnClick)="addClick($event)"
+  [hidenMF]="false"
+  (clickMofe)="clickMF($event)"
+  (selectChange)="selectChange($event)"
 >
 </lib-codx-view-ws>
 <ng-template #tmpHeader>
@@ -22,24 +27,85 @@
 </ng-template>
 
 <ng-template #itemTemplateList let-item>
-  <div class="d-flex align-items-center border-bottom p-3">
-    <div class="d-flex justify-content-between">
-      <div class="d-flex justify-content-start">
-        <span class="fw-bold">
-          {{ item.title }}
-        </span>
+  <div
+    class="d-flex align-items-center border-bottom"
+    style="padding: 10px 50px 10px 60px"
+  >
+    <div class="d-flex flex-column">
+      <div class="d-flex justify-content-between">
+        <div class="fw-bold justify-content-start">
+          <span class="fw-bold"> {{ item.title }} </span>
+        </div>
+        <div class="d-flex justify-content-end">
+          <div style="position: absolute">
+            <codx-attachment-temp
+              [objectID]="item?.recID"
+              [formModel]="formModel"
+              [viewType]="1"
+              referType="source"
+            ></codx-attachment-temp>
+          </div>
+        </div>
       </div>
-      <div class="d-flex justify-content-end">
-        <div style="position: absolute">
-          <codx-attachment-temp
-            [objectID]="item?.recID"
-            [formModel]="formModel"
-            [viewType]="1"
-            referType="source"
-          ></codx-attachment-temp>
+      <div class="mt-1">
+        <codx-tag
+          [entityName]="formModel.entityName"
+          [disabled]="true"
+          [isEdit]="false"
+          [value]="item.tags"
+        ></codx-tag>
+      </div>
+      <div class="mt-2">
+        <span
+          [innerHTML]="item?.memo | formatvalue : formModel : 'Memo' | async"
+        ></span>
+      </div>
+      <div class="mt-2 d-flex flex-row">
+        <div class="me-3 d-flex align-items-center">
+          <span
+            class="icon-16 icon-add_alarm me-2"
+            [ngbTooltip]="itemCreatedOn"
+          ></span>
+          <span>{{ item.createdOn | date : "dd/MM/yyyy" }}</span>
+          <ng-template #itemCreatedOn>
+            <codx-label
+              [formModel]="formModel"
+              default="Ngày tạo"
+              fiedName="CreatedOn"
+            ></codx-label>
+          </ng-template>
+        </div>
+        <div class="d-flex align-items-center" *ngIf="item.modifiedOn">
+          <span
+            class="icon-16 icon-edit me-2"
+            [ngbTooltip]="itemModifiedOn"
+          ></span>
+          <span>{{ item.modifiedOn | date : "dd/MM/yyyy" }}</span>
+          <ng-template #itemModifiedOn>
+            <codx-label
+              [formModel]="formModel"
+              default="Ngày chỉnh sửa"
+              fiedName="ModifiedOn"
+            ></codx-label>
+          </ng-template>
         </div>
       </div>
     </div>
   </div>
 </ng-template>
 <!-- (clickMF)="clickMF($event, item)"   -->
+<ng-template #emtryStorages>
+    <div class="container h-100">
+      <div class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
+          <img
+            src="../assets/themes/ws/default/img/Archive_NoData.svg"
+            class="w-200px"
+          />
+          <div class="fs-5 text-dark fw-bold mt-2 text-center">
+            {{ "SYS011" | mssg | async }}
+          </div>
+        </div>
+      </div>
+    </div>
+</ng-template>

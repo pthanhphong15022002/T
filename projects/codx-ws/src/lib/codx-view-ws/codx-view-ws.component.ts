@@ -31,6 +31,7 @@ export class CodxViewWsComponent {
   @Input() tmpRightToolBar?: TemplateRef<any>;
   @Input() tmpHeader?: TemplateRef<any> = null;
   @Input() tmpItem?: TemplateRef<any>;
+  @Input() emtry?: TemplateRef<any>;
   @Input() itemTemplateList: TemplateRef<any>;
   @Input() service!: string;
   @Input() assemblyName = 'ERM.Business.Core';
@@ -59,6 +60,7 @@ export class CodxViewWsComponent {
   fMoreFuncs: ButtonModel[];
   formModel = new FormModel();
   itemSelected: any;
+  loaded: boolean;
   @ViewChild('listView') listView: CodxListviewComponent;
   @ViewChild('grid') grid: CodxGridviewV2Component;
 
@@ -152,8 +154,13 @@ export class CodxViewWsComponent {
       changes['dataSource']?.currentValue !=
         changes['dataSource']?.previousValue
     ) {
+      this.loaded = false;
       this.dataSource = changes['dataSource']?.currentValue;
-      if (!this.dataSource) this.loadData();
+      if (!this.dataSource) {
+        this.loadData();
+      } else {
+        this.loaded = true;
+      }
     }
   }
 
@@ -162,6 +169,7 @@ export class CodxViewWsComponent {
       if (item && item.length > 0) {
         this.dataSource = item[0];
       }
+      this.loaded = true;
     });
   }
 
@@ -203,7 +211,7 @@ export class CodxViewWsComponent {
     if (this.listView?.dataService as CRUDService) {
       (this.listView.dataService as CRUDService).add(data).subscribe();
     }
-    if (this.grid){
+    if (this.grid) {
       this.grid.addRow(data);
     }
     this.ref.detectChanges();
@@ -219,7 +227,7 @@ export class CodxViewWsComponent {
     if (this.listView?.dataService as CRUDService) {
       (this.listView.dataService as CRUDService).update(data).subscribe();
     }
-    if (this.grid){
+    if (this.grid) {
       this.grid.edit(data);
     }
     this.ref.detectChanges();
@@ -231,12 +239,9 @@ export class CodxViewWsComponent {
         (x) => x[this.idFeild] != data[this.idFeild]
       );
     if (this.listView?.dataService as CRUDService) {
-      this.listView.dataService.onAction.next({
-        type: 'delete',
-        data: data,
-      });
+      (this.listView?.dataService as CRUDService).remove(data).subscribe();
     }
-    if (this.grid){
+    if (this.grid) {
       this.grid.deleteRow(data, true);
     }
     this.ref.detectChanges();
