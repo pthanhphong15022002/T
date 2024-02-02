@@ -1768,7 +1768,7 @@ export class ContractsComponent extends UIComponent {
       if(datas){
         let jsonData = JSON.parse(datas);
         if(jsonData){
-          this.liquidation.disposalNewAddress = jsonData.NewAddres;
+          this.liquidation.disposalNewAddress = jsonData[0].NewAddres;
         }
       }
     } catch (error) {
