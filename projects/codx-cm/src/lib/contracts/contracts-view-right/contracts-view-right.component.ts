@@ -78,6 +78,7 @@ export class ContractsViewDetailComponent
   listStepsProcess = [];
   isLoadingContract = false;
   notificationPopup;
+  userOwner;
 
 
   tabControl = [
@@ -160,17 +161,11 @@ export class ContractsViewDetailComponent
     if (changes?.contract && this.contract) {
       this.listInsStep = null;
       this.setDataInput();
-      this.contractService
-        .getContactByRecID(this.contract?.contactID)
-        .subscribe((res) => {
-          if (res) {
-            this.contactPerson = res;
-          }
-        });
       this.getContractLink();
       this.getQuotation();
       this.getDeal();
       this.getListCOntractByParentID();
+      this.getUserContract();
     }
     if (changes?.contractAppendix && changes?.contractAppendix?.currentValue) {
       this.listContractInParentID = this.listContractInParentID ? this.listContractInParentID : [];
@@ -205,6 +200,27 @@ export class ContractsViewDetailComponent
       icon: 'icon-i-link',
     };
     this.tabControl.push(contractLink);
+  }
+
+  getUserContract(){
+    if(this.contract?.contactID){
+      this.contractService
+      .getContactByRecID(this.contract?.contactID)
+      .subscribe((res) => {
+        if (res) {
+          this.contactPerson = res;
+        }
+      });
+    }
+    if(this.contract?.owner){
+      this.api
+        .exec<any>('HR', 'EmployeesBusiness', 'GetListEmployeesByUserIDAsync', [this.contract?.owner])
+        .subscribe((res) => {
+          if(res){
+            this.userOwner =  res[0];
+          }
+        });
+    }
   }
 
   setDataInput() {
