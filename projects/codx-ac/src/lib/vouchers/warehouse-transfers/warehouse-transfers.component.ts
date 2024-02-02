@@ -567,9 +567,7 @@ export class WarehouseTransfersComponent extends UIComponent {
    */
   changeMFDetail(event: any, type: any = '') {
     let data = this.view.dataService.dataSelected;
-    if (data) {
-      this.acService.changeMFTranfers(event, data, type, this.journal, this.view.formModel);
-    }
+    this.acService.changeMFTranfers(event, data, type, this.journal, this.view.formModel);
   }
 
   /**

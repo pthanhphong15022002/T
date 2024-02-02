@@ -571,17 +571,14 @@ export class CashPaymentsComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any, type: any = '') {
-    console.log(event);
     let data = this.view?.dataService?.dataSelected;
-    if (data) {
-      this.acService.changeMFCashPayment(
-        event,
-        data,
-        type,
-        this.journal,
-        this.view.formModel
-      );
-    }
+    this.acService.changeMFCashPayment(
+      event,
+      data,
+      type,
+      this.journal,
+      this.view.formModel
+    );
   }
 
   /**
