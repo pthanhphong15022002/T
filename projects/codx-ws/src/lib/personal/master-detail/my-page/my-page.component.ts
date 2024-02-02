@@ -26,6 +26,7 @@ import { ExtendStorageComponent } from './extend-storage/extend-storage.componen
 import { ExtendNoteBookComponent } from './extend-note-book/extend-note-book.component';
 import { CodxWsService } from '../../../codx-ws.service';
 import { Observable } from 'rxjs';
+import { DetailNotebookComponent } from './detail-notebook/detail-notebook.component';
 
 @Component({
   selector: 'lib-my-page',
@@ -184,10 +185,25 @@ export class MyPageComponent implements OnInit {
     });
   }
 
-  openDetailPage(recID: any) {
-    this.codxService.navigate('', this.urlDetailNoteBook, {
-      recID: recID,
-    });
+  openDetailNoteBook(data: any) {
+    var option = new DialogModel();
+    option.zIndex = 100;
+    let formModel = new FormModel();
+    formModel.formName = 'NoteBooks';
+    formModel.gridViewName = 'grvNoteBooks';
+    formModel.entityName = 'WP_NoteBooks';
+    formModel.funcID = 'WS00625';
+    option.FormModel = formModel;
+    this.callfc.openForm(
+      DetailNotebookComponent,
+      '',
+      900,
+      900,
+      '',
+      data,
+      '',
+      option
+    );
   }
 
   setTimeOunt(settimeout = 200, data) {
