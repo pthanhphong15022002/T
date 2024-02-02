@@ -11,6 +11,7 @@ import {
   ButtonModel,
   DataRequest,
   DialogModel,
+  FormModel,
   NotificationsService,
   SidebarModel,
   TenantStore,
@@ -30,6 +31,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
+import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
 
 @Component({
   selector: 'lib-salesinvoices',
@@ -246,15 +248,13 @@ export class SalesinvoicesComponent extends UIComponent {
    */
   changeMFDetail(event: any, type: any = '') {
     let data = this.view.dataService.dataSelected;
-    if (data) {
-      this.acService.changeMFSale(
-        event,
-        data,
-        type,
-        this.journal,
-        this.view.formModel
-      );
-    }
+    this.acService.changeMFSale(
+      event,
+      data,
+      type,
+      this.journal,
+      this.view.formModel
+    );
   }
 
   /**
@@ -425,41 +425,124 @@ export class SalesinvoicesComponent extends UIComponent {
     //         });
     //     }
     //   });
-    this.view.dataService.dataSelected = dataCopy;
-    this.view.dataService
-      .copy((o) => this.setDefault(dataCopy, 'copy'))
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res != null) {
-          res.isCopy = true;
-          let data = {
-            headerText: this.headerText,
-            journal: { ...this.journal },
-            oData: { ...res },
-            hideFields: [...this.hideFields],
-            baseCurr: this.baseCurr,
-          };
-          let optionSidebar = new SidebarModel();
-          optionSidebar.DataService = this.view?.dataService;
-          optionSidebar.FormModel = this.view?.formModel;
-          let dialog = this.callfc.openSide(
-            SalesinvoicesAddComponent,
-            data,
-            optionSidebar,
-            this.view.funcID
-          );
-          dialog.closed.subscribe((res) => {
-            if (res && res?.event) {
-              if (res?.event?.type === 'discard') {
-                if (this.view.dataService.data.length == 0) {
-                  this.itemSelected = undefined;
-                  this.detectorRef.detectChanges();
-                }
+    let newdataCopy = { ...dataCopy };
+    if (this.journal && this.journal.assignRule == '0') {
+      let data = {
+        currentVoucherNo: newdataCopy.voucherNo
+      }
+      let opt = new DialogModel();
+      let dataModel = new FormModel();
+      opt.FormModel = dataModel;
+      let dialog = this.callfc.openForm(
+        NewvoucherComponent,
+        'Nhập số chứng từ mới',
+        null,
+        null,
+        '',
+        data,
+        '',
+        opt
+      );
+      dialog.closed.subscribe((res) => {
+        if (res && res?.event) {
+          let newvoucherNo = res?.event;
+          newdataCopy.voucherNo = newvoucherNo;
+          this.view.dataService
+            .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res: any) => {
+              if (res != null) {
+                res.isCopy = true;
+                let datas = { ...res };
+                this.view.dataService
+                  .saveAs(datas)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe((res) => {
+                    if (res) {
+                      let data = {
+                        headerText: this.headerText,
+                        journal: { ...this.journal },
+                        oData: { ...datas },
+                        hideFields: [...this.hideFields],
+                        baseCurr: this.baseCurr,
+                      };
+                      let optionSidebar = new SidebarModel();
+                      optionSidebar.DataService = this.view?.dataService;
+                      optionSidebar.FormModel = this.view?.formModel;
+                      let dialog2 = this.callfc.openSide(
+                        SalesinvoicesAddComponent,
+                        data,
+                        optionSidebar,
+                        this.view.funcID
+                      );
+                      dialog2.closed.subscribe((res) => {
+                        if (res && res?.event) {
+                          if (res?.event?.type === 'discard') {
+                            if (this.view.dataService.data.length == 0) {
+                              this.itemSelected = undefined;
+                              this.detectorRef.detectChanges();
+                            }
+                          }
+                        }
+                      });
+                      this.view.dataService
+                        .add(datas)
+                        .pipe(takeUntil(this.destroy$))
+                        .subscribe();
+                    }
+                  });
               }
-            }
-          });
+            });
         }
       });
+    } else {
+      this.view.dataService
+        .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res: any) => {
+          if (res != null) {
+            res.isCopy = true;
+            let datas = { ...res };
+            this.view.dataService
+              .saveAs(datas)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((res) => {
+                if (res) {
+                  let data = {
+                    headerText: this.headerText,
+                    journal: { ...this.journal },
+                    oData: { ...datas },
+                    hideFields: [...this.hideFields],
+                    baseCurr: this.baseCurr,
+                  };
+                  let optionSidebar = new SidebarModel();
+                  optionSidebar.DataService = this.view?.dataService;
+                  optionSidebar.FormModel = this.view?.formModel;
+                  let dialog2 = this.callfc.openSide(
+                    SalesinvoicesAddComponent,
+                    data,
+                    optionSidebar,
+                    this.view.funcID
+                  );
+                  dialog2.closed.subscribe((res) => {
+                    if (res && res?.event) {
+                      if (res?.event?.type === 'discard') {
+                        if (this.view.dataService.data.length == 0) {
+                          this.itemSelected = undefined;
+                          this.detectorRef.detectChanges();
+                        }
+                      }
+                    }
+                  });
+                  this.view.dataService
+                    .add(datas)
+                    .pipe(takeUntil(this.destroy$))
+                    .subscribe();
+                }
+              });
+          }
+        });
+    }
   }
 
   /**
@@ -503,7 +586,7 @@ export class SalesinvoicesComponent extends UIComponent {
       optionSidebar,
       this.view.funcID
     );
-    dialog.closed.subscribe((res) => {});
+    dialog.closed.subscribe((res) => { });
   }
 
   /**

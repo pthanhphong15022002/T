@@ -1,0 +1,83 @@
+<codx-form
+  [headerText]="headerText"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+></codx-form>
+
+<ng-template #body>
+    <div class="container">
+        <div class="form-group">
+            <codx-label [formModel]="dialog?.formModel" name="EmployeeID" [default]="'Nhân viên'" class="mb-2"></codx-label>
+            <div class="ps-4">
+                <codx-temp-full 
+                    *ngIf="employee"
+                    [dataItem]="employee" 
+                    [imageId]="employee.employeeID" 
+                    [imageObjName]="employee.employeeName" 
+                    [imageObjType]="'HR_Employees'" 
+                    [title]="employee.employeeName"
+                    [desc]="employee.positionName"
+                    [hideMF]="true">
+                </codx-temp-full>
+            </div>
+        </div>
+        <div class="form-group">
+            <codx-input
+                [checked]="false"
+                [field]="'viewAll'"
+                type="checkbox"
+                [formModel]="dialog?.formModel"
+                [label]="'Hiển thị tất cả loại công'"
+                [labelPosition]="'after'"
+                (valueChange)="valueInputChange($event)">
+            </codx-input>
+        </div>
+        <div class="form-group">
+            <ng-container *ngIf="columnGrids && columnGrids?.length > 0">
+              <codx-gridview-v2
+                #codxGridview
+                [columnsGrid]="columnGrids"
+                [editSettings]="editSettings"
+                [templateMore]="tmpMoreFunc"
+                [editOnClick]="true"
+                [autoAddRow]="false"
+                [showEmptyRecord]="false"
+                [autoLoad]="false"
+                [dataSource]="dataSources"
+                [idField]="'kowCode'"
+                (cellChanged)="valueCellChange($event)">
+              </codx-gridview-v2>
+            </ng-container>
+        </div>
+        <div class="form-group">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-sm btn-light-primary" (click)="addNewRowGrid()">
+                <i class="icon-add icon-16 ms-n1"></i>
+                <codx-label [formModel]="dialog.formModel" name="lblAdd"  [default]="'Thêm'"></codx-label>
+              </button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<!-- template footer -->
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!(userPermission && (userPermission.isAdmin || userPermission.write == '9'))">
+        <i class="icon-save"></i>
+        <codx-label [formModel]="dialog.formModel" name="lblSave" [default]="'Lưu'"></codx-label>
+      </button>
+    </div>
+  </ng-template>
+
+  <!-- template moreFC -->
+<ng-template #tmpMoreFunc let-data>
+    <codx-mfunc
+        [dataItem]="data"
+        [formModel]="dialog?.formModel"
+        (clickMF)="clickMF($event, data)"
+        (changeDataMF)="changeDataMF($event)"
+        type="hover"
+    ></codx-mfunc>
+  </ng-template>

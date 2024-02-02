@@ -1,8 +1,9 @@
-import { Component, OnInit, Optional, ViewChild } from '@angular/core';
-import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, CodxService, DialogData, DialogModel, DialogRef, NotificationsService, SidebarModel } from 'codx-core';
+import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, CodxService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, SidebarModel, ViewModel, ViewType } from 'codx-core';
 import { DetailStorageComponent } from '../detail-storage/detail-storage.component';
 import { AddUpdateStorageComponent } from '../add-update-storage/add-update-storage.component';
 import { CodxView2Component } from 'projects/codx-share/src/lib/components/codx-view2/codx-view2.component';
+import { CodxViewWsComponent } from 'projects/codx-ws/src/lib/codx-view-ws/codx-view-ws.component';
 
 @Component({
   selector: 'lib-extend-storage',
@@ -10,11 +11,17 @@ import { CodxView2Component } from 'projects/codx-share/src/lib/components/codx-
   styleUrls: ['./extend-storage.component.scss']
 })
 export class ExtendStorageComponent implements OnInit{
-  @ViewChild('codxview2') codxview2: CodxView2Component;
-  
+  @ViewChild('codxview') codxview: CodxViewWsComponent;
+
   dialog:any;
   user:any;
-  formModel:any;
+  formModel: FormModel = {
+    formName: 'Storages',
+    gridViewName: 'grvStorages',
+    entityName: 'WP_Storages',
+    funcID: 'WS00626',
+  };
+  viewList: Array<ViewModel> = [];
 
   constructor(
     private callfc: CallFuncService,
@@ -23,25 +30,26 @@ export class ExtendStorageComponent implements OnInit{
     private notification : NotificationsService,
     private api : ApiHttpService,
     private cache : CacheService,
+    private detectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) 
+  )
   {
     this.dialog = dialog;
     this.user = this.auth.get();
   }
   ngOnInit(): void {
-    this.cache.functionList('MWP00941').subscribe((res) => {
-      if (res) {
-        this.formModel = 
-        {
-          entityName : res?.entityName,
-          gridViewName : res?.gridViewName, 
-          formName : res?.formName,
-          funcID:"MWP00941"
-        }
-      }
-    });
+    this.viewList = [
+      {
+        type: ViewType.list,
+        active: true,
+      },
+      {
+        type: ViewType.grid,
+        active: false,
+      },
+    ];
+
   }
 
   close()
@@ -67,7 +75,8 @@ export class ExtendStorageComponent implements OnInit{
     );
     dialog.closed.subscribe((res) => {
       if (res.event){
-        this.codxview2.addDataSource(res.event);
+        this.codxview.addDataSource(res.event);
+        this.detectorRef.detectChanges();
       }
     });
   }
@@ -85,7 +94,7 @@ export class ExtendStorageComponent implements OnInit{
           );
           dialog.closed.subscribe((res) => {
             debugger
-            if (res.event) this.codxview2.updateDataSource(res.event);
+            if (res.event) this.codxview.updateDataSource(res.event);
           });
           break;
         }
@@ -97,7 +106,7 @@ export class ExtendStorageComponent implements OnInit{
           this.notification.alertCode('SYS030').subscribe((x) => {
             if (x.event.status == 'Y') {
               this.api.execSv("WP","WP","NoteBooksBusiness","DeleteNoteBookAsync",data?.recID).subscribe(item=>{
-                if(item) this.codxview2.deleteDataSource(item);
+                if(item) this.codxview.deleteDataSource(item);
               })
             }
           });

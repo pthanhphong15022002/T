@@ -180,6 +180,7 @@ export class AddProcessDefaultComponent implements OnInit{
     
         this.dataIns.processID = this.process?.recID,
         this.dataIns.instanceNo = instanceNo,
+        this.dataIns.instanceID = this.dataIns.recID,
         this.dataIns.status= "1",
         this.dataIns.currentStage= stageF.recID,
         this.dataIns.currentStep= step.recID,

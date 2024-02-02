@@ -1,61 +1,143 @@
 <div class="d-flex flex-column w-100 h-100">
-    <div id="view2-header" *ngIf="tmpHeader">
-        <ng-container *ngTemplateOutlet="tmpHeader"></ng-container>
-    </div>
-    <div class="d-flex flex-column bg-white w-100 h-100"> 
-        <ng-container *ngTemplateOutlet="toolbar"></ng-container>
-        <ng-container *ngTemplateOutlet="body"></ng-container>
-    </div>
+  <div id="view2-header" *ngIf="tmpHeader">
+    <ng-container *ngTemplateOutlet="tmpHeader"></ng-container>
+  </div>
+  <div class="d-flex flex-column bg-white w-100 h-100">
+    <ng-container *ngTemplateOutlet="toolbar"></ng-container>
+    <ng-container *ngTemplateOutlet="body"></ng-container>
+  </div>
 </div>
 
 <ng-template #toolbar>
-    <div class="d-flex align-items-center justify-content-between w-100 pb-2 border-bottom">
-        <ng-container *ngIf="tmpRightToolBar">
-            <div class="d-flex align-items-center justify-content-start w-100">
-                <ng-container *ngTemplateOutlet="tmpRightToolBar"></ng-container>
-            </div>
-        </ng-container>
-        <div class="d-flex align-items-center justify-content-end w-200px">
-            <codx-searchbar
-                class="mt-1"
-                [type]="'slide'"
-                (searchEvent)="onSearch($event)"
-            ></codx-searchbar>
-            <codx-toolbar-choose
-                class="mt-2 mx-2"
-                [views]="viewList"
-                (viewChange)="viewChanged($event)"
-                (sortChange)="sortChanged($event)"
-            >
-            </codx-toolbar-choose>
-            <button
-                type="button"
-                class="btn btn-sm btn-primary mt-2 mx-2"
-                (click)="addClick()"
-                *ngIf="isAdd"
-            >
-                <codx-label
-                    fiedName="lblSave"
-                    default="Thêm"
-                >
-                </codx-label>
-            </button>
-            <codx-toolbar-more
-                class="mt-2 me-2"
-                [buttons]="fMoreFuncs"
-                (buttonClick)="clickToolbarMore($event)"
-            >
-            </codx-toolbar-more>
-        </div>
+  <div class="d-flex align-items-center justify-content-end w-100 pb-2">
+    <codx-mfunc
+      *ngIf="!hidenMF"
+      [ngClass]="itemSelected ? '' : 'd-none'"
+      [formModel]="formModel"
+      [isToolBar]="true"
+      type="view"
+      [dataItem]="itemSelected"
+      (changeDataMF)="changeDataMF($event, itemSelected)"
+      (clickMF)="clickMF($event, itemSelected)"
+    ></codx-mfunc>
+  </div>
+  <div
+    class="d-flex align-items-center justify-content-between w-100 pb-2 border-bottom"
+  >
+    <div class="d-flex align-items-center justify-content-start w-100">
+      <ng-container *ngTemplateOutlet="tmpRightToolBar"></ng-container>
     </div>
+
+    <div class="d-flex align-items-center justify-content-end w-200px">
+      <codx-searchbar
+        class="mt-1"
+        [type]="'slide'"
+        (searchEvent)="onSearch($event)"
+      ></codx-searchbar>
+
+      <codx-toolbar-choose
+        class="mt-2 mx-2"
+        [views]="viewList"
+        (viewChange)="viewChanged($event)"
+        (sortChange)="sortChanged($event)"
+      >
+      </codx-toolbar-choose>
+      <button
+        type="button"
+        class="btn btn-sm btn-primary mt-2 mx-2"
+        (click)="addClick()"
+        *ngIf="isAdd"
+      >
+        <codx-label fiedName="lblSave" default="Thêm"> </codx-label>
+      </button>
+      <codx-toolbar-more
+        class="mt-2 me-2"
+        [buttons]="fMoreFuncs"
+        (buttonClick)="clickToolbarMore($event)"
+      >
+      </codx-toolbar-more>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #body>
-    <ng-container *ngIf="dataSource && (dataSource.length > 0) && tmpItem">
-        <div id="codx-view2-body" class="d-flex flex-wrap h-auto scroll-y codx-view2-body" [ngClass]="bodyCss">
+  <ng-container *ngIf="viewList?.length > 0">
+    <ng-container *ngFor="let view of viewList">
+      <ng-container *ngIf="view.type == modeView">
+        <ng-container
+          *ngIf="
+            dataSource && dataSource.length > 0 && tmpItem && view.type == 4
+          "
+        >
+          <div
+            id="codx-view2-body"
+            class="d-flex flex-wrap h-auto scroll-y codx-view2-body"
+            [ngClass]="bodyCss"
+          >
             <ng-container *ngFor="let item of dataSource">
-                <ng-container *ngTemplateOutlet="tmpItem ; context:{ $implicit: item }"></ng-container>
+              <ng-container
+                *ngTemplateOutlet="tmpItem; context: { $implicit: item }"
+              ></ng-container>
             </ng-container>
-        </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="view.type == 1">
+          <div class="h-100">
+            <codx-listview
+              #listView
+              [entityName]="entityName"
+              [gridViewName]="gridViewName"
+              [predicate]="predicate"
+              [dataValue]="dataValue"
+              [predicates]="predicates"
+              [dataValues]="dataValues"
+              [service]="service"
+              [assemblyName]="assemblyName"
+              [className]="className"
+              [method]="method"
+              [itemTemplate]="itemTemplateList"
+              (onSelectionChanged)="onSelectedViewList($event)"
+              [funcID]="funcID"
+              type="listView"
+              [formName]="formName"
+            >
+            </codx-listview>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="view.type == 11">
+          <codx-gridview-v2
+            #grid
+            [formName]="formName"
+            [gridViewName]="gridViewName"
+            [entityName]="entityName"
+            [service]="service"
+            [assemblyName]="assemblyName"
+            [className]="className"
+            [method]="method"
+            [predicate]="predicate"
+            [dataValue]="dataValue"
+            [predicates]="predicates"
+            [dataValues]="dataValues"
+            rowHeight="40"
+            [height]="'100%'"
+            [hideMoreFunc]="hidenMF"
+            [templateMore]="tempMorefunction"
+            (onSelected)="onSelected($event)"
+          ></codx-gridview-v2>
+          <ng-template #tempMorefunction let-data>
+            <div class="" style="height: 30px">
+              <codx-mfunc
+                [dataItem]="data"
+                [formModel]="formModel"
+                type="view"
+                [isBookMark]="false"
+                (clickMF)="clickMF($event, data)"
+                (changeDataMF)="changeDataMF($event, data)"
+              ></codx-mfunc>
+            </div>
+          </ng-template>
+        </ng-container>
+      </ng-container>
     </ng-container>
+  </ng-container>
 </ng-template>

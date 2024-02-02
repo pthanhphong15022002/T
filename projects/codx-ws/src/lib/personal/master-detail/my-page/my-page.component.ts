@@ -16,6 +16,8 @@ import { AddUpdateNoteBookComponent } from './add-update-note-book/add-update-no
 import { AddUpdateStorageComponent } from './add-update-storage/add-update-storage.component';
 import { DetailStorageComponent } from './detail-storage/detail-storage.component';
 import { ExtendStorageComponent } from './extend-storage/extend-storage.component';
+import { ExtendNoteBookComponent } from './extend-note-book/extend-note-book.component';
+import { CodxWsService } from '../../../codx-ws.service';
 
 @Component({
   selector: 'lib-my-page',
@@ -39,7 +41,8 @@ export class MyPageComponent implements OnInit {
     private cache: CacheService,
     private codxService: CodxService,
     private callfc: CallFuncService,
-    private api: ApiHttpService
+    private api: ApiHttpService,
+    private wsSv: CodxWsService
   ) {
     this.user = this.authStore.get();
     this.dataValuePortal = this.user?.userID;
@@ -47,6 +50,42 @@ export class MyPageComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getCache();
+    this.wsSv.loadDataList.subscribe((res) => {
+      if (res) {
+        const data = res?.data;
+        const type = res.type;
+        const action = res.action;
+        let listView =
+          type == 'notebook'
+            ? (this.listViewNoteBooks?.dataService as CRUDService)
+            : (this.listViewStorages?.dataService as CRUDService);
+        if (listView) {
+          switch (action) {
+            case 'add':
+              listView.add(data)
+              .subscribe();
+              break;
+            case 'update':
+              listView.update(data)
+              .subscribe();
+              break;
+            case 'delete':
+              listView.onAction.next({
+                type: 'delete',
+                data: data,
+              });
+              break;
+          }
+          if(type == 'notebook'){
+            (this.listViewNoteBooks.dataService as CRUDService) = listView;
+          }else{
+            (this.listViewStorages.dataService as CRUDService) = listView;
+          }
+        }
+
+        this.wsSv.loadDataList.next(null);
+      }
+    });
   }
 
   getCache() {
@@ -79,6 +118,7 @@ export class MyPageComponent implements OnInit {
         formModel.funcID = 'WS00625';
         option.FormModel = formModel;
         option.Width = '550px';
+        option.zIndex = 1010;
         var dialog = this.callfc.openSide(
           AddUpdateNoteBookComponent,
           [def?.data, 'add'],
@@ -86,7 +126,6 @@ export class MyPageComponent implements OnInit {
         );
         dialog.closed.subscribe((res) => {
           if (res.event) {
-            res.event['modifiedOn'] = new Date();
             (this.listViewNoteBooks.dataService as CRUDService)
               .add(res.event)
               .subscribe();
@@ -112,6 +151,7 @@ export class MyPageComponent implements OnInit {
         option.FormModel = formModel;
         option.Width = '550px';
         def.storageType = 'WP_Comments';
+        option.zIndex = 1010;
         var dialog = this.callfc.openSide(
           AddUpdateStorageComponent,
           { data: def?.data, action: 'add', text: 'Thêm' },
@@ -143,14 +183,37 @@ export class MyPageComponent implements OnInit {
   }
 
   extendStorage() {
-    // var option = new DialogModel();
-    // option.IsFull = true;
-    // this.callfc.openForm(ExtendStorageComponent,"",null,null,"","","",option);
-    this.codxService.navigate('', '/ws/storage');
+    var option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 1001;
+    this.callfc.openForm(
+      ExtendStorageComponent,
+      '',
+      null,
+      null,
+      '',
+      '',
+      '',
+      option
+    );
+    // this.codxService.navigate('', '/ws/storage');
   }
 
   extendNoteBook() {
-    this.codxService.navigate('', '/ws/notebook');
+    var option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 100;
+    this.callfc.openForm(
+      ExtendNoteBookComponent,
+      '',
+      null,
+      null,
+      '',
+      '',
+      '',
+      option
+    );
+    // this.codxService.navigate('', '/ws/notebook');
   }
 
   clickMFStorage(e: any, data: any) {
@@ -166,6 +229,7 @@ export class MyPageComponent implements OnInit {
         formModel.funcID = 'WS00626';
         option.FormModel = formModel;
         option.Width = '550px';
+        option.zIndex = 1010;
         var dialog = this.callfc.openSide(
           AddUpdateStorageComponent,
           { data: data, action: 'edit', text: e?.text },
@@ -201,6 +265,7 @@ export class MyPageComponent implements OnInit {
         formModel.funcID = 'WS00625';
         option.FormModel = formModel;
         option.Width = '550px';
+        option.zIndex = 1010;
         var dialog = this.callfc.openSide(
           AddUpdateNoteBookComponent,
           [data, 'edit'],

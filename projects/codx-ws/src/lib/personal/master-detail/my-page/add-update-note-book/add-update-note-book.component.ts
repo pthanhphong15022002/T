@@ -194,7 +194,7 @@ export class AddUpdateNoteBookComponent extends UIComponent implements OnInit {
       'inline',
       1000,
       name,
-      'image',
+      'avt',
       false,
     ];
     this.api
