@@ -59,24 +59,35 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     if(this.data) {
       this.stage = this.listStage.filter(x=>x.recID == this.data.stageID)[0];
       this.listUses = this.data.permissions || [];
-      this.listDocument = this.process.documentControl.filter(x=>x.stepNo == this.data.stepNo);
-      let i = 0 ;
-      this.listDocument.forEach(elm=>{
-        var fieldID =  elm.fieldID;
-        if(elm.refStepNo)
-        {
-          var index = this.process.documentControl.findIndex(x=>x.recID == elm.refStepID);
-          if(index>=0) fieldID = this.process.documentControl[index].fieldID;
-        }
-        this.getFile(fieldID , i)
-      })
+      if(this.process.documentControl && this.process.documentControl.length>0)
+      {
+        var entityName = this.formModel.entityName;
+        this.listDocument = this.process.documentControl.filter(x=>x.stepNo == this.data.stepNo);
+        let i = 0 ;
+        this.listDocument.forEach(elm=>{
+          var fieldID =  elm.fieldID;
+         
+          if(elm?.templateID) {
+            fieldID = elm?.templateID;
+            entityName = "AD_ExcelTemplates"
+            if(elm.templateType == "word") entityName = "AD_WordTemplates"
+          }
+          else if(elm.refStepNo)
+          {
+            var index = this.process.documentControl.findIndex(x=>x.recID == elm.refStepID);
+            if(index>=0) fieldID = this.process.documentControl[index].fieldID;
+          }
+          this.getFile(fieldID, entityName , i)
+        })
+      }
+      else this.process.documentControl = [];
     }
   }
 
-  getFile(recID:any,index:any)
+  getFile(recID:any , entityName:any ,index:any)
   {
     let i = index;
-    this.api.execSv("DM","DM","FileBussiness","GetFileByObjectIDAsync",[recID + ";",this.formModel.entityName]).subscribe(item=>{
+    this.api.execSv("DM","DM","FileBussiness","GetFileByObjectIDAsync",[recID + ";", entityName]).subscribe(item=>{
       if(item)
       {
         this.listDocument[i].files = item;
@@ -108,6 +119,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       checkList: "",
       nextSteps: ""
     }
+    if(!this.process.documentControl)this.process.documentControl = []
     this.dataChange.emit(this.data);
   }
   changeActivity()
