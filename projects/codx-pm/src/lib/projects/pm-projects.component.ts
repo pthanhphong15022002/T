@@ -1,9 +1,10 @@
 import { Component, ViewEncapsulation, OnInit, AfterViewInit, TemplateRef, ViewChild, Injector } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { ProgressAnnotationService } from "@syncfusion/ej2-angular-progressbar";
-import { CodxService, FormModel, NotificationsService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from "codx-core";
+import { CodxService, DialogModel, FormModel, NotificationsService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from "codx-core";
 import { CodxShareService } from "projects/codx-share/src/public-api";
 import { PopupAddProjectComponent } from "./popup-add-project/popup-add-project.component";
+import { PopupProjectDetailsComponent } from "./popup-project-details/popup-project-details.component";
 
 @Component({
   selector: 'lib-projects',
@@ -118,12 +119,74 @@ export class ProjectsComponent
 
   }
 
+  edit(){
+    this.view.dataService.edit(this.view?.dataService.dataSelected).subscribe(()=>{
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.formModel;
+      option.Width = '800px';
+      let dialog = this.callfc.openSide(
+        PopupAddProjectComponent,
+        [this.view?.dataService.dataSelected,'edit'],
+        option
+      );
+      dialog.closed.subscribe((returnData) => {
+        if (returnData?.event) {
+          //this.view?.dataService?.update(returnData?.event);
+        } else {
+          this.view.dataService.clear();
+        }
+      });
+    })
+
+  }
+
+  delete(){
+    let returnData:any;
+    this.notificationSv.alertCode('SYS030').subscribe((res:any)=>{
+      if(res.event && res.event.status == 'Y'){
+        this.view.dataService.dataSelected.stop=true;
+        this.view.dataService.edit(this.view?.dataService.dataSelected).subscribe(()=>{
+          this.view.dataService
+          .save()
+          .subscribe((res:any) => {
+            if (res?.save || res?.update) {
+              if (!res.save) {
+                returnData = res?.update;
+              } else {
+                returnData = res?.save;
+              }
+              if (!returnData?.error) {
+                this.view.dataService.data = this.view.dataService.data.filter((x:any)=>x.recID!= returnData?.data?.recID);
+                this.detectorRef.detectChanges();
+              }
+            } else {
+              //Trả lỗi từ backend.
+              return;
+            }
+          });
+        })
+
+
+          }
+        })
+       }
+
   selectedChange(e:any){
 
   }
 
   clickMF(e:any,data:any){
-
+    switch (e.functionID) {
+      case 'SYS03':
+        this.edit();
+        break;
+      case 'SYS02':
+        this.delete();
+      break;
+      default:
+        break;
+    }
   }
 
   textRender(e:any,data:any){
@@ -143,5 +206,18 @@ export class ProjectsComponent
       return arr;
     }
     return data.permissions;
+  }
+
+  onDbClick(e:any){
+
+    let option = new DialogModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.formModel;
+    option.IsFull=true;
+    let dialog = this.callfc.openForm(
+      PopupProjectDetailsComponent,'',0,0,'',
+      this.view?.dataService.dataSelected,'',
+      option
+    );
   }
 }
