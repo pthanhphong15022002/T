@@ -1763,7 +1763,7 @@ export class ContractsComponent extends UIComponent {
     this.liquidation.pmtMethodID = 'CK';
     try {
       let datas = data?.datas;
-      console.log(datas);
+      console.log(JSON.stringify(this.liquidation));
       
       if(datas){
         let jsonData = JSON.parse(datas);
