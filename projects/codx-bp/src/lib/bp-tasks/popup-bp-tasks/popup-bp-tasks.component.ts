@@ -6,6 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  ApiHttpService,
   AuthStore,
   CacheService,
   DialogData,
@@ -41,6 +42,7 @@ export class PopupBpTasksComponent implements OnInit {
     private shareService: CodxShareService,
     private detectorRef: ChangeDetectorRef,
     private cache: CacheService,
+    private api: ApiHttpService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -57,6 +59,16 @@ export class PopupBpTasksComponent implements OnInit {
     this.checkList = this.data.checkList ?? [];
     this.getInfo();
     this.getVll();
+    if(this.dataIns == null){
+      this.api.execSv<any>('BP','BP','ProcessInstancesBusiness','GetItemsByInstanceIDAsync', [this.data.instanceID]).subscribe((ins) => {
+        if(ins){
+          this.dataIns = ins;
+          if(this.subTitle == null){
+            this.subTitle = this.dataIns.title;
+          }
+        }
+      });
+    }
   }
 
   getVll() {
@@ -102,6 +114,11 @@ export class PopupBpTasksComponent implements OnInit {
     }
   }
 
+  valueChange(e){
+
+  }
+
+  //#region ActivityType = 'Task'
   addCheckList() {
     let obj = {
       recID: Util.uid(),
@@ -119,6 +136,8 @@ export class PopupBpTasksComponent implements OnInit {
     this.checkList[i]['status'] = e?.target?.checked ? '1' : '0';
     this.detectorRef.detectChanges();
   }
+  //#endregion
+
   addFile(evt: any) {
     this.attachment.uploadFile();
   }

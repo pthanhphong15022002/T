@@ -48,9 +48,17 @@
     <div class="d-flex align-items-center text-gray-700 mb-1">
       <span class="icon-corporate_fare icon-16 me-1"></span>
       <span
+        #customerID
         class="codx-textcontent line-clamp line-clamp-1"
         [innerHTML]="
-          data?.customerID | formatvalue : view.formModel : 'CustomerID' | async
+          data?.customerID
+            | formatvalue
+              : view.formModel
+              : 'CustomerID'
+              : customerID
+              : 'CMContracts'
+              : 'grvCMContracts'
+            | async
         "
       ></span>
     </div>
@@ -69,21 +77,44 @@
       <div class="d-flex justify-content-end align-items-center">
         <span class="icon-monetization_on icon-16 me-1 text-warning"></span>
         <span
-          class="text-dark me-1"
-          [innerHTML]="
-            data?.contractAmt
-              | formatvalue : view?.formModel : 'ContractAmt'
-              | async
-          "
-        ></span>
-        <span
-          class="text-dark"
-          [innerHTML]="
-            data?.currencyID
-              | formatvalue : view?.formModel : 'CurrencyID'
-              | async
-          "
-        ></span>
+            class="fs-6-sm text-gray-600"
+            #ContractAmt
+            [innerHTML]="
+              data?.contractAmt
+                | formatvalue
+                  : view?.formModel
+                  : 'ContractAmt'
+                  : ContractAmt
+                  : 'CMContracts'
+                  : 'grvCMContracts'
+                | async
+            "
+             [ngbTooltip]="contractAmt"
+             container="body"
+          ></span>
+          <span
+            class="fs-6-sm ms-1 text-gray-600"
+            #CurrencyID
+            [innerHTML]="
+              data?.currencyID
+                | formatvalue
+                  : view?.formModel
+                  : 'CurrencyID'
+                  : CurrencyID
+                  : 'CMContracts'
+                  : 'grvCMContracts'
+                | async
+            "
+          ></span>
+          <ng-template #contractAmt>
+            <codx-label
+              class="fs-5-sm"
+              fiedName="contractAmt"
+              [formModel]="view?.formModel"
+              [setRequire]="false"
+              default="Giá trị hợp đồng"
+            ></codx-label>
+          </ng-template >
       </div>
     </div>
     <div class="d-flex justify-content-between align-items-center">
@@ -114,12 +145,29 @@
           <span class="icon-16 icon-av_timer me-1 text-gray-700"></span>
           <span
             class="text-gray-700 line-clamp line-clamp-1"
+            #CreatedOn
             [innerHTML]="
               data?.createdOn
-                | formatvalue : view?.formModel : 'CreatedOn'
+                | formatvalue
+                  : view?.formModel
+                  : 'CreatedOn'
+                  : CreatedOn
+                  : 'CMContracts'
+                  : 'grvCMContracts'
                 | async
             "
+            [ngbTooltip]="createdOn"
+            container="body"
           ></span>
+          <ng-template #createdOn>
+            <codx-label
+              class="fs-6 fw-bold"
+              fiedName="createdOn"
+              [formModel]="view?.formModel"
+              [setRequire]="false"
+              default="Ngày lập hợp đồng"
+            ></codx-label>
+          </ng-template >
         </div>
         <div class="h-25px">
           <codx-imgs
@@ -148,7 +196,7 @@
     (clickMoreFunc)="clickMoreFunc($event)"
     (changeProgress)="autoStart($event)"
     (isSusscess)="autoOpenPopupSusscess($event)"
-    (moveStage)="handelMoveStage($event,dataSelected)"
+    (moveStage)="handelMoveStage($event, dataSelected)"
   ></contracts-view-detail>
 </ng-template>
 
@@ -336,7 +384,7 @@
       </div>
 
       <div class="row form-group">
-        <div class="col-6 ">
+        <div class="col-6">
           <codx-label
             [formModel]="view?.formModel"
             fiedName="disposalOn"
@@ -363,31 +411,31 @@
       </div>
 
       <div class="row form-group">
-        <div class="col-6 ">
+        <div class="col-6">
           <codx-label
-          [formModel]="view?.formModel"
-          fiedName="disposalExpired"
-          [crrValue]="liquidation?.disposalExpired"
-        ></codx-label>
-        <codx-input
-          class="me-3"
-          field="disposalExpired"
-          [formModel]="view?.formModel"
-          (valueChange)="changeData($event)"
-          [crrValue]="liquidation?.disposalExpired"
-        ></codx-input>
+            [formModel]="view?.formModel"
+            fiedName="disposalExpired"
+            [crrValue]="liquidation?.disposalExpired"
+          ></codx-label>
+          <codx-input
+            class="me-3"
+            field="disposalExpired"
+            [formModel]="view?.formModel"
+            (valueChange)="changeData($event)"
+            [crrValue]="liquidation?.disposalExpired"
+          ></codx-input>
         </div>
-        <div class="col-6 ">
+        <div class="col-6">
           <codx-label
-          [formModel]="view?.formModel"
-          fiedName="pmtMethodID"
-        ></codx-label>
-        <codx-input
-          field="pmtMethodID"
-          [formModel]="view?.formModel"
-          (valueChange)="changeData($event)"
-          [crrValue]="liquidation?.pmtMethodID"
-        ></codx-input>
+            [formModel]="view?.formModel"
+            fiedName="pmtMethodID"
+          ></codx-label>
+          <codx-input
+            field="pmtMethodID"
+            [formModel]="view?.formModel"
+            (valueChange)="changeData($event)"
+            [crrValue]="liquidation?.pmtMethodID"
+          ></codx-input>
         </div>
       </div>
       <div class="form-group">

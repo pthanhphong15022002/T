@@ -83,56 +83,6 @@
     </div>
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-end codx-badge">
-        <!-- <div
-          *ngIf="data.status == '2' && data.applyProcess; else statusDefault"
-          [ngStyle]="{
-            'background-color': data?.steps['backgroundColor']
-          }"
-          class="me-1 badge badge-sm d-flex align-items-center mw-125px"
-        >
-          <span
-            [ngClass]="data?.steps['icon']"
-            [ngStyle]="{ color: data?.steps['iconColor'] }"
-            class="me-1"
-          ></span>
-          <span
-            class="text-ellipsis line-clamp line-clamp-1"
-            [ngbTooltip]="data?.currentStepName"
-            [ngStyle]="{ color: data?.steps['textColor'] }"
-            >{{ data?.currentStepName }}</span
-          >
-        </div>
-        <ng-template #statusDefault>
-          <div [ngbTooltip]="data?.status == '13' ? popupCustGroupID : ''">
-            <ng-template #popupCustGroupID>
-              <div class="text-end text-sm-start">
-                <codx-label
-                  [setRequire]="false"
-                  class="d-flex align-items-start label-colon fw-bold codx-textlabel inline"
-                  fiedName="ReturnedCmt"
-                  [formModel]="view.formModel"
-                ></codx-label>
-                <span
-                  class="d-flex align-items-start inline"
-                  [innerHTML]="
-                    data?.returnedCmt
-                      | formatvalue : view.formModel : 'ReturnedCmt'
-                      | async
-                  "
-                ></span>
-              </div>
-            </ng-template>
-            <codx-vll
-              [name]="gridViewSetup?.Status?.referedValue"
-              [field]="'Status'"
-              [value]="data?.status"
-              [showText]="true"
-              [showBgColor]="true"
-              class="badge badge-light badge-sm"
-            >
-            </codx-vll>
-          </div>
-        </ng-template> -->
         <codx-vll
         [name]="gridViewSetup?.Status?.referedValue"
         [field]="'Status'"
@@ -180,19 +130,6 @@
   </div>
 </ng-template>
 <ng-template #footer let-data> </ng-template>
-<!-- <ng-template #baseHeaderRightTmp let-data>
-  <div>
-    <span
-      class="icon-14 me-1"
-      [class]="'1' | vll : vllPriority : 'icon' | async"
-      [style.color]="'1' | vll : vllPriority : 'textColor' | async"
-    >
-    </span>
-  </div>
-</ng-template> -->
-
-<!--list details tempfull-->
-<!--Detail-->
 <ng-template #templateDetail>
   <codx-lead-detail
     #detailViewLead
@@ -296,97 +233,9 @@
 </ng-template>
 
 <ng-template #footerKanban let-data>
-  <!-- <div class="d-flex flex-column">
-    <div class="d-flex justify-content-between align-items-center">
-      <div class="d-flex justify-content-end align-items-center">
-        <span class="me-1">
-          <span class="icon-16 icon-av_timer me-1"></span>
-          <span
-            class="text-gray-700"
-            #modifiedOn
-            [innerHTML]="
-              data?.modifiedOn
-                | formatvalue : view.formModel : 'modifiedOn'
-                | async
-            "
-          ></span>
-        </span>
-        <codx-imgs
-          [isToolTip]="true"
-          [width]="25"
-          [objectId]="data?.owner"
-          objectType="AD_Users"
-          [numberImages]="1"
-        >
-        </codx-imgs>
-      </div>
-    </div>
-  </div> -->
-
   <div class="d-flex align-items-center justify-content-end">
     <div class="me-auto">
       <div class="d-flex align-items-end codx-badge">
-        <!-- <div
-          *ngIf="data.status == '2' && data.applyProcess; else statusDefault"
-          [ngStyle]="{
-            'background-color': data?.steps['backgroundColor']
-          }"
-          class="me-1 badge badge-sm d-flex align-items-center mw-125px"
-        >
-          <span
-            [ngClass]="data?.steps['icon']"
-            [ngStyle]="{ color: data?.steps['iconColor'] }"
-            class="me-1"
-          ></span>
-          <span
-            class="text-ellipsis line-clamp line-clamp-1"
-            [ngbTooltip]="data?.currentStepName"
-            [ngStyle]="{ color: data?.steps['textColor'] }"
-            >{{ data?.currentStepName }}</span
-          >
-        </div>
-        <ng-template #statusDefault>
-          <div [ngbTooltip]="data?.status == '13' ? popupCustGroupID : ''">
-            <ng-template #popupCustGroupID>
-              <div class="text-end text-sm-start">
-                <codx-label
-                  [setRequire]="false"
-                  class="d-flex align-items-start label-colon fw-bold codx-textlabel inline"
-                  fiedName="ReturnedCmt"
-                  [formModel]="view.formModel"
-                ></codx-label>
-                <span
-                  class="d-flex align-items-start inline"
-                  [innerHTML]="
-                    data?.returnedCmt
-                      | formatvalue : view.formModel : 'ReturnedCmt'
-                      | async
-                  "
-                ></span>
-              </div>
-            </ng-template>
-            <codx-vll
-              [name]="gridViewSetup?.Status?.referedValue"
-              [field]="'Status'"
-              [value]="data?.status"
-              [showText]="true"
-              [showBgColor]="true"
-              class="badge badge-light badge-sm"
-            >
-            </codx-vll>
-          </div>
-          <ng-container *ngIf="data.approveStatus > '1' && data?.approveStatus">
-            <codx-vll
-              [name]="vllApprove"
-              [field]="'ApproveStatus'"
-              [value]="data?.approveStatus"
-              [showText]="true"
-              [showBgColor]="true"
-              class="badge badge-primary badge-sm"
-            >
-            </codx-vll>
-          </ng-container>
-        </ng-template> -->
         <codx-vll
         [name]="gridViewSetup?.Status?.referedValue"
         [field]="'Status'"
@@ -474,34 +323,6 @@
   <codx-form [body]="templateDetail" [dialog]="popup"> </codx-form>
 </ng-template>
 
-<!-- <ng-template #popUpQuestionCopy let-dialog="dialogQuestionCopy">
-  <codx-form
-    [headerText]="titleAction"
-    [body]="bodyFormCopyName"
-    [footer]="footerFormCopyName"
-    [dialog]="dialogQuestionCopy"
-  >
-  </codx-form>
-</ng-template> -->
-
-<!-- <ng-template #bodyFormCopyName>
-  <div class="form-group">
-    <ejs-combobox
-      [dataSource]="valueListStatus"
-      [fields]="fieldCbxStatus"
-      (valueChange)="valueChangeStatus($event)"
-      [placeholder]="gridViewSetup?.Status?.description"
-      [allowFiltering]="true"
-      [value]="statusDefault"
-    ></ejs-combobox>
-  </div>
-</ng-template>
-
-<ng-template #footerFormCopyName>
-  <button type="button" class="btn btn-primary" (click)="saveStatus()">
-    <codx-label fiedName="lblSave" default="Lưu"></codx-label>
-  </button>
-</ng-template> -->
 <ng-template #baseHeaderRightTmp let-data>
   <div
     [class]="data?.closed ? 'icon-lock text-danger' : ''"
@@ -515,16 +336,96 @@
       ></codx-label>
     </ng-template>
   </div>
-  <!-- <div
-  [class]="data?.closed ? 'icon-lock text-danger' : ''"
-  [ngbTooltip]="TooltipEdit"
->
-  <ng-template #TooltipEdit>
+</ng-template>
+
+
+<ng-template #templateCustommer let-data>
+  <div class="">
     <codx-label
-      default="Áp quy trịnh"
-      name="lblIsClosed"
-      [formModel]="view.formModel"
+      class="text-primary fs-7 cursor-pointer"
+      style="font-style: italic"
+      fiedName="viewDetailsCost"
+      [formName]="'CMDeals'"
+      [gridViewName]="'grvCMDeals'"
+      default="Chi tiết"
+      (click)="viewCustomer(data)"
     ></codx-label>
-  </ng-template>
-</div> -->
+  </div>
+</ng-template>
+
+<ng-template #templateStatus let-data>
+  <div class="d-flex flex-column">
+    <div>
+      <codx-vll
+        [name]="gridViewSetup?.Status?.referedValue"
+        [field]="'Status'"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-sm"
+      ></codx-vll>
+    </div>
+    <codx-label
+      class="text-primary fs-7 cursor-pointer mt-1"
+      style="font-style: italic"
+      fiedName="viewDetailsCost"
+      [formName]="'CMDeals'"
+      [gridViewName]="'grvCMDeals'"
+      default="Chi tiết"
+    ></codx-label>
+  </div>
+</ng-template>
+
+<ng-template #templateCustomer let-data>
+  <div class="liquidation p-5">
+    <div class="header-liquidation w-100">
+      <div class="d-flex justify-content-between w-100">
+        <codx-label
+          class="fs-5 fw-bold"
+          [formModel]="view.formModel"
+          name="titleCustomer"
+          default="Thông tin khách hàng"
+        ></codx-label>
+        <button
+          class="button-close d-flex"
+          style="border: none; outline: none; background: none"
+          (click)="popupViewCustommer.close()"
+        >
+          <i class="icon-close icon-18 text-hover-danger p-1"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="main-liquidation pt-3">
+     <div class="top">
+      <div class="d-flex justify-content-center">
+        <codx-img
+          [objectId]="dataView?.recID"
+          [objectName]="dataView?.leadName"
+          [imgOn]="dataView?.modifiedOn"
+          [objectType]="'CM_Leads'"
+          [referType]="'avt'"
+          [width]="60"
+        ></codx-img>
+      </div>
+      <div class="d-flex flex-column justify-content-center">
+        <span>{{dataView?.leadName}}</span>
+        <span
+        class="fw-bold fs-6"
+        [innerHTML]="
+          dataView?.industries
+            | formatvalue
+              : view.formModel
+              : 'Industries'
+            | async
+        "
+      ></span>
+        <span class="icon-location_on icon-16 me-2 text-gray-600 fs-7">
+      </span>
+      <span class="text-gray-600">{{ dataView.address }}</span>
+      </div>
+     </div>
+    </div>
+      
+  </div>
 </ng-template>

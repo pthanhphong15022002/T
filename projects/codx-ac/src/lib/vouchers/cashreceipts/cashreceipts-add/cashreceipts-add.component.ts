@@ -1283,8 +1283,12 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         this.onAddLine();
         break;
       case 'add':
-      case 'update': //? sau khi thêm dòng thành công
-        
+      case 'update':
+      case 'delete':
+        if(this.formCashReceipt.data.totalAmt != 0){
+          let total = this?.eleGridCashReceipt.dataSource.reduce((sum, data:any) => sum + data?.dr,0);
+          if(total > this.formCashReceipt.data.totalAmt) this.notification.notifyCode('AC0012');
+        }
         break;
       case 'closeEdit': //? khi thoát dòng
       if (this.eleGridCashReceipt && this.eleGridCashReceipt.rowDataSelected) {

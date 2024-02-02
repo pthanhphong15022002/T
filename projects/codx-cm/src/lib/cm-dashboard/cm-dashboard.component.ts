@@ -552,6 +552,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //InOut diện tích
   listAreaIn = [];
   listAreaOut = [];
+  isQTSC = false;
   //======================================================================
 
   constructor(
@@ -676,6 +677,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.isLoaded = true;
         break;
       case 'CMDQTSC007':
+      case 'CMDQTSC008':
+        this.isQTSC = this.funcID == 'CMDQTSC007';
         if (!this.dataBusinessType || this.dataBusinessType?.length == 0)
           this.cache.valueList('CRM079').subscribe((vll) => {
             if (vll && vll?.datas) {
@@ -1042,6 +1045,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                     this.isLoaded = true;
                     break;
                   case 'CMDQTSC007':
+                  case 'CMDQTSC008':
+                    this.isQTSC = this.funcID == 'CMDQTSC007';
                     this.year = new Date().getUTCFullYear();
                     if (
                       !this.dataBusinessType ||
@@ -1103,7 +1108,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     if (method) {
       let requets = [parameters, predicate, dataValue];
 
-      if (this.funcID == 'CMD002' || this.funcID == 'CMD003')
+      if (
+        this.funcID == 'CMD002' ||
+        this.funcID == 'CMD003' ||
+        this.funcID == 'CMDQTSC007'
+      )
         requets = [parameters, predicate, dataValue, this.funcID];
 
       this.subscription = this.api
@@ -1127,6 +1136,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 this.changeMySales(res);
                 break;
               case 'CMDQTSC007':
+              case 'CMDQTSC008':
                 this.viewDashBoardsInOut(res);
                 break;
             }
@@ -2871,10 +2881,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.getCompartInOut(dataSetOut, false);
     //in
     this.getCompartInOut(dataSetIn, true);
+    //nguồn
+    this.getInByChanel(dataSetInCrr);
     //Thanh lý
     this.getOutByDisReason(dataSetOutCrr);
     //PHÂN LOẠI KHÁCH HÀNG
-    this.getChartClassify(dataSetIn?.filter((x) => x.yearApproved < this.year));
+    this.getChartClassify(dataSetInCrr);
   }
   //DNNT TN
 
@@ -3166,7 +3178,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   //nguon
-  getInbyChanel(dataSet) {
+  getInByChanel(dataSet) {
+    this.pieChartInChanel = [];
+    if (!dataSet || dataSet?.length == 0) {
+      return;
+    }
     let listData = this.groupBy(dataSet, 'channelID');
     if (listData) {
       for (let key in listData) {
@@ -3190,7 +3206,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   //Thanh lý
   getOutByDisReason(dataSet) {
-    this.listOutByDisposalCmt = [];
     this.pieChartOutDisposalReason = [];
     if (!dataSet || dataSet?.length == 0) {
       return;
@@ -3215,6 +3230,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       }
     }
   }
+
   //PHÂN LOẠI KHÁCH HÀNG -pieChartClassify
   getChartClassify(dataSet) {
     // this.pieChartClassify = [];

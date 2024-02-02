@@ -60,6 +60,8 @@ export class ViewHistoryCustomerComponent {
           if (changes['customerID']?.currentValue == this.id) return;
           this.id = changes['customerID']?.currentValue;
           this.getListHistoryToDCQ();
+        }else{
+          this.id = changes['customerID']?.currentValue;
         }
       } else {
         if (!this.loaded) this.loaded = true;
