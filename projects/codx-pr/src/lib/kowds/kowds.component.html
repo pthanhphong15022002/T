@@ -102,7 +102,7 @@
         [className]="'KowDsBusiness'" 
         [method]="'LoadDataGridDetailAsync'"
         [idField]="'employeeID'" 
-        (onDoubleClick)="doubleClick($event)"
+        (onDoubleClick)="grvDetailDoubleClick($event)"
         (onDatabound)="onDatabound(1)">
       </codx-gridview-v2>
     </div>
@@ -122,7 +122,8 @@
         [className]="'KowDsBusiness'" 
         [method]="'LoadDataGridSummaryAsync'"
         [idField]="'employeeID'" 
-        (onDatabound)="onDatabound(2)">
+        (onDatabound)="onDatabound(2)"
+        (onDoubleClick)="grvSummaryDoubleClick($event)">
       </codx-gridview-v2>
     </div>
     <!-- process loading -->
@@ -229,7 +230,7 @@
     </div>
     <div class="row">
       <div class="form-group">
-        <div class="d-flex justify-content-between">
+        <div class="d-flex align-items-center justify-content-between">
           <div>
             <codx-input 
               type="radio" 
@@ -242,9 +243,11 @@
               [formModel]="dialog.formModel" 
               (valueChange)="valueChange($event)">
             </codx-input>
-            <p>{{messageHR060}}</p>
           </div>
           <codx-input type="combobox" [refValue]="'HRKows'" field="kowCode" (valueChange)="valueChange($event)"></codx-input>
+        </div>
+        <div class="mt-2 ps-4">
+          <p class="text-gray-600">{{messageHR060}}</p>
         </div>
       </div>
     </div>
@@ -266,7 +269,9 @@
     <div class="row mt-4">
       <div class="form-group">
         <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-primary" (click)="clickBtn(dialog)">Thực hiện</button>
+          <button type="button" class="btn btn-primary" (click)="clickBtn(dialog)" [disabled]="!(userPermission && (userPermission.isAdmin || userPermission.write == '9'))">
+            <codx-label [formModel]="view?.formModel" name="lblExcute" [default]="'Thực hiện'"></codx-label>
+          </button>
         </div>
       </div>
     </div>
