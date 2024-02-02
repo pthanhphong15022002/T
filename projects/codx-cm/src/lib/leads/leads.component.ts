@@ -299,7 +299,7 @@ export class LeadsComponent
           case 'StatusCodeIDView': // hiện trạng
             template = this.templateStatus;
             break;
-          case 'CustomerID': // khách hàng
+          case 'CustomerInforView': // khách hàng
             template = this.templateCustommer;
             break;
           default:
