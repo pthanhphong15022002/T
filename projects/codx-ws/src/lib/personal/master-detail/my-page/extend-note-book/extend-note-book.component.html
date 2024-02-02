@@ -1,51 +1,110 @@
-<div codxcontainer></div>
-<div modifyLang></div>
-<div class="d-flex flex-column h-100vh bg-F5F8FA">
-    <div class="d-flex align-items-center bg-white py-2 px-5">
-        <div class="cursor-pointer me-2" (click)="close()">
-            <i class="icon-arrow_back"></i>
-        </div>
-        <codx-label default="Sổ tay" class="fs-2 fw-bold"></codx-label>
+<lib-codx-view-ws
+  #codxview
+  service="WP"
+  [entityName]="'WP_NoteBooks'"
+  [gridViewName]="'grvNoteBooks'"
+  [formName]="'NoteBooks'"
+  [predicate]="'CreatedBy=@0'"
+  [dataValue]="user?.userID"
+  [itemTemplateList]="itemTemplateList"
+  [viewList]="viewList"
+  [tmpHeader]="tmpHeader"
+  [emtry]="emtryNoteBook"
+  (btnClick)="addClick($event)"
+  [hidenMF]="false"
+  (clickMofe)="clickMF($event)"
+  (selectChange)="selectChange($event)"
+>
+</lib-codx-view-ws>
+<ng-template #tmpHeader>
+  <div class="d-flex align-items-center bg-white py-2 px-5">
+    <div class="cursor-pointer me-2" (click)="close()">
+      <i class="icon-arrow_back"></i>
     </div>
-    <div class="h-100 mt-4 mx-4">
-        <ng-container [ngTemplateOutlet]="body"></ng-container>
-    </div>
-</div>
-<ng-template #body>
-    <ng-container *ngIf="formModel">
-        <lib-codx-view-ws
-            #codxview2
-            service="WP"
-            [entityName]="formModel?.entityName"
-            [gridViewName]="formModel?.gridViewName" 
-            [formName]="formModel?.formName"
-            [predicate]="'CreatedBy=@0'"
-            [dataValue]="user?.userID"
-            [tmpItem]="tmp"
-            (btnClick)="addClick($event)"
-        >
-        </lib-codx-view-ws>
-    </ng-container>
+    <codx-label default="Sổ tay" class="fs-2 fw-bold"></codx-label>
+  </div>
 </ng-template>
 
-<ng-template #tmp let-item>
-    <codx-card-img
-        (click)="openDetailPage(item?.recID)" 
-        [dataItem]="item"
-        cardCss="border card-img-mwp img-storage w-225px h-200px ms-4 mt-2" 
-        [title]="item.title" 
-        icoTitleCss="icon-archive icon-16" 
-        [desc2]="item.memo"
-        [imageObjName]="item.title"
-        [imageId]="item.recID"
-        [imageReferType]="'image'"
-        [imageObjType]="'WP_NoteBooks'" 
-        imgCss="h-150px w-100 mb-2" 
-        [imageWidth]="200"
-        [formModel]="formModel"
-        [typeMF]="'hover'"
-        (clickMF)="clickMFNoteBook($event,item)"
-    >
-    </codx-card-img>
+<ng-template #itemTemplateList let-item>
+  <div
+    class="d-flex align-items-center border-bottom"
+    style="padding: 10px 50px 10px 60px"
+  >
+    <div class="d-flex flex-column">
+      <div class="d-flex justify-content-between">
+        <div class="fw-bold justify-content-start">
+          <span class="fw-bold"> {{ item.title }} </span>
+        </div>
+        <div class="d-flex justify-content-end">
+          <div style="position: absolute">
+            <codx-attachment-temp
+              [objectID]="item?.recID"
+              [formModel]="formModel"
+              [viewType]="1"
+              referType="source"
+            ></codx-attachment-temp>
+          </div>
+        </div>
+      </div>
+      <div class="mt-1">
+        <codx-tag
+          [entityName]="formModel.entityName"
+          [disabled]="true"
+          [isEdit]="false"
+          [value]="item.tags"
+        ></codx-tag>
+      </div>
+      <div class="mt-2">
+        <span
+          [innerHTML]="item?.memo | formatvalue : formModel : 'Memo' | async"
+        ></span>
+      </div>
+      <div class="mt-2 d-flex flex-row">
+        <div class="me-3 d-flex align-items-center">
+          <span
+            class="icon-16 icon-add_alarm me-2"
+            [ngbTooltip]="itemCreatedOn"
+          ></span>
+          <span>{{ item.createdOn | date : "dd/MM/yyyy" }}</span>
+          <ng-template #itemCreatedOn>
+            <codx-label
+              [formModel]="formModel"
+              default="Ngày tạo"
+              fiedName="CreatedOn"
+            ></codx-label>
+          </ng-template>
+        </div>
+        <div class="d-flex align-items-center" *ngIf="item.modifiedOn">
+          <span
+            class="icon-16 icon-edit me-2"
+            [ngbTooltip]="itemModifiedOn"
+          ></span>
+          <span>{{ item.modifiedOn | date : "dd/MM/yyyy" }}</span>
+          <ng-template #itemModifiedOn>
+            <codx-label
+              [formModel]="formModel"
+              default="Ngày chỉnh sửa"
+              fiedName="ModifiedOn"
+            ></codx-label>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>
 <!-- (clickMF)="clickMF($event, item)"   -->
+<ng-template #emtryNoteBook>
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/ws/default/img/NoteBooks_NoData.svg"
+          class="w-200px"
+        />
+        <div class="fs-5 text-dark fw-bold mt-2 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

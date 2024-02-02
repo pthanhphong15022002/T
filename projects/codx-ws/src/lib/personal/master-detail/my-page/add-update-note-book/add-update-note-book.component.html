@@ -54,22 +54,59 @@
           </codx-label>
         </div>
         <div class="col-12">
-          <div class="upload-img mt-3">
-            <codx-img
-              #imageUpLoad
-              [width]="100"
-              [objectType]="'WP_NoteBooks'"
-              [objectName]="noteBooks?.title"
-              [funcId]="formModel?.funcID"
-              [isAllowEdit]="true"
-              [objectId]="noteBooks?.recID"
-              [imageType]="'square'"
-              [referType]="'image'"
-              (handleInput)="handleInput()"
-              [imgOn]="noteBooks?.modifiedOn"
-            >
-            </codx-img>
+          <div
+            class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column"
+            (click)="addAvatar()"
+          >
+            <div class="dropzone-msg dz-message needsclick">
+              <ng-container *ngIf="linkAvatar != '' && linkAvatar">
+                <img [src]="linkAvatar" class="image-maxsize" />
+              </ng-container>
+              <ng-container *ngIf="linkAvatar == '' || linkAvatar == null">
+                <div class="dropzone-msg-title mb-2">
+                  <i class="icon-image icon-30"></i>
+                </div>
+                <div class="dropzone-msg-title mb-2">
+                  <codx-label
+                    name="lblContentAddAvatar"
+                    [formModel]="dialog.formModel"
+                    default="Chọn hình ảnh"
+                    class="fw-bold"
+                  >
+                  </codx-label>
+                </div>
+                <span class="dropzone-msg-desc">
+                  <codx-label
+                    name="lblRequiredAvatar"
+                    [formModel]="dialog.formModel"
+                    default="(Nên chọn hình ảnh có kích thước ...px đến ...px)"
+                    class="fw-bold"
+                  ></codx-label>
+                </span>
+              </ng-container>
+            </div>
           </div>
+          <codx-attachment
+            #imageAvatar
+            [objectType]="'WP_NoteBooks'"
+            [objectId]="noteBooks?.recID"
+            [formModel]="formModel"
+            [functionID]="'WS00625'"
+            hideFolder="1"
+            hideImageUpload="1"
+            hideImageThumb="1"
+            hideUploadBtn="1"
+            hideDes="1"
+            type="inline"
+            allowMultiFile="0"
+            allowExtensions=".jpg,.png"
+            [isSaveSelected]="0"
+            (fileAdded)="fileImgAdded($event)"
+            displayThumb="full"
+            showMessage="0"
+            category="0"
+          >
+          </codx-attachment>
         </div>
       </div>
     </div>
@@ -79,9 +116,19 @@
     <div class="d-flex justify-content-end">
       <button
         type="button"
+        class="btn btn-light-primary ms-1"
+        (click)="saveNoteBooks('close')"
+      >
+        <codx-label
+          name="SaveAndClose"
+          [formName]="formModel?.formName"
+          default="Lưu và đóng"
+        ></codx-label>
+      </button>
+      <button
+        type="button"
         class="btn btn-primary ms-1"
-        (click)="saveNoteBooks()"
-        *ngIf="!readOnly"
+        (click)="saveNoteBooks('navigate')"
       >
         <codx-label
           name="Save"

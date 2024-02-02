@@ -37,6 +37,7 @@ import { PopupAddSalCoeffEmpComponent } from './salcoeffemp/popup/popup-add-salc
 import { PopupCoppySalCoeffEmpComponent } from './salcoeffemp/popup/popup-coppy-salcoeffemp/popup-coppy-salcoeffemp.component';
 import { PayTExceptComponent } from './pay-texcept/pay-texcept.component';
 import { PopupAddPayTexceptComponent } from './pay-texcept/popup/popup-add-pay-texcept/popup-add-pay-texcept.component';
+import { PopupKowdMonthComponent } from './kowds/popup/popup-kowd-month/popup-kowd-month.component';
 
 export const routes: Routes = [
   {
@@ -104,7 +105,8 @@ const T_Component: Type<any>[] = [
   PopupAddSalCoeffEmpComponent,
   PopupCoppySalCoeffEmpComponent,
   PayTExceptComponent,
-  PopupAddPayTexceptComponent
+  PopupAddPayTexceptComponent,
+  PopupKowdMonthComponent
 ];
 
 @NgModule({

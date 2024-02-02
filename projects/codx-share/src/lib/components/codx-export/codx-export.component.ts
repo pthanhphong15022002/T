@@ -210,7 +210,6 @@ export class CodxExportComponent implements OnInit, OnChanges {
       case 'edit': {
         var option = new DialogModel();
         option.FormModel = this.formModel;
-        option.DataService = data;
         if (this.type == 'word') option.IsFull = true;
         this.callfunc
           .openForm(
@@ -225,6 +224,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
               refType: this.refType,
               refID: this.refID,
               formModel: this.formModel,
+              data: data
             },
             '',
             option

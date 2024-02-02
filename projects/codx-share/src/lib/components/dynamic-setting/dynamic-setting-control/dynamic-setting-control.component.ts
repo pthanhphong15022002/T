@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Injector, Input, OnInit, Optional, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Injector, Input, OnChanges, OnInit, Optional, Output, SimpleChanges } from '@angular/core';
 import { CodxFormScheduleComponent, DataRequest, DialogData, DialogModel, DialogRef, UIComponent } from 'codx-core';
 import { CatagoryComponent } from '../catagory/catagory.component';
 
@@ -9,18 +9,20 @@ import { CatagoryComponent } from '../catagory/catagory.component';
   styleUrls: ['./dynamic-setting-control.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DynamicSettingControlComponent extends UIComponent{
+export class DynamicSettingControlComponent extends UIComponent implements OnChanges{
   //#region Contrucstor
   @Input() settingFull: any;
   @Input() formModel: any;
   @Input() autoSchedule: boolean = true;
   @Input() headerText: any = 'Thiết lập tham số';
+  @Input() showHeaderText: any = true;
+  @Input() lineType:string = '1';
   @Output() valueChanges: EventEmitter<any> = new EventEmitter();
   @Output() changeAutoSchedules: EventEmitter<any> = new EventEmitter();
   oldDataValue: any = {};
   isauto:any = false;
   componentSub = '';
-  lineType = '1';
+
   itemSelect:any;
   dialog?: DialogRef;
   newSetting:any = [];
@@ -40,7 +42,23 @@ export class DynamicSettingControlComponent extends UIComponent{
       this.itemSelect = data.data?.itemSelect;
       this.tilte= data.data?.tilte;
       this.dataValue = data.data?.dataValue;
-      this.settingFull = data.data?.settingFull;
+      if(!this.settingFull)this.settingFull = data.data?.settingFull;
+    }
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['lineType']){
+      this.lineType = changes['lineType'].currentValue;
+    }
+    if(changes['settingFull']){
+      this.settingFull = changes['settingFull'].currentValue;
+      if (this.settingFull) {
+        this.setting = this.settingFull?.paras;
+        if (this.setting) {
+          this.newSetting = this.setting.filter(x => x.lineType == this.lineType);
+        }
+        this.dataValue = JSON.parse(this.settingFull?.paraValues);
+        this.detectorRef.detectChanges();
+      }
     }
   }
   //#endregion Contrucstor
@@ -56,7 +74,7 @@ export class DynamicSettingControlComponent extends UIComponent{
         this.dataValue = JSON.parse(this.settingFull?.paraValues);
         this.detectorRef.detectChanges();
       }
-    } 
+    }
   }
 
   ngDoCheck() {

@@ -18,7 +18,7 @@ import { AccordionModule } from '@syncfusion/ej2-angular-navigations';
 import { EPBookingComponent } from 'projects/codx-ep/src/lib/booking/ep-booking.component';
 import { PersonalsComponent } from 'projects/codx-mwp/src/lib/personals/personals.component';
 import { IncommingComponent } from 'projects/codx-od/src/lib/incomming/incomming.component';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReportComponent } from './report/report.component';
 import { TasksComponent } from 'projects/codx-tm/src/lib/tasks/tasks.component';
@@ -36,7 +36,7 @@ import { EmployeeQuitComponent } from 'projects/codx-hr/src/lib/employee-quit/em
 import { BookmarkComponent } from './bookmark/bookmark.component';
 import { COCalendarComponent } from 'projects/codx-co/src/lib/calendar/calendar.component';
 import { ApprovalsComponent } from 'projects/codx-ac/src/lib/approvals/approvals.component';
-import { ApprovalsComponent as ApprovalsComponentWS} from './approvals/approvals.component';
+import { ApprovalsComponent as ApprovalsComponentWS } from './approvals/approvals.component';
 import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
 import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 import { InformationComponent } from './personal/master-detail/information/information.component';
@@ -50,7 +50,6 @@ import { LayoutNoasideAcComponent } from 'projects/codx-ac/src/lib/_layout-noasi
 import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { PaymentOrderComponent } from 'projects/codx-ac/src/lib/vouchers/payment-order/payment-order.component';
 import { PersonalAchievementComponent } from 'projects/codx-fd/src/lib/personal-achievement/personal-achievement.component';
-
 
 import { MyPageComponent } from './personal/master-detail/my-page/my-page.component';
 import { TabAllModule } from '@syncfusion/ej2-angular-navigations';
@@ -68,7 +67,7 @@ import { CvInformationComponent } from './workspace/AITool/cv-information/cv-inf
 import { CvEvaluateComponent } from './workspace/AITool/cv-evaluate/cv-evaluate.component';
 import { PersonalUsageHistoryComponent } from 'projects/codx-fd/src/lib/personal-usage-history/personal-usage-history.component';
 import { CodxEPModule } from 'projects/codx-ep/src/lib/codx-ep.module';
-import { CodxCommonModule } from "projects/codx-common/src/public-api";
+import { CodxCommonModule } from 'projects/codx-common/src/public-api';
 import { CodxViewWsComponent } from './codx-view-ws/codx-view-ws.component';
 import { CodxWpV2Module } from 'projects/codx-wp/src/lib/codx-wp-v2.module';
 import { AcModule } from 'projects/codx-ac/src/public-api';
@@ -81,12 +80,13 @@ import { CalendarsComponent } from 'projects/codx-cm/src/lib/calendars/calendars
 import { SprintsComponent } from 'projects/codx-tm/src/lib/sprints/sprints.component';
 import { TMMeetingsComponent } from 'projects/codx-tm/src/lib/tmmeetings/tmmeetings.component';
 import { CodxDmModule } from 'projects/codx-dm/src/public-api';
-import { SearchingComponent as  SearchingODComponent} from 'projects/codx-od/src/lib/incomming/searching/searching.component';
-import { SearchingComponent as  SearchingDMComponent} from 'projects/codx-dm/src/lib/searching/searching.component';
-import { SearchingComponent as  SearchingESComponent} from 'projects/codx-es/src/lib/searching/searching.component';
+import { SearchingComponent as SearchingODComponent } from 'projects/codx-od/src/lib/incomming/searching/searching.component';
+import { SearchingComponent as SearchingDMComponent } from 'projects/codx-dm/src/lib/searching/searching.component';
+import { SearchingComponent as SearchingESComponent } from 'projects/codx-es/src/lib/searching/searching.component';
 import { CodxCoModule } from 'projects/codx-co/src/public-api';
 import { CodxWpModule } from 'projects/codx-wp/src/public-api';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
+import { DetailNotebookComponent } from './personal/master-detail/my-page/detail-notebook/detail-notebook.component';
 //import { CodxWpV2Module } from 'projects/codx-wp/src/lib/codx-wp-v2.module';
 const routes: Routes = [
   {
@@ -141,15 +141,12 @@ const routes: Routes = [
         component: EmployeeQuitComponent,
       },
       // HR - Hồ sơ cá nhân
-    //   {
-    // component: LayoutOnlyHeaderComponent,
+      //   {
+      // component: LayoutOnlyHeaderComponent,
 
-    //     path: 'employeedetail/:funcID',
-    //     component: EmployeeInfoDetailComponent,
-    //   },
-
-
-
+      //     path: 'employeedetail/:funcID',
+      //     component: EmployeeInfoDetailComponent,
+      //   },
 
       // {
       //   path: '',
@@ -225,22 +222,21 @@ const routes: Routes = [
         redirectTo: 'error/404',
       },
     ],
-
   },
   {
-    path:'',
+    path: '',
     component: Layout2Component,
     children: [
       //-----------Khai báo routing nghiệp vu---------------
       {
         path: '',
         component: WorkspaceComponent,
-        children:[
-           {
+        children: [
+          {
             path: 'dispatches/:funcID',
             component: IncommingComponent,
           },
-           //Task + duyyet TM
+          //Task + duyyet TM
           {
             path: 'tasks/:funcID',
             component: TasksComponent,
@@ -339,81 +335,88 @@ const routes: Routes = [
           //   path: 'searching/:funcID',
           //   component: SearchingComponent,
           // },
-
-        ]
+        ],
       },
       {
         path: 'workspace/:funcID',
         component: WorkspaceComponent,
       },
-    ]
+    ],
   },
   {
-    path: 'storage',
-    component: ExtendStorageComponent,
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
+        path: 'storage',
+        component: ExtendStorageComponent,
+      },
+      {
+        path: 'notebook',
+        component: ExtendNoteBookComponent,
+      },
+    ],
   },
-  {
-    path: 'notebook',
-    component: ExtendNoteBookComponent,
-  }
 ];
 
 @NgModule({
-    declarations: [
-        CodxWsComponent,
-        LayoutComponent,
-        Layout2Component,
-        CodxWsHeaderComponent,
-        WpBreadcumComponent,
-        WorkspaceComponent,
-        HeaderComponent,
-        PersonalComponent,
-        MenuListComponent,
-        MasterDetailComponent,
-        ApprovalsComponent,
-        ApprovalsComponentWS,
-        MenuListApprovalComponent,
-        DashboardComponent,
-        ReportComponent,
-        RequestReviewComponent,
-        BookmarkComponent,
-        InformationComponent,
-        LoginSercurityComponent,
-        SercurityTOTPComponent,
-        AddUpdateNoteBookComponent,
-        AddUpdateStorageComponent,
-        DetailStorageComponent,
-        ExtendStorageComponent,
-        ExtendNoteBookComponent,
-        MyPageComponent,
-        ImgComponent,
-        VideoComponent,
-        CvInformationComponent,
-        CvEvaluateComponent,
-        CodxViewWsComponent,
-    ],
-    exports: [RouterModule],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes),
-        CodxCoreModule.forRoot({ environment }),
-        CodxShareModule,
-        CodxEPModule,
-        CodxDmModule,
-        CodxWpV2Module,
-        AcModule,
-        CodxHRModule,
-        CodxCoModule,
-        //CodxWpModule,
-        //CodxWpV2Module,
-        //CodxCoModule,
-        AccordionModule,
-        NgbDropdownModule,
-        SpeedDialModule,
-        TooltipModule,
-        TabAllModule,
-        CodxCommonModule
-    ]
-
+  declarations: [
+    CodxWsComponent,
+    LayoutComponent,
+    Layout2Component,
+    CodxWsHeaderComponent,
+    WpBreadcumComponent,
+    WorkspaceComponent,
+    HeaderComponent,
+    PersonalComponent,
+    MenuListComponent,
+    MasterDetailComponent,
+    ApprovalsComponent,
+    ApprovalsComponentWS,
+    MenuListApprovalComponent,
+    DashboardComponent,
+    ReportComponent,
+    RequestReviewComponent,
+    BookmarkComponent,
+    InformationComponent,
+    LoginSercurityComponent,
+    SercurityTOTPComponent,
+    AddUpdateNoteBookComponent,
+    AddUpdateStorageComponent,
+    DetailStorageComponent,
+    ExtendStorageComponent,
+    ExtendNoteBookComponent,
+    MyPageComponent,
+    ImgComponent,
+    VideoComponent,
+    CvInformationComponent,
+    CvEvaluateComponent,
+    CodxViewWsComponent,
+    DetailNotebookComponent,
+  ],
+  exports: [RouterModule],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    CodxCoreModule.forRoot({ environment }),
+    CodxShareModule,
+    CodxEPModule,
+    CodxDmModule,
+    CodxWpV2Module,
+    AcModule,
+    CodxHRModule,
+    CodxCoModule,
+    //CodxWpModule,
+    //CodxWpV2Module,
+    //CodxCoModule,
+    AccordionModule,
+    NgbDropdownModule,
+    SpeedDialModule,
+    TooltipModule,
+    TabAllModule,
+    CodxCommonModule,
+    NgbModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxWsModule {}

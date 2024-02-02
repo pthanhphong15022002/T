@@ -157,7 +157,7 @@
     </div>
     <div class="row my-2 ms-1 me-2">
       <codx-tree-comment
-        [objectID]="deal?.recID"
+        [objectID]="deal?.recID + '-1'"
         [objectType]="dialog?.formModel?.entityName"
         [actionType]="'C'"
         [addNew]="true"
@@ -179,7 +179,7 @@
     <ng-container [ngTemplateOutlet]="informationTemplate"></ng-container>
     <div class="row my-2 ms-1 me-2">
       <codx-tree-comment
-        [objectID]="deal?.recID"
+        [objectID]="deal?.recID + '-2'"
         [objectType]="dialog?.formModel?.entityName"
         [actionType]="'C'"
         [addNew]="true"
@@ -251,32 +251,12 @@
         [hidenMF]="deal.closed"></codx-tab-dealcompetitors>
     </div>
   </div>
-
-  <!-- <div id="note" class="item-main mb-7" *ngIf="type == '1'">
-    <div class="d-flex align-items-center text-primary my-2">
-      <span class="icon-event_notes icon-20 me-1 fw-bold"></span>
-      <codx-label
-        class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
-        fiedName="memo"
-        [formModel]="dialog?.formModel"
-        [default]="'Ghi chú'"></codx-label>
-    </div>
-    <div class="row my-2">
-      <codx-tree-comment
-        [objectID]="deal?.recID"
-        [objectType]="dialog?.formModel?.entityName"
-        [actionType]="'C'"
-        [addNew]="true"
-        [funcID]="dialog?.formModel?.funcID"
-        (totalCommentChange)="changeCountFooter($event, 'comment')"></codx-tree-comment>
-    </div>
-  </div> -->
 </ng-template>
 
 <!-- Thông tin chung -->
 <ng-template #informationTemplate>
   <div>
-    <div class="row my-2">
+    <!-- <div class="row my-2">
       <div class="col-6">
         <div class="mb-1">
           <codx-label
@@ -368,7 +348,6 @@
             ></codx-label>
           </div>
           <div class="d-flex justify-content-end">
-            <!-- [ngbTooltip]="tooltipSalesperson" -->
             <div
               style="position: relative"
               *ngIf="deal?.salespersonID"
@@ -382,13 +361,6 @@
               >
               </codx-img>
               <div style="position: absolute; right: 0px; bottom: 0px">
-                <!-- <span
-                ><img
-                  src="/assets/themes/cm/default/img/{{
-                    getIcon('3')
-                  }}"
-                  alt=""
-              /></span> -->
               </div>
             </div>
             <div style="position: relative" *ngIf="deal?.consultantID">
@@ -401,19 +373,12 @@
               >
               </codx-imgs>
               <div style="position: absolute; right: 0px; bottom: 0px">
-                <!-- <span
-                ><img
-                  src="/assets/themes/cm/default/img/{{
-                    getIcon('5')
-                  }}"
-                  alt=""
-              /></span> -->
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="row my-2">
       <div class="col-6">
         <codx-label
@@ -532,7 +497,7 @@
       </div>
     </div>
 
-    <div class="row my-2">
+    <!-- <div class="row my-2">
       <div class="col-6">
         <codx-label
           class="label-colon text-gray-600 codx-textlabel"
@@ -568,7 +533,7 @@
           "
         ></span>
       </div>
-    </div>
+    </div> -->
   </div>
 </ng-template>
 
@@ -665,7 +630,7 @@
   </div>
   <div class="row my-2 ms-1 me-2">
     <codx-tree-comment
-      [objectID]="deal?.recID"
+      [objectID]="deal?.recID + '3'"
       [objectType]="dialog?.formModel?.entityName"
       [actionType]="'C'"
       [addNew]="true"

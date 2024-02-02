@@ -1,13 +1,15 @@
-import { ChangeDetectorRef, Component, Injector, Optional, ViewChild } from "@angular/core";
-import { AuthService, AuthStore, CacheService, DialogData, DialogRef, FormModel, ImageViewerComponent, NotificationsService, UIComponent } from "codx-core";
+import { ChangeDetectorRef, Component, Injector, Optional, ViewChild, ViewEncapsulation } from "@angular/core";
+import { AuthService, AuthStore, CacheService, DialogData, DialogModel, DialogRef, FormModel, ImageViewerComponent, NotificationsService, UIComponent } from "codx-core";
 import { CodxCommonService } from "projects/codx-common/src/lib/codx-common.service";
 import { CodxBookingService } from "projects/codx-share/src/lib/components/codx-booking/codx-booking.service";
+import { DynamicSettingControlComponent } from "projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component";
 import { CodxShareService } from "projects/codx-share/src/public-api";
 
 @Component({
   selector: 'popup-add-project',
   templateUrl: './popup-add-project.component.html',
   styleUrls: ['./popup-add-project.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PopupAddProjectComponent extends UIComponent {
 
@@ -55,7 +57,10 @@ export class PopupAddProjectComponent extends UIComponent {
   members:any=[];
   listRoles:any=[];
   curUser:any;
-
+  paravalues:any;
+  newSetting:any=[];
+  oldDataValue:any;
+  componentSub:any='';
 
   constructor(
     injector: Injector,
@@ -77,6 +82,12 @@ export class PopupAddProjectComponent extends UIComponent {
     this.data = dialogData.data[0];
     this.funcType = dialogData.data[1];
     this.user=this.authStore.get();
+
+    if(this.data.settings && this.data.settings.length){
+      this.newSetting = JSON.parse(JSON.stringify(this.data.settings));
+      this.paravalues = this.data.settings.map((x:any)=>  x.fieldValue);
+      this.paravalues = JSON.stringify(this.paravalues)
+    }
   }
 
   override onInit(): void {
@@ -89,6 +100,13 @@ export class PopupAddProjectComponent extends UIComponent {
 
   valueDateChange(e:any){
     this.data[e.field]=e.data.fromDate;
+  }
+
+  valueSettingChange(e:any,data:any){
+    let col = this.newSetting.find((x:any)=>x.fieldName==e.field);
+    if(col){
+      col.fieldValue=e.data;
+    }
   }
 
   showPopover(e:any,dat:any){
@@ -127,8 +145,31 @@ export class PopupAddProjectComponent extends UIComponent {
           this.attendeesNumber = this.data.attendees;
           if(this.data && !this.data.projectManager) this.data.projectManager = this.user.userID;
           this.changeDetectorRef.detectChanges();
-        } else {
-
+        } else if(this.funcType == 'edit') {
+          this.members = this.data.permissions;
+          if(!this.members || !this.members.length){
+          this.members=[];
+            let people = this.authService.userValue;
+          let tmpResource :any={};
+          tmpResource.objectID = people?.userID;
+          tmpResource.objectName = people?.userName;
+          tmpResource.status = '1';
+          tmpResource.roleType = 'PM';
+          tmpResource.optional = false;
+          tmpResource.quantity = 1;
+          this.listRoles.forEach((element) => {
+            if (element.value == tmpResource?.roleType) {
+              tmpResource.icon = element?.icon;
+              tmpResource.roleName = element?.text;
+            }
+          });
+          this.curUser = tmpResource;
+          this.members.push(tmpResource);
+          this.data.attendees =  this.members?.length;
+          this.data.permissions =  this.members;
+          this.attendeesNumber = this.data.attendees;
+          if(this.data && !this.data.projectManager) this.data.projectManager = this.user.userID;
+          }
         }
       }
     });
@@ -170,7 +211,6 @@ export class PopupAddProjectComponent extends UIComponent {
     });
    if(listUserID){
     this.valueUser(listUserID);
-    console.log(this.members);
 
    }
   }
@@ -271,7 +311,9 @@ export class PopupAddProjectComponent extends UIComponent {
 
   saveForm(){
     let returnData:any;
+    this.data.settings = this.newSetting;
     this.dialogRef.dataService.dataSelected = this.data;
+
     this.dialogRef.dataService
     .save()
     .subscribe((res) => {
@@ -308,7 +350,58 @@ export class PopupAddProjectComponent extends UIComponent {
 
 
   }
+  removeMember(item:any){
+    if(item){
+      this.members = this.members.filter((x:any)=>x.objectID!=item.objectID);
+      this.data.permissions = this.members;
+      this.changeDetectorRef.detectChanges();
+    }
 
+  }
 
+  openSub(evt: any, data: any, dataValue: any) {
+
+  }
+
+  openPopup(evt: any, item: any, reference: string = '') {
+    let value = item.fieldName;
+    let recID = item.recID;
+    if (!reference) reference = item.reference;
+    let width = 0,
+      height = 0,
+      title = '',
+      funcID = '',
+      data = {},
+      cssClass = '',
+      dialogModel = new DialogModel();
+    if (!reference) {
+      let lineType = '1';
+      let itemChild = this.data.settings.filter(
+        (x) => x.refLineID === recID && x.lineType === lineType
+      );
+      data['newSetting'] = itemChild;
+      data['lineType'] = lineType;
+      data['itemSelect'] = item;
+      data['tilte'] = item.tilte;
+      //data['dataValue'] = this.paravalues;
+      data['settingFull'] = {paras:this.data.settings, paraValues: this.paravalues};
+      width = 500;
+      height = 100 * itemChild.length;
+      this.callfc.openForm(
+        DynamicSettingControlComponent,
+        title,
+        width,
+        height,
+        funcID,
+        data,
+        cssClass,
+        dialogModel
+      );
+    }
+  }
+
+  collapseItem(evt: any, setting: any) {
+
+  }
 
 }

@@ -43,6 +43,7 @@ export class CatagoryComponent implements OnInit {
   private components = {
     cpnAutoNumbers: PopupAddAutoNumberComponent,
     cpnAlertRules: CodxEmailComponent,
+    cpnAutomationRules: CodxEmailComponent,
     cpnApprovals: CodxApproveStepsComponent,
     cpnCategories: PopupAddCategoryComponent,
     cpnScheduledTasks: CodxFormScheduleComponent,
@@ -274,14 +275,12 @@ export class CatagoryComponent implements OnInit {
         case 'cpncalendar':
           break;
         case 'cpnalertrules':
-          var rule = this.alertRules[value];
+          var lstRules = this.alertRules[reference];
+          var rule = lstRules[value];
           if (!rule) return;
           data['formGroup'] = null;
           data['templateID'] = rule.emailTemplate;
-          // data['showIsTemplate'] = null;
-          // data['showIsPublish'] = null;
-          // data['showSendLater'] = null;
-
+          data['type'] = 'cpnalertrules';
           this.callfc.openForm(
             component,
             '',
@@ -293,14 +292,17 @@ export class CatagoryComponent implements OnInit {
             dialogModel
           );
           break;
-          // var rule = this.alertRules[value];
-          // if (!rule) return;
-          data['transID'] = null;
-          // data['templateID'] = rule.emailTemplate;
+        case 'cpnautomationrules':
+          var lstRules = this.alertRules[reference];
+          var rule = lstRules[value];
+          if (!rule || !rule.actions || !rule.actions.templateID) return;
+          data['formGroup'] = null;
+          data['templateID'] = rule.actions.templateID;
+          data['type'] = 'cpnautomationrules';
           this.callfc.openForm(
             component,
             '',
-            screen.width,
+            800,
             screen.height,
             '',
             data,
@@ -417,7 +419,7 @@ export class CatagoryComponent implements OnInit {
                   dt.dataValue = JSON.stringify(dataValue);
                   this.api
                     .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
-                    .subscribe((res) => { });
+                    .subscribe((res) => {});
                 }
               }
             });
@@ -661,20 +663,24 @@ export class CatagoryComponent implements OnInit {
 
   getAlertRule() {
     var lstRoleID = [];
+    var lstAutoRoleID = [];
     if (this.setting) {
       this.setting.forEach((element) => {
-        if (element.fieldName) lstRoleID.push(element.fieldName);
+        if (element.fieldName) {
+          if (element.reference === 'cpnAutomationRules')
+            lstAutoRoleID.push(element.fieldName);
+          else lstRoleID.push(element.fieldName);
+        }
       });
     }
     if (lstRoleID.length > 0) {
       this.api
         .execSv<any>('SYS', 'AD', 'AlertRulesBusiness', 'GetDicByIDAsync', [
-          lstRoleID,
+          { cpnAutomationRules: lstAutoRoleID, cpnAlertRules: lstRoleID },
         ])
         .subscribe((res) => {
-          if (res) {
-            this.alertRules = res;
-          }
+          if (res) this.alertRules = res;
+
           this.changeDetectorRef.detectChanges();
         });
     }
@@ -1016,9 +1022,17 @@ export class CatagoryComponent implements OnInit {
         //   }
         // });
         break;
-      case "updatedowcode": // HR: update kỳ công cho nhân sự
-        let lstFuncID = ["PRT01","PRT03","PRTPro18"];
-        this.api.execSv("SYS","SYS","GridViewSetupBusiness","HRUpdateGridViewSetUpAsync",[lstFuncID,dataVale[setting.fieldName]]).subscribe();
+      case 'updatedowcode': // HR: update kỳ công cho nhân sự
+        let lstFuncID = ['PRT01', 'PRT03', 'PRTPro18'];
+        this.api
+          .execSv(
+            'SYS',
+            'SYS',
+            'GridViewSetupBusiness',
+            'HRUpdateGridViewSetUpAsync',
+            [lstFuncID, dataVale[setting.fieldName]]
+          )
+          .subscribe();
         break;
     }
   }
@@ -1105,12 +1119,12 @@ export class CatagoryComponent implements OnInit {
           funcID == 'CMS0301'
             ? '1'
             : funcID == 'CMS0302'
-              ? '2'
-              : funcID == 'CMS0303'
-                ? '3'
-                : funcID == 'CMS0304'
-                  ? '5'
-                  : '4',
+            ? '2'
+            : funcID == 'CMS0303'
+            ? '3'
+            : funcID == 'CMS0304'
+            ? '5'
+            : '4',
         ]
       )
       .subscribe((data) => {

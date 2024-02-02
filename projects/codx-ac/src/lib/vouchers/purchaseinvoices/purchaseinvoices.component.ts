@@ -11,6 +11,7 @@ import {
   ButtonModel,
   DataRequest,
   DialogModel,
+  FormModel,
   NotificationsService,
   RequestOption,
   SidebarModel,
@@ -28,6 +29,7 @@ import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { AllocationAddComponent } from './allocation-add/allocation-add.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
 
 @Component({
   selector: 'lib-purchaseinvoices',
@@ -58,11 +60,11 @@ export class PurchaseinvoicesComponent extends UIComponent {
     //? nút thêm phiếu
     id: 'btnAdd',
     icon: 'icon-i-file-earmark-plus',
-    items : [{
-      id : 'btnXml',
-      text:'Đọc XML',
-      icon:'icon-article',
-      cssClass:'dropdown-toggle dropdown-toggle-split'
+    items: [{
+      id: 'btnXml',
+      text: 'Đọc XML',
+      icon: 'icon-article',
+      cssClass: 'dropdown-toggle dropdown-toggle-split'
     }]
   }];
 
@@ -73,7 +75,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
   //     text: 'Đọc file xml',
   //   },
   // ];
-  viewActive:number = ViewType.listdetail;
+  viewActive: number = ViewType.listdetail;
   ViewType = ViewType;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
@@ -160,18 +162,18 @@ export class PurchaseinvoicesComponent extends UIComponent {
 
         },
 
-        request:{service:'AC'},
-        subModel:{
-          entityName:'AC_PurchaseInvoicesLines',
-          formName:'PurchaseInvoicesLines',
-          gridviewName:'grvPurchaseInvoicesLines',
-          parentField:'TransID',
-          parentNameField:'VoucherNo',
-          hideMoreFunc:true,
-          request:{
+        request: { service: 'AC' },
+        subModel: {
+          entityName: 'AC_PurchaseInvoicesLines',
+          formName: 'PurchaseInvoicesLines',
+          gridviewName: 'grvPurchaseInvoicesLines',
+          parentField: 'TransID',
+          parentNameField: 'VoucherNo',
+          hideMoreFunc: true,
+          request: {
             service: 'AC',
           },
-          idField:'recID'
+          idField: 'recID'
         }
       },
     ];
@@ -291,10 +293,10 @@ export class PurchaseinvoicesComponent extends UIComponent {
           dialog.closed.subscribe((res) => {
             if (res && res?.event) {
               if (res?.event?.type === 'discard') {
-                if(this.view.dataService.data.length == 0){
+                if (this.view.dataService.data.length == 0) {
                   this.itemSelected = undefined;
                   this.detectorRef.detectChanges();
-                } 
+                }
               }
             }
           })
@@ -354,7 +356,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
    */
   editVoucher(dataEdit) {
     delete dataEdit.isReadOnly;
-    this.view.dataService.dataSelected = {...dataEdit};
+    this.view.dataService.dataSelected = { ...dataEdit };
     this.view.dataService.dataSelected = dataEdit;
     this.view.dataService
       .edit(dataEdit)
@@ -380,10 +382,10 @@ export class PurchaseinvoicesComponent extends UIComponent {
         dialog.closed.subscribe((res) => {
           if (res && res?.event) {
             if (res?.event?.type === 'discard') {
-              if(this.view.dataService.data.length == 0){
+              if (this.view.dataService.data.length == 0) {
                 this.itemSelected = undefined;
                 this.detectorRef.detectChanges();
-              } 
+              }
             }
           }
         })
@@ -396,53 +398,171 @@ export class PurchaseinvoicesComponent extends UIComponent {
    * @param dataCopy : data chứng từ sao chép
    */
   copyVoucher(dataCopy) {
-    this.view.dataService.dataSelected = dataCopy;
-    this.view.dataService
-      .copy((o) => this.setDefault(dataCopy, 'copy'))
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res != null) {
-          res.isCopy = true;
-          let datas = { ...res };
+    // this.view.dataService.dataSelected = dataCopy;
+    // this.view.dataService
+    //   .copy((o) => this.setDefault(dataCopy, 'copy'))
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((res: any) => {
+    //     if (res != null) {
+    //       res.isCopy = true;
+    //       let datas = { ...res };
+    //       this.view.dataService
+    //         .saveAs(datas)
+    //         .pipe(takeUntil(this.destroy$))
+    //         .subscribe((res) => {
+    //           if (res) {
+    //             let data = {
+    //               headerText: this.headerText, //? tiêu đề voucher
+    //               journal: { ...this.journal }, //?  data journal
+    //               oData: { ...datas }, //?  data của cashpayment
+    //               hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+    //               baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+    //             };
+    //             let optionSidebar = new SidebarModel();
+    //             optionSidebar.DataService = this.view?.dataService;
+    //             optionSidebar.FormModel = this.view?.formModel;
+    //             let dialog = this.callfc.openSide(
+    //               PurchaseinvoicesAddComponent,
+    //               data,
+    //               optionSidebar,
+    //               this.view.funcID
+    //             );
+    //             dialog.closed.subscribe((res) => {
+    //               if (res && res?.event) {
+    //                 if (res?.event?.type === 'discard') {
+    //                   if(this.view.dataService.data.length == 0){
+    //                     this.itemSelected = undefined;
+    //                     this.detectorRef.detectChanges();
+    //                   } 
+    //                 }
+    //               }
+    //             })
+    //             this.view.dataService
+    //               .add(datas)
+    //               .pipe(takeUntil(this.destroy$))
+    //               .subscribe();
+    //           }
+    //         });
+    //     }
+    //   });
+    let newdataCopy = { ...dataCopy };
+    if (this.journal && this.journal.assignRule == '0') {
+      let data = {
+        currentVoucherNo: newdataCopy.voucherNo
+      }
+      let opt = new DialogModel();
+      let dataModel = new FormModel();
+      opt.FormModel = dataModel;
+      let dialog = this.callfc.openForm(
+        NewvoucherComponent,
+        'Nhập số chứng từ mới',
+        null,
+        null,
+        '',
+        data,
+        '',
+        opt
+      );
+      dialog.closed.subscribe((res) => {
+        if (res && res?.event) {
+          let newvoucherNo = res?.event;
+          newdataCopy.voucherNo = newvoucherNo;
           this.view.dataService
-            .saveAs(datas)
+            .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
             .pipe(takeUntil(this.destroy$))
-            .subscribe((res) => {
-              if (res) {
-                let data = {
-                  headerText: this.headerText, //? tiêu đề voucher
-                  journal: { ...this.journal }, //?  data journal
-                  oData: { ...datas }, //?  data của cashpayment
-                  hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-                  baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-                };
-                let optionSidebar = new SidebarModel();
-                optionSidebar.DataService = this.view?.dataService;
-                optionSidebar.FormModel = this.view?.formModel;
-                let dialog = this.callfc.openSide(
-                  PurchaseinvoicesAddComponent,
-                  data,
-                  optionSidebar,
-                  this.view.funcID
-                );
-                dialog.closed.subscribe((res) => {
-                  if (res && res?.event) {
-                    if (res?.event?.type === 'discard') {
-                      if(this.view.dataService.data.length == 0){
-                        this.itemSelected = undefined;
-                        this.detectorRef.detectChanges();
-                      } 
-                    }
-                  }
-                })
+            .subscribe((res: any) => {
+              if (res != null) {
+                res.isCopy = true;
+                let datas = { ...res };
                 this.view.dataService
-                  .add(datas)
+                  .saveAs(datas)
                   .pipe(takeUntil(this.destroy$))
-                  .subscribe();
+                  .subscribe((res) => {
+                    if (res) {
+                      let data = {
+                        headerText: this.headerText,
+                        journal: { ...this.journal },
+                        oData: { ...datas },
+                        hideFields: [...this.hideFields],
+                        baseCurr: this.baseCurr,
+                      };
+                      let optionSidebar = new SidebarModel();
+                      optionSidebar.DataService = this.view?.dataService;
+                      optionSidebar.FormModel = this.view?.formModel;
+                      let dialog2 = this.callfc.openSide(
+                        PurchaseinvoicesAddComponent,
+                        data,
+                        optionSidebar,
+                        this.view.funcID
+                      );
+                      dialog2.closed.subscribe((res) => {
+                        if (res && res?.event) {
+                          if (res?.event?.type === 'discard') {
+                            if (this.view.dataService.data.length == 0) {
+                              this.itemSelected = undefined;
+                              this.detectorRef.detectChanges();
+                            }
+                          }
+                        }
+                      });
+                      this.view.dataService
+                        .add(datas)
+                        .pipe(takeUntil(this.destroy$))
+                        .subscribe();
+                    }
+                  });
               }
             });
         }
       });
+    } else {
+      this.view.dataService
+        .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res: any) => {
+          if (res != null) {
+            res.isCopy = true;
+            let datas = { ...res };
+            this.view.dataService
+              .saveAs(datas)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((res) => {
+                if (res) {
+                  let data = {
+                    headerText: this.headerText,
+                    journal: { ...this.journal },
+                    oData: { ...datas },
+                    hideFields: [...this.hideFields],
+                    baseCurr: this.baseCurr,
+                  };
+                  let optionSidebar = new SidebarModel();
+                  optionSidebar.DataService = this.view?.dataService;
+                  optionSidebar.FormModel = this.view?.formModel;
+                  let dialog2 = this.callfc.openSide(
+                    PurchaseinvoicesAddComponent,
+                    data,
+                    optionSidebar,
+                    this.view.funcID
+                  );
+                  dialog2.closed.subscribe((res) => {
+                    if (res && res?.event) {
+                      if (res?.event?.type === 'discard') {
+                        if (this.view.dataService.data.length == 0) {
+                          this.itemSelected = undefined;
+                          this.detectorRef.detectChanges();
+                        }
+                      }
+                    }
+                  });
+                  this.view.dataService
+                    .add(datas)
+                    .pipe(takeUntil(this.destroy$))
+                    .subscribe();
+                }
+              });
+          }
+        });
+    }
   }
 
   /**
@@ -455,10 +575,10 @@ export class PurchaseinvoicesComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res && !res?.error) {
-          if(this.view.dataService.data.length == 0){
+          if (this.view.dataService.data.length == 0) {
             this.itemSelected = undefined;
             this.detectorRef.detectChanges();
-          } 
+          }
         }
       });
   }
@@ -569,7 +689,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
             '',
             '',
             null,
-            JSON.stringify({ParentID:data.journalNo})
+            JSON.stringify({ ParentID: data.journalNo })
           )
           .pipe(takeUntil(this.destroy$))
           .subscribe((result: any) => {
@@ -659,9 +779,9 @@ export class PurchaseinvoicesComponent extends UIComponent {
     );
   }
 
-  allocationVoucher(text: any, data: any){
+  allocationVoucher(text: any, data: any) {
     let obj = {
-      data : data
+      data: data
     }
     let opt = new DialogModel();
     let dialog = this.callfc.openForm(
@@ -707,7 +827,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
   }
 
   viewChanged(view) {
-    if(view && view?.view?.type == this.viewActive) return;
+    if (view && view?.view?.type == this.viewActive) return;
     this.viewActive = view?.view?.type;
     this.detectorRef.detectChanges();
   }
@@ -720,9 +840,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
    */
   changeMFDetail(event: any, type: any = '') {
     let data = this.view.dataService.dataSelected;
-    if (data) {
-      this.acService.changeMFPur(event,data,type,this.journal,this.view.formModel); 
-    }
+    this.acService.changeMFPur(event, data, type, this.journal, this.view.formModel);
   }
 
   /**
@@ -748,6 +866,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
     return this.api.exec('AC', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
       data,
       this.journal,
+      this.journalNo,
       action,
     ]);
   }
