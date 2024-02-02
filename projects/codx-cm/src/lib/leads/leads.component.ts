@@ -81,6 +81,7 @@ export class LeadsComponent
 
   @ViewChild('templateStatus') templateStatus: TemplateRef<any>;
   @ViewChild('templateCustommer') templateCustommer: TemplateRef<any>;
+  @ViewChild('templateCustomer') tempCustomer: TemplateRef<any>;
   // @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
   // dialogQuestionCopy: DialogRef;
   dialogViewLead: DialogRef;
@@ -161,12 +162,15 @@ export class LeadsComponent
   hideMoreFC = false;
   applyProcess: boolean = true;
   arrFieldIsVisible: any[];
+  popupViewCustommer: DialogRef;
 
   // const set value
   readonly btnAdd: string = 'btnAdd';
   readonly applyFor: any = '5';
   readonly fieldCbxStatus = { text: 'text', value: 'value' };
   readonly fieldCbxStatusCode = { text: 'text', value: 'value' };
+  dataView: any;
+  
 
   constructor(
     private inject: Injector,
@@ -2166,4 +2170,21 @@ export class LeadsComponent
         }
       });
   }
+
+  viewCustomer(data) {
+    this.dataView = data;
+    let opt = new DialogModel();
+    opt.zIndex = 1015;
+    this.popupViewCustommer = this.callFunc.openForm(
+      this.tempCustomer,
+      '',
+      500,
+      600,
+      '',
+      null,
+      '',
+      opt
+    );
+  }
+
 }

@@ -26,7 +26,7 @@
 
 .arrow-steps .step {
   margin-right: 4px;
-  height: 22px;
+  height: 18px;
   position: relative;
   -moz-user-select: none;
   background-color: #d9e3f7;
@@ -43,12 +43,12 @@
   content: " ";
   position: absolute;
   top: 0;
-  right: -17px;
+  right: -14px;
   width: 0;
   height: 0;
-  border-top: 12px solid transparent;
-  border-bottom: 10px solid transparent;
-  border-left: 17px solid #d9e3f7;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-left: 14px solid #d9e3f7;
   z-index: 2;
   transition: border-color 0.2s ease;
 }
@@ -73,20 +73,12 @@
 .arrow-steps .step:before {
   right: auto;
   left: 0;
-  border-left: 17px solid #fff !important;
+  border-left-color:#fff !important;
   z-index: 0;
 }
 
 .arrow-steps .step:first-child:before {
   border: none;
-}
-
-.arrow-steps .step:first-child {
-  border-radius: 5px 0 0 5px;
-}
-
-.arrow-steps .step:last-child {
-  border-radius: 0 5px 5px 0;
 }
 
 .arrow-steps .step span {
@@ -107,7 +99,7 @@
 }
 
 .arrow-steps .step.current:after {
-  border-left: 17px solid #3699ff;
+  border-left-color:#3699ff;
 }
 .arrow-steps .step.old {
   color: #fff;
@@ -115,7 +107,7 @@
 }
 
 .arrow-steps .step.old:after {
-  border-left: 17px solid #1fa65c;
+  border-left-color:#1fa65c;
 }
 
 .custom-horizontal-rule {
@@ -124,14 +116,14 @@
 }
 
 .container-progress {
-  height: 30px;
+  height: 26px;
   background: #e4e1e1;
   width: 100%;
   border-radius: 3px;
 }
 
 .progress-list {
-  height: 30px;
+  height: 26px;
   border-radius: 3px;
 }
 
@@ -140,5 +132,5 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  top: -24px;
+  top: -21px;
 }
