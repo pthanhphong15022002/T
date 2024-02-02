@@ -2987,11 +2987,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       let arrChart = [
         {
           year: yearOld.toString(),
-          count: 1,
+          count: 0,
         },
         {
           year: this.year.toString(),
-          count: 1,
+          count: 0,
         },
       ];
       if (isIn) {

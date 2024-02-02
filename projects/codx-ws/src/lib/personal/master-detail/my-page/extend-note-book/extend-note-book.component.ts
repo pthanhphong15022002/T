@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
-import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, CodxService, DialogData, DialogRef, NotificationsService, SidebarModel } from 'codx-core';
+import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, CodxService, DialogData, DialogRef, NotificationsService, SidebarModel, ViewModel, ViewType } from 'codx-core';
 import { AddUpdateNoteBookComponent } from '../add-update-note-book/add-update-note-book.component';
 import { CodxView2Component } from 'projects/codx-share/src/lib/components/codx-view2/codx-view2.component';
 
@@ -15,6 +15,8 @@ export class ExtendNoteBookComponent implements OnInit{
   user:any;
   urlDetailNoteBook:any;
   formModel:any;
+  viewList: Array<ViewModel> = [];
+
   constructor(
     private callfc: CallFuncService,
     private auth : AuthStore,
@@ -25,12 +27,22 @@ export class ExtendNoteBookComponent implements OnInit{
     private ref : ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) 
+  )
   {
     this.dialog = dialog;
     this.user = this.auth.get();
   }
   ngOnInit(): void {
+    this.viewList = [
+      {
+        type: ViewType.list,
+        active: true,
+      },
+      {
+        type: ViewType.grid,
+        active: false,
+      },
+    ];
     this.getCache();
   }
 
@@ -44,16 +56,16 @@ export class ExtendNoteBookComponent implements OnInit{
 
     this.cache.functionList('MWP0094').subscribe((res) => {
       if (res) {
-        this.formModel = 
+        this.formModel =
         {
           entityName : res?.entityName,
-          gridViewName : res?.gridViewName, 
+          gridViewName : res?.gridViewName,
           formName : res?.formName,
           funcID:"MWP0094"
         }
       }
     });
-   
+
   }
 
   close()

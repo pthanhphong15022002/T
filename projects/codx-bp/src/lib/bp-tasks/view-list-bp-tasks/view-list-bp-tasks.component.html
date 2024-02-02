@@ -102,7 +102,7 @@
     </codx-vll>
   </div>
   <div class="w-15 d-flex align-items-center">
-    <div class="d-flex justify-content-start align-items-center">
+    <div class="d-flex justify-content-start align-items-center" *ngIf="dataSelected.createdBy">
       <div class="me-3">
         <codx-img
           [objectId]="dataSelected.createdBy"
