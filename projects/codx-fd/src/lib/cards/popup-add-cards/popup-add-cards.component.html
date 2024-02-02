@@ -889,7 +889,7 @@
               >
               </codx-input>
               <div
-                *ngIf="cointsError"
+                *ngIf="cointsError && type != 'detail'"
                 class="errorMessage text-danger ms-3"
                 data-field="taskName"
               >
