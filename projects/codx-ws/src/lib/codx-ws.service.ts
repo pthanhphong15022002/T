@@ -13,7 +13,7 @@ export class CodxWsService {
   private caches = new Map<string, Map<string, any>>();
   private cachedObservables = new Map<string, Observable<any>>();
   public funcChange:Subject<any> = new BehaviorSubject<any>(null);
-
+  loadDataList = new BehaviorSubject<any>(null);
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
