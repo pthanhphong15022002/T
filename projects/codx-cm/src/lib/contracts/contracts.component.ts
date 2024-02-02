@@ -1761,7 +1761,20 @@ export class ContractsComponent extends UIComponent {
     this.liquidation.debtClosingOn = new Date();
     this.liquidation.disposalID = this.liquidation?.contractID;
     this.liquidation.pmtMethodID = 'CK';
-    let b = data?.datas;
+    try {
+      let datas = data?.datas;
+      console.log(datas);
+      
+      if(datas){
+        let jsonData = JSON.parse(datas);
+        if(jsonData){
+          this.liquidation.disposalNewAddress = jsonData.NewAddres;
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      
+    }
     this.contractService
     .getContactByRecID(this.liquidation?.contactID)
     .subscribe((res) => {
