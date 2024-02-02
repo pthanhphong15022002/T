@@ -371,9 +371,9 @@ export class ContractsComponent extends UIComponent {
           case 'CM0204_16': // mở lại hợp đồng
             res.disabled = !data?.closed;
             break;
-          case 'CM0204_18': // thanh lý
-            res.disabled = data?.status == '17' || data?.closed;
-            break;
+          // case 'CM0204_18': // thanh lý
+          //   res.disabled = data?.status == '17' || data?.closed;
+          //   break;
           case 'CM0204_19': // đưa vào quy trình xử lý
             res.disabled = data?.full
               ? data?.closed ||
@@ -1780,7 +1780,7 @@ export class ContractsComponent extends UIComponent {
     .getContactByRecID(this.liquidation?.contactID)
     .subscribe((res) => {
       if (res) {
-        this.liquidation.disposalNewContac = this.liquidation.disposalNewContac ? this.liquidation.disposalNewContac : res?.contactName;
+        this.liquidation.disposalNewContact = this.liquidation.disposalNewContact ? this.liquidation.disposalNewContact : res?.contactName;
         this.liquidation.disposalEmail = this.liquidation.disposalEmail ? this.liquidation.disposalEmail : res?.personalEmail;
         this.liquidation.disposalPhone = this.liquidation.disposalPhone ? this.liquidation.disposalPhone : res?.mobile;
       }
