@@ -96,7 +96,7 @@
 <!-- template footer -->
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button class="btn btn-primary" (click)="onSaveForm()">
+    <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!(userPermission && (userPermission.isAdmin || userPermission.write == '9'))">
       <i class="icon-save"></i>
       <codx-label [formModel]="dialog.formModel" name="lblSave" [default]="'Lưu'"></codx-label>
     </button>

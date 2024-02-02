@@ -810,7 +810,7 @@ export class PopupAddProcessComponent {
                   title : element.title,
                   isRequired: false,
                   count : 0,
-                  isList: "0",
+                  isList: "1",
                   stepNo: this.data?.steps[1].stepNo,
                   fieldID: this.data?.steps[1].recID,
                   memo: this.data?.steps[1].memo,

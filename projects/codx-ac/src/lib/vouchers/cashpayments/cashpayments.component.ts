@@ -35,6 +35,7 @@ import { ProgressBar } from '@syncfusion/ej2-angular-progressbar';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { Subject, takeUntil } from 'rxjs';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
 declare var jsBh: any;
 @Component({
   selector: 'lib-cashpayments',
@@ -368,90 +369,126 @@ export class CashPaymentsComponent extends UIComponent {
    * @param dataCopy : data chứng từ sao chép
    */
   copyVoucher(dataCopy) {
-    // this.view.dataService.dataSelected = dataCopy;
-    // this.view.dataService
-    //   .copy((o) => this.setDefault(dataCopy, 'copy'))
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res != null) {
-    //       res.isCopy = true;
-    //       let datas = { ...res };
-    //       this.view.dataService
-    //         .saveAs(datas)
-    //         .pipe(takeUntil(this.destroy$))
-    //         .subscribe((res) => {
-    //           if (res) {
-    //             let data = {
-    //               headerText: this.headerText,
-    //               journal: { ...this.journal },
-    //               oData: { ...datas },
-    //               hideFields: [...this.hideFields],
-    //               baseCurr: this.baseCurr,
-    //               legalName: this.legalName,
-    //             };
-    //             let optionSidebar = new SidebarModel();
-    //             optionSidebar.DataService = this.view?.dataService;
-    //             optionSidebar.FormModel = this.view?.formModel;
-    //             let dialog = this.callfc.openSide(
-    //               CashPaymentAddComponent,
-    //               data,
-    //               optionSidebar,
-    //               this.view.funcID
-    //             );
-    //             dialog.closed.subscribe((res) => {
-    //               if (res && res?.event) {
-    //                 if (res?.event?.type === 'discard') {
-    //                   if (this.view.dataService.data.length == 0) {
-    //                     this.itemSelected = undefined;
-    //                     this.detectorRef.detectChanges();
-    //                   }
-    //                 }
-    //               }
-    //             });
-    //             this.view.dataService
-    //               .add(datas)
-    //               .pipe(takeUntil(this.destroy$))
-    //               .subscribe();
-    //           }
-    //         });
-    //     }
-    //   });
-    this.view.dataService.dataSelected = dataCopy;
-    this.view.dataService
-      .copy((o) => this.setDefault(dataCopy, 'copy'))
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res != null) {
-          res.isCopy = true;
-          let data = {
-            headerText: this.headerText,
-            journal: { ...this.journal },
-            oData: { ...res },
-            hideFields: [...this.hideFields],
-            baseCurr: this.baseCurr,
-            legalName: this.legalName,
-          };
-          let optionSidebar = new SidebarModel();
-          optionSidebar.DataService = this.view?.dataService;
-          optionSidebar.FormModel = this.view?.formModel;
-          let dialog = this.callfc.openSide(
-            CashPaymentAddComponent,
-            data,
-            optionSidebar,
-            this.view.funcID
-          );
-          dialog.closed.subscribe((res) => {
-            if (res && res?.event) {
-              if (res?.event?.type === 'discard') {
-                if (this.view.dataService.data.length == 0) {
-                  this.itemSelected = undefined;
-                  this.detectorRef.detectChanges();
-                }
+    let newdataCopy = {...dataCopy};
+    if (this.journal && this.journal.assignRule == '0') {
+      let data = {
+        currentVoucherNo : newdataCopy.voucherNo
+      }
+      let opt = new DialogModel();
+      let dataModel = new FormModel();
+      opt.FormModel = dataModel;
+      let dialog = this.callfc.openForm(
+        NewvoucherComponent,
+        'Nhập số chứng từ mới',
+        null,
+        null,
+        '',
+        data,
+        '',
+        opt
+      );
+      dialog.closed.subscribe((res) => {
+        if (res && res?.event) {
+          let newvoucherNo = res?.event;
+          newdataCopy.voucherNo = newvoucherNo;
+          this.view.dataService
+            .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res: any) => {
+              if (res != null) {
+                res.isCopy = true;
+                let datas = { ...res };
+                this.view.dataService
+                  .saveAs(datas)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe((res) => {
+                    if (res) {
+                      let data = {
+                        headerText: this.headerText,
+                        journal: { ...this.journal },
+                        oData: { ...datas },
+                        hideFields: [...this.hideFields],
+                        baseCurr: this.baseCurr,
+                        legalName: this.legalName,
+                      };
+                      let optionSidebar = new SidebarModel();
+                      optionSidebar.DataService = this.view?.dataService;
+                      optionSidebar.FormModel = this.view?.formModel;
+                      let dialog2 = this.callfc.openSide(
+                        CashPaymentAddComponent,
+                        data,
+                        optionSidebar,
+                        this.view.funcID
+                      );
+                      dialog2.closed.subscribe((res) => {
+                        if (res && res?.event) {
+                          if (res?.event?.type === 'discard') {
+                            if (this.view.dataService.data.length == 0) {
+                              this.itemSelected = undefined;
+                              this.detectorRef.detectChanges();
+                            }
+                          }
+                        }
+                      });
+                      this.view.dataService
+                        .add(datas)
+                        .pipe(takeUntil(this.destroy$))
+                        .subscribe();
+                    }
+                  });
               }
-            }
-          });
+            });
         }
       });
+    } else {
+      this.view.dataService
+        .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res: any) => {
+          if (res != null) {
+            res.isCopy = true;
+            let datas = { ...res };
+            this.view.dataService
+              .saveAs(datas)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((res) => {
+                if (res) {
+                  let data = {
+                    headerText: this.headerText,
+                    journal: { ...this.journal },
+                    oData: { ...datas },
+                    hideFields: [...this.hideFields],
+                    baseCurr: this.baseCurr,
+                    legalName: this.legalName,
+                  };
+                  let optionSidebar = new SidebarModel();
+                  optionSidebar.DataService = this.view?.dataService;
+                  optionSidebar.FormModel = this.view?.formModel;
+                  let dialog2 = this.callfc.openSide(
+                    CashPaymentAddComponent,
+                    data,
+                    optionSidebar,
+                    this.view.funcID
+                  );
+                  dialog2.closed.subscribe((res) => {
+                    if (res && res?.event) {
+                      if (res?.event?.type === 'discard') {
+                        if (this.view.dataService.data.length == 0) {
+                          this.itemSelected = undefined;
+                          this.detectorRef.detectChanges();
+                        }
+                      }
+                    }
+                  });
+                  this.view.dataService
+                    .add(datas)
+                    .pipe(takeUntil(this.destroy$))
+                    .subscribe();
+                }
+              });
+          }
+        });
+    }
   }
 
   /**
@@ -478,7 +515,7 @@ export class CashPaymentsComponent extends UIComponent {
       optionSidebar,
       this.view.funcID
     );
-    dialog.closed.subscribe((res) => {});
+    dialog.closed.subscribe((res) => { });
   }
 
   /**
@@ -534,17 +571,14 @@ export class CashPaymentsComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any, type: any = '') {
-    console.log(event);
     let data = this.view?.dataService?.dataSelected;
-    if (data) {
-      this.acService.changeMFCashPayment(
-        event,
-        data,
-        type,
-        this.journal,
-        this.view.formModel
-      );
-    }
+    this.acService.changeMFCashPayment(
+      event,
+      data,
+      type,
+      this.journal,
+      this.view.formModel
+    );
   }
 
   /**

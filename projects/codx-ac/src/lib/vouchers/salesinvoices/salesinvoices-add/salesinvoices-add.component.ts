@@ -42,7 +42,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
   @ViewChild('eleGridSalesInvoice') eleGridSalesInvoice: CodxGridviewV2Component;
   @ViewChild('eleGridVatInvoices') eleGridVatInvoices: CodxGridviewV2Component;
   @ViewChild('formSalesInvoice') public formSalesInvoice: CodxFormComponent;
-  @ViewChild('elementTabDetail') elementTabDetail: any;
+  @ViewChild('elementTabMaster') elementTabMaster: any;
   @ViewChild('eleCbxObjectID') eleCbxObjectID: any;
   @ViewChild('eleCbxCurrencyID') eleCbxCurrencyID: any;
 
@@ -122,8 +122,8 @@ export class SalesinvoicesAddComponent extends UIComponent {
    * @param event
    * @param eleTab
    */
-  createTabDetail(event: any, eleTab: TabComponent) {
-    //this.showHideTabDetail(this.formSalesInvoice?.data?.subType, this.elementTabDetail);
+  createTabMaster(event: any, eleTab: TabComponent) {
+    this.showHideTabMaster(this.formSalesInvoice?.data?.subType, this.elementTabMaster);
   }
 
   /**
@@ -264,6 +264,10 @@ export class SalesinvoicesAddComponent extends UIComponent {
    */
   changeSubType(event?: any) {
     this.formSalesInvoice.setValue('subType', event.data[0], { onlySelf: true, emitEvent: false, });
+    this.showHideTabMaster(
+      this.formSalesInvoice?.data?.subType,
+      this.elementTabMaster
+    );
     this.detectorRef.detectChanges();
     // this.formSalesInvoice.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
     // this.detectorRef.detectChanges();
@@ -421,16 +425,8 @@ export class SalesinvoicesAddComponent extends UIComponent {
         if (res.hasOwnProperty('update')) {
           if (res.update.hasOwnProperty('data') && !res.update.data) return;
         }
-        if (this.eleGridSalesInvoice && this.elementTabDetail?.selectingID == '0') {
+        if (this.eleGridSalesInvoice) {
           this.eleGridSalesInvoice.saveRow((res: any) => { //? save lưới trước
-            if (res) {
-              this.addRowDetailByType(typeBtn);
-            }
-          })
-          return;
-        }
-        if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '1') {
-          this.eleGridVatInvoices.saveRow((res: any) => { //? save lưới trước
             if (res) {
               this.addRowDetailByType(typeBtn);
             }
@@ -484,7 +480,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
         if (res.hasOwnProperty('update')) {
           if (res.update.hasOwnProperty('data') && !res.update.data) return;
         }
-        if ((this.eleGridSalesInvoice || this.eleGridSalesInvoice?.isEdit) && this.elementTabDetail?.selectingID == '0') {
+        if ((this.eleGridSalesInvoice || this.eleGridSalesInvoice?.isEdit)) {
           this.eleGridSalesInvoice.saveRow((res: any) => { //? save lưới trước
             if (res) {
               this.saveVoucher(type);
@@ -842,7 +838,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
    * @param data
    */
   copyRow(data) {
-    if (this.eleGridSalesInvoice && this.elementTabDetail?.selectingID == '0') {
+    if (this.eleGridSalesInvoice) {
       this.eleGridSalesInvoice.saveRow((res: any) => { //? save lưới trước
         if (res) {
           data.recID = Util.uid();
@@ -859,7 +855,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
    * @param data
    */
   deleteRow(data) {
-    if (this.eleGridSalesInvoice && this.elementTabDetail?.selectingID == '0') {
+    if (this.eleGridSalesInvoice) {
       this.eleGridSalesInvoice.saveRow((res: any) => { //? save lưới trước
         if (res) {
           this.eleGridSalesInvoice.deleteRow(data);
@@ -891,6 +887,26 @@ export class SalesinvoicesAddComponent extends UIComponent {
         invoiceNo += item.invoiceNo + ',';
       }, {})
       this.formSalesInvoice.data.invoiceNo = invoiceNo.substring(0, invoiceNo.lastIndexOf(',') + 0);
+    }
+  }
+
+  showHideTabMaster(type, eleTab) {
+    if (eleTab) {
+      switch (type) {
+        case '1':
+        case '4':
+        case '5':
+          eleTab.hideTab(0, false);
+          eleTab.hideTab(1, false);
+          eleTab.hideTab(2, true);
+          break;
+        case '2':
+        case '3':
+          eleTab.hideTab(0, false);
+          eleTab.hideTab(1, false);
+          eleTab.hideTab(2, false);
+          break;
+      }
     }
   }
 

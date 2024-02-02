@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, Injector, Input, SimpleChange, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { AuthStore, ButtonModel, DataRequest, NotificationsService, SidebarModel, TenantStore, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, ButtonModel, DataRequest, DialogModel, FormModel, NotificationsService, SidebarModel, TenantStore, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { WarehouseTransfersAddComponent } from './warehouse-transfers-add/warehouse-transfers-add.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
 
 @Component({
   selector: 'lib-warehouse-transfers',
@@ -35,7 +36,7 @@ export class WarehouseTransfersComponent extends UIComponent {
     id: 'btnAdd',
     icon: 'icon-i-file-earmark-plus',
   }];
-  viewActive:number = ViewType.listdetail;
+  viewActive: number = ViewType.listdetail;
   ViewType = ViewType;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
@@ -74,7 +75,7 @@ export class WarehouseTransfersComponent extends UIComponent {
   }
 
   ngAfterViewInit() {
-    
+
     this.cache
       .functionList(this.view.funcID)
       .pipe(takeUntil(this.destroy$))
@@ -94,7 +95,7 @@ export class WarehouseTransfersComponent extends UIComponent {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
           collapsed: true,
-          widthLeft:'23%',
+          widthLeft: '23%',
           //separatorSize:3
         },
       },
@@ -222,7 +223,7 @@ export class WarehouseTransfersComponent extends UIComponent {
   }
 
   viewChanged(view) {
-    if(view && view?.view?.type == this.viewActive) return;
+    if (view && view?.view?.type == this.viewActive) return;
     this.viewActive = view?.view?.type;
     this.detectorRef.detectChanges();
   }
@@ -259,10 +260,10 @@ export class WarehouseTransfersComponent extends UIComponent {
           dialog.closed.subscribe((res) => {
             if (res && res?.event) {
               if (res?.event?.type === 'discard') {
-                if(this.view.dataService.data.length == 0){
+                if (this.view.dataService.data.length == 0) {
                   this.itemSelected = undefined;
                   this.detectorRef.detectChanges();
-                } 
+                }
               }
             }
           })
@@ -276,7 +277,7 @@ export class WarehouseTransfersComponent extends UIComponent {
    */
   editVoucher(dataEdit) {
     delete dataEdit.isReadOnly;
-    this.view.dataService.dataSelected = {...dataEdit};
+    this.view.dataService.dataSelected = { ...dataEdit };
     this.view.dataService
       .edit(dataEdit)
       .pipe(takeUntil(this.destroy$))
@@ -301,10 +302,10 @@ export class WarehouseTransfersComponent extends UIComponent {
         dialog.closed.subscribe((res) => {
           if (res && res?.event) {
             if (res?.event?.type === 'discard') {
-              if(this.view.dataService.data.length == 0){
+              if (this.view.dataService.data.length == 0) {
                 this.itemSelected = undefined;
                 this.detectorRef.detectChanges();
-              } 
+              }
             }
           }
         })
@@ -364,41 +365,124 @@ export class WarehouseTransfersComponent extends UIComponent {
     //         });
     //     }
     //   });
-    this.view.dataService.dataSelected = dataCopy;
-    this.view.dataService
-      .copy((o) => this.setDefault(dataCopy, 'copy'))
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res != null) {
-          res.isCopy = true;
-          let data = {
-            headerText: this.headerText,
-            journal: { ...this.journal },
-            oData: { ...res },
-            hideFields: [...this.hideFields],
-            baseCurr: this.baseCurr,
-          };
-          let optionSidebar = new SidebarModel();
-          optionSidebar.DataService = this.view?.dataService;
-          optionSidebar.FormModel = this.view?.formModel;
-          let dialog = this.callfc.openSide(
-            WarehouseTransfersAddComponent,
-            data,
-            optionSidebar,
-            this.view.funcID
-          );
-          dialog.closed.subscribe((res) => {
-            if (res && res?.event) {
-              if (res?.event?.type === 'discard') {
-                if(this.view.dataService.data.length == 0){
-                  this.itemSelected = undefined;
-                  this.detectorRef.detectChanges();
-                } 
+    let newdataCopy = { ...dataCopy };
+    if (this.journal && this.journal.assignRule == '0') {
+      let data = {
+        currentVoucherNo: newdataCopy.voucherNo
+      }
+      let opt = new DialogModel();
+      let dataModel = new FormModel();
+      opt.FormModel = dataModel;
+      let dialog = this.callfc.openForm(
+        NewvoucherComponent,
+        'Nhập số chứng từ mới',
+        null,
+        null,
+        '',
+        data,
+        '',
+        opt
+      );
+      dialog.closed.subscribe((res) => {
+        if (res && res?.event) {
+          let newvoucherNo = res?.event;
+          newdataCopy.voucherNo = newvoucherNo;
+          this.view.dataService
+            .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res: any) => {
+              if (res != null) {
+                res.isCopy = true;
+                let datas = { ...res };
+                this.view.dataService
+                  .saveAs(datas)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe((res) => {
+                    if (res) {
+                      let data = {
+                        headerText: this.headerText,
+                        journal: { ...this.journal },
+                        oData: { ...datas },
+                        hideFields: [...this.hideFields],
+                        baseCurr: this.baseCurr,
+                      };
+                      let optionSidebar = new SidebarModel();
+                      optionSidebar.DataService = this.view?.dataService;
+                      optionSidebar.FormModel = this.view?.formModel;
+                      let dialog2 = this.callfc.openSide(
+                        WarehouseTransfersAddComponent,
+                        data,
+                        optionSidebar,
+                        this.view.funcID
+                      );
+                      dialog2.closed.subscribe((res) => {
+                        if (res && res?.event) {
+                          if (res?.event?.type === 'discard') {
+                            if (this.view.dataService.data.length == 0) {
+                              this.itemSelected = undefined;
+                              this.detectorRef.detectChanges();
+                            }
+                          }
+                        }
+                      });
+                      this.view.dataService
+                        .add(datas)
+                        .pipe(takeUntil(this.destroy$))
+                        .subscribe();
+                    }
+                  });
               }
-            }
-          })
+            });
         }
       });
+    } else {
+      this.view.dataService
+        .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res: any) => {
+          if (res != null) {
+            res.isCopy = true;
+            let datas = { ...res };
+            this.view.dataService
+              .saveAs(datas)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((res) => {
+                if (res) {
+                  let data = {
+                    headerText: this.headerText,
+                    journal: { ...this.journal },
+                    oData: { ...datas },
+                    hideFields: [...this.hideFields],
+                    baseCurr: this.baseCurr,
+                  };
+                  let optionSidebar = new SidebarModel();
+                  optionSidebar.DataService = this.view?.dataService;
+                  optionSidebar.FormModel = this.view?.formModel;
+                  let dialog2 = this.callfc.openSide(
+                    WarehouseTransfersAddComponent,
+                    data,
+                    optionSidebar,
+                    this.view.funcID
+                  );
+                  dialog2.closed.subscribe((res) => {
+                    if (res && res?.event) {
+                      if (res?.event?.type === 'discard') {
+                        if (this.view.dataService.data.length == 0) {
+                          this.itemSelected = undefined;
+                          this.detectorRef.detectChanges();
+                        }
+                      }
+                    }
+                  });
+                  this.view.dataService
+                    .add(datas)
+                    .pipe(takeUntil(this.destroy$))
+                    .subscribe();
+                }
+              });
+          }
+        });
+    }
   }
 
   /**
@@ -411,10 +495,10 @@ export class WarehouseTransfersComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res && !res?.error) {
-          if(this.view.dataService.data.length == 0){
+          if (this.view.dataService.data.length == 0) {
             this.itemSelected = undefined;
             this.detectorRef.detectChanges();
-          } 
+          }
         }
       });
   }
@@ -481,11 +565,9 @@ export class WarehouseTransfersComponent extends UIComponent {
    * @param data
    * @returns
    */
-  changeMFDetail(event: any,type: any = '') {
+  changeMFDetail(event: any, type: any = '') {
     let data = this.view.dataService.dataSelected;
-    if (data) {
-      this.acService.changeMFTranfers(event,data,type,this.journal,this.view.formModel);
-    }
+    this.acService.changeMFTranfers(event, data, type, this.journal, this.view.formModel);
   }
 
   /**
@@ -557,7 +639,7 @@ export class WarehouseTransfersComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('IV', 'TransfersBusiness', 'ValidateVourcherAsync', [data,text])
+      .exec('IV', 'TransfersBusiness', 'ValidateVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -574,7 +656,7 @@ export class WarehouseTransfersComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('IV', 'TransfersBusiness', 'PostVourcherAsync', [data,text])
+      .exec('IV', 'TransfersBusiness', 'PostVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -591,7 +673,7 @@ export class WarehouseTransfersComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('IV', 'TransfersBusiness', 'UnPostVourcherAsync', [data,text])
+      .exec('IV', 'TransfersBusiness', 'UnPostVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -638,9 +720,9 @@ export class WarehouseTransfersComponent extends UIComponent {
    */
   printVoucher(data: any, reportID: any, reportType: string = 'V') {
     let params = {
-      Recs:data?.recID,
+      Recs: data?.recID,
     }
-    this.shareService.printReport(reportID,reportType,params,this.view?.formModel);
+    this.shareService.printReport(reportID, reportType, params, this.view?.formModel);
   }
   //#endregion Function
 }
