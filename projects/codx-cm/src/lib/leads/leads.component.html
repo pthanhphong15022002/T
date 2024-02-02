@@ -371,6 +371,7 @@
       [formName]="'CMDeals'"
       [gridViewName]="'grvCMDeals'"
       default="Chi tiết"
+      (click)="currentStep(data,'2')"
     ></codx-label>
   </div>
 </ng-template>
@@ -404,7 +405,7 @@
             [imgOn]="dataView?.modifiedOn"
             [objectType]="'CM_Leads'"
             [referType]="'avt'"
-            [width]="60"
+            [width]="70"
           ></codx-img>
         </div>
         <div
@@ -412,7 +413,7 @@
         >
           <span class="fs-5 fw-bold text-center">{{ dataView?.leadName }}</span>
           <span
-            class="fs-5"
+            class="fs-5-sm"
             [innerHTML]="
               dataView?.industries
                 | formatvalue : view?.formModel : 'Industries'
@@ -422,8 +423,17 @@
         </div>
         <div>
           <div>
-            <span class="icon-phone_android icon-16 me-2"></span>
-            <span>{{ dataView?.companyPhone }}</span>
+           <span
+                  #phone
+                  [innerHTML]="
+                    dataView?.companyPhone
+                      | formatvalue
+                        : view.formModel
+                        : 'phone'
+                        : phone
+                      | async
+                  "
+                ></span>
           </div>
           <div>
             <span class="icon-location_on icon-16 me-2 text-gray-600 fs-7">
@@ -433,13 +443,88 @@
         </div>
       </div>
       <hr />
-      <div>
-        <codx-label
-          class="fs-4-sm fw-bold label-colon"
-          [formModel]="view.formModel"
-          name="titleContact"
-          default="Người đại diện"
-        ></codx-label>
+
+      <div class="">
+        <div>
+          <codx-label
+            class="fs-5-sm label-colon text-gray-600"
+            [formModel]="view.formModel"
+            name="titleContact"
+            default="Người đại diện"
+          ></codx-label>
+        </div>
+        
+        <div class="ms-2 mt-2">
+          <div class="d-flex">
+            <codx-img
+              [objectId]="dataView?.contactID"
+              [objectName]="dataView?.contactName"
+              [imgOn]="dataView?.modifiedOn"
+              [objectType]="'CM_Leads'"
+              [referType]="'avt'"
+              [width]="40"
+            ></codx-img>
+            <div class="ms-2">
+              <div class="fw-bold text-dark fs-6">
+                <span
+                  #contactName
+                  [innerHTML]="
+                    dataView?.contactName
+                      | formatvalue
+                        : view.formModel
+                        : 'contactName'
+                        : contactName
+                      | async
+                  "
+                ></span>
+              </div>
+
+              <div class="fw-bold text-dark fs-6">
+                <span
+                  *ngIf="dataView?.jobTitle"
+                  #jobTitle
+                  [innerHTML]="
+                    dataView?.jobTitle
+                      | formatvalue
+                        : view.formModel
+                        : 'jobTitle'
+                        : jobTitle
+                      | async
+                  "
+                ></span>
+              </div>
+
+              <div class="fw-bold text-dark fs-6">
+                <span
+                  #phone
+                  [innerHTML]="
+                    dataView?.phone
+                      | formatvalue
+                        : view.formModel
+                        : 'phone'
+                        : phone
+                      | async
+                  "
+                ></span>
+              </div>
+
+              <div class="fw-bold text-dark fs-6 ">                
+                <span
+                  #email
+                  [innerHTML]="
+                    dataView?.email
+                      | formatvalue
+                        : view.formModel
+                        : 'email'
+                        : email
+                      | async
+                  "
+                ></span>
+              </div>
+
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

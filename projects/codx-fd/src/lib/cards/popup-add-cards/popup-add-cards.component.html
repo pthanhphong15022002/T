@@ -205,8 +205,8 @@
           </codx-input>
         </div>
       </ng-container>
-      <ng-container *ngIf="parameter && parameter.RuleSelected">
-        <ng-container [ngSwitch]="parameter.RuleSelected">
+      <ng-container *ngIf="parameter && parameter?.RuleSelected">
+        <ng-container [ngSwitch]="parameter?.RuleSelected">
           <ng-container *ngSwitchCase="0"> </ng-container>
           <ng-container *ngSwitchCase="1">
             <div class="form-group">
@@ -638,8 +638,8 @@
 <ng-template #templateGiftAndPoint>
   <div class="content d-flex flex-column flex-column-fluid py-0">
     <div class="extend-main">
-      <ng-container *ngIf="parameter && cardType != CARDTYPE_EMNUM.Radio">
-        <ng-container *ngIf="parameter.HasGifts && parameter.HasGifts == '1'">
+      <ng-container *ngIf="(parameter && cardType != CARDTYPE_EMNUM.Radio) || !cardType">
+        <ng-container *ngIf="(parameter?.HasGifts && parameter?.HasGifts == '1') || !cardType">
           <div class="d-flex align-items-center justify-content-between mt-4">
             <div class="d-flex align-items-center">
               <div class="fw-bold fs-6">
@@ -862,7 +862,7 @@
             </div>
           </ng-container>
         </ng-container>
-        <ng-container *ngIf="parameter.HasPoints && parameter.HasPoints == '1'">
+        <ng-container *ngIf="(parameter?.HasPoints && parameter?.HasPoints == '1') || !cardType">
           <div class="row mt-8">
             <div class="col-6 form-group">
               <codx-label
