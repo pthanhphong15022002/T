@@ -1,24 +1,12 @@
-<codx-layout-add
-  #form
-  [tabInfo]="tabInfo"
-  [footer]="footer"
-  [formModel]="dialog.formModel"
-  [dialog]="dialog"
-  [headerText]="headerText"
-  [tabContent]="[tabDescription, tabestablish]"
-  [data]="vatCodes"
->
+<codx-layout-add #form [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel" [dialog]="dialog"
+  [title]="headerText" [tabContent]="[tabDescription, tabestablish]" [data]="vatCodes">
 </codx-layout-add>
 
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <button type="button" class="btn btn-primary" (click)="onSave()">
-      <codx-label
-        fiedName="lblSave"
-        [formName]="formModel?.formName"
-        [gridViewName]="formModel?.gridViewName"
-        default="Lưu"
-      ></codx-label>
+      <codx-label fiedName="lblSave" [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
+        default="Lưu"></codx-label>
     </button>
   </div>
 </ng-template>
@@ -28,19 +16,14 @@
     <div class="row">
       <div class="form-group">
         <codx-label fiedName="VATID" [formModel]="form.formModel"> </codx-label>
-        <codx-input
-          [Group]="form.formGroup"
-          field="vatid"
-          [formModel]="form.formModel"
-          (valueChange)="valueChange($event)"
-          [disabled]="
+        <codx-input [Group]="form.formGroup" field="vatid" [formModel]="form.formModel"
+          (valueChange)="valueChange($event)" [disabled]="
             keyField == 'VATID'
               ? true
               : false || formType == 'edit'
               ? true
               : false
-          "
-        >
+          ">
         </codx-input>
       </div>
     </div>
@@ -48,12 +31,8 @@
       <div class="form-group">
         <codx-label fiedName="VATName" [formModel]="form.formModel">
         </codx-label>
-        <codx-input
-          [Group]="form.formGroup"
-          field="vatName"
-          [formModel]="form.formModel"
-          (valueChange)="valueChange($event)"
-        >
+        <codx-input [Group]="form.formGroup" field="vatName" [formModel]="form.formModel"
+          (valueChange)="valueChange($event)">
         </codx-input>
       </div>
     </div>
@@ -61,12 +40,8 @@
       <div class="form-group">
         <codx-label fiedName="TaxGroup" [formModel]="form.formModel">
         </codx-label>
-        <codx-input
-          [Group]="form.formGroup"
-          field="taxGroup"
-          [formModel]="form.formModel"
-          (valueChange)="valueChange($event)"
-        >
+        <codx-input [Group]="form.formGroup" field="taxGroup" [formModel]="form.formModel"
+          (valueChange)="valueChange($event)">
         </codx-input>
       </div>
     </div>
@@ -74,34 +49,22 @@
       <div class="col-3 form-group">
         <codx-label fiedName="VATPct" [formModel]="form.formModel">
         </codx-label>
-        <codx-input
-          [Group]="form.formGroup"
-          field="vatPct"
-          [formModel]="form.formModel"
-          (valueChange)="valueChange($event)"
-        >
+        <codx-input [Group]="form.formGroup" field="vatPct" [formModel]="form.formModel"
+          (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <div class="col-3 form-group">
         <codx-label fiedName="TaxDirection" [formModel]="form.formModel">
         </codx-label>
-        <codx-input
-          [Group]="form.formGroup"
-          field="taxDirection"
-          [formModel]="form.formModel"
-          (valueChange)="valueChange($event)"
-        >
+        <codx-input [Group]="form.formGroup" field="taxDirection" [formModel]="form.formModel"
+          (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <div class="col-6 form-group">
         <codx-label fiedName="InvoiceType" [formModel]="form.formModel">
         </codx-label>
-        <codx-input
-          [Group]="form.formGroup"
-          field="invoiceType"
-          [formModel]="form.formModel"
-          (valueChange)="valueChange($event)"
-        >
+        <codx-input [Group]="form.formGroup" field="invoiceType" [formModel]="form.formModel"
+          (valueChange)="valueChange($event)">
         </codx-input>
       </div>
     </div>
@@ -109,23 +72,15 @@
       <div class="form-group">
         <codx-label fiedName="Formula" [formModel]="form.formModel">
         </codx-label>
-        <codx-input
-          [Group]="form.formGroup"
-          field="formula"
-          [formModel]="form.formModel"
-          (valueChange)="valueChange($event)"
-        >
+        <codx-input [Group]="form.formGroup" field="formula" [formModel]="form.formModel"
+          (valueChange)="valueChange($event)">
         </codx-input>
       </div>
     </div>
     <div class="row">
       <div class="col-1 form-group">
-        <codx-input
-          [Group]="form.formGroup"
-          field="taxableObject"
-          [formModel]="form.formModel"
-          (valueChange)="valueChange($event)"
-        >
+        <codx-input [Group]="form.formGroup" field="taxableObject" [formModel]="form.formModel"
+          (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <div class="col-11 form-group">
@@ -135,12 +90,8 @@
     </div>
     <div class="row">
       <div class="col-1 form-group">
-        <codx-input
-          [Group]="form.formGroup"
-          field="stop"
-          [formModel]="form.formModel"
-          (valueChange)="valueChange($event)"
-        >
+        <codx-input [Group]="form.formGroup" field="stop" [formModel]="form.formModel"
+          (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <div class="col-11 form-group">
@@ -152,16 +103,9 @@
 
 <ng-template #tabestablish>
   <div class="d-flex align-items-center justify-content-between mb-4">
-    <codx-label
-      class="text-primary fw-bold fs-5"
-      [formModel]="form.formModel"
-      default="Danh sách thiết lập tài khoản"
-    ></codx-label>
-    <button
-      type="button"
-      class="btn btn-icon btn-primary"
-      (click)="openPopupAddVatPosting()"
-    >
+    <codx-label class="text-primary fw-bold fs-5" [formModel]="form.formModel"
+      default="Danh sách thiết lập tài khoản"></codx-label>
+    <button type="button" class="btn btn-icon btn-primary" (click)="openPopupAddVatPosting()">
       <i class="icon-post_add"></i>
     </button>
   </div>
@@ -170,106 +114,54 @@
       <div class="d-flex align-items-center justify-content-between pt-2">
         <div class="justify-content-start me-2">
           <div>
-            <codx-label
-              fiedName="PostType"
-              [formModel]="fmVatPosting"
-              class="label-colon fw-bold"
-              default="Ghi sổ theo"
-              [setRequire]="false"
-            ></codx-label>
-            <span
-              class="fw-bold"
-              #postType
-              [innerHTML]="
+            <codx-label fiedName="PostType" [formModel]="fmVatPosting" class="label-colon fw-bold" default="Ghi sổ theo"
+              [setRequire]="false"></codx-label>
+            <span class="fw-bold" #postType [innerHTML]="
                 item?.postType
                   | formatvalue : fmVatPosting : 'postType' : postType
                   | async
-              "
-            ></span>
+              "></span>
             &nbsp;
-            <span
-              class="fw-bold"
-              #vatAcctID
-              [innerHTML]="
+            <span class="fw-bold" #vatAcctID [innerHTML]="
                 item?.vatAcctID
                   | formatvalue : fmVatPosting : 'vatAcctID' : vatAcctID
                   | async
-              "
-            ></span>
+              "></span>
             &nbsp;
             <span class="fs-3">&#183;</span>
             &nbsp;
-            <codx-label
-              fiedName="PostOffset"
-              [formModel]="fmVatPosting"
-              class="label-colon fw-bold"
-              default="Đối ứng"
-            ></codx-label>
-            <span
-              class="fw-bold"
-              #postOffset
-              [innerHTML]="
+            <codx-label fiedName="PostOffset" [formModel]="fmVatPosting" class="label-colon fw-bold"
+              default="Đối ứng"></codx-label>
+            <span class="fw-bold" #postOffset [innerHTML]="
                 item?.postOffset
                   | formatvalue : fmVatPosting : 'postOffset' : postOffset
                   | async
-              "
-            ></span>
+              "></span>
             &nbsp;
-            <span
-              class="fw-bold"
-              #offsetAcctID
-              [innerHTML]="
+            <span class="fw-bold" #offsetAcctID [innerHTML]="
                 item?.offsetAcctID
                   | formatvalue : fmVatPosting : 'offsetAcctID' : offsetAcctID
                   | async
-              "
-            ></span>
+              "></span>
           </div>
           <div>
-            <codx-label
-              fiedName="DIM2"
-              [formModel]="fmVatPosting"
-              class="label-colon"
-              default="TTCP"
-            ></codx-label>
-            <span
-              class="fw-bold"
-              #diM2
-              [innerHTML]="
+            <codx-label fiedName="DIM2" [formModel]="fmVatPosting" class="label-colon" default="TTCP"></codx-label>
+            <span class="fw-bold" #diM2 [innerHTML]="
                 item?.diM2 | formatvalue : fmVatPosting : 'diM2' : diM2 | async
-              "
-            ></span>
+              "></span>
             &nbsp;
             <span class="fs-3">&#183;</span>
             &nbsp;
-            <codx-label
-              fiedName="DIM3"
-              [formModel]="fmVatPosting"
-              class="label-colon"
-              default="Mục phí"
-            ></codx-label>
-            <span
-              class="fw-bold"
-              #diM3
-              [innerHTML]="
+            <codx-label fiedName="DIM3" [formModel]="fmVatPosting" class="label-colon" default="Mục phí"></codx-label>
+            <span class="fw-bold" #diM3 [innerHTML]="
                 item?.diM3 | formatvalue : fmVatPosting : 'diM3' : diM3 | async
-              "
-            ></span>
+              "></span>
           </div>
           <div>
-            <codx-label
-              fiedName="DIM1"
-              [formModel]="fmVatPosting"
-              class="label-colon"
-              default="TTCP"
-            ></codx-label>
-            <span
-              class="fw-bold"
-              #diM1
-              [innerHTML]="
+            <codx-label fiedName="DIM1" [formModel]="fmVatPosting" class="label-colon" default="TTCP"></codx-label>
+            <span class="fw-bold" #diM1 [innerHTML]="
                 item?.diM1 | formatvalue : fmVatPosting : 'diM1' : diM1 | async
-              "
-            ></span>
+              "></span>
           </div>
         </div>
         <div class="d-flex justify-content-end">
