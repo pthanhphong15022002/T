@@ -1766,6 +1766,7 @@ export class ContractsComponent extends UIComponent {
       console.log(JSON.stringify(this.liquidation));
       
       if(datas){
+        datas = datas.replace(/'/g, '"');
         let jsonData = JSON.parse(datas);
         if(jsonData){
           this.liquidation.disposalNewAddress = jsonData[0].NewAddress;
