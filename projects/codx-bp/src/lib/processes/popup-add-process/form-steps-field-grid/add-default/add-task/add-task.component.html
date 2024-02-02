@@ -203,7 +203,7 @@
                 <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentCheck'" [default]="'Tài liệu kiểm tra'" class="fw-bold" *ngIf="activityType == 'Check'"></codx-label>
                 <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentSign'" [default]="'Tài liệu ký số'" class="fw-bold" *ngIf="activityType == 'Sign'"></codx-label>
                 <div class="d-flex align-items-center justify-content-between px-4">
-                    <button type="button" class="btn btn-light w-100 mt-4 me-1" ><i class="icon-i-file-earmark-text"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment1" default="Chọn từ quy trình"></codx-label></button>
+                    <button type="button" class="btn btn-light w-100 mt-4 me-1" (click)="openFormFileProcess()"><i class="icon-i-file-earmark-text"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment1" default="Chọn từ quy trình"></codx-label></button>
                     <button type="button" class="btn btn-light w-100 mt-4 ms-1" (click)="openAttach2()"><i class="icon-attach_file"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment2" default="Đính kèm mới"></codx-label></button>
                 </div>
                 <div class="mt-6">

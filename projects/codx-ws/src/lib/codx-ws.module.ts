@@ -18,7 +18,7 @@ import { AccordionModule } from '@syncfusion/ej2-angular-navigations';
 import { EPBookingComponent } from 'projects/codx-ep/src/lib/booking/ep-booking.component';
 import { PersonalsComponent } from 'projects/codx-mwp/src/lib/personals/personals.component';
 import { IncommingComponent } from 'projects/codx-od/src/lib/incomming/incomming.component';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReportComponent } from './report/report.component';
 import { TasksComponent } from 'projects/codx-tm/src/lib/tasks/tasks.component';
@@ -413,6 +413,8 @@ const routes: Routes = [
     TooltipModule,
     TabAllModule,
     CodxCommonModule,
+    NgbModule
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxWsModule {}
