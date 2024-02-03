@@ -124,7 +124,6 @@ export class CodxEmailComponent implements OnInit {
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
-    debugger
     this.dialog = dialog;
 
     if (data?.data) {
