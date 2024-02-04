@@ -41,15 +41,20 @@
                     
                     <ng-container [ngSwitch]="child?.fieldType">
                         <ng-container *ngSwitchCase="'Attachment'">
-                            <codx-attachment #attachment
-                                [hideDes]="'1'"
-                                hideImageUpload="0"
-                                [formModel]="formModel"
-                                [objectId]="dataIns.recID" 
-                                hideBtnSave="1" hideFolder="1"
-                                referType="source"
-                               >
-                            </codx-attachment>
+                            <ng-container *ngIf="!child.documentControl">
+                                <codx-attachment #attachment
+                                    [hideDes]="'1'"
+                                    hideImageUpload="0"
+                                    [formModel]="formModel"
+                                    [objectId]="dataIns.recID" 
+                                    hideBtnSave="1" hideFolder="1"
+                                    referType="source"
+                                >
+                                </codx-attachment>
+                            </ng-container>
+                            <ng-container *ngIf="child.documentControl">
+                                <lib-attachment-grid [data]="dataIns.documentControl" [formModel]="formModel" (dataChange)="dataChangeAttachmentGrid($event)"></lib-attachment-grid>
+                            </ng-container>
                         </ng-container>
                         <ng-container *ngSwitchDefault>
                             <codx-input

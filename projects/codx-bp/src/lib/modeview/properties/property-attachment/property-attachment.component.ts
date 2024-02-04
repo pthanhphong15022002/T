@@ -22,6 +22,7 @@ export class PropertyAttachmentComponent extends BasePropertyComponent{
       count : 0,
       listType: "2"
     }
+    if(!this.data.documentControl) this.data.documentControl = [];
     this.data.documentControl.push(data);
     this.dataChange.emit(this.data);
   }

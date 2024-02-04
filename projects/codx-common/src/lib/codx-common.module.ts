@@ -84,6 +84,8 @@ import { PresentationComponent } from './_layout/drawers/codx-ai/presentation/pr
 import { SubstringPipe } from './pipe/substring';
 import { DebounceDirective } from './directives/debounce-click.directive';
 import { AssetURLPipe } from './pipe/assetURL';
+import { AttachmentGridComponent } from './component/attachment-grid/attachment-grid.component';
+import { AttachmentGridFilesComponent } from './component/attachment-grid/attachment-grid-files/attachment-grid-files.component';
 //#endregion
 
 const T_Component: Type<any>[] = [
@@ -117,6 +119,8 @@ const T_Component: Type<any>[] = [
   CodxViewFilesComponent,
   OpenFolderComponent,
   AttachmentComponent,
+  AttachmentGridComponent,
+  AttachmentGridFilesComponent,
   PdfComponent,
   ViewFileDialogComponent,
   DialogthumbComponent,
