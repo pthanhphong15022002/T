@@ -804,6 +804,7 @@ export class PopupAddProcessComponent {
                   isRequired: false,
                   count: 0,
                   isList: '1',
+                  stepID: this.data?.steps[1].recID,
                   stepNo: this.data?.steps[1].stepNo,
                   fieldID: this.data?.steps[1].recID,
                   memo: this.data?.steps[1].memo,
@@ -818,6 +819,7 @@ export class PopupAddProcessComponent {
                     JSON.stringify(this.data.documentControl)
                   );
                   element.documentControl.forEach((docu) => {
+                    docu.stepID = this.data?.steps[1].recID;
                     docu.stepNo = this.data?.steps[1].stepNo;
                     docu.fieldID = this.data?.steps[1].recID;
                     docu.memo = this.data?.steps[1].memo;
