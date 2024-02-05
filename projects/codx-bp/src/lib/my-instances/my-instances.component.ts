@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import {
   AuthStore,
+  DialogModel,
   NotificationsService,
   UIComponent,
   ViewModel,
@@ -15,6 +16,7 @@ import {
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxBpService } from '../codx-bp.service';
+import { ProcessReleaseDetailComponent } from '../processes/popup-add-process/process-release/process-release-detail/process-release-detail.component';
 
 @Component({
   selector: 'lib-my-instances',
@@ -84,5 +86,40 @@ export class MyInstancesComponent
     }
   }
 
-  clickMF(e, data) {}
+  clickMF(e, data) {
+    this.dataSelected = data;
+    switch (e.functionID) {
+      case 'SYS03':
+        this.openFormDetail(data);
+        break;
+    }
+  }
+  dbClick(e) {
+    if (e && e?.data) {
+      this.openFormDetail(e?.data);
+    }
+  }
+  openFormDetail(dt: any) {
+    var option = new DialogModel();
+    option.IsFull = true;
+    option.FormModel = this.view.formModel;
+    this.api
+      .execSv<any>('BP', 'ERM.Business.BP', 'ProcessesBusiness', 'GetAsync', [
+        dt?.processID,
+      ])
+      .subscribe((process) => {
+        if (process) {
+          let popup = this.callfc.openForm(
+            ProcessReleaseDetailComponent,
+            '',
+            850,
+            600,
+            '',
+            { data: dt, process: process },
+            '',
+            option
+          );
+        }
+      });
+  }
 }
