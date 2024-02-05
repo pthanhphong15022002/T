@@ -34,6 +34,7 @@ export class PopupCustomFieldComponent implements OnInit {
   taskID = ''; //task
   isShowMore = false; //mở rộng popup
   widthDefault = '550';
+  fieldOther = []; //Là form công việc
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -44,12 +45,14 @@ export class PopupCustomFieldComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    this.dialog = dialog;
     this.fields = JSON.parse(JSON.stringify(dt?.data?.data));
     this.titleHeader = dt?.data?.titleHeader;
     this.objectIdParent = dt?.data?.objectIdParent;
     this.customerID = dt?.data?.customerID;
     this.taskID = dt?.data?.taskID;
-    this.dialog = dialog;
+    this.fieldOther = dt?.data?.fieldOther ?? [];
+
     this.isAdd = dt?.data?.isAdd ?? false;
     this.arrCaculateField = this.fields.filter((x) => x.dataType == 'CF');
     //lấy độ rộng popup
@@ -178,6 +181,10 @@ export class PopupCustomFieldComponent implements OnInit {
     //   (x) => x.dataType == 'N' || x.dataType == 'CF'
     // );
     if (!fieldsNum || fieldsNum?.length == 0) return;
+    //lấy các trường liên quan
+    if (this.fieldOther?.length > 0) {
+      fieldsNum = fieldsNum.concat(this.fieldOther);
+    }
 
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
