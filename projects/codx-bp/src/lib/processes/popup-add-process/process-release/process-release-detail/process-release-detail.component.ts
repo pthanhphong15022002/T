@@ -2,6 +2,7 @@ import { Component, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, CacheService, CallFuncService, DialogData, DialogRef, SidebarModel } from 'codx-core';
 import moment from 'moment';
 import { PopupBpTasksComponent } from 'projects/codx-bp/src/lib/bp-tasks/popup-bp-tasks/popup-bp-tasks.component';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
 
@@ -141,5 +142,33 @@ export class ProcessReleaseDetailComponent implements OnInit{
     popup.closed.subscribe((res) => {
 
     });
+  }
+
+  openForm(dt:any)
+  {
+    if(dt?.activityType == "Email")
+    {
+      let data = {
+        dialog: this.dialog,
+        formGroup: null,
+        templateID: '',
+        showIsTemplate: true,
+        showIsPublish: true,
+        showSendLater: true,
+        files: null,
+        isAddNew: false,
+        notSendMail: true,
+      };
+  
+      let popEmail = this.callFc.openForm(
+        CodxEmailComponent,
+        '',
+        800,
+        screen.height,
+        '',
+        data
+      );
+    }
+    else return;
   }
 }
