@@ -8,10 +8,23 @@
   [body]="body"
 >
   <ng-template #body>
-    <div *ngIf="isLoad">
-      <dynamic-setting-control #settingControl [formModel]="dialog.formModel"
-      (valueChanges)="valuechange($event)" ></dynamic-setting-control>
+    <dynamic-setting-control
+      #settingControl
+      [formModel]="dialog.formModel"
+      [isSave]="false"
+      [showHeaderText]="false"
+      [settingFull]="settingFull"
+      (valueChanges)="valuechange($event)"
+    ></dynamic-setting-control>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex flex-stack justify-content-end">
+      <div class="right">
+        <button type="button" class="btn btn-primary" (click)="onSave()">
+          <codx-label name="lblSave" formName="Settings" default="Lưu">
+          </codx-label>
+        </button>
+      </div>
     </div>
   </ng-template>
-  <ng-template #footer></ng-template>
 </codx-form>
