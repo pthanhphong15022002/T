@@ -17,6 +17,7 @@ export class DynamicSettingControlComponent extends UIComponent implements OnCha
   @Input() headerText: any = 'Thiết lập tham số';
   @Input() showHeaderText: any = true;
   @Input() lineType:string = '1';
+  @Input() isSave: boolean = true;
   @Output() valueChanges: EventEmitter<any> = new EventEmitter();
   @Output() changeAutoSchedules: EventEmitter<any> = new EventEmitter();
   oldDataValue: any = {};
@@ -53,7 +54,8 @@ export class DynamicSettingControlComponent extends UIComponent implements OnCha
       this.settingFull = changes['settingFull'].currentValue;
       if (this.settingFull) {
         this.setting = this.settingFull?.paras;
-        if (this.setting) {
+        this.newSetting = this.setting;
+        if (this.setting && this.lineType) {
           this.newSetting = this.setting.filter(x => x.lineType == this.lineType);
         }
         this.dataValue = JSON.parse(this.settingFull?.paraValues);

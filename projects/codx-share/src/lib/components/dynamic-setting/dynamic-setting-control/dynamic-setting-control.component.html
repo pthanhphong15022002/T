@@ -110,7 +110,7 @@
                 : dataValue
                 ? dataValue[data.fieldName] || ''
                 : ''
-  
+
             " (valueChange)="valueChange($event, data)">
             </codx-input>
           </ng-container>
@@ -140,7 +140,7 @@
                   " (valueChange)="valueChange($event, data, null)">
               </codx-input>
             </ng-container>
-  
+
             <a *ngIf="data.displayMode === '6'" href="javascript:void(0)" (click)="
                   data.reference &&
                     openSub($event, data, dataValue[data.transType])
@@ -194,12 +194,12 @@
         </ng-container>
       </ng-container>
     </ng-container>
-  
+
     <hr class="ms-12 my-0" style="margin-top: -1px;" *ngIf="!isGroup" />
   </ng-template>
 </ng-template>
 <ng-template #footer>
-  <div class="d-flex flex-stack justify-content-end" *ngIf="dialog">
+  <div class="d-flex flex-stack justify-content-end" *ngIf="dialog && isSave">
     <div class="right">
       <button type="button" class="btn btn-primary" (click)="onSave()">
         <codx-label name="lblSave" formName="Settings" default="Lưu">
