@@ -67,6 +67,13 @@ export class AddProcessDefaultComponent implements OnInit{
         if(this.type == 'add') {
           this.dynamicFormsForm.addControl(field, new FormControl(element.defaultValue , (element.isRequired ? Validators.required : null)));
           if(element.fieldType == "Attachment") this.dataIns.documentControl = JSON.parse(element.documentControl);
+          else if(element.fieldType == "Table") 
+          {
+            element.dataFormat = typeof element.dataFormat == 'string' ? JSON.parse(element.dataFormat) : element.dataFormat;
+            element.tableFormat = typeof element.tableFormat == 'string' ? JSON.parse(element.tableFormat) : element.tableFormat;
+            element.filedR = field;
+            this.dataIns[field] = [];
+          }
         }
         else 
         {
@@ -263,5 +270,15 @@ export class AddProcessDefaultComponent implements OnInit{
   {
     var dt = JSON.parse(JSON.stringify(e));
     this.dataIns.documentControl = dt;
+  }
+
+  editTable(f:any,index:any)
+  {
+    
+  }
+
+  addRow(f:any)
+  {
+    this.dataIns[f].push("");
   }
 }
