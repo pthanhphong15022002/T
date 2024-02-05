@@ -61,7 +61,14 @@
           <span class="place-holder">dd/mm/yyyy</span>
         </div>
         <span class="ms-1 me-1">|</span>
-        <span>2 giờ</span>
+        <span class="me-1">{{ dataSelected.duration }}</span>
+        <codx-label
+          class=""
+          fiedName="lbl_Duration"
+          [setRequire]="false"
+          [formModel]="formModel"
+          [default]="'giờ'"
+        ></codx-label>
       </div>
     </div>
     <div class="d-flex">
@@ -87,7 +94,14 @@
           <span class="place-holder">dd/mm/yyyy</span>
         </div>
         <span class="ms-1 me-1">|</span>
-        <span>2 giờ</span>
+        <span class="me-1">{{ dataSelected.interval }}</span>
+        <codx-label
+          class=""
+          fiedName="lbl_Interval"
+          [setRequire]="false"
+          [formModel]="formModel"
+          [default]="'giờ'"
+        ></codx-label>
       </div>
     </div>
   </div>
@@ -102,7 +116,10 @@
     </codx-vll>
   </div>
   <div class="w-15 d-flex align-items-center">
-    <div class="d-flex justify-content-start align-items-center" *ngIf="dataSelected.createdBy">
+    <div
+      class="d-flex justify-content-start align-items-center"
+      *ngIf="dataSelected.createdBy"
+    >
       <div class="me-3">
         <codx-img
           [objectId]="dataSelected.createdBy"
@@ -121,8 +138,12 @@
       </div>
     </div>
   </div>
-  <div class="w-15"></div>
-  <div class="w-15"></div>
+  <div class="w-15">
+    {{ process?.processName }}
+  </div>
+  <div class="w-15">
+    {{ instance?.title }}
+  </div>
   <div class="w-10 d-flex align-items-center">
     <codx-attachment-temp
       [objectID]="dataSelected?.recID"
