@@ -9,7 +9,7 @@
 ></codx-form>
 <ng-template #body>
   <ng-container *ngFor="let item of fields">
-    <div class="form-group" id="{{ item.recID }}">
+    <div class="form-group">
       <codx-input-custom-field
         [customField]="item | changeMemoryCells"
         [objectId]="item.recID"
