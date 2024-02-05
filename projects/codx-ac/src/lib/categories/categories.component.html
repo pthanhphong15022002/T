@@ -1,1 +1,45 @@
-<p>categories works!</p>
+<ng-container *ngIf="lstGroup">
+    <div class="h-100">
+        <codx-view2 [dataSource]="datas" [tmpItem]="tmp" [tmpRightToolBar]="tmpRightToolBar"
+            (selectedChange)="selectedChange($event)" (viewChange)="viewChange($event)"></codx-view2>
+    </div>
+</ng-container>
+
+<ng-template #tmp let-data>
+    <ng-container *ngIf="viewID == '1'">
+        <div #divCard
+            class="d-flex flex-column w-225px h-225px m-3 text-white position-relative cursor-pointer ws-report-card">
+            <codx-card-img imgCss="h-150px rounded border-bottom" cardCss="border rounded h-100" [imageSrc]="imgDefault"
+                ngClass="h-100 card-share-report" [footer]="footer">
+            </codx-card-img>
+        </div>
+        <ng-template #footer>
+            <ng-container *ngTemplateOutlet="tmpFooter ; context: { $implicit: data}"></ng-container>
+        </ng-template>
+    </ng-container>
+    <ng-container *ngIf="viewID == '2'">
+        <div class="d-flex align-items-center border-bottom p-4 cursor-pointer">
+            <div class="w-100">{{data.customName}}</div>
+        </div>
+    </ng-container>
+</ng-template>
+<ng-template #tmpRightToolBar>
+    <div class="d-flex ms-4 pt-4">
+        <div class="d-flex flex-wrap align-items-center ws-dashboard-toolbar-list">
+            <ng-container *ngFor="let item of lstGroup ; let i = index">
+                <div class="me-4 mb-2 cursor-pointer fw-bold" [class.active]="selectedToolBar == item?.functionID"
+                    (click)="selectedChangeToolBar(item)">
+                    <span>{{item?.customName}}</span>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #tmpFooter let-data>
+    <div class="d-flex align-items-top justify-content-between">
+        <div class="d-flex flex-column w-100">
+            <div class="text-dark line-clamp line-clamp-1 text-wrap">{{data.customName}}</div>
+        </div>
+    </div>
+</ng-template>

@@ -911,7 +911,7 @@ export class CM_Contracts {
   expirationAlertTime: number;
   
   disposalNewAddress: string; 
-  disposalNewContac: string; 
+  disposalNewContact: string; 
   disposalEmail: string; 
   disposalPhone: string;
 }

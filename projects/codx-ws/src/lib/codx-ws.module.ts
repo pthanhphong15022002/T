@@ -18,7 +18,7 @@ import { AccordionModule } from '@syncfusion/ej2-angular-navigations';
 import { EPBookingComponent } from 'projects/codx-ep/src/lib/booking/ep-booking.component';
 import { PersonalsComponent } from 'projects/codx-mwp/src/lib/personals/personals.component';
 import { IncommingComponent } from 'projects/codx-od/src/lib/incomming/incomming.component';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReportComponent } from './report/report.component';
 import { TasksComponent } from 'projects/codx-tm/src/lib/tasks/tasks.component';
@@ -86,6 +86,7 @@ import { SearchingComponent as SearchingESComponent } from 'projects/codx-es/src
 import { CodxCoModule } from 'projects/codx-co/src/public-api';
 import { CodxWpModule } from 'projects/codx-wp/src/public-api';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
+import { DetailNotebookComponent } from './personal/master-detail/my-page/detail-notebook/detail-notebook.component';
 //import { CodxWpV2Module } from 'projects/codx-wp/src/lib/codx-wp-v2.module';
 const routes: Routes = [
   {
@@ -391,6 +392,7 @@ const routes: Routes = [
     CvInformationComponent,
     CvEvaluateComponent,
     CodxViewWsComponent,
+    DetailNotebookComponent,
   ],
   exports: [RouterModule],
   imports: [
@@ -413,6 +415,8 @@ const routes: Routes = [
     TooltipModule,
     TabAllModule,
     CodxCommonModule,
+    NgbModule
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxWsModule {}

@@ -1,0 +1,180 @@
+<div
+  style="
+    background-color: #f5f8fa;
+    overflow: hidden;
+    height: 96vh;
+    position: relative;
+  ">
+  <div class="w-100 top2">
+    <div class="main-body">
+      <div class="right col-12 h-100">
+        <div
+          class="d-flex align-items-center py-5 top1 justify-content-between">
+          <codx-label
+            class="fs-5 fw-bold me-2"
+            name="lblTitleViewDeal"
+            [formModel]="dialog?.formModel"
+            [default]="title"></codx-label>
+          <div class="d-flex align-items-center justify-content-end">
+            <button
+              *ngIf="isZoomOut"
+              type="button"
+              class="btn btn-icon background-gray" (click)="showMore()">
+              <span class="icon-filter_none icon-16"></span>
+            </button>
+
+            <!-- *ngIf="isZoomIn" -->
+            <button
+              *ngIf="!isZoomOut"
+              type="button"
+              class="btn btn-icon background-gray" (click)="showMore()">
+              <span class="icon-crop_square icon-18"></span>
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-icon background-gray"
+              (click)="closePopup()">
+              <span
+                class="icon-20 icon-close cursor-pointer p-1"></span>
+            </button>
+
+          </div>
+        </div>
+        <div class="top" *ngIf="type == '1'">
+          <div class="d-flex">
+            <div class="tab-scroll mb-4">
+              <div class="tab-horizone bg-white h-od-tab">
+                <ul class="nav nav-tabs px-4">
+                  <li
+                    *ngFor="let item of listTabRight; let i = index"
+                    class="nav-item"
+                    (click)="navChange(item.id, 0, $event.target)">
+                    <a
+                      class="nav-link"
+                      [ngClass]="item.id == tabRightSelect ? 'active' : ''"
+                    >
+                      <div class="text-uppercase fw-bold d-flex align-items-center">
+                        <span class="icon-18 me-1" [ngClass]="item?.icon"></span>
+                        <span>{{ item?.name }}</span>
+                        
+                      </div>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="main pw-content po"
+          data-kt-scroll-activate="{default: true}"
+          data-kt-scroll-max-height="auto"
+          data-kt-scroll-dependencies=".pw-profile,.pw-menu"
+          data-kt-scroll-wrappers=".employee-container"
+          data-kt-scroll-offset="0px"
+          scrollSpy
+          [spiedTags]="['DIV']"
+          (sectionChange)="onSectionChange($event, 1)">
+          <ng-container
+            *ngIf="tabLeftSelect?.id == 'listTabInformation'"
+            [ngTemplateOutlet]="information"></ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noData>
+  <codx-no-data> </codx-no-data>
+</ng-template>
+
+<ng-template #information>
+
+  <div id="costItems" class="item-main mt-0"  *ngIf="type == '1'">
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center text-primary my-2">
+        <span
+          class="icon-u_dollar-sign-alt icon-18 py-2 icon-20 me-1 fw-bold"></span>
+        <codx-label
+          class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
+          name="lblTitleCost"
+          [formModel]="dialog?.formModel"
+          [default]="'Chi phí'"></codx-label>
+      </div>
+    </div>
+    <div>
+      <crud-cost-items
+        *ngIf="listCosts"
+        [transID]="deal?.recID"
+        [costInfos]="listCosts"
+        [isLoadedData]="true"
+        [viewOnly]="false"
+        [isAutoSave]=" true"
+        [dealValueTo]="deal?.dealValueTo"
+        (totalDataCost)="totalDataCost($event)"
+        (dataDealValueTo)="changeDealValueTo($event)"
+      ></crud-cost-items>
+    </div>
+  </div>
+
+  <div id="contact" class="item-main mt-0"  *ngIf="type == '1'">
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center text-primary my-2">
+        <span
+          class="icon-u_dollar-sign-alt icon-18 py-2 icon-20 me-1 fw-bold"></span>
+        <codx-label
+          class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
+          name="lblTitleContact"
+          [formModel]="dialog?.formModel"
+          [default]="'Người quyết định'"></codx-label>
+      </div>
+    </div>
+    <div>
+      <codx-list-contacts
+        #loadContactDeal
+        [selectAll]="false"
+        [funcID]="'CM0201'"
+        [objectID]="deal?.recID"
+        [customerID]="deal?.customerID"
+        [objectType]="'4'"
+        [objectName]="deal?.dealName"
+        [type]="'formAdd'"
+        [hidenMF]="false"
+      ></codx-list-contacts>
+    </div>
+    <div class="row my-2 ms-1 me-2">
+      <codx-tree-comment
+        [objectID]="deal?.recID"
+        [objectType]="dialog?.formModel?.entityName"
+        [actionType]="'C'"
+        [addNew]="true"
+        [funcID]="dialog?.formModel?.funcID"
+        (totalCommentChange)="changeCountFooter($event, 'comment')"></codx-tree-comment>
+    </div>
+  </div>
+
+
+  <div id="tasks" class="item-main" *ngIf="type != '1'">
+    <div class="d-flex align-items-center text-primary my-2">
+      <span class="icon-i-box-arrow-in-right icon-20 me-1 fw-bold"></span>
+      <codx-label
+        class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
+        name="lblTitleTask"
+        [formModel]="dialog?.formModel"
+        [default]="'Quá trình bán hàng'"></codx-label>
+    </div>
+    <div>
+      <step-task
+        [entityName]="'CM_Deals'"
+        [listInstanceStep]="listInsStep"
+        [dataCM]="deal"
+        [applyFor]="'1'"
+        [isMoveStage]="true"
+        (moveStage)="moveStage($event)"
+        (startStep)="startNow($event)"></step-task>
+    </div>
+  </div>
+
+</ng-template>
+

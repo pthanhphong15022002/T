@@ -1,0 +1,16 @@
+<codx-form
+    [headerText]="'Danh sách mẫu'"
+    [body]="body"
+    [dialog]="dialog"
+>
+</codx-form>
+<ng-template #body>
+    <codx-thumbnail  
+        [files]="files" 
+        displayThumb="simple" 
+        [hideDelete]="'1'"
+        [hideMoreF]="'0'" 
+        [isClick]="false" 
+    >
+    </codx-thumbnail>
+</ng-template>

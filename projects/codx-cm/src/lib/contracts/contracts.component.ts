@@ -1762,13 +1762,14 @@ export class ContractsComponent extends UIComponent {
     this.liquidation.disposalID = this.liquidation?.contractID;
     this.liquidation.pmtMethodID = 'CK';
     try {
-      let datas = data?.datas;
-      console.log(JSON.stringify(this.liquidation));
-      
+      let datas = data?.datas;      
       if(datas){
+        console.log(datas);
+        datas = datas.replace(/'/g, '"');
+        console.log(datas);
         let jsonData = JSON.parse(datas);
         if(jsonData){
-          this.liquidation.disposalNewAddress = jsonData.NewAddres;
+          this.liquidation.disposalNewAddress = this.liquidation.disposalNewAddress ? this.liquidation.disposalNewAddress :  jsonData[0].NewAddress;
         }
       }
     } catch (error) {
@@ -1779,9 +1780,9 @@ export class ContractsComponent extends UIComponent {
     .getContactByRecID(this.liquidation?.contactID)
     .subscribe((res) => {
       if (res) {
-        this.liquidation.disposalNewContac = res?.contactName;
-        this.liquidation.disposalEmail = res?.personalEmail;
-        this.liquidation.disposalPhone = res?.mobile;
+        this.liquidation.disposalNewContact = this.liquidation.disposalNewContact ? this.liquidation.disposalNewContact : res?.contactName;
+        this.liquidation.disposalEmail = this.liquidation.disposalEmail ? this.liquidation.disposalEmail : res?.personalEmail;
+        this.liquidation.disposalPhone = this.liquidation.disposalPhone ? this.liquidation.disposalPhone : res?.mobile;
       }
     });
     let opt = new DialogModel();
