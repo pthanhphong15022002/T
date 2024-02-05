@@ -147,7 +147,7 @@ export class AddUpdateStorageComponent implements OnInit {
   }
 
   addAvatar() {
-    this.imageAvatar.referType = 'image';
+    this.imageAvatar.referType = 'avt';
     this.imageAvatar.uploadFile();
   }
 
@@ -168,7 +168,7 @@ export class AddUpdateStorageComponent implements OnInit {
       'inline',
       1000,
       name,
-      'image',
+      'avt',
       false,
     ];
     this.api
