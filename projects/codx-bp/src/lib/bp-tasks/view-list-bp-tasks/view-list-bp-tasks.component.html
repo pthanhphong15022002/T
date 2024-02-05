@@ -144,12 +144,28 @@
   <div class="w-15">
     {{ instance?.title }}
   </div>
-  <div class="w-10 d-flex align-items-center">
-    <codx-attachment-temp
-      [objectID]="dataSelected?.recID"
-      [formModel]="formModel"
-      [viewType]="1"
-      referType="source"
-    ></codx-attachment-temp>
+  <div class="w-10 d-flex justify-content-center">
+    <div class="attachment-file d-flex align-items-center" (click)="countData > 0 ? openPopup() : ''">
+      <span class="icon-i-paperclip"></span>
+      <span class="count-file">{{ countData }}</span>
+    </div>
   </div>
 </div>
+
+<ng-template #tmpListItem let-dialog>
+  <codx-form
+    [body]="body"
+    [dialog]="dialog"
+    headerText="Danh sách file đính kèm"
+  >
+  </codx-form>
+  <ng-template #body>
+    <codx-thumbnail
+      class="popup-attachment"
+      [files]="lstFile"
+      [formModel]="formModel"
+      [hideDelete]="true"
+      [hideMoreF]="true"
+    ></codx-thumbnail>
+  </ng-template>
+</ng-template>

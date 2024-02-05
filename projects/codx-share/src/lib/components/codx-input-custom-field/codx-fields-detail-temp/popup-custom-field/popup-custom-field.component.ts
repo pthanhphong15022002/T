@@ -181,8 +181,8 @@ export class PopupCustomFieldComponent implements OnInit {
     //   (x) => x.dataType == 'N' || x.dataType == 'CF'
     // );
     if (!fieldsNum || fieldsNum?.length == 0) return;
-    //lấy các trường liên quan
     if (this.fieldOther?.length > 0) {
+      //lấy các trường liên quan
       fieldsNum = fieldsNum.concat(this.fieldOther);
     }
 
@@ -192,12 +192,9 @@ export class PopupCustomFieldComponent implements OnInit {
       // if (!check) return;
       // if (field != null && fieldName != null && dataValue != null)
       //   dataFormat.replaceAll('[' + fieldName + ']', dataValue);
-
       fieldsNum.forEach((f) => {
-        if (
-          dataFormat.includes('[' + f.fieldName + ']') &&
-          f.dataValue?.toString()
-        ) {
+        if (dataFormat.includes('[' + f.fieldName + ']')) {
+          if (!f.dataValue?.toString()) return;
           let dataValue = f.dataValue;
           if (versionID) {
             let ver = f?.version?.find((x) => x.refID == versionID);
@@ -220,20 +217,14 @@ export class PopupCustomFieldComponent implements OnInit {
         if (index != -1) {
           this.fields[index] = this.upDataVersion(
             this.fields[index],
-            obj.dataValue
+            obj.dataValue,
+            fieldsNum
           );
-          // this.fields[index].dataValue = obj.dataValue;
         }
-        // let fieldCFOnCF = this.arrCaculateField.filter((f) =>
-        //   f.dataFormat.includes('[' + obj.fieldName + ']')
-        // );
-        // if (fieldCFOnCF?.length > 0) {
-        //   fieldCFOnCF.forEach((x) => {
-        //     this.caculateField(x, obj.fieldName, obj.dataValue);
-        //   });
-        // }
-
+        //this.getElement(obj.recID);
         this.changeDetectorRef.detectChanges();
+      } else if (obj.dataValue) {
+        //Chua xu ly
       }
     });
   }
@@ -241,7 +232,7 @@ export class PopupCustomFieldComponent implements OnInit {
   //------------------END_CACULATE--------------------//
 
   //updata Version
-  upDataVersion(field, value) {
+  upDataVersion(field, value, listFN = []) {
     field.dataValue = value;
     if (this.taskID) {
       if (field?.versions?.length > 0) {
@@ -266,9 +257,47 @@ export class PopupCustomFieldComponent implements OnInit {
           },
         ];
       }
+    } else {
+      //update cac version
+      if (listFN?.length > 0) {
+        var versions = field.versions;
+        if (versions?.length > 0) {
+          versions.forEach((vs) => {
+            let listConver = [];
+            listFN.forEach((fn) => {
+              let f = JSON.parse(JSON.stringify(fn));
+              var vsion = f?.versions.find((x) => x.refID == vs.refID);
+              if (vsion != null) f.dataValue = vsion.dataValue;
+              listConver.push(f);
+            });
+            let dataVer = this.caculateVersionField(listConver, field);
+            if (dataVer != null) vs.dataValue = dataVer;
+          });
+        }
+      }
     }
 
     return field;
+  }
+  //cacule Version
+  caculateVersionField(fieldsN, fieldCF) {
+    let dataFormat = fieldCF.dataFormat;
+    fieldsN.forEach((f) => {
+      if (
+        dataFormat.includes('[' + f.fieldName + ']') &&
+        f.dataValue?.toString()
+      ) {
+        let dataValue = f.dataValue;
+        if (f.dataFormat == 'P') dataValue = dataValue + '/100';
+        dataFormat = dataFormat.replaceAll('[' + f.fieldName + ']', dataValue);
+      }
+    });
+
+    if (!dataFormat.includes('[')) {
+      //tinh toán
+      return this.customFieldSV.caculate(dataFormat);
+    }
+    return null;
   }
 
   //openpopup
@@ -276,5 +305,12 @@ export class PopupCustomFieldComponent implements OnInit {
     this.isShowMore = !this.isShowMore;
     this.dialog.setWidth(this.isShowMore ? width : this.widthDefault);
     this.changeDetectorRef.detectChanges();
+  }
+
+  getElement(recID) {
+    let el = document.getElementById(recID);
+    if (el) {
+      debugger;
+    }
   }
 }

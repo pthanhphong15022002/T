@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { ApiHttpService } from 'codx-core';
+import { Component, EventEmitter, Input, Output, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ApiHttpService, AuthService, CallFuncService, DialogModel } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'lib-view-list-bp-tasks',
@@ -9,6 +10,8 @@ import { isObservable } from 'rxjs';
   styleUrls: ['./view-list-bp-tasks.component.css'],
 })
 export class ViewListBpTasksComponent implements OnInit {
+  @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
+
   @Input() dataSelected: any;
   @Input() formModel: any;
   @Output() dbClickEvent = new EventEmitter<any>();
@@ -16,11 +19,16 @@ export class ViewListBpTasksComponent implements OnInit {
   instance: any;
   process: any;
   sumDuration = 0;
-  constructor(private shareService: CodxShareService, private api: ApiHttpService) {}
+  lstFile = [];
+  countData = 0;
+  user: any;
+  constructor(private shareService: CodxShareService, private api: ApiHttpService, private auth: AuthService, private callFc: CallFuncService) {}
   ngOnInit(): void {
+    this.user = this.auth.userValue;
     this.getInfo();
     this.getProcessAndInstances();
     this.getTimeDurationdAndInterval();
+    this.getDataFileAsync(this.dataSelected.recID);
   }
   getInfo() {
     let paras = [this.dataSelected.createdBy];
@@ -59,6 +67,55 @@ export class ViewListBpTasksComponent implements OnInit {
       this.dataSelected.interval = '0';
     }
     this.sumDuration = sumDuration;
+  }
+
+  openPopup() {
+    if (this.tmpListItem) {
+      let option = new DialogModel();
+      option.zIndex = 100;
+      let popup = this.callFc.openForm(
+        this.tmpListItem,
+        '',
+        400,
+        500,
+        '',
+        null,
+        '',
+        option
+      );
+      popup.closed.subscribe((res: any) => {
+        if (res) {
+          // this.getDataFileAsync(this.dataSelected.recID);
+        }
+      });
+    }
+  }
+
+  getDataFileAsync(pObjectID: string) {
+    if (pObjectID) {
+      this.api
+        .execSv(
+          'DM',
+          'ERM.Business.DM',
+          'FileBussiness',
+          'GetFilesByIbjectIDAsync',
+          pObjectID
+        )
+        .subscribe((res: any) => {
+          if (res.length > 0) {
+            let files = res;
+            files.map((e: any) => {
+              if (e && e.referType == 'video') {
+                e[
+                  'srcVideo'
+                ] = `${environment.apiUrl}/api/dm/filevideo/${e.recID}?access_token=${this.user.token}`;
+              }
+            });
+            this.lstFile = res;
+            this.countData = res.length;
+          }
+        });
+    }
   }
 
   dbClick(data){
