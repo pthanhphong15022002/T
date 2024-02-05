@@ -56,6 +56,37 @@
                                 <lib-attachment-grid [data]="dataIns.documentControl" [formModel]="formModel" (dataChange)="dataChangeAttachmentGrid($event)"></lib-attachment-grid>
                             </ng-container>
                         </ng-container>
+                        <ng-container *ngSwitchCase="'Table'">
+                            <table class="table table-bordered mt-2">
+                                <thead>
+                                  <tr>
+                                    <th scope="col" *ngIf="child?.tableFormat?.hasIndexNo">#</th>
+                                    <th scope="col" *ngFor="let col of child.dataFormat">{{col.title}}</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <th scope="row" *ngIf="child?.tableFormat?.hasIndexNo"></th>
+                                    <ng-container *ngFor="let s of dataIns[child?.filedR] , let i = index">
+                                        <td *ngFor="let col of child.dataFormat">
+                                            <codx-input
+                                                [formName]="formModel.formName" 
+                                                [gridViewName]="formModel.gridViewName + col.fieldType"
+                                                [type]="(col?.controlType | addProcessDefaultPrice : col?.controlType : col?.dataType : col?.dataFormat: col?.refType)"
+                                                [refValue]="col.refValue"
+                                                [refType]="col.refType" 
+                                                [field]="getField(col?.fieldName)"
+                                                [placeholder]="col?.description"
+                                                (valueChange)="editTable(child?.filedR,i)"
+                                                >
+                                            </codx-input>
+                                        </td>
+                                    </ng-container>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <span (click)="addRow(child?.filedR)">Thêm</span>
+                        </ng-container>
                         <ng-container *ngSwitchDefault>
                             <codx-input
                                 [formName]="formModel.formName" 

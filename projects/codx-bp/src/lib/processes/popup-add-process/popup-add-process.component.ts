@@ -843,6 +843,12 @@ export class PopupAddProcessComponent {
                   ? JSON.stringify(element.dataFormat)
                   : null;
             }
+            if (typeof element.tableFormat != 'string') {
+              element.tableFormat =
+                element.tableFormat?.length > 0
+                  ? JSON.stringify(element.tableFormat)
+                  : null;
+            }
           });
 
           this.data.steps[1].extendInfo = this.extendInfos;
