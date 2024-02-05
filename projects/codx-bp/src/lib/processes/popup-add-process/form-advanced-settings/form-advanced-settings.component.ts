@@ -31,7 +31,15 @@ export class FormAdvancedSettingsComponent implements OnInit {
 
       this.newSetting.forEach((item: any) => {
         const key = Object.keys(item)[0];
-        paravalues[item.fieldName] = item.fieldValue;
+        paravalues[item.fieldName] =
+          item.controlType == 'Switch' ||
+          item.controlType == 'Checkbox' ||
+          item.controlType == 'Radio'
+            ? item.fieldValue?.toLowerCase()?.trim() == 'true' ||
+              item.fieldValue?.toLowerCase()?.trim() == '1'
+              ? true
+              : false
+            : item.fieldValue;
       });
       this.paravalues = JSON.stringify(paravalues);
       this.settingFull = {
@@ -45,7 +53,15 @@ export class FormAdvancedSettingsComponent implements OnInit {
   valuechange(e) {
     this.newSetting.forEach((item) => {
       if (item.fieldName === e?.field) {
-        item.fieldValue = e?.data;
+        if (
+          item.controlType == 'Switch' ||
+          item.controlType == 'Checkbox' ||
+          item.controlType == 'Radio'
+        ) {
+          item.fieldValue = e?.data ? '1' : '0';
+        } else {
+          item.fieldValue = e?.data;
+        }
       }
     });
     console.log(e);

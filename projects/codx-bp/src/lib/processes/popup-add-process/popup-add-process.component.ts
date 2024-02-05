@@ -177,6 +177,8 @@ export class PopupAddProcessComponent {
           if (st && st['1']) {
             this.dataValueSettings = JSON.stringify(st['1']);
             this.data.settings = st['1'];
+          }else{
+            this.data.settings = [];
           }
         });
     }
