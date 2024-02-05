@@ -220,10 +220,10 @@ export class ApprovalsComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '800px';
     this.callfc.openSide(
       PopupAddCardsComponent,
-      { funcID: this.funcID },
+      { funcID: this.funcID, type: "add"},
       option
     );
   }
@@ -234,7 +234,7 @@ export class ApprovalsComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      option.Width = '550px';
+      option.Width = '800px';
       this.callfc.openSide(
         PopupAddCardsComponent,
         {
@@ -271,6 +271,21 @@ export class ApprovalsComponent extends UIComponent {
       this.accept(data);
     } else if (event.functionID === 'FDT1002') {
       this.notAccept(data);
+    } else if (event.functionID === 'SYS05') { // xem
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '800px';
+      this.callfc.openSide(
+        PopupAddCardsComponent,
+        { 
+          funcID: this.funcID, 
+          data: this.itemSelected, 
+          type: "detail",
+          title: "Xem chi tiết"
+        },
+        option
+      );
     }
   }
 

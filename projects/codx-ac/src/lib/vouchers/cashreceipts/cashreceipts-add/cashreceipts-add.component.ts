@@ -48,7 +48,6 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
   baseCurr: any; 
-  legalName: any; 
   isPreventChange:any = false;
   postDateControl:any;
   preData:any;
@@ -78,7 +77,6 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     this.dataDefault = { ...dialogData.data?.oData }; 
     this.journal = { ...dialogData.data?.journal }; 
     this.baseCurr = dialogData.data?.baseCurr;
-    this.legalName = this.dialogData.data?.legalName;
   }
   //#endregion Contructor
 

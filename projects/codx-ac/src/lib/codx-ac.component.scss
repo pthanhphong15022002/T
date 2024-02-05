@@ -534,3 +534,7 @@
         animation-name: none !important;
     }
 }
+.e-acrdn-item.e-select.e-item-focus :focus{
+    outline: none !important;
+    box-shadow: none !important;
+}

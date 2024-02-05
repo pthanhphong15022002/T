@@ -59,6 +59,7 @@ export class CodxEmailComponent implements OnInit {
   formModel: FormModel;
   date: any;
   templateID: string = '';
+  type: string = 'AlertRules';
   templateType: string = '';
 
   saveIsTemplate: boolean = false;
@@ -76,6 +77,7 @@ export class CodxEmailComponent implements OnInit {
   showBCC = false;
 
   data: any = {};
+  lstCubes: any = {};
 
   vllShare = 'ES014';
   container: HTMLElement;
@@ -98,7 +100,7 @@ export class CodxEmailComponent implements OnInit {
 
   email?: email;
   option?: option;
-
+  dataAI:any;
   public cssClass: string = 'e-list-template';
 
   //(1)(2)(3)(4) => ưu tiên get danh sách
@@ -126,6 +128,7 @@ export class CodxEmailComponent implements OnInit {
 
     if (data?.data) {
       this.templateID = data.data.templateID;
+      if (data.data.type) this.type = data.data.type;
       this.email = data.data.email as email;
       this.option = data.data.option as option;
       this.functionID = data.data.functionID;
@@ -243,6 +246,11 @@ export class CodxEmailComponent implements OnInit {
                       }
                     });
                   }
+
+                  if (res1.length > 1 && res1[2]) {
+                    let lstCube = res1[2] as any[];
+                    this.dataSource = [...this.dataSource, ...lstCube];
+                  }
                   this.formModel.currentData = this.data =
                     this.dialogETemplate.value;
                   this.isAfterRender = true;
@@ -341,7 +349,7 @@ export class CodxEmailComponent implements OnInit {
         var result = [];
         console.log(grvSetup);
         arrgv.forEach((element) => {
-          if (element.isTemplate == '1') {
+          if (element.isVisible) {
             var obj = {
               fieldName: element?.fieldName,
               headerText: element?.headerText,
@@ -694,13 +702,24 @@ export class CodxEmailComponent implements OnInit {
           let isExist = this.isExist(element?.objectType, sendType);
           if (isExist == false) {
             let appr = new EmailSendTo();
-            appr.objectID = element?.objectType == "SYS061" ?element?.id : element?.objectType;
-            appr.text =  element?.objectType == "SYS061" ? element?.text : element?.objectName;
-            appr.objectType = element?.objectType == "SYS061" ?element?.id : element?.objectType;
-            appr.sendType = sendType.toString();            
+            appr.objectID =
+              element?.objectType == 'SYS061'
+                ? element?.id
+                : element?.objectType;
+            appr.text =
+              element?.objectType == 'SYS061'
+                ? element?.text
+                : element?.objectName;
+            appr.objectType =
+              element?.objectType == 'SYS061'
+                ? element?.id
+                : element?.objectType;
+            appr.sendType = sendType.toString();
             appr.icon = element?.icon ?? element?.dataSelected?.icon;
-            if(element?.objectType == "SYS061" && !appr.icon){
-              appr.icon = this.vllShareData?.datas?.find(x=>x.value == "SYS061")?.icon;
+            if (element?.objectType == 'SYS061' && !appr.icon) {
+              appr.icon = this.vllShareData?.datas?.find(
+                (x) => x.value == 'SYS061'
+              )?.icon;
             }
             lst.push(appr);
           }
@@ -833,15 +852,18 @@ export class CodxEmailComponent implements OnInit {
 
   onActionComplete(args: any): void {}
 
-  // Gợi ý nội dung email bằng AI 
-  createContentEmail(e:any)
+  valueChangeContentEmail(e:any)
   {
-    this.isLoadingAI = true;
-    let data = {
+    this.dataAI = {
       content : e?.data,
     };
-    let prompt = `Mẫu promt (tiếng Việt): Bạn hãy tạo email dạng html theo nội dung ${e?.data}.`;
-    this.fetch(data,prompt).then((res:any) => 
+  }
+  // Gợi ý nội dung email bằng AI 
+  createContentEmail()
+  {
+    this.isLoadingAI = true;
+    let prompt = `Mẫu promt (tiếng Việt): Bạn hãy tạo email dạng html theo nội dung ${this.dataAI.content}.`;
+    this.fetch(this.dataAI,prompt).then((res:any) => 
       {
         this.data.message = res.data.Data;
         this.isLoadingAI = false;

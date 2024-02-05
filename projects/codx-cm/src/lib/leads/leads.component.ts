@@ -49,6 +49,7 @@ import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.mo
 import { ViewDealDetailComponent } from '../deals/view-deal-detail/view-deal-detail.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { ViewLeadDetailComponent } from './view-lead-detail/view-lead-detail.component';
+import { CurrentStatusComponent } from './view-lead-detail/current-status/current-status.component';
 @Component({
   selector: 'lib-leads',
   templateUrl: './leads.component.html',
@@ -81,6 +82,7 @@ export class LeadsComponent
 
   @ViewChild('templateStatus') templateStatus: TemplateRef<any>;
   @ViewChild('templateCustommer') templateCustommer: TemplateRef<any>;
+  @ViewChild('templateCustomer') tempCustomer: TemplateRef<any>;
   // @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
   // dialogQuestionCopy: DialogRef;
   dialogViewLead: DialogRef;
@@ -161,12 +163,15 @@ export class LeadsComponent
   hideMoreFC = false;
   applyProcess: boolean = true;
   arrFieldIsVisible: any[];
+  popupViewCustommer: DialogRef;
 
   // const set value
   readonly btnAdd: string = 'btnAdd';
   readonly applyFor: any = '5';
   readonly fieldCbxStatus = { text: 'text', value: 'value' };
   readonly fieldCbxStatusCode = { text: 'text', value: 'value' };
+  dataView: any;
+  
 
   constructor(
     private inject: Injector,
@@ -294,7 +299,7 @@ export class LeadsComponent
           case 'StatusCodeIDView': // hiện trạng
             template = this.templateStatus;
             break;
-          case 'CustomerID': // khách hàng
+          case 'CustomerInforView': // khách hàng
             template = this.templateCustommer;
             break;
           default:
@@ -2166,4 +2171,70 @@ export class LeadsComponent
         }
       });
   }
+
+  viewCustomer(data) {
+    this.dataView = data;
+    let opt = new DialogModel();
+    opt.zIndex = 1015;
+    this.popupViewCustommer = this.callFunc.openForm(
+      this.tempCustomer,
+      '',
+      500,
+      400,
+      '',
+      null,
+      '',
+      opt
+    );
+  }
+
+  currentStep(deal, type = '1') {
+    if (deal) {
+      let data = {
+        formModel: this.view.formModel,
+        dataView: deal,
+        isView: true,
+        type,
+        view: this.view,
+        statusCodeID: this.statusCodeID,
+        statusCodeCmt: this.statusCodeCmt,
+        detailViewDeal: this.detailViewLead,
+        title: type == '1' ? 'Thông tin dự án' : 'Hiện trạng',
+        // listInsStepStart: this.listInsStep,
+      };
+      let option = new DialogModel();
+      option.zIndex = 100;
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      let popup = this.callFunc.openForm(
+        CurrentStatusComponent,
+        '',
+        800,
+        window.innerHeight,
+        '',
+        data,
+        '',
+        option
+      );
+      popup.closed.subscribe((e) => {
+        // if (e && e.event) {
+        //   if (e.event?.isUpDealCost) {
+        //     let dealCost = e.event.dealCost;
+        //     deal.dealCost = dealCost;
+        //   }
+        //   if (e.event?.isUpDealValueTo) {
+        //     let dealValueTo = e.event.dealValueTo;
+        //     deal.dealValueTo = dealValueTo;
+        //   }
+        //   let grossProfit = deal.dealValueTo - deal.dealCost;
+        //   deal.grossProfit = grossProfit;
+
+        //   this.view.dataService.update(deal, true).subscribe();
+
+        //   if (this.listKeyFieldSum?.length > 0) this.totalGirdView(); //tính lại tổng chajy cuxng nhanh
+        // }
+      });
+    }
+  }
+
 }

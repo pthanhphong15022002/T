@@ -36,12 +36,13 @@ import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
 
 @Component({
   selector: 'lib-receipt-transactions',
   templateUrl: './receipt-transactions.component.html',
   styleUrls: ['./receipt-transactions.component.css'],
-  changeDetection : ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReceiptTransactionsComponent extends UIComponent {
   //#region Constructor
@@ -65,7 +66,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
     id: 'btnAdd',
     icon: 'icon-i-file-earmark-plus',
   }];
-  viewActive:number = ViewType.listdetail;
+  viewActive: number = ViewType.listdetail;
   ViewType = ViewType;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
@@ -97,7 +98,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
   //#region Init
 
   onInit(): void {
-    if(!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
+    if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
     this.getJournal(); //? lấy data journal và các field ẩn từ sổ nhật kí
   }
 
@@ -121,7 +122,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
           collapsed: true,
-          widthLeft:'23%'
+          widthLeft: '23%'
           //separatorSize:3
         },
       },
@@ -150,25 +151,25 @@ export class ReceiptTransactionsComponent extends UIComponent {
 
         },
 
-        request:{service:'IV'},
-        subModel:{
-          entityName:'IV_VouchersLines',
-          formName:'VouchersLinesReceipts',
-          gridviewName:'grvVouchersLinesReceipts',
-          parentField:'TransID',
-          parentNameField:'VoucherNo',
-          hideMoreFunc:true,
-          request:{
+        request: { service: 'IV' },
+        subModel: {
+          entityName: 'IV_VouchersLines',
+          formName: 'VouchersLinesReceipts',
+          gridviewName: 'grvVouchersLinesReceipts',
+          parentField: 'TransID',
+          parentNameField: 'VoucherNo',
+          hideMoreFunc: true,
+          request: {
             service: 'IV',
           },
-          idField:'recID'
+          idField: 'recID'
         }
       },
     ];
     this.acService.setChildLinks();
   }
 
-  ngDoCheck(){
+  ngDoCheck() {
     this.detectorRef.detectChanges();
   }
 
@@ -270,7 +271,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
   }
 
   viewChanged(view) {
-    if(view && view?.view?.type == this.viewActive) return;
+    if (view && view?.view?.type == this.viewActive) return;
     this.viewActive = view?.view?.type;
     this.detectorRef.detectChanges();
   }
@@ -309,10 +310,10 @@ export class ReceiptTransactionsComponent extends UIComponent {
           dialog.closed.subscribe((res) => {
             if (res && res?.event) {
               if (res?.event?.type === 'discard') {
-                if(this.view.dataService.data.length == 0){
+                if (this.view.dataService.data.length == 0) {
                   this.itemSelected = undefined;
                   this.detectorRef.detectChanges();
-                } 
+                }
               }
             }
           })
@@ -326,7 +327,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
    */
   editVoucher(dataEdit) {
     delete dataEdit.isReadOnly;
-    this.view.dataService.dataSelected = {...dataEdit};
+    this.view.dataService.dataSelected = { ...dataEdit };
     this.view.dataService.dataSelected = dataEdit;
     this.view.dataService
       .edit(dataEdit)
@@ -352,10 +353,10 @@ export class ReceiptTransactionsComponent extends UIComponent {
         dialog.closed.subscribe((res) => {
           if (res && res?.event) {
             if (res?.event?.type === 'discard') {
-              if(this.view.dataService.data.length == 0){
+              if (this.view.dataService.data.length == 0) {
                 this.itemSelected = undefined;
                 this.detectorRef.detectChanges();
-              } 
+              }
             }
           }
         })
@@ -368,88 +369,124 @@ export class ReceiptTransactionsComponent extends UIComponent {
    * @param dataCopy : data chứng từ sao chép
    */
   copyVoucher(dataCopy) {
-    // this.view.dataService.dataSelected = dataCopy;
-    // this.view.dataService
-    //   .copy((o) => this.setDefault(dataCopy, 'copy'))
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res != null) {
-    //       res.isCopy = true;
-    //       let datas = { ...res };
-    //       this.view.dataService
-    //         .saveAs(datas)
-    //         .pipe(takeUntil(this.destroy$))
-    //         .subscribe((res) => {
-    //           if (res) {
-    //             let data = {
-    //               headerText: this.headerText, //? tiêu đề voucher
-    //               journal: { ...this.journal }, //?  data journal
-    //               oData: { ...datas }, //?  data của cashpayment
-    //               hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-    //               baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-    //             };
-    //             let optionSidebar = new SidebarModel();
-    //             optionSidebar.DataService = this.view?.dataService;
-    //             optionSidebar.FormModel = this.view?.formModel;
-    //             let dialog = this.callfc.openSide(
-    //               ReceiptTransactionsAddComponent,
-    //               data,
-    //               optionSidebar,
-    //               this.view.funcID
-    //             );
-    //             dialog.closed.subscribe((res) => {
-    //               if (res && res?.event) {
-    //                 if (res?.event?.type === 'discard') {
-    //                   if(this.view.dataService.data.length == 0){
-    //                     this.itemSelected = undefined;
-    //                     this.detectorRef.detectChanges();
-    //                   } 
-    //                 }
-    //               }
-    //             })
-    //             this.view.dataService
-    //               .add(datas)
-    //               .pipe(takeUntil(this.destroy$))
-    //               .subscribe();
-    //           }
-    //         });
-    //     }
-    //   });
-    this.view.dataService.dataSelected = dataCopy;
-    this.view.dataService
-      .copy((o) => this.setDefault(dataCopy, 'copy'))
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res != null) {
-          res.isCopy = true;
-          let data = {
-            headerText: this.headerText,
-            journal: { ...this.journal },
-            oData: { ...res },
-            hideFields: [...this.hideFields],
-            baseCurr: this.baseCurr,
-          };
-          let optionSidebar = new SidebarModel();
-          optionSidebar.DataService = this.view?.dataService;
-          optionSidebar.FormModel = this.view?.formModel;
-          let dialog = this.callfc.openSide(
-            ReceiptTransactionsAddComponent,
-            data,
-            optionSidebar,
-            this.view.funcID
-          );
-          dialog.closed.subscribe((res) => {
-            if (res && res?.event) {
-              if (res?.event?.type === 'discard') {
-                if(this.view.dataService.data.length == 0){
-                  this.itemSelected = undefined;
-                  this.detectorRef.detectChanges();
-                } 
+    let newdataCopy = { ...dataCopy };
+    if (this.journal && this.journal.assignRule == '0') {
+      let data = {
+        journalType : this.journal.journalType,
+        journalNo : this.journalNo
+      }
+      let opt = new DialogModel();
+      opt.FormModel = this.view.formModel;
+      let dialog = this.callfc.openForm(
+        NewvoucherComponent,
+        'Nhập số chứng từ mới',
+        null,
+        null,
+        '',
+        data,
+        '',
+        opt
+      );
+      dialog.closed.subscribe((res) => {
+        if (res && res?.event) {
+          let newvoucherNo = res?.event;
+          newdataCopy.voucherNo = newvoucherNo;
+          this.view.dataService
+            .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res: any) => {
+              if (res != null) {
+                res.isCopy = true;
+                let datas = { ...res };
+                this.view.dataService
+                  .saveAs(datas)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe((res) => {
+                    if (res) {
+                      let data = {
+                        headerText: this.headerText,
+                        journal: { ...this.journal },
+                        oData: { ...datas },
+                        hideFields: [...this.hideFields],
+                        baseCurr: this.baseCurr,
+                      };
+                      let optionSidebar = new SidebarModel();
+                      optionSidebar.DataService = this.view?.dataService;
+                      optionSidebar.FormModel = this.view?.formModel;
+                      let dialog2 = this.callfc.openSide(
+                        ReceiptTransactionsAddComponent,
+                        data,
+                        optionSidebar,
+                        this.view.funcID
+                      );
+                      dialog2.closed.subscribe((res) => {
+                        if (res && res?.event) {
+                          if (res?.event?.type === 'discard') {
+                            if (this.view.dataService.data.length == 0) {
+                              this.itemSelected = undefined;
+                              this.detectorRef.detectChanges();
+                            }
+                          }
+                        }
+                      });
+                      this.view.dataService
+                        .add(datas)
+                        .pipe(takeUntil(this.destroy$))
+                        .subscribe();
+                    }
+                  });
               }
-            }
-          })
+            });
         }
       });
+    } else {
+      this.view.dataService
+        .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res: any) => {
+          if (res != null) {
+            res.isCopy = true;
+            let datas = { ...res };
+            this.view.dataService
+              .saveAs(datas)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((res) => {
+                if (res) {
+                  let data = {
+                    headerText: this.headerText,
+                    journal: { ...this.journal },
+                    oData: { ...datas },
+                    hideFields: [...this.hideFields],
+                    baseCurr: this.baseCurr,
+                  };
+                  let optionSidebar = new SidebarModel();
+                  optionSidebar.DataService = this.view?.dataService;
+                  optionSidebar.FormModel = this.view?.formModel;
+                  let dialog2 = this.callfc.openSide(
+                    ReceiptTransactionsAddComponent,
+                    data,
+                    optionSidebar,
+                    this.view.funcID
+                  );
+                  dialog2.closed.subscribe((res) => {
+                    if (res && res?.event) {
+                      if (res?.event?.type === 'discard') {
+                        if (this.view.dataService.data.length == 0) {
+                          this.itemSelected = undefined;
+                          this.detectorRef.detectChanges();
+                        }
+                      }
+                    }
+                  });
+                  this.view.dataService
+                    .add(datas)
+                    .pipe(takeUntil(this.destroy$))
+                    .subscribe();
+                }
+              });
+          }
+        });
+    }
   }
 
   /**
@@ -462,10 +499,10 @@ export class ReceiptTransactionsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res && !res?.error) {
-          if(this.view.dataService.data.length == 0){
+          if (this.view.dataService.data.length == 0) {
             this.itemSelected = undefined;
             this.detectorRef.detectChanges();
-          } 
+          }
         }
       });
   }
@@ -516,7 +553,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
             '',
             '',
             null,
-            JSON.stringify({ParentID:data.journalNo})
+            JSON.stringify({ ParentID: data.journalNo })
           )
           .pipe(takeUntil(this.destroy$))
           .subscribe((result: any) => {
@@ -566,7 +603,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('IV', 'VouchersBusiness', 'ValidateVourcherAsync', [data,text])
+      .exec('IV', 'VouchersBusiness', 'ValidateVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -583,7 +620,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('IV', 'VouchersBusiness', 'PostVourcherAsync', [data,text])
+      .exec('IV', 'VouchersBusiness', 'PostVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -600,7 +637,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('IV', 'VouchersBusiness', 'UnPostVourcherAsync', [data,text])
+      .exec('IV', 'VouchersBusiness', 'UnPostVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -664,11 +701,9 @@ export class ReceiptTransactionsComponent extends UIComponent {
    * @param data
    * @returns
    */
-  changeMFDetail(event: any,type: any = '') {
+  changeMFDetail(event: any, type: any = '') {
     let data = this.view.dataService.dataSelected;
-    if (data) {
-      this.acService.changeMFVoucher(event,data,type,this.journal,this.view.formModel);
-    }
+    this.acService.changeMFVoucher(event, data, type, this.journal, this.view.formModel);
   }
 
   /**

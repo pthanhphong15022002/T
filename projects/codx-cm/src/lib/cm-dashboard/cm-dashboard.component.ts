@@ -2876,7 +2876,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     //tang
     this.getAreaInOut(dataSetInCrr, true);
     //  giam
-    this.getAreaInOut(dataSetInCrr, false);
+    this.getAreaInOut(dataSetOutCrr, false);
     //out-in old now
     this.getCompartInOut(dataSetOut, false);
     //in
@@ -2987,11 +2987,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       let arrChart = [
         {
           year: yearOld.toString(),
-          count: 1,
+          count: 0,
         },
         {
           year: this.year.toString(),
-          count: 1,
+          count: 0,
         },
       ];
       if (isIn) {
@@ -3120,12 +3120,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
     let fieldGroup = isIn ? 'quarterApproved' : 'quarterDisposal';
     let fieldFiter = isIn ? 'expandedArea' : 'decreasedArea';
-    let listEnterpriseNew = this.groupBy(dataSet, fieldGroup);
+    let listDataGroup = this.groupBy(dataSet, fieldGroup);
 
     let totalRentalArea = this.total(dataSet, 'rentalArea');
     let totalUpAndDownArea = this.total(dataSet, fieldFiter);
     let totalArea = totalRentalArea + totalUpAndDownArea;
-    if (listEnterpriseNew) {
+    if (listDataGroup) {
       this.vllQuaters?.forEach((qt) => {
         let key = qt.value;
         let obj = {
@@ -3133,17 +3133,16 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           quarterName: qt?.text,
           totalArea: 0,
           totalRentalArea: this.total(
-            dataSet?.filter((x) => x[fieldGroup] == key),
+            listDataGroup[key]?.filter((x) => x[fieldGroup] == key),
             'rentalArea'
           ),
           totalUpAndDownArea: this.total(
-            dataSet?.filter((x) => x[fieldGroup] == key),
+            listDataGroup[key]?.filter((x) => x[fieldGroup] == key),
             fieldFiter
           ),
         };
+        obj.totalArea = obj.totalRentalArea + obj.totalUpAndDownArea;
 
-        // countPriEnterprise += obj.countPrivateEnterprises ?? 0;
-        // countStateEnterprise += obj.countStateEnterprises ?? 0;
         if (isIn) {
           this.listAreaIn.push(obj);
         } else {

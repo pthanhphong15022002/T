@@ -26,6 +26,7 @@ import { PopupCopyEkowdsComponent } from './popup/popup-copy-ekowds/popup-copy-e
 import { KowdsScheduleComponent } from './kowds-schedule/kowds-schedule.component';
 import { ViewKowcodeComponent } from '../request-kowds/view-kowcode/view-kowcode.component';
 import moment from 'moment';
+import { PopupKowdMonthComponent } from './popup/popup-kowd-month/popup-kowd-month.component';
 
 @Component({
   selector: 'pr-kowds',
@@ -173,7 +174,6 @@ export class KowdsComponent extends UIComponent {
     });
   }
 
-
   // show/hide moreFunc
   changeDataMF(event) {
     if(event && event.length > 0)
@@ -226,7 +226,7 @@ export class KowdsComponent extends UIComponent {
       case 'SYS102': // delete
         this.delete();
         break;
-      case 'HRTPro18A14': // update KowD
+      case 'HRTPro18A14': // open popup gen or update dayOff to KowD
         this.openPopupGenKowD();
         break;
     }
@@ -234,18 +234,26 @@ export class KowdsComponent extends UIComponent {
 
   // open popup coppy
   coppy(){
-    if (this.codxGrvDetailDay?.selectedIndexes?.length < 1) {
+    let selectedIndexs = [];
+    if(this.modeView == 1) // công chi tiết
+      selectedIndexs = [...this.codxGrvDetailDay.selectedIndexes];
+    else if(this.modeView == 2) // công tổng hợp
+      selectedIndexs = [...this.codxGrvSummaryKow.selectedIndexes];
+
+    if(selectedIndexs.length <= 0)
+    {
       this.notify.notifyCode('HR040');
       return;
     }
-    else if (this.codxGrvDetailDay?.selectedIndexes?.length > 1) 
+    else if (selectedIndexs.length > 1) 
     {
       this.notify.notifyCode('HR038');
       return;
     } 
-    else if(this.codxGrvDetailDay?.selectedIndexes?.length == 1)
+    else if(selectedIndexs.length == 1)
     {
-      let data = this.codxGrvDetailDay.dataSource[this.codxGrvDetailDay.selectedIndexes];
+      let idx = selectedIndexs[0];
+      let data = this.modeView == 1 ? this.codxGrvDetailDay.dataSource[idx] : this.codxGrvSummaryKow.dataSource[idx];
       let option = new SidebarModel();
       option.FormModel = this.view.formModel;
       option.Width = '550px';
@@ -259,7 +267,8 @@ export class KowdsComponent extends UIComponent {
         {
           data: emp,
           dowCode: this.filters["DowCode"],
-          headerText: 'Sao chép dữ liệu công',
+          headerText: 'Sao chép Dữ liệu công',
+          userPermission : this.userPermission
         },
         option
       );
@@ -275,18 +284,29 @@ export class KowdsComponent extends UIComponent {
 
   // delete data
   delete(){
-    if(this.codxGrvDetailDay.selectedIndexes.length > 0)
+    let selectedIndexs = [];
+    let strEmpIDs = "";
+    if(this.modeView == 1) // công chi tiết
+    {
+      selectedIndexs = [...this.codxGrvDetailDay.selectedIndexes];
+      strEmpIDs = selectedIndexs.map((idx) => this.codxGrvDetailDay.dataSource[idx].EmployeeID).join(";");
+    }
+    else if(this.modeView == 2) // công tổng hợp
+    {
+      selectedIndexs = [...this.codxGrvSummaryKow.selectedIndexes];
+      strEmpIDs = selectedIndexs.map((idx) => this.codxGrvSummaryKow.dataSource[idx].EmployeeID).join(";");
+    }
+    if(selectedIndexs.length > 0 && strEmpIDs)
     {
       this.notify.alertCode('HR039',null,this.filters["DowCode"])
       .subscribe((res:any) => {
         if (res && res?.event?.status == 'Y') 
         {
-          let strEmpIDs = this.codxGrvDetailDay.selectedIndexes.map((idx) => this.codxGrvDetailDay.dataSource[idx].EmployeeID).join(";");
           this.api.execSv<any>(
             'HR',
             'PR',
             'KowDsBusiness',
-            'DeteleByEmpIDAsync',
+            'DeteleByKowCodeAsync',
             [strEmpIDs,this.filters["DowCode"]]
           ).subscribe((res) => {
             if(res) 
@@ -359,8 +379,8 @@ export class KowdsComponent extends UIComponent {
 
 
   // double click on codxGrvDetailDay
-  doubleClick(event:any) {
-    if(this.view && event && event?.column)
+  grvDetailDoubleClick(event:any) {
+    if(event && event?.column && this.userPermission && (this.userPermission?.isAdmin || this.userPermission?.write == "9"))
     {
       let year = Number.parseInt(this.filters["DowCode"].split("/")[0]) , month = Number.parseInt(this.filters["DowCode"].split("/")[1]) - 1;
       let obj = {
@@ -383,20 +403,39 @@ export class KowdsComponent extends UIComponent {
     }
   }
 
-  copyEmpKow(empIDResources, empIDsCopy, dowCode) {
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.PR',
-      'KowDsBusiness',
-      'CopyEmpKowAsync',
-      [empIDResources, empIDsCopy, dowCode]
-    );
+  // double click on codxGrvSummary
+  grvSummaryDoubleClick(event:any){
+    if(event && event?.column && this.userPermission && (this.userPermission?.isAdmin || this.userPermission?.write == "9"))
+    {
+      let employee = {
+        employeeID : event.rowData.EmployeeID,
+        employeeName : event.rowData.EmployeeName,
+        positionName : event.rowData.PositionName
+      };
+      let obj = {
+        headerText:"Dữ liệu công theo tháng",
+        employee : employee,
+        dowCode: this.filters["DowCode"],
+        kowCode: event.column.field,
+        userPermission: this.userPermission
+      };
+      let option = new SidebarModel();
+      option.FormModel = this.view.formModel;
+      option.Width = '550px';
+      this.callfunc.openSide(PopupKowdMonthComponent,obj,option)
+      .closed.subscribe((res:any) => {
+        if(res && res.event)
+        {
+          this.refeshGrid();
+        }
+      });
+    }
   }
-
 
   //get user permission function
   getUserPermission(funcID) {
-    this.cache.functionList(funcID).subscribe((func:any) => {
+    this.cache.functionList(funcID)
+    .subscribe((func:any) => {
       if(func)
       {
         this.function = func;
@@ -405,8 +444,7 @@ export class KowdsComponent extends UIComponent {
           'Core',
           'DataBusiness',
           'GetUserPermissionAsync',
-          [funcID, func.entityName]
-        )
+          [funcID, func.entityName])
         .subscribe((permisison:any) => 
         {
           this.userPermission = permisison;
@@ -524,32 +562,36 @@ export class KowdsComponent extends UIComponent {
 
   // click gen KowD or Fill DayOff to KowD
   clickBtn(dialog:DialogRef){
-    if(!this.filters["DowCode"])
+    if(this.userPermission && (this.userPermission?.isAdmin || this.userPermission?.write == "9"))
     {
-      this.notify.notify("Vui lòng chọn kỳ công");
-      return;
-    }
-    let empIDs = this.codxGrvDetailDay.selectedIndexes.map(idx => this.codxGrvDetailDay.dataSource[idx].EmployeeID);
-    if(empIDs.length > 0)
-    {
-      if(this.kowDOption == "1")
+      if(!this.filters["DowCode"])
       {
-        if(!this.kowCode)
+        this.notify.notify("Vui lòng chọn kỳ công");
+        return;
+      }
+      let empIDs = this.codxGrvDetailDay.selectedIndexes.map(idx => this.codxGrvDetailDay.dataSource[idx].EmployeeID);
+      if(empIDs.length > 0)
+      {
+        if(this.kowDOption == "1")
         {
-          this.notify.notifyCode("HR041");
-          return;
+          if(!this.kowCode)
+          {
+            this.notify.notifyCode("HR041");
+            return;
+          }
+          this.processObj = [];
+          this.genKowD(empIDs.join(";"),this.filters["DowCode"],this.kowCode);
         }
-        this.processObj = [];
-        this.genKowD(empIDs.join(";"),this.filters["DowCode"],this.kowCode);
+        else if(this.kowDOption == "2")
+        {
+          this.processObj = [];
+          this.updateDayOffToKowD(empIDs.join(";"),this.filters["DowCode"]);
+        }
+        dialog.close();
       }
-      else if(this.kowDOption == "2")
-      {
-        this.processObj = [];
-        this.updateDayOffToKowD(empIDs.join(";"),this.filters["DowCode"]);
-      }
-      dialog.close();
+      else this.notify.notifyCode("HR040");
     }
-    else this.notify.notifyCode("HR040");
+    
   }
   
   processing:boolean = false;
@@ -609,7 +651,7 @@ export class KowdsComponent extends UIComponent {
   clickRemoveProcess(idx:number){
     if(idx > -1 && idx < this.processObj.length)
     {
-      this.processObj.splice(idx,1);
+      this.processObj = this.processObj.filter(x => x.value != 100);
       if(this.processObj.length == 0)
       {
         this.processing = false;

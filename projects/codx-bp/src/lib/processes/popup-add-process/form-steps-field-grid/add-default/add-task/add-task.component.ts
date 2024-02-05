@@ -19,6 +19,8 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
   @Input() activityType: any;
   isNewForm = false;
   listUses = [];
+  listTo = [];
+  listCC = [];
   checkList = [];
   vllBP013 =
   {
@@ -40,6 +42,8 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
   }
 
   listDocument = [];
+  dataEmail: any;
+  showEmail = false;
   ngOnChanges(changes: SimpleChanges): void {
     if(changes?.activityType && changes['activityType'].currentValue != changes['activityType'].previousValue)
     {
@@ -59,24 +63,35 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     if(this.data) {
       this.stage = this.listStage.filter(x=>x.recID == this.data.stageID)[0];
       this.listUses = this.data.permissions || [];
-      this.listDocument = this.process.documentControl.filter(x=>x.stepNo == this.data.stepNo);
-      let i = 0 ;
-      this.listDocument.forEach(elm=>{
-        var fieldID =  elm.fieldID;
-        if(elm.refStepNo)
-        {
-          var index = this.process.documentControl.findIndex(x=>x.recID == elm.refStepID);
-          if(index>=0) fieldID = this.process.documentControl[index].fieldID;
-        }
-        this.getFile(fieldID , i)
-      })
+      if(this.process.documentControl && this.process.documentControl.length>0)
+      {
+        var entityName = this.formModel.entityName;
+        this.listDocument = this.process.documentControl.filter(x=>x.stepNo == this.data.stepNo);
+        let i = 0 ;
+        this.listDocument.forEach(elm=>{
+          var fieldID =  elm.fieldID;
+         
+          if(elm?.templateID) {
+            fieldID = elm?.templateID;
+            entityName = "AD_ExcelTemplates"
+            if(elm.templateType == "word") entityName = "AD_WordTemplates"
+          }
+          else if(elm.refStepNo)
+          {
+            var index = this.process.documentControl.findIndex(x=>x.recID == elm.refStepID);
+            if(index>=0) fieldID = this.process.documentControl[index].fieldID;
+          }
+          this.getFile(fieldID, entityName , i)
+        })
+      }
+      else this.process.documentControl = [];
     }
   }
 
-  getFile(recID:any,index:any)
+  getFile(recID:any , entityName:any ,index:any)
   {
     let i = index;
-    this.api.execSv("DM","DM","FileBussiness","GetFileByObjectIDAsync",[recID + ";",this.formModel.entityName]).subscribe(item=>{
+    this.api.execSv("DM","DM","FileBussiness","GetFileByObjectIDAsync",[recID + ";", entityName]).subscribe(item=>{
       if(item)
       {
         this.listDocument[i].files = item;
@@ -108,6 +123,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       checkList: "",
       nextSteps: ""
     }
+    if(!this.process.documentControl)this.process.documentControl = []
     this.dataChange.emit(this.data);
   }
   changeActivity()
@@ -164,6 +180,23 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     }
     else if(this.data.activityType == "Conditions" && !this.data.settings.nextSteps) this.data.settings.nextSteps = [];
     else if((this.data.activityType == "Sign" || this.data.activityType == "Check") && !this.data?.settings?.approveMode) this.data.settings.approveMode = 1;
+    else if(this.data.activityType == "Email")
+    {
+      if(this.data.settings?.templateID)
+      {
+        this.api.execSv("BG","BG","EmailsBusiness","GetItemByRecIDAsync",this.data.settings?.templateID).subscribe(item=>{
+          if(item)
+          {
+            this.dataEmail = item;
+            if(this.dataEmail.sendTo && this.dataEmail.sendTo.length > 0)
+            {
+              this.listTo = this.dataEmail?.sendTo || [];
+              this.showEmail = true;
+            }
+          }
+        })
+      }
+    }
   }
   valueChange(e:any)
   {
@@ -214,7 +247,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       title : this.data.stepName,
       isRequired: false,
       count : 0,
-      isList: "0",
+      listType: "1",
       stepNo: this.data?.stepNo,
       fieldID: this.data?.recID,
       memo: this.data?.memo,
@@ -232,7 +265,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       title : this.data.stepName,
       isRequired: false,
       count : 0,
-      isList: "0",
+      listType: "1",
       stepNo: this.data?.stepNo,
       fieldID: this.data?.recID,
       memo: this.data?.memo,
@@ -241,17 +274,20 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     this.dataChangeProcess.emit(this.process);
     this.attachment2.uploadFile();
   }
+
   fileSave(e:any)
   {
     if(Array.isArray(e)) this.data.attachments = e.length;
     else this.data.attachments = 1;
     this.dataChange.emit(this.data);
   }
+
   fileDelete(e:any)
   {
     this.data.attachments --;
     this.dataChange.emit(this.data);
   }
+
   openFormSetting(val:any=null , index = null)
   {
     let option = new DialogModel();
@@ -364,7 +400,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
               title : this.data.stepName,
               isRequired: false,
               count : 0,
-              isList: "0",
+              listType: "0",
               stepNo: this.data?.stepNo,
               fieldID: this.data?.recID,
               memo: this.data?.memo,
@@ -466,5 +502,79 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
         this.dataChangeProcess.emit(this.process);
       }
     })
+  }
+
+  valueChangeEmail(e:any,type:any)
+  {
+    if(e?.data?.dataSelected)
+    {
+      e?.data?.dataSelected.forEach(elm=>{
+        var obj = 
+        {
+          objectID : elm.id,
+          objectType: elm.objectType || 'U',
+          sendType : '2'
+        }
+        if(type == 'to')
+        {
+          this.listTo.push(obj);
+        }
+        else if(type == 'cc')
+        {
+          this.listCC.push(obj);
+        }
+      })
+    }
+
+    this.dataEmail.sendTo = this.listTo.concat(this.listCC);
+    this.setTimeoutSaveDataEmail();
   } 
+
+  valueChangeTextEmail(e:any)
+  {
+    this.dataEmail[e?.field] = e?.data;
+    this.setTimeoutSaveDataEmail();
+  }
+
+  settingEmail()
+  {
+    this.dataEmail = 
+    {
+      recID: Util.uid(),
+      category: '2',
+      templateName: this.data?.stepName
+    }
+    this.api.execSv("BG","BG","EmailsBusiness","SaveAsync",this.dataEmail).subscribe((item:any)=>{
+      if(item)
+      {
+        this.data.settings.templateID = item.recID
+        this.dataEmail = item;
+      }
+    })
+
+    this.showEmail = ! this.showEmail;
+  }
+  saveDataTimeout = new Map();
+
+  setTimeoutSaveDataEmail() {
+    clearTimeout(this.saveDataTimeout?.get(this.dataEmail.recID));
+    this.saveDataTimeout?.delete(
+      this.saveDataTimeout?.get(this.dataEmail.recID)
+    );
+    this.saveDataTimeout.set(
+      this.dataEmail.recID,
+      setTimeout(
+        this.onSave.bind(this),
+        1000
+      )
+    );
+  }
+
+  onSave() {
+    this.api
+      .execSv('BG', 'ERM.Business.BG', 'EmailsBusiness', 'UpdateAsync', this.dataEmail)
+      .subscribe((res) => {
+       
+      });
+  }
 }

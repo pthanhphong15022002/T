@@ -58,14 +58,16 @@ export class AddProcessDefaultComponent implements OnInit{
 
   formatData()
   {
-    debugger
     var list = [];
     let extendInfo = JSON.parse(JSON.stringify(this.data.extendInfo));
     extendInfo.forEach(element => {
       let field = element.fieldName.toLowerCase();
       if(element.fieldType != "Title") 
       {
-        if(this.type == 'add') this.dynamicFormsForm.addControl(field, new FormControl(element.defaultValue , (element.isRequired ? Validators.required : null)));
+        if(this.type == 'add') {
+          this.dynamicFormsForm.addControl(field, new FormControl(element.defaultValue , (element.isRequired ? Validators.required : null)));
+          if(element.fieldType == "Attachment") this.dataIns.documentControl = JSON.parse(element.documentControl);
+        }
         else 
         {
           let dataEdit = JSON.parse(this.dataIns.datas);
@@ -73,6 +75,7 @@ export class AddProcessDefaultComponent implements OnInit{
         }
       }
       if(element.fieldType == "SubTitle") this.subTitle = field;
+    
       var index = list.findIndex(x=>x.columnOrder == element.columnOrder)
       if(index >= 0)
       {
@@ -104,7 +107,7 @@ export class AddProcessDefaultComponent implements OnInit{
 
   async onSave()
   {
-
+    if(!this.checkAttachment()) return;
     if(this.dynamicFormsForm.invalid) this.findInvalidControls();
     else
     {
@@ -180,6 +183,7 @@ export class AddProcessDefaultComponent implements OnInit{
     
         this.dataIns.processID = this.process?.recID,
         this.dataIns.instanceNo = instanceNo,
+        this.dataIns.instanceID = this.dataIns.recID,
         this.dataIns.status= "1",
         this.dataIns.currentStage= stageF.recID,
         this.dataIns.currentStep= step.recID,
@@ -218,6 +222,31 @@ export class AddProcessDefaultComponent implements OnInit{
     }
   }
 
+  checkAttachment()
+  {
+    if(!this.dataIns.documentControl) return true;
+    else
+    {
+      var arr = [];
+      this.dataIns.documentControl.forEach(elm=>{
+        if(elm.isRequired && elm.count == 0)
+        {
+          arr.push(elm.title)
+        }
+      })
+
+      if(arr.length>0)
+      {
+        var name = arr.join(', ');
+        name += " " + 'bắt buộc đính kèm mẫu'
+        this.notifySvr.notify(name);
+        return false;
+      }
+
+      return true;
+    }
+  }
+
   findInvalidControls() {
     const invalid = [];
     const controls = this.dynamicFormsForm.controls;
@@ -228,5 +257,11 @@ export class AddProcessDefaultComponent implements OnInit{
     }
     var name = invalid.join(" , ");
     this.notifySvr.notifyCode('SYS009', 0, name);
+  }
+
+  dataChangeAttachmentGrid(e:any)
+  {
+    var dt = JSON.parse(JSON.stringify(e));
+    this.dataIns.documentControl = dt;
   }
 }
