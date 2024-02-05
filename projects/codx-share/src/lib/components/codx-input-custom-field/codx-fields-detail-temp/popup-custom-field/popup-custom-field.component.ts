@@ -220,7 +220,8 @@ export class PopupCustomFieldComponent implements OnInit {
         if (index != -1) {
           this.fields[index] = this.upDataVersion(
             this.fields[index],
-            obj.dataValue
+            obj.dataValue,
+            fieldsNum
           );
           // this.fields[index].dataValue = obj.dataValue;
         }
@@ -241,7 +242,7 @@ export class PopupCustomFieldComponent implements OnInit {
   //------------------END_CACULATE--------------------//
 
   //updata Version
-  upDataVersion(field, value) {
+  upDataVersion(field, value, listFN = []) {
     field.dataValue = value;
     if (this.taskID) {
       if (field?.versions?.length > 0) {
@@ -266,9 +267,47 @@ export class PopupCustomFieldComponent implements OnInit {
           },
         ];
       }
+    } else {
+      //update cac version
+      if (listFN?.length > 0) {
+        var versions = field.versions;
+        if (versions?.length > 0) {
+          versions.forEach((vs) => {
+            let listConver = [];
+            listFN.forEach((fn) => {
+              let f = JSON.parse(JSON.stringify(fn));
+              var vsion = f?.versions.find((x) => x.refID == vs.refID);
+              if (vsion != null) f.dataValue = vsion.dataValue;
+              listConver.push(f);
+            });
+            let dataVer = this.caculateVersionField(listConver, field);
+            if (dataVer != null) vs.dataValue = dataVer;
+          });
+        }
+      }
     }
 
     return field;
+  }
+  //cacule Version
+  caculateVersionField(fieldsN, fieldCF) {
+    let dataFormat = fieldCF.dataFormat;
+    fieldsN.forEach((f) => {
+      if (
+        dataFormat.includes('[' + f.fieldName + ']') &&
+        f.dataValue?.toString()
+      ) {
+        let dataValue = f.dataValue;
+        if (f.dataFormat == 'P') dataValue = dataValue + '/100';
+        dataFormat = dataFormat.replaceAll('[' + f.fieldName + ']', dataValue);
+      }
+    });
+
+    if (!dataFormat.includes('[')) {
+      //tinh toán
+      return this.customFieldSV.caculate(dataFormat);
+    }
+    return null;
   }
 
   //openpopup
