@@ -127,7 +127,7 @@ export class MyPageComponent implements OnInit {
     });
   }
 
-  loadDataStorage(){
+  loadDataStorage() {
     this.isLoadStorages = false;
     let request = new DataRequest();
     request.predicate = this.predicateNoteBook;
@@ -194,7 +194,7 @@ export class MyPageComponent implements OnInit {
     formModel.entityName = 'WP_NoteBooks';
     formModel.funcID = 'WS00625';
     option.FormModel = formModel;
-    this.callfc.openForm(
+    let dialog = this.callfc.openForm(
       DetailNotebookComponent,
       '',
       900,
@@ -204,6 +204,15 @@ export class MyPageComponent implements OnInit {
       '',
       option
     );
+    dialog.closed.subscribe((res) => {
+      if (res.event) {
+        this.updateList(res.event, 'notebook', 'update');
+        (this.listViewNoteBooks.dataService as CRUDService)
+          .update(res.event)
+          .subscribe();
+        this.detectorRef.detectChanges();
+      }
+    });
   }
 
   setTimeOunt(settimeout = 200, data) {

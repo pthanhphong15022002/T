@@ -8,7 +8,7 @@ import {
   AccumulationTooltipService,
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
-import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { AccordionModule, TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxCoreModule } from 'codx-core';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
@@ -466,6 +466,7 @@ export const routes: Routes = [
     TranformValueNumberPipe,
     NgbAccordionModule,
     DynamicSettingModule,
+    AccordionModule
   ],
 })
 export class AcModule {}
