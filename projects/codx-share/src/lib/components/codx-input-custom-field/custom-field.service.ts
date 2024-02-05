@@ -105,6 +105,8 @@ export class CustomFieldService {
       return stringMath;
     if (stringMath.includes('+-'))
       stringMath = stringMath.replaceAll('+-', '-');
+    if (stringMath.includes('--'))
+      stringMath = stringMath.replaceAll('--', '+');
 
     if (stringMath.includes('+')) {
       let arrAdd = stringMath.trim().split('+');
