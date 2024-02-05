@@ -65,27 +65,28 @@
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  <tr>
-                                    <th scope="row" *ngIf="child?.tableFormat?.hasIndexNo"></th>
-                                    <ng-container *ngFor="let s of dataIns[child?.filedR] , let i = index">
-                                        <td *ngFor="let col of child.dataFormat">
-                                            <codx-input
-                                                [formName]="formModel.formName" 
-                                                [gridViewName]="formModel.gridViewName + col.fieldType"
-                                                [type]="(col?.controlType | addProcessDefaultPrice : col?.controlType : col?.dataType : col?.dataFormat: col?.refType)"
-                                                [refValue]="col.refValue"
-                                                [refType]="col.refType" 
-                                                [field]="getField(col?.fieldName)"
-                                                [placeholder]="col?.description"
-                                                (valueChange)="editTable(child?.filedR,i)"
-                                                >
-                                            </codx-input>
-                                        </td>
+                                    <ng-container *ngFor="let s of dataIns?.datas[tableField] , let i = index">
+                                    <tr>
+                                        <th scope="row" *ngIf="child?.tableFormat?.hasIndexNo"></th>
+                                            <td *ngFor="let col of child.dataFormat">
+                                                <codx-input
+                                                    [formName]="formModel.formName" 
+                                                    [gridViewName]="formModel.gridViewName + col.fieldType"
+                                                    [type]="(col?.controlType | addProcessDefaultPrice : col?.controlType : col?.dataType : col?.dataFormat: col?.refType)"
+                                                    [refValue]="col.refValue"
+                                                    [refType]="col.refType" 
+                                                    [field]="getField(col?.fieldName)"
+                                                    [placeholder]="col?.description"
+                                                    (valueChange)="editTable(i,$event)"
+                                                    [crrValue]="s[getField(col?.fieldName)]"
+                                                    >
+                                                </codx-input>
+                                            </td>
+                                        </tr>
                                     </ng-container>
-                                  </tr>
                                 </tbody>
                               </table>
-                              <span (click)="addRow(child?.filedR)">Thêm</span>
+                              <span (click)="addRow()">Thêm</span>
                         </ng-container>
                         <ng-container *ngSwitchDefault>
                             <codx-input
