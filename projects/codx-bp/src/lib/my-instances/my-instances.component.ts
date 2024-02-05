@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Injector,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import {
   AuthStore,
   NotificationsService,
@@ -21,10 +28,10 @@ export class MyInstancesComponent
   @ViewChild('templateList') templateList?: TemplateRef<any>;
   @ViewChild('headerTemplateList') headerTemplateList?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  predicates = 'CreatedBy=@0'
+  predicates = 'CreatedBy=@0';
   dataValues = '';
   dataSelected: any;
-  user:any;
+  user: any;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -57,4 +64,25 @@ export class MyInstancesComponent
     this.dataSelected = data?.data ? data?.data : data;
     this.detectorRef.detectChanges();
   }
+
+  changeDataMF(e, data) {
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'BPT0501':
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+            res.disabled = false;
+            break;
+          default:
+            res.disabled = true;
+            break;
+        }
+      });
+    }
+  }
+
+  clickMF(e, data) {}
 }
