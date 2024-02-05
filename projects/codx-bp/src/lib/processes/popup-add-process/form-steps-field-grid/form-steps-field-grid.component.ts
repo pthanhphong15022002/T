@@ -138,6 +138,7 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
   {
     if(dt.activityType == "Conditions" &&  dt.settings.nextSteps.length > 0)
     {
+      if(!dt?.child) dt.child = [];
       dt.settings.nextSteps.forEach(element => {
         if(!dt.child.some(x=>x.parentID == element.nextStepID))
         {
