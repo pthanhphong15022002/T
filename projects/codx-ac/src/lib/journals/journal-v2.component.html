@@ -106,7 +106,7 @@
   <!-- <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (changeDataMF)="changeMF($event)"
     (clickMF)="clickMF($event, data)" [isBookMark]="true" type="hover"
     style="top: 50%; transform: translateY(-50%)"></codx-mfunc> -->
-  <div class="d-flex w-100 flex-column text-content flex-grow-1 p-3">
+  <div (dblclick)="dbClick(data)" class="d-flex w-100 flex-column text-content flex-grow-1 p-3">
     <div class="d-flex w-100 justify-content-between">
       <div class="row w-100">
         <div class="col-4">
@@ -145,8 +145,7 @@
                 : ''
             " [imageId]="data.recID" [imageObjType]="'AC_Journals'" [rootData]="data" [imgOn]="data?.modifiedOn"
         imgCss="w-100px h-80px" [imageWidth]="100" [dataItem]="data" [formModel]="view.formModel" [typeMF]="'hover'"
-        [hideMF]="codxService.asideMode == '2'"
-        (dblclick)="dbClick(data)">
+        [hideMF]="codxService.asideMode == '2'">
       </codx-card-img>
       <div class="d-flex flex-column">
         <div class="mb-1">
