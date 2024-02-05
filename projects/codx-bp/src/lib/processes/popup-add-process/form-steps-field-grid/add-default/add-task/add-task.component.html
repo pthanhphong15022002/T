@@ -13,6 +13,10 @@
 			</div>
 		</div>
     </div>
+    <div class="d-flex flex-column mt-4" *ngIf="activityType == 'Event'">
+        <codx-label formName="fmBPFieldGrid" fiedName="lblTaskEventTitle" default="Loai sự kiện" class="fw-bold"></codx-label>
+        <codx-input type="valuelist" [refValue]="'BP009'" [crrValue]="data?.settings?.eventType"  field="eventType" (valueChange)="valueChangeSetting($event)"></codx-input>
+    </div>
     <ng-container *ngIf="activityType == 'Conditions'">
         <div class="d-flex flex-column mt-4">
             <codx-label formName="fmBPFieldGrid" fiedName="lblTaskName" default="Tên điều kiện" class="fw-bold"></codx-label>
@@ -45,6 +49,10 @@
             <codx-label formName="fmBPFieldGrid" fiedName="lblTaskDes" default="Diễn giải" class="fw-bold"></codx-label>
             <codx-input type="textarea" format="ed2" field="memo" [crrValue]="data?.memo" (valueChange)="valueChange($event)" [ngClass]="'w-100'"></codx-input>
         </div>
+        <div class="d-flex flex-column mt-4" *ngIf="activityType == 'Event'">
+            <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSettingEmail" default="Mẫu biên bản" class="fw-bold"></codx-label>
+            <button type="button" class="btn btn-light w-100 mt-4 cursor-pointer" (click)="settingEmail()"><i class="icon-i-plus"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSettingsEditEmail" default="Thêm mới hoặc chọn mẫu biên bản"></codx-label></button>
+        </div>
         <div class="d-flex flex-column mt-4">
             <codx-label formName="fmBPFieldGrid" fiedName="lblTaskDuration" default="Thời gian thực hiện" class="fw-bold"></codx-label>
             <div class="d-flex align-items-center">
@@ -65,6 +73,7 @@
                 >
                 </codx-input>
             </div>
+        
             <div class="d-flex flex-column">
                 <div class="d-flex align-items-center justify-content-between mt-2" *ngFor="let item of listUses , let i = index">
                     <div class="d-flex align-items-center">
@@ -88,6 +97,29 @@
                         </div>
                     </div>
                 </ng-container>
+            </div>
+        </div>
+
+        <div class="d-flex flex-column border-top mt-4 pt-4" *ngIf="activityType == 'Event'">
+            <div class="d-flex align-items-center justify-content-between">
+                <codx-label formName="fmBPFieldGrid" fiedName="lblTaskOwners2" default="Người tham gia" class="fw-bold"></codx-label>
+                <codx-input type="Combobox" [refValue]="'Share_Users'" [showInput]="false"
+                    refType="P" field="popup"
+                    (valueChange)="valueChangeUserEvent($event)"    
+                >
+                </codx-input>
+            </div>
+
+            <div class="d-flex align-items-center justify-content-between mt-2" *ngFor="let item of listUses2 , let i = index">
+                <div class="d-flex align-items-center">
+                    <codx-img [objectId]="item?.objectID" [objectType]="'AD_Users'" [referType]="'avt'" [width]="30"></codx-img>
+                    <div class="d-flex flex-column ms-2">
+                        <span>{{item.objectName}}</span>
+                    </div>
+                </div>
+                <div class="cursor-pointer" (click)="deleteUser2(i)">
+                    <i class="icon-close"></i>
+                </div>
             </div>
         </div>
         <ng-container *ngIf="activityType == 'Form'">
@@ -156,7 +188,7 @@
                
             </div>
         </ng-container>
-        <ng-container *ngIf="activityType == 'Task'">
+        <ng-container *ngIf="activityType == 'Task' || activityType == 'Event' || activityType == 'Stamp'">
             <div class="d-flex flex-column border-top mt-4 pt-4">
                 <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment" default="Tài liệu đính kèm" class="fw-bold"></codx-label>
                 <div class="d-flex align-items-center justify-content-between px-4">
@@ -183,7 +215,7 @@
                     </codx-attachment>
                 </div>
             </div>
-            <div class="d-flex flex-column border-top mt-4 pt-4">
+            <div class="d-flex flex-column border-top mt-4 pt-4" *ngIf="activityType == 'Task'">
                 <codx-label formName="fmBPFieldGrid" fiedName="lblTaskCheckList" default="CheckList" class="fw-bold"></codx-label>
                 <ng-container *ngFor="let cl of checkList , let indexC = index ">
                     <div class="d-flex align-items-center mt-4">
@@ -217,18 +249,23 @@
         <ng-container *ngIf="activityType == 'Email'">
             <div class="d-flex flex-column border-top mt-4 pt-4">
                 <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSettingEmail" default="Mẫu email" class="fw-bold"></codx-label>
-                <button type="button" class="btn btn-light w-100 mt-4 cursor-pointer"><i class="icon-email"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSettingsEditEmail" default="Thiết lập/chỉnh sửa mẫu email"></codx-label></button>
+                <button type="button" class="btn btn-light w-100 mt-4 cursor-pointer" (click)="settingEmail()"><i class="icon-email"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSettingsEditEmail" default="Thiết lập/chỉnh sửa mẫu email"></codx-label></button>
             </div>
 
-            <div class="d-flex flex-column mt-2">
+            <div class="d-flex flex-column mt-2" [ngClass]="showEmail ? 'visible' : 'invisible h-0px'">
                 <div class="d-flex align-items-center">
                     <codx-label default="To:"></codx-label>
                     <div class="w-100 ms-2 py-2 border-bottom d-flex align-items-center justify-content-between">
-                        <div class="w-100">
+                        <div class="d-flex flex-wrap align-items-center w-100">
+                            <div class="d-flex align-items-center badge badge-light fs-base p-1 mx-2 my-1" *ngFor="let item of listTo">
+                                <codx-img [objectId]="item.objectID" [objectType]="'AD_Users'" [width]="20"></codx-img>
+                                <span class="mx-2">{{item.objectName}}</span>
+                                <i class="icon-close cursor-pointer"></i>
+                            </div>
                         </div>
                         <codx-input type="Combobox" [refValue]="'Share_Users'" [showInput]="false"
                             refType="P" field="popup"
-                            (valueChange)="valueChangeUser($event)"    
+                            (valueChange)="valueChangeEmail($event,'to')"    
                         >
                         </codx-input>
                     </div>
@@ -236,22 +273,27 @@
                 <div class="d-flex align-items-center mt-2">
                     <codx-label default="CC:"></codx-label>
                     <div class="w-100 ms-2 py-2 border-bottom d-flex align-items-center justify-content-between">
-                        <div class="w-100">
+                        <div class="d-flex flex-wrap align-items-center w-100">
+                            <div class="d-flex align-items-center badge badge-light fs-base mx-2 p-1 my-1" *ngFor="let item of listCC">
+                                <codx-img [objectId]="item.objectID"  [objectType]="'AD_Users'"></codx-img>
+                                <span class="mx-2">{{item.objectName}}</span>
+                                <i class="icon-close cursor-pointer"></i>
+                            </div>
                         </div>
                         <codx-input type="Combobox" [refValue]="'Share_Users'" [showInput]="false"
                             refType="P" field="popup"
-                            (valueChange)="valueChangeUser($event)"    
+                            (valueChange)="valueChangeEmail($event,'cc')"    
                         >
                         </codx-input>
                     </div>
                 </div>
                 <div class="d-flex align-items-center mt-4">
                     <codx-label default="Tiêu đề:" class="w-60px"></codx-label>
-                    <codx-input type="text" ngClass="ms-2 w-100"></codx-input>
+                    <codx-input type="text" field="subject" ngClass="ms-2 w-100" (valueChange)="valueChangeTextEmail($event)"></codx-input>
                 </div>
                 <div class="d-flex flex-column mt-4">
                     <codx-label default="Nội dung:"></codx-label>
-                    <codx-input type="textarea"></codx-input>
+                    <codx-input type="textarea" field="message" (valueChange)="valueChangeTextEmail($event)"></codx-input>
                 </div>
             </div>
         </ng-container>

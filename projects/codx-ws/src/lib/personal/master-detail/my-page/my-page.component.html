@@ -183,13 +183,13 @@
 <ng-template #tmpNoteBook let-data>
   <div
     class="d-flex align-items-center cursor-pointer has-action-menu px-4"
-    (click)="openDetailPage(data?.recID)"
+    (click)="openDetailNoteBook(data)"
   >
     <codx-img
       [objectId]="data.recID"
       [objectType]="'WP_NoteBooks'"
       [objectName]="data?.title"
-      [referType]="'image'"
+      [referType]="'avt'"
       [imageType]="'square'"
       [isDefaulImg]="true"
       [imgSource]="'./assets/themes/ws/default/img/NoteBooks.svg'"
@@ -223,7 +223,7 @@
       [objectId]="data.recID"
       [objectType]="'WP_NoteBooks'"
       [objectName]="data?.title"
-      [referType]="'image'"
+      [referType]="'avt'"
       [imageType]="'square'"
       [isDefaulImg]="true"
       [imgSource]="'./assets/themes/ws/default/img/Archive.svg'"

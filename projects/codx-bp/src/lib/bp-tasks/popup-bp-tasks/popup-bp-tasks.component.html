@@ -13,7 +13,13 @@
       class="d-flex align-items-center justify-content-between w-100 px-3 py-4"
     >
       <div class="d-flex justify-content-start flex-column w-100">
-        <span class="fw-bold fs-3 mt-1">{{ title }}</span>
+        <codx-label
+          class="fw-bold fs-3 mt-1"
+          [formModel]="form.formModel"
+          [fiedName]="form.formModel.formName + data.activityType"
+          [default]="title"
+        >
+        </codx-label>
         <span class="text-gray-500 fw-bold">{{ subTitle }}</span>
       </div>
       <div
@@ -201,10 +207,22 @@
           ></codx-label>
         </span>
       </button>
-      <ng-container *ngIf="data?.activityType == 'Approve'" [ngTemplateOutlet]="buttonApprove"></ng-container>
-      <ng-container *ngIf="data?.activityType == 'Check'" [ngTemplateOutlet]="buttonCheck"></ng-container>
-      <ng-container *ngIf="data?.activityType == 'Task'" [ngTemplateOutlet]="buttonTask"></ng-container>
-      <ng-container *ngIf="data?.activityType == 'Sign'" [ngTemplateOutlet]="buttonSign"></ng-container>
+      <ng-container
+        *ngIf="data?.activityType == 'Approve'"
+        [ngTemplateOutlet]="buttonApprove"
+      ></ng-container>
+      <ng-container
+        *ngIf="data?.activityType == 'Check'"
+        [ngTemplateOutlet]="buttonCheck"
+      ></ng-container>
+      <ng-container
+        *ngIf="data?.activityType == 'Task'"
+        [ngTemplateOutlet]="buttonTask"
+      ></ng-container>
+      <ng-container
+        *ngIf="data?.activityType == 'Sign'"
+        [ngTemplateOutlet]="buttonSign"
+      ></ng-container>
       <ng-template #buttonApprove>
         <div class="d-flex justify-content-end">
           <button type="button" class="btn btn-light-primary ms-1">
@@ -307,5 +325,3 @@
     </div>
   </ng-template>
 </codx-form>
-
-

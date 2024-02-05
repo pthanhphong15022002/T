@@ -1,1 +1,197 @@
-<p>detail-notebook works!</p>
+<codx-form
+  #form
+  [dialog]="dialog"
+  [formModel]="dialog.formModel"
+  [footer]="footer"
+  [body]="body"
+  [customToolbar]="subToolbar"
+  [subHeader]="subHeader"
+></codx-form>
+<ng-template #subToolbar>
+  <div class="d-flex justify-content-between w-100">
+    <div class="d-flex flex-column">
+      <codx-label
+        class="fs-6"
+        default="Nội dung"
+        [formModel]="form.formModel"
+        name="lblContentNoteBoook"
+      ></codx-label>
+    </div>
+    <div
+      class="d-flex justify-content-end align-items-center"
+      (click)="close()"
+    >
+      <div class="cursor-pointer">
+        <i class="icon-close"></i>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #subHeader>
+  <ng-container *ngIf="form?.formGroup"></ng-container>
+</ng-template>
+<ng-template #body>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="mb-4">
+      <codx-tag
+        field="tags"
+        [entityName]="dialog.formModel.entityName"
+        [isEdit]="true"
+        [disabled]="false"
+        [value]="data?.tags"
+        (valueChange)="valueChange($event)"
+      ></codx-tag>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <div class="form-group">
+          <codx-label
+            fiedName="Title"
+            [formModel]="form?.formModel"
+            default="Tiêu đề"
+          ></codx-label>
+          <codx-input
+            [formModel]="form?.formModel"
+            field="title"
+            (valueChange)="valueChange($event)"
+            [crrValue]="data?.title"
+          >
+          </codx-input>
+        </div>
+        <div
+          class="d-flex justify-content-between align-items-center"
+          style="margin-top: 50px"
+        >
+          <div class="d-flex flex-column align-items-center text-primary">
+            <div class="d-flex align-items-center">
+              <span class="icon-attach_file icon-18 me-2 text-primary"></span>
+              <codx-label
+                class="fw-bold"
+                name="lblAttachments"
+                [formModel]="form.formModel"
+                default="Tài liệu đính kèm"
+              >
+              </codx-label>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end align-items-center">
+            <button
+              type="button"
+              class="btn btn-light ms-1"
+              (click)="addFile(null)"
+            >
+              <codx-label
+                name="lblAddfile"
+                [formModel]="form?.formModel"
+                default="Add file"
+              ></codx-label>
+            </button>
+          </div>
+        </div>
+        <codx-attachment
+          #attachment
+          [objectType]="dialog.formModel.entityName"
+          [objectId]="data?.recID"
+          hideFolder="1"
+          hideImageUpload="0"
+          hideImageThumb="0"
+          hideUploadBtn="1"
+          [showMessage]="0"
+          hideDes="1"
+          type="inline"
+          allowMultiFile="1"
+          referType="source"
+          [formModel]="dialog.formModel"
+          (fileAdded)="fileAdded($event)"
+          (fileCount)="getfileCount($event)"
+          displayThumb="full"
+          [heightScroll]="400"
+        >
+        </codx-attachment>
+      </div>
+      <div class="col-8">
+        <div class="w-100 h-100">
+          <codx-input
+            type="textarea"
+            [crrValue]="data.memo"
+            [placeholder]="'Nhập memo'"
+            [copyStyle]="'clean'"
+            field="memo"
+            [class]="'border-none'"
+            className="min-h-100px"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+          <div
+            class="dropzone dropzone-default d-flex flex-center flex-column"
+            (click)="addFile('image')"
+          >
+            <div class="dropzone-msg dz-message needsclick">
+              <ng-container *ngIf="linkAvatar != '' && linkAvatar">
+                <img [src]="linkAvatar" class="image-maxsize" />
+              </ng-container>
+              <ng-container *ngIf="linkAvatar == '' || linkAvatar == null">
+                <div class="dropzone-msg-title mb-2">
+                  <i class="icon-image icon-30"></i>
+                </div>
+                <div class="dropzone-msg-title mb-2">
+                  <codx-label
+                    name="lblContentAddAvatar"
+                    [formModel]="dialog.formModel"
+                    default="Chọn hình ảnh"
+                    class="fw-bold"
+                  >
+                  </codx-label>
+                </div>
+                <span class="dropzone-msg-desc">
+                  <codx-label
+                    name="lblRequiredAvatar"
+                    [formModel]="dialog.formModel"
+                    default="(Nên chọn hình ảnh có kích thước ...px đến ...px)"
+                    class="fw-bold"
+                  ></codx-label>
+                </span>
+              </ng-container>
+            </div>
+          </div>
+          <codx-attachment
+            #imageAvatar
+            [objectType]="'WP_NoteBooks'"
+            [objectId]="data?.recID"
+            [formModel]="form.formModel"
+            [functionID]="'WS00625'"
+            hideFolder="1"
+            hideImageUpload="1"
+            hideImageThumb="1"
+            hideUploadBtn="1"
+            hideDes="1"
+            type="inline"
+            allowMultiFile="0"
+            allowExtensions=".jpg,.png"
+            [isSaveSelected]="0"
+            (fileAdded)="fileAddImg($event)"
+            displayThumb="full"
+            showMessage="0"
+            category="0"
+          >
+          </codx-attachment>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button
+      type="button"
+      class="btn btn-primary ms-1"
+      (click)="saveNoteBooks()"
+    >
+      <codx-label
+        name="Save"
+        [formModel]="form?.formModel"
+        default="Lưu"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>

@@ -37,7 +37,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
   @ViewChild('contentTemplate') contentTemplate: TemplateRef<any>;
   views: Array<ViewModel> = [];
   subViews: Array<ViewModel> = [];
-  viewActive: number = ViewType.smallcard;
+  viewActive: number = 0;
   headerText: string;
   funcName:any;
   vll86 = [];
@@ -56,6 +56,11 @@ export class JournalV2Component extends UIComponent implements OnInit {
   mainFilterValue: string;
   subFilterValue: string;
   ViewType = ViewType;
+  vllAC125:any = [];
+  vllAC126:any = [];
+  vllAC108:any = [];
+  vllAC109:any = [];
+  vllAC111:any = [];
   button: ButtonModel[] = [{
     icon:'icon-i-journal-plus',
     id: 'btnAdd',
@@ -74,13 +79,21 @@ export class JournalV2Component extends UIComponent implements OnInit {
 
   //#region Init
   onInit() {
+    if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
+    this.cache.viewSettings(this.funcID).subscribe((res:any)=>{
+      let data = res.filter(x => x.isDefault == true)[0];
+      if (data) {
+        this.viewActive = data?.view;
+        console.log(this.viewActive);
+        this.detectorRef.detectChanges();
+      }
+    })
     this.cache.valueList('AC077').subscribe((func) => {
       if (func) this.func = func.datas;
     });
     this.cache
       .valueList('AC064')
       .pipe(
-        tap((t) => console.log('AC064', t)),
         map((d) => d.datas)
       )
       .subscribe((res) => {
@@ -101,11 +114,16 @@ export class JournalV2Component extends UIComponent implements OnInit {
       }
     });
 
-    this.assignVllToProp2('AC134', 'journalTypes134');
-    this.assignVllToProp2('AC135', 'journalTypes135');
-    this.assignVllToProp2('AC136', 'journalTypes136');
-    this.assignVllToProp2('AC137', 'journalTypes137');
-    this.assignVllToProp2('AC138', 'journalTypes138');
+    this.getVll('AC134', 'journalTypes134');
+    this.getVll('AC135', 'journalTypes135');
+    this.getVll('AC136', 'journalTypes136');
+    this.getVll('AC137', 'journalTypes137');
+    this.getVll('AC138', 'journalTypes138');
+    this.getVll('AC125','vllAC125');
+    this.getVll('AC126','vllAC126');
+    this.getVll('AC108','vllAC108');
+    this.getVll('AC109','vllAC109');
+    this.getVll('AC111','vllAC111');
   }
 
   ngAfterViewInit() {
@@ -399,17 +417,6 @@ export class JournalV2Component extends UIComponent implements OnInit {
     ]);
   }
 
-  assignVllToProp2(vllCode: string, propName: string): void {
-    this.cache
-      .valueList(vllCode)
-      .pipe(
-        map((d) => d.datas.map((v) => v.value))
-      )
-      .subscribe((res) => {
-        this[propName] = res;
-      });
-  }
-
   sortData(): void {
     const temp: any[] = this.view.dataService.data;
     this.view.dataService.data = [
@@ -455,6 +462,17 @@ export class JournalV2Component extends UIComponent implements OnInit {
         this.detectorRef.detectChanges();
       }
     }
+  }
+
+  getVll(vllCode: string, propName: string) {
+    this.cache
+      .valueList(vllCode)
+      .pipe(
+        map((d) => d.datas.map((v) => v.value))
+      )
+      .subscribe((res) => {
+        this[propName] = res;
+      });
   }
   //#endregion Function  
 }
