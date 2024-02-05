@@ -218,10 +218,12 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
         })
       }
     }
+    if(changes?.isAdmin){
+      this.isAdmin = changes?.isAdmin?.currentValue;
+    }
 
     if (changes?.dataCM) {
       this.type = this.dataCM.viewModeDetail || 'S';
-      this.isAdmin = false;
       if (!this.isAdmin) {
         this.isAdmin =
           this.dataCM?.full ||

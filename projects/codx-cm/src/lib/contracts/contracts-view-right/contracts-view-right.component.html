@@ -1212,6 +1212,7 @@
     (isSusscess)="checkSusscess($event)"
     [taskAdd]="taskAdd"
     (moveStage)="handelMoveStage($event)"
+    [isAdmin]="contract?.isAdminAll"
   ></step-task>
   <!-- [taskAdd]="dataTaskAdd" -->
 </ng-template>

@@ -103,6 +103,11 @@ export class CustomFieldService {
   sumAndMul(stringMath, haveSum = false) {
     if (!stringMath || !this.isExitOperator(this.operator, stringMath))
       return stringMath;
+    if (stringMath.includes('+-'))
+      stringMath = stringMath.replaceAll('+-', '-');
+    if (stringMath.includes('--'))
+      stringMath = stringMath.replaceAll('--', '+');
+
     if (stringMath.includes('+')) {
       let arrAdd = stringMath.trim().split('+');
       if (arrAdd?.length > 0) {
