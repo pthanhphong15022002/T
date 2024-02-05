@@ -12,7 +12,9 @@
   [predicates]="predicates"
   [dataValues]="dataValues"
   (selectedChange)="selectedChange($event)"
-  [hideMoreFuncs]="true"
+  [hideMoreFuncs]="false"
+  (changeDataMF)="changeDataMF($event, dataSelected)"
+  (clickMF)="clickMF($event, dataSelected)"
 
 >
 </codx-views>
@@ -66,5 +68,6 @@
   <lib-view-list-instances
     [dataSelected]="data"
     [formModel]="view.formModel"
+    (dbClickEvent)="dbClick($event)"
   ></lib-view-list-instances>
 </ng-template>

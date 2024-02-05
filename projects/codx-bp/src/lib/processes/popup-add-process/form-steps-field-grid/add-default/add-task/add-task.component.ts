@@ -19,6 +19,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
   @Input() activityType: any;
   isNewForm = false;
   listUses = [];
+  listUses2 = [];
   listTo = [];
   listCC = [];
   checkList = [];
@@ -63,6 +64,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     if(this.data) {
       this.stage = this.listStage.filter(x=>x.recID == this.data.stageID)[0];
       this.listUses = this.data.permissions || [];
+      this.listUses2 = this.data.settings?.objects || [];
       if(this.process.documentControl && this.process.documentControl.length>0)
       {
         var entityName = this.formModel.entityName;
@@ -197,6 +199,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
         })
       }
     }
+    else if(this.data.activityType == "Event" && !this.data.settings?.eventType) this.data.settings.eventType = '1';
   }
   valueChange(e:any)
   {
@@ -224,6 +227,26 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     this.dataChange.emit(this.data);
   }
 
+  valueChangeUserEvent(e:any)
+  {
+    if(e?.data?.dataSelected)
+    {
+      e?.data?.dataSelected.forEach(element => {
+        this.listUses2.push(
+          {
+            objectID: element.id,
+            objectName: element.text,
+            objectType: "U",
+            roleType: '3'
+          }
+        )
+      });
+    }
+
+    this.data.settings.objects = this.listUses2;
+    this.dataChange.emit(this.data);
+  }
+
   deleteUser(index:any)
   {
     this.listUses.splice(index,1);
@@ -231,6 +254,12 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     this.dataChange.emit(this.data);
   }
 
+  deleteUser2(index:any)
+  {
+    this.listUses2.splice(index,1);
+    this.data.settings.objects = this.listUses;
+    this.dataChange.emit(this.data);
+  }
   changeStage(e:any)
   {
     this.stage = this.parent = e;
@@ -248,6 +277,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       isRequired: false,
       count : 0,
       listType: "1",
+      stepID: this.data?.recID,
       stepNo: this.data?.stepNo,
       fieldID: this.data?.recID,
       memo: this.data?.memo,
@@ -266,6 +296,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       isRequired: false,
       count : 0,
       listType: "1",
+      stepID: this.data?.recID,
       stepNo: this.data?.stepNo,
       fieldID: this.data?.recID,
       memo: this.data?.memo,
@@ -401,6 +432,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
               isRequired: false,
               count : 0,
               listType: "0",
+              stepID: this.data?.recID,
               stepNo: this.data?.stepNo,
               fieldID: this.data?.recID,
               memo: this.data?.memo,
@@ -492,6 +524,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
           isRequired: false,
           count : 0,
           isList: "0",
+          stepID: this.data?.recID,
           stepNo: this.data?.stepNo,
           fieldID: this.data?.recID,
           memo: this.data?.memo,

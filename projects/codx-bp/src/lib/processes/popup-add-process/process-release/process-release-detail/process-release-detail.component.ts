@@ -101,13 +101,14 @@ export class ProcessReleaseDetailComponent implements OnInit{
         if(index >= 0)
         {
           elm2.permissions = typeof this.listTask[index]?.permissions === 'object' ? this.listTask[index].permissions : (this.listTask[index]?.permissions ? JSON.parse(this.listTask[index].permissions) : null);
-          elm2.permissions =  elm2?.permissions ? elm2.permissions.map((u) => u.objectID).join(';') : "";
+          elm2.permissions =  elm2?.permissions ? elm2.permissions.map((u) => u.objectID).join(';') : null;
           elm2.startDate = this.listTask[index].startDate ? moment(this.listTask[index].startDate).format('dd/MM/yyyy') : 'dd/MM/yyyy';
           elm2.endDate = this.listTask[index].endDate ? moment(this.listTask[index].endDate).format('dd/MM/yyyy') : 'dd/MM/yyyy';
           elm2.actualStart = this.listTask[index].actualStart ? moment(this.listTask[index].actualStart).format('dd/MM/yyyy') : 'dd/MM/yyyy';
           elm2.actualEnd = this.listTask[index].actualEnd ? moment(this.listTask[index].actualEnd).format('dd/MM/yyyy') : 'dd/MM/yyyy';
           elm2.status = this.listTask[index].status;
         }
+        else elm2.permissions = null;
       }
 
       if(elm2.activityType == "Conditions" && elm2.child && elm2.child.length>0)
