@@ -332,7 +332,13 @@ export class AddUserComponent extends UIComponent implements OnInit {
   ) {
     if (this.form.formGroup.valid) {
       this.dialog.dataService
-        .save((opt: any) => this.beforeSave(opt), 0, '', '', true)
+        .save(
+          (opt: any) => this.beforeSave(opt),
+          0,
+          '',
+          '',
+          mode === 'addUserRoles' ? false : true
+        )
         .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {
           if (res) {

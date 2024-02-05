@@ -116,6 +116,7 @@ export class ExtendNoteBookComponent implements OnInit {
         dialog.closed.subscribe((res) => {
           if (res.event) {
             this.codxview.addDataSource(res.event);
+            this.dataSelected = res.event;
             this.wsSv.loadDataList.next({data: res.event, type: 'notebook', action: 'add'});
             this.ref.detectChanges();
           }
@@ -138,6 +139,7 @@ export class ExtendNoteBookComponent implements OnInit {
   }
 
   clickMFNoteBook(e: any, data: any) {
+    this.dataSelected = data;
     switch (e?.functionID) {
       //Chỉnh sửa
       case 'SYS03': {
@@ -158,6 +160,7 @@ export class ExtendNoteBookComponent implements OnInit {
         dialog.closed.subscribe((res) => {
           if (res.event) {
             res.event['modifiedOn'] = new Date();
+            this.dataSelected = res.event;
             this.codxview.updateDataSource(res.event);
             this.wsSv.loadDataList.next({data: res.event, type: 'notebook', action: 'update'});
             this.ref.detectChanges();

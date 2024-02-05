@@ -82,27 +82,54 @@
           </div>
         </ng-container>
         <ng-container *ngIf="view.type == 1">
-          <div class="h-100">
-            <codx-listview
-              #listView
-              [entityName]="entityName"
-              [gridViewName]="gridViewName"
-              [predicate]="predicate"
-              [dataValue]="dataValue"
-              [predicates]="predicates"
-              [dataValues]="dataValues"
-              [service]="service"
-              [assemblyName]="assemblyName"
-              [className]="className"
-              [method]="method"
-              [itemTemplate]="itemTemplateList"
-              (onSelectionChanged)="onSelectedViewList($event)"
-              [funcID]="funcID"
-              type="listView"
-              [formName]="formName"
-            >
-            </codx-listview>
-          </div>
+          <ng-container *ngIf="emtry">
+            <div class="h-100" *ngIf="loaded">
+              <ng-container *ngIf="dataSource && dataSource.length > 0;else emtry">
+                <codx-listview
+                  #listView
+                  [entityName]="entityName"
+                  [gridViewName]="gridViewName"
+                  [predicate]="predicate"
+                  [dataValue]="dataValue"
+                  [predicates]="predicates"
+                  [dataValues]="dataValues"
+                  [service]="service"
+                  [assemblyName]="assemblyName"
+                  [className]="className"
+                  [method]="method"
+                  [itemTemplate]="itemTemplateList"
+                  (onSelectionChanged)="onSelectedViewList($event)"
+                  [funcID]="funcID"
+                  type="listView"
+                  [formName]="formName"
+                >
+                </codx-listview>
+              </ng-container>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="emtry == null">
+            <div class="h-100">
+              <codx-listview
+                #listView
+                [entityName]="entityName"
+                [gridViewName]="gridViewName"
+                [predicate]="predicate"
+                [dataValue]="dataValue"
+                [predicates]="predicates"
+                [dataValues]="dataValues"
+                [service]="service"
+                [assemblyName]="assemblyName"
+                [className]="className"
+                [method]="method"
+                [itemTemplate]="itemTemplateList"
+                (onSelectionChanged)="onSelectedViewList($event)"
+                [funcID]="funcID"
+                type="listView"
+                [formName]="formName"
+              >
+              </codx-listview>
+            </div>
+          </ng-container>
         </ng-container>
         <ng-container *ngIf="view.type == 11">
           <codx-gridview-v2
