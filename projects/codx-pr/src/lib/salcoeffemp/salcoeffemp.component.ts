@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, HostBinding, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AuthStore, ButtonModel, CRUDService, CodxGridviewV2Component, DataService, DialogModel, NotificationsService, SidebarModel, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
 import { PopupAddSalCoeffEmpComponent } from './popup/popup-add-salcoeffemp/popup-add-salcoeffemp.component';
 import { PopupCoppySalCoeffEmpComponent } from './popup/popup-coppy-salcoeffemp/popup-coppy-salcoeffemp.component';
@@ -10,6 +10,8 @@ import moment from 'moment';
   styleUrls: ['./salcoeffemp.component.css']
 })
 export class SalcoeffempComponent extends UIComponent implements OnInit, AfterViewInit{
+
+  @HostBinding('class') get valid() { return "w-100 h-100"; }
   views:ViewModel[];
   dtServiceOrgUnit:CRUDService;
   columnsGrid:any[] = [];
@@ -195,7 +197,7 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
   // changeDataMF
   changeDataMF(event:any){
     event.forEach((x:any) => { 
-      if(x.functionID == 'SYS02' || x.functionID == 'SYS04' && (this.userPermission.write == "9" || this.userPermission.isAdmin))
+      if((x.functionID == 'SYS02' || x.functionID == 'SYS04') && (this.userPermission?.write == "9" || this.userPermission?.isAdmin))
       {
         x.disabled = false;
         x.isbookmark = true;
@@ -290,7 +292,7 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
   clickShowTooltip(){
     let dialog = new DialogModel();
     dialog.FormModel = this.view.formModel;
-    this.callfc.openForm(this.tmpTooltip,"",300,0,this.view.funcID,null,"",dialog);
+    this.callfc.openForm(this.tmpTooltip,"",400,400,this.view.funcID,null,"",dialog);
   }
   
 }

@@ -20,27 +20,31 @@
       <span class="icon-navigate_next"></span>
     </div>
     <div class="d-flex align-items-center">
-      <div [class]="modeView == 1? 'text-primary': 'text-muted'">
-        <codx-label [formModel]="view.formModel" [name]="'lblbreadCumbs2'" [default]="'Chi tiết theo ngày'" (click)="switchModeView(1)" class="fw-bold fs-4 ms-2 cursor-pointer" [class]="modeView == 1 ? 'text-primary' : 'text-muted'">
-        </codx-label>
-        <span class="fw-bolder">({{modeView == 1 ? detailByDateRowCount : 0}})</span>
-      </div>
-      <span class="ms-2 fw-bold fs-4">|</span>
-      <div [class]="modeView == 2 ? 'text-primary': 'text-muted'">
-        <codx-label [formModel]="view.formModel" [name]="'lblKowDSummary'" [default]="'Bảng công tổng hợp'" (click)="switchModeView(2)" class="ms-2 fw-bold fs-4 cursor-pointer" [class]="modeView == 2 ? 'text-primary': 'text-muted'">
-        </codx-label>
-        <span class="fw-bolder">({{modeView == 2 ? summaryKowDRowCount: 0}})</span>
-      </div>
+      <ng-container *ngIf="UIMode == '1';else tmpKowDMonth">
+        <div [class]="modeView == '1' ? 'text-primary': 'text-muted'" >
+          <codx-label [formModel]="view.formModel" [name]="'lblbreadCumbs2'" [default]="'Chi tiết theo ngày'" (click)="switchModeView('1')" class="fw-bold fs-4 ms-2 cursor-pointer" [class]="modeView == '1' ? 'text-primary' : 'text-muted'">
+          </codx-label>
+          <span class="fw-bolder">({{modeView == '1' ? detailByDateRowCount : 0}})</span>
+        </div>
+        <span class="ms-2 fw-bold fs-4">|</span>
+        <div [class]="modeView == '2' ? 'text-primary': 'text-muted'">
+          <codx-label [formModel]="view.formModel" [name]="'lblKowDSummary'" [default]="'Bảng công tổng hợp'" (click)="switchModeView('2')" class="ms-2 fw-bold fs-4 cursor-pointer" [class]="modeView == '2' ? 'text-primary': 'text-muted'">
+          </codx-label>
+          <span class="fw-bolder">({{modeView == '2' ? summaryKowDRowCount: 0}})</span>
+        </div>
+      </ng-container>
+      <ng-template #tmpKowDMonth>
+        <div class="fw-bolder">({{summaryKowDRowCount}})</div>
+      </ng-template>
     </div>
   </div>
 </ng-template>
 
 <!-- template panel left -->
-<ng-template #leftPanel let-data>
+<ng-template #tmpPanelLeft let-data>
   <codx-listview 
-    id="chartOrg" 
-    #chartOrg 
-    [itemTemplate]="tempTree" 
+    class="h-100"
+    [itemTemplate]="tmpItemTemplate" 
     type="treeView" 
     entityName="HR_OrganizationUnits"
     service="HR" 
@@ -76,7 +80,7 @@
 </ng-template>
 
 <!-- template tree HR_OrgUnit -->
-<ng-template #tempTree let-data>
+<ng-template #tmpItemTemplate let-data>
   <div class="d-flex align-items-top py-1">
     <i class="icon-home me-2"></i>
     <span>{{ data?.orgUnitName }}</span>
@@ -86,7 +90,7 @@
 <!-- template panel right -->
 <ng-template #tmpPanelRight>
   <ng-container *ngIf="dataValues">
-    <div class="w-100 h-100" [ngClass]="modeView == 1 ? 'd-block' : 'd-none'">
+    <div [class]="modeView == '1' ? 'd-block' : 'd-none'" class="w-100 h-100">
       <codx-gridview-v2 *ngIf="detailByDayColoumns && detailByDayColoumns?.length > 0 && loadedGridDetail" 
         #codxGrvDetailDay 
         [formName]="'KowDs'"
@@ -106,7 +110,7 @@
         (onDatabound)="onDatabound(1)">
       </codx-gridview-v2>
     </div>
-    <div class="w-100 h-100" [ngClass]="modeView == 2 ? 'd-block' : 'd-none'">
+    <div [class]="modeView == '2' ? 'd-block' : 'd-none'" class="w-100 h-100">
       <codx-gridview-v2 *ngIf="summaryColumns && summaryColumns?.length > 0 && loadedGridSummary"
         #codxGrvSummaryKow 
         [formName]="'KowDs'"
@@ -173,7 +177,7 @@
 
 <!-- template column kowd -->
 <ng-template #tempCellDetail let-data>
-  <div class="d-flex align-items-center">
+  <div class="d-flex align-items-center justify-content-center">
     <ng-container *ngIf="data[data?.column?.field]?.length > 0">
       <ng-container *ngFor="let item of data[data.column.field];let idx = index"> 
         <div class="text-center p-1 me-2 text-dark" [ngStyle]="{'background-color':vllHR033[item.KowType]?.color}" >
@@ -192,16 +196,16 @@
 
 <!-- template popup note HR_Kows -->
 <ng-template #tmpPopupNoteKow let-dialog>
-  <div class="container p-4">
-    <div class="form-group">
-      <div class="d-flex align-items-center justify-content-between">
-          <codx-label [formModel]="view.formModel" name="lblNote" [default]="'Chú thích'" class="fs-3 fw-bold text-primary"></codx-label>
+  <div class="d-flex flex-column align-items-stretch h-100 py-2">
+    <div class="form-group mb-0">
+      <div class="d-flex align-items-center justify-content-between p-4">
+          <codx-label [formModel]="view.formModel" name="lblNote" [default]="'Chú thích'" class="fs-3 fw-bold text-primary text-uppercase"></codx-label>
           <button type="button" class="btn btn-icon btn-light" (click)="dialog?.close()">
               <span class="icon-close icon-18"></span>
           </button>
       </div> 
     </div>
-    <div class="form-group ps-2">
+    <div class="form-group ps-5 mb-0 overflow-auto">
       <ng-container *ngIf="lstHRKow && lstHRKow.length > 0 && vllHR033">
         <div *ngFor="let item of lstHRKow" class="d-flex flex-column py-2">
             <div class="d-flex align-items-center">
@@ -212,16 +216,15 @@
       </ng-container>
     </div>
   </div>
-  
 </ng-template>
 
 <!-- template popup gen kowd -->
 <ng-template #tmpPopupKowD let-dialog>
-  <div class="container p-4">
+  <div class="position-relative h-100 p-4">
     <div class="row">
       <div class="form-group">
         <div class="d-flex align-items-center justify-content-between">
-          <h3 class="text-primary">CHÚ THÍCH</h3>
+          <codx-label [formModel]="view.formModel" name="lblNote" [default]="'Chú thích'" class="fs-3 fw-bold text-primary text-uppercase"></codx-label>
           <button type="button" class="btn btn-icon btn-light" (click)="dialog.close()">
               <span class="icon-close icon-18"></span>
           </button>
@@ -266,7 +269,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="row mt-4">
+    <div class="row position-absolute bottom-0 end-0 me-2">
       <div class="form-group">
         <div class="d-flex justify-content-end">
           <button type="button" class="btn btn-primary" (click)="clickBtn(dialog)" [disabled]="!(userPermission && (userPermission.isAdmin || userPermission.write == '9'))">
