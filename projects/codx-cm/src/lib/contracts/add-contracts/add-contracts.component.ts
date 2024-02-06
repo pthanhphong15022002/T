@@ -1253,22 +1253,26 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
 
   //#endregion
 
-  getSettingMail(processID){
-    this.contractService.getSettingMailByProcessID(processID).subscribe(res => {
-      if(res){
-        this.contracts.isAlert = res[0];
-        this.contracts.mssgCode = res[1];
-        this.contracts.isMail = res[2];
-        this.contracts.expirationAlertTime = res[4];
-        if(this.contracts?.isMail){
-          this.contractService.copyTempMail([res[3], this.contracts?.emailTemplate]).subscribe(res => {
-            if(res){
-              this.contracts.emailTemplate = res;
-            }
-          })
+  getSettingMail(processID) {
+    this.contractService
+      .getSettingMailByProcessID(processID)
+      .subscribe((res) => {
+        if (res) {
+          this.contracts.isAlert = res[0];
+          this.contracts.mssgCode = res[1];
+          this.contracts.isMail = res[2];
+          this.contracts.expirationAlertTime = res[4];
+          if (this.contracts?.isMail) {
+            this.contractService
+              .copyTempMail([res[3], this.contracts?.emailTemplate])
+              .subscribe((res) => {
+                if (res) {
+                  this.contracts.emailTemplate = res;
+                }
+              });
+          }
         }
-      }
-    })
+      });
   }
 
   getListInstanceSteps(processId: any) {
@@ -1554,6 +1558,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.arrCaculateField = this.arrCaculateField.concat(fnum);
       }
     });
+    if (this.arrCaculateField?.length > 0)
+      this.arrCaculateField.sort((a, b) => {
+        if (a.dataFormat.includes('[' + b.fieldName + ']')) return 1;
+        else if (b.dataFormat.includes('[' + a.fieldName + ']')) return -1;
+        else return 0;
+      });
     this.isLoadedCF = true;
   }
   //tính toán
@@ -1572,14 +1582,23 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
       fieldsNum.forEach((f) => {
-        if (
-          dataFormat.includes('[' + f.fieldName + ']') &&
-          f.dataValue?.toString()
-        ) {
+        if (dataFormat.includes('[' + f.fieldName + ']')) {
+          if (!f.dataValue?.toString()) return;
           let dataValue = f.dataValue;
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
             '[' + f.fieldName + ']',
+            dataValue
+          );
+        }
+      });
+
+      this.arrCaculateField.forEach((x) => {
+        if (dataFormat.includes('[' + x.fieldName + ']')) {
+          if (!x.dataValue?.toString()) return;
+          let dataValue = x.dataValue;
+          dataFormat = dataFormat.replaceAll(
+            '[' + x.fieldName + ']',
             dataValue
           );
         }
@@ -1845,7 +1864,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     ) {
       this.cmService.addContracts([this.contracts]).subscribe((res) => {
         if (res) {
-          this.dialog.close(res);
+          // this.dialog.close(res);
         }
       });
     }

@@ -34,6 +34,7 @@ export class PopupCustomFieldComponent implements OnInit {
   taskID = ''; //task
   isShowMore = false; //mở rộng popup
   widthDefault = '550';
+  fieldOther = []; //Là form công việc
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -44,14 +45,22 @@ export class PopupCustomFieldComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    this.dialog = dialog;
     this.fields = JSON.parse(JSON.stringify(dt?.data?.data));
     this.titleHeader = dt?.data?.titleHeader;
     this.objectIdParent = dt?.data?.objectIdParent;
     this.customerID = dt?.data?.customerID;
     this.taskID = dt?.data?.taskID;
-    this.dialog = dialog;
+    this.fieldOther = dt?.data?.fieldOther ?? [];
+
     this.isAdd = dt?.data?.isAdd ?? false;
     this.arrCaculateField = this.fields.filter((x) => x.dataType == 'CF');
+    if (this.arrCaculateField?.length > 0)
+      this.arrCaculateField.sort((a, b) => {
+        if (a.dataFormat.includes('[' + b.fieldName + ']')) return 1;
+        else if (b.dataFormat.includes('[' + a.fieldName + ']')) return -1;
+        else return 0;
+      });
     //lấy độ rộng popup
     this.widthDefault = this.dialog.dialog.width
       ? this.dialog.dialog.width.toString()
@@ -171,13 +180,17 @@ export class PopupCustomFieldComponent implements OnInit {
   }
 
   //----------------------CACULATE---------------------------//
-  caculateField(versionID = null) {
+  caculateField() {
     if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
     let fieldsNum = this.fields.filter((x) => x.dataType == 'N');
     // let fieldsNum = this.fields.filter(
     //   (x) => x.dataType == 'N' || x.dataType == 'CF'
     // );
     if (!fieldsNum || fieldsNum?.length == 0) return;
+    if (this.fieldOther?.length > 0) {
+      //lấy các trường liên quan
+      fieldsNum = fieldsNum.concat(this.fieldOther);
+    }
 
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
@@ -185,21 +198,29 @@ export class PopupCustomFieldComponent implements OnInit {
       // if (!check) return;
       // if (field != null && fieldName != null && dataValue != null)
       //   dataFormat.replaceAll('[' + fieldName + ']', dataValue);
-
       fieldsNum.forEach((f) => {
-        if (
-          dataFormat.includes('[' + f.fieldName + ']') &&
-          f.dataValue?.toString()
-        ) {
+        if (dataFormat.includes('[' + f.fieldName + ']')) {
+          if (!f.dataValue?.toString()) return;
           let dataValue = f.dataValue;
-          if (versionID) {
-            let ver = f?.version?.find((x) => x.refID == versionID);
-            if (ver) dataValue = ver?.dataValue;
-          }
+          // if (versionID) {
+          //   let ver = f?.version?.find((x) => x.refID == versionID);
+          //   if (ver) dataValue = ver?.dataValue;
+          // }
 
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
             '[' + f.fieldName + ']',
+            dataValue
+          );
+        }
+      });
+
+      this.arrCaculateField.forEach((x) => {
+        if (dataFormat.includes('[' + x.fieldName + ']')) {
+          if (!x.dataValue?.toString()) return;
+          let dataValue = x.dataValue;
+          dataFormat = dataFormat.replaceAll(
+            '[' + x.fieldName + ']',
             dataValue
           );
         }
@@ -213,20 +234,15 @@ export class PopupCustomFieldComponent implements OnInit {
         if (index != -1) {
           this.fields[index] = this.upDataVersion(
             this.fields[index],
-            obj.dataValue
+            obj.dataValue,
+            fieldsNum
           );
-          // this.fields[index].dataValue = obj.dataValue;
         }
-        // let fieldCFOnCF = this.arrCaculateField.filter((f) =>
-        //   f.dataFormat.includes('[' + obj.fieldName + ']')
-        // );
-        // if (fieldCFOnCF?.length > 0) {
-        //   fieldCFOnCF.forEach((x) => {
-        //     this.caculateField(x, obj.fieldName, obj.dataValue);
-        //   });
-        // }
 
+        //this.getElement(obj.recID);
         this.changeDetectorRef.detectChanges();
+      } else if (obj.dataValue) {
+        //Chua xu ly
       }
     });
   }
@@ -234,7 +250,7 @@ export class PopupCustomFieldComponent implements OnInit {
   //------------------END_CACULATE--------------------//
 
   //updata Version
-  upDataVersion(field, value) {
+  upDataVersion(field, value, listFN = []) {
     field.dataValue = value;
     if (this.taskID) {
       if (field?.versions?.length > 0) {
@@ -259,9 +275,47 @@ export class PopupCustomFieldComponent implements OnInit {
           },
         ];
       }
+    } else {
+      //update cac version
+      if (listFN?.length > 0) {
+        var versions = field.versions;
+        if (versions?.length > 0) {
+          versions.forEach((vs) => {
+            let listConver = [];
+            listFN.forEach((fn) => {
+              let f = JSON.parse(JSON.stringify(fn));
+              var vsion = f?.versions.find((x) => x.refID == vs.refID);
+              if (vsion != null) f.dataValue = vsion.dataValue;
+              listConver.push(f);
+            });
+            let dataVer = this.caculateVersionField(listConver, field);
+            if (dataVer != null) vs.dataValue = dataVer;
+          });
+        }
+      }
     }
 
     return field;
+  }
+  //cacule Version
+  caculateVersionField(fieldsN, fieldCF) {
+    let dataFormat = fieldCF.dataFormat;
+    fieldsN.forEach((f) => {
+      if (
+        dataFormat.includes('[' + f.fieldName + ']') &&
+        f.dataValue?.toString()
+      ) {
+        let dataValue = f.dataValue;
+        if (f.dataFormat == 'P') dataValue = dataValue + '/100';
+        dataFormat = dataFormat.replaceAll('[' + f.fieldName + ']', dataValue);
+      }
+    });
+
+    if (!dataFormat.includes('[')) {
+      //tinh toán
+      return this.customFieldSV.caculate(dataFormat);
+    }
+    return null;
   }
 
   //openpopup
@@ -269,5 +323,12 @@ export class PopupCustomFieldComponent implements OnInit {
     this.isShowMore = !this.isShowMore;
     this.dialog.setWidth(this.isShowMore ? width : this.widthDefault);
     this.changeDetectorRef.detectChanges();
+  }
+
+  getElement(recID) {
+    let el = document.getElementById(recID);
+    if (el) {
+      debugger;
+    }
   }
 }

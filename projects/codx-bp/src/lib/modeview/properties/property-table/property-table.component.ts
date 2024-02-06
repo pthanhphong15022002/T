@@ -194,7 +194,7 @@ export class PropertyTableComponent extends BasePropertyComponent implements OnI
     data.description = data.description || null;
     data.dataType = data.dataType || "String";
     data.Format = data?.Format || "";
-    data.controlType = data?.controlType || "TextBox";
+    data.controlType = data?.controlType || data.value;
     data.isRequired = data?.isRequired != null ? data?.isRequired : false;
     data.defaultValue = data.defaultValue || null;
     data.columnNo = 0;

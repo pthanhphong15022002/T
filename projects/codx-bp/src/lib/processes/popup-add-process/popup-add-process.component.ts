@@ -79,7 +79,7 @@ import {
   BP_Processes_Permissions,
   BP_Processes_Steps,
 } from '../../models/BP_Processes.model';
-import { Subject, isObservable, takeUntil } from 'rxjs';
+import { Subject, firstValueFrom, isObservable, takeUntil } from 'rxjs';
 import { ModeviewComponent } from '../../modeview/modeview.component';
 import { DynamicSettingControlComponent } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component';
 import { PopupPermissionsProcessesComponent } from './popup-permissions-processes/popup-permissions-processes.component';
@@ -135,6 +135,7 @@ export class PopupAddProcessComponent {
   countValidate = 0;
   gridViewSetup: any;
   lstShowExtends = [];
+  dataValueSettings: any;
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
@@ -149,7 +150,8 @@ export class PopupAddProcessComponent {
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
-    if (dialog.dataService.dataSelected) this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    if (dialog.dataService.dataSelected)
+      this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.action = dt?.data?.action;
     this.title = dt?.data?.title;
     this.user = this.authStore.get();
@@ -160,17 +162,25 @@ export class PopupAddProcessComponent {
     this.genData();
   }
 
-  genData()
-  {
-    if(this.action == 'add')
-    {
-      this.data.settings = [
-        {
-          fieldName : "InstanceNoControl",
-          fieldValue: "0"
-        }
-      ];
-      this.data.category = "1";
+  genData() {
+    if (this.action == 'add') {
+      this.data.category = '1';
+      this.api
+        .execSv<any>(
+          'SYS',
+          'ERM.Business.SYS',
+          'SettingsBusiness',
+          'GetSettingByFormAsync',
+          ['BPParameters', '1']
+        )
+        .subscribe((st) => {
+          if (st && st['1']) {
+            this.dataValueSettings = JSON.stringify(st['1']);
+            this.data.settings = st['1'];
+          }else{
+            this.data.settings = [];
+          }
+        });
     }
   }
   ngAfterViewInit(): void {
@@ -286,11 +296,16 @@ export class PopupAddProcessComponent {
     var processallowDrag = null;
     var processDefaultProcess = null;
     var processCompleteControl = null;
-    if(this.data.settings && this.data.settings.length > 0)
-    {
-      processallowDrag =  this.data.settings.filter(x=>x.fieldName == "AllowDrag")[0];
-      processDefaultProcess = this.data.settings.filter(x=>x.fieldName == "DefaultProcess")[0];
-      processCompleteControl = this.data.settings.filter(x=>x.fieldName == "CompleteControl")[0];
+    if (this.data.settings && this.data.settings.length > 0) {
+      processallowDrag = this.data.settings.filter(
+        (x) => x.fieldName == 'AllowDrag'
+      )[0];
+      processDefaultProcess = this.data.settings.filter(
+        (x) => x.fieldName == 'DefaultProcess'
+      )[0];
+      processCompleteControl = this.data.settings.filter(
+        (x) => x.fieldName == 'CompleteControl'
+      )[0];
     }
 
     stage.settings = JSON.stringify({
@@ -448,7 +463,7 @@ export class PopupAddProcessComponent {
         this.updateNodeStatus(oldNode, newNode);
         this.processTab++;
         this.currentTab++;
-        this.updateProcessStep().subscribe(item=>{
+        this.updateProcessStep().subscribe((item) => {
           this.dialog.dataService.update(item, true).subscribe();
         });
         break;
@@ -688,21 +703,11 @@ export class PopupAddProcessComponent {
     let option = new DialogModel();
     option.zIndex = 1010;
     option.FormModel = JSON.parse(JSON.stringify(this.dialog.formModel));
-    // let dataValue = await firstValueFrom(this.api
-    //   .execSv<any>('BG', 'BG', 'ScheduleTasksBusiness', 'GetScheduleTasksAsync', [
-    //     'ACP101',
-    //   ]));
-
     let data = {
-      newSetting: this.data.settings ?? [],
-      lineType: '1',
-      tilte: 'Thiết lập nâng cao',
-      // settingFull: dataValue,
-      // dataValue: dataValue?.paraValues
-    };
-
-    this.callfc.openForm(
-      DynamicSettingControlComponent,
+      data: this.data
+    }
+    let popupDialog = this.callfc.openForm(
+      FormAdvancedSettingsComponent,
       '',
       700,
       800,
@@ -711,20 +716,11 @@ export class PopupAddProcessComponent {
       '',
       option
     );
-    // let popupDialog = this.callfc.openForm(
-    //   FormAdvancedSettingsComponent,
-    //   '',
-    //   700,
-    //   800,
-    //   '',
-    //   data,
-    //   '',
-    //   option
-    // );
-    // popupDialog.closed.subscribe((e) => {
-    //   if (e) {
-    //   }
-    // });
+    popupDialog.closed.subscribe((e) => {
+      if (e && e?.event) {
+        this.data = JSON.parse(JSON.stringify(e?.event));
+      }
+    });
   }
   //#endregion
   //#region form setting properties
@@ -800,36 +796,37 @@ export class PopupAddProcessComponent {
         // }
         if (this.data?.steps[1]?.extendInfo) {
           this.extendInfos.forEach((element) => {
-            if(element.controlType == "Attachment")
-            {
-              if(!this.data.documentControl)
-              {
-                var obj = 
-                {
-                  recID : Util.uid(),
-                  title : element.title,
+            if (element.controlType == 'Attachment') {
+              if (!this.data.documentControl) {
+                var obj = {
+                  recID: Util.uid(),
+                  title: element.title,
                   isRequired: false,
-                  count : 0,
-                  isList: "1",
+                  count: 0,
+                  isList: '1',
+                  stepID: this.data?.steps[1].recID,
                   stepNo: this.data?.steps[1].stepNo,
                   fieldID: this.data?.steps[1].recID,
                   memo: this.data?.steps[1].memo,
-                }
+                };
                 this.data.documentControl = [obj];
-              }
-              else
-              {
-                if(element.documentControl && element.documentControl.length >0)
-                {
-                  var doc = JSON.parse(JSON.stringify(this.data.documentControl));
-                  element.documentControl.forEach(docu=>{
-                    docu.stepNo =  this.data?.steps[1].stepNo;
+              } else {
+                if (
+                  element.documentControl &&
+                  element.documentControl.length > 0
+                ) {
+                  var doc = JSON.parse(
+                    JSON.stringify(this.data.documentControl)
+                  );
+                  element.documentControl.forEach((docu) => {
+                    docu.stepID = this.data?.steps[1].recID;
+                    docu.stepNo = this.data?.steps[1].stepNo;
                     docu.fieldID = this.data?.steps[1].recID;
                     docu.memo = this.data?.steps[1].memo;
-                    var index = doc.findIndex(x=>x.recID == docu.recID);
-                    if(index>=0) doc[index] = docu;
+                    var index = doc.findIndex((x) => x.recID == docu.recID);
+                    if (index >= 0) doc[index] = docu;
                     else doc.push(docu);
-                  })
+                  });
                   this.data.documentControl = doc;
                 }
               }
@@ -846,6 +843,12 @@ export class PopupAddProcessComponent {
               element.dataFormat =
                 element.dataFormat?.length > 0
                   ? JSON.stringify(element.dataFormat)
+                  : null;
+            }
+            if (typeof element.tableFormat != 'string') {
+              element.tableFormat =
+                element.tableFormat?.length > 0
+                  ? JSON.stringify(element.tableFormat)
                   : null;
             }
           });
@@ -912,9 +915,9 @@ export class PopupAddProcessComponent {
     let data = [];
     op.className = 'ProcessesBusiness';
     op.service = 'BP';
-    if(this.data?.steps?.length > 0){
+    if (this.data?.steps?.length > 0) {
       this.data?.steps?.forEach((ele) => {
-        if(typeof ele.settings !== 'string'){
+        if (typeof ele.settings !== 'string') {
           ele.settings = JSON.stringify(ele.settings);
         }
       });
@@ -928,11 +931,12 @@ export class PopupAddProcessComponent {
     }
 
     let result = JSON.parse(JSON.stringify(this.data));
-    result.steps.forEach((elm :any)=>{
+    result.steps.forEach((elm: any) => {
       delete elm.child;
 
-      if(typeof elm.settings === 'object')  elm.settings = JSON.stringify(elm.settings);
-    })
+      if (typeof elm.settings === 'object')
+        elm.settings = JSON.stringify(elm.settings);
+    });
 
     op.data = result;
     return true;
@@ -951,13 +955,19 @@ export class PopupAddProcessComponent {
       this.data
     );
   }
-  updateProcessStep()
-  {
+  updateProcessStep() {
     let result = JSON.parse(JSON.stringify(this.data));
-    result.steps.forEach((elm :any)=>{
+    result.steps.forEach((elm: any) => {
       delete elm.child;
-      if(typeof elm.settings === 'object')  elm.settings = JSON.stringify(elm.settings);
-    })
-    return this.api.execSv("BP","BP","ProcessesBusiness","UpdateProcessAsync",result);
+      if (typeof elm.settings === 'object')
+        elm.settings = JSON.stringify(elm.settings);
+    });
+    return this.api.execSv(
+      'BP',
+      'BP',
+      'ProcessesBusiness',
+      'UpdateProcessAsync',
+      result
+    );
   }
 }

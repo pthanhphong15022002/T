@@ -1,0 +1,22 @@
+:ng-deep{
+  .button-area{
+    display: none !important;
+  }
+
+  .parent-container:hover{
+    .button-area{
+      display: block !important;
+    }
+  }
+
+
+}
+.button-area{
+  display: none !important;
+}
+
+.parent-container:hover{
+  .button-area{
+    display: block !important;
+  }
+}

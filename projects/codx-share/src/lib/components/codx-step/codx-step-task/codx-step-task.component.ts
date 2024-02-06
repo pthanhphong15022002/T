@@ -66,6 +66,7 @@ import { environment } from 'src/environments/environment';
 import { Location } from '@angular/common';
 import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
 import { PopupCustomFieldComponent } from '../../codx-input-custom-field/codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
+import { CustomFieldService } from '../../codx-input-custom-field/custom-field.service';
 @Component({
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
@@ -218,7 +219,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private activedRouter: ActivatedRoute,
     private tenantStore: TenantStore,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private customFieldSV: CustomFieldService
   ) {
     this.user = this.authStore.get();
     this.id = Util.uid();
@@ -2881,12 +2883,28 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       });
   }
 
+  //field chứa trong form
   getFields(listField, fieldID) {
     if (listField?.length > 0) {
       this.listFieldTask = listField?.filter((field) =>
         fieldID.includes(field?.recID)
       );
       return this.listFieldTask;
+    }
+    return null;
+  }
+  //field khác và có giá trị ddeer tisnh toan => tối ưu sẽ lấy các trường liên quan
+  getFieldsOther(listField, fieldID) {
+    var check = this.listFieldTask.some((x) => x.dataType == 'CF');
+    if (!check) return null;
+    if (listField?.length > 0) {
+      let fieldOrther = listField?.filter(
+        (field) =>
+          !fieldID.includes(field?.recID) &&
+          field.dataValue &&
+          field.dataType == 'N'
+      );
+      return fieldOrther;
     }
     return null;
   }
@@ -3080,6 +3098,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       // customerID: '',
       isAdd: false, ///là add form để lấy giá trị mặc định gán vào
       taskID: task.recID,
+      fieldOther: this.getFieldsOther(this.currentStep?.fields, task?.fieldID),
     };
     let formModel: FormModel = {
       entityName: 'DP_Instances_Steps_Fields',
@@ -3114,6 +3133,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
           }
         });
+        this.currentStep.fields = this.caculateField(
+          task?.fieldID,
+          listFieldStep
+        );
+
         if (countFieldChange == fields?.length) {
           task.status = '3';
           let actualEnd = new Date();
@@ -3371,5 +3395,61 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     task.owner = role.objectID;
     task.roles = [role];
     return role;
+  }
+
+  //Caculate
+  caculateField(fieldID, fields) {
+    let arrCaculateField = fields.filter(
+      (x) => x.dataType == 'CF' && !fieldID.includes(x.recID)
+    );
+    if (!arrCaculateField || arrCaculateField?.length == 0) return fields;
+
+    arrCaculateField.sort((a, b) => {
+      if (a.dataFormat.includes('[' + b.fieldName + ']')) return 1;
+      else if (b.dataFormat.includes('[' + a.fieldName + ']')) return -1;
+      else return 0;
+    });
+    let fieldsNum = fields.filter((x) => x.dataType == 'N');
+
+    if (!fieldsNum || fieldsNum?.length == 0) return fields;
+
+    arrCaculateField.forEach((obj) => {
+      let dataFormat = obj.dataFormat;
+
+      fieldsNum.forEach((f) => {
+        if (dataFormat.includes('[' + f.fieldName + ']')) {
+          if (!f.dataValue?.toString()) return;
+          let dataValue = f.dataValue;
+
+          if (f.dataFormat == 'P') dataValue = dataValue + '/100';
+          dataFormat = dataFormat.replaceAll(
+            '[' + f.fieldName + ']',
+            dataValue
+          );
+        }
+      });
+
+      arrCaculateField.forEach((x) => {
+        if (dataFormat.includes('[' + x.fieldName + ']')) {
+          if (!x.dataValue?.toString()) return;
+          let dataValue = x.dataValue;
+          dataFormat = dataFormat.replaceAll(
+            '[' + x.fieldName + ']',
+            dataValue
+          );
+        }
+      });
+
+      if (!dataFormat.includes('[')) {
+        //tinh toán
+        obj.dataValue = this.customFieldSV.caculate(dataFormat);
+        //tính toan end
+        let index = fields.findIndex((x) => x.recID == obj.recID);
+        if (index != -1) {
+          fields[index].dataValue = obj.dataValue;
+        }
+      }
+    });
+    return fields;
   }
 }

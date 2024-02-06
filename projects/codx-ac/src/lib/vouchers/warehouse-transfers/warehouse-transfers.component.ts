@@ -318,61 +318,14 @@ export class WarehouseTransfersComponent extends UIComponent {
    * @param dataCopy : data chứng từ sao chép
    */
   copyVoucher(dataCopy) {
-    // this.view.dataService.dataSelected = dataCopy;
-    // this.view.dataService
-    //   .copy((o) => this.setDefault(dataCopy, 'copy'))
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res != null) {
-    //       res.isCopy = true;
-    //       let datas = { ...res };
-    //       this.view.dataService
-    //         .saveAs(datas)
-    //         .pipe(takeUntil(this.destroy$))
-    //         .subscribe((res) => {
-    //           if (res) {
-    //             let data = {
-    //               headerText: this.headerText, //? tiêu đề voucher
-    //               journal: { ...this.journal }, //?  data journal
-    //               oData: { ...datas }, //?  data của cashpayment
-    //               hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-    //               baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-    //             };
-    //             let optionSidebar = new SidebarModel();
-    //             optionSidebar.DataService = this.view?.dataService;
-    //             optionSidebar.FormModel = this.view?.formModel;
-    //             let dialog = this.callfc.openSide(
-    //               WarehouseTransfersAddComponent,
-    //               data,
-    //               optionSidebar,
-    //               this.view.funcID
-    //             );
-    //             dialog.closed.subscribe((res) => {
-    //               if (res && res?.event) {
-    //                 if (res?.event?.type === 'discard') {
-    //                   if(this.view.dataService.data.length == 0){
-    //                     this.itemSelected = undefined;
-    //                     this.detectorRef.detectChanges();
-    //                   } 
-    //                 }
-    //               }
-    //             })
-    //             this.view.dataService
-    //               .add(datas)
-    //               .pipe(takeUntil(this.destroy$))
-    //               .subscribe();
-    //           }
-    //         });
-    //     }
-    //   });
     let newdataCopy = { ...dataCopy };
     if (this.journal && this.journal.assignRule == '0') {
       let data = {
-        currentVoucherNo: newdataCopy.voucherNo
+        journalType : this.journal.journalType,
+        journalNo : this.journalNo
       }
       let opt = new DialogModel();
-      let dataModel = new FormModel();
-      opt.FormModel = dataModel;
+      opt.FormModel = this.view.formModel;
       let dialog = this.callfc.openForm(
         NewvoucherComponent,
         'Nhập số chứng từ mới',
@@ -567,9 +520,7 @@ export class WarehouseTransfersComponent extends UIComponent {
    */
   changeMFDetail(event: any, type: any = '') {
     let data = this.view.dataService.dataSelected;
-    if (data) {
-      this.acService.changeMFTranfers(event, data, type, this.journal, this.view.formModel);
-    }
+    this.acService.changeMFTranfers(event, data, type, this.journal, this.view.formModel);
   }
 
   /**

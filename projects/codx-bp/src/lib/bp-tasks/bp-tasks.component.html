@@ -14,6 +14,20 @@
 >
 </codx-views>
 
+<!--grid-->
+<ng-template #templateMore let-data>
+  <div class="" style="height: 30px" *ngIf="hidenMF">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      [isBookMark]="false"
+      type="view"
+    ></codx-mfunc>
+  </div>
+</ng-template>
+<!--end-->
+
 <ng-template #headerTemplateList let-data>
   <div class="d-flex ps-2 pe-4 m-2 w-100" style="background: #c1c8cc">
     <div class="w-5">

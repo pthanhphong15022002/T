@@ -77,6 +77,7 @@ export class CodxReportPopupViewDetailComponent
   popupParams: any;
   isAfterRender=false;
   dialogRef: DialogRef;
+  isMorc:any = false;
   constructor(
     injector: Injector,
     private auth: AuthStore,
@@ -209,5 +210,31 @@ export class CodxReportPopupViewDetailComponent
     this.url = `${environment.apiUrl}/api/${
       this.data.service
     }/GetReportByPDF?reportID=${recID}&parameters=${this._paramString}&${sk}&=`+Util.uid();
+  }
+
+  closeForm(){
+    this.dialogRef.close();
+  }
+
+  editReport() {
+    if (this.data) {
+      let option = new DialogModel();
+      option.DataService = this.dialogRef.dataService;
+      option.FormModel = this.dialogRef.formModel;
+      this.callfc.openForm(
+        PopupAddReportComponent,
+        '',
+        screen.width,
+        screen.height,
+        ' ',
+        {
+          module: this.data.moduleID,
+          reportID: this.data.recID,
+        },
+        '',
+        option
+      );
+      this.isMorc = !this.isMorc;
+    }
   }
 }

@@ -1,0 +1,22 @@
+<table class="table mt-2">
+    <thead>
+      <tr class="fw-bold bg-light">
+        <th scope="col">Danh sách file đính kèm</th>
+        <th scope="col">Mẫu</th>
+        <th scope="col">Bắt buộc</th>
+        <th scope="col">Đính kèm</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-top cursor-pointer" *ngFor="let item of data, let i = index">
+          <th class="border-none">{{item.title}}</th>
+          <td><div class="d-flex align-items-center" (click)="openFormDetail(item.files)"><span>{{item.count}}</span><i class="icon-i-file-earmark-text icon-20 ms-2"></i></div></td>
+          <td><codx-input type="checkbox" field="isRequired" [crrValue]="item.isRequired" (valueChange)="valueChange($event,i)"></codx-input></td>
+          <td><i class="icon-attach_file" (click)="openAttach(item.recID,i)"></i></td>
+      </tr>
+    </tbody>
+  </table>
+  <codx-attachment #attachment hideImageThumb="1" hideImageUpload="1" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+  hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel" 
+  [idField]="'RecID'" [isSaveSelected]="'1'" [objectType]="formModel?.entityName" (fileSave)="fileSave($event)">
+  </codx-attachment>

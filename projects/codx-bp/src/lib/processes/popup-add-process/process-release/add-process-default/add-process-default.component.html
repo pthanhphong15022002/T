@@ -41,15 +41,52 @@
                     
                     <ng-container [ngSwitch]="child?.fieldType">
                         <ng-container *ngSwitchCase="'Attachment'">
-                            <codx-attachment #attachment
-                                [hideDes]="'1'"
-                                hideImageUpload="0"
-                                [formModel]="formModel"
-                                [objectId]="dataIns.recID" 
-                                hideBtnSave="1" hideFolder="1"
-                                referType="source"
-                               >
-                            </codx-attachment>
+                            <ng-container *ngIf="!child.documentControl">
+                                <codx-attachment #attachment
+                                    [hideDes]="'1'"
+                                    hideImageUpload="0"
+                                    [formModel]="formModel"
+                                    [objectId]="dataIns.recID" 
+                                    hideBtnSave="1" hideFolder="1"
+                                    referType="source"
+                                >
+                                </codx-attachment>
+                            </ng-container>
+                            <ng-container *ngIf="child.documentControl">
+                                <lib-attachment-grid [data]="dataIns.documentControl" [formModel]="formModel" (dataChange)="dataChangeAttachmentGrid($event)"></lib-attachment-grid>
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'Table'">
+                            <table class="table table-bordered mt-2">
+                                <thead>
+                                  <tr>
+                                    <th scope="col" *ngIf="child?.tableFormat?.hasIndexNo">#</th>
+                                    <th scope="col" *ngFor="let col of child.dataFormat">{{col.title}}</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container *ngFor="let s of dataIns?.datas[tableField] , let i = index">
+                                    <tr>
+                                        <th scope="row" *ngIf="child?.tableFormat?.hasIndexNo"></th>
+                                            <td *ngFor="let col of child.dataFormat">
+                                                <codx-input
+                                                    [formName]="formModel.formName" 
+                                                    [gridViewName]="formModel.gridViewName + col.fieldType"
+                                                    [type]="(col?.controlType | addProcessDefaultPrice : col?.controlType : col?.dataType : col?.dataFormat: col?.refType)"
+                                                    [refValue]="col.refValue"
+                                                    [refType]="col.refType" 
+                                                    [field]="getField(col?.fieldName)"
+                                                    [placeholder]="col?.description"
+                                                    (valueChange)="editTable(i,$event)"
+                                                    [crrValue]="s[getField(col?.fieldName)]"
+                                                    >
+                                                </codx-input>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                </tbody>
+                              </table>
+                              <span (click)="addRow()">Thêm</span>
                         </ng-container>
                         <ng-container *ngSwitchDefault>
                             <codx-input

@@ -8,7 +8,7 @@ import {
   AccumulationTooltipService,
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
-import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { AccordionModule, TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxCoreModule } from 'codx-core';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
@@ -114,7 +114,6 @@ import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 import { CashtransfersComponent } from './vouchers/cashtransfers/cashtransfers.component';
 import { CashtransfersAddComponent } from './vouchers/cashtransfers/cashtransfers-add/cashtransfers-add.component';
-import { DynamicSettingControlComponent } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component';
 import { DynamicSettingModule } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module';
 import { PeriodicControlComponent } from './share/periodic-control/periodic-control.component';
 import { FormatDatePipe } from './share/periodic-control/formatDate/format-date.pipe';
@@ -133,6 +132,10 @@ export const routes: Routes = [
         path: 'journalnames/:funcID',
         component: JournalV2Component,
         data: { noReuse: true },
+      },
+      {
+        path: 'categories/:funcID',
+        component: CategoriesComponent,
       },
       {
         path: 'report/:funcID',
@@ -321,29 +324,6 @@ export const routes: Routes = [
     ],
   },
 
-  // {
-  //   path: '',
-  //   component: LayoutNoToolbarComponent,
-  //   children: [
-  //     {
-  //       path: 'journalnames/:funcID',
-  //       component: JournalV2Component,
-  //       data: { noReuse: true },
-  //     },
-  //     { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
-  //   ],
-  // },
-  // {
-  //   path: '',
-  //   component: LayloutJournalComponent,
-  //   children: [
-  //     {
-  //       path: 'journalnames/:funcID',
-  //       component: JournalV2Component,
-  //       data: { noReuse: true },
-  //     },
-  //   ],
-  // },
   {
     path: '',
     component: LayoutOnlyHeaderComponent,
@@ -354,39 +334,15 @@ export const routes: Routes = [
       },
     ],
   },
-  // {
-  //   path: '',
-  //   component: LayoutComponent,
-  //   children: [
-  //     {
-  //       path: 'journalnames/:funcID',
-  //       component: JournalV2Component,
-  //       data: { noReuse: true },
-  // {
-  //   path: '',
-  //   component: LayloutJournalComponent,
-  //   children: [
-  //     {
-  //       path: 'journalnames/:funcID',
-  //       component: JournalV2Component,
-  //       data: { noReuse: true },
-  //     },
-  //   ],
-  // },
-  // {
-  //   path: '',
-  //   component: LayoutOnlyHeaderComponent,
-  //   children: [
-  //     {
-  //       path: 'MACContent/:funcID',
-  //       component: MACContentComponent,
-  //     },
-  //   ],
-  // },
   {
     path: '',
     loadChildren: () =>
       import('./settings/settings.module').then((m) => m.SettingsModule),
+  },
+  {
+    path: 'categories',
+    loadChildren: () =>
+      import('./categories/categories.module').then((m) => m.CategoriesModule),
   },
 ];
 
@@ -510,6 +466,7 @@ export const routes: Routes = [
     TranformValueNumberPipe,
     NgbAccordionModule,
     DynamicSettingModule,
+    AccordionModule
   ],
 })
 export class AcModule {}

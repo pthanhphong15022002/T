@@ -372,11 +372,11 @@ export class CashPaymentsComponent extends UIComponent {
     let newdataCopy = {...dataCopy};
     if (this.journal && this.journal.assignRule == '0') {
       let data = {
-        currentVoucherNo : newdataCopy.voucherNo
+        journalType : this.journal.journalType,
+        journalNo : this.journalNo
       }
       let opt = new DialogModel();
-      let dataModel = new FormModel();
-      opt.FormModel = dataModel;
+      opt.FormModel = this.view.formModel;
       let dialog = this.callfc.openForm(
         NewvoucherComponent,
         'Nhập số chứng từ mới',
@@ -571,17 +571,14 @@ export class CashPaymentsComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any, type: any = '') {
-    console.log(event);
     let data = this.view?.dataService?.dataSelected;
-    if (data) {
-      this.acService.changeMFCashPayment(
-        event,
-        data,
-        type,
-        this.journal,
-        this.view.formModel
-      );
-    }
+    this.acService.changeMFCashPayment(
+      event,
+      data,
+      type,
+      this.journal,
+      this.view.formModel
+    );
   }
 
   /**
