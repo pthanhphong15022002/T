@@ -117,7 +117,7 @@ export class AddProcessDefaultComponent implements OnInit{
     return Util.camelize(key);
   }
 
-  async onSave()
+  async onSave(type=1)
   {
     if(!this.checkAttachment()) return;
     if(this.dynamicFormsForm.invalid) this.findInvalidControls();
@@ -217,7 +217,11 @@ export class AddProcessDefaultComponent implements OnInit{
         this.api.execSv("BP","BP","ProcessTasksBusiness","SaveListTaskAsync",listTask).subscribe();
         //Luu Instanes
         this.api.execSv("BP","BP","ProcessInstancesBusiness","SaveInsAsync",this.dataIns).subscribe(item=>{
-          this.dialog.close(this.dataIns)
+          if(type == 1) this.dialog.close(this.dataIns)
+          else 
+          {
+            this.startProcess(this.dataIns.recID)
+          }
         });
     
         if(this.attachment.fileUploadList && this.attachment.fileUploadList.length > 0)
@@ -290,5 +294,21 @@ export class AddProcessDefaultComponent implements OnInit{
   addRow()
   {
     this.dataIns.datas[this.tableField].push("");
+  }
+
+  startProcess(recID:any) {
+    this.api
+      .execSv(
+        'BP',
+        'ERM.Business.BP',
+        'ProcessesBusiness',
+        'StartProcessAsync',
+        [recID]
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close(res);
+        }
+      });
   }
 }
