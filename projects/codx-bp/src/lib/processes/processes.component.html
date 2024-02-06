@@ -273,8 +273,8 @@
 
 <!--LIST-->
 <ng-template #headerTemplateList let-data>
-  <div class="d-flex w-100 ps-2 pe-4 m-2" style="background: #e3ecf1">
-    <div class="w-30 text-dark fw-bold py-3 fw-500">
+  <div class="d-flex w-100 m-1" style="background: #e3ecf1">
+    <div class="w-30 text-dark fw-bold ps-5 py-3 fw-500">
       <codx-label
         fiedName="list_ProcessName"
         [setRequire]="false"
@@ -290,7 +290,7 @@
         [default]="'Trình trạng'"
       ></codx-label>
     </div>
-    <div class="w-15 text-dark fw-bold py-3 fw-500">
+    <div class="w-10 text-dark fw-bold py-3 fw-500">
       <codx-label
         fiedName="list_Category"
         [setRequire]="false"
@@ -298,7 +298,7 @@
         [default]="'Vùng quy trình'"
       ></codx-label>
     </div>
-    <div class="w-15 text-dark fw-bold py-3 fw-500">
+    <div class="w-20 text-dark fw-bold py-3 fw-500">
       <codx-label
         fiedName="list_Permissions"
         [setRequire]="false"
@@ -326,7 +326,7 @@
 </ng-template>
 
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center border-bottom">
+  <div class="d-flex w-100 align-items-center border-bottom">
     <div class="w-30 py-3 ps-5">
       <span
         [innerHTML]="
@@ -347,14 +347,14 @@
         </codx-vll>
       </div>
     </div>
-    <div class="w-15 py-3">
-      <span
+    <div class="w-10 py-3 d-flex justify-content-center">
+      <div
         [innerHTML]="
           data?.category | formatvalue : view.formModel : 'Category' | async
         "
-      ></span>
+      ></div>
     </div>
-    <div class="w-15 py-3 d-flex flex-wrap">
+    <div class="w-20 py-3 d-flex flex-wrap">
       <ng-container *ngIf="data?.permissions?.length > 0">
         <ng-container *ngFor="let item of data?.permissions; let i = index">
           <ng-container *ngIf="i < 2">
@@ -395,19 +395,19 @@
       </ng-container>
     </div>
     <div class="w-20 py-3">
-      <div class="d-flex justify-content-start align-items-center">
-        <div class="me-3">
+      <div class="d-flex justify-content-start align-items-center pe-3">
+        <div class="me-3 h-30px">
           <codx-img
             [objectId]="data.createdBy"
             [objectName]="data.userName"
             [objectType]="'AD_Users'"
-            [width]="35"
+            [width]="30"
           >
           </codx-img>
         </div>
         <div class="d-flex flex-column w-100">
           <div class="d-flex flex-column">
-            <div class="fw-bold fs-6 text-dark line-clamp line-clamp-1">
+            <div class="fw-bold text-dark line-clamp line-clamp-1">
               {{ data.userName }}
             </div>
             <div class="text-gray-500">{{ data.positionName }}</div>

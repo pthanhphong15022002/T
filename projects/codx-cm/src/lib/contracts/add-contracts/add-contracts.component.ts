@@ -1845,7 +1845,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     ) {
       this.cmService.addContracts([this.contracts]).subscribe((res) => {
         if (res) {
-          this.dialog.close(res);
+          // this.dialog.close(res);
         }
       });
     }
