@@ -1,11 +1,43 @@
-<codx-form [body]="body" [bodyCss]="'overflow-hidden'" [headerText]="data?.customName" [dialog]="dialogRef" >
+<codx-form [body]="body" [bodyCss]="'overflow-hidden'" [headerText]="data?.customName" [dialog]="dialogRef"
+  [customToolbar]="TmpSubToolbar">
+  <ng-template #TmpSubToolbar>
+    <div class="w-100">
+      <div class="d-flex align-items-center justify-content-between pt-3">
+        <div class="d-flex align-items-center me-2">
+          <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
+            {{ data?.customName }}
+          </div>
+        </div>
+        <div class="d-flex align-items-center">
+          <div *ngIf="isMorc" aria-labelledby="dropdownMenuButton" class="dropdown-menu overflow-auto show"
+            style="max-height: 500px; position: static;">
+            <a (click)="editReport()" class="cursor-pointer" tabindex="0">
+              <div class="w-100 text-center">
+                  <span class="ms-2 fs-7">Thông tin báo cáo</span>
+                </div>
+            </a>
+          </div>
+          <div class="dropdown d-flex align-items-center pin-morefunction">
+            <button (click)="isMorc = !isMorc" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false" class="dropdown-toggle btn align-items-center mt-1">
+              <span class="icon-more_vert icon-18"></span>
+            </button>
+          </div>
+          <div>
+            <i (click)="closeForm()" class="text-hover-primary cursor-pointer icon-close icon-18"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
   <ng-template #body>
     <ng-container *ngIf=" data?.displayMode == '3' || data?.displayMode == '4'; else reportBolder ">
       <lib-pdf *ngIf="url" [inputUrl]="url" [hideActions]="true" [hideThumbnail]="true"></lib-pdf>
     </ng-container>
     <ng-template #reportBolder>
-      <codx-report-iframe [service]="data?.service" [funcID]="data?.recID" [predicates]="predicate" [dataValues]="dataValue" [printMode]="!data?.displayMode || data?.displayMode=='0'?  false:true"
-        [print]="print" [param]="_paramString" [labels]="_labelString" [format]="_formatString"></codx-report-iframe>
+      <codx-report-iframe [service]="data?.service" [funcID]="data?.recID" [predicates]="predicate"
+        [dataValues]="dataValue" [printMode]="!data?.displayMode || data?.displayMode=='0'?  false:true" [print]="print"
+        [param]="_paramString" [labels]="_labelString" [format]="_formatString"></codx-report-iframe>
     </ng-template>
   </ng-template>
 </codx-form>

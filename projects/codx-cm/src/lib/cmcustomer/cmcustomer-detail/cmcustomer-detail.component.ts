@@ -127,6 +127,7 @@ export class CmCustomerDetailComponent implements OnInit {
     this.viewTag = '';
     setTimeout(() => {
       this.viewTag = data?.tags;
+      this.isAdmin = JSON.parse(JSON.stringify(this.isAdmin));
     }, 100);
   }
 

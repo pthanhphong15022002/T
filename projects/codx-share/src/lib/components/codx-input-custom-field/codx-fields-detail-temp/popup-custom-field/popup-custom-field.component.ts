@@ -55,6 +55,12 @@ export class PopupCustomFieldComponent implements OnInit {
 
     this.isAdd = dt?.data?.isAdd ?? false;
     this.arrCaculateField = this.fields.filter((x) => x.dataType == 'CF');
+    if (this.arrCaculateField?.length > 0)
+      this.arrCaculateField.sort((a, b) => {
+        if (a.dataFormat.includes('[' + b.fieldName + ']')) return 1;
+        else if (b.dataFormat.includes('[' + a.fieldName + ']')) return -1;
+        else return 0;
+      });
     //lấy độ rộng popup
     this.widthDefault = this.dialog.dialog.width
       ? this.dialog.dialog.width.toString()
@@ -174,7 +180,7 @@ export class PopupCustomFieldComponent implements OnInit {
   }
 
   //----------------------CACULATE---------------------------//
-  caculateField(versionID = null) {
+  caculateField() {
     if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
     let fieldsNum = this.fields.filter((x) => x.dataType == 'N');
     // let fieldsNum = this.fields.filter(
@@ -196,14 +202,29 @@ export class PopupCustomFieldComponent implements OnInit {
         if (dataFormat.includes('[' + f.fieldName + ']')) {
           if (!f.dataValue?.toString()) return;
           let dataValue = f.dataValue;
-          if (versionID) {
-            let ver = f?.version?.find((x) => x.refID == versionID);
-            if (ver) dataValue = ver?.dataValue;
-          }
+          // if (versionID) {
+          //   let ver = f?.version?.find((x) => x.refID == versionID);
+          //   if (ver) dataValue = ver?.dataValue;
+          // }
 
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
             '[' + f.fieldName + ']',
+            dataValue
+          );
+        }
+      });
+
+      this.arrCaculateField.forEach((x) => {
+        if (dataFormat.includes('[' + x.fieldName + ']')) {
+          if (!x.dataValue?.toString()) return;
+          let dataValue = x.dataValue;
+          // if (versionID) {
+          //   let ver = x?.version?.find((x) => x.refID == versionID);
+          //   if (ver) dataValue = ver?.dataValue;
+          // }
+          dataFormat = dataFormat.replaceAll(
+            '[' + x.fieldName + ']',
             dataValue
           );
         }
@@ -221,6 +242,7 @@ export class PopupCustomFieldComponent implements OnInit {
             fieldsNum
           );
         }
+
         //this.getElement(obj.recID);
         this.changeDetectorRef.detectChanges();
       } else if (obj.dataValue) {

@@ -991,6 +991,7 @@
               </div>
             </ng-template>
             <ng-template #content let-data="value">
+              {{dataSelected?.isAdminAll}}
               <div class="mt-5 p-2" [ngClass]="isShow ? '': 'croll-m-5'" style="overflow-x: hidden !important;">
                 <step-task
                   [entityName]="'CM_Deals'"
@@ -1008,6 +1009,7 @@
                   [ownerInstance]="dataSelected?.owner"
                   [taskAdd]="taskAdd"
                   (moveStage)="handelMoveStage($event)"
+                  [isAdmin]="dataSelected?.isAdminAll"
                 ></step-task>
               </div>
 
