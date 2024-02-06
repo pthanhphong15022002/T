@@ -1634,9 +1634,24 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
                 );
             }
           }
+          this.setElement(obj.recID, obj.dataValue);
         }
       }
     });
+  }
+
+  setElement(recID, value) {
+    var codxinput = document.querySelectorAll(
+      '.form-group codx-input[data-record="' + recID + '"]'
+    );
+
+    if (codxinput) {
+      let htmlE = codxinput[0] as HTMLElement;
+      let input = htmlE.querySelector('input') as HTMLInputElement;
+      if (input) {
+        input.value = value;
+      }
+    }
   }
   //#endregion
   addFile(evt: any) {

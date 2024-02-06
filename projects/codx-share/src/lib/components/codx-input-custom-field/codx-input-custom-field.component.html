@@ -722,6 +722,7 @@
 
   <ng-container *ngIf="customField.dataType == 'CF'">
     <codx-input
+      [attr.data-record]="customField.recID"
       [field]="customField.fieldName"
       [type]="customField.dataValue ? 'number' : 'text'"
       [placeholder]="customField.note || customField.dataFormat"
