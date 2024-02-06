@@ -109,6 +109,6 @@
     </div>
     <div class="d-flex align-items-center justify-content-end p-2">
         <button type="button" class="btn btn-outline-primary me-2" (click)="onSave()"><codx-label [formName]="formModel.formName" fiedName="lblSave" default="Lưu"></codx-label></button>
-        <button class="btn btn-primary ms-2"><codx-label [formName]="formModel.formName" fiedName="lblDone" default="Hoàn tất"></codx-label></button>
+        <button class="btn btn-primary ms-2" (click)="onSave(2)" *ngIf="type != 'edit'"><codx-label [formName]="formModel.formName" fiedName="lblDone" default="Hoàn tất"></codx-label></button>
     </div>
 </div>
