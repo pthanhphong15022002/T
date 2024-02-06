@@ -1,15 +1,12 @@
 import { AfterViewInit, ChangeDetectorRef, Component, HostListener, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { ApiHttpService, CRUDService, CacheService, CallFuncService, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, NotificationsService, UIComponent, Util } from 'codx-core';
-import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
-import { TS_KowDs } from '../../../models/kowds.model';
-import moment from 'moment';
-import { DateTime } from '@syncfusion/ej2-angular-charts';
+import { TS_KowDs } from '../../../models/TS_KowDs';
 @Component({
-  selector: 'pr-popup-ekowds',
-  templateUrl: './popup-ekowds.component.html',
-  styleUrls: ['./popup-ekowds.component.css']
+  selector: 'pr-popup-kowd-day',
+  templateUrl: './popup-kowd-day.component.html',
+  styleUrls: ['./popup-kowd-day.component.css']
 })
-export class PopupEkowdsComponent implements OnInit, AfterViewInit {
+export class PopupKowdDayComponent implements OnInit, AfterViewInit {
 
   data:any;
   dialog:DialogRef;

@@ -80,6 +80,7 @@ export class BpTasksComponent
         'grvBPTasks'
       )
       .subscribe((grid) => {
+        debugger
         const obj = { data: data, action: action };
         let popup = this.callfc.openSide(PopupBpTasksComponent, obj, option);
         popup.closed.subscribe((res) => {});

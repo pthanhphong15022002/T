@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  HostBinding,
   Injector,
   TemplateRef,
   ViewChild,
@@ -25,6 +26,9 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
   styleUrls: ['./request-kowds.component.css'],
 })
 export class RequestKowDsComponent extends UIComponent implements AfterViewInit{
+
+
+  @HostBinding('class') get valid() { return "w-100 h-100"; }
   views: any[];
   formModel: any;
   grvSetup: any;
