@@ -933,8 +933,11 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
 
   selectFieldNum() {
     this.arrFieldNum = [];
+    // this.arrFieldNum = this.listColumns
+    //   .filter((x) => x.dataType == 'N')
+    //   .map((x) => x.fieldName);
     this.arrFieldNum = this.listColumns
-      .filter((x) => x.dataType == 'N')
+      .filter((x) => x.dataType == 'N' || x.dataType == 'CF')
       .map((x) => x.fieldName);
 
     if (!this.arrFieldNum || this.arrFieldNum?.length == 0)
