@@ -219,10 +219,6 @@ export class PopupCustomFieldComponent implements OnInit {
         if (dataFormat.includes('[' + x.fieldName + ']')) {
           if (!x.dataValue?.toString()) return;
           let dataValue = x.dataValue;
-          // if (versionID) {
-          //   let ver = x?.version?.find((x) => x.refID == versionID);
-          //   if (ver) dataValue = ver?.dataValue;
-          // }
           dataFormat = dataFormat.replaceAll(
             '[' + x.fieldName + ']',
             dataValue

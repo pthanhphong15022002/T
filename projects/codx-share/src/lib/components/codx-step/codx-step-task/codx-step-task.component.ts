@@ -3403,6 +3403,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       (x) => x.dataType == 'CF' && !fieldID.includes(x.recID)
     );
     if (!arrCaculateField || arrCaculateField?.length == 0) return fields;
+
+    arrCaculateField.sort((a, b) => {
+      if (a.dataFormat.includes('[' + b.fieldName + ']')) return 1;
+      else if (b.dataFormat.includes('[' + a.fieldName + ']')) return -1;
+      else return 0;
+    });
     let fieldsNum = fields.filter((x) => x.dataType == 'N');
 
     if (!fieldsNum || fieldsNum?.length == 0) return fields;
@@ -3411,15 +3417,24 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       let dataFormat = obj.dataFormat;
 
       fieldsNum.forEach((f) => {
-        if (
-          dataFormat.includes('[' + f.fieldName + ']') &&
-          f.dataValue?.toString()
-        ) {
+        if (dataFormat.includes('[' + f.fieldName + ']')) {
+          if (!f.dataValue?.toString()) return;
           let dataValue = f.dataValue;
 
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
             '[' + f.fieldName + ']',
+            dataValue
+          );
+        }
+      });
+
+      arrCaculateField.forEach((x) => {
+        if (dataFormat.includes('[' + x.fieldName + ']')) {
+          if (!x.dataValue?.toString()) return;
+          let dataValue = x.dataValue;
+          dataFormat = dataFormat.replaceAll(
+            '[' + x.fieldName + ']',
             dataValue
           );
         }
