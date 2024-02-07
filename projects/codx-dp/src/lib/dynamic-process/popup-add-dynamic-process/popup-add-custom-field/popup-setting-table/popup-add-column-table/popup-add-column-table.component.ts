@@ -867,10 +867,12 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   fieldSelect(fieldName) {
     if (this.caculateField) {
       let idxLast = this.caculateField.length - 1;
+      let chart = this.caculateField[idxLast];
       if (
-        this.caculateField[idxLast] == ']' ||
-        this.caculateField[idxLast] == ')' ||
-        this.caculateField[idxLast] == ','
+        chart == ']' ||
+        chart == ')' ||
+        chart == ',' ||
+        this.arrNum.includes(chart)
       )
         return;
     }

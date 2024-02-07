@@ -7,6 +7,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { CustomFieldService } from '../../custom-field.service';
+import { Html } from '@syncfusion/ej2-angular-diagrams';
 
 @Component({
   selector: 'lib-popup-custom-field',
@@ -239,7 +240,7 @@ export class PopupCustomFieldComponent implements OnInit {
           );
         }
 
-        //this.getElement(obj.recID);
+        this.setElement(obj.recID, obj.dataValue);
         this.changeDetectorRef.detectChanges();
       } else if (obj.dataValue) {
         //Chua xu ly
@@ -325,10 +326,21 @@ export class PopupCustomFieldComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  getElement(recID) {
-    let el = document.getElementById(recID);
-    if (el) {
-      debugger;
+  setElement(recID, value) {
+    value =
+      value && value != '_'
+        ? Number.parseFloat(value)?.toFixed(2).toString()
+        : '';
+    var codxinput = document.querySelectorAll(
+      '.form-group codx-input[data-record="' + recID + '"]'
+    );
+
+    if (codxinput?.length > 0) {
+      let htmlE = codxinput[0] as HTMLElement;
+      let input = htmlE.querySelector('input') as HTMLInputElement;
+      if (input) {
+        input.value = value;
+      }
     }
   }
 }
