@@ -1765,6 +1765,7 @@ export class PopupAddDealComponent
   }
 
   setElement(recID, value) {
+    value = value == '_' ? '' : value;
     var codxinput = document.querySelectorAll(
       '.form-group codx-input[data-record="' + recID + '"]'
     );
