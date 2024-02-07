@@ -327,7 +327,7 @@ export class PopupAddInstanceComponent implements OnInit {
               this.listCustomFile.push(this.listStep[index].fields[idxField]);
           }
         }
-        if (field.dataType) this.caculateField();
+        if (field.dataType == 'N') this.caculateField();
       }
     }
   }
@@ -689,6 +689,7 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   setElement(recID, value) {
+    value = value == '_' ? '' : value;
     var codxinput = document.querySelectorAll(
       '.form-group codx-input[data-record="' + recID + '"]'
     );
