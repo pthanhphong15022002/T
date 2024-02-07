@@ -181,7 +181,7 @@ export class ProcessReleaseDetailComponent implements OnInit{
         gridViewName: 'grvBPTasks',
         entityName: 'BP_Tasks',
       };
-      option.zIndex = 1010;
+      option.zIndex = 1060;
       let popup = this.callFc.openSide(PopupBpTasksComponent, {data: dt}, option);
       popup.closed.subscribe((res) => {});
     }

@@ -178,6 +178,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     var option = new DialogModel();
     option.IsFull = true;
     option.FormModel = this.view.formModel;
+    option.zIndex = 1000;
     let popup = this.callFunc.openForm(
       ProcessReleaseDetailComponent,
       '',
