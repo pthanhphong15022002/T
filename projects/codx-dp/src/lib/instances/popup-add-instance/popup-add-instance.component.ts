@@ -345,7 +345,11 @@ export class PopupAddInstanceComponent implements OnInit {
   beforeSave(option: RequestOption) {
     if (this.action === 'add' || this.action === 'copy') {
       option.methodName = 'AddInstanceAsync';
-      option.data = [this.instance, this.listStep, this.oldIdInstance];
+      option.data = [
+        this.instance,
+        this.listStep,
+        this.action === 'copy' ? this.oldIdInstance : null,
+      ];
     } else if (this.action === 'edit') {
       option.methodName = 'EditInstanceAsync';
       option.data = [this.instance, this.listCustomFile];
@@ -704,7 +708,7 @@ export class PopupAddInstanceComponent implements OnInit {
       let htmlE = codxinput[0] as HTMLElement;
       let input = htmlE.querySelector('input') as HTMLInputElement;
       if (input) {
-        // if (input.type == 'text' && value) input.type = 'number';
+        if (input.type == 'text' && value) input.setAttribute('type', 'number');
         input.value = value;
       }
     }
