@@ -441,8 +441,8 @@ export class PopupAddLeadComponent
         this.lead.processID = null;
         //    this.lead.wardID = null;
       }
-      if(this.lead?.countryID == null || this.lead?.countryID?.trim() == ''){
-        if(this.lead.provinceID){
+      if (this.lead?.countryID == null || this.lead?.countryID?.trim() == '') {
+        if (this.lead.provinceID) {
           let province = await firstValueFrom(
             this.api.execSv<any>(
               'BS',
@@ -1220,6 +1220,12 @@ export class PopupAddLeadComponent
           this.arrCaculateField = this.arrCaculateField.concat(fnum);
       }
     });
+    if (this.arrCaculateField?.length > 0)
+      this.arrCaculateField.sort((a, b) => {
+        if (a.dataFormat.includes('[' + b.fieldName + ']')) return 1;
+        else if (b.dataFormat.includes('[' + a.fieldName + ']')) return -1;
+        else return 0;
+      });
     this.isLoadedCF = true;
   }
   //tính toán
@@ -1238,14 +1244,23 @@ export class PopupAddLeadComponent
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
       fieldsNum.forEach((f) => {
-        if (
-          dataFormat.includes('[' + f.fieldName + ']') &&
-          f.dataValue?.toString()
-        ) {
+        if (dataFormat.includes('[' + f.fieldName + ']')) {
+          if (!f.dataValue?.toString()) return;
           let dataValue = f.dataValue;
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
             '[' + f.fieldName + ']',
+            dataValue
+          );
+        }
+      });
+
+      this.arrCaculateField.forEach((x) => {
+        if (dataFormat.includes('[' + x.fieldName + ']')) {
+          if (!x.dataValue?.toString()) return;
+          let dataValue = x.dataValue;
+          dataFormat = dataFormat.replaceAll(
+            '[' + x.fieldName + ']',
             dataValue
           );
         }
@@ -1282,8 +1297,23 @@ export class PopupAddLeadComponent
             }
           }
         }
+        this.setElement(obj.recID, obj.dataValue);
       }
     });
+  }
+  setElement(recID, value) {
+    value = value == '_' ? '' : value;
+    var codxinput = document.querySelectorAll(
+      '.form-group codx-input[data-record="' + recID + '"]'
+    );
+
+    if (codxinput) {
+      let htmlE = codxinput[0] as HTMLElement;
+      let input = htmlE.querySelector('input') as HTMLInputElement;
+      if (input) {
+        input.value = value;
+      }
+    }
   }
   //------------------END_CACULATE--------------------//
 }

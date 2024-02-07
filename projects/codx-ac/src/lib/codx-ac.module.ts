@@ -8,7 +8,10 @@ import {
   AccumulationTooltipService,
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
-import { AccordionModule, TabModule } from '@syncfusion/ej2-angular-navigations';
+import {
+  AccordionModule,
+  TabModule,
+} from '@syncfusion/ej2-angular-navigations';
 import { CodxCoreModule } from 'codx-core';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
@@ -123,6 +126,7 @@ import { AssetJournalsAddComponent } from './vouchers/asset-journals/asset-journ
 import { CategoriesComponent } from './categories/categories.component';
 import { RunDepreciationComponent } from './periodic/rundepreciation/rundepreciation.component';
 import { NewvoucherComponent } from './share/add-newvoucher/newvoucher.component';
+import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 export const routes: Routes = [
   {
     path: '',
@@ -320,6 +324,10 @@ export const routes: Routes = [
         component: ViewInstancesComponent,
         data: { noReuse: true },
       },
+      {
+        path: 'shared/dynamic/:funcID',
+        component: DynamicFormComponent,
+      },
       //-----------end--------------//
     ],
   },
@@ -466,7 +474,7 @@ export const routes: Routes = [
     TranformValueNumberPipe,
     NgbAccordionModule,
     DynamicSettingModule,
-    AccordionModule
+    AccordionModule,
   ],
 })
 export class AcModule {}

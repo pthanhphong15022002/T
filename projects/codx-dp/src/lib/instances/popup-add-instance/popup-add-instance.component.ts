@@ -1,4 +1,3 @@
-import { filter } from 'rxjs';
 import {
   ChangeDetectorRef,
   Component,
@@ -8,7 +7,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
-  ApiHttpService,
   AuthStore,
   CacheService,
   CallFuncService,
@@ -22,8 +20,8 @@ import {
 } from 'codx-core';
 import moment from 'moment';
 import { CodxDpService } from '../../codx-dp.service';
-import { DP_Instances, DP_Instances_Steps } from '../../models/models';
-import { stringify } from 'querystring';
+import { DP_Instances } from '../../models/models';
+
 import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
 
 @Component({
@@ -327,7 +325,7 @@ export class PopupAddInstanceComponent implements OnInit {
               this.listCustomFile.push(this.listStep[index].fields[idxField]);
           }
         }
-        if (field.dataType) this.caculateField();
+        if (field.dataType == 'N') this.caculateField();
       }
     }
   }
@@ -613,6 +611,12 @@ export class PopupAddInstanceComponent implements OnInit {
           this.arrCaculateField = this.arrCaculateField.concat(fnum);
       }
     });
+    if (this.arrCaculateField?.length > 0)
+      this.arrCaculateField.sort((a, b) => {
+        if (a.dataFormat.includes('[' + b.fieldName + ']')) return 1;
+        else if (b.dataFormat.includes('[' + a.fieldName + ']')) return -1;
+        else return 0;
+      });
     this.isLoadedCF = true;
   }
   //tính toán
@@ -631,14 +635,23 @@ export class PopupAddInstanceComponent implements OnInit {
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
       fieldsNum.forEach((f) => {
-        if (
-          dataFormat.includes('[' + f.fieldName + ']') &&
-          f.dataValue?.toString()
-        ) {
+        if (dataFormat.includes('[' + f.fieldName + ']')) {
+          if (!f.dataValue?.toString()) return;
           let dataValue = f.dataValue;
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
             '[' + f.fieldName + ']',
+            dataValue
+          );
+        }
+      });
+
+      this.arrCaculateField.forEach((x) => {
+        if (dataFormat.includes('[' + x.fieldName + ']')) {
+          if (!x.dataValue?.toString()) return;
+          let dataValue = x.dataValue;
+          dataFormat = dataFormat.replaceAll(
+            '[' + x.fieldName + ']',
             dataValue
           );
         }
@@ -667,9 +680,25 @@ export class PopupAddInstanceComponent implements OnInit {
                 this.listCustomFile.push(this.listStep[index].fields[idxField]);
             }
           }
+          this.setElement(obj.recID, obj.dataValue);
         }
       }
     });
+  }
+
+  setElement(recID, value) {
+    value = value == '_' ? '' : value;
+    var codxinput = document.querySelectorAll(
+      '.form-group codx-input[data-record="' + recID + '"]'
+    );
+
+    if (codxinput) {
+      let htmlE = codxinput[0] as HTMLElement;
+      let input = htmlE.querySelector('input') as HTMLInputElement;
+      if (input) {
+        input.value = value;
+      }
+    }
   }
   //------------------END_CACULATE--------------------//
 }

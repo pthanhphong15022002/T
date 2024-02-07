@@ -25,8 +25,8 @@ import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/
 import { SalcoeffempComponent } from './salcoeffemp/salcoeffemp.component';
 import { KowdsComponent } from './kowds/kowds.component';
 import { KowdsScheduleComponent } from './kowds/kowds-schedule/kowds-schedule.component';
-import { PopupCopyEkowdsComponent } from './kowds/popup/popup-copy-ekowds/popup-copy-ekowds.component';
-import { PopupEkowdsComponent } from './kowds/popup/popup-ekowds/popup-ekowds.component';
+import { PopupCopyEkowdsComponent } from './kowds/popup/popup-copy-kowd/popup-copy-kowd.component';
+import { PopupKowdDayComponent } from './kowds/popup/popup-kowd-day/popup-kowd-day.component';
 import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts.component';
 import { ViewDetailRequestKowDsComponent } from './request-kowds/view-detail-request-kowds/view-detail-request-kowds.component';
 import { RequestKowDsComponent } from './request-kowds/request-kowds.component';
@@ -38,6 +38,8 @@ import { PopupCoppySalCoeffEmpComponent } from './salcoeffemp/popup/popup-coppy-
 import { PayTExceptComponent } from './pay-texcept/pay-texcept.component';
 import { PopupAddPayTexceptComponent } from './pay-texcept/popup/popup-add-pay-texcept/popup-add-pay-texcept.component';
 import { PopupKowdMonthComponent } from './kowds/popup/popup-kowd-month/popup-kowd-month.component';
+import { PopupRequestKowdComponent } from './kowds/popup/popup-request-kowd/popup-request-kowd.component';
+
 
 export const routes: Routes = [
   {
@@ -97,7 +99,7 @@ const T_Component: Type<any>[] = [
   SalcoeffempComponent,
   KowdsScheduleComponent,
   PopupCopyEkowdsComponent,
-  PopupEkowdsComponent,
+  PopupKowdDayComponent,
   ViewDetailRequestKowDsComponent,
   RequestKowDsComponent,
   TotalKowDsComponent,
@@ -106,7 +108,8 @@ const T_Component: Type<any>[] = [
   PopupCoppySalCoeffEmpComponent,
   PayTExceptComponent,
   PopupAddPayTexceptComponent,
-  PopupKowdMonthComponent
+  PopupKowdMonthComponent,
+  PopupRequestKowdComponent
 ];
 
 @NgModule({

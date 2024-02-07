@@ -1,11 +1,10 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
-import { CodxHrService } from 'projects/codx-hr/src/public-api';
 
 @Component({
-  selector: 'pr-popup-copy-ekowds',
-  templateUrl: './popup-copy-ekowds.component.html',
-  styleUrls: ['./popup-copy-ekowds.component.css']
+  selector: 'pr-popup-copy-kowd',
+  templateUrl: './popup-copy-kowd.component.html',
+  styleUrls: ['./popup-copy-kowd.component.css']
 })
 export class PopupCopyEkowdsComponent implements OnInit,AfterViewInit {
 
