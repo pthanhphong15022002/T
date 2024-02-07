@@ -23,6 +23,7 @@ import { ProjectsComponent } from './projects/pm-projects.component';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { PopupAddProjectComponent } from './projects/popup-add-project/popup-add-project.component';
 import { PopupProjectDetailsComponent } from './projects/popup-project-details/popup-project-details.component';
+import { ProjectTasksViewComponent } from './projects/lib-view-tasks/lib-view-tasks.component';
 
 export const routes: Routes = [
   {
@@ -45,7 +46,8 @@ export const routes: Routes = [
     LayoutComponent,
     ProjectsComponent,
     PopupAddProjectComponent,
-    PopupProjectDetailsComponent
+    PopupProjectDetailsComponent,
+    ProjectTasksViewComponent
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
