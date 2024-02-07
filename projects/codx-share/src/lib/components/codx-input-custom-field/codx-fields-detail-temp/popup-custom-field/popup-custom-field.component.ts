@@ -332,7 +332,7 @@ export class PopupCustomFieldComponent implements OnInit {
       '.form-group codx-input[data-record="' + recID + '"]'
     );
 
-    if (codxinput) {
+    if (codxinput?.length > 0) {
       let htmlE = codxinput[0] as HTMLElement;
       let input = htmlE.querySelector('input') as HTMLInputElement;
       if (input) {

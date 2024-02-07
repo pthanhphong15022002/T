@@ -635,7 +635,10 @@ export class PopupAddInstanceComponent implements OnInit {
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
       fieldsNum.forEach((f) => {
-        if (dataFormat.includes('[' + f.fieldName + ']')) {
+        if (
+          f.stepID == obj.stepID &&
+          dataFormat.includes('[' + f.fieldName + ']')
+        ) {
           if (!f.dataValue?.toString()) return;
           let dataValue = f.dataValue;
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
@@ -647,7 +650,10 @@ export class PopupAddInstanceComponent implements OnInit {
       });
 
       this.arrCaculateField.forEach((x) => {
-        if (dataFormat.includes('[' + x.fieldName + ']')) {
+        if (
+          x.stepID == obj.stepID &&
+          dataFormat.includes('[' + x.fieldName + ']')
+        ) {
           if (!x.dataValue?.toString()) return;
           let dataValue = x.dataValue;
           dataFormat = dataFormat.replaceAll(
@@ -692,7 +698,7 @@ export class PopupAddInstanceComponent implements OnInit {
       '.form-group codx-input[data-record="' + recID + '"]'
     );
 
-    if (codxinput) {
+    if (codxinput?.length > 0) {
       let htmlE = codxinput[0] as HTMLElement;
       let input = htmlE.querySelector('input') as HTMLInputElement;
       if (input) {
