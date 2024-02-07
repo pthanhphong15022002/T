@@ -1147,6 +1147,8 @@ export class PopupAddLeadComponent
             (x) => x.recID == event.data.recID
           );
           if (idxField != -1) {
+            let valueOld =
+              this.listInstanceSteps[index].fields[idxField].dataValue;
             this.listInstanceSteps[index].fields[idxField].dataValue = result;
             let idxEdit = this.listCustomFile.findIndex(
               (x) =>
@@ -1159,9 +1161,10 @@ export class PopupAddLeadComponent
               this.listCustomFile.push(
                 this.listInstanceSteps[index].fields[idxField]
               );
+            if (field.dataType == 'N' && valueOld != result)
+              this.caculateField();
           }
         }
-        if (field.dataType == 'N') this.caculateField();
       }
     }
   }

@@ -313,6 +313,7 @@ export class PopupAddInstanceComponent implements OnInit {
             (x) => x.recID == event.data.recID
           );
           if (idxField != -1) {
+            let valueOld = this.listStep[index].fields[idxField].dataValue;
             this.listStep[index].fields[idxField].dataValue = result;
 
             let idxEdit = this.listCustomFile.findIndex(
@@ -323,9 +324,10 @@ export class PopupAddInstanceComponent implements OnInit {
                 this.listStep[index].fields[idxField];
             } else
               this.listCustomFile.push(this.listStep[index].fields[idxField]);
+            if (field.dataType == 'N' && valueOld != result)
+              this.caculateField();
           }
         }
-        if (field.dataType == 'N') this.caculateField();
       }
     }
   }
@@ -702,6 +704,7 @@ export class PopupAddInstanceComponent implements OnInit {
       let htmlE = codxinput[0] as HTMLElement;
       let input = htmlE.querySelector('input') as HTMLInputElement;
       if (input) {
+        // if (input.type == 'text' && value) input.type = 'number';
         input.value = value;
       }
     }

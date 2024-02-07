@@ -1430,6 +1430,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             (x) => x.recID == event.data.recID
           );
           if (idxField != -1) {
+            let valueOld =
+              this.listInstanceSteps[index].fields[idxField].dataValue;
             this.listInstanceSteps[index].fields[idxField].dataValue = result;
             let idxEdit = this.listCustomFile.findIndex(
               (x) =>
@@ -1442,9 +1444,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
               this.listCustomFile.push(
                 this.listInstanceSteps[index].fields[idxField]
               );
+            if (field.dataType == 'N' && valueOld != result)
+              this.caculateField();
           }
         }
-        if (field.dataType == 'N') this.caculateField();
       }
     }
   }
@@ -1886,9 +1889,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     ) {
       this.cmService.addContracts([this.contracts]).subscribe((res) => {
         if (res) {
-          if(this.type == "DP"){
+          if (this.type == 'DP') {
             this.dialog.close();
-          }else{
+          } else {
             this.dialog.close(res);
           }
         }
