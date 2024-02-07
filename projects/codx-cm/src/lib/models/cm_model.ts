@@ -209,6 +209,7 @@ export class CM_Deals {
   customerName: string;
   customerCategory: string;
   applyProcess: boolean;
+  isAdminAll: boolean;
   dealCost: number = 0;
   grossProfit: number = 0;
 }
@@ -687,6 +688,7 @@ export class CM_Leads {
   note: string;
   attachments: number;
   comments: number;
+  isAdminAll: boolean;
   isDuplicated: boolean;
   contactID: string = Util.uid();
   customerID: string;
@@ -904,6 +906,7 @@ export class CM_Contracts {
   displayed: boolean; //Ngày thanh lý
   disposalExpired: boolean; //Ngày thanh lý
 
+  isAdminAll: boolean;
   isMail: boolean;
   isAlert: boolean;
   emailTemplate: string;
@@ -911,7 +914,7 @@ export class CM_Contracts {
   expirationAlertTime: number;
   
   disposalNewAddress: string; 
-  disposalNewContac: string; 
+  disposalNewContact: string; 
   disposalEmail: string; 
   disposalPhone: string;
 }

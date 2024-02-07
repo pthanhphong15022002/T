@@ -2,6 +2,7 @@ import { Component, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, CacheService, CallFuncService, DialogData, DialogRef, SidebarModel } from 'codx-core';
 import moment from 'moment';
 import { PopupBpTasksComponent } from 'projects/codx-bp/src/lib/bp-tasks/popup-bp-tasks/popup-bp-tasks.component';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
 
@@ -94,19 +95,22 @@ export class ProcessReleaseDetailComponent implements OnInit{
     list.forEach(elm2 => {
       elm2.settings = typeof elm2?.settings === 'object' ? elm2.settings : (elm2?.settings ? JSON.parse(elm2.settings) : null);
       elm2.child = this.getListChild(elm2);
+      elm2.dataTask = null;
       if(this.listTask && this.listTask.length > 0)
       {
         var index = this.listTask.findIndex(x=>x.stepID == elm2.recID);
         if(index >= 0)
         {
           elm2.permissions = typeof this.listTask[index]?.permissions === 'object' ? this.listTask[index].permissions : (this.listTask[index]?.permissions ? JSON.parse(this.listTask[index].permissions) : null);
-          elm2.permissions =  elm2?.permissions ? elm2.permissions.map((u) => u.objectID).join(';') : "";
+          elm2.permissions =  elm2?.permissions ? elm2.permissions.map((u) => u.objectID).join(';') : null;
           elm2.startDate = this.listTask[index].startDate ? moment(this.listTask[index].startDate).format('dd/MM/yyyy') : 'dd/MM/yyyy';
           elm2.endDate = this.listTask[index].endDate ? moment(this.listTask[index].endDate).format('dd/MM/yyyy') : 'dd/MM/yyyy';
           elm2.actualStart = this.listTask[index].actualStart ? moment(this.listTask[index].actualStart).format('dd/MM/yyyy') : 'dd/MM/yyyy';
           elm2.actualEnd = this.listTask[index].actualEnd ? moment(this.listTask[index].actualEnd).format('dd/MM/yyyy') : 'dd/MM/yyyy';
           elm2.status = this.listTask[index].status;
+          elm2.dataTask = this.listTask[index];
         }
+        else elm2.permissions = null;
       }
 
       if(elm2.activityType == "Conditions" && elm2.child && elm2.child.length>0)
@@ -141,5 +145,45 @@ export class ProcessReleaseDetailComponent implements OnInit{
     popup.closed.subscribe((res) => {
 
     });
+  }
+
+  openForm(dt:any)
+  {
+    if(dt?.activityType == "Email")
+    {
+      let data = {
+        dialog: this.dialog,
+        formGroup: null,
+        templateID: '',
+        showIsTemplate: true,
+        showIsPublish: true,
+        showSendLater: true,
+        files: null,
+        isAddNew: false,
+        notSendMail: true,
+      };
+  
+      let popEmail = this.callFc.openForm(
+        CodxEmailComponent,
+        '',
+        800,
+        screen.height,
+        '',
+        data
+      );
+    }
+    else if(dt)
+    {
+      var option = new SidebarModel();
+      // option.FormModel = this.view.formModel; //Đợi có grid mở lên
+      option.FormModel = {
+        formName: 'BPTasks',
+        gridViewName: 'grvBPTasks',
+        entityName: 'BP_Tasks',
+      };
+      option.zIndex = 1010;
+      let popup = this.callFc.openSide(PopupBpTasksComponent, {data: dt}, option);
+      popup.closed.subscribe((res) => {});
+    }
   }
 }

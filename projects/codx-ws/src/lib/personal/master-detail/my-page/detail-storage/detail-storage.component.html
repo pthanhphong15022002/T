@@ -11,12 +11,8 @@
 </div>
 
 <ng-template #body>
-    <!-- <app-list-post 
-        #listPost
-        [predicate]="predicate" 
-        [dataValue]="dataValue" 
-        [method]="'GetListPostInStorageAsync'"
-        [isShowCreate]="false"
-    >
-    </app-list-post> -->
+  <ng-container *ngIf="data && data?.details?.length > 0">
+    <app-list-post [predicate]="predicate" [dataValue]="dataValue" [isShowCreate]="false">
+    </app-list-post>
+  </ng-container>
 </ng-template>

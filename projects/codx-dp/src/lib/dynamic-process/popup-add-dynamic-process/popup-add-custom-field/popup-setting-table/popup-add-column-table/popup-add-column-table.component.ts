@@ -867,10 +867,12 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   fieldSelect(fieldName) {
     if (this.caculateField) {
       let idxLast = this.caculateField.length - 1;
+      let chart = this.caculateField[idxLast];
       if (
-        this.caculateField[idxLast] == ']' ||
-        this.caculateField[idxLast] == ')' ||
-        this.caculateField[idxLast] == ','
+        chart == ']' ||
+        chart == ')' ||
+        chart == ',' ||
+        this.arrNum.includes(chart)
       )
         return;
     }
@@ -933,8 +935,11 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
 
   selectFieldNum() {
     this.arrFieldNum = [];
+    // this.arrFieldNum = this.listColumns
+    //   .filter((x) => x.dataType == 'N')
+    //   .map((x) => x.fieldName);
     this.arrFieldNum = this.listColumns
-      .filter((x) => x.dataType == 'N')
+      .filter((x) => x.dataType == 'N' || x.dataType == 'CF')
       .map((x) => x.fieldName);
 
     if (!this.arrFieldNum || this.arrFieldNum?.length == 0)

@@ -20,10 +20,11 @@ export class BpTasksComponent
 {
   @ViewChild('templateList') templateList?: TemplateRef<any>;
   @ViewChild('headerTemplateList') headerTemplateList?: TemplateRef<any>;
+  @ViewChild('templateMore') templateMore: TemplateRef<any>;
   views: Array<ViewModel> = [];
 
   dataSelected: any;
-
+  hidenMF: boolean = false;
   constructor(inject: Injector) {
     super(inject);
   }
@@ -40,6 +41,14 @@ export class BpTasksComponent
           headerTemplate: this.headerTemplateList,
         },
       },
+      {
+        type: ViewType.grid,
+        active: false,
+        sameData: true,
+        model: {
+          template2: this.templateMore,
+        },
+      },
     ];
   }
 
@@ -47,6 +56,8 @@ export class BpTasksComponent
     this.dataSelected = data?.data ? data?.data : data;
     this.detectorRef.detectChanges();
   }
+
+  clickMF(e, data){}
 
   dbClickEvent(e) {
     if (e && e?.data) {
@@ -69,6 +80,7 @@ export class BpTasksComponent
         'grvBPTasks'
       )
       .subscribe((grid) => {
+        debugger
         const obj = { data: data, action: action };
         let popup = this.callfc.openSide(PopupBpTasksComponent, obj, option);
         popup.closed.subscribe((res) => {});

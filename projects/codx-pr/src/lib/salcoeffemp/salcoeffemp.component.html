@@ -13,6 +13,7 @@
 <!-- template left -->
 <ng-template #tmpLeft>
     <codx-listview
+        class="h-100"
         [itemTemplate]="itemTemplateTree"
         [entityName]="'HR_OrganizationUnits'"
         [service]="'HR'"
@@ -69,13 +70,13 @@
 
 <!-- template employee -->
 <ng-template #tmpEmployee let-data>
-    <div class="d-flex align-items-center p-2" *ngIf="data">
+    <div class="d-flex align-items-center p-2">
         <div class="me-4">
             <codx-img 
-                [objectId]="data.employeeID" 
-                [objectName]="data.employeeName"
+                [objectId]="data?.employeeID" 
+                [objectName]="data?.employeeName"
                 objectType="HR_Employees" 
-                [width]="30"
+                [width]="40"
                 [imageType]="'circle'">
             </codx-img>
         </div>
@@ -89,7 +90,9 @@
 
 <!-- template data column-->
 <ng-template #tmpData let-data>
-    <span>{{data[data.column.field]}}</span>
+    <div class="text-left">
+        <span>{{data[data.column.field]}}</span>
+    </div>
 </ng-template>
 
 <!-- template footerLeftPanel -->
@@ -102,7 +105,7 @@
           </codx-label>
         </div>
         
-        <div class="d-flex flex-row align-items-center cursor-hover" (click)="clickShowTooltip()">
+        <div class="cursor-pointer d-flex flex-row align-items-center cursor-hover" (click)="clickShowTooltip()">
           <span class="icon-sticky_note_2 text-primary me-1"></span>
           <codx-label class="text-primary" name="lblExplanation" default="Chú thích hệ số" [formModel]="view.formModel"></codx-label>
         </div>
@@ -111,22 +114,28 @@
 
 <!-- template popup LS_SalCoeff -->
 <ng-template #tmpTooltip let-dialog>
-    <div class="container h-100 p-5">
-        <div class="form-group">
+    <div class="d-flex flex-column align-items-stretch h-100 py-2">
+        <div class="form-group mb-0 p-4">
             <div class="d-flex align-items-center justify-content-between">
-                <h3 class="text-primary">CHÚ THÍCH</h3>
-                <button type="button" class="btn btn-icon btn-light" (click)="dialog.close()">
+                <codx-label [formModel]="view.formModel" name="lblNote" [default]="'Chú thích'" class="fs-3 fw-bold text-primary text-uppercase"></codx-label>
+                <button type="button" class="btn btn-icon btn-light" (click)="dialog?.close()">
                     <span class="icon-close icon-18"></span>
                 </button>
-            </div> 
-        </div>
-        <ng-container *ngFor="let item of lstSalCoeffs">
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-4">{{item.coeffCode}}:</div>
-                    <div class="col-4">{{item.coeffName}}</div>
-                </div>
             </div>
-        </ng-container>
+        </div>
+        <div class="form-group mt-2 mb-0 overflow-auto">
+            <div class="container">
+                <ng-container *ngFor="let item of lstSalCoeffs">
+                    <div class="row mb-4">
+                        <div class="col-4">
+                            <span class="fw-bolder">{{item.coeffCode}}:</span>
+                        </div>
+                        <div class="col-8">
+                            <span>{{item.coeffName}}</span>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
     </div>
 </ng-template>

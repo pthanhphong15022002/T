@@ -1242,10 +1242,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
   fieldSelect(fieldName) {
     if (this.caculateField) {
       let idxLast = this.caculateField.length - 1;
+      let chart = this.caculateField[idxLast];
       if (
-        this.caculateField[idxLast] == ']' ||
-        this.caculateField[idxLast] == ')' ||
-        this.caculateField[idxLast] == ','
+        chart == ']' ||
+        chart == ')' ||
+        chart == ',' ||
+        this.arrNum.includes(chart)
       )
         return;
     }
@@ -1312,12 +1314,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
       (x) => x.recID == this.field.stepID && x.fields?.length > 0
     );
     if (idx != -1) {
-      this.arrFieldNum = this.stepList[idx].fields
-        .filter((x) => x.dataType == 'N')
-        .map((x) => x.fieldName);
       // this.arrFieldNum = this.stepList[idx].fields
-      //   .filter((x) => x.dataType == 'N' || x.dataType == 'CF') //lafm them
+      //   .filter((x) => x.dataType == 'N')
       //   .map((x) => x.fieldName);
+      this.arrFieldNum = this.stepList[idx].fields
+        .filter((x) => x.dataType == 'N' || x.dataType == 'CF') //lafm them
+        .map((x) => x.fieldName);
     }
     if (!this.arrFieldNum || this.arrFieldNum?.length == 0)
       this.notiService.notify(

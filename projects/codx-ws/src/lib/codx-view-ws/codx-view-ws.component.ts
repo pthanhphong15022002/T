@@ -6,12 +6,17 @@ import {
   Output,
   SimpleChanges,
   TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import {
   ApiHttpService,
   ButtonModel,
+  CRUDService,
   CacheService,
+  CodxGridviewV2Component,
+  CodxListviewComponent,
   DataRequest,
+  FormModel,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -26,6 +31,7 @@ export class CodxViewWsComponent {
   @Input() tmpRightToolBar?: TemplateRef<any>;
   @Input() tmpHeader?: TemplateRef<any> = null;
   @Input() tmpItem?: TemplateRef<any>;
+  @Input() emtry?: TemplateRef<any>;
   @Input() itemTemplateList: TemplateRef<any>;
   @Input() service!: string;
   @Input() assemblyName = 'ERM.Business.Core';
@@ -38,15 +44,26 @@ export class CodxViewWsComponent {
   @Input() entityName: string = '';
   @Input() formName: string = '';
   @Input() gridViewName: string = '';
+  @Input() funcID: string = '';
   @Input() idFeild = 'recID';
   @Input() dataSource: any;
   @Input() bodyCss: any;
   @Input() modeView: any;
   @Input() isAdd: boolean = true;
+  @Input() hidenMF: boolean = false;
   @Output() btnClick = new EventEmitter();
+  @Output() clickMofe = new EventEmitter<any>();
+  @Output() changeMF = new EventEmitter<any>();
+  @Output() selectChange = new EventEmitter<any>();
   request: DataRequest;
   @Input() viewList: Array<ViewModel> = [];
   fMoreFuncs: ButtonModel[];
+  formModel = new FormModel();
+  itemSelected: any;
+  loaded: boolean;
+  @ViewChild('listView') listView: CodxListviewComponent;
+  @ViewChild('grid') grid: CodxGridviewV2Component;
+
   constructor(
     private ref: ChangeDetectorRef,
     private cache: CacheService,
@@ -103,7 +120,10 @@ export class CodxViewWsComponent {
         }
       });
     }
-
+    this.formModel.formName = this.formName;
+    this.formModel.entityName = this.entityName;
+    this.formModel.gridViewName = this.gridViewName;
+    this.formModel.funcID = this.funcID;
     this.fMoreFuncs = [
       {
         id: 'id-select-multi',
@@ -134,8 +154,13 @@ export class CodxViewWsComponent {
       changes['dataSource']?.currentValue !=
         changes['dataSource']?.previousValue
     ) {
+      this.loaded = false;
       this.dataSource = changes['dataSource']?.currentValue;
-      if (!this.dataSource) this.loadData();
+      if (!this.dataSource) {
+        this.loadData();
+      } else {
+        this.loaded = true;
+      }
     }
   }
 
@@ -144,6 +169,7 @@ export class CodxViewWsComponent {
       if (item && item.length > 0) {
         this.dataSource = item[0];
       }
+      this.loaded = true;
     });
   }
 
@@ -181,6 +207,13 @@ export class CodxViewWsComponent {
   addDataSource(data: any) {
     if (!this.dataSource) this.dataSource = [];
     this.dataSource.push(data);
+    this.dataSource = JSON.parse(JSON.stringify(this.dataSource));
+    if (this.listView?.dataService as CRUDService) {
+      (this.listView.dataService as CRUDService).add(data).subscribe();
+    }
+    if (this.grid) {
+      this.grid.addRow(data);
+    }
     this.ref.detectChanges();
   }
 
@@ -191,6 +224,12 @@ export class CodxViewWsComponent {
       );
       if (index >= 0) this.dataSource[index] = data;
     }
+    if (this.listView?.dataService as CRUDService) {
+      (this.listView.dataService as CRUDService).update(data).subscribe();
+    }
+    if (this.grid) {
+      this.grid.edit(data);
+    }
     this.ref.detectChanges();
   }
 
@@ -199,6 +238,48 @@ export class CodxViewWsComponent {
       this.dataSource = this.dataSource.filter(
         (x) => x[this.idFeild] != data[this.idFeild]
       );
+    if (this.listView?.dataService as CRUDService) {
+      (this.listView?.dataService as CRUDService).remove(data).subscribe();
+    }
+    if (this.grid) {
+      this.grid.deleteRow(data, true);
+    }
     this.ref.detectChanges();
+  }
+
+  clickMF(e, data) {
+    this.clickMofe.emit({ e: e, data: data });
+  }
+
+  changeDataMF(e, data) {
+    this.changeMF.emit({ e: e, data: data });
+  }
+
+  onSelected(data) {
+    if (data) {
+      this.itemSelected = data;
+    } else {
+      this.itemSelected = null;
+    }
+    this.selectChange.emit({ data: this.itemSelected });
+    this.ref.detectChanges();
+  }
+
+  /**
+   * * select item in view list
+   * @param event
+   * @returns
+   */
+  onSelectedViewList(event) {
+    if (typeof event?.data !== 'undefined') {
+      if (event?.data?.data || event?.data?.error) {
+        this.selectChange.emit({ data: null });
+        return;
+      } else {
+        this.itemSelected = event?.data;
+        this.selectChange.emit({ data: this.itemSelected });
+        this.ref.detectChanges();
+      }
+    }
   }
 }

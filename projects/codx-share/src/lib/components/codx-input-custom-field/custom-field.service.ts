@@ -41,6 +41,10 @@ export class CustomFieldService {
   sumSub(stringMath, opera = '+') {
     if (!stringMath || !this.isExitOperator(this.operatorAddMinus, stringMath))
       return stringMath;
+    if (stringMath.includes('+-'))
+      stringMath = stringMath.replaceAll('+-', '-');
+    if (stringMath.includes('--'))
+      stringMath = stringMath.replaceAll('--', '+');
     let sum = 0;
     let num = stringMath[0];
 
@@ -71,6 +75,10 @@ export class CustomFieldService {
   multDiv(stringMath, opera = 'x') {
     if (!stringMath || !this.isExitOperator(this.operatorMulDiv, stringMath))
       return stringMath;
+    if (stringMath.includes('xSUB'))
+      stringMath = stringMath.replaceAll('xSUB', 'x-');
+    if (stringMath.includes('/SUB'))
+      stringMath = stringMath.replaceAll('/SUB', '/-');
     let mul = 1;
     let num = stringMath[0];
 
@@ -103,6 +111,14 @@ export class CustomFieldService {
   sumAndMul(stringMath, haveSum = false) {
     if (!stringMath || !this.isExitOperator(this.operator, stringMath))
       return stringMath;
+    if (stringMath.includes('+-'))
+      stringMath = stringMath.replaceAll('+-', '-');
+    if (stringMath.includes('--'))
+      stringMath = stringMath.replaceAll('--', '+');
+    if (stringMath.includes('x-'))
+      stringMath = stringMath.replaceAll('x-', 'xSUB');
+    if (stringMath.includes('/-'))
+      stringMath = stringMath.replaceAll('/-', '/SUB');
     if (stringMath.includes('+')) {
       let arrAdd = stringMath.trim().split('+');
       if (arrAdd?.length > 0) {

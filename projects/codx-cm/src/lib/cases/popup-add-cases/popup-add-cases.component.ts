@@ -140,7 +140,7 @@ export class PopupAddCasesComponent
   isLoadedCF = false;
   customerCategory: any;
   instanceReason: any;
-  recIdMove:any;
+  recIdMove: any;
   isShowReasonDP: boolean = false;
   isViewAll: boolean = false;
   constructor(
@@ -187,7 +187,7 @@ export class PopupAddCasesComponent
         this.action !== this.actionAdd
           ? JSON.parse(JSON.stringify(dialog.dataService?.dataSelected))
           : this.cases;
-          this.customerCategory = dt?.data?.customerCategory;
+      this.customerCategory = dt?.data?.customerCategory;
     }
 
     if (this.action !== this.actionAdd) {
@@ -388,6 +388,8 @@ export class PopupAddCasesComponent
             (x) => x.recID == event.data.recID
           );
           if (idxField != -1) {
+            let valueOld =
+              this.listInstanceSteps[index].fields[idxField].dataValue;
             this.listInstanceSteps[index].fields[idxField].dataValue = result;
             let idxEdit = this.listCustomFile.findIndex(
               (x) =>
@@ -400,9 +402,10 @@ export class PopupAddCasesComponent
               this.listCustomFile.push(
                 this.listInstanceSteps[index].fields[idxField]
               );
+            if (field.dataType == 'N' && valueOld != result)
+              this.caculateField();
           }
         }
-        if (field.dataType == 'N') this.caculateField();
       }
     }
   }
@@ -542,7 +545,7 @@ export class PopupAddCasesComponent
       });
   }
   onAddInstance() {
-    if(this.isShowReasonDP) {
+    if (this.isShowReasonDP) {
       let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
       this.codxCmService.addInstance(data).subscribe((instance) => {
         if (instance) {
@@ -567,25 +570,23 @@ export class PopupAddCasesComponent
           this.dialog.close();
         }
       });
-    }
-    else {
+    } else {
       this.dialog.dataService
-      .save((option: any) => this.beforeSaveInstance(option))
-      .subscribe((res) => {
-        if (res && res.save) {
-          this.cases.status = res.save.status;
-          this.cases.datas = res.save.datas;
-          this.addPermission(res.save.permissions);
-          this.codxCmService.addCases(this.cases).subscribe((res) => {
-            if (res) {
-            }
-          });
-          this.dialog.close(res.save);
-          this.changeDetectorRef.detectChanges();
-        }
-      });
+        .save((option: any) => this.beforeSaveInstance(option))
+        .subscribe((res) => {
+          if (res && res.save) {
+            this.cases.status = res.save.status;
+            this.cases.datas = res.save.datas;
+            this.addPermission(res.save.permissions);
+            this.codxCmService.addCases(this.cases).subscribe((res) => {
+              if (res) {
+              }
+            });
+            this.dialog.close(res.save);
+            this.changeDetectorRef.detectChanges();
+          }
+        });
     }
-
   }
   onUpdateInstance() {
     this.dialog.dataService
@@ -643,9 +644,9 @@ export class PopupAddCasesComponent
       this.cases.applyProcess = this.applyProcess;
       this.checkApplyProcess(this.cases.applyProcess);
     }
-    if(this.isViewAll && this.processID && this.action === this.actionAdd) {
-      this.applyProcess  = true;
-      this.cases.applyProcess =  this.applyProcess ;
+    if (this.isViewAll && this.processID && this.action === this.actionAdd) {
+      this.applyProcess = true;
+      this.cases.applyProcess = this.applyProcess;
       await this.getListInstanceSteps(this.processID);
     }
 
@@ -670,7 +671,6 @@ export class PopupAddCasesComponent
         await this.onEdit();
       }
     }
-
   }
 
   async getGridView(formModel) {
@@ -1224,6 +1224,12 @@ export class PopupAddCasesComponent
           this.arrCaculateField = this.arrCaculateField.concat(fnum);
       }
     });
+    if (this.arrCaculateField?.length > 0)
+      this.arrCaculateField.sort((a, b) => {
+        if (a.dataFormat.includes('[' + b.fieldName + ']')) return 1;
+        else if (b.dataFormat.includes('[' + a.fieldName + ']')) return -1;
+        else return 0;
+      });
     this.isLoadedCF = true;
   }
   //tính toán
@@ -1243,13 +1249,28 @@ export class PopupAddCasesComponent
       let dataFormat = obj.dataFormat;
       fieldsNum.forEach((f) => {
         if (
-          dataFormat.includes('[' + f.fieldName + ']') &&
-          f.dataValue?.toString()
+          f.stepID == obj.stepID &&
+          dataFormat.includes('[' + f.fieldName + ']')
         ) {
+          if (!f.dataValue?.toString()) return;
           let dataValue = f.dataValue;
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
             '[' + f.fieldName + ']',
+            dataValue
+          );
+        }
+      });
+
+      this.arrCaculateField.forEach((x) => {
+        if (
+          x.stepID == obj.stepID &&
+          dataFormat.includes('[' + x.fieldName + ']')
+        ) {
+          if (!x.dataValue?.toString()) return;
+          let dataValue = x.dataValue;
+          dataFormat = dataFormat.replaceAll(
+            '[' + x.fieldName + ']',
             dataValue
           );
         }
@@ -1286,8 +1307,26 @@ export class PopupAddCasesComponent
             }
           }
         }
+        this.setElement(obj.recID, obj.dataValue);
       }
     });
+  }
+  setElement(recID, value) {
+    value =
+      value && value != '_'
+        ? Number.parseFloat(value)?.toFixed(2).toString()
+        : '';
+    var codxinput = document.querySelectorAll(
+      '.form-group codx-input[data-record="' + recID + '"]'
+    );
+
+    if (codxinput?.length > 0) {
+      let htmlE = codxinput[0] as HTMLElement;
+      let input = htmlE.querySelector('input') as HTMLInputElement;
+      if (input) {
+        input.value = value;
+      }
+    }
   }
   //------------------END_CACULATE--------------------//
 }

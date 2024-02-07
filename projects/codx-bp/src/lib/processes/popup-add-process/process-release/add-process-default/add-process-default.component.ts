@@ -27,6 +27,7 @@ export class AddProcessDefaultComponent implements OnInit{
   }
   type = 'add';
   subTitle:any;
+  tableField:any;
   user:any;
   constructor(
     private notifySvr: NotificationsService,
@@ -58,21 +59,35 @@ export class AddProcessDefaultComponent implements OnInit{
 
   formatData()
   {
-    debugger
     var list = [];
     let extendInfo = JSON.parse(JSON.stringify(this.data.extendInfo));
     extendInfo.forEach(element => {
       let field = element.fieldName.toLowerCase();
       if(element.fieldType != "Title") 
       {
-        if(this.type == 'add') this.dynamicFormsForm.addControl(field, new FormControl(element.defaultValue , (element.isRequired ? Validators.required : null)));
+        if(this.type == 'add') {
+          this.dynamicFormsForm.addControl(field, new FormControl(element.defaultValue , (element.isRequired ? Validators.required : null)));
+          if(element.fieldType == "Attachment") this.dataIns.documentControl = JSON.parse(element.documentControl);
+         
+        }
         else 
         {
-          let dataEdit = JSON.parse(this.dataIns.datas);
+          this.dataIns.datas = typeof this.dataIns.datas === 'string' ?  JSON.parse(this.dataIns.datas) : this.dataIns.datas;
+          let dataEdit = this.dataIns.datas;
           this.dynamicFormsForm.addControl(field, new FormControl(dataEdit[field] , (element.isRequired ? Validators.required : null)));
         }
       }
       if(element.fieldType == "SubTitle") this.subTitle = field;
+      if(element.fieldType == "Table") 
+      {
+        element.dataFormat = typeof element.dataFormat == 'string' ? JSON.parse(element.dataFormat) : element.dataFormat;
+        element.tableFormat = typeof element.tableFormat == 'string' ? JSON.parse(element.tableFormat) : element.tableFormat;
+        this.tableField = field;
+        if(this.type == 'add') {
+          this.dataIns.datas = {};
+          this.dataIns.datas[field] = [];
+        }
+      }
       var index = list.findIndex(x=>x.columnOrder == element.columnOrder)
       if(index >= 0)
       {
@@ -102,9 +117,9 @@ export class AddProcessDefaultComponent implements OnInit{
     return Util.camelize(key);
   }
 
-  async onSave()
+  async onSave(type=1)
   {
-
+    if(!this.checkAttachment()) return;
     if(this.dynamicFormsForm.invalid) this.findInvalidControls();
     else
     {
@@ -177,9 +192,10 @@ export class AddProcessDefaultComponent implements OnInit{
           permissions: this.data?.owners,
         }
     
-    
+        valueForm[this.tableField] = this.dataIns.datas[this.tableField].filter(x=> typeof x === 'object');
         this.dataIns.processID = this.process?.recID,
         this.dataIns.instanceNo = instanceNo,
+        this.dataIns.instanceID = this.dataIns.recID,
         this.dataIns.status= "1",
         this.dataIns.currentStage= stageF.recID,
         this.dataIns.currentStep= step.recID,
@@ -193,14 +209,19 @@ export class AddProcessDefaultComponent implements OnInit{
         this.dataIns.actualEnd= null,
         this.dataIns.createdOn= new Date(),
         this.dataIns.createdBy = this.user?.userID,
-        this.dataIns.duration = this.process?.duration
+        this.dataIns.duration = this.process?.duration,
         this.dataIns.datas = JSON.stringify(valueForm)
         var listTask = JSON.stringify([stage,step]);
+
         //Luu process Task
         this.api.execSv("BP","BP","ProcessTasksBusiness","SaveListTaskAsync",listTask).subscribe();
         //Luu Instanes
         this.api.execSv("BP","BP","ProcessInstancesBusiness","SaveInsAsync",this.dataIns).subscribe(item=>{
-          this.dialog.close(this.dataIns)
+          if(type == 1) this.dialog.close(this.dataIns)
+          else 
+          {
+            this.startProcess(this.dataIns.recID)
+          }
         });
     
         if(this.attachment.fileUploadList && this.attachment.fileUploadList.length > 0)
@@ -218,6 +239,31 @@ export class AddProcessDefaultComponent implements OnInit{
     }
   }
 
+  checkAttachment()
+  {
+    if(!this.dataIns.documentControl) return true;
+    else
+    {
+      var arr = [];
+      this.dataIns.documentControl.forEach(elm=>{
+        if(elm.isRequired && elm.count == 0)
+        {
+          arr.push(elm.title)
+        }
+      })
+
+      if(arr.length>0)
+      {
+        var name = arr.join(', ');
+        name += " " + 'bắt buộc đính kèm mẫu'
+        this.notifySvr.notify(name);
+        return false;
+      }
+
+      return true;
+    }
+  }
+
   findInvalidControls() {
     const invalid = [];
     const controls = this.dynamicFormsForm.controls;
@@ -228,5 +274,41 @@ export class AddProcessDefaultComponent implements OnInit{
     }
     var name = invalid.join(" , ");
     this.notifySvr.notifyCode('SYS009', 0, name);
+  }
+
+  dataChangeAttachmentGrid(e:any)
+  {
+    var dt = JSON.parse(JSON.stringify(e));
+    this.dataIns.documentControl = dt;
+  }
+
+  editTable(index:any,e:any)
+  {
+    debugger
+    if(typeof this.dataIns.datas[this.tableField][index] === 'string') {
+      this.dataIns.datas[this.tableField][index] = {}
+    }
+    this.dataIns.datas[this.tableField][index][e?.field] = e?.data;
+  }
+
+  addRow()
+  {
+    this.dataIns.datas[this.tableField].push("");
+  }
+
+  startProcess(recID:any) {
+    this.api
+      .execSv(
+        'BP',
+        'ERM.Business.BP',
+        'ProcessesBusiness',
+        'StartProcessAsync',
+        [recID]
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close(res);
+        }
+      });
   }
 }

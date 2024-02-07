@@ -40,9 +40,23 @@ export class AddFileFromProcessDefaultComponent implements OnInit{
           var dt = this.data.steps.filter(x=>x.stepNo == elm.stepNo);
           if(dt)
           {
+            let fieldID =  elm.fieldID;
+            let entityName = this.formModel.entityName;
             elm.stepName = dt[0].stepName,
-            elm.stageName =  this.data.steps.filter(x=>x.recID == dt[0].parentID)[0].stepName
-            this.getFile(elm.fieldID,i);
+            elm.stageName =  this.data.steps.filter(x=>x.recID == dt[0].parentID)[0].stepName;
+
+            if(elm?.templateID) {
+              fieldID = elm?.templateID;
+              entityName = "AD_ExcelTemplates"
+              if(elm.templateType == "word") entityName = "AD_WordTemplates"
+            }
+            else if(elm.refStepNo)
+            {
+              var index = this.documentControl.findIndex(x=>x.recID == elm.refStepID);
+              if(index>=0) fieldID = this.documentControl[index].fieldID;
+            }
+
+            this.getFile(fieldID,entityName,i);
             i++;
           }
         });
@@ -50,6 +64,7 @@ export class AddFileFromProcessDefaultComponent implements OnInit{
       }
     }
   }
+
 
   groupData()
   {
@@ -70,10 +85,10 @@ export class AddFileFromProcessDefaultComponent implements OnInit{
       }
     });
   }
-  getFile(recID:any,index:any)
+  getFile(recID:any,entityName:any,index:any)
   {
     let i = index;
-    this.api.execSv("DM","DM","FileBussiness","GetFileByObjectIDAsync",[recID + ";",this.formModel.entityName]).subscribe(item=>{
+    this.api.execSv("DM","DM","FileBussiness","GetFileByObjectIDAsync",[recID + ";",entityName]).subscribe(item=>{
       if(item)
       {
         this.documentControl[i].files = item;

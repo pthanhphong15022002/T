@@ -1,6 +1,14 @@
-import { AfterViewInit, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Injector,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import {
   AuthStore,
+  DialogModel,
   NotificationsService,
   UIComponent,
   ViewModel,
@@ -8,6 +16,7 @@ import {
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxBpService } from '../codx-bp.service';
+import { ProcessReleaseDetailComponent } from '../processes/popup-add-process/process-release/process-release-detail/process-release-detail.component';
 
 @Component({
   selector: 'lib-my-instances',
@@ -21,10 +30,10 @@ export class MyInstancesComponent
   @ViewChild('templateList') templateList?: TemplateRef<any>;
   @ViewChild('headerTemplateList') headerTemplateList?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  predicates = 'CreatedBy=@0'
+  predicates = 'CreatedBy=@0';
   dataValues = '';
   dataSelected: any;
-  user:any;
+  user: any;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -56,5 +65,61 @@ export class MyInstancesComponent
   selectedChange(data: any) {
     this.dataSelected = data?.data ? data?.data : data;
     this.detectorRef.detectChanges();
+  }
+
+  changeDataMF(e, data) {
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'BPT0501':
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+            res.disabled = false;
+            break;
+          default:
+            res.disabled = true;
+            break;
+        }
+      });
+    }
+  }
+
+  clickMF(e, data) {
+    this.dataSelected = data;
+    switch (e.functionID) {
+      case 'SYS03':
+        this.openFormDetail(data);
+        break;
+    }
+  }
+  dbClick(e) {
+    if (e && e?.data) {
+      this.openFormDetail(e?.data);
+    }
+  }
+  openFormDetail(dt: any) {
+    var option = new DialogModel();
+    option.IsFull = true;
+    option.FormModel = this.view.formModel;
+    this.api
+      .execSv<any>('BP', 'ERM.Business.BP', 'ProcessesBusiness', 'GetAsync', [
+        dt?.processID,
+      ])
+      .subscribe((process) => {
+        if (process) {
+          let popup = this.callfc.openForm(
+            ProcessReleaseDetailComponent,
+            '',
+            850,
+            600,
+            '',
+            { data: dt, process: process },
+            '',
+            option
+          );
+        }
+      });
   }
 }

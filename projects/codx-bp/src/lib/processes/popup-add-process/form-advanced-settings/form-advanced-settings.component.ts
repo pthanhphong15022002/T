@@ -14,29 +14,61 @@ export class FormAdvancedSettingsComponent implements OnInit {
   title = 'Thiết lập nâng cao';
   settings = [];
   isLoad = false;
+  settingFull = {};
+  newSetting = [];
+  paravalues: any;
+  data: any;
   constructor(
     private api: ApiHttpService,
     @Optional() dg: DialogRef,
     @Optional() dt: DialogData
   ) {
     this.dialog = dg;
-  }
-  ngOnInit(): void {
-    this.api
-      .execSv('BG', 'BG', 'ScheduleTasksBusiness', 'GetScheduleTasksAsync', [
-        'ACP101',
-      ])
-      .subscribe((res: any) => {
-        if (res) {
-          this.settings = res;
-        } else {
-          this.settings = [];
-        }
-        this.isLoad = true;
-        this.settingControl.setting = this.settings;
-        // this.settingControl.dialog = null;
+    this.data = JSON.parse(JSON.stringify(dt?.data?.data));
+    if (this.data.settings && this.data.settings.length) {
+      this.newSetting = JSON.parse(JSON.stringify(this.data.settings));
+      const paravalues: { [key: string]: any } = {};
+
+      this.newSetting.forEach((item: any) => {
+        const key = Object.keys(item)[0];
+        paravalues[item.fieldName] =
+          item.controlType == 'Switch' ||
+          item.controlType == 'Checkbox' ||
+          item.controlType == 'Radio'
+            ? item.fieldValue?.toLowerCase()?.trim() == 'true' ||
+              item.fieldValue?.toLowerCase()?.trim() == '1'
+              ? true
+              : false
+            : item.fieldValue;
       });
+      this.paravalues = JSON.stringify(paravalues);
+      this.settingFull = {
+        paras: this.data.settings,
+        paraValues: this.paravalues,
+      };
+    }
+  }
+  ngOnInit(): void {}
+
+  valuechange(e) {
+    this.newSetting.forEach((item) => {
+      if (item.fieldName === e?.field) {
+        if (
+          item.controlType == 'Switch' ||
+          item.controlType == 'Checkbox' ||
+          item.controlType == 'Radio'
+        ) {
+          item.fieldValue = e?.data ? '1' : '0';
+        } else {
+          item.fieldValue = e?.data;
+        }
+      }
+    });
+    console.log(e);
   }
 
-  valuechange(e) {}
+  onSave() {
+    this.data.settings = JSON.parse(JSON.stringify(this.newSetting));
+    this.dialog.close(this.data);
+  }
 }

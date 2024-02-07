@@ -9,20 +9,32 @@
 </div>
 
 <ng-template #toolbar>
+  <div class="d-flex align-items-center justify-content-end w-100 pb-2">
+    <codx-mfunc
+      *ngIf="!hidenMF"
+      [ngClass]="itemSelected ? '' : 'd-none'"
+      [formModel]="formModel"
+      [isToolBar]="true"
+      type="view"
+      [dataItem]="itemSelected"
+      (changeDataMF)="changeDataMF($event, itemSelected)"
+      (clickMF)="clickMF($event, itemSelected)"
+    ></codx-mfunc>
+  </div>
   <div
     class="d-flex align-items-center justify-content-between w-100 pb-2 border-bottom"
   >
-    <ng-container *ngIf="tmpRightToolBar">
-      <div class="d-flex align-items-center justify-content-start w-100">
-        <ng-container *ngTemplateOutlet="tmpRightToolBar"></ng-container>
-      </div>
-    </ng-container>
+    <div class="d-flex align-items-center justify-content-start w-100">
+      <ng-container *ngTemplateOutlet="tmpRightToolBar"></ng-container>
+    </div>
+
     <div class="d-flex align-items-center justify-content-end w-200px">
       <codx-searchbar
         class="mt-1"
         [type]="'slide'"
         (searchEvent)="onSearch($event)"
       ></codx-searchbar>
+
       <codx-toolbar-choose
         class="mt-2 mx-2"
         [views]="viewList"
@@ -70,23 +82,87 @@
           </div>
         </ng-container>
         <ng-container *ngIf="view.type == 1">
-          <div class="h-100">
-            <codx-listview
-              #listViewNoteBooks
-              [entityName]="entityName"
-              [gridViewName]="gridViewName"
-              [predicate]="predicate"
-              [dataValue]="dataValue"
-              [service]="service"
-              [assemblyName]="assemblyName"
-              [className]="className"
-              [method]="method"
-              [itemTemplate]="itemTemplateList"
-              type="listView"
-              [formName]="formName"
-            >
-            </codx-listview>
-          </div>
+          <ng-container *ngIf="emtry">
+            <div class="h-100" *ngIf="loaded">
+              <ng-container *ngIf="dataSource && dataSource.length > 0;else emtry">
+                <codx-listview
+                  #listView
+                  [entityName]="entityName"
+                  [gridViewName]="gridViewName"
+                  [predicate]="predicate"
+                  [dataValue]="dataValue"
+                  [predicates]="predicates"
+                  [dataValues]="dataValues"
+                  [service]="service"
+                  [assemblyName]="assemblyName"
+                  [className]="className"
+                  [method]="method"
+                  [itemTemplate]="itemTemplateList"
+                  (onSelectionChanged)="onSelectedViewList($event)"
+                  [funcID]="funcID"
+                  type="listView"
+                  [formName]="formName"
+                >
+                </codx-listview>
+              </ng-container>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="emtry == null">
+            <div class="h-100">
+              <codx-listview
+                #listView
+                [entityName]="entityName"
+                [gridViewName]="gridViewName"
+                [predicate]="predicate"
+                [dataValue]="dataValue"
+                [predicates]="predicates"
+                [dataValues]="dataValues"
+                [service]="service"
+                [assemblyName]="assemblyName"
+                [className]="className"
+                [method]="method"
+                [itemTemplate]="itemTemplateList"
+                (onSelectionChanged)="onSelectedViewList($event)"
+                [funcID]="funcID"
+                type="listView"
+                [formName]="formName"
+              >
+              </codx-listview>
+            </div>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="view.type == 11">
+          <codx-gridview-v2
+            #grid
+            [formName]="formName"
+            [gridViewName]="gridViewName"
+            [entityName]="entityName"
+            [service]="service"
+            [assemblyName]="assemblyName"
+            [className]="className"
+            [method]="method"
+            [predicate]="predicate"
+            [dataValue]="dataValue"
+            [predicates]="predicates"
+            [dataValues]="dataValues"
+            rowHeight="40"
+            [height]="'100%'"
+            [hideMoreFunc]="hidenMF"
+            [templateMore]="tempMorefunction"
+            (onSelected)="onSelected($event)"
+          ></codx-gridview-v2>
+          <ng-template #tempMorefunction let-data>
+            <div class="" style="height: 30px">
+              <codx-mfunc
+                [dataItem]="data"
+                [formModel]="formModel"
+                type="view"
+                [isBookMark]="false"
+                (clickMF)="clickMF($event, data)"
+                (changeDataMF)="changeDataMF($event, data)"
+              ></codx-mfunc>
+            </div>
+          </ng-template>
         </ng-container>
       </ng-container>
     </ng-container>

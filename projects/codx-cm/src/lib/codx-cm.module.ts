@@ -127,6 +127,7 @@ import { PopupCostItemsComponent } from './deals/popup-cost-items/popup-cost-ite
 import { ViewStepComponent } from './deals/step-task/view-step/view-step.component';
 import { CostItemsComponent } from './deals/popup-cost-items/cost-items/cost-items.component';
 import { CodxDashboardViewsComponent } from 'projects/codx-share/src/lib/components/codx-dashboard/dashboard-view/dashboard-view.component';
+import { CurrentStatusComponent } from './leads/view-lead-detail/current-status/current-status.component';
 
 export const routes: Routes = [
   {
@@ -315,6 +316,7 @@ const T_Component: Type<any>[] = [
   CodxViewComponent,
   CurrentStepComponent,
   ViewStepComponent,
+  CurrentStatusComponent,
 ];
 
 @NgModule({

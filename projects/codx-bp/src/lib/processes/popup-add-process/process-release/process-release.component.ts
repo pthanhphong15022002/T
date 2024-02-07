@@ -205,6 +205,12 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         this.startProcess();
         break;
       }
+      //Xem chi tiết quy trình
+      case 'BPT01012':
+        {
+          this.openFormDetail(this.view?.dataService?.dataSelected)
+          break;
+        }
     }
   }
   startProcess() {
