@@ -708,7 +708,6 @@ export class PopupAddInstanceComponent implements OnInit {
       let htmlE = codxinput[0] as HTMLElement;
       let input = htmlE.querySelector('input') as HTMLInputElement;
       if (input) {
-        if (input.type == 'text' && value) input.setAttribute('type', 'number');
         input.value = value;
       }
     }
