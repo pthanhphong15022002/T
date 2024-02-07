@@ -327,7 +327,7 @@ export class PopupAddInstanceComponent implements OnInit {
               this.listCustomFile.push(this.listStep[index].fields[idxField]);
           }
         }
-        if (field.dataType) this.caculateField();
+        if (field.dataType == 'N') this.caculateField();
       }
     }
   }
