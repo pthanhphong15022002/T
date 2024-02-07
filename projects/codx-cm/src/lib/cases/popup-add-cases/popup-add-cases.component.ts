@@ -1312,7 +1312,10 @@ export class PopupAddCasesComponent
     });
   }
   setElement(recID, value) {
-    value = value == '_' ? '' : value;
+    value =
+      value && value != '_'
+        ? Number.parseFloat(value)?.toFixed(2).toString()
+        : '';
     var codxinput = document.querySelectorAll(
       '.form-group codx-input[data-record="' + recID + '"]'
     );
