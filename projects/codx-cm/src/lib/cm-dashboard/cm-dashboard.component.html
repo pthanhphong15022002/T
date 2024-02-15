@@ -1999,7 +1999,7 @@
         name="lblChartIn"
         formName="CMInOutDashboard"
         gridViewName="grvCMInOutDashboard"
-        default="Doanh nghiệp thanh lý HĐ năm "
+        default="Diện tích bán mới năm "
       ></codx-label>
       <span class="fw-bold" [innerHTML]="year"></span>
     </div>
@@ -2008,6 +2008,7 @@
         id="chart-container-3"
         [primaryXAxis]="primaryXAxisColumn"
         [primaryYAxis]="primaryYAxisColumn"
+        [tooltip]="tooltipChartColumn"
         [legendSettings]="legendSettingsColumn"
       >
         <!--   [title]="titleTest" -->
@@ -2072,7 +2073,7 @@
           </th>
           <th class="w-15 border-bottom text-center">
             <codx-label
-              name="lblTableDNTN"
+              name="lblOutRentalArea"
               formName="CMInOutDashboard"
               gridViewName="grvCMInOutDashboard"
               default="Diện tích thanh lý"
@@ -2080,7 +2081,7 @@
           </th>
           <th class="w-15 border-bottom text-center">
             <codx-label
-              name="lblTableDNNN"
+              name="lblDownArea"
               formName="CMInOutDashboard"
               gridViewName="grvCMInOutDashboard"
               default="Diện tích giảm"
@@ -2102,10 +2103,10 @@
     <div class="text-center fs-2 mt-3">
       <codx-label
         class="fw-bold"
-        name="lblChartIn"
+        name="lblChartOut"
         formName="CMInOutDashboard"
         gridViewName="grvCMInOutDashboard"
-        default="Doanh nghiệp thanh lý HĐ năm "
+        default="Diện tích thanh lý năm "
       ></codx-label>
       <span class="fw-bold" [innerHTML]="year"></span>
     </div>
@@ -2114,6 +2115,7 @@
         id="chart-container-4"
         [primaryXAxis]="primaryXAxisColumn"
         [primaryYAxis]="primaryYAxisColumn"
+        [tooltip]="tooltipChartColumn"
         [legendSettings]="legendSettingsColumn"
       >
         <!--   [title]="titleTest" -->
