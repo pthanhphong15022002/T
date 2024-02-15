@@ -45,17 +45,10 @@ import { PopupExtendComponent } from './popup-extend/popup-extend.component';
 import { CodxImportComponent } from '../codx-import/codx-import.component';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
-import { X } from '@angular/cdk/keycodes';
 import { AssignTaskModel } from '../../models/assign-task.model';
-import { concat } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
-import {
-  AnimationModel,
-  ILoadedEventArgs,
-  ProgressTheme,
-} from '@syncfusion/ej2-angular-progressbar';
+import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { CodxShareService } from '../../codx-share.service';
-import { truncate } from 'fs/promises';
 import { TreeViewComponent } from './tree-view/tree-view.component';
 
 @Component({
@@ -1807,10 +1800,10 @@ export class CodxTasksComponent
         this.openExtendsAction(e.data, data);
         break;
       case 'SYS008':
-          if(this.view.viewActiveType == ViewType.kanban){
-            this.view.currentView.openSetting();
-          }
-      break;
+        if (this.view.viewActiveType == ViewType.kanban) {
+          this.view.currentView.openSetting();
+        }
+        break;
       default: {
         this.codxShareService.defaultMoreFunc(
           e,
@@ -2010,8 +2003,6 @@ export class CodxTasksComponent
             if (this.funcID == 'TMT0403' || this.funcID == 'TMT0402')
               x.disabled = true;
             break;
-
-
         }
       });
     }
