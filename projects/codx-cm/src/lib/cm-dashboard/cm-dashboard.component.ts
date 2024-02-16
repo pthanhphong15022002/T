@@ -518,11 +518,47 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     valueType: 'Category',
     title: '',
   };
-  primaryYAxisColumn = {
+  primaryYAxisColumnEpIn = {
     title: 'Tổng số',
     minimum: 0,
     // maximum: 100,
-    interval: 20,
+    interval: 10,
+    // lineStyle: { width: 0 },
+    majorTickLines: { width: 0 },
+    majorGridLines: { width: 1 },
+    minorGridLines: { width: 1 },
+    minorTickLines: { width: 0 },
+  };
+
+  primaryYAxisColumnEpOut = {
+    title: 'Tổng số',
+    minimum: 0,
+    // maximum: 100,
+    interval: 10,
+    // lineStyle: { width: 0 },
+    majorTickLines: { width: 0 },
+    majorGridLines: { width: 1 },
+    minorGridLines: { width: 1 },
+    minorTickLines: { width: 0 },
+  };
+
+  primaryYAxisColumnAreaIn = {
+    title: 'Tổng số',
+    minimum: 0,
+    // maximum: 100,
+    interval: 10,
+    // lineStyle: { width: 0 },
+    majorTickLines: { width: 0 },
+    majorGridLines: { width: 1 },
+    minorGridLines: { width: 1 },
+    minorTickLines: { width: 0 },
+  };
+
+  primaryYAxisColumnAreaOut = {
+    title: 'Tổng số',
+    minimum: 0,
+    // maximum: 100,
+    interval: 10,
     // lineStyle: { width: 0 },
     majorTickLines: { width: 0 },
     majorGridLines: { width: 1 },
@@ -553,6 +589,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   listAreaIn = [];
   listAreaOut = [];
   isQTSC = false;
+
+  loadedMap = false;
+  loadedHeight = 0;
   //======================================================================
 
   constructor(
@@ -916,7 +955,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       this.tooltip.format =
         'Tổng doanh số dự kiến : <b>${point.x} ' +
         this.currencyID +
-        '</b> <br/>Tổng mục tiêu : : <b>${point.y} ' +
+        '</b> <br/>Tổng mục tiêu : <b>${point.y} ' +
         this.currencyID +
         '</b><br/>Số lượng cơ hội : <b>${point.size}</b>';
     } else {
@@ -1632,6 +1671,37 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   getNamePy(value) {
     return this.vllPy.find((x) => x.value == value)?.text;
   }
+  loadTreeMap(e, chart) {
+    if (e?.treemap?.availableSize?.height && !this.loadedMap) {
+      let height = e.treemap.availableSize.height;
+      let width = e.treemap.availableSize.width;
+      // e.treemap.areaRect.height = e.treemap.availableSize.height = height - 50;
+      // e.treemap.areaRect.width = e.treemap.availableSize.width =
+      //   (width * (height - 50)) / height;
+
+      // this.loadedMap = true;
+      // if (chart) {
+      //   chart.destroy();
+      //   //   chart = e.treemap;
+
+      //   chart.width = e.treemap.areaRect.width;
+      //   chart.height = e.treemap.areaRect.height;
+      //   chart.refresh();
+      // }
+
+      // e.treemap.destroy();
+      // e.treemap.refresh();
+    }
+  }
+  resize(e, chart) {
+    if (e?.treemap?.availableSize?.height) {
+      e.treemap.availableSize.height -= 50;
+      e.treemap.areaRect.height = e.treemap.availableSize.height;
+      if (chart) {
+        chart.refresh();
+      }
+    }
+  }
 
   changeChart(ele: any, obj: any) {
     let viewCrr = '1';
@@ -1640,11 +1710,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         if (ele.id == this.tabActiveBusIns) return;
         this.tabActiveBusIns = ele.id;
         viewCrr = '1';
+        this.loadedMap = false;
         break;
       case 'btIndustries':
         if (ele.id == this.tabActiveBusIns) return;
         this.tabActiveBusIns = ele.id;
         viewCrr = '2';
+        this.loadedMap = false;
         break;
       case 'btMax':
         if (ele.id == this.tabActiveMaxMin) return;
@@ -2929,6 +3001,17 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     }
 
     let fieldGroup = isIn ? 'quarterApproved' : 'quarterDisposal';
+    let countAll = dataSet?.length;
+
+    let renderMax = Math.floor(countAll / 10);
+
+    if (renderMax > 10) {
+      let mod = renderMax % 10;
+      renderMax = Math.floor(renderMax / 10) * 10 + (mod > 5 ? 10 : 5);
+      if (isIn) this.primaryYAxisColumnEpIn.interval = renderMax;
+      else this.primaryYAxisColumnEpOut.interval = renderMax;
+    }
+
     let listEnterpriseNew = this.groupBy(dataSet, fieldGroup);
 
     if (listEnterpriseNew) {
@@ -2956,7 +3039,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       let objTotal = {
         quarter: 100,
         quarterName: 'Tổng cộng',
-        countAll: dataSet?.length,
+        countAll: countAll,
       };
       this.dataBusinessType.forEach(
         (type) =>
@@ -3125,6 +3208,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let totalRentalArea = this.total(dataSet, 'rentalArea');
     let totalUpAndDownArea = this.total(dataSet, fieldFiter);
     let totalArea = totalRentalArea + totalUpAndDownArea;
+    let renderMax = Math.floor(totalArea / 10);
+
+    if (renderMax > 10) {
+      let mod = renderMax % 10;
+      renderMax = Math.floor(renderMax / 10) * 10 + (mod > 5 ? 10 : 5);
+      if (isIn) this.primaryYAxisColumnAreaIn.interval = renderMax;
+      else this.primaryYAxisColumnAreaOut.interval = renderMax;
+    }
     if (listDataGroup) {
       this.vllQuaters?.forEach((qt) => {
         let key = qt.value;

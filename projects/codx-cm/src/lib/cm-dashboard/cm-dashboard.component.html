@@ -185,12 +185,13 @@
         </div>
       </div>
     </div>
-    <div class="w-100 d-block align-item-center position-relative">
+    <div class="w-100 h-100 d-block align-item-center position-relative">
       <div #viewBus class="d-block position-absolute">
+        <!--class="d-block" style="display: block" -->
         <ejs-treemap
           #pie1
-          class="d-block"
-          style="display: block; height: 380px !important"
+          (load)="loadTreeMap($event, pie1)"
+          (resize)="resize($event, pie1)"
           [dataSource]="dataSourceBussnessLine"
           weightValuePath="quantity"
           rangeColorValuePath="quantity"
@@ -206,14 +207,13 @@
         >
         </ejs-treemap>
       </div>
-      <div
-        #viewIndus
-        class="d-none d-block position-absolute overflow-x-hidden"
-      >
+      <div #viewIndus class="d-none d-block position-absolute">
         <ejs-treemap
           #pie2
+          (load)="loadTreeMap($event, pie2)"
+          (resize)="resize($event, pie2)"
           class="d-none d-block"
-          style="display: block; height: 380px !important"
+          style="display: block"
           [dataSource]="dataSourceIndustry"
           weightValuePath="quantity"
           rangeColorValuePath="quantity"
@@ -1815,7 +1815,7 @@
       <ejs-chart
         id="chart-container-1"
         [primaryXAxis]="primaryXAxisColumn"
-        [primaryYAxis]="primaryYAxisColumn"
+        [primaryYAxis]="primaryYAxisColumnEpIn"
         [tooltip]="tooltipChartColumn"
         [legendSettings]="legendSettingsColumn"
       >
@@ -1909,7 +1909,7 @@
       <ejs-chart
         id="chart-container-2"
         [primaryXAxis]="primaryXAxisColumn"
-        [primaryYAxis]="primaryYAxisColumn"
+        [primaryYAxis]="primaryYAxisColumnEpOut"
         [tooltip]="tooltipChartColumn"
         [legendSettings]="legendSettingsColumn"
       >
@@ -2012,7 +2012,7 @@
       <ejs-chart
         id="chart-container-3"
         [primaryXAxis]="primaryXAxisColumn"
-        [primaryYAxis]="primaryYAxisColumn"
+        [primaryYAxis]="primaryYAxisColumnAreaIn"
         [tooltip]="tooltipChartColumn"
         [legendSettings]="legendSettingsColumn"
       >
@@ -2122,7 +2122,7 @@
       <ejs-chart
         id="chart-container-4"
         [primaryXAxis]="primaryXAxisColumn"
-        [primaryYAxis]="primaryYAxisColumn"
+        [primaryYAxis]="primaryYAxisColumnAreaOut"
         [tooltip]="tooltipChartColumn"
         [legendSettings]="legendSettingsColumn"
       >
@@ -2153,7 +2153,7 @@
             columnSpacing="0.25"
             columnWidth="1"
             yName="totalUpAndDownArea"
-            [name]="titleUpAndDownAreaIn"
+            [name]="titleUpAndDownAreaOut"
           ></e-series>
         </e-series-collection>
       </ejs-chart>
