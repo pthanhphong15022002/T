@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  HostBinding,
   Injector,
   Input,
   OnChanges,
@@ -10,46 +11,32 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
-  AuthStore,
-  CacheService,
   CodxGridviewV2Component,
-  DataRequest,
   FormModel,
-  NotificationsService,
-  ResourceModel,
-  UIComponent,
   UIDetailComponent,
-  Util,
 } from 'codx-core';
 
-import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
-import { CodxPrService } from '../../codx-pr.service';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
-import { ViewKowcodeComponent } from '../view-kowcode/view-kowcode.component';
 
 @Component({
   selector: 'view-detail-request-kowds',
   templateUrl: './view-detail-request-kowds.component.html',
   styleUrls: ['./view-detail-request-kowds.component.css'],
 })
-export class ViewDetailRequestKowDsComponent
-  extends UIDetailComponent
-  implements OnChanges, AfterViewInit
-{
-  @Input() hideMF = true;
-  @Input() hideFooter = false;
-  itemDetail: any;
-  @ViewChild('tempEmployee', { static: true }) tempEmployee: TemplateRef<any>;
-  @ViewChild('tempKowTotal', { static: true }) tempKowTotal: TemplateRef<any>;
-  @ViewChild('gridTotal') gridTotal: CodxGridviewV2Component;
+export class ViewDetailRequestKowDsComponent extends UIDetailComponent implements OnChanges, AfterViewInit {
 
-  dataValues = [];
-  oFuncID = 'PRTPro18a';
-  oFunList: any;
-  renderedGrid = false;
-  oFormModel: any;
-  gridFM: any;
-  cbbKowCode = [];
+  @HostBinding('class') get valid() { return "d-block w-100 h-100"; }
+  @Input() runMode:string;
+  @Input() formModel:FormModel;
+  @Input() hideMF:boolean = true;
+  @Input() hideFooter:boolean = false;
+
+  @ViewChild('codxGrvV2') codxGrvV2: CodxGridviewV2Component;
+  @ViewChild('tmpCellEmp') tmpCellEmp: TemplateRef<any>;
+  @ViewChild('tmpCellKow') tmpCellKow: TemplateRef<any>;
+  @ViewChild("tmpPopupNoteKow") tmpPopupNoteKow:TemplateRef<any>;
+  data: any;
+  loaded = false;
   tabControl = [
     {
       name: 'History',
@@ -70,152 +57,111 @@ export class ViewDetailRequestKowDsComponent
       icon: 'icon-i-chat-right',
     },
   ];
-  curRecID = '';
-  totalKowPr: any;
-  totalKowDV: any;
-  vllKowCode: any;
-  gridKow: any;
-  loadedCBB = false;
-  reloadGrid: boolean;
-  funcList: any;
-  runMode: any;
-  createdName = '';
   gridKowColumns = [];
-  constructor(
+  rowCount:number = 0;
+  constructor
+  (
     injector: Injector,
-    private authStore: AuthStore,
-    private codxCommonService: CodxCommonService,
     private codxShareService: CodxShareService,
-    private codxPrService: CodxPrService,
-    private notify: NotificationsService,
-    private df: ChangeDetectorRef
-  ) {
+  ) 
+  {
     super(injector);
-    //Lấy thông tin formName, grvName để dịch label
-    this.codxPrService.getFormModel(this.oFuncID).then((fm) => {
-      this.oFormModel = fm;
-    });
-    this.cache.functionList(this.funcID).subscribe((func) => {
-      this.funcList = func;
-      this.runMode = func?.runMode;
-    });
   }
-  onInit(): void {
-    this.gridFM = new FormModel();
-    this.gridFM.formName = 'KowDs';
-    this.gridFM.gridViewName = 'grvKowDsUIByKow';
-    this.gridFM.entityName = 'TS_KowDs';
 
-    
+  onInit(): void {
+    this.cache.valueList("HR033")
+    .subscribe((vll:any) => {
+      if(vll && vll.datas)
+      {
+        vll.datas.forEach((element) => {
+          this.vllHR033[element.value] = element;
+        });
+      }
+    });
+    this.loadData(this.formModel.funcID,this.recID);
   }
+
   ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes?.recID?.currentValue
-      //&& changes?.recID?.currentValue != this.curRecID
-    ) {
-      this.curRecID = changes?.recID?.currentValue;
-      this.loadData();
+    if(changes && changes.recID && changes.recID.currentValue !== changes.recID.previousValue)
+    {
+      this.loadData(this.formModel.funcID,this.recID);
+      this.codxGrvV2?.refresh();
+      this.detectorRef.detectChanges();
     }
   }
-  loadData() {
-    this.api
-      .execSv('HR', 'ERM.Business.PR', 'KowDsBusiness', 'GetViewDetailAsync', [
-        this.curRecID,
-        this.funcID,
-      ])
+
+  // get data info
+  loadData(funcID,recID:string) {
+    if(funcID && recID)
+    {
+      this.api
+      .execSv('HR', 'ERM.Business.HR', 'RequestBusiness', 'GetByIDAsync', [funcID,recID])
       .subscribe((res: any) => {
-        this.itemDetail = res;
-        this.cache.getCompany(this.itemDetail?.createdBy).subscribe((crea) => {
-          this.createdName = crea?.employeeName ?? this.itemDetail?.createdBy;
-          this.detectorRef.detectChanges();
-        });
-        this.setPrDvTotalKowGrid();
+        this.data = res;
         this.detectorRef.detectChanges();
       });
-  }
-  setPrDvTotalKowGrid() {
-    this.totalKowDV = this.itemDetail?.recID;
-    this.totalKowPr = 'RecID == @0';
-    this.detectorRef.detectChanges();
-    if (this.gridTotal) {
-      this.gridTotal?.refresh(true);
     }
-    this.detectorRef.detectChanges();
+    
   }
 
+
   ngAfterViewInit(): void {
-    this.cache
-      .gridViewSetup('KowDs', 'grvKowDsUIByKow')
-      .subscribe((res: any) => {
-        if (res) {
-          this.gridKowColumns = [];
-          this.gridKow = Util.camelizekeyObj(res);
-          for (let field in this.gridKow) {
-            if (this.gridKow[field]?.fieldName == 'EmployeeID') {
-              this.gridKowColumns.push({
-                //headerTemplate: 'Nhân viên',
-                template: this.tempEmployee,
-                field: 'employeeID',
-              });
-            } else if (this.gridKow[field]?.fieldName == 'KowCode') {
-              let gridModel = new DataRequest();
-              gridModel.pageLoading = false;
-              gridModel.comboboxName = this.gridKow[field]?.referedValue;
-              this.api
-                .execSv(
-                  'HR',
-                  'ERM.Business.Core',
-                  'DataBusiness',
-                  'LoadDataCbxAsync',
-                  [gridModel]
-                )
-                .subscribe((cbx: any) => {
-                  if (cbx && cbx[0] != null) {
-                    this.cbbKowCode = JSON.parse(cbx[0]);
-                    if (this.cbbKowCode?.length > 0) {
-                      this.cbbKowCode.forEach((kow) => {
-                        this.gridKowColumns.push({
-                          headerText: kow?.KowID,
-                          template: this.tempKowTotal,
-                          field: kow?.KowID,
-                          refField: 'kowCode',
-                        });
-                      });
-                    }
-                    this.renderedGrid = true;
-                    this.detectorRef.detectChanges();
-                  }
-                });
-            }
-          }
-        }
-      });
+    this.getColSummaryKowd();
   }
-  changeDataMF(evt: any, data: any) {
-    if (this.runMode == '1') {
-      this.codxShareService.changeMFApproval(event, data?.unbounds);
-    } else {
-      evt.forEach((func) => {
-        if (
-          // Hiện: sửa - xóa - chép - gửi duyệt -
-          func.functionID == 'SYS02' ||
-          func.functionID == 'SYS03' ||
-          func.functionID == 'SYS04'
-        ) {
-          func.disabled = true;
+
+  // get column grid for gridview summary kowd
+  getColSummaryKowd(){
+    this.gridKowColumns = [];
+    this.gridKowColumns.push({
+      template: this.tmpCellEmp,
+      field: 'employeeID'
+    });
+    this.api.execSv("HR","HR","KOWsBusiness","GetAsync")
+    .subscribe((res:any) => {
+        if (res && res?.length > 0) 
+        {
+          this.lstHRKow = [...res];
+          res.forEach((kow) => {
+            this.gridKowColumns.push({
+              headerTemplate: `<div class="fw-bolder text-primary text-center">${kow.kowID}</div>`,
+              template: this.tmpCellKow,
+              field: kow.kowID,
+              refField: 'kowCode'
+            });
+          });
+          this.detectorRef.detectChanges();
         }
-      });
+    });
+  }
+
+  // show/hide mfc
+  changeDataMF(event: any, data: any) {
+    if (this.runMode == '1') // form xét duyệt
+    {
+      this.codxShareService.changeMFApproval(event, data?.unbounds);
+    } 
+    else // form nghiệp vụ
+    {
+      // evt.forEach((func) => {
+      //   if(func.functionID == 'SYS02' ||  func.functionID == 'SYS03' || func.functionID == 'SYS04') 
+      //   { 
+      //     func.disabled = true;
+      //   }
+      // });
+      event.forEach((func) => func.disabled = true);
     }
   }
-  openFormFuncID(evt: any) {}
-  explanPopup() {
-    let dialogKowCode = this.callfc.openForm(
-      ViewKowcodeComponent,
-      '',
-      350,
-      500,
-      null,
-      this.cbbKowCode
-    );
+
+  lstHRKow:any[] = [];
+  vllHR033:any = {};
+  openPopupNote() {
+    if(this.lstHRKow && this.lstHRKow?.length > 0)
+    {
+      this.callfc.openForm(this.tmpPopupNoteKow,'',400,500);
+    }
+  }
+
+  onDatabound(){
+    this.rowCount = this.codxGrvV2.dataService.rowCount;
   }
 }
