@@ -5,7 +5,6 @@ import {
   Input,
   OnInit,
   Output,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
@@ -13,7 +12,6 @@ import {
   ApiHttpService,
   CacheService,
   CallFuncService,
-  DataRequest,
   DialogModel,
   FormModel,
   NotificationsService,
