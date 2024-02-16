@@ -127,6 +127,13 @@ export class PropertyValueListComponent extends BasePropertyComponent implements
     }
   }
 
+  valueChangeVllInput(e:any)
+  {
+    this.vll[e?.field] = e?.data;
+    var data = JSON.parse(JSON.stringify(this.vll));
+    this.setTimeoutSaveDataAnswer(data);
+  }
+
   valueChangeText(e:any,index:any)
   {
     this.crr.text[index] = this.lstVll[index].customValues = e?.target?.value;
