@@ -185,12 +185,16 @@
         </div>
       </div>
     </div>
-    <div class="w-100 d-block align-item-center position-relative">
-      <div #viewBus class="d-block position-absolute">
+    <div class="d-block align-item-center position-relative">
+      <div #viewBus class="d-block position-absolute align-item-center">
+        <!--class="d-block" style="display: block" -->
         <ejs-treemap
           #pie1
+          [height]="'300px'"
+          [width]="'500px'"
           class="d-block"
-          style="display: block; height: 380px !important"
+          (load)="loadTreeMap($event, pie1)"
+          (resize)="resize($event, pie1)"
           [dataSource]="dataSourceBussnessLine"
           weightValuePath="quantity"
           rangeColorValuePath="quantity"
@@ -206,14 +210,15 @@
         >
         </ejs-treemap>
       </div>
-      <div
-        #viewIndus
-        class="d-none d-block position-absolute overflow-x-hidden"
-      >
+      <div #viewIndus class="d-none d-block position-absolute">
         <ejs-treemap
           #pie2
+          [height]="'300px'"
+          [width]="'500px'"
+          (load)="loadTreeMap($event, pie2)"
+          (resize)="resize($event, pie2)"
           class="d-none d-block"
-          style="display: block; height: 380px !important"
+          style="display: block"
           [dataSource]="dataSourceIndustry"
           weightValuePath="quantity"
           rangeColorValuePath="quantity"
@@ -648,13 +653,12 @@
       </div>
     </div>
 
-    <div class="d-block">
-      <div #viewStatus class="d-block">
+    <div class="position-relative align-item-center">
+      <div #viewStatus class="d-block align-item-center">
         <ejs-accumulationchart
           class="d-block"
-          id="pyramidcontainer"
+          id="pyramidcontainer1"
           #pyramidStatus
-          style="height: 90%"
           [legendSettings]="legendSettingsPy"
           [tooltip]="{
             header: '',
@@ -662,9 +666,11 @@
             format: '${point.tooltip}'
           }"
           (pointRender)="formatCrrView($event)"
+          [height]="'300px'"
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
+              [height]="'300px'"
               name="ConversionRate"
               [dataSource]="dataSourcePyStatus"
               xName="name"
@@ -673,8 +679,8 @@
               [neckHeight]="neckHeight"
               [gapRatio]="gapRatio"
               [emptyPointSettings]="emptyPointSettings"
-              width="60%"
-              height="80%"
+              width="50%"
+              height="90%"
               [explode]="explode"
               [dataLabel]="dataLabel"
               type="Funnel"
@@ -684,12 +690,11 @@
         </ejs-accumulationchart>
       </div>
 
-      <div #viewStages class="d-none d-block">
+      <div #viewStages class="d-none d-block align-item-center">
         <ejs-accumulationchart
-          class="d-block"
-          id="pyramidcontainer"
+          class="d-block d-none"
+          id="pyramidcontainer2"
           #pyramidStages
-          style="height: 90%"
           [legendSettings]="legendSettingsPy"
           [tooltip]="{
             header: '',
@@ -697,6 +702,7 @@
             format: '${point.tooltip}'
           }"
           (pointRender)="formatCrrView($event)"
+          [height]="'300px'"
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
@@ -708,8 +714,8 @@
               [neckHeight]="neckHeight"
               [gapRatio]="gapRatio"
               [emptyPointSettings]="emptyPointSettings"
-              width="60%"
-              height="80%"
+              width="50%"
+              height="90%"
               [explode]="explode"
               [dataLabel]="dataLabel"
               type="Funnel"
@@ -1769,9 +1775,10 @@
     <table style="table-layout: fixed" class="table mb-0">
       <thead class="border-gray-200 table-thead-ac">
         <tr class="border-bottom">
-          <th class="w-40 border-bottom text-center"></th>
-          <th class="w-15 border-bottom text-center">
+          <th class="border-bottom text-center"></th>
+          <th class="border-bottom text-center">
             <codx-label
+              class="fw-bold"
               name="lblTableTotal"
               formName="CMInOutDashboard"
               gridViewName="grvCMInOutDashboard"
@@ -1779,7 +1786,7 @@
             ></codx-label>
           </th>
           <ng-container *ngFor="let item of dataBusinessType">
-            <th class="w-15 border-bottom text-center">
+            <th class="border-bottom text-center fw-bold">
               {{ item?.text }}
             </th>
           </ng-container>
@@ -1814,7 +1821,7 @@
       <ejs-chart
         id="chart-container-1"
         [primaryXAxis]="primaryXAxisColumn"
-        [primaryYAxis]="primaryYAxisColumn"
+        [primaryYAxis]="primaryYAxisColumnEpIn"
         [tooltip]="tooltipChartColumn"
         [legendSettings]="legendSettingsColumn"
       >
@@ -1862,9 +1869,10 @@
     <table style="table-layout: fixed" class="table mb-0">
       <thead class="border-gray-200 table-thead-ac">
         <tr class="border-bottom">
-          <th class="w-40 border-bottom"></th>
-          <th class="w-15 border-bottom">
+          <th class="border-bottom text-center"></th>
+          <th class="border-bottom text-center">
             <codx-label
+              class="fw-bold"
               name="lblTableTotal"
               formName="CMInOutDashboard"
               gridViewName="grvCMInOutDashboard"
@@ -1872,7 +1880,7 @@
             ></codx-label>
           </th>
           <ng-container *ngFor="let item of dataBusinessType">
-            <th class="w-15 border-bottom text-center">
+            <th class="fw-bold border-bottom text-center">
               {{ item?.text }}
             </th>
           </ng-container>
@@ -1907,7 +1915,7 @@
       <ejs-chart
         id="chart-container-2"
         [primaryXAxis]="primaryXAxisColumn"
-        [primaryYAxis]="primaryYAxisColumn"
+        [primaryYAxis]="primaryYAxisColumnEpOut"
         [tooltip]="tooltipChartColumn"
         [legendSettings]="legendSettingsColumn"
       >
@@ -1955,25 +1963,28 @@
     <table style="table-layout: fixed" class="table mb-0">
       <thead class="border-gray-200 table-thead-ac">
         <tr class="border-bottom">
-          <th class="w-40 border-bottom"></th>
-          <th class="w-15 border-bottom">
+          <th class="border-bottom text-center"></th>
+          <th class="border-bottom text-center">
             <codx-label
+              class="fw-bold"
               name="lblTotalAreaNew"
               formName="CMInOutDashboard"
               gridViewName="grvCMInOutDashboard"
               default="Tổng số diện tích bán mới"
             ></codx-label>
           </th>
-          <th class="w-15 border-bottom">
+          <th class="border-bottom text-center">
             <codx-label
+              class="fw-bold"
               name="lblAreaNew"
               formName="CMInOutDashboard"
               gridViewName="grvCMInOutDashboard"
               default="Diện tích bán mới"
             ></codx-label>
           </th>
-          <th class="w-15 border-bottom">
+          <th class="border-bottom text-center">
             <codx-label
+              class="fw-bold"
               name="lblAreaExtend"
               formName="CMInOutDashboard"
               gridViewName="grvCMInOutDashboard"
@@ -1999,7 +2010,7 @@
         name="lblChartIn"
         formName="CMInOutDashboard"
         gridViewName="grvCMInOutDashboard"
-        default="Doanh nghiệp thanh lý HĐ năm "
+        default="Diện tích bán mới năm "
       ></codx-label>
       <span class="fw-bold" [innerHTML]="year"></span>
     </div>
@@ -2007,7 +2018,8 @@
       <ejs-chart
         id="chart-container-3"
         [primaryXAxis]="primaryXAxisColumn"
-        [primaryYAxis]="primaryYAxisColumn"
+        [primaryYAxis]="primaryYAxisColumnAreaIn"
+        [tooltip]="tooltipChartColumn"
         [legendSettings]="legendSettingsColumn"
       >
         <!--   [title]="titleTest" -->
@@ -2061,18 +2073,20 @@
     <table style="table-layout: fixed" class="table mb-0">
       <thead class="border-gray-200 table-thead-ac">
         <tr class="border-bottom">
-          <th class="w-40 border-bottom text-center"></th>
-          <th class="w-15 border-bottom text-center">
+          <th class="border-bottom text-center"></th>
+          <th class="border-bottom text-center">
             <codx-label
+              class="fw-bold"
               name="lblTableLiquidation"
               formName="CMInOutDashboard"
               gridViewName="grvCMInOutDashboard"
               default="Tổng số diện tích thanh lý"
             ></codx-label>
           </th>
-          <th class="w-15 border-bottom text-center">
+          <th class="border-bottom text-center">
             <codx-label
-              name="lblTableDNTN"
+              class="fw-bold"
+              name="lblOutRentalArea"
               formName="CMInOutDashboard"
               gridViewName="grvCMInOutDashboard"
               default="Diện tích thanh lý"
@@ -2080,7 +2094,8 @@
           </th>
           <th class="w-15 border-bottom text-center">
             <codx-label
-              name="lblTableDNNN"
+              class="fw-bold"
+              name="lblDownArea"
               formName="CMInOutDashboard"
               gridViewName="grvCMInOutDashboard"
               default="Diện tích giảm"
@@ -2102,10 +2117,10 @@
     <div class="text-center fs-2 mt-3">
       <codx-label
         class="fw-bold"
-        name="lblChartIn"
+        name="lblChartOut"
         formName="CMInOutDashboard"
         gridViewName="grvCMInOutDashboard"
-        default="Doanh nghiệp thanh lý HĐ năm "
+        default="Diện tích thanh lý năm "
       ></codx-label>
       <span class="fw-bold" [innerHTML]="year"></span>
     </div>
@@ -2113,7 +2128,8 @@
       <ejs-chart
         id="chart-container-4"
         [primaryXAxis]="primaryXAxisColumn"
-        [primaryYAxis]="primaryYAxisColumn"
+        [primaryYAxis]="primaryYAxisColumnAreaOut"
+        [tooltip]="tooltipChartColumn"
         [legendSettings]="legendSettingsColumn"
       >
         <!--   [title]="titleTest" -->
@@ -2143,7 +2159,7 @@
             columnSpacing="0.25"
             columnWidth="1"
             yName="totalUpAndDownArea"
-            [name]="titleUpAndDownAreaIn"
+            [name]="titleUpAndDownAreaOut"
           ></e-series>
         </e-series-collection>
       </ejs-chart>
@@ -2180,9 +2196,10 @@
     <table style="table-layout: fixed" class="table mb-0">
       <thead class="border-gray-200 table-thead-ac">
         <tr class="border-bottom">
-          <th class="w-40 border-bottom text-center"></th>
-          <th class="w-15 border-bottom text-center">
+          <th class="border-bottom text-center"></th>
+          <th class="border-bottom text-center">
             <codx-label
+              class="fw-bold"
               name="lblTableLiquidation"
               formName="CMInOutDashboard"
               gridViewName="grvCMInOutDashboard"
@@ -2190,7 +2207,7 @@
             ></codx-label>
             <span class="fw-bold" [innerHTML]="year"></span>
           </th>
-          <th class="w-15 border-bottom text-center">
+          <th class="border-bottom text-center">
             <codx-label
               class="fw-bold"
               name="lblTableDNTN"
@@ -2278,9 +2295,10 @@
     <table style="table-layout: fixed" class="table mb-0">
       <thead class="border-gray-200 table-thead-ac">
         <tr class="border-bottom">
-          <th class="w-40 border-bottom text-center"></th>
-          <th class="w-15 border-bottom text-center">
+          <th class="border-bottom text-center"></th>
+          <th class="border-bottom text-center">
             <codx-label
+              class="fw-bold"
               name="lblTableLiquidation"
               formName="CMInOutDashboard"
               gridViewName="grvCMInOutDashboard"
@@ -2288,7 +2306,7 @@
             ></codx-label>
             <span class="fw-bold" [innerHTML]="year"></span>
           </th>
-          <th class="w-15 border-bottom text-center">
+          <th class="border-bottom text-center">
             <codx-label
               class="fw-bold"
               name="lblTableDNTN"
@@ -2365,8 +2383,9 @@
     <table style="table-layout: fixed" class="table mb-0">
       <thead class="border-gray-200 table-thead-ac">
         <tr class="border-bottom">
-          <th class="w-15 border-bottom text-center">
+          <th class="border-bottom text-center">
             <codx-label
+              class="fw-bold"
               name="lblTableLiquidation"
               formName="CMInOutDashboard"
               gridViewName="grvCMInOutDashboard"
@@ -2374,7 +2393,7 @@
             ></codx-label>
           </th>
           <ng-container *ngFor="let item of pieChartInChanel">
-            <th class="w-15 border-bottom text-center">
+            <th class="border-bottom text-center fw-bold">
               {{ item?.channelName }}
             </th>
           </ng-container>
@@ -2449,7 +2468,7 @@
     <table style="table-layout: fixed" class="table mb-0">
       <thead class="border-gray-200 table-thead-ac">
         <tr class="border-bottom">
-          <th class="w-15 border-bottom">
+          <th class="border-bottom text-center">
             <codx-label
               class="fw-bold"
               name=""
@@ -2459,7 +2478,7 @@
             ></codx-label>
           </th>
           <ng-container *ngFor="let item of pieChartOutDisposalReason">
-            <th class="w-15 border-bottom text-center">
+            <th class="border-bottom text-center fw-bold">
               {{ item?.disposalReasonName }}
             </th>
           </ng-container>
@@ -2534,7 +2553,7 @@
     <table style="table-layout: fixed" class="table mb-0">
       <thead class="border-gray-200 table-thead-ac">
         <tr class="border-bottom">
-          <th class="w-15 border-bottom">
+          <th class="border-bottom text-center">
             <codx-label
               class="fw-bold"
               name=""
@@ -2544,7 +2563,7 @@
             ></codx-label>
           </th>
           <ng-container *ngFor="let item of pieChartClassify">
-            <th class="w-15 border-bottom text-center">
+            <th class="border-bottom text-center fw-bold">
               {{ item?.classification }}
             </th>
           </ng-container>

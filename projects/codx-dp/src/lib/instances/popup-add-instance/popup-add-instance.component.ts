@@ -1,4 +1,3 @@
-import { filter } from 'rxjs';
 import {
   ChangeDetectorRef,
   Component,
@@ -8,7 +7,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
-  ApiHttpService,
   AuthStore,
   CacheService,
   CallFuncService,
@@ -22,8 +20,8 @@ import {
 } from 'codx-core';
 import moment from 'moment';
 import { CodxDpService } from '../../codx-dp.service';
-import { DP_Instances, DP_Instances_Steps } from '../../models/models';
-import { stringify } from 'querystring';
+import { DP_Instances } from '../../models/models';
+
 import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
 
 @Component({
@@ -315,6 +313,7 @@ export class PopupAddInstanceComponent implements OnInit {
             (x) => x.recID == event.data.recID
           );
           if (idxField != -1) {
+            let valueOld = this.listStep[index].fields[idxField].dataValue;
             this.listStep[index].fields[idxField].dataValue = result;
 
             let idxEdit = this.listCustomFile.findIndex(
@@ -325,9 +324,10 @@ export class PopupAddInstanceComponent implements OnInit {
                 this.listStep[index].fields[idxField];
             } else
               this.listCustomFile.push(this.listStep[index].fields[idxField]);
+            if (field.dataType == 'N' && valueOld != result)
+              this.caculateField();
           }
         }
-        if (field.dataType) this.caculateField();
       }
     }
   }
@@ -345,7 +345,11 @@ export class PopupAddInstanceComponent implements OnInit {
   beforeSave(option: RequestOption) {
     if (this.action === 'add' || this.action === 'copy') {
       option.methodName = 'AddInstanceAsync';
-      option.data = [this.instance, this.listStep, this.oldIdInstance];
+      option.data = [
+        this.instance,
+        this.listStep,
+        this.action === 'copy' ? this.oldIdInstance : null,
+      ];
     } else if (this.action === 'edit') {
       option.methodName = 'EditInstanceAsync';
       option.data = [this.instance, this.listCustomFile];
@@ -637,7 +641,10 @@ export class PopupAddInstanceComponent implements OnInit {
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
       fieldsNum.forEach((f) => {
-        if (dataFormat.includes('[' + f.fieldName + ']')) {
+        if (
+          f.stepID == obj.stepID &&
+          dataFormat.includes('[' + f.fieldName + ']')
+        ) {
           if (!f.dataValue?.toString()) return;
           let dataValue = f.dataValue;
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
@@ -649,7 +656,10 @@ export class PopupAddInstanceComponent implements OnInit {
       });
 
       this.arrCaculateField.forEach((x) => {
-        if (dataFormat.includes('[' + x.fieldName + ']')) {
+        if (
+          x.stepID == obj.stepID &&
+          dataFormat.includes('[' + x.fieldName + ']')
+        ) {
           if (!x.dataValue?.toString()) return;
           let dataValue = x.dataValue;
           dataFormat = dataFormat.replaceAll(
@@ -682,9 +692,28 @@ export class PopupAddInstanceComponent implements OnInit {
                 this.listCustomFile.push(this.listStep[index].fields[idxField]);
             }
           }
+          this.setElement(obj.recID, obj.dataValue);
         }
       }
     });
+  }
+
+  setElement(recID, value) {
+    value =
+      value && value != '_'
+        ? Number.parseFloat(value)?.toFixed(2).toString()
+        : '';
+    var codxinput = document.querySelectorAll(
+      '.form-group codx-input[data-record="' + recID + '"]'
+    );
+
+    if (codxinput?.length > 0) {
+      let htmlE = codxinput[0] as HTMLElement;
+      let input = htmlE.querySelector('input') as HTMLInputElement;
+      if (input) {
+        input.value = value;
+      }
+    }
   }
   //------------------END_CACULATE--------------------//
 }

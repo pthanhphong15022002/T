@@ -3429,7 +3429,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
       });
 
-      arrCaculateField.forEach((x) => {
+      fields.forEach((x) => {
         if (dataFormat.includes('[' + x.fieldName + ']')) {
           if (!x.dataValue?.toString()) return;
           let dataValue = x.dataValue;

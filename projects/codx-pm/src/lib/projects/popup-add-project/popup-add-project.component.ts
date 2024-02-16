@@ -88,6 +88,12 @@ export class PopupAddProjectComponent extends UIComponent {
       this.paravalues = this.data.settings.map((x:any)=>  x.fieldValue);
       this.paravalues = JSON.stringify(this.paravalues)
     }
+    else{
+
+      this.api.execSv("SYS",'ERM.Business.SYS','SettingsBusiness','GetSettingByFormAsync',['PMParameters','1',false]).subscribe((res:any)=>{
+        debugger
+      })
+    }
   }
 
   override onInit(): void {
