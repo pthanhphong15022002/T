@@ -591,7 +591,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   isQTSC = false;
 
   loadedMap = false;
-  loadedHeight = 0;
   //======================================================================
 
   constructor(
@@ -605,9 +604,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   ) {
     super(inject);
     this.user = this.authstore.get();
-    // this.funcID = 'DPT01';
     this.language = this.auth.userValue?.language?.toLowerCase();
-    // this.funcID = this.router.snapshot.params['funcID'];
+
     this.reportID = this.router.snapshot.params['funcID'];
     this.loadChangeDefault();
   }
@@ -1770,6 +1768,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           obj.chart2.temp.element.classList.add('d-none');
         obj.chart1.temp.element.classList.contains('d-none') &&
           obj.chart1.temp.element.classList.remove('d-none');
+
         obj.chart1.temp.refresh();
       }
     } else {

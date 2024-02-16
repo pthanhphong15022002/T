@@ -185,11 +185,14 @@
         </div>
       </div>
     </div>
-    <div class="w-100 h-100 d-block align-item-center position-relative">
-      <div #viewBus class="d-block position-absolute">
+    <div class="d-block align-item-center position-relative">
+      <div #viewBus class="d-block position-absolute align-item-center">
         <!--class="d-block" style="display: block" -->
         <ejs-treemap
           #pie1
+          [height]="'300px'"
+          [width]="'500px'"
+          class="d-block"
           (load)="loadTreeMap($event, pie1)"
           (resize)="resize($event, pie1)"
           [dataSource]="dataSourceBussnessLine"
@@ -210,6 +213,8 @@
       <div #viewIndus class="d-none d-block position-absolute">
         <ejs-treemap
           #pie2
+          [height]="'300px'"
+          [width]="'500px'"
           (load)="loadTreeMap($event, pie2)"
           (resize)="resize($event, pie2)"
           class="d-none d-block"
@@ -648,13 +653,12 @@
       </div>
     </div>
 
-    <div class="d-block">
-      <div #viewStatus class="d-block">
+    <div class="position-relative align-item-center">
+      <div #viewStatus class="d-block align-item-center">
         <ejs-accumulationchart
           class="d-block"
-          id="pyramidcontainer"
+          id="pyramidcontainer1"
           #pyramidStatus
-          style="height: 90%"
           [legendSettings]="legendSettingsPy"
           [tooltip]="{
             header: '',
@@ -662,9 +666,11 @@
             format: '${point.tooltip}'
           }"
           (pointRender)="formatCrrView($event)"
+          [height]="'300px'"
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
+              [height]="'300px'"
               name="ConversionRate"
               [dataSource]="dataSourcePyStatus"
               xName="name"
@@ -673,8 +679,8 @@
               [neckHeight]="neckHeight"
               [gapRatio]="gapRatio"
               [emptyPointSettings]="emptyPointSettings"
-              width="60%"
-              height="80%"
+              width="50%"
+              height="90%"
               [explode]="explode"
               [dataLabel]="dataLabel"
               type="Funnel"
@@ -684,12 +690,11 @@
         </ejs-accumulationchart>
       </div>
 
-      <div #viewStages class="d-none d-block">
+      <div #viewStages class="d-none d-block align-item-center">
         <ejs-accumulationchart
-          class="d-block"
-          id="pyramidcontainer"
+          class="d-block d-none"
+          id="pyramidcontainer2"
           #pyramidStages
-          style="height: 90%"
           [legendSettings]="legendSettingsPy"
           [tooltip]="{
             header: '',
@@ -697,6 +702,7 @@
             format: '${point.tooltip}'
           }"
           (pointRender)="formatCrrView($event)"
+          [height]="'300px'"
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
@@ -708,8 +714,8 @@
               [neckHeight]="neckHeight"
               [gapRatio]="gapRatio"
               [emptyPointSettings]="emptyPointSettings"
-              width="60%"
-              height="80%"
+              width="50%"
+              height="90%"
               [explode]="explode"
               [dataLabel]="dataLabel"
               type="Funnel"
