@@ -439,6 +439,7 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
   }
 
   viewData(data) {
+    if (!data) return;
     this.view.dataService.dataSelected = data;
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
