@@ -225,6 +225,7 @@ export const routes: Routes = [
       {
         path: 'periodic/:funcID',
         component: PeriodicComponent,
+        data: { noReuse: true },
         children: [
           {
             path: 'RunPosting/:funcID',
