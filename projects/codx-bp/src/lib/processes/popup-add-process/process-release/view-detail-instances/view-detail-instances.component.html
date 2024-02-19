@@ -80,6 +80,10 @@
                 <div
                   class="badge badge-danger badge-md d-flex align-items-center me-1"
                   style="line-height: 12px; height: 21px"
+                  *ngIf="
+                    dataSelected.endDate &&
+                    (dataSelected?.actualEnd | checkDuedateValue : dataSelected?.endDate)
+                  "
                 >
                   <span class="icon-notifications icon-16 me-1"></span>
                   <codx-label

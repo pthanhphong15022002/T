@@ -61,7 +61,7 @@ export class PopupAddProjectComponent extends UIComponent {
   newSetting:any=[];
   oldDataValue:any;
   componentSub:any='';
-
+  defaultSettings:any=[];
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
@@ -90,8 +90,14 @@ export class PopupAddProjectComponent extends UIComponent {
     }
     else{
 
-      this.api.execSv("SYS",'ERM.Business.SYS','SettingsBusiness','GetSettingByFormAsync',['PMParameters','1',false]).subscribe((res:any)=>{
-        debugger
+      this.api.execSv("SYS",'ERM.Business.SYS','SettingsBusiness','GetSettingByFormAsync',['PMParameters','1']).subscribe((res:any)=>{
+        if(res ){
+          this.defaultSettings = res['1'];
+          this.data.settings = this.defaultSettings;
+          this.newSetting = JSON.parse(JSON.stringify(this.data.settings));
+          this.paravalues = this.data.settings.map((x:any)=>  x.fieldValue);
+          this.paravalues = JSON.stringify(this.paravalues)
+        }
       })
     }
   }
