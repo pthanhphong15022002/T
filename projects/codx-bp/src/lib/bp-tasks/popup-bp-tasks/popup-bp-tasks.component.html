@@ -167,6 +167,12 @@
         default="Tài liệu đính kèm"
       >
       </codx-label>
+      <div class="mt-2">
+        <ng-container *ngIf="files?.length > 0">
+          <codx-thumbnail [files]="files" displayThumb="simple" [hideMoreF]="'0'" [hideHover]="'1'" [hideDelete]="'1'" >
+          </codx-thumbnail>
+        </ng-container>
+      </div>
       <codx-attachment
         #attachment
         [objectType]="dialog.formModel.entityName"

@@ -579,6 +579,7 @@ export class TabModel {
 }
 
 export class DP_Activities {
+  id: string;
   recID: string;
   instanceID: string;
   objectID: string;

@@ -1,54 +1,84 @@
-<codx-views #view [views]="views"  [service]="service" [assemblyName]="assemblyName" [formModel]="formModel"
-  [entityName]="entity" [className]="className" [method]="method" 
-  (selectedChange)="changeItemDetail($event)" [selectedFirst]="true" (clickMF)="clickMF($event, itemDetail)"
-  (changeDataMF)="changeDataMF($event, itemDetail)">
+<codx-views #view 
+  [views]="views"  
+  [idField]="'recID'"
+  [selectedFirst]="true" 
+  [hideMoreFuncs]="true"
+  (selectedChange)="selectedChange($event)" 
+  (clickMF)="clickMF($event)">
 </codx-views>
+<!-- template item -->
 <ng-template #itemTemplate let-data>
   <div class="d-flex flex-row">
     <div class="d-flex justify-content-center align-items-center">
-      <span class="mx-2 bg-success rounded-circle dowCode d-flex flex-column justify-content-center align-items-center text-light">
-        <span class="fs-4" [innerHTML]="data?.dowCode | substring : 0:2:true"> 
-        </span>
-        <span class=" fs-6" [innerHTML]="data?.dowCode | substring : 0 : 4" >
-        </span>
-      </span>
+      <div class="d-flex flex-column justify-content-center align-items-center rounded-circle bg-success text-light w-60 mx-2">
+        <ng-container *ngIf="data?.dowCode">
+          <span class="fs-4">{{data.dowCode | substring : 0 : 2 : true}}</span>
+          <span class="fs-6">{{data.dowCode | substring : 0 : 4}}</span>
+        </ng-container>
+      </div>
     </div>
     <div class="flex-grow w-100">
-      <codx-temp-full cardCss="card-template border-bottom p-3" [typeMF]="'hover'" [title]="data?.requestName"
-      [titleCss]="'fw-bold fs-6 mb-1'" [subTitleTmp]="subTitleTmp"
-      [descTmp]="descTmp"
-      [formModel]="view?.formModel" (clickMF)="clickMF($event, data)" typeMF="hover" [dataItem]="data"
-      (changeDataMF)="changeDataMF($event, data)">
-    </codx-temp-full>
+      <codx-temp-full 
+        [dataItem]="data"
+        [title]="data?.requestName"
+        [subTitleTmp]="subTitleTmp"
+        [descTmp]="descTmp"
+        [formModel]="view?.formModel" 
+        [typeMF]="'hover'" 
+        (clickMF)="clickMF($event)" 
+        (changeDataMF)="changeDataMF($event,data)">
+      </codx-temp-full>
     </div>
-    
   </div>
-
 </ng-template>
+
+<!-- template sub title -->
 <ng-template #subTitleTmp let-data>
-  <div class="pb-1">
-    <codx-label class="text-gray-600" name="lblSendDate" default="Ngày gửi: " [formName]="funcList?.formName"
-      [gridViewName]="funcList?.gridViewName"></codx-label>
-    <span [innerHTML]="data?.createdOn | fmDT : 'dmy'"></span>
+  <div class="d-flex align-items-center mb-1">
+    <codx-label [formModel]="view?.formModel" class="text-gray-600" name="lblSendDate" default="Ngày gửi: "></codx-label>
+    <div class="ms-1" [innerHTML]="data?.createdOn | formatvalue : view?.formModel : 'createdOn' | async"></div>
   </div>
 </ng-template>
+
+<!-- template description -->
 <ng-template #descTmp let-data>
-  <div class="pb-1">
-    <codx-vll [showText]="true" [showBgColor]="true" [name]="'HRS102a'" [value]="data?.approveStatus"
-    class="badge badge-light badge-md fs-7">
-  </codx-vll>
-    <span *ngIf="data?.approveStatus =='5' && data?.approvedOn"  class="text-gray-600"  [innerHTML]="data?.approvedOn | fmDT : 'dmy'"></span>
+  <div class="d-flex align-items-center mb-1">
+    <ng-container *ngIf="data?.status">
+      <codx-vll 
+        [showText]="true" 
+        [showBgColor]="true" 
+        [name]="'HRS102a'" 
+        [value]="data?.status"
+        class="badge badge-light badge-md fs-7 me-2">
+      </codx-vll>
+    </ng-container>
+    <ng-container *ngIf="data?.approveStatus =='5' && data?.approvedOn">
+      <div class="text-gray-600"  [innerHTML]="data?.approvedOn | formatvalue : view?.formModel : 'approvedOn' | async"></div>
+    </ng-container>
   </div>
+
 </ng-template>
 
+<!-- template panel right -->
 <ng-template #panelRight>
-  <view-detail-request-kowds #viewdetail  [recID]="selectRecID" [funcID]="funcID">
-  </view-detail-request-kowds>
+  <ng-container *ngIf="selectedID">
+    <view-detail-request-kowds  
+      [recID]="selectedID" 
+      [runMode]="runMode"
+      [hideMF]="false" 
+      [formModel]="view?.formModel">
+    </view-detail-request-kowds>
+  </ng-container>
+  
 </ng-template>
 
-<!-- [predicate]="'IsTemplate=@0'"
-  [dataValue]="false" -->
+
 <ng-template #baseHeaderRight let-data>
-  <codx-vll class="badge" [name]="'ES003'" [value]="data?.approveStatus" [showText]="true" [showBgColor]="true">
+  <codx-vll 
+    class="badge" 
+    [name]="'ES003'" 
+    [value]="data?.approveStatus" 
+    [showText]="true" 
+    [showBgColor]="true">
   </codx-vll>
 </ng-template>

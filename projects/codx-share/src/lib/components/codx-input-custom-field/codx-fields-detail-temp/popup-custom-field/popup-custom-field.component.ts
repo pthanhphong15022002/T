@@ -7,6 +7,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { CustomFieldService } from '../../custom-field.service';
+import { Html } from '@syncfusion/ej2-angular-diagrams';
 
 @Component({
   selector: 'lib-popup-custom-field',
@@ -55,6 +56,12 @@ export class PopupCustomFieldComponent implements OnInit {
 
     this.isAdd = dt?.data?.isAdd ?? false;
     this.arrCaculateField = this.fields.filter((x) => x.dataType == 'CF');
+    if (this.arrCaculateField?.length > 0)
+      this.arrCaculateField.sort((a, b) => {
+        if (a.dataFormat.includes('[' + b.fieldName + ']')) return 1;
+        else if (b.dataFormat.includes('[' + a.fieldName + ']')) return -1;
+        else return 0;
+      });
     //lấy độ rộng popup
     this.widthDefault = this.dialog.dialog.width
       ? this.dialog.dialog.width.toString()
@@ -174,7 +181,7 @@ export class PopupCustomFieldComponent implements OnInit {
   }
 
   //----------------------CACULATE---------------------------//
-  caculateField(versionID = null) {
+  caculateField() {
     if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
     let fieldsNum = this.fields.filter((x) => x.dataType == 'N');
     // let fieldsNum = this.fields.filter(
@@ -196,14 +203,25 @@ export class PopupCustomFieldComponent implements OnInit {
         if (dataFormat.includes('[' + f.fieldName + ']')) {
           if (!f.dataValue?.toString()) return;
           let dataValue = f.dataValue;
-          if (versionID) {
-            let ver = f?.version?.find((x) => x.refID == versionID);
-            if (ver) dataValue = ver?.dataValue;
-          }
+          // if (versionID) {
+          //   let ver = f?.version?.find((x) => x.refID == versionID);
+          //   if (ver) dataValue = ver?.dataValue;
+          // }
 
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
             '[' + f.fieldName + ']',
+            dataValue
+          );
+        }
+      });
+
+      this.arrCaculateField.forEach((x) => {
+        if (dataFormat.includes('[' + x.fieldName + ']')) {
+          if (!x.dataValue?.toString()) return;
+          let dataValue = x.dataValue;
+          dataFormat = dataFormat.replaceAll(
+            '[' + x.fieldName + ']',
             dataValue
           );
         }
@@ -221,7 +239,8 @@ export class PopupCustomFieldComponent implements OnInit {
             fieldsNum
           );
         }
-        //this.getElement(obj.recID);
+
+        this.setElement(obj.recID, obj.dataValue);
         this.changeDetectorRef.detectChanges();
       } else if (obj.dataValue) {
         //Chua xu ly
@@ -307,10 +326,21 @@ export class PopupCustomFieldComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  getElement(recID) {
-    let el = document.getElementById(recID);
-    if (el) {
-      debugger;
+  setElement(recID, value) {
+    value =
+      value && value != '_'
+        ? Number.parseFloat(value)?.toFixed(2).toString()
+        : '';
+    var codxinput = document.querySelectorAll(
+      '.form-group codx-input[data-record="' + recID + '"]'
+    );
+
+    if (codxinput?.length > 0) {
+      let htmlE = codxinput[0] as HTMLElement;
+      let input = htmlE.querySelector('input') as HTMLInputElement;
+      if (input) {
+        input.value = value;
+      }
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import { Component, HostBinding, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
@@ -20,13 +20,11 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CodxHrService } from 'projects/codx-hr/src/public-api';
-import { PopupEkowdsComponent } from './popup/popup-ekowds/popup-ekowds.component';
-import { PopupCopyEkowdsComponent } from './popup/popup-copy-ekowds/popup-copy-ekowds.component';
-import { KowdsScheduleComponent } from './kowds-schedule/kowds-schedule.component';
-import { ViewKowcodeComponent } from '../request-kowds/view-kowcode/view-kowcode.component';
+import { PopupKowdDayComponent } from './popup/popup-kowd-day/popup-kowd-day.component';
+import { PopupCopyEkowdsComponent } from './popup/popup-copy-kowd/popup-copy-kowd.component';
 import moment from 'moment';
 import { PopupKowdMonthComponent } from './popup/popup-kowd-month/popup-kowd-month.component';
+import { PopupRequestKowdComponent } from './popup/popup-request-kowd/popup-request-kowd.component';
 
 @Component({
   selector: 'pr-kowds',
@@ -35,9 +33,8 @@ import { PopupKowdMonthComponent } from './popup/popup-kowd-month/popup-kowd-mon
 })
 export class KowdsComponent extends UIComponent {
 
+  @HostBinding('class') get valid() { return "w-100 h-100"; }
   views: Array<ViewModel>;
-  orgUnitID: string = '';
-  rowCountCalendarGrid: any;
   detailByDayColoumns: any = [];
   summaryColumns = [];
   dataValues: any;
@@ -55,12 +52,13 @@ export class KowdsComponent extends UIComponent {
   lstHRKow:any = [];
   kowDOption:string = "";
   kowCode:string = "";
-  modeView:number = 1; // 1: Chi tiết theo ngày; 2: Bảng công tổng hợp
+  UIMode:string = "";
+  modeView:string = ""; // 1: Chi tiết theo ngày; 2: Bảng công tổng hợp
   mssgConfirmDelete:string = "HR039";
 
   @ViewChild('codxGrvDetailDay') codxGrvDetailDay: CodxGridviewV2Component;
   @ViewChild('codxGrvSummaryKow') codxGrvSummaryKow: CodxGridviewV2Component;
-  @ViewChild('leftPanel') leftPanel: TemplateRef<any>;
+  @ViewChild('tmpPanelLeft') tmpPanelLeft: TemplateRef<any>;
   @ViewChild('tmpPanelRight') tmpPanelRight: TemplateRef<any>;
   @ViewChild('tempEmployee') tempEmployee: TemplateRef<any>;
   @ViewChild('tempCellSummary') tempCellSummary: TemplateRef<any>;
@@ -69,9 +67,7 @@ export class KowdsComponent extends UIComponent {
   @ViewChild("tmpPopupNoteKow") tmpPopupNoteKow:TemplateRef<any>;
   constructor(
     inject: Injector,
-    private hrService: CodxHrService,
     public override codxService: CodxService,
-    private callfunc: CallFuncService,
     private notify: NotificationsService,
     private routeActive: ActivatedRoute,
     private realHub: RealHubService,
@@ -85,8 +81,11 @@ export class KowdsComponent extends UIComponent {
 
 
   onInit(): void {
-    //cache valuelist
-    this.cache.valueList("HR033").subscribe((vll:any) => {
+    this.getUserPermission(this.funcID);
+    this.getTimeKeepingMode();
+
+    this.cache.valueList("HR033")
+    .subscribe((vll:any) => {
       if(vll && vll.datas)
       {
         vll.datas.forEach((element) => {
@@ -94,22 +93,30 @@ export class KowdsComponent extends UIComponent {
         });
       }
     });
-    // get messgae
-    this.cache.message("HR060").subscribe((mssg:any) => {
+    this.cache.message("HR060")
+    .subscribe((mssg:any) => {
       if(mssg)
         this.messageHR060 = mssg.customName ?? mssg.defaultName;
     });
-    // get messgae
-    this.cache.message("HR039").subscribe((mssg:any) => {
+    this.cache.message("HR039")
+    .subscribe((mssg:any) => {
       if(mssg)
         this.mssgConfirmDelete = mssg.customName ?? mssg.defaultName;
     });
+    this.cache.functionList("PRTPro18a")
+    .subscribe((func:any) => {
+      if(func)
+      {
+        this.FMRequestPro = new FormModel();
+        this.FMRequestPro.funcID = "PRTPro18a";
+        this.FMRequestPro.entityName = func.entityName;
+        this.FMRequestPro.formName = func.formName;
+        this.FMRequestPro.gridViewName = func.gridViewName;
+      }
+    });
 
-    // get user permission
-    this.getUserPermission(this.funcID);
-
-    // hub proccess
-    this.realHub.start("hr").then((x: RealHub) => {
+    this.realHub.start("hr")
+    .then((x: RealHub) => {
       if(x)
       {
         x.$subjectReal.asObservable().subscribe((z) => {
@@ -143,31 +150,65 @@ export class KowdsComponent extends UIComponent {
   ngAfterViewInit(): void {
     this.views = [
       {
-        id: '3',
         type: ViewType.content,
         sameData: false,
-
         model: {
           panelRightRef: this.tmpPanelRight,
-          panelLeftRef: this.leftPanel,
+          panelLeftRef: this.tmpPanelLeft,
           collapsed: true,
           resizable: true,
         },
       },
     ];
     this.getCurrentDowCode();
-    this.getColSummaryKowd();
+    this.getColSummaryKowd();   
+  }
 
+  // get UIMode
+  getTimeKeepingMode(){
+    let formName = "TRParameters", category = "1";
+    this.api.execSv("SYS","SYS","SettingValuesBusiness","GetParameterByHRAsync",[formName,category])
+    .subscribe((setting:any) => {
+      if(setting)
+      {
+        let jsSetting = JSON.parse(setting);
+        if(jsSetting && jsSetting["TimeKeepingMode"] == "1")
+        {
+          this.UIMode = "1";
+          this.modeView = "1";
+        }
+        else
+        {
+          this.UIMode = "2";
+          this.modeView = "2";
+        }
+        let ivt = setInterval(() => {
+          let toolBar = document.getElementsByTagName("codx-toolbar");
+          if(this.UIMode == "2" && toolBar)
+          {
+            clearInterval(ivt);
+            if(toolBar && toolBar?.length > 0)
+            {
+              let icon = toolBar[0].getElementsByClassName("icon-navigate_next")
+              if(icon && icon?.length > 0)
+                icon[0].remove();
+            }
+          }
+        },1000);
+        this.detectorRef.detectChanges();
+      }
+    });
   }
 
   // get CurrentPayrollDow
   getCurrentDowCode(){
-    this.api.execSv("SYS","SYS","SettingValuesBusiness","GetParameterByHRAsync",["PRParameters","1"])
-    .subscribe((res:any) => {
-      if(res)
+    let formName = "PRParameters", category = "1";
+    this.api.execSv("SYS","SYS","SettingValuesBusiness","GetParameterByHRAsync",[formName,category])
+    .subscribe((setting:any) => {
+      if(setting)
       {
-        let setting = JSON.parse(res)
-        this.filters["DowCode"] = setting["CurrentPayrollDow"];
+        let jsSetting = JSON.parse(setting)
+        this.filters["DowCode"] = jsSetting["CurrentPayrollDow"];
         this.dataValues = JSON.stringify(this.filters);
         this.getColGridDetailDay();
       }
@@ -178,36 +219,29 @@ export class KowdsComponent extends UIComponent {
   changeDataMF(event) {
     if(event && event.length > 0)
     {
-      event.forEach((mfc:any) => 
-      {
+      event.forEach((mfc:any) => {
         switch(mfc.functionID)
         {
           case "SYS104":
-            if(this.userPermission?.write != 0 || this.userPermission?.isAdmin == true)
-            {
-              mfc.disabled = false;
-              mfc.isbookmark = true;
-            }
-          break;
           case "SYS102":
-            if(this.userPermission?.delete != 0 || this.userPermission?.isAdmin == true)
+          case "HRTPro18A03":
+            if(this.userPermission?.delete == "9" || this.userPermission?.isAdmin == true)
             {
               mfc.disabled = false;
               mfc.isbookmark = true;
-            }
-          break;
+              mfc.isblur = false;
+            } 
+            else mfc.disabled = false;
+            break;
           case "HRTPro18A14":
-            if(this.modeView == 1 && this.userPermission?.write != 0 || this.userPermission?.isAdmin == true)
+            if(this.UIMode == "1" && this.modeView == "1" && (this.userPermission?.write == "9" || this.userPermission?.isAdmin == true))
             {
               mfc.disabled = false;
               mfc.isbookmark = true;
               mfc.isblur = false;
             }
-            else
-            {
-              mfc.disabled = true;
-            }
-          break;
+            else mfc.disabled = true;
+            break;
           default:
             mfc.disabled = true;
             break;
@@ -218,7 +252,7 @@ export class KowdsComponent extends UIComponent {
 
   // click MF
   clickMF(event) {
-    switch (event.functionID) 
+    switch (event && event?.functionID) 
     {
       case 'SYS104': // coppy
         this.coppy();
@@ -229,15 +263,18 @@ export class KowdsComponent extends UIComponent {
       case 'HRTPro18A14': // open popup gen or update dayOff to KowD
         this.openPopupGenKowD();
         break;
+      case 'HRTPro18A03': // open popup request KowD
+        this.request();
+        break;
     }
   }
 
-  // open popup coppy
-  coppy(){
+  // coppy data
+  coppy() {
     let selectedIndexs = [];
-    if(this.modeView == 1) // công chi tiết
+    if(this.modeView == "1") // công chi tiết
       selectedIndexs = [...this.codxGrvDetailDay.selectedIndexes];
-    else if(this.modeView == 2) // công tổng hợp
+    else if(this.modeView == "2") // công tổng hợp
       selectedIndexs = [...this.codxGrvSummaryKow.selectedIndexes];
 
     if(selectedIndexs.length <= 0)
@@ -253,7 +290,7 @@ export class KowdsComponent extends UIComponent {
     else if(selectedIndexs.length == 1)
     {
       let idx = selectedIndexs[0];
-      let data = this.modeView == 1 ? this.codxGrvDetailDay.dataSource[idx] : this.codxGrvSummaryKow.dataSource[idx];
+      let data = this.modeView == "1" ? this.codxGrvDetailDay.dataSource[idx] : this.codxGrvSummaryKow.dataSource[idx];
       let option = new SidebarModel();
       option.FormModel = this.view.formModel;
       option.Width = '550px';
@@ -262,7 +299,7 @@ export class KowdsComponent extends UIComponent {
         employeeName: data.EmployeeName,
         positionName: data.PositionName,
       };
-      let dialog = this.callfunc.openSide(
+      let dialog = this.callfc.openSide(
         PopupCopyEkowdsComponent,
         {
           data: emp,
@@ -286,12 +323,12 @@ export class KowdsComponent extends UIComponent {
   delete(){
     let selectedIndexs = [];
     let strEmpIDs = "";
-    if(this.modeView == 1) // công chi tiết
+    if(this.modeView == "1") // công chi tiết
     {
       selectedIndexs = [...this.codxGrvDetailDay.selectedIndexes];
       strEmpIDs = selectedIndexs.map((idx) => this.codxGrvDetailDay.dataSource[idx].EmployeeID).join(";");
     }
-    else if(this.modeView == 2) // công tổng hợp
+    else if(this.modeView == "2") // công tổng hợp
     {
       selectedIndexs = [...this.codxGrvSummaryKow.selectedIndexes];
       strEmpIDs = selectedIndexs.map((idx) => this.codxGrvSummaryKow.dataSource[idx].EmployeeID).join(";");
@@ -322,6 +359,27 @@ export class KowdsComponent extends UIComponent {
     else this.notify.notifyCode('HR040');
   }
 
+  FMRequestPro:FormModel;
+  request(){
+    if(this.FMRequestPro)
+    {
+      this.cache.gridViewSetup(this.FMRequestPro.formName,this.FMRequestPro.gridViewName)
+      .subscribe((grv) => {
+        let option = new SidebarModel();
+        option.FormModel = this.FMRequestPro;
+        let obj = {
+          headerText: "Gửi duyệt bảng công",
+          dowCode: this.filters["DowCode"],
+          orgUnitID: this.filters["OrgUnitID"],
+          orgUnitName: this.orgUnitName,
+          gridViewSetUp: grv,
+          userPermission: this.userPermission
+        };
+        this.callfc.openSide(PopupRequestKowdComponent,obj,option);
+      });
+    }
+  }
+
   // searchChanged
   searchChanged(event:any){
     this.codxGrvDetailDay.dataService.searchText = event;
@@ -332,24 +390,17 @@ export class KowdsComponent extends UIComponent {
   //change mode view grid
   switchModeView(mode) {
     this.modeView = mode;
-    let elements = document.getElementsByClassName("icon-system_update_alt");
-    if(elements.length > 0)
-    {
-      let btn = elements[0].parentElement;
-      if(btn)
-      {
-        mode == 1 ? btn.classList.remove("d-none") : btn.classList.add("d-none");
-      }
-    }
+    this.view.hideMoreFuncs = this.modeView != this.UIMode; 
     this.detectorRef.detectChanges();
-    
   }
 
   // selected orgUnitID
+  orgUnitName:string = "";
   onSelectionChanged(event) {
     if(event && event?.data && event?.data?.orgUnitID && event.data.orgUnitID != this.filters["OrgUnitID"])
     {
       this.filters["OrgUnitID"] = event.data.orgUnitID;
+      this.orgUnitName = event.data.orgUnitName;
       this.dataValues = JSON.stringify(this.filters);
       this.detectorRef.detectChanges();
       this.refeshGrid();
@@ -373,18 +424,17 @@ export class KowdsComponent extends UIComponent {
   openPopupNote() {
     if(this.lstHRKow && this.lstHRKow?.length > 0)
     {
-      this.callfc.openForm(this.tmpPopupNoteKow,'',300,500);
+      this.callfc.openForm(this.tmpPopupNoteKow,'',400,500);
     }
   }
 
-
   // double click on codxGrvDetailDay
   grvDetailDoubleClick(event:any) {
-    if(event && event?.column && this.userPermission && (this.userPermission?.isAdmin || this.userPermission?.write == "9"))
+    if(this.UIMode == "1" && event && event?.column && (this.userPermission && (this.userPermission?.isAdmin || this.userPermission?.write == "9")))
     {
       let year = Number.parseInt(this.filters["DowCode"].split("/")[0]) , month = Number.parseInt(this.filters["DowCode"].split("/")[1]) - 1;
       let obj = {
-        headerText:"Dữ liệu công theo ngày",
+        headerText:"Dữ liệu công theo ngày", // chưa có function name or mssg
         employeeID : event.rowData.EmployeeID,
         dowCode: this.filters["DowCode"],
         workDate:  new Date(year,month,event.column?.field),
@@ -393,9 +443,9 @@ export class KowdsComponent extends UIComponent {
       let option = new SidebarModel();
       option.FormModel = this.view.formModel;
       option.Width = '550px';
-      this.callfunc.openSide(PopupEkowdsComponent,obj,option)
+      this.callfc.openSide(PopupKowdDayComponent,obj,option)
       .closed.subscribe((res:any) => {
-        if(res && res.event)
+        if(res && res?.event)
         {
           this.refeshGrid();
         }
@@ -405,7 +455,7 @@ export class KowdsComponent extends UIComponent {
 
   // double click on codxGrvSummary
   grvSummaryDoubleClick(event:any){
-    if(event && event?.column && this.userPermission && (this.userPermission?.isAdmin || this.userPermission?.write == "9"))
+    if(this.UIMode == "2" && event && event?.column && (this.userPermission && (this.userPermission?.isAdmin || this.userPermission?.write == "9")))
     {
       let employee = {
         employeeID : event.rowData.EmployeeID,
@@ -413,7 +463,7 @@ export class KowdsComponent extends UIComponent {
         positionName : event.rowData.PositionName
       };
       let obj = {
-        headerText:"Dữ liệu công theo tháng",
+        headerText:"Dữ liệu công theo tháng", // chưa có function name or mssg
         employee : employee,
         dowCode: this.filters["DowCode"],
         kowCode: event.column.field,
@@ -422,9 +472,9 @@ export class KowdsComponent extends UIComponent {
       let option = new SidebarModel();
       option.FormModel = this.view.formModel;
       option.Width = '550px';
-      this.callfunc.openSide(PopupKowdMonthComponent,obj,option)
+      this.callfc.openSide(PopupKowdMonthComponent,obj,option)
       .closed.subscribe((res:any) => {
-        if(res && res.event)
+        if(res && res?.event)
         {
           this.refeshGrid();
         }
@@ -455,8 +505,8 @@ export class KowdsComponent extends UIComponent {
   }
 
   //onDatabound(modeView)
-  onDatabound(type){
-    if(type == 1)
+  onDatabound(modeview){
+    if(modeview == 1)
       this.detailByDateRowCount = this.codxGrvDetailDay.dataService.rowCount;
     else
       this.summaryKowDRowCount = this.codxGrvSummaryKow.dataService.rowCount;
@@ -464,21 +514,21 @@ export class KowdsComponent extends UIComponent {
 
   // get column grid for gridview detail by day
   getColGridDetailDay(){
+    this.detailByDayColoumns = [];
     this.detailByDayColoumns.push({
       template: this.tempEmployee,
       field: 'employeeID'
     });
     let year = Number.parseInt(this.filters["DowCode"].split("/")[0]), month = Number.parseInt(this.filters["DowCode"].split("/")[1]) - 1;              
     let dayNums = new Date(year, month + 1, 0).getDate();
-    for (let day = 1; day <= dayNums; day++) 
-    {
+    for (let day = 1; day <= dayNums; day++) {
       let dayOffWeek =  this.capitalize(moment(new Date(year,month,day)).format('dddd'));
       this.detailByDayColoumns.push({
         field: day.toString(),
         refField: 'workDate',
         headerTemplate: 
         `<div class="text-center">
-          <div class="text-gray">${dayOffWeek}</div>
+          <div class="text-gray-600">${dayOffWeek}</div>
           <div class="fw-bold text-dark">${day}</div>
         </div>`,
         template: this.tempCellDetail
@@ -556,13 +606,18 @@ export class KowdsComponent extends UIComponent {
 
   //refesh codxGrid
   refeshGrid(){
-    this.codxGrvDetailDay?.refresh();
-    this.codxGrvSummaryKow?.refresh();
+    if(this.UIMode == "1")
+    {
+      this.codxGrvDetailDay?.refresh();
+      this.codxGrvSummaryKow?.refresh();
+    }
+    else
+      this.codxGrvSummaryKow?.refresh();
   }
 
   // click gen KowD or Fill DayOff to KowD
   clickBtn(dialog:DialogRef){
-    if(this.userPermission && (this.userPermission?.isAdmin || this.userPermission?.write == "9"))
+    if(this.UIMode == "1" && this.modeView == "1" && (this.userPermission && (this.userPermission?.isAdmin || this.userPermission?.write == "9")))
     {
       if(!this.filters["DowCode"])
       {
@@ -591,7 +646,6 @@ export class KowdsComponent extends UIComponent {
       }
       else this.notify.notifyCode("HR040");
     }
-    
   }
   
   processing:boolean = false;
@@ -606,13 +660,14 @@ export class KowdsComponent extends UIComponent {
         if(res)
         {
           this.session = res[0];
-          for (let index = 0; index < res[1]; index++) {
-              let obj = {
-                id : index + 1,
-                value : 0,
-                iteration: 0,
-                totalIteration: 0,
-              };
+          for (let index = 0; index < res[1]; index++) 
+          {
+            let obj = {
+              id : index + 1,
+              value : 0,
+              iteration: 0,
+              totalIteration: 0,
+            };
             this.processObj.push(obj);
           }
           this.processing = true;
