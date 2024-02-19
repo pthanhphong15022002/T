@@ -119,7 +119,7 @@ export class AddProcessDefaultComponent implements OnInit{
 
   async onSave(type=1)
   {
-    if(!this.checkAttachment()) return;
+    //if(!this.checkAttachment()) return;
     if(this.dynamicFormsForm.invalid) this.findInvalidControls();
     else
     {

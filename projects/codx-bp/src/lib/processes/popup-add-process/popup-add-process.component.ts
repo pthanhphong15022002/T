@@ -764,6 +764,7 @@ export class PopupAddProcessComponent {
         this.extendInfos =
           res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
         this.setLstExtends();
+        debugger
         // let extDocumentControls = this.extendInfos.filter(
         //   (x) => x.fieldType == 'Attachment' && x.documentControl != null
         // );
