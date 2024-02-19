@@ -92,6 +92,17 @@ export class MyInstancesComponent
       case 'SYS03':
         this.openFormDetail(data);
         break;
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        break;
+      }
     }
   }
   dbClick(e) {

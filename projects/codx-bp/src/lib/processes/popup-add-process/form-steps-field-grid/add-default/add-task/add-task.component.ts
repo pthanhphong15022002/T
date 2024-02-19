@@ -408,7 +408,8 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
           type: type,
           refType: this.formModel?.entityName,
           formModel: this.formModel,
-          data:data
+          data:data,
+          listField: this.data.extendInfo
         },
         '',
         option

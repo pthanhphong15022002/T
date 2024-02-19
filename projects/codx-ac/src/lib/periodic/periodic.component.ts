@@ -119,7 +119,6 @@ export class PeriodicComponent extends UIComponent {
         },
       },
     ];
-    console.log(this.view);
   }
   //#region Init
 
