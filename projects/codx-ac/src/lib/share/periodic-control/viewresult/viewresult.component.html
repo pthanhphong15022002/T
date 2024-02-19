@@ -1,0 +1,7 @@
+<codx-form [headerText]="headerText" [body]="TmpBody" [formModel]="dialog.formModel" [dialog]="dialog">
+</codx-form>
+<ng-template #TmpBody>
+    <codx-gridview-v2 class="h-100" #eleGrid formName="Depreciations" idField="recID" [hideMoreFunc]="true"
+        [loadFull]="false" gridViewName="grvDepreciations" entityName="AM_Depreciations" predicates="SessionID=@0"
+        [dataValues]="sessionID" service="AM"></codx-gridview-v2>
+</ng-template>

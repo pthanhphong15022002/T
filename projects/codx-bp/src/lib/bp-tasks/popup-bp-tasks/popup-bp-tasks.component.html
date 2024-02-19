@@ -213,6 +213,8 @@
           ></codx-label>
         </span>
       </button>
+
+
       <ng-container
         *ngIf="data?.activityType == 'Approve'"
         [ngTemplateOutlet]="buttonApprove"
@@ -222,7 +224,7 @@
         [ngTemplateOutlet]="buttonCheck"
       ></ng-container>
       <ng-container
-        *ngIf="data?.activityType == 'Task'"
+        *ngIf="data?.activityType == 'Task' || data?.activityType == 'Form'"
         [ngTemplateOutlet]="buttonTask"
       ></ng-container>
       <ng-container
