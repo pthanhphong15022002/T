@@ -163,6 +163,7 @@
             [placeholder]="data?.description ?? ''"
             [itemTemplate]="customTemplate"
             [valueTemplate]="valueCustomTemplate"
+            [readonly]="true"
           >
           </ejs-combobox>
         </ng-container>
@@ -178,6 +179,7 @@
             [placeholder]="data?.description ?? ''"
             [itemTemplate]="customTemplate"
             [valueTemplate]="valueCustomTemplate"
+            [readonly]="true"
           >
           </ejs-multiselect>
         </ng-container>
@@ -247,6 +249,7 @@
               [width]="700"
               [height]="600"
               [value]=""
+              [readonly]="true"
               (clickSave)="valueChangePop($event)"
             >
             </codx-combobox-popup>
@@ -262,6 +265,7 @@
         [refType]="data.refType"
         [placeholder]="data?.description"
         [multiple]="data.multiselect ?? false"
+        [disabled]="true"
       ></codx-input>
     </div>
   </div>
