@@ -129,7 +129,7 @@
         <ng-container *ngIf="name == 'Tasks'">
           <ng-container>
             <div class="tm-detail">
-              <codx-tasks-share
+              <!-- <codx-tasks-share
                 [dataObj]="dataObj"
                 [showButtonAdd]="showButtonAdd"
                 [showMoreFunc]="showMoreFunc"
@@ -137,7 +137,10 @@
                 [hideSearchFav]="true"
                 [viewMode]="viewMode"
               >
-              </codx-tasks-share>
+              </codx-tasks-share> -->
+
+              <lib-view-tasks></lib-view-tasks>
+              <!-- <h1>View tasks here...</h1> -->
             </div>
           </ng-container>
         </ng-container>

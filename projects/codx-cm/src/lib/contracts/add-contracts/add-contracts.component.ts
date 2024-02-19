@@ -1253,22 +1253,26 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
 
   //#endregion
 
-  getSettingMail(processID){
-    this.contractService.getSettingMailByProcessID(processID).subscribe(res => {
-      if(res){
-        this.contracts.isAlert = res[0];
-        this.contracts.mssgCode = res[1];
-        this.contracts.isMail = res[2];
-        this.contracts.expirationAlertTime = res[4];
-        if(this.contracts?.isMail){
-          this.contractService.copyTempMail([res[3], this.contracts?.emailTemplate]).subscribe(res => {
-            if(res){
-              this.contracts.emailTemplate = res;
-            }
-          })
+  getSettingMail(processID) {
+    this.contractService
+      .getSettingMailByProcessID(processID)
+      .subscribe((res) => {
+        if (res) {
+          this.contracts.isAlert = res[0];
+          this.contracts.mssgCode = res[1];
+          this.contracts.isMail = res[2];
+          this.contracts.expirationAlertTime = res[4];
+          if (this.contracts?.isMail) {
+            this.contractService
+              .copyTempMail([res[3], this.contracts?.emailTemplate])
+              .subscribe((res) => {
+                if (res) {
+                  this.contracts.emailTemplate = res;
+                }
+              });
+          }
         }
-      }
-    })
+      });
   }
 
   getListInstanceSteps(processId: any) {
@@ -1426,6 +1430,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             (x) => x.recID == event.data.recID
           );
           if (idxField != -1) {
+            let valueOld =
+              this.listInstanceSteps[index].fields[idxField].dataValue;
             this.listInstanceSteps[index].fields[idxField].dataValue = result;
             let idxEdit = this.listCustomFile.findIndex(
               (x) =>
@@ -1438,9 +1444,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
               this.listCustomFile.push(
                 this.listInstanceSteps[index].fields[idxField]
               );
+            if (field.dataType == 'N' && valueOld != result)
+              this.caculateField();
           }
         }
-        if (field.dataType == 'N') this.caculateField();
       }
     }
   }
@@ -1554,6 +1561,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.arrCaculateField = this.arrCaculateField.concat(fnum);
       }
     });
+    if (this.arrCaculateField?.length > 0)
+      this.arrCaculateField.sort((a, b) => {
+        if (a.dataFormat.includes('[' + b.fieldName + ']')) return 1;
+        else if (b.dataFormat.includes('[' + a.fieldName + ']')) return -1;
+        else return 0;
+      });
     this.isLoadedCF = true;
   }
   //tính toán
@@ -1573,13 +1586,28 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       let dataFormat = obj.dataFormat;
       fieldsNum.forEach((f) => {
         if (
-          dataFormat.includes('[' + f.fieldName + ']') &&
-          f.dataValue?.toString()
+          f.stepID == obj.stepID &&
+          dataFormat.includes('[' + f.fieldName + ']')
         ) {
+          if (!f.dataValue?.toString()) return;
           let dataValue = f.dataValue;
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
             '[' + f.fieldName + ']',
+            dataValue
+          );
+        }
+      });
+
+      this.arrCaculateField.forEach((x) => {
+        if (
+          x.stepID == obj.stepID &&
+          dataFormat.includes('[' + x.fieldName + ']')
+        ) {
+          if (!x.dataValue?.toString()) return;
+          let dataValue = x.dataValue;
+          dataFormat = dataFormat.replaceAll(
+            '[' + x.fieldName + ']',
             dataValue
           );
         }
@@ -1615,9 +1643,28 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
                 );
             }
           }
+          this.setElement(obj.recID, obj.dataValue);
         }
       }
     });
+  }
+
+  setElement(recID, value) {
+    value =
+      value && value != '_'
+        ? Number.parseFloat(value)?.toFixed(2).toString()
+        : '';
+    var codxinput = document.querySelectorAll(
+      '.form-group codx-input[data-record="' + recID + '"]'
+    );
+
+    if (codxinput?.length > 0) {
+      let htmlE = codxinput[0] as HTMLElement;
+      let input = htmlE.querySelector('input') as HTMLInputElement;
+      if (input) {
+        input.value = value;
+      }
+    }
   }
   //#endregion
   addFile(evt: any) {
@@ -1845,7 +1892,11 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     ) {
       this.cmService.addContracts([this.contracts]).subscribe((res) => {
         if (res) {
-          this.dialog.close(res);
+          if (this.type == 'DP') {
+            this.dialog.close();
+          } else {
+            this.dialog.close(res);
+          }
         }
       });
     }

@@ -277,6 +277,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       isRequired: false,
       count : 0,
       listType: "1",
+      stepID: this.data?.recID,
       stepNo: this.data?.stepNo,
       fieldID: this.data?.recID,
       memo: this.data?.memo,
@@ -295,6 +296,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       isRequired: false,
       count : 0,
       listType: "1",
+      stepID: this.data?.recID,
       stepNo: this.data?.stepNo,
       fieldID: this.data?.recID,
       memo: this.data?.memo,
@@ -406,7 +408,8 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
           type: type,
           refType: this.formModel?.entityName,
           formModel: this.formModel,
-          data:data
+          data:data,
+          listField: this.data.extendInfo
         },
         '',
         option
@@ -430,6 +433,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
               isRequired: false,
               count : 0,
               listType: "0",
+              stepID: this.data?.recID,
               stepNo: this.data?.stepNo,
               fieldID: this.data?.recID,
               memo: this.data?.memo,
@@ -521,6 +525,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
           isRequired: false,
           count : 0,
           isList: "0",
+          stepID: this.data?.recID,
           stepNo: this.data?.stepNo,
           fieldID: this.data?.recID,
           memo: this.data?.memo,

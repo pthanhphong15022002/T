@@ -13,6 +13,7 @@
 <!-- template left -->
 <ng-template #tmpLeft>
     <codx-listview
+        class="h-100"
         [itemTemplate]="itemTemplateTree"
         [entityName]="'HR_OrganizationUnits'"
         [service]="'HR'"
@@ -62,11 +63,22 @@
 
 <!-- template column employee -->
 <ng-template #tmpColEmployee let-data>
-    <div class="d-flex flex-column">
-        <div class="fw-bold fs-6 line-clamp line-clamp-1 mb-1">{{data?.employeeName}}</div>
-        <div class="text-dark mb-1">{{data?.employeeID}}</div>
-        <div class="text-gray-600 fs-7 mb-1">{{data?.positionName}}</div>
-    </div>
+    <div class="d-flex align-items-center w-100">
+        <div class="p-3 ps-5">
+          <div class="d-flex align-items-center">
+            <div class="d-flex flex-column me-4">
+              <codx-img [objectId]="data?.employeeID" [objectName]="data?.employeeName"
+                objectType="HR_Employees" [width]="40" [imageType]="'circle'" class="pic-emloyee">
+              </codx-img>
+            </div>
+            <div class="d-flex flex-column">
+              <div class="fw-bold fs-6 line-clamp line-clamp-1 mb-1">{{data?.employeeName}}</div>
+              <div class="text-dark mb-1">{{data?.employeeID}}</div>
+              <div class="text-gray-600 fs-7 mb-1">{{data?.eositionName}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
 </ng-template>
 
 <!-- template column category -->

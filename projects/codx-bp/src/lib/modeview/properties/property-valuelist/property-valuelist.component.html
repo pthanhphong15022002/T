@@ -79,12 +79,25 @@
         class="form-control mx-2"
         [value]="item.customValues"
         [ngStyle]="{
-          color: item?.colorSet,
-          'background-color': item?.textColorSet
+          color: item?.textColorSet,
+          'background-color': item?.colorSet
         }"
         placeholder="Nhập tên"
         (change)="valueChangeText($event, i)"
       />
+      <codx-input
+        field="textColorSet"
+        class="ms-4"
+        type="colorpicker"
+        [showSelect]="false"
+        [showButtons]="false"
+        [showInputColor]="true"
+        [showText]="false"
+        [modeSwitcher]="false"
+        [crrValue]="item.textColorSet || '#000000'"
+        (valueChange)="valueChangeVll($event, i)"
+      >
+      </codx-input>
       <codx-input
         field="colorSet"
         class="ms-4"
@@ -95,23 +108,11 @@
         placeholder="A"
         [showText]="false"
         [modeSwitcher]="false"
-        [crrValue]="item.colorSet || '#000000'"
+        [crrValue]="item.colorSet || '#FFFFFF'"
         (valueChange)="valueChangeVll($event, i)"
       >
       </codx-input>
-      <codx-input
-        field="textColorSet"
-        class="ms-4"
-        type="colorpicker"
-        [showSelect]="false"
-        [showButtons]="false"
-        [showInputColor]="true"
-        [showText]="false"
-        [modeSwitcher]="false"
-        [crrValue]="item.textColorSet || '#FFFFFF'"
-        (valueChange)="valueChangeVll($event, i)"
-      >
-      </codx-input>
+     
       <div
         class="mx-2 cursor-pointer"
         (click)="item.customValues ? deleteValues(i) : undefined"
@@ -146,9 +147,9 @@
     <div class="d-flex align-items-center mt-4">
       <codx-input
         type="switch"
-        field="isRequired"
-        label="Bắt buộc"
+        field="multiSelect"
         class="mt-2"
+        (valueChange)="valueChangeVllInput($event)"
       ></codx-input>
       <codx-label
         formName="DynamicForms"

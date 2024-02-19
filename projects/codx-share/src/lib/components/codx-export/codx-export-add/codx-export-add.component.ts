@@ -68,6 +68,8 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
   objRequied=[];
   showInsert = false;
   gridViewSetupWord:any;
+  isHasFields = false;
+
   constructor(
     private tenant: TenantStore,
     private readonly auth: AuthService,
@@ -86,6 +88,10 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     this.refID = dt.data?.refID; // Thảo thêm để thêm biến lưu cho temEx
     this.refType = dt.data?.refType || dt.data?.formModel?.entityName; // Thảo thêm để thêm biến lưu cho temEx
     this.formModel = dt.data.formModel;
+    if(dt.data?.listField) {
+      this.isHasFields = true;
+      this.formatField(dt.data?.listField);
+    }
     if (this.action == 'add') {
       this.headerText = 'Thêm ' + this.type + ' Template';
     } else if (this.action == 'edit') {
@@ -157,7 +163,8 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
             this.data
           );
         });
-      this.getGridView();
+      if(!this.isHasFields) this.getGridView();
+
       //Url service word
       let baseurl: string = environment.apiUrl + '/api/documenteditor/import';
       baseurl +=
@@ -196,6 +203,29 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
           }
         }
       });
+  }
+
+  formatField(data:any)
+  {
+    this.gridViewSettup = [];
+    data.forEach(element => {
+      var obj = {
+        text: element?.title,
+        category: 'Drag or click the field to insert.',
+        htmlAttributes: { draggable: true },
+      };
+
+      var obj2 = {
+        key: element.fieldName,
+        headerText: element.title,
+        referedType: element.refType,
+        referedValue: element.refValue,
+      };
+
+      this.gridViewSettup.push(obj2);
+
+      this.listFeild.push(obj);
+    });
   }
 
   get f(): { [key: string]: AbstractControl } {
@@ -529,11 +559,21 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
 
     var check = this.gridViewSettup.filter((x) => x.headerText == text);
     if (Array.isArray(check))
-      text += '|' + check[0].referedType + '|' + check[0].referedValue;
-    this.container.documentEditor.editor.insertField(
-      fieldCode,
-      '[' + text + ']'
-    );
+    {
+      text = check[0].key;
+
+      if(check[0]?.referedType)
+        text += '|' + check[0].referedType;
+
+      if(check[0]?.referedValue)
+        text += '|' + check[0].referedValue;
+    }
+
+    // this.container.documentEditor.editor.insertField(
+    //   fieldCode,
+    //   '[' + text + ']'
+    // );
+    this.container.documentEditor.editor.insertText('[' + text + '] ');
     this.container.documentEditor.focusIn();
   }
 

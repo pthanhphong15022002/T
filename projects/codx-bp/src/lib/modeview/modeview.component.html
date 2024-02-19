@@ -8,13 +8,13 @@
     <codx-label default="Form nhập liệu" formName="fnBPModeView" fiedName="BPModeViewTitle" class="fs-4 fw-bold"></codx-label>
     <div class="d-flex align-items-center">
       <div id="group_period" class="btn-group mt-2 bp-header-button-group" role="group" aria-label="Basic radio toggle button group">
-        <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+        <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked (change)="changeView(1)">
         <label class="btn btn-outline-secondary" for="btnradio1">
           <i class="icon-edit_square icon-20"></i>
           <codx-label default="Chỉnh sửa" class="mt-1"></codx-label>
         </label>
 
-        <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+        <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" (change)="changeView(2)">
         <label class="btn btn-outline-secondary" for="btnradio2">
           <i class="icon-i-eye icon-20"></i>
           <codx-label default="Xem" class="mt-1"></codx-label>
@@ -48,7 +48,7 @@
             <ng-template #content>
               <div class="d-flex flex-column">
                 <ng-container *ngFor="let item of vllBP002?.datas">
-                  <div class="w-100 py-3 px-4 mb-3 bg-item-lightest rd-3px cursor-move mw-300px d-flex align-items-center" cdkDrag [cdkDragData]="item" *ngIf="item.groupType == 0">
+                  <div class="w-100 py-3 px-4 mb-3 bg-item-lightest rd-3px cursor-move mw-300px d-flex align-items-center" cdkDrag  [cdkDragDisabled]="viewType == 2" [cdkDragData]="item" *ngIf="item.groupType == 0">
                     <i [ngClass]="item.icon" class="icon-22"></i>
                     <span class="fw-bold ms-4 mt-1">{{item.text}}</span>
                   </div>
@@ -63,7 +63,7 @@
             <ng-template #content>
               <div class="d-flex flex-column">
                 <ng-container *ngFor="let item of vllBP002?.datas">
-                  <div class="w-100 py-3 px-4 mt-3 bg-item-lightest rd-3px cursor-move mw-300px d-flex align-items-center" cdkDrag [cdkDragData]="item" *ngIf="item.groupType == 1">
+                  <div class="w-100 py-3 px-4 mt-3 bg-item-lightest rd-3px cursor-move mw-300px d-flex align-items-center" cdkDrag [cdkDragDisabled]="viewType == 2" [cdkDragData]="item" *ngIf="item.groupType == 1">
                     <i [ngClass]="item.icon" class="icon-22"></i>
                     <span class="fw-bold ms-4 mt-1">{{item.text}}</span>
                   </div>
@@ -101,10 +101,10 @@
                 <div class="d-flex align-items-center p-2 w-100 cursor-pointer"
                   *ngFor="let subItem of item.children;let j = index "
                   cdkDrag
-                  [cdkDragDisabled]="subItem.controlType == 'Title'"
+                  [cdkDragDisabled]="subItem.controlType == 'Title' || viewType == 2"
                   [cdkDragData]="item.name"
                   [ngClass]="(dataSelected.columnOrder == subItem.columnOrder &&  dataSelected.columnNo == subItem.columnNo) ? 'active':''"
-                  (click)="selectedItem(subItem)"
+                  (click)="viewType == 1 ? selectedItem(subItem): undefined"
                 >
                  <ng-container [ngSwitch]="subItem.value">
                     <ng-container *ngSwitchCase="'Text'">
@@ -168,13 +168,17 @@
                   <ng-template #text let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
-                      <div class="w-100 border mt-2 px-4 py-3 rd-3px">
+                      <div class="w-100 border mt-2 px-4 py-2 rd-3px" *ngIf="viewType == 1">
                         <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
                       </div>
+
+                      <ng-container *ngIf="viewType == 2">
+                        <ng-container  *ngTemplateOutlet="defaultInput ; context: { $implicit: data }"></ng-container>
+                      </ng-container>
                     </div>
                   </ng-template>
 
@@ -182,14 +186,18 @@
                   <ng-template #valueList let-data>
                     <div class="d-flex flex-column w-100">
                        <div class="d-flex align-items-center">
-                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
-                      <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
+                      <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-2 rd-3px" *ngIf="viewType == 1">
                         <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
                         <i [ngClass]="data.refType == '3P' ? 'icon-person_add_alt_1 text-primary' :'icon-keyboard_arrow_down text-dark' "></i>
                       </div>
+
+                      <ng-container *ngIf="viewType == 2">
+                        <ng-container  *ngTemplateOutlet="defaultInput ; context: { $implicit: data }"></ng-container>
+                      </ng-container>
                     </div>
                   </ng-template>
 
@@ -197,14 +205,18 @@
                   <ng-template #combobox let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
-                      <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
+                      <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-2 rd-3px" *ngIf="viewType == 1">
                         <span class="text-muted text-truncate mw-55px">{{data.description}}</span>
                         <i class="icon-keyboard_arrow_down text-dark"></i>
                       </div>
+
+                      <ng-container *ngIf="viewType == 2">
+                        <ng-container  *ngTemplateOutlet="defaultInput ; context: { $implicit: data }"></ng-container>
+                      </ng-container>
                     </div>
                   </ng-template>
 
@@ -212,17 +224,21 @@
                   <ng-template #datetime let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
-                      <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
+                      <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-2 rd-3px" *ngIf="viewType == 1">
                         <span class="text-muted text-truncate mw-55px">{{data.defaultValue ? (data.defaultValue | date: 'dd/MM/yyyy HH:mm:ss') : data.description}}</span>
                         <div class="d-flex align-items-center">
                           <i class="icon-i-calendar text-dark"></i>
                           <i class="icon-i-clock ms-3 text-dark"></i>
                         </div>
                       </div>
+
+                      <ng-container *ngIf="viewType == 2">
+                        <ng-container  *ngTemplateOutlet="defaultInput ; context: { $implicit: data }"></ng-container>
+                      </ng-container>
                     </div>
                   </ng-template>
 
@@ -231,7 +247,7 @@
                   <ng-template #attachment let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
                         <span class="fw-bold">{{data.title}}</span>
                       </div>
                       <ng-container *ngIf="!data.documentControl || data.documentControl.length == 0">
@@ -252,7 +268,7 @@
                           <thead>
                             <tr class="fw-bold bg-light">
                               <th scope="col">Tên file</th>
-                              <th scope="col">Template</th>
+                              <th scope="col">Mẫu</th>
                               <th scope="col">Bắt buộc</th>
                               <th scope="col">Đính kèm</th>
                             </tr>
@@ -274,30 +290,36 @@
                   <ng-template #yesno let-data>
                     <div class="d-flex align-items-center justify-content-between w-100 ps-0">
                       <div class="d-flex align-items-center">
-                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
-                      <ng-container *ngIf="data.controlType == 'Switch'">
-                        <div class="form-switch">
-                          <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" disabled>
-                        </div>
+                      <ng-container *ngIf="viewType == 1">
+                        <ng-container *ngIf="data.controlType == 'Switch'">
+                          <div class="form-switch">
+                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" disabled>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngIf="data.controlType == 'CheckBox'">
+                          <div class="d-flex align-items-center">
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
+                              <label class="form-check-label" for="flexRadioDefault1">
+                                Yes
+                              </label>
+                            </div>
+                            <div class="form-check ms-4">
+                              <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                              <label class="form-check-label" for="flexRadioDefault1">
+                                No
+                              </label>
+                            </div>
+                          </div>
+                        </ng-container>
                       </ng-container>
-                      <ng-container *ngIf="data.controlType == 'CheckBox'">
-                        <div class="d-flex align-items-center">
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
-                            <label class="form-check-label" for="flexRadioDefault1">
-                              Yes
-                            </label>
-                          </div>
-                          <div class="form-check ms-4">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                            <label class="form-check-label" for="flexRadioDefault1">
-                              No
-                            </label>
-                          </div>
-                        </div>
+
+                      <ng-container *ngIf="viewType == 2">
+                        <ng-container  *ngTemplateOutlet="defaultInput ; context: { $implicit: data }"></ng-container>
                       </ng-container>
                     </div>
                   </ng-template>
@@ -306,7 +328,7 @@
                   <ng-template #share let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
@@ -321,7 +343,7 @@
                   <ng-template #rank let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
                         <span class="fw-bold">{{data.text}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
@@ -344,7 +366,7 @@
                   <ng-template #tables let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
@@ -352,13 +374,13 @@
                         <thead>
                           <tr>
                             <th scope="col" *ngIf="data?.tableFormat?.hasIndexNo">#</th>
-                            <th scope="col" *ngFor="let col of data.dataFormat">{{col.title}}</th>
+                            <th scope="col" *ngFor="let col of data?.dataFormat">{{col.title}}</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr>
                             <th scope="row" *ngIf="data?.tableFormat?.hasIndexNo"></th>
-                            <td *ngFor="let col of data.dataFormat"></td>
+                            <td *ngFor="let col of data?.dataFormat"></td>
                           </tr>
                         </tbody>
                       </table>
@@ -369,7 +391,7 @@
                   <ng-template #progress let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
@@ -391,7 +413,7 @@
                   <ng-template #email let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
@@ -406,7 +428,7 @@
                   <ng-template #address let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
@@ -421,7 +443,7 @@
                   <ng-template #expression let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
@@ -436,7 +458,7 @@
                   <ng-template #phone let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
@@ -528,4 +550,14 @@
   </div>
 </ng-template>
 
-
+<ng-template #defaultInput let-data>
+  <codx-input
+    [type]="(data?.controlType | addProcessDefaultPrice : data?.controlType : data?.dataType : data?.dataFormat: data?.refType)"
+    [refValue]="data.refValue"
+    [refType]="data.refType" 
+    [field]="getField(data?.fieldName)"
+    [crrValue]="data?.defaultValue"
+    [placeholder]="data?.description"
+  >
+  </codx-input>
+</ng-template>

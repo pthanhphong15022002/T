@@ -8,8 +8,6 @@ import {
   SidebarModel,
 } from 'codx-core';
 import { PopupAddComponent } from './popup-add/popup-add.component';
-import { tmpReferences } from '../../models/assign-task.model';
-import { request } from 'http';
 
 @Injectable({
   providedIn: 'root',

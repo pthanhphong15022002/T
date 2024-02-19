@@ -769,6 +769,8 @@ export class PopupAddDealComponent
             (x) => x.recID == event.data.recID
           );
           if (idxField != -1) {
+            let valueOld =
+              this.listInstanceSteps[index].fields[idxField].dataValue;
             this.listInstanceSteps[index].fields[idxField].dataValue = result;
             let idxEdit = this.listCustomFile.findIndex(
               (x) =>
@@ -781,9 +783,10 @@ export class PopupAddDealComponent
               this.listCustomFile.push(
                 this.listInstanceSteps[index].fields[idxField]
               );
+            if (field.dataType == 'N' && valueOld != result)
+              this.caculateField();
           }
         }
-        if (field.dataType == 'N') this.caculateField();
       }
     }
   }
@@ -1682,6 +1685,12 @@ export class PopupAddDealComponent
           this.arrCaculateField = this.arrCaculateField.concat(fnum);
       }
     });
+    if (this.arrCaculateField?.length > 0)
+      this.arrCaculateField.sort((a, b) => {
+        if (a.dataFormat.includes('[' + b.fieldName + ']')) return 1;
+        else if (b.dataFormat.includes('[' + a.fieldName + ']')) return -1;
+        else return 0;
+      });
     this.isLoadedCF = true;
   }
   //tính toán
@@ -1701,13 +1710,28 @@ export class PopupAddDealComponent
       let dataFormat = obj.dataFormat;
       fieldsNum.forEach((f) => {
         if (
-          dataFormat.includes('[' + f.fieldName + ']') &&
-          f.dataValue?.toString()
+          f.stepID == obj.stepID &&
+          dataFormat.includes('[' + f.fieldName + ']')
         ) {
+          if (!f.dataValue?.toString()) return;
           let dataValue = f.dataValue;
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
             '[' + f.fieldName + ']',
+            dataValue
+          );
+        }
+      });
+
+      this.arrCaculateField.forEach((x) => {
+        if (
+          x.stepID == obj.stepID &&
+          dataFormat.includes('[' + x.fieldName + ']')
+        ) {
+          if (!x.dataValue?.toString()) return;
+          let dataValue = x.dataValue;
+          dataFormat = dataFormat.replaceAll(
+            '[' + x.fieldName + ']',
             dataValue
           );
         }
@@ -1743,9 +1767,28 @@ export class PopupAddDealComponent
                 );
             }
           }
+          this.setElement(obj.recID, obj.dataValue);
         }
       }
     });
+  }
+
+  setElement(recID, value) {
+    value =
+      value && value != '_'
+        ? Number.parseFloat(value)?.toFixed(2).toString()
+        : '';
+    var codxinput = document.querySelectorAll(
+      '.form-group codx-input[data-record="' + recID + '"]'
+    );
+
+    if (codxinput?.length > 0) {
+      let htmlE = codxinput[0] as HTMLElement;
+      let input = htmlE.querySelector('input') as HTMLInputElement;
+      if (input) {
+        input.value = value;
+      }
+    }
   }
   //------------------END_CACULATE--------------------//
 

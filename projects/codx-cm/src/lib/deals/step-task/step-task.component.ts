@@ -74,6 +74,7 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
   @Output() startStep = new EventEmitter<any>();
   @ViewChild('viewReason', { static: true }) viewReason;
   dialogPopupReason: DialogRef;
+  isRoleFullStep = false;
   status = [];
   type = 'S';
   crrViewGant = 'W';
@@ -218,17 +219,15 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
         })
       }
     }
-
     if (changes?.dataCM) {
       this.type = this.dataCM.viewModeDetail || 'S';
-      this.isAdmin = false;
-      if (!this.isAdmin) {
-        this.isAdmin =
-          this.dataCM?.full ||
-          this.dataCM?.owner == this.user?.userID;
-        if(!this.isAdmin){
+      if (this.isAdmin) {
+        this.isRoleFullStep = true;
+      }else{
+        this.isRoleFullStep = this.dataCM?.owner == this.user?.userID;
+        if(!this.isRoleFullStep){
           let checkRole = this.dataCM?.permissions?.some(x => x?.objectID == this.user?.userID && x?.memberType == "1");
-          this.isAdmin = checkRole ? true : false;
+          this.isRoleFullStep = checkRole ? true : false;
         }
       }
       if(this.entityName == 'CM_Customers'){

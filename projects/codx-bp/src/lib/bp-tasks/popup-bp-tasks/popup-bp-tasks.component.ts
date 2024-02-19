@@ -11,6 +11,7 @@ import {
   CacheService,
   DialogData,
   DialogRef,
+  NotificationsService,
   Util,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
@@ -36,6 +37,8 @@ export class PopupBpTasksComponent implements OnInit {
   vllTitle = '';
   subTitle = '';
   checkList = [];
+  files = [];
+  fileIDs = [];
   action = '';
   constructor(
     private authstore: AuthStore,
@@ -43,6 +46,7 @@ export class PopupBpTasksComponent implements OnInit {
     private detectorRef: ChangeDetectorRef,
     private cache: CacheService,
     private api: ApiHttpService,
+    private notiService: NotificationsService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -63,6 +67,46 @@ export class PopupBpTasksComponent implements OnInit {
       this.api.execSv<any>('BP','BP','ProcessInstancesBusiness','GetItemsByInstanceIDAsync', [this.data.instanceID]).subscribe((ins) => {
         if(ins){
           this.dataIns = ins;
+          this.fileIDs=[];
+          if (this.dataIns?.documentControl?.length > 0) {
+            let curStepDmc= this.dataIns?.documentControl.filter(x=>x?.stepID == this.data?.stepID );
+            if(curStepDmc?.length>0){
+              curStepDmc?.forEach(dmc=>{
+                if(dmc?.files?.length>0){
+                  dmc?.files?.forEach(file=>{
+                    if(file?.type=="2" || file?.type=="3"){
+                      this.fileIDs.push(file?.fileID);
+                    }
+                  })
+                }
+                
+                let curRefStepDmc= this.dataIns?.documentControl.filter(x=>x?.stepID == dmc.refStepID );
+                if(curRefStepDmc?.length>0){
+                  curRefStepDmc?.forEach(refDmc=>{
+                    if(refDmc?.files?.length>0){
+                      refDmc?.files?.forEach(refFile=>{
+                        if(refFile?.type=="2" || refFile?.type=="3"){
+                          this.fileIDs.push(refFile?.fileID);
+                        }
+                      })
+                    }
+                  })
+                }
+              })
+            }
+            if(this.fileIDs?.length>0){
+              this.files=[];
+              this.shareService
+                .getLstFileByID(this.fileIDs)
+                .subscribe((res) => {
+                  if (res) {
+                    this.files = res;
+                    this.detectorRef.detectChanges();
+                  }
+                });
+            }
+            
+          }
           if(this.subTitle == null){
             this.subTitle = this.dataIns.title;
           }
@@ -112,6 +156,19 @@ export class PopupBpTasksComponent implements OnInit {
         }
       }
     }
+    //Update Task Status test
+    this.api.execSv(
+      'BP',
+      'ERM.Business.BP',
+      'ProcessesBusiness',
+      'UpdateStatusTaskAsync',
+      [this.data.recID,"3"]//Hoàn tất
+    ).subscribe(res=>{
+      if(res){
+        this.notiService.notifyCode("SYS034");
+        this.dialog && this.dialog.close(res)
+      }
+    });
   }
 
   valueChange(e){

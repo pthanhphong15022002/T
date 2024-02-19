@@ -167,7 +167,7 @@
                     <div ngbDropdown class="d-inline-block">
                         <button ngbDropdownToggle [disabled]="data?.settings?.isTemplate ? false : true" type="button" class="btn btn-light w-100 mt-4"><i class="icon-i-plus"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSelectFile" default="Chọn file template"></codx-label></button>
                         <div class="w-100" ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                           <div ngbDropdownItem class="d-flex align-items-center" (click)="addTemplate('add','excel')">
+                           <div ngbDropdownItem class="d-flex align-items-center cursor-pointer" (click)="addTemplate('add','excel')">
                                 <i
                                     class="fa-solid fa-file-excel fs-2 me-3"
                                     style="color: #347442"
@@ -175,7 +175,7 @@
                                 </i>
                                 <span>Excel</span>
                             </div>
-                            <div ngbDropdownItem class="d-flex align-items-center" (click)="addTemplate('add','word')">
+                            <div ngbDropdownItem class="d-flex align-items-center cursor-pointer" (click)="addTemplate('add','word')">
                                 <i
                                 class="fa-solid fa-file-word fs-2 me-3"
                                 style="color: #005dc7"

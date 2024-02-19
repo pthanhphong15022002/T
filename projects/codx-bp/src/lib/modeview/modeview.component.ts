@@ -28,7 +28,7 @@ export class ModeviewComponent implements OnInit {
   count = count;
   dataSelected: any;
   dialog:any;
-
+  viewType = 1;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -98,6 +98,14 @@ export class ModeviewComponent implements OnInit {
       }
       else
       {
+        if(elm.fieldType == "Table")
+        {
+          elm.dataFormat = typeof elm.dataFormat == 'string' ? JSON.parse(elm.dataFormat) :  elm.dataFormat;
+        }
+        else if(elm.fieldType == "Attachment")
+        {
+          elm.documentControl = typeof elm.documentControl == 'string' ? JSON.parse(elm.documentControl) :  elm.documentControl;
+        }
         elm.text = vlls[indexs].text;
         elm.icon = vlls[indexs].icon;
         elm.textColor = vlls[indexs].textColor;
@@ -570,5 +578,16 @@ export class ModeviewComponent implements OnInit {
     str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
     str = str.replace(/Đ/g, "D");
     return str;
-}
+  }
+
+  changeView(e:any)
+  {
+    this.viewType = e;
+  }
+
+  getField(key: string): string {
+    if (!key) return '';
+
+    return Util.camelize(key);
+  }
 }

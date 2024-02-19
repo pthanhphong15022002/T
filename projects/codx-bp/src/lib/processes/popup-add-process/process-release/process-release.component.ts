@@ -178,6 +178,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     var option = new DialogModel();
     option.IsFull = true;
     option.FormModel = this.view.formModel;
+    option.zIndex = 1000;
     let popup = this.callFunc.openForm(
       ProcessReleaseDetailComponent,
       '',
@@ -205,6 +206,12 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         this.startProcess();
         break;
       }
+      //Xem chi tiết quy trình
+      case 'BPT01012':
+        {
+          this.openFormDetail(this.view?.dataService?.dataSelected)
+          break;
+        }
     }
   }
   startProcess() {
