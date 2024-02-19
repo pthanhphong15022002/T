@@ -18,13 +18,15 @@
     font-size: var(--fs-body);
   }
 }
+.hover-scroll, .hover-scroll-x, .hover-scroll-y, .hover-scroll-overlay-y, main, span, ol, ul, pre, div, * {
+  scrollbar-width: thin;
+}
 .fs-body{
   font-size: var(--fs-body);
 }
 .e-control, .e-css, .e-listview, .e-splitter.e-splitter-horizontal .e-pane,
 .e-splitter.e-splitter-vertical .e-pane {
   font-family: 'Roboto', Segoe UI, serif;
-
 }
 .e-device .e-dlg-content,
 .e-device .e-dlg-content * {

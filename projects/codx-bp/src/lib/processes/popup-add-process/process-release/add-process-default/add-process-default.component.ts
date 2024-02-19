@@ -192,7 +192,7 @@ export class AddProcessDefaultComponent implements OnInit{
           permissions: this.data?.owners,
         }
     
-        valueForm[this.tableField] = this.dataIns.datas[this.tableField].filter(x=> typeof x === 'object');
+        if(this.tableField) valueForm[this.tableField] = this.dataIns.datas[this.tableField].filter(x=> typeof x === 'object');
         this.dataIns.processID = this.process?.recID,
         this.dataIns.instanceNo = instanceNo,
         this.dataIns.instanceID = this.dataIns.recID,
