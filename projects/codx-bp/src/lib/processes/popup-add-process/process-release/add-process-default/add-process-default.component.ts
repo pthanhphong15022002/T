@@ -210,7 +210,8 @@ export class AddProcessDefaultComponent implements OnInit{
         this.dataIns.createdOn= new Date(),
         this.dataIns.createdBy = this.user?.userID,
         this.dataIns.duration = this.process?.duration,
-        this.dataIns.datas = JSON.stringify(valueForm)
+        this.dataIns.datas = JSON.stringify(valueForm);
+        this.dataIns.documentControl = this.data?.documentControl;
         var listTask = JSON.stringify([stage,step]);
 
         //Luu process Task
