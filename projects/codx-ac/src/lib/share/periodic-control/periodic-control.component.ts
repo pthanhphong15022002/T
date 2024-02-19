@@ -255,6 +255,14 @@ export class PeriodicControlComponent extends UIComponent{
       urlRedirect += event.data.url + '/' + event.functionID;
       this.route.navigate([urlRedirect], { queryParams: { sessionID: data.recID } });
     }
+    // this.numbreadcumb = 2;
+    // let link = {
+    //   title: event.text,
+    //   url:'',
+    //   numbreadcumb:this.numbreadcumb
+    // }
+    // this.breadcumb.push(link);
+    // this.detectorRef.detectChanges();
   }
   //#endregion Function
 }

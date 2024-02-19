@@ -1,5 +1,5 @@
 <codx-views class="ac-views d-block h-100" #view idField="recID" [views]="views" service="AC" [entityName]="view?.entityName" [hideMoreFuncs]="true"
-  [toolbarDisplay]="false" [autoLoad]="true" assemblyName="AC" className="RunPeriodicBusiness" service="AC" method="GetDataAsync"
+  [toolbarDisplay]="false" assemblyName="AC" className="RunPeriodicBusiness" service="AC" method="GetDataAsync"
   (requestEnded)="requestEnded($event)" (viewChanged)="viewChanged($event)">
 </codx-views>
 <ng-template #template let-data>
