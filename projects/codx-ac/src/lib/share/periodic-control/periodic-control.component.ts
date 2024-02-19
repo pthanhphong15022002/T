@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { FormModel, NotificationsService, UIComponent, UrlUtil, ViewModel, ViewType } from 'codx-core';
+import { DialogModel, FormModel, NotificationsService, UIComponent, UrlUtil, ViewModel, ViewType } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import { PeriodicComponent } from '../../periodic/periodic.component';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { Router } from '@angular/router';
+import { ViewresultComponent } from './viewresult/viewresult.component';
 
 @Component({
   selector: 'lib-periodic-control',
@@ -208,14 +209,6 @@ export class PeriodicControlComponent extends UIComponent{
       }, {});
   }
 
-  // onCollaple(){
-  //   this.oData = [this.oData.shift()];
-  //   this.view.dataService.request.page = 1;
-  //   this.showLess = false;
-  //   this.showAll = false;
-  //   this.detectorRef.detectChanges();
-  // }
-
   runPeriodic(runtype:any,recID:any,runMode:any,text:any){
     let storeName = (runMode === '1' || runMode === '2') ? 'AC_spRunPeriodic' : 'AC_spCancelPeriodic';
     this.api.exec('AC','RunPeriodicBusiness','RunPeriodicAsync',[
@@ -239,30 +232,31 @@ export class PeriodicControlComponent extends UIComponent{
     })
   }
 
-  // cancel(text:any,data:any){
-  //   this.api.exec('AC','RunPeriodicBusiness','CancelAsync',[data,this.dataDefault.refType,text]).subscribe((res:any)=>{
-  //     if (res) {
-  //       this.notification.notifyCode('AC0029', 0, text);
-  //     }else{
-  //       this.notification.notifyCode('AC0030', 0, text);
-  //     }
-  //   })
-  // }
-
   viewResult(data: any, event: any) {
-    if (event.data.url) {
-      let urlRedirect = '/' + UrlUtil.getTenant() + '/';
-      urlRedirect += event.data.url + '/' + event.functionID;
-      this.route.navigate([urlRedirect], { queryParams: { sessionID: data.recID } });
+    switch(this.funcID){
+      case 'ACP107':
+        this.openFormViewResult(data,event.text);
+        break;
     }
-    // this.numbreadcumb = 2;
-    // let link = {
-    //   title: event.text,
-    //   url:'',
-    //   numbreadcumb:this.numbreadcumb
-    // }
-    // this.breadcumb.push(link);
-    // this.detectorRef.detectChanges();
+  }
+
+  openFormViewResult(datas:any,text:any){
+    let data = {
+      headerText: text,
+      sessionID : datas.recID
+    }
+    let opt = new DialogModel();
+    opt.FormModel = this.view.formModel;
+    let dialog = this.callfc.openForm(
+      ViewresultComponent,
+      null,
+      null,
+      null,
+      '',
+      data,
+      '',
+      opt
+    );
   }
   //#endregion Function
 }
