@@ -971,4 +971,9 @@ export class PopupAddProcessComponent {
       result
     );
   }
+
+  valueChange2(e:any)
+  {
+    this.data = e;
+  }
 }

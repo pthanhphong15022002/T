@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, Optional, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges } from '@angular/core';
 import { CallFuncService, DialogData, DialogRef, SidebarModel } from 'codx-core';
 import { StagesComponent } from './stages/stages.component';
 import { AddDefaultComponent } from './add-default/add-default.component';
@@ -13,6 +13,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class FormStepsFieldGridComponent implements OnInit, OnChanges{
   @Input() data: any;
   @Input() formModel: any;
+  @Output() dataChange = new EventEmitter<any>();
+  
   myTemplate  = '';
   listStage = [];
   count = 0;
@@ -130,6 +132,8 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
             }
           }
           this.ref.detectChanges();
+
+          this.dataChange.emit(this.data);
         }
       });
   }
