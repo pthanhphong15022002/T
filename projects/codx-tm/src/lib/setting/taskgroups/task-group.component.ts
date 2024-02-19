@@ -117,9 +117,11 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.button = [{
-      id: 'btnAdd',
-    }];
+    this.button = [
+      {
+        id: 'btnAdd',
+      },
+    ];
 
     this.moreFuncs = [
       {
@@ -332,6 +334,9 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
       case 'SYS02':
         this.delete(data);
         break;
+      case 'SYS05':
+        this.viewData(data);
+        break;
     }
   }
 
@@ -366,20 +371,6 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
     switch (evt.id) {
       case 'btnAdd':
         this.add();
-        break;
-    }
-  }
-
-  moreFuncClick(e: any, data?: any) {
-    switch (e.functionID) {
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'SYS02':
-        this.delete(data);
         break;
     }
   }
@@ -445,6 +436,19 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
           }
         });
       });
+  }
+
+  viewData(data) {
+    this.view.dataService.dataSelected = data;
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = '800px';
+    this.dialog = this.callfc.openSide(
+      PopAddTaskgroupComponent,
+      ['view', this.titleAction],
+      option
+    );
   }
 
   copy(data) {

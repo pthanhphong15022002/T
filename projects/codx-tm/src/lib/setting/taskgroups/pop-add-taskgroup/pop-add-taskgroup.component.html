@@ -30,7 +30,7 @@
             ? planceHolderAutoNumber
             : gridViewSetup['TaskGroupID']?.description
         "
-        [disabled]="disabledShowInput"
+        [disabled]="disabledShowInput || readOnly"
         [crrValue]="taskGroups.taskGroupID"
         (valueChange)="valueChange($event)"
       >
@@ -49,6 +49,7 @@
         type="text"
         [crrValue]="taskGroups.taskGroupName"
         (valueChange)="valueChange($event)"
+        [disabled]="readOnly"
       >
       </codx-input>
     </div>
@@ -69,6 +70,7 @@
         [crrValue]="taskGroups.note"
         class="form-control"
         (valueChange)="changeMemo($event)"
+        [disabled]="readOnly"
       ></codx-input>
     </div>
   </div>
@@ -103,6 +105,7 @@
         [crrValue]="taskGroups.projectControl"
         (valueChange)="valueList($event)"
         [refValue]="gridViewSetup.ProjectControl.referedValue"
+        [disabled]="readOnly"
       >
       </codx-input>
     </div>
@@ -136,6 +139,7 @@
         [crrValue]="taskGroups.locationControl"
         (valueChange)="valueList($event)"
         [refValue]="gridViewSetup.LocationControl.referedValue"
+        [disabled]="readOnly"
       >
         <!-- [refValue]="gridViewSetup.LocationControl.referedValue" -->
       </codx-input>
@@ -170,6 +174,7 @@
         [crrValue]="taskGroups.planControl"
         (valueChange)="valueList($event)"
         [refValue]="gridViewSetup.PlanControl.referedValue"
+        [disabled]="readOnly"
       >
       </codx-input>
     </div>
@@ -203,6 +208,7 @@
         [crrValue]="taskGroups.updateControl"
         (valueChange)="valueList($event)"
         [refValue]="gridViewSetup.UpdateControl.referedValue"
+        [disabled]="readOnly"
       >
       </codx-input>
     </div>
@@ -267,13 +273,14 @@
             [checked]="taskGroups.verifyControl === '1'"
             (valueChange)="valueWitch($event)"
             [refValue]="gridViewSetup?.VerifyControl?.referedValue"
+            [disabled]="readOnly"
           >
           </codx-input>
         </div>
         <div class="ms-3 w-20px">
           <span
             class="icon-edit text-primary icon-18"
-            *ngIf="taskGroups.verifyControl == '1'"
+            *ngIf="taskGroups.verifyControl == '1' && !readOnly"
             (click)="openShare(controlShare, true)"
           >
           </span>
@@ -341,13 +348,14 @@
             [checked]="taskGroups.approveControl === '1'"
             (valueChange)="valueWitch($event)"
             [refValue]="gridViewSetup?.ApproveControl?.referedValue"
+            [disabled]="readOnly"
           >
           </codx-input>
         </div>
         <div class="ms-3 w-20px">
           <span
             class="icon-edit text-primary icon-18"
-            *ngIf="taskGroups.approveControl == '1'"
+            *ngIf="taskGroups.approveControl == '1' && !readOnly"
             (click)="openShare(controlShare, false)"
           >
           </span>
@@ -381,6 +389,7 @@
             field="maxHoursControl"
             [checked]="taskGroups.maxHoursControl === '1'"
             (valueChange)="valueWitch($event)"
+            [disabled]="readOnly"
           >
           </codx-input>
         </div>
@@ -388,7 +397,7 @@
           <span
             class="icon-edit text-primary icon-18"
             (click)="openPopupLink()"
-            *ngIf="taskGroups.maxHoursControl == '1'"
+            *ngIf="taskGroups.maxHoursControl == '1' && !readOnly"
           ></span>
         </div>
       </div>
@@ -424,6 +433,7 @@
           field="editControl"
           [checked]="taskGroups.editControl === '1'"
           (valueChange)="valueWitch($event)"
+          [disabled]="readOnly"
         >
         </codx-input>
         <span class="ms-3 w-20px"></span>
@@ -460,6 +470,7 @@
           field="dueDateControl"
           [checked]="taskGroups.dueDateControl === '1'"
           (valueChange)="valueWitch($event)"
+          [disabled]="readOnly"
         >
         </codx-input>
         <span class="ms-3 w-20px"></span>
@@ -496,6 +507,7 @@
           field="autoCompleted"
           [checked]="taskGroups.autoCompleted === '1'"
           (valueChange)="valueWitch($event)"
+          [disabled]="readOnly"
         >
         </codx-input>
         <span class="ms-3 w-20px"></span>
@@ -532,6 +544,7 @@
           field="completedControl"
           [checked]="taskGroups.completedControl === '1'"
           (valueChange)="valueWitch($event)"
+          [disabled]="readOnly"
         >
         </codx-input>
         <span class="ms-3 w-20px"></span>
@@ -568,6 +581,7 @@
           field="extendControl"
           [checked]="taskGroups.extendControl === '1'"
           (valueChange)="valueWitch($event)"
+          [disabled]="readOnly"
         >
         </codx-input>
         <span class="ms-3 w-20px"></span>
@@ -604,6 +618,7 @@
             field="confirmControl"
             [checked]="taskGroups.confirmControl === '1'"
             (valueChange)="valueWitch($event)"
+            [disabled]="readOnly"
           >
           </codx-input>
         </div>
@@ -615,7 +630,8 @@
 <ng-template #tabJob>
   <div class="d-flex algin-items-center justify-content-between">
     <div class="d-flex flex-column">
-      <codx-label class="fw-bold text-dark"
+      <codx-label
+        class="fw-bold text-dark"
         fiedName="CheckListControl"
         default="Nhập việc cần làm"
         formName="TaskGroups"
@@ -639,6 +655,7 @@
         placeholder=""
         [crrValue]="taskGroups.checkListControl"
         (valueChange)="valueCheck($event)"
+        [disabled]="readOnly"
       >
       </codx-input>
     </div>
@@ -692,7 +709,10 @@
           </div>
         </ng-container>
       </div>
-      <div class="add-control mt-2 d-flex algin-items-center" *ngIf="enableAddtodolist">
+      <div
+        class="add-control mt-2 d-flex algin-items-center"
+        *ngIf="enableAddtodolist"
+      >
         <div class="input-group w-100">
           <input
             type="text"
@@ -773,6 +793,7 @@
         [placeholder]="gridViewSetup?.MaxHours?.headerText"
         [crrValue]="taskGroups.maxHours"
         (valueChange)="changeHours($event)"
+        [disabled]="readOnly"
       ></codx-input>
     </div>
   </div>
