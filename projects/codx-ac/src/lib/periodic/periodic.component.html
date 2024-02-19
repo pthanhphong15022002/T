@@ -35,6 +35,7 @@
           (changeDataMF)="changeDataMF($event,'M')" (clickMF)="clickMF($event)"></codx-mfunc>
     </div> -->
   </div>
+
   <div *ngIf="numbreadcumb == 0" class="h-100 bg-body rounded-3">
     <codx-listview class="p-3" [selectFirst]="true" [itemTemplate]="templateListCard"
     type="cardView" [funcId]="funcID" service="AC" [entityName]="view.entityName" [dataService]="view.dataService">

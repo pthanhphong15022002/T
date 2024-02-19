@@ -764,6 +764,7 @@ export class PopupAddProcessComponent {
         this.extendInfos =
           res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
         this.setLstExtends();
+        debugger
         // let extDocumentControls = this.extendInfos.filter(
         //   (x) => x.fieldType == 'Attachment' && x.documentControl != null
         // );
@@ -924,7 +925,7 @@ export class PopupAddProcessComponent {
     }
     data = [this.data];
 
-    if (this.action == 'add' || this.action == 'copy') {
+    if ((this.action == 'add' || this.action == 'copy') && this.currentTab == 0) {
       op.methodName = 'AddProcessAsync';
     } else {
       op.methodName = 'UpdateProcessAsync';
@@ -969,5 +970,10 @@ export class PopupAddProcessComponent {
       'UpdateProcessAsync',
       result
     );
+  }
+
+  valueChange2(e:any)
+  {
+    this.data = e;
   }
 }

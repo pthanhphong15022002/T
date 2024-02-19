@@ -127,6 +127,7 @@ import { CategoriesComponent } from './categories/categories.component';
 import { RunDepreciationComponent } from './periodic/rundepreciation/rundepreciation.component';
 import { NewvoucherComponent } from './share/add-newvoucher/newvoucher.component';
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
+import { ViewresultComponent } from './share/periodic-control/viewresult/viewresult.component';
 export const routes: Routes = [
   {
     path: '',
@@ -250,10 +251,6 @@ export const routes: Routes = [
           {
             path: 'RunDepreciation/:funcID',
             component: PeriodicControlComponent,
-          },
-          {
-            path: 'RunDepreciation/ViewResult/:funcID/:morfunc',
-            component: RunDepreciationComponent,
           },
           {
             path: 'AllocatePrepaidExpenses/:funcID',
@@ -450,6 +447,7 @@ export const routes: Routes = [
     CategoriesComponent,
     RunDepreciationComponent,
     NewvoucherComponent,
+    ViewresultComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

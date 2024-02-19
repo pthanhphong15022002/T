@@ -52,27 +52,6 @@ export class PeriodicComponent extends UIComponent {
     super(inject);
     this.user = this.authstore.get();
     this.gridModel.pageSize = 10;
-    let id = this.router.snapshot.queryParams['id'];
-    // if (id) {
-    //   switch (id) {
-    //     case "1":
-    //       this.numbreadcumb = 1;
-    //       let funcid = this.router.snapshot.queryParams['funcID'];
-    //       this.cache
-    //         .functionList(funcid)
-    //         .subscribe((res) => {
-    //           if (res) {
-    //             this.breadcumb = [];
-    //             let link = {
-    //               title: res?.defaultName,
-    //             }
-    //             this.breadcumb.push(link);
-    //             this.detectorRef.detectChanges();
-    //           }
-    //         });
-    //       break;
-    //   }
-    // }
     this.route.events.subscribe((val) => {
       if (val && val?.type == 1) {
         let funcID = this.router.snapshot.params['funcID'];

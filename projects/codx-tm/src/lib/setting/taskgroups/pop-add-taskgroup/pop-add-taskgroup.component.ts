@@ -88,6 +88,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     this.titleAction = dt.data[1];
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
+    this.readOnly = this.action == 'view';
     if (this.action == 'add') {
       //defaut
       this.taskGroups.maxHoursControl = this.taskGroups.maxHoursControl ?? '0';
@@ -638,17 +639,16 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     }
 
     if (this.taskGroups.verifyControl == '1') {
-        if (
-          this.taskGroups.verifyByType == null ||
-          this.taskGroups.verifyByType.trim() == ''
-        ) {
-          this.notiService.notifyCode(
-            'SYS009',
-            0,
-            '"' + this.gridViewSetup['VerifyByType']?.headerText + '"'
-          );
-          return;
-
+      if (
+        this.taskGroups.verifyByType == null ||
+        this.taskGroups.verifyByType.trim() == ''
+      ) {
+        this.notiService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.gridViewSetup['VerifyByType']?.headerText + '"'
+        );
+        return;
       }
     }
 
