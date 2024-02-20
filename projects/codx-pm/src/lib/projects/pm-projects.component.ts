@@ -213,6 +213,7 @@ export class ProjectsComponent
     let option = new DialogModel();
     option.DataService = this.view?.dataService;
     option.IsFull=true;
+    option.zIndex = 999;
     let dialog = this.callfc.openForm(
       PopupProjectDetailsComponent,'',0,0,'',
       this.view?.dataService.dataSelected,'',
