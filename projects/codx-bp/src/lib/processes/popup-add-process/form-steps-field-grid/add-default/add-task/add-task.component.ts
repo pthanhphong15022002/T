@@ -88,7 +88,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       }
       else if(elm.refStepNo)
       {
-        var index = this.process.documentControl.findIndex(x=>x.recID == elm.refStepID);
+        var index = this.getDocRef(elm.refStepID);
         if(index>=0) {
           if(this.process.documentControl[index].templateID) {
             fieldID = this.process.documentControl[index].templateID;
@@ -100,6 +100,25 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       }
       this.getFile(fieldID, entityName , i)
     })
+  }
+
+  getDocRef(refStepID:any)
+  {
+    var index = null;
+    if(refStepID)
+    {
+      var doc = this.process.documentControl.filter(x=>x.stepID == refStepID)[0];
+      if(doc?.refStepID == '00000000-0000-0000-0000-000000000000' || !doc?.refStepID)
+      {
+        return this.process.documentControl.findIndex(x=>x.stepID == refStepID);
+      } 
+      else 
+      {
+        return this.getDocRef(doc.refStepID)
+      }
+    } 
+    index = this.process.documentControl.findIndex(x=>x.stepID == refStepID);
+    return index;
   }
 
   getFile(recID:any , entityName:any ,index:any)
