@@ -145,7 +145,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
         [
           {
               recID: Util.uid(),
-              fieldName: "Ten_bieu_mau",
+              fieldName: "Ten_bieu_mau_" + this.data?.stepNo,
               title: "Tên biểu mẫu",
               dataType: "String",
               fieldType: "Title",
@@ -158,7 +158,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
           },
           {
               recID: "c3f6287e-3e7b-4395-99db-e72dc0479117",
-              fieldName: "Mo_ta_ngan_gon",
+              fieldName: "Mo_ta_ngan_gon_" + this.data?.stepNo,
               title: "Mô tả ngắn gọn",
               dataType: "String",
               fieldType: "SubTitle",
@@ -285,6 +285,8 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     this.process.documentControl.push(documentControl);
     this.listDocument.push(documentControl);
     this.dataChangeProcess.emit(this.process);
+    this.data.attachments = this.attachment.fileUploadList.length;
+    this.dataChange.emit(this.data);
     this.attachment.uploadFile();
   }
   openAttach2()
@@ -303,14 +305,17 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     }
     this.process.documentControl.push(documentControl);
     this.dataChangeProcess.emit(this.process);
+
+    this.data.attachments = this.attachment2.fileUploadList.length;
     this.attachment2.uploadFile();
+    this.dataChange.emit(this.data);
   }
 
   fileSave(e:any)
   {
-    if(Array.isArray(e)) this.data.attachments = e.length;
-    else this.data.attachments = 1;
-    this.dataChange.emit(this.data);
+    // if(Array.isArray(e)) this.data.attachments = e.length;
+    // else this.data.attachments = 1;
+    // this.dataChange.emit(this.data);
   }
 
   fileDelete(e:any)
@@ -345,7 +350,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       null,
       null,
       '',
-      this.data.extendInfo,
+      {extendInfo:this.data.extendInfo,stepNo: this.data.stepNo},
       '',
       option
     );

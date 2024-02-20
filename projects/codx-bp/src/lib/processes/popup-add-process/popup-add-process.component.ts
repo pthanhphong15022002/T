@@ -234,10 +234,11 @@ export class PopupAddProcessComponent {
 
   setDefaultTitle() {
     const createField = (value, fieldType, isForm = false) => {
+      var values = value + "_1";
       const field = {
         recID: Util.uid(),
         fieldName: this.bpSv.createAutoNumber(
-          value,
+          values,
           this.extendInfos,
           'fieldName'
         ),
@@ -755,7 +756,7 @@ export class PopupAddProcessComponent {
       null,
       null,
       '',
-      this.extendInfos,
+      {extendInfo:this.extendInfos,stepNo:this.data?.steps[1].stepNo},
       '',
       option
     );
