@@ -1,4 +1,4 @@
-import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import {
   AuthStore,
@@ -19,6 +19,7 @@ import { Subject, combineLatest, takeUntil } from 'rxjs';
   selector: 'lib-periodic',
   templateUrl: './periodic.component.html',
   styleUrls: ['./periodic.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PeriodicComponent extends UIComponent {
   //#region Constructor
@@ -88,16 +89,17 @@ export class PeriodicComponent extends UIComponent {
     this.views = [
       {
         type: ViewType.content,
-        active: false,
+        active: true,
         sameData: true,
-        showFilter: false,
-        showSearchBar: false,
-        showButton: false,
         model: {
-          panelRightRef: this.tmpContent
+          panelLeftRef: this.tmpContent,
         },
       },
     ];
+  }
+  
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
   }
   //#region Init
 
