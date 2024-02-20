@@ -1,4 +1,4 @@
-import { Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Optional, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
@@ -12,10 +12,13 @@ import { firstValueFrom } from 'rxjs';
 })
 export class AddProcessDefaultComponent implements OnInit{
   @ViewChild('attachment') attachment: AttachmentComponent;
-  dynamicFormsForm: FormGroup;
-  process:any;
+
+  @Input() process:any;
+  @Input() dataIns:any = {};
+  @Input() type = 'add';
+  @Input() stepID:any;
+  @Output() dataChange = new EventEmitter<any>();
   data:any;
-  dataIns:any = {};
   dialog:any;
   table:any
   formModel = 
@@ -25,7 +28,7 @@ export class AddProcessDefaultComponent implements OnInit{
     gridViewName: 'grvDynamicForms',
     entityName: 'BP_Instances'
   }
-  type = 'add';
+  dynamicFormsForm: FormGroup;
   subTitle:any;
   tableField:any;
   user:any;
@@ -40,9 +43,9 @@ export class AddProcessDefaultComponent implements OnInit{
   {
     this.user = auth.get();
     this.dynamicFormsForm = new FormGroup({});
-    this.process = dt?.data?.process;
-    this.dataIns = dt?.data?.dataIns;
-    this.type = dt?.data?.type;
+    this.process = this.process || dt?.data?.process;
+    this.dataIns = this.dataIns || dt?.data?.dataIns;
+    this.type = dt?.data?.type ? dt?.data?.type : this.type;
     this.dialog = dialog;
     this.formModel.funcID = this.dialog.formModel?.funcID;
   }
@@ -52,7 +55,15 @@ export class AddProcessDefaultComponent implements OnInit{
 
   getData()
   {
-    this.data = this.process.steps.filter(x=>x.activityType == "Form")[0];
+    var index = 0;
+    if(this.stepID) {
+      var dts = this.process.steps.filter(x=>x.activityType == "Form");
+      if(dts)
+      {
+        index = dts.findIndex(x=>x.recID == this.stepID);
+      }
+    }
+    this.data = this.process.steps.filter(x=>x.activityType == "Form")[index];
     this.data.settings = typeof this.data.settings === 'string' ? JSON.parse(this.data.settings) : this.data.settings;
     this.formatData()
   }
@@ -113,7 +124,7 @@ export class AddProcessDefaultComponent implements OnInit{
 
   getField(key: string): string {
     if (!key) return '';
-
+    key = key.toLowerCase();
     return Util.camelize(key);
   }
 
@@ -124,9 +135,10 @@ export class AddProcessDefaultComponent implements OnInit{
     else
     {
       var valueForm = this.dynamicFormsForm.value;
-      this.dataIns.title= valueForm[this.subTitle];
       if(this.type == 'add')
       {
+        this.dataIns.title= valueForm[this.subTitle];
+        this.dataIns.recID = Util.uid();
         var instanceNoControl = "1";
         var instanceNo = "aaaaaaa";
         var index = this.process.settings.findIndex(x=>x.fieldName == "InstanceNoControl");
@@ -231,10 +243,20 @@ export class AddProcessDefaultComponent implements OnInit{
       else if(this.type == 'edit')
       {
         this.dataIns.modifiedOn= new Date(),
-        this.dataIns.modifiedBy = this.user?.userID,
-        this.dataIns.datas = JSON.stringify(valueForm)
+        this.dataIns.modifiedBy = this.user?.userID;
+        if(this.dataIns.datas)
+        {
+          if(typeof this.dataIns.datas == 'string') this.dataIns.datas = JSON.parse(this.dataIns.datas)
+          let keys = Object.keys(valueForm)
+          keys.forEach(k => {
+            this.dataIns.datas[k] = valueForm[k];
+          });
+          this.dataIns.datas = JSON.stringify(this.dataIns.datas)
+        }
+        else this.dataIns.datas = JSON.stringify(valueForm)
         this.api.execSv("BP","BP","ProcessInstancesBusiness","UpdateInsAsync",this.dataIns).subscribe(item=>{
-          this.dialog.close(this.dataIns)
+          this.dialog.close(this.dataIns);
+          this.dataChange.emit(this.dataIns);
         });
       }
     }
@@ -308,7 +330,7 @@ export class AddProcessDefaultComponent implements OnInit{
       )
       .subscribe((res) => {
         if (res) {
-          this.dialog.close(res);
+          this.dialog.close(this.dataIns)
         }
       });
   }

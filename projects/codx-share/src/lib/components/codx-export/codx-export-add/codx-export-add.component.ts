@@ -476,9 +476,10 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
         var file = new File([blob], this.nameFile || this.formModel.entityName);
         this.attachment1.isSaveSelected = '1';
         this.attachment1.fileUploadList = [];
+        if(!this.nameFile) this.nameFile = this.formModel.entityName + ".docx";
         return this.attachment1.handleFileInputObservable([
           {
-            name: this.nameFile || this.formModel.entityName,
+            name: this.nameFile,
             rawFile: file,
             type: 'docx',
             size: file.size,
