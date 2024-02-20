@@ -19,7 +19,6 @@ export class PeriodicControlComponent extends UIComponent{
   dataValue: any = {};
   title: any = '';
   showAll: any = true;
-  showLess:any = false;
   oData: any = [];
   functionType:any;
   settingFull:any;
@@ -129,6 +128,9 @@ export class PeriodicControlComponent extends UIComponent{
           case 'd3':
             this.runPeriodic(this.settingFull.refType,this.settingFull.refID,'3',event.text);
             break;
+          case 'd4':
+            this.deletePeriodic(data);
+            break;
         }
       }
     }
@@ -180,7 +182,6 @@ export class PeriodicControlComponent extends UIComponent{
     this.view.dataService.request.pageSize = 10;
     this.api.exec('AC', 'RunPeriodicBusiness', 'GetDataAsync', [this.view.dataService.request]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if (res && res[0].length) {
-        this.showLess = true;
         this.view.dataService.request.page += 1;
         let data = res[0];
         data.reduce((pre,item) => {
@@ -188,7 +189,7 @@ export class PeriodicControlComponent extends UIComponent{
           if(i == -1) this.oData.push(item);
         },this.oData)
         let total = res[1];
-        if(this.oData.length <= total) this.showAll = false;
+        if(this.oData.length == total) this.showAll = false;
         this.detectorRef.detectChanges();
       }
     });
@@ -238,6 +239,36 @@ export class PeriodicControlComponent extends UIComponent{
         this.openFormViewResult(data,event.text);
         break;
     }
+  }
+
+  deletePeriodic(data:any){
+    this.api.exec('AC','RunPeriodicBusiness','DeletelAsync',[
+      data.recID,
+      this.view.dataService.request
+    ]).pipe(takeUntil(this.destroy$))
+    .subscribe((res:any)=>{
+      if (res) {
+        if (this.oData.length == 1) {
+          if (res[0].length) {
+            this.oData = [res[0][0]];
+            let total = res[1];
+            if(total == 1) this.showAll = false;
+          }else{
+            this.oData = [];
+            this.showAll = false;
+          }
+        }else{
+          this.oData = res[0];
+          let total = res[1];
+          if (this.oData.length <= total) this.showAll = false; 
+          // let index = this.oData.findIndex(x => x.recID == data.recID);
+          //   if (index > -1) {
+          //     this.oData.splice(index, 1);
+          // }
+        }
+        this.detectorRef.detectChanges();
+      }
+    })
   }
 
   openFormViewResult(datas:any,text:any){
