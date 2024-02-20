@@ -61,7 +61,9 @@ export const routes: Routes = [
     ProjectsComponent,
     PopupAddProjectComponent,
     PopupProjectDetailsComponent,
-    ProjectTasksViewComponent
+    ProjectTasksViewComponent,
+    PopupSelectUserComponent,
+    PopupAddTaskComponent
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
