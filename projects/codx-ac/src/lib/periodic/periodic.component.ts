@@ -97,6 +97,10 @@ export class PeriodicComponent extends UIComponent {
       },
     ];
   }
+  
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
+  }
   //#region Init
 
   //#region Events
