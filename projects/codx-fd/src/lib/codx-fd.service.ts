@@ -503,4 +503,14 @@ export class CodxFdService {
       [employeeID]
     );
   }
+
+  getGiftTranByRecID(recID: string) {
+    return this.api.execSv(
+      'FD',
+      'FD',
+      'GiftTransBusiness',
+      'GetGiftTranInforAsync',
+      [recID]
+    );
+  }
 }

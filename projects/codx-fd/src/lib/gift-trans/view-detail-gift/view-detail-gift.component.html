@@ -75,7 +75,7 @@
                     <div [innerHTML]="data.situation"></div>
                 </div>
             </div>
-            <div class="mt-9">
+            <div class="mt-9" *ngIf="data?.cardType">
                 <div class="mb-3">
                     <codx-label [ngClass]="'fw-bold text-primary fs-6'" [formModel]="formModel" name="lblReference"
                         default="Thông tin tham chiếu"></codx-label>
