@@ -29,6 +29,8 @@ import { PopupProjectDetailsComponent } from './projects/popup-project-details/p
 import { ProjectTasksViewComponent } from './projects/lib-view-tasks/lib-view-tasks.component';
 import { TaskExtendsComponent } from 'projects/codx-tm/src/lib/taskextends/taskextends.component';
 import { TasksComponent } from 'projects/codx-tm/src/lib/tasks/tasks.component';
+import { PopupAddTaskComponent } from './projects/popup-add-task/popup-add-task.component';
+import { PopupSelectUserComponent } from './projects/popup-select-user/popup-select-user.component';
 
 export const routes: Routes = [
   {
@@ -60,6 +62,8 @@ export const routes: Routes = [
     PopupAddProjectComponent,
     PopupProjectDetailsComponent,
     ProjectTasksViewComponent,
+    PopupSelectUserComponent,
+    PopupAddTaskComponent
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
