@@ -240,11 +240,11 @@ export class CodxBookingViewDetailComponent
           break;
         default:
           //Biến động , tự custom
-          var customData = {
-            refID: '',
-            refType: this.formModel?.entityName,
-            dataSource: data,
-          };
+          // var customData = {
+          //   refID: '',
+          //   refType: this.formModel?.entityName,
+          //   dataSource: data,
+          // };
 
           this.codxShareService.defaultMoreFunc(
             event,
@@ -253,7 +253,7 @@ export class CodxBookingViewDetailComponent
             this.formModel,
             this.view?.dataService,
             this,
-            customData
+            //customData
           );
           break;
       }
