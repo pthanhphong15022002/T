@@ -1,0 +1,127 @@
+<ng-container class="border border-dark">
+  <codx-form
+  headerText="{{ title }}"
+  #form
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog!"
+  [subHeader]=""
+  [subHeaderText]=""
+  [openMore]="false"
+  [data]="data"
+>
+<ng-template #body>
+  <div class="form-group ps-0">
+    <codx-label fiedName="TaskName" [formModel]="form.formModel" default="Tên công việc">
+    </codx-label>
+    <codx-input field="taskName" [crrValue]="data?.taskName" type="text"
+       (valueChange)="valueChange($event)">
+    </codx-input>
+  </div>
+  <div class="form-group ps-0">
+    <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả công việc">
+    </codx-label>
+    <codx-input field="memo" [crrValue]="data?.memo" type="text"
+       (valueChange)="valueChange($event)">
+    </codx-input>
+  </div>
+  <div class="form-group ps-0">
+    <codx-label fiedName="TaskGroupID" [formModel]="form.formModel" default="Nhóm công việc">
+    </codx-label>
+    <codx-input field="taskGroupID" [crrValue]="data?.taskGroupID" type="combobox" refType="3" refValue="TaskGroupProjects"
+       (valueChange)="valueChange($event)">
+    </codx-input>
+  </div>
+  <div class="row">
+    <div class="col-4 form-group" >
+      <codx-label fiedName="StartDate" [formModel]="form.formModel" default="Ngày bắt đầu">
+      </codx-label>
+      <codx-input type="datetime" class="test-datetime" field="startDate" [crrValue]="data.startDate" format="d"
+        (valueChange)="valueDateChange($event)">
+      </codx-input>
+    </div>
+    <div class="col-4 form-group" >
+      <codx-label fiedName="FinishDate" [formModel]="form.formModel" default="Ngày kết thúc">
+      </codx-label>
+      <codx-input type="datetime" class="test-datetime" field="finishDate" [crrValue]="data.finishDate" format="d"
+        (valueChange)="valueDateChange($event)">
+      </codx-input>
+    </div>
+    <div class="col-4 form-group" >
+      <codx-label fiedName="Priority" [formModel]="form.formModel" default="Độ ưu tiên">
+      </codx-label>
+      <codx-input type="valuelist"  field="priority" [crrValue]="data.priority" refValue="PM010"
+        (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+  </div>
+  <div class="row">
+    <div class="container w-100 h-100">
+      <div class="row">
+          <div class="col-4">
+            <codx-label fiedName="resources" [formModel]="form.formModel" default="Người xử lý" class="text-primary fw-bold" >
+            </codx-label>
+          </div>
+          <div class="col-8">
+            <div class="d-flex flex-row justify-content-start">
+              <ng-container *ngFor="let item of listRoles">
+                <div class="d-flex align-items-center justify-content-end me-4">
+                  <span [inlineSVG]="'./assets/themes/pm/default/img/'+ item?.icon"></span>
+                  <div class="fs-8 text-gray-500 ms-1">{{ item?.text }}</div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between">
+
+
+      <div class="d-flex flex-row text-end align-items-start">
+        <div class="mx-2">
+          <button class="btn btn-sm" (click)="selectUser()"><i class="icon-groups icon-21"></i></button>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="col-4 form-group">
+      <codx-label fiedName="Resources" [formModel]="form.formModel" default="Người xử lí">
+      </codx-label>
+      <div  style="margin: 0 auto; width:100%;" *ngIf="projectMemberType=='1'">
+        <ejs-multiselect id='multiselect-checkbox' #checkbox [dataSource]="projectData.permissions" [fields]='fields'
+        [mode]="'CheckBox'"  [showDropDownIcon]="true" showSelectAll='true' [popupHeight]="'400px'" [popupWidth]="'400px'" [filterBarPlaceholder]="'Tìm kiếm...'" locale="vi">
+        <ng-template #itemTemplate let-data>
+          <div class="">
+            <codx-img [width]="30" [objectId]="data?.objectID" objectType="AD_Users" [objectName]="data?.objectName"></codx-img> &nbsp;&nbsp; {{data.objectName}}
+          </div>
+      </ng-template>
+    </ejs-multiselect>
+     </div>
+    </div>
+    <div class="col-8 form-group">
+
+    </div> -->
+  </div>
+</ng-template>
+<ng-template #footer>
+  <div class="d-flex justify-content-between">
+    <!-- <button
+      codxLang
+      name="btnApply"
+      formName="System"
+      default="Áp dụng"
+      class="btn btn-light-primary"
+    ></button> -->
+    <button
+      codxLang
+      name="btnSave"
+      formName="System"
+      default="Lưu"
+      class="btn btn-light-success"
+    ></button>
+  </div>
+</ng-template>
+
+</codx-form>
+
+
+</ng-container>
