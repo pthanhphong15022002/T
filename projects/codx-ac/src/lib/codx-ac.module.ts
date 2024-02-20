@@ -20,7 +20,6 @@ import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CoreModule } from '../../../../src/core/core.module';
 import { LayoutComponent } from './_layout/layout.component';
-import { ApprovalsComponent } from './approvals/approvals.component';
 import { ApprovalsComponent as ApprovalsComponentWS } from 'projects/codx-ws/src/lib/approvals/approvals.component';
 import { CodxAcComponent } from './codx-ac.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -184,6 +183,37 @@ export const routes: Routes = [
         path: 'cashtranfers/:funcID/:journalNo',
         component: CashtransfersComponent,
         data: { noReuse: true },
+      },
+      //Approval
+      {
+        path: 'cashpayments/:funcID',
+        component: CashPaymentsComponent,
+        data: { noReuse: true, runMode: 1 },
+      },
+      {
+        path: 'assetjournals/:funcID',
+        component: AssetJournalsComponent,
+        data: { noReuse: true, runMode: 1 },
+      },
+      {
+        path: 'generaljournals/:funcID',
+        component: GeneralJournalComponent,
+        data: { noReuse: true, runMode: 1 },
+      },
+      {
+        path: 'cashreceipts/:funcID',
+        component: CashreceiptsComponent,
+        data: { noReuse: true, runMode: 1 },
+      },
+      {
+        path: 'purchaseinvoices/:funcID',
+        component: PurchaseinvoicesComponent,
+        data: { noReuse: true, runMode: 1 },
+      },
+      {
+        path: 'cashtranfers/:funcID',
+        component: CashtransfersComponent,
+        data: { noReuse: true, runMode: 1 },
       },
       {
         path: 'dashboard/:funcID',
