@@ -135,7 +135,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     this.data.settings.color = vllStage.color;
     this.data.settings.backGround = vllStage.textColor;
     this.data.activityType = this.activityType;
-
+    if(this.parent?.child) this.data.stepName = vllStage.text + " " + (this.parent.child.length + 1);
     if(this.data.activityType == "Form")
     {
       if(!this.data.extendInfo || this.data.extendInfo.length == 0)
@@ -145,7 +145,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
         [
           {
               recID: Util.uid(),
-              fieldName: "Ten_bieu_mau_" + this.data?.stepNo,
+              fieldName: "ten_bieu_mau_" + this.data?.stepNo,
               title: "Tên biểu mẫu",
               dataType: "String",
               fieldType: "Title",
@@ -158,7 +158,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
           },
           {
               recID: "c3f6287e-3e7b-4395-99db-e72dc0479117",
-              fieldName: "Mo_ta_ngan_gon_" + this.data?.stepNo,
+              fieldName: "mo_ta_ngan_gon_" + this.data?.stepNo,
               title: "Mô tả ngắn gọn",
               dataType: "String",
               fieldType: "SubTitle",
