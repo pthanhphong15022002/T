@@ -119,6 +119,6 @@ export class ViewListBpTasksComponent implements OnInit {
   }
 
   dbClick(data){
-    this.dbClickEvent.emit({data: data});
+    this.dbClickEvent.emit({data: data, process: this.process, dataIns: this.instance});
   }
 }

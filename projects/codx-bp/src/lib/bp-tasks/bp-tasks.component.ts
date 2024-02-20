@@ -61,11 +61,11 @@ export class BpTasksComponent
 
   dbClickEvent(e) {
     if (e && e?.data) {
-      this.popupTasks(e?.data, 'edit');
+      this.popupTasks(e, 'edit');
     }
   }
 
-  popupTasks(data, action) {
+  popupTasks(e, action) {
     var option = new SidebarModel();
     // option.FormModel = this.view.formModel; //Đợi có grid mở lên
     option.FormModel = {
@@ -81,7 +81,7 @@ export class BpTasksComponent
       )
       .subscribe((grid) => {
         debugger
-        const obj = { data: data, action: action };
+        const obj = { data: e?.data, action: action, process: e?.process, dataIns: e?.dataIns };
         let popup = this.callfc.openSide(PopupBpTasksComponent, obj, option);
         popup.closed.subscribe((res) => {});
       });

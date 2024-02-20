@@ -335,7 +335,7 @@
   </ng-template>
 </codx-form>
 </ng-container>
-<ng-container *ngIf="data?.activityType == 'Form'">
+<ng-container *ngIf="data?.activityType == 'Form' && process && dataIns">
   <lib-add-process-default [type]="'edit'" [process]="process" [dataIns]="dataIns" [stepID]="data?.stepID" (dataChange)="dataChange($event)"></lib-add-process-default>
 </ng-container>
 
