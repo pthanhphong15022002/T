@@ -55,7 +55,6 @@ export class AddProcessDefaultComponent implements OnInit{
 
   getData()
   {
-    debugger
     var index = 0;
     if(this.stepID) {
       var dts = this.process.steps.filter(x=>x.activityType == "Form");
@@ -136,9 +135,10 @@ export class AddProcessDefaultComponent implements OnInit{
     else
     {
       var valueForm = this.dynamicFormsForm.value;
-      this.dataIns.title= valueForm[this.subTitle];
       if(this.type == 'add')
       {
+        this.dataIns.title= valueForm[this.subTitle];
+        this.dataIns.recID = Util.uid();
         var instanceNoControl = "1";
         var instanceNo = "aaaaaaa";
         var index = this.process.settings.findIndex(x=>x.fieldName == "InstanceNoControl");
@@ -330,7 +330,7 @@ export class AddProcessDefaultComponent implements OnInit{
       )
       .subscribe((res) => {
         if (res) {
-          this.dialog.close(res);
+          this.dialog.close(this.dataIns)
         }
       });
   }
