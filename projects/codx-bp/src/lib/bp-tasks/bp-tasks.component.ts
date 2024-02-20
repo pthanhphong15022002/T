@@ -5,6 +5,7 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopupBpTasksComponent } from './popup-bp-tasks/popup-bp-tasks.component';
@@ -12,7 +13,8 @@ import { PopupBpTasksComponent } from './popup-bp-tasks/popup-bp-tasks.component
 @Component({
   selector: 'lib-bp-tasks',
   templateUrl: './bp-tasks.component.html',
-  styleUrls: ['./bp-tasks.component.css'],
+  styleUrls: ['./bp-tasks.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class BpTasksComponent
   extends UIComponent
@@ -50,6 +52,7 @@ export class BpTasksComponent
         },
       },
     ];
+    this.detectorRef.detectChanges();
   }
 
   selectedChange(data: any) {
@@ -57,15 +60,15 @@ export class BpTasksComponent
     this.detectorRef.detectChanges();
   }
 
-  clickMF(e, data){}
+  clickMF(e, data) {}
 
   dbClickEvent(e) {
     if (e && e?.data) {
-      this.popupTasks(e?.data, 'edit');
+      this.popupTasks(e, 'edit');
     }
   }
 
-  popupTasks(data, action) {
+  popupTasks(e, action) {
     var option = new SidebarModel();
     // option.FormModel = this.view.formModel; //Đợi có grid mở lên
     option.FormModel = {
@@ -74,16 +77,23 @@ export class BpTasksComponent
       entityName: 'BP_Tasks',
     };
     option.zIndex = 1010;
-    this.cache
-      .gridViewSetup(
-        'BPTasks',
-        'grvBPTasks'
-      )
-      .subscribe((grid) => {
-        debugger
-        const obj = { data: data, action: action };
-        let popup = this.callfc.openSide(PopupBpTasksComponent, obj, option);
-        popup.closed.subscribe((res) => {});
+    this.cache.gridViewSetup('BPTasks', 'grvBPTasks').subscribe((grid) => {
+      debugger;
+      const obj = {
+        data: e?.data,
+        action: action,
+        process: e?.process,
+        dataIns: e?.dataIns,
+      };
+      let popup = this.callfc.openSide(PopupBpTasksComponent, obj, option);
+      popup.closed.subscribe((res) => {
+        if (res && res.event != null) {
+          this.view.dataService.update(res.event, true).subscribe();
+          this.dataSelected = JSON.parse(JSON.stringify(res.event));
+          this.detectorRef.detectChanges();
+          // this.detectorRef.markForCheck();
+        }
       });
+    });
   }
 }

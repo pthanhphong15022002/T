@@ -16,7 +16,10 @@ import { SharedModule } from '@shared/shared.module';
 import { DiagramModule } from '@syncfusion/ej2-angular-diagrams';
 // import { LinearGaugeModule  } from '@syncfusion/ej2-angular-lineargauge';
 import { SplitterAllModule } from '@syncfusion/ej2-angular-layouts';
-import { TabModule, AccordionModule } from '@syncfusion/ej2-angular-navigations';
+import {
+  TabModule,
+  AccordionModule,
+} from '@syncfusion/ej2-angular-navigations';
 import { DynamicSettingModule } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { ProjectsComponent } from './projects/pm-projects.component';
@@ -24,6 +27,8 @@ import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { PopupAddProjectComponent } from './projects/popup-add-project/popup-add-project.component';
 import { PopupProjectDetailsComponent } from './projects/popup-project-details/popup-project-details.component';
 import { ProjectTasksViewComponent } from './projects/lib-view-tasks/lib-view-tasks.component';
+import { TaskExtendsComponent } from 'projects/codx-tm/src/lib/taskextends/taskextends.component';
+import { TasksComponent } from 'projects/codx-tm/src/lib/tasks/tasks.component';
 import { PopupAddTaskComponent } from './projects/popup-add-task/popup-add-task.component';
 import { PopupSelectUserComponent } from './projects/popup-select-user/popup-select-user.component';
 
@@ -37,9 +42,16 @@ export const routes: Routes = [
         component: ProjectsComponent,
         data: { noReuse: true },
       },
-    ]
-  }
-
+      {
+        path: 'taskextends/:funcID',
+        component: TaskExtendsComponent,
+      },
+      {
+        path: 'tasks/:funcID',
+        component: TasksComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
@@ -49,9 +61,7 @@ export const routes: Routes = [
     ProjectsComponent,
     PopupAddProjectComponent,
     PopupProjectDetailsComponent,
-    ProjectTasksViewComponent,
-    PopupAddTaskComponent,
-    PopupSelectUserComponent
+    ProjectTasksViewComponent
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
@@ -76,14 +86,11 @@ export const routes: Routes = [
     SplitterAllModule,
     DynamicSettingModule,
     NgbAccordionModule,
-    ProgressBarModule
+    ProgressBarModule,
     // NgxImageZoomModule
   ],
-  exports: [
-    CodxPmComponent
-  ]
+  exports: [CodxPmComponent],
 })
-
 export class CodxPmModule {
   public static forRoot(
     config?: EnvironmentConfig
@@ -97,4 +104,4 @@ export class CodxPmModule {
       ],
     };
   }
- }
+}

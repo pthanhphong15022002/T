@@ -172,7 +172,7 @@
               [ngClass]="currentTab == 1 ? 'active show' : ''"
             >
               <ng-container *ngIf="processTabIndex == 0">
-                <lib-form-steps-field-grid [data]="data" [formModel]="dialog?.formModel"></lib-form-steps-field-grid>
+                <lib-form-steps-field-grid [data]="data" [formModel]="dialog?.formModel" (dataChange)="valueChange2($event)"></lib-form-steps-field-grid>
               </ng-container>
               <ng-container *ngIf="processTabIndex == 1">
                 <ng-template [ngTemplateOutlet]="tmpStepFields"></ng-template>
@@ -317,7 +317,7 @@
         <codx-label
           [formModel]="dialog.formModel"
           [fiedName]="'ProcessName'"
-          default="Nhóm quy trình"
+          default="T quy trình"
         >
         </codx-label>
         <codx-input

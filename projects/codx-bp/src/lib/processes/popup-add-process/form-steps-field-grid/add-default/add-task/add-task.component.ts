@@ -67,27 +67,39 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       this.listUses2 = this.data.settings?.objects || [];
       if(this.process.documentControl && this.process.documentControl.length>0)
       {
-        var entityName = this.formModel.entityName;
-        this.listDocument = this.process.documentControl.filter(x=>x.stepNo == this.data.stepNo);
-        let i = 0 ;
-        this.listDocument.forEach(elm=>{
-          var fieldID =  elm.fieldID;
-         
-          if(elm?.templateID) {
-            fieldID = elm?.templateID;
-            entityName = "AD_ExcelTemplates"
-            if(elm.templateType == "word") entityName = "AD_WordTemplates"
-          }
-          else if(elm.refStepNo)
-          {
-            var index = this.process.documentControl.findIndex(x=>x.recID == elm.refStepID);
-            if(index>=0) fieldID = this.process.documentControl[index].fieldID;
-          }
-          this.getFile(fieldID, entityName , i)
-        })
+        this.formatDocument();
       }
       else this.process.documentControl = [];
     }
+  }
+
+  formatDocument()
+  {
+    var entityName = this.formModel.entityName;
+    this.listDocument = this.process.documentControl.filter(x=>x.stepNo == this.data.stepNo);
+    let i = 0 ;
+    this.listDocument.forEach(elm=>{
+      var fieldID =  elm.fieldID;
+     
+      if(elm?.templateID) {
+        fieldID = elm?.templateID;
+        entityName = "AD_ExcelTemplates"
+        if(elm.templateType == "word") entityName = "AD_WordTemplates"
+      }
+      else if(elm.refStepNo)
+      {
+        var index = this.process.documentControl.findIndex(x=>x.recID == elm.refStepID);
+        if(index>=0) {
+          if(this.process.documentControl[index].templateID) {
+            fieldID = this.process.documentControl[index].templateID;
+            entityName = "AD_ExcelTemplates"
+            if(this.process.documentControl[index].templateType == "word") entityName = "AD_WordTemplates"
+          }
+          else fieldID = this.process.documentControl[index].fieldID;
+        }
+      }
+      this.getFile(fieldID, entityName , i)
+    })
   }
 
   getFile(recID:any , entityName:any ,index:any)
@@ -135,7 +147,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     this.data.settings.color = vllStage.color;
     this.data.settings.backGround = vllStage.textColor;
     this.data.activityType = this.activityType;
-
+    if(this.parent?.child) this.data.stepName = vllStage.text + " " + (this.parent.child.length + 1);
     if(this.data.activityType == "Form")
     {
       if(!this.data.extendInfo || this.data.extendInfo.length == 0)
@@ -145,7 +157,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
         [
           {
               recID: Util.uid(),
-              fieldName: "Ten_bieu_mau",
+              fieldName: "ten_bieu_mau_" + this.data?.stepNo,
               title: "Tên biểu mẫu",
               dataType: "String",
               fieldType: "Title",
@@ -158,7 +170,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
           },
           {
               recID: "c3f6287e-3e7b-4395-99db-e72dc0479117",
-              fieldName: "Mo_ta_ngan_gon",
+              fieldName: "mo_ta_ngan_gon_" + this.data?.stepNo,
               title: "Mô tả ngắn gọn",
               dataType: "String",
               fieldType: "SubTitle",
@@ -285,6 +297,8 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     this.process.documentControl.push(documentControl);
     this.listDocument.push(documentControl);
     this.dataChangeProcess.emit(this.process);
+    this.data.attachments = this.attachment.fileUploadList.length;
+    this.dataChange.emit(this.data);
     this.attachment.uploadFile();
   }
   openAttach2()
@@ -303,14 +317,17 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     }
     this.process.documentControl.push(documentControl);
     this.dataChangeProcess.emit(this.process);
+
+    this.data.attachments = this.attachment2.fileUploadList.length;
     this.attachment2.uploadFile();
+    this.dataChange.emit(this.data);
   }
 
   fileSave(e:any)
   {
-    if(Array.isArray(e)) this.data.attachments = e.length;
-    else this.data.attachments = 1;
-    this.dataChange.emit(this.data);
+    // if(Array.isArray(e)) this.data.attachments = e.length;
+    // else this.data.attachments = 1;
+    // this.dataChange.emit(this.data);
   }
 
   fileDelete(e:any)
@@ -345,7 +362,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       null,
       null,
       '',
-      this.data.extendInfo,
+      {extendInfo:this.data.extendInfo,stepNo: this.data.stepNo},
       '',
       option
     );
@@ -530,10 +547,12 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
           fieldID: this.data?.recID,
           memo: this.data?.memo,
           refStepNo: res?.event?.stepNo,
-          refStepID: res?.event?.recID
+          refStepID: res?.event?.stepID
         }
         this.process.documentControl.push(documentControl);
         this.dataChangeProcess.emit(this.process);
+        this.formatDocument();
+
       }
     })
   }

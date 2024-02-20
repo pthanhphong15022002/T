@@ -451,7 +451,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
         var customData = {
           refID: '',
           refType: this.view?.formModel?.entityName,
-          dataSource: datas,
+          //dataSource: JSON.stringify([datas]),
         };
 
         this.codxShareService.defaultMoreFunc(
@@ -461,7 +461,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
           this.view?.formModel,
           this.view?.dataService,
           this,
-          customData
+          //customData
         );
         break;
     }

@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, Optional, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges } from '@angular/core';
 import { CallFuncService, DialogData, DialogRef, SidebarModel } from 'codx-core';
 import { StagesComponent } from './stages/stages.component';
 import { AddDefaultComponent } from './add-default/add-default.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { DomSanitizer } from '@angular/platform-browser';
+import { E } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-form-steps-field-grid',
@@ -13,6 +14,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class FormStepsFieldGridComponent implements OnInit, OnChanges{
   @Input() data: any;
   @Input() formModel: any;
+  @Output() dataChange = new EventEmitter<any>();
+  
   myTemplate  = '';
   listStage = [];
   count = 0;
@@ -103,33 +106,44 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
       {
         if(res?.event)
         {
-          this.data = res?.event?.process;
-          let dt = res?.event?.data;
-          if(dt.activityType == "Stage")
+          if(res?.event?.delete)
           {
-            var index = this.listStage.findIndex(x=>x.recID == dt.recID);
-            var indexP = this.data.steps.findIndex(x=>x.recID == dt.recID);
-            if(index >= 0) this.listStage[index] = dt;
-            else this.listStage.push(dt);
-            if(indexP >= 0) this.data.steps[indexP] = dt;
-            else this.data.steps.push(dt);
+            this.data = res?.event?.process;
+            let deleteDt = res?.event?.data;
           }
           else
           {
-            var index = this.listStage.findIndex(x=>x.recID == dt.parentID);
-            dt = this.setDataCondition(dt);
-            if(type == 'add') {
-              this.listStage[index].child.push(dt);
-              this.data.steps.push(dt);
-            }
-            else {
-              var index2 = this.listStage[index].child.findIndex(x=>x.recID == dt.recID);
+            this.data = res?.event?.process;
+            let dt = res?.event?.data;
+            if(dt.activityType == "Stage")
+            {
+              var index = this.listStage.findIndex(x=>x.recID == dt.recID);
               var indexP = this.data.steps.findIndex(x=>x.recID == dt.recID);
-              if(index2 >= 0) this.listStage[index].child[index2] = dt;
+              if(index >= 0) this.listStage[index] = dt;
+              else this.listStage.push(dt);
               if(indexP >= 0) this.data.steps[indexP] = dt;
+              else this.data.steps.push(dt);
             }
+            else
+            {
+              var index = this.listStage.findIndex(x=>x.recID == dt.parentID);
+              dt = this.setDataCondition(dt);
+              if(type == 'add') {
+                this.listStage[index].child.push(dt);
+                this.data.steps.push(dt);
+              }
+              else {
+                var index2 = this.listStage[index].child.findIndex(x=>x.recID == dt.recID);
+                var indexP = this.data.steps.findIndex(x=>x.recID == dt.recID);
+                if(index2 >= 0) this.listStage[index].child[index2] = dt;
+                if(indexP >= 0) this.data.steps[indexP] = dt;
+              }
+            }
+            this.ref.detectChanges();
+  
+            this.dataChange.emit(this.data);
           }
-          this.ref.detectChanges();
+          
         }
       });
   }
