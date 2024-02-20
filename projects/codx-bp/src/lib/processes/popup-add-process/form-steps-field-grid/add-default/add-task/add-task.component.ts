@@ -67,27 +67,39 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       this.listUses2 = this.data.settings?.objects || [];
       if(this.process.documentControl && this.process.documentControl.length>0)
       {
-        var entityName = this.formModel.entityName;
-        this.listDocument = this.process.documentControl.filter(x=>x.stepNo == this.data.stepNo);
-        let i = 0 ;
-        this.listDocument.forEach(elm=>{
-          var fieldID =  elm.fieldID;
-         
-          if(elm?.templateID) {
-            fieldID = elm?.templateID;
-            entityName = "AD_ExcelTemplates"
-            if(elm.templateType == "word") entityName = "AD_WordTemplates"
-          }
-          else if(elm.refStepNo)
-          {
-            var index = this.process.documentControl.findIndex(x=>x.recID == elm.refStepID);
-            if(index>=0) fieldID = this.process.documentControl[index].fieldID;
-          }
-          this.getFile(fieldID, entityName , i)
-        })
+        this.formatDocument();
       }
       else this.process.documentControl = [];
     }
+  }
+
+  formatDocument()
+  {
+    var entityName = this.formModel.entityName;
+    this.listDocument = this.process.documentControl.filter(x=>x.stepNo == this.data.stepNo);
+    let i = 0 ;
+    this.listDocument.forEach(elm=>{
+      var fieldID =  elm.fieldID;
+     
+      if(elm?.templateID) {
+        fieldID = elm?.templateID;
+        entityName = "AD_ExcelTemplates"
+        if(elm.templateType == "word") entityName = "AD_WordTemplates"
+      }
+      else if(elm.refStepNo)
+      {
+        var index = this.process.documentControl.findIndex(x=>x.recID == elm.refStepID);
+        if(index>=0) {
+          if(this.process.documentControl[index].templateID) {
+            fieldID = this.process.documentControl[index].templateID;
+            entityName = "AD_ExcelTemplates"
+            if(this.process.documentControl[index].templateType == "word") entityName = "AD_WordTemplates"
+          }
+          else fieldID = this.process.documentControl[index].fieldID;
+        }
+      }
+      this.getFile(fieldID, entityName , i)
+    })
   }
 
   getFile(recID:any , entityName:any ,index:any)
@@ -539,6 +551,8 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
         }
         this.process.documentControl.push(documentControl);
         this.dataChangeProcess.emit(this.process);
+        this.formatDocument();
+
       }
     })
   }
