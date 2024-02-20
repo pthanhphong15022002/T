@@ -45,6 +45,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
   listDocument = [];
   dataEmail: any;
   showEmail = false;
+  hideOwner = false;
   ngOnChanges(changes: SimpleChanges): void {
     if(changes?.activityType && changes['activityType'].currentValue != changes['activityType'].previousValue)
     {
@@ -156,7 +157,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       checkList: "",
       nextSteps: ""
     }
-    if(!this.process.documentControl)this.process.documentControl = []
+    if(!this.process.documentControl) this.process.documentControl = []
     this.dataChange.emit(this.data);
   }
   changeActivity()
@@ -203,6 +204,16 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
         ]
       }
       if(this.data.settings?.isTemplate == undefined || this.data.settings?.isTemplate == null) this.data.settings.isTemplate = false;
+      if(this.data.stepNo == 1) {
+        this.hideOwner = true;
+        this.data.permissions = [ {
+          objectID: this.user?.userID,
+          objectName: this.user?.userName,
+          objectType: "U",
+          roleType: 'O'
+        }];
+        this.dataChange.emit(this.data);
+      }
     }
     else if(this.data.activityType == "Task")
     {
