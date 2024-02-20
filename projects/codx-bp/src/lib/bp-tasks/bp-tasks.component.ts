@@ -5,6 +5,7 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopupBpTasksComponent } from './popup-bp-tasks/popup-bp-tasks.component';
@@ -12,7 +13,8 @@ import { PopupBpTasksComponent } from './popup-bp-tasks/popup-bp-tasks.component
 @Component({
   selector: 'lib-bp-tasks',
   templateUrl: './bp-tasks.component.html',
-  styleUrls: ['./bp-tasks.component.css'],
+  styleUrls: ['./bp-tasks.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class BpTasksComponent
   extends UIComponent

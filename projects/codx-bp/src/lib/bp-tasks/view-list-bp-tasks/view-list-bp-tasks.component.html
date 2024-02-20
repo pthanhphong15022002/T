@@ -34,10 +34,10 @@
       {{ dataSelected?.taskName }}
     </div>
   </div>
-  <div class="w-250px p-2 d-flex align-items-center">
+  <div class="w-350px p-2 d-flex align-items-center">
     {{ dataSelected?.memo }}
   </div>
-  <div class="w-350px p-2">
+  <div class="w-350px p-2 d-flex align-items-center flex-column">
     <div class="d-flex mb-1">
       <codx-label
         class="label-colon text-dark fw-bold"
@@ -115,7 +115,7 @@
     >
     </codx-vll>
   </div>
-  <div class="w-150px p-2 d-flex align-items-center">
+  <div class="w-250px p-2 d-flex align-items-center flex-column">
     <div
       class="d-flex justify-content-start align-items-center"
       *ngIf="dataSelected.createdBy"
@@ -138,10 +138,10 @@
       </div>
     </div>
   </div>
-  <div class="w-150px p-2">
+  <div class="w-200px p-2 d-flex align-items-center">
     {{ process?.processName }}
   </div>
-  <div class="w-150px p-2">
+  <div class="w-200px p-2 d-flex align-items-center">
     {{ instance?.title }}
   </div>
   <div class="w-100px p-2 d-flex justify-content-center">
