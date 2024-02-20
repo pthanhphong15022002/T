@@ -547,7 +547,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
           fieldID: this.data?.recID,
           memo: this.data?.memo,
           refStepNo: res?.event?.stepNo,
-          refStepID: res?.event?.recID
+          refStepID: res?.event?.stepID
         }
         this.process.documentControl.push(documentControl);
         this.dataChangeProcess.emit(this.process);
