@@ -160,6 +160,10 @@ export class JournalV2Component extends UIComponent implements OnInit {
     ];
   }
 
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
+  }
+
   ngOnDestroy() {
     this.onDestroy();
   }

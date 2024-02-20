@@ -37,9 +37,9 @@
   </div>
 
   <div *ngIf="numbreadcumb == 0" class="h-100 bg-body rounded-3">
-    <!-- <codx-listview class="p-3" [selectFirst]="true" [itemTemplate]="templateListCard" type="cardView" [funcId]="funcID"
+    <codx-listview class="p-3" [selectFirst]="true" [itemTemplate]="templateListCard" type="cardView" [funcId]="funcID"
       service="AC" [entityName]="view.entityName" [dataService]="view.dataService">
-    </codx-listview> -->
+    </codx-listview>
   </div>
   <router-outlet (activate)="activate($event)" (deactivate)="deactivate($event)"></router-outlet>
 </ng-template>

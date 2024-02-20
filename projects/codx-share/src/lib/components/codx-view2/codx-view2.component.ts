@@ -9,6 +9,7 @@ import {
   SimpleChanges,
   TemplateRef,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   ApiHttpService,
   ButtonModel,
@@ -25,10 +26,11 @@ import { Observable } from 'rxjs';
   styleUrls: ['./codx-view2.component.css'],
 })
 export class CodxView2Component implements OnInit, AfterViewInit {
+  //#region Contructor
+  @Input() funcID?: string;
   @Input() tmpRightToolBar?: TemplateRef<any>;
   @Input() tmpHeader?: TemplateRef<any> = null;
   @Input() tmpItem?: TemplateRef<any>;
-
   @Input() service!: string;
   @Input() assemblyName = 'ERM.Business.Core';
   @Input() className = 'DataBusiness';
@@ -57,33 +59,18 @@ export class CodxView2Component implements OnInit, AfterViewInit {
   constructor(
     private ref: ChangeDetectorRef,
     private cache: CacheService,
-    private api: ApiHttpService
+    private api: ApiHttpService,
+    private router: ActivatedRoute
   ) {
     this.request = new DataRequest();
     this.request.page = 1;
     this.request.pageSize = 20;
   }
+  //#endregion
+  //#region Init
   ngAfterViewInit(): void {
     const elem = document.querySelector('#view2-header');
     if (elem) new ResizeObserver(this.setHeight).observe(elem);
-  }
-
-  setHeight() {
-    if (!document.getElementById('view2-header')) return;
-
-    var h = document.getElementById('view2-header').offsetHeight;
-
-    if (h > 0) {
-      h += 90;
-      let height = window.innerHeight - h;
-      if (document.getElementById('codx-view2-body'))
-        document.getElementById('codx-view2-body').style.cssText =
-          'height:' + height + 'px !important';
-    } else {
-      if (document.getElementById('codx-view2-body'))
-        document.getElementById('codx-view2-body').style.cssText =
-          'height:auto';
-    }
   }
 
   ngOnInit(): void {
@@ -130,6 +117,38 @@ export class CodxView2Component implements OnInit, AfterViewInit {
       },
     ];
 
+    if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
+    if (this.funcID)
+      this.api
+        .exec('SYS', 'CommonBusiness', 'GetSettingFormAsync', [
+          this.funcID,
+          this.formName,
+          this.gridViewName,
+          this.entityName,
+        ])
+        .subscribe((res: any) => {
+          if (res.viewSettings && res.viewSettings.length) {
+            this.cache.setViewSetting(res.func.functionID, res.viewSettings);
+            if (this.viewList && this.viewList.length > 0) {
+              this.viewList?.filter(function (o) {
+                var v = res.viewSettings?.find(
+                  (x) => x.view == o.type.toString()
+                );
+                if (v) {
+                  o.active = v.isDefault;
+                  o.hide = false;
+                } else {
+                  o.hide = true;
+                  o.active = false;
+                }
+              });
+              let active = this.viewList.find(
+                (x) => x.active == true && !x.hide
+              );
+              this.acitveMenuView(active);
+            }
+          }
+        });
     if (!this.dataSource) this.loadData();
   }
 
@@ -164,6 +183,26 @@ export class CodxView2Component implements OnInit, AfterViewInit {
     );
   }
 
+  setHeight() {
+    if (!document.getElementById('view2-header')) return;
+
+    var h = document.getElementById('view2-header').offsetHeight;
+
+    if (h > 0) {
+      h += 90;
+      let height = window.innerHeight - h;
+      if (document.getElementById('codx-view2-body'))
+        document.getElementById('codx-view2-body').style.cssText =
+          'height:' + height + 'px !important';
+    } else {
+      if (document.getElementById('codx-view2-body'))
+        document.getElementById('codx-view2-body').style.cssText =
+          'height:auto';
+    }
+  }
+  //#endregion
+
+  //#region Func
   onSearch(e: any) {}
 
   viewChanged(e: any) {
@@ -214,4 +253,6 @@ export class CodxView2Component implements OnInit, AfterViewInit {
   selectedItem(e: any) {
     this.selectedChange.emit(e);
   }
+
+  //#endregion
 }
