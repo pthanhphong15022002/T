@@ -10,9 +10,9 @@
     <tbody>
       <tr class="border-top cursor-pointer" *ngFor="let item of data, let i = index">
           <th class="border-none">{{item.title}}</th>
-          <td><div class="d-flex align-items-center" (click)="openFormDetail(item.files)"><span>{{item.count}}</span><i class="icon-i-file-earmark-text icon-20 ms-2"></i></div></td>
+          <td><div class="d-flex align-items-center position-relative" (click)="openFormDetail(item.files)"><span class="rounder-attach rounded-circle" *ngIf="item?.count">{{item.count}}</span><i class="icon-i-file-earmark-text icon-20 ms-2"></i></div></td>
           <td><codx-input type="checkbox" field="isRequired" [crrValue]="item.isRequired" (valueChange)="valueChange($event,i)" [disabled]="true"></codx-input></td>
-          <td><i class="icon-attach_file" (click)="openAttach(item.recID,i)"></i></td>
+          <td class="position-relative"><span class="rounder-attach rounded-circle" *ngIf="item?.countAttach">{{item.countAttach}}</span><i class="icon-attach_file" (click)="openAttach(item.recID,i)"></i></td>
       </tr>
     </tbody>
   </table>

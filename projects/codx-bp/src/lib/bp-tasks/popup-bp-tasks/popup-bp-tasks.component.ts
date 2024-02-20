@@ -25,7 +25,6 @@ import { isObservable } from 'rxjs';
 })
 export class PopupBpTasksComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
-
   dialog: any;
   formModel: any;
   data: any;
@@ -40,6 +39,7 @@ export class PopupBpTasksComponent implements OnInit {
   files = [];
   fileIDs = [];
   action = '';
+  process:any
   constructor(
     private authstore: AuthStore,
     private shareService: CodxShareService,
@@ -53,6 +53,7 @@ export class PopupBpTasksComponent implements OnInit {
     this.dialog = dialog;
     this.formModel = this.dialog?.formModel;
     this.data = JSON.parse(JSON.stringify(dt?.data?.data));
+    this.process = dt?.data?.process;
     this.dataIns = dt?.data?.dataIns
       ? JSON.parse(JSON.stringify(dt?.data?.dataIns))
       : null;
@@ -202,5 +203,11 @@ export class PopupBpTasksComponent implements OnInit {
   getfileCount(e) {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
+  }
+
+  dataChange(e:any)
+  {
+    this.dataIns = e;
+    this.dialog.close(this.dataIns)
   }
 }

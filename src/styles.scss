@@ -18,13 +18,15 @@
     font-size: var(--fs-body);
   }
 }
+.hover-scroll, .hover-scroll-x, .hover-scroll-y, .hover-scroll-overlay-y, main, span, ol, ul, pre, div, * {
+  scrollbar-width: thin;
+}
 .fs-body{
   font-size: var(--fs-body);
 }
 .e-control, .e-css, .e-listview, .e-splitter.e-splitter-horizontal .e-pane,
 .e-splitter.e-splitter-vertical .e-pane {
   font-family: 'Roboto', Segoe UI, serif;
-
 }
 .e-device .e-dlg-content,
 .e-device .e-dlg-content * {
@@ -4493,9 +4495,9 @@ lib-deals .e-listview .e-list-group-item {
   line-height: 28px;
 }
 
-lib-workspace .aside-menu .hover-scroll-overlay-y{
-  height: calc(100% - 60px)!important;
-}
+// lib-workspace .aside-menu .hover-scroll-overlay-y{
+//   height: calc(100% - 60px)!important;
+// }
 tmdashboard .container-toolbar + .container-fluid,
 dmdashboard .container-toolbar + .container-fluid{
   overflow-y: scroll;

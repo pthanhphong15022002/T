@@ -10,7 +10,7 @@
                     <ng-template>
                         <div class="d-flex flex-column ps-13 pb-4" *ngFor="let item2 of item.child">
                             <span class="mt-1 fw-bold">{{item2.stepName}}</span>
-                            <div class="d-flex justify-content-between align-items-center ps-8 pb-4 mt-2 cursor-pointer border-bottom" (click)="selectedItem(item)">
+                            <div class="d-flex justify-content-between align-items-center ps-8 pb-4 mt-2 cursor-pointer border-bottom" (click)="selectedItem(item2)">
                                 <codx-thumbnail  
                                     [files]="item2?.files" 
                                     displayThumb="simple" 

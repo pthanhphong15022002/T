@@ -28,7 +28,6 @@ export class PopupAddGiftComponent implements OnInit {
 
   funcID: string = null;
   title: string = null;
-  transType: string = "3";
   cardTypeDefault: string = "1";
   patternIDSeleted: string = null;
   userReciver: string = "";
@@ -61,6 +60,11 @@ export class PopupAddGiftComponent implements OnInit {
   loadingEvoucher: boolean = false;
   totalPage: number = 1;
   quantityEvoucher: number = 0;
+  type: string = "add";
+  readonly: boolean = false;
+  data: any = null;
+  giftData: any = null;
+  showGiftDelivered = true;
   @ViewChild("combobox") combobox: ComboBoxComponent;
 
   constructor(
@@ -77,7 +81,12 @@ export class PopupAddGiftComponent implements OnInit {
     @Optional() dd?: DialogData) {
     this.dialogRef = dialogRef;
     this.user = this.auth.userValue;
-    this.funcID = dd.data;
+    this.funcID = dd.data.funcID;
+    this.type = dd.data.type;
+    this.data = dd.data.data;
+    if(this.type == "detail") {
+      this.readonly = true;
+    }
   }
 
   ngOnInit(): void {
@@ -104,7 +113,6 @@ export class PopupAddGiftComponent implements OnInit {
 
     this.cache.functionList(this.funcID)
       .subscribe((func: any) => {
-        console.log('fun:', func);
 
         if (func && func?.formName && func?.gridViewName && func?.entityName && func?.description) {
           this.title = func.description;
@@ -113,6 +121,23 @@ export class PopupAddGiftComponent implements OnInit {
     
     if(this.funcID == "FDT092") {
       this.loadDataEvoucher();
+      this.showGiftDelivered = false;
+      this.giftTrans.Status = "3";
+    }
+
+    if(this.data) {
+      this.fdService.getGiftTranByRecID(this.data.recID).subscribe((res: any) => {
+        if(res) {
+          this.giftTrans.UserID = res.reciver.userID;
+          this.giftTrans.Status = res.status;
+          this.giftTrans.Situation = res.situation;
+          this.giftTrans.TransType = res.transType;
+          this.form.patchValue({ quantity: res.gift.quantity });
+          this.quantityEvoucher = res.gift.quantity;
+          this.amount = res.gift.amount;
+          this.giftData = res.gift;
+        }
+      });
     }
   }
 
@@ -166,7 +191,7 @@ export class PopupAddGiftComponent implements OnInit {
       .subscribe((data) => {
         if (data) {
           if(data?.productList && data?.productList.length > 0) {
-            this.combobox.addItem(data.productList);
+            this.combobox?.addItem(data.productList);
           }
           this.totalPage = data?.pagination?.totalPage;
         }
@@ -181,7 +206,7 @@ export class PopupAddGiftComponent implements OnInit {
   }
 
   valueChange(event: any) {
-    if (!event) return;
+    if (!event || this.type == "detail") return;
     let data = event.data;
     let field = event.field;
     switch (field) {
@@ -240,8 +265,9 @@ export class PopupAddGiftComponent implements OnInit {
       case 'status':
         if (data) {
           this.giftTrans.Status = "3";
+        } else {
+          this.giftTrans.Status = "1";
         }
-        this.giftTrans.Status = "1";
         break;
 
       case 'situation':
@@ -268,7 +294,7 @@ export class PopupAddGiftComponent implements OnInit {
       this.notifySV.notifyCode("RS034")
       return;
     }
-    if (!this.giftTrans.Situation) {
+    if (this.giftTrans.TransType == '3' && !this.giftTrans.Situation) {
       this.notifySV.notify("Vui nhập nội dung");
       return;
     }
@@ -350,7 +376,6 @@ export class PopupAddGiftComponent implements OnInit {
   }
 
   selectedPattern(pattern: any) {
-    console.log(pattern);
     if (!pattern) return;
     if (this.patternIDSeleted = pattern.patternID) {
       this.patternIDSeleted = "";

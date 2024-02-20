@@ -919,7 +919,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                 var newlist = res.filter((x) => x.status == 6);
                 var newlistNot = res.filter((x) => x.status == -1);
                 var addList = res.filter((x) => x.status == 0 || x.status == 9);
-
+                if(!this.atSV?.fileListAdded) this.atSV.fileListAdded = [];
                 for (var i = 0; i < addList.length; i++) {
                   this.data.push(Object.assign({}, addList[i].data));
                   this.atSV.fileListAdded.push(Object.assign({}, addList[i]));
@@ -1465,6 +1465,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                           if (this.showMessage == '1')
                             this.notificationsService.notify(item.message);
                           this.fileUploadList[0].recID = item.data.recID;
+                          if(!Array.isArray(this.atSV.fileListAdded)) this.atSV.fileListAdded = [];
                           this.atSV.fileListAdded.push(Object.assign({}, item));
                           this.data.push(Object.assign({}, item.data));
                           this.fileUploadList = [];

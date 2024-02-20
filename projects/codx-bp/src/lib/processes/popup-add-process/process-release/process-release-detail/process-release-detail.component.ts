@@ -182,8 +182,13 @@ export class ProcessReleaseDetailComponent implements OnInit{
         entityName: 'BP_Tasks',
       };
       option.zIndex = 1060;
-      let popup = this.callFc.openSide(PopupBpTasksComponent, {data: dt}, option);
-      popup.closed.subscribe((res) => {});
+      let popup = this.callFc.openSide(PopupBpTasksComponent, {data: dt,process:this.process,dataIns: this.data}, option);
+      popup.closed.subscribe((res) => {
+        if(res && res?.event)
+        {
+          this.data = res?.event
+        }
+      });
     }
   }
 }
