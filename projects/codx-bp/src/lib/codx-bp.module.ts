@@ -158,7 +158,7 @@ export const routes: Routes = [
     AddProcessDefaultPrice,
     AddFileFromProcessComponent,
     AddFileFromProcessDefaultComponent,
-    
+
     ProcessReleaseComponent,
     ProcessReleaseDetailComponent,
     ViewListInstancesComponent,
