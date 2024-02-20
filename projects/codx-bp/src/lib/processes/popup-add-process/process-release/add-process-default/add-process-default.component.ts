@@ -1,4 +1,4 @@
-import { Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Optional, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
@@ -12,10 +12,13 @@ import { firstValueFrom } from 'rxjs';
 })
 export class AddProcessDefaultComponent implements OnInit{
   @ViewChild('attachment') attachment: AttachmentComponent;
-  dynamicFormsForm: FormGroup;
-  process:any;
+
+  @Input() process:any;
+  @Input() dataIns:any = {};
+  @Input() type = 'add';
+  @Input() stepID:any;
+  @Output() dataChange = new EventEmitter<any>();
   data:any;
-  dataIns:any = {};
   dialog:any;
   table:any
   formModel = 
@@ -25,8 +28,9 @@ export class AddProcessDefaultComponent implements OnInit{
     gridViewName: 'grvDynamicForms',
     entityName: 'BP_Instances'
   }
-  type = 'add';
+  dynamicFormsForm: FormGroup;
   subTitle:any;
+  tableField:any;
   user:any;
   constructor(
     private notifySvr: NotificationsService,
@@ -39,9 +43,9 @@ export class AddProcessDefaultComponent implements OnInit{
   {
     this.user = auth.get();
     this.dynamicFormsForm = new FormGroup({});
-    this.process = dt?.data?.process;
-    this.dataIns = dt?.data?.dataIns;
-    this.type = dt?.data?.type;
+    this.process = this.process || dt?.data?.process;
+    this.dataIns = this.dataIns || dt?.data?.dataIns;
+    this.type = dt?.data?.type ? dt?.data?.type : this.type;
     this.dialog = dialog;
     this.formModel.funcID = this.dialog.formModel?.funcID;
   }
@@ -51,28 +55,50 @@ export class AddProcessDefaultComponent implements OnInit{
 
   getData()
   {
-    this.data = this.process.steps.filter(x=>x.activityType == "Form")[0];
+    var index = 0;
+    if(this.stepID) {
+      var dts = this.process.steps.filter(x=>x.activityType == "Form");
+      if(dts)
+      {
+        index = dts.findIndex(x=>x.recID == this.stepID);
+      }
+    }
+    this.data = this.process.steps.filter(x=>x.activityType == "Form")[index];
     this.data.settings = typeof this.data.settings === 'string' ? JSON.parse(this.data.settings) : this.data.settings;
     this.formatData()
   }
 
   formatData()
   {
-    debugger
     var list = [];
     let extendInfo = JSON.parse(JSON.stringify(this.data.extendInfo));
     extendInfo.forEach(element => {
       let field = element.fieldName.toLowerCase();
       if(element.fieldType != "Title") 
       {
-        if(this.type == 'add') this.dynamicFormsForm.addControl(field, new FormControl(element.defaultValue , (element.isRequired ? Validators.required : null)));
+        if(this.type == 'add') {
+          this.dynamicFormsForm.addControl(field, new FormControl(element.defaultValue , (element.isRequired ? Validators.required : null)));
+          if(element.fieldType == "Attachment") this.dataIns.documentControl = JSON.parse(element.documentControl);
+         
+        }
         else 
         {
-          let dataEdit = JSON.parse(this.dataIns.datas);
+          this.dataIns.datas = typeof this.dataIns.datas === 'string' ?  JSON.parse(this.dataIns.datas) : this.dataIns.datas;
+          let dataEdit = this.dataIns.datas;
           this.dynamicFormsForm.addControl(field, new FormControl(dataEdit[field] , (element.isRequired ? Validators.required : null)));
         }
       }
       if(element.fieldType == "SubTitle") this.subTitle = field;
+      if(element.fieldType == "Table") 
+      {
+        element.dataFormat = typeof element.dataFormat == 'string' ? JSON.parse(element.dataFormat) : element.dataFormat;
+        element.tableFormat = typeof element.tableFormat == 'string' ? JSON.parse(element.tableFormat) : element.tableFormat;
+        this.tableField = field;
+        if(this.type == 'add') {
+          this.dataIns.datas = {};
+          this.dataIns.datas[field] = [];
+        }
+      }
       var index = list.findIndex(x=>x.columnOrder == element.columnOrder)
       if(index >= 0)
       {
@@ -98,20 +124,21 @@ export class AddProcessDefaultComponent implements OnInit{
 
   getField(key: string): string {
     if (!key) return '';
-
+    key = key.toLowerCase();
     return Util.camelize(key);
   }
 
-  async onSave()
+  async onSave(type=1)
   {
-
+    //if(!this.checkAttachment()) return;
     if(this.dynamicFormsForm.invalid) this.findInvalidControls();
     else
     {
       var valueForm = this.dynamicFormsForm.value;
-      this.dataIns.title= valueForm[this.subTitle];
       if(this.type == 'add')
       {
+        this.dataIns.title= valueForm[this.subTitle];
+        this.dataIns.recID = Util.uid();
         var instanceNoControl = "1";
         var instanceNo = "aaaaaaa";
         var index = this.process.settings.findIndex(x=>x.fieldName == "InstanceNoControl");
@@ -177,7 +204,7 @@ export class AddProcessDefaultComponent implements OnInit{
           permissions: this.data?.owners,
         }
     
-    
+        if(this.tableField) valueForm[this.tableField] = this.dataIns.datas[this.tableField].filter(x=> typeof x === 'object');
         this.dataIns.processID = this.process?.recID,
         this.dataIns.instanceNo = instanceNo,
         this.dataIns.instanceID = this.dataIns.recID,
@@ -194,14 +221,20 @@ export class AddProcessDefaultComponent implements OnInit{
         this.dataIns.actualEnd= null,
         this.dataIns.createdOn= new Date(),
         this.dataIns.createdBy = this.user?.userID,
-        this.dataIns.duration = this.process?.duration
-        this.dataIns.datas = JSON.stringify(valueForm)
+        this.dataIns.duration = this.process?.duration,
+        this.dataIns.datas = JSON.stringify(valueForm);
+        this.dataIns.documentControl = this.data?.documentControl;
         var listTask = JSON.stringify([stage,step]);
+
         //Luu process Task
         this.api.execSv("BP","BP","ProcessTasksBusiness","SaveListTaskAsync",listTask).subscribe();
         //Luu Instanes
         this.api.execSv("BP","BP","ProcessInstancesBusiness","SaveInsAsync",this.dataIns).subscribe(item=>{
-          this.dialog.close(this.dataIns)
+          if(type == 1) this.dialog.close(this.dataIns)
+          else 
+          {
+            this.startProcess(this.dataIns.recID)
+          }
         });
     
         if(this.attachment.fileUploadList && this.attachment.fileUploadList.length > 0)
@@ -210,12 +243,47 @@ export class AddProcessDefaultComponent implements OnInit{
       else if(this.type == 'edit')
       {
         this.dataIns.modifiedOn= new Date(),
-        this.dataIns.modifiedBy = this.user?.userID,
-        this.dataIns.datas = JSON.stringify(valueForm)
+        this.dataIns.modifiedBy = this.user?.userID;
+        if(this.dataIns.datas)
+        {
+          if(typeof this.dataIns.datas == 'string') this.dataIns.datas = JSON.parse(this.dataIns.datas)
+          let keys = Object.keys(valueForm)
+          keys.forEach(k => {
+            this.dataIns.datas[k] = valueForm[k];
+          });
+          this.dataIns.datas = JSON.stringify(this.dataIns.datas)
+        }
+        else this.dataIns.datas = JSON.stringify(valueForm)
         this.api.execSv("BP","BP","ProcessInstancesBusiness","UpdateInsAsync",this.dataIns).subscribe(item=>{
-          this.dialog.close(this.dataIns)
+          this.dialog.close(this.dataIns);
+          this.dataChange.emit(this.dataIns);
         });
       }
+    }
+  }
+
+  checkAttachment()
+  {
+    if(!this.dataIns.documentControl) return true;
+    else
+    {
+      var arr = [];
+      this.dataIns.documentControl.forEach(elm=>{
+        if(elm.isRequired && elm.count == 0)
+        {
+          arr.push(elm.title)
+        }
+      })
+
+      if(arr.length>0)
+      {
+        var name = arr.join(', ');
+        name += " " + 'bắt buộc đính kèm mẫu'
+        this.notifySvr.notify(name);
+        return false;
+      }
+
+      return true;
     }
   }
 
@@ -229,5 +297,41 @@ export class AddProcessDefaultComponent implements OnInit{
     }
     var name = invalid.join(" , ");
     this.notifySvr.notifyCode('SYS009', 0, name);
+  }
+
+  dataChangeAttachmentGrid(e:any)
+  {
+    var dt = JSON.parse(JSON.stringify(e));
+    this.dataIns.documentControl = dt;
+  }
+
+  editTable(index:any,e:any)
+  {
+    debugger
+    if(typeof this.dataIns.datas[this.tableField][index] === 'string') {
+      this.dataIns.datas[this.tableField][index] = {}
+    }
+    this.dataIns.datas[this.tableField][index][e?.field] = e?.data;
+  }
+
+  addRow()
+  {
+    this.dataIns.datas[this.tableField].push("");
+  }
+
+  startProcess(recID:any) {
+    this.api
+      .execSv(
+        'BP',
+        'ERM.Business.BP',
+        'ProcessesBusiness',
+        'StartProcessAsync',
+        [recID]
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close(this.dataIns)
+        }
+      });
   }
 }

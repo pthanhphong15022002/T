@@ -7,6 +7,8 @@ import {
   RequestOption,
   UIComponent,
   NotificationsService,
+  DialogModel,
+  FormModel,
 } from 'codx-core';
 import {
   Component,
@@ -20,6 +22,8 @@ import {
 import { NoteBooks } from 'projects/codx-mwp/src/lib/model/NoteBooks.model';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
+import { DetailNotebookComponent } from '../detail-notebook/detail-notebook.component';
+import { CodxWsService } from 'projects/codx-ws/src/public-api';
 @Component({
   selector: 'app-add-update-note-book',
   templateUrl: './add-update-note-book.component.html',
@@ -53,6 +57,7 @@ export class AddUpdateNoteBookComponent extends UIComponent implements OnInit {
   constructor(
     private injector: Injector,
     private notification: NotificationsService,
+    private wsSv: CodxWsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -119,10 +124,7 @@ export class AddUpdateNoteBookComponent extends UIComponent implements OnInit {
             this.dialog.close(item);
           } else {
             this.dialog.close(item);
-            let url = ''; // Đợi có url rồi set
-            this.codxService.navigate('', url, {
-              recID: item.recID,
-            });
+            this.navigateOpen(item);
           }
         }
       });
@@ -143,10 +145,7 @@ export class AddUpdateNoteBookComponent extends UIComponent implements OnInit {
             this.dialog.close(item);
           } else {
             this.dialog.close(item);
-            let url = ''; // Đợi có url rồi set
-            this.codxService.navigate('', url, {
-              recID: item.recID,
-            });
+            this.navigateOpen(item);
           }
         }
       });
@@ -169,8 +168,35 @@ export class AddUpdateNoteBookComponent extends UIComponent implements OnInit {
     return true;
   }
 
+  navigateOpen(data){
+    var option = new DialogModel();
+    option.zIndex = 100;
+    let formModel = new FormModel();
+    formModel.formName = 'NoteBooks';
+    formModel.gridViewName = 'grvNoteBooks';
+    formModel.entityName = 'WP_NoteBooks';
+    formModel.funcID = 'WS00625';
+    option.FormModel = formModel;
+    let dialog = this.callfc.openForm(
+      DetailNotebookComponent,
+      '',
+      900,
+      900,
+      '',
+      data,
+      '',
+      option
+    );
+    dialog.closed.subscribe((res) => {
+      if (res.event) {
+        this.wsSv.loadDataList.next({data: res.event, type: 'notebook', action: 'update'});
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
   addAvatar() {
-    this.imageAvatar.referType = 'image';
+    this.imageAvatar.referType = 'avt';
     this.imageAvatar.uploadFile();
   }
 

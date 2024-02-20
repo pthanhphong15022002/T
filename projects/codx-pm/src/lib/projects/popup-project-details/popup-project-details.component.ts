@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit, AfterViewInit, ChangeDetectorRef, Optional } from "@angular/core";
+import { Component, ViewEncapsulation, OnInit, AfterViewInit, ChangeDetectorRef, Optional, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { DialogData, DialogRef } from "codx-core";
 
@@ -8,7 +8,8 @@ import { DialogData, DialogRef } from "codx-core";
   styleUrls: ['./popup-project-details.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class PopupProjectDetailsComponent implements OnInit, AfterViewInit {
+export class PopupProjectDetailsComponent implements OnInit, AfterViewInit{
+
 
   resources:any;
   data:any;
@@ -18,7 +19,7 @@ export class PopupProjectDetailsComponent implements OnInit, AfterViewInit {
   offset = '0px';
   name:string='Tasks';
   tabControl: any= [{ name: 'Tasks', textDefault: 'Công việc', isActive: true },];
-  dataObj:any;
+  dataObj:any={};
   showMoreFunc:boolean=true;
   showButtonAdd:boolean=true;
   viewMode:any;
@@ -36,6 +37,7 @@ export class PopupProjectDetailsComponent implements OnInit, AfterViewInit {
     this.nameObj = this.data.projectName
     this.dialog = dialog;
   }
+
 
   ngAfterViewInit(): void {
 

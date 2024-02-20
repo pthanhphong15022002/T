@@ -5,7 +5,6 @@ import {
   Input,
   OnInit,
   Output,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
@@ -13,7 +12,6 @@ import {
   ApiHttpService,
   CacheService,
   CallFuncService,
-  DataRequest,
   DialogModel,
   FormModel,
   NotificationsService,
@@ -960,18 +958,20 @@ export class CodxInputCustomFieldComponent implements OnInit {
   //----------------Tính toán---------------------//
   arrCheck = ['+', '-', 'x', '/', 'Avg(', '(', ')'];
   isExitOperator(string) {
-    var check = false;
-    this.arrCheck.forEach((op, idx) => {
-      if (string.includes(op)) {
-        check = true;
-        if (idx == 0 && op == '-') {
-          check = false;
-        }
-        if (check) return;
-      }
-    });
-    return check;
+    //var check = false;
+    // this.arrCheck.forEach((op, idx) => {
+    //   if (string.includes(op)) {
+    //     check = true;
+    //     if (idx == 0 && op == '-') {
+    //       check = false;
+    //     }
+    //     if (check) return;
+    //   }
+    // });
+    //return check;
+    return string.includes('_');
   }
+
   //----------------------------------------------//
 
   //-------------- Data num co E ---------------//

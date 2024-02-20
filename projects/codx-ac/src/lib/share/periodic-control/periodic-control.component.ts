@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { FormModel, NotificationsService, UIComponent, UrlUtil, ViewModel, ViewType } from 'codx-core';
+import { DialogModel, FormModel, NotificationsService, UIComponent, UrlUtil, ViewModel, ViewType } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import { PeriodicComponent } from '../../periodic/periodic.component';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { Router } from '@angular/router';
+import { ViewresultComponent } from './viewresult/viewresult.component';
 
 @Component({
   selector: 'lib-periodic-control',
@@ -18,7 +19,6 @@ export class PeriodicControlComponent extends UIComponent{
   dataValue: any = {};
   title: any = '';
   showAll: any = true;
-  showLess:any = false;
   oData: any = [];
   functionType:any;
   settingFull:any;
@@ -128,6 +128,9 @@ export class PeriodicControlComponent extends UIComponent{
           case 'd3':
             this.runPeriodic(this.settingFull.refType,this.settingFull.refID,'3',event.text);
             break;
+          case 'd4':
+            this.deletePeriodic(data);
+            break;
         }
       }
     }
@@ -179,7 +182,6 @@ export class PeriodicControlComponent extends UIComponent{
     this.view.dataService.request.pageSize = 10;
     this.api.exec('AC', 'RunPeriodicBusiness', 'GetDataAsync', [this.view.dataService.request]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if (res && res[0].length) {
-        this.showLess = true;
         this.view.dataService.request.page += 1;
         let data = res[0];
         data.reduce((pre,item) => {
@@ -187,7 +189,7 @@ export class PeriodicControlComponent extends UIComponent{
           if(i == -1) this.oData.push(item);
         },this.oData)
         let total = res[1];
-        if(this.oData.length <= total) this.showAll = false;
+        if(this.oData.length == total) this.showAll = false;
         this.detectorRef.detectChanges();
       }
     });
@@ -207,14 +209,6 @@ export class PeriodicControlComponent extends UIComponent{
       if(type != element.data.tabControl) element.disabled = true;
       }, {});
   }
-
-  // onCollaple(){
-  //   this.oData = [this.oData.shift()];
-  //   this.view.dataService.request.page = 1;
-  //   this.showLess = false;
-  //   this.showAll = false;
-  //   this.detectorRef.detectChanges();
-  // }
 
   runPeriodic(runtype:any,recID:any,runMode:any,text:any){
     let storeName = (runMode === '1' || runMode === '2') ? 'AC_spRunPeriodic' : 'AC_spCancelPeriodic';
@@ -239,22 +233,61 @@ export class PeriodicControlComponent extends UIComponent{
     })
   }
 
-  // cancel(text:any,data:any){
-  //   this.api.exec('AC','RunPeriodicBusiness','CancelAsync',[data,this.dataDefault.refType,text]).subscribe((res:any)=>{
-  //     if (res) {
-  //       this.notification.notifyCode('AC0029', 0, text);
-  //     }else{
-  //       this.notification.notifyCode('AC0030', 0, text);
-  //     }
-  //   })
-  // }
-
   viewResult(data: any, event: any) {
-    if (event.data.url) {
-      let urlRedirect = '/' + UrlUtil.getTenant() + '/';
-      urlRedirect += event.data.url + '/' + event.functionID;
-      this.route.navigate([urlRedirect], { queryParams: { sessionID: data.recID } });
+    switch(this.funcID){
+      case 'ACP107':
+        this.openFormViewResult(data,event.text);
+        break;
     }
+  }
+
+  deletePeriodic(data:any){
+    this.api.exec('AC','RunPeriodicBusiness','DeletelAsync',[
+      data.recID,
+      this.view.dataService.request
+    ]).pipe(takeUntil(this.destroy$))
+    .subscribe((res:any)=>{
+      if (res) {
+        if (this.oData.length == 1) {
+          if (res[0].length) {
+            this.oData = [res[0][0]];
+            let total = res[1];
+            if(total == 1) this.showAll = false;
+          }else{
+            this.oData = [];
+            this.showAll = false;
+          }
+        }else{
+          this.oData = res[0];
+          let total = res[1];
+          if (this.oData.length <= total) this.showAll = false; 
+          // let index = this.oData.findIndex(x => x.recID == data.recID);
+          //   if (index > -1) {
+          //     this.oData.splice(index, 1);
+          // }
+        }
+        this.detectorRef.detectChanges();
+      }
+    })
+  }
+
+  openFormViewResult(datas:any,text:any){
+    let data = {
+      headerText: text,
+      sessionID : datas.recID
+    }
+    let opt = new DialogModel();
+    opt.FormModel = this.view.formModel;
+    let dialog = this.callfc.openForm(
+      ViewresultComponent,
+      null,
+      null,
+      null,
+      '',
+      data,
+      '',
+      opt
+    );
   }
   //#endregion Function
 }

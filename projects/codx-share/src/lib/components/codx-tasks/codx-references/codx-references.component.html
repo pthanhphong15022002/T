@@ -15,7 +15,7 @@
   <div class="container" *ngIf="dataReferences?.length > 0">
     <div class="w-100">
       <ng-container *ngFor="let data of dataReferences; let i = index">
-        <div class="tab-tch mt-3  ms-{{ i * 15 }}">
+        <div class="tab-tch mt-3" [style]="'margin-left:' + i * 25 + 'px;'">
           <codx-temp-full
             [icoCss]="
               'w-30px symbol h-30px fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' +

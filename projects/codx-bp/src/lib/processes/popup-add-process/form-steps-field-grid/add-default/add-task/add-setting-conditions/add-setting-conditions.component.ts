@@ -569,7 +569,7 @@ export class AddSettingConditionsComponent {
       {
         let p2 = p.filters[y];
         this.predicateV += this.convertOperator(p2,number);
-        if(!p2.operator.includes("EMPTY")) 
+        if(p2?.operator && !p2.operator.includes("EMPTY")) 
         {
           number ++;
           this.dataValueV.push(p2.value);
@@ -594,7 +594,7 @@ export class AddSettingConditionsComponent {
       case 'EMPTY': return  data.field + "==" + 'NULL';
       case 'NOTEMPTY': return data.field + "!=" + 'NULL';
     }
-    return data;
+    return "";
   }
 
   convertLogic(data:any)

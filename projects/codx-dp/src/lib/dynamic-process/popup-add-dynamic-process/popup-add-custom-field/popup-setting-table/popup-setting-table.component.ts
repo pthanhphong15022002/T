@@ -123,7 +123,6 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
         });
       }
       this.changdef.detectChanges();
-      return;
     }
   }
 

@@ -553,7 +553,10 @@
         [applyFor]="'1'"
         [isMoveStage]="true"
         (moveStage)="moveStage($event)"
-        (startStep)="startNow($event)"></step-task>
+        (startStep)="startNow($event)"
+        [isAdmin]="deal?.isAdminAll"
+      ></step-task>
+
     </div>
   </div>
 

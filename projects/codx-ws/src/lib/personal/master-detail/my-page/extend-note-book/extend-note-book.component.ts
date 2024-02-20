@@ -13,6 +13,7 @@ import {
   CallFuncService,
   CodxService,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -24,6 +25,7 @@ import { AddUpdateNoteBookComponent } from '../add-update-note-book/add-update-n
 import { CodxView2Component } from 'projects/codx-share/src/lib/components/codx-view2/codx-view2.component';
 import { CodxViewWsComponent } from 'projects/codx-ws/src/lib/codx-view-ws/codx-view-ws.component';
 import { CodxWsService } from 'projects/codx-ws/src/public-api';
+import { DetailNotebookComponent } from '../detail-notebook/detail-notebook.component';
 
 @Component({
   selector: 'lib-extend-note-book',
@@ -86,10 +88,38 @@ export class ExtendNoteBookComponent implements OnInit {
     // this.codxService.navigate("","/ws/personal/WS006");
   }
 
-  detailStorage(recID: any) {
-    // var option = new DialogModel();
-    // option.IsFull = true;
-    // this.callfc.openForm(DetailStorageComponent,"",null,null,"",recID,"",option);
+  detailNoteBook(data: any) {
+    var option = new DialogModel();
+    option.zIndex = 100;
+    let formModel = new FormModel();
+    formModel.formName = 'NoteBooks';
+    formModel.gridViewName = 'grvNoteBooks';
+    formModel.entityName = 'WP_NoteBooks';
+    formModel.funcID = 'WS00625';
+    option.FormModel = formModel;
+    let dialog = this.callfc.openForm(
+      DetailNotebookComponent,
+      '',
+      900,
+      900,
+      '',
+      data,
+      '',
+      option
+    );
+    dialog.closed.subscribe((res) => {
+      if (res.event) {
+        res.event['modifiedOn'] = new Date();
+        this.dataSelected = res.event;
+        this.codxview.updateDataSource(res.event);
+        this.wsSv.loadDataList.next({
+          data: res.event,
+          type: 'notebook',
+          action: 'update',
+        });
+        this.ref.detectChanges();
+      }
+    });
   }
 
   addClick(e: any) {
@@ -117,7 +147,11 @@ export class ExtendNoteBookComponent implements OnInit {
           if (res.event) {
             this.codxview.addDataSource(res.event);
             this.dataSelected = res.event;
-            this.wsSv.loadDataList.next({data: res.event, type: 'notebook', action: 'add'});
+            this.wsSv.loadDataList.next({
+              data: res.event,
+              type: 'notebook',
+              action: 'add',
+            });
             this.ref.detectChanges();
           }
         });
@@ -162,9 +196,12 @@ export class ExtendNoteBookComponent implements OnInit {
             res.event['modifiedOn'] = new Date();
             this.dataSelected = res.event;
             this.codxview.updateDataSource(res.event);
-            this.wsSv.loadDataList.next({data: res.event, type: 'notebook', action: 'update'});
+            this.wsSv.loadDataList.next({
+              data: res.event,
+              type: 'notebook',
+              action: 'update',
+            });
             this.ref.detectChanges();
-
           }
         });
         break;
@@ -184,12 +221,15 @@ export class ExtendNoteBookComponent implements OnInit {
                 data?.recID
               )
               .subscribe((item) => {
-                if (item){
+                if (item) {
                   this.codxview.deleteDataSource(this.dataSelected);
-                  this.wsSv.loadDataList.next({data:item, type: 'notebook', action: 'delete'});
+                  this.wsSv.loadDataList.next({
+                    data: item,
+                    type: 'notebook',
+                    action: 'delete',
+                  });
                 }
                 this.ref.detectChanges();
-
               });
           }
         });

@@ -3,7 +3,7 @@
   *ngIf="dataSelected"
   (dblclick)="dbClick(dataSelected)"
 >
-  <div class="w-5 d-flex align-items-center">
+  <div class="w-20px p-2 d-flex align-items-center">
     <div
       *ngIf="
         dataSelected.endDate &&
@@ -20,7 +20,7 @@
       ></codx-label>
     </ng-template>
   </div>
-  <div class="w-10 d-flex align-items-center">
+  <div class="w-150px p-2 d-flex align-items-center">
     <codx-vll
       [name]="'BP001'"
       [value]="dataSelected?.activityType"
@@ -29,18 +29,18 @@
     >
     </codx-vll>
   </div>
-  <div class="w-20 d-flex align-items-center">
+  <div class="w-250px p-2 d-flex align-items-center">
     <div class="fw-bold">
       {{ dataSelected?.taskName }}
     </div>
   </div>
-  <div class="w-25 d-flex align-items-center">
+  <div class="w-350px p-2 d-flex align-items-center">
     {{ dataSelected?.memo }}
   </div>
-  <div class="w-25">
-    <div class="d-flex">
+  <div class="w-350px p-2 d-flex align-items-center flex-column">
+    <div class="d-flex mb-1">
       <codx-label
-        class="label-colon text-gray-800"
+        class="label-colon text-dark fw-bold"
         fiedName="list_PlanTime"
         [setRequire]="false"
         [formModel]="formModel"
@@ -61,12 +61,19 @@
           <span class="place-holder">dd/mm/yyyy</span>
         </div>
         <span class="ms-1 me-1">|</span>
-        <span>2 giờ</span>
+        <span class="me-1">{{ dataSelected.duration }}</span>
+        <codx-label
+          class=""
+          fiedName="lbl_Duration"
+          [setRequire]="false"
+          [formModel]="formModel"
+          [default]="'giờ'"
+        ></codx-label>
       </div>
     </div>
     <div class="d-flex">
       <codx-label
-        class="label-colon text-gray-800"
+        class="label-colon text-dark fw-bold"
         fiedName="ActualTime"
         [setRequire]="false"
         [formModel]="formModel"
@@ -86,12 +93,19 @@
         <div *ngIf="!dataSelected.actualEnd">
           <span class="place-holder">dd/mm/yyyy</span>
         </div>
-        <span class="ms-1 me-1">|</span>
-        <span>2 giờ</span>
+        <span class="mx-2">|</span>
+        <span class="text-dark fw-bold me-1">{{ dataSelected.interval }}</span>
+        <codx-label
+          class="text-dark"
+          fiedName="lbl_Interval"
+          [setRequire]="false"
+          [formModel]="formModel"
+          [default]="'giờ'"
+        ></codx-label>
       </div>
     </div>
   </div>
-  <div class="w-10 d-flex align-items-center">
+  <div class="w-100px p-2 d-flex align-items-center">
     <codx-vll
       [name]="'BP014'"
       [value]="dataSelected?.status"
@@ -101,8 +115,11 @@
     >
     </codx-vll>
   </div>
-  <div class="w-15 d-flex align-items-center">
-    <div class="d-flex justify-content-start align-items-center" *ngIf="dataSelected.createdBy">
+  <div class="w-250px p-2 d-flex align-items-center flex-column">
+    <div
+      class="d-flex justify-content-start align-items-center"
+      *ngIf="dataSelected.createdBy"
+    >
       <div class="me-3">
         <codx-img
           [objectId]="dataSelected.createdBy"
@@ -121,14 +138,34 @@
       </div>
     </div>
   </div>
-  <div class="w-15"></div>
-  <div class="w-15"></div>
-  <div class="w-10 d-flex align-items-center">
-    <codx-attachment-temp
-      [objectID]="dataSelected?.recID"
-      [formModel]="formModel"
-      [viewType]="1"
-      referType="source"
-    ></codx-attachment-temp>
+  <div class="w-200px p-2 d-flex align-items-center">
+    {{ process?.processName }}
+  </div>
+  <div class="w-200px p-2 d-flex align-items-center">
+    {{ instance?.title }}
+  </div>
+  <div class="w-100px p-2 d-flex justify-content-center">
+    <div class="attachment-file d-flex align-items-center" (click)="countData > 0 ? openPopup() : ''">
+      <span class="icon-i-paperclip"></span>
+      <span class="count-file">{{ countData }}</span>
+    </div>
   </div>
 </div>
+
+<ng-template #tmpListItem let-dialog>
+  <codx-form
+    [body]="body"
+    [dialog]="dialog"
+    headerText="Danh sách file đính kèm"
+  >
+  </codx-form>
+  <ng-template #body>
+    <codx-thumbnail
+      class="popup-attachment"
+      [files]="lstFile"
+      [formModel]="formModel"
+      [hideDelete]="true"
+      [hideMoreF]="true"
+    ></codx-thumbnail>
+  </ng-template>
+</ng-template>

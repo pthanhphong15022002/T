@@ -1716,6 +1716,15 @@ export class CodxShareService {
       }
     });
   }
+  getLstFileByID(lstID: string[]): Observable<any> {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetListFileByIDAsync',
+      [JSON.stringify(lstID)]
+    );
+  }
 }
 
 //#region Model

@@ -41,6 +41,7 @@ import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.mo
 import { ContractsDetailComponent } from '../../../contracts/contracts-detail/contracts-detail.component';
 import { CodxViewApproveComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 @Component({
   selector: 'task',
   templateUrl: './task.component.html',
@@ -346,6 +347,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       );
       let dataSave = { task: taskContract };
       this.save(dataSave);
+    } else if (this.taskType?.value == 'E') {
+      this.handelMail(null, 'add');
     } else {
       let data = {
         action: 'add',
@@ -398,26 +401,66 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   async editTask(task) {
     let taskEdit = JSON.parse(JSON.stringify(task));
     this.getTypeTask(taskEdit);
-    let taskOutput = await this.openPopupTask('edit', taskEdit);
-    if (taskOutput?.event) {
-      if (!taskOutput?.event?.objectID) {
-        task['objectID'] = this.objectID;
-      }
+    if (this.taskType?.value == 'E') {
+      this.handelMail(task, 'edit');
+    } else if (this.taskType?.value == 'Q') {
+      this.stepService.addQuotation('edit', 'Chỉnh sửa', null, null, null);
+      this.stepService.popupClosedSubject.subscribe((res) => {
+        let task = res;
+        if (task) {
+          let dataSave = { task: task };
+          this.save(dataSave);
+        }
+      });
+    } else if (this.taskType?.value == 'CO') {
+      let data = { action: 'edit', type: 'task' };
+      let taskContract = await this.stepService.openPopupTaskContract(
+        data,
+        'edit',
+        null,
+        null,
+        null,
+        true
+      );
+      let dataSave = { task: taskContract };
       this.api
-        .exec<any>('DP', 'ActivitiesBusiness', 'EditActivitiesAsync', [
-          taskOutput?.event?.task,
-          this.entityName,
-        ])
-        .subscribe((res) => {
-          if (res) {
-            let index = this.listActivitie?.findIndex(
-              (activitie) => activitie.recID == res.recID
-            );
-            this.listActivitie?.splice(index, 1, res);
-            this.notiService.notifyCode('SYS007');
-            this.changeDetectorRef.markForCheck();
-          }
-        });
+          .exec<any>('DP', 'ActivitiesBusiness', 'EditActivitiesAsync', [
+            taskContract,
+            this.entityName,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              let index = this.listActivitie?.findIndex(
+                (activitie) => activitie.recID == res.recID
+              );
+              this.listActivitie?.splice(index, 1, res);
+              this.notiService.notifyCode('SYS007');
+              this.changeDetectorRef.markForCheck();
+            }
+          });
+      
+    } else {
+      let taskOutput = await this.openPopupTask('edit', taskEdit);
+      if (taskOutput?.event) {
+        if (!taskOutput?.event?.objectID) {
+          task['objectID'] = this.objectID;
+        }
+        this.api
+          .exec<any>('DP', 'ActivitiesBusiness', 'EditActivitiesAsync', [
+            taskOutput?.event?.task,
+            this.entityName,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              let index = this.listActivitie?.findIndex(
+                (activitie) => activitie.recID == res.recID
+              );
+              this.listActivitie?.splice(index, 1, res);
+              this.notiService.notifyCode('SYS007');
+              this.changeDetectorRef.markForCheck();
+            }
+          });
+      }
     }
   }
   deleteTask(task) {
@@ -455,38 +498,41 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     delete dataCopy?.id;
     dataCopy['modifiedOn'] = null;
     dataCopy['modifiedBy'] = null;
-
-    let taskOutput = await this.openPopupTask('copy', dataCopy);
-    let data = taskOutput?.event?.task;
-    let isAddTask = taskOutput?.event?.isAddTask;
-    let isCreateMeeting = taskOutput?.event?.isCreateMeeting;
-    if (data) {
-      this.copyData(data, this.activitie);
-      let rolesTask = data?.roles;
-      let roles: DP_Activities_Roles[] = [];
-      if (rolesTask?.length > 0) {
-        rolesTask.forEach((element) => {
-          let role = new DP_Activities_Roles();
-          this.copyData(element, role);
-          roles.push(role);
-        });
+    if (this.taskType?.value == 'E') {
+      this.handelMail(task, 'copy');
+    } else {
+      let taskOutput = await this.openPopupTask('copy', dataCopy);
+      let data = taskOutput?.event?.task;
+      let isAddTask = taskOutput?.event?.isAddTask;
+      let isCreateMeeting = taskOutput?.event?.isCreateMeeting;
+      if (data) {
+        this.copyData(data, this.activitie);
+        let rolesTask = data?.roles;
+        let roles: DP_Activities_Roles[] = [];
+        if (rolesTask?.length > 0) {
+          rolesTask.forEach((element) => {
+            let role = new DP_Activities_Roles();
+            this.copyData(element, role);
+            roles.push(role);
+          });
+        }
+        this.activitie.roles = roles;
+        this.activitie.objectID = this.objectID;
+        this.api
+          .exec<any>('DP', 'ActivitiesBusiness', 'AddActivitiesAsync', [
+            this.activitie,
+            this.entityName,
+            isCreateMeeting,
+            isAddTask,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              this.listActivitie.push(res);
+              this.notiService.notifyCode('SYS006');
+              this.changeDetectorRef.markForCheck();
+            }
+          });
       }
-      this.activitie.roles = roles;
-      this.activitie.objectID = this.objectID;
-      this.api
-        .exec<any>('DP', 'ActivitiesBusiness', 'AddActivitiesAsync', [
-          this.activitie,
-          this.entityName,
-          isCreateMeeting,
-          isAddTask,
-        ])
-        .subscribe((res) => {
-          if (res) {
-            this.listActivitie.push(res);
-            this.notiService.notifyCode('SYS006');
-            this.changeDetectorRef.markForCheck();
-          }
-        });
     }
   }
 
@@ -901,6 +947,117 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       type: '2',
       stepsTasks: task,
     });
+  }
+
+  handelMail(activitie: DP_Activities, action) {
+    activitie = activitie
+      ? JSON.parse(JSON.stringify(activitie))
+      : new DP_Activities();
+    let data = {
+      formGroup: null,
+      templateID: activitie?.reference || null,
+      showIsTemplate: true,
+      showIsPublish: true,
+      showSendLater: true,
+      files: null,
+      isAddNew: action == 'edit' ? false : true,
+      saveIsTemplate: action == 'edit' ? false : true,
+      notSendMail: true,
+    };
+
+    let popEmail = this.callFunc.openForm(
+      CodxEmailComponent,
+      '',
+      800,
+      screen.height,
+      '',
+      data
+    );
+    popEmail.closed.subscribe((res) => {
+      if (res && res?.event) {
+        let mail = res?.event;
+        if (action === 'add' || action === 'copy') {
+          if (activitie?.id) {
+            delete activitie.id;
+          }
+          activitie.refID = Util.uid();
+          activitie.recID = Util.uid();
+          activitie.status = '1';
+          activitie.progress = 0;
+          activitie.assigned = '0';
+          activitie.dependRule = '0';
+          activitie.approveStatus = '1';
+          activitie.approveStatus = '1';
+          activitie.isTaskDefault = false;
+          activitie.taskType = 'E';
+
+          activitie.taskName = mail?.subject || this.taskType?.text;
+          activitie.durationDay = 1;
+          activitie.reference = mail?.recID;
+          activitie.memo = mail?.message;
+
+          if (mail?.isSendMail) {
+            activitie.actualEnd = new Date();
+            activitie.status = '3';
+            activitie.progress = 100;
+          } else {
+            activitie.startDate = new Date();
+            activitie.endDate = new Date();
+            activitie.endDate.setDate(activitie.startDate.getDate() + 1);
+            activitie.status = '1';
+            activitie.progress = 0;
+          }
+          this.setRole(activitie);
+          activitie.objectID = this.objectID;
+          activitie.objectType = this.entityName;
+          this.api
+            .exec<any>('DP', 'ActivitiesBusiness', 'AddActivitiesAsync', [
+              activitie,
+              this.entityName,
+            ])
+            .subscribe((res) => {
+              if (res) {
+                this.listActivitie.push(res);
+                this.isNoData = false;
+                this.notiService.notifyCode('SYS006');
+                this.changeDetectorRef.markForCheck();
+              }
+            });
+        } else {
+          activitie.taskName = mail?.subject || 'Email';
+          activitie.memo = mail?.message;
+          this.api
+            .exec<any>('DP', 'ActivitiesBusiness', 'EditActivitiesAsync', [
+              activitie,
+              this.entityName,
+            ])
+            .subscribe((res) => {
+              if (res) {
+                let index = this.listActivitie?.findIndex(
+                  (activitie) => activitie.recID == res.recID
+                );
+                this.listActivitie?.splice(index, 1, res);
+                this.notiService.notifyCode('SYS007');
+                this.changeDetectorRef.markForCheck();
+              }
+            });
+        }
+        this.changeDetectorRef.markForCheck();
+      }
+    });
+  }
+  setRole(task) {
+    let role = new DP_Activities_Roles();
+    role.recID = Util.uid();
+    role.objectName = this.user?.userName;
+    role.objectID = this.user?.userID;
+    role.createdOn = new Date();
+    role.createdBy = this.user?.userID;
+    role.roleType = 'O';
+    role.objectType = this.user?.objectType;
+    task.owner = role.objectID;
+    task.roles = [role];
+    return role;
   }
   //#endregion
 }

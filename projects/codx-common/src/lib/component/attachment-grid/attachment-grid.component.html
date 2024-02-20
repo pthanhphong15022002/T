@@ -1,0 +1,22 @@
+<table class="table mt-2">
+    <thead>
+      <tr class="fw-bold bg-light">
+        <th scope="col"><codx-label default="Danh sách file đính kèm" [formName]="formModel?.formName" [fiedName]="'lblAttachGridListAttach'"></codx-label></th>
+        <th scope="col"><codx-label default="Mẫu" [formName]="formModel?.formName" [fiedName]="'lblAttachGridTemplate'"></codx-label></th>
+        <th scope="col"><codx-label default="Bắt buộc" [formName]="formModel?.formName" [fiedName]="'lblAttachGridRequired'"></codx-label></th>
+        <th scope="col"><codx-label default="Đính kèm" [formName]="formModel?.formName" [fiedName]="'lblAttachGridAttach'"></codx-label></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-top cursor-pointer" *ngFor="let item of data, let i = index">
+          <th class="border-none">{{item.title}}</th>
+          <td><div class="d-flex align-items-center position-relative" (click)="openFormDetail(item.files)"><span class="rounder-attach rounded-circle" *ngIf="item?.count">{{item.count}}</span><i class="icon-i-file-earmark-text icon-20 ms-2"></i></div></td>
+          <td><codx-input type="checkbox" field="isRequired" [crrValue]="item.isRequired" (valueChange)="valueChange($event,i)" [disabled]="true"></codx-input></td>
+          <td class="position-relative"><span class="rounder-attach rounded-circle" *ngIf="item?.countAttach">{{item.countAttach}}</span><i class="icon-attach_file" (click)="openAttach(item.recID,i)"></i></td>
+      </tr>
+    </tbody>
+  </table>
+  <codx-attachment #attachment hideImageThumb="1" hideImageUpload="1" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+    hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel" 
+    [idField]="'RecID'" [isSaveSelected]="'1'" [objectType]="formModel?.entityName" [referType]="'attach'" (fileSave)="fileSave($event)">
+  </codx-attachment>

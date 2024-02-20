@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, HostBinding, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { AuthStore, CRUDService, CodxGridviewV2Component, DialogModel, NotificationsService, SidebarModel, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
 import moment from 'moment';
 
@@ -9,6 +9,7 @@ import moment from 'moment';
 })
 export class PayTExceptComponent extends UIComponent implements AfterViewInit {
   
+  @HostBinding('class') get valid() { return "w-100 h-100"; }
   views:ViewModel[];
   columnsGrid:any[] = [];
   gridViewSetup:any;
@@ -206,7 +207,7 @@ export class PayTExceptComponent extends UIComponent implements AfterViewInit {
   // changeDataMF
   changeDataMF(event:any){
     event.forEach((x:any) => { 
-      if(x.functionID == 'SYS02' || x.functionID == 'SYS04' && (this.userPermission.write == "9" || this.userPermission.isAdmin))
+      if((x.functionID == 'SYS02' || x.functionID == 'SYS04') && (this.userPermission?.write == "9" || this.userPermission?.isAdmin))
       {
         x.disabled = false;
         x.isbookmark = true;

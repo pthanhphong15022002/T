@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { ApiHttpService, NotificationsService, CacheService, CallFuncService, DialogRef, DialogData, CodxGridviewV2Component, Util } from 'codx-core';
-import { TS_KowDs } from '../../../models/kowds.model';
+import { TS_KowDs } from '../../../models/TS_KowDs';
 
 @Component({
   selector: 'pr-popup-kowd-month',

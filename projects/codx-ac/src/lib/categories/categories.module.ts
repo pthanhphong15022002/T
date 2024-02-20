@@ -22,6 +22,7 @@ import { FixedAssetsComponent } from '../settings/fixed-assets/fixed-assets.comp
 import { ItemBatchsComponent } from '../settings/item-batchs/item-batchs.component';
 import { ItemSeriesComponent } from '../settings/item-series/item-series.component';
 import { VATCodesComponent } from '../settings/vatcodes/vatcodes.component';
+import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 
 var routes: Routes = [
   {
@@ -99,6 +100,10 @@ var routes: Routes = [
       {
         path: 'vatcodes/:funcID',
         component: VATCodesComponent,
+      },
+      {
+        path: 'dynamic/:funcID',
+        component: DynamicFormComponent,
       },
     ],
   },
