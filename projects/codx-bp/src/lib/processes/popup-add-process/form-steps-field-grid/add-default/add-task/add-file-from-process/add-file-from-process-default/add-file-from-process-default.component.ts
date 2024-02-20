@@ -49,8 +49,7 @@ export class AddFileFromProcessDefaultComponent implements OnInit{
             }
             else if(elm.refStepNo)
             {
-              var index = this.getDocRef(elm.refStepNo);
-              debugger
+              var index = this.getDocRef(elm.refStepID);
               if(index>=0) {
                 if(this.documentControl[index].templateID) {
                   fieldID = this.documentControl[index].templateID;
@@ -75,17 +74,17 @@ export class AddFileFromProcessDefaultComponent implements OnInit{
     var index = null;
     if(refStepID)
     {
-      var doc = this.documentControl.filter(x=>x.recID == refStepID)[0];
+      var doc = this.documentControl.filter(x=>x.stepID == refStepID)[0];
       if(doc?.refStepID == '00000000-0000-0000-0000-000000000000' || !doc?.refStepID)
       {
-        index = this.documentControl.findIndex(x=>x.recID == refStepID);
+        return this.documentControl.findIndex(x=>x.stepID == refStepID);
       } 
       else 
       {
         return this.getDocRef(doc.refStepID)
       }
     } 
-    index = this.documentControl.findIndex(x=>x.recID == refStepID);
+    index = this.documentControl.findIndex(x=>x.stepID == refStepID);
     return index;
   }
 
