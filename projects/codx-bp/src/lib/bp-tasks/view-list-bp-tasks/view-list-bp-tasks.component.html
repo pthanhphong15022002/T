@@ -3,7 +3,7 @@
   *ngIf="dataSelected"
   (dblclick)="dbClick(dataSelected)"
 >
-  <div class="w-50px p-2 d-flex align-items-center">
+  <div class="w-20px p-2 d-flex align-items-center">
     <div
       *ngIf="
         dataSelected.endDate &&
@@ -20,7 +20,7 @@
       ></codx-label>
     </ng-template>
   </div>
-  <div class="w-100px p-2 d-flex align-items-center">
+  <div class="w-150px p-2 d-flex align-items-center">
     <codx-vll
       [name]="'BP001'"
       [value]="dataSelected?.activityType"
@@ -29,7 +29,7 @@
     >
     </codx-vll>
   </div>
-  <div class="w-200px p-2 d-flex align-items-center">
+  <div class="w-250px p-2 d-flex align-items-center">
     <div class="fw-bold">
       {{ dataSelected?.taskName }}
     </div>
