@@ -45,6 +45,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
   listDocument = [];
   dataEmail: any;
   showEmail = false;
+  hideOwner = false;
   ngOnChanges(changes: SimpleChanges): void {
     if(changes?.activityType && changes['activityType'].currentValue != changes['activityType'].previousValue)
     {
@@ -88,7 +89,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       }
       else if(elm.refStepNo)
       {
-        var index = this.process.documentControl.findIndex(x=>x.recID == elm.refStepID);
+        var index = this.getDocRef(elm.refStepID);
         if(index>=0) {
           if(this.process.documentControl[index].templateID) {
             fieldID = this.process.documentControl[index].templateID;
@@ -100,6 +101,25 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       }
       this.getFile(fieldID, entityName , i)
     })
+  }
+
+  getDocRef(refStepID:any)
+  {
+    var index = null;
+    if(refStepID)
+    {
+      var doc = this.process.documentControl.filter(x=>x.stepID == refStepID)[0];
+      if(doc?.refStepID == '00000000-0000-0000-0000-000000000000' || !doc?.refStepID)
+      {
+        return this.process.documentControl.findIndex(x=>x.stepID == refStepID);
+      } 
+      else 
+      {
+        return this.getDocRef(doc.refStepID)
+      }
+    } 
+    index = this.process.documentControl.findIndex(x=>x.stepID == refStepID);
+    return index;
   }
 
   getFile(recID:any , entityName:any ,index:any)
@@ -137,7 +157,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       checkList: "",
       nextSteps: ""
     }
-    if(!this.process.documentControl)this.process.documentControl = []
+    if(!this.process.documentControl) this.process.documentControl = []
     this.dataChange.emit(this.data);
   }
   changeActivity()
@@ -184,6 +204,16 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
         ]
       }
       if(this.data.settings?.isTemplate == undefined || this.data.settings?.isTemplate == null) this.data.settings.isTemplate = false;
+      if(this.data.stepNo == 1) {
+        this.hideOwner = true;
+        this.data.permissions = [ {
+          objectID: this.user?.userID,
+          objectName: this.user?.userName,
+          objectType: "U",
+          roleType: 'O'
+        }];
+        this.dataChange.emit(this.data);
+      }
     }
     else if(this.data.activityType == "Task")
     {
@@ -547,7 +577,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
           fieldID: this.data?.recID,
           memo: this.data?.memo,
           refStepNo: res?.event?.stepNo,
-          refStepID: res?.event?.recID
+          refStepID: res?.event?.stepID
         }
         this.process.documentControl.push(documentControl);
         this.dataChangeProcess.emit(this.process);

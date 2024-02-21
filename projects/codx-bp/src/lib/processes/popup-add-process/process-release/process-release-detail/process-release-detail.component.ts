@@ -1,4 +1,4 @@
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, Optional, SimpleChanges } from '@angular/core';
 import { ApiHttpService, CacheService, CallFuncService, DialogData, DialogRef, SidebarModel } from 'codx-core';
 import moment from 'moment';
 import { PopupBpTasksComponent } from 'projects/codx-bp/src/lib/bp-tasks/popup-bp-tasks/popup-bp-tasks.component';
@@ -11,15 +11,17 @@ import { isObservable } from 'rxjs';
   templateUrl: './process-release-detail.component.html',
   styleUrls: ['./process-release-detail.component.scss']
 })
-export class ProcessReleaseDetailComponent implements OnInit{
-  data:any;
+export class ProcessReleaseDetailComponent implements OnInit , OnChanges{
+  @Input() data:any;
+  @Input() process:any;
+  @Input() formModel:any;
+  @Input() right = false;
   dialog:any;
   active = 1;
-  process:any;
   listStage = [];
   count = 0;
   listTask:any;
-  formModel:any;
+ 
   info:any;
   constructor(
     private shareService: CodxShareService,
@@ -31,9 +33,20 @@ export class ProcessReleaseDetailComponent implements OnInit{
   )
   {
     this.dialog = dialog;
-    this.formModel = dialog.formModel;
-    this.data = dt?.data?.data;
-    this.process =  JSON.parse(JSON.stringify(dt?.data?.process));
+    this.formModel = this.formModel || dialog?.formModel;
+    this.data = this.data || dt?.data?.data;
+    if(dt?.data?.process) this.process = JSON.parse(JSON.stringify(dt?.data?.process));
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['process'].currentValue &&
+      changes['process'].currentValue != changes['process'].previousValue
+    )
+    {
+        this.process = changes['process'].currentValue;
+        this.getData();
+        this.getInfo();
+    }
   }
   ngOnInit(): void {
     this.getData();

@@ -29,12 +29,9 @@ export class AddFileFromProcessDefaultComponent implements OnInit{
   {
     if(this.data) {
       this.documentControl = JSON.parse(JSON.stringify(this.data.documentControl));
-      if(this.step?.stepNo)
-      {
-        this.documentControl = this.documentControl.filter(x=>x.stepNo < this.step.stepNo);
-      }
+      if(this.step?.stepNo) this.documentControl = this.documentControl.filter(x=>x.stepNo < this.step.stepNo);
       let i = 0;
-      if(this.documentControl && this.documentControl.length>0)
+      if(this.documentControl && this.documentControl.length > 0)
       {
         this.documentControl.forEach(elm => {
           var dt = this.data.steps.filter(x=>x.stepNo == elm.stepNo);
@@ -52,8 +49,15 @@ export class AddFileFromProcessDefaultComponent implements OnInit{
             }
             else if(elm.refStepNo)
             {
-              var index = this.documentControl.findIndex(x=>x.recID == elm.refStepID);
-              if(index>=0) fieldID = this.documentControl[index].fieldID;
+              var index = this.getDocRef(elm.refStepID);
+              if(index>=0) {
+                if(this.documentControl[index].templateID) {
+                  fieldID = this.documentControl[index].templateID;
+                  entityName = "AD_ExcelTemplates"
+                  if(this.documentControl[index].templateType == "word") entityName = "AD_WordTemplates"
+                }
+                else fieldID = this.documentControl[index].fieldID;
+              }
             }
 
             this.getFile(fieldID,entityName,i);
@@ -65,6 +69,24 @@ export class AddFileFromProcessDefaultComponent implements OnInit{
     }
   }
 
+  getDocRef(refStepID:any)
+  {
+    var index = null;
+    if(refStepID)
+    {
+      var doc = this.documentControl.filter(x=>x.stepID == refStepID)[0];
+      if(doc?.refStepID == '00000000-0000-0000-0000-000000000000' || !doc?.refStepID)
+      {
+        return this.documentControl.findIndex(x=>x.stepID == refStepID);
+      } 
+      else 
+      {
+        return this.getDocRef(doc.refStepID)
+      }
+    } 
+    index = this.documentControl.findIndex(x=>x.stepID == refStepID);
+    return index;
+  }
 
   groupData()
   {

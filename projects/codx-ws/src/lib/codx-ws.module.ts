@@ -171,10 +171,11 @@ const routes: Routes = [
       //   ],
       // },
       // Phiếu chi
-      // {
-      //   path: 'cashpayments/:funcID',
-      //   component: CashPaymentsComponent,
-      // },
+      {
+        path: 'cashpayments/:funcID',
+        component: CashPaymentsComponent,
+        data: { noReuse: true, runMode: 1 },
+      },
       // {
       //   path: 'paymentorders/:funcID',
       //   component: PaymentOrderComponent,
@@ -415,7 +416,7 @@ const routes: Routes = [
     TooltipModule,
     TabAllModule,
     CodxCommonModule,
-    NgbModule
+    NgbModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
