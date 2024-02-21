@@ -68,15 +68,19 @@
               "
             ></div>
           </div>
-          <div class="d-flex justify-content-start footerCard-item mb-2">
-            <span
-              class="text-gray-600"
-              [innerHTML]="
-                data?.category
-                  | formatvalue : view.formModel : 'Category'
-                  | async
-              "
-            ></span>
+          <div
+            class="d-flex justify-content-start footerCard-item mb-2 text-gray-600"
+          >
+            <codx-label
+              default="Số lượng yêu cầu"
+              class="label-colon"
+              [formModel]="view.formModel"
+              fiedName="card_Counts"
+            ></codx-label>
+            <span *ngIf="data.counts > 0; else countNo">{{ data.counts }}</span>
+            <ng-template #countNo>
+              <span>0</span>
+            </ng-template>
           </div>
           <div class="d-flex justify-content-between h-35px">
             <div
@@ -274,7 +278,7 @@
 <!--LIST-->
 <ng-template #headerTemplateList let-data>
   <div class="d-flex w-100 m-1" style="background: #e3ecf1">
-    <div class="w-30 text-dark fw-bold ps-5 py-3 fw-500">
+    <div class="w-35 text-dark fw-bold ps-5 py-3 fw-500">
       <codx-label
         fiedName="list_ProcessName"
         [setRequire]="false"
@@ -288,14 +292,6 @@
         [setRequire]="false"
         [formModel]="view.formModel"
         [default]="'Trình trạng'"
-      ></codx-label>
-    </div>
-    <div class="w-10 text-dark fw-bold py-3 fw-500">
-      <codx-label
-        fiedName="list_Category"
-        [setRequire]="false"
-        [formModel]="view.formModel"
-        [default]="'Vùng quy trình'"
       ></codx-label>
     </div>
     <div class="w-20 text-dark fw-bold py-3 fw-500">
@@ -314,7 +310,7 @@
         [default]="'Người tạo'"
       ></codx-label>
     </div>
-    <div class="w-10 text-dark fw-bold py-3 fw-500">
+    <div class="w-15 text-dark fw-bold py-3 fw-500">
       <codx-label
         fiedName="list_Tags"
         [setRequire]="false"
@@ -327,14 +323,29 @@
 
 <ng-template #templateList let-data>
   <div class="d-flex w-100 align-items-center border-bottom">
-    <div class="w-30 py-3 ps-5">
-      <span
-        [innerHTML]="
-          data?.processName
-            | formatvalue : view.formModel : 'ProcessName'
-            | async
-        "
-      ></span>
+    <div class="w-35 py-3 ps-5">
+      <div class="d-flex flex-column">
+        <div
+          class="mb-1"
+          [innerHTML]="
+            data?.processName
+              | formatvalue : view.formModel : 'ProcessName'
+              | async
+          "
+        ></div>
+        <div class="text-gray-600">
+          <codx-label
+            default="Số lượng yêu cầu"
+            class="label-colon"
+            [formModel]="view.formModel"
+            fiedName="list_Counts"
+          ></codx-label>
+          <span *ngIf="data.counts > 0; else countNo">{{ data.counts }}</span>
+          <ng-template #countNo>
+            <span>0</span>
+          </ng-template>
+        </div>
+      </div>
     </div>
     <div class="w-10 py-3">
       <div class="d-flex justify-content-start align-items-center codx-badge">
@@ -346,13 +357,6 @@
         >
         </codx-vll>
       </div>
-    </div>
-    <div class="w-10 py-3 d-flex justify-content-center">
-      <div
-        [innerHTML]="
-          data?.category | formatvalue : view.formModel : 'Category' | async
-        "
-      ></div>
     </div>
     <div class="w-20 py-3 d-flex flex-wrap">
       <ng-container *ngIf="data?.permissions?.length > 0">
@@ -415,7 +419,7 @@
         </div>
       </div>
     </div>
-    <div class="w-10 py-3">
+    <div class="w-15 py-3">
       <codx-tag
         [entityName]="view?.formModel?.entityName"
         [disabled]="true"
