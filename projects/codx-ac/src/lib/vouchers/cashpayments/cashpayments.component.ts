@@ -36,6 +36,7 @@ import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components
 import { Subject, takeUntil } from 'rxjs';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
+import { Router } from '@angular/router';
 declare var jsBh: any;
 @Component({
   selector: 'lib-cashpayments',
@@ -101,6 +102,7 @@ export class CashPaymentsComponent extends UIComponent {
     this.router.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       this.journalNo = params?.journalNo;
     });
+    this.runmode = this.router.snapshot.data['runMode'];
   }
   //#endregion Constructor
 
@@ -113,7 +115,7 @@ export class CashPaymentsComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.headerText = res?.defaultName || res?.customName;
-          this.runmode = res?.runMode;
+          this.runmode = this.runmode || res?.runMode;
         }
       });
     this.getJournal();

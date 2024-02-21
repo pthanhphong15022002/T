@@ -42,6 +42,7 @@
     (clickMF)="clickMF($event, data)"
     [hideMF]="asideMode == '2'"
     (changeDataMF)="changeDataMF($event, data)"
+    (dblclick)="clickMF({functionID: 'BPT0101'},data)"
   >
   </codx-card-img>
   <ng-template #footerbg let-data>
@@ -322,7 +323,7 @@
 </ng-template>
 
 <ng-template #templateList let-data>
-  <div class="d-flex w-100 align-items-center border-bottom">
+  <div class="d-flex w-100 align-items-center border-bottom" (dblclick)="clickMF({functionID: 'BPT0101'},data)">
     <div class="w-35 py-3 ps-5">
       <div class="d-flex flex-column">
         <div
