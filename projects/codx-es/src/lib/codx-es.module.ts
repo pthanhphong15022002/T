@@ -68,6 +68,7 @@ import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
 import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts.component';
+import { PopupSupplierComponent } from './sign-file/popup-sign-for-approval/popup-supplier/popup-supplier.component';
 
 const routes: Routes = [
   {
@@ -196,6 +197,7 @@ const routes: Routes = [
     SettingComponent,
     PopupADRComponent,
     PopupSignForApprovalComponent,
+    PopupSupplierComponent,
     ViewApprovalProcessComponent,
     ESApprovelComponent,
     SearchingComponent,

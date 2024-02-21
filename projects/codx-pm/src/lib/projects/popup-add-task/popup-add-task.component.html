@@ -32,7 +32,7 @@
        (valueChange)="valueChange($event)">
     </codx-input>
   </div>
-  <div class="row">
+  <div class="row border-bottom">
     <div class="col-4 form-group" >
       <codx-label fiedName="StartDate" [formModel]="form.formModel" default="Ngày bắt đầu">
       </codx-label>
@@ -55,15 +55,15 @@
       </codx-input>
     </div>
   </div>
-  <div class="row">
+  <div class="row pt-3 border-bottom">
     <div class="container w-100 h-100">
       <div class="row">
-          <div class="col-4">
+          <div class="col-4 p-0 ps-1">
             <codx-label fiedName="resources" [formModel]="form.formModel" default="Người xử lý" class="text-primary fw-bold" >
             </codx-label>
           </div>
           <div class="col-8">
-            <div class="d-flex flex-row justify-content-start">
+            <div class="d-flex flex-row justify-content-end">
               <ng-container *ngFor="let item of listRoles">
                 <div class="d-flex align-items-center justify-content-end me-4">
                   <span [inlineSVG]="'./assets/themes/pm/default/img/'+ item?.icon"></span>
@@ -78,47 +78,213 @@
 
 
       <div class="d-flex flex-row text-end align-items-start">
-        <div class="mx-2">
-          <button class="btn btn-sm" (click)="selectUser()"><i class="icon-groups icon-21"></i></button>
+        <div class="my-2">
+          <span class="border rounded-circle w-30px h-30px btn-outline-primary d-flex justify-content-center" (click)="selectUser()"><i class="icon-groups icon-21 pt-1"></i></span>
         </div>
       </div>
     </div>
-    <!-- <div class="col-4 form-group">
-      <codx-label fiedName="Resources" [formModel]="form.formModel" default="Người xử lí">
-      </codx-label>
-      <div  style="margin: 0 auto; width:100%;" *ngIf="projectMemberType=='1'">
-        <ejs-multiselect id='multiselect-checkbox' #checkbox [dataSource]="projectData.permissions" [fields]='fields'
-        [mode]="'CheckBox'"  [showDropDownIcon]="true" showSelectAll='true' [popupHeight]="'400px'" [popupWidth]="'400px'" [filterBarPlaceholder]="'Tìm kiếm...'" locale="vi">
-        <ng-template #itemTemplate let-data>
-          <div class="">
-            <codx-img [width]="30" [objectId]="data?.objectID" objectType="AD_Users" [objectName]="data?.objectName"></codx-img> &nbsp;&nbsp; {{data.objectName}}
+    <div class="w-100 overflow-scroll" style="max-height:200px">
+      <div class="d-flex align-items-center mb-4 pb-2 position-relative parent-container mt-3" *ngFor="let item of members">
+        <div class="symbol symbol-30px symbol-circle me-4">
+          <codx-img [width]="30" [objectId]="item?.resourceID" objectType="AD_Users" [objectName]="item?.resourceName"></codx-img>
+          <div style="position: absolute; right: 0px; bottom: 0px">
+            <ng-container *ngFor="let role of listRoles">
+              <ng-container  *ngIf="item.icon && role.value == item.roleType">
+                <span
+                  ><img
+                    src="/assets/themes/pm/default/img/{{ item?.icon }}"
+                    alt=""
+                /></span>
+              </ng-container>
+            </ng-container>
           </div>
-      </ng-template>
-    </ejs-multiselect>
-     </div>
-    </div>
-    <div class="col-8 form-group">
+          <!-- <div role="button" class="pe-auto"  *ngIf="item.icon">
+            <span popoverClass="userPopoverClass"  placement="right"
+              autoClose="outside" class="position-absolute attendees-tag"
+              [inlineSVG]="'./assets/themes/pm/default/img/'+ item?.icon" >
+            </span>
+          </div> -->
+        </div>
 
-    </div> -->
+        <div class="d-flex flex-column w-50">
+          <div class="text-dark fw-bold fs-6 fw-bolder">
+            {{ item?.resourceName }}
+          </div>
+          <div>
+            <span class="text-muted">{{
+              item?.roleType | vll : "PM013" : "text" | async
+              }}</span>
+          </div>
+        </div>
+        <div class="d-flex flex-column w-25">
+          <codx-vll
+              [name]="'PM013'"
+              [value]="item.roleType"
+              [showBgColor]="true"
+              [showText]="true"
+              [className]="'rounded-pill'"
+            >
+            </codx-vll>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center me-5 ">
+        <!-- <i class="icon-clear icon-16 " (click)="removeMember(item)"></i> -->
+        </div>
+
+
+      </div>
+    </div>
+
+
+  </div>
+  <div class="row border-bottom pt-3">
+    <div class="col-1 d-flex align-items-center pb-3 ps-5">
+      <codx-input type="checkbox" [class]="'check-circle'" field="approveControl" [crrValue]="data.approveControl=='1'" (valueChange)="checkboxChange($event)"></codx-input>
+    </div>
+    <div class="col-11 d-flex justify-content-start">
+      <codx-label fiedName="ApproveControl" [formModel]="form.formModel" default="Có báo cáo kết quả thực hiện"  >
+      </codx-label>
+    </div>
+
+
+  </div>
+  <div class="row pt-3 border-bottom"  *ngIf="enableAttachment">
+    <div
+    class="d-flex align-items-center nav-item w-100 mb-1"
+
+  >
+    <div class="w-75 d-flex align-items-center mb-2">
+
+      <div class="fw-bold text-primary">
+        <codx-label
+          name="lblAttachments"
+          [formModel]="form.formModel"
+          default="Tài liệu đính kèm"
+        >
+        </codx-label>
+      </div>
+    </div>
+    <div class="w-25 d-flex align-items-center justify-content-end">
+      <span class="icon-attach_file icon-18 me-2 text-primary" (click)="attach()"></span>
+    </div>
+  </div>
+  <div class="AttachmentFile-group flex-nowrap">
+    <codx-attachment
+      #attachment
+      [objectType]="'TM_Tasks'"
+      [objectId]="data?.recID"
+      hideFolder="1"
+      hideImageUpload="0"
+      hideImageThumb="0"
+      hideUploadBtn="1"
+      [showMessage]="0"
+      hideDes="1"
+      type="inline"
+      allowMultiFile="1"
+      referType="source"
+      [formModel]="dialog.formModel"
+      [functionID]="funcID"
+      (fileAdded)="fileAdded($event)"
+      (fileCount)="getfileCount($event)"
+      displayThumb="full"
+    >
+    </codx-attachment>
+  </div>
+  </div>
+  <div class="row pt-5 border-bottom" *ngIf="enableChecklist">
+    <codx-label fiedName="checklist" [formModel]="form.formModel" default="Công việc cần làm" class="text-primary fw-bold" >
+    </codx-label>
+    <div class="container mx-auto pb-1">
+      <form class="w-100 max-w-sm">
+        <div class="d-flex align-items-center  pt-3">
+          <input
+            [(ngModel)]="newTask"
+            #input
+            name="newTask"
+            class="border-0"
+            type="text"
+            placeholder="...Thêm bước công việc"
+            (keydown.enter)="addTask(input)"
+          />
+          <span
+            (click)="addTask(input)"
+            class="px-1 rounded border d-flex align-items-center text-hover-success"
+          >
+            <i class="icon-playlist_add icon-21"></i>
+        </span>
+        </div>
+      </form>
+    </div>
+
+    <div>
+      <div *ngIf="todoList.length > 0" class="container mx-auto overflow-scroll" style="max-height:200px">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" *ngFor="let task of todoList" >
+            <div class="w-100 d-flex align-items-center">
+              <div class="w-75 row" [ngClass]="task.status!='1' ? 'text-decoration-line-through' : ''">
+                <div class="col-1">
+                  <ejs-checkbox #checkbox [cssClass]="'check-circle'" [checked]="task.status!='1'" (change)="toggleCompleted(task)"></ejs-checkbox>
+                  <!-- <codx-input type="checkbox" [class]="'check-circle'" [crrValue]="task.status!='1'" (valueChange)="toggleCompleted(task)"></codx-input> -->
+                </div>
+                <div class="col-11">
+                  {{ task.memo }}
+                </div>
+
+              </div>
+
+              <div class="w-25 d-flex align-items-center justify-content-end">
+                <i class="icon-cancel icon-21 me-3 text-danger" (click)="removeTask(task)"></i>
+                <!-- <i class="icon-i-check-circle icon-16 text-success" (click)="toggleCompleted(task)"></i> -->
+
+              </div>
+            </div>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row pt-3">
+    <codx-tag
+    [field]="'tags'"
+    [entityName]="entityName"
+    [value]="data.tags"
+    (valueChange)="valueChange($event)"
+  ></codx-tag>
   </div>
 </ng-template>
 <ng-template #footer>
-  <div class="d-flex justify-content-between">
-    <!-- <button
-      codxLang
-      name="btnApply"
-      formName="System"
-      default="Áp dụng"
-      class="btn btn-light-primary"
-    ></button> -->
-    <button
-      codxLang
-      name="btnSave"
-      formName="System"
-      default="Lưu"
-      class="btn btn-light-success"
-    ></button>
+  <div class="d-flex align-items-center">
+    <div class=" w-50 d-flex justify-content-start">
+      <button
+        *ngIf="!enableAttachment"
+        class="btn btn-outline-secondary"
+        (click)="attach()"
+      ><i class="icon-attach_file"></i> Đính kèm</button>
+      <button
+        *ngIf="!enableChecklist"
+        class="btn btn-outline-secondary"
+        (click)="checklist()"
+      ><i class="icon-fact_check"></i> Check list</button>
+    </div>
+    <div class="w-50 d-flex justify-content-end">
+      <!-- <button
+        codxLang
+        name="btnApply"
+        formName="System"
+        default="Áp dụng"
+        class="btn btn-light-primary"
+      ></button> -->
+      <button
+        codxLang
+        name="btnSave"
+        formName="System"
+        default="Lưu"
+        class="btn btn-light-success"
+        (click)="save()"
+      ></button>
+    </div>
   </div>
+
 </ng-template>
 
 </codx-form>

@@ -551,6 +551,7 @@ export class CM_Cases {
   bUID: string;
   owner: string;
   createdOn: Date = new Date();
+  approvedDate: Date;
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;

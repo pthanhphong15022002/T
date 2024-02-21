@@ -116,30 +116,6 @@
             ></codx-label>
           </ng-template >
       </div>
-    </div>
-    <div class="d-flex justify-content-between align-items-center">
-      <div class="d-flex align-items-end codx-badge">
-        <codx-vll
-          [name]="vllStatus"
-          [field]="'Status'"
-          [value]="data?.status"
-          [showText]="true"
-          [showBgColor]="true"
-          class="badge badge-primary badge-sm"
-        >
-        </codx-vll>
-        <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
-          <codx-vll
-            [name]="vllApprove"
-            [field]="'ApproveStatus'"
-            [value]="data?.approveStatus"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-primary badge-sm"
-          >
-          </codx-vll>
-        </ng-container>
-      </div>
       <div class="d-flex align-items-center">
         <div class="d-flex align-items-center me-2">
           <span class="icon-16 icon-av_timer me-1 text-gray-700"></span>
@@ -166,6 +142,60 @@
               [formModel]="view?.formModel"
               [setRequire]="false"
               default="Ngày lập hợp đồng"
+            ></codx-label>
+          </ng-template >
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-end codx-badge">
+        <codx-vll
+          [name]="vllStatus"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-primary badge-sm"
+        >
+        </codx-vll>
+        <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
+          <codx-vll
+            [name]="vllApprove"
+            [field]="'ApproveStatus'"
+            [value]="data?.approveStatus"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-primary badge-sm"
+          >
+          </codx-vll>
+        </ng-container>
+      </div>
+      <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center me-2">
+          <span
+            *ngIf="data?.approvedDate"
+            class="text-gray-700 line-clamp line-clamp-1"
+            #ApprovedDate
+            [innerHTML]="
+              data?.approvedDate
+                | formatvalue
+                  : view?.formModel
+                  : 'ApprovedDate'
+                  : ApprovedDate
+                  : 'CMContracts'
+                  : 'grvCMContracts'
+                | async
+            "
+            [ngbTooltip]="approvedDate"
+            container="body"
+          ></span>
+          <ng-template #approvedDate>
+            <codx-label
+              class="fs-6 fw-bold"
+              fiedName="approvedDate"
+              [formModel]="view?.formModel"
+              [setRequire]="false"
+              default="Ngày duyệt"
             ></codx-label>
           </ng-template >
         </div>
