@@ -25,7 +25,6 @@ import { isObservable } from 'rxjs';
 })
 export class PopupBpTasksComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
-
   dialog: any;
   formModel: any;
   data: any;
@@ -40,6 +39,7 @@ export class PopupBpTasksComponent implements OnInit {
   files = [];
   fileIDs = [];
   action = '';
+  process: any;
   constructor(
     private authstore: AuthStore,
     private shareService: CodxShareService,
@@ -53,6 +53,7 @@ export class PopupBpTasksComponent implements OnInit {
     this.dialog = dialog;
     this.formModel = this.dialog?.formModel;
     this.data = JSON.parse(JSON.stringify(dt?.data?.data));
+    this.process = dt?.data?.process;
     this.dataIns = dt?.data?.dataIns
       ? JSON.parse(JSON.stringify(dt?.data?.dataIns))
       : null;
@@ -63,58 +64,73 @@ export class PopupBpTasksComponent implements OnInit {
     this.checkList = this.data.checkList ?? [];
     this.getInfo();
     this.getVll();
-    if(this.dataIns == null){
-      this.api.execSv<any>('BP','BP','ProcessInstancesBusiness','GetItemsByInstanceIDAsync', [this.data.instanceID]).subscribe((ins) => {
-        if(ins){
-          this.dataIns = ins;
-          this.fileIDs=[];
-          if (this.dataIns?.documentControl?.length > 0) {
-            let curStepDmc= this.dataIns?.documentControl.filter(x=>x?.stepID == this.data?.stepID );
-            if(curStepDmc?.length>0){
-              curStepDmc?.forEach(dmc=>{
-                if(dmc?.files?.length>0){
-                  dmc?.files?.forEach(file=>{
-                    if(file?.type=="2" || file?.type=="3"){
-                      this.fileIDs.push(file?.fileID);
-                    }
-                  })
-                }
-                
-                let curRefStepDmc= this.dataIns?.documentControl.filter(x=>x?.stepID == dmc.refStepID );
-                if(curRefStepDmc?.length>0){
-                  curRefStepDmc?.forEach(refDmc=>{
-                    if(refDmc?.files?.length>0){
-                      refDmc?.files?.forEach(refFile=>{
-                        if(refFile?.type=="2" || refFile?.type=="3"){
-                          this.fileIDs.push(refFile?.fileID);
-                        }
-                      })
-                    }
-                  })
-                }
-              })
-            }
-            if(this.fileIDs?.length>0){
-              this.files=[];
-              this.shareService
-                .getLstFileByID(this.fileIDs)
-                .subscribe((res) => {
-                  if (res) {
-                    this.files = res;
-                    this.detectorRef.detectChanges();
-                  }
-                });
-            }
-            
+    if (this.dataIns == null) {
+      this.api
+        .execSv<any>(
+          'BP',
+          'BP',
+          'ProcessInstancesBusiness',
+          'GetItemsByInstanceIDAsync',
+          [this.data.instanceID]
+        )
+        .subscribe((ins) => {
+          if (ins) {
+            this.dataIns = ins;
+            this.getFile();
           }
-          if(this.subTitle == null){
-            this.subTitle = this.dataIns.title;
-          }
-        }
-      });
+        });
+    }    
+    this.getFile();
+    if (this.subTitle == null) {
+      this.subTitle = this.dataIns.title;
     }
   }
-
+  getFile(){
+    if(this.dataIns!=null){ 
+          this.fileIDs=[];
+          if (this.dataIns?.documentControl?.length > 0) {
+            //let curStepDmc= this.dataIns?.documentControl;
+            let curStepDmc= this.dataIns?.documentControl.filter(x=>x?.stepID == this.data?.stepID );
+            if(curStepDmc?.length>0){
+              curStepDmc?.forEach(dmc=>{
+                if(dmc?.files?.length>0){
+                  dmc?.files?.forEach(file=>{
+                    if(file?.type=="1" || file?.type=="3"){
+                      this.fileIDs.push(file?.fileID);
+                    }
+                  })
+                }
+                
+                let curRefStepDmc= this.dataIns?.documentControl.filter(x=>x?.stepID == dmc.refStepID );
+                if(curRefStepDmc?.length>0){
+                  curRefStepDmc?.forEach(refDmc=>{
+                    if(refDmc?.files?.length>0){
+                      refDmc?.files?.forEach(refFile=>{
+                        if(refFile?.type=="1" || refFile?.type=="3"){
+                          this.fileIDs.push(refFile?.fileID);
+                        }
+                      })
+                    }
+                  })
+                }
+              })
+            }
+            if(this.fileIDs?.length>0){
+              this.files=[];
+              this.shareService
+                .getLstFileByID(this.fileIDs)
+                .subscribe((res) => {
+                  if (res) {
+                    this.files = res;
+                    this.detectorRef.detectChanges();
+                  }
+                });
+            }
+            
+          }
+          
+        }
+      }
   getVll() {
     this.cache.valueList('BP001').subscribe((vll) => {
       if (vll && vll?.datas?.length > 0) {
@@ -157,23 +173,23 @@ export class PopupBpTasksComponent implements OnInit {
       }
     }
     //Update Task Status test
-    this.api.execSv(
-      'BP',
-      'ERM.Business.BP',
-      'ProcessesBusiness',
-      'UpdateStatusTaskAsync',
-      [this.data.recID,"3"]//Hoàn tất
-    ).subscribe(res=>{
-      if(res){
-        this.notiService.notifyCode("SYS034");
-        this.dialog && this.dialog.close(res)
-      }
-    });
+    this.api
+      .execSv(
+        'BP',
+        'ERM.Business.BP',
+        'ProcessesBusiness',
+        'UpdateStatusTaskAsync',
+        [this.data.recID, '3'] //Hoàn tất
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.notiService.notifyCode('SYS034');
+          this.dialog && this.dialog.close(res);
+        }
+      });
   }
 
-  valueChange(e){
-
-  }
+  valueChange(e) {}
 
   //#region ActivityType = 'Task'
   addCheckList() {
@@ -202,5 +218,10 @@ export class PopupBpTasksComponent implements OnInit {
   getfileCount(e) {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
+  }
+
+  dataChange(e: any) {
+    this.dataIns = e;
+    this.dialog.close(this.dataIns);
   }
 }

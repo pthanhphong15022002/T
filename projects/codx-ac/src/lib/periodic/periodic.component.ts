@@ -1,4 +1,4 @@
-import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import {
   AuthStore,
@@ -19,6 +19,7 @@ import { Subject, combineLatest, takeUntil } from 'rxjs';
   selector: 'lib-periodic',
   templateUrl: './periodic.component.html',
   styleUrls: ['./periodic.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PeriodicComponent extends UIComponent {
   //#region Constructor
@@ -52,27 +53,6 @@ export class PeriodicComponent extends UIComponent {
     super(inject);
     this.user = this.authstore.get();
     this.gridModel.pageSize = 10;
-    let id = this.router.snapshot.queryParams['id'];
-    // if (id) {
-    //   switch (id) {
-    //     case "1":
-    //       this.numbreadcumb = 1;
-    //       let funcid = this.router.snapshot.queryParams['funcID'];
-    //       this.cache
-    //         .functionList(funcid)
-    //         .subscribe((res) => {
-    //           if (res) {
-    //             this.breadcumb = [];
-    //             let link = {
-    //               title: res?.defaultName,
-    //             }
-    //             this.breadcumb.push(link);
-    //             this.detectorRef.detectChanges();
-    //           }
-    //         });
-    //       break;
-    //   }
-    // }
     this.route.events.subscribe((val) => {
       if (val && val?.type == 1) {
         let funcID = this.router.snapshot.params['funcID'];
@@ -109,17 +89,17 @@ export class PeriodicComponent extends UIComponent {
     this.views = [
       {
         type: ViewType.content,
-        active: false,
+        active: true,
         sameData: true,
-        showFilter: false,
-        showSearchBar: false,
-        showButton: false,
         model: {
-          panelRightRef: this.tmpContent
+          panelLeftRef: this.tmpContent,
         },
       },
     ];
-    console.log(this.view);
+  }
+  
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
   }
   //#region Init
 

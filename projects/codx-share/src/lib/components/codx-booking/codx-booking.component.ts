@@ -600,11 +600,11 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           default:
             //Biến động , tự custom
             
-            var customData = {
-              refID: '',
-              refType: this.view?.formModel?.entityName,
-              dataSource: data,
-            };
+            // var customData = {
+            //   refID: '',
+            //   refType: this.view?.formModel?.entityName,
+            //   dataSource: data,
+            // };
 
             this.codxShareService.defaultMoreFunc(
               event,
@@ -613,7 +613,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
               this.view?.formModel,
               this.view?.dataService,
               this,
-              customData
+              //customData
             );
             break;
         }

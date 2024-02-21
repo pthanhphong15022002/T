@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, OnInit, AfterViewInit, TemplateRef, ViewChild, Injector } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { ProgressAnnotationService } from "@syncfusion/ej2-angular-progressbar";
-import { CodxService, DialogModel, FormModel, NotificationsService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from "codx-core";
+import { CRUDService, CodxService, DataService, DialogModel, FormModel, NotificationsService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from "codx-core";
 import { CodxShareService } from "projects/codx-share/src/public-api";
 import { PopupAddProjectComponent } from "./popup-add-project/popup-add-project.component";
 import { PopupProjectDetailsComponent } from "./popup-project-details/popup-project-details.component";
@@ -212,8 +212,8 @@ export class ProjectsComponent
 
     let option = new DialogModel();
     option.DataService = this.view?.dataService;
-    option.FormModel = this.formModel;
     option.IsFull=true;
+    option.zIndex = 999;
     let dialog = this.callfc.openForm(
       PopupProjectDetailsComponent,'',0,0,'',
       this.view?.dataService.dataSelected,'',

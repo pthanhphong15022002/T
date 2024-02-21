@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AttachmentComponent } from '../attachment/attachment.component';
-import { CallFuncService } from 'codx-core';
+import { ApiHttpService, CallFuncService } from 'codx-core';
 import { AttachmentGridFilesComponent } from './attachment-grid-files/attachment-grid-files.component';
 
 @Component({
@@ -17,6 +17,7 @@ export class AttachmentGridComponent implements OnInit{
   selectedIndex:any;
 
   constructor(
+    private api: ApiHttpService,
     private callFunc: CallFuncService
   )
   {
@@ -25,12 +26,27 @@ export class AttachmentGridComponent implements OnInit{
 
   ngOnInit(): void {
     this.data = typeof this.data === 'string' ? JSON.parse(this.data) : this.data;
+    this.formatData();
   }
  
+
+  formatData()
+  {
+    if(this.data && this.data.length > 0)
+    {
+      let index = 0;
+      this.data.forEach(element => {
+        this.getFile(element?.recID,index);
+        index ++;
+      });
+    }
+  }
+
   openAttach(recID:any,index:any)
   {
     this.selectedIndex = index;
     this.attachment.objectId = recID;
+    this.attachment.referType = 'attach';
     this.attachment.uploadFile();
   }
 
@@ -42,10 +58,12 @@ export class AttachmentGridComponent implements OnInit{
 
   fileSave(e:any)
   {
+    if(!this.data[this.selectedIndex]?.countAttach) this.data[this.selectedIndex].countAttach = 0;
     if(!this.data[this.selectedIndex].files) this.data[this.selectedIndex].files = [];
     if(!Array.isArray(e)) 
     {
-      this.data[this.selectedIndex].count ++;
+     
+      this.data[this.selectedIndex].countAttach ++;
       var obj = 
       {
         fileID: e.recID,
@@ -63,7 +81,7 @@ export class AttachmentGridComponent implements OnInit{
         }
         this.data[this.selectedIndex].files.push(obj);
       });
-      this.data[this.selectedIndex].count += e.length;
+      this.data[this.selectedIndex].countAttach += e.length;
     }
     this.dataChange.emit(this.data);
   }
@@ -71,5 +89,15 @@ export class AttachmentGridComponent implements OnInit{
   openFormDetail(data:any)
   {
     this.callFunc.openForm(AttachmentGridFilesComponent,"",500,600,"",data);
+  }
+
+  getFile(recID:any,index:any)
+  {
+    this.api.execSv("DM","DM","FileBussiness","CountAttachmentAsync",[recID,'attach',this.formModel.entityName]).subscribe(item=>{
+      if(item)
+      {
+        this.data[index].countAttach = item;
+      }
+    })
   }
 }

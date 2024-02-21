@@ -1,5 +1,5 @@
-<codx-views class="ac-views ac-animation-none" #view idField="functionID" [views]="views" [entityName]="view.entityName"
-  predicates="Language=@0" [dataValues]="user?.language == '' ? 'VN' : user?.language | uppercase"
+<codx-views class="ac-views ac-animation-none" #view [views]="views" [entityName]="view.entityName"
+  predicate="ParentID=@0 && Language=@1" [dataValue]="funcID +';'+(user.language == '' ? 'VN' : user.language | uppercase)"
   [hideMoreFuncs]="true" [titleToolBarTmp]="titleToolBarTmp" [toolbarDisplay]="false">
 </codx-views>
 <ng-template #titleToolBarTmp let-data>
@@ -35,10 +35,11 @@
           (changeDataMF)="changeDataMF($event,'M')" (clickMF)="clickMF($event)"></codx-mfunc>
     </div> -->
   </div>
+
   <div *ngIf="numbreadcumb == 0" class="h-100 bg-body rounded-3">
-    <codx-listview class="p-3" [selectFirst]="true" [itemTemplate]="templateListCard"
-    type="cardView" [funcId]="funcID" service="AC" [entityName]="view.entityName" [dataService]="view.dataService">
-  </codx-listview>
+    <codx-listview class="p-3" [selectFirst]="true" [itemTemplate]="templateListCard" type="cardView" [funcId]="funcID"
+      service="AC" [entityName]="view.entityName" [dataService]="view.dataService">
+    </codx-listview>
   </div>
   <router-outlet (activate)="activate($event)" (deactivate)="deactivate($event)"></router-outlet>
 </ng-template>

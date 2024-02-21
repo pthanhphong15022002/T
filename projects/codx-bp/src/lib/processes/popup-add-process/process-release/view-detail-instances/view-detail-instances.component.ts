@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
+import { ApiHttpService } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
 
@@ -12,11 +13,12 @@ export class ViewDetailInstancesComponent {
   @Input() formModel: any;
   @Input() asideMode: string ;
   @Input() lstSteps = [];
+  process:any;
   loaded: boolean;
   id: any;
   isShow = false;
   info: any;
-  constructor(private changeDetectorRef: ChangeDetectorRef, private shareService: CodxShareService) {}
+  constructor(private changeDetectorRef: ChangeDetectorRef, private shareService: CodxShareService , private api: ApiHttpService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
@@ -31,10 +33,21 @@ export class ViewDetailInstancesComponent {
           JSON.stringify(changes['dataSelected'].currentValue)
         );
         this.getInfo();
+        this.getProcess();
         this.loaded = true;
 
       }
     }
+  }
+
+  getProcess() {
+    this.api
+      .execSv('BP', 'BP', 'ProcessesBusiness', 'GetAsync', this.dataSelected.processID)
+      .subscribe((item) => {
+        if (item) {
+          this.process = item;
+        }
+      });
   }
 
   clickShowTab(isShow) {

@@ -59,7 +59,8 @@
             <codx-label
               [name]="'lbl' + item.name"
               [formName]="'SYS'"
-              [default]="item.textDefault"
+              [default]="item.text"
+              (click)="clickMenu(item)"
             >
             </codx-label>
           </a>
@@ -123,10 +124,9 @@
         data-kt-scroll-height="auto"
         data-kt-scroll-dependencies=".sprints-task-header"
         data-kt-scroll-wrappers=".stepper-body .no-header"
-        [attr.data-kt-scroll-offset]="offset"
       >
 
-        <ng-container *ngIf="name == 'Tasks'">
+        <ng-container *ngIf="selectedTab?.value == '1'">
           <ng-container>
             <div class="tm-detail">
               <!-- <codx-tasks-share
@@ -139,7 +139,7 @@
               >
               </codx-tasks-share> -->
 
-              <lib-view-tasks></lib-view-tasks>
+              <lib-view-tasks [projectID]="data?.projectID" [projectData]="data"></lib-view-tasks>
               <!-- <h1>View tasks here...</h1> -->
             </div>
           </ng-container>

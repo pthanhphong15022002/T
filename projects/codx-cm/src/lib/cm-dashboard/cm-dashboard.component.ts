@@ -1669,27 +1669,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   getNamePy(value) {
     return this.vllPy.find((x) => x.value == value)?.text;
   }
-  loadTreeMap(e, chart) {
-    if (e?.treemap?.availableSize?.height && !this.loadedMap) {
-      let height = e.treemap.availableSize.height;
-      let width = e.treemap.availableSize.width;
-      // e.treemap.areaRect.height = e.treemap.availableSize.height = height - 50;
-      // e.treemap.areaRect.width = e.treemap.availableSize.width =
-      //   (width * (height - 50)) / height;
-
-      // this.loadedMap = true;
-      // if (chart) {
-      //   chart.destroy();
-      //   //   chart = e.treemap;
-
-      //   chart.width = e.treemap.areaRect.width;
-      //   chart.height = e.treemap.areaRect.height;
-      //   chart.refresh();
-      // }
-
-      // e.treemap.destroy();
-      // e.treemap.refresh();
-    }
+  loadTreeMap(e) {
+    // if (e?.treemap?.availableSize?.height && !this.loadedMap) {
+    //   e.treemap.availableSize.height = 300;
+    //   e.treemap.availableSize.width = 500;
+    // }
   }
   resize(e, chart) {
     if (e?.treemap?.availableSize?.height) {
@@ -1763,12 +1747,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
       obj.chart1.view.classList.contains('d-none') &&
         obj.chart1.view.classList.remove('d-none');
-      if (obj.chart1.temp && obj.chart2.temp) {
+      if (obj?.chart1?.temp && obj?.chart2?.temp) {
         !obj.chart2.temp.element.classList.contains('d-none') &&
           obj.chart2.temp.element.classList.add('d-none');
         obj.chart1.temp.element.classList.contains('d-none') &&
           obj.chart1.temp.element.classList.remove('d-none');
-
         obj.chart1.temp.refresh();
       }
     } else {
@@ -1778,7 +1761,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       obj.chart2.view.classList.contains('d-none') &&
         obj.chart2.view.classList.remove('d-none');
 
-      if (obj.chart1.temp && obj.chart2.temp) {
+      if (obj?.chart1?.temp && obj?.chart2?.temp) {
         !obj.chart1.temp.element.classList.contains('d-none') &&
           obj.chart1.temp.element.classList.add('d-none');
 

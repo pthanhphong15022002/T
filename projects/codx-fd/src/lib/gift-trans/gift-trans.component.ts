@@ -64,10 +64,20 @@ export class GiftTransComponent extends UIComponent {
     }
 
     clickMF(event: any, data: any) {
-        console.log('clickMF:', event, data);
         switch (event.functionID) {
             case "FDT0911": // giao quà
                 this.sendGift(data);
+                break;
+            case "SYS05": // xem
+                let option = new SidebarModel();
+                option.DataService = (this.view.dataService as CRUDService);
+                option.FormModel = this.view.formModel;
+                let dataSend = {
+                    funcID: this.funcID,
+                    type: "detail",
+                    data: data
+                }
+                this.callfc.openSide(PopupAddGiftComponent, dataSend, option, "");
                 break;
         }
     }
@@ -112,7 +122,11 @@ export class GiftTransComponent extends UIComponent {
         let option = new SidebarModel();
         option.DataService = (this.view.dataService as CRUDService);
         option.FormModel = this.view.formModel;
-        this.callfc.openSide(PopupAddGiftComponent, this.funcID, option, "");
+        let dataSend = {
+            funcID: this.funcID,
+            type: "add",
+        }
+        this.callfc.openSide(PopupAddGiftComponent, dataSend, option, "");
     }
     selectedChange(event: any) {
         if (!event || !event.data) return;

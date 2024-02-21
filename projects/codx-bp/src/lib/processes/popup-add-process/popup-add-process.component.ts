@@ -234,13 +234,14 @@ export class PopupAddProcessComponent {
 
   setDefaultTitle() {
     const createField = (value, fieldType, isForm = false) => {
+      var values = value + "_1";
       const field = {
         recID: Util.uid(),
-        fieldName: this.bpSv.createAutoNumber(
-          value,
+        fieldName: (this.bpSv.createAutoNumber(
+          values,
           this.extendInfos,
           'fieldName'
-        ),
+        )).toLowerCase(),
         title: this.bpSv.createAutoNumber(value, this.extendInfos, 'title'),
         dataType: 'String',
         fieldType,
@@ -391,16 +392,18 @@ export class PopupAddProcessComponent {
     let newNo = tabNo;
     let oldNo = this.currentTab;
     // if (tabNo <= this.processTab && tabNo != this.currentTab) { //cmt tạm để làm cho xong rồi bắt sau
-    this.updateNodeStatus(oldNo, newNo);
-    this.currentTab = tabNo;
+    //Quy trình xử lý
     if (tabNo == 1) {
-      // setTimeout(() => {
-      //   if (this.elementRef.nativeElement.querySelector('#appearance'))
-      //     this.elementRef.nativeElement.querySelector('#appearance').onclick =
-      //       this.documentClick.bind(this);
-      // }, 200);
+      this.processTab == 0 && this.processTab++;
+      if (this.action == 'add') {
+        if(!this.checkRequired()) return null;
+        this.data = { ...this.data };
+        this.action = 'edit'
+        this.saveProcessStep().subscribe();
+      }
     }
-
+    this.currentTab = tabNo;
+    this.updateNodeStatus(oldNo, newNo);
     // }
     this.detectorRef.detectChanges();
   }
@@ -448,16 +451,19 @@ export class PopupAddProcessComponent {
     let newNode = oldNode + 1;
     switch (currentTab) {
       case 0: {
-        this.updateNodeStatus(oldNode, newNode);
-        this.currentTab++;
-        this.processTab == 0 && this.processTab++;
         if (this.action == 'add') {
+          if(!this.checkRequired()) return null;
+          this.action = 'edit'
           this.data = { ...this.data };
           this.saveProcessStep().subscribe();
         }
+        this.updateNodeStatus(oldNode, newNode);
+        this.currentTab++;
+        this.processTab == 0 && this.processTab++;
         break;
       }
       case 1:
+      {
         this.newNode = newNode;
         this.oldNode = oldNode;
         this.updateNodeStatus(oldNode, newNode);
@@ -467,6 +473,7 @@ export class PopupAddProcessComponent {
           this.dialog.dataService.update(item, true).subscribe();
         });
         break;
+      }
       case 2:
         this.updateNodeStatus(oldNode, newNode);
         this.currentTab++;
@@ -755,7 +762,7 @@ export class PopupAddProcessComponent {
       null,
       null,
       '',
-      this.extendInfos,
+      {extendInfo:this.extendInfos,stepNo:this.data?.steps[1].stepNo},
       '',
       option
     );
@@ -879,8 +886,18 @@ export class PopupAddProcessComponent {
     }
   }
 
+  checkRequired()
+  {
+    if(!this.data?.processName) {
+      this.notiSv.notifyCode('SYS009', 0, 'Tên quy trình');
+      return false;
+    }
+    return true;
+  }
+
   handlerSave() {
-    if (this.action == 'add' || this.action == 'copy') {
+    if ((this.action == 'add' || this.action == 'copy') && this.currentTab == 0) {
+      if(!this.checkRequired()) return;
       this.onAdd();
     } else {
       this.onUpdate();
@@ -906,8 +923,9 @@ export class PopupAddProcessComponent {
             .update(res.update)
             .subscribe();
           res.update.modifiedOn = new Date();
-          this.dialog.close(res.update);
+          //this.dialog.close(res.update);
         }
+        this.dialog.close(res.update);
       });
   }
 
@@ -924,7 +942,7 @@ export class PopupAddProcessComponent {
     }
     data = [this.data];
 
-    if (this.action == 'add' || this.action == 'copy') {
+    if ((this.action == 'add' || this.action == 'copy') && this.currentTab == 0) {
       op.methodName = 'AddProcessAsync';
     } else {
       op.methodName = 'UpdateProcessAsync';
@@ -969,5 +987,10 @@ export class PopupAddProcessComponent {
       'UpdateProcessAsync',
       result
     );
+  }
+
+  valueChange2(e:any)
+  {
+    this.data = e;
   }
 }

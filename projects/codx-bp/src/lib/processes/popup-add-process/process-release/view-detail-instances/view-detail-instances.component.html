@@ -80,6 +80,10 @@
                 <div
                   class="badge badge-danger badge-md d-flex align-items-center me-1"
                   style="line-height: 12px; height: 21px"
+                  *ngIf="
+                    dataSelected.endDate &&
+                    (dataSelected?.actualEnd | checkDuedateValue : dataSelected?.endDate)
+                  "
                 >
                   <span class="icon-notifications icon-16 me-1"></span>
                   <codx-label
@@ -117,7 +121,7 @@
         </div>
       </ng-template>
       <ng-template #body let-data>
-        <div class="cm-scroll" [ngClass]="isShow ? 'cm-full' : ''">
+        <!-- <div class="cm-scroll" [ngClass]="isShow ? 'cm-full' : ''">
           <div
             class="btn btn-white btn-icon tab-action"
             (click)="clickShowTab(!isShow)"
@@ -146,7 +150,9 @@
                       ></codx-label>
                     </div>
                   </ng-template>
-                  <ng-template #content> </ng-template>
+                  <ng-template #content>
+
+                  </ng-template>
                 </e-tabitem>
                 <e-tabitem>
                   <ng-template #headerText>
@@ -167,7 +173,8 @@
               </e-tabitems>
             </ejs-tab>
           </div>
-        </div>
+        </div> -->
+        <lib-process-release-detail [data]="dataSelected" [process]="process" [formModel]="formModel" [right]="true"></lib-process-release-detail>
       </ng-template>
     </codx-detail-tmp>
   </ng-container>

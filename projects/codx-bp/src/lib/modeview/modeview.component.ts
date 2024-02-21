@@ -19,7 +19,7 @@ const DragConfig = {
 
 export class ModeviewComponent implements OnInit {
   @Input() data:any;
-  
+  @Input() stepNo:any;
   vllBP002:any;
   table: Array<any> = [];
   basic = ["Text","ValueList","ComboBox","DateTime","Attachment","Number","YesNo","User","Share"];
@@ -28,7 +28,7 @@ export class ModeviewComponent implements OnInit {
   count = count;
   dataSelected: any;
   dialog:any;
-
+  viewType = 1;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -37,7 +37,8 @@ export class ModeviewComponent implements OnInit {
     @Optional() dialog?: DialogRef
   )
   {
-    this.data = this.data || dt?.data;
+    this.data = this.data || dt?.data?.extendInfo;
+    this.stepNo = this.stepNo || dt?.data?.stepNo;
     this.dialog = dialog;
   }
 
@@ -98,6 +99,14 @@ export class ModeviewComponent implements OnInit {
       }
       else
       {
+        if(elm.fieldType == "Table")
+        {
+          elm.dataFormat = typeof elm.dataFormat == 'string' ? JSON.parse(elm.dataFormat) :  elm.dataFormat;
+        }
+        else if(elm.fieldType == "Attachment")
+        {
+          elm.documentControl = typeof elm.documentControl == 'string' ? JSON.parse(elm.documentControl) :  elm.documentControl;
+        }
         elm.text = vlls[indexs].text;
         elm.icon = vlls[indexs].icon;
         elm.textColor = vlls[indexs].textColor;
@@ -388,7 +397,7 @@ export class ModeviewComponent implements OnInit {
     }
     data.recID = Util.uid();
     data.width = "";
-    data.fieldName = this.formatTitle(data.title);
+    data.fieldName = this.formatTitle(data.title.toLowerCase());
     data.description  =  data.description || "Câu trả lời";
     data.columnOrder = this.table.length;
     data.columnNo = 0;
@@ -404,7 +413,7 @@ export class ModeviewComponent implements OnInit {
 
   formatTitle(str:any)
   {
-    return this.xoa_dau(str.replaceAll(" ","_"));
+    return this.xoa_dau(str.replaceAll(" ","_").replaceAll("/","_")) + "_" + this.stepNo;
   }
 
   drop2(event:any)
@@ -570,5 +579,16 @@ export class ModeviewComponent implements OnInit {
     str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
     str = str.replace(/Đ/g, "D");
     return str;
-}
+  }
+
+  changeView(e:any)
+  {
+    this.viewType = e;
+  }
+
+  getField(key: string): string {
+    if (!key) return '';
+
+    return Util.camelize(key);
+  }
 }

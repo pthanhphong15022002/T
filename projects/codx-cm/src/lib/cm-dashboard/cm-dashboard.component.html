@@ -187,14 +187,12 @@
     </div>
     <div class="d-block align-item-center position-relative">
       <div #viewBus class="d-block position-absolute align-item-center">
-        <!--class="d-block" style="display: block" -->
         <ejs-treemap
           #pie1
-          [height]="'300px'"
-          [width]="'500px'"
+          [height]="'320px'"
+          [width]="'520px'"
           class="d-block"
-          (load)="loadTreeMap($event, pie1)"
-          (resize)="resize($event, pie1)"
+          (load)="loadTreeMap($event)"
           [dataSource]="dataSourceBussnessLine"
           weightValuePath="quantity"
           rangeColorValuePath="quantity"
@@ -210,13 +208,15 @@
         >
         </ejs-treemap>
       </div>
-      <div #viewIndus class="d-none d-block position-absolute">
+      <div
+        #viewIndus
+        class="d-none d-block position-absolute align-item-center"
+      >
         <ejs-treemap
           #pie2
-          [height]="'300px'"
-          [width]="'500px'"
-          (load)="loadTreeMap($event, pie2)"
-          (resize)="resize($event, pie2)"
+          (load)="loadTreeMap($event)"
+          [height]="'320px'"
+          [width]="'520px'"
           class="d-none d-block"
           style="display: block"
           [dataSource]="dataSourceIndustry"
@@ -670,8 +670,7 @@
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
-              [height]="'300px'"
-              name="ConversionRate"
+              name="ConversionRate1"
               [dataSource]="dataSourcePyStatus"
               xName="name"
               yName="quantity"
@@ -706,7 +705,7 @@
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
-              name="ConversionRate"
+              name="ConversionRate2"
               [dataSource]="dataSourcePyStage"
               xName="name"
               yName="quantity"
