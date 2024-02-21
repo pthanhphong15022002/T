@@ -1,9 +1,9 @@
 <div
-  class="d-flex align-items-center border-bottom ps-2 pe-4"
+  class="d-flex align-items-center border-bottom w-100"
   *ngIf="dataSelected"
   (dblclick)="dbClick(dataSelected)"
 >
-  <div class="w-20px p-2 d-flex align-items-center">
+  <div class="w-30px p-2 d-flex align-items-center">
     <div
       *ngIf="
         dataSelected.endDate &&
@@ -21,23 +21,73 @@
     </ng-template>
   </div>
   <div class="w-150px p-2 d-flex align-items-center">
-    <codx-vll
-      [name]="'BP001'"
-      [value]="dataSelected?.activityType"
-      [showText]="true"
-      [showIcon]="true"
+    <span
+      class="icon-16 me-1"
+      [class]="dataSelected?.activityType | vll : 'BP001' : 'icon' | async"
+      [style.color]="
+        dataSelected?.activityType | vll : 'BP001' : 'color' | async
+      "
     >
-    </codx-vll>
+    </span>
+    <span
+      [innerHTML]="dataSelected?.activityType | vll : 'BP001' : 'text' | async"
+    ></span>
   </div>
   <div class="w-250px p-2 d-flex align-items-center">
-    <div class="fw-bold">
-      {{ dataSelected?.taskName }}
+    <div
+      (mouseenter)="closePopover()"
+      class="mb-1"
+      [style.height]="'auto'"
+      [ngClass]="
+        checkHover(dataSelected?.recID)
+          ? 'line-clamp line-clamp-2 text-popover'
+          : ''
+      "
+      [id]="dataSelected.recID"
+      [ngbPopover]="dataSelected?.taskName"
+      [style.height]="'auto'"
+      #taskName="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="PopoverDetail($event, taskName, dataSelected, 'taskName')"
+      (mouseleave)="popoverClosed(taskName)"
+      (click)="isPopoverOpen = true"
+      placement="right bottom  top"
+      [popoverClass]="dataSelected.recID"
+    >
+      <span class="fw-bold">
+        {{ dataSelected?.taskName }}
+      </span>
     </div>
   </div>
-  <div class="w-350px p-2 d-flex align-items-center">
-    {{ dataSelected?.memo }}
+  <div class="w-250px p-2 d-flex align-items-center">
+    <div
+      (mouseenter)="closePopover()"
+      class="mb-1"
+      [style.height]="'auto'"
+      [ngClass]="
+        checkHover(dataSelected?.recID)
+          ? 'line-clamp line-clamp-2 text-popover'
+          : ''
+      "
+      [id]="dataSelected.recID"
+      [ngbPopover]="dataSelected?.memo"
+      [style.height]="'auto'"
+      #memo="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="PopoverDetail($event, memo, dataSelected, 'memo')"
+      (mouseleave)="popoverClosed(memo)"
+      (click)="isPopoverOpen = true"
+      placement="right bottom  top"
+      [popoverClass]="dataSelected.recID"
+    >
+      <span
+        [innerHTML]="
+          dataSelected?.memo | formatvalue : formModel : 'Memo' | async
+        "
+      ></span>
+    </div>
   </div>
-  <div class="w-350px p-2 d-flex align-items-center flex-column">
+  <div class="w-300px p-2 d-flex flex-column">
     <div class="d-flex mb-1">
       <codx-label
         class="label-colon text-dark fw-bold"
@@ -139,13 +189,60 @@
     </div>
   </div>
   <div class="w-200px p-2 d-flex align-items-center">
-    {{ process?.processName }}
+    <div
+      (mouseenter)="closePopover()"
+      class="mb-1"
+      [style.height]="'auto'"
+      [ngClass]="
+        checkHover(process?.recID) ? 'line-clamp line-clamp-2 text-popover' : ''
+      "
+      [id]="process?.recID"
+      [ngbPopover]="process?.processName"
+      [style.height]="'auto'"
+      #processName="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="PopoverDetail($event, processName, process, 'processName')"
+      (mouseleave)="popoverClosed(processName)"
+      (click)="isPopoverOpen = true"
+      placement="right bottom  top"
+      [popoverClass]="process?.recID"
+    >
+      <span>
+        {{ process?.processName }}
+      </span>
+    </div>
   </div>
   <div class="w-200px p-2 d-flex align-items-center">
-    {{ instance?.title }}
+    <div
+      (mouseenter)="closePopover()"
+      class="mb-1"
+      [style.height]="'auto'"
+      [ngClass]="
+        checkHover(instance?.recID)
+          ? 'line-clamp line-clamp-2 text-popover'
+          : ''
+      "
+      [id]="instance?.recID"
+      [ngbPopover]="instance?.title"
+      [style.height]="'auto'"
+      #title="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="PopoverDetail($event, title, instance, 'title')"
+      (mouseleave)="popoverClosed(title)"
+      (click)="isPopoverOpen = true"
+      placement="right bottom  top"
+      [popoverClass]="instance?.recID"
+    >
+      <span>
+        {{ instance?.title }}
+      </span>
+    </div>
   </div>
   <div class="w-100px p-2 d-flex justify-content-center">
-    <div class="attachment-file d-flex align-items-center" (click)="countData > 0 ? openPopup() : ''">
+    <div
+      class="attachment-file d-flex align-items-center"
+      (click)="countData > 0 ? openPopup() : ''"
+    >
       <span class="icon-i-paperclip"></span>
       <span class="count-file">{{ countData }}</span>
     </div>

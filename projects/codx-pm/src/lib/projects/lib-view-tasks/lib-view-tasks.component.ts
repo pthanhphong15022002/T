@@ -1,8 +1,9 @@
 import { Component, ViewEncapsulation, OnInit, AfterViewInit, Injector, Optional, OnChanges, SimpleChanges, Input } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { ProgressAnnotationService } from "@syncfusion/ej2-angular-progressbar";
-import { CodxService, DialogData, DialogRef, FormModel, NotificationsService, ResourceModel, UIComponent, ViewModel, ViewType } from "codx-core";
+import { CodxService, DialogData, DialogRef, FormModel, NotificationsService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from "codx-core";
 import { CodxShareService } from "projects/codx-share/src/public-api";
+import { PopupAddTaskComponent } from "../popup-add-task/popup-add-task.component";
 
 @Component({
   selector: 'lib-view-tasks',
@@ -18,9 +19,10 @@ export class ProjectTasksViewComponent
 
 
   @Input() projectID:any;
+  @Input() projectData:any;
 
   views:  Array<ViewModel> = [];;
-  entityName:string = 'PM_Projects';
+  entityName:string = 'TM_Tasks';
   service:string='TM';
   assemblyName:string='ERM.Business.TM';
   className:string="TaskBusiness";
@@ -57,16 +59,15 @@ export class ProjectTasksViewComponent
     this.cache.functionList(this.funcID).subscribe((res:any)=>{
       this.formModel = res;
     })
-    this.cache.valueList('PM006').subscribe((res:any)=>{
-      this.vllTab = res;
-      debugger
-    });
-    debugger
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['projectID']){
      this.dataObj['projectID']=changes['projectID'].currentValue
+    }
+    if(changes['projectData']){
+     this.dataObj=changes['projectData'].currentValue
     }
   }
 
@@ -88,4 +89,32 @@ export class ProjectTasksViewComponent
     this.detectorRef.detectChanges();
   }
 
+  addTask(){
+    this.view.dataService.addNew().subscribe((res) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.formModel;
+      option.Width = '550px';
+      option.zIndex=9997;
+      let dialogAdd = this.callfc.openSide(
+        PopupAddTaskComponent,
+        [res,'add',this.dataObj],
+        option
+      );
+      dialogAdd.closed.subscribe((returnData) => {
+        if (returnData?.event) {
+          //this.view?.dataService?.update(returnData?.event);
+        } else {
+          this.view.dataService.clear();
+        }
+      });
+
+    })
+  }
+
+  click(e:any){
+    if(e.id=='btnAdd'){
+      this.addTask()
+    }
+  }
 }
