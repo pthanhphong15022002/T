@@ -1,9 +1,9 @@
 <div
-  class="d-flex align-items-center border-bottom ps-2 pe-4"
+  class="d-flex align-items-center border-bottom w-100"
   *ngIf="dataSelected"
   (dblclick)="dbClick(dataSelected)"
 >
-  <div class="w-20px p-2 d-flex align-items-center">
+  <div class="w-30px p-2 d-flex align-items-center">
     <div
       *ngIf="
         dataSelected.endDate &&
@@ -21,13 +21,17 @@
     </ng-template>
   </div>
   <div class="w-150px p-2 d-flex align-items-center">
-    <codx-vll
-      [name]="'BP001'"
-      [value]="dataSelected?.activityType"
-      [showText]="true"
-      [showIcon]="true"
+    <span
+      class="icon-16 me-1"
+      [class]="dataSelected?.activityType | vll : 'BP001' : 'icon' | async"
+      [style.color]="
+        dataSelected?.activityType | vll : 'BP001' : 'color' | async
+      "
     >
-    </codx-vll>
+    </span>
+    <span
+      [innerHTML]="dataSelected?.activityType | vll : 'BP001' : 'text' | async"
+    ></span>
   </div>
   <div class="w-250px p-2 d-flex align-items-center">
     <div
@@ -55,7 +59,7 @@
       </span>
     </div>
   </div>
-  <div class="w-350px p-2 d-flex align-items-center">
+  <div class="w-250px p-2 d-flex align-items-center">
     <div
       (mouseenter)="closePopover()"
       class="mb-1"
@@ -83,7 +87,7 @@
       ></span>
     </div>
   </div>
-  <div class="w-350px p-2 d-flex align-items-center flex-column">
+  <div class="w-300px p-2 d-flex flex-column">
     <div class="d-flex mb-1">
       <codx-label
         class="label-colon text-dark fw-bold"
@@ -192,7 +196,7 @@
       [ngClass]="
         checkHover(process?.recID) ? 'line-clamp line-clamp-2 text-popover' : ''
       "
-      [id]="process.recID"
+      [id]="process?.recID"
       [ngbPopover]="process?.processName"
       [style.height]="'auto'"
       #processName="ngbPopover"
@@ -201,7 +205,7 @@
       (mouseleave)="popoverClosed(processName)"
       (click)="isPopoverOpen = true"
       placement="right bottom  top"
-      [popoverClass]="process.recID"
+      [popoverClass]="process?.recID"
     >
       <span>
         {{ process?.processName }}
@@ -218,7 +222,7 @@
           ? 'line-clamp line-clamp-2 text-popover'
           : ''
       "
-      [id]="instance.recID"
+      [id]="instance?.recID"
       [ngbPopover]="instance?.title"
       [style.height]="'auto'"
       #title="ngbPopover"
@@ -227,7 +231,7 @@
       (mouseleave)="popoverClosed(title)"
       (click)="isPopoverOpen = true"
       placement="right bottom  top"
-      [popoverClass]="instance.recID"
+      [popoverClass]="instance?.recID"
     >
       <span>
         {{ instance?.title }}

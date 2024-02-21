@@ -16,9 +16,15 @@
   [className]="className"
   [method]="method"
   [dataObj]="dataObj"
+  [titleToolBarTmp]="titleToolBarTmp"
 >
 </codx-views>
 
+<ng-template #titleToolBarTmp>
+  <div class="d-flex align-items-center px-4">
+    <span class="fw-bold fs-3 cursor-pointer" (click)="codxService.navigate('', parentFunc?.url)">{{parentFunc?.customName}}</span><i class="icon-navigate_next mx-1"></i><span>{{process?.processName}}</span>
+  </div>
+</ng-template>
 <!--VIEW KANBAN-->
 <ng-template #viewColumKaban let-data>
   <div
