@@ -472,7 +472,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
         fixedDims2[i] = '1';
       }
     }
-    line.fixedDIMs1 = fixedDims1.join('');
+    line.fixedDIMs = fixedDims1.join('');
     line.fixedDIMs2 = fixedDims2.join('');
     return line;
   }
