@@ -30,15 +30,14 @@ import { PopupKowdDayComponent } from './kowds/popup/popup-kowd-day/popup-kowd-d
 import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts.component';
 import { ViewDetailRequestKowDsComponent } from './request-kowds/view-detail-request-kowds/view-detail-request-kowds.component';
 import { RequestKowDsComponent } from './request-kowds/request-kowds.component';
-import { TotalKowDsComponent } from './request-kowds/total-kowds/total-kowds.component';
-import { ViewKowcodeComponent } from './request-kowds/view-kowcode/view-kowcode.component';
-
 import { PopupAddSalCoeffEmpComponent } from './salcoeffemp/popup/popup-add-salcoeffemp/popup-add-salcoeffemp.component';
 import { PopupCoppySalCoeffEmpComponent } from './salcoeffemp/popup/popup-coppy-salcoeffemp/popup-coppy-salcoeffemp.component';
 import { PayTExceptComponent } from './pay-texcept/pay-texcept.component';
 import { PopupAddPayTexceptComponent } from './pay-texcept/popup/popup-add-pay-texcept/popup-add-pay-texcept.component';
 import { PopupKowdMonthComponent } from './kowds/popup/popup-kowd-month/popup-kowd-month.component';
 import { PopupRequestKowdComponent } from './kowds/popup/popup-request-kowd/popup-request-kowd.component';
+import { HrTemplateExcelComponent } from './hr-template-excel/hr-template-excel.component';
+import { ViewDetailTemplateComponent } from './hr-template-excel/view-detail-template/view-detail-template.component';
 
 
 export const routes: Routes = [
@@ -53,6 +52,18 @@ export const routes: Routes = [
       {
         path: 'RequestPro18/:funcID',
         component: RequestKowDsComponent,
+      },
+      {
+        path: 'SalCoeffEmp/:funcID',
+        component: SalcoeffempComponent,
+      },
+      {
+        path: 'PayTExcept/:funcID',
+        component: PayTExceptComponent,
+      },
+      {
+        path: 'HRTemplateExcel/:funcID',
+        component: HrTemplateExcelComponent,
       },
       //----phát hành quy trình DP-CRM----//
       {
@@ -79,16 +90,8 @@ export const routes: Routes = [
         path: 'instances/:funcID/:processID',
         component: ViewInstancesComponent,
         data: { noReuse: true },
-      },
+      }
       //-----------end--------------//
-      {
-        path: 'SalCoeffEmp/:funcID',
-        component: SalcoeffempComponent,
-      },
-      {
-        path: 'PayTExcept/:funcID',
-        component: PayTExceptComponent,
-      },
     ],
   },
 ];
@@ -102,14 +105,14 @@ const T_Component: Type<any>[] = [
   PopupKowdDayComponent,
   ViewDetailRequestKowDsComponent,
   RequestKowDsComponent,
-  TotalKowDsComponent,
-  ViewKowcodeComponent,
   PopupAddSalCoeffEmpComponent,
   PopupCoppySalCoeffEmpComponent,
   PayTExceptComponent,
   PopupAddPayTexceptComponent,
   PopupKowdMonthComponent,
-  PopupRequestKowdComponent
+  PopupRequestKowdComponent,
+  HrTemplateExcelComponent,
+  ViewDetailTemplateComponent
 ];
 
 @NgModule({
