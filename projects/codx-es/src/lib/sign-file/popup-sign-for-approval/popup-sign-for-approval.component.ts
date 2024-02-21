@@ -33,7 +33,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   @ViewChild('pdfView') pdfView: PdfComponent;
   @ViewChild('popupOTPPin', { static: false }) popupOTPPin: TemplateRef<any>;
   @ViewChild('viettelCers', { static: false }) viettelCers: TemplateRef<any>;
-  @ViewChild('viettelSignWait', { static: false }) viettelSignWait: TemplateRef<any>;
+  @ViewChild('viettelESignWait', { static: false }) viettelESignWait: TemplateRef<any>;
 
   isAfterRender: boolean = false;
   isConfirm = true;
@@ -516,7 +516,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
     }
   }
   viettelESign(data,comment,cert){
-    let dialogCers = this.callfc.openForm(this.viettelSignWait,'',450,250);  
+    let dialogCers = this.callfc.openForm(this.viettelESignWait,'',450,250);  
                     
     this.pdfView.signPDF(data,comment,JSON.stringify(cert),'4').then((resModel: ResponseModel) => {
       if (resModel?.msgCodeError == null && resModel?.rowCount > 0) {
