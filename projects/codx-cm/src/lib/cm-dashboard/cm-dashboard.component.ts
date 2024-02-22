@@ -607,7 +607,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   dataSpaceForRent = [];
 
   primaryYAxisColumnSFR = {
-    title: 'Diện tích',
+    title: 'm2',
     minimum: 0,
     // maximum: 100,
     interval: 50,
@@ -616,7 +616,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     minorGridLines: { width: 1 },
     minorTickLines: { width: 0 },
   };
-  titleUsableArea = 'Diện tích - m2';
+  titleUsableArea = 'Diện tích cho thuê ';
 
   zoomSettings: Object = {
     mode: 'X',
