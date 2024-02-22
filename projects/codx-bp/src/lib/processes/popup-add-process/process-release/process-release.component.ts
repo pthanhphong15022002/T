@@ -290,8 +290,9 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     .subscribe((res) => {
       if (res) {
         this.view.dataService.delete(this.view?.dataService?.dataSelected);
-        this.notifiSer.notifyCode('SYS034');
+        this.notifiSer.notifyCode('SYS008');
       }
+      else this.notifiSer.notifyCode('SYS022');
     });
   }
   popUpAddEdit(item: any, type: any) {
