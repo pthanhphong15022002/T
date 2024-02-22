@@ -1908,7 +1908,7 @@ export class PdfComponent
                 area.location.height = scaleH / this.yScale;
               }
               this.esService
-                .addOrEditSignArea(this.recID, this.curFileID, area, area.recID)
+                .addOrEditSignArea(this.recID, this.curFileID, area, area.recID,this.modeView)
                 .subscribe((res) => {});
             } else {
             }
@@ -2360,7 +2360,7 @@ export class PdfComponent
     };
 
     this.esService
-      .addOrEditSignArea(this.recID, this.curFileID, tmpArea, tmpArea.recID)
+      .addOrEditSignArea(this.recID, this.curFileID, tmpArea, tmpArea.recID,this.modeView)
       .subscribe((res) => {
         this.esService
           .getSignAreas(
@@ -2619,7 +2619,7 @@ export class PdfComponent
 
           layer?.add(textArea);
           this.esService
-            .addOrEditSignArea(this.recID, this.curFileID, tmpArea, recID)
+            .addOrEditSignArea(this.recID, this.curFileID, tmpArea, recID,this.modeView)
             .subscribe((res) => {
               if (res) {
                 textArea?.id(res);
@@ -2739,7 +2739,7 @@ export class PdfComponent
 
             layer?.add(imgArea);
             this.esService
-              .addOrEditSignArea(this.recID, this.curFileID, tmpArea, recID)
+              .addOrEditSignArea(this.recID, this.curFileID, tmpArea, recID,this.modeView)
               .subscribe((res) => {
                 if (res) {
                   imgArea?.id(res);
@@ -2808,7 +2808,7 @@ export class PdfComponent
     }
     //es_SignArea.labelValue
     this.esService
-      .addOrEditSignArea(this.recID, this.curFileID, tmpArea, tmpArea.recID)
+      .addOrEditSignArea(this.recID, this.curFileID, tmpArea, tmpArea.recID,this.modeView)
       .subscribe((res) => {
         if (res) {
           this.esService
@@ -2884,7 +2884,7 @@ export class PdfComponent
         );
       }
       this.esService
-        .addOrEditSignArea(this.recID, this.curFileID, tmpArea, recID)
+        .addOrEditSignArea(this.recID, this.curFileID, tmpArea, recID,this.modeView)
         .subscribe((res) => {
           if (res) {
             konva?.id(res);
