@@ -81,25 +81,52 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     let i = 0 ;
     this.listDocument.forEach(elm=>{
       var fieldID =  elm.fieldID;
-     
-      if(elm?.templateID) {
-        fieldID = elm?.templateID;
-        entityName = "AD_ExcelTemplates"
-        if(elm.templateType == "word") entityName = "AD_WordTemplates"
-      }
-      else if(elm.refStepNo)
+      if(elm.files && elm.files.length>0)
       {
-        var index = this.getDocRef(elm.refStepID);
-        if(index>=0) {
-          if(this.process.documentControl[index].templateID) {
-            fieldID = this.process.documentControl[index].templateID;
-            entityName = "AD_ExcelTemplates"
-            if(this.process.documentControl[index].templateType == "word") entityName = "AD_WordTemplates"
+        var recIDs = elm.files.map(function(item) {
+          return item?.fileID || item?.recID;
+        });
+        recIDs = JSON.stringify(recIDs);
+        this.getFile2(recIDs,i);
+      }
+      else
+      {
+        if(elm?.templateID) {
+          fieldID = elm?.templateID;
+          entityName = "AD_ExcelTemplates"
+          if(elm.templateType == "word") entityName = "AD_WordTemplates"
+
+          this.getFile(fieldID, entityName , i)
+        }
+        else if(elm.refStepNo)
+        {
+          //var index = this.getDocRef(elm.refStepID);
+          var index = this.process.documentControl.findIndex(x=>x.recID == elm.refID);
+          if(index >= 0) 
+          {
+            if(this.process.documentControl[index].files && this.process.documentControl[index].files.length>0)
+            {
+              var recIDs = this.process.documentControl[index].files.map(function(item) {
+                return item?.fileID || item?.recID;
+              });
+              recIDs = JSON.stringify(recIDs);
+              this.getFile2(recIDs,i);
+            }
+            else
+            {
+              if(this.process.documentControl[index].templateID) {
+                fieldID = this.process.documentControl[index].templateID;
+                entityName = "AD_ExcelTemplates"
+                if(this.process.documentControl[index].templateType == "word") entityName = "AD_WordTemplates"
+              }
+              else fieldID = this.process.documentControl[index].fieldID;
+
+              this.getFile(fieldID, entityName , i)
+            }
           }
-          else fieldID = this.process.documentControl[index].fieldID;
         }
       }
-      this.getFile(fieldID, entityName , i)
+      i++;
     })
   }
 
@@ -108,17 +135,17 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     var index = null;
     if(refStepID)
     {
-      var doc = this.process.documentControl.filter(x=>x.stepID == refStepID)[0];
+      var doc = this.process.documentControl.filter(x=>x.recID == refStepID)[0];
       if(doc?.refStepID == '00000000-0000-0000-0000-000000000000' || !doc?.refStepID)
       {
-        return this.process.documentControl.findIndex(x=>x.stepID == refStepID);
+        return this.process.documentControl.findIndex(x=>x.recID == refStepID);
       } 
       else 
       {
         return this.getDocRef(doc.refStepID)
       }
     } 
-    index = this.process.documentControl.findIndex(x=>x.stepID == refStepID);
+    index = this.process.documentControl.findIndex(x=>x.recID == refStepID);
     return index;
   }
 
@@ -128,11 +155,20 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     this.api.execSv("DM","DM","FileBussiness","GetFileByObjectIDAsync",[recID + ";", entityName]).subscribe(item=>{
       if(item)
       {
-        this.listDocument[i].files = item;
+        this.listDocument[i].filess = item;
       }
     })
   }
-
+  getFile2(recID:any,index:any)
+  {
+    let i = index;
+    this.api.execSv("DM","DM","FileBussiness","GetListFile",recID).subscribe(item=>{
+      if(item)
+      {
+        this.listDocument[i].filess = item;
+      }
+    })
+  }
   default()
   {
     var vllStage = this.vll.datas.filter(x=>x.value == "Task")[0];
@@ -323,7 +359,9 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       stepNo: this.data?.stepNo,
       fieldID: this.data?.recID,
       memo: this.data?.memo,
+      refID: ''
     }
+    documentControl.refID = documentControl.recID;
     this.process.documentControl.push(documentControl);
     this.listDocument.push(documentControl);
     this.dataChangeProcess.emit(this.process);
@@ -344,7 +382,9 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       stepNo: this.data?.stepNo,
       fieldID: this.data?.recID,
       memo: this.data?.memo,
+      refID: ''
     }
+    documentControl.refID = documentControl.recID;
     this.process.documentControl.push(documentControl);
     this.dataChangeProcess.emit(this.process);
 
@@ -565,21 +605,25 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     popup.closed.subscribe(res=>{
       if(res?.event)
       {
-        var documentControl =
-        {
-          recID : Util.uid(),
-          title : this.data.stepName,
-          isRequired: false,
-          count : 0,
-          isList: "0",
-          stepID: this.data?.recID,
-          stepNo: this.data?.stepNo,
-          fieldID: this.data?.recID,
-          memo: this.data?.memo,
-          refStepNo: res?.event?.stepNo,
-          refStepID: res?.event?.stepID
-        }
-        this.process.documentControl.push(documentControl);
+        res?.event.forEach(element => {
+          var documentControl =
+          {
+            recID : Util.uid(),
+            title : element?.title,
+            isRequired: false,
+            count : 0,
+            isList: "0",
+            stepID: this.data?.recID,
+            stepNo: this.data?.stepNo,
+            fieldID: this.data?.recID,
+            memo: this.data?.memo,
+            refStepNo: element?.stepNo,
+            refStepID: element?.recID,
+            refID: element.refID
+          }
+          this.process.documentControl.push(documentControl);
+        });
+        
         this.dataChangeProcess.emit(this.process);
         this.formatDocument();
 

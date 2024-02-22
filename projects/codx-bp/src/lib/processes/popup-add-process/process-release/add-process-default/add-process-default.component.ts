@@ -14,7 +14,7 @@ export class AddProcessDefaultComponent implements OnInit{
   @ViewChild('attachment') attachment: AttachmentComponent;
 
   @Input() process:any;
-  @Input() dataIns:any = {};
+  @Input() dataIns:any
   @Input() type = 'add';
   @Input() stepID:any;
   @Output() dataChange = new EventEmitter<any>();
@@ -50,6 +50,10 @@ export class AddProcessDefaultComponent implements OnInit{
     this.formModel.funcID = this.dialog.formModel?.funcID;
   }
   ngOnInit(): void {
+    if(this.type == 'add')  {
+      this.dataIns.recID = Util.uid();
+      this.dataIns.documentControl = this.process?.documentControl || [];
+    }
     this.getData();
   }
 
@@ -71,18 +75,24 @@ export class AddProcessDefaultComponent implements OnInit{
   formatData()
   {
     var list = [];
-    let extendInfo = JSON.parse(JSON.stringify(this.data.extendInfo));
+    let extendInfo = typeof this.data.extendInfo == 'string' ?  JSON.parse(this.data.extendInfo) : this.data.extendInfo;
     extendInfo.forEach(element => {
       let field = element.fieldName.toLowerCase();
       if(element.fieldType != "Title") 
       {
         if(this.type == 'add') {
           this.dynamicFormsForm.addControl(field, new FormControl(element.defaultValue , (element.isRequired ? Validators.required : null)));
-          if(element.fieldType == "Attachment") this.dataIns.documentControl = JSON.parse(element.documentControl);
-         
+          if(element.fieldType == "Attachment") {
+            //this.dataIns.documentControl = JSON.parse(element.documentControl);
+            element.documentControl = typeof element.documentControl == 'string' ? JSON.parse(element.documentControl): element.documentControl;
+          }
         }
         else 
         {
+          if(element.fieldType == "Attachment") {
+            element.documentControl = typeof element.documentControl == 'string' ? JSON.parse(element.documentControl): element.documentControl;
+            if(element.documentControl) element.documentControl = this.dataIns.documentControl.filter(x=>x.fieldID == element.recID);
+          }
           this.dataIns.datas = typeof this.dataIns.datas === 'string' ?  JSON.parse(this.dataIns.datas) : this.dataIns.datas;
           let dataEdit = this.dataIns.datas;
           this.dynamicFormsForm.addControl(field, new FormControl(dataEdit[field] , (element.isRequired ? Validators.required : null)));
@@ -138,7 +148,6 @@ export class AddProcessDefaultComponent implements OnInit{
       if(this.type == 'add')
       {
         this.dataIns.title= valueForm[this.subTitle];
-        this.dataIns.recID = Util.uid();
         var instanceNoControl = "1";
         var instanceNo = "aaaaaaa";
         var index = this.process.settings.findIndex(x=>x.fieldName == "InstanceNoControl");
@@ -223,22 +232,18 @@ export class AddProcessDefaultComponent implements OnInit{
         this.dataIns.createdBy = this.user?.userID,
         this.dataIns.duration = this.process?.duration,
         this.dataIns.datas = JSON.stringify(valueForm);
-        this.dataIns.documentControl = this.data?.documentControl;
+        // if(!this.dataIns?.documentControl) this.dataIns.documentControl = [];
+        // this.dataIns.documentControl = this.data?.documentControl.concat(this.dataIns.documentControl);
         var listTask = JSON.stringify([stage,step]);
-
         //Luu process Task
         this.api.execSv("BP","BP","ProcessTasksBusiness","SaveListTaskAsync",listTask).subscribe();
         //Luu Instanes
-        this.api.execSv("BP","BP","ProcessInstancesBusiness","SaveInsAsync",this.dataIns).subscribe(item=>{
+        this.api.execSv("BP","BP","ProcessInstancesBusiness","SaveInsAsync",this.dataIns).subscribe(async item=>{
           if(type == 1) this.dialog.close(this.dataIns)
-          else 
-          {
-            this.startProcess(this.dataIns.recID)
-          }
+          else this.startProcess(this.dataIns.recID)
+          //addFile nếu có
+          this.addFileAttach();
         });
-    
-        if(this.attachment.fileUploadList && this.attachment.fileUploadList.length > 0)
-          (await this.attachment.saveFilesObservable()).subscribe();
       }
       else if(this.type == 'edit')
       {
@@ -254,12 +259,48 @@ export class AddProcessDefaultComponent implements OnInit{
           this.dataIns.datas = JSON.stringify(this.dataIns.datas)
         }
         else this.dataIns.datas = JSON.stringify(valueForm)
-        this.api.execSv("BP","BP","ProcessInstancesBusiness","UpdateInsAsync",this.dataIns).subscribe(item=>{
-          this.dialog.close(this.dataIns);
-          this.dataChange.emit(this.dataIns);
-        });
+        this.updateIns();
       }
     }
+  }
+
+  async addFileAttach()
+  {
+    if(this.attachment.fileUploadList && this.attachment.fileUploadList.length > 0)
+    (await this.attachment.saveFilesObservable()).subscribe(item2=>{
+      if(item2)
+      {
+        let arr = [];
+        if(!Array.isArray(item2))
+        {
+          arr.push(item2);
+        }
+        else arr = item2;
+        arr.forEach(elm=>{
+          var obj = 
+          {
+            fileID: elm.data.recID,
+            type: 1
+          }
+          var index = this.dataIns.documentControl.findIndex(x=>x.fieldID == elm.data.objectID);
+          if(index >=0 ) 
+          {
+            if(!this.dataIns.documentControl[index]?.files) this.dataIns.documentControl[index].files = [];
+            this.dataIns.documentControl[index].files.push(obj);
+          }
+        })
+
+        this.api.execSv("BP","BP","ProcessInstancesBusiness","UpdateInsAsync",this.dataIns).subscribe();
+        //this.dataIns.documentControl.
+      }
+  });
+  }
+  updateIns()
+  {
+    this.api.execSv("BP","BP","ProcessInstancesBusiness","UpdateInsAsync",this.dataIns).subscribe(item=>{
+      this.dialog.close(this.dataIns);
+      this.dataChange.emit(this.dataIns);
+    });
   }
 
   checkAttachment()
@@ -301,13 +342,19 @@ export class AddProcessDefaultComponent implements OnInit{
 
   dataChangeAttachmentGrid(e:any)
   {
-    var dt = JSON.parse(JSON.stringify(e));
-    this.dataIns.documentControl = dt;
+    if(Array.isArray(e))
+    {
+      e.forEach(elm=>{
+        var dt = JSON.parse(JSON.stringify(elm));
+        var index = this.dataIns.documentControl.findIndex(x=>x.recID == elm.recID);
+        if(index>=0) this.dataIns.documentControl[index] = dt;
+      })
+    }
+  
   }
 
   editTable(index:any,e:any)
   {
-    debugger
     if(typeof this.dataIns.datas[this.tableField][index] === 'string') {
       this.dataIns.datas[this.tableField][index] = {}
     }

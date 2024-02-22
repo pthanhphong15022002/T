@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { BasePropertyComponent } from '../base.component';
 import { Util } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import { AttachmentGridFilesComponent } from 'projects/codx-common/src/lib/component/attachment-grid/attachment-grid-files/attachment-grid-files.component';
 
 @Component({
   selector: 'lib-property-attachment',
@@ -20,8 +21,10 @@ export class PropertyAttachmentComponent extends BasePropertyComponent{
       title : '',
       isRequired: false,
       count : 0,
-      listType: "2"
+      listType: "2",
+      refID: ''
     }
+    data.refID = data.recID
     if(!this.data.documentControl) this.data.documentControl = [];
     this.data.documentControl.push(data);
     this.dataChange.emit(this.data);
@@ -48,15 +51,18 @@ export class PropertyAttachmentComponent extends BasePropertyComponent{
 
   fileSave(e:any)
   {
-    let count = 1;
+    if(!this.data.documentControl[this.selectedIndex]?.files) {
+      this.data.documentControl[this.selectedIndex].files = [];
+      this.data.documentControl[this.selectedIndex].count = 0;
+    }
+    var count = 1;
     if(Array.isArray(e))
     {
       count = e.length;
-      this.data.documentControl[this.selectedIndex].files = [];
       e.forEach(elm=>{
         var obj = 
         {
-          fileID : elm.recID,
+          fileID : elm.data.recID,
           type: '1'
         }
         this.data.documentControl[this.selectedIndex].files.push(obj);
@@ -70,9 +76,14 @@ export class PropertyAttachmentComponent extends BasePropertyComponent{
         fileID : e.recID,
         type: '1'
       }
-      this.data.documentControl[this.selectedIndex].files = [obj];
+      this.data.documentControl[this.selectedIndex].files.push(obj);
     }
-    this.data.documentControl[this.selectedIndex].count = count;
+    this.data.documentControl[this.selectedIndex].count += count;
     this.dataChange.emit(this.data);
+  }
+
+  openFormFile(data:any)
+  {
+    this.callFuc.openForm(AttachmentGridFilesComponent,"",500,600,"",{data:data});
   }
 }

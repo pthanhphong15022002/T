@@ -9,12 +9,15 @@ import {
   ApiHttpService,
   AuthStore,
   CacheService,
+  CallFuncService,
   DialogData,
+  DialogModel,
   DialogRef,
   NotificationsService,
   Util,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
 
@@ -42,6 +45,7 @@ export class PopupBpTasksComponent implements OnInit {
   process: any;
   constructor(
     private authstore: AuthStore,
+    private callfc: CallFuncService,
     private shareService: CodxShareService,
     private detectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -82,55 +86,67 @@ export class PopupBpTasksComponent implements OnInit {
     }    
     this.getFile();
     if (this.subTitle == null) {
-      this.subTitle = this.dataIns.title;
+      this.subTitle = this.dataIns?.title;
     }
   }
   getFile(){
-    if(this.dataIns!=null){ 
-          this.fileIDs=[];
-          if (this.dataIns?.documentControl?.length > 0) {
-            //let curStepDmc= this.dataIns?.documentControl;
-            let curStepDmc= this.dataIns?.documentControl.filter(x=>x?.stepID == this.data?.stepID );
-            if(curStepDmc?.length>0){
-              curStepDmc?.forEach(dmc=>{
-                if(dmc?.files?.length>0){
-                  dmc?.files?.forEach(file=>{
-                    if(file?.type=="1" || file?.type=="3"){
-                      this.fileIDs.push(file?.fileID);
-                    }
-                  })
-                }
-                
-                let curRefStepDmc= this.dataIns?.documentControl.filter(x=>x?.stepID == dmc.refStepID );
-                if(curRefStepDmc?.length>0){
-                  curRefStepDmc?.forEach(refDmc=>{
-                    if(refDmc?.files?.length>0){
-                      refDmc?.files?.forEach(refFile=>{
-                        if(refFile?.type=="1" || refFile?.type=="3"){
-                          this.fileIDs.push(refFile?.fileID);
-                        }
-                      })
-                    }
-                  })
-                }
-              })
-            }
-            if(this.fileIDs?.length>0){
-              this.files=[];
-              this.shareService
-                .getLstFileByID(this.fileIDs)
-                .subscribe((res) => {
-                  if (res) {
-                    this.files = res;
-                    this.detectorRef.detectChanges();
-                  }
-                });
-            }
-            
-          }
-          
-        }
-      }
+    if(this.dataIns!=null){ 
+          this.fileIDs=[];
+          if (this.dataIns?.documentControl?.length > 0) {
+            //let curStepDmc= this.dataIns?.documentControl;
+            let curStepDmc= this.dataIns?.documentControl.filter(x=>x?.stepID == this.data?.stepID );
+            if(curStepDmc?.length>0){
+              curStepDmc?.forEach(dmc=>{
+                if(dmc?.files?.length>0){
+                  dmc?.files?.forEach(file=>{
+                    if(file?.type=="1" || file?.type=="3"){
+                      this.fileIDs.push(file?.fileID);
+                    }
+                  })
+                }
+                
+                let curRefStepDmc= this.dataIns?.documentControl.filter(x=>x?.recID == dmc?.refID );
+                if(curRefStepDmc?.length>0){
+                  curRefStepDmc?.forEach(refDmc=>{
+                    if(refDmc?.files?.length>0){
+                      refDmc?.files?.forEach(refFile=>{
+                        if(refFile?.type=="1" || refFile?.type=="3"){
+                          this.fileIDs.push(refFile?.fileID);
+                        }
+                      })
+                    }
+                  })
+                }
+                // let curRefStepDmc= this.dataIns?.documentControl.filter(x=>x?.stepID == dmc.refStepID );
+                // if(curRefStepDmc?.length>0){
+                //   curRefStepDmc?.forEach(refDmc=>{
+                //     if(refDmc?.files?.length>0){
+                //       refDmc?.files?.forEach(refFile=>{
+                //         if(refFile?.type=="1" || refFile?.type=="3"){
+                //           this.fileIDs.push(refFile?.fileID);
+                //         }
+                //       })
+                //     }
+                //   })
+                // }
+              })
+            }
+            if(this.fileIDs?.length>0){
+              this.files=[];
+              this.shareService
+                .getLstFileByID(this.fileIDs)
+                .subscribe((res) => {
+                  if (res) {
+                    this.files = res;
+                    this.detectorRef.detectChanges();
+                  }
+                });
+            }
+            
+          }
+          
+        }
+      }
   getVll() {
     this.cache.valueList('BP001').subscribe((vll) => {
       if (vll && vll?.datas?.length > 0) {
@@ -223,5 +239,42 @@ export class PopupBpTasksComponent implements OnInit {
   dataChange(e: any) {
     this.dataIns = e;
     this.dialog.close(this.dataIns);
+  }
+  eSign(){
+    if(this.data?.recID){      
+          // gọi hàm xử lý xem trình ký
+          let dialogModel = new DialogModel();
+          dialogModel.IsFull = true;
+          var listApproveMF = this.shareService.getMoreFunction(null,"S1");
+  
+          let dialogApprove = this.callfc.openForm(
+            PopupSignForApprovalComponent,
+            'Thêm mới',
+            700,
+            650,
+            'EST021',
+            {
+              funcID: 'EST021',
+              sfRecID: this.data?.recID,
+              title: this.data?.taskName,
+              status: "3",
+              stepType: "S1",
+              stepNo: "0",
+              modeView:"2",
+              lstMF: listApproveMF,
+            },
+            '',
+            dialogModel
+          );
+          dialogApprove.closed.subscribe((res) => {
+            if (!res?.event?.msgCodeError && res?.event?.rowCount>0) {
+              this.onSave()
+              
+            }
+          });
+        
+        
+    
+    }
   }
 }
