@@ -18,6 +18,7 @@ export class ViewDetailInstancesComponent {
   id: any;
   isShow = false;
   info: any;
+  progressIns = 0;
   constructor(private changeDetectorRef: ChangeDetectorRef, private shareService: CodxShareService , private api: ApiHttpService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -35,6 +36,9 @@ export class ViewDetailInstancesComponent {
         this.getInfo();
         this.getProcess();
         this.loaded = true;
+        if(this.dataSelected?.countTasks > 0){
+          this.progressIns = this.dataSelected?.completedTasks ? this.dataSelected?.completedTasks / this.dataSelected?.countTasks : 0;
+        }
 
       }
     }

@@ -82,7 +82,8 @@
                   style="line-height: 12px; height: 21px"
                   *ngIf="
                     dataSelected.endDate &&
-                    (dataSelected?.actualEnd | checkDuedateValue : dataSelected?.endDate)
+                    (dataSelected?.actualEnd
+                      | checkDuedateValue : dataSelected?.endDate)
                   "
                 >
                   <span class="icon-notifications icon-16 me-1"></span>
@@ -98,6 +99,7 @@
                   [value]="dataSelected?.status"
                   [showText]="true"
                   [showIcon]="true"
+                  [showBgColor]="true"
                   class="badge badge-light badge-md"
                 >
                 </codx-vll>
@@ -112,9 +114,17 @@
             </div>
             <div class="ms-2" style="margin-top: 6px">
               <codx-progressbar
-                [progress]="dataSelected?.progress"
+                [progress]="progressIns"
                 [stype]="2"
                 [size]="50"
+                [color]="
+                  dataSelected?.endDate
+                    ? (dataSelected?.actualEnd
+                      | checkDuedateValue : dataSelected?.endDate)
+                      ? '#dc3545'
+                      : '#005DC7'
+                    : '#005DC7'
+                "
               ></codx-progressbar>
             </div>
           </div>
@@ -174,7 +184,12 @@
             </ejs-tab>
           </div>
         </div> -->
-        <lib-process-release-detail [data]="dataSelected" [process]="process" [formModel]="formModel" [right]="true"></lib-process-release-detail>
+        <lib-process-release-detail
+          [data]="dataSelected"
+          [process]="process"
+          [formModel]="formModel"
+          [right]="true"
+        ></lib-process-release-detail>
       </ng-template>
     </codx-detail-tmp>
   </ng-container>
