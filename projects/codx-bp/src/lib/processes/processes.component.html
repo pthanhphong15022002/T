@@ -42,7 +42,7 @@
     (clickMF)="clickMF($event, data)"
     [hideMF]="asideMode == '2'"
     (changeDataMF)="changeDataMF($event, data)"
-    (dblclick)="clickMF({functionID: 'BPT0101'},data)"
+    (dblclick)="clickMF({ functionID: 'BPT0101' }, data)"
   >
   </codx-card-img>
   <ng-template #footerbg let-data>
@@ -323,7 +323,10 @@
 </ng-template>
 
 <ng-template #templateList let-data>
-  <div class="d-flex w-100 align-items-center border-bottom" (dblclick)="clickMF({functionID: 'BPT0101'},data)">
+  <div
+    class="d-flex w-100 align-items-center border-bottom"
+    (dblclick)="clickMF({ functionID: 'BPT0101' }, data)"
+  >
     <div class="w-35 py-3 ps-5">
       <div class="d-flex flex-column">
         <div
@@ -349,12 +352,16 @@
       </div>
     </div>
     <div class="w-10 py-3">
-      <div class="d-flex justify-content-start align-items-center codx-badge">
+      <div class="d-flex align-items-center justify-content-start codx-badge">
         <codx-vll
           [name]="'CRM042'"
           [field]="'Status'"
           [value]="data?.status"
           [showText]="true"
+          [showText]="true"
+          [showIcon]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md"
         >
         </codx-vll>
       </div>
