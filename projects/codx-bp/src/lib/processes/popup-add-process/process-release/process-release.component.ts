@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  AlertConfirmInputConfig,
   ApiHttpService,
   ButtonModel,
   CacheService,
@@ -222,6 +223,11 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         break;
       }
       //Delete
+      case 'SYS02':
+      {
+        this.deleteItem();
+        break;
+      }
       case 'SYS05':
         break;
       //start
@@ -258,7 +264,10 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
+          let data = this.view?.dataService?.dataSelected;
+          data.status = "2";
           this.notifiSer.notifyCode('SYS034');
+          (this.view.currentView as any).kanban.updateCard(data);
         }
       });
   }
@@ -279,21 +288,31 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
 
   deleteItem()
   {
-    this.api
-    .execSv(
-      'BP',
-      'ERM.Business.BP',
-      'ProcessesBusiness',
-      'DeleteInsAsync',
-      [this.view?.dataService?.dataSelected?.recID]
-    )
-    .subscribe((res) => {
-      if (res) {
-        this.view.dataService.delete(this.view?.dataService?.dataSelected);
-        this.notifiSer.notifyCode('SYS008');
-      }
-      else this.notifiSer.notifyCode('SYS022');
-    });
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notifiSer
+      .alert('Thông báo', 'Bạn có chắc chắn muốn xóa?', config)
+      .closed.subscribe((x) => {
+        if (x.event.status == 'Y')
+        {
+          this.api
+          .execSv(
+            'BP',
+            'ERM.Business.BP',
+            'ProcessInstancesBusiness',
+            'DeleteInsAsync',
+            this.view?.dataService?.dataSelected?.recID
+          )
+          .subscribe((res) => {
+            if (res) {
+              (this.view.currentView as any).kanban.removeCard(this.view?.dataService?.dataSelected);
+              this.notifiSer.notifyCode('SYS008');
+            }
+            else this.notifiSer.notifyCode('SYS022');
+          });
+        }
+      });
+   
   }
   popUpAddEdit(item: any, type: any) {
     var option = new SidebarModel();

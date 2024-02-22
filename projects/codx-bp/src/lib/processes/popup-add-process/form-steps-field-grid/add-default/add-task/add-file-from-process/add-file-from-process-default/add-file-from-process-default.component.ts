@@ -161,6 +161,7 @@ export class AddFileFromProcessDefaultComponent implements OnInit{
     this.api.execSv("DM","DM","FileBussiness","GetFileByObjectIDAsync",[recID + ";",entityName]).subscribe(item=>{
       if(item)
       {
+        if(!this.documentControl[i]?.files) this.documentControl[i].files = [];
         this.documentControl[i].files = item;
         this.countOb = this.countOb - 1
         if(this.countOb == 0) this.groupData();
@@ -173,6 +174,7 @@ export class AddFileFromProcessDefaultComponent implements OnInit{
     this.api.execSv("DM","DM","FileBussiness","GetListFile",recID).subscribe(item=>{
       if(item)
       {
+        if(!this.documentControl[i]?.files) this.documentControl[i].files = [];
         this.documentControl[i].files = item;
         this.countOb = this.countOb - 1
         if(this.countOb == 0) this.groupData();
