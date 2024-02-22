@@ -4,6 +4,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  HostListener,
   Injector,
   QueryList,
   Renderer2,
@@ -47,6 +48,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChildren('templateDeals') dashBoardDeals: QueryList<any>;
   @ViewChildren('templateTarget') dashBoardTaget: QueryList<any>;
   @ViewChildren('templateInOut') dashBoardInOut: QueryList<any>;
+  @ViewChildren('templateSpaceForRent') dashBoardSpaceForRent: QueryList<any>;
 
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChild('accumulationPipe') accumulationPipe: AccumulationChartComponent;
@@ -65,8 +67,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   panelsDeals2: any;
   datasDeals2: any;
 
-  panelsDeals3: any;
-  datasDeals3: any;
+  panelsContractsRealties: any;
+  datasContractsRealties: any;
+
+  panelsRealties1: any;
+  datasRealties1: any;
+
+  panelsRealties2: any;
+  datasRealties3: any;
 
   arrVllStatus: any = [];
   vllStatus = '';
@@ -593,7 +601,31 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   isQTSC = false;
 
   loadedMap = false;
-  //======================================================================
+  //=============================================================
+
+  //================ REALTIES DASHBROAD=============================
+  dataSpaceForRent = [];
+
+  primaryYAxisColumnSFR = {
+    title: 'Diện tích',
+    minimum: 0,
+    // maximum: 100,
+    interval: 50,
+    majorTickLines: { width: 0 },
+    majorGridLines: { width: 1 },
+    minorGridLines: { width: 1 },
+    minorTickLines: { width: 0 },
+  };
+  titleUsableArea = 'Diện tích - m2';
+
+  zoomSettings: Object = {
+    mode: 'X',
+    enableMouseWheelZooming: true,
+    enablePinchZooming: true,
+    enableSelectionZooming: true,
+    enableScrollbar: true,
+  };
+  //=============================================================
 
   constructor(
     inject: Injector,
@@ -626,11 +658,18 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       '[{"panelId":"12.1636284528927885_layout","data":"1"},{"panelId":"22.5801149283702021_layout","data":"2"},{"panelId":"32.6937258303982936_layout","data":"3"},{"panelId":"42.5667390469747078_layout","data":"4"},{"panelId":"52.4199281088325755_layout","data":"5"},{"panelId":"62.4592017601751599_layout","data":"6"},{"panelId":"72.14683256767762543_layout","data":"7"},{"panelId":"82.36639064171709834_layout","data":"8"},{"panelId":"92.06496875406606994_layout","data":"9"},{"panelId":"102.21519762020962552_layout","data":"10"},{"panelId":"112.21519762020964252_layout","data":"11"}]'
     );
 
-    this.panelsDeals3 = JSON.parse(
+    this.panelsContractsRealties = JSON.parse(
       '[{"id":"13.1636284528927885_layout","row":0,"col":0,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"23.5801149283702021_layout","row":0,"col":30,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"33.6937258303982936_layout","row":25,"col":0,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"43.5667390469747078_layout","row":25,"col":30,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"53.4199281088325755_layout","row":50,"col":0,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"63.4592017601751599_layout","row":50,"col":30,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"73.14683256767762543_layout","row":75,"col":0,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"83.21519762020964252_layout","row":75,"col":30,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"93.21519762020964252_layout","row":100,"col":0,"sizeX":30,"sizeY":20,"minSizeX":30,"minSizeY":20,"maxSizeX":null,"maxSizeY":null}]'
     );
-    this.datasDeals3 = JSON.parse(
+    this.datasContractsRealties = JSON.parse(
       '[{"panelId":"13.1636284528927885_layout","data":"1"},{"panelId":"23.5801149283702021_layout","data":"2"},{"panelId":"33.6937258303982936_layout","data":"3"},{"panelId":"43.5667390469747078_layout","data":"4"},{"panelId":"53.4199281088325755_layout","data":"5"},{"panelId":"63.4592017601751599_layout","data":"6"},{"panelId":"73.14683256767762543_layout","data":"7"},{"panelId":"83.21519762020964252_layout","data":"8"},{"panelId":"93.21519762020964252_layout","data":"9"}]'
+    );
+
+    this.panelsRealties1 = JSON.parse(
+      '[{"id":"14.1636284528927885_layout","row":0,"col":0,"sizeX":60,"sizeY":25,"minSizeX":60,"minSizeY":25,"maxSizeX":null,"maxSizeY":null}]'
+    );
+    this.datasRealties1 = JSON.parse(
+      '[{"panelId":"14.1636284528927885_layout","data":"1"}]'
     );
 
     this.primaryXAxisY = {
@@ -730,6 +769,20 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         }
         this.getDataset(
           'QTSCNumberInAndOutBusiness',
+          'GetReportSourceAsync',
+          param
+        );
+        break;
+      case 'CMDQTSC010':
+        this.getDataset(
+          'OfficeSpaceForRentBusiness',
+          'GetReportSourceAsync',
+          param
+        );
+        break;
+      case 'CMDQTSC011':
+        this.getDataset(
+          'OfficeTypeReportBusiness',
           'GetReportSourceAsync',
           param
         );
@@ -1101,6 +1154,18 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                       'GetReportSourceAsync'
                     );
                     break;
+                  case 'CMDQTSC010':
+                    this.getDataset(
+                      'OfficeSpaceForRentBusiness',
+                      'GetReportSourceAsync'
+                    );
+                    break;
+                  case 'CMDQTSC011':
+                    this.getDataset(
+                      'OfficeTypeReportBusiness',
+                      'GetReportSourceAsync'
+                    );
+                    break;
                 }
 
                 this.detectorRef.detectChanges();
@@ -1177,6 +1242,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
               case 'CMDQTSC007':
               case 'CMDQTSC008':
                 this.viewDashBoardsInOut(res);
+                break;
+              case 'CMDQTSC010':
+                this.viewDashBoardsOfficeSpaceForRent(res);
+                break;
+              case 'CMDQTSC011':
+                this.viewDashBoardsOfficeTypeReport(res);
                 break;
             }
           }
@@ -3349,4 +3420,43 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     ];
   }
   //------------------------------------------------//
+
+  //------------------OfficeSpaceForRent -CMRQTSC010--------------------//
+  viewDashBoardsOfficeSpaceForRent(dataSet) {
+    this.dataSpaceForRent = dataSet;
+    let max = 0;
+    if (this.dataSpaceForRent?.length > 0) {
+      this.dataSpaceForRent.forEach((x) => {
+        if (max < x.usableArea) max = x.usableArea;
+      });
+
+      let renderMax = Math.floor(max / 10);
+
+      if (renderMax > 50) {
+        let mod = renderMax % 10;
+        renderMax = Math.floor(renderMax / 10) * 10 + (mod > 5 ? 10 : 5);
+        this.primaryYAxisColumnSFR.interval = renderMax;
+      }
+    }
+  }
+  onScroll(event) {
+    debugger;
+  }
+
+  // @HostListener('scroll', ['$event'])
+  // onScrollCMM(event: Event): void {
+  //   debugger;
+  //   // if (!this.isAllDatas) {
+  //   //   const element = event.target as HTMLElement;
+  //   //   if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+  //   //     this.gridModelTree.page += 1;
+  //   //     this.loadData();
+  //   //   }
+  //   // }
+  // }
+  //-----------------------------------------------------------------//
+
+  //------------------OfficeTypeReport -CMRQTSC011--------------------//
+  viewDashBoardsOfficeTypeReport(dataSet) {}
+  //-----------------------------------------------------------------//
 }

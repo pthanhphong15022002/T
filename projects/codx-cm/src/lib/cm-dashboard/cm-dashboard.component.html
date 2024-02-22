@@ -39,12 +39,33 @@
     <ng-container *ngIf="funcID == 'CMDQTSC007' || funcID == 'CMDQTSC008'">
       <codx-dashboard
         [templates]="dashBoardInOut"
-        [panels]="panelsDeals3"
-        [datas]="datasDeals3"
+        [panels]="panelsContractsRealties"
+        [datas]="datasContractsRealties"
         [isEditMode]="isEditMode"
         [cellSpacing]="[10, 10]"
         [columns]="60"
       ></codx-dashboard>
+    </ng-container>
+
+    <!-- <ng-container *ngIf="funcID == 'CMDQTSC010'">
+      <codx-dashboard
+        [templates]="dashBoardSpaceForRent"
+        [panels]="panelsRealties1"
+        [datas]="datasRealties1"
+        [isEditMode]="isEditMode"
+        [cellSpacing]="[10, 10]"
+        [columns]="60"
+      ></codx-dashboard>
+    </ng-container> -->
+    <ng-container
+      *ngIf="funcID == 'CMDQTSC010'"
+      [ngTemplateOutlet]="officeSpaceForRent"
+    >
+    </ng-container>
+    <ng-container
+      *ngIf="funcID == 'CMDQTSC011'"
+      [ngTemplateOutlet]="officeTypeReport"
+    >
     </ng-container>
   </div>
 
@@ -1757,7 +1778,7 @@
 <!---------------------------------------------------------------------------------------------------------->
 
 <!---------------------------------------------------------------------------------------------------------->
-<!---------------------------------------------------------------------------------------------------------->
+<!-------------------------   Thống kê ra vào - CMDQTSC007- CMDQTSC008  ------------------------------------>
 <!---------------------------------------------------------------------------------------------------------->
 <ng-template #templateInOut>
   <div class="w-100 h-100" id="1">
@@ -2626,6 +2647,68 @@
     </div>
   </div>
 </ng-template>
+
+<!---------------------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------------->
+
+<!---------------------------------------------------------------------------------------------------------->
+<!-----------------------------  Thống kê diện tích - CMDQTSC010        ------------------------------------>
+<!---------------------------------------------------------------------------------------------------------->
+<ng-template #templateSpaceForRent>
+  <div class="w-100 h-100" id="1"></div>
+</ng-template>
+
+<ng-template #officeSpaceForRent>
+  <div class="w-100 h-100 bg-white row">
+    <div class="col-4 mt-3 h-100">
+      <ejs-grid [dataSource]="dataSpaceForRent" height="100%">
+        <e-columns>
+          <e-column
+            field="AssetID"
+            headerText="Tên tòa nhà"
+            textAlign="Left"
+            width="90"
+          ></e-column>
+          <e-column
+            field="UsableArea"
+            headerText="Diện tích cho thuê ( m2)"
+            width="120"
+          ></e-column>
+        </e-columns>
+      </ejs-grid>
+    </div>
+    <div class="col-8 align-item-center">
+      <ejs-chart
+        id="chart-container-3"
+        [primaryXAxis]="primaryXAxisColumn"
+        [primaryYAxis]="primaryYAxisColumnSFR"
+        [tooltip]="tooltipChartColumn"
+        [legendSettings]="legendSettingsColumn"
+      >
+        <e-series-collection>
+          <e-series
+            [dataSource]="dataSpaceForRent"
+            type="Column"
+            columnSpacing="0.25"
+            columnWidth="0.5"
+            xName="assetName"
+            yName="usableArea"
+            [name]="titleUsableArea"
+          ></e-series>
+        </e-series-collection>
+      </ejs-chart>
+    </div>
+  </div>
+</ng-template>
+<!---------------------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------------->
+
+<!---------------------------------------------------------------------------------------------------------->
+<!-----------------------------Thống kê theo loại văn phòng - CMDQTSC011------------------------------------>
+<!---------------------------------------------------------------------------------------------------------->
+<ng-template #officeTypeReport> 456 </ng-template>
 
 <!---------------------------------------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------------------------------------->
