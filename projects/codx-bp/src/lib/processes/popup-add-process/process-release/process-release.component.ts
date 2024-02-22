@@ -252,9 +252,13 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
       });
   }
   addItem() {
-    this.view.dataService.addNew().subscribe((item) => {
-      this.popUpAddEdit(item, 'add');
-    });
+    if(this.process.status == '5')
+    {
+      this.view.dataService.addNew().subscribe((item) => {
+        this.popUpAddEdit(item, 'add');
+      });
+    }
+    else this.notifiSer.notifyCode('BP003');
   }
 
   editItem() {
