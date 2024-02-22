@@ -66,7 +66,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   listCosts;
   dealCostOld = 0;
   isChangeCost = false;
-  widthDefault = '550'
+  widthDefault = '550';
 
   viewSettings: any;
   statusCodeID;
@@ -100,12 +100,11 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   ];
 
   listTabInformation = [
-    { id: 'sales', name: 'Sales team', icon: "icon-people_alt"},
-    { id: 'costItems', name: 'Chi phí', icon: "icon-add_to_photos"},
-    { id: 'contact', name: 'Người quyết định', icon: "icon-contact_phone"},
-    { id: 'information', name: 'Nhu cầu', icon: "icon-add_box"},
-    { id: 'opponent', name: 'Đối thủ', icon: "icon-i-people-fill"},
-
+    { id: 'sales', name: 'Sales team', icon: 'icon-people_alt' },
+    { id: 'costItems', name: 'Chi phí', icon: 'icon-add_to_photos' },
+    { id: 'contact', name: 'Người quyết định', icon: 'icon-contact_phone' },
+    { id: 'information', name: 'Nhu cầu', icon: 'icon-add_box' },
+    { id: 'opponent', name: 'Đối thủ', icon: 'icon-i-people-fill' },
 
     // { id: 'fields', name: 'Thông tin mở rộng', icon: "icon-"},
     // { id: 'note', name: 'Ghi chú', icon: "icon-"},
@@ -124,7 +123,8 @@ export class CurrentStepComponent implements OnInit, OnChanges {
     private changeDetectorRef: ChangeDetectorRef,
     private callFunc: CallFuncService,
     private api: ApiHttpService,
-    private el: ElementRef, private renderer: Renderer2,
+    private el: ElementRef,
+    private renderer: Renderer2,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -155,7 +155,9 @@ export class CurrentStepComponent implements OnInit, OnChanges {
     this.tabLeftSelect = this.listTabLeft[0];
     this.listInsStep = this.listInsStepStart;
     if (this.type != '1') {
-      this.listTabInformation = [{ id: 'tasks', name: 'Công việc', icon:"icon-i-list-task" }];
+      this.listTabInformation = [
+        { id: 'tasks', name: 'Công việc', icon: 'icon-i-list-task' },
+      ];
     }
     this.getContract();
     this.cache
@@ -168,23 +170,31 @@ export class CurrentStepComponent implements OnInit, OnChanges {
       });
     this.getCostItemsByTransID(this.deal?.recID);
     this.widthDefault = this.dialog.dialog.width
-    ? this.dialog.dialog.width.toString()
-    : '550';   
+      ? this.dialog.dialog.width.toString()
+      : '550';
 
-    let listUserID = JSON.stringify([this.deal?.salespersonID, this.deal?.consultantID]);
+    let listUserID = JSON.stringify([
+      this.deal?.salespersonID,
+      this.deal?.consultantID,
+    ]);
 
     this.api
-    .exec<any>('HR', 'EmployeesBusiness', 'GetListEmployeesByUserIDAsync', [listUserID])
-    .subscribe((res) => {
-      if(res){
-        this.consultant = res.find(x => x.userID == this.deal?.consultantID);
-        this.salesperson = res.find(x => x.userID == this.deal?.salespersonID);
-      }
-      console.log(res);
-      
-    });
+      .exec<any>('HR', 'EmployeesBusiness', 'GetListEmployeesByUserIDAsync', [
+        listUserID,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.consultant = res.find(
+            (x) => x.userID == this.deal?.consultantID
+          );
+          this.salesperson = res.find(
+            (x) => x.userID == this.deal?.salespersonID
+          );
+        }
+        console.log(res);
+      });
   }
-  
+
   ngOnChanges(changes: SimpleChanges) {}
 
   getCostItemsByTransID(transID) {
@@ -537,14 +547,14 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   }
 
   startNow(e) {
-    if(e){
+    if (e) {
       this.notiService
-      .alertCode('DP033', null, ['"' + this.deal?.dealName + '"' || ''])
-      .subscribe((x) => {
-        if (x.event && x.event.status == 'Y') {
-          this.startDeal(this.deal);
-        }
-      });
+        .alertCode('DP033', null, ['"' + this.deal?.dealName + '"' || ''])
+        .subscribe((x) => {
+          if (x.event && x.event.status == 'Y') {
+            this.startDeal(this.deal);
+          }
+        });
     }
   }
 
@@ -560,7 +570,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
               this.view.dataService.update(this.deal, true).subscribe();
               if (this.detailViewDeal)
                 this.detailViewDeal.reloadListStep(resDP[1]);
-                this.getListInstanceStep(this.deal);
+              this.getListInstanceStep(this.deal);
               this.notiService.notifyCode('SYS007');
             }
             this.changeDetectorRef.markForCheck();
@@ -568,7 +578,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
         }
       });
   }
-  
+
   totalDataCost(e) {
     this.totalCost = e;
     this.isUpDealCost = true;
@@ -579,7 +589,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   }
 
   closePopup() {
-    if ((!this.isUpDealCost && !this.isUpDealValueTo)) {
+    if (!this.isUpDealCost && !this.isUpDealValueTo) {
       this.dialog.close();
       return;
     }
@@ -598,12 +608,12 @@ export class CurrentStepComponent implements OnInit, OnChanges {
     this.dialog.setWidth(this.isZoomOut ? width : this.widthDefault);
     let c = document.getElementsByClassName('e-popup-open');
     var a = c[0] as HTMLElement;
-    if(this.isZoomOut && a){
-      a.style.height = '100%'; 
+    if (this.isZoomOut && a) {
+      a.style.height = '100%';
       a.style.maxHeight = '100%';
-    }else if(!this.isZoomOut && a){
-      a.style.height = '100%'; 
-      a.style.maxHeight = '95%';
+    } else if (!this.isZoomOut && a) {
+      a.style.height = '100%';
+      a.style.maxHeight = '98%';
     }
     this.changeDetectorRef.detectChanges();
   }
