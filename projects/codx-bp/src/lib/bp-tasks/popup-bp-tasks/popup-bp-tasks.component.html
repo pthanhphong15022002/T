@@ -193,9 +193,7 @@
           displayThumb="full"
         >
         </codx-attachment>
-      </div>
-      
-
+      </div>      
     <!-- <a (click)="eSign()">Ký số</a> -->
   </ng-template>
   <ng-template #footer>
@@ -322,14 +320,14 @@
               default="Trả về"
             ></codx-label>
           </button>
-          <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+          <button type="button" class="btn btn-primary ms-1" (click)="eSign()">
             <codx-label
               [name]="'lblbt2' + data?.activityType"
               [formName]="dialog?.formModel?.formName"
               [gridViewName]="
                 dialog?.formModel?.gridViewName + data?.activityType
               "
-              default="Đã kiểm tra"
+              default="Ký"
             ></codx-label>
           </button>
         </div>

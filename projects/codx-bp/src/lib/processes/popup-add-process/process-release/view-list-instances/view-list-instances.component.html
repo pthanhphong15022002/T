@@ -18,7 +18,7 @@
         [formModel]="formModel"
         [default]="'Ngày tạo'"
       ></codx-label>
-      <div class="ps-5">
+      <div class="">
         <span>{{ dataSelected.createdOn | date : "dd/MM/yyyy" }}</span>
       </div>
     </div>
@@ -44,9 +44,9 @@
             ? (dataSelected?.actualEnd
               | checkDuedateValue : dataSelected?.endDate)
               ? '#dc3545'
-              : 'rgb(172 240 202)'
+              : '#005DC7'
             : progress > 0
-            ? 'rgb(172 240 202)'
+            ? '#005DC7'
             : ''
         "
         role="progressbar"

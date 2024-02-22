@@ -89,6 +89,10 @@ export class AddProcessDefaultComponent implements OnInit{
         }
         else 
         {
+          if(element.fieldType == "Attachment") {
+            element.documentControl = typeof element.documentControl == 'string' ? JSON.parse(element.documentControl): element.documentControl;
+            if(element.documentControl) element.documentControl = this.dataIns.documentControl.filter(x=>x.fieldID == element.recID);
+          }
           this.dataIns.datas = typeof this.dataIns.datas === 'string' ?  JSON.parse(this.dataIns.datas) : this.dataIns.datas;
           let dataEdit = this.dataIns.datas;
           this.dynamicFormsForm.addControl(field, new FormControl(dataEdit[field] , (element.isRequired ? Validators.required : null)));

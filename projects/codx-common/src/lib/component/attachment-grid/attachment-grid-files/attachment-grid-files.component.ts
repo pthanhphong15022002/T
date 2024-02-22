@@ -37,10 +37,8 @@ export class AttachmentGridFilesComponent implements OnInit{
       if(item)
       {
         this.files = item;
-        if(this.referType)
-        {
-          this.files = this.files.filter(x=>x.referType == this.referType)
-        }
+        if(this.referType) this.files = this.files.filter(x=>x.referType == this.referType)
+        else this.files = this.files.filter(x=>x.referType == '')
       }
     })
   }

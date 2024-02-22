@@ -351,10 +351,11 @@ li {
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 3px;
+  margin-left: 10px;
 }
 .model-func:hover{
-  border-radius: 5px;
-  box-shadow: 0px -1px 5px 3px var(--primary-light) inset;
+  background-color: var(--primary-lighter);
 }
 .popup-hover:hover{
   color: var(--primary-dark)!important;
