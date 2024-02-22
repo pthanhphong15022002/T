@@ -4,7 +4,6 @@ import {
   Injector,
   TemplateRef,
   ViewChild,
-  ViewEncapsulation,
 } from '@angular/core';
 import {
   AuthStore,
@@ -13,11 +12,9 @@ import {
   DialogModel,
   FormModel,
   NotificationsService,
-  ResourceModel,
   SidebarModel,
   TenantStore,
   UIComponent,
-  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -31,8 +28,6 @@ import {
   fmVATInvoices,
 } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { ProgressBar } from '@syncfusion/ej2-angular-progressbar';
-import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { Subject, takeUntil } from 'rxjs';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
@@ -51,7 +46,7 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('listTemplate') listTemplate?: TemplateRef<any>;
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
   headerText: any;
-  runmode: any;
+  runmode: string = '';
   journalNo: string;
   itemSelected: any;
   userID: any;
@@ -72,6 +67,7 @@ export class CashPaymentsComponent extends UIComponent {
   bankPayID: any;
   bankNamePay: any;
   bankReceiveName: any;
+  predicate: string = 'JournalNo=@0';
   viewActive: number = ViewType.listdetail;
   ViewType = ViewType;
   fmCashpaymentLine: FormModel = fmCashPaymentsLines;
@@ -101,6 +97,13 @@ export class CashPaymentsComponent extends UIComponent {
     this.router.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       this.journalNo = params?.journalNo;
     });
+
+    this.router.data.subscribe((res: any) => {
+      if (res && res['runMode'] && res['runMode'] == '1') {
+        this.predicate = '';
+        this.runmode = res.runMode;
+      }
+    });
   }
   //#endregion Constructor
 
@@ -113,7 +116,7 @@ export class CashPaymentsComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.headerText = res?.defaultName || res?.customName;
-          this.runmode = res?.runMode;
+          if (!this.runmode) this.runmode = res?.runMode;
         }
       });
     this.getJournal();
@@ -369,12 +372,12 @@ export class CashPaymentsComponent extends UIComponent {
    * @param dataCopy : data chứng từ sao chép
    */
   copyVoucher(dataCopy) {
-    let newdataCopy = {...dataCopy};
+    let newdataCopy = { ...dataCopy };
     if (this.journal && this.journal.assignRule == '0') {
       let data = {
-        journalType : this.journal.journalType,
-        journalNo : this.journalNo
-      }
+        journalType: this.journal.journalType,
+        journalNo: this.journalNo,
+      };
       let opt = new DialogModel();
       opt.FormModel = this.view.formModel;
       let dialog = this.callfc.openForm(
@@ -515,7 +518,7 @@ export class CashPaymentsComponent extends UIComponent {
       optionSidebar,
       this.view.funcID
     );
-    dialog.closed.subscribe((res) => { });
+    dialog.closed.subscribe((res) => {});
   }
 
   /**
@@ -572,13 +575,17 @@ export class CashPaymentsComponent extends UIComponent {
    */
   changeMFDetail(event: any, type: any = '') {
     let data = this.view?.dataService?.dataSelected;
-    this.acService.changeMFCashPayment(
-      event,
-      data,
-      type,
-      this.journal,
-      this.view.formModel
-    );
+    if (this.runmode == '1') {
+      this.shareService.changeMFApproval(event, data.unbounds);
+    } else {
+      this.acService.changeMFCashPayment(
+        event,
+        data,
+        type,
+        this.journal,
+        this.view.formModel
+      );
+    }
   }
 
   /**
