@@ -19,7 +19,7 @@
       <ejs-multiselect id='multiselect-checkbox' #checkbox [dataSource]="projectData?.permissions" [fields]='fields'
       [mode]="'CheckBox'"  [showDropDownIcon]="true" showSelectAll='true' [popupHeight]="'400px'" [popupWidth]="'400px'" [filterBarPlaceholder]="'Tìm kiếm...'" locale="vi" (valueChange)="valueChange($event)">
         <ng-template #itemTemplate let-data>
-          <div class="">
+          <div class="ms-5 d-flex align-items-center">
             <codx-img [width]="30" [objectId]="data?.objectID" objectType="AD_Users" [objectName]="data?.objectName"></codx-img> &nbsp;&nbsp; {{data.objectName}}
           </div>
         </ng-template>

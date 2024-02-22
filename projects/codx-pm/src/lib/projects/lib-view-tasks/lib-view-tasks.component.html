@@ -11,6 +11,23 @@
   [idField]="idField"
   [selectedFirst]="false"
   [dataObj]="dataObj"
+  [predicate]="predicate"
+  [dataValue]="datavalue"
+  [isSubView]="true"
   (buttonClick)="click($event)"
+  (clickMF)="clickMF($event)"
+  *ngIf="projectID && datavalue"
 >
 </codx-views>
+<ng-template #itemViewList let-data>
+  <share-view-list
+    [formModel]="view.formModel"
+    [vllStatus]="vllStatus"
+    [data]="data"
+    [listRoles]="listRoles"
+    [showMoreFunc]="true"
+    [user]="user"
+
+  >
+  </share-view-list>
+</ng-template>
