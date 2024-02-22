@@ -196,10 +196,10 @@
                     <button type="button" class="btn btn-light w-100 mt-4 ms-1" (click)="openAttach1()"><i class="icon-attach_file"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment2" default="Đính kèm mới"></codx-label></button>
                 </div>
                 <div class="mt-6">
-                    <div class="d-flex flex-column px-4" *ngFor="let item of listDocument">
-                        <span>{{item.title}}</span>
+                    <div class="d-flex flex-column px-4 py-2" [class.border-top]="(listDocument && listDocument.length>1 && i>0)" *ngFor="let item of listDocument , let i = index">
+                        <span class="fw-bold">{{item.title}}</span>
                         <codx-thumbnail  
-                            [files]="item?.files" 
+                            [files]="item?.filess" 
                             displayThumb="simple" 
                             [hideDelete]="'1'"
                             [hideMoreF]="'0'" 
@@ -242,7 +242,7 @@
                     <div class="d-flex flex-column px-4" *ngFor="let item of listDocument">
                         <span>{{item.title}}</span>
                         <codx-thumbnail  
-                            [files]="item?.files" 
+                            [files]="item?.filess" 
                             displayThumb="simple" 
                             [hideDelete]="'1'"
                             [hideMoreF]="'0'" 

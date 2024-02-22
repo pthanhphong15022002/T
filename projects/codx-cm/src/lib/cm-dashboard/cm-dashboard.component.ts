@@ -568,8 +568,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   ///END TEST
   titleTotalAll = 'Tổng cộng';
-  titleRentalAreaIn = 'Diện tích bán mới';
-  titleRentalAreaOut = 'Diện tích thanh lý';
+  titleQuotationAreaIn = 'Diện tích bán mới';
+  titleQuotationAreaOut = 'Diện tích thanh lý';
+  //titleRentalAreaIn = 'Diện tích bán mới';
+  //titleRentalAreaOut = 'Diện tích thanh lý';
   titleUpAndDownAreaIn = 'Diện tích mở rộng';
   titleUpAndDownAreaOut = 'Diện tích giảm';
 
@@ -3159,7 +3161,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           quarter: qt.value,
           quarterName: qt?.text,
           totalArea: 0,
-          totalRentalArea: 0,
+          totalQuotationArea: 0,
+          //  totalRentalArea: 0,
           totalUpAndDownArea: 0,
         };
         if (isIn) {
@@ -3172,7 +3175,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         quarter: 100,
         quarterName: 'Tổng cộng',
         totalArea: 0,
-        totalRentalArea: 0,
+        totalQuotationArea: 0,
+        //  totalRentalArea: 0,
         totalUpAndDownArea: 0,
       };
       if (isIn) {
@@ -3187,9 +3191,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let fieldFiter = isIn ? 'expandedArea' : 'decreasedArea';
     let listDataGroup = this.groupBy(dataSet, fieldGroup);
 
-    let totalRentalArea = this.total(dataSet, 'rentalArea');
+    //let totalRentalArea = this.total(dataSet, 'rentalArea');
+    let totalQuotationArea = this.total(dataSet, 'quotationArea');
     let totalUpAndDownArea = this.total(dataSet, fieldFiter);
-    let totalArea = totalRentalArea + totalUpAndDownArea;
+    // let totalArea = totalRentalArea + totalUpAndDownArea;
+    let totalArea = totalQuotationArea + totalUpAndDownArea;
     let renderMax = Math.floor(totalArea / 10);
 
     if (renderMax > 10) {
@@ -3205,16 +3211,21 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           quarter: key,
           quarterName: qt?.text,
           totalArea: 0,
-          totalRentalArea: this.total(
+          totalQuotationArea: this.total(
             listDataGroup[key]?.filter((x) => x[fieldGroup] == key),
-            'rentalArea'
+            'quotationArea'
           ),
+          // totalRentalArea: this.total(
+          //   listDataGroup[key]?.filter((x) => x[fieldGroup] == key),
+          //   'rentalArea'
+          // ),
           totalUpAndDownArea: this.total(
             listDataGroup[key]?.filter((x) => x[fieldGroup] == key),
             fieldFiter
           ),
         };
-        obj.totalArea = obj.totalRentalArea + obj.totalUpAndDownArea;
+        obj.totalArea = obj.totalQuotationArea + obj.totalUpAndDownArea;
+        //obj.totalArea = obj.totalRentalArea + obj.totalUpAndDownArea;
 
         if (isIn) {
           this.listAreaIn.push(obj);
@@ -3227,7 +3238,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         quarter: 100,
         quarterName: 'Tổng cộng',
         totalArea: totalArea,
-        totalRentalArea: totalRentalArea,
+        totalQuotationArea: totalQuotationArea,
+        //totalRentalArea: totalRentalArea,
         totalUpAndDownArea: totalUpAndDownArea,
       };
 
