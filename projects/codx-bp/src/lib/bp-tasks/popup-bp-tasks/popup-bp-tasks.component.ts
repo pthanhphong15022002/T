@@ -86,7 +86,7 @@ export class PopupBpTasksComponent implements OnInit {
     }    
     this.getFile();
     if (this.subTitle == null) {
-      this.subTitle = this.dataIns.title;
+      this.subTitle = this.dataIns?.title;
     }
   }
   getFile(){
