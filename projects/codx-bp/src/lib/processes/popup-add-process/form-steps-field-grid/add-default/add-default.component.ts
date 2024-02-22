@@ -78,4 +78,9 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
     this.vllDefault = e;
     this.activityType = e?.value;
   }
+
+  deleteItem()
+  {
+    this.dialog.close({delete: this.data});
+  }
 }

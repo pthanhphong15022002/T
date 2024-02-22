@@ -20,32 +20,48 @@
                 <codx-label [formModel]="dialogRef.formModel" name="lblReciver" default="Người nhận quà"></codx-label>
                 <codx-input type="combobox" class=" form-control borderless p-0" [crrValue]="giftTrans.UserID"
                     [multiple]="false" [loadFull]="true" field="userID" (valueChange)="valueChange($event)"
-                    refValue="Users">
+                    refValue="Users" [disabled]="readonly">
                 </codx-input>
             </div>
             <div class="form-group">
-                <div class="d-flex">
-                    <div>
-                        <codx-input class="rounded-circle" [crrValue]="'3'" [checked]="true" [label]="'Quỹ công ty'"
-                            type="radio" field="transType3" name="radio" (valueChange)="valueChange($event)"
-                            ngDefaultControl>
-                        </codx-input>
+                <ng-container *ngIf="type != 'detail'">
+                    <div class="d-flex">
+                        <div>
+                            <codx-input class="rounded-circle" [crrValue]="'3'" [label]="'Quỹ công ty'" type="radio" 
+                                field="transType3" name="transType" (valueChange)="valueChange($event)" [checked]="true">
+                            </codx-input>
+                        </div>
+                        <div class="ms-6">
+                            <codx-input class="rounded-circle" [crrValue]="'4'" [label]="'Quỹ cá nhân'" type="radio"
+                                field="transType4" name="transType" (valueChange)="valueChange($event)">
+                            </codx-input>
+                        </div>
                     </div>
-                    <div class="ms-6">
-                        <codx-input class="rounded-circle" [crrValue]="'4'" [label]="'Quỹ cá nhân'" type="radio"
-                            field="transType4" name="radio" (valueChange)="valueChange($event)" ngDefaultControl>
-                        </codx-input>
-                    </div>
-                </div>
+                </ng-container>
+                <ng-container *ngIf="type == 'detail'">
+                    <div class="d-flex">
+                        <div>
+                            <codx-input class="rounded-circle" [label]="'Quỹ công ty'" type="radio" 
+                                field="transType3" name="transType"
+                                [disabled]="readonly" [checked]="giftTrans?.TransType === '3'">
+                            </codx-input>
+                        </div>
+                        <div class="ms-6">
+                            <codx-input class="rounded-circle" [label]="'Quỹ cá nhân'" type="radio"
+                                [disabled]="readonly" field="transType4" name="transType"
+                                [checked]="giftTrans?.TransType === '4'">
+                            </codx-input>
+                        </div>
+                    </div></ng-container>
             </div>
             <div class="form-group">
                 <codx-label [formModel]="dialogRef.formModel" name="lblGifts" default="Quà tặng"></codx-label>
-                <ng-container *ngIf="funcID == 'FDT091'">
+                <ng-container *ngIf="funcID == 'FDT091' && type != 'detail'">
                     <codx-input type="combobox" name="FDGifts" class="form-control borderless p-0" refValue="FDGifts"
-                        field="giftID" [crrValue]="form.controls['giftID'].value" (valueChange)="valueChange($event)">
+                        [disabled]="readonly" field="giftID" [crrValue]="form.controls['giftID'].value" (valueChange)="valueChange($event)">
                     </codx-input>
                 </ng-container>
-                <ng-container *ngIf="funcID == 'FDT092'">
+                <ng-container *ngIf="funcID == 'FDT092' && type != 'detail'">
                     <ejs-combobox #combobox
                         class="e-ddl e-lib e-control overflow-hidden e-popup-open borderless p-0"
                         id='evoucherCombobox' 
@@ -56,6 +72,7 @@
                         [itemTemplate]='itemTemplate'
                         (beforeOpen)="beforeOpen($event)"
                         (select)="selectEvoucher($event)"
+                        [readonly]="readonly"
                     >
                         <ng-template #itemTemplate let-data>
                             <div class="mt-9 group-gifts" (click)="selectItem(data)">
@@ -87,18 +104,55 @@
                         </ng-template>
                     </ejs-combobox>
                 </ng-container>
+                <ng-container *ngIf="type == 'detail'">
+                    <div class="mt-9 group-gifts">
+                        <div class="d-flex ms-2">
+                            <div class="me-5">
+                                <codx-img *ngIf="giftData?.category == '1'" 
+                                    [objectId]="giftData.giftID"
+                                    [objectType]="'FD_Gifts'" 
+                                    imageType="square" 
+                                    [width]="100"
+                                ></codx-img>
+                                <codx-img *ngIf="giftData?.category == '3' || giftData?.category == '4'"
+                                    [imgSource]="giftData.image" 
+                                    [objectType]="'FD_Gifts'" 
+                                    imageType="square" 
+                                    [width]="100"
+                                ></codx-img>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <div class="fw-bold mb-3">{{giftData?.giftName}}</div>
+                                <div class="mb-2" *ngIf="giftData?.brandName">
+                                    <span class="fw-normal text-gray-500 me-1">
+                                        <codx-label formName="" name="lblCount"
+                                            default="Thương hiệu:"></codx-label>
+                                    </span>
+                                    <span>{{giftData?.brandName}}</span>
+                                </div>
+                                <div class="mb-2" *ngIf="giftData?.categoryName">
+                                    <span class="fw-normal text-gray-500 me-1">
+                                        <codx-label formName="" name="lblCount"
+                                            default="Nhãn hàng:"></codx-label>
+                                    </span>
+                                    <span>{{giftData?.categoryName}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
             </div>
             <div class="row">
                 <div class="col-6">
                     <div class="form-group">
                         <codx-label [formModel]="dialogRef.formModel" name="lblAmount" default="Số lượng"></codx-label>
-                        <ng-container *ngIf="funcID == 'FDT091'">
+                        <ng-container *ngIf="funcID == 'FDT091' && type !== 'detail'">
                             <codx-input type="number" [min]="min" class="form-control" [max]="max"
                                 [crrValue]="form.controls['quantity'].value" field="quantity"
-                                (valueChange)="valueChange($event)">
+                                (valueChange)="valueChange($event)" [disabled]="readonly">
                             </codx-input>
                         </ng-container>
-                        <ng-container *ngIf="funcID == 'FDT092'">
+                        <ng-container *ngIf="funcID == 'FDT092' || type == 'detail'">
                             <codx-input type="number" class="form-control"
                                 [crrValue]="quantityEvoucher" field="quantity" 
                                 [disabled]="true">
@@ -117,28 +171,23 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" *ngIf="showGiftDelivered">
                 <div class="d-flex align-items-center">
                     <codx-label class="me-3" [formModel]="dialogRef.formModel" name="lblStatus" default="Đã giao quà">
                     </codx-label>
                     <codx-input [checked]="giftTrans.Status == '3'" type="switch" field="status" name="status"
-                        (valueChange)="valueChange($event)" ngDefaultControl>
+                        (valueChange)="valueChange($event)" [disabled]="readonly" ngDefaultControl>
                     </codx-input>
                 </div>
             </div>
-            <div class="form-group">
-                <codx-label [formModel]="dialogRef.formModel" name="lblSituation" default="Nội dung"></codx-label>
-                <codx-input [crrValue]="giftTrans.Situation" type="textarea" field="situation" name="situation"
-                    [disabled]="giftTrans.TransType == '4'" (valueChange)="valueChange($event)">
-                </codx-input>
-            </div>
-            <div class="form-group">
-                <ng-container *ngIf="giftTrans.TransType == '3'">
-                    <!-- <div class="d-flex">
-                        <ng-container *ngFor="let item of lstPattern">
-                            <ng-container *ngTemplateOutlet="patternItem ; context{ $implicit: item }"></ng-container>
-                        </ng-container>
-                    </div> -->
+            <ng-container *ngIf="giftTrans.TransType == '3'">
+                <div class="form-group">
+                    <codx-label [formModel]="dialogRef.formModel" name="lblSituation" default="Nội dung"></codx-label>
+                    <codx-input [crrValue]="giftTrans.Situation" type="textarea" field="situation" name="situation"
+                        [disabled]="readonly" (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div>
+                <div class="form-group">
                     <div class="d-flex align-items-center justify-content-between mt-4 mb-3">
                         <div class="text-dark font-weight-bold">
                             <codx-label [formModel]="dialogRef.formModel" name="Pattern" default="Chọn thiệp">
@@ -201,17 +250,17 @@
                             </ng-container>
                         </ngb-carousel>
                     </div>
-                </ng-container>
-            </div>
-            <div class="d-flex align-items-center">
-                <codx-label class="me-3" [formModel]="dialogRef.formModel" name="lblSharePortal"
-                    default="Chia sẻ trên Portal">
-                </codx-label>
-                <codx-input [disabled]="giftTrans.TransType == '4'" [checked]="giftTrans.TransType == '3'"
-                    [crrValue]="isSharePortal" type="switch" field="isSharePortal" name="isSharePortal"
-                    (valueChange)="valueChange($event)">
-                </codx-input>
-            </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <codx-label class="me-3" [formModel]="dialogRef.formModel" name="lblSharePortal"
+                        default="Chia sẻ trên Portal">
+                    </codx-label>
+                    <codx-input [disabled]="readonly" [checked]="giftTrans.TransType == '3'"
+                        [crrValue]="isSharePortal" type="switch" field="isSharePortal" name="isSharePortal"
+                        (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div>
+            </ng-container>
         </div>
     </div>
     <!-- <div class="add-gift" *ngIf="giftTrans">
@@ -222,7 +271,7 @@
 <ng-template #footer>
     <div class="d-flex justify-content-end">
         <div>
-            <button class="btn btn-primary" (click)="save()">
+            <button class="btn btn-primary" (click)="save()" [disabled]="readonly">
                 <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Lưu"></codx-label>
             </button>
         </div>

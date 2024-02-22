@@ -121,7 +121,7 @@
         </div>
       </ng-template>
       <ng-template #body let-data>
-        <div class="cm-scroll" [ngClass]="isShow ? 'cm-full' : ''">
+        <!-- <div class="cm-scroll" [ngClass]="isShow ? 'cm-full' : ''">
           <div
             class="btn btn-white btn-icon tab-action"
             (click)="clickShowTab(!isShow)"
@@ -150,7 +150,9 @@
                       ></codx-label>
                     </div>
                   </ng-template>
-                  <ng-template #content> </ng-template>
+                  <ng-template #content>
+
+                  </ng-template>
                 </e-tabitem>
                 <e-tabitem>
                   <ng-template #headerText>
@@ -171,7 +173,8 @@
               </e-tabitems>
             </ejs-tab>
           </div>
-        </div>
+        </div> -->
+        <lib-process-release-detail [data]="dataSelected" [process]="process" [formModel]="formModel" [right]="true"></lib-process-release-detail>
       </ng-template>
     </codx-detail-tmp>
   </ng-container>

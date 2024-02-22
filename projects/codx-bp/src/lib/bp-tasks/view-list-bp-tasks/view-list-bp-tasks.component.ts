@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ApiHttpService, AuthService, CallFuncService, DialogModel } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { isObservable } from 'rxjs';
+import { Subject, isObservable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -119,6 +119,61 @@ export class ViewListBpTasksComponent implements OnInit {
   }
 
   dbClick(data){
-    this.dbClickEvent.emit({data: data});
+    this.dbClickEvent.emit({data: data, process: this.process, dataIns: this.instance});
+  }
+
+
+  popoverDetail: any;
+  popupOld: any;
+  popoverList: any;
+  fieldPopover: any;
+  isPopoverOpen = false;
+  PopoverDetail(e, p: any, emp, field: string) {
+    this.isPopoverOpen = true;
+    let parent = e?.currentTarget?.clientHeight;
+    let child = e?.currentTarget?.scrollHeight;
+    const isOpen = p.isOpen();
+    if (this.popupOld?.popoverClass !== p?.popoverClass) {
+      this.popupOld?.close();
+    }
+    if (emp != null) {
+      this.popoverList?.close();
+      this.popoverDetail = emp;
+      if (emp[field] != null && emp[field]?.trim() != '') {
+        if (parent < child) {
+          p.open();
+        }
+      }
+    } else {
+      p.close();
+    }
+    this.popupOld = p;
+    this.fieldPopover = field;
+  }
+
+  popoverClosed(p) {
+    p.close();
+
+    this.isPopoverOpen = false;
+  }
+
+  closePopover() {
+    this.popupOld?.close();
+  }
+
+  checkHover(id) {
+    var subject = new Subject<boolean>();
+    setTimeout(() => {
+      let isCollapsed = false;
+      let element = document.getElementById(id);
+      if (element) {
+        if (element.offsetHeight > 40) {
+          isCollapsed = true;
+        }
+      }
+      subject.next(isCollapsed);
+    }, 100);
+
+    return subject.asObservable();
   }
 }

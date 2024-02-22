@@ -12,6 +12,7 @@ export class AttachmentGridComponent implements OnInit{
   @ViewChild('attachment') attachment: AttachmentComponent;
   @Input() data:any;
   @Input() formModel:any;
+  @Input() dataIns:any;
   @Output() dataChange = new EventEmitter<any>();
   
   selectedIndex:any;
@@ -46,6 +47,7 @@ export class AttachmentGridComponent implements OnInit{
   {
     this.selectedIndex = index;
     this.attachment.objectId = recID;
+    this.attachment.referType = 'attach' + this.dataIns.recID;
     this.attachment.uploadFile();
   }
 
@@ -57,14 +59,16 @@ export class AttachmentGridComponent implements OnInit{
 
   fileSave(e:any)
   {
+    if(!this.data[this.selectedIndex]?.countAttach) this.data[this.selectedIndex].countAttach = 0;
     if(!this.data[this.selectedIndex].files) this.data[this.selectedIndex].files = [];
     if(!Array.isArray(e)) 
     {
-      //this.data[this.selectedIndex].count ++;
+     
+      this.data[this.selectedIndex].countAttach ++;
       var obj = 
       {
         fileID: e.recID,
-        type: '0'
+        type: '1'
       }
       this.data[this.selectedIndex].files.push(obj);
     }
@@ -73,24 +77,24 @@ export class AttachmentGridComponent implements OnInit{
       e.forEach(elm => {
         var obj = 
         {
-          fileID: elm.recID,
-          type: '0'
+          fileID: elm.data.recID,
+          type: '1'
         }
         this.data[this.selectedIndex].files.push(obj);
       });
-      //this.data[this.selectedIndex].count += e.length;
+      this.data[this.selectedIndex].countAttach += e.length;
     }
     this.dataChange.emit(this.data);
   }
 
-  openFormDetail(data:any)
+  openFormDetail(data:any , refType:any=null)
   {
-    this.callFunc.openForm(AttachmentGridFilesComponent,"",500,600,"",data);
+    this.callFunc.openForm(AttachmentGridFilesComponent,"",500,600,"",{data:data,referType:refType});
   }
 
   getFile(recID:any,index:any)
   {
-    this.api.execSv("DM","DM","FileBussiness","CountAttachmentAsync",[recID,this.formModel.entityName,'attach']).subscribe(item=>{
+    this.api.execSv("DM","DM","FileBussiness","CountAttachmentAsync",[recID,('attach' + this.dataIns.recID),this.formModel.entityName]).subscribe(item=>{
       if(item)
       {
         this.data[index].countAttach = item;

@@ -19,7 +19,7 @@ const DragConfig = {
 
 export class ModeviewComponent implements OnInit {
   @Input() data:any;
-  
+  @Input() stepNo:any;
   vllBP002:any;
   table: Array<any> = [];
   basic = ["Text","ValueList","ComboBox","DateTime","Attachment","Number","YesNo","User","Share"];
@@ -37,12 +37,33 @@ export class ModeviewComponent implements OnInit {
     @Optional() dialog?: DialogRef
   )
   {
-    this.data = this.data || dt?.data;
+    this.data = this.data || dt?.data?.extendInfo;
+    this.stepNo = this.stepNo || dt?.data?.stepNo;
     this.dialog = dialog;
   }
 
   ngOnInit(): void {
+    this.resetCount();
     this.getVll();
+  }
+
+  resetCount()
+  {
+    if(this.data.length > 2) return; 
+    this.count.text = 0,
+    this.count.valueList = 0,
+    this.count.combobox = 0,
+    this.count.attachment = 0,
+    this.count.number = 0,
+    this.count.yesNo = 0,
+    this.count.share = 0,
+    this.count.rank = 0,
+    this.count.table = 0,
+    this.count.progress = 0,
+    this.count.phone = 0,
+    this.count.email = 0,
+    this.count.address = 0,
+    this.count.expression = 0;
   }
 
   btnClick()
@@ -396,7 +417,7 @@ export class ModeviewComponent implements OnInit {
     }
     data.recID = Util.uid();
     data.width = "";
-    data.fieldName = this.formatTitle(data.title);
+    data.fieldName = this.formatTitle(data.title.toLowerCase());
     data.description  =  data.description || "Câu trả lời";
     data.columnOrder = this.table.length;
     data.columnNo = 0;
@@ -412,7 +433,7 @@ export class ModeviewComponent implements OnInit {
 
   formatTitle(str:any)
   {
-    return this.xoa_dau(str.replaceAll(" ","_"));
+    return this.xoa_dau(str.replaceAll(" ","_").replaceAll("/","_")) + "_" + this.stepNo;
   }
 
   drop2(event:any)
