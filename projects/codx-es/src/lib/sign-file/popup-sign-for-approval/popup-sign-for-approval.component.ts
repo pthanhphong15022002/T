@@ -23,6 +23,7 @@ import { PopupCommentComponent } from '../popup-comment/popup-comment.component'
 import { ResponseModel } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 import { PdfComponent } from 'projects/codx-common/src/lib/component/pdf/pdf.component';
 import { PopupSupplierComponent } from './popup-supplier/popup-supplier.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-popup-sign-for-approval',
@@ -47,7 +48,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   lstCert=[];
   formModel: FormModel;
   dialogSignFile: FormGroup;
-
+  modeView="1";
   confirmValue: string = '';
 
   sfRecID = '';
@@ -71,6 +72,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
     private notify: NotificationsService,
     private authStore: AuthStore,
     private codxShareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     private http: HttpClient,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -78,7 +80,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
     super(inject);
     this.dialog = dialog;
     this.data = dt?.data;
-    this.lstMF = dt?.data?.lstMF;
+    this.lstMF = dt?.data?.lstMF;    
+    this.modeView = dt?.data?.modeView ?? "1";
     this.isApproved = dt?.data?.status =='5' ? true : false;
     this.oApprovalTrans = dt?.data?.oTrans;
     if (this.oApprovalTrans?.confirmControl == '1') {
@@ -362,6 +365,17 @@ export class PopupSignForApprovalComponent extends UIComponent {
     comment = comment?.length>0 ? comment : this.dialogSignFile?.value?.comment;
     switch (this.pdfView.signerInfo.signType) {
       case '2': {
+        // this.codxCommonService
+        //   .codxApprove(this.transRecID, mode, null, comment, null, null, "1").subscribe((resModel: ResponseModel) => {
+        //       if (resModel?.msgCodeError == null && resModel?.rowCount > 0) {
+        //         this.notify.notifyCode('SYS034');
+        //         this.canOpenSubPopup = false;
+        //       } else {
+        //         this.canOpenSubPopup = false;
+        //         this.notify.notifyCode('SYS021');
+        //       }
+        //       this.dialog && this.dialog.close(resModel);
+        //     });
         if (this.pdfView.isAwait) {
           this.pdfView
             .signPDF(mode, comment,null,"1")
