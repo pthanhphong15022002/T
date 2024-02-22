@@ -57,8 +57,10 @@ export class ViewDetailRequestKowDsComponent extends UIDetailComponent implement
       icon: 'icon-i-chat-right',
     },
   ];
-  gridKowColumns = [];
+  gridColumns = [];
   rowCount:number = 0;
+  lstHRKow:any[] = [];
+  vllHR033:any = {};
   constructor
   (
     injector: Injector,
@@ -107,12 +109,15 @@ export class ViewDetailRequestKowDsComponent extends UIDetailComponent implement
 
   ngAfterViewInit(): void {
     this.getColSummaryKowd();
+    setTimeout(() => {
+      this.setDetailBody();
+    },2000);
   }
 
   // get column grid for gridview summary kowd
   getColSummaryKowd(){
-    this.gridKowColumns = [];
-    this.gridKowColumns.push({
+    this.gridColumns = [];
+    this.gridColumns.push({
       template: this.tmpCellEmp,
       field: 'employeeID'
     });
@@ -122,13 +127,14 @@ export class ViewDetailRequestKowDsComponent extends UIDetailComponent implement
         {
           this.lstHRKow = [...res];
           res.forEach((kow) => {
-            this.gridKowColumns.push({
+            this.gridColumns.push({
               headerTemplate: `<div class="fw-bolder text-primary text-center">${kow.kowID}</div>`,
               template: this.tmpCellKow,
               field: kow.kowID,
               refField: 'kowCode'
             });
           });
+          this.loaded = true;
           this.detectorRef.detectChanges();
         }
     });
@@ -142,18 +148,11 @@ export class ViewDetailRequestKowDsComponent extends UIDetailComponent implement
     } 
     else // form nghiệp vụ
     {
-      // evt.forEach((func) => {
-      //   if(func.functionID == 'SYS02' ||  func.functionID == 'SYS03' || func.functionID == 'SYS04') 
-      //   { 
-      //     func.disabled = true;
-      //   }
-      // });
       event.forEach((func) => func.disabled = true);
     }
   }
 
-  lstHRKow:any[] = [];
-  vllHR033:any = {};
+  
   openPopupNote() {
     if(this.lstHRKow && this.lstHRKow?.length > 0)
     {
@@ -163,5 +162,16 @@ export class ViewDetailRequestKowDsComponent extends UIDetailComponent implement
 
   onDatabound(){
     this.rowCount = this.codxGrvV2.dataService.rowCount;
+  }
+
+  setDetailBody(){
+    var header = document.getElementsByClassName("codx-detail-header")[0] as HTMLElement;
+    var body = document.getElementsByClassName("codx-detail-body")[0] as HTMLElement;
+    if(header && body)
+    {
+      header.classList.remove("mt-3");
+      body.classList.remove("mt-2");
+      body.style.setProperty("height",`calc(100% - ${header.clientHeight}px)`);
+    }
   }
 }

@@ -22,7 +22,7 @@ export class ProjectTasksViewComponent
   @Input() projectData:any;
 
   views:  Array<ViewModel> = [];;
-  entityName:string = 'PM_Projects';
+  entityName:string = 'TM_Tasks';
   service:string='TM';
   assemblyName:string='ERM.Business.TM';
   className:string="TaskBusiness";

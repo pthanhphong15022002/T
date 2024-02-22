@@ -112,12 +112,8 @@ export class PopupRequestKowdComponent implements OnInit,AfterViewInit {
       .subscribe((res:any) => {
         if(res)
         {
-          if(res[0])
-          {
-            this.notiSV.notifyCode("SYS006");
-            this.dialog.close(true);
-          }
-          else this.notiSV.notify(res[1]);
+          this.notiSV.notifyCode("SYS006");
+          this.dialog.close(true);
         }
         else this.notiSV.notifyCode("SYS023");
       });

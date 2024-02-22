@@ -169,7 +169,7 @@ export class CodxApproveStepsComponent
                   if (st?.approvers) {
                     for (let ap of st?.approvers) {
                       let curAp = [];
-                      if (ap?.roleType == 'PA' || ap?.roleType == 'PE') {
+                      if (ap?.roleType == 'PE' ) {//|| ap?.roleType == 'PA'
                         this.popupApproverInfo = true;
                         this.checkPopupApproverInfo.emit(true);
                       }

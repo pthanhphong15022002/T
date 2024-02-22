@@ -194,6 +194,9 @@
         >
         </codx-attachment>
       </div>
+      
+
+    <!-- <a (click)="eSign()">Ký số</a> -->
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-between">
@@ -338,4 +341,5 @@
 <ng-container *ngIf="data?.activityType == 'Form' && process && dataIns">
   <lib-add-process-default [type]="'edit'" [process]="process" [dataIns]="dataIns" [stepID]="data?.stepID" (dataChange)="dataChange($event)"></lib-add-process-default>
 </ng-container>
+
 

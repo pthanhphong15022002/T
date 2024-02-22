@@ -1656,6 +1656,15 @@ export class CodxEsService {
       []
     );
   }
+  getViettelCer(userID) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'ApprovalTransBusiness',
+      'GetViettelCerAsync',
+      [userID]
+    );
+  }
 }
 export class LayoutModel {
   isChange: boolean = false;
