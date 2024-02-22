@@ -221,6 +221,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         this.editItem();
         break;
       }
+      //Delete
       case 'SYS05':
         break;
       //start
@@ -230,12 +231,22 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
       }
       //Xem chi tiết quy trình
       case 'BPT01012':
-        {
-          this.openFormDetail(this.view?.dataService?.dataSelected)
-          break;
-        }
+      {
+        this.openFormDetail(this.view?.dataService?.dataSelected)
+        break;
+      }
     }
   }
+
+  changeDataMF(e:any)
+  {
+    var approvelCL = e.filter(
+      (x: { functionID: string }) =>
+        x.functionID == 'BPT01011'
+    );
+    if (approvelCL[0] && this.view?.dataService?.dataSelected?.status == "2") approvelCL[0].disabled = true;
+  }
+
   startProcess() {
     this.api
       .execSv(
@@ -251,6 +262,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         }
       });
   }
+
   addItem() {
     if(this.process.status == '5')
     {
@@ -265,6 +277,24 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     this.popUpAddEdit(this.view.dataService.dataSelected, 'edit');
   }
 
+  deleteItem()
+  {
+    this.api
+    .execSv(
+      'BP',
+      'ERM.Business.BP',
+      'ProcessesBusiness',
+      'DeleteInsAsync',
+      [this.view?.dataService?.dataSelected?.recID]
+    )
+    .subscribe((res) => {
+      if (res) {
+        this.view.dataService.delete(this.view?.dataService?.dataSelected);
+        this.notifiSer.notifyCode('SYS008');
+      }
+      else this.notifiSer.notifyCode('SYS022');
+    });
+  }
   popUpAddEdit(item: any, type: any) {
     var option = new SidebarModel();
     option.FormModel = {
