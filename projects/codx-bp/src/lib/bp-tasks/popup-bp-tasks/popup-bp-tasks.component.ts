@@ -86,51 +86,63 @@ export class PopupBpTasksComponent implements OnInit {
     }
   }
   getFile(){
-    if(this.dataIns!=null){ 
-          this.fileIDs=[];
-          if (this.dataIns?.documentControl?.length > 0) {
-            //let curStepDmc= this.dataIns?.documentControl;
-            let curStepDmc= this.dataIns?.documentControl.filter(x=>x?.stepID == this.data?.stepID );
-            if(curStepDmc?.length>0){
-              curStepDmc?.forEach(dmc=>{
-                if(dmc?.files?.length>0){
-                  dmc?.files?.forEach(file=>{
-                    if(file?.type=="1" || file?.type=="3"){
-                      this.fileIDs.push(file?.fileID);
-                    }
-                  })
-                }
-                
-                let curRefStepDmc= this.dataIns?.documentControl.filter(x=>x?.stepID == dmc.refStepID );
-                if(curRefStepDmc?.length>0){
-                  curRefStepDmc?.forEach(refDmc=>{
-                    if(refDmc?.files?.length>0){
-                      refDmc?.files?.forEach(refFile=>{
-                        if(refFile?.type=="1" || refFile?.type=="3"){
-                          this.fileIDs.push(refFile?.fileID);
-                        }
-                      })
-                    }
-                  })
-                }
-              })
-            }
-            if(this.fileIDs?.length>0){
-              this.files=[];
-              this.shareService
-                .getLstFileByID(this.fileIDs)
-                .subscribe((res) => {
-                  if (res) {
-                    this.files = res;
-                    this.detectorRef.detectChanges();
-                  }
-                });
-            }
-            
-          }
-          
-        }
-      }
+    if(this.dataIns!=null){ 
+          this.fileIDs=[];
+          if (this.dataIns?.documentControl?.length > 0) {
+            //let curStepDmc= this.dataIns?.documentControl;
+            let curStepDmc= this.dataIns?.documentControl.filter(x=>x?.stepID == this.data?.stepID );
+            if(curStepDmc?.length>0){
+              curStepDmc?.forEach(dmc=>{
+                if(dmc?.files?.length>0){
+                  dmc?.files?.forEach(file=>{
+                    if(file?.type=="1" || file?.type=="3"){
+                      this.fileIDs.push(file?.fileID);
+                    }
+                  })
+                }
+                
+                let curRefStepDmc= this.dataIns?.documentControl.filter(x=>x?.recID == dmc?.refID );
+                if(curRefStepDmc?.length>0){
+                  curRefStepDmc?.forEach(refDmc=>{
+                    if(refDmc?.files?.length>0){
+                      refDmc?.files?.forEach(refFile=>{
+                        if(refFile?.type=="1" || refFile?.type=="3"){
+                          this.fileIDs.push(refFile?.fileID);
+                        }
+                      })
+                    }
+                  })
+                }
+                // let curRefStepDmc= this.dataIns?.documentControl.filter(x=>x?.stepID == dmc.refStepID );
+                // if(curRefStepDmc?.length>0){
+                //   curRefStepDmc?.forEach(refDmc=>{
+                //     if(refDmc?.files?.length>0){
+                //       refDmc?.files?.forEach(refFile=>{
+                //         if(refFile?.type=="1" || refFile?.type=="3"){
+                //           this.fileIDs.push(refFile?.fileID);
+                //         }
+                //       })
+                //     }
+                //   })
+                // }
+              })
+            }
+            if(this.fileIDs?.length>0){
+              this.files=[];
+              this.shareService
+                .getLstFileByID(this.fileIDs)
+                .subscribe((res) => {
+                  if (res) {
+                    this.files = res;
+                    this.detectorRef.detectChanges();
+                  }
+                });
+            }
+            
+          }
+          
+        }
+      }
   getVll() {
     this.cache.valueList('BP001').subscribe((vll) => {
       if (vll && vll?.datas?.length > 0) {
@@ -223,5 +235,22 @@ export class PopupBpTasksComponent implements OnInit {
   dataChange(e: any) {
     this.dataIns = e;
     this.dialog.close(this.dataIns);
+  }
+  eSign(){
+    if(this.data?.recID){
+      
+      this.api.execSv<any>(
+        'BP',
+        'BP',
+        'ProcessesBusiness',
+        'GetPDFFormAsync',
+        [{recID:this.data?.recID}]
+      ).subscribe(res=>{
+        if(res){
+          
+        }
+      });
+    
+    }
   }
 }

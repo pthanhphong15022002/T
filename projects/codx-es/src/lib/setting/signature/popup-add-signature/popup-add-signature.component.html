@@ -315,7 +315,7 @@
       </codx-attachment>
     </div>
     <div class="form-group row mt-3">
-      <div class="col-4">
+      <div class="col-5">
         <codx-label fiedName="StartedOn" [formModel]="form?.formModel">
         </codx-label>
         <codx-input
@@ -328,7 +328,7 @@
         >
         </codx-input>
       </div>
-      <div class="col-4">
+      <div class="col-5">
         <codx-label fiedName="ExpiredOn" [formModel]="form?.formModel">
         </codx-label>
         <codx-input
@@ -340,7 +340,21 @@
         >
         </codx-input>
       </div>
-      <div class="col-4">
+      
+    </div>
+    <div class="form-group row mt-3">
+      <div class="col-5">
+        <codx-label fiedName="ThirdPartyID" default="Tài khoản bên thứ ba" [formModel]="form?.formModel">
+        </codx-label>
+          <codx-input
+          type="text"      
+          field="thirdPartyID"
+          [crrValue]="data?.thirdPartyID"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="col-5">
         <codx-label fiedName="Password" [formModel]="form?.formModel">
         </codx-label>
         <div class="input-pw">
@@ -354,18 +368,9 @@
         >
         </codx-input>
         </div>
-
-        
-        <!-- <codx-input
-          type="text"
-          field="password"
-          [hideValue]="true"
-          [crrValue]="data?.password"
-          [disabled]="data.signatureType != '1' || !isAdd ? true : false"
-          (valueChange)="passwordChange($event)"
-        >
-        </codx-input> -->
       </div>
+      
+      
     </div>
   </ng-template>
   <ng-template #footer>

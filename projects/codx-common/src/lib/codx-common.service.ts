@@ -913,7 +913,9 @@ export class CodxCommonService {
     status: string, //Trạng thái
     reasonID: string = null, //Mã lí do (ko bắt buộc)
     comment: string = null, //Bình luận (ko bắt buộc)
-    userID: string = null //Người thực hiện (ko bắt buộc)
+    userID: string = null, //Người thực hiện (ko bắt buộc)
+    cert: string=null, //Người thực hiện (ko bắt buộc)
+    supplier: string=null, //Người thực hiện (ko bắt buộc)
   ): Observable<any> {
     let approveProcess = new ApproveProcess();
     approveProcess.tranRecID = tranRecID;
@@ -921,6 +923,8 @@ export class CodxCommonService {
     approveProcess.reasonID = reasonID;
     approveProcess.comment = comment;
     approveProcess.userID = userID;
+    approveProcess.cert = cert;
+    approveProcess.supplier = supplier!=null ?supplier: "1";
 
     return this.api.execSv(
       'ES',
