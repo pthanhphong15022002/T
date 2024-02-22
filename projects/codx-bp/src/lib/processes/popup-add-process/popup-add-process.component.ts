@@ -165,7 +165,7 @@ export class PopupAddProcessComponent {
 
   genData() {
     if (this.action == 'add') {
-      this.data.category = '1';
+      this.data.category = '';
       this.api
         .execSv<any>(
           'SYS',
@@ -811,9 +811,11 @@ export class PopupAddProcessComponent {
                   isList: '1',
                   stepID: this.data?.steps[1].recID,
                   stepNo: this.data?.steps[1].stepNo,
-                  fieldID: this.data?.steps[1].recID,
+                  fieldID: element.recID,
                   memo: this.data?.steps[1].memo,
+                  refID: ''
                 };
+                obj.refID = obj.recID;
                 this.data.documentControl = [obj];
               } else {
                 if (
@@ -826,7 +828,7 @@ export class PopupAddProcessComponent {
                   element.documentControl.forEach((docu) => {
                     docu.stepID = this.data?.steps[1].recID;
                     docu.stepNo = this.data?.steps[1].stepNo;
-                    docu.fieldID = this.data?.steps[1].recID;
+                    docu.fieldID = element.recID;
                     docu.memo = this.data?.steps[1].memo;
                     var index = doc.findIndex((x) => x.recID == docu.recID);
                     if (index >= 0) doc[index] = docu;

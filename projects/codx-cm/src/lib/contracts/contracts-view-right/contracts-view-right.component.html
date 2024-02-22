@@ -212,7 +212,37 @@
         </div>
       </div>
     </div>
-
+    <div class="row">
+      <div class="col-6"></div>
+      <div class="col-6">
+        <div *ngIf="contract?.approveStatus && contract?.approveStatus != '1'" class="d-flex justify-content-end">
+          <span  [innerHTML]="contract?.approvedDate
+            | formatvalue : formModel : 'approvedDate'
+            | async"
+            [ngbTooltip]="approvedDate"
+            placement="top"
+          >
+          <ng-template #approvedDate>
+            <codx-label
+              fiedName="approvedDate"
+              [formModel]="formModel"
+              [setRequire]="false"
+              default="Ngày duyệt"
+            ></codx-label>
+          </ng-template>
+          </span>
+          <codx-vll
+            [name]="'DP043'"
+            [field]="'ApproveStatus'"
+            [value]="contract?.approveStatus"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-primary badge-sm ms-3 me-0"
+          >
+          </codx-vll>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <div class="col-6">
         <div class="mb-1">
