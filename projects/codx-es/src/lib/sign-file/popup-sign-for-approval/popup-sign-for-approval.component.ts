@@ -380,13 +380,19 @@ export class PopupSignForApprovalComponent extends UIComponent {
           this.pdfView
             .signPDF(mode, comment,null,"1")
             .then((resModel: ResponseModel) => {
-              if (resModel?.msgCodeError == null && resModel?.rowCount > 0) {
-                this.notify.notifyCode('SYS034');
-                this.canOpenSubPopup = false;
-              } else {
-                this.canOpenSubPopup = false;
-                this.notify.notifyCode('SYS021');
+              if(this.modeView=="1"){
+                if (resModel?.msgCodeError == null && resModel?.rowCount > 0) {
+                  this.notify.notifyCode('SYS034');
+                  this.canOpenSubPopup = false;
+                } else {
+                  this.canOpenSubPopup = false;
+                  this.notify.notifyCode('SYS021');
+                }
               }
+              else{
+                this.notify.notifyCode('SYS034');
+              }
+              
               this.dialog && this.dialog.close(resModel);
             });
         // } else {

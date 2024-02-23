@@ -22,7 +22,7 @@ export class ProcessReleaseDetailComponent implements OnInit , OnChanges{
   listStage = [];
   count = 0;
   listTask:any;
- 
+  user:any;
   info:any;
   constructor(
     private shareService: CodxShareService,
@@ -38,6 +38,7 @@ export class ProcessReleaseDetailComponent implements OnInit , OnChanges{
     this.formModel = this.formModel || dialog?.formModel;
     this.data = this.data || dt?.data?.data;
     if(dt?.data?.process) this.process = JSON.parse(JSON.stringify(dt?.data?.process));
+    this.user = this.auth.get();
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (
@@ -192,7 +193,7 @@ export class ProcessReleaseDetailComponent implements OnInit , OnChanges{
       let privileged = true;
       if(dt?.permissions)
       {
-          privileged = dt?.permissions.some(x=>x.objectID == this.info.userID && x.objectType == "U");
+          privileged = dt?.permissions.some(x=>x.objectID == this.user.userID && x.objectType == "U");
       }
       var option = new SidebarModel();
       // option.FormModel = this.view.formModel; //Đợi có grid mở lên
