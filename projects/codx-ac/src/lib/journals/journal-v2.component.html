@@ -1,7 +1,8 @@
 <codx-views class="ac-animation-none" [toolbarDisplay]="true" #view [views]="views" service="AC"
-  entityName="AC_Journals" predicates="Status=@0" [dataValues]="mainFilterValue ?? '1'" [autoLoad]="true">
+  [button]="mainFilterValue != '2' ? button : null" [entityName]="view.entityName" [autoLoad]="true"
+  (buttonClick)="toolbarClick($event)" (selectedChange)="onSelected($event)" (searchChange)="search($event)"
+  (clickMF)="clickMF($event, itemSelected)" (changeDataMF)="changeMF($event)">
 </codx-views>
-
 
 <ng-template #contentTemplate>
   <!-- <codx-toolbar [funcId]="funcID" [dataSelected]="itemSelected" [views]="subViews" [formModel]="view.formModel"

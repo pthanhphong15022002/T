@@ -60,6 +60,7 @@ export class JournalsAddComponent extends UIComponent {
   fieldSelected:any;
   oAutoNumber:any = [];
   mainFilterValue:any;
+  baseCurr:any;
   tabInfo: any[] = [ //? thiết lập tab hiển thị trên form
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description'},
     { icon: 'icon-settings', text: 'Thiết lập', name: 'Setting' },
@@ -102,17 +103,17 @@ export class JournalsAddComponent extends UIComponent {
   }
 
   ngAfterViewInit() {
-    if (!this.formJournal.form.data.isEdit) {
-      this.cache
+    this.cache
       .viewSettingValues('ACParameters')
       .pipe(
-        map((arr) => arr.filter((f) => f.category === '1')?.[0]),
-        map((data) => JSON.parse(data.dataValue)?.IDIMControl)
+        map((data) => data.filter((f) => f.category === '1')?.[0]),
       )
       .subscribe((res) => {
-        this.formJournal.form.setValue('idimControl',res,{});
+        let dataValue = JSON.parse(res.dataValue);
+        if (!this.formJournal.form.data.isEdit) this.formJournal.form.setValue('idimControl', dataValue.IDIMControl, {});
+        this.baseCurr = dataValue.BaseCurr;
       });
-    }
+    
     this.onDisableTab();
   }
   //#endregion Init
@@ -256,6 +257,12 @@ export class JournalsAddComponent extends UIComponent {
         case 'dracctcontrol':
           this.formJournal.form.setValue('drAcctID','',{});
           this.detectorRef.detectChanges();
+          break;
+        case 'multicurrency':
+          if (!value) {
+            this.formJournal.form.setValue('currencyID',this.baseCurr,{});
+            console.log(this.formJournal.form.data);
+          }
           break;
       }
   }

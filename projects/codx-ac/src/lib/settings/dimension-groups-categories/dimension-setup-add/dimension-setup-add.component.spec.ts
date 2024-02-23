@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { InventoryComponent } from './inventory.component';
+import { DimensionSetupAddComponent } from './dimension-setup-add.component';
 
-describe('InventoryComponent', () => {
-  let component: InventoryComponent;
-  let fixture: ComponentFixture<InventoryComponent>;
+describe('PopAddDimensionSetupComponent', () => {
+  let component: DimensionSetupAddComponent;
+  let fixture: ComponentFixture<DimensionSetupAddComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InventoryComponent ]
+      declarations: [ DimensionSetupAddComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InventoryComponent);
+    fixture = TestBed.createComponent(DimensionSetupAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

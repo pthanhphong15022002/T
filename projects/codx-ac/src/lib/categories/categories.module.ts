@@ -12,9 +12,7 @@ import { VendorsComponent } from '../settings/vendors-categories/vendors.compone
 import { ItemsComponent } from '../settings/items-categories/items.component';
 import { WarehousesComponent } from '../settings/warehouses-categories/warehouses.component';
 import { UnitsofmearsureComponent } from '../settings/unitsofmearsure-categories/unitsofmearsure.component';
-import { InventoryComponent } from '../settings/inventory/inventory.component';
 import { ItempostingaccountsComponent } from '../settings/posting-accounts-categories/posting-accounts.component';
-import { DimensionGroupsComponent } from '../settings/dimension-groups/dimension-groups.component';
 import { ArPostingAccountsComponent } from '../settings/ar-posting-accounts/ar-posting-accounts.component';
 import { APPostingAccountsComponent } from '../settings/apposting-accounts/apposting-accounts.component';
 import { FAPostingAccountsComponent } from '../settings/faposting-accounts/faposting-accounts.component';
@@ -23,6 +21,8 @@ import { ItemBatchsComponent } from '../settings/item-batchs/item-batchs.compone
 import { ItemSeriesComponent } from '../settings/item-series/item-series.component';
 import { VATCodesComponent } from '../settings/vatcodes/vatcodes.component';
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
+import { DimensionGroupsComponent } from '../settings/dimension-groups-categories/dimension-groups.component';
+import { ModelsComponent } from '../settings/models-categories/models.component';
 
 var routes: Routes = [
   {
@@ -59,7 +59,7 @@ var routes: Routes = [
       },
       {
         path: 'inventorymodels/:funcID',
-        component: InventoryComponent,
+        component: ModelsComponent,
       },
       {
         path: 'postingaccounts/:funcID',

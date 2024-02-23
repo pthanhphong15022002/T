@@ -808,7 +808,7 @@ export class PopupAddProcessComponent {
         if (this.data?.steps[1]?.extendInfo) {
           this.extendInfos.forEach((element) => {
             if (element.controlType == 'Attachment') {
-              if (!this.data.documentControl) {
+              if (!element?.documentControl) {
                 var obj = {
                   recID: Util.uid(),
                   title: element.title,
@@ -823,14 +823,15 @@ export class PopupAddProcessComponent {
                 };
                 obj.refID = obj.recID;
                 this.data.documentControl = [obj];
-              } else {
-                if (
+              } else if (
                   element.documentControl &&
                   element.documentControl.length > 0
                 ) {
+                  debugger
                   var doc = JSON.parse(
                     JSON.stringify(this.data.documentControl)
                   );
+                  if(!doc) doc = [];
                   element.documentControl.forEach((docu) => {
                     docu.stepID = this.data?.steps[1].recID;
                     docu.stepNo = this.data?.steps[1].stepNo;
@@ -841,7 +842,6 @@ export class PopupAddProcessComponent {
                     else doc.push(docu);
                   });
                   this.data.documentControl = doc;
-                }
               }
             }
 

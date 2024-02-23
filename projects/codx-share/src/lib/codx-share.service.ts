@@ -776,10 +776,10 @@ export class CodxShareService {
     switch (status) {
       case '0': {
         //cancel
-        if (approvalTrans.cancelControl != 1) {
+        if (approvalTrans?.cancelControl != 1) {
           _dialog = this.openPopupComment(
             status,
-            approvalTrans.cancelControl,
+            approvalTrans?.cancelControl,
             funcID,
             title,
             formModel
@@ -790,12 +790,12 @@ export class CodxShareService {
       case '2': {
         //redo
         if (
-          approvalTrans.redoControl == '2' ||
-          approvalTrans.redoControl == '3'
+          approvalTrans?.redoControl == '2' ||
+          approvalTrans?.redoControl == '3'
         ) {
           _dialog = this.openPopupComment(
             status,
-            approvalTrans.redoControl,
+            approvalTrans?.redoControl,
             funcID,
             title,
             formModel
@@ -805,10 +805,10 @@ export class CodxShareService {
       }
       case '5': {
         //duyet
-        if (approvalTrans.approveControl != '1') {
+        if (approvalTrans?.approveControl != '1') {
           _dialog = this.openPopupComment(
             status,
-            approvalTrans.approveControl,
+            approvalTrans?.approveControl,
             funcID,
             title,
             formModel
@@ -819,12 +819,12 @@ export class CodxShareService {
       case '4': {
         //reject
         if (
-          approvalTrans.rejectControl == '2' ||
-          approvalTrans.rejectControl == '3'
+          approvalTrans?.rejectControl == '2' ||
+          approvalTrans?.rejectControl == '3'
         ) {
           _dialog = this.openPopupComment(
             status,
-            approvalTrans.rejectControl,
+            approvalTrans?.rejectControl,
             funcID,
             title,
             formModel
@@ -856,10 +856,10 @@ export class CodxShareService {
     // switch (status) {
     //   case '0': {
     //     //cancel
-    //     if (approvalTrans.cancelControl != 1) {
+    //     if (approvalTrans?.cancelControl != 1) {
     //       _dialog = this.openPopupComment(
     //         status,
-    //         approvalTrans.cancelControl,
+    //         approvalTrans?.cancelControl,
     //         funcID,
     //         title,
     //         formModel
@@ -870,12 +870,12 @@ export class CodxShareService {
     //   case '2': {
     //     //redo
     //     if (
-    //       approvalTrans.redoControl == '2' ||
-    //       approvalTrans.redoControl == '3'
+    //       approvalTrans?.redoControl == '2' ||
+    //       approvalTrans?.redoControl == '3'
     //     ) {
     //       _dialog = this.openPopupComment(
     //         status,
-    //         approvalTrans.redoControl,
+    //         approvalTrans?.redoControl,
     //         funcID,
     //         title,
     //         formModel
@@ -885,10 +885,10 @@ export class CodxShareService {
     //   }
     //   case '5': {
     //     //duyet
-    //     if (approvalTrans.approveControl != '1') {
+    //     if (approvalTrans?.approveControl != '1') {
     //       _dialog = this.openPopupComment(
     //         status,
-    //         approvalTrans.approveControl,
+    //         approvalTrans?.approveControl,
     //         funcID,
     //         title,
     //         formModel
@@ -899,12 +899,12 @@ export class CodxShareService {
     //   case '4': {
     //     //reject
     //     if (
-    //       approvalTrans.rejectControl == '2' ||
-    //       approvalTrans.rejectControl == '3'
+    //       approvalTrans?.rejectControl == '2' ||
+    //       approvalTrans?.rejectControl == '3'
     //     ) {
     //       _dialog = this.openPopupComment(
     //         status,
-    //         approvalTrans.rejectControl,
+    //         approvalTrans?.rejectControl,
     //         funcID,
     //         title,
     //         formModel
@@ -932,7 +932,7 @@ export class CodxShareService {
       {
         title: title,
         formModel: formModel,
-        approveControl: funcControl,
+        approveControl: funcControl?? "0",
         mode: status,
       }
     );

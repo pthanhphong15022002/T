@@ -140,7 +140,7 @@ export class AddProcessDefaultComponent implements OnInit{
 
   async onSave(type=1)
   {
-    //if(!this.checkAttachment()) return;
+    if(!this.checkAttachment()) return;
     if(this.dynamicFormsForm.invalid) this.findInvalidControls();
     else
     {
@@ -160,7 +160,6 @@ export class AddProcessDefaultComponent implements OnInit{
           );
         }
         var stageF = this.process.steps.filter(x=>x.activityType == "Stage")[0];
-        debugger
         var stage = 
         {
           recID: Util.uid(),
@@ -311,7 +310,7 @@ export class AddProcessDefaultComponent implements OnInit{
     {
       var arr = [];
       this.dataIns.documentControl.forEach(elm=>{
-        if(elm.isRequired && elm.count == 0)
+        if(elm.isRequired && (elm?.countAttach == 0 || !elm?.countAttach))
         {
           arr.push(elm.title)
         }
