@@ -19,6 +19,7 @@ import {
   CallFuncService,
   NotificationsService,
   DialogModel,
+  TenantStore,
 } from 'codx-core';
 import {
   DP_Activities,
@@ -42,6 +43,7 @@ import { ContractsDetailComponent } from '../../../contracts/contracts-detail/co
 import { CodxViewApproveComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { Location } from '@angular/common';
 @Component({
   selector: 'task',
   templateUrl: './task.component.html',
@@ -96,7 +98,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     private notiService: NotificationsService,
     private codxShareService: CodxShareService,
     private activedRouter: ActivatedRoute,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private location: Location,
+    private tenantStore: TenantStore,
   ) {
     this.user = this.authstore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -336,7 +340,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         }
       });
     } else if (this.taskType?.value == 'CO') {
-      let data = { action: 'add', type: 'task' };
+      let data = { action: 'add', type: 'task', customerID: this.objectID };
       let taskContract = await this.stepService.openPopupTaskContract(
         data,
         'add',
@@ -413,7 +417,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         }
       });
     } else if (this.taskType?.value == 'CO') {
-      let data = { action: 'edit', type: 'task' };
+      let data = { action: 'edit', type: 'task'};
       let taskContract = await this.stepService.openPopupTaskContract(
         data,
         'edit',
@@ -715,30 +719,17 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       }
     }
   }
-  viewDetailContract(task) {
+  viewDetailContract(task) { 
     if (task?.objectLinked) {
-      this.stepService.getOneContract(task?.objectLinked).subscribe((res) => {
-        if (res) {
-          let data = {
-            contract: res,
-          };
-          let option = new DialogModel();
-          option.IsFull = true;
-          option.zIndex = 1001;
-          this.callFunc.openForm(
-            ContractsDetailComponent,
-            '',
-            null,
-            null,
-            '',
-            data,
-            '',
-            option
-          );
-        } else {
-          this.notiService.notify('Không tìm thấy hợp đồng', '3');
-        }
-      });
+      const url1 = this.location.prepareExternalUrl(this.location.path());
+        const parser = document.createElement('a');
+        parser.href = url1;
+        const domain = parser.origin;
+
+        let tenant = this.tenantStore.get().tenant;
+        let url = `${domain}/${tenant}/cm/contracts/CM0206?predicate=RecID=@0&dataValue=${task?.objectLinked}`;
+        window.open(url, '_blank');
+        return; 
     } else {
       this.notiService.notify('Không tìm thấy hợp đồng', '3');
     }
