@@ -2661,11 +2661,11 @@
 
 <ng-template #officeSpaceForRent>
   <div class="w-100 h-100 bg-white row">
-    <div class="col-4 mt-3 h-100">
+    <div class="col-4 mt-3 h-100 d-flex justify-content-center">
       <ejs-grid [dataSource]="dataSpaceForRent" height="100%">
         <e-columns>
           <e-column
-            field="AssetID"
+            field="AssetName"
             headerText="Tên tòa nhà"
             textAlign="Left"
             width="90"
@@ -2678,7 +2678,7 @@
         </e-columns>
       </ejs-grid>
     </div>
-    <div class="col-8 align-item-center">
+    <div class="col-8 d-flex justify-content-center align-item-center">
       <ejs-chart
         id="chart-container-3"
         [primaryXAxis]="primaryXAxisColumn"
