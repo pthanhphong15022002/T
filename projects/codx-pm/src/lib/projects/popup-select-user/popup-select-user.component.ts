@@ -49,6 +49,9 @@ export class PopupSelectUserComponent implements OnInit, AfterViewInit{
     this.selectedUser = e;
   }
 
+  cbxChange(e:any){
+    this.selectedUser = e.data?.split(';');
+  }
   apply(){
     if(this.selectedUser.length)
       this.dialog.close(this.selectedUser);
