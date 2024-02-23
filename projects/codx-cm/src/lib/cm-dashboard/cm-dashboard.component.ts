@@ -3480,7 +3480,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   //------------------OfficeSpaceForRent -CMRQTSC010--------------------//
   viewDashBoardsOfficeSpaceForRent(dataSet) {
-    this.dataSpaceForRent = dataSet;
+    this.dataSpaceForRent = [];
+    if (!dataSet || dataSet?.length == 0) {
+      return;
+    }
+    dataSet.forEach((x, idx) => {
+      this.dataSpaceForRent.push({ ...x, ...{ noIndex: idx + 1 } });
+    });
     // let max = 0;
     // if (this.dataSpaceForRent?.length > 0) {
     //   this.dataSpaceForRent.forEach((x) => {
@@ -3496,21 +3502,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     //   }
     // }
   }
-  onScroll(event) {
-    debugger;
-  }
 
-  // @HostListener('scroll', ['$event'])
-  // onScrollCMM(event: Event): void {
-  //   debugger;
-  //   // if (!this.isAllDatas) {
-  //   //   const element = event.target as HTMLElement;
-  //   //   if (element.scrollHeight - element.scrollTop === element.clientHeight) {
-  //   //     this.gridModelTree.page += 1;
-  //   //     this.loadData();
-  //   //   }
-  //   // }
-  // }
   //-----------------------------------------------------------------//
 
   //------------------OfficeTypeReport -CMRQTSC011--------------------//
@@ -3522,7 +3514,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let listData = this.groupBy(dataSet, 'parentID');
     if (listData) {
       for (let key in listData) {
-        this.dataOfficeType.push(listData[key]);
+        let arr = [];
+        if (listData[key]?.length > 0)
+          listData[key].forEach((x, idx) => {
+            arr.push({ ...x, ...{ noIndex: idx + 1 } });
+          });
+        this.dataOfficeType.push(arr);
       }
     }
   }
