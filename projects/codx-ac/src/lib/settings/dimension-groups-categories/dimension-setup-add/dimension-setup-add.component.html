@@ -1,0 +1,117 @@
+<codx-form #form [headerText]="headerText" [body]="body" [formModel]="dialog.formModel" [dialog]="dialog"
+  [footer]="footer" [data]="dataDefault">
+</codx-form>
+<!-- <ng-container *ngIf="isPopupCbb">
+  <codx-combobox-popup [comboboxName]="'EntityName'" [multiple]="true" [width]="700" [height]="600"
+    (clickSave)="clickSave($event)" [value]="dataCbx" [formModel]="form.formModel">
+  </codx-combobox-popup>
+</ng-container> -->
+<ng-template #body>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="mt-5 mb-3 fw-bold text-primary fs-6">
+      <codx-label [formModel]="form.formModel" default="Kiểm nhập liệu"></codx-label>
+    </div>
+    <div class="d-flex align-items-center mb-2 min-h-25px">
+      <div class="me-3">
+        <codx-input class="check-circle" [Group]="form.formGroup" field="requireControl" [formModel]="form.formModel">
+        </codx-input>
+      </div>
+      <codx-label class="text-dark" [formModel]="form.formModel" fiedName="requireControl"></codx-label>
+    </div>
+    <div class="d-flex align-items-center mb-2 min-h-25px">
+      <div class="me-3">
+        <codx-input class="check-circle" [Group]="form.formGroup" field="requireReceipt" [formModel]="form.formModel">
+        </codx-input>
+      </div>
+      <codx-label class="text-dark" [formModel]="form.formModel" fiedName="RequireReceipt"></codx-label>
+    </div>
+    <div class="d-flex align-items-center mb-2 min-h-25px">
+      <div class="me-3">
+        <codx-input class="check-circle" [Group]="form.formGroup" field="requireIssue" [formModel]="form.formModel">
+        </codx-input>
+      </div>
+      <codx-label class="text-dark" [formModel]="form.formModel" fiedName="RequireIssue"></codx-label>
+    </div>
+    <div class="form-group">
+      <codx-label class="text-dark" [formModel]="form.formModel" fiedName="excludes"></codx-label>
+      <codx-input field="excludes" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+    </div>
+    <div class="mt-2 mb-3 fw-bold text-primary fs-6">
+      <codx-label [formModel]="form.formModel" default="Kiểm soát tồn kho"></codx-label>
+    </div>
+    <div class="d-flex align-items-center mb-2 min-h-25px">
+      <div class="me-3">
+        <codx-input class="check-circle" [Group]="form.formGroup" field="physicalControl" [formModel]="form.formModel">
+        </codx-input>
+      </div>
+      <codx-label class="text-dark" [formModel]="form.formModel" fiedName="PhysicalControl"></codx-label>
+    </div>
+    <div class="d-flex align-items-center mb-2 min-h-25px">
+      <div class="me-3">
+        <codx-input class="check-circle" [Group]="form.formGroup" field="financialControl" [formModel]="form.formModel">
+        </codx-input>
+      </div>
+      <codx-label class="text-dark" [formModel]="form.formModel" fiedName="FinancialControl"></codx-label>
+    </div>
+    <div class="d-flex align-items-center mb-2 min-h-25px">
+      <div class="me-3">
+        <codx-input class="check-circle" [Group]="form.formGroup" field="physicalCosting" [formModel]="form.formModel">
+        </codx-input>
+      </div>
+      <codx-label class="text-dark" [formModel]="form.formModel" fiedName="PhysicalCosting"></codx-label>
+    </div>
+    <div class="d-flex align-items-center mb-2 min-h-25px">
+      <div class="me-3">
+        <codx-input class="check-circle" [Group]="form.formGroup" field="financialCosting" [formModel]="form.formModel">
+        </codx-input>
+      </div>
+      <codx-label class="text-dark" [formModel]="form.formModel" fiedName="FinancialCosting"></codx-label>
+    </div>
+
+    <div class="mt-5 mb-3 fw-bold text-primary fs-6">
+      <codx-label [formModel]="form.formModel" default="Kiểm soát seri"></codx-label>
+    </div>
+    <div class="d-flex align-items-center mb-2 min-h-25px">
+      <div class="me-3">
+        <codx-input class="check-circle" [Group]="form.formGroup" field="seriControl" [formModel]="form.formModel">
+        </codx-input>
+      </div>
+      <codx-label class="text-dark" [formModel]="form.formModel" fiedName="SeriControl"></codx-label>
+    </div>
+    <div class="mt-5 mb-3 fw-bold text-primary fs-6">
+      <codx-label [formModel]="form.formModel" default="Kiểm soát lô"></codx-label>
+    </div>
+    <div class="d-flex align-items-center mb-2 min-h-25px">
+      <div class="me-3">
+        <codx-input class="check-circle" [Group]="form.formGroup" field="singleBatch" [formModel]="form.formModel">
+        </codx-input>
+      </div>
+      <codx-label class="text-dark" [formModel]="form.formModel" fiedName="SingleBatch"></codx-label>
+    </div>
+
+    <div class="mt-6 mb-3 fw-bold text-primary fs-6">
+      <codx-label [formModel]="form.formModel" default="Thiết lập khác"></codx-label>
+    </div>
+    <div class="d-flex align-items-center mb-2 min-h-25px">
+      <div class="me-3">
+        <codx-input class="check-circle" [Group]="form.formGroup" field="skuControl" [formModel]="form.formModel">
+        </codx-input>
+      </div>
+      <codx-label class="text-dark" [formModel]="form.formModel" fiedName="SKUControl"></codx-label>
+    </div>
+    <div class="d-flex align-items-center mb-2 min-h-25px">
+      <div class="me-3">
+        <codx-input class="check-circle" [Group]="form.formGroup" field="wipControl" [formModel]="form.formModel">
+        </codx-input>
+      </div>
+      <codx-label class="text-dark" [formModel]="form.formModel" fiedName="WIPControl"></codx-label>
+    </div>
+  </ng-container>
+</ng-template>
+<ng-template #footer>
+  <button [shortcut]="'alt+s'" [autoClick]="true" id="btnsave" type="button" tab-index="" class="btn btn-md btn-primary"
+    style="border: 1px solid var(--primary-dark) !important" (keydown.enter)="onSave(); $event.preventDefault()"
+    (click)="onSave()">
+    <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+  </button>
+</ng-template>

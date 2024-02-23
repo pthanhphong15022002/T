@@ -11,7 +11,6 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { NameByIdPipe } from '../pipes/name-by-id.pipe';
 import { APPostingAccountsComponent } from './apposting-accounts/apposting-accounts.component';
 import { ArPostingAccountsComponent } from './ar-posting-accounts/ar-posting-accounts.component';
-import { DimensionGroupsComponent } from './dimension-groups/dimension-groups.component';
 import { FAPostingAccountsComponent } from './faposting-accounts/faposting-accounts.component';
 import { FixedAssetsComponent } from './fixed-assets/fixed-assets.component';
 import { InventoryComponent } from './inventory/inventory.component';
@@ -29,6 +28,7 @@ import { WarehousesComponent } from './warehouses-categories/warehouses.componen
 import { UnitsofmearsureComponent } from './unitsofmearsure-categories/unitsofmearsure.component';
 import { AcShareModule } from '../ac-share.module';
 import { FiscalPeriodsComponent } from './fiscal-periods/fiscal-periods.component';
+import { DimensionGroupsComponent } from './dimension-groups-categories/dimension-groups.component';
 
 var routes: Routes = [
   {
