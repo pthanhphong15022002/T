@@ -340,6 +340,12 @@ export class PopupAddProcessComponent {
     });
     lstStep.push(stage, form);
     this.data.steps = lstStep;
+    this.cache.message('BP001').subscribe(item=>{
+      this.data.steps[0].stepName = item?.customName;
+    });
+    this.cache.message('BP002').subscribe(item=>{
+      this.data.steps[1].stepName = item?.customName;
+    });
     this.setLstExtends();
   }
 

@@ -1,7 +1,7 @@
-import { Component, ViewEncapsulation, OnInit, AfterViewInit, Injector, Optional, OnChanges, SimpleChanges, Input } from "@angular/core";
+import { Component, ViewEncapsulation, OnInit, AfterViewInit, Injector, Optional, OnChanges, SimpleChanges, Input, ViewChild, TemplateRef } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { ProgressAnnotationService } from "@syncfusion/ej2-angular-progressbar";
-import { CodxService, DialogData, DialogRef, FormModel, NotificationsService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from "codx-core";
+import { AuthStore, CodxService, DialogData, DialogRef, FormModel, NotificationsService, PageTitleService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from "codx-core";
 import { CodxShareService } from "projects/codx-share/src/public-api";
 import { PopupAddTaskComponent } from "../popup-add-task/popup-add-task.component";
 
@@ -20,13 +20,15 @@ export class ProjectTasksViewComponent
 
   @Input() projectID:any;
   @Input() projectData:any;
-
+  @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   views:  Array<ViewModel> = [];;
   entityName:string = 'TM_Tasks';
   service:string='TM';
   assemblyName:string='ERM.Business.TM';
   className:string="TaskBusiness";
   method:string="GetTasksAsync";
+  predicate:string = 'ProjectID=@0&&Category=@1'
+  datavalue:string=''
   idField:string='recID';
   button:any;
   itemSelected: any;
@@ -42,6 +44,9 @@ export class ProjectTasksViewComponent
   formModel:FormModel;
   vllTab:any;
   dataObj:any={};
+  listRoles:any=[];
+  vllStatus:any=[];
+  user:any;
 
   constructor(
     private injector: Injector,
@@ -49,6 +54,8 @@ export class ProjectTasksViewComponent
     private shareService: CodxShareService,
     private notificationSv: NotificationsService,
     public override codxService : CodxService,
+    private pageTitle: PageTitleService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
 
@@ -59,7 +66,40 @@ export class ProjectTasksViewComponent
     this.cache.functionList(this.funcID).subscribe((res:any)=>{
       this.formModel = res;
     })
+    this.router.params.subscribe((res:any)=>{
+      if(res['projectID']){
+        this.projectID = res['projectID'];
+        this.datavalue=this.projectID+';3'
+        this.getProject(this.projectID);
+      }
+    })
+    this.router.queryParams.subscribe((res:any)=>{
+      if(res['ProjectID']){
+        this.projectID = res['ProjectID'];
+        this.datavalue=this.projectID+';3'
+        this.getProject(this.projectID);
+      }
+    });
+    this.cache.valueList('PM013').subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        this.listRoles = res.datas;
+      }
+    });
+    this.cache.valueList('PM012').subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        this.vllStatus = res.datas;
+      }
+    });
+    this.user = this.authStore.get();
+  }
 
+  getProject(projectID){
+    if(projectID){
+      this.api.execSv('PM','ERM.Business.PM','ProjectsBusiness','GetProjectByIDAsync',projectID).subscribe((res:any)=>{
+        if(!this.projectData)this.projectData= res;
+        setTimeout(()=>{this.pageTitle.setSubTitle(this.projectData.projectName)},1000)
+      })
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -78,10 +118,18 @@ export class ProjectTasksViewComponent
     this.views = [
       {
         id: '1',
-        type: ViewType.list,
+        type: ViewType.listtree,
         sameData: true,
         //active: true,
+        request:{
+          parentIDField:'parentID'
+        },
         model: {
+          template:this.itemViewList,
+          resourceModel:{
+            parentIdField:'parentID'
+          },
+
         },
       },
 
@@ -98,7 +146,7 @@ export class ProjectTasksViewComponent
       option.zIndex=9997;
       let dialogAdd = this.callfc.openSide(
         PopupAddTaskComponent,
-        [res,'add',this.dataObj],
+        [res,'add',this.projectData],
         option
       );
       dialogAdd.closed.subscribe((returnData) => {
@@ -112,9 +160,49 @@ export class ProjectTasksViewComponent
     })
   }
 
+  editTask(){
+    if(this.view.dataService.dataSelected){
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.formModel;
+      option.Width = '850px';
+      option.zIndex=9997;
+      let dialogAdd = this.callfc.openSide(
+        PopupAddTaskComponent,
+        [this.view.dataService.dataSelected,'edit',this.projectData],
+        option
+      );
+      dialogAdd.closed.subscribe((returnData) => {
+        if (returnData?.event) {
+          //this.view?.dataService?.update(returnData?.event);
+        } else {
+          this.view.dataService.clear();
+        }
+      });
+    }
+
+  }
+
+  deleteTask(){
+
+  }
+
   click(e:any){
     if(e.id=='btnAdd'){
       this.addTask()
+    }
+  }
+
+  clickMF(e:any){
+    switch (e.functionID) {
+      case 'SYS03':
+        this.editTask();
+        break;
+      case 'SYS02':
+        this.deleteTask();
+      break;
+      default:
+        break;
     }
   }
 }

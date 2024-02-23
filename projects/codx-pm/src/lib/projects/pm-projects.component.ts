@@ -209,15 +209,19 @@ export class ProjectsComponent
   }
 
   onDbClick(e:any){
-
-    let option = new DialogModel();
-    option.DataService = this.view?.dataService;
-    option.IsFull=true;
-    option.zIndex = 999;
-    let dialog = this.callfc.openForm(
-      PopupProjectDetailsComponent,'',0,0,'',
-      this.view?.dataService.dataSelected,'',
-      option
+    let newurl = `pm/projects/${this.funcID}/${this.view?.dataService.dataSelected?.projectID}`;
+    this.codxService.navigate(
+      '',
+      newurl
     );
+    // let option = new DialogModel();
+    // option.DataService = this.view?.dataService;
+    // option.IsFull=true;
+    // option.zIndex = 999;
+    // let dialog = this.callfc.openForm(
+    //   PopupProjectDetailsComponent,'',0,0,'',
+    //   this.view?.dataService.dataSelected,'',
+    //   option
+    // );
   }
 }

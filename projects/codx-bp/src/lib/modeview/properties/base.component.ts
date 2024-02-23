@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
-import { ApiHttpService, AuthStore, CallFuncService } from "codx-core";
+import { ApiHttpService, AuthStore, CacheService, CallFuncService } from "codx-core";
 import { CodxShareService } from "projects/codx-share/src/public-api";
 import { CodxBpService } from "../../codx-bp.service";
 
@@ -17,7 +17,8 @@ export abstract class BasePropertyComponent
       public shareService: CodxShareService,
       public ref: ChangeDetectorRef,
       public bpService: CodxBpService,
-      public callFuc: CallFuncService
+      public callFuc: CallFuncService,
+      public cache: CacheService
     )
     {
       this.user = this.authstore.get();

@@ -50,7 +50,7 @@ import { SetupShowSignature } from 'projects/codx-es/src/lib/codx-es.model';
 import { environment } from 'src/environments/environment';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { CodxCommonService } from '../../codx-common.service';
-import { ResponseModel } from '../../models/ApproveProcess.model';
+import { ResponseModel, tempLoadPDF } from '../../models/ApproveProcess.model';
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -85,7 +85,7 @@ export class PdfComponent
   env = environment;
   //Input
   @Input() recID = '';
-  @Input() mode = '1';//Cơ chế chạy: 1: chạy theo ES; 2: chạy theo BP
+  @Input() modeView = '1'; //Cơ chế chạy: 1: chạy theo ES; 2: chạy theo BP
   @Input() isEditable = true;
   @Input() isConfirm = false;
   @Input() hasPermission = false;
@@ -312,11 +312,9 @@ export class PdfComponent
     //}
     //Mode cho ES
     if (this.inputUrl == null) {
-      if(this.mode=='1'){
+      if (this.modeView == '1') {
         this.getSFByID();
-
-      }
-      else{
+      } else {
         this.getProcessESign();
       }
       this.getSettingValue();
@@ -585,37 +583,22 @@ export class PdfComponent
 
   //Lấy data ký số theo cơ chế mới cho quy trình động
   getProcessESign() {
-    this.loadProcessESign(
-        this.recID,
-        this.isApprover,
-        this.transRecID,
-        this.dynamicApprovers,
-        this.isSettingMode,
-      )
+    let request = new tempLoadPDF();
+    request.recID = this.recID;
+    this.api
+      .execSv('BP', 'BP', 'ProcessesBusiness', 'GetPDFFormAsync', [request])
       .subscribe((res: any) => {
-        console.table('sf', res);
-        //Gán template để hiển thị form ký số (ApproveControl==3 hoặc 4 ko tạo ES_SignFiles, view vùng kí mẫu qua template)
-        //Hiện tạm ngừng dùng do vẫn tạo ES_SignFiles như các ApproveControl khác)
-        if (this.oURL?.length > 0) {
-          res.urls = this.oURL;
-        }
-        let sf = this.oSignFile ?? res?.signFile;
-        //---------------------
-        if (sf) {
-          sf.files.forEach((file: any, index) => {
-            if (file?.eSign) {
-              //Lấy ds files cho cbx
-              this.lstFiles.push({
-                fileName: file.fileName,
-                fileRefNum: sf.refNo,
-                fileID: file.fileID,
-                fileUrl: environment.urlUpload + '/' + res.urls[index],
-                signers: res?.approvers,
-                areas: file.areas,
-                fileIdx: index,
-              });
-            }
-          });
+        if (res) {
+          if(res?.listFile?.length>0){
+            res?.listFile?.forEach((file: any, index) => {
+              if (file) {
+                file.fileUrl = environment.urlUpload + '/' + file.fileUrl;
+                file.fileIdx = index;
+              }
+            });
+            this.lstFiles=res?.listFile;
+          }
+          
 
           //Lấy danh sách người duyệt
           this.lstSigners = res.approvers;
@@ -634,15 +617,12 @@ export class PdfComponent
 
           //Lấy thông tin Approver hiện tại
           if (this.isApprover) {
-            this.signerInfo = res?.approvers.find(
-              (approver) => approver.authorID == this.oApprovalTrans.stepRecID
-            );
+            this.signerInfo = res?.approvers.find((approver) => approver.userID == this.user?.userID );
             //Trả về cho form ký duyệt để xét nghiệp vụ OTP,loại chữ ký
             this.changeSignerInfo.emit(this.signerInfo);
           } else {
             this.signerInfo = res.approvers[0];
           }
-
           //Load lại danh sách action khả dụng theo từng người/step
           //this.reloadAction();
 
@@ -1928,7 +1908,7 @@ export class PdfComponent
                 area.location.height = scaleH / this.yScale;
               }
               this.esService
-                .addOrEditSignArea(this.recID, this.curFileID, area, area.recID)
+                .addOrEditSignArea(this.recID, this.curFileID, area, area.recID,this.modeView)
                 .subscribe((res) => {});
             } else {
             }
@@ -2380,7 +2360,7 @@ export class PdfComponent
     };
 
     this.esService
-      .addOrEditSignArea(this.recID, this.curFileID, tmpArea, tmpArea.recID)
+      .addOrEditSignArea(this.recID, this.curFileID, tmpArea, tmpArea.recID,this.modeView)
       .subscribe((res) => {
         this.esService
           .getSignAreas(
@@ -2442,12 +2422,20 @@ export class PdfComponent
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   //sign pdf
-  signPDF(mode, comment,cert=null,supplier=null): any {
+  signPDF(mode, comment, cert = null, supplier = null): any {
     if (this.isEditable && this.transRecID) {
       // let hasCA = this.lstCA ? (this.lstCA.length != 0 ? true : false) : false;
       return new Promise<any>((resolve, rejects) => {
         this.codxCommonService
-          .codxApprove(this.transRecID, mode, null, comment, null, cert,supplier)
+          .codxApprove(
+            this.transRecID,
+            mode,
+            null,
+            comment,
+            null,
+            cert,
+            supplier
+          )
           .subscribe((res: ResponseModel) => {
             resolve(res);
           });
@@ -2458,7 +2446,15 @@ export class PdfComponent
     this.esService.editSignature(this.paSignature).subscribe((res) => {
       if (res && this.transRecID) {
         this.codxCommonService
-          .codxApprove(this.transRecID, this.publicSignStatus, null, null,null,null,"3")
+          .codxApprove(
+            this.transRecID,
+            this.publicSignStatus,
+            null,
+            null,
+            null,
+            null,
+            '3'
+          )
           .subscribe((res: ResponseModel) => {
             if (res?.msgCodeError == null && res?.rowCount > 0) {
               this.notificationsService.notifyCode('SYS034');
@@ -2623,7 +2619,7 @@ export class PdfComponent
 
           layer?.add(textArea);
           this.esService
-            .addOrEditSignArea(this.recID, this.curFileID, tmpArea, recID)
+            .addOrEditSignArea(this.recID, this.curFileID, tmpArea, recID,this.modeView)
             .subscribe((res) => {
               if (res) {
                 textArea?.id(res);
@@ -2743,7 +2739,7 @@ export class PdfComponent
 
             layer?.add(imgArea);
             this.esService
-              .addOrEditSignArea(this.recID, this.curFileID, tmpArea, recID)
+              .addOrEditSignArea(this.recID, this.curFileID, tmpArea, recID,this.modeView)
               .subscribe((res) => {
                 if (res) {
                   imgArea?.id(res);
@@ -2812,7 +2808,7 @@ export class PdfComponent
     }
     //es_SignArea.labelValue
     this.esService
-      .addOrEditSignArea(this.recID, this.curFileID, tmpArea, tmpArea.recID)
+      .addOrEditSignArea(this.recID, this.curFileID, tmpArea, tmpArea.recID,this.modeView)
       .subscribe((res) => {
         if (res) {
           this.esService
@@ -2888,7 +2884,7 @@ export class PdfComponent
         );
       }
       this.esService
-        .addOrEditSignArea(this.recID, this.curFileID, tmpArea, recID)
+        .addOrEditSignArea(this.recID, this.curFileID, tmpArea, recID,this.modeView)
         .subscribe((res) => {
           if (res) {
             konva?.id(res);
@@ -3181,7 +3177,7 @@ export class PdfComponent
   popupPublicESign(status) {
     if (this.oApprovalTrans.approverType == 'PE') {
       this.codxCommonService
-        .codxApprove(this.transRecID, status, null, null,null,null,"3")
+        .codxApprove(this.transRecID, status, null, null, null, null, '3')
         .subscribe((res: ResponseModel) => {
           if (res?.msgCodeError == null && res?.rowCount > 0) {
             this.notificationsService.notifyCode('SYS034');
@@ -3286,13 +3282,19 @@ export class PdfComponent
   }
 
   //API test
-  loadProcessESign(recID,transRecID,isApprover,isSettingMode,dynamicApprovers) {
+  loadProcessESign(
+    recID,
+    transRecID,
+    isApprover,
+    isSettingMode,
+    dynamicApprovers
+  ) {
     let model = new PDF_SignModel();
-    model.recID= recID;
-    model.transRecID= transRecID;
-    model.isApprover= isApprover;
-    model.isSettingMode= isSettingMode;
-    model.dynamicApprovers= dynamicApprovers;
+    model.recID = recID;
+    model.transRecID = transRecID;
+    model.isApprover = isApprover;
+    model.isSettingMode = isSettingMode;
+    model.dynamicApprovers = dynamicApprovers;
     return this.api.execSv<any>(
       'BP',
       'ERM.Business.BP',

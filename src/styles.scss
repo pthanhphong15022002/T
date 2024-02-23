@@ -4600,3 +4600,13 @@ Custom Scrollbars
   box-shadow: none;
   border: 0; 
 }
+
+//////
+
+.dashboard-content.w-100 > codx-wrapper.hover-scroll-overlay-y{
+  overflow: hidden!important;
+}
+
+codx-aside .menu-link .menu-icon span[class*="icon-"]::before{
+  color:var(--primary);
+}

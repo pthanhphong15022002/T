@@ -75,7 +75,7 @@ export class AddProcessDefaultComponent implements OnInit{
   formatData()
   {
     var list = [];
-    let extendInfo = typeof this.data.extendInfo == 'string' ?  JSON.parse(this.data.extendInfo) : this.data.extendInfo;
+    let extendInfo = JSON.parse(JSON.stringify(typeof this.data.extendInfo == 'string' ?  JSON.parse(this.data.extendInfo) : this.data.extendInfo))
     extendInfo.forEach(element => {
       let field = element.fieldName.toLowerCase();
       if(element.fieldType != "Title") 
@@ -89,6 +89,10 @@ export class AddProcessDefaultComponent implements OnInit{
         }
         else 
         {
+          if(element.fieldType == "Attachment") {
+            element.documentControl = typeof element.documentControl == 'string' ? JSON.parse(element.documentControl): element.documentControl;
+            if(element.documentControl) element.documentControl = this.dataIns.documentControl.filter(x=>x.fieldID == element.recID);
+          }
           this.dataIns.datas = typeof this.dataIns.datas === 'string' ?  JSON.parse(this.dataIns.datas) : this.dataIns.datas;
           let dataEdit = this.dataIns.datas;
           this.dynamicFormsForm.addControl(field, new FormControl(dataEdit[field] , (element.isRequired ? Validators.required : null)));
@@ -156,6 +160,7 @@ export class AddProcessDefaultComponent implements OnInit{
           );
         }
         var stageF = this.process.steps.filter(x=>x.activityType == "Stage")[0];
+        debugger
         var stage = 
         {
           recID: Util.uid(),
@@ -373,7 +378,7 @@ export class AddProcessDefaultComponent implements OnInit{
       )
       .subscribe((res) => {
         if (res) {
-          this.dialog.close(this.dataIns)
+          this.dialog.close(this.dataIns);
         }
       });
   }
