@@ -70,9 +70,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   panelsContractsRealties: any;
   datasContractsRealties: any;
 
-  panelsRealties1: any;
-  datasRealties1: any;
-
   panelsRealties2: any;
   datasRealties3: any;
 
@@ -530,7 +527,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     title: 'Tổng số',
     minimum: 0,
     // maximum: 100,
-    interval: 10,
+    // interval: 10,
     // lineStyle: { width: 0 },
     majorTickLines: { width: 0 },
     majorGridLines: { width: 1 },
@@ -542,7 +539,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     title: 'Tổng số',
     minimum: 0,
     // maximum: 100,
-    interval: 10,
+    // interval: 10,
     // lineStyle: { width: 0 },
     majorTickLines: { width: 0 },
     majorGridLines: { width: 1 },
@@ -554,7 +551,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     title: 'Tổng số',
     minimum: 0,
     // maximum: 100,
-    interval: 10,
+    //  interval: 10,
     // lineStyle: { width: 0 },
     majorTickLines: { width: 0 },
     majorGridLines: { width: 1 },
@@ -566,7 +563,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     title: 'Tổng số',
     minimum: 0,
     // maximum: 100,
-    interval: 10,
+    // interval: 10,
     // lineStyle: { width: 0 },
     majorTickLines: { width: 0 },
     majorGridLines: { width: 1 },
@@ -610,7 +607,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     title: 'm2',
     minimum: 0,
     // maximum: 100,
-    interval: 50,
+    // interval: 50,
     majorTickLines: { width: 0 },
     majorGridLines: { width: 1 },
     minorGridLines: { width: 1 },
@@ -618,13 +615,79 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   };
   titleUsableArea = 'Diện tích cho thuê ';
 
-  zoomSettings: Object = {
-    mode: 'X',
-    enableMouseWheelZooming: true,
-    enablePinchZooming: true,
-    enableSelectionZooming: true,
-    enableScrollbar: true,
+  // zoomSettings: Object = {
+  //   mode: 'X',
+  //   enableMouseWheelZooming: true,
+  //   enablePinchZooming: true,
+  //   enableSelectionZooming: true,
+  //   enableScrollbar: true,
+  // };
+
+  titleDashboard = 'Thống kê diện tích văn phòng cho thuê nội khu';
+
+  dataOfficeType = [];
+  girdViewDashboardType = [
+    {
+      field: 'assetName',
+      headerText: 'Tên tòa nhà',
+      textAlign: 'Right',
+      width: 90,
+    },
+    {
+      field: 'idiM0',
+      headerText: 'Năm xây dựng',
+      textAlign: 'Right',
+      width: 90,
+    },
+    {
+      field: 'idiM1',
+      headerText: 'Năm hoàn thành',
+      textAlign: 'Right',
+      width: 90,
+    },
+    {
+      field: 'usableArea',
+      headerText: 'Tổng diện tích đang cho thuê',
+      textAlign: 'Right',
+      width: 90,
+    },
+    {
+      field: 'fillArea',
+      headerText: 'Tổng diện tích lấp đầy',
+      textAlign: 'Right',
+      width: 90,
+    },
+    {
+      field: 'vacantArea',
+      headerText: 'Tổng diện tích còn trống',
+      textAlign: 'Right',
+      width: 90,
+    },
+    {
+      field: 'fillPercent',
+      headerText: '% lấp đầy',
+      textAlign: 'Right',
+      width: 90,
+    },
+    {
+      field: 'vacantPercent',
+      headerText: '% trống',
+      textAlign: 'Right',
+      width: 90,
+    },
+  ];
+
+  primaryYAxisColumnOTR = {
+    title: '',
+    minimum: 0,
+    // maximum: 100,
+    // interval: 1000,
+    majorTickLines: { width: 0 },
+    majorGridLines: { width: 1 },
+    minorGridLines: { width: 1 },
+    minorTickLines: { width: 0 },
   };
+
   //=============================================================
 
   constructor(
@@ -663,13 +726,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     );
     this.datasContractsRealties = JSON.parse(
       '[{"panelId":"13.1636284528927885_layout","data":"1"},{"panelId":"23.5801149283702021_layout","data":"2"},{"panelId":"33.6937258303982936_layout","data":"3"},{"panelId":"43.5667390469747078_layout","data":"4"},{"panelId":"53.4199281088325755_layout","data":"5"},{"panelId":"63.4592017601751599_layout","data":"6"},{"panelId":"73.14683256767762543_layout","data":"7"},{"panelId":"83.21519762020964252_layout","data":"8"},{"panelId":"93.21519762020964252_layout","data":"9"}]'
-    );
-
-    this.panelsRealties1 = JSON.parse(
-      '[{"id":"14.1636284528927885_layout","row":0,"col":0,"sizeX":60,"sizeY":25,"minSizeX":60,"minSizeY":25,"maxSizeX":null,"maxSizeY":null}]'
-    );
-    this.datasRealties1 = JSON.parse(
-      '[{"panelId":"14.1636284528927885_layout","data":"1"}]'
     );
 
     this.primaryXAxisY = {
@@ -3058,14 +3114,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let fieldGroup = isIn ? 'quarterApproved' : 'quarterDisposal';
     let countAll = dataSet?.length;
 
-    let renderMax = Math.floor(countAll / 10);
+    // let renderMax = Math.floor(countAll / 10);
 
-    if (renderMax > 10) {
-      let mod = renderMax % 10;
-      renderMax = Math.floor(renderMax / 10) * 10 + (mod > 5 ? 10 : 5);
-      if (isIn) this.primaryYAxisColumnEpIn.interval = renderMax;
-      else this.primaryYAxisColumnEpOut.interval = renderMax;
-    }
+    // if (renderMax > 10) {
+    //   let mod = renderMax % 10;
+    //   renderMax = Math.floor(renderMax / 10) * 10 + (mod > 5 ? 10 : 5);
+    //   if (isIn) this.primaryYAxisColumnEpIn.interval = renderMax;
+    //   else this.primaryYAxisColumnEpOut.interval = renderMax;
+    // }
 
     let listEnterpriseNew = this.groupBy(dataSet, fieldGroup);
 
@@ -3267,14 +3323,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let totalUpAndDownArea = this.total(dataSet, fieldFiter);
     // let totalArea = totalRentalArea + totalUpAndDownArea;
     let totalArea = totalQuotationArea + totalUpAndDownArea;
-    let renderMax = Math.floor(totalArea / 10);
 
-    if (renderMax > 10) {
-      let mod = renderMax % 10;
-      renderMax = Math.floor(renderMax / 10) * 10 + (mod > 5 ? 10 : 5);
-      if (isIn) this.primaryYAxisColumnAreaIn.interval = renderMax;
-      else this.primaryYAxisColumnAreaOut.interval = renderMax;
-    }
+    // let renderMax = Math.floor(totalArea / 10);
+
+    // if (renderMax > 10) {
+    //   let mod = renderMax % 10;
+    //   renderMax = Math.floor(renderMax / 10) * 10 + (mod > 5 ? 10 : 5);
+    //    if (isIn) this.primaryYAxisColumnAreaIn.interval = renderMax;
+    //    else this.primaryYAxisColumnAreaOut.interval = renderMax;
+    // }
     if (listDataGroup) {
       this.vllQuaters?.forEach((qt) => {
         let key = qt.value;
@@ -3423,40 +3480,48 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   //------------------OfficeSpaceForRent -CMRQTSC010--------------------//
   viewDashBoardsOfficeSpaceForRent(dataSet) {
-    this.dataSpaceForRent = dataSet;
-    let max = 0;
-    if (this.dataSpaceForRent?.length > 0) {
-      this.dataSpaceForRent.forEach((x) => {
-        if (max < x.usableArea) max = x.usableArea;
-      });
-
-      let renderMax = Math.floor(max / 10);
-
-      if (renderMax > 50) {
-        let mod = renderMax % 10;
-        renderMax = Math.floor(renderMax / 10) * 10 + (mod > 5 ? 10 : 5);
-        this.primaryYAxisColumnSFR.interval = renderMax;
-      }
+    this.dataSpaceForRent = [];
+    if (!dataSet || dataSet?.length == 0) {
+      return;
     }
-  }
-  onScroll(event) {
-    debugger;
+    dataSet.forEach((x, idx) => {
+      this.dataSpaceForRent.push({ ...x, ...{ noIndex: idx + 1 } });
+    });
+    // let max = 0;
+    // if (this.dataSpaceForRent?.length > 0) {
+    //   this.dataSpaceForRent.forEach((x) => {
+    //     if (max < x.usableArea) max = x.usableArea;
+    //   });
+
+    //   let renderMax = Math.floor(max / 10);
+
+    //   if (renderMax > 50) {
+    //     let mod = renderMax % 10;
+    //     renderMax = Math.floor(renderMax / 10) * 10 + (mod > 5 ? 10 : 5);
+    //     this.primaryYAxisColumnSFR.interval = renderMax;
+    //   }
+    // }
   }
 
-  // @HostListener('scroll', ['$event'])
-  // onScrollCMM(event: Event): void {
-  //   debugger;
-  //   // if (!this.isAllDatas) {
-  //   //   const element = event.target as HTMLElement;
-  //   //   if (element.scrollHeight - element.scrollTop === element.clientHeight) {
-  //   //     this.gridModelTree.page += 1;
-  //   //     this.loadData();
-  //   //   }
-  //   // }
-  // }
   //-----------------------------------------------------------------//
 
   //------------------OfficeTypeReport -CMRQTSC011--------------------//
-  viewDashBoardsOfficeTypeReport(dataSet) {}
+  viewDashBoardsOfficeTypeReport(dataSet) {
+    this.dataOfficeType = [];
+    if (!dataSet || dataSet?.length == 0) {
+      return;
+    }
+    let listData = this.groupBy(dataSet, 'parentID');
+    if (listData) {
+      for (let key in listData) {
+        let arr = [];
+        if (listData[key]?.length > 0)
+          listData[key].forEach((x, idx) => {
+            arr.push({ ...x, ...{ noIndex: idx + 1 } });
+          });
+        this.dataOfficeType.push(arr);
+      }
+    }
+  }
   //-----------------------------------------------------------------//
 }

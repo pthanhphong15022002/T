@@ -7,7 +7,6 @@ import { APPostingAccountsComponent } from './apposting-accounts/apposting-accou
 import { ArPostingAccountsComponent } from './ar-posting-accounts/ar-posting-accounts.component';
 import { FAPostingAccountsComponent } from './faposting-accounts/faposting-accounts.component';
 import { FixedAssetsComponent } from './fixed-assets/fixed-assets.component';
-import { InventoryComponent } from './inventory/inventory.component';
 import { ItemBatchsComponent } from './item-batchs/item-batchs.component';
 import { ItemSeriesComponent } from './item-series/item-series.component';
 import { VATCodesComponent } from './vatcodes/vatcodes.component';
@@ -22,6 +21,7 @@ import { UnitsofmearsureComponent } from './unitsofmearsure-categories/unitsofme
 import { AcShareModule } from '../ac-share.module';
 import { FiscalPeriodsComponent } from './fiscal-periods/fiscal-periods.component';
 import { DimensionGroupsComponent } from './dimension-groups-categories/dimension-groups.component';
+import { ModelsComponent } from './models-categories/models.component';
 
 var routes: Routes = [
   {
@@ -58,7 +58,7 @@ var routes: Routes = [
       },
       {
         path: 'inventorymodels/:funcID',
-        component: InventoryComponent,
+        component: ModelsComponent,
       },
       {
         path: 'postingaccounts/:funcID',

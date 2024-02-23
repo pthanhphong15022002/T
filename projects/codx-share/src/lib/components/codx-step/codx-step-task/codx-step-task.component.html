@@ -65,7 +65,8 @@
             *ngIf="
               currentStep?.startDate &&
               currentStep?.endDate &&
-              currentStep?.stepStatus != '3'
+              (currentStep?.stepStatus != '3'
+              && currentStep?.stepStatus != '4')
             "
           >
             {{ currentStep?.startDate | date : dateFomat }} -
@@ -73,7 +74,7 @@
           >
           <span
             class="date text-nowrap text-gray-500"
-            *ngIf="currentStep?.actualEnd && currentStep?.stepStatus == '3'"
+            *ngIf="currentStep?.actualEnd && (currentStep?.stepStatus == '3' || currentStep?.stepStatus == '4')"
           >
             {{ currentStep?.actualEnd | date : dateFomat }}
           </span>

@@ -160,7 +160,7 @@ export class PopupAddProcessComponent {
 
   ngOnInit(): void {
     this.genData();
-    this.bpSv.getEndDate(new Date(), '1', 4, 'STD').subscribe((res) => {});
+    // this.bpSv.getEndDate(new Date(), '1', 4, 'STD').subscribe((res) => {});
   }
 
   genData() {
