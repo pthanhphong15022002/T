@@ -95,7 +95,7 @@ export class ViewListInstancesComponent {
           this.countTask = tasks?.length ?? 0; //Tổng task của nhiệm vụ
 
           tasks.forEach((ele) => {
-            if (ele.status == '90') {
+            if (ele.status == '3') {
               //Task done
               this.countTaskDone++;
             }
