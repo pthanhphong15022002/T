@@ -2483,7 +2483,7 @@ export class PdfComponent
                 resp.msgCodeError = null;
                 resp.rowCount = 1;
                 resp.returnStatus = '5';
-                resolve(res);
+                resolve(resp);
               }
             });
         });
