@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Injector,
@@ -13,24 +14,22 @@ import {
   NotificationsService,
   DialogData,
   RequestOption,
+  LayoutAddComponent,
 } from 'codx-core';
-import { Inventorymodels } from '../../../models/Inventorymodels.model';
+import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'lib-pop-add-inventory',
   templateUrl: './models-add.component.html',
   styleUrls: ['./models-add.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModelsAddComponent extends UIComponent {
   //#region Contructor
-  @ViewChild('form') form: CodxFormComponent;
-  title: string;
-  headerText: string;
-  formModel: FormModel;
+  @ViewChild('form') public form: LayoutAddComponent;
   dialog!: DialogRef;
-  inventory: Inventorymodels;
-  gridViewSetup: any;
-  validate: any = 0;
-  keyField: any = '';
+  dialogData!: DialogData;
+  headerText: string;
+  dataDefault: any;
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     {
@@ -40,6 +39,7 @@ export class ModelsAddComponent extends UIComponent {
     },
   ];
   formType: any;
+  private destroy$ = new Subject<void>(); 
   constructor(
     inject: Injector,
     private dt: ChangeDetectorRef,
@@ -49,158 +49,195 @@ export class ModelsAddComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.inventory = dialog.dataService!.dataSelected;
-    this.headerText = dialogData.data?.headerText;
-    this.formType = dialogData.data?.formType;
-    this.keyField = dialog.dataService!.keyField;
+    this.dataDefault = {...dialogData?.data?.dataDefault};
+    this.dialogData = {...dialogData};
+    if(dialogData?.data?.dataDefault?.accountControl == '1')
+      dialogData.data.dataDefault.accountControl = true;
+    else
+      dialogData.data.dataDefault.accountControl = false;
+
+    if(dialogData?.data?.dataDefault?.stdCostReceipt == '1')
+      dialogData.data.dataDefault.stdCostReceipt = true;
+    else
+      dialogData.data.dataDefault.stdCostReceipt = false;
+
+    if(dialogData?.data?.dataDefault?.stdCostIssue == '1')
+      dialogData.data.dataDefault.stdCostIssue = true;
+    else
+      dialogData.data.dataDefault.stdCostIssue = false;
+
+    if(dialogData?.data?.dataDefault?.reservePartial == '1')
+      dialogData.data.dataDefault.reservePartial = true;
+    else
+      dialogData.data.dataDefault.reservePartial = false;
+
+    if(dialogData?.data?.dataDefault?.reserveExpired == '1')
+      dialogData.data.dataDefault.reserveExpired = true;
+    else
+      dialogData.data.dataDefault.reserveExpired = false;
   }
   //#endregion
 
   //#region Init
   onInit(): void {}
   ngAfterViewInit() {
-    this.formModel = this.form?.formModel;
+  }
+  onDestroy(){
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  ngOnDestroy() {
+    this.onDestroy();
   }
   //#endregion
 
   //#region Event
-  valueChange(e: any) {
-    this.inventory[e.field] = e.data;
-  }
   valueChanges(e: any) {
-    if (e.data) {
-      this.inventory[e.field] = '1';
-    } else {
-      this.inventory[e.field] = '0';
-    }
+    // if (e.data) {
+    //   this.inventory[e.field] = '1';
+    // } else {
+    //   this.inventory[e.field] = '0';
+    // }
   }
   //#endregion
 
   //#region Function
   setTitle() {
-    this.title = this.headerText;
+    this.headerText = this.dialogData?.data?.headerText;
     this.dt.detectChanges();
-  }
-  checkValidate() {
-
-    //Note
-    let ignoredFields: string[] = [];
-    if(this.keyField == 'InventModelID')
-    {
-      ignoredFields.push(this.keyField);
-    }
-    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
-    //End Note
-
-    var keygrid = Object.keys(this.gridViewSetup);
-    var keymodel = Object.keys(this.inventory);
-    for (let index = 0; index < keygrid.length; index++) {
-      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
-        if(ignoredFields.includes(keygrid[index].toLowerCase()))
-        {
-          continue;
-        }
-        for (let i = 0; i < keymodel.length; i++) {
-          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
-            if (
-              this.inventory[keymodel[i]] == null ||
-              String(this.inventory[keymodel[i]]).match(/^ *$/) !== null
-            ) {
-              this.notification.notifyCode(
-                'SYS009',
-                0,
-                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
-              );
-              this.validate++;
-            }
-          }
-        }
-      }
-    }
   }
   //#endregion
 
   //#region CRUD
   onSave() {
-    this.checkValidate();
-    if (this.validate > 0) {
-      this.validate = 0;
-      return;
-    } else {
-      if (this.formType == 'add' || this.formType == 'copy') {
-        this.dialog.dataService
-          .save((opt: RequestOption) => {
-            opt.methodName = 'AddAsync';
-            opt.className = 'InventoryModelsBusiness';
-            opt.assemblyName = 'IV';
-            opt.service = 'IV';
-            opt.data = [this.inventory];
-            return true;
-          })
-          .subscribe((res) => {
-            if (res.save) {
-              this.dialog.close();
-              this.dt.detectChanges();
-            } else {
-              this.notification.notifyCode(
-                'SYS031',
-                0,
-                '"' + this.inventory.inventModelID + '"'
-              );
-              return;
-            }
-          });
+    this.formatData();
+    this.form.form.save(null, 0, '', '', false,{allowCompare:false}).pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if(!res) return;
+      if(res.hasOwnProperty('save')){
+        if(res.save.hasOwnProperty('data') && !res.save.data) return;
       }
-      if (this.formType == 'edit') {
-        this.dialog.dataService
-          .save((opt: RequestOption) => {
-            opt.methodName = 'UpdateAsync';
-            opt.className = 'InventoryModelsBusiness';
-            opt.assemblyName = 'IV';
-            opt.service = 'IV';
-            opt.data = [this.inventory];
-            return true;
-          })
-          .subscribe((res) => {
-            if (res.save || res.update) {
-              this.dialog.close();
-              this.dt.detectChanges();
-            }
-          });
+      if(res.hasOwnProperty('update')){
+        if(res.update.hasOwnProperty('data') && !res.update.data) return;
       }
-    }
+      if (this.form.form.data.isAdd || this.form.form.data.isCopy)
+        this.notification.notifyCode('SYS006');
+      else
+        this.notification.notifyCode('SYS007');
+      this.dialog.close();
+    })
+    // this.checkValidate();
+    // if (this.validate > 0) {
+    //   this.validate = 0;
+    //   return;
+    // } else {
+    //   if (this.formType == 'add' || this.formType == 'copy') {
+    //     this.dialog.dataService
+    //       .save((opt: RequestOption) => {
+    //         opt.methodName = 'AddAsync';
+    //         opt.className = 'InventoryModelsBusiness';
+    //         opt.assemblyName = 'IV';
+    //         opt.service = 'IV';
+    //         opt.data = [this.inventory];
+    //         return true;
+    //       })
+    //       .subscribe((res) => {
+    //         if (res.save) {
+    //           this.dialog.close();
+    //           this.dt.detectChanges();
+    //         } else {
+    //           this.notification.notifyCode(
+    //             'SYS031',
+    //             0,
+    //             '"' + this.inventory.inventModelID + '"'
+    //           );
+    //           return;
+    //         }
+    //       });
+    //   }
+    //   if (this.formType == 'edit') {
+    //     this.dialog.dataService
+    //       .save((opt: RequestOption) => {
+    //         opt.methodName = 'UpdateAsync';
+    //         opt.className = 'InventoryModelsBusiness';
+    //         opt.assemblyName = 'IV';
+    //         opt.service = 'IV';
+    //         opt.data = [this.inventory];
+    //         return true;
+    //       })
+    //       .subscribe((res) => {
+    //         if (res.save || res.update) {
+    //           this.dialog.close();
+    //           this.dt.detectChanges();
+    //         }
+    //       });
+    //   }
+    // }
   }
   onSaveAdd() {
-    this.checkValidate();
-    if (this.validate > 0) {
-      this.validate = 0;
-      return;
-    } else {
-      this.dialog.dataService
-        .save((opt: RequestOption) => {
-          opt.methodName = 'AddAsync';
-          opt.className = 'InventoryModelsBusiness';
-          opt.assemblyName = 'IV';
-          opt.service = 'IV';
-          opt.data = [this.inventory];
-          return true;
-        })
-        .subscribe((res) => {
-          if (res.save) {
-            this.dialog.dataService.clear();
-            this.dialog.dataService.addNew().subscribe((res) => {
-              this.form.formGroup.patchValue(res);
-              this.inventory = this.dialog.dataService!.dataSelected;
-            });
-          } else {
-            this.notification.notifyCode(
-              'SYS031',
-              0,
-              '"' + this.inventory.inventModelID + '"'
-            );
-            return;
-          }
-        });
+    // this.checkValidate();
+    // if (this.validate > 0) {
+    //   this.validate = 0;
+    //   return;
+    // } else {
+    //   this.dialog.dataService
+    //     .save((opt: RequestOption) => {
+    //       opt.methodName = 'AddAsync';
+    //       opt.className = 'InventoryModelsBusiness';
+    //       opt.assemblyName = 'IV';
+    //       opt.service = 'IV';
+    //       opt.data = [this.inventory];
+    //       return true;
+    //     })
+    //     .subscribe((res) => {
+    //       if (res.save) {
+    //         this.dialog.dataService.clear();
+    //         this.dialog.dataService.addNew().subscribe((res) => {
+    //           this.form.formGroup.patchValue(res);
+    //           this.inventory = this.dialog.dataService!.dataSelected;
+    //         });
+    //       } else {
+    //         this.notification.notifyCode(
+    //           'SYS031',
+    //           0,
+    //           '"' + this.inventory.inventModelID + '"'
+    //         );
+    //         return;
+    //       }
+    //     });
+    // }
+  }
+
+  formatData() {
+    if (this.form.form.data.accountControl) {
+      this.form.form.setValue('accountControl','1',{},false);
+    }else{
+      this.form.form.setValue('accountControl','0',{},false);
+    }
+
+    if (this.form.form.data.stdCostReceipt) {
+      this.form.form.setValue('stdCostReceipt','1',{},false);
+    }else{
+      this.form.form.setValue('stdCostReceipt','0',{},false);
+    }
+
+    if (this.form.form.data.stdCostIssue) {
+      this.form.form.setValue('stdCostIssue','1',{},false);
+    }else{
+      this.form.form.setValue('stdCostIssue','0',{},false);
+    }
+
+    if (this.form.form.data.reservePartial) {
+      this.form.form.setValue('reservePartial','1',{},false);
+    }else{
+      this.form.form.setValue('reservePartial','0',{},false);
+    }
+
+    if (this.form.form.data.reserveExpired) {
+      this.form.form.setValue('reserveExpired','1',{},false);
+    }else{
+      this.form.form.setValue('reserveExpired','0',{},false);
     }
   }
   //#endregion

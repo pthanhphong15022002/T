@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Injector,
@@ -25,6 +26,7 @@ import { Subject, takeUntil } from 'rxjs';
   selector: 'lib-inventory',
   templateUrl: './models.component.html',
   styleUrls: ['./models.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModelsComponent extends UIComponent {
   //#region Contructor
@@ -81,7 +83,7 @@ export class ModelsComponent extends UIComponent {
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
-        this.add(e);
+        this.addNew(e);
         break;
     }
   }
@@ -98,7 +100,27 @@ export class ModelsComponent extends UIComponent {
         break;
     }
   }
-  add(e) {
+  addNew(e) {
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
+    this.view.dataService.addNew().subscribe((res: any) => {
+      if (res) {
+        res.isAdd = true;
+        let data = {
+          headerText: this.headerText,
+          dataDefault:{...res}
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '800px';
+        let dialog = this.callfunc.openSide(
+          ModelsAddComponent,
+          data,
+          option,
+          this.view.funcID
+        );
+      }
+    })
     // this.headerText = e.text + ' ' + this.funcName;
     // this.view.dataService.addNew().subscribe((res: any) => {
     //   var obj = {
@@ -120,62 +142,70 @@ export class ModelsComponent extends UIComponent {
     //   });
     // });
   }
-  edit(e, data) {
-    // if (data) {
-    //   this.view.dataService.dataSelected = data;
-    // }
-    // this.view.dataService
-    //   .edit(this.view.dataService.dataSelected)
-    //   .subscribe((res: any) => {
-    //     var obj = {
-    //       formType: 'edit',
-    //       headerText: e.text + ' ' + this.funcName,
-    //     };
-    //     let option = new SidebarModel();
-    //     option.DataService = this.view.dataService;
-    //     option.FormModel = this.view.formModel;
-    //     option.Width = '800px';
-    //     this.dialog = this.callfunc.openSide(
-    //       PopAddInventoryComponent,
-    //       obj,
-    //       option
-    //     );
-    //   });
+  edit(e, dataEdit) {
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
+    if (dataEdit) {
+      this.view.dataService.dataSelected = dataEdit;
+    }
+    this.view.dataService
+      .edit(dataEdit)
+      .subscribe((res: any) => {
+        if(res){
+          res.isEdit = true;
+          let data = {
+            headerText: this.headerText,
+            dataDefault:{...res}
+          };
+          let option = new SidebarModel();
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.view?.formModel;
+          option.Width = '800px';
+          let dialog = this.callfunc.openSide(
+            ModelsAddComponent,
+            data,
+            option,
+            this.view.funcID
+          );
+        }    
+      });
   }
-  copy(e, data) {
-    // if (data) {
-    //   this.view.dataService.dataSelected = data;
-    // }
-    // this.view.dataService
-    //   .copy()
-    //   .subscribe((res: any) => {
-    //     var obj = {
-    //       formType: 'copy',
-    //       headerText: e.text + ' ' + this.funcName,
-    //     };
-    //     let option = new SidebarModel();
-    //     option.DataService = this.view.dataService;
-    //     option.FormModel = this.view.formModel;
-    //     option.Width = '800px';
-    //     this.dialog = this.callfunc.openSide(
-    //       PopAddInventoryComponent,
-    //       obj,
-    //       option
-    //     );
-    //   });
+  copy(e, dataCopy) {
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
+    if (dataCopy) {
+      this.view.dataService.dataSelected = dataCopy;
+    }
+    this.view.dataService.copy().subscribe((res: any) => {
+      if(res){
+        res.isCopy = true;
+        let data = {
+          headerText: this.headerText,
+          dataDefault:{...res}
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '800px';
+        let dialog = this.callfunc.openSide(
+          ModelsAddComponent,
+          data,
+          option,
+          this.view.funcID
+        );
+      }   
+    });
   }
-  delete(data) {
-    // if (data) {
-    //   this.view.dataService.dataSelected = data;
-    // }
-    // this.view.dataService
-    //   .delete([data], true, (option: RequestOption) =>
-    //     this.beforeDelete(option, data)
-    //   )
-    //   .subscribe((res: any) => {
-    //     if (res) {
-    //     }
-    //   });
+  delete(dataDelete) {
+    this.view.dataService
+      .delete([dataDelete], true)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res && !res?.error) {
+          if (this.view.dataService.data.length == 0) {
+            this.itemSelected = undefined;
+            this.detectorRef.detectChanges();
+          }
+        }
+      });
   }
 
   changeDataMF(event,type:any=''){
