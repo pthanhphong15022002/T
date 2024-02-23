@@ -2661,14 +2661,21 @@
       <ejs-grid [dataSource]="dataSpaceForRent" height="100%">
         <e-columns>
           <e-column
+            field="noIndex"
+            headerText="STT"
+            textAlign="Right"
+            width="50"
+          ></e-column>
+          <e-column
             field="AssetName"
             headerText="Tên tòa nhà"
-            textAlign="Left"
+            textAlign="Right"
             width="90"
           ></e-column>
           <e-column
             field="UsableArea"
             headerText="Diện tích cho thuê ( m2)"
+            textAlign="Right"
             width="120"
           ></e-column>
         </e-columns>
@@ -2725,13 +2732,25 @@
           <div class="col-7 justify-content-center">
             <ejs-grid [dataSource]="item" height="100%">
               <e-columns>
+                <e-column
+                  field="noIndex"
+                  headerText="STT"
+                  textAlign="Right"
+                  width="50"
+                ></e-column>
                 <ng-container *ngFor="let f of girdViewDashboardType">
                   <e-column
+                    [headerTemplate]="headerTemplate"
                     [field]="f.field"
                     [headerText]="f.headerText"
                     [textAlign]="f.textAlign"
                     [width]="f.width"
                   ></e-column>
+                  <ng-template #headerTemplate>
+                    <span [ngbTooltip]="f.headerText" container="body">{{
+                      f.headerText
+                    }}</span>
+                  </ng-template>
                 </ng-container>
               </e-columns>
             </ejs-grid>
@@ -2744,6 +2763,12 @@
               [legendSettings]="legendSettingsColumn"
             >
               <e-series-collection>
+                <e-column
+                  field="noIndex"
+                  headerText="STT"
+                  textAlign="Right"
+                  width="50"
+                ></e-column>
                 <ng-container *ngFor="let f of girdViewDashboardType">
                   <e-series
                     [dataSource]="item"

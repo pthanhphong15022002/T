@@ -29,6 +29,8 @@ export class CodxView2Component implements OnInit, AfterViewInit {
   //#region Contructor
   @Input() funcID?: string;
   @Input() tmpRightToolBar?: TemplateRef<any>;
+  @Input() showHeader: boolean = true;
+  @Input() showRightToolbar: boolean = true;
   @Input() tmpHeader?: TemplateRef<any> = null;
   @Input() tmpItem?: TemplateRef<any>;
   @Input() service!: string;
@@ -56,6 +58,7 @@ export class CodxView2Component implements OnInit, AfterViewInit {
   request: DataRequest;
   viewList: Array<ViewModel> = [];
   fMoreFuncs: ButtonModel[];
+  title: string = '';
   constructor(
     private ref: ChangeDetectorRef,
     private cache: CacheService,
@@ -127,7 +130,8 @@ export class CodxView2Component implements OnInit, AfterViewInit {
           this.entityName,
         ])
         .subscribe((res: any) => {
-          if (res.viewSettings && res.viewSettings.length) {
+          if (res && res.viewSettings && res.viewSettings.length) {
+            this.title = res.func?.customName;
             this.cache.setViewSetting(res.func.functionID, res.viewSettings);
             if (this.viewList && this.viewList.length > 0) {
               this.viewList?.filter(function (o) {
