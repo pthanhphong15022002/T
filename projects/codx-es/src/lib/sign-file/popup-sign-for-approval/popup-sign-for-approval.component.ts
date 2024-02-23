@@ -376,7 +376,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
         //       }
         //       this.dialog && this.dialog.close(resModel);
         //     });
-        if (this.pdfView.isAwait) {
+        //if (!this.pdfView.isAwait) {
           this.pdfView
             .signPDF(mode, comment,null,"1")
             .then((resModel: ResponseModel) => {
@@ -389,59 +389,59 @@ export class PopupSignForApprovalComponent extends UIComponent {
               }
               this.dialog && this.dialog.close(resModel);
             });
-        } else {
-          this.esService
-            .updateTransAwaitingStatus(this.transRecID, false)
-            .subscribe((updateTransStatus) => {
-              if (updateTransStatus) {
-                // let result = {
-                //   result: true,
-                //   mode: mode.toString() == '5' ? 9 : mode, //dang ky
-                // };
-                this.pdfView
-                  .signPDF(mode, comment,null,"1")
-                  .then((resModel: ResponseModel) => {
-                    if (
-                      resModel?.msgCodeError == null &&
-                      resModel?.rowCount > 0
-                    ) {
-                      this.esService.statusChange.next(mode);
-                      this.esService.setupChange.next(true);
-                      this.notify.notifyCode('SYS034');
-                      this.canOpenSubPopup = false;
-                    } else {
-                      this.esService.setupChange.next(true);
-                      this.canOpenSubPopup = false;
+        // } else {
+        //   this.esService
+        //     .updateTransAwaitingStatus(this.transRecID, false)
+        //     .subscribe((updateTransStatus) => {
+        //       if (updateTransStatus) {
+        //         // let result = {
+        //         //   result: true,
+        //         //   mode: mode.toString() == '5' ? 9 : mode, //dang ky
+        //         // };
+        //         this.pdfView
+        //           .signPDF(mode, comment,null,"1")
+        //           .then((resModel: ResponseModel) => {
+        //             if (
+        //               resModel?.msgCodeError == null &&
+        //               resModel?.rowCount > 0
+        //             ) {
+        //               this.esService.statusChange.next(mode);
+        //               this.esService.setupChange.next(true);
+        //               this.notify.notifyCode('SYS034');
+        //               this.canOpenSubPopup = false;
+        //             } else {
+        //               this.esService.setupChange.next(true);
+        //               this.canOpenSubPopup = false;
 
-                      this.esService
-                        .updateTransAwaitingStatus(this.transRecID, true)
-                        .subscribe((updateTransStatus) => {
-                          //that bai
-                          this.esService.setupChange.next(true);
-                          this.esService.statusChange.next(3);
-                        });
-                      this.notify.notifyCode('SYS021');
-                    }
-                    this.dialog && this.dialog.close(resModel);
-                  });
-                this.canOpenSubPopup = false;
-              } else {
-                this.canOpenSubPopup = false;
-                let resModel = new ResponseModel();
-                resModel.rowCount = 0; //ko thể cập nhật sang đang ký
-                resModel.msgCodeError = 'ES017';
-                this.esService
-                  .updateTransAwaitingStatus(this.transRecID, true)
-                  .subscribe((updateTransStatus) => {
-                    //that bai
-                    this.esService.setupChange.next(true);
-                    this.esService.statusChange.next(3);
-                    this.notify.notifyCode(resModel.msgCodeError);
-                  });
-                this.dialog && this.dialog.close(resModel);
-              }
-            });
-        }
+        //               this.esService
+        //                 .updateTransAwaitingStatus(this.transRecID, true)
+        //                 .subscribe((updateTransStatus) => {
+        //                   //that bai
+        //                   this.esService.setupChange.next(true);
+        //                   this.esService.statusChange.next(3);
+        //                 });
+        //               this.notify.notifyCode('SYS021');
+        //             }
+        //             this.dialog && this.dialog.close(resModel);
+        //           });
+        //         this.canOpenSubPopup = false;
+        //       } else {
+        //         this.canOpenSubPopup = false;
+        //         let resModel = new ResponseModel();
+        //         resModel.rowCount = 0; //ko thể cập nhật sang đang ký
+        //         resModel.msgCodeError = 'ES017';
+        //         this.esService
+        //           .updateTransAwaitingStatus(this.transRecID, true)
+        //           .subscribe((updateTransStatus) => {
+        //             //that bai
+        //             this.esService.setupChange.next(true);
+        //             this.esService.statusChange.next(3);
+        //             this.notify.notifyCode(resModel.msgCodeError);
+        //           });
+        //         this.dialog && this.dialog.close(resModel);
+        //       }
+        //     });
+        // }
 
         break;
       }
@@ -490,8 +490,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
               {
                 this.esService.getViettelCer(this.signerInfo.thirdPartyID).subscribe(cers=>{
                   if(cers){
-                    this.lstCert = cers?.filter(x=>x?.error == null);              
-                    this.lstCert.push(this.lstCert[0]);
+                    this.lstCert = cers?.filter(x=>x?.error == null); 
                     if(this.lstCert?.length ==1){
                       this.viettelESign(mode,comment,this.lstCert[0]?.cert)
                     }

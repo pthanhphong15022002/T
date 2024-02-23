@@ -75,7 +75,7 @@ export class AddProcessDefaultComponent implements OnInit{
   formatData()
   {
     var list = [];
-    let extendInfo = typeof this.data.extendInfo == 'string' ?  JSON.parse(this.data.extendInfo) : this.data.extendInfo;
+    let extendInfo = JSON.parse(JSON.stringify(typeof this.data.extendInfo == 'string' ?  JSON.parse(this.data.extendInfo) : this.data.extendInfo))
     extendInfo.forEach(element => {
       let field = element.fieldName.toLowerCase();
       if(element.fieldType != "Title") 
@@ -140,7 +140,7 @@ export class AddProcessDefaultComponent implements OnInit{
 
   async onSave(type=1)
   {
-    //if(!this.checkAttachment()) return;
+    if(!this.checkAttachment()) return;
     if(this.dynamicFormsForm.invalid) this.findInvalidControls();
     else
     {
@@ -310,7 +310,7 @@ export class AddProcessDefaultComponent implements OnInit{
     {
       var arr = [];
       this.dataIns.documentControl.forEach(elm=>{
-        if(elm.isRequired && elm.count == 0)
+        if(elm.isRequired && (elm?.countAttach == 0 || !elm?.countAttach))
         {
           arr.push(elm.title)
         }
@@ -377,7 +377,7 @@ export class AddProcessDefaultComponent implements OnInit{
       )
       .subscribe((res) => {
         if (res) {
-          this.dialog.close(this.dataIns)
+          this.dialog.close(this.dataIns);
         }
       });
   }

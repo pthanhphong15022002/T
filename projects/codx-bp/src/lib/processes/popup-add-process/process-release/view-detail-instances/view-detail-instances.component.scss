@@ -1,0 +1,16 @@
+.cm-full{
+  inset: 33px 11px 0 !important;
+}
+
+.codx-detail-main{
+  overflow: hidden !important;
+}
+
+.codx-detail-body{
+  height: calc(100vh - 330px);
+}
+
+lib-process-release-detail .tab-content{
+  height: calc(100vh - 370px);
+  overflow: auto;
+}

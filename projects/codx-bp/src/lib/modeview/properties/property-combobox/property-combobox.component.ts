@@ -18,13 +18,20 @@ export class PropertyComboboxComponent extends BasePropertyComponent implements 
      changes['data']?.currentValue != changes['data']?.previousValue
    ) 
    {
-    if(this.data.dataFormat != null && this.data?.dataFormat?.trim() != '') 
-    {
-      this.listCbx = JSON.parse(this.data.dataFormat);
-    }
-     if(this.data.refType == "3") this.dropdown = true;
-     else this.popup = true;
+      if(this.data?.refValue) this.getCombobox();
+      if(this.data.refType == "3") this.dropdown = true;
+      else this.popup = true;
    }
+ }
+
+ getCombobox()
+ {
+  this.cache.combobox(this.data.refValue).subscribe(item=>{
+    if(item) {
+      this.listCbx = item.displayMembers.split(";");
+      this.listCbx = this.listCbx.filter(x=>x != "");
+    }
+  })
  }
 
  openSettingCbx() {
@@ -35,14 +42,7 @@ export class PropertyComboboxComponent extends BasePropertyComponent implements 
     gridViewName: 'grvDPStepsFields',
     entityName: 'BP_Processes_Steps_ExtendInfo',
   };
-  if (
-    this.data.dataFormat != null &&
-    this.data?.dataFormat?.trim() != ''
-  ) {
-    this.listCbx = JSON.parse(this.data.dataFormat);
-  }
   let data = {
-    lstCbx: this.listCbx,
     data: this.data,
     title: this.data.text,
   };
@@ -59,6 +59,10 @@ export class PropertyComboboxComponent extends BasePropertyComponent implements 
   popupDialog.closed.subscribe((dg) => {
     if (dg && dg?.event) {
       this.data = dg?.event;
+      if(dg?.event?.refValue)
+      {
+        this.getCombobox();
+      }
       //this.listCbx = JSON.parse(this.data.dataFormat);
       this.dataChange.emit(this.data);
     }

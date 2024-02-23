@@ -197,7 +197,7 @@
     <!-- <a (click)="eSign()">Ký số</a> -->
   </ng-template>
   <ng-template #footer>
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between" *ngIf="privileged">
       <button
         type="button"
         class="btn btn-outline-primary me-3"
