@@ -75,7 +75,7 @@ export class AddProcessDefaultComponent implements OnInit{
   formatData()
   {
     var list = [];
-    let extendInfo = typeof this.data.extendInfo == 'string' ?  JSON.parse(this.data.extendInfo) : this.data.extendInfo;
+    let extendInfo = JSON.parse(JSON.stringify(typeof this.data.extendInfo == 'string' ?  JSON.parse(this.data.extendInfo) : this.data.extendInfo))
     extendInfo.forEach(element => {
       let field = element.fieldName.toLowerCase();
       if(element.fieldType != "Title") 
@@ -160,6 +160,7 @@ export class AddProcessDefaultComponent implements OnInit{
           );
         }
         var stageF = this.process.steps.filter(x=>x.activityType == "Stage")[0];
+        debugger
         var stage = 
         {
           recID: Util.uid(),
@@ -377,7 +378,7 @@ export class AddProcessDefaultComponent implements OnInit{
       )
       .subscribe((res) => {
         if (res) {
-          this.dialog.close(this.dataIns)
+          this.dialog.close(this.dataIns);
         }
       });
   }
