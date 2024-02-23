@@ -269,7 +269,7 @@ export class PopupBpTasksComponent implements OnInit {
             dialogModel
           );
           dialogApprove.closed.subscribe((res) => {
-            if (!res?.event?.msgCodeError && res?.event?.rowCount>0) {
+            if (res!=null) {
               this.onSave()
               
             }
