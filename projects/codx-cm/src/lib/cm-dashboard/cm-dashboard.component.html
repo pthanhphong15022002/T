@@ -47,16 +47,6 @@
       ></codx-dashboard>
     </ng-container>
 
-    <!-- <ng-container *ngIf="funcID == 'CMDQTSC010'">
-      <codx-dashboard
-        [templates]="dashBoardSpaceForRent"
-        [panels]="panelsRealties1"
-        [datas]="datasRealties1"
-        [isEditMode]="isEditMode"
-        [cellSpacing]="[10, 10]"
-        [columns]="60"
-      ></codx-dashboard>
-    </ng-container> -->
     <ng-container
       *ngIf="funcID == 'CMDQTSC010'"
       [ngTemplateOutlet]="officeSpaceForRent"
@@ -179,7 +169,8 @@
           <label class="btn btn-outline-primary" for="btBussinessLine"
             ><codx-label
               name="btBussinessLine"
-              formModel="CMMyDashboard"
+              formName="CMMyDashboard"
+              gridViewName="grvCMMyDashboard"
               default="Dòng sản phẩm"
             ></codx-label
           ></label>
@@ -199,7 +190,8 @@
           <label class="btn btn-outline-primary" for="btIndustries">
             <codx-label
               name="btIndustries"
-              formModel="CMMyDashboard"
+              formName="CMMyDashboard"
+              gridViewName="grvCMMyDashboard"
               default="Lĩnh vực hoạt động"
             ></codx-label
           ></label>
@@ -294,7 +286,8 @@
           <label class="btn btn-outline-primary" for="btSuccess"
             ><codx-label
               name="btSuccess"
-              formModel=""
+              formName="CMMyDashboard"
+              gridViewName="grvCMMyDashboard"
               default="Thành công"
             ></codx-label
           ></label>
@@ -314,7 +307,8 @@
           <label class="btn btn-outline-primary" for="btFail">
             <codx-label
               name="btFail"
-              formModel=""
+              formName="CMMyDashboard"
+              gridViewName="grvCMMyDashboard"
               default="Thất bại"
             ></codx-label
           ></label>
@@ -414,7 +408,8 @@
           <label class="btn btn-outline-primary" for="btMax">
             <codx-label
               name="btMax"
-              formModel=""
+              formName="CMMyDashboard"
+              gridViewName="grvCMMyDashboard"
               default="Cao nhất"
             ></codx-label>
           </label>
@@ -434,7 +429,8 @@
           <label class="btn btn-outline-primary" for="btMin">
             <codx-label
               name="btMin"
-              formModel=""
+              formName="CMMyDashboard"
+              gridViewName="grvCMMyDashboard"
               default="Thấp nhất"
             ></codx-label>
           </label>
@@ -520,7 +516,8 @@
           <label class="btn btn-outline-primary" for="btReasonSucess">
             <codx-label
               name="btReasonSucess"
-              formModel=""
+              formName="CMMyDashboard"
+              gridViewName="grvCMMyDashboard"
               default="Thành công"
             ></codx-label>
           </label>
@@ -540,7 +537,8 @@
           <label class="btn btn-outline-primary" for="btReasonFail">
             <codx-label
               name="btReasonFail"
-              formModel=""
+              formName="CMMyDashboard"
+              gridViewName="grvCMMyDashboard"
               default="Thất bại"
             ></codx-label>
           </label>
@@ -645,7 +643,8 @@
             <label class="btn btn-outline-primary" for="btStatus"
               ><codx-label
                 name="btStatus"
-                formModel=""
+                formName="CMMyDashboard"
+                gridViewName="grvCMMyDashboard"
                 default="Status"
               ></codx-label
             ></label>
@@ -665,7 +664,8 @@
             <label class="btn btn-outline-primary" for="btStages">
               <codx-label
                 name="btStages"
-                formModel=""
+                formName="CMMyDashboard"
+                gridViewName="grvCMMyDashboard"
                 default="Stages"
               ></codx-label
             ></label>
@@ -2655,13 +2655,9 @@
 <!---------------------------------------------------------------------------------------------------------->
 <!-----------------------------  Thống kê diện tích - CMDQTSC010        ------------------------------------>
 <!---------------------------------------------------------------------------------------------------------->
-<ng-template #templateSpaceForRent>
-  <div class="w-100 h-100" id="1"></div>
-</ng-template>
-
 <ng-template #officeSpaceForRent>
   <div class="w-100 h-100 bg-white row">
-    <div class="col-4 mt-3 h-100 d-flex justify-content-center">
+    <div class="col-4 h-100 d-flex justify-content-center">
       <ejs-grid [dataSource]="dataSpaceForRent" height="100%">
         <e-columns>
           <e-column
@@ -2708,7 +2704,65 @@
 <!---------------------------------------------------------------------------------------------------------->
 <!-----------------------------Thống kê theo loại văn phòng - CMDQTSC011------------------------------------>
 <!---------------------------------------------------------------------------------------------------------->
-<ng-template #officeTypeReport> 456 </ng-template>
+<ng-template #officeTypeReport>
+  <div class="h-100 d-flex flex-column bg-white" id="view-dashboard">
+    <ng-container *ngFor="let item of dataOfficeType">
+      <div class="mb-10">
+        <div>
+          <codx-label
+            class="fw-bold"
+            name="titleTypeDB"
+            formName="CMRealtiesDashboard"
+            gridViewName="grvCMRealtiesDashboard"
+            default="THỐNG KÊ VĂN PHÒNG"
+          ></codx-label>
+          <span
+            class="fw-bold"
+            [innerHTML]="item[0].parentName?.toUpperCase()"
+          ></span>
+        </div>
+        <div class="row">
+          <div class="col-7 d-flex justify-content-center">
+            <ejs-grid [dataSource]="item" height="100%">
+              <e-columns>
+                <ng-container *ngFor="let f of girdViewDashboardType">
+                  <e-column
+                    [field]="f.field"
+                    [headerText]="f.headerText"
+                    [textAlign]="f.textAlign"
+                    [width]="f.width"
+                  ></e-column>
+                </ng-container>
+              </e-columns>
+            </ejs-grid>
+          </div>
+          <div class="col-5 d-flex justify-content-center align-item-center">
+            <ejs-chart
+              id="chart-container-3"
+              [primaryXAxis]="primaryXAxisColumn"
+              [primaryYAxis]="primaryYAxisColumnOTR"
+              [tooltip]="tooltipChartColumn"
+              [legendSettings]="legendSettingsColumn"
+            >
+              <e-series-collection>
+                <ng-container *ngFor="let f of girdViewDashboardType">
+                  <e-series
+                    *ngIf="f.field != 'IDIM0' && f.field != 'AssetName'"
+                    [dataSource]="item"
+                    type="StackingColumn"
+                    [xName]="item[0].assetName"
+                    [yName]="f.field"
+                    [name]="f.headerText"
+                  ></e-series>
+                </ng-container>
+              </e-series-collection>
+            </ejs-chart>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
 
 <!---------------------------------------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------------------------------------->

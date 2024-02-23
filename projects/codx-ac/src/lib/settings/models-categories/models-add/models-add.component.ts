@@ -17,10 +17,10 @@ import {
 import { Inventorymodels } from '../../../models/Inventorymodels.model';
 @Component({
   selector: 'lib-pop-add-inventory',
-  templateUrl: './pop-add-inventory.component.html',
-  styleUrls: ['./pop-add-inventory.component.css'],
+  templateUrl: './models-add.component.html',
+  styleUrls: ['./models-add.component.css'],
 })
-export class PopAddInventoryComponent extends UIComponent {
+export class ModelsAddComponent extends UIComponent {
   //#region Contructor
   @ViewChild('form') form: CodxFormComponent;
   title: string;
@@ -53,13 +53,6 @@ export class PopAddInventoryComponent extends UIComponent {
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.keyField = dialog.dataService!.keyField;
-    this.cache
-      .gridViewSetup('InventoryModels', 'grvInventoryModels')
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
-        }
-      });
   }
   //#endregion
 
