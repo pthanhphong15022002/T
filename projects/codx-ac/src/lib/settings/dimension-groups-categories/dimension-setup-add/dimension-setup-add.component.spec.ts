@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopAddDimensionSetupComponent } from './pop-add-dimension-setup.component';
+import { DimensionSetupAddComponent } from './dimension-setup-add.component';
 
 describe('PopAddDimensionSetupComponent', () => {
-  let component: PopAddDimensionSetupComponent;
-  let fixture: ComponentFixture<PopAddDimensionSetupComponent>;
+  let component: DimensionSetupAddComponent;
+  let fixture: ComponentFixture<DimensionSetupAddComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopAddDimensionSetupComponent ]
+      declarations: [ DimensionSetupAddComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopAddDimensionSetupComponent);
+    fixture = TestBed.createComponent(DimensionSetupAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

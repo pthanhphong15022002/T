@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopAddDimensionGroupsComponent } from './pop-add-dimension-groups.component';
+import { DimensionGroupsAddComponent } from './dimension-groups-add.component';
 
 describe('PopAddDimensionGroupsComponent', () => {
-  let component: PopAddDimensionGroupsComponent;
-  let fixture: ComponentFixture<PopAddDimensionGroupsComponent>;
+  let component: DimensionGroupsAddComponent;
+  let fixture: ComponentFixture<DimensionGroupsAddComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopAddDimensionGroupsComponent ]
+      declarations: [ DimensionGroupsAddComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopAddDimensionGroupsComponent);
+    fixture = TestBed.createComponent(DimensionGroupsAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

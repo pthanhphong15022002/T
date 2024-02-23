@@ -114,6 +114,14 @@ export class ProjectTasksViewComponent
   override onInit(): void {
 
   }
+
+  taskSettings = {
+    id: 'recID',
+    name: 'taskName',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    parentID:'parentID'
+  };
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -132,18 +140,30 @@ export class ProjectTasksViewComponent
 
         },
       },
+      {
+        id: '2',
+        type: ViewType.gantt,
+        sameData: true,
+        //active: true,
+
+        model: {
+          eventModel: this.taskSettings,
+        },
+      },
 
     ];
     this.detectorRef.detectChanges();
   }
 
-  addTask(){
+  addTask(parentID?:any){
     this.view.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.formModel;
       option.Width = '550px';
       option.zIndex=9997;
+      res.projectID=this.projectData.projectID;
+      if(parentID) res.parentID=parentID;
       let dialogAdd = this.callfc.openSide(
         PopupAddTaskComponent,
         [res,'add',this.projectData],
@@ -174,6 +194,9 @@ export class ProjectTasksViewComponent
       );
       dialogAdd.closed.subscribe((returnData) => {
         if (returnData?.event) {
+          if(returnData.event=='assignTask'){
+            this.addTask(this.view.dataService.dataSelected?.recID)
+          }
           //this.view?.dataService?.update(returnData?.event);
         } else {
           this.view.dataService.clear();
