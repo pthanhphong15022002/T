@@ -17,6 +17,10 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('attachment2') attachment2: AttachmentComponent;
   @Input() activityType: any;
+  listCombobox = {};
+  multiple = true;
+  vllShare = 'BP017';
+  typeShare = '1';
   isNewForm = false;
   listUses = [];
   listUses2 = [];
@@ -287,14 +291,14 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
 
   valueChangeUser(e:any)
   {
-    if(e?.data?.dataSelected)
+    if(e)
     {
-      e?.data?.dataSelected.forEach(element => {
+      e.forEach(element => {
         this.listUses.push(
           {
             objectID: element.id,
             objectName: element.text,
-            objectType: "U",
+            objectType: element.objectType,
             roleType: 'O'
           }
         )
@@ -525,8 +529,10 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
               fieldID: this.data?.recID,
               memo: this.data?.memo,
               templateID: res?.event[0].recID,
-              templateType: type
+              templateType: type,
+              refID: '',
             }
+            documentControl.refID = documentControl.recID;
             this.process.documentControl.push(documentControl);
           }
          
@@ -619,7 +625,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
             memo: this.data?.memo,
             refStepNo: element?.stepNo,
             refStepID: element?.recID,
-            refID: element.refID
+            refID: element?.refID
           }
           this.process.documentControl.push(documentControl);
         });
@@ -703,5 +709,15 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       .subscribe((res) => {
        
       });
+  }
+
+  sharePerm(share:any) {
+    this.listCombobox = {};
+    this.multiple = true;
+    this.vllShare = 'BP017';
+    this.typeShare = '1';
+    let option = new DialogModel();
+    option.zIndex = 1010;
+    this.callFuc.openForm(share, '', 420, 600, null, null, null, option);
   }
 }

@@ -120,4 +120,14 @@ export class CodxBpService {
       [userID]
     );
   }
+
+  getEndDate(startDate: Date, interval: String, duration: any, calendarID: String){
+    return this.api.execSv<any>(
+      APICONSTANT.SERVICES.BP,
+      APICONSTANT.ASSEMBLY.BP,
+      'ProcessesBusiness',
+      'SettingEndDateAsync',
+      [startDate, interval, duration, calendarID]
+    );
+  }
 }

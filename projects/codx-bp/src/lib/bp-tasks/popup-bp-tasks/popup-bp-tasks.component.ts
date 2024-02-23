@@ -9,12 +9,15 @@ import {
   ApiHttpService,
   AuthStore,
   CacheService,
+  CallFuncService,
   DialogData,
+  DialogModel,
   DialogRef,
   NotificationsService,
   Util,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
 
@@ -42,6 +45,7 @@ export class PopupBpTasksComponent implements OnInit {
   process: any;
   constructor(
     private authstore: AuthStore,
+    private callfc: CallFuncService,
     private shareService: CodxShareService,
     private detectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -82,7 +86,7 @@ export class PopupBpTasksComponent implements OnInit {
     }    
     this.getFile();
     if (this.subTitle == null) {
-      this.subTitle = this.dataIns.title;
+      this.subTitle = this.dataIns?.title;
     }
   }
   getFile(){
@@ -237,19 +241,39 @@ export class PopupBpTasksComponent implements OnInit {
     this.dialog.close(this.dataIns);
   }
   eSign(){
-    if(this.data?.recID){
-      
-      this.api.execSv<any>(
-        'BP',
-        'BP',
-        'ProcessesBusiness',
-        'GetPDFFormAsync',
-        [{recID:this.data?.recID}]
-      ).subscribe(res=>{
-        if(res){
-          
-        }
-      });
+    if(this.data?.recID){      
+          // gọi hàm xử lý xem trình ký
+          let dialogModel = new DialogModel();
+          dialogModel.IsFull = true;
+          var listApproveMF = this.shareService.getMoreFunction(null,"S1");
+  
+          let dialogApprove = this.callfc.openForm(
+            PopupSignForApprovalComponent,
+            'Thêm mới',
+            700,
+            650,
+            'EST021',
+            {
+              funcID: 'EST021',
+              sfRecID: this.data?.recID,
+              title: this.data?.taskName,
+              status: "3",
+              stepType: "S1",
+              stepNo: "0",
+              modeView:"2",
+              lstMF: listApproveMF,
+            },
+            '',
+            dialogModel
+          );
+          dialogApprove.closed.subscribe((res) => {
+            if (!res?.event?.msgCodeError && res?.event?.rowCount>0) {
+              this.onSave()
+              
+            }
+          });
+        
+        
     
     }
   }

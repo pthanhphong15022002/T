@@ -329,15 +329,6 @@
         </codx-input>
       </div>
       <div class="form-group">
-        <codx-label
-          name="lblAvatarProcess"
-          [formModel]="dialog.formModel"
-          default="Ảnh đại diện"
-        >
-        </codx-label>
-        <ng-container [ngTemplateOutlet]="avatarProcess"></ng-container>
-      </div>
-      <div class="form-group">
         <div class="d-flex justify-content-between">
           <div class="d-flex justify-content-start">
             <codx-label
@@ -405,6 +396,15 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="form-group">
+        <codx-label
+          name="lblAvatarProcess"
+          [formModel]="dialog.formModel"
+          default="Ảnh đại diện"
+        >
+        </codx-label>
+        <ng-container [ngTemplateOutlet]="avatarProcess"></ng-container>
       </div>
     </div>
     <div class="info-right d-flex flex-column align-items-center">

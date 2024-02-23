@@ -1367,15 +1367,27 @@ export class CodxEsService {
   }
 
   //#endregion
-  addOrEditSignArea(recID, fileID, area, areaID): Observable<any> {
+  addOrEditSignArea(recID, fileID, area, areaID,mode="1"): Observable<any> {
     let data = [recID, fileID, area, areaID];
-    return this.api.execSv(
-      'ES',
-      'ERM.Business.ES',
-      'SignFilesBusiness',
-      'AddOrEditAreaAsync',
-      data
-    );
+    if(mode ="1"){
+      return this.api.execSv(
+        'ES',
+        'ERM.Business.ES',
+        'SignFilesBusiness',
+        'AddOrEditAreaAsync',
+        data
+      );
+    }
+    else{
+      return this.api.execSv(
+        'BP',
+        'ERM.Business.BP',
+        'ProcessesBusiness',
+        'AddOrEditAreaAsync',
+        data
+      );
+    }
+    
   }
 
   deleteAreaById(data: any): Observable<any> {
