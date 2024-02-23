@@ -1,0 +1,5 @@
+.btn-update{
+    padding: 4px 8px;
+    border: solid 1px var(--primary);
+    border-radius: 10px;
+}

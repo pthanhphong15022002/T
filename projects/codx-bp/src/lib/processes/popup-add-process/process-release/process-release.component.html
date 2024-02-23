@@ -4,6 +4,7 @@
   [button]="button"
   (buttonClick)="click($event)"
   (clickMF)="clickMF($event)"
+  (changeDataMF)="changeDataMF($event)"
   (viewChanging)="viewChange($event)"
   (selectedChange)="selectedChange($event)"
   [service]="service"
@@ -103,7 +104,7 @@
         </div>
       </div>
     </div>
-    <div
+    <!-- <div
       class="mt-2 fs-7 text-danger d-flex align-items-center"
       *ngIf="
         data.endDate && (data?.actualEnd | checkDuedateValue : data?.endDate)
@@ -118,7 +119,7 @@
       <span class="ms=2">
         {{data.endDate && (data?.actualEnd | checkDuedateValue : data?.endDate : 'text')}}
       </span>
-    </div>
+    </div> -->
     <div class="d-flex justify-content-between align-items-center mt-2">
       <div class="d-flex align-items-center">
         <codx-vll

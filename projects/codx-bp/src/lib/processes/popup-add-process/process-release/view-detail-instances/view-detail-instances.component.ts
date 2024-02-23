@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { ApiHttpService } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
@@ -6,7 +6,8 @@ import { isObservable } from 'rxjs';
 @Component({
   selector: 'lib-view-detail-instances',
   templateUrl: './view-detail-instances.component.html',
-  styleUrls: ['./view-detail-instances.component.css'],
+  styleUrls: ['./view-detail-instances.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ViewDetailInstancesComponent {
   @Input() dataSelected: any;
@@ -18,6 +19,7 @@ export class ViewDetailInstancesComponent {
   id: any;
   isShow = false;
   info: any;
+  progressIns = 0;
   constructor(private changeDetectorRef: ChangeDetectorRef, private shareService: CodxShareService , private api: ApiHttpService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -35,6 +37,9 @@ export class ViewDetailInstancesComponent {
         this.getInfo();
         this.getProcess();
         this.loaded = true;
+        if(this.dataSelected?.countTasks > 0){
+          this.progressIns = this.dataSelected?.completedTasks ? this.dataSelected?.completedTasks / this.dataSelected?.countTasks : 0;
+        }
 
       }
     }

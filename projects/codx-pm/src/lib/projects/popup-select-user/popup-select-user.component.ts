@@ -7,7 +7,6 @@ import { CodxShareService } from "projects/codx-share/src/public-api";
   selector: 'popup-select-user',
   templateUrl: './popup-select-user.component.html',
   styleUrls: ['./popup-select-user.component.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class PopupSelectUserComponent implements OnInit, AfterViewInit{
 

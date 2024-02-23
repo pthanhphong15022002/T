@@ -43,7 +43,27 @@ export class ModeviewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.resetCount();
     this.getVll();
+  }
+
+  resetCount()
+  {
+    if(this.data.length > 2) return; 
+    this.count.text = 0,
+    this.count.valueList = 0,
+    this.count.combobox = 0,
+    this.count.attachment = 0,
+    this.count.number = 0,
+    this.count.yesNo = 0,
+    this.count.share = 0,
+    this.count.rank = 0,
+    this.count.table = 0,
+    this.count.progress = 0,
+    this.count.phone = 0,
+    this.count.email = 0,
+    this.count.address = 0,
+    this.count.expression = 0;
   }
 
   btnClick()

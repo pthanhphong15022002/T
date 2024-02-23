@@ -1,7 +1,32 @@
-import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
-import { AnimationModel, ProgressBar } from '@syncfusion/ej2-angular-progressbar';
-import { AuthStore, ButtonModel, DataRequest, DialogModel, FormModel, NotificationsService, PageLink, PageTitleService, SidebarModel, TenantStore, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
+import {
+  AnimationModel,
+  ProgressBar,
+} from '@syncfusion/ej2-angular-progressbar';
+import {
+  AuthStore,
+  ButtonModel,
+  DataRequest,
+  DialogModel,
+  FormModel,
+  NotificationsService,
+  PageLink,
+  PageTitleService,
+  SidebarModel,
+  TenantStore,
+  UIComponent,
+  Util,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { Subject, takeUntil } from 'rxjs';
@@ -38,11 +63,13 @@ export class CashreceiptsComponent extends UIComponent {
   legalName: any; //? tên công ty
   dataDefault: any; //? data default của phiếu
   hideFields: Array<any> = []; //? array field được ẩn lấy từ journal
-  button: ButtonModel[] = [{
-    //? nút thêm phiếu
-    id: 'btnAdd',
-    icon: 'icon-i-file-earmark-plus',
-  }];
+  button: ButtonModel[] = [
+    {
+      //? nút thêm phiếu
+      id: 'btnAdd',
+      icon: 'icon-i-file-earmark-plus',
+    },
+  ];
   bhLogin: boolean = false;
   bankPayID: any;
   bankNamePay: any;
@@ -57,7 +84,7 @@ export class CashreceiptsComponent extends UIComponent {
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private codxCommonService: CodxCommonService,
-    private tenant: TenantStore,
+    private tenant: TenantStore
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
@@ -71,11 +98,15 @@ export class CashreceiptsComponent extends UIComponent {
           this.legalName = res[0].legalName; //? get tên company
         }
       });
-    this.router.params
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((params) => {
-        this.journalNo = params?.journalNo; //? get số journal từ router
-      });
+    this.router.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      this.journalNo = params?.journalNo; //? get số journal từ router
+    });
+
+    this.router.data.subscribe((res: any) => {
+      if (res && res['runMode'] && res['runMode'] == '1') {
+        this.runmode = res.runMode;
+      }
+    });
   }
   //#endregion
 
@@ -96,6 +127,7 @@ export class CashreceiptsComponent extends UIComponent {
         if (res) {
           this.headerText = res?.defaultName || res?.customName;
           this.runmode = res?.runMode; //? lấy runmode
+          if (!this.runmode) this.runmode = res?.runMode;
           this.detectorRef.detectChanges();
         }
       });
@@ -109,7 +141,7 @@ export class CashreceiptsComponent extends UIComponent {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
           collapsed: true,
-          widthLeft: '23%'
+          widthLeft: '23%',
         },
       },
       {
@@ -134,7 +166,6 @@ export class CashreceiptsComponent extends UIComponent {
         sameData: true,
         model: {
           template2: this.templateGrid,
-
         },
 
         request: { service: 'AC' },
@@ -148,8 +179,8 @@ export class CashreceiptsComponent extends UIComponent {
           request: {
             service: 'AC',
           },
-          idField: 'recID'
-        }
+          idField: 'recID',
+        },
       },
     ];
     this.acService.setChildLinks();
@@ -163,7 +194,7 @@ export class CashreceiptsComponent extends UIComponent {
   //#region Event
   /**
    * * Hàm click button thêm mới
-   * @param event 
+   * @param event
    */
   toolbarClick(event) {
     switch (event.id) {
@@ -175,8 +206,8 @@ export class CashreceiptsComponent extends UIComponent {
 
   /**
    * *Hàm click các morefunction
-   * @param event 
-   * @param data 
+   * @param event
+   * @param data
    */
   clickMoreFunction(e, data) {
     switch (e.functionID) {
@@ -261,7 +292,7 @@ export class CashreceiptsComponent extends UIComponent {
                 }
               }
             }
-          })
+          });
         }
       });
   }
@@ -304,13 +335,13 @@ export class CashreceiptsComponent extends UIComponent {
               }
             }
           }
-        })
+        });
       });
   }
 
   /**
    * *Hàm sao chép chứng từ
-   * @param event 
+   * @param event
    * @param dataCopy : data chứng từ sao chép
    */
   copyVoucher(dataCopy) {
@@ -318,9 +349,9 @@ export class CashreceiptsComponent extends UIComponent {
     let newdataCopy = { ...dataCopy };
     if (this.journal && this.journal.assignRule == '0') {
       let data = {
-        journalType : this.journal.journalType,
-        journalNo : this.journalNo
-      }
+        journalType: this.journal.journalType,
+        journalNo: this.journalNo,
+      };
       let opt = new DialogModel();
       opt.FormModel = this.view.formModel;
       let dialog = this.callfc.openForm(
@@ -374,7 +405,7 @@ export class CashreceiptsComponent extends UIComponent {
                             }
                           }
                         }
-                      })
+                      });
                       this.view.dataService
                         .add(datas)
                         .pipe(takeUntil(this.destroy$))
@@ -384,7 +415,7 @@ export class CashreceiptsComponent extends UIComponent {
               }
             });
         }
-      })
+      });
     } else {
       this.view.dataService
         .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
@@ -423,7 +454,7 @@ export class CashreceiptsComponent extends UIComponent {
                         }
                       }
                     }
-                  })
+                  });
                   this.view.dataService
                     .add(datas)
                     .pipe(takeUntil(this.destroy$))
@@ -440,14 +471,17 @@ export class CashreceiptsComponent extends UIComponent {
    * @param dataDelete : data xóa
    */
   deleteVoucher(dataDelete) {
-    this.view.dataService.delete([dataDelete], true).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
-      if (res && !res?.error) {
-        if (this.view.dataService.data.length == 0) {
-          this.itemSelected = undefined;
-          this.detectorRef.detectChanges();
+    this.view.dataService
+      .delete([dataDelete], true)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res && !res?.error) {
+          if (this.view.dataService.data.length == 0) {
+            this.itemSelected = undefined;
+            this.detectorRef.detectChanges();
+          }
         }
-      }
-    });
+      });
   }
 
   /**
@@ -474,13 +508,12 @@ export class CashreceiptsComponent extends UIComponent {
       optionSidebar,
       this.view.funcID
     );
-    dialog.closed.subscribe((res) => {
-    })
+    dialog.closed.subscribe((res) => {});
   }
 
   /**
    * *Xuất file theo template(Excel,PDF,...)
-   * @param data 
+   * @param data
    */
   exportVoucher(data) {
     var gridModel = new DataRequest();
@@ -508,19 +541,29 @@ export class CashreceiptsComponent extends UIComponent {
 
   /**
    * *Hàm ẩn hiện các morefunction của từng chứng từ ( trên view danh sách và danh sách chi tiết)
-   * @param event : danh sách morefunction 
+   * @param event : danh sách morefunction
    * @param data
-   * @returns 
+   * @returns
    */
   changeMFDetail(event: any, type: any = '') {
     let data = this.view.dataService.dataSelected;
-    this.acService.changeMFCashReceipt(event, data, type, this.journal, this.view.formModel);
+    if (this.runmode == '1') {
+      this.shareService.changeMFApproval(event, data.unbounds);
+    } else {
+      this.acService.changeMFCashReceipt(
+        event,
+        data,
+        type,
+        this.journal,
+        this.view.formModel
+      );
+    }
   }
 
   /**
    * * Hàm get data và get dữ liệu chi tiết của chứng từ khi được chọn
-   * @param event 
-   * @returns 
+   * @param event
+   * @returns
    */
   onSelectedItem(event) {
     this.itemSelected = event;
@@ -547,7 +590,7 @@ export class CashreceiptsComponent extends UIComponent {
 
   /**
    * *Hàm gửi duyệt chứng từ (xử lí cho MF gửi duyệt)
-   * @param data 
+   * @param data
    */
   releaseVoucher(text: any, data: any) {
     this.acService
@@ -590,7 +633,7 @@ export class CashreceiptsComponent extends UIComponent {
 
   /**
    * *Hàm hủy gửi duyệt chứng từ (xử lí cho MF hủy yêu cầu duyệt)
-   * @param data 
+   * @param data
    */
   cancelReleaseVoucher(text: any, data: any) {
     this.codxCommonService
@@ -616,7 +659,7 @@ export class CashreceiptsComponent extends UIComponent {
 
   /**
    * *Hàm kiểm tra tính hợp lệ của chứng từ (xử lí cho MF kiểm tra tính hợp lệ)
-   * @param data 
+   * @param data
    */
   validateVourcher(text: any, data: any) {
     this.api
@@ -633,7 +676,7 @@ export class CashreceiptsComponent extends UIComponent {
 
   /**
    * *Hàm ghi sổ chứng từ (xử lí cho MF ghi sổ)
-   * @param data 
+   * @param data
    */
   postVoucher(text: any, data: any) {
     this.api
@@ -690,21 +733,26 @@ export class CashreceiptsComponent extends UIComponent {
       data,
       this.journal,
       this.journalNo,
-      action
+      action,
     ]);
   }
 
   /**
    * *Hàm in chứng từ (xử lí cho MF In)
-   * @param data 
-   * @param reportID 
-   * @param reportType 
+   * @param data
+   * @param reportID
+   * @param reportType
    */
   printVoucher(data: any, reportID: any, reportType: string = 'V') {
     let params = {
       Recs: data?.recID,
-    }
-    this.shareService.printReport(reportID, reportType, params, this.view?.formModel);
+    };
+    this.shareService.printReport(
+      reportID,
+      reportType,
+      params,
+      this.view?.formModel
+    );
   }
 
   /**
