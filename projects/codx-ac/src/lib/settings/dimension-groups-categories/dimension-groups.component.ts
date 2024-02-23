@@ -36,6 +36,7 @@ export class DimensionGroupsComponent extends UIComponent {
   }];
   headerText: any;
   funcName: any;
+  itemSelected:any;
   private destroy$ = new Subject<void>();
   constructor(
     private inject: Injector,
@@ -61,6 +62,7 @@ export class DimensionGroupsComponent extends UIComponent {
         active: true,
         sameData: true,
         model: {
+          hideMoreFunc:true,
           template2: this.templateGrid,
         },
       },
@@ -85,7 +87,21 @@ export class DimensionGroupsComponent extends UIComponent {
         break;
     }
   }
-  clickMF(e, data) {
+  // clickMF(e, data) {
+  //   switch (e.functionID) {
+  //     case 'SYS02':
+  //       this.delete(data);
+  //       break;
+  //     case 'SYS03':
+  //       this.edit(e, data);
+  //       break;
+  //     case 'SYS04':
+  //       this.copy(e, data);
+  //       break;
+  //   }
+  // }
+
+  clickMoreFunction(e, data) {
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -216,7 +232,26 @@ export class DimensionGroupsComponent extends UIComponent {
     this.view.dataService
       .delete([dataDelete], true)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {});
+      .subscribe((res: any) => {
+        if (res && !res?.error) {
+          if (this.view.dataService.data.length == 0) {
+            this.itemSelected = undefined;
+            this.detectorRef.detectChanges();
+          }
+        }
+      });
+  }
+
+  changeDataMF(event,type:any=''){
+    event.reduce((pre,element) => {
+      if(type === 'views') element.isbookmark = true;
+      if(!['SYS03','SYS02','SYS04'].includes(element.functionID)) element.disabled = true;
+    },{})
+  }
+
+  onSelectedItem(event) {
+    this.itemSelected = event;
+    this.detectorRef.detectChanges();
   }
   //#endregion
 }
