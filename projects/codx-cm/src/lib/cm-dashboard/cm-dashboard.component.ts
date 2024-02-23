@@ -527,7 +527,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     title: 'Tổng số',
     minimum: 0,
     // maximum: 100,
-    interval: 10,
+    // interval: 10,
     // lineStyle: { width: 0 },
     majorTickLines: { width: 0 },
     majorGridLines: { width: 1 },
@@ -539,7 +539,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     title: 'Tổng số',
     minimum: 0,
     // maximum: 100,
-    interval: 10,
+    // interval: 10,
     // lineStyle: { width: 0 },
     majorTickLines: { width: 0 },
     majorGridLines: { width: 1 },
@@ -551,7 +551,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     title: 'Tổng số',
     minimum: 0,
     // maximum: 100,
-    interval: 10,
+    //  interval: 10,
     // lineStyle: { width: 0 },
     majorTickLines: { width: 0 },
     majorGridLines: { width: 1 },
@@ -563,7 +563,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     title: 'Tổng số',
     minimum: 0,
     // maximum: 100,
-    interval: 10,
+    // interval: 10,
     // lineStyle: { width: 0 },
     majorTickLines: { width: 0 },
     majorGridLines: { width: 1 },
@@ -607,7 +607,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     title: 'm2',
     minimum: 0,
     // maximum: 100,
-    interval: 50,
+    // interval: 50,
     majorTickLines: { width: 0 },
     majorGridLines: { width: 1 },
     minorGridLines: { width: 1 },
@@ -634,13 +634,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       width: 90,
     },
     {
-      field: 'IDIM0',
+      field: 'idiM0',
       headerText: 'Năm xây dựng',
       textAlign: 'Left',
       width: 90,
     },
     {
-      field: 'IDIM1',
+      field: 'idiM1',
       headerText: 'Năm hoàn thành',
       textAlign: 'Left',
       width: 90,
@@ -664,13 +664,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       width: 90,
     },
     {
-      field: 'FillPercent',
+      field: 'fillPercent',
       headerText: '% lấp đầy',
       textAlign: 'Left',
       width: 90,
     },
     {
-      field: 'VacantPercent',
+      field: 'vacantPercent',
       headerText: '% trống',
       textAlign: 'Left',
       width: 90,
@@ -681,7 +681,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     title: '',
     minimum: 0,
     // maximum: 100,
-    interval: 1000,
+    // interval: 1000,
     majorTickLines: { width: 0 },
     majorGridLines: { width: 1 },
     minorGridLines: { width: 1 },
@@ -3114,14 +3114,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let fieldGroup = isIn ? 'quarterApproved' : 'quarterDisposal';
     let countAll = dataSet?.length;
 
-    let renderMax = Math.floor(countAll / 10);
+    // let renderMax = Math.floor(countAll / 10);
 
-    if (renderMax > 10) {
-      let mod = renderMax % 10;
-      renderMax = Math.floor(renderMax / 10) * 10 + (mod > 5 ? 10 : 5);
-      if (isIn) this.primaryYAxisColumnEpIn.interval = renderMax;
-      else this.primaryYAxisColumnEpOut.interval = renderMax;
-    }
+    // if (renderMax > 10) {
+    //   let mod = renderMax % 10;
+    //   renderMax = Math.floor(renderMax / 10) * 10 + (mod > 5 ? 10 : 5);
+    //   if (isIn) this.primaryYAxisColumnEpIn.interval = renderMax;
+    //   else this.primaryYAxisColumnEpOut.interval = renderMax;
+    // }
 
     let listEnterpriseNew = this.groupBy(dataSet, fieldGroup);
 
@@ -3323,14 +3323,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let totalUpAndDownArea = this.total(dataSet, fieldFiter);
     // let totalArea = totalRentalArea + totalUpAndDownArea;
     let totalArea = totalQuotationArea + totalUpAndDownArea;
-    let renderMax = Math.floor(totalArea / 10);
 
-    if (renderMax > 10) {
-      let mod = renderMax % 10;
-      renderMax = Math.floor(renderMax / 10) * 10 + (mod > 5 ? 10 : 5);
-      if (isIn) this.primaryYAxisColumnAreaIn.interval = renderMax;
-      else this.primaryYAxisColumnAreaOut.interval = renderMax;
-    }
+    // let renderMax = Math.floor(totalArea / 10);
+
+    // if (renderMax > 10) {
+    //   let mod = renderMax % 10;
+    //   renderMax = Math.floor(renderMax / 10) * 10 + (mod > 5 ? 10 : 5);
+    //    if (isIn) this.primaryYAxisColumnAreaIn.interval = renderMax;
+    //    else this.primaryYAxisColumnAreaOut.interval = renderMax;
+    // }
     if (listDataGroup) {
       this.vllQuaters?.forEach((qt) => {
         let key = qt.value;
@@ -3480,20 +3481,20 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //------------------OfficeSpaceForRent -CMRQTSC010--------------------//
   viewDashBoardsOfficeSpaceForRent(dataSet) {
     this.dataSpaceForRent = dataSet;
-    let max = 0;
-    if (this.dataSpaceForRent?.length > 0) {
-      this.dataSpaceForRent.forEach((x) => {
-        if (max < x.usableArea) max = x.usableArea;
-      });
+    // let max = 0;
+    // if (this.dataSpaceForRent?.length > 0) {
+    //   this.dataSpaceForRent.forEach((x) => {
+    //     if (max < x.usableArea) max = x.usableArea;
+    //   });
 
-      let renderMax = Math.floor(max / 10);
+    //   let renderMax = Math.floor(max / 10);
 
-      if (renderMax > 50) {
-        let mod = renderMax % 10;
-        renderMax = Math.floor(renderMax / 10) * 10 + (mod > 5 ? 10 : 5);
-        this.primaryYAxisColumnSFR.interval = renderMax;
-      }
-    }
+    //   if (renderMax > 50) {
+    //     let mod = renderMax % 10;
+    //     renderMax = Math.floor(renderMax / 10) * 10 + (mod > 5 ? 10 : 5);
+    //     this.primaryYAxisColumnSFR.interval = renderMax;
+    //   }
+    // }
   }
   onScroll(event) {
     debugger;
