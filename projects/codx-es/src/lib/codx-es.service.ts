@@ -1369,7 +1369,7 @@ export class CodxEsService {
   //#endregion
   addOrEditSignArea(recID, fileID, area, areaID,mode="1"): Observable<any> {
     let data = [recID, fileID, area, areaID];
-    if(mode ="1"){
+    if(mode =="1"){
       return this.api.execSv(
         'ES',
         'ERM.Business.ES',
@@ -1384,7 +1384,7 @@ export class CodxEsService {
         'ERM.Business.BP',
         'ProcessesBusiness',
         'AddOrEditAreaAsync',
-        data
+        [recID, fileID, area, areaID]
       );
     }
     

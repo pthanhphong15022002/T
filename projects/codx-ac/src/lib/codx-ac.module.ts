@@ -246,7 +246,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'issuetransaction/:funcID/:journalNo',
+        path: 'vouchersissues/:funcID/:journalNo',
         component: ReceiptTransactionsComponent,
         data: { noReuse: true },
       },

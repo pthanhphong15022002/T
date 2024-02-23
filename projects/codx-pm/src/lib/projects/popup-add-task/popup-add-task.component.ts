@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild, ViewEncapsulation } from "@angular/core";
-import { NotificationsService, AuthService, CacheService, AuthStore, DialogData, DialogRef, DialogModel, CallFuncService, ApiHttpService, RequestOption } from "codx-core";
+import { NotificationsService, AuthService, CacheService, AuthStore, DialogData, DialogRef, DialogModel, CallFuncService, ApiHttpService, RequestOption, SidebarModel } from "codx-core";
 import { CodxCommonService } from "projects/codx-common/src/lib/codx-common.service";
 import { CodxShareService } from "projects/codx-share/src/public-api";
 import { L10n,setCulture } from '@syncfusion/ej2-base';
@@ -218,7 +218,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     }
   }
 
-  save(){
+  async save(){
     if(this.action == 'add'){
       this.data.status='10';
       this.data.category='3';
@@ -257,46 +257,29 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
       this.notificationsService.notifyCode('TM027');
       return
     }
-    // this.dialog.dataService
-    //     .save((opt: RequestOption) => {
-    //       opt.methodName = 'AddTaskAsync';
-    //       opt.data = [
-    //         this.data,
-    //         this.funcID,
-    //         this.members,
-    //         this.todoList,
-    //       ];
-    //       return true;
-    //     })
-    //     .subscribe((res) => {
-    //       this.attachment?.clearData();
-    //       if (res && res.save) {
-    //         this.dialog.close(res.save[0]);
-    //       }
-    //     });
-    if(this.action=='add'){
-      this.api
-      .exec('TM', 'TaskBusiness', 'AddTaskAsync', [
-        this.data,
-        this.funcID,
-        this.members,
-        this.todoList,
-      ])
-      .subscribe((res: any) => {
 
-        this.attachment?.clearData();
-        this.dialog.close(res);
-        if (res) {
-          if(res.length){
-            let item= res.find((x:any)=>x.category=='3');
-            if(item){
-              this.dialog.dataService.add(item, 0, false).subscribe()
-            }
-          }
-          this.notificationsService.notifyCode('SYS006');
-        } else this.notificationsService.notifyCode('SYS023');
-      });
+    if (this.attachment && this.attachment.fileUploadList.length)
+    (await this.attachment.saveFilesObservable()).subscribe((res) => {
+      if (res) {
+        let attachments = Array.isArray(res) ? res.length : 1;
+        if (this.action == 'edit') {
+          this.data.attachments += attachments;
+          //this.checkUpdateStatusTask();
+          // this.updateTask();
+        } else {
+          this.data.attachments = attachments;
+          this.createTask();
+        }
+      }
+    });
+  else {
+    if (this.action == 'edit') {
+      //this.checkUpdateStatusTask();
+      //this.updateTask();
+    } else{
+      this.createTask();
     }
+  }
 
   }
 
@@ -382,5 +365,64 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
           this.data.assignTo = this.listUser.join(';');
         }
       });
+  }
+
+  assignTask(){
+    this.dialog.close('assignTask');
+    // let _dialog = this.dialog;
+    // setTimeout(()=>{
+    //   _dialog.dataService.addNew().subscribe((res) => {
+    //     let option = new SidebarModel();
+    //     option.DataService = _dialog?.dataService;
+    //     option.FormModel = this.formModel;
+    //     option.Width = '550px';
+    //     option.zIndex=9998;
+    //     res.parentID = this.data.recID;
+    //     res.projectID = this.data.projectID;
+    //     let dialogAdd = this.callfc.openSide(
+    //       PopupAddTaskComponent,
+    //       [res,'add',this.projectData],
+    //       option
+    //     );
+    //     dialogAdd.closed.subscribe((returnData) => {
+    //       if (returnData?.event) {
+    //         //this.view?.dataService?.update(returnData?.event);
+    //       } else {
+    //         _dialog.dataService.clear();
+    //       }
+    //     });
+
+    //   })
+    // },500)
+
+
+  }
+
+  createTask(){
+    if(this.action=='add'){
+
+      this.api
+      .exec('TM', 'TaskBusiness', 'AddTaskAsync', [
+        this.data,
+        this.funcID,
+        this.members,
+        this.todoList,
+      ])
+      .subscribe((res: any) => {
+
+        this.attachment?.clearData();
+        this.dialog.close(res);
+        if (res) {
+          if(res.length){
+            let item= res.find((x:any)=>x.category=='3');
+            if(item){
+              this.dialog.dataService.add(item, 0, false).subscribe()
+            }
+          }
+          this.notificationsService.notifyCode('SYS006');
+        } else this.notificationsService.notifyCode('SYS023');
+      });
+    }
+
   }
 }
