@@ -19,6 +19,7 @@ export class ViewListInstancesComponent {
   countOverDueTask = 0;
   info: any;
   progress = 0;
+  process: any;
   constructor(
     private api: ApiHttpService,
     private shareService: CodxShareService
@@ -31,24 +32,23 @@ export class ViewListInstancesComponent {
   }
 
   getProcess() {
-    if (this.lstStages == null || this.lstStages?.length == 0) {
-      this.api
-        .execSv<any>(
-          'BP',
-          'BP',
-          'ProcessesBusiness',
-          'GetAsync',
-          this.dataSelected.processID
-        )
-        .subscribe((item) => {
-          if (item) {
-            const process = item;
-            this.lstStages = process?.steps?.filter(
-              (x) => x.activityType == 'Stage'
-            );
-          }
-        });
-    }
+    this.api
+      .execSv<any>(
+        'BP',
+        'BP',
+        'ProcessesBusiness',
+        'GetAsync',
+        this.dataSelected.processID
+      )
+      .subscribe((item) => {
+        if (item) {
+          const process = item;
+          this.process = process;
+          this.lstStages = process?.steps?.filter(
+            (x) => x.activityType == 'Stage'
+          );
+        }
+      });
   }
 
   getInfo() {
@@ -105,12 +105,11 @@ export class ViewListInstancesComponent {
                 if (new Date(ele.endDate) < new Date(ele.actualEnDate))
                   this.countOverDueTask++;
               } else {
-                if (new Date(ele.endDate) < new Date())
-                  this.countOverDueTask++;
+                if (new Date(ele.endDate) < new Date()) this.countOverDueTask++;
               }
             }
 
-            if(this.countTask > 0) {
+            if (this.countTask > 0) {
               let rate = (this.countTaskDone / this.countTask) * 100;
               this.progress = rate > 0 ? Math.round(rate) : 0;
             }

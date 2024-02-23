@@ -13,13 +13,13 @@
     <div class="text-gray-700 d-flex">
       <codx-label
         class="label-colon"
-        fiedName="CreatedOn"
+        fiedName="list_ProcessName"
         [setRequire]="false"
         [formModel]="formModel"
-        [default]="'Ngày tạo'"
+        [default]="'Qui trình'"
       ></codx-label>
       <div class="">
-        <span>{{ dataSelected.createdOn | date : "dd/MM/yyyy" }}</span>
+        <span>{{ process?.processName }}</span>
       </div>
     </div>
   </div>
