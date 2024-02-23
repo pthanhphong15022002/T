@@ -78,7 +78,6 @@ export class BpTasksComponent
     };
     option.zIndex = 1010;
     this.cache.gridViewSetup('BPTasks', 'grvBPTasks').subscribe((grid) => {
-      debugger;
       const obj = {
         data: e?.data,
         action: action,

@@ -170,3 +170,11 @@ export class tempLoadPDF {
   isSettingMode: boolean;
   dynamicApprovers: Array<Approver>;
 }
+export class tempSignPDFInput {
+  taskID: string;
+  cert: string;
+  supplier: string;
+  signatureRecID: string;
+  fileIDs: string;
+  approver: string;
+}
