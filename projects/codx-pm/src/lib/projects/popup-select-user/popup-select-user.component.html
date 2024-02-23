@@ -15,7 +15,7 @@
   <div class="row">
     <codx-label fiedName="Resources" [formModel]="form.formModel" default="Người xử lí">
     </codx-label>
-    <div  style="margin: 0 auto; width:100%;" *ngIf="projectMemberType=='1'">
+    <!-- <div  style="margin: 0 auto; width:100%;" *ngIf="projectMemberType=='1'">
       <ejs-multiselect id='multiselect-checkbox' #checkbox [dataSource]="projectData?.permissions" [fields]='fields'
       [mode]="'CheckBox'"  [showDropDownIcon]="true" showSelectAll='true' [popupHeight]="'400px'" [popupWidth]="'400px'" [filterBarPlaceholder]="'Tìm kiếm...'" locale="vi" (valueChange)="valueChange($event)">
         <ng-template #itemTemplate let-data>
@@ -24,6 +24,9 @@
           </div>
         </ng-template>
       </ejs-multiselect>
+    </div> -->
+    <div  style="margin: 0 auto; width:100%;" *ngIf="projectMemberType=='1'">
+      <codx-input type="combobox" refType="3" refValue="ProjectMembers" [model]="projectData" [multiple]="true" (valueChange)="cbxChange($event)"></codx-input>
     </div>
   </div>
 </ng-template>
