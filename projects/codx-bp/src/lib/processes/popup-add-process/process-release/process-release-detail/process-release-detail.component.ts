@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, OnInit, Optional, SimpleChanges } from '@angular/core';
-import { ApiHttpService, CacheService, CallFuncService, DialogData, DialogRef, SidebarModel } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, SidebarModel } from 'codx-core';
 import moment from 'moment';
+import { userInfo } from 'os';
 import { PopupBpTasksComponent } from 'projects/codx-bp/src/lib/bp-tasks/popup-bp-tasks/popup-bp-tasks.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -28,6 +29,7 @@ export class ProcessReleaseDetailComponent implements OnInit , OnChanges{
     private cache: CacheService,
     private api: ApiHttpService,
     private callFc: CallFuncService,
+    private auth: AuthStore,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   )
@@ -187,6 +189,11 @@ export class ProcessReleaseDetailComponent implements OnInit , OnChanges{
     }
     else if(dt)
     {
+      let privileged = true;
+      if(dt?.permissions)
+      {
+          privileged = dt?.permissions.some(x=>x.objectID == this.info.userID && x.objectType == "U");
+      }
       var option = new SidebarModel();
       // option.FormModel = this.view.formModel; //Đợi có grid mở lên
       option.FormModel = {
@@ -195,7 +202,7 @@ export class ProcessReleaseDetailComponent implements OnInit , OnChanges{
         entityName: 'BP_Tasks',
       };
       option.zIndex = 1060;
-      let popup = this.callFc.openSide(PopupBpTasksComponent, {data: dt,process:this.process,dataIns: this.data}, option);
+      let popup = this.callFc.openSide(PopupBpTasksComponent, {data: dt,process:this.process,dataIns: this.data,privileged:privileged}, option);
       popup.closed.subscribe((res) => {
         if(res && res?.event)
         {

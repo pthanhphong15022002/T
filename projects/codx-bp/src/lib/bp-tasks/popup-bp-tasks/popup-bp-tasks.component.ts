@@ -43,6 +43,7 @@ export class PopupBpTasksComponent implements OnInit {
   fileIDs = [];
   action = '';
   process: any;
+  privileged = true;
   constructor(
     private authstore: AuthStore,
     private callfc: CallFuncService,
@@ -62,6 +63,7 @@ export class PopupBpTasksComponent implements OnInit {
       ? JSON.parse(JSON.stringify(dt?.data?.dataIns))
       : null;
     this.user = this.authstore.get();
+    if(dt?.data?.privileged != null) this.privileged = dt?.data?.privileged;
     this.subTitle = dt?.data?.subTitle;
   }
   ngOnInit(): void {
