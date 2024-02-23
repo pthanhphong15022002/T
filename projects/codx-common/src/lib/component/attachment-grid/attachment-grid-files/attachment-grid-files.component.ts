@@ -10,6 +10,7 @@ export class AttachmentGridFilesComponent implements OnInit{
   listData: any;
   files:any;
   dialog:any;
+  referType:any
   constructor(
     private api: ApiHttpService,
     @Optional() dialog: DialogRef,
@@ -17,7 +18,8 @@ export class AttachmentGridFilesComponent implements OnInit{
   )
   {
     this.dialog = dialog;
-    this.listData = dt?.data;
+    this.listData = dt?.data?.data;
+    this.referType = dt?.data?.referType
   }
   ngOnInit(): void {
     if(this.listData && this.listData.length>0)
@@ -35,6 +37,8 @@ export class AttachmentGridFilesComponent implements OnInit{
       if(item)
       {
         this.files = item;
+        if(this.referType) this.files = this.files.filter(x=>x.referType == this.referType)
+        else this.files = this.files.filter(x=>x.referType == '')
       }
     })
   }

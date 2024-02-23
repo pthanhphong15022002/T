@@ -43,6 +43,16 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
+        path: 'projects/:funcID/:projectID',
+        component: ProjectTasksViewComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'pmtask/:funcID',
+        component: ProjectTasksViewComponent,
+        data: { noReuse: true },
+      },
+      {
         path: 'taskextends/:funcID',
         component: TaskExtendsComponent,
       },

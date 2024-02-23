@@ -1,0 +1,37 @@
+<codx-form #form [headerText]="'Chọn nhà cung cấp chữ ký số'" [lblHeader]="'lblSupplier'" [body]="body"
+  [footer]="footer" [dialog]="dialog">
+  <ng-template #body>
+    <div class="px-5 d-flex flex-row justify-content-between">
+      <div *ngFor="let spl of vllSupplier; let index = index">
+        <div class="d-flex flex-column justify-content-center align-items-center">
+          <div class="d-flex flex-column ">
+              <img  class="h-80px w-80px "
+                [src]="'../assets/themes/es/default/img/' +spl.icon" />
+          </div>
+          <div class="d-flex flex-row align-items-center ">
+            <div class="pe-7">
+              <codx-input  type="radio" name="cert" [checked]="index==0"
+                (valueChange)="changeSupplier(spl?.value)">
+              </codx-input>              
+            </div>
+            <span class="pt-3 fs-6 fw-bold">
+              {{ spl.text }}
+            </span>
+          </div>
+          
+          
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
+
+  <ng-template #footer>
+    <div [class]="'justify-content-end card-footer d-flex'">
+      <button type="button" class="btn btn-primary" (click)="saveForm()">
+        <codx-label name="lblSave" default="Xác nhận" [gridViewName]="" [formName]="">
+        </codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

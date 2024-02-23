@@ -1,0 +1,265 @@
+<codx-form #form [headerText]="headerText" [body]="body" [formModel]="dialog.formModel" [dialog]="dialog"
+    [footer]="footer" [data]="dataDefault">
+</codx-form>
+<ng-template #body>
+    <ng-container *ngIf="form?.formGroup">
+        <div class="row mt-3">
+            <div class="col-4">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="DimGroupID"
+                    ></codx-label>
+                    <codx-input [disabled]="form?.data?._keyAuto == 'DimGroupID' ? true : false || form?.data?.isEdit ? true : false" [Group]="form.formGroup" [formModel]="form.formModel" field="dimGroupID">
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="DimGroupName"
+                    ></codx-label>
+                    <codx-input [Group]="form.formGroup" field="dimGroupName" [formModel]="form.formModel">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="mt-2 mb-1 text-primary fw-bold fs-5">
+            <codx-label [formModel]="form.formModel" default="Thuộc tính mặt hàng"></codx-label>
+        </div>
+        <div class="d-flex align-items-center py-3">
+            <div class="w-100">
+                <div class="text-dark fw-bold fs-6 mb-1">
+                    <codx-label fiedName="Active0" [formModel]="form.formModel"></codx-label>
+                </div>
+                <!-- <div class="text-gray-600 fs-7">Quy cách đóng gói: Thùng,bao,họp,bịch,viên....</div> -->
+                <div class="text-gray-600 fs-7">{{form.gridviewSetup['Active0'].description}}</div>
+            </div>
+            <div class="ms-6 d-flex align-items-center">
+                <span class="me-3 mt-1">
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="active0" (valueChange)="valueChange($event,'0')">
+                    </codx-input>
+                </span>
+                <span *ngIf="form?.data?.active0" type="button" class="btn btn-icon btn-sm btn-light-primary"
+                    (click)="openPopupSetup('Active0','0')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!form?.data?.active0" type="button" class="btn btn-icon">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+            </div>
+        </div>
+        <hr class="my-0" />
+        <div class="d-flex align-items-center py-3">
+            <div class="w-100">
+                <div class="text-dark fw-bold fs-6 mb-1">
+                    <codx-label fiedName="Active1" [formModel]="form.formModel"></codx-label>
+                </div>
+                <!-- <div class="text-gray-600 fs-7">Thuộc tính bao gồm: chất liệu(sắt,nhựa gỗ,...); xuất
+                    xứ:US,JP,EU,...</div> -->
+                <div class="text-gray-600 fs-7">{{form.gridviewSetup['Active1'].description}}</div>
+            </div>
+            <div class="ms-6 d-flex align-items-center">
+                <span class="me-3 mt-1">
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="active1" (valueChange)="valueChange($event,'1')">
+                    </codx-input>
+                </span>
+                <span *ngIf="form?.data?.active1" type="button" class="btn btn-icon btn-sm btn-light-primary"
+                    (click)="openPopupSetup('Active1','1')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!form?.data?.active1" type="button" class="btn btn-icon">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+            </div>
+        </div>
+        <hr class="my-0" />
+        <div class="d-flex align-items-center py-3">
+            <div class="w-100">
+                <div class="text-dark fw-bold fs-6 mb-1">
+                    <codx-label fiedName="Active2" [formModel]="form.formModel"></codx-label>
+                </div>
+                <!-- <div class="text-gray-600 fs-7">Màu sắc bao gồm: Xanh,đỏ,vàng,tím,đen...</div> -->
+                <div class="text-gray-600 fs-7">{{form.gridviewSetup['Active2'].description}}</div>
+            </div>
+            <div class="ms-6 d-flex align-items-center">
+                <span class="me-3 mt-1">
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="active2" (valueChange)="valueChange($event,'2')">
+                    </codx-input>
+                </span>
+                <span *ngIf="form?.data?.active2" type="button" class="btn btn-icon btn-sm btn-light-primary"
+                    (click)="openPopupSetup('Active2','2')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!form?.data?.active2" type="button" class="btn btn-icon">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+            </div>
+        </div>
+        <hr class="my-0" />
+        <div class="d-flex align-items-center py-3">
+            <div class="w-100">
+                <div class="text-dark fw-bold fs-6 mb-1">
+                    <codx-label fiedName="Active3" [formModel]="form.formModel"></codx-label>
+                </div>
+                <!-- <div class="text-gray-600 fs-7">Qui cách bao gồm: dày-rộng-dài; phi(tròn)</div> -->
+                <div class="text-gray-600 fs-7">{{form.gridviewSetup['Active3'].description}}</div>
+            </div>
+            <div class="ms-6 d-flex align-items-center">
+                <span class="me-3 mt-1">
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="active3" (valueChange)="valueChange($event,'3')">
+                    </codx-input>
+                </span>
+                <span *ngIf="form?.data?.active3" type="button" class="btn btn-icon btn-sm btn-light-primary"
+                    (click)="openPopupSetup('Active3','3')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!form?.data?.active3" type="button" class="btn btn-icon">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+            </div>
+        </div>
+        <div class="mt-2 text-primary fw-bold fs-5">
+            <codx-label [formModel]="form.formModel" default="Cấp tồn kho"></codx-label>
+        </div>
+        <div class="d-flex align-items-center py-3">
+            <div class="w-100">
+                <div class="text-dark fw-bold fs-6 mb-1">
+                    <codx-label fiedName="Active4" [formModel]="form.formModel"></codx-label>
+                </div>
+                <!-- <div class="text-gray-600 fs-7">Cấp kho: Kho thành phẩm, kho trung chuyển, kho gởi bán...</div> -->
+                <div class="text-gray-600 fs-7">{{form.gridviewSetup['Active4'].description}}</div>
+            </div>
+            <div class="ms-6 d-flex align-items-center">
+                <span class="me-3 mt-1">
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="active4" (valueChange)="valueChange($event,'4')">
+                    </codx-input>
+                </span>
+                <span *ngIf="form?.data?.active4" type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="openPopupSetup('Active4','4')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!form?.data?.active4" type="button" class="btn btn-icon">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+            </div>
+        </div>
+        <hr class="my-0" />
+        <div class="d-flex align-items-center py-3">
+            <div class="w-100">
+                <div class="text-dark fw-bold fs-6 mb-1">
+                    <codx-label fiedName="Active5" [formModel]="form.formModel"></codx-label>
+                </div>
+                <!-- <div class="text-gray-600 fs-7">Theo dõi vị trí trong kho: Dãy - kệ - Tầng - Ngăn(Pin)</div> -->
+                <div class="text-gray-600 fs-7">{{form.gridviewSetup['Active5'].description}}</div>
+            </div>
+            <div class="ms-6 d-flex align-items-center">
+                <span class="me-3 mt-1">
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="active5" (valueChange)="valueChange($event,'5')">
+                    </codx-input>
+                </span>
+                <span *ngIf="form?.data?.active5" type="button" class="btn btn-icon btn-sm btn-light-primary"
+                    (click)="openPopupSetup('Active5','5')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!form?.data?.active5" type="button" class="btn btn-icon">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+            </div>
+        </div>
+        <hr class="my-0" />
+        <div class="d-flex align-items-center py-3">
+            <div class="w-100">
+                <div class="text-dark fw-bold fs-6 mb-1">
+                    <codx-label fiedName="Active6" [formModel]="form.formModel"></codx-label>
+                </div>
+                <!-- <div class="text-gray-600 fs-7">Theo dõi nguồn gốc lô sản xuất: Số lô, ngày sản xuất, hạn sử
+                    dụng...</div> -->
+                <div class="text-gray-600 fs-7">{{form.gridviewSetup['Active6'].description}}</div>
+            </div>
+            <div class="ms-6 d-flex align-items-center">
+                <span class="me-3 mt-1">
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="active6" (valueChange)="valueChange($event,'6')">
+                    </codx-input>
+                </span>
+                <span *ngIf="form?.data?.active6" type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="openPopupSetup('Active6','6')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!form?.data?.active6" type="button" class="btn btn-icon">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+            </div>
+        </div>
+        <hr class="my-0" />
+        <div class="d-flex align-items-center py-3">
+            <div class="w-100">
+                <div class="text-dark fw-bold fs-6 mb-1">
+                    <codx-label fiedName="Active7" [formModel]="form.formModel"></codx-label>
+                </div>
+                <!-- <div class="text-gray-600 fs-7">Theo dõi chi tiết: số seri(barcode hoặc QR code), hạn bảo
+                    hành</div> -->
+                <div class="text-gray-600 fs-7">{{form.gridviewSetup['Active7'].description}}</div>
+            </div>
+            <div class="ms-6 d-flex align-items-center">
+                <span class="me-3 mt-1">
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="active7" (valueChange)="valueChange($event,'7')">
+                    </codx-input>
+                </span>
+                <span *ngIf="form?.data?.active7" type="button" class="btn btn-icon btn-sm btn-light-primary"
+                    (click)="openPopupSetup('Active7','7')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!form?.data?.active7" type="button" class="btn btn-icon">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+            </div>
+        </div>
+        <hr class="my-0" />
+        <div class="d-flex align-items-center py-3">
+            <div class="w-100">
+                <div class="text-dark fw-bold fs-6 mb-1">
+                    <codx-label fiedName="Active8" [formModel]="form.formModel"></codx-label>
+                </div>
+                <!-- <div class="text-gray-600 fs-7">Quản lý đóng palet: Qui cách palet, số lượng/palet, nhãn palet...</div> -->
+                <div class="text-gray-600 fs-7">{{form.gridviewSetup['Active8'].description}}</div>
+            </div>
+            <div class="ms-6 d-flex align-items-center">
+                <span class="me-3 mt-1">
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="active8" (valueChange)="valueChange($event,'8')">
+                    </codx-input>
+                </span>
+                <span *ngIf="form?.data?.active8" type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="openPopupSetup('Active8','8')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!form?.data?.active8" type="button" class="btn btn-icon">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+            </div>
+        </div>
+        <hr class="my-0" />
+        <div class="d-flex align-items-center py-3">
+            <div class="w-100">
+                <div class="text-dark fw-bold fs-6 mb-1">
+                    <codx-label fiedName="Active9" [formModel]="form.formModel"></codx-label>
+                </div>
+                <!-- <div class="text-gray-600 fs-7">Tham số mở rộng</div> -->
+                <div class="text-gray-600 fs-7">{{form.gridviewSetup['Active9'].description}}</div>
+            </div>
+            <div class="ms-6 d-flex align-items-center">
+                <span class="me-3 mt-1">
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="active9" (valueChange)="valueChange($event,'9')">
+                    </codx-input>
+                </span>
+                <span *ngIf="form?.data?.active9" type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="openPopupSetup('Active9','9')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!form?.data?.active9" type="button" class="btn btn-icon">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>
+<ng-template #footer>
+    <button [shortcut]="'alt+s'" [autoClick]="true" id="btnsave" type="button" tab-index=""
+      class="btn btn-md btn-primary" style="border: 1px solid var(--primary-dark) !important"
+      (keydown.enter)="onSave(); $event.preventDefault()" (click)="onSave()">
+      <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+    </button>
+</ng-template>

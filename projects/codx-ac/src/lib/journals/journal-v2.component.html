@@ -1,8 +1,14 @@
-<codx-views class="ac-animation-none" [toolbarDisplay]="false" #view [views]="views" service="AC"
-  entityName="AC_Journals" predicates="Status=@0" [dataValues]="mainFilterValue ?? '1'" [autoLoad]="true">
+<codx-views class="ac-animation-none" [toolbarDisplay]="true" #view [views]="views" service="AC"
+  [button]="mainFilterValue != '2' ? button : null" [entityName]="view.entityName" [autoLoad]="true"
+  (buttonClick)="toolbarClick($event)" (selectedChange)="onSelected($event)" (searchChange)="search($event)"
+  (clickMF)="clickMF($event, itemSelected)" (changeDataMF)="changeMF($event)">
 </codx-views>
 
 <ng-template #contentTemplate>
+  <!-- <codx-toolbar [funcId]="funcID" [dataSelected]="itemSelected" [views]="subViews" [formModel]="view.formModel"
+    [showFilter]="false" [button]="mainFilterValue != '2' ? button : null" (buttonClick)="toolbarClick($event)"
+    (searchChange)="search($event)" (clickMF)="clickMF($event, itemSelected)" (changeDataMF)="changeMF($event)"
+    (viewChange)="viewChanged($event)"></codx-toolbar> -->
   <div class="px-4 bg-body list-survey h-100">
     <div class="d-flex justify-content-between py-2 hhder">
       <div class="main-list">
@@ -22,22 +28,10 @@
                 *ngFor="let item of vll85; let i = index">
                 <a href="javascript:void(0)" (click)="changePredicate(item.value, 'subFilterValue')"
                   style="color: inherit">{{ item.text }}</a>
-                <!-- <i class="icon-i-caret-down-fill font-12" style="color: inherit"></i> -->
               </li>
             </ol>
           </div>
         </div>
-      </div>
-      <div class="d-flex align-items-center">
-        <codx-searchbar (searchEvent)="search($event)"></codx-searchbar>
-        <codx-toolbar-button class="ms-3" [button]="mainFilterValue != '2' ? button : null"
-          (buttonClick)="toolbarClick($event)">
-        </codx-toolbar-button>
-        <codx-mfunc [ngClass]="itemSelected ? '' : 'd-none'" [formModel]="view.formModel" [isToolBar]="true" type="view"
-          [dataItem]="itemSelected" (changeDataMF)="changeMF($event)"
-          (clickMF)="clickMF($event, itemSelected)"></codx-mfunc>
-        <codx-toolbar-choose class="me-2 ms-1" [views]="subViews" (viewChange)="viewChanged($event)">
-        </codx-toolbar-choose>
       </div>
     </div>
     <div class="row" data-kt-scroll="true" data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
@@ -318,10 +312,12 @@
                     <codx-label fiedName="VatControl" [formModel]="view.formModel"></codx-label>
                   </div>
                   <div>
-                    <codx-input type="switch" [disabled]="true" [crrValue]="data?.vatControl == '1' ? true : false"></codx-input>
+                    <codx-input type="switch" [disabled]="true"
+                      [crrValue]="data?.vatControl == '1' ? true : false"></codx-input>
                   </div>
                 </div>
-                <div *ngIf="vllAC126.includes(data?.journalType)" class="w-100 d-flex align-items-center justify-content-between mb-1">
+                <div *ngIf="vllAC126.includes(data?.journalType)"
+                  class="w-100 d-flex align-items-center justify-content-between mb-1">
                   <div>
                     <codx-label fiedName="UseDutyTax" [formModel]="view.formModel"></codx-label>
                   </div>
@@ -329,7 +325,8 @@
                     <codx-input type="switch" [disabled]="true" [crrValue]="data?.useDutyTax"></codx-input>
                   </div>
                 </div>
-                <div *ngIf="vllAC126.includes(data?.journalType)" class="w-100 d-flex align-items-center justify-content-between mb-1">
+                <div *ngIf="vllAC126.includes(data?.journalType)"
+                  class="w-100 d-flex align-items-center justify-content-between mb-1">
                   <div>
                     <codx-label fiedName="UseExciseTax" [formModel]="view.formModel"></codx-label>
                   </div>
@@ -377,7 +374,8 @@
                                 "></span>
                   </div>
                 </div>
-                <div *ngIf="vllAC111.includes(data?.journalType)" class="w-100 d-flex align-items-center justify-content-between mb-1">
+                <div *ngIf="vllAC111.includes(data?.journalType)"
+                  class="w-100 d-flex align-items-center justify-content-between mb-1">
                   <div>
                     <codx-label fiedName="WarehouseReceipt" [formModel]="view.formModel"></codx-label>
                   </div>
@@ -506,28 +504,31 @@
       </div>
       <div class="mb-2">
         <codx-label class="fw-bold fs-6 label-colon" fiedName="poster" [formModel]="view.formModel"></codx-label>
-        
+
       </div>
       <div class="d-flex align-items-center">
         <codx-label class="fw-bold fs-6 label-colon" fiedName="createdBy" [formModel]="view.formModel"></codx-label>
         <codx-imgs [isToolTip]="true" [objectId]="data?.createdBy" [objectName]="data?.createdBy"
-            [objectType]="'AD_Users'" [width]="30" [numberImages]="1">
+          [objectType]="'AD_Users'" [width]="30" [numberImages]="1">
         </codx-imgs>
       </div>
     </div>
-    <!-- <div class="text-truncate">
-      <codx-label fiedName="creater" [formModel]="view.formModel"></codx-label>
-      :
-      <span class="text-primary">{{
-        this.creaters | nameById : "journalNo" : "value" : data.journalNo
-        }}</span>
-    </div>
-    <div class="text-truncate">
-      <codx-label fiedName="poster" [formModel]="view.formModel"></codx-label>:
-      <span class="text-primary">
-        {{
-        this.posters | nameById : "journalNo" : "value" : data.journalNo
-        }}</span>
-    </div> -->
   </ng-template>
+</ng-template>
+
+
+
+
+<ng-template #temptemp>
+  <div class="d-flex align-items-center">
+    <codx-searchbar (searchEvent)="search($event)"></codx-searchbar>
+    <codx-toolbar-button class="ms-3" [button]="mainFilterValue != '2' ? button : null"
+      (buttonClick)="toolbarClick($event)">
+    </codx-toolbar-button>
+    <codx-mfunc [ngClass]="itemSelected ? '' : 'd-none'" [formModel]="view.formModel" [isToolBar]="true" type="view"
+      [dataItem]="itemSelected" (changeDataMF)="changeMF($event)"
+      (clickMF)="clickMF($event, itemSelected)"></codx-mfunc>
+    <codx-toolbar-choose class="me-2 ms-1" [views]="subViews" (viewChange)="viewChanged($event)">
+    </codx-toolbar-choose>
+  </div>
 </ng-template>

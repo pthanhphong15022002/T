@@ -160,11 +160,12 @@ export class PopupAddProcessComponent {
 
   ngOnInit(): void {
     this.genData();
+    // this.bpSv.getEndDate(new Date(), '1', 4, 'STD').subscribe((res) => {});
   }
 
   genData() {
     if (this.action == 'add') {
-      this.data.category = '1';
+      this.data.category = '';
       this.api
         .execSv<any>(
           'SYS',
@@ -177,7 +178,7 @@ export class PopupAddProcessComponent {
           if (st && st['1']) {
             this.dataValueSettings = JSON.stringify(st['1']);
             this.data.settings = st['1'];
-          }else{
+          } else {
             this.data.settings = [];
           }
         });
@@ -234,14 +235,12 @@ export class PopupAddProcessComponent {
 
   setDefaultTitle() {
     const createField = (value, fieldType, isForm = false) => {
-      var values = value + "_1";
+      var values = value + '_1';
       const field = {
         recID: Util.uid(),
-        fieldName: (this.bpSv.createAutoNumber(
-          values,
-          this.extendInfos,
-          'fieldName'
-        )).toLowerCase(),
+        fieldName: this.bpSv
+          .createAutoNumber(values, this.extendInfos, 'fieldName')
+          .toLowerCase(),
         title: this.bpSv.createAutoNumber(value, this.extendInfos, 'title'),
         dataType: 'String',
         fieldType,
@@ -341,6 +340,12 @@ export class PopupAddProcessComponent {
     });
     lstStep.push(stage, form);
     this.data.steps = lstStep;
+    this.cache.message('BP001').subscribe(item=>{
+      this.data.steps[0].stepName = item?.customName;
+    });
+    this.cache.message('BP002').subscribe(item=>{
+      this.data.steps[1].stepName = item?.customName;
+    });
     this.setLstExtends();
   }
 
@@ -396,9 +401,9 @@ export class PopupAddProcessComponent {
     if (tabNo == 1) {
       this.processTab == 0 && this.processTab++;
       if (this.action == 'add') {
-        if(!this.checkRequired()) return null;
+        if (!this.checkRequired()) return null;
         this.data = { ...this.data };
-        this.action = 'edit'
+        this.action = 'edit';
         this.saveProcessStep().subscribe();
       }
     }
@@ -452,8 +457,8 @@ export class PopupAddProcessComponent {
     switch (currentTab) {
       case 0: {
         if (this.action == 'add') {
-          if(!this.checkRequired()) return null;
-          this.action = 'edit'
+          if (!this.checkRequired()) return null;
+          this.action = 'edit';
           this.data = { ...this.data };
           this.saveProcessStep().subscribe();
         }
@@ -462,8 +467,7 @@ export class PopupAddProcessComponent {
         this.processTab == 0 && this.processTab++;
         break;
       }
-      case 1:
-      {
+      case 1: {
         this.newNode = newNode;
         this.oldNode = oldNode;
         this.updateNodeStatus(oldNode, newNode);
@@ -711,8 +715,8 @@ export class PopupAddProcessComponent {
     option.zIndex = 1010;
     option.FormModel = JSON.parse(JSON.stringify(this.dialog.formModel));
     let data = {
-      data: this.data
-    }
+      data: this.data,
+    };
     let popupDialog = this.callfc.openForm(
       FormAdvancedSettingsComponent,
       '',
@@ -762,7 +766,7 @@ export class PopupAddProcessComponent {
       null,
       null,
       '',
-      {extendInfo:this.extendInfos,stepNo:this.data?.steps[1].stepNo},
+      { extendInfo: this.extendInfos, stepNo: this.data?.steps[1].stepNo },
       '',
       option
     );
@@ -804,7 +808,7 @@ export class PopupAddProcessComponent {
         if (this.data?.steps[1]?.extendInfo) {
           this.extendInfos.forEach((element) => {
             if (element.controlType == 'Attachment') {
-              if (!this.data.documentControl) {
+              if (!element?.documentControl) {
                 var obj = {
                   recID: Util.uid(),
                   title: element.title,
@@ -813,29 +817,31 @@ export class PopupAddProcessComponent {
                   isList: '1',
                   stepID: this.data?.steps[1].recID,
                   stepNo: this.data?.steps[1].stepNo,
-                  fieldID: this.data?.steps[1].recID,
+                  fieldID: element.recID,
                   memo: this.data?.steps[1].memo,
+                  refID: ''
                 };
+                obj.refID = obj.recID;
                 this.data.documentControl = [obj];
-              } else {
-                if (
+              } else if (
                   element.documentControl &&
                   element.documentControl.length > 0
                 ) {
+                  debugger
                   var doc = JSON.parse(
                     JSON.stringify(this.data.documentControl)
                   );
+                  if(!doc) doc = [];
                   element.documentControl.forEach((docu) => {
                     docu.stepID = this.data?.steps[1].recID;
                     docu.stepNo = this.data?.steps[1].stepNo;
-                    docu.fieldID = this.data?.steps[1].recID;
+                    docu.fieldID = element.recID;
                     docu.memo = this.data?.steps[1].memo;
                     var index = doc.findIndex((x) => x.recID == docu.recID);
                     if (index >= 0) doc[index] = docu;
                     else doc.push(docu);
                   });
                   this.data.documentControl = doc;
-                }
               }
             }
 
@@ -886,9 +892,8 @@ export class PopupAddProcessComponent {
     }
   }
 
-  checkRequired()
-  {
-    if(!this.data?.processName) {
+  checkRequired() {
+    if (!this.data?.processName) {
       this.notiSv.notifyCode('SYS009', 0, 'Tên quy trình');
       return false;
     }
@@ -896,8 +901,11 @@ export class PopupAddProcessComponent {
   }
 
   handlerSave() {
-    if ((this.action == 'add' || this.action == 'copy') && this.currentTab == 0) {
-      if(!this.checkRequired()) return;
+    if (
+      (this.action == 'add' || this.action == 'copy') &&
+      this.currentTab == 0
+    ) {
+      if (!this.checkRequired()) return;
       this.onAdd();
     } else {
       this.onUpdate();
@@ -942,7 +950,10 @@ export class PopupAddProcessComponent {
     }
     data = [this.data];
 
-    if ((this.action == 'add' || this.action == 'copy') && this.currentTab == 0) {
+    if (
+      (this.action == 'add' || this.action == 'copy') &&
+      this.currentTab == 0
+    ) {
       op.methodName = 'AddProcessAsync';
     } else {
       op.methodName = 'UpdateProcessAsync';
@@ -989,8 +1000,7 @@ export class PopupAddProcessComponent {
     );
   }
 
-  valueChange2(e:any)
-  {
+  valueChange2(e: any) {
     this.data = e;
   }
 }
