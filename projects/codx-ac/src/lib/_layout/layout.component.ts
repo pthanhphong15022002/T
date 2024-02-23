@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  HostBinding,
   HostListener,
   Injector,
   OnInit,
@@ -31,7 +32,8 @@ export class LayoutComponent extends LayoutBaseComponent {
   constructor(
     inject: Injector,
     private round: RoundService,
-    private router: ActivatedRoute
+    private router: ActivatedRoute,
+    private acService: CodxAcService
   ) {
     super(inject);
     this.module = 'AC';
@@ -42,19 +44,13 @@ export class LayoutComponent extends LayoutBaseComponent {
       console.log(res);
     });
   }
-
   onInit(): void {}
 
   onAfterViewInit(): void {
-    // this.layoutModel.toolbarDisplay = false;
-    // this.codxAC.changeToolBar.subscribe((funcID:any)=>{
-    //   if (funcID) {
-    //     if (funcID === 'ACT') {
-    //       this.funcID = funcID;
-    //     }
-    //   }else{
-    //     this.funcID = null;
-    //   }
-    // })
+    this.acService.toolbar.subscribe((res) => {
+      let body = document.getElementsByTagName('lib-layout')[0];
+      if (res) body.classList.remove('toolbar-enabled', 'toolbar-fixed');
+      else body.classList.add('toolbar-enabled', 'toolbar-fixed');
+    });
   }
 }

@@ -2661,14 +2661,21 @@
       <ejs-grid [dataSource]="dataSpaceForRent" height="100%">
         <e-columns>
           <e-column
+            field="noIndex"
+            headerText="STT"
+            textAlign="Right"
+            width="50"
+          ></e-column>
+          <e-column
             field="AssetName"
             headerText="Tên tòa nhà"
-            textAlign="Left"
+            textAlign="Right"
             width="90"
           ></e-column>
           <e-column
             field="UsableArea"
             headerText="Diện tích cho thuê ( m2)"
+            textAlign="Right"
             width="120"
           ></e-column>
         </e-columns>
@@ -2676,7 +2683,7 @@
     </div>
     <div class="col-8 d-flex justify-content-center align-item-center">
       <ejs-chart
-        id="chart-container-3"
+        id="chart-container-r1"
         [primaryXAxis]="primaryXAxisColumn"
         [primaryYAxis]="primaryYAxisColumnSFR"
         [tooltip]="tooltipChartColumn"
@@ -2705,9 +2712,9 @@
 <!-----------------------------Thống kê theo loại văn phòng - CMDQTSC011------------------------------------>
 <!---------------------------------------------------------------------------------------------------------->
 <ng-template #officeTypeReport>
-  <div class="h-100 d-flex flex-column bg-white" id="view-dashboard">
+  <div class="ps-10 pe-10 h-100 bg-white hover-scroll-y" id="view-dashboard">
     <ng-container *ngFor="let item of dataOfficeType">
-      <div class="mb-10">
+      <div class="mt-5" style="height: 500px !important">
         <div>
           <codx-label
             class="fw-bold"
@@ -2722,35 +2729,51 @@
           ></span>
         </div>
         <div class="row">
-          <div class="col-7 d-flex justify-content-center">
+          <div class="col-7 justify-content-center">
             <ejs-grid [dataSource]="item" height="100%">
               <e-columns>
+                <e-column
+                  field="noIndex"
+                  headerText="STT"
+                  textAlign="Right"
+                  width="50"
+                ></e-column>
                 <ng-container *ngFor="let f of girdViewDashboardType">
                   <e-column
+                    [headerTemplate]="headerTemplate"
                     [field]="f.field"
                     [headerText]="f.headerText"
                     [textAlign]="f.textAlign"
                     [width]="f.width"
                   ></e-column>
+                  <ng-template #headerTemplate>
+                    <span [ngbTooltip]="f.headerText" container="body">{{
+                      f.headerText
+                    }}</span>
+                  </ng-template>
                 </ng-container>
               </e-columns>
             </ejs-grid>
           </div>
-          <div class="col-5 d-flex justify-content-center align-item-center">
+          <div class="col-5 justify-content-center align-item-center">
             <ejs-chart
-              id="chart-container-3"
               [primaryXAxis]="primaryXAxisColumn"
               [primaryYAxis]="primaryYAxisColumnOTR"
               [tooltip]="tooltipChartColumn"
               [legendSettings]="legendSettingsColumn"
             >
               <e-series-collection>
+                <e-column
+                  field="noIndex"
+                  headerText="STT"
+                  textAlign="Right"
+                  width="50"
+                ></e-column>
                 <ng-container *ngFor="let f of girdViewDashboardType">
                   <e-series
-                    *ngIf="f.field != 'IDIM0' && f.field != 'AssetName'"
                     [dataSource]="item"
-                    type="StackingColumn"
-                    [xName]="item[0].assetName"
+                    type="Column"
+                    xName="assetName"
                     [yName]="f.field"
                     [name]="f.headerText"
                   ></e-series>

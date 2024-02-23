@@ -162,26 +162,6 @@ export class DimensionGroupsComponent extends UIComponent {
           );
         }    
       });
-    // if (data) {
-    //   this.view.dataService.dataSelected = data;
-    // }
-    // this.view.dataService
-    //   .edit(this.view.dataService.dataSelected)
-    //   .subscribe((res: any) => {
-    //     var obj = {
-    //       formType: 'edit',
-    //       headerText: e.text + ' ' + this.funcName.toLowerCase(),
-    //     };
-    //     let option = new SidebarModel();
-    //     option.DataService = this.view.dataService;
-    //     option.FormModel = this.view.formModel;
-    //     option.Width = '550px';
-    //     this.dialog = this.callfunc.openSide(
-    //       PopAddDimensionGroupsComponent,
-    //       obj,
-    //       option
-    //     );
-    //   });
   }
   copy(e, dataCopy) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
@@ -207,26 +187,6 @@ export class DimensionGroupsComponent extends UIComponent {
         );
       }   
     });
-    // if (data) {
-    //   this.view.dataService.dataSelected = data;
-    // }
-    // this.view.dataService
-    //   .copy()
-    //   .subscribe((res: any) => {
-    //     var obj = {
-    //       formType: 'copy',
-    //       headerText: e.text + ' ' + this.funcName.toLowerCase(),
-    //     };
-    //     let option = new SidebarModel();
-    //     option.DataService = this.view.dataService;
-    //     option.FormModel = this.view.formModel;
-    //     option.Width = '550px';
-    //     this.dialog = this.callfunc.openSide(
-    //       PopAddDimensionGroupsComponent,
-    //       obj,
-    //       option
-    //     );
-    //   });
   }
   delete(dataDelete) {
     this.view.dataService
