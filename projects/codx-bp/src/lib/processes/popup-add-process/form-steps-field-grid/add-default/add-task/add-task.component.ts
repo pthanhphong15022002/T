@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { BaseFieldComponent } from '../../base.component';
 import { BP_Processes_Steps } from 'projects/codx-bp/src/lib/models/BP_Processes.model';
 import { AlertConfirmInputConfig, DialogModel, Util } from 'codx-core';
@@ -17,6 +17,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('attachment2') attachment2: AttachmentComponent;
   @Input() activityType: any;
+  @Output() dataChangeAttach = new EventEmitter<any>();
   listCombobox = {};
   multiple = true;
   vllShare = 'BP017';
@@ -352,6 +353,42 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
 
   openAttach1()
   {
+    this.data.attachments = this.attachment.fileUploadList.length;
+    this.dataChange.emit(this.data);
+    this.attachment.uploadFile();
+    this.dataChangeAttach.emit(true);
+  }
+  openAttach2()
+  {
+    this.data.attachments = this.attachment2.fileUploadList.length;
+    this.attachment2.uploadFile();
+    this.dataChange.emit(this.data);
+    this.dataChangeAttach.emit(true);
+  }
+
+  fileSave(e:any)
+  {
+    var files = [];
+    if(Array.isArray(e))
+    {
+      e.forEach(elm=>{
+        var f = 
+        {
+          fileID: elm?.data?.recID,
+          type : '1'
+        }
+        files.push(f);
+      })
+    }
+    else 
+    {
+      var f = 
+        {
+          fileID: e?.recID,
+          type : '1'
+        }
+        files.push(f);
+    }
     var documentControl = 
     {
       recID : Util.uid(),
@@ -363,45 +400,15 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       stepNo: this.data?.stepNo,
       fieldID: this.data?.recID,
       memo: this.data?.memo,
-      refID: ''
+      refID: '',
+      files : files
     }
     documentControl.refID = documentControl.recID;
     this.process.documentControl.push(documentControl);
     this.listDocument.push(documentControl);
     this.dataChangeProcess.emit(this.process);
-    this.data.attachments = this.attachment.fileUploadList.length;
-    this.dataChange.emit(this.data);
-    this.attachment.uploadFile();
-  }
-  openAttach2()
-  {
-    var documentControl = 
-    {
-      recID : Util.uid(),
-      title : this.data.stepName,
-      isRequired: false,
-      count : 0,
-      listType: "1",
-      stepID: this.data?.recID,
-      stepNo: this.data?.stepNo,
-      fieldID: this.data?.recID,
-      memo: this.data?.memo,
-      refID: ''
-    }
-    documentControl.refID = documentControl.recID;
-    this.process.documentControl.push(documentControl);
-    this.dataChangeProcess.emit(this.process);
-
-    this.data.attachments = this.attachment2.fileUploadList.length;
-    this.attachment2.uploadFile();
-    this.dataChange.emit(this.data);
-  }
-
-  fileSave(e:any)
-  {
-    // if(Array.isArray(e)) this.data.attachments = e.length;
-    // else this.data.attachments = 1;
-    // this.dataChange.emit(this.data);
+    this.formatDocument();
+    this.dataChangeAttach.emit(false);
   }
 
   fileDelete(e:any)

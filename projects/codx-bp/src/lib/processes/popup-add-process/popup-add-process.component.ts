@@ -253,8 +253,8 @@ export class PopupAddProcessComponent {
       };
 
       if (isForm) {
-        field.description = 'Câu trả lời';
-        field.defaultValue = field.title;
+        field.description = field.title;
+        //field.defaultValue = field.title;
       }
 
       return field;
