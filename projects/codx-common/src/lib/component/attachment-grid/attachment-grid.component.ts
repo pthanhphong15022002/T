@@ -14,7 +14,7 @@ export class AttachmentGridComponent implements OnInit{
   @Input() formModel:any;
   @Input() dataIns:any;
   @Output() dataChange = new EventEmitter<any>();
-  
+  @Output() dataChangeAttachment = new EventEmitter<any>();
   selectedIndex:any;
 
   constructor(
@@ -49,6 +49,7 @@ export class AttachmentGridComponent implements OnInit{
     this.attachment.objectId = recID;
     this.attachment.referType = 'attach' + this.dataIns.recID;
     this.attachment.uploadFile();
+    this.dataChangeAttachment.emit(true);
   }
 
   valueChange(e:any,index:any)
@@ -85,6 +86,7 @@ export class AttachmentGridComponent implements OnInit{
       this.data[this.selectedIndex].countAttach += e.length;
     }
     this.dataChange.emit(this.data);
+    this.dataChangeAttachment.emit(false);
   }
 
   openFormDetail(data:any , refType:any=null)

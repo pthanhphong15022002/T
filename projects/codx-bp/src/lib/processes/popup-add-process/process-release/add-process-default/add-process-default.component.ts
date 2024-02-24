@@ -32,6 +32,7 @@ export class AddProcessDefaultComponent implements OnInit{
   subTitle:any;
   tableField:any;
   user:any;
+  isAttach= false;
   constructor(
     private notifySvr: NotificationsService,
     private auth: AuthStore,
@@ -388,5 +389,10 @@ export class AddProcessDefaultComponent implements OnInit{
           this.dialog.close(this.dataIns);
         }
       });
+  }
+
+  dataChangeAttachment(e:any)
+  {
+    this.isAttach = e;
   }
 }
