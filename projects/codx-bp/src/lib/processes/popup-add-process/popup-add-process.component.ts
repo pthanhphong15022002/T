@@ -136,6 +136,7 @@ export class PopupAddProcessComponent {
   gridViewSetup: any;
   lstShowExtends = [];
   dataValueSettings: any;
+  countStage=0;
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
@@ -1022,6 +1023,32 @@ export class PopupAddProcessComponent {
   }
 
   valueChange2(e: any) {
-    this.data = e;
+    this.data = this.formatData(e);
+  }
+
+
+  formatData(datas:any)
+  {
+    let x = 0;
+    let data = datas.steps;
+    this.countStage = data.length;
+    data = data.sort((a, b) => a.stepNo - b.stepNo);
+    var listStage = data.filter(x=>x.activityType == 'Stage');
+    listStage.forEach(element => {
+      var index = data.findIndex(x=>x.recID == element.recID);
+      data[index].stepNo = x;
+      x++;
+      if(element.child && element.child.length>0)
+      {
+        element.child.forEach(element2 => {
+          var index2 = data.findIndex(x=>x.recID == element2.recID);
+          data[index2]= element2;
+          data[index2].stepNo = x;
+          x++
+        });
+      }
+    });
+    datas.steps = data;
+    return datas;
   }
 }
