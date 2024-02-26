@@ -54,6 +54,7 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
       this.count -= this.listStage.length;
       this.listStage.forEach(elm => {
         elm.child = this.getListChild(elm) || [];
+        if(typeof elm.settings == 'string') elm.settings = JSON.parse(elm.settings);
       });
     }
   }
@@ -186,5 +187,10 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
       .bypassSecurityTrustHtml(`<div class="col-3 d-flex align-items-center"><div class="w-30px"><i class="`+val.settings.icon+`" style="color:`+val.settings.color+`"></i></div>`+data.stepName+`</div><div class="col-1 d-flex align-items-center"><i class="`+data?.settings?.icon+`" style="color:`+data?.settings?.color+`"></i><span class="mx-2">`+data.activityType+`</span></div><div class="col-4"><span>`+(data?.memo || '')+`</span></div><div class="col-2"><span>`+data?.duration+`</span><span class="mx-1">`+data?.interval+`</span></div>`);
     }
     return "";
+  }
+
+  drop(e:any)
+  {
+
   }
 }
