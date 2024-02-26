@@ -32,6 +32,7 @@ export class AddProcessDefaultComponent implements OnInit{
   subTitle:any;
   tableField:any;
   user:any;
+  isAttach= false;
   constructor(
     private notifySvr: NotificationsService,
     private auth: AuthStore,
@@ -239,10 +240,9 @@ export class AddProcessDefaultComponent implements OnInit{
         this.api.execSv("BP","BP","ProcessTasksBusiness","SaveListTaskAsync",listTask).subscribe();
         //Luu Instanes
         this.api.execSv("BP","BP","ProcessInstancesBusiness","SaveInsAsync",this.dataIns).subscribe(async item=>{
-          if(type == 1) this.dialog.close(this.dataIns)
-          else this.startProcess(this.dataIns.recID)
+        
           //addFile nếu có
-          this.addFileAttach();
+          this.addFileAttach(type);
         });
       }
       else if(this.type == 'edit')
@@ -264,36 +264,45 @@ export class AddProcessDefaultComponent implements OnInit{
     }
   }
 
-  async addFileAttach()
+  async addFileAttach(type:any)
   {
     if(this.attachment.fileUploadList && this.attachment.fileUploadList.length > 0)
-    (await this.attachment.saveFilesObservable()).subscribe(item2=>{
-      if(item2)
-      {
-        let arr = [];
-        if(!Array.isArray(item2))
+    {
+      (await this.attachment.saveFilesObservable()).subscribe(item2=>{
+        if(item2)
         {
-          arr.push(item2);
+          let arr = [];
+          if(!Array.isArray(item2))
+          {
+            arr.push(item2);
+          }
+          else arr = item2;
+          arr.forEach(elm=>{
+            var obj = 
+            {
+              fileID: elm.data.recID,
+              type: 1
+            }
+            var index = this.dataIns.documentControl.findIndex(x=>x.fieldID == elm.data.objectID);
+            if(index >=0 ) 
+            {
+              if(!this.dataIns.documentControl[index]?.files) this.dataIns.documentControl[index].files = [];
+              this.dataIns.documentControl[index].files.push(obj);
+            }
+          })
+          if(type == 1) this.dialog.close(this.dataIns)
+          else this.startProcess(this.dataIns.recID)
+          this.api.execSv("BP","BP","ProcessInstancesBusiness","UpdateInsAsync",this.dataIns).subscribe();
+          //this.dataIns.documentControl.
         }
-        else arr = item2;
-        arr.forEach(elm=>{
-          var obj = 
-          {
-            fileID: elm.data.recID,
-            type: 1
-          }
-          var index = this.dataIns.documentControl.findIndex(x=>x.fieldID == elm.data.objectID);
-          if(index >=0 ) 
-          {
-            if(!this.dataIns.documentControl[index]?.files) this.dataIns.documentControl[index].files = [];
-            this.dataIns.documentControl[index].files.push(obj);
-          }
-        })
-
-        this.api.execSv("BP","BP","ProcessInstancesBusiness","UpdateInsAsync",this.dataIns).subscribe();
-        //this.dataIns.documentControl.
-      }
-  });
+      });
+    }
+    else
+    {
+      if(type == 1) this.dialog.close(this.dataIns)
+      else this.startProcess(this.dataIns.recID)
+    }
+   
   }
   updateIns()
   {
@@ -348,7 +357,9 @@ export class AddProcessDefaultComponent implements OnInit{
         var dt = JSON.parse(JSON.stringify(elm));
         var index = this.dataIns.documentControl.findIndex(x=>x.recID == elm.recID);
         if(index>=0) this.dataIns.documentControl[index] = dt;
-      })
+      });
+
+      //this.api.execSv("BP","BP","ProcessInstancesBusiness","UpdateInsAsync",this.dataIns).subscribe();  
     }
   
   }
@@ -375,10 +386,21 @@ export class AddProcessDefaultComponent implements OnInit{
         'StartProcessAsync',
         [recID]
       )
-      .subscribe((res) => {
+      .subscribe((res:any) => {
         if (res) {
+          if(res?.recID){
+            this.dataIns=res;
+          }
+          else{
+            this.dataIns.status = '2';
+          }
           this.dialog.close(this.dataIns);
         }
       });
+  }
+
+  dataChangeAttachment(e:any)
+  {
+    this.isAttach = e;
   }
 }

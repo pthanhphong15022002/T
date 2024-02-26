@@ -258,7 +258,7 @@
     </div>
     <div class="h-100 ms-1 ps-3" style="border-left: 2px solid #ddd" [ngStyle]="{width: action == 'add' ? '0%' : '40%'}" [ngClass]="action=='edit' ? '' : 'd-none'">
       <h5><codx-label name="lblTaskHistory" [formModel]="formModel" default="Lịch sử cập nhật"></codx-label></h5>
-      <div class="pt-3 h-50">
+      <div class="pt-3 h-75">
         <codx-history
           [objectID]="data?.recID"
           [formModel]="dialog?.formModel"

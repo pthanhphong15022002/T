@@ -182,6 +182,7 @@ export class PopupAddProcessComponent {
             this.data.settings = [];
           }
         });
+      this.defaultAdminPermission();
     }
   }
   ngAfterViewInit(): void {
@@ -203,6 +204,28 @@ export class PopupAddProcessComponent {
   onDestroy() {
     this.destroyFrom$.next();
     this.destroyFrom$.complete();
+  }
+
+  defaultAdminPermission() {
+    let perm = new BP_Processes_Permissions();
+    perm.objectID = this.user?.userID;
+    perm.objectName = this.user?.userName;
+    perm.objectType = '1';
+    perm.roleType = 'O';
+    perm.create = true;
+    perm.read = true;
+    perm.update = true;
+    perm.assign = true;
+    perm.delete = true;
+    perm.share = true;
+    perm.download = true;
+    perm.allowPermit = true;
+    perm.publish = true;
+    perm.isActive = true;
+
+    let permissions = [];
+    permissions.push(perm);
+    this.data.permissions = permissions;
   }
 
   getVll() {
@@ -253,8 +276,8 @@ export class PopupAddProcessComponent {
       };
 
       if (isForm) {
-        field.description = 'Câu trả lời';
-        field.defaultValue = field.title;
+        field.description = field.title;
+        //field.defaultValue = field.title;
       }
 
       return field;
@@ -340,10 +363,10 @@ export class PopupAddProcessComponent {
     });
     lstStep.push(stage, form);
     this.data.steps = lstStep;
-    this.cache.message('BP001').subscribe(item=>{
+    this.cache.message('BP001').subscribe((item) => {
       this.data.steps[0].stepName = item?.customName;
     });
-    this.cache.message('BP002').subscribe(item=>{
+    this.cache.message('BP002').subscribe((item) => {
       this.data.steps[1].stepName = item?.customName;
     });
     this.setLstExtends();
@@ -570,23 +593,32 @@ export class PopupAddProcessComponent {
     );
   }
 
+  defaultRoleNotAdmin(objectID, objectName, objectType) {
+    let perm = new BP_Processes_Permissions();
+    perm.objectID = objectID;
+    perm.objectName = objectName;
+    perm.objectType = objectType;
+    perm.roleType = 'P';
+    perm.create = true;
+    perm.read = true;
+    perm.update = false;
+    perm.assign = false;
+    perm.delete = false;
+    perm.share = false;
+    perm.download = false;
+    perm.allowPermit = false;
+    perm.publish = false;
+    perm.isActive = false;
+
+    return perm;
+  }
+
   searchAddUsers(e) {
     if (e && e?.component?.itemsSelected?.length > 0) {
       let permissions = this.data.permissions ?? [];
       const data = e?.component?.itemsSelected[0];
       if (data) {
-        let perm = new BP_Processes_Permissions();
-        perm.objectID = data?.UserID;
-        perm.objectName = data?.UserName;
-        perm.objectType = 'U';
-        perm.read = true;
-        perm.full = true;
-        perm.create = true;
-        perm.assign = true;
-        perm.update = true;
-        perm.delete = true;
-        perm.isActive = true;
-
+        let perm = this.defaultRoleNotAdmin(data?.UserID, data?.UserName, 'U');
         permissions = this.checkUserPermission(permissions, perm);
         this.data.permissions = permissions;
       }
@@ -602,29 +634,20 @@ export class PopupAddProcessComponent {
       //Người giám sát
       for (let i = 0; i < value.length; i++) {
         let data = value[i];
-        let perm = new BP_Processes_Permissions();
-        perm.objectName =
-          data?.objectType != '1'
-            ? data.text == null || data.text == ''
-              ? data?.objectName
-              : data?.text
-            : this.user?.userName;
-
-        perm.objectID =
+        let perm = this.defaultRoleNotAdmin(
           data?.objectType != '1'
             ? data.id != null
               ? data.id
               : null
-            : this.user?.userID;
-        perm.objectType = data.objectType;
-        perm.full = true;
-        perm.create = true;
-        perm.read = true;
-        perm.assign = true;
-        perm.edit = true;
-        // perm.publish = true;
-        perm.delete = true;
-        perm.isActive = true;
+            : this.user?.userID,
+          data?.objectType != '1'
+            ? data.text == null || data.text == ''
+              ? data?.objectName
+              : data?.text
+            : this.user?.userName,
+          data.objectType
+        );
+
         permissions = this.checkUserPermission(permissions, perm);
       }
       this.data.permissions = permissions;
@@ -662,9 +685,9 @@ export class PopupAddProcessComponent {
   clickRoles() {
     let title = this.gridViewSetup?.Permissions?.headerText ?? 'Phân quyền';
     let formModel = new FormModel();
-    formModel.formName = 'DPProcessesPermissions';
-    formModel.gridViewName = 'grvDPProcessesPermissions';
-    formModel.entityName = 'DP_Processes_Permissions';
+    formModel.formName = 'Processes_Permissions';
+    formModel.gridViewName = 'grvProcesses_Permissions';
+    formModel.entityName = 'BP_Processes_Permissions';
     let dialogModel = new DialogModel();
     dialogModel.zIndex = 999;
     dialogModel.FormModel = formModel;
@@ -819,29 +842,27 @@ export class PopupAddProcessComponent {
                   stepNo: this.data?.steps[1].stepNo,
                   fieldID: element.recID,
                   memo: this.data?.steps[1].memo,
-                  refID: ''
+                  refID: '',
                 };
                 obj.refID = obj.recID;
                 this.data.documentControl = [obj];
               } else if (
-                  element.documentControl &&
-                  element.documentControl.length > 0
-                ) {
-                  debugger
-                  var doc = JSON.parse(
-                    JSON.stringify(this.data.documentControl)
-                  );
-                  if(!doc) doc = [];
-                  element.documentControl.forEach((docu) => {
-                    docu.stepID = this.data?.steps[1].recID;
-                    docu.stepNo = this.data?.steps[1].stepNo;
-                    docu.fieldID = element.recID;
-                    docu.memo = this.data?.steps[1].memo;
-                    var index = doc.findIndex((x) => x.recID == docu.recID);
-                    if (index >= 0) doc[index] = docu;
-                    else doc.push(docu);
-                  });
-                  this.data.documentControl = doc;
+                element.documentControl &&
+                element.documentControl.length > 0
+              ) {
+                debugger;
+                var doc = JSON.parse(JSON.stringify(this.data.documentControl));
+                if (!doc) doc = [];
+                element.documentControl.forEach((docu) => {
+                  docu.stepID = this.data?.steps[1].recID;
+                  docu.stepNo = this.data?.steps[1].stepNo;
+                  docu.fieldID = element.recID;
+                  docu.memo = this.data?.steps[1].memo;
+                  var index = doc.findIndex((x) => x.recID == docu.recID);
+                  if (index >= 0) doc[index] = docu;
+                  else doc.push(docu);
+                });
+                this.data.documentControl = doc;
               }
             }
 

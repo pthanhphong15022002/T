@@ -262,12 +262,18 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         'StartProcessAsync',
         [this.view?.dataService?.dataSelected?.recID]
       )
-      .subscribe((res) => {
+      .subscribe((res:any) => {
         if (res) {
           let data = this.view?.dataService?.dataSelected;
-          data.status = "2";
+          if(res?.recID){
+            data = res
+          }
+          else{
+            data.status = '2';
+          }
           this.notifiSer.notifyCode('SYS034');
           (this.view.currentView as any).kanban.updateCard(data);
+          this.view.dataService.update(data).subscribe();
         }
       });
   }
@@ -328,7 +334,10 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
       if (res?.event) {
         if (type == 'add')
           (this.view.currentView as any).kanban.addCard(res?.event);
-        else (this.view.currentView as any).kanban.updateCard(res?.event);
+        else {
+          (this.view.currentView as any).kanban.updateCard(res?.event);
+          this.view.dataService.update(res?.event).subscribe()
+        }
       }
     });
   }
