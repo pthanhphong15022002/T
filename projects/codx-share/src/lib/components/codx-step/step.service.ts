@@ -713,7 +713,7 @@ export class StepService {
     };
     let option = new SidebarModel();
     option.Width = '800px';
-    option.zIndex = 1001;
+    option.zIndex = 1000;
     option.FormModel = formModel;
     await firstValueFrom(
       this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
