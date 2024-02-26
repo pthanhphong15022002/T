@@ -20,10 +20,7 @@ export class PopupPermissionsProcessesComponent {
   //Role
   full: boolean = false;
   read: boolean;
-  assign: boolean;
-  update: boolean;
-  delete: boolean;
-  // publish: boolean;
+  share: boolean;
   create: boolean;
   //Date
   startDate: Date;
@@ -57,47 +54,48 @@ export class PopupPermissionsProcessesComponent {
         oldIndex > -1 &&
         this.lstPermissions[oldIndex] != null
       ) {
-        this.lstPermissions[oldIndex].full = this.full;
+        this.lstPermissions[oldIndex].roleType = this.full ? 'O' : 'P';
         this.lstPermissions[oldIndex].read = this.read;
         this.lstPermissions[oldIndex].create = this.create;
-        this.lstPermissions[oldIndex].update = this.update;
         // this.lstPermissions[oldIndex].publish = this.publish;
-        this.lstPermissions[oldIndex].delete = this.delete;
-        this.lstPermissions[oldIndex].assign = this.assign;
+        this.lstPermissions[oldIndex].share = this.share;
         this.lstPermissions[oldIndex].isActive = true;
-
+        this.lstPermissions[oldIndex] = this.defaultRole(
+          this.lstPermissions[oldIndex],
+          this.lstPermissions[oldIndex].roleType
+        );
         // this.permissions[oldIndex].startDate = this.startDate;
         // this.lstPermissions[oldIndex].endDate = this.endDate;
       }
     }
 
     if (this.lstPermissions[index] != null) {
-      this.full =
-        this.lstPermissions[index].read &&
-        this.lstPermissions[index].create &&
-        this.lstPermissions[index].update &&
-        this.lstPermissions[index].delete &&
-        this.lstPermissions[index].assign;
+      this.full = this.lstPermissions[index].roleType == 'O';
       // this.lstPermissions[index].publish;
       this.read = this.lstPermissions[index].read;
       this.create = this.lstPermissions[index].create;
-      this.update = this.lstPermissions[index].update;
-      // this.publish = this.lstPermissions[index].publish;
-      this.delete = this.lstPermissions[index].delete;
-      this.assign = this.lstPermissions[index].assign;
-
+      this.share = this.lstPermissions[index].share;
       this.currentPemission = index;
     } else {
       this.full = false;
       this.read = false;
       this.create = false;
-      this.update = false;
-      // this.publish = false;
-      this.delete = false;
-      this.assign = false;
+      this.share = false;
       this.currentPemission = index;
     }
     this.detectorRef.detectChanges();
+  }
+
+  defaultRole(perm: BP_Processes_Permissions, roleType: string) {
+    perm.update = roleType == 'O' ? true : false;
+    perm.assign = roleType == 'O' ? true : false;
+    perm.delete = roleType == 'O' ? true : false;
+    perm.download = roleType == 'O' ? true : false;
+    perm.allowPermit = roleType == 'O' ? true : false;
+    perm.publish = roleType == 'O' ? true : false;
+    perm.isActive = roleType == 'O' ? true : false;
+
+    return perm;
   }
   //#endregion
 
@@ -107,13 +105,10 @@ export class PopupPermissionsProcessesComponent {
     switch (type) {
       case 'full':
         this.full = data;
-        if (this.isSetFull) {
-          this.read = data;
-          this.create = data;
-          this.update = data;
-          // this.publish = data;
-          this.delete = data;
-          this.assign = data;
+        if (this.full) {
+          this.read = true;
+          this.create = true;
+          this.share = true;
         }
         break;
       default:
@@ -123,17 +118,7 @@ export class PopupPermissionsProcessesComponent {
     }
 
     if (type != 'full' && data == false) this.full = false;
-
-    if (
-      this.read &&
-      this.create &&
-      this.update &&
-      // this.publish &&
-      this.delete &&
-      this.assign
-    )
-      this.full = true;
-
+    this.lstPermissions[this.currentPemission].roleType = this.full ? 'O' : 'P';
     this.detectorRef.detectChanges();
   }
 
@@ -152,13 +137,14 @@ export class PopupPermissionsProcessesComponent {
       this.currentPemission > -1 &&
       this.lstPermissions[this.currentPemission] != null
     ) {
-      this.lstPermissions[this.currentPemission].full = this.full;
       this.lstPermissions[this.currentPemission].read = this.read;
       this.lstPermissions[this.currentPemission].create = this.create;
-      this.lstPermissions[this.currentPemission].assign = this.assign;
-      this.lstPermissions[this.currentPemission].delete = this.delete;
-      this.lstPermissions[this.currentPemission].update = this.update;
-      this.lstPermissions[this.currentPemission].isActive = true;
+      this.lstPermissions[this.currentPemission].share = this.share;
+      this.lstPermissions[this.currentPemission] = this.defaultRole(
+        this.lstPermissions[this.currentPemission],
+        this.lstPermissions[this.currentPemission].roleType
+      );
+
       // this.lstPermissions[this.currentPemission].publish = this.publish;
     }
     this.dialog.close(this.lstPermissions);
