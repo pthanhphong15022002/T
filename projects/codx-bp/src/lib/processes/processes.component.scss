@@ -173,10 +173,9 @@
 
 .m-w-70 {
   max-width: 70% !important;
-
 }
 
-.m-w-30{
+.m-w-30 {
   max-width: 30% !important;
 }
 
@@ -185,6 +184,13 @@
   font-weight: 400;
   border-radius: 1rem;
   font-size: 11px;
-  background-color: #EAF0FF !important;
-  color: #005DC7;
+  background-color: #eaf0ff !important;
+  color: #005dc7;
+}
+
+.user-mini-icon {
+  width: 25px !important;
+  min-width: 25px !important;
+  height: 25px !important;
+  line-height: 25px !important;
 }

@@ -57,7 +57,7 @@ export class ProcessesComponent
   popoverList: any;
   readonly btnAdd: string = 'btnAdd';
   asideMode: string;
-
+  vllBP016 = [];
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -111,6 +111,12 @@ export class ProcessesComponent
         id: this.btnAdd,
       },
     ];
+
+    this.cache.valueList('BP016').subscribe(vll => {
+      if (vll && vll?.datas?.length > 0) {
+        this.vllBP016 = vll.datas;
+      }
+    })
   }
 
   //#region  event emit change codx-view
