@@ -195,7 +195,10 @@ export class ProjectTasksViewComponent
       dialogAdd.closed.subscribe((returnData) => {
         if (returnData?.event) {
           if(returnData.event=='assignTask'){
-            this.addTask(this.view.dataService.dataSelected?.recID)
+            setTimeout(()=>{
+              this.addTask(this.view.dataService.dataSelected?.recID)
+            },100)
+
           }
           //this.view?.dataService?.update(returnData?.event);
         } else {
