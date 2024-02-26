@@ -439,7 +439,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
 
   loadContentWord(url: any, uploadId: any = null) {
     let http: XMLHttpRequest = new XMLHttpRequest();
-    let content = { url };
+    let content = { fileUrl: url };
     http.withCredentials = true;
     http.open('Post', this.serviceUrl, true);
     http.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
