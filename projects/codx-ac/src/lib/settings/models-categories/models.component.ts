@@ -8,26 +8,27 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import {
+  ButtonModel,
+  CallFuncService,
+  DialogRef,
+  RequestOption,
+  SidebarModel,
   UIComponent,
   ViewModel,
-  ButtonModel,
-  DialogRef,
-  CallFuncService,
   ViewType,
-  SidebarModel,
-  RequestOption,
 } from 'codx-core';
-import { DimensionGroupsAddComponent } from './dimension-groups-add/dimension-groups-add.component';
+import { ModelsAddComponent } from './models-add/models-add.component';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'lib-dimension-groups',
-  templateUrl: './dimension-groups.component.html',
-  styleUrls: ['./dimension-groups.component.css'],
+  selector: 'lib-inventory',
+  templateUrl: './models.component.html',
+  styleUrls: ['./models.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DimensionGroupsComponent extends UIComponent {
+export class ModelsComponent extends UIComponent {
   //#region Contructor
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
   views: Array<ViewModel> = [];
@@ -68,7 +69,6 @@ export class DimensionGroupsComponent extends UIComponent {
       },
     ];
   }
-
   onDestroy(){
     this.destroy$.next();
     this.destroy$.complete();
@@ -79,7 +79,7 @@ export class DimensionGroupsComponent extends UIComponent {
   }
   //#endregion
 
-  //#region Functione
+  //#region Function
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
@@ -87,20 +87,6 @@ export class DimensionGroupsComponent extends UIComponent {
         break;
     }
   }
-  // clickMF(e, data) {
-  //   switch (e.functionID) {
-  //     case 'SYS02':
-  //       this.delete(data);
-  //       break;
-  //     case 'SYS03':
-  //       this.edit(e, data);
-  //       break;
-  //     case 'SYS04':
-  //       this.copy(e, data);
-  //       break;
-  //   }
-  // }
-
   clickMoreFunction(e, data) {
     switch (e.functionID) {
       case 'SYS02':
@@ -117,7 +103,7 @@ export class DimensionGroupsComponent extends UIComponent {
   addNew(e) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
     this.view.dataService.addNew().subscribe((res: any) => {
-      if(res){
+      if (res) {
         res.isAdd = true;
         let data = {
           headerText: this.headerText,
@@ -126,15 +112,35 @@ export class DimensionGroupsComponent extends UIComponent {
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = '550px';
+        option.Width = '800px';
         let dialog = this.callfunc.openSide(
-          DimensionGroupsAddComponent,
+          ModelsAddComponent,
           data,
           option,
           this.view.funcID
         );
-      }       
-    });
+      }
+    })
+    // this.headerText = e.text + ' ' + this.funcName;
+    // this.view.dataService.addNew().subscribe((res: any) => {
+    //   var obj = {
+    //     formType: 'add',
+    //     headerText: this.headerText,
+    //   };
+    //   let option = new SidebarModel();
+    //   option.DataService = this.view.dataService;
+    //   option.FormModel = this.view.formModel;
+    //   option.Width = '800px';
+    //   this.dialog = this.callfunc.openSide(
+    //     PopAddInventoryComponent,
+    //     obj,
+    //     option,
+    //     this.view.funcID
+    //   );
+    //   this.dialog.closed.subscribe((x) => {
+    //     if (x.event == null) this.view.dataService.clear();
+    //   });
+    // });
   }
   edit(e, dataEdit) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
@@ -153,9 +159,9 @@ export class DimensionGroupsComponent extends UIComponent {
           let option = new SidebarModel();
           option.DataService = this.view?.dataService;
           option.FormModel = this.view?.formModel;
-          option.Width = '550px';
+          option.Width = '800px';
           let dialog = this.callfunc.openSide(
-            DimensionGroupsAddComponent,
+            ModelsAddComponent,
             data,
             option,
             this.view.funcID
@@ -178,9 +184,9 @@ export class DimensionGroupsComponent extends UIComponent {
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = '550px';
+        option.Width = '800px';
         let dialog = this.callfunc.openSide(
-          DimensionGroupsAddComponent,
+          ModelsAddComponent,
           data,
           option,
           this.view.funcID

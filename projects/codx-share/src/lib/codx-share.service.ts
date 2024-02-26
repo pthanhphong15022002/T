@@ -1218,24 +1218,26 @@ export class CodxShareService {
     var bm = data.filter(
       (x: { functionID: string }) => x.functionID == 'SYS207'
     );
-    bm[0].disabled = true;
-    if (datas?.statusApproval != '3') {
-      var check = this.checkStatusApproval(
-        datas?.approvalRecID,
-        datas?.statusApproval
-      );
-      if (isObservable(check)) {
-        check.subscribe((item) => {
+    if (bm && bm[0]) {
+      bm[0].disabled = true;
+      if (datas?.statusApproval != '3') {
+        var check = this.checkStatusApproval(
+          datas?.approvalRecID,
+          datas?.statusApproval
+        );
+        if (isObservable(check)) {
+          check.subscribe((item) => {
+            var bm = data.filter(
+              (x: { functionID: string }) => x.functionID == 'SYS207'
+            );
+            bm[0].disabled = !item;
+          });
+        } else {
           var bm = data.filter(
             (x: { functionID: string }) => x.functionID == 'SYS207'
           );
-          bm[0].disabled = !item;
-        });
-      } else {
-        var bm = data.filter(
-          (x: { functionID: string }) => x.functionID == 'SYS207'
-        );
-        bm[0].disabled = !check;
+          bm[0].disabled = !check;
+        }
       }
     }
   }

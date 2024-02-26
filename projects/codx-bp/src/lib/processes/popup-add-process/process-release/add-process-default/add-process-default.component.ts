@@ -32,6 +32,7 @@ export class AddProcessDefaultComponent implements OnInit{
   subTitle:any;
   tableField:any;
   user:any;
+  isAttach= false;
   constructor(
     private notifySvr: NotificationsService,
     private auth: AuthStore,
@@ -348,7 +349,9 @@ export class AddProcessDefaultComponent implements OnInit{
         var dt = JSON.parse(JSON.stringify(elm));
         var index = this.dataIns.documentControl.findIndex(x=>x.recID == elm.recID);
         if(index>=0) this.dataIns.documentControl[index] = dt;
-      })
+      });
+
+      //this.api.execSv("BP","BP","ProcessInstancesBusiness","UpdateInsAsync",this.dataIns).subscribe();  
     }
   
   }
@@ -375,10 +378,21 @@ export class AddProcessDefaultComponent implements OnInit{
         'StartProcessAsync',
         [recID]
       )
-      .subscribe((res) => {
+      .subscribe((res:any) => {
         if (res) {
+          if(res?.recID){
+            this.dataIns=res;
+          }
+          else{
+            this.dataIns.status = '2';
+          }
           this.dialog.close(this.dataIns);
         }
       });
+  }
+
+  dataChangeAttachment(e:any)
+  {
+    this.isAttach = e;
   }
 }

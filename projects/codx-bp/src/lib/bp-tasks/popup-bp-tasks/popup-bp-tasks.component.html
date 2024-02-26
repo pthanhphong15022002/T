@@ -218,19 +218,19 @@
 
 
       <ng-container
-        *ngIf="data?.activityType == 'Approve'"
+        *ngIf="data?.activityType == 'Approve' && data?.status != '3'"
         [ngTemplateOutlet]="buttonApprove"
       ></ng-container>
       <ng-container
-        *ngIf="data?.activityType == 'Check'"
+        *ngIf="data?.activityType == 'Check'  && data?.status != '3'"
         [ngTemplateOutlet]="buttonCheck"
       ></ng-container>
       <ng-container
-        *ngIf="data?.activityType == 'Task' || data?.activityType == 'Form'"
+        *ngIf="(data?.activityType == 'Task' || data?.activityType == 'Form') && data?.status != '3'"
         [ngTemplateOutlet]="buttonTask"
       ></ng-container>
       <ng-container
-        *ngIf="data?.activityType == 'Sign'"
+        *ngIf="data?.activityType == 'Sign'  && data?.status != '3'"
         [ngTemplateOutlet]="buttonSign"
       ></ng-container>
       <ng-template #buttonApprove>

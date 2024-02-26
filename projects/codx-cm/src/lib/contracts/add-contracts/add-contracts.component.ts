@@ -117,7 +117,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   contractRefID = '';
   view = [];
   listField = [];
-  customerID = {};
+  customerID = "";
   listProcessNo = [];
   listTypeContract = [];
   listCustomFile: any[] = [];
@@ -274,6 +274,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.contractRefID = dt?.data?.contractRefID;
     this.recIDContract = dt?.data?.recIDContract;
     this.businessLineID = dt?.data?.businessLineID;
+    this.customerID = dt?.data?.customerID;
     this.stepsTasks = dt?.data?.stepsTasks || {};
     this.contractsInput = dt?.data?.contract || dt?.data?.dataCM || null;
     this.user = this.authStore.get();
@@ -392,8 +393,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.contracts.effectiveFrom = new Date();
         this.contracts.applyProcess = false;
         this.contracts.displayed = true;
+        this.contracts.approveStatus = null;
         this.contracts.currencyID = this.currencyIDDefault;
         this.contracts.businessLineID = this.businessLineID || '';
+        this.contracts.customerID = this.customerID;
         this.loadExchangeRate(this.contracts.currencyID); //tiền tệ
         this.setContractByDataOutput();
         this.getAutoNumber();
@@ -431,6 +434,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         delete this.contracts['id'];
         this.contracts.status = '1';
         this.contracts.contractID = '';
+        this.contracts.approveStatus = null;
         this.contracts.currencyID = this.currencyIDDefault;
         this.oldIdInstance = this.contracts?.refID;
         this.disabledShowInput = false;
@@ -504,7 +508,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     if (customer) {
       this.customerIdOld = this.contracts.customerID;
       this.customer = customer;
-      this.customerID = { customerID: customer?.recID };
       this.contracts.customerID = customer?.recID;
       this.contracts.customerName = customer?.customerName;
       this.contracts.taxCode = customer?.taxCode;
