@@ -520,7 +520,7 @@
         <thead>
           <tr class="bg-gray-100">
             <th *ngIf="settingCount" scope="col" class="fw-bold ps-4">
-              <div>
+              <div style="text-align: center !important">
                 <codx-label
                   name="lblNo"
                   formName="System"
@@ -556,7 +556,7 @@
               <!-- <tr > -->
               <tr cdkDrag cdkDragLockAxis="y">
                 <td class="ps-4" *ngIf="settingCount">
-                  <div>
+                  <div style="text-align: center !important">
                     <span>{{ index + 1 }}</span>
                   </div>
                 </td>
@@ -571,9 +571,18 @@
                         : ''
                     "
                   >
-                    <codx-fields-format-value
-                      [data]="fieldFormat"
-                    ></codx-fields-format-value>
+                    <div
+                      [style]="
+                        fieldFormat.dataType == 'N' ||
+                        fieldFormat.dataType == 'CF'
+                          ? 'float : right '
+                          : ''
+                      "
+                    >
+                      <codx-fields-format-value
+                        [data]="fieldFormat"
+                      ></codx-fields-format-value>
+                    </div>
                   </td>
                 </ng-container>
                 <td>
@@ -635,6 +644,8 @@
                 <td class="ps-4">
                   <div>
                     <span
+                      class="fw-bold"
+                      style="float: right"
                       [innerHTML]="cell | sumColumnsTable : arrDataValue"
                     ></span>
                   </div>
@@ -679,7 +690,9 @@
               <ng-container *ngFor="let cell of columns">
                 <td class="ps-4">
                   <div>
-                    <span> {{ cell?.totalColumns ? 0 : "" }}</span>
+                    <span class="fw-bold" style="float: right">
+                      {{ cell?.totalColumns ? 0 : "" }}</span
+                    >
                   </div>
                 </td>
               </ng-container>

@@ -151,7 +151,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   countInputChangeAuto = 0;
   // task
   instance = new tmpInstances();
-  viewTask;
+  viewTask = {};
   stepsTasks;
   oldIdInstance = '';
   listApproverView;
@@ -1682,19 +1682,19 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         return false;
       }
       if (!this.stepsTasks['taskName']?.trim()) {
-        message.push(this.view['taskName']);
+        message.push(this.viewTask['taskName']);
       }
       if (this.stepsTasks?.roles?.length <= 0) {
-        message.push(this.view['roles']);
+        message.push(this.viewTask['roles']);
       }
 
       if (this.isStartIns) {
         if (this.stepsTasks?.status != '3') {
           if (!this.stepsTasks?.startDate) {
-            message.push(this.view['startDate']);
+            message.push(this.viewTask['startDate']);
           }
           if (!this.stepsTasks?.endDate) {
-            message.push(this.view['endDate']);
+            message.push(this.viewTask['endDate']);
           }
         }
       } else {
@@ -1702,7 +1702,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           !this.stepsTasks['durationDay'] &&
           !this.stepsTasks['durationHour']
         ) {
-          message.push(this.view['durationDay']);
+          message.push(this.viewTask['durationDay']);
         }
       }
       if (message.length > 0) {
