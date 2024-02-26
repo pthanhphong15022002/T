@@ -1653,6 +1653,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   addFile(fileItem: any) {
     var that = this;
+    fileItem.avatar = null;
+    fileItem.item = null;
     var done = this.fileService.addFile(
       fileItem,
       this.actionType,
