@@ -46,7 +46,12 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   @Input() filter: any;
   @Input() favoriteID = '00000000-0000-0000-0000-000000000009';
   @Input() favoriteName = '';
+  @Input() predicate = '';
+  @Input() predicateChild = '';
+  @Input() dataValue = '';
+  @Input() dataValueChild = '';
   @Input() searchText: any;
+  @Input() itemTemplate!: TemplateRef<any>;
 
   isShow = true;
   isClose = false;
@@ -104,6 +109,10 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     this.gridModelTree.filter = this.filter;
     this.gridModelTree.favoriteID = this.favoriteID;
     this.gridModelTree.searchText = this.searchText;
+    if(this.predicate && this.dataValue){
+      this.gridModelTree.predicate=this.predicate;
+      this.gridModelTree.dataValue=this.dataValue;
+    }
     this.loadData();
     //cu ne
     // var gridModel = new DataRequest();
@@ -226,13 +235,16 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
 
     this.loadedTree = false;
     if (parent.isItem) {
-      this.api
+      if(this.predicateChild && this.dataValue){
+        let predicate = this.predicateChild+'&&ParentID=@1';
+        let datavalue = this.dataValueChild+';'+parent.data.recID.toString()
+        this.api
         .execSv<any>(
           'TM',
           'ERM.Business.TM',
           'TaskBusiness',
           'GetListTasksChildrenDeTailsTreeOneStepAsync',
-          parent.data.taskID
+          [parent.data.taskID,predicate,datavalue]
         )
         .subscribe((res) => {
           if (res && res?.length > 0) {
@@ -240,6 +252,24 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
             this.loadedTree = true;
           }
         });
+      }
+      else{
+        this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskBusiness',
+          'GetListTasksChildrenDeTailsTreeOneStepAsync',
+          [parent.data.taskID]
+        )
+        .subscribe((res) => {
+          if (res && res?.length > 0) {
+            parent.data.items = res;
+            this.loadedTree = true;
+          }
+        });
+      }
+
     }
   }
 

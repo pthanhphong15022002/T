@@ -27,9 +27,13 @@ export class FixedAssetsComponent extends UIComponent {
   views: Array<ViewModel> = [];
   btnAdd: ButtonModel[] = [{ id: 'btnAdd' }];
   functionName: string;
+  isSubView: boolean;
 
   constructor(injector: Injector) {
     super(injector);
+    this.router.data.subscribe((res) => {
+      if (res && res['isSubView']) this.isSubView = res.isSubView;
+    });
   }
   //#endregion
 

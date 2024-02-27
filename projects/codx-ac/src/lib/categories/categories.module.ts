@@ -32,74 +32,92 @@ var routes: Routes = [
       {
         path: 'currencies/:funcID',
         component: CurrencyComponent,
+        data: { isSubView: true },
       },
       {
         path: 'chartofaccounts/:funcID',
         component: AccountsComponent,
+        data: { isSubView: true },
       },
       {
         path: 'customers/:funcID',
         component: CustomersComponent,
+        data: { isSubView: true },
       },
       {
         path: 'vendors/:funcID',
         component: VendorsComponent,
+        data: { isSubView: true },
       },
       {
         path: 'items/:funcID',
         component: ItemsComponent,
+        data: { isSubView: true },
       },
       {
         path: 'warehouses/:funcID',
         component: WarehousesComponent,
+        data: { isSubView: true },
       },
       {
         path: 'unitsofmearsure/:funcID',
         component: UnitsofmearsureComponent,
+        data: { isSubView: true },
       },
       {
         path: 'inventorymodels/:funcID',
         component: ModelsComponent,
+        data: { isSubView: true },
       },
       {
         path: 'postingaccounts/:funcID',
         component: ItempostingaccountsComponent,
+        data: { isSubView: true },
       },
       {
         path: 'dimensiongroups/:funcID',
         component: DimensionGroupsComponent,
+        data: { isSubView: true },
       },
       {
         path: 'arpostingaccounts/:funcID',
         component: ArPostingAccountsComponent,
+        data: { isSubView: true },
       },
       {
         path: 'appostingaccounts/:funcID',
         component: APPostingAccountsComponent,
+        data: { isSubView: true },
       },
       {
         path: 'fapostingaccounts/:funcID',
         component: FAPostingAccountsComponent,
+        data: { isSubView: true },
       },
       {
         path: 'fixedassets/:funcID',
         component: FixedAssetsComponent,
+        data: { isSubView: true },
       },
       {
         path: 'fiscalperiods/:funcID',
         component: FiscalPeriodsComponent,
+        data: { isSubView: true },
       },
       {
         path: 'itembatchs/:funcID',
         component: ItemBatchsComponent,
+        data: { isSubView: true },
       },
       {
         path: 'itemseries/:funcID',
         component: ItemSeriesComponent,
+        data: { isSubView: true },
       },
       {
         path: 'vatcodes/:funcID',
         component: VATCodesComponent,
+        data: { isSubView: true },
       },
       {
         path: 'dynamic/:funcID',

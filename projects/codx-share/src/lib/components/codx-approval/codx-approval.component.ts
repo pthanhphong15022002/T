@@ -254,6 +254,9 @@ export class CodxApprovalComponent
           ) {
             list[i].disabled = false;
           }
+          else if(value.status == '3' && list[i].functionID == 'SYS209'){
+            list[i].disabled = false;
+          }
         } else if (
           value.status == '5' ||
           value.status == '2' ||

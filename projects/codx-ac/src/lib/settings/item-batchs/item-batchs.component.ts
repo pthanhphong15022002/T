@@ -1,15 +1,29 @@
-import { ChangeDetectorRef, Component, Injector, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { ButtonModel, CallFuncService, DialogRef, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  Optional,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  ButtonModel,
+  CallFuncService,
+  DialogRef,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { PopAddItemBatchsComponent } from './pop-add-item-batchs/pop-add-item-batchs.component';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-item-batchs',
   templateUrl: './item-batchs.component.html',
-  styleUrls: ['./item-batchs.component.css']
+  styleUrls: ['./item-batchs.component.css'],
 })
-export class ItemBatchsComponent extends UIComponent{
-  
+export class ItemBatchsComponent extends UIComponent {
   //Constructor
 
   views: Array<ViewModel> = [];
@@ -23,6 +37,7 @@ export class ItemBatchsComponent extends UIComponent{
   private destroy$ = new Subject<void>();
 
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+  isSubView: boolean;
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
@@ -31,14 +46,16 @@ export class ItemBatchsComponent extends UIComponent{
   ) {
     super(inject);
     this.dialog = dialog;
+    this.router.data.subscribe((res) => {
+      if (res && res['isSubView']) this.isSubView = res.isSubView;
+    });
   }
 
   //End Constructor
-  
+
   //Init
 
-  onInit(): void {
-  }
+  onInit(): void {}
 
   ngAfterViewInit() {
     this.views = [
@@ -53,11 +70,12 @@ export class ItemBatchsComponent extends UIComponent{
       },
     ];
 
-    this.cache.functionList(this.view?.funcID)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      this.funcName = res.defaultName.toLowerCase();
-    });
+    this.cache
+      .functionList(this.view?.funcID)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        this.funcName = res.defaultName.toLowerCase();
+      });
   }
 
   //End Init
@@ -137,39 +155,34 @@ export class ItemBatchsComponent extends UIComponent{
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService
-      .copy()
-      .subscribe((res: any) => {
-        var obj = {
-          formType: 'copy',
-          headerText: e.text + ' ' + this.funcName,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.Width = '550px';
-        this.dialog = this.callfunc.openSide(
-          PopAddItemBatchsComponent,
-          obj,
-          option
-        );
-      });
+    this.view.dataService.copy().subscribe((res: any) => {
+      var obj = {
+        formType: 'copy',
+        headerText: e.text + ' ' + this.funcName,
+      };
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfunc.openSide(
+        PopAddItemBatchsComponent,
+        obj,
+        option
+      );
+    });
   }
 
   delete(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.delete([data], true).subscribe((res: any) => {
-    });
+    this.view.dataService.delete([data], true).subscribe((res: any) => {});
   }
 
-  hideMoreFunction(e: any)
-  {
+  hideMoreFunction(e: any) {
     var bm = e.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'SYS003' ||
-        x.functionID == 'SYS004'
+        x.functionID == 'SYS003' || x.functionID == 'SYS004'
     );
     bm.forEach((morefunction) => {
       morefunction.disabled = true;

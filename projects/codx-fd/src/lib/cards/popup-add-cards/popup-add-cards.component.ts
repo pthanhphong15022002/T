@@ -226,7 +226,13 @@ export class PopupAddCardsComponent implements OnInit, AfterViewInit {
         if (res) {
           console.log(res);
           this.evoucher = res.gifts?.filter((x: any) => x.category == '4');
+          this.amountEvoucher = this.evoucher.reduce((p, c) => {
+            return p + c.price * c.quantity;
+          }, 0);
           this.gifts = res.gifts?.filter((x: any) => x.category == '1');
+          this.amount = this.gifts.reduce((p, c) => {
+            return p + c.price * c.quantity;
+          }, 0);
           this.givePoint = res.point;
           this.form.patchValue({ coins: this.givePoint });
           this.lstShare = res.listShare;

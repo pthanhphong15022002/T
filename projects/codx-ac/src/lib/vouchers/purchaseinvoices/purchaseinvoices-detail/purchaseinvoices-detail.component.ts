@@ -121,6 +121,12 @@ export class PurchaseinvoicesDetailComponent extends UIDetailComponent {
   createTab(e: any, ele: TabComponent) {
     this.showHideTab(this.itemSelected?.subType, ele);
   }
+
+  selecting(event){
+    if (event.isSwiped) {
+      event.cancel = true;
+    }
+  }
   //#endregion Init
 
   //#region Event

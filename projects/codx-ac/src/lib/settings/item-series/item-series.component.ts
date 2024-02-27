@@ -1,29 +1,46 @@
-import { ChangeDetectorRef, Component, Injector, Optional, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  Optional,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { Button } from '@syncfusion/ej2-angular-buttons';
-import { ButtonModel, CallFuncService, DialogRef, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  ButtonModel,
+  CallFuncService,
+  DialogRef,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { PopAddItemSeriesComponent } from './pop-add-item-series/pop-add-item-series.component';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-item-series',
   templateUrl: './item-series.component.html',
-  styleUrls: ['./item-series.component.css']
+  styleUrls: ['./item-series.component.css'],
 })
 export class ItemSeriesComponent extends UIComponent {
-
   //Constructor
 
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  button: ButtonModel[] = [{
-    id: 'btnAdd'
-  }];
+  button: ButtonModel[] = [
+    {
+      id: 'btnAdd',
+    },
+  ];
   headerText: any;
   columnsGrid = [];
   dialog: DialogRef;
   funcName: any = '';
   gridViewSetup: any;
-  private destroy$ = new Subject<void>()
+  private destroy$ = new Subject<void>();
+  isSubView: boolean;
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
@@ -32,14 +49,16 @@ export class ItemSeriesComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
+    this.router.data.subscribe((res) => {
+      if (res && res['isSubView']) this.isSubView = res.isSubView;
+    });
   }
 
   //End Constructor
 
   //Init
 
-  onInit(): void {
-  }
+  onInit(): void {}
 
   ngAfterViewInit() {
     this.views = [
@@ -54,7 +73,8 @@ export class ItemSeriesComponent extends UIComponent {
       },
     ];
 
-    this.cache.functionList(this.view?.funcID)
+    this.cache
+      .functionList(this.view?.funcID)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         this.funcName = res.defaultName.toLowerCase();
@@ -138,38 +158,34 @@ export class ItemSeriesComponent extends UIComponent {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService
-      .copy()
-      .subscribe((res: any) => {
-        var obj = {
-          formType: 'copy',
-          headerText: e.text + ' ' + this.funcName,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.Width = '550px';
-        this.dialog = this.callfunc.openSide(
-          PopAddItemSeriesComponent,
-          obj,
-          option
-        );
-      });
+    this.view.dataService.copy().subscribe((res: any) => {
+      var obj = {
+        formType: 'copy',
+        headerText: e.text + ' ' + this.funcName,
+      };
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfunc.openSide(
+        PopAddItemSeriesComponent,
+        obj,
+        option
+      );
+    });
   }
 
   delete(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.delete([data], true).subscribe((res: any) => {
-    });
+    this.view.dataService.delete([data], true).subscribe((res: any) => {});
   }
 
   hideMoreFunction(e: any) {
     var bm = e.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'SYS003' ||
-        x.functionID == 'SYS004'
+        x.functionID == 'SYS003' || x.functionID == 'SYS004'
     );
     bm.forEach((morefunction) => {
       morefunction.disabled = true;

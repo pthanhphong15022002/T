@@ -6,7 +6,7 @@
     <codx-treeview
       id="tree"
       #treeView
-      [itemTemplate]="templateTreeView"
+      [itemTemplate]="itemTemplate || templateTreeView"
       [data]="dataTree"
       [enableCheck]="false"
       idField="recID"

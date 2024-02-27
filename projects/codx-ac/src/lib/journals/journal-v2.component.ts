@@ -17,6 +17,7 @@ import {
   ButtonModel,
   CodxGridviewV2Component,
   ScrollComponent,
+  DialogModel,
 } from 'codx-core';
 import { JournalsAddComponent } from '../journals/journals-add/journals-add.component';
 import { NameByIdPipe } from '../pipes/name-by-id.pipe';
@@ -33,6 +34,7 @@ import { CodxAcService } from '../codx-ac.service';
 import { IJournalPermission } from '../journals/interfaces/IJournalPermission.interface';
 import { IJournal } from '../journals/interfaces/IJournal.interface';
 import { toCamelCase } from '../utils';
+import { JournalViewsettingComponent } from './journals-viewsetting/journal-viewsetting/journal-viewsetting.component';
 
 @Component({
   selector: 'lib-test-journal',
@@ -65,11 +67,6 @@ export class JournalV2Component extends UIComponent implements OnInit {
   mainFilterValue: string;
   subFilterValue: string;
   ViewType = ViewType;
-  vllAC125: any = [];
-  vllAC126: any = [];
-  vllAC108: any = [];
-  vllAC109: any = [];
-  vllAC111: any = [];
   button: ButtonModel[] = [
     {
       icon: 'icon-i-journal-plus',
@@ -137,17 +134,6 @@ export class JournalV2Component extends UIComponent implements OnInit {
         this.mainFilterValue = res.datas[0].value;
       }
     });
-
-    this.getVll('AC134', 'journalTypes134');
-    this.getVll('AC135', 'journalTypes135');
-    this.getVll('AC136', 'journalTypes136');
-    this.getVll('AC137', 'journalTypes137');
-    this.getVll('AC138', 'journalTypes138');
-    this.getVll('AC125', 'vllAC125');
-    this.getVll('AC126', 'vllAC126');
-    this.getVll('AC108', 'vllAC108');
-    this.getVll('AC109', 'vllAC109');
-    this.getVll('AC111', 'vllAC111');
   }
 
   ngAfterViewInit() {
@@ -522,13 +508,30 @@ export class JournalV2Component extends UIComponent implements OnInit {
     }
   }
 
-  getVll(vllCode: string, propName: string) {
-    this.cache
-      .valueList(vllCode)
-      .pipe(map((d) => d.datas.map((v) => v.value)))
-      .subscribe((res) => {
-        this[propName] = res;
-      });
+  // getVll(vllCode: string, propName: string) {
+  //   this.cache
+  //     .valueList(vllCode)
+  //     .pipe(map((d) => d.datas.map((v) => v.value)))
+  //     .subscribe((res) => {
+  //       this[propName] = res;
+  //     });
+  // }
+  viewSetting(journal:any){
+    let data = {
+      journal: journal,
+    };
+    let opt = new DialogModel();
+      opt.FormModel = this.view.formModel;
+      let dialog = this.callfc.openForm(
+        JournalViewsettingComponent,
+        null,
+        null,
+        null,
+        '',
+        data,
+        '',
+        opt
+      );
   }
   //#endregion Function
 }

@@ -83,3 +83,82 @@
     background-size: 76%;
     border-radius: 4px;
 }
+
+.dropzone.dropzone-default {
+    padding: 0;
+    text-align: center;
+    cursor: pointer;
+    border: 0.5px dashed #6c757d;
+    border-radius: 0.42rem;
+    height: 238px;
+    width: 100%;
+    background: #f5f8fa;
+    overflow: hidden;
+}
+.dropzone-msg{
+    border: 4px var(--white) solid;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 8px!important;
+    overflow: hidden;
+    background-color: white;
+}
+  
+.dropzone-msg-title {
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--gray-800);
+}
+  
+.dropzone.dropzone-default.dropzone-primary {
+    border-color: #3699ff;
+}
+  
+.dropzone-msg-desc {
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 14px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    /* Text/Muted */
+    color: #6c757d;
+}
+  
+.image-100 {
+    width: 100px !important;
+    height: 100px !important;
+}
+
+.total-coins {
+    font-size: 24px;
+    font-weight: 600;
+    color: #FDAD30;
+}
+
+.font-total-coins {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.cursor-unset {
+    cursor: unset !important;
+}
+
+.disabled {
+    background-color: #e9ecef;
+}
+
+.working {
+    background-color: var(--primary-lighter);
+}
+
+.mgb-20 {
+    margin-bottom: 20px;
+}

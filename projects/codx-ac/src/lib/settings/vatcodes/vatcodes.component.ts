@@ -1,27 +1,44 @@
-import { ChangeDetectorRef, Component, Injector, Optional, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  Optional,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { Button } from '@syncfusion/ej2-angular-buttons';
-import { ButtonModel, CallFuncService, DialogRef, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  ButtonModel,
+  CallFuncService,
+  DialogRef,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { PopAddVatcodesComponent } from './pop-add-vatcodes/pop-add-vatcodes.component';
 
 @Component({
   selector: 'lib-vatcodes',
   templateUrl: './vatcodes.component.html',
-  styleUrls: ['./vatcodes.component.css']
+  styleUrls: ['./vatcodes.component.css'],
 })
-export class VATCodesComponent extends UIComponent{
- 
+export class VATCodesComponent extends UIComponent {
   //Constructor
 
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  button: ButtonModel[] = [{
-    id: 'btnAdd'
-  }];
+  button: ButtonModel[] = [
+    {
+      id: 'btnAdd',
+    },
+  ];
   headerText: any;
   columnsGrid = [];
   dialog: DialogRef;
   funcName: any = '';
   gridViewSetup: any;
+  isSubView: boolean;
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
@@ -30,14 +47,16 @@ export class VATCodesComponent extends UIComponent{
   ) {
     super(inject);
     this.dialog = dialog;
+    this.router.data.subscribe((res) => {
+      if (res && res['isSubView']) this.isSubView = res.isSubView;
+    });
   }
 
   //End Constructor
-  
+
   //Init
-  
-  onInit(): void {
-  }
+
+  onInit(): void {}
 
   ngAfterViewInit() {
     this.views = [
@@ -53,8 +72,7 @@ export class VATCodesComponent extends UIComponent{
     ];
 
     this.cache.functionList(this.view.funcID).subscribe((res) => {
-      if(res)
-      {
+      if (res) {
         this.funcName = res.defaultName;
       }
     });
@@ -138,23 +156,21 @@ export class VATCodesComponent extends UIComponent{
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService
-      .copy()
-      .subscribe((res: any) => {
-        var obj = {
-          formType: 'copy',
-          headerText: e.text + ' ' + this.funcName,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.Width = '800px';
-        this.dialog = this.callfunc.openSide(
-          PopAddVatcodesComponent,
-          obj,
-          option
-        );
-      });
+    this.view.dataService.copy().subscribe((res: any) => {
+      var obj = {
+        formType: 'copy',
+        headerText: e.text + ' ' + this.funcName,
+      };
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '800px';
+      this.dialog = this.callfunc.openSide(
+        PopAddVatcodesComponent,
+        obj,
+        option
+      );
+    });
   }
 
   delete(data) {
@@ -172,12 +188,10 @@ export class VATCodesComponent extends UIComponent{
     });
   }
 
-  hideMoreFunction(e: any)
-  {
+  hideMoreFunction(e: any) {
     var bm = e.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'SYS003' ||
-        x.functionID == 'SYS004'
+        x.functionID == 'SYS003' || x.functionID == 'SYS004'
     );
     bm.forEach((morefunction) => {
       morefunction.disabled = true;

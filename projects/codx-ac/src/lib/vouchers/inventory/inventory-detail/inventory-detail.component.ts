@@ -1,24 +1,24 @@
-import { Component, ElementRef, EventEmitter, Injector, Input, Output, SimpleChange, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Injector, Input, Output, SimpleChange, ViewChild } from '@angular/core';
 import { extend } from '@syncfusion/ej2-angular-grids';
-import { CallFuncService, DataRequest, DialogModel, FormModel, NotificationsService, RequestOption, SidebarModel, TenantStore, UIComponent } from 'codx-core';
+import { CallFuncService, CodxService, DataRequest, DialogModel, FormModel, NotificationsService, RequestOption, SidebarModel, TenantStore, UIComponent, UIDetailComponent } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { IssueTransactionsAddComponent } from '../issue-transactions-add/issue-transactions-add.component';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
+import { InventoryAddComponent } from '../inventory-add/inventory-add.component';
 import { CodxAcService } from '../../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
 
 @Component({
-  selector: 'issue-transactions-detail',
-  templateUrl: './issue-transactions-detail.component.html',
-  styleUrls: ['./issue-transactions-detail.component.css']
+  selector: 'receipt-transactions-detail',
+  templateUrl: './inventory-detail.component.html',
+  styleUrls: ['./inventory-detail.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IssueTransactionsDetailComponent extends UIComponent {
+export class InventoryDetailComponent extends UIDetailComponent {
   
   //#region Constructor
-  @Input() recID: any;
   @Input() dataItem: any;
   @Input() dataService: any;
   @Input() formModel: any;
@@ -47,14 +47,18 @@ export class IssueTransactionsDetailComponent extends UIComponent {
     private acService: CodxAcService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore
+    private tenant: TenantStore,
+    public codxService: CodxService
   ) {
     super(inject);
   }
   //#endregion Constructor
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    if(this.recID) this.getDataDetail(this.dataItem,this.recID);
+    if(!this.formModel) this.getFormModel();
+  }
 
   ngAfterViewInit() {
     //* thiết lập cấu hình sidebar
@@ -84,10 +88,11 @@ export class IssueTransactionsDetailComponent extends UIComponent {
   //#endregion Init
 
   //#region Event
+
   //#endregion
 
   //#region Function
-
+  
   /**
    * *Hàm get data chi tiết
    * @param data
@@ -111,18 +116,6 @@ export class IssueTransactionsDetailComponent extends UIComponent {
         this.detectorRef.detectChanges();
       });
     }
-  }
-
-  /**
-   * *Hàm call set default data khi thêm mới chứng từ
-   * @returns
-   */
-  setDefault(data: any, action: any = '') {
-    return this.api.exec('AC', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
-      data,
-      this.journal,
-      action,
-    ]);
   }
 
   /**
@@ -155,5 +148,17 @@ export class IssueTransactionsDetailComponent extends UIComponent {
     }
   }
 
+  getFormModel()
+  {
+    this.cache.functionList(this.funcID).subscribe(item=>{
+      this.formModel = new FormModel();
+      this.formModel.entityName = item?.entityName;
+      this.formModel.formName = item?.formName;
+      this.formModel.gridViewName = item?.gridViewName;
+    })
+  }
   //#endregion
+
+
+  
 }
