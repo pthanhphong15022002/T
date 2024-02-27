@@ -31,6 +31,7 @@ import { TaskExtendsComponent } from 'projects/codx-tm/src/lib/taskextends/taske
 import { TasksComponent } from 'projects/codx-tm/src/lib/tasks/tasks.component';
 import { PopupAddTaskComponent } from './projects/popup-add-task/popup-add-task.component';
 import { PopupSelectUserComponent } from './projects/popup-select-user/popup-select-user.component';
+import { PopupViewTaskComponent } from './projects/popup-view-task/popup-view-task.component';
 
 export const routes: Routes = [
   {
@@ -73,7 +74,8 @@ export const routes: Routes = [
     PopupProjectDetailsComponent,
     ProjectTasksViewComponent,
     PopupSelectUserComponent,
-    PopupAddTaskComponent
+    PopupAddTaskComponent,
+    PopupViewTaskComponent
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
