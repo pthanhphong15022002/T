@@ -5,6 +5,7 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
+  Util,
 } from 'codx-core';
 import { CustomFieldService } from '../../custom-field.service';
 import { Html } from '@syncfusion/ej2-angular-diagrams';
@@ -322,6 +323,7 @@ export class PopupCustomFieldComponent implements OnInit {
   //openpopup
   rezisePopup(width = '1000') {
     this.isShowMore = !this.isShowMore;
+    width = Util.getViewPort().width.toString();
     this.dialog.setWidth(this.isShowMore ? width : this.widthDefault);
     this.changeDetectorRef.detectChanges();
   }

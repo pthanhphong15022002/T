@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { Internationalization } from '@syncfusion/ej2-base';
 import {
   ApiHttpService,
   AuthStore,
@@ -80,14 +81,14 @@ export class FormatDataValuePipe implements PipeTransform {
 
   formatNumber(dataValue, dataFormat): any {
     if (!dataValue) return of(dataValue || '');
+    let intl = new Internationalization();
+    let nFormatter = intl.getNumberFormat({
+      skeleton: 'n6',
+    });
     if (dataFormat == 'I') {
       dataValue = Number.parseFloat(dataValue).toFixed(0);
-      return of(dataValue || '');
-    }
-
-    dataValue =
-      Number.parseFloat(dataValue).toFixed(2) + (dataFormat == 'P' ? ' %' : '');
-    return of(dataValue || '');
+    } else dataValue = Number.parseFloat(dataValue).toFixed(2);
+    return of(nFormatter(dataValue) + (dataFormat == 'P' ? ' %' : '') || '');
   }
 
   //----------Format  Data time --------------------//
