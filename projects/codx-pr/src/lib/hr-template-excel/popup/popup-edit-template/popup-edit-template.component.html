@@ -1,0 +1,115 @@
+<codx-form
+  [headerText]="headerText"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+></codx-form>
+
+<ng-template #body>
+    <div class="container p-4">
+        <div class="form-group">
+            <codx-label [formModel]="dialog?.formModel" fiedName="HRTemplateID" [default]="'Mã bảng lương'"></codx-label>
+            <codx-input [formModel]="dialog?.formModel" field="hrTemplateID" [crrValue]="data?.hrTemplateID" (valueChange)="valueChange($event)"></codx-input>
+        </div>
+        <div class="form-group">
+            <codx-label [formModel]="dialog?.formModel" fiedName="HRTemplateName" [default]="'Tên bảng lương'"></codx-label>
+            <codx-input [formModel]="dialog?.formModel" field="hrTemplateName" [crrValue]="data?.hrTemplateName" (valueChange)="valueChange($event)"></codx-input>
+        </div>
+        <div class="form-group">
+            <codx-label [formModel]="dialog?.formModel" fiedName="Memo" [default]="'Tên bảng lương'"></codx-label>
+            <codx-input [formModel]="dialog?.formModel" field="memo" [crrValue]="data?.memo" (valueChange)="valueChange($event)"></codx-input>
+        </div>
+        <div class="form-group">
+            <codx-label [formModel]="dialog?.formModel" fiedName="GroupSalCode" [default]="'Tên bảng lương'"></codx-label>
+            <codx-input [formModel]="dialog?.formModel" field="groupSalCode" (valueChange)="valueChange($event)"></codx-input>
+        </div>
+        <div class="form-group">
+            <div class="d-flex align-items-center justify-content-between w-100 mb-2">
+                <codx-label [formModel]="dialog?.formModel" fiedName="lblTemplateSalary" [default]="'Mẫu bảng lương'" class="fw-bold text-primary"></codx-label>
+                <span><i class="icon-info text-primary"></i></span>
+            </div>
+            <ng-container *ngIf="rpReportList && rpReportList?.templateID;else noTemplate">
+                <div class="flex flex-column w-100">
+                    <codx-attachment 
+                        class="mb-2"
+                        [objectId]="rpReportList.templateID" 
+                        [objectType]="'AD_ExcelTemplates'"
+                        [displayThumb]="'simple'" 
+                        hideImageUpload="0" 
+                        showMessage="0" 
+                        hideBtnSave="1" 
+                        hideFolder="1" 
+                        hideUploadBtn="1" 
+                        [hideDes]="'1'" 
+                        [hideDelete]="'1'" 
+                        [hideMoreF]="'0'">
+                    </codx-attachment>
+                    <div class="btn btn-outline-primary" (click)="addTemplate()">
+                        <span class="me-1"><i class="swap_vertical_circle text-primary"></i></span>
+                        <codx-label [formModel]="dialog?.formModel" name="lblChangeTemplate" [default]="'Thay mẫu khác'" class="text-primary"></codx-label>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #noTemplate>
+                <div class="btn btn-outline-primary" (click)="addTemplate()">
+                    <span class="me-1"><i class="icon-playlist_add text-primary"></i></span>
+                    <codx-label [formModel]="dialog?.formModel" name="lblSelectTemplate" [default]="'Chọn mẫu'" class="text-primary"></codx-label>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex align-items-center justify-content-between w-100">
+        <div class="d-flex align-items-center">
+            <div>
+                <button type="button" class="btn btn-outline-primary" (click)="dowloadExampleTemplate()">
+                    <span class="me-1"><i class="icon-download text-primary"></i></span>
+                    <codx-label [formModel]="dialog?.formModel" name="lblExampleTemplate" [default]="'Template mẫu'" class="text-primary"></codx-label>
+                </button>
+            </div>
+            <div class="btn btn-outline-success" (click)="viewDataSet()">
+                <span class="me-1"><i class="icon-eye text-success"></i></span>
+                <codx-label [formModel]="dialog?.formModel" name="lblSelectTemplate" [default]="'Xem tập dữ liệu'" class="text-success"></codx-label>
+            </div>
+        </div>
+        <div>
+            <button class="btn btn-primary" (click)="onSaveForm()">
+                <codx-label [formModel]="dialog.formModel" name="lblSubmit" [default]="'Lưu'"></codx-label>
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #tmpViewDataSet let-dialogPopup>
+    <div class="d-flex flex-column align-items-stretch w-100 h-100 p-4">
+        <div class="row">
+          <div class="d-flex align-items-center justify-content-between p-4">
+              <codx-label [formModel]="dialog?.formModel" name="lblViewDataSet" [default]="'Xem tập dữ liệu'" class="fs-3 fw-bold"></codx-label>
+              <button type="button" class="btn btn-icon btn-light" (click)="dialogPopup?.close()">
+                  <span class="icon-close icon-18"></span>
+              </button>
+          </div> 
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6">
+                        <codx-label [formModel]="dialog?.formModel" name="lblFieldName" [default]="'Tên trường dữ liệu'" class="fw-bold"></codx-label>
+                    </div>
+                    <div class="col-6">
+                        <codx-label [formModel]="dialog?.formModel" name="lblHeaderText" [default]="'Diễn giải'" class="fw-bold"></codx-label>
+                    </div>
+                </div>
+            </div>
+            <ng-container *ngIf="dataSets && dataSets.length > 0">
+                <div class="col-12 overflow-auto h-100">
+                    <div *ngFor="let item of dataSets" class="row py-2">
+                        <div class="col-6 text-left">{{item.fieldName}}</div>
+                        <div class="col-6 text-left">{{item.headerText}}</div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+      </div>
+</ng-template>

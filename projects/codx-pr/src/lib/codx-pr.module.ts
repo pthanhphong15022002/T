@@ -38,6 +38,7 @@ import { PopupKowdMonthComponent } from './kowds/popup/popup-kowd-month/popup-ko
 import { PopupRequestKowdComponent } from './kowds/popup/popup-request-kowd/popup-request-kowd.component';
 import { HrTemplateExcelComponent } from './hr-template-excel/hr-template-excel.component';
 import { ViewDetailTemplateComponent } from './hr-template-excel/view-detail-template/view-detail-template.component';
+import { PopupEditTemplateComponent } from './hr-template-excel/popup/popup-edit-template/popup-edit-template.component';
 
 
 export const routes: Routes = [
@@ -112,7 +113,8 @@ const T_Component: Type<any>[] = [
   PopupKowdMonthComponent,
   PopupRequestKowdComponent,
   HrTemplateExcelComponent,
-  ViewDetailTemplateComponent
+  ViewDetailTemplateComponent,
+  PopupEditTemplateComponent
 ];
 
 @NgModule({
