@@ -4610,3 +4610,9 @@ Custom Scrollbars
 codx-aside .menu-link .menu-icon span[class*="icon-"]::before{
   color:var(--primary);
 }
+.card-body.scroll-y{
+  overflow: auto;
+}
+.hover-scroll-overlay-y, .hover-scroll-overlay-y:hover {
+  overflow-y: auto!important;
+}
