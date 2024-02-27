@@ -155,7 +155,7 @@
       </div>
     </div>
     <div [ngClass]="isReadMore ? 'card-pur-more' : 'card-pur-less'">
-      <ejs-tab #elementTabDetail>
+      <ejs-tab (selecting)="selecting($event)" #elementTabDetail>
         <e-tabitems>
           <!--Start tab Thông tin hóa đơn -->
           <e-tabitem>

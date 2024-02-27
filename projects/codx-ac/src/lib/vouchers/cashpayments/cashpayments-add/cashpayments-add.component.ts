@@ -772,6 +772,12 @@ export class CashPaymentAddComponent extends UIComponent {
     }
   }
 
+  selecting(event){
+    if (event.isSwiped) {
+      event.cancel = true;
+    }
+  }
+
   //#endregion Event
 
   //#region Method

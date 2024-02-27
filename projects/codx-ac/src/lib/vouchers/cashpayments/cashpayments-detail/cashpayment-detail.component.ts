@@ -118,6 +118,12 @@ export class CashpaymentDetailComponent extends UIDetailComponent {
     this.showHideTab(this.itemSelected?.subType, ele);
   }
 
+  selecting(event){
+    if (event.isSwiped) {
+      event.cancel = true;
+    }
+  }
+
   //#endregion Init
 
   //#region Event
