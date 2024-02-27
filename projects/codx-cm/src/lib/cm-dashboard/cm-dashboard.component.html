@@ -2663,18 +2663,19 @@
           <e-column
             field="noIndex"
             headerText="STT"
-            textAlign="Left"
+            textAlign="Right"
             width="50"
           ></e-column>
           <e-column
             field="AssetName"
             headerText="Tên tòa nhà"
-            textAlign="Left"
+            textAlign="Right"
             width="90"
           ></e-column>
           <e-column
             field="UsableArea"
             headerText="Diện tích cho thuê ( m2)"
+            textAlign="Right"
             width="120"
           ></e-column>
         </e-columns>
@@ -2734,7 +2735,7 @@
                 <e-column
                   field="noIndex"
                   headerText="STT"
-                  textAlign="Left"
+                  textAlign="Right"
                   width="50"
                 ></e-column>
                 <ng-container *ngFor="let f of girdViewDashboardType">
@@ -2762,16 +2763,10 @@
               [legendSettings]="legendSettingsColumn"
             >
               <e-series-collection>
-                <e-column
-                  field="noIndex"
-                  headerText="STT"
-                  textAlign="Left"
-                  width="50"
-                ></e-column>
                 <ng-container *ngFor="let f of girdViewDashboardType">
                   <e-series
                     [dataSource]="item"
-                    type="Column"
+                    type="StackingColumn"
                     xName="assetName"
                     [yName]="f.field"
                     [name]="f.headerText"

@@ -139,20 +139,9 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
   showMore() {
     let isShowMore = !this.isShowMore;
     let width = '1100';
-    // tạm tắt
-    // if (isShowMore) {
-    //   let element = document.getElementById('table');
-    //   if (element) {
-    //     width = (element.offsetWidth + 50).toString();
-    //   }
-    // }
-    // if (Number.parseFloat(width) <= Number.parseFloat(this.widthDefault))
-    //   return;
 
     this.isShowMore = isShowMore;
-    if (Number.parseFloat(width) > Util.getViewPort().width - 100)
-      width = (Util.getViewPort().width - 100).toString();
-
+    width = Util.getViewPort().width.toString();
     this.dialog.setWidth(this.isShowMore ? width : this.widthDefault);
     this.changeRef.detectChanges();
   }

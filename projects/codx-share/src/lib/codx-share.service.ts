@@ -434,6 +434,8 @@ export class CodxShareService {
           gridModel.pageSize = dataService.request.pageSize;
           gridModel.predicate = dataService.request.predicates;
           gridModel.dataValue = dataService.request.dataValues;
+          gridModel.filter = dataService.request.filter;
+          gridModel.searchText = dataService.request.searchText;
         }
         gridModel.groupFields = 'createdBy';
         this.callfunc.openForm(
@@ -932,7 +934,7 @@ export class CodxShareService {
       {
         title: title,
         formModel: formModel,
-        approveControl: funcControl?? "0",
+        approveControl: funcControl ?? '0',
         mode: status,
       }
     );

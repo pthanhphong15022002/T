@@ -17,21 +17,21 @@
         <codx-label fiedName="TaskName" [formModel]="form.formModel" default="Tên công việc" [ngClass]="grvSetup['TaskName']?.isRequire ? 'required' : ''">
         </codx-label>
         <codx-input field="taskName" [crrValue]="data?.taskName" type="text"
-           (valueChange)="valueChange($event)">
+           (valueChange)="valueChange($event)" [disabled]="!enableEdit">
         </codx-input>
       </div>
       <div class="form-group ps-0">
         <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả công việc" [ngClass]="grvSetup['Memo']?.isRequire ? 'required' : ''">
         </codx-label>
         <codx-input field="memo" [crrValue]="data?.memo" type="text"
-           (valueChange)="valueChange($event)">
+           (valueChange)="valueChange($event)" [disabled]="!enableEdit">
         </codx-input>
       </div>
       <div class="form-group ps-0">
         <codx-label fiedName="TaskGroupID" [formModel]="form.formModel" default="Nhóm công việc" [ngClass]="grvSetup['TaskGroupID']?.isRequire ? 'required' : ''">
         </codx-label>
         <codx-input field="taskGroupID" [crrValue]="data?.taskGroupID" type="combobox" refType="3" refValue="TaskGroupProjects"
-           (valueChange)="valueChange($event)">
+           (valueChange)="valueChange($event)" [disabled]="!enableEdit">
         </codx-input>
       </div>
       <div class="row border-bottom">
@@ -39,38 +39,44 @@
           <codx-label fiedName="StartDate" [formModel]="form.formModel" default="Ngày bắt đầu" [ngClass]="grvSetup['StartDate']?.isRequire ? 'required' : ''">
           </codx-label>
           <codx-input type="datetime" class="test-datetime" field="startDate" [crrValue]="data.startDate" format="d"
-            (valueChange)="valueDateChange($event)">
+            (valueChange)="valueDateChange($event)" [disabled]="!enableEdit">
           </codx-input>
         </div>
         <div class="col-4 form-group" >
           <codx-label fiedName="EndDate" [formModel]="form.formModel" default="Ngày kết thúc" [ngClass]="grvSetup['EndDate']?.isRequire ? 'required' : ''">
           </codx-label>
           <codx-input type="datetime" class="test-datetime" field="endDate" [crrValue]="data.endDate" format="d"
-            (valueChange)="valueDateChange($event)">
+            (valueChange)="valueDateChange($event)" [disabled]="!enableEdit">
           </codx-input>
         </div>
         <div class="col-4 form-group" >
           <codx-label fiedName="Priority" [formModel]="form.formModel" default="Độ ưu tiên" [ngClass]="grvSetup['Priority']?.isRequire ? 'required' : ''">
           </codx-label>
           <codx-input type="valuelist"  field="priority" [crrValue]="data.priority" refValue="PM010"
-            (valueChange)="valueChange($event)">
+            (valueChange)="valueChange($event)" [disabled]="!enableEdit">
           </codx-input>
         </div>
       </div>
       <div class="row pt-3 border-bottom">
         <div class="container w-100 h-100">
           <div class="row">
-              <div class="col-4 p-0 ps-1">
+              <div class="col-2 p-0 ps-1">
                 <codx-label fiedName="resources" [formModel]="form.formModel" default="Người xử lý" class="text-primary fw-bold" >
                 </codx-label>
               </div>
-              <div class="col-8">
+              <div class="col-10">
                 <div class="d-flex flex-row justify-content-end">
                   <ng-container *ngFor="let item of listRoles">
-                    <div class="d-flex align-items-center justify-content-end me-4">
-                      <span [inlineSVG]="'./assets/themes/pm/default/img/'+ item?.icon"></span>
-                      <div class="fs-8 text-gray-500 ms-1">{{ item?.text }}</div>
-                    </div>
+                    <button
+                    type="button"
+                    class="btn btn-sm ms-2 btn-light-primary"
+                    (click)="enableEdit ?openControlShare(item.value):''"
+                  >
+                    <i class="me-1"
+                      ><img src="/assets/themes/tm/default/img/{{ item.icon }}" alt=""
+                    /></i>
+                    <span class="fs-8">{{ item.text }}</span>
+                  </button>
                   </ng-container>
                 </div>
               </div>
@@ -85,9 +91,16 @@
             </div>
           </div>
         </div>
-        <div class="w-100 overflow-scroll" style="max-height:200px">
+        <div class="w-100">
           <div class="d-flex align-items-center mb-4 pb-2 position-relative parent-container mt-3" *ngFor="let item of members">
-            <div class="symbol symbol-30px symbol-circle me-4">
+            <div class="symbol symbol-30px symbol-circle me-4"
+            popoverClass="userPopoverClass"
+            [ngbPopover]="popoverSelectRoles"
+            placement="right"
+            #p="ngbPopover"
+            (mouseenter)="enableEdit ? showPopover(p, item.resourceID):''"
+            autoClose="outside"
+            >
               <codx-img [width]="30" [objectId]="item?.resourceID" objectType="AD_Users" [objectName]="item?.resourceName"></codx-img>
               <div style="position: absolute; right: 0px; bottom: 0px">
                 <ng-container *ngFor="let role of listRoles">
@@ -129,7 +142,7 @@
                 </codx-vll>
             </div>
             <div class="d-flex flex-column justify-content-center align-items-center me-5 ">
-            <!-- <i class="icon-clear icon-16 " (click)="removeMember(item)"></i> -->
+            <i class="icon-clear icon-16 " (click)="removeMember(item)"></i>
             </div>
 
 
@@ -166,7 +179,7 @@
           </div>
         </div>
         <div class="w-25 d-flex align-items-center justify-content-end">
-          <span class="icon-attach_file icon-18 me-2 text-primary" (click)="attach()"></span>
+          <span class="icon-attach_file icon-18 me-2 text-primary" (click)="enableEdit ?attach() : ''"></span>
         </div>
       </div>
       <div class="AttachmentFile-group flex-nowrap">
@@ -197,21 +210,25 @@
         </codx-label>
         <div class="container mx-auto pb-1">
           <form class="w-100 max-w-sm">
-            <div class="d-flex align-items-center  pt-3">
-              <input
+            <div class="d-flex align-items-center  pt-3 w-100">
+              <div style="width:90% !important">
+                <input
                 [(ngModel)]="newTask"
                 #input
                 name="newTask"
-                class="border-0"
+                class="border-0 w-100"
                 type="text"
                 placeholder="...Thêm công việc cần làm"
                 (keydown.enter)="addTask(input)"
                 (keydown.tab)="addTask(input)"
                 (blur)="addTask(input)"
+                [disabled]="!enableEdit"
               />
+              </div>
+
               <span
-                (click)="addTask(input)"
-                class="px-1 rounded border d-flex align-items-center text-hover-success"
+                (click)="enableEdit ? addTask(input):''"
+                class="px-1 ms-3 rounded border d-flex align-items-center text-hover-success"
               >
                 <i class="icon-playlist_add icon-21"></i>
             </span>
@@ -258,7 +275,7 @@
     </div>
     <div class="h-100 ms-1 ps-3" style="border-left: 2px solid #ddd" [ngStyle]="{width: action == 'add' ? '0%' : '40%'}" [ngClass]="action=='edit' ? '' : 'd-none'">
       <h5><codx-label name="lblTaskHistory" [formModel]="formModel" default="Lịch sử cập nhật"></codx-label></h5>
-      <div class="pt-3 h-50">
+      <div class="pt-3 h-75">
         <codx-history
           [objectID]="data?.recID"
           [formModel]="dialog?.formModel"
@@ -287,11 +304,13 @@
         *ngIf="!enableAttachment "
         class="btn btn-outline-secondary"
         (click)="attach()"
+        [disabled]="!enableEdit"
       ><i class="icon-attach_file"></i> Đính kèm</button>
       <button
         *ngIf="!enableChecklist"
         class="btn btn-outline-secondary"
         (click)="checklist()"
+        [disabled]="!enableEdit"
       ><i class="icon-fact_check"></i> Check list</button>
     </div>
     <div class="w-50 d-flex justify-content-end">
@@ -303,6 +322,7 @@
         default="Giao việc"
         class="btn btn-light-primary"
         (click)="assignTask()"
+        [disabled]="!enableEdit"
       ></button>
       <button
         codxLang
@@ -311,6 +331,7 @@
         default="Lưu"
         class="btn btn-primary"
         (click)="save()"
+        [disabled]="!enableEdit"
       ></button>
     </div>
   </div>
@@ -321,3 +342,21 @@
 
 
 </ng-container>
+<ng-template #popoverSelectRoles>
+  <div class="d-flex flex-column mb-1" >
+    <ng-container *ngFor="let item of listRoles">
+      <div
+        class="d-flex align-items-center btn btn-sm btn-white"
+        (click)="enableEdit ? selectRoseType(item.value) : ''"
+        style="cursor: pointer"
+      >
+        <span
+          ><img src="/assets/themes/tm/default/img/{{ item.icon }}" alt=""
+        /></span>
+        <div class="fs-7 ms-2 text-gray-600" style="padding-top: 2px">
+          {{ item.text }}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
