@@ -40,8 +40,6 @@ import { NameByIdPipe } from './pipes/name-by-id.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
 import { ReportsComponent } from './reports/reports.component';
 import { SearchingComponent } from './searching/searching.component';
-import { ReceiptTransactionsAddComponent } from './vouchers/receipt-transactions/receipt-transactions-add/receipt-transactions-add.component';
-import { ReceiptTransactionsComponent } from './vouchers/receipt-transactions/receipt-transactions.component';
 import { SalesinvoicesComponent } from './vouchers/salesinvoices/salesinvoices.component';
 import { DeductInterestExpensesComponent } from './periodic/deduct-interest-expenses/deduct-interest-expenses.component';
 import { PopAddDeductInterestExpensesComponent } from './periodic/deduct-interest-expenses/pop-add-deduct-interest-expenses/pop-add-deduct-interest-expenses.component';
@@ -67,14 +65,10 @@ import { TranformClassBorderPipe } from './pipes/tranform-class-border.pipe';
 import { PurchaseinvoicesComponent } from './vouchers/purchaseinvoices/purchaseinvoices.component';
 import { PurchaseinvoicesAddComponent } from './vouchers/purchaseinvoices/purchaseinvoices-add/purchaseinvoices-add.component';
 import { SalesinvoicesAddComponent } from './vouchers/salesinvoices/salesinvoices-add/salesinvoices-add.component';
-import { IssueTransactionsComponent } from './vouchers/issue-transactions/issue-transactions.component';
-import { IssueTransactionsAddComponent } from './vouchers/issue-transactions/issue-transactions-add/issue-transactions-add.component';
 import { IsObjectEmptyPipe } from './pipes/is-object-empty.pipe';
 import { CashreceiptsComponent } from './vouchers/cashreceipts/cashreceipts.component';
 import { CashreceiptsAddComponent } from './vouchers/cashreceipts/cashreceipts-add/cashreceipts-add.component';
 import { PurchaseinvoicesDetailComponent } from './vouchers/purchaseinvoices/purchaseinvoices-detail/purchaseinvoices-detail.component';
-import { IssueTransactionsDetailComponent } from './vouchers/issue-transactions/issue-transactions-detail/issue-transactions-detail.component';
-import { ReceiptTransactionsDetailComponent } from './vouchers/receipt-transactions/receipt-transactions-detail/receipt-transactions-detail.component';
 import { SalesinvoicesDetailComponent } from './vouchers/salesinvoices/salesinvoices-detail/salesinvoices-detail.component';
 import { TranformValueNumberPipe } from './pipes/tranform-value-number.pipe';
 import { AcctrantsTableComponent } from './share/ac-tableview/acctrants-table/acctrants-table.component';
@@ -127,6 +121,10 @@ import { RunDepreciationComponent } from './periodic/rundepreciation/rundeprecia
 import { NewvoucherComponent } from './share/add-newvoucher/newvoucher.component';
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { ViewresultComponent } from './share/periodic-control/viewresult/viewresult.component';
+import { JournalViewsettingComponent } from './journals/journals-viewsetting/journal-viewsetting/journal-viewsetting.component';
+import { InventoryDetailComponent } from './vouchers/inventory/inventory-detail/inventory-detail.component';
+import { InventoryComponent } from './vouchers/inventory/inventory.component';
+import { InventoryAddComponent } from './vouchers/inventory/inventory-add/inventory-add.component';
 export const routes: Routes = [
   {
     path: '',
@@ -155,6 +153,11 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
+        path: 'cashpaymentsbanks/:funcID/:journalNo',
+        component: CashPaymentsComponent,
+        data: { noReuse: true },
+      },
+      {
         path: 'assetjournals/:funcID/:journalNo',
         component: AssetJournalsComponent,
         data: { noReuse: true },
@@ -166,6 +169,11 @@ export const routes: Routes = [
       },
       {
         path: 'cashreceipts/:funcID/:journalNo',
+        component: CashreceiptsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'cashreceiptsbanks/:funcID/:journalNo',
         component: CashreceiptsComponent,
         data: { noReuse: true },
       },
@@ -241,13 +249,18 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'receipttransaction/:funcID/:journalNo',
-        component: ReceiptTransactionsComponent,
+        path: 'vouchersreceipts/:funcID/:journalNo',
+        component: InventoryComponent,
         data: { noReuse: true },
       },
       {
-        path: 'issuetransaction/:funcID/:journalNo',
-        component: ReceiptTransactionsComponent,
+        path: 'vouchersissues/:funcID/:journalNo',
+        component: InventoryComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'transfers/:funcID/:journalNo',
+        component: WarehouseTransfersComponent,
         data: { noReuse: true },
       },
       // {
@@ -319,11 +332,6 @@ export const routes: Routes = [
             component: PeriodicControlComponent,
           },
         ],
-      },
-      {
-        path: 'warehousetransfers/:funcID/:journalNo',
-        component: WarehouseTransfersComponent,
-        data: { noReuse: true },
       },
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
       //----phát hành quy trình DP-CRM----//
@@ -400,8 +408,8 @@ export const routes: Routes = [
     SalesinvoicesComponent,
     SalesinvoicesAddComponent,
     SearchingComponent,
-    ReceiptTransactionsComponent,
-    ReceiptTransactionsAddComponent,
+    InventoryComponent,
+    InventoryAddComponent,
     ReportsComponent,
     Group067Component,
     GroupShareComponent,
@@ -431,16 +439,13 @@ export const routes: Routes = [
     LayloutJournalComponent,
     TranformSubobjectPipe,
     TranformClassBorderPipe,
-    IssueTransactionsComponent,
-    IssueTransactionsAddComponent,
     IsObjectEmptyPipe,
     CashreceiptsComponent,
     CashreceiptsAddComponent,
     CashpaymentDetailComponent,
     CashrecieptDetailComponent,
     PurchaseinvoicesDetailComponent,
-    IssueTransactionsDetailComponent,
-    ReceiptTransactionsDetailComponent,
+    InventoryDetailComponent,
     SalesinvoicesDetailComponent,
     AcctrantsTableComponent,
     SettledinvoicesTableComponent,
@@ -478,6 +483,7 @@ export const routes: Routes = [
     RunDepreciationComponent,
     NewvoucherComponent,
     ViewresultComponent,
+    JournalViewsettingComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

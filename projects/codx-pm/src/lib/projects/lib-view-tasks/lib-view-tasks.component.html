@@ -11,6 +11,45 @@
   [idField]="idField"
   [selectedFirst]="false"
   [dataObj]="dataObj"
+  [predicate]="predicate"
+  [dataValue]="datavalue"
+  parentIDField="parentID"
+  [isSubView]="true"
   (buttonClick)="click($event)"
+  (clickMF)="clickMF($event)"
+  *ngIf="projectID && datavalue"
 >
 </codx-views>
+<ng-template #itemViewList let-data>
+  <share-view-list
+    [formModel]="view.formModel"
+    [vllStatus]="'PM012'"
+    [vllPriority]="'PM010'"
+    [data]="data"
+    [listRoles]="listRoles"
+    [showMoreFunc]="true"
+    [user]="user"
+  >
+  </share-view-list>
+</ng-template>
+<ng-template #treeView>
+  <share-tree-view
+    #viewTree
+    [formModel]="view.formModel"
+    [vllStatus]="vllStatus"
+    [listRoles]="listRoles"
+    [dataObj]="dataObj"
+    [filter]="view.dataService.filter"
+    [favoriteID]="view.dataService.favoriteID"
+    [searchText]="view.dataService.searchText"
+    [predicate]="predicate+'&&ParentID=null'"
+    [dataValue]="datavalue"
+    [predicateChild]="'Category=@0'"
+    [dataValueChild]="'3'"
+    [showMoreFunc]="true"
+    (clickMoreFunction)="clickMF($event)"
+    [itemTemplate]="itemViewList"
+    [user]="user"
+  >
+  </share-tree-view>
+</ng-template>

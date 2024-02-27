@@ -145,6 +145,7 @@ export class PopupAddProjectComponent extends UIComponent {
           tmpResource.roleType = 'PM';
           tmpResource.optional = false;
           tmpResource.quantity = 1;
+          tmpResource.objectType ='U';
           this.listRoles.forEach((element) => {
             if (element.value == tmpResource?.roleType) {
               tmpResource.icon = element?.icon;
@@ -169,6 +170,7 @@ export class PopupAddProjectComponent extends UIComponent {
           tmpResource.roleType = 'PM';
           tmpResource.optional = false;
           tmpResource.quantity = 1;
+          tmpResource.objectType='U';
           this.listRoles.forEach((element) => {
             if (element.value == tmpResource?.roleType) {
               tmpResource.icon = element?.icon;

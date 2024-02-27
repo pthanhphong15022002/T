@@ -29,17 +29,20 @@ export class WarehousesComponent extends UIComponent {
   //#region Contructor
   views: Array<ViewModel> = [];
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
-  button: ButtonModel[] = [{
-    id: 'btnAdd',
-  }];
+  button: ButtonModel[] = [
+    {
+      id: 'btnAdd',
+    },
+  ];
   funcName: any;
-  headerText:any;
+  headerText: any;
   private destroy$ = new Subject<void>();
-  constructor(
-    private inject: Injector,
-    private callfunc: CallFuncService,
-  ) {
+  isSubView: boolean;
+  constructor(private inject: Injector, private callfunc: CallFuncService) {
     super(inject);
+    this.router.data.subscribe((res) => {
+      if (res && res['isSubView']) this.isSubView = res.isSubView;
+    });
   }
   //#endregion
 
@@ -93,11 +96,11 @@ export class WarehousesComponent extends UIComponent {
   add(e) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
     this.view.dataService.addNew().subscribe((res: any) => {
-      if(res){
+      if (res) {
         res.isAdd = true;
         let data = {
           headerText: this.headerText,
-          dataDefault:{...res}
+          dataDefault: { ...res },
         };
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
@@ -109,7 +112,7 @@ export class WarehousesComponent extends UIComponent {
           option,
           this.view.funcID
         );
-      }       
+      }
     });
   }
   edit(e, dataEdit) {
@@ -117,39 +120,12 @@ export class WarehousesComponent extends UIComponent {
     if (dataEdit) {
       this.view.dataService.dataSelected = dataEdit;
     }
-    this.view.dataService
-      .edit(dataEdit)
-      .subscribe((res: any) => {
-        if(res){
-          res.isEdit = true;
-          let data = {
-            headerText: this.headerText,
-            dataDefault:{...res}
-          };
-          let option = new SidebarModel();
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.view?.formModel;
-          option.Width = '800px';
-          let dialog = this.callfunc.openSide(
-            WarehousesAddComponent,
-            data,
-            option,
-            this.view.funcID
-          );
-        }    
-      });
-  }
-  copy(e, dataCopy) {
-    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
-    if (dataCopy) {
-      this.view.dataService.dataSelected = dataCopy;
-    }
-    this.view.dataService.copy().subscribe((res: any) => {
-      if(res){
-        res.isCopy = true;
+    this.view.dataService.edit(dataEdit).subscribe((res: any) => {
+      if (res) {
+        res.isEdit = true;
         let data = {
           headerText: this.headerText,
-          dataDefault:{...res}
+          dataDefault: { ...res },
         };
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
@@ -161,7 +137,32 @@ export class WarehousesComponent extends UIComponent {
           option,
           this.view.funcID
         );
-      }   
+      }
+    });
+  }
+  copy(e, dataCopy) {
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
+    if (dataCopy) {
+      this.view.dataService.dataSelected = dataCopy;
+    }
+    this.view.dataService.copy().subscribe((res: any) => {
+      if (res) {
+        res.isCopy = true;
+        let data = {
+          headerText: this.headerText,
+          dataDefault: { ...res },
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '800px';
+        let dialog = this.callfunc.openSide(
+          WarehousesAddComponent,
+          data,
+          option,
+          this.view.funcID
+        );
+      }
     });
   }
   delete(dataDelete) {

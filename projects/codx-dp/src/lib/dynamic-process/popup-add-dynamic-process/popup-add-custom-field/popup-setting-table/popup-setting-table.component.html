@@ -155,6 +155,12 @@
               <!-- {{column.title}} -->
               <div>
                 <span>{{ column?.title }}</span>
+                <ng-container *ngIf="column?.dataType == 'CF'">
+                  &nbsp;
+                  <span [ngbTooltip]="column?.dataFormat" container="body"
+                    ><i class="icon-calculate icon-12 text-primary"></i
+                  ></span>
+                </ng-container>
               </div>
               <div>
                 <span class="text-gray-500">{{ column?.fieldName }}</span>
@@ -260,6 +266,7 @@
           <td class="ps-4" *ngIf="settingCount">
             <div>
               <codx-label
+                class="fw-bold"
                 name="lblSum"
                 formName="System"
                 [default]="'Tổng cộng'"
@@ -267,9 +274,8 @@
             </div>
           </td>
           <ng-container *ngFor="let cell of listColumns">
-            <td class="ps-4">
-              <div>
-                <!-- <span> {{ cell?.totalColumns ? 0 : "" }}</span> -->
+            <td class="">
+              <div style="text-align: center !important">
                 <codx-input
                   *ngIf="cell.dataType == 'N' || cell.dataType == 'CF'"
                   type="checkbox"

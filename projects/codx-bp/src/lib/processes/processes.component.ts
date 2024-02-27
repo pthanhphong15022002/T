@@ -57,7 +57,7 @@ export class ProcessesComponent
   popoverList: any;
   readonly btnAdd: string = 'btnAdd';
   asideMode: string;
-
+  vllBP016 = [];
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -111,6 +111,12 @@ export class ProcessesComponent
         id: this.btnAdd,
       },
     ];
+
+    this.cache.valueList('BP016').subscribe(vll => {
+      if (vll && vll?.datas?.length > 0) {
+        this.vllBP016 = vll.datas;
+      }
+    })
   }
 
   //#region  event emit change codx-view
@@ -252,6 +258,12 @@ export class ProcessesComponent
         this.codxService.navigate('',"/bp/instances/BPT011/"+this.itemSelected.recID);
         break;
       }
+      //Phát hành quy trình
+      case "BPT0105":
+      {
+        this.releaseProcess();
+        break;
+      }
       default: {
         this.codxShareService.defaultMoreFunc(
           e,
@@ -272,7 +284,13 @@ export class ProcessesComponent
     this.callfc.openForm(FormTestDiagramComponent,'',0,0,this.funcID,null,'',option);
   }
 
-  changeDataMF(e, data) {}
+  changeDataMF(e:any,data:any) {
+    var approvelCL = e.filter(
+      (x: { functionID: string }) =>
+        x.functionID == 'BPT0105'
+    );
+    if (approvelCL[0] && data?.status == "5") approvelCL[0].disabled = true;
+  }
   //#endregion
 
   //#region CRUD more func
@@ -433,4 +451,21 @@ export class ProcessesComponent
     return true;
   }
   //#endregion
+
+  //Phát hành quy trình
+  releaseProcess()
+  {
+    this.api.execSv("BP","BP","ProcessesBusiness","ReleaseAsync",this.view.dataService.dataSelected?.recID).subscribe(item=>{
+      if(item)
+      {
+        this.itemSelected = item;
+        this.view.dataService.update(item, true).subscribe();
+        this.notiSv.notifyCode("SV001")
+      }
+      else
+      {
+        this.notiSv.notifyCode("SV002")
+      }
+    })
+  }
 }

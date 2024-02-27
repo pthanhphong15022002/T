@@ -136,6 +136,7 @@ export class PopupAddProcessComponent {
   gridViewSetup: any;
   lstShowExtends = [];
   dataValueSettings: any;
+  countStage=0;
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
@@ -160,11 +161,12 @@ export class PopupAddProcessComponent {
 
   ngOnInit(): void {
     this.genData();
+    // this.bpSv.getEndDate(new Date(), '1', 4, 'STD').subscribe((res) => {});
   }
 
   genData() {
     if (this.action == 'add') {
-      this.data.category = '1';
+      this.data.category = '';
       this.api
         .execSv<any>(
           'SYS',
@@ -177,10 +179,11 @@ export class PopupAddProcessComponent {
           if (st && st['1']) {
             this.dataValueSettings = JSON.stringify(st['1']);
             this.data.settings = st['1'];
-          }else{
+          } else {
             this.data.settings = [];
           }
         });
+      this.defaultAdminPermission();
     }
   }
   ngAfterViewInit(): void {
@@ -202,6 +205,28 @@ export class PopupAddProcessComponent {
   onDestroy() {
     this.destroyFrom$.next();
     this.destroyFrom$.complete();
+  }
+
+  defaultAdminPermission() {
+    let perm = new BP_Processes_Permissions();
+    perm.objectID = this.user?.userID;
+    perm.objectName = this.user?.userName;
+    perm.objectType = '1';
+    perm.roleType = 'O';
+    perm.create = true;
+    perm.read = true;
+    perm.update = true;
+    perm.assign = true;
+    perm.delete = true;
+    perm.share = true;
+    perm.download = true;
+    perm.allowPermit = true;
+    perm.publish = true;
+    perm.isActive = true;
+
+    let permissions = [];
+    permissions.push(perm);
+    this.data.permissions = permissions;
   }
 
   getVll() {
@@ -234,14 +259,12 @@ export class PopupAddProcessComponent {
 
   setDefaultTitle() {
     const createField = (value, fieldType, isForm = false) => {
-      var values = value + "_1";
+      var values = value + '_1';
       const field = {
         recID: Util.uid(),
-        fieldName: (this.bpSv.createAutoNumber(
-          values,
-          this.extendInfos,
-          'fieldName'
-        )).toLowerCase(),
+        fieldName: this.bpSv
+          .createAutoNumber(values, this.extendInfos, 'fieldName')
+          .toLowerCase(),
         title: this.bpSv.createAutoNumber(value, this.extendInfos, 'title'),
         dataType: 'String',
         fieldType,
@@ -254,8 +277,8 @@ export class PopupAddProcessComponent {
       };
 
       if (isForm) {
-        field.description = 'Câu trả lời';
-        field.defaultValue = field.title;
+        field.description = field.title;
+        //field.defaultValue = field.title;
       }
 
       return field;
@@ -294,6 +317,7 @@ export class PopupAddProcessComponent {
     stage.stepName = vllStage.text + ' 1';
     stage.reminder = this.data.reminder;
     stage.eventControl = null;
+    stage.stepType = "1";
     var processallowDrag = null;
     var processDefaultProcess = null;
     var processCompleteControl = null;
@@ -331,6 +355,7 @@ export class PopupAddProcessComponent {
     form.memo = '';
     form.duration = 0;
     form.interval = '1';
+    form.stepType = "1";
     form.settings = JSON.stringify({
       icon: vllForm.icon,
       color: vllForm.color,
@@ -341,6 +366,12 @@ export class PopupAddProcessComponent {
     });
     lstStep.push(stage, form);
     this.data.steps = lstStep;
+    this.cache.message('BP001').subscribe((item) => {
+      this.data.steps[0].stepName = item?.customName;
+    });
+    this.cache.message('BP002').subscribe((item) => {
+      this.data.steps[1].stepName = item?.customName;
+    });
     this.setLstExtends();
   }
 
@@ -396,9 +427,9 @@ export class PopupAddProcessComponent {
     if (tabNo == 1) {
       this.processTab == 0 && this.processTab++;
       if (this.action == 'add') {
-        if(!this.checkRequired()) return null;
+        if (!this.checkRequired()) return null;
         this.data = { ...this.data };
-        this.action = 'edit'
+        this.action = 'edit';
         this.saveProcessStep().subscribe();
       }
     }
@@ -452,8 +483,8 @@ export class PopupAddProcessComponent {
     switch (currentTab) {
       case 0: {
         if (this.action == 'add') {
-          if(!this.checkRequired()) return null;
-          this.action = 'edit'
+          if (!this.checkRequired()) return null;
+          this.action = 'edit';
           this.data = { ...this.data };
           this.saveProcessStep().subscribe();
         }
@@ -462,8 +493,7 @@ export class PopupAddProcessComponent {
         this.processTab == 0 && this.processTab++;
         break;
       }
-      case 1:
-      {
+      case 1: {
         this.newNode = newNode;
         this.oldNode = oldNode;
         this.updateNodeStatus(oldNode, newNode);
@@ -566,23 +596,32 @@ export class PopupAddProcessComponent {
     );
   }
 
+  defaultRoleNotAdmin(objectID, objectName, objectType) {
+    let perm = new BP_Processes_Permissions();
+    perm.objectID = objectID;
+    perm.objectName = objectName;
+    perm.objectType = objectType;
+    perm.roleType = 'P';
+    perm.create = true;
+    perm.read = true;
+    perm.update = false;
+    perm.assign = false;
+    perm.delete = false;
+    perm.share = false;
+    perm.download = false;
+    perm.allowPermit = false;
+    perm.publish = false;
+    perm.isActive = false;
+
+    return perm;
+  }
+
   searchAddUsers(e) {
     if (e && e?.component?.itemsSelected?.length > 0) {
       let permissions = this.data.permissions ?? [];
       const data = e?.component?.itemsSelected[0];
       if (data) {
-        let perm = new BP_Processes_Permissions();
-        perm.objectID = data?.UserID;
-        perm.objectName = data?.UserName;
-        perm.objectType = 'U';
-        perm.read = true;
-        perm.full = true;
-        perm.create = true;
-        perm.assign = true;
-        perm.update = true;
-        perm.delete = true;
-        perm.isActive = true;
-
+        let perm = this.defaultRoleNotAdmin(data?.UserID, data?.UserName, 'U');
         permissions = this.checkUserPermission(permissions, perm);
         this.data.permissions = permissions;
       }
@@ -598,29 +637,20 @@ export class PopupAddProcessComponent {
       //Người giám sát
       for (let i = 0; i < value.length; i++) {
         let data = value[i];
-        let perm = new BP_Processes_Permissions();
-        perm.objectName =
-          data?.objectType != '1'
-            ? data.text == null || data.text == ''
-              ? data?.objectName
-              : data?.text
-            : this.user?.userName;
-
-        perm.objectID =
+        let perm = this.defaultRoleNotAdmin(
           data?.objectType != '1'
             ? data.id != null
               ? data.id
               : null
-            : this.user?.userID;
-        perm.objectType = data.objectType;
-        perm.full = true;
-        perm.create = true;
-        perm.read = true;
-        perm.assign = true;
-        perm.edit = true;
-        // perm.publish = true;
-        perm.delete = true;
-        perm.isActive = true;
+            : this.user?.userID,
+          data?.objectType != '1'
+            ? data.text == null || data.text == ''
+              ? data?.objectName
+              : data?.text
+            : this.user?.userName,
+          data.objectType
+        );
+
         permissions = this.checkUserPermission(permissions, perm);
       }
       this.data.permissions = permissions;
@@ -658,9 +688,9 @@ export class PopupAddProcessComponent {
   clickRoles() {
     let title = this.gridViewSetup?.Permissions?.headerText ?? 'Phân quyền';
     let formModel = new FormModel();
-    formModel.formName = 'DPProcessesPermissions';
-    formModel.gridViewName = 'grvDPProcessesPermissions';
-    formModel.entityName = 'DP_Processes_Permissions';
+    formModel.formName = 'Processes_Permissions';
+    formModel.gridViewName = 'grvProcesses_Permissions';
+    formModel.entityName = 'BP_Processes_Permissions';
     let dialogModel = new DialogModel();
     dialogModel.zIndex = 999;
     dialogModel.FormModel = formModel;
@@ -711,8 +741,8 @@ export class PopupAddProcessComponent {
     option.zIndex = 1010;
     option.FormModel = JSON.parse(JSON.stringify(this.dialog.formModel));
     let data = {
-      data: this.data
-    }
+      data: this.data,
+    };
     let popupDialog = this.callfc.openForm(
       FormAdvancedSettingsComponent,
       '',
@@ -762,7 +792,7 @@ export class PopupAddProcessComponent {
       null,
       null,
       '',
-      {extendInfo:this.extendInfos,stepNo:this.data?.steps[1].stepNo},
+      { extendInfo: this.extendInfos, stepNo: this.data?.steps[1].stepNo },
       '',
       option
     );
@@ -804,7 +834,7 @@ export class PopupAddProcessComponent {
         if (this.data?.steps[1]?.extendInfo) {
           this.extendInfos.forEach((element) => {
             if (element.controlType == 'Attachment') {
-              if (!this.data.documentControl) {
+              if (!element?.documentControl) {
                 var obj = {
                   recID: Util.uid(),
                   title: element.title,
@@ -813,29 +843,29 @@ export class PopupAddProcessComponent {
                   isList: '1',
                   stepID: this.data?.steps[1].recID,
                   stepNo: this.data?.steps[1].stepNo,
-                  fieldID: this.data?.steps[1].recID,
+                  fieldID: element.recID,
                   memo: this.data?.steps[1].memo,
+                  refID: '',
                 };
+                obj.refID = obj.recID;
                 this.data.documentControl = [obj];
-              } else {
-                if (
-                  element.documentControl &&
-                  element.documentControl.length > 0
-                ) {
-                  var doc = JSON.parse(
-                    JSON.stringify(this.data.documentControl)
-                  );
-                  element.documentControl.forEach((docu) => {
-                    docu.stepID = this.data?.steps[1].recID;
-                    docu.stepNo = this.data?.steps[1].stepNo;
-                    docu.fieldID = this.data?.steps[1].recID;
-                    docu.memo = this.data?.steps[1].memo;
-                    var index = doc.findIndex((x) => x.recID == docu.recID);
-                    if (index >= 0) doc[index] = docu;
-                    else doc.push(docu);
-                  });
-                  this.data.documentControl = doc;
-                }
+              } else if (
+                element.documentControl &&
+                element.documentControl.length > 0
+              ) {
+                debugger;
+                var doc = JSON.parse(JSON.stringify(this.data.documentControl));
+                if (!doc) doc = [];
+                element.documentControl.forEach((docu) => {
+                  docu.stepID = this.data?.steps[1].recID;
+                  docu.stepNo = this.data?.steps[1].stepNo;
+                  docu.fieldID = element.recID;
+                  docu.memo = this.data?.steps[1].memo;
+                  var index = doc.findIndex((x) => x.recID == docu.recID);
+                  if (index >= 0) doc[index] = docu;
+                  else doc.push(docu);
+                });
+                this.data.documentControl = doc;
               }
             }
 
@@ -886,9 +916,8 @@ export class PopupAddProcessComponent {
     }
   }
 
-  checkRequired()
-  {
-    if(!this.data?.processName) {
+  checkRequired() {
+    if (!this.data?.processName) {
       this.notiSv.notifyCode('SYS009', 0, 'Tên quy trình');
       return false;
     }
@@ -896,8 +925,11 @@ export class PopupAddProcessComponent {
   }
 
   handlerSave() {
-    if ((this.action == 'add' || this.action == 'copy') && this.currentTab == 0) {
-      if(!this.checkRequired()) return;
+    if (
+      (this.action == 'add' || this.action == 'copy') &&
+      this.currentTab == 0
+    ) {
+      if (!this.checkRequired()) return;
       this.onAdd();
     } else {
       this.onUpdate();
@@ -942,7 +974,10 @@ export class PopupAddProcessComponent {
     }
     data = [this.data];
 
-    if ((this.action == 'add' || this.action == 'copy') && this.currentTab == 0) {
+    if (
+      (this.action == 'add' || this.action == 'copy') &&
+      this.currentTab == 0
+    ) {
       op.methodName = 'AddProcessAsync';
     } else {
       op.methodName = 'UpdateProcessAsync';
@@ -989,8 +1024,33 @@ export class PopupAddProcessComponent {
     );
   }
 
-  valueChange2(e:any)
+  valueChange2(e: any) {
+    this.data = this.formatData(e);
+  }
+
+
+  formatData(datas:any)
   {
-    this.data = e;
+    let x = 0;
+    let data = datas.steps;
+    this.countStage = data.length;
+    data = data.sort((a, b) => a.stepNo - b.stepNo);
+    var listStage = data.filter(x=>x.activityType == 'Stage');
+    listStage.forEach(element => {
+      var index = data.findIndex(x=>x.recID == element.recID);
+      data[index].stepNo = x;
+      x++;
+      if(element.child && element.child.length>0)
+      {
+        element.child.forEach(element2 => {
+          var index2 = data.findIndex(x=>x.recID == element2.recID);
+          data[index2]= element2;
+          data[index2].stepNo = x;
+          x++
+        });
+      }
+    });
+    datas.steps = data;
+    return datas;
   }
 }

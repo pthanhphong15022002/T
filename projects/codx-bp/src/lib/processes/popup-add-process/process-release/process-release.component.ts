@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  AlertConfirmInputConfig,
   ApiHttpService,
   ButtonModel,
   CacheService,
@@ -221,6 +222,12 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         this.editItem();
         break;
       }
+      //Delete
+      case 'SYS02':
+      {
+        this.deleteItem();
+        break;
+      }
       case 'SYS05':
         break;
       //start
@@ -230,12 +237,22 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
       }
       //Xem chi tiết quy trình
       case 'BPT01012':
-        {
-          this.openFormDetail(this.view?.dataService?.dataSelected)
-          break;
-        }
+      {
+        this.openFormDetail(this.view?.dataService?.dataSelected)
+        break;
+      }
     }
   }
+
+  changeDataMF(e:any)
+  {
+    var approvelCL = e.filter(
+      (x: { functionID: string }) =>
+        x.functionID == 'BPT01011'
+    );
+    if (approvelCL[0] && this.view?.dataService?.dataSelected?.status == "2") approvelCL[0].disabled = true;
+  }
+
   startProcess() {
     this.api
       .execSv(
@@ -245,22 +262,64 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         'StartProcessAsync',
         [this.view?.dataService?.dataSelected?.recID]
       )
-      .subscribe((res) => {
+      .subscribe((res:any) => {
         if (res) {
+          let data = this.view?.dataService?.dataSelected;
+          if(res?.recID){
+            data = res
+          }
+          else{
+            data.status = '2';
+          }
           this.notifiSer.notifyCode('SYS034');
+          (this.view.currentView as any).kanban.updateCard(data);
+          this.view.dataService.update(data).subscribe();
         }
       });
   }
+
   addItem() {
-    this.view.dataService.addNew().subscribe((item) => {
-      this.popUpAddEdit(item, 'add');
-    });
+    if(this.process.status == '5')
+    {
+      this.view.dataService.addNew().subscribe((item) => {
+        this.popUpAddEdit(item, 'add');
+      });
+    }
+    else this.notifiSer.notifyCode('BP003');
   }
 
   editItem() {
     this.popUpAddEdit(this.view.dataService.dataSelected, 'edit');
   }
 
+  deleteItem()
+  {
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notifiSer
+      .alert('Thông báo', 'Bạn có chắc chắn muốn xóa?', config)
+      .closed.subscribe((x) => {
+        if (x.event.status == 'Y')
+        {
+          this.api
+          .execSv(
+            'BP',
+            'ERM.Business.BP',
+            'ProcessInstancesBusiness',
+            'DeleteInsAsync',
+            this.view?.dataService?.dataSelected?.recID
+          )
+          .subscribe((res) => {
+            if (res) {
+              (this.view.currentView as any).kanban.removeCard(this.view?.dataService?.dataSelected);
+              this.notifiSer.notifyCode('SYS008');
+            }
+            else this.notifiSer.notifyCode('SYS022');
+          });
+        }
+      });
+   
+  }
   popUpAddEdit(item: any, type: any) {
     var option = new SidebarModel();
     option.FormModel = {
@@ -275,7 +334,10 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
       if (res?.event) {
         if (type == 'add')
           (this.view.currentView as any).kanban.addCard(res?.event);
-        else (this.view.currentView as any).kanban.updateCard(res?.event);
+        else {
+          (this.view.currentView as any).kanban.updateCard(res?.event);
+          this.view.dataService.update(res?.event).subscribe()
+        }
       }
     });
   }

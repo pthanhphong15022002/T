@@ -65,6 +65,7 @@ export class BP_Processes_Steps {
   modifiedOn: Date;
   modifiedBy: string;
   settings: string;
+  stepType:string;
 }
 export class BP_ProcessRevisions {
   recID: string;
@@ -107,7 +108,7 @@ export class BP_Processes_Permissions {
   objectName: string;
   objectID: string;
   objectType: string;
-  full: boolean;
+  roleType: string;
   create: boolean;
   read: boolean;
   update: boolean;

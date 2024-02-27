@@ -534,7 +534,44 @@
         animation-name: none !important;
     }
 }
-.e-acrdn-item.e-select.e-item-focus :focus{
-    outline: none !important;
-    box-shadow: none !important;
-}
+// .e-acrdn-item.e-select.e-item-focus :focus{
+//     outline: none !important;
+//     box-shadow: none !important;
+// }
+
+// .ac-accordion .e-acrdn-content{
+//     width: 100%;
+//     position: absolute;
+//     background-color: white !important;
+//     z-index: 1000;
+//     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+// }
+
+// .e-tooltip-wrap.e-popup {
+//     background-color: white !important;
+//     border: none !important;
+//     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+// }
+
+// .e-tooltip-wrap .e-tip-content {
+//     color: black !important;
+// }
+
+// .e-tooltip-wrap .e-arrow-tip-inner.e-tip-right,
+// .e-tooltip-wrap .e-arrow-tip-inner.e-tip-left,
+// .e-tooltip-wrap .e-arrow-tip-inner.e-tip-bottom,
+// .e-tooltip-wrap .e-arrow-tip-inner.e-tip-top {
+//     color: white !important;
+// }
+
+// /* To customize the arrow tip at bottom */
+// .e-tooltip-wrap .e-arrow-tip-outer.e-tip-bottom {
+//     border-left: 2px solid transparent;
+//     border-top: 2px solid white !important;
+// }
+
+// /* To customize the arrow tip at top */
+// .e-tooltip-wrap .e-arrow-tip-outer.e-tip-top {
+//     border-bottom: 2px solid white !important;
+//     border-left: 2px solid transparent;
+// }

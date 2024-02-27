@@ -43,15 +43,18 @@ export class ArPostingAccountsComponent extends UIComponent {
   funcName: any;
   menuActive: any = 1;
   linkActive = '';
-  button = [{
-    id: 'btnAdd',
-  }];
+  button = [
+    {
+      id: 'btnAdd',
+    },
+  ];
   editSettings: EditSettingsModel = {
     allowEditing: false,
     allowAdding: false,
     allowDeleting: true,
     mode: 'Normal',
   };
+  isSubView: boolean;
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
@@ -65,6 +68,9 @@ export class ArPostingAccountsComponent extends UIComponent {
         let m = res.find((x) => x.functionID == 'SYS01');
         if (m) this.moreFuncName = m.defaultName;
       }
+    });
+    this.router.data.subscribe((res) => {
+      if (res && res['isSubView']) this.isSubView = res.isSubView;
     });
   }
   //#endregion
@@ -156,7 +162,7 @@ export class ArPostingAccountsComponent extends UIComponent {
     if (this.menuActive == 1) {
       this.menuAccount.forEach((element) => {
         if (element.value == this.postTypeAccount) {
-          this.subheaderText = 'Tài khoản > ' + element.text;//
+          this.subheaderText = 'Tài khoản > ' + element.text; //
         }
       });
       postType = this.postTypeAccount;
@@ -164,7 +170,7 @@ export class ArPostingAccountsComponent extends UIComponent {
     if (this.menuActive == 2) {
       this.menuRules.forEach((element) => {
         if (element.value == this.postTypeRules) {
-          this.subheaderText = 'Điều khoản > ' + element.text;//
+          this.subheaderText = 'Điều khoản > ' + element.text; //
         }
       });
       postType = this.postTypeRules;
@@ -194,14 +200,14 @@ export class ArPostingAccountsComponent extends UIComponent {
     if (data.moduleID == '1') {
       this.menuAccount.forEach((element) => {
         if (element.value == data.postType) {
-          this.subheaderText = 'Tài khoản > ' + element.text;//
+          this.subheaderText = 'Tài khoản > ' + element.text; //
         }
       });
     }
     if (data.moduleID == '2') {
       this.menuRules.forEach((element) => {
         if (element.value == data.postType) {
-          this.subheaderText = 'Điều khoản > ' + element.text;//
+          this.subheaderText = 'Điều khoản > ' + element.text; //
         }
       });
     }
@@ -227,14 +233,14 @@ export class ArPostingAccountsComponent extends UIComponent {
     if (data.moduleID == '1') {
       this.menuAccount.forEach((element) => {
         if (element.value == data.postType) {
-          this.subheaderText = 'Tài khoản > ' + element.text;//
+          this.subheaderText = 'Tài khoản > ' + element.text; //
         }
       });
     }
     if (data.moduleID == '2') {
       this.menuRules.forEach((element) => {
         if (element.value == data.postType) {
-          this.subheaderText = 'Điều khoản > ' + element.text;//
+          this.subheaderText = 'Điều khoản > ' + element.text; //
         }
       });
     }

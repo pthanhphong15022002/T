@@ -17,15 +17,24 @@ import {
   ButtonModel,
   CodxGridviewV2Component,
   ScrollComponent,
+  DialogModel,
 } from 'codx-core';
 import { JournalsAddComponent } from '../journals/journals-add/journals-add.component';
 import { NameByIdPipe } from '../pipes/name-by-id.pipe';
-import { BehaviorSubject, Subject, combineLatest, map, takeUntil, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  Subject,
+  combineLatest,
+  map,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { Router } from '@angular/router';
 import { CodxAcService } from '../codx-ac.service';
 import { IJournalPermission } from '../journals/interfaces/IJournalPermission.interface';
 import { IJournal } from '../journals/interfaces/IJournal.interface';
 import { toCamelCase } from '../utils';
+import { JournalViewsettingComponent } from './journals-viewsetting/journal-viewsetting/journal-viewsetting.component';
 
 @Component({
   selector: 'lib-test-journal',
@@ -41,7 +50,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
   subViews: Array<ViewModel> = [];
   viewActive: number = 0;
   headerText: string;
-  funcName:any;
+  funcName: any;
   vll86 = [];
   vll85 = [];
   func = [];
@@ -58,16 +67,15 @@ export class JournalV2Component extends UIComponent implements OnInit {
   mainFilterValue: string;
   subFilterValue: string;
   ViewType = ViewType;
-  vllAC125:any = [];
-  vllAC126:any = [];
-  vllAC108:any = [];
-  vllAC109:any = [];
-  vllAC111:any = [];
-  button: ButtonModel[] = [{
-    icon:'icon-i-journal-plus',
-    id: 'btnAdd',
-  }];
+  button: ButtonModel[] = [
+    {
+      icon: 'icon-i-journal-plus',
+      id: 'btnAdd',
+    },
+  ];
   itemSelected: any;
+  @ViewChild('templateListCard') tempCard?: TemplateRef<any>;
+  @ViewChild('listItemTemplate') tempList?: TemplateRef<any>;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
@@ -82,8 +90,8 @@ export class JournalV2Component extends UIComponent implements OnInit {
   //#region Init
   onInit() {
     if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
-    this.cache.viewSettings(this.funcID).subscribe((res:any)=>{
-      let data = res.filter(x => x.isDefault == true)[0];
+    this.cache.viewSettings(this.funcID).subscribe((res: any) => {
+      let data = res.filter((x) => x.isDefault == true)[0];
       if (data) {
         this.viewActive = parseInt(data?.view);
         this.subViews = [
@@ -102,15 +110,13 @@ export class JournalV2Component extends UIComponent implements OnInit {
         ];
         this.detectorRef.detectChanges();
       }
-    })
+    });
     this.cache.valueList('AC077').subscribe((func) => {
       if (func) this.func = func.datas;
     });
     this.cache
       .valueList('AC064')
-      .pipe(
-        map((d) => d.datas)
-      )
+      .pipe(map((d) => d.datas))
       .subscribe((res) => {
         this.vllJournalTypes064 = res;
       });
@@ -128,17 +134,6 @@ export class JournalV2Component extends UIComponent implements OnInit {
         this.mainFilterValue = res.datas[0].value;
       }
     });
-
-    this.getVll('AC134', 'journalTypes134');
-    this.getVll('AC135', 'journalTypes135');
-    this.getVll('AC136', 'journalTypes136');
-    this.getVll('AC137', 'journalTypes137');
-    this.getVll('AC138', 'journalTypes138');
-    this.getVll('AC125','vllAC125');
-    this.getVll('AC126','vllAC126');
-    this.getVll('AC108','vllAC108');
-    this.getVll('AC109','vllAC109');
-    this.getVll('AC111','vllAC111');
   }
 
   ngAfterViewInit() {
@@ -151,11 +146,33 @@ export class JournalV2Component extends UIComponent implements OnInit {
     this.views = [
       {
         type: ViewType.content,
-        active: true,
+        active: false,
         sameData: true,
+        hide: true,
         model: {
           panelLeftRef: this.contentTemplate,
         },
+      },
+      {
+        type: ViewType.smallcard,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.tempCard,
+        },
+      },
+      {
+        type: ViewType.list,
+        active: false,
+        sameData: true,
+        model: {
+          template: this.tempList,
+        },
+      },
+      {
+        type: ViewType.grid,
+        active: false,
+        sameData: true,
       },
     ];
   }
@@ -176,7 +193,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
 
   //#region Event
   viewChanged(view) {
-    if(view && view.type == this.viewActive) return;
+    if (view && view.type == this.viewActive) return;
     this.itemSelected = undefined;
     this.viewActive = view.type;
     this.subViews?.filter(function (v) {
@@ -204,8 +221,8 @@ export class JournalV2Component extends UIComponent implements OnInit {
   }
 
   changePredicate(value: string, field: string): void {
-    if(field === 'mainFilterValue' && this.mainFilterValue == value) return;
-    if(field === 'subFilterValue' && this.subFilterValue == value) return;
+    if (field === 'mainFilterValue' && this.mainFilterValue == value) return;
+    if (field === 'subFilterValue' && this.subFilterValue == value) return;
     this[field] = value;
     this.itemSelected = undefined;
     let journalTypes: string = '';
@@ -242,9 +259,9 @@ export class JournalV2Component extends UIComponent implements OnInit {
     this.detectorRef.detectChanges();
   }
 
-  changeMF(event){
+  changeMF(event) {
     if (event) {
-      this.acService.changeMFJournal(event,this.mainFilterValue); 
+      this.acService.changeMFJournal(event, this.mainFilterValue);
     }
   }
 
@@ -270,7 +287,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
     });
   }
 
-  onDoubleClick(event){
+  onDoubleClick(event) {
     let data = event?.rowData;
     this.dbClick(data);
   }
@@ -296,8 +313,8 @@ export class JournalV2Component extends UIComponent implements OnInit {
           res.isAdd = true;
           let data = {
             headerText: this.headerText,
-            oData:{...res},
-            mainFilterValue:this.mainFilterValue
+            oData: { ...res },
+            mainFilterValue: this.mainFilterValue,
           };
           let option = new SidebarModel();
           option.FormModel = this.view?.formModel;
@@ -323,8 +340,8 @@ export class JournalV2Component extends UIComponent implements OnInit {
         res.isEdit = true;
         let data = {
           headerText: this.headerText,
-          oData:{...res},
-          mainFilterValue:this.mainFilterValue
+          oData: { ...res },
+          mainFilterValue: this.mainFilterValue,
         };
         let option = new SidebarModel();
         option.FormModel = this.view?.formModel;
@@ -342,28 +359,26 @@ export class JournalV2Component extends UIComponent implements OnInit {
   copy(e, dataCopy): void {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
     this.view.dataService.dataSelected = dataCopy;
-    this.view.dataService
-      .copy()
-      .subscribe((res: any) => {
-        if (res) {
-          res.isCopy = true;
-          let data = {
-            headerText: this.headerText,
-            oData:{...res},
-            mainFilterValue:this.mainFilterValue
-          };
-          let option = new SidebarModel();
-          option.FormModel = this.view?.formModel;
-          option.DataService = this.view?.dataService;
-          option.Width = '800px';
-          let dialog = this.callfc.openSide(
-            JournalsAddComponent,
-            data,
-            option,
-            this.view.funcID
-          );
-        }
-      });
+    this.view.dataService.copy().subscribe((res: any) => {
+      if (res) {
+        res.isCopy = true;
+        let data = {
+          headerText: this.headerText,
+          oData: { ...res },
+          mainFilterValue: this.mainFilterValue,
+        };
+        let option = new SidebarModel();
+        option.FormModel = this.view?.formModel;
+        option.DataService = this.view?.dataService;
+        option.Width = '800px';
+        let dialog = this.callfc.openSide(
+          JournalsAddComponent,
+          data,
+          option,
+          this.view.funcID
+        );
+      }
+    });
   }
 
   delete(data): void {
@@ -376,66 +391,68 @@ export class JournalV2Component extends UIComponent implements OnInit {
         options.entityName = func?.entityName;
         options.pageLoading = false;
         options.predicates = 'JournalType=@0 and JournalNo=@1';
-        options.dataValues = data.journalType+';'+data.journalNo;
+        options.dataValues = data.journalType + ';' + data.journalNo;
         this.api
-        .execSv(service, 'Core', 'DataBusiness', 'LoadDataAsync', options)
-        .pipe(map((r) => r?.[0] ?? [])).subscribe((res:any)=>{
-          if (res.length > 0) {
-            this.notiService.notifyCode('AC0002', 0, `"${data.journalDesc}"`);
-          }else{
-            this.view.dataService.delete([data]).subscribe((res: any) => {});
-          }
-        })
+          .execSv(service, 'Core', 'DataBusiness', 'LoadDataAsync', options)
+          .pipe(map((r) => r?.[0] ?? []))
+          .subscribe((res: any) => {
+            if (res.length > 0) {
+              this.notiService.notifyCode('AC0002', 0, `"${data.journalDesc}"`);
+            } else {
+              this.view.dataService.delete([data]).subscribe((res: any) => {});
+            }
+          });
       }
-    })
+    });
   }
 
-  addNewJournalSample(e, data){
+  addNewJournalSample(e, data) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
-    let oData = {...data};
-    this.api.exec('AC', 'JournalsBusiness', 'SetDefaultAsync', [
-      this.mainFilterValue,
-    ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-      delete oData?.journalNo;
-      delete oData?.recID;
-      Object.assign(res?.data,oData);
-      res.data.status = '1';
-      res.data.isTemplate = false;
-      res.data.journalName = data?.journalNo;
-      let journal = res.data;
-      journal.isAdd = true;
-      let datas = {
-        headerText: this.headerText,
-        oData: { ...journal },
-        mainFilterValue: this.mainFilterValue
-      };
-      let option = new SidebarModel();
-      option.FormModel = this.view?.formModel;
-      option.DataService = this.view?.dataService;
-      option.Width = '800px';
-      let dialog = this.callfc.openSide(
-        JournalsAddComponent,
-        datas,
-        option,
-        this.view.funcID
-      );
-      // this.api
-      //   .execAction('AC_Journals', [journal], 'SaveAsync')
-      //   .subscribe((res: any) => {
-      //     if (res) {
-      //       let f = this.func.find((x) => x.value === journal.journalType);
-      //       if (!f) return;
-      //       this.cache.functionList(f?.default).subscribe((func) => {
-      //         if (func) {
-      //           let urlRedirect = '/' + UrlUtil.getTenant();
-      //           if (func && func.url && func.url.charAt(0) != '/') urlRedirect += '/';
-      //           urlRedirect += func.url + '/' + journal?.journalNo;
-      //           this.route.navigate([urlRedirect]);
-      //         }
-      //       });  
-      //     }
-      //   })
-    })
+    let oData = { ...data };
+    this.api
+      .exec('AC', 'JournalsBusiness', 'SetDefaultAsync', [this.mainFilterValue])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        delete oData?.journalNo;
+        delete oData?.recID;
+        Object.assign(res?.data, oData);
+        res.data.status = '1';
+        res.data.isTemplate = false;
+        res.data.journalName = data?.journalNo;
+        let journal = res.data;
+        journal.isAdd = true;
+        let datas = {
+          headerText: this.headerText,
+          oData: { ...journal },
+          mainFilterValue: this.mainFilterValue,
+        };
+        let option = new SidebarModel();
+        option.FormModel = this.view?.formModel;
+        option.DataService = this.view?.dataService;
+        option.Width = '800px';
+        let dialog = this.callfc.openSide(
+          JournalsAddComponent,
+          datas,
+          option,
+          this.view.funcID
+        );
+        // this.api
+        //   .execAction('AC_Journals', [journal], 'SaveAsync')
+        //   .subscribe((res: any) => {
+        //     if (res) {
+        //       let f = this.func.find((x) => x.value === journal.journalType);
+        //       if (!f) return;
+        //       this.cache.functionList(f?.default).subscribe((func) => {
+        //         if (func) {
+        //           let urlRedirect = '/' + UrlUtil.getTenant();
+        //           if (func && func.url && func.url.charAt(0) != '/') urlRedirect += '/';
+        //           urlRedirect += func.url + '/' + journal?.journalNo;
+        //           this.route.navigate([urlRedirect]);
+        //         }
+        //       });
+        //     }
+        //   })
+      });
   }
 
   setDefault() {
@@ -471,7 +488,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
    * @returns
    */
   onSelected(data) {
-    if(data) this.itemSelected = data;
+    if (data) this.itemSelected = data;
     this.detectorRef.detectChanges();
   }
 
@@ -491,15 +508,30 @@ export class JournalV2Component extends UIComponent implements OnInit {
     }
   }
 
-  getVll(vllCode: string, propName: string) {
-    this.cache
-      .valueList(vllCode)
-      .pipe(
-        map((d) => d.datas.map((v) => v.value))
-      )
-      .subscribe((res) => {
-        this[propName] = res;
-      });
+  // getVll(vllCode: string, propName: string) {
+  //   this.cache
+  //     .valueList(vllCode)
+  //     .pipe(map((d) => d.datas.map((v) => v.value)))
+  //     .subscribe((res) => {
+  //       this[propName] = res;
+  //     });
+  // }
+  viewSetting(journal:any){
+    let data = {
+      journal: journal,
+    };
+    let opt = new DialogModel();
+      opt.FormModel = this.view.formModel;
+      let dialog = this.callfc.openForm(
+        JournalViewsettingComponent,
+        null,
+        null,
+        null,
+        '',
+        data,
+        '',
+        opt
+      );
   }
-  //#endregion Function  
+  //#endregion Function
 }

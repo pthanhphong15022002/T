@@ -161,3 +161,20 @@ export class ES_File {
   modifiedOn: Date;
   modifiedBy: string;
 }
+
+export class tempLoadPDF {
+  recID: string;
+  transRecID: string;
+  isApproveMode: boolean;
+  isTemplateMode: boolean;
+  isSettingMode: boolean;
+  dynamicApprovers: Array<Approver>;
+}
+export class tempSignPDFInput {
+  taskID: string;
+  cert: string;
+  supplier: string;
+  signatureRecID: string;
+  fileIDs: string;
+  approver: string;
+}

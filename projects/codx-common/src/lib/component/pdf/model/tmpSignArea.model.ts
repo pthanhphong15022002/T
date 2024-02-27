@@ -62,3 +62,11 @@ export class location {
   height: number;
   pageNumber: number;
 }
+export class PDF_SignModel {
+  recID: string;
+  transRecID: string;
+  isApprover: boolean;
+  isSettingMode: boolean;
+  isTemplateMode: boolean;
+  dynamicApprovers: any;
+}

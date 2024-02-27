@@ -53,10 +53,7 @@ import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-repo
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 import { LayoutComponent } from 'projects/codx-share/src/lib/components/layout/layout.component';
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
-import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
-import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
-import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
-import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
+import { AddDecentralGroupComponent } from './decentralized-group/add-decentral-group/add-decentral-group.component';
 
 export const routes: Routes = [
   {
@@ -144,6 +141,7 @@ const T_Component: Type<any>[] = [
   PopActiveAccountComponent,
   DecentralizedGroupComponent,
   AddDecentralGroupMemComponent,
+  AddDecentralGroupComponent,
   PopupOrderDetailComponent,
   PopupExtendModuleComponent,
 ];

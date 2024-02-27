@@ -488,6 +488,10 @@ export class CodxViewTaskComponent implements OnInit {
   }
 
   setChangeMFSStart(res, isGroup, isTask) {
+    if(!this.isRoleAll || !this.isOnlyView){
+      res.disabled = true;
+      return;
+    }
     if (this.type === 'P' || this.type === 'G') {
       res.disabled = true;
       return;

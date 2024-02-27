@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { BaseFieldComponent } from '../../base.component';
 import { BP_Processes_Steps } from 'projects/codx-bp/src/lib/models/BP_Processes.model';
 import { AlertConfirmInputConfig, DialogModel, Util } from 'codx-core';
@@ -17,6 +17,11 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('attachment2') attachment2: AttachmentComponent;
   @Input() activityType: any;
+  @Output() dataChangeAttach = new EventEmitter<any>();
+  listCombobox = {};
+  multiple = true;
+  vllShare = 'BP017';
+  typeShare = '1';
   isNewForm = false;
   listUses = [];
   listUses2 = [];
@@ -81,25 +86,52 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     let i = 0 ;
     this.listDocument.forEach(elm=>{
       var fieldID =  elm.fieldID;
-     
-      if(elm?.templateID) {
-        fieldID = elm?.templateID;
-        entityName = "AD_ExcelTemplates"
-        if(elm.templateType == "word") entityName = "AD_WordTemplates"
-      }
-      else if(elm.refStepNo)
+      if(elm.files && elm.files.length>0)
       {
-        var index = this.getDocRef(elm.refStepID);
-        if(index>=0) {
-          if(this.process.documentControl[index].templateID) {
-            fieldID = this.process.documentControl[index].templateID;
-            entityName = "AD_ExcelTemplates"
-            if(this.process.documentControl[index].templateType == "word") entityName = "AD_WordTemplates"
+        var recIDs = elm.files.map(function(item) {
+          return item?.fileID || item?.recID;
+        });
+        recIDs = JSON.stringify(recIDs);
+        this.getFile2(recIDs,i);
+      }
+      else
+      {
+        if(elm?.templateID) {
+          fieldID = elm?.templateID;
+          entityName = "AD_ExcelTemplates"
+          if(elm.templateType == "word") entityName = "AD_WordTemplates"
+
+          this.getFile(fieldID, entityName , i)
+        }
+        else if(elm.refStepNo)
+        {
+          //var index = this.getDocRef(elm.refStepID);
+          var index = this.process.documentControl.findIndex(x=>x.recID == elm.refID);
+          if(index >= 0) 
+          {
+            if(this.process.documentControl[index].files && this.process.documentControl[index].files.length>0)
+            {
+              var recIDs = this.process.documentControl[index].files.map(function(item) {
+                return item?.fileID || item?.recID;
+              });
+              recIDs = JSON.stringify(recIDs);
+              this.getFile2(recIDs,i);
+            }
+            else
+            {
+              if(this.process.documentControl[index].templateID) {
+                fieldID = this.process.documentControl[index].templateID;
+                entityName = "AD_ExcelTemplates"
+                if(this.process.documentControl[index].templateType == "word") entityName = "AD_WordTemplates"
+              }
+              else fieldID = this.process.documentControl[index].fieldID;
+
+              this.getFile(fieldID, entityName , i)
+            }
           }
-          else fieldID = this.process.documentControl[index].fieldID;
         }
       }
-      this.getFile(fieldID, entityName , i)
+      i++;
     })
   }
 
@@ -108,17 +140,17 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     var index = null;
     if(refStepID)
     {
-      var doc = this.process.documentControl.filter(x=>x.stepID == refStepID)[0];
+      var doc = this.process.documentControl.filter(x=>x.recID == refStepID)[0];
       if(doc?.refStepID == '00000000-0000-0000-0000-000000000000' || !doc?.refStepID)
       {
-        return this.process.documentControl.findIndex(x=>x.stepID == refStepID);
+        return this.process.documentControl.findIndex(x=>x.recID == refStepID);
       } 
       else 
       {
         return this.getDocRef(doc.refStepID)
       }
     } 
-    index = this.process.documentControl.findIndex(x=>x.stepID == refStepID);
+    index = this.process.documentControl.findIndex(x=>x.recID == refStepID);
     return index;
   }
 
@@ -128,11 +160,20 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     this.api.execSv("DM","DM","FileBussiness","GetFileByObjectIDAsync",[recID + ";", entityName]).subscribe(item=>{
       if(item)
       {
-        this.listDocument[i].files = item;
+        this.listDocument[i].filess = item;
       }
     })
   }
-
+  getFile2(recID:any,index:any)
+  {
+    let i = index;
+    this.api.execSv("DM","DM","FileBussiness","GetListFile",recID).subscribe(item=>{
+      if(item)
+      {
+        this.listDocument[i].filess = item;
+      }
+    })
+  }
   default()
   {
     var vllStage = this.vll.datas.filter(x=>x.value == "Task")[0];
@@ -251,14 +292,14 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
 
   valueChangeUser(e:any)
   {
-    if(e?.data?.dataSelected)
+    if(e)
     {
-      e?.data?.dataSelected.forEach(element => {
+      e.forEach(element => {
         this.listUses.push(
           {
             objectID: element.id,
             objectName: element.text,
-            objectType: "U",
+            objectType: element.objectType,
             roleType: 'O'
           }
         )
@@ -312,52 +353,62 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
 
   openAttach1()
   {
-    var documentControl = 
-    {
-      recID : Util.uid(),
-      title : this.data.stepName,
-      isRequired: false,
-      count : 0,
-      listType: "1",
-      stepID: this.data?.recID,
-      stepNo: this.data?.stepNo,
-      fieldID: this.data?.recID,
-      memo: this.data?.memo,
-    }
-    this.process.documentControl.push(documentControl);
-    this.listDocument.push(documentControl);
-    this.dataChangeProcess.emit(this.process);
     this.data.attachments = this.attachment.fileUploadList.length;
     this.dataChange.emit(this.data);
     this.attachment.uploadFile();
+    this.dataChangeAttach.emit(true);
   }
   openAttach2()
   {
-    var documentControl = 
-    {
-      recID : Util.uid(),
-      title : this.data.stepName,
-      isRequired: false,
-      count : 0,
-      listType: "1",
-      stepID: this.data?.recID,
-      stepNo: this.data?.stepNo,
-      fieldID: this.data?.recID,
-      memo: this.data?.memo,
-    }
-    this.process.documentControl.push(documentControl);
-    this.dataChangeProcess.emit(this.process);
-
     this.data.attachments = this.attachment2.fileUploadList.length;
     this.attachment2.uploadFile();
     this.dataChange.emit(this.data);
+    this.dataChangeAttach.emit(true);
   }
 
   fileSave(e:any)
   {
-    // if(Array.isArray(e)) this.data.attachments = e.length;
-    // else this.data.attachments = 1;
-    // this.dataChange.emit(this.data);
+    var files = [];
+    if(Array.isArray(e))
+    {
+      e.forEach(elm=>{
+        var f = 
+        {
+          fileID: elm?.data?.recID,
+          type : '1'
+        }
+        files.push(f);
+      })
+    }
+    else 
+    {
+      var f = 
+        {
+          fileID: e?.recID,
+          type : '1'
+        }
+        files.push(f);
+    }
+    var documentControl = 
+    {
+      recID : Util.uid(),
+      title : this.data.stepName,
+      isRequired: false,
+      count : 0,
+      listType: "1",
+      stepID: this.data?.recID,
+      stepNo: this.data?.stepNo,
+      fieldID: this.data?.recID,
+      memo: this.data?.memo,
+      refID: '',
+      files : files
+    }
+    documentControl.refID = documentControl.recID;
+    this.process.documentControl.push(documentControl);
+    this.listDocument.push(documentControl);
+    this.dataChangeProcess.emit(this.process);
+    this.formatDocument();
+    this.dataChangeAttach.emit(false);
   }
 
   fileDelete(e:any)
@@ -485,8 +536,10 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
               fieldID: this.data?.recID,
               memo: this.data?.memo,
               templateID: res?.event[0].recID,
-              templateType: type
+              templateType: type,
+              refID: '',
             }
+            documentControl.refID = documentControl.recID;
             this.process.documentControl.push(documentControl);
           }
          
@@ -565,21 +618,25 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     popup.closed.subscribe(res=>{
       if(res?.event)
       {
-        var documentControl =
-        {
-          recID : Util.uid(),
-          title : this.data.stepName,
-          isRequired: false,
-          count : 0,
-          isList: "0",
-          stepID: this.data?.recID,
-          stepNo: this.data?.stepNo,
-          fieldID: this.data?.recID,
-          memo: this.data?.memo,
-          refStepNo: res?.event?.stepNo,
-          refStepID: res?.event?.stepID
-        }
-        this.process.documentControl.push(documentControl);
+        res?.event.forEach(element => {
+          var documentControl =
+          {
+            recID : Util.uid(),
+            title : element?.title,
+            isRequired: false,
+            count : 0,
+            isList: "0",
+            stepID: this.data?.recID,
+            stepNo: this.data?.stepNo,
+            fieldID: this.data?.recID,
+            memo: this.data?.memo,
+            refStepNo: element?.stepNo,
+            refStepID: element?.recID,
+            refID: element?.refID
+          }
+          this.process.documentControl.push(documentControl);
+        });
+        
         this.dataChangeProcess.emit(this.process);
         this.formatDocument();
 
@@ -659,5 +716,15 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       .subscribe((res) => {
        
       });
+  }
+
+  sharePerm(share:any) {
+    this.listCombobox = {};
+    this.multiple = true;
+    this.vllShare = 'BP017';
+    this.typeShare = '1';
+    let option = new DialogModel();
+    option.zIndex = 1010;
+    this.callFuc.openForm(share, '', 420, 600, null, null, null, option);
   }
 }

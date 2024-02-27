@@ -1,10 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { AnyARecord } from 'dns';
+import { Internationalization } from '@syncfusion/ej2-base';
 
 @Pipe({
   name: 'sumColumnsTable',
 })
 export class SumColumnsTablePipe implements PipeTransform {
+  //constructor(private cache: CacheService) {}
+
   transform(value: any, arrayValue: any): any {
     if (value?.totalColumns) {
       let sum = 0;
@@ -18,12 +20,53 @@ export class SumColumnsTablePipe implements PipeTransform {
   }
 
   formatNumber(dataValue, dataFormat): any {
+    let intl = new Internationalization();
+    let nFormatter = intl.getNumberFormat({
+      skeleton: 'n6',
+    });
+
     if (dataFormat == 'I') {
       dataValue = Number.parseFloat(dataValue).toFixed(0);
-      return dataValue;
+    } else {
+      dataValue = Number.parseFloat(dataValue).toFixed(2);
     }
-    dataValue =
-      Number.parseFloat(dataValue).toFixed(2) + (dataFormat == 'P' ? ' %' : '');
-    return dataValue;
+    return nFormatter(dataValue) + (dataFormat == 'P' ? ' %' : '');
+    //tham khao tu AC
+    // let intl = new Internationalization();
+    // let zeroAfterPoint: any;
+    // let formatStr: any;
+    // let nFormatter: any;
+    // let format = 'B';
+    // debugger;
+    // return this.cache.systemSetting().pipe(
+    //   map((res) => {
+    //     if (res) {
+    //       debugger;
+    //       switch (format.toLowerCase()) {
+    //         case 'b':
+    //           zeroAfterPoint = res?.dBaseCurr;
+    //           break;
+    //         case 's':
+    //           zeroAfterPoint = res?.dSourceCurr;
+    //           break;
+    //       }
+    //       formatStr = this.createString('n', zeroAfterPoint);
+    //       nFormatter = intl.getNumberFormat({
+    //         format: formatStr,
+    //         skeleton: formatStr,
+    //       });
+    //       dataValue = nFormatter(dataValue);
+    //     }
+    //     return dataValue;
+    //   })
+    // );
   }
+
+  // createString(preFormatString, zeroAfterPoint = 6) {
+  //   let val = preFormatString;
+  //   if (zeroAfterPoint < 0) zeroAfterPoint = 0;
+  //   if (zeroAfterPoint > 6) zeroAfterPoint = 6;
+  //   if (preFormatString) val = preFormatString + zeroAfterPoint;
+  //   return val;
+  // }
 }

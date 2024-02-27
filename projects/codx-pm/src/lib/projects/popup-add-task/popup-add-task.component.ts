@@ -1,10 +1,11 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild, ViewEncapsulation } from "@angular/core";
-import { NotificationsService, AuthService, CacheService, AuthStore, DialogData, DialogRef, DialogModel, CallFuncService } from "codx-core";
+import { NotificationsService, AuthService, CacheService, AuthStore, DialogData, DialogRef, DialogModel, CallFuncService, ApiHttpService, RequestOption, SidebarModel } from "codx-core";
 import { CodxCommonService } from "projects/codx-common/src/lib/codx-common.service";
 import { CodxShareService } from "projects/codx-share/src/public-api";
 import { L10n,setCulture } from '@syncfusion/ej2-base';
 import { PopupSelectUserComponent } from "../popup-select-user/popup-select-user.component";
 import { AttachmentComponent } from "projects/codx-common/src/lib/component/attachment/attachment.component";
+import moment from "moment";
 @Component({
   selector: 'popup-add-task',
   templateUrl: './popup-add-task.component.html',
@@ -29,7 +30,11 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   members:any=[];
   enableAttachment:boolean=false;
   enableChecklist:boolean=false;
-
+  grvSetup:any;
+  defaultParams:any;
+  validEditStatus:any=['00','07','09','10','20'];
+  crrUser:any;
+  parentTask:any;
 
   constructor(
     injector: Injector,
@@ -40,6 +45,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore,
+    private api: ApiHttpService,
     protected callfc: CallFuncService,
 
     @Optional() dialogData?: DialogData,
@@ -49,8 +55,21 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     this.formModel = this.dialog?.formModel;
     this.funcID = this.formModel?.funcID;
     this.data = dialogData.data[0];
+    if(this.data.parentID){
+      this.api.execSv('TM','ERM.Business.TM','TasksBusiness','GetTaskByRecIDAsync',this.data.parentID).subscribe((res:any)=>{
+        if(res){
+          this.parentTask = res;
+        }
+      })
+    }
+    this.crrUser = this.authStore.get();
     if(dialogData.data[1]){
       this.action = dialogData.data[1];
+      if(this.action!='add'){
+        this.enableAttachment=true;
+        this.enableChecklist=true;
+        this.getTaskUpdate(this.data.recID);
+      }
     }
     if(dialogData.data[2]){
       this.projectData = dialogData.data[2];
@@ -59,13 +78,22 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
         if(memberType){
           this.projectMemberType = memberType.fieldValue;
         }
+        if(this.projectData.settings.find((x:any)=>x.fieldName=='ApproveControl')){
+          this.data.approveControl = this.projectData.settings.find((x:any)=>x.fieldName=='ApproveControl').fieldValue;
+        }
       }
     }
     this.cacheService.valueList('PM013').subscribe((res:any)=>{
       if(res && res.datas){
         this.listRoles = res.datas
       }
+    });
+    this.cacheService.gridViewSetup(this.formModel.formName,this.formModel.gridViewName).subscribe((res:any)=>{
+      if(res){
+        this.grvSetup=res;
+      }
     })
+    this.getParam();
   }
   ngOnInit(): void {
     L10n.load({
@@ -94,7 +122,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   selectUser(){
     let option = new DialogModel;
     option.zIndex=9999;
-    let dialog = this.callfc.openForm(PopupSelectUserComponent,'',500,600,'',{projectData:this.projectData,projectMemberType:this.projectMemberType},'',option);
+    let dialog = this.callfc.openForm(PopupSelectUserComponent,'',500,600,'',{projectData:this.projectData,projectMemberType:this.projectMemberType, roleType: this.selectedRole ? this.selectedRole : 'A'},'',option);
     dialog.closed.subscribe((res:any)=>{
       if(res.event){
         if(this.projectMemberType == '1'){
@@ -102,13 +130,29 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
             let member:any={};
            let item =  this.projectData.permissions.find((x:any)=>x.objectID==res.event[i])
            if(item){
+            let roleType = 'A';
             member.resourceID=item.objectID;
             member.resourceName=item.objectName;
-            member.roleType = 'A';
-            member.icon = this.listRoles.find((x:any)=>x.value=='A')?.icon;
-            this.members.push(member);
+            if(this.selectedRole){
+             roleType = this.selectedRole;
+
+            }
+            member.roleType = roleType;
+            member.icon = this.listRoles.find((x:any)=>x.value==roleType)?.icon;
+            let idx=this.members.findIndex((x:any)=>x.resourceID==member.resourceID);
+            if(idx==-1){
+              this.members.push(member);
+              this.data.assignTo= this.members.map((x:any)=> x.resourceID).join(';')
+            }
+            else{
+              if(this.members[idx].roleType != member.roleType){
+                this.members[idx=member]
+              }
+            }
+
            }
           }
+          this.getListUser(this.members.map((x:any)=>x.resourceID).join(';'));
           this.changeDetectorRef.detectChanges();
         }
       }
@@ -117,7 +161,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
 
   attach(){
     this.enableAttachment = true;
-    this.attachment.uploadFile();
+    this.attachment && this.attachment.uploadFile();
   }
 
   fileAdded(e) {
@@ -138,13 +182,25 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   todoList:any=[]
   addTask(input:any) {
     if (this.newTask.trim() !== '') {
-      const newTask: any = {
-        memo: this.newTask,
-        status: '1',
-        taskID:this.data.recID
-      };
-      this.todoList.push(newTask);
-      this.newTask = '';
+      if(!this.isEditTodo){
+        const newTask: any = {
+          text: this.newTask,
+          status: '1',
+          taskID:this.data.recID
+        };
+        this.todoList.push(newTask);
+        this.newTask = '';
+      }
+      else{
+        this.todoSeleted.text = this.newTask;
+        this.todoList[this.todoSelectedIndex]={...this.todoSeleted};
+        this.newTask = '';
+        this.todoSelectedIndex=undefined;
+        this.todoSeleted=undefined;
+        this.isEditTodo=false;
+
+      }
+
     }
     setTimeout(()=>{input.focus()},500)
   }
@@ -153,6 +209,19 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     const taskIndex = this.todoList.indexOf(task);
     if (taskIndex !== -1) {
       this.todoList.splice(taskIndex, 1);
+    }
+  }
+
+  isEditTodo:boolean=false;
+  todoSeleted:any;
+  todoSelectedIndex:any;
+  editTodo(task:any,input:any){
+    this.newTask = task.text;
+    this.isEditTodo=true;
+    this.todoSeleted=task;
+    this.todoSelectedIndex = this.todoList.indexOf(task);
+    if(input){
+      input.focus();
     }
   }
 
@@ -169,20 +238,304 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
 
   checkboxChange(e:any){
     if(e.data){
-      this.data[e.field]='90';
+      this.data[e.field]='1';
     }
     else{
-      this.data[e.field]='90';
+      this.data[e.field]='0';
     }
   }
 
-  save(){
+  async save(){
     if(this.action == 'add'){
       this.data.status='10';
       this.data.category='3';
       this.data.projectID=this.projectData.projectID;
     }
-    debugger
+    if(this.projectData.settings){
+      let deadlineControl = this.projectData.settings.find((x:any)=> x.fieldName=="DeadlineControl");
+      if(deadlineControl){
+        switch (deadlineControl.fieldValue) {
+          case '0':
+
+            break;
+          case '1':
+            if(this.projectData.startDate && this.data.startDate){
+             if(moment(this.projectData.startDate).isAfter(this.data.startDate)){
+                this.notificationsService.notify('Thời gian bắt đầu phải nằm trong thời gian của dự án!','2');
+                return;
+             }
+            }
+            if(this.projectData.finishDate && this.data.endDate){
+             if(moment(this.projectData.finishDate).isBefore(this.data.endDate)){
+                this.notificationsService.notify('Thời gian kết thúc phải nằm trong thời gian của dự án!','2');
+                return;
+             }
+            }
+            break;
+          case '2':
+            if(this.parentTask){
+              if(this.parentTask.startDate &&  this.data.startDate ){
+                if(moment(this.parentTask.startDate).isAfter(this.data.startDate)){
+                  this.notificationsService.notify('Thời gian bắt đầu phải nằm trong thời gian của công việc cha!','2');
+                  return;
+               }
+              }
+              if(this.parentTask.endDate && this.data.endDate){
+                if(moment(this.parentTask.endDate).isBefore(this.data.endDate)){
+                  this.notificationsService.notify('Thời gian kết thúc phải nằm trong thời gian của công việc cha!','2');
+                  return;
+               }
+              }
+            }
+            break;
+
+
+        }
+      }
+    }
+    if(this.grvSetup['TaskName']?.isRequire && !this.data.taskName){
+      this.notificationsService.notifyCode('TM027');
+      return
+    }
+
+    if (this.attachment && this.attachment.fileUploadList.length)
+    (await this.attachment.saveFilesObservable()).subscribe((res) => {
+      if (res) {
+        let attachments = Array.isArray(res) ? res.length : 1;
+        if (this.action == 'edit') {
+          this.data.attachments += attachments;
+          //this.checkUpdateStatusTask();
+          // this.updateTask();
+        } else {
+          this.data.attachments = attachments;
+          this.createTask();
+        }
+      }
+    });
+  else {
+    if (this.action == 'edit') {
+      //this.checkUpdateStatusTask();
+      //this.updateTask();
+    } else{
+      this.createTask();
+    }
   }
 
+  }
+
+
+  getParam(callback = null) {
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetByModuleWithCategoryAsync',
+        ['TMParameters', '1']
+      )
+      .subscribe((res) => {
+        if (res) {
+          //var dataValue = JSON.parse(res.dataValue);
+          this.defaultParams = JSON.parse(res.dataValue);
+        }
+      });
+  }
+
+  getTaskUpdate(recID:any){
+    this.api.execSv('TM','ERM.Business.TM','TaskBusiness','GetTaskUpdateByRecIDAsync',recID).subscribe((res:any)=>{
+      if(res  && res.length==4){
+        this.listUserDetail=res[1]
+        this.members = res[3];
+        if(this.members.length){
+          for(let i=0;i<this.members.length;i++){
+            if(this.members[i].roleType)this.members[i].icon = this.listRoles.find((x:any)=>x.value==this.members[i].roleType)?.icon;
+          }
+        }
+        this.todoList = res[2];
+        this.checkAllowedEdit();
+      }
+    })
+  }
+
+  oCountFooter:any;
+  changeCountFooter(value: number, key: string) {
+    if(this.oCountFooter){
+      let oCountFooter = JSON.parse(JSON.stringify(this.oCountFooter));
+      oCountFooter[key] = value;
+      this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
+      this.changeDetectorRef.detectChanges();
+    }
+
+  }
+
+  listUserDetail:any=[];
+  crrRole:any='A';
+  listUser:any=[]
+  getListUser(listUser) {
+    while (listUser.includes(' ')) {
+      listUser = listUser.replace(' ', '');
+    }
+    var arrUser = listUser.split(';');
+    //var crrRole = this.crrRole;
+    this.api
+      .execSv<any>(
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(listUser.split(';'))
+      )
+      .subscribe((res) => {
+        if (res && res.length > 0) {
+          this.listUserDetail = this.listUserDetail.concat(res);
+
+          // for (var i = 0; i < res.length; i++) {
+          //   let emp = res[i];
+          //   var taskResource:any={};
+          //   taskResource.resourceID = emp?.userID;
+          //   taskResource.resourceName = emp?.userName;
+          //   taskResource.positionName = emp?.positionName;
+          //   taskResource.departmentName = emp?.departmentName;
+          //   taskResource.roleType = crrRole ?? 'R';
+          //   //this.listTaskResources.push(taskResource);
+          // }
+          if (arrUser.length != res.length) {
+            arrUser = res.map((x) => x.userID);
+          }
+          this.listUser = this.listUser.concat(arrUser);
+          this.data.assignTo = this.listUser.join(';');
+          this.selectedRole=undefined;
+          debugger
+        }
+      });
+  }
+
+  assignTask(){
+    this.dialog.close('assignTask');
+    // let _dialog = this.dialog;
+    // setTimeout(()=>{
+    //   _dialog.dataService.addNew().subscribe((res) => {
+    //     let option = new SidebarModel();
+    //     option.DataService = _dialog?.dataService;
+    //     option.FormModel = this.formModel;
+    //     option.Width = '550px';
+    //     option.zIndex=9998;
+    //     res.parentID = this.data.recID;
+    //     res.projectID = this.data.projectID;
+    //     let dialogAdd = this.callfc.openSide(
+    //       PopupAddTaskComponent,
+    //       [res,'add',this.projectData],
+    //       option
+    //     );
+    //     dialogAdd.closed.subscribe((returnData) => {
+    //       if (returnData?.event) {
+    //         //this.view?.dataService?.update(returnData?.event);
+    //       } else {
+    //         _dialog.dataService.clear();
+    //       }
+    //     });
+
+    //   })
+    // },500)
+
+
+  }
+
+  createTask(){
+    if(this.action=='add'){
+
+      this.api
+      .exec('TM', 'TaskBusiness', 'AddTaskAsync', [
+        this.data,
+        this.funcID,
+        this.members,
+        this.todoList,
+      ])
+      .subscribe((res: any) => {
+
+        this.attachment?.clearData();
+        this.dialog.close(res);
+        if (res) {
+          if(res.length){
+            let item= res.find((x:any)=>x.category=='3');
+            if(item){
+              this.dialog.dataService.add(item, 0, false).subscribe()
+            }
+          }
+          this.notificationsService.notifyCode('SYS006');
+        } else this.notificationsService.notifyCode('SYS023');
+      });
+    }
+
+  }
+
+  selectRoseType(value) {
+    if(this.memberID){
+      let member = this.members.find((x:any)=>x.resourceID == this.memberID)
+      if(member){
+        if(value == 'A' && member.roleType !='A' && this.members.some((x:any)=>x.roleType=='A')){
+          this.notificationsService.notifyCode('TM078');
+          this.popover.close();
+        return;
+        }
+        if(member.roleType == value) return;
+        member.roleType=value;
+        this.members = this.members.slice();
+        this.popover.close();
+        this.changeDetectorRef.detectChanges();
+      }
+    }
+  }
+
+  popover:any;
+  memberID:any
+  showPopover(p, userID) {
+    this.memberID =userID;
+    if (this.popover) this.popover.close();
+    p.open();
+    this.popover = p;
+  }
+
+  selectedRole:any;
+  openControlShare(selectedRole:any){
+    this.selectedRole = selectedRole;
+    this.selectUser();
+  }
+
+  enableEdit:boolean=true;
+  checkAllowedEdit(){
+    if(this.action=='add'){
+      this.enableEdit=true;
+      return
+    }
+    if(!this.crrUser){
+      this.enableEdit = false;
+      return;
+    }
+    if(this.data){
+      if(this.validEditStatus.indexOf(this.data.status)==-1){
+        this.enableEdit = false;
+        return;
+      }
+      if(this.data.createdBy == this.crrUser.userID){
+        this.enableEdit = true;
+        return;
+      }
+      if(this.members.length){
+        let userRole = this.members.find((x:any)=>x.resourceID==this.crrUser.userID);
+        if(userRole && userRole.roleType=='A'){
+          this.enableEdit=true;
+        }
+        else this.enableEdit = false;
+      }
+    }
+  }
+
+  removeMember(e:any){
+    if(e){
+      this.members = this.members.filter((x:any)=>x.resouceID != e.resourceID);
+      this.getListUser(this.members.map((x:any)=>x.resourceID).join(';'));
+      this.changeDetectorRef.detectChanges();
+    }
+  }
 }

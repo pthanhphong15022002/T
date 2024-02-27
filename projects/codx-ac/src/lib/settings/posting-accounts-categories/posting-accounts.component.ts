@@ -41,7 +41,6 @@ import { Subject, takeUntil } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItempostingaccountsComponent extends UIComponent {
-
   //#region Constructor
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
@@ -51,19 +50,25 @@ export class ItempostingaccountsComponent extends UIComponent {
   menuPurchase: any;
   menuSell: any;
   menuProduction: any;
-  vllHeader:any;
+  vllHeader: any;
   menuActive: any = '1';
   postType: any;
   funcName: any;
   subheaderText: any;
   headerText: any;
-  button = [{
-    id: 'btnAdd',
-  }];
-  dataDefault:any;
+  button = [
+    {
+      id: 'btnAdd',
+    },
+  ];
+  dataDefault: any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
+  isSubView: boolean;
   constructor(private inject: Injector, private callfunc: CallFuncService) {
     super(inject);
+    this.router.data.subscribe((res) => {
+      if (res && res['isSubView']) this.isSubView = res.isSubView;
+    });
   }
   //#endregion Constructor
 
@@ -128,7 +133,7 @@ export class ItempostingaccountsComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -139,7 +144,7 @@ export class ItempostingaccountsComponent extends UIComponent {
 
   /**
    * *Hàm xử lí click trên toolbar
-   * @param e 
+   * @param e
    */
   toolBarClick(e) {
     switch (e.id) {
@@ -151,8 +156,8 @@ export class ItempostingaccountsComponent extends UIComponent {
 
   /**
    * *Hàm xử lí click morefunction
-   * @param e 
-   * @param data 
+   * @param e
+   * @param data
    */
   clickMF(e, data) {
     switch (e.functionID) {
@@ -170,8 +175,8 @@ export class ItempostingaccountsComponent extends UIComponent {
 
   /**
    * *Hàm xử lí click các menu header (hàng tồn kho,mua hàng,...)
-   * @param e 
-   * @returns 
+   * @param e
+   * @returns
    */
   clickMenu(e: any) {
     if (e === this.menuActive) return;
@@ -202,8 +207,8 @@ export class ItempostingaccountsComponent extends UIComponent {
 
   /**
    * *Hàm xử lí click các sub menu con của các header
-   * @param value 
-   * @returns 
+   * @param value
+   * @returns
    */
   clickMenuItem(value: any) {
     if (this.postType == value) return;
@@ -214,19 +219,19 @@ export class ItempostingaccountsComponent extends UIComponent {
   }
 
   //#endregion Event
-  
+
   //#region Function
 
   /**
    * *Hàm thêm mới thiết lập tài khoản hạch toán
-   * @param e 
+   * @param e
    */
   addNew(e) {
     this.view.dataService.addNew().subscribe((res: any) => {
       res.moduleID = this.menuActive;
       res.postType = this.postType;
       this.eleGrid.addRow(res, this.eleGrid.dataSource.length);
-    })
+    });
     // this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
     // this.subheaderText = this.getSubHeader(this.menuActive,this.postType);
     // let data = {
@@ -249,7 +254,7 @@ export class ItempostingaccountsComponent extends UIComponent {
     //         this.optionSidebar,
     //         this.view.funcID
     //       );
-    //     }       
+    //     }
     //   });
     // }else{
     //   data.dataDefault.recID = Util.uid();
@@ -262,13 +267,12 @@ export class ItempostingaccountsComponent extends UIComponent {
     //     this.view.funcID
     //   );
     // }
-    
   }
 
   /**
    * *Hàm chỉnh sửa thiết lập tài khoản hạch toán
-   * @param e 
-   * @param dataEdit 
+   * @param e
+   * @param dataEdit
    */
   edit(e, dataEdit) {
     // this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
@@ -298,8 +302,8 @@ export class ItempostingaccountsComponent extends UIComponent {
 
   /**
    * *Hàm sao chép thiết lập tài khoản hạch toán
-   * @param e 
-   * @param dataCopy 
+   * @param e
+   * @param dataCopy
    */
   copy(e, dataCopy) {
     // this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
@@ -329,7 +333,7 @@ export class ItempostingaccountsComponent extends UIComponent {
 
   /**
    * *Hàm xóa thiết lập tài khoản hạch toán
-   * @param dataDelete 
+   * @param dataDelete
    */
   delete(dataDelete) {
     this.eleGrid.deleteRow(dataDelete);
@@ -337,39 +341,41 @@ export class ItempostingaccountsComponent extends UIComponent {
 
   /**
    * *Hàm lấy tên subhearder
-   * @param valueHeader 
-   * @param valueItem 
-   * @returns 
+   * @param valueHeader
+   * @param valueItem
+   * @returns
    */
-  getSubHeader(valueHeader,valueItem){
+  getSubHeader(valueHeader, valueItem) {
     let textheader;
     let textitem;
-    if (this.vllHeader.find(x => x.value == valueHeader)) {
-      textheader = (this.vllHeader.find(x => x.value == valueHeader))?.text;
+    if (this.vllHeader.find((x) => x.value == valueHeader)) {
+      textheader = this.vllHeader.find((x) => x.value == valueHeader)?.text;
     }
-    switch(valueHeader){
+    switch (valueHeader) {
       case '1':
-        if (this.menuInventory.find(x => x.value == valueItem)) {
-          textitem = (this.menuInventory.find(x => x.value == valueItem))?.text;
+        if (this.menuInventory.find((x) => x.value == valueItem)) {
+          textitem = this.menuInventory.find((x) => x.value == valueItem)?.text;
         }
         break;
       case '2':
-        if (this.menuPurchase.find(x => x.value == valueItem)) {
-          textitem = (this.menuPurchase.find(x => x.value == valueItem))?.text;
+        if (this.menuPurchase.find((x) => x.value == valueItem)) {
+          textitem = this.menuPurchase.find((x) => x.value == valueItem)?.text;
         }
         break;
       case '3':
-        if (this.menuSell.find(x => x.value == valueItem)) {
-          textitem = (this.menuSell.find(x => x.value == valueItem))?.text;
+        if (this.menuSell.find((x) => x.value == valueItem)) {
+          textitem = this.menuSell.find((x) => x.value == valueItem)?.text;
         }
         break;
       case '4':
-        if (this.menuProduction.find(x => x.value == valueItem)) {
-          textitem = (this.menuProduction.find(x => x.value == valueItem))?.text;
+        if (this.menuProduction.find((x) => x.value == valueItem)) {
+          textitem = this.menuProduction.find(
+            (x) => x.value == valueItem
+          )?.text;
         }
         break;
     }
-    return textheader + ' > ' + textitem
+    return textheader + ' > ' + textitem;
   }
 
   //#endregion Function

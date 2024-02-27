@@ -181,8 +181,27 @@ export class PopupAddLineTableComponent implements OnInit {
           let fieldName = this.fieldFormat[index]['fieldName'];
           this.line[fieldName] = obj.dataValue;
         }
+        this.setElement(obj.recID, obj.dataValue);
       }
     });
+  }
+
+  setElement(recID, value) {
+    value =
+      value && value != '_'
+        ? Number.parseFloat(value)?.toFixed(2).toString()
+        : '';
+    var codxinput = document.querySelectorAll(
+      '.form-group codx-input[data-record="' + recID + '"]'
+    );
+
+    if (codxinput?.length > 0) {
+      let htmlE = codxinput[0] as HTMLElement;
+      let input = htmlE.querySelector('input') as HTMLInputElement;
+      if (input) {
+        input.value = value;
+      }
+    }
   }
   //------------------END_CACULATE--------------------//
 }

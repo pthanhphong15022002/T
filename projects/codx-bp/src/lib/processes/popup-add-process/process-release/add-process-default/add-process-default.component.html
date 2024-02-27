@@ -42,18 +42,21 @@
                     <ng-container [ngSwitch]="child?.fieldType">
                         <ng-container *ngSwitchCase="'Attachment'">
                             <ng-container *ngIf="!child.documentControl">
-                                <codx-attachment #attachment
+                                <codx-attachment 
+                                    #attachment
                                     [hideDes]="'1'"
                                     hideImageUpload="0"
                                     [formModel]="formModel"
-                                    [objectId]="dataIns.recID" 
-                                    hideBtnSave="1" hideFolder="1"
-                                    referType="source"
+                                    [objectId]="child.recID" 
+                                    [objectType]="formModel?.entityName"
+                                    hideBtnSave="1" 
+                                    hideFolder="1"
+                                    [referType]="'attach' + dataIns?.recID"
                                 >
                                 </codx-attachment>
                             </ng-container>
                             <ng-container *ngIf="child.documentControl">
-                                <lib-attachment-grid [data]="dataIns.documentControl" [formModel]="formModel" (dataChange)="dataChangeAttachmentGrid($event)"></lib-attachment-grid>
+                                <lib-attachment-grid [data]="child.documentControl" [dataIns]="dataIns" [formModel]="formModel" (dataChange)="dataChangeAttachmentGrid($event)" (dataChangeAttachment)="dataChangeAttachment($event)"></lib-attachment-grid>
                             </ng-container>
                         </ng-container>
                         <ng-container *ngSwitchCase="'Table'">
@@ -108,7 +111,7 @@
         </ng-container>
     </div>
     <div class="d-flex align-items-center justify-content-end p-2">
-        <button type="button" class="btn btn-outline-primary me-2" (click)="onSave()"><codx-label [formName]="formModel.formName" fiedName="lblSave" default="Lưu"></codx-label></button>
-        <button class="btn btn-primary ms-2" (click)="onSave(2)" *ngIf="type != 'edit'"><codx-label [formName]="formModel.formName" fiedName="lblDone" default="Lưu & Bắt đầu thực hiện"></codx-label></button>
+        <button type="button" class="btn btn-outline-primary me-2" [disabled]="isAttach" (click)="!isAttach?onSave():undefined"><codx-label [formName]="formModel.formName" fiedName="lblSave" default="Lưu"></codx-label></button>
+        <button class="btn btn-primary ms-2" [disabled]="isAttach" (click)="!isAttach?onSave(2):undefined" *ngIf="type != 'edit'"><codx-label [formName]="formModel.formName" fiedName="lblDone" default="Lưu & Bắt đầu thực hiện"></codx-label></button>
     </div>
 </div>

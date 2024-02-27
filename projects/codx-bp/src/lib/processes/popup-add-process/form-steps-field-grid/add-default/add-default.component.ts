@@ -14,7 +14,7 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
   activityType = 'Stage';
   vllBP001:any;
   vllDefault:any;
-
+  isAttach = false;
   constructor(
     public inject: Injector,
     @Optional() dt?: DialogData,
@@ -81,6 +81,11 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
 
   deleteItem()
   {
-    this.dialog.close({delete: this.data});
+    //this.dialog.close({delete: this.data});
+  }
+
+  dataChangeAttach(e:any)
+  {
+    this.isAttach = e;
   }
 }

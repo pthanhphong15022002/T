@@ -77,6 +77,12 @@ export class WarehouseTransfersDetailComponent extends UIDetailComponent {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  selecting(event){
+    if (event.isSwiped) {
+      event.cancel = true;
+    }
+  }
   //#endregion Init
 
   //#region Event

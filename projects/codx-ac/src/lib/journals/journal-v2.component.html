@@ -1,8 +1,25 @@
-<codx-views class="ac-animation-none" [toolbarDisplay]="false" #view [views]="views" service="AC"
-  entityName="AC_Journals" predicates="Status=@0" [dataValues]="mainFilterValue ?? '1'" [autoLoad]="true">
+<codx-views
+  class="ac-animation-none"
+  [toolbarDisplay]="true"
+  #view
+  [views]="views"
+  service="AC"
+  [button]="mainFilterValue != '2' ? button : null"
+  [entityName]="view.entityName"
+  [autoLoad]="true"
+  (buttonClick)="toolbarClick($event)"
+  (selectedChange)="onSelected($event)"
+  (searchChange)="search($event)"
+  (clickMF)="clickMF($event, itemSelected)"
+  (changeDataMF)="changeMF($event)"
+>
 </codx-views>
 
 <ng-template #contentTemplate>
+  <!-- <codx-toolbar [funcId]="funcID" [dataSelected]="itemSelected" [views]="subViews" [formModel]="view.formModel"
+    [showFilter]="false" [button]="mainFilterValue != '2' ? button : null" (buttonClick)="toolbarClick($event)"
+    (searchChange)="search($event)" (clickMF)="clickMF($event, itemSelected)" (changeDataMF)="changeMF($event)"
+    (viewChange)="viewChanged($event)"></codx-toolbar> -->
   <div class="px-4 bg-body list-survey h-100">
     <div class="d-flex justify-content-between py-2 hhder">
       <div class="main-list">
@@ -10,56 +27,98 @@
           <div class="codx-breadcrumb mb-2">
             <ol class="breadcrumb breadcrumb-dash fs-3 fw-bold">
               <li class="breadcrumb-item" *ngFor="let item of vll86">
-                <a (click)="changePredicate(item.value, 'mainFilterValue')" href="javascript:void(0)"
-                  [ngClass]="item.value == mainFilterValue ? 'active' : ''" class="breadcrumb-text">{{ item.text }}
+                <a
+                  (click)="changePredicate(item.value, 'mainFilterValue')"
+                  href="javascript:void(0)"
+                  [ngClass]="item.value == mainFilterValue ? 'active' : ''"
+                  class="breadcrumb-text"
+                  >{{ item.text }}
                 </a>
               </li>
             </ol>
           </div>
           <div class="codx-breadcrumb">
             <ol class="breadcrumb breadcrumb-dot fs-6 fw-bold">
-              <li class="breadcrumb-item" [ngClass]="item.value === subFilterValue ? 'text-dark' : 'text-muted'"
-                *ngFor="let item of vll85; let i = index">
-                <a href="javascript:void(0)" (click)="changePredicate(item.value, 'subFilterValue')"
-                  style="color: inherit">{{ item.text }}</a>
-                <!-- <i class="icon-i-caret-down-fill font-12" style="color: inherit"></i> -->
+              <li
+                class="breadcrumb-item"
+                [ngClass]="
+                  item.value === subFilterValue ? 'text-dark' : 'text-muted'
+                "
+                *ngFor="let item of vll85; let i = index"
+              >
+                <a
+                  href="javascript:void(0)"
+                  (click)="changePredicate(item.value, 'subFilterValue')"
+                  style="color: inherit"
+                  >{{ item.text }}</a
+                >
               </li>
             </ol>
           </div>
         </div>
       </div>
-      <div class="d-flex align-items-center">
-        <codx-searchbar (searchEvent)="search($event)"></codx-searchbar>
-        <codx-toolbar-button class="ms-3" [button]="mainFilterValue != '2' ? button : null"
-          (buttonClick)="toolbarClick($event)">
-        </codx-toolbar-button>
-        <codx-mfunc [ngClass]="itemSelected ? '' : 'd-none'" [formModel]="view.formModel" [isToolBar]="true" type="view"
-          [dataItem]="itemSelected" (changeDataMF)="changeMF($event)"
-          (clickMF)="clickMF($event, itemSelected)"></codx-mfunc>
-        <codx-toolbar-choose class="me-2 ms-1" [views]="subViews" (viewChange)="viewChanged($event)">
-        </codx-toolbar-choose>
-      </div>
     </div>
-    <div class="row" data-kt-scroll="true" data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
-      data-kt-scroll-dependencies=".hhder, .header" data-kt-scroll-wrappers=".wrapper" data-kt-scroll-offset="0px">
-      <div [style]="viewActive == ViewType.list ? '' : 'display: none;'" class="h-100">
-        <codx-listview class="h-100 overflow-auto" type="listView" funcId="ACT" service="AC"
-          [entityName]="view.entityName" [dataService]="view.dataService" [itemTemplate]="listItemTemplate"
-          (onSelectionChanged)="onSelectedViewList($event)">
+    <div
+      class="row"
+      data-kt-scroll="true"
+      data-kt-scroll-activate="{default: true}"
+      data-kt-scroll-height="auto"
+      data-kt-scroll-dependencies=".hhder, .header"
+      data-kt-scroll-wrappers=".wrapper"
+      data-kt-scroll-offset="0px"
+    >
+      <div
+        [style]="viewActive == ViewType.list ? '' : 'display: none;'"
+        class="h-100"
+      >
+        <codx-listview
+          class="h-100 overflow-auto"
+          type="listView"
+          funcId="ACT"
+          service="AC"
+          [entityName]="view.entityName"
+          [dataService]="view.dataService"
+          [itemTemplate]="listItemTemplate"
+          (onSelectionChanged)="onSelectedViewList($event)"
+        >
         </codx-listview>
       </div>
 
-      <div [style]="viewActive == ViewType.smallcard ? '' : 'display: none;'" class="h-100">
-        <codx-listview class="h-100" [selectFirst]="true" [itemTemplate]="templateListCard" type="cardView" funcId="ACT"
-          service="AC" [entityName]="view.entityName" [dataService]="view.dataService">
+      <div
+        [style]="viewActive == ViewType.smallcard ? '' : 'display: none;'"
+        class="h-100"
+      >
+        <codx-listview
+          class="h-100"
+          [selectFirst]="true"
+          [itemTemplate]="templateListCard"
+          type="cardView"
+          funcId="ACT"
+          service="AC"
+          [entityName]="view.entityName"
+          [dataService]="view.dataService"
+        >
         </codx-listview>
       </div>
 
-      <div class="h-100" [style]="viewActive == ViewType.grid ? '' : 'display: none;'">
-        <codx-gridview-v2 class="h-100" #grid (onSelected)="onSelected($event)" [formName]="view.formModel.formName"
-          [gridViewName]="view.formModel.gridViewName" [rowHeight]="40" (onDoubleClick)="onDoubleClick($event)"
-          [entityName]="view.formModel.entityName" [templateMore]="moreTemplate" service="AC" [isMainView]="true"
-          [dataSource]="view.dataService.data">
+      <div
+        class="h-100"
+        [style]="viewActive == ViewType.grid ? '' : 'display: none;'"
+      >
+        <codx-gridview-v2
+          class="h-100"
+          #grid
+          (onSelected)="onSelected($event)"
+          [formName]="view.formModel.formName"
+          [gridViewName]="view.formModel.gridViewName"
+          [rowHeight]="40"
+          (onDoubleClick)="onDoubleClick($event)"
+          [entityName]="view.formModel.entityName"
+          [templateMore]="moreTemplate"
+          service="AC"
+          [isMainView]="true"
+          [dataSource]="view.dataService.data"
+        >
         </codx-gridview-v2>
       </div>
     </div>
@@ -67,82 +126,141 @@
 </ng-template>
 
 <ng-template #templateListCard let-data>
-  <codx-card-img cardCss="dp-card-process border rounded-2 h-100 w-225px" [imageSrc]="
-        !data.hasImage
-          ? 'assets/themes/ac/default/img/' +
-            (data.journalType | vll : 'AC078' : 'text' | async)
-          : ''
-      " [imageId]="data.recID" [imageObjType]="'AC_Journals'" [rootData]="data" [imgOn]="data?.modifiedOn"
-    imgCss="w-100 h-150px" [imageWidth]="1000" [dataItem]="data" [formModel]="view.formModel" [typeMF]="'hover'"
-    [hideMF]="codxService.asideMode == '2'" [titleTmp]="titleTmp" [descTmp]="descTmp" (click)="onSelected(data)"
-    (dblclick)="dbClick(data)">
+  <codx-card-img
+    cardCss="dp-card-process border rounded-2 h-100 w-225px"
+    [imageSrc]="
+      !data.hasImage
+        ? 'assets/themes/ac/default/img/' +
+          (data.journalType | vll : 'AC078' : 'text' | async)
+        : ''
+    "
+    [imageId]="data.recID"
+    [imageObjType]="'AC_Journals'"
+    [rootData]="data"
+    [imgOn]="data?.modifiedOn"
+    imgCss="w-100 h-150px"
+    [imageWidth]="1000"
+    [dataItem]="data"
+    [formModel]="view.formModel"
+    [typeMF]="'hover'"
+    [hideMF]="codxService.asideMode == '2'"
+    [titleTmp]="titleTmp"
+    [descTmp]="descTmp"
+    (click)="onSelected(data)"
+    (dblclick)="dbClick(data)"
+  >
   </codx-card-img>
 </ng-template>
 
 <ng-template #titleTmp let-data>
   <div class="d-flex py-3 gap-2 w-100">
     <span [ngClass]="data?.journalType | vll : 'AC064' : 'icon' | async"></span>
-    <span [ngbTooltip]="popupjournalDesc" class="fw-bold text-truncate">{{ data?.journalDesc }}</span>
+    <span [ngbTooltip]="popupjournalDesc" class="fw-bold text-truncate">{{
+      data?.journalDesc
+    }}</span>
   </div>
   <ng-template #popupjournalDesc>
-    <span>{{data?.journalDesc}}</span>
+    <span>{{ data?.journalDesc }}</span>
   </ng-template>
 </ng-template>
 <ng-template #descTmp let-data>
   <div class="d-flex align-items-center justify-content-between w-100">
     <div class="d-flex w-100">
       <i class="icon-i-star text-warning icon-14 me-1"></i>
-      <span class="text-warning"> {{data.transCount ? data.transCount : 0}}</span>
+      <span class="text-warning">
+        {{ data.transCount ? data.transCount : 0 }}</span
+      >
     </div>
   </div>
 </ng-template>
 
 <ng-template #moreTemplate let-data>
-  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (changeDataMF)="changeMF($event)"
-    (clickMF)="clickMF($event, data)" [isBookMark]="true" type="view"></codx-mfunc>
+  <codx-mfunc
+    [dataItem]="data"
+    [formModel]="view.formModel"
+    (changeDataMF)="changeMF($event)"
+    (clickMF)="clickMF($event, data)"
+    [isBookMark]="true"
+    type="view"
+  ></codx-mfunc>
 </ng-template>
 
 <ng-template #listItemTemplate let-data>
-  <div (dblclick)="dbClick(data)" class="d-flex w-100 flex-column text-content flex-grow-1 p-3">
+  <div
+    (dblclick)="dbClick(data)"
+    class="d-flex w-100 flex-column text-content flex-grow-1 p-3"
+  >
     <div class="d-flex w-100 justify-content-between">
       <div class="row w-100">
         <div class="col-4">
-          <ng-container *ngTemplateOutlet="column1Template; context: { $implicit: data }"></ng-container>
+          <ng-container
+            *ngTemplateOutlet="column1Template; context: { $implicit: data }"
+          ></ng-container>
         </div>
         <div class="col-4">
-          <ng-container *ngTemplateOutlet="column2Template; context: { $implicit: data }"></ng-container>
+          <ng-container
+            *ngTemplateOutlet="column2Template; context: { $implicit: data }"
+          ></ng-container>
         </div>
         <div class="col-4">
-          <ng-container *ngTemplateOutlet="column3Template; context: { $implicit: data }"></ng-container>
+          <ng-container
+            *ngTemplateOutlet="column3Template; context: { $implicit: data }"
+          ></ng-container>
         </div>
       </div>
     </div>
   </div>
   <ng-template #column1Template let-data>
     <div class="d-flex">
-      <codx-card-img style="width: 100px;height: 80px;" cardCss="dp-card-process border rounded-2 me-3" [imageSrc]="
-              !data.hasImage
-                ? 'assets/themes/ac/default/img/' +
-                  (data.journalType | vll : 'AC078' : 'text' | async)
-                : ''
-            " [imageId]="data.recID" [imageObjType]="'AC_Journals'" [rootData]="data" [imgOn]="data?.modifiedOn"
-        imgCss="w-100px h-80px" [imageWidth]="100" [dataItem]="data" [formModel]="view.formModel" [typeMF]="'hover'"
-        [hideMF]="codxService.asideMode == '2'">
+      <codx-card-img
+        style="width: 100px; height: 80px"
+        cardCss="dp-card-process border rounded-2 me-3"
+        [imageSrc]="
+          !data.hasImage
+            ? 'assets/themes/ac/default/img/' +
+              (data.journalType | vll : 'AC078' : 'text' | async)
+            : ''
+        "
+        [imageId]="data.recID"
+        [imageObjType]="'AC_Journals'"
+        [rootData]="data"
+        [imgOn]="data?.modifiedOn"
+        imgCss="w-100px h-80px"
+        [imageWidth]="100"
+        [dataItem]="data"
+        [formModel]="view.formModel"
+        [typeMF]="'hover'"
+        [hideMF]="codxService.asideMode == '2'"
+      >
       </codx-card-img>
       <div class="d-flex flex-column">
         <div class="mb-1">
           <span class="fw-bold">{{ data.journalDesc }}</span>
         </div>
         <div class="mb-1">
-          <codx-label class="fw-bold fs-6 label-colon" fiedName="periodID" [formModel]="view.formModel"></codx-label>
-          <span *ngIf="data?.periodID" class="text-gray-600 fs-6">{{data.periodID}}</span>
-          <span *ngIf="(data?.periodID == '' || data?.periodID == null) && view?.gridViewSetup"
-            class="place-holder text-gray-600 me-3">{{
-            view?.gridViewSetup["PeriodID"].headerText}}</span>
+          <codx-label
+            class="fw-bold fs-6 label-colon"
+            fiedName="periodID"
+            [formModel]="view.formModel"
+          ></codx-label>
+          <span *ngIf="data?.periodID" class="text-gray-600 fs-6">{{
+            data.periodID
+          }}</span>
+          <span
+            *ngIf="
+              (data?.periodID == '' || data?.periodID == null) &&
+              view?.gridViewSetup
+            "
+            class="place-holder text-gray-600 me-3"
+            >{{ view?.gridViewSetup["PeriodID"].headerText }}</span
+          >
         </div>
         <div class="mb-1">
-          <codx-label class="fw-bold fs-6 label-colon" default="Số chứng từ"></codx-label>
-          <span class="fs-6"> {{data.transCount ? data.transCount : 0}}</span>
+          <codx-label
+            class="fw-bold fs-6 label-colon"
+            default="Số chứng từ"
+          ></codx-label>
+          <span class="fs-6"> {{ data.transCount ? data.transCount : 0 }}</span>
         </div>
       </div>
     </div>
@@ -150,7 +268,90 @@
 
   <ng-template #column2Template let-data>
     <div class="d-flex">
-      <ejs-accordion style="border: none !important;">
+      <div (click)="viewSetting(data)" class="d-flex align-items-center justify-content-center">
+          <span class="list-header mx-0 my-0 me-2">Xem thiết lập</span>
+          <i class="text-primary icon-i-eye icon-14"></i>
+        </div>
+      <!-- <ejs-tooltip id="tooltip" target="#setting" position="Right">
+        <div
+          id="setting"
+          class="d-flex align-items-center justify-content-center"
+        >
+          <i class="text-primary icon-settings icon-14 me-3"></i>
+          <span class="list-header mx-0 my-0">Xem thiết lập</span>
+        </div>
+        <ng-template #content>
+          <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+            <div>
+              <codx-label class="me-5" fiedName="AssignRule" [formModel]="view.formModel"></codx-label>
+            </div>
+            <div>
+              <span class="text-gray-500" #assignRule [innerHTML]="
+                            data?.assignRule
+                              | formatvalue : view.formModel : 'assignRule' : assignRule
+                              | async
+                          "></span>
+            </div>
+          </div>
+          <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+            <div>
+              <codx-label class="me-5" fiedName="MultiCurrency" [formModel]="view.formModel"></codx-label>
+            </div>
+            <div>
+              <codx-input type="switch" [disabled]="true" [crrValue]="data?.multiCurrency"></codx-input>
+            </div>
+          </div>
+          <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+            <div>
+              <codx-label class="me-5" fiedName="CurrencyID" [formModel]="view.formModel"></codx-label>
+            </div>
+            <div>
+              <span class="text-gray-500" #currencyID [innerHTML]="
+                            data?.currencyID
+                              | formatvalue : view.formModel : 'currencyID' : currencyID
+                              | async
+                          "></span>
+            </div>
+          </div>
+          <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+            <div>
+              <codx-label class="me-5" fiedName="ExchType" [formModel]="view.formModel"></codx-label>
+            </div>
+            <div class="text-gray-600">
+              <span class="text-gray-500" #exchType [innerHTML]="
+                            data?.exchType
+                              | formatvalue : view.formModel : 'exchType' : exchType
+                              | async
+                          "></span>
+            </div>
+          </div>
+          <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+            <div>
+              <codx-label class="me-5" fiedName="DRAcctControl" [formModel]="view.formModel"></codx-label>
+            </div>
+            <div>
+              <span class="text-gray-500" #drAcctControl [innerHTML]="
+                            data?.drAcctControl
+                              | formatvalue : view.formModel : 'drAcctControl' : drAcctControl
+                              | async
+                          "></span>
+            </div>
+          </div>
+          <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+            <div>
+              <codx-label class="me-5" fiedName="crAcctControl" [formModel]="view.formModel"></codx-label>
+            </div>
+            <div>
+              <span class="text-gray-500" #crAcctControl [innerHTML]="
+                            data?.crAcctControl
+                              | formatvalue : view.formModel : 'crAcctControl' : crAcctControl
+                              | async
+                          "></span>
+            </div>
+          </div>
+        </ng-template>
+      </ejs-tooltip> -->
+      <!-- <ejs-accordion style="border: none !important;">
         <e-accordionitems>
           <e-accordionitem>
             <ng-template #header>
@@ -318,10 +519,12 @@
                     <codx-label fiedName="VatControl" [formModel]="view.formModel"></codx-label>
                   </div>
                   <div>
-                    <codx-input type="switch" [disabled]="true" [crrValue]="data?.vatControl == '1' ? true : false"></codx-input>
+                    <codx-input type="switch" [disabled]="true"
+                      [crrValue]="data?.vatControl == '1' ? true : false"></codx-input>
                   </div>
                 </div>
-                <div *ngIf="vllAC126.includes(data?.journalType)" class="w-100 d-flex align-items-center justify-content-between mb-1">
+                <div *ngIf="vllAC126.includes(data?.journalType)"
+                  class="w-100 d-flex align-items-center justify-content-between mb-1">
                   <div>
                     <codx-label fiedName="UseDutyTax" [formModel]="view.formModel"></codx-label>
                   </div>
@@ -329,7 +532,8 @@
                     <codx-input type="switch" [disabled]="true" [crrValue]="data?.useDutyTax"></codx-input>
                   </div>
                 </div>
-                <div *ngIf="vllAC126.includes(data?.journalType)" class="w-100 d-flex align-items-center justify-content-between mb-1">
+                <div *ngIf="vllAC126.includes(data?.journalType)"
+                  class="w-100 d-flex align-items-center justify-content-between mb-1">
                   <div>
                     <codx-label fiedName="UseExciseTax" [formModel]="view.formModel"></codx-label>
                   </div>
@@ -377,7 +581,8 @@
                                 "></span>
                   </div>
                 </div>
-                <div *ngIf="vllAC111.includes(data?.journalType)" class="w-100 d-flex align-items-center justify-content-between mb-1">
+                <div *ngIf="vllAC111.includes(data?.journalType)"
+                  class="w-100 d-flex align-items-center justify-content-between mb-1">
                   <div>
                     <codx-label fiedName="WarehouseReceipt" [formModel]="view.formModel"></codx-label>
                   </div>
@@ -405,7 +610,7 @@
             </ng-template>
           </e-accordionitem>
         </e-accordionitems>
-      </ejs-accordion>
+      </ejs-accordion> -->
     </div>
     <!-- <div class="py-3">
     <div class="d-flex gap-2 mb-1">
@@ -501,33 +706,62 @@
   <ng-template #column3Template let-data>
     <div class="">
       <div class="mb-2">
-        <codx-label class="fw-bold fs-6 label-colon" fiedName="creater" [formModel]="view.formModel"></codx-label>
-
+        <codx-label
+          class="fw-bold fs-6 label-colon"
+          fiedName="creater"
+          [formModel]="view.formModel"
+        ></codx-label>
       </div>
       <div class="mb-2">
-        <codx-label class="fw-bold fs-6 label-colon" fiedName="poster" [formModel]="view.formModel"></codx-label>
-        
+        <codx-label
+          class="fw-bold fs-6 label-colon"
+          fiedName="poster"
+          [formModel]="view.formModel"
+        ></codx-label>
       </div>
       <div class="d-flex align-items-center">
-        <codx-label class="fw-bold fs-6 label-colon" fiedName="createdBy" [formModel]="view.formModel"></codx-label>
-        <codx-imgs [isToolTip]="true" [objectId]="data?.createdBy" [objectName]="data?.createdBy"
-            [objectType]="'AD_Users'" [width]="30" [numberImages]="1">
+        <codx-label
+          class="fw-bold fs-6 label-colon"
+          fiedName="createdBy"
+          [formModel]="view.formModel"
+        ></codx-label>
+        <codx-imgs
+          [isToolTip]="true"
+          [objectId]="data?.createdBy"
+          [objectName]="data?.createdBy"
+          [objectType]="'AD_Users'"
+          [width]="30"
+          [numberImages]="1"
+        >
         </codx-imgs>
       </div>
     </div>
-    <!-- <div class="text-truncate">
-      <codx-label fiedName="creater" [formModel]="view.formModel"></codx-label>
-      :
-      <span class="text-primary">{{
-        this.creaters | nameById : "journalNo" : "value" : data.journalNo
-        }}</span>
-    </div>
-    <div class="text-truncate">
-      <codx-label fiedName="poster" [formModel]="view.formModel"></codx-label>:
-      <span class="text-primary">
-        {{
-        this.posters | nameById : "journalNo" : "value" : data.journalNo
-        }}</span>
-    </div> -->
   </ng-template>
+</ng-template>
+
+<ng-template #temptemp>
+  <div class="d-flex align-items-center">
+    <codx-searchbar (searchEvent)="search($event)"></codx-searchbar>
+    <codx-toolbar-button
+      class="ms-3"
+      [button]="mainFilterValue != '2' ? button : null"
+      (buttonClick)="toolbarClick($event)"
+    >
+    </codx-toolbar-button>
+    <codx-mfunc
+      [ngClass]="itemSelected ? '' : 'd-none'"
+      [formModel]="view.formModel"
+      [isToolBar]="true"
+      type="view"
+      [dataItem]="itemSelected"
+      (changeDataMF)="changeMF($event)"
+      (clickMF)="clickMF($event, itemSelected)"
+    ></codx-mfunc>
+    <codx-toolbar-choose
+      class="me-2 ms-1"
+      [views]="subViews"
+      (viewChange)="viewChanged($event)"
+    >
+    </codx-toolbar-choose>
+  </div>
 </ng-template>
