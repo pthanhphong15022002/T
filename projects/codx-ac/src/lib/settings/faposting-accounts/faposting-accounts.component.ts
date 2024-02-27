@@ -37,13 +37,19 @@ export class FAPostingAccountsComponent
   menuItems: Array<any> = [];
   selectedValue: string;
   defaultPostType: string;
-  btnAdd = [{
-    id: 'btnAdd',
-  }];
+  btnAdd = [
+    {
+      id: 'btnAdd',
+    },
+  ];
   functionName: string;
+  isSubView: boolean;
 
   constructor(inject: Injector) {
     super(inject);
+    this.router.data.subscribe((res) => {
+      if (res && res['isSubView']) this.isSubView = res.isSubView;
+    });
   }
   //#endregion
 
