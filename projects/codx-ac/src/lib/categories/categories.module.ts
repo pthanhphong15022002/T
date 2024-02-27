@@ -104,6 +104,7 @@ var routes: Routes = [
       {
         path: 'dynamic/:funcID',
         component: DynamicFormComponent,
+        data: { isSubView: true },
       },
     ],
   },

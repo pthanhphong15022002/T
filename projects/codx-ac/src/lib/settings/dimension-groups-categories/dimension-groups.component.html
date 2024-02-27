@@ -1,6 +1,6 @@
-<codx-views #view [views]="views" [button]="button" [entityName]="view.entityName"
-  (buttonClick)="toolBarClick($event)" [hideMoreFuncs]="!itemSelected" (changeDataMF)="changeDataMF($event,'views')" (selectedChange)="onSelectedItem($event)"
-  (clickMF)="clickMoreFunction($event, itemSelected)">
+<codx-views #view [views]="views" [button]="button" [entityName]="view.entityName" [isSubView]="true"
+  (buttonClick)="toolBarClick($event)" [hideMoreFuncs]="!itemSelected" (changeDataMF)="changeDataMF($event,'views')"
+  (selectedChange)="onSelectedItem($event)" (clickMF)="clickMoreFunction($event, itemSelected)">
 </codx-views>
 
 <!-- Start: TemplateGrid -->
