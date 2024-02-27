@@ -1,34 +1,17 @@
-<codx-views
-  #view
-  [views]="views"
-  entityName="AM_Assets"
-  [button]="btnAdd"
-  (buttonClick)="onClickAdd($event)"
->
+<codx-views #view [views]="views" entityName="AM_Assets" [button]="btnAdd" [isSubView]="true"
+  (buttonClick)="onClickAdd($event)">
 </codx-views>
 
 <ng-template #header1>
-  <codx-label
-    fiedName="lblHeader1"
-    [formModel]="view.formModel"
-    default="Thông tin chung"
-  ></codx-label>
+  <codx-label fiedName="lblHeader1" [formModel]="view.formModel" default="Thông tin chung"></codx-label>
 </ng-template>
 
 <ng-template #header2>
-  <codx-label
-    fiedName="lblHeader2"
-    [formModel]="view.formModel"
-    default="Thông tin khấu hao"
-  ></codx-label>
+  <codx-label fiedName="lblHeader2" [formModel]="view.formModel" default="Thông tin khấu hao"></codx-label>
 </ng-template>
 
 <ng-template #header3>
-  <codx-label
-    fiedName="lblHeader3"
-    [formModel]="view.formModel"
-    default="Tình trạng"
-  ></codx-label>
+  <codx-label fiedName="lblHeader3" [formModel]="view.formModel" default="Tình trạng"></codx-label>
 </ng-template>
 
 <ng-template #rowTemplate let-data>
@@ -37,69 +20,42 @@
     <td class="p-3">
       <div class="fw-bold">{{ data?.assetName }}</div>
       <div>
-        <codx-label
-          fiedName="assetCardNo"
-          [formModel]="view.formModel"
-        ></codx-label
-        >:&nbsp;<span class="text-primary">{{ data?.assetCardNo }}</span>
+        <codx-label fiedName="assetCardNo" [formModel]="view.formModel"></codx-label>:&nbsp;<span
+          class="text-primary">{{ data?.assetCardNo }}</span>
         &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
-        <codx-label
-          fiedName="assetOriginID"
-          [formModel]="view.formModel"
-        ></codx-label
-        >:&nbsp;<span class="text-primary">{{ data?.assetOriginID }}</span>
+        <codx-label fiedName="assetOriginID" [formModel]="view.formModel"></codx-label>:&nbsp;<span
+          class="text-primary">{{ data?.assetOriginID }}</span>
         &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
-        <codx-label
-          fiedName="assetGroupID"
-          [formModel]="view.formModel"
-        ></codx-label
-        >:&nbsp;<span class="text-primary">{{ data?.assetGroupID }}</span>
+        <codx-label fiedName="assetGroupID" [formModel]="view.formModel"></codx-label>:&nbsp;<span
+          class="text-primary">{{ data?.assetGroupID }}</span>
       </div>
       <div>
-        <codx-vll
-          *ngIf="data?.assetType"
-          [showText]="true"
-          [showBgColor]="true"
-          name="AC080"
-          [value]="data?.assetType"
-          class="badge badge-danger"
-        >
+        <codx-vll *ngIf="data?.assetType" [showText]="true" [showBgColor]="true" name="AC080" [value]="data?.assetType"
+          class="badge badge-danger">
         </codx-vll>
       </div>
     </td>
 
     <td class="p-3">
       <div>
-        <codx-label fiedName="costAmt" [formModel]="view.formModel"></codx-label
-        >:&nbsp;<span class="text-primary">{{ data?.costAmt }}</span>
+        <codx-label fiedName="costAmt" [formModel]="view.formModel"></codx-label>:&nbsp;<span class="text-primary">{{
+          data?.costAmt }}</span>
         &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
-        <codx-label
-          fiedName="accumulatedDepr"
-          [formModel]="view.formModel"
-        ></codx-label
-        >:&nbsp;<span class="text-primary">{{ data?.accumulatedDepr }}</span>
+        <codx-label fiedName="accumulatedDepr" [formModel]="view.formModel"></codx-label>:&nbsp;<span
+          class="text-primary">{{ data?.accumulatedDepr }}</span>
         &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
-        <codx-label fiedName="salvage" [formModel]="view.formModel"></codx-label
-        >:&nbsp;<span class="text-primary">{{ data?.salvage }}</span>
+        <codx-label fiedName="salvage" [formModel]="view.formModel"></codx-label>:&nbsp;<span class="text-primary">{{
+          data?.salvage }}</span>
       </div>
       <div>
-        <codx-label
-          fiedName="deprStartDate"
-          [formModel]="view.formModel"
-        ></codx-label
-        >:&nbsp;<span class="text-primary">{{ data?.deprStartDate }}</span>
+        <codx-label fiedName="deprStartDate" [formModel]="view.formModel"></codx-label>:&nbsp;<span
+          class="text-primary">{{ data?.deprStartDate }}</span>
         &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
-        <codx-label
-          fiedName="servicePeriods"
-          [formModel]="view.formModel"
-        ></codx-label
-        >:&nbsp;<span class="text-primary">{{ data?.servicePeriods }}</span>
+        <codx-label fiedName="servicePeriods" [formModel]="view.formModel"></codx-label>:&nbsp;<span
+          class="text-primary">{{ data?.servicePeriods }}</span>
         &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
-        <codx-label
-          fiedName="deprPeriods"
-          [formModel]="view.formModel"
-        ></codx-label
-        >:&nbsp;<span class="text-primary">{{ data?.deprPeriods }}</span>
+        <codx-label fiedName="deprPeriods" [formModel]="view.formModel"></codx-label>:&nbsp;<span
+          class="text-primary">{{ data?.deprPeriods }}</span>
       </div>
       <div>
         <span class="badge badge-info">{{ data?.deprMethod }}</span>
@@ -107,13 +63,8 @@
     </td>
 
     <td class="text-center p-3">
-      <span class="badge badge-warning"
-        ><codx-label
-          fiedName="lblStatus"
-          [formModel]="view.formModel"
-          [default]="data?.status === '1' ? 'Còn sử dụng' : 'Hết hạn'"
-        ></codx-label
-      ></span>
+      <span class="badge badge-warning"><codx-label fiedName="lblStatus" [formModel]="view.formModel"
+          [default]="data?.status === '1' ? 'Còn sử dụng' : 'Hết hạn'"></codx-label></span>
       <div class="text-secondary">
         {{ data?.createdOn | date : "dd/MM/yyyy" }}
       </div>
@@ -121,23 +72,13 @@
     </td>
 
     <td>
-      <codx-mfunc
-        [dataItem]="data"
-        [formModel]="view.formModel"
-        (clickMF)="onClickMoreFuncs($event, data)"
-        [isBookMark]="true"
-        type="view"
-      ></codx-mfunc>
+      <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="onClickMoreFuncs($event, data)"
+        [isBookMark]="true" type="view"></codx-mfunc>
     </td>
   </tr>
 </ng-template>
 
 <ng-template #moreTemplate let-data>
-  <codx-mfunc
-    [dataItem]="data"
-    [formModel]="view.formModel"
-    (clickMF)="onClickMoreFuncs($event, data)"
-    [isBookMark]="true"
-    type="view"
-  ></codx-mfunc>
+  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="onClickMoreFuncs($event, data)"
+    [isBookMark]="true" type="view"></codx-mfunc>
 </ng-template>

@@ -1,5 +1,5 @@
 <codx-views class="ac-views" #view [views]="views" [button]="button" [autoLoad]="true" [entityName]="view.entityName"
-  (buttonClick)="toolBarClick($event)" [hideMoreFuncs]="true">
+  [isSubView]="true" (buttonClick)="toolBarClick($event)" [hideMoreFuncs]="true">
 </codx-views>
 <!-- Start: TemplateLeft -->
 <ng-template #templateLeft>
@@ -112,8 +112,8 @@
   <ng-container *ngIf="view.formModel">
     <div class="tabposting-content">
       <codx-gridview-v2 #eleGrid class="tabLine" [formName]="view.formModel.formName" [editOnClick]="true"
-      [gridViewName]="view.formModel.gridViewName" [entityName]="view.formModel.entityName" predicates="PostType=@0"
-      [dataValues]="postType" [hideMoreFunc]="true"></codx-gridview-v2>
+        [gridViewName]="view.formModel.gridViewName" [entityName]="view.formModel.entityName" predicates="PostType=@0"
+        [dataValues]="postType" [hideMoreFunc]="true"></codx-gridview-v2>
     </div>
   </ng-container>
 </ng-template>

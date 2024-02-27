@@ -13,6 +13,7 @@
   [dataObj]="dataObj"
   [predicate]="predicate"
   [dataValue]="datavalue"
+  parentIDField="parentID"
   [isSubView]="true"
   (buttonClick)="click($event)"
   (clickMF)="clickMF($event)"
@@ -28,7 +29,22 @@
     [listRoles]="listRoles"
     [showMoreFunc]="true"
     [user]="user"
-
   >
   </share-view-list>
+</ng-template>
+<ng-template #treeView>
+  <share-tree-view
+    #viewTree
+    [formModel]="view.formModel"
+    [vllStatus]="vllStatus"
+    [listRoles]="listRoles"
+    [dataObj]="dataObj"
+    [filter]="view.dataService.filter"
+    [favoriteID]="view.dataService.favoriteID"
+    [searchText]="view.dataService.searchText"
+    [showMoreFunc]="true"
+    (clickMoreFunction)="clickMF($event)"
+    [user]="user"
+  >
+  </share-tree-view>
 </ng-template>
