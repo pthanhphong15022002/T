@@ -255,11 +255,17 @@
                 class="fw-bold ps-4"
                 [style]="
                   item?.columnWidth > 0 && settingWidth
-                    ? 'width :' + item.columnWidth + 'px !important'
+                    ? 'width :' + item?.columnWidth + 'px !important'
                     : ''
                 "
               >
                 <span>{{ item?.title }}</span>
+                <ng-container *ngIf="item?.dataType == 'CF'">
+                  &nbsp;
+                  <span [ngbTooltip]="item?.dataFormat" container="body"
+                    ><i class="icon-calculate icon-12 text-primary"></i
+                  ></span>
+                </ng-container>
               </th>
             </ng-container>
           </tr>

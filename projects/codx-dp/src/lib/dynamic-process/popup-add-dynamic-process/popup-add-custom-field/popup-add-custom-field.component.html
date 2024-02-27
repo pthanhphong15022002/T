@@ -540,6 +540,12 @@
             >
               <div>
                 <span>{{ item?.title }}</span>
+                <ng-container *ngIf="item?.dataType == 'CF'">
+                  &nbsp;
+                  <span [ngbTooltip]="item?.dataFormat" container="body"
+                    ><i class="icon-calculate icon-12 text-primary"></i
+                  ></span>
+                </ng-container>
               </div>
               <div>
                 <span class="text-gray-500">{{ item?.fieldName }}</span>
@@ -585,8 +591,8 @@
           </td>
           <ng-container *ngFor="let cell of listColumns">
             <td class="ps-4">
-              <div>
-                <span> {{ cell?.totalColumns ? 0 : "" }}</span>
+              <div style="text-align: right !important">
+                <span class="fw-bold"> {{ cell?.totalColumns ? 0 : "" }}</span>
               </div>
             </td>
           </ng-container>
