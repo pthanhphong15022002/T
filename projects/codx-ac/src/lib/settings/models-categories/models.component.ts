@@ -32,19 +32,25 @@ export class ModelsComponent extends UIComponent {
   //#region Contructor
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  button: ButtonModel[] = [{
-    id: 'btnAdd',
-  }];
+  button: ButtonModel[] = [
+    {
+      id: 'btnAdd',
+    },
+  ];
   headerText: any;
   funcName: any;
-  itemSelected:any;
+  itemSelected: any;
   private destroy$ = new Subject<void>();
+  isSubView: boolean;
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
-    private callfunc: CallFuncService,
+    private callfunc: CallFuncService
   ) {
     super(inject);
+    this.router.data.subscribe((res) => {
+      if (res && res['isSubView']) this.isSubView = res.isSubView;
+    });
   }
   //#endregion
 
@@ -63,13 +69,13 @@ export class ModelsComponent extends UIComponent {
         active: true,
         sameData: true,
         model: {
-          hideMoreFunc:true,
+          hideMoreFunc: true,
           template2: this.templateGrid,
         },
       },
     ];
   }
-  onDestroy(){
+  onDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -107,7 +113,7 @@ export class ModelsComponent extends UIComponent {
         res.isAdd = true;
         let data = {
           headerText: this.headerText,
-          dataDefault:{...res}
+          dataDefault: { ...res },
         };
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
@@ -120,7 +126,7 @@ export class ModelsComponent extends UIComponent {
           this.view.funcID
         );
       }
-    })
+    });
     // this.headerText = e.text + ' ' + this.funcName;
     // this.view.dataService.addNew().subscribe((res: any) => {
     //   var obj = {
@@ -147,39 +153,12 @@ export class ModelsComponent extends UIComponent {
     if (dataEdit) {
       this.view.dataService.dataSelected = dataEdit;
     }
-    this.view.dataService
-      .edit(dataEdit)
-      .subscribe((res: any) => {
-        if(res){
-          res.isEdit = true;
-          let data = {
-            headerText: this.headerText,
-            dataDefault:{...res}
-          };
-          let option = new SidebarModel();
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.view?.formModel;
-          option.Width = '800px';
-          let dialog = this.callfunc.openSide(
-            ModelsAddComponent,
-            data,
-            option,
-            this.view.funcID
-          );
-        }    
-      });
-  }
-  copy(e, dataCopy) {
-    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
-    if (dataCopy) {
-      this.view.dataService.dataSelected = dataCopy;
-    }
-    this.view.dataService.copy().subscribe((res: any) => {
-      if(res){
-        res.isCopy = true;
+    this.view.dataService.edit(dataEdit).subscribe((res: any) => {
+      if (res) {
+        res.isEdit = true;
         let data = {
           headerText: this.headerText,
-          dataDefault:{...res}
+          dataDefault: { ...res },
         };
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
@@ -191,7 +170,32 @@ export class ModelsComponent extends UIComponent {
           option,
           this.view.funcID
         );
-      }   
+      }
+    });
+  }
+  copy(e, dataCopy) {
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
+    if (dataCopy) {
+      this.view.dataService.dataSelected = dataCopy;
+    }
+    this.view.dataService.copy().subscribe((res: any) => {
+      if (res) {
+        res.isCopy = true;
+        let data = {
+          headerText: this.headerText,
+          dataDefault: { ...res },
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '800px';
+        let dialog = this.callfunc.openSide(
+          ModelsAddComponent,
+          data,
+          option,
+          this.view.funcID
+        );
+      }
     });
   }
   delete(dataDelete) {
@@ -208,11 +212,12 @@ export class ModelsComponent extends UIComponent {
       });
   }
 
-  changeDataMF(event,type:any=''){
-    event.reduce((pre,element) => {
-      if(type === 'views') element.isbookmark = true;
-      if(!['SYS03','SYS02','SYS04'].includes(element.functionID)) element.disabled = true;
-    },{})
+  changeDataMF(event, type: any = '') {
+    event.reduce((pre, element) => {
+      if (type === 'views') element.isbookmark = true;
+      if (!['SYS03', 'SYS02', 'SYS04'].includes(element.functionID))
+        element.disabled = true;
+    }, {});
   }
 
   onSelectedItem(event) {

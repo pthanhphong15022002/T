@@ -31,19 +31,25 @@ export class DimensionGroupsComponent extends UIComponent {
   //#region Contructor
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  button: ButtonModel[] = [{
-    id: 'btnAdd',
-  }];
+  button: ButtonModel[] = [
+    {
+      id: 'btnAdd',
+    },
+  ];
   headerText: any;
   funcName: any;
-  itemSelected:any;
+  itemSelected: any;
   private destroy$ = new Subject<void>();
+  isSubView: boolean;
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
-    private callfunc: CallFuncService,
+    private callfunc: CallFuncService
   ) {
     super(inject);
+    this.router.data.subscribe((res) => {
+      if (res && res['isSubView']) this.isSubView = res.isSubView;
+    });
   }
   //#endregion
 
@@ -62,14 +68,14 @@ export class DimensionGroupsComponent extends UIComponent {
         active: true,
         sameData: true,
         model: {
-          hideMoreFunc:true,
+          hideMoreFunc: true,
           template2: this.templateGrid,
         },
       },
     ];
   }
 
-  onDestroy(){
+  onDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -117,11 +123,11 @@ export class DimensionGroupsComponent extends UIComponent {
   addNew(e) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
     this.view.dataService.addNew().subscribe((res: any) => {
-      if(res){
+      if (res) {
         res.isAdd = true;
         let data = {
           headerText: this.headerText,
-          dataDefault:{...res}
+          dataDefault: { ...res },
         };
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
@@ -133,7 +139,7 @@ export class DimensionGroupsComponent extends UIComponent {
           option,
           this.view.funcID
         );
-      }       
+      }
     });
   }
   edit(e, dataEdit) {
@@ -141,39 +147,12 @@ export class DimensionGroupsComponent extends UIComponent {
     if (dataEdit) {
       this.view.dataService.dataSelected = dataEdit;
     }
-    this.view.dataService
-      .edit(dataEdit)
-      .subscribe((res: any) => {
-        if(res){
-          res.isEdit = true;
-          let data = {
-            headerText: this.headerText,
-            dataDefault:{...res}
-          };
-          let option = new SidebarModel();
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.view?.formModel;
-          option.Width = '550px';
-          let dialog = this.callfunc.openSide(
-            DimensionGroupsAddComponent,
-            data,
-            option,
-            this.view.funcID
-          );
-        }    
-      });
-  }
-  copy(e, dataCopy) {
-    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
-    if (dataCopy) {
-      this.view.dataService.dataSelected = dataCopy;
-    }
-    this.view.dataService.copy().subscribe((res: any) => {
-      if(res){
-        res.isCopy = true;
+    this.view.dataService.edit(dataEdit).subscribe((res: any) => {
+      if (res) {
+        res.isEdit = true;
         let data = {
           headerText: this.headerText,
-          dataDefault:{...res}
+          dataDefault: { ...res },
         };
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
@@ -185,7 +164,32 @@ export class DimensionGroupsComponent extends UIComponent {
           option,
           this.view.funcID
         );
-      }   
+      }
+    });
+  }
+  copy(e, dataCopy) {
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
+    if (dataCopy) {
+      this.view.dataService.dataSelected = dataCopy;
+    }
+    this.view.dataService.copy().subscribe((res: any) => {
+      if (res) {
+        res.isCopy = true;
+        let data = {
+          headerText: this.headerText,
+          dataDefault: { ...res },
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '550px';
+        let dialog = this.callfunc.openSide(
+          DimensionGroupsAddComponent,
+          data,
+          option,
+          this.view.funcID
+        );
+      }
     });
   }
   delete(dataDelete) {
@@ -202,11 +206,12 @@ export class DimensionGroupsComponent extends UIComponent {
       });
   }
 
-  changeDataMF(event,type:any=''){
-    event.reduce((pre,element) => {
-      if(type === 'views') element.isbookmark = true;
-      if(!['SYS03','SYS02','SYS04'].includes(element.functionID)) element.disabled = true;
-    },{})
+  changeDataMF(event, type: any = '') {
+    event.reduce((pre, element) => {
+      if (type === 'views') element.isbookmark = true;
+      if (!['SYS03', 'SYS02', 'SYS04'].includes(element.functionID))
+        element.disabled = true;
+    }, {});
   }
 
   onSelectedItem(event) {
