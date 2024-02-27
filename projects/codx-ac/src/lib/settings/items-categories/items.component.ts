@@ -1,13 +1,24 @@
-import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import {
   ButtonModel,
   CallFuncService,
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewType
+  ViewType,
 } from 'codx-core';
-import { CodxAcService, fmItemsProduction, fmItemsPurchase, fmItemsSales } from '../../codx-ac.service';
+import {
+  CodxAcService,
+  fmItemsProduction,
+  fmItemsPurchase,
+  fmItemsSales,
+} from '../../codx-ac.service';
 import { toCamelCase } from '../../utils';
 import { Subject, takeUntil } from 'rxjs';
 import { ItemsAddComponent } from './items-add/items-add.component';
@@ -23,27 +34,33 @@ export class ItemsComponent extends UIComponent {
   //#region Constructor
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  button: ButtonModel[] = [{
-    id: 'btnAdd',
-    icon: 'icon-i-box-seam',
-  }];
+  button: ButtonModel[] = [
+    {
+      id: 'btnAdd',
+      icon: 'icon-i-box-seam',
+    },
+  ];
   funcName = '';
   headerText: any;
   optionSidebar: SidebarModel = new SidebarModel();
-  fmItemsPurchase:any = fmItemsPurchase;
-  fmItemsSales:any = fmItemsSales;
-  fmItemsProduction:any = fmItemsProduction;
+  fmItemsPurchase: any = fmItemsPurchase;
+  fmItemsSales: any = fmItemsSales;
+  fmItemsProduction: any = fmItemsProduction;
   fgItemsPurchase: FormGroup;
   fgItemsSales: FormGroup;
   fgItemsProduction: FormGroup;
   private destroy$ = new Subject<void>();
-  
+  isSubView: boolean;
+
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
-    private acService: CodxAcService,
+    private acService: CodxAcService
   ) {
     super(inject);
+    this.router.data.subscribe((res) => {
+      if (res && res['isSubView']) this.isSubView = res.isSubView;
+    });
   }
   //#endregion
 
@@ -70,26 +87,26 @@ export class ItemsComponent extends UIComponent {
 
   ngAfterViewInit() {
     this.cache
-    .functionList(this.view.funcID)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res) => {
-      if (res) this.funcName = res.defaultName;
-    });
-  this.views = [
-    {
-      type: ViewType.grid,
-      active: true,
-      sameData: false,
-      model: {
-        template2: this.templateGrid,
+      .functionList(this.view.funcID)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) this.funcName = res.defaultName;
+      });
+    this.views = [
+      {
+        type: ViewType.grid,
+        active: true,
+        sameData: false,
+        model: {
+          template2: this.templateGrid,
+        },
       },
-    },
-  ];
+    ];
 
-  //* thiết lập cấu hình sidebar
-  this.optionSidebar.DataService = this.view.dataService;
-  this.optionSidebar.FormModel = this.view.formModel;
-  this.optionSidebar.Width = '800px';
+    //* thiết lập cấu hình sidebar
+    this.optionSidebar.DataService = this.view.dataService;
+    this.optionSidebar.FormModel = this.view.formModel;
+    this.optionSidebar.Width = '800px';
   }
 
   ngDoCheck() {
@@ -100,7 +117,7 @@ export class ItemsComponent extends UIComponent {
   //#region Event
   /**
    * *Hàm xử lí thêm mới tài khoản
-   * @param e 
+   * @param e
    */
   toolBarClick(e) {
     switch (e.id) {
@@ -112,8 +129,8 @@ export class ItemsComponent extends UIComponent {
 
   /**
    * *Hàm xử lí chỉnh sửa,copy,xóa tài khoản
-   * @param e 
-   * @param data 
+   * @param e
+   * @param data
    */
   clickMF(e, data) {
     switch (e.functionID) {
@@ -134,18 +151,18 @@ export class ItemsComponent extends UIComponent {
 
   /**
    * *Hàm them moi hang hoa
-   * @param e 
+   * @param e
    */
   addNew(e) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
-    let data : any = {
+    let data: any = {
       headerText: this.headerText,
-      fgItemsPurchase:this.fgItemsPurchase,
-      fgItemsSales:this.fgItemsSales,
-      fgItemsProduction:this.fgItemsProduction
+      fgItemsPurchase: this.fgItemsPurchase,
+      fgItemsSales: this.fgItemsSales,
+      fgItemsProduction: this.fgItemsProduction,
     };
     this.view.dataService.addNew().subscribe((res: any) => {
-      if(res){
+      if (res) {
         res.isAdd = true;
         data.dataDefault = res;
         let dialog = this.callfunc.openSide(
@@ -163,7 +180,7 @@ export class ItemsComponent extends UIComponent {
         //       .subscribe((res: any) => { });
         //   }
         // });
-      }       
+      }
     });
   }
 
@@ -172,26 +189,24 @@ export class ItemsComponent extends UIComponent {
     if (dataEdit) {
       this.view.dataService.dataSelected = dataEdit;
     }
-    this.view.dataService
-      .edit(dataEdit)
-      .subscribe((res: any) => {
-        if(res){
-          res.isEdit = true;
-          let data : any = {
-            headerText: this.headerText,
-            fgItemsPurchase:this.fgItemsPurchase,
-            fgItemsSales:this.fgItemsSales,
-            fgItemsProduction:this.fgItemsProduction,
-            dataDefault : {...res}
-          };
-          let dialog = this.callfunc.openSide(
+    this.view.dataService.edit(dataEdit).subscribe((res: any) => {
+      if (res) {
+        res.isEdit = true;
+        let data: any = {
+          headerText: this.headerText,
+          fgItemsPurchase: this.fgItemsPurchase,
+          fgItemsSales: this.fgItemsSales,
+          fgItemsProduction: this.fgItemsProduction,
+          dataDefault: { ...res },
+        };
+        let dialog = this.callfunc.openSide(
           ItemsAddComponent,
           data,
           this.optionSidebar,
           this.view.funcID
         );
-        }    
-      });
+      }
+    });
   }
 
   copy(e, dataCopy) {
@@ -200,14 +215,14 @@ export class ItemsComponent extends UIComponent {
       this.view.dataService.dataSelected = dataCopy;
     }
     this.view.dataService.copy().subscribe((res: any) => {
-      if(res){
+      if (res) {
         res.isCopy = true;
-        let data : any = {
+        let data: any = {
           headerText: this.headerText,
-          fgItemsPurchase:this.fgItemsPurchase,
-          fgItemsSales:this.fgItemsSales,
-          fgItemsProduction:this.fgItemsProduction,
-          dataDefault : res
+          fgItemsPurchase: this.fgItemsPurchase,
+          fgItemsSales: this.fgItemsSales,
+          fgItemsProduction: this.fgItemsProduction,
+          dataDefault: res,
         };
         let dialog = this.callfunc.openSide(
           ItemsAddComponent,
@@ -215,7 +230,7 @@ export class ItemsComponent extends UIComponent {
           this.optionSidebar,
           this.view.funcID
         );
-      }   
+      }
     });
   }
 
@@ -226,5 +241,4 @@ export class ItemsComponent extends UIComponent {
       .subscribe((res: any) => {});
   }
   //#endregion Function
-
 }

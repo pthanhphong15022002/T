@@ -1390,25 +1390,49 @@ export class CodxEsService {
     
   }
 
-  deleteAreaById(data: any): Observable<any> {
-    return this.api.execSv(
-      'ES',
-      'ERM.Business.ES',
-      'SignFilesBusiness',
-      'DeleteAreaAsync',
-      data
-    );
+  deleteAreaById(recID, fileID, areaID, modeView="1"): Observable<any> {
+    if(modeView=="1"){
+      return this.api.execSv(
+        'ES',
+        'ERM.Business.ES',
+        'SignFilesBusiness',
+        'DeleteAreaAsync',
+        [recID, fileID, areaID, modeView]
+      );
+    }
+    else{
+      return this.api.execSv(
+        'BP',
+        'ERM.Business.BP',
+        'ProcessesBusiness',
+        'DeleteAreaAsync',
+        [recID, fileID, areaID, modeView]
+      );
+    }
+    
   }
 
-  getSignAreas(sfID, fileID, isApprover, userID, stepNo): Observable<any> {
+  getSignAreas(sfID, fileID, isApprover, userID, stepNo,mode ="1"): Observable<any> {
     let data = [sfID, fileID, isApprover, userID, stepNo];
-    return this.api.execSv(
-      'ES',
-      'ERM.Business.ES',
-      'SignFilesBusiness',
-      'GetAllAreasAsync',
-      data
-    );
+    if(mode =="1"){
+      return this.api.execSv(
+        'ES',
+        'ERM.Business.ES',
+        'SignFilesBusiness',
+        'GetAllAreasAsync',
+        data
+      );
+    }
+    else{
+      return this.api.execSv(
+        'BP',
+        'ERM.Business.BP',
+        'ProcessesBusiness',
+        'GetAllAreasAsync',
+        [sfID, fileID, isApprover, userID]
+      );
+    }
+    
   }
 
   getLastTextLine(pageNumber: number): Observable<number> {

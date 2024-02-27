@@ -36,20 +36,33 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
     if(dt?.data) this.data = dt?.data
   }
   ngAfterViewInit(): void {
-    let ldls: CdkDropList[] = [];
-
-    this.dlq.forEach((dl) => {
-      console.log('found DropList ' + dl.id)
-      ldls.push(dl)
-    });
-    ldls = ldls.reverse()
-
-    asapScheduler.schedule(() => { this.dls = ldls; });
+    this.resetDLS();
+    // this.dlq.changes
+    // .subscribe((queryChanges) => {
+    //     this.dlq = queryChanges;
+    //     this.resetDLS();
+    // });
   }
   ngOnInit(): void {
     this.formatData();
+  
   }
-
+  ngAfterContentChecked() {
+    this.ref.detectChanges();
+  }
+  resetDLS()
+  {
+    //this.dlq.reset();
+    let ldls: CdkDropList[] = [];
+    this.dlq.forEach((dl) => {
+      dl.connectedTo = [];
+      ldls.push(dl)
+    });
+    ldls = ldls.reverse()
+    asapScheduler.schedule(() => { this.dls = ldls; });
+    this.dls = [];
+    this.ref.detectChanges();
+  }
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes['data'] &&
@@ -73,7 +86,6 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
       this.count -= this.listStage.length;
       this.listStage.forEach(elm => {
         elm.child = this.getListChild(elm) || [];
-        elm.stepNo = i;
         if(typeof elm.settings == 'string') elm.settings = JSON.parse(elm.settings);
         i++;
 
@@ -81,6 +93,11 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
       });
 
       this.listStage = this.listStage.sort((a, b) => a.stepNo - b.stepNo);
+
+      this.listStage.forEach(elm3=>{
+        elm3.stepNo = i;
+        i++;
+      })
     }
   }
 
@@ -94,7 +111,6 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
       elm2.settings = typeof elm2?.settings === 'object' ? elm2.settings : (elm2?.settings ? JSON.parse(elm2.settings) : null);
       elm2.permissions = typeof elm2?.permissions === 'object' ? elm2.permissions : (elm2?.permissions ? JSON.parse(elm2.permissions) : null);
       elm2.child = this.getListChild(elm2);
-      elm2.stepNo = j;
       if(elm2.activityType == "Conditions" && elm2.child && elm2.child.length>0)
       {
         for(var i =0 ; i< elm2.child.length ; i++)
@@ -103,9 +119,13 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
           if(index >= 0) elm2.child[i].reasonCon = elm2.settings.nextSteps[index].predicateName;
         }
       }
-      j++;
     });
     
+    list = list.sort((a, b) => a.stepNo - b.stepNo);
+    list.forEach(elm3=>{
+      elm3.stepNo = j;
+      j++;
+    })
     return list;
   }
 
@@ -150,6 +170,7 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
               else this.listStage.push(dt);
               if(indexP >= 0) this.data.steps[indexP] = dt;
               else this.data.steps.push(dt);
+             
             }
             else
             {
@@ -158,6 +179,8 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
               if(type == 'add') {
                 this.listStage[index].child.push(dt);
                 this.data.steps.push(dt);
+                let index2 = this.dls.findIndex(x=>x.id == dt.parentID);
+                this.dls[index2].data.push(dt);
               }
               else {
                 var index2 = this.listStage[index].child.findIndex(x=>x.recID == dt.recID);
@@ -167,10 +190,10 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
               }
             }
             this.ref.detectChanges();
-  
             this.dataChange.emit(this.data);
           }
-          
+          this.listStage = [...this.listStage];
+          this.resetDLS();
         }
       });
   }

@@ -38,7 +38,7 @@ import { CHAT } from '../models/chat-const.model';
   styleUrls: ['./chat-box.component.scss'],
 })
 export class CodxChatBoxComponent implements OnInit, AfterViewInit {
-  chatboxTitle="";
+  chatboxTitle = '';
   @HostListener('click', ['$event'])
   onClick(event: any) {
     this.isChatBox(event.target);
@@ -57,7 +57,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   data: any = null;
   page: number = 0;
   pageSize: number = 20;
-  isFull:boolean = false;
+  isFull: boolean = false;
   group: any = null;
   blocked: boolean = false;
   isLoading: boolean = false;
@@ -101,14 +101,14 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
     private cache: CacheService,
     private callFC: CallFuncService,
     private dt: ChangeDetectorRef,
-    private notification: NotificationsService,
+    private notification: NotificationsService
   ) {
     this.user = this.auth.get();
     this.formModel = new FormModel();
   }
 
   permissions: any[] = [];
-  ngOnInit(){
+  ngOnInit() {
     this.getGroupInfo();
     this.getMessage();
     this.getSetting();
@@ -121,58 +121,65 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
     permisison.isActive = true;
     this.permissions.push(permisison);
   }
-  
+
   ngAfterViewInit(): void {
     this.signalR.chatboxChange.subscribe((res: any) => {
-      if(res?.event && res?.data){
-        switch(res?.event){
-          case CHAT.UI_FUNC.DeletedMessage:{
-            let deleted = this.arrMessages?.filter(x=>x?.recID == res?.data);
-            if(deleted?.length>0){
-              this.arrMessages[this.arrMessages.indexOf(deleted[0])].messageType ='5';
+      if (res?.event && res?.data) {
+        switch (res?.event) {
+          case CHAT.UI_FUNC.DeletedMessage: {
+            let deleted = this.arrMessages?.filter(
+              (x) => x?.recID == res?.data
+            );
+            if (deleted?.length > 0) {
+              this.arrMessages[
+                this.arrMessages.indexOf(deleted[0])
+              ].messageType = '5';
               this.dt.detectChanges();
             }
             break;
           }
-          case CHAT.UI_FUNC.ReactedMessage:{
-            let mssgReact = this.arrMessages?.filter(x=>x?.recID == res?.data?.mssgID);
-            if(mssgReact?.length>0){
-              let vote =
-              {
-                voteType : res?.data?.voteType,
-                createdBy : res?.data?.createdBy,
-                createdName : res?.data?.CreatedName,
+          case CHAT.UI_FUNC.ReactedMessage: {
+            let mssgReact = this.arrMessages?.filter(
+              (x) => x?.recID == res?.data?.mssgID
+            );
+            if (mssgReact?.length > 0) {
+              let vote = {
+                voteType: res?.data?.voteType,
+                createdBy: res?.data?.createdBy,
+                createdName: res?.data?.CreatedName,
               };
-              this.reactedMessage(this.arrMessages[this.arrMessages.indexOf(mssgReact[0])],vote);
+              this.reactedMessage(
+                this.arrMessages[this.arrMessages.indexOf(mssgReact[0])],
+                vote
+              );
               this.dt.detectChanges();
             }
             break;
           }
           case CHAT.UI_FUNC.SendedMessage:
-          case CHAT.UI_FUNC.SendedMessageSystem:{
-            if(res?.groupID == this.groupID)
-            {
+          case CHAT.UI_FUNC.SendedMessageSystem: {
+            if (res?.groupID == this.groupID) {
               this.group.lastMssgID = res.data.recID;
               this.group.messageType = res.data.messageType;
               this.group.message = res.data.message;
               this.arrMessages.push(res.data);
               setTimeout(() => {
-                this.chatBoxBody.nativeElement.scrollTo(0,this.chatBoxBody.nativeElement.scrollHeight);
+                this.chatBoxBody.nativeElement.scrollTo(
+                  0,
+                  this.chatBoxBody.nativeElement.scrollHeight
+                );
               }, 200);
             }
           }
-            
         }
       }
     });
   }
 
-  ngOnDestroy(): void {
-
-  }
+  ngOnDestroy(): void {}
   getSetting() {
     // get function
-    if (this.funcID){
+    if (this.funcID) {
       this.cache.functionList(this.funcID).subscribe((func: any) => {
         if (func) {
           this.function = JSON.parse(JSON.stringify(func));
@@ -202,7 +209,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
     this.cache.valueList('L1480').subscribe((vll: any) => {
       if (vll?.datas) {
         this.vllL1480 = vll.datas;
-      } 
+      }
     });
     // get mssage deleted
     this.cache.message('CHAT002').subscribe((res: any) => {
@@ -218,77 +225,78 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
     });
   }
 
-  
   // get group infor
   getGroupInfo() {
-    if(this.groupID){
+    if (this.groupID) {
       this.api
-      .execSv('WP', 'ERM.Business.WP', 'GroupBusiness', 'GetGroupByIDAsync', this.groupID)
-      .subscribe((res: any) => {
-        if (res) 
-        {
-          this.group = res;
-          
-          if(res.members)
-          {
-            if(this.group?.groupType == "1") {
-              let tempUser = res.members.filter(x=>x.userID != this.user?.userID);
-              if(tempUser?.length>0){
-                this.chatboxTitle = tempUser[0].userName;
+        .execSv(
+          'WP',
+          'ERM.Business.WP',
+          'GroupBusiness',
+          'GetGroupByIDAsync',
+          this.groupID
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.group = res;
+
+            if (res.members) {
+              if (this.group?.groupType == '1') {
+                let tempUser = res.members.filter(
+                  (x) => x.userID != this.user?.userID
+                );
+                if (tempUser?.length > 0) {
+                  this.chatboxTitle = tempUser[0].userName;
+                }
               }
+              this.crrMembers = Array.from<any>(res.members)
+                .map((x) => x.userID)
+                .join(';');
             }
-            this.crrMembers = Array.from<any>(res.members).map((x) => x.userID).join(';');
           }
-        }
-      });
+        });
     }
   }
   // get message
-  getMessage(isScroll:boolean = false) {
-    if(!this.isLoading)
-    {
-      if(!this.isFull)
-      {
+  getMessage(isScroll: boolean = false) {
+    if (!this.isLoading) {
+      if (!this.isFull) {
         this.isLoading = true;
         this.page++;
         this.api
-        .execSv('WP', 'ERM.Business.WP', 'ChatBusiness', 'GetMessageAsync', [this.groupID,this.page])
-        .subscribe((res: any[]) => {
-          if(isScroll)
-          {
-            let data = Array.from<any>(res[0]).reverse();
-            if (data.length > 0) 
-            {
-              this.arrMessages = data.concat(this.arrMessages);
+          .execSv('WP', 'ERM.Business.WP', 'ChatBusiness', 'GetMessageAsync', [
+            this.groupID,
+            this.page,
+          ])
+          .subscribe((res: any[]) => {
+            if (isScroll) {
+              let data = Array.from<any>(res[0]).reverse();
+              if (data.length > 0) {
+                this.arrMessages = data.concat(this.arrMessages);
+              }
+            } else {
+              let data = Array.from<any>(res[0]);
+              if (data.length > 0) {
+                this.arrMessages = data.reverse();
+              }
             }
-          }
-          else
-          {
-            let data = Array.from<any>(res[0]);
-            if (data.length > 0) 
-            {
-              this.arrMessages = data.reverse();
-            }
-          }
-          this.isFull = this.page == Math.ceil(res[1] / 20);
-          this.isLoading = false;
-          this.dt.detectChanges();
-        });
+            this.isFull = this.page == Math.ceil(res[1] / 20);
+            this.isLoading = false;
+            this.dt.detectChanges();
+          });
       }
     }
   }
   // scroll up load data
   scroll(element: HTMLElement) {
-    if (!this.isLoading && element.scrollTop <= 100) 
-    {
+    if (!this.isLoading && element.scrollTop <= 100) {
       this.getMessage(true);
     }
   }
-  reactedMessage(mssg: any, vote: any){
+  reactedMessage(mssg: any, vote: any) {
     //Thêm react
-    let myVote = mssg?.votes?.filter(x=>x.createdBy == this.user?.userID)
-    if(mssg?.votes?.length == 0 || myVote?.length ==0)
-    {
+    let myVote = mssg?.votes?.filter((x) => x.createdBy == this.user?.userID);
+    if (mssg?.votes?.length == 0 || myVote?.length == 0) {
       if (!mssg.lstVote) {
         mssg.lstVote = [];
       }
@@ -313,15 +321,16 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
       if (this.user.userID == vote.createdBy) {
         mssg.myVote = tmpVote;
       }
-    }
-    else if(myVote?.length>0){
+    } else if (myVote?.length > 0) {
       //Cập nhập react
-      if(myVote[0]?.voteType != vote?.voteType){
+      if (myVote[0]?.voteType != vote?.voteType) {
         let oldVote = mssg.votes.find((x) => x.createdBy == vote.createdBy);
         let indexOld = mssg.lstVote.findIndex(
           (x) => x.voteType == oldVote.voteType
         );
-        let indexNew = mssg.lstVote.findIndex((x) => x.voteType == vote.voteType);
+        let indexNew = mssg.lstVote.findIndex(
+          (x) => x.voteType == vote.voteType
+        );
         if (indexOld != -1) {
           mssg.lstVote[indexOld].count <= 1
             ? mssg.lstVote.splice(indexOld, 1)
@@ -343,7 +352,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
         mssg.votes[index].voteType = vote.voteType;
       }
       //Xóa
-      else{
+      else {
         let index = mssg.lstVote.findIndex((x) => x.voteType == vote.voteType);
         if (index != -1) {
           mssg.lstVote[index].count <= 1
@@ -437,34 +446,33 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   }
 
   // send message
-  message:string = "";
+  message: string = '';
   sendMessage() {
-    if (!this.blocked && this.message.trim()) 
-    {
+    if (!this.blocked && this.message.trim()) {
       this.blocked = true;
       let mssg = new MessageItem(this.groupID);
       mssg.message = this.message;
-      mssg.messageType = "1";
+      mssg.messageType = '1';
       mssg.userID = this.user?.userID;
       mssg.createdBy = this.user?.userID;
       mssg.createdOn = new Date();
-      if(this.mssgReply)
-      {
+      if (this.mssgReply) {
         mssg.refID = this.mssgReply.recID;
-        mssg.messageType = "4";
+        mssg.messageType = '4';
         let refContent = {
-          type : this.mssgReply.messageType,
-          content : this.mssgReply.message,
-          createdName : this.mssgReply.createdName,
-        }
+          type: this.mssgReply.messageType,
+          content: this.mssgReply.message,
+          createdName: this.mssgReply.createdName,
+        };
         mssg.refContent = refContent;
       }
 
       this.signalR.sendData(CHAT.BE_FUNC.SendMessage, JSON.stringify(mssg));
-      this.message = "";
+      this.message = '';
       this.isReply = false;
-      this.replyTo = "";
-      this.blocked = false;this.mssgReply=null;
+      this.replyTo = '';
+      this.blocked = false;
+      this.mssgReply = null;
       this.dt.detectChanges();
     }
   }
@@ -574,7 +582,10 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
       this.codxATMImages.objectId = message.recID;
       this.codxATMImages.saveFilesMulObservable().subscribe((res: any) => {
         if (res)
-          this.signalR.sendData(CHAT.BE_FUNC.SendMessage, JSON.stringify(message));
+          this.signalR.sendData(
+            CHAT.BE_FUNC.SendMessage,
+            JSON.stringify(message)
+          );
         else this.notifiSV.notify('SYS019');
       });
     }
@@ -604,32 +615,34 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   }
   // click vote mssg
   clickVoteMssg(mssg: any, vote: any) {
-    this.signalR.sendData(CHAT.BE_FUNC.ReactMessage, this.groupID, mssg.recID, vote.value);
+    this.signalR.sendData(
+      CHAT.BE_FUNC.ReactMessage,
+      this.groupID,
+      mssg.recID,
+      vote.value
+    );
     this.dt.detectChanges();
   }
-  defaultReact(mssg:any){
-    this.clickVoteMssg(mssg,this.vllL1480[0]);
+  defaultReact(mssg: any) {
+    this.clickVoteMssg(mssg, this.vllL1480[0]);
   }
 
   replyTo: string = '';
   // reply message
   clickReplyMssg(mssg: any = null) {
     this.isReply = mssg ? true : false;
-    this.replyTo = mssg ? 'Đang trả lời ' : "";
+    this.replyTo = mssg ? 'Đang trả lời ' : '';
     this.mssgReply = mssg;
-    if (mssg) 
-    {
-      if (this.mssgReply.messageType == '2') 
-      {
+    if (mssg) {
+      if (this.mssgReply.messageType == '2') {
         this.data.fileName = this.mssgReply.fileName;
         this.data.fileSize = this.mssgReply.fileSize;
         this.data.fileType = this.mssgReply.fileType;
       }
-      if (mssg.createdBy != this.user.userID) 
-      {
+      if (mssg.createdBy != this.user.userID) {
         this.replyTo += mssg.createdName;
       }
-    } 
+    }
   }
   // format file size
   formatBytes(bytes, decimals = 2) {
@@ -645,7 +658,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   checkDate(index: number) {
     var mssg1 = this.arrMessages[index];
     var mssg2 = this.arrMessages[index + 1];
-    if (mssg1 && mssg2) 
+    if (mssg1 && mssg2)
       return moment(mssg2.createdOn).diff(moment(mssg1.createdOn), 'days') > 0;
     return false;
   }
@@ -656,17 +669,19 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   height: number = window.innerHeight;
   crrMembers: string = '';
   addMemeber(event: any) {
-    if (event && event.id && event.text) {
-      let arrUserID = event.id.split(';');
-      let arUserName = event.text.split(';');
-      let lstMemberID = this.crrMembers.split(';');
+    if (event) {
+      let arrUserID = [];
+      if (event.id) arrUserID = event.id.split(';');
+      let arUserName = [];
+      if (event.text) arUserName = event.text.split(';');
+      let lstMemberID = [];
+      if (this.crrMembers) lstMemberID = this.crrMembers.split(';');
       let members = [];
       let index = 0;
+      let membersDeleted = [];
       arrUserID.forEach((e, i) => {
-        if (!lstMemberID.includes(e)) {
-          members[index] = { userID: arrUserID[i], userName: arUserName[i] };
-          index++;
-        }
+        members[index] = { userID: arrUserID[i], userName: arUserName[i] };
+        index++;
       });
       this.crrMembers = event.id;
       this.signalR.sendData(
@@ -699,17 +714,21 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
         });
     }
   }
-  favorite(){
+  favorite() {
     this.api
-        .execSv('WP', 'ERM.Business.WP', 'ContactFavoriteBusiness', 'CheckFavoriteAsync', [
-          this.group?.groupID2,!this.group.isFavorite
-        ])
-        .subscribe((res: any) => {
-          if(res){
-            this.group.isFavorite = !this.group?.isFavorite;
-            this.dt.detectChanges();
-          }
-        });
+      .execSv(
+        'WP',
+        'ERM.Business.WP',
+        'ContactFavoriteBusiness',
+        'CheckFavoriteAsync',
+        [this.group?.groupID2, !this.group.isFavorite]
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          this.group.isFavorite = !this.group?.isFavorite;
+          this.dt.detectChanges();
+        }
+      });
   }
   //
   closePopupVote(dialog: any) {
@@ -745,6 +764,5 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   closePoppViewMember(dialog: DialogRef) {
     dialog?.close();
   }
-  click(dialog, member) {
-  }
+  click(dialog, member) {}
 }

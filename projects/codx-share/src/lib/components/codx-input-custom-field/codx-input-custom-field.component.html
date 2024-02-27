@@ -540,6 +540,12 @@
               >
                 <div>
                   <span>{{ item?.title }}</span>
+                  <ng-container *ngIf="item?.dataType == 'CF'">
+                    &nbsp;
+                    <span [ngbTooltip]="item?.dataFormat" container="body"
+                      ><i class="icon-calculate icon-12 text-primary"></i
+                    ></span>
+                  </ng-container>
                 </div>
                 <div *ngIf="!disable">
                   <span class="text-gray-500">{{ item?.fieldName }}</span>

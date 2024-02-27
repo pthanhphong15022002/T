@@ -34,25 +34,31 @@ export class VendorsComponent extends UIComponent {
   //#region Contructor
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
   views: Array<ViewModel> = []; //? model view
-  button: ButtonModel[] = [{
-    id: 'btnAdd',
-    icon: 'icon-business',
-  }];
+  button: ButtonModel[] = [
+    {
+      id: 'btnAdd',
+      icon: 'icon-business',
+    },
+  ];
   funcName = ''; //? tên truyền vào headertext
   headerText: any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
+  isSubView: boolean;
 
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
-    private acService: CodxAcService,
+    private acService: CodxAcService
   ) {
     super(inject);
+    this.router.data.subscribe((res) => {
+      if (res && res['isSubView']) this.isSubView = res.isSubView;
+    });
   }
   //#endregion Contructor
 
   //#region Init
-  onInit(): void { }
+  onInit(): void {}
   ngAfterViewInit() {
     this.cache
       .functionList(this.view.funcID)
@@ -81,7 +87,7 @@ export class VendorsComponent extends UIComponent {
   //#region Event
   /**
    * *Hàm xử lí thêm mới tài khoản
-   * @param e 
+   * @param e
    */
   toolBarClick(e) {
     switch (e.id) {
@@ -93,8 +99,8 @@ export class VendorsComponent extends UIComponent {
 
   /**
    * *Hàm xử lí chỉnh sửa,copy,xóa tài khoản
-   * @param e 
-   * @param data 
+   * @param e
+   * @param data
    */
   clickMF(e, data) {
     switch (e.functionID) {
@@ -110,7 +116,6 @@ export class VendorsComponent extends UIComponent {
     }
   }
 
-
   //#endregion Event
 
   //#region Function
@@ -121,7 +126,7 @@ export class VendorsComponent extends UIComponent {
         res.isAdd = true;
         let data = {
           headerText: this.headerText,
-          dataDefault: { ...res }
+          dataDefault: { ...res },
         };
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
@@ -141,27 +146,25 @@ export class VendorsComponent extends UIComponent {
     if (dataEdit) {
       this.view.dataService.dataSelected = dataEdit;
     }
-    this.view.dataService
-      .edit(dataEdit)
-      .subscribe((res: any) => {
-        if (res) {
-          res.isEdit = true;
-          let data = {
-            headerText: this.headerText,
-            dataDefault: { ...res }
-          };
-          let option = new SidebarModel();
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.view?.formModel;
-          option.Width = '800px';
-          let dialog = this.callfunc.openSide(
-            VendorsAddComponent,
-            data,
-            option,
-            this.view.funcID
-          );
-        }
-      });
+    this.view.dataService.edit(dataEdit).subscribe((res: any) => {
+      if (res) {
+        res.isEdit = true;
+        let data = {
+          headerText: this.headerText,
+          dataDefault: { ...res },
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '800px';
+        let dialog = this.callfunc.openSide(
+          VendorsAddComponent,
+          data,
+          option,
+          this.view.funcID
+        );
+      }
+    });
   }
 
   copy(e, dataCopy) {
@@ -174,12 +177,12 @@ export class VendorsComponent extends UIComponent {
         res.isCopy = true;
         let data = {
           headerText: this.headerText,
-          dataDefault: { ...res }
+          dataDefault: { ...res },
         };
         let option = new SidebarModel();
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.view?.formModel;
-          option.Width = '800px';
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '800px';
         let dialog = this.callfunc.openSide(
           VendorsAddComponent,
           data,
@@ -193,7 +196,7 @@ export class VendorsComponent extends UIComponent {
     this.view.dataService
       .delete([dataDelete], true)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => { });
+      .subscribe((res: any) => {});
   }
   //#endregion Function
 }
