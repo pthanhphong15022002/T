@@ -24,6 +24,7 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
   myTemplate  = '';
   listStage = [];
   count = 0;
+  listIds=[];
   constructor(
     private shareService: CodxShareService,
     private ref: ChangeDetectorRef,
@@ -36,31 +37,25 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
     if(dt?.data) this.data = dt?.data
   }
   ngAfterViewInit(): void {
-    this.resetDLS();
-    // this.dlq.changes
-    // .subscribe((queryChanges) => {
-    //     this.dlq = queryChanges;
-    //     this.resetDLS();
-    // });
+    //this.resetDLS();
+  
   }
+
   ngOnInit(): void {
+    this.listIds = [];
     this.formatData();
   
   }
-  ngAfterContentChecked() {
-    this.ref.detectChanges();
-  }
   resetDLS()
   {
+    debugger
     //this.dlq.reset();
     let ldls: CdkDropList[] = [];
     this.dlq.forEach((dl) => {
-      dl.connectedTo = [];
       ldls.push(dl)
     });
     ldls = ldls.reverse()
     asapScheduler.schedule(() => { this.dls = ldls; });
-    this.dls = [];
     this.ref.detectChanges();
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -94,10 +89,14 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
 
       this.listStage = this.listStage.sort((a, b) => a.stepNo - b.stepNo);
 
+      let a = 0;
       this.listStage.forEach(elm3=>{
+        this.listIds.push('stage'+a+'_'+elm3.recID)
         elm3.stepNo = i;
         i++;
+        a++;
       })
+      debugger
     }
   }
 
@@ -170,7 +169,9 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
               else this.listStage.push(dt);
               if(indexP >= 0) this.data.steps[indexP] = dt;
               else this.data.steps.push(dt);
-             
+
+              var name = "stage"+ (this.listIds.length - 1) + "_"+dt.recID;
+              this.listIds.push(name);
             }
             else
             {
@@ -179,8 +180,6 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
               if(type == 'add') {
                 this.listStage[index].child.push(dt);
                 this.data.steps.push(dt);
-                let index2 = this.dls.findIndex(x=>x.id == dt.parentID);
-                this.dls[index2].data.push(dt);
               }
               else {
                 var index2 = this.listStage[index].child.findIndex(x=>x.recID == dt.recID);
@@ -192,8 +191,6 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
             this.ref.detectChanges();
             this.dataChange.emit(this.data);
           }
-          this.listStage = [...this.listStage];
-          this.resetDLS();
         }
       });
   }
@@ -263,7 +260,8 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      event.previousContainer.data[event.previousIndex].parentID = event.previousContainer.data[event.previousIndex].stageID = event?.event.target.id;
+      let id = event?.event.target.id.split("_");
+      event.previousContainer.data[event.previousIndex].parentID = event.previousContainer.data[event.previousIndex].stageID = id[1];
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -278,5 +276,10 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
     }
 
     this.dataChange.emit(this.data);
+  }
+
+  getImg(data:any)
+  {
+    return data.map((u) => u.objectID).join(';');
   }
 }
