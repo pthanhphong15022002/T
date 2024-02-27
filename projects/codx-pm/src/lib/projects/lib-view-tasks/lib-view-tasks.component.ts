@@ -4,23 +4,24 @@ import { ProgressAnnotationService } from "@syncfusion/ej2-angular-progressbar";
 import { AuthStore, CodxService, DialogData, DialogRef, FormModel, NotificationsService, PageTitleService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from "codx-core";
 import { CodxShareService } from "projects/codx-share/src/public-api";
 import { PopupAddTaskComponent } from "../popup-add-task/popup-add-task.component";
+import { PopupViewTaskComponent } from "../popup-view-task/popup-view-task.component";
 
 @Component({
   selector: 'lib-view-tasks',
   templateUrl: './lib-view-tasks.component.html',
   styleUrls: ['./lib-view-tasks.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  providers:[ProgressAnnotationService]
+  providers: [ProgressAnnotationService],
 })
 export class ProjectTasksViewComponent
   extends UIComponent
-  implements OnInit, AfterViewInit,OnChanges
+  implements OnInit, AfterViewInit, OnChanges
 {
-
-
-  @Input() projectID:any;
-  @Input() projectData:any;
+  @Input() projectID: any;
+  @Input() projectData: any;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
+  @ViewChild('treeView') treeView!: TemplateRef<any>;
+
   views:  Array<ViewModel> = [];;
   entityName:string = 'TM_Tasks';
   service:string='TM';
@@ -32,51 +33,50 @@ export class ProjectTasksViewComponent
   idField:string='recID';
   button:any;
   itemSelected: any;
-  grvSetup:any;
+  grvSetup: any;
   request: ResourceModel;
   container: Object = {
     width: 30,
     roundedCornerRadius: 20,
     backgroundColor: '#D6D6D6',
     type: 'RoundedRectangle',
-    border: { width: 1 }
-}
-  formModel:FormModel;
-  vllTab:any;
-  dataObj:any={};
-  listRoles:any=[];
-  vllStatus:any=[];
-  user:any;
+    border: { width: 1 },
+  };
+  formModel: FormModel;
+  vllTab: any;
+  dataObj: any = {};
+  listRoles: any = [];
+  vllStatus: any = [];
+  user: any;
 
   constructor(
     private injector: Injector,
     private routerActive: ActivatedRoute,
     private shareService: CodxShareService,
     private notificationSv: NotificationsService,
-    public override codxService : CodxService,
+    public override codxService: CodxService,
     private pageTitle: PageTitleService,
     private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-
   ) {
     super(injector);
-    this.funcID='PMT0101';
+    this.funcID = 'PMT0101';
     this.button = [{ id: 'btnAdd' }];
-    this.cache.functionList(this.funcID).subscribe((res:any)=>{
+    this.cache.functionList(this.funcID).subscribe((res: any) => {
       this.formModel = res;
-    })
-    this.router.params.subscribe((res:any)=>{
-      if(res['projectID']){
+    });
+    this.router.params.subscribe((res: any) => {
+      if (res['projectID']) {
         this.projectID = res['projectID'];
-        this.datavalue=this.projectID+';3'
+        this.datavalue = this.projectID + ';3';
         this.getProject(this.projectID);
       }
-    })
-    this.router.queryParams.subscribe((res:any)=>{
-      if(res['ProjectID']){
+    });
+    this.router.queryParams.subscribe((res: any) => {
+      if (res['ProjectID']) {
         this.projectID = res['ProjectID'];
-        this.datavalue=this.projectID+';3'
+        this.datavalue = this.projectID + ';3';
         this.getProject(this.projectID);
       }
     });
@@ -93,34 +93,42 @@ export class ProjectTasksViewComponent
     this.user = this.authStore.get();
   }
 
-  getProject(projectID){
-    if(projectID){
-      this.api.execSv('PM','ERM.Business.PM','ProjectsBusiness','GetProjectByIDAsync',projectID).subscribe((res:any)=>{
-        if(!this.projectData)this.projectData= res;
-        setTimeout(()=>{this.pageTitle.setSubTitle(this.projectData.projectName)},1000)
-      })
+  getProject(projectID) {
+    if (projectID) {
+      this.api
+        .execSv(
+          'PM',
+          'ERM.Business.PM',
+          'ProjectsBusiness',
+          'GetProjectByIDAsync',
+          projectID
+        )
+        .subscribe((res: any) => {
+          if (!this.projectData) this.projectData = res;
+          setTimeout(() => {
+            this.pageTitle.setSubTitle(this.projectData.projectName);
+          }, 1000);
+        });
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes['projectID']){
-     this.dataObj['projectID']=changes['projectID'].currentValue
+    if (changes['projectID']) {
+      this.dataObj['projectID'] = changes['projectID'].currentValue;
     }
-    if(changes['projectData']){
-     this.dataObj=changes['projectData'].currentValue
+    if (changes['projectData']) {
+      this.dataObj = changes['projectData'].currentValue;
     }
   }
 
-  override onInit(): void {
-
-  }
+  override onInit(): void {}
 
   taskSettings = {
     id: 'recID',
     name: 'taskName',
     startDate: 'startDate',
     endDate: 'endDate',
-    parentID:'parentID'
+    parentID: 'parentID',
   };
   ngAfterViewInit(): void {
     this.views = [
@@ -129,15 +137,14 @@ export class ProjectTasksViewComponent
         type: ViewType.listtree,
         sameData: true,
         //active: true,
-        request:{
-          parentIDField:'parentID'
+        request: {
+          parentIDField: 'parentID',
         },
         model: {
-          template:this.itemViewList,
-          resourceModel:{
-            parentIdField:'parentID'
+          template: this.itemViewList,
+          resourceModel: {
+            parentIdField: 'parentID',
           },
-
         },
       },
       {
@@ -150,23 +157,33 @@ export class ProjectTasksViewComponent
           eventModel: this.taskSettings,
         },
       },
+      {
+        type: ViewType.content,
+        active: false,
+        sameData: false,
+        text: this.user?.language == 'VN' ? 'Cây giao việc' : 'Tree Assign',
+        //icon: 'icon-account_tree',
+        model: {
+          panelLeftRef: this.treeView,
+        },
+      },
 
     ];
     this.detectorRef.detectChanges();
   }
 
-  addTask(parentID?:any){
+  addTask(parentID?: any) {
     this.view.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.formModel;
       option.Width = '550px';
-      option.zIndex=9997;
-      res.projectID=this.projectData.projectID;
-      if(parentID) res.parentID=parentID;
+      option.zIndex = 9997;
+      res.projectID = this.projectData.projectID;
+      if (parentID) res.parentID = parentID;
       let dialogAdd = this.callfc.openSide(
         PopupAddTaskComponent,
-        [res,'add',this.projectData],
+        [res, 'add', this.projectData],
         option
       );
       dialogAdd.closed.subscribe((returnData) => {
@@ -176,29 +193,27 @@ export class ProjectTasksViewComponent
           this.view.dataService.clear();
         }
       });
-
-    })
+    });
   }
 
-  editTask(){
-    if(this.view.dataService.dataSelected){
+  editTask() {
+    if (this.view.dataService.dataSelected) {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.formModel;
       option.Width = '850px';
-      option.zIndex=9997;
+      option.zIndex = 9997;
       let dialogAdd = this.callfc.openSide(
         PopupAddTaskComponent,
-        [this.view.dataService.dataSelected,'edit',this.projectData],
+        [this.view.dataService.dataSelected, 'edit', this.projectData],
         option
       );
       dialogAdd.closed.subscribe((returnData) => {
         if (returnData?.event) {
-          if(returnData.event=='assignTask'){
-            setTimeout(()=>{
-              this.addTask(this.view.dataService.dataSelected?.recID)
-            },100)
-
+          if (returnData.event == 'assignTask') {
+            setTimeout(() => {
+              this.addTask(this.view.dataService.dataSelected?.recID);
+            }, 100);
           }
           //this.view?.dataService?.update(returnData?.event);
         } else {
@@ -206,20 +221,43 @@ export class ProjectTasksViewComponent
         }
       });
     }
-
   }
 
   deleteTask(){
 
   }
 
-  click(e:any){
-    if(e.id=='btnAdd'){
-      this.addTask()
+  viewTask(){
+    if(this.view.dataService.dataSelected){
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.formModel;
+      option.Width = '550px';
+      option.zIndex=9997;
+      let dialogAdd = this.callfc.openSide(
+        PopupViewTaskComponent,
+        {data:this.view.dataService.dataSelected,projectData:this.projectData},
+        option
+      );
+      dialogAdd.closed.subscribe((returnData) => {
+        if (returnData?.event) {
+
+          //this.view?.dataService?.update(returnData?.event);
+        } else {
+          this.view.dataService.clear();
+        }
+      });
+    }
+
+  }
+
+  click(e: any) {
+    if (e.id == 'btnAdd') {
+      this.addTask();
     }
   }
 
-  clickMF(e:any){
+  clickMF(e: any) {
     switch (e.functionID) {
       case 'SYS03':
         this.editTask();
@@ -227,8 +265,11 @@ export class ProjectTasksViewComponent
       case 'SYS02':
         this.deleteTask();
       break;
-      default:
-        break;
+      case "SYS05":
+        this.viewTask()
+      break;
+
+
     }
   }
 }

@@ -30,7 +30,7 @@ export class MyInstancesComponent
   @ViewChild('templateList') templateList?: TemplateRef<any>;
   @ViewChild('headerTemplateList') headerTemplateList?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  predicates = 'CreatedBy=@0';
+  predicates = 'Permissions.Any(ObjectID=@0)';
   dataValues = '';
   dataSelected: any;
   user: any;

@@ -6,6 +6,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  Input,
   OnInit,
   Output,
   ViewChild,
@@ -23,6 +24,8 @@ import {
 import { SignalRService } from '../services/signalr.service';
 import { CodxChatBoxComponent } from '../chat-box/chat-box.component';
 import { CHAT } from '../models/chat-const.model';
+import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'codx-chat-list',
@@ -43,7 +46,10 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
 
   @Output('getTotalMessage') getTotalMessage: EventEmitter<any> =
     new EventEmitter();
+  @Output('renderDropDown') renderDropDown: EventEmitter<any> =
+    new EventEmitter();
   @ViewChild('codxListView') codxListView: CodxListviewComponent;
+  @Input() dropdown: NgbDropdown;
   constructor(
     private api: ApiHttpService,
     private signalRSV: SignalRService,
@@ -151,12 +157,11 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   }
   // searrch
   search(event: any, isFavorite = false) {
-    if(isFavorite){
+    if (isFavorite) {
       this.searched = false;
       this.codxListView.dataService.method = 'GetGroupFavoriteAsync';
       this.codxListView.dataService.search(event);
-    }
-    else if (event) {
+    } else if (event) {
       this.searched = true;
       this.codxListView.dataService.method = 'SearchAsync';
       this.codxListView.dataService.search(event);
@@ -167,9 +172,8 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
     }
     this.dt.detectChanges();
   }
-  hideChatList(){
+  hideChatList() {
     document?.getElementById('chatbox-dropdownPopup')?.remove();
-      
   }
   //select goup chat
   selectItem(group: any) {
@@ -214,46 +218,52 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
       (this.codxListView.dataService as CRUDService).add(group).subscribe();
     }
   }
-  clickMF(type,data){
-    if(type && data){
-      switch(type){
-        case 'delete':{
+  clickMF(type, data) {
+    if (type && data) {
+      switch (type) {
+        case 'delete': {
           this.notificationsService.alertCode('SYS030').subscribe((x) => {
             if (x.event?.status == 'Y') {
-              this.CodxCommonService.deleteGroup(data.groupID).subscribe(res=>{
-              if(res){
-                (this.codxListView.dataService as CRUDService).remove(data).subscribe();
-                this.notificationsService.notifyCode('SYS008');
-              }
-            })
-            } 
-          });          
+              this.CodxCommonService.deleteGroup(data.groupID).subscribe(
+                (res) => {
+                  if (res) {
+                    (this.codxListView.dataService as CRUDService)
+                      .remove(data)
+                      .subscribe();
+                    this.notificationsService.notifyCode('SYS008');
+                  }
+                  this.renderDropDown.emit(true);
+                }
+              );
+            }
+          });
           break;
         }
         case 'unFavorite':
-        case 'favorite':          
-          this.favorite(data,data?.isFavorite);
+        case 'favorite':
+          this.favorite(data, data?.isFavorite);
           break;
-        
       }
+      // if(this.dropdown) this.dropdown.open();
+      this.dt.detectChanges();
     }
   }
-  changeDataMF(evt,data){
-    if(evt){
-      
+  changeDataMF(evt, data) {
+    if (evt) {
     }
   }
-  favorite(data,isFavorite =false){    
-  this.api
-      .execSv('WP', 'ERM.Business.WP', 'ContactFavoriteBusiness', 'CheckFavoriteAsync', [
-        data?.groupID2,!isFavorite
-      ])
-      .subscribe((res: any) => {
-        if(res){
-          data.isFavorite = !isFavorite;
-          this.dt.detectChanges();
-        }
-      });
+  async favorite(data, isFavorite = false) {
+    const res = await firstValueFrom(
+      this.api.execSv(
+        'WP',
+        'ERM.Business.WP',
+        'ContactFavoriteBusiness',
+        'CheckFavoriteAsync',
+        [data?.groupID2, !isFavorite]
+      )
+    );
+    if (res) data.isFavorite = !isFavorite;
+    this.renderDropDown.emit(true);
+    this.dt.detectChanges();
   }
-  
 }
