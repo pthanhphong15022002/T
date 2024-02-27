@@ -232,8 +232,7 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
       event.container.data[i].stepNo = i;
     }
 
-    var a = this.data;
-    debugger 
+    this.dataChange.emit(this.data);
   }
 
   dropStep(event:any)
@@ -255,7 +254,6 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
       event.container.data[i].stepNo = i;
     }
 
-    var a = this.data;
-    debugger 
+    this.dataChange.emit(this.data);
   }
 }
