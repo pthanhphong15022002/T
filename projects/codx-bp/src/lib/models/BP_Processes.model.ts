@@ -107,7 +107,7 @@ export class BP_Processes_Permissions {
   objectName: string;
   objectID: string;
   objectType: string;
-  full: boolean;
+  roleType: string;
   create: boolean;
   read: boolean;
   update: boolean;

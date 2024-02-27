@@ -937,9 +937,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   showMore() {
     this.isShowMore = !this.isShowMore;
-    let width = '1000';
-    if (this.isShowMore) width = '1000'; ///test
-
+    let width = Util.getViewPort().width.toString();
     this.dialog.setWidth(this.isShowMore ? width : this.widthDefault);
     this.changeRef.detectChanges();
   }
