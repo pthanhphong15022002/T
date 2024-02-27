@@ -2763,16 +2763,10 @@
               [legendSettings]="legendSettingsColumn"
             >
               <e-series-collection>
-                <e-column
-                  field="noIndex"
-                  headerText="STT"
-                  textAlign="Right"
-                  width="50"
-                ></e-column>
                 <ng-container *ngFor="let f of girdViewDashboardType">
                   <e-series
                     [dataSource]="item"
-                    type="Column"
+                    type="StackingColumn"
                     xName="assetName"
                     [yName]="f.field"
                     [name]="f.headerText"
