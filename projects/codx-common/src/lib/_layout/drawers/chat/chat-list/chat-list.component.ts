@@ -178,8 +178,7 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   //select goup chat
   selectItem(group: any) {
     this.signalRSV.sendData(CHAT.BE_FUNC.LoadGroup, group?.groupID);
-    group.message.isRead = true;
-    this.dt.detectChanges();
+    if (group?.message) group.message.isRead = true;
     this.hideChatList();
     this.api
       .execSv(
@@ -194,6 +193,7 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
           this.getTotalMessage.emit();
         }
       });
+    this.dt.detectChanges();
   }
   // select item search
   selectItemSeach(item: any) {
