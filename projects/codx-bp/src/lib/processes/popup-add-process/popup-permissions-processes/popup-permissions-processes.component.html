@@ -44,7 +44,12 @@
                         {{ perm.objectName }}
                       </div>
                       <div class="text-gray-500 fs-7">
-                        <span *ngIf="perm.roleType == 'O'">
+                        <span
+                          [innerHTML]="
+                            perm.roleType | vll : 'BP020 ' : 'text' | async
+                          "
+                        ></span>
+                        <!-- <span *ngIf="perm.roleType == 'O'">
                           <codx-label
                             default="Quản trị viên"
                             [formModel]="dialog.formModel"
@@ -57,7 +62,7 @@
                             [formModel]="dialog.formModel"
                             fiedName="role_user"
                           ></codx-label>
-                        </span>
+                        </span> -->
                       </div>
                     </div>
                   </ng-template>
@@ -78,7 +83,12 @@
                         {{ perm.objectName }}
                       </div>
                       <div class="text-gray-500 fs-7">
-                        <span *ngIf="perm.roleType == 'O'">
+                        <span
+                          [innerHTML]="
+                            perm.roleType | vll : 'BP020 ' : 'text' | async
+                          "
+                        ></span>
+                        <!-- <span *ngIf="perm.roleType == 'O'">
                           <codx-label
                             default="Quản trị viên"
                             [formModel]="dialog.formModel"
@@ -91,7 +101,7 @@
                             [formModel]="dialog.formModel"
                             fiedName="role_user"
                           ></codx-label>
-                        </span>
+                        </span> -->
                       </div>
                     </div>
                   </ng-template>

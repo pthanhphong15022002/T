@@ -32,7 +32,9 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   enableChecklist:boolean=false;
   grvSetup:any;
   defaultParams:any;
-
+  validEditStatus:any=['00','07','09','10','20'];
+  crrUser:any;
+  parentTask:any;
 
   constructor(
     injector: Injector,
@@ -53,7 +55,14 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     this.formModel = this.dialog?.formModel;
     this.funcID = this.formModel?.funcID;
     this.data = dialogData.data[0];
-
+    if(this.data.parentID){
+      this.api.execSv('TM','ERM.Business.TM','TasksBusiness','GetTaskByRecIDAsync',this.data.parentID).subscribe((res:any)=>{
+        if(res){
+          this.parentTask = res;
+        }
+      })
+    }
+    this.crrUser = this.authStore.get();
     if(dialogData.data[1]){
       this.action = dialogData.data[1];
       if(this.action!='add'){
@@ -68,6 +77,9 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
         let memberType = this.projectData.settings.find((x:any)=> x.fieldName=="MemberType");
         if(memberType){
           this.projectMemberType = memberType.fieldValue;
+        }
+        if(this.projectData.settings.find((x:any)=>x.fieldName=='ApproveControl')){
+          this.data.approveControl = this.projectData.settings.find((x:any)=>x.fieldName=='ApproveControl').fieldValue;
         }
       }
     }
@@ -110,7 +122,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   selectUser(){
     let option = new DialogModel;
     option.zIndex=9999;
-    let dialog = this.callfc.openForm(PopupSelectUserComponent,'',500,600,'',{projectData:this.projectData,projectMemberType:this.projectMemberType},'',option);
+    let dialog = this.callfc.openForm(PopupSelectUserComponent,'',500,600,'',{projectData:this.projectData,projectMemberType:this.projectMemberType, roleType: this.selectedRole ? this.selectedRole : 'A'},'',option);
     dialog.closed.subscribe((res:any)=>{
       if(res.event){
         if(this.projectMemberType == '1'){
@@ -118,14 +130,29 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
             let member:any={};
            let item =  this.projectData.permissions.find((x:any)=>x.objectID==res.event[i])
            if(item){
+            let roleType = 'A';
             member.resourceID=item.objectID;
             member.resourceName=item.objectName;
-            member.roleType = 'A';
-            member.icon = this.listRoles.find((x:any)=>x.value=='A')?.icon;
-            this.members.push(member);
+            if(this.selectedRole){
+             roleType = this.selectedRole;
+
+            }
+            member.roleType = roleType;
+            member.icon = this.listRoles.find((x:any)=>x.value==roleType)?.icon;
+            let idx=this.members.findIndex((x:any)=>x.resourceID==member.resourceID);
+            if(idx==-1){
+              this.members.push(member);
+              this.data.assignTo= this.members.map((x:any)=> x.resourceID).join(';')
+            }
+            else{
+              if(this.members[idx].roleType != member.roleType){
+                this.members[idx=member]
+              }
+            }
+
            }
           }
-          this.getListUser(res.event.join(';'));
+          this.getListUser(this.members.map((x:any)=>x.resourceID).join(';'));
           this.changeDetectorRef.detectChanges();
         }
       }
@@ -246,7 +273,20 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
             }
             break;
           case '2':
-
+            if(this.parentTask){
+              if(this.parentTask.startDate &&  this.data.startDate ){
+                if(moment(this.parentTask.startDate).isAfter(this.data.startDate)){
+                  this.notificationsService.notify('Thời gian bắt đầu phải nằm trong thời gian của công việc cha!','2');
+                  return;
+               }
+              }
+              if(this.parentTask.endDate && this.data.endDate){
+                if(moment(this.parentTask.endDate).isBefore(this.data.endDate)){
+                  this.notificationsService.notify('Thời gian kết thúc phải nằm trong thời gian của công việc cha!','2');
+                  return;
+               }
+              }
+            }
             break;
 
 
@@ -312,6 +352,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
           }
         }
         this.todoList = res[2];
+        this.checkAllowedEdit();
       }
     })
   }
@@ -335,7 +376,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
       listUser = listUser.replace(' ', '');
     }
     var arrUser = listUser.split(';');
-    var crrRole = this.crrRole;
+    //var crrRole = this.crrRole;
     this.api
       .execSv<any>(
         'HR',
@@ -348,21 +389,23 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
         if (res && res.length > 0) {
           this.listUserDetail = this.listUserDetail.concat(res);
 
-          for (var i = 0; i < res.length; i++) {
-            let emp = res[i];
-            var taskResource:any={};
-            taskResource.resourceID = emp?.userID;
-            taskResource.resourceName = emp?.userName;
-            taskResource.positionName = emp?.positionName;
-            taskResource.departmentName = emp?.departmentName;
-            taskResource.roleType = crrRole ?? 'R';
-            //this.listTaskResources.push(taskResource);
-          }
+          // for (var i = 0; i < res.length; i++) {
+          //   let emp = res[i];
+          //   var taskResource:any={};
+          //   taskResource.resourceID = emp?.userID;
+          //   taskResource.resourceName = emp?.userName;
+          //   taskResource.positionName = emp?.positionName;
+          //   taskResource.departmentName = emp?.departmentName;
+          //   taskResource.roleType = crrRole ?? 'R';
+          //   //this.listTaskResources.push(taskResource);
+          // }
           if (arrUser.length != res.length) {
             arrUser = res.map((x) => x.userID);
           }
           this.listUser = this.listUser.concat(arrUser);
           this.data.assignTo = this.listUser.join(';');
+          this.selectedRole=undefined;
+          debugger
         }
       });
   }
@@ -424,5 +467,75 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
       });
     }
 
+  }
+
+  selectRoseType(value) {
+    if(this.memberID){
+      let member = this.members.find((x:any)=>x.resourceID == this.memberID)
+      if(member){
+        if(value == 'A' && member.roleType !='A' && this.members.some((x:any)=>x.roleType=='A')){
+          this.notificationsService.notifyCode('TM078');
+          this.popover.close();
+        return;
+        }
+        if(member.roleType == value) return;
+        member.roleType=value;
+        this.members = this.members.slice();
+        this.popover.close();
+        this.changeDetectorRef.detectChanges();
+      }
+    }
+  }
+
+  popover:any;
+  memberID:any
+  showPopover(p, userID) {
+    this.memberID =userID;
+    if (this.popover) this.popover.close();
+    p.open();
+    this.popover = p;
+  }
+
+  selectedRole:any;
+  openControlShare(selectedRole:any){
+    this.selectedRole = selectedRole;
+    this.selectUser();
+  }
+
+  enableEdit:boolean=true;
+  checkAllowedEdit(){
+    if(this.action=='add'){
+      this.enableEdit=true;
+      return
+    }
+    if(!this.crrUser){
+      this.enableEdit = false;
+      return;
+    }
+    if(this.data){
+      if(this.validEditStatus.indexOf(this.data.status)==-1){
+        this.enableEdit = false;
+        return;
+      }
+      if(this.data.createdBy == this.crrUser.userID){
+        this.enableEdit = true;
+        return;
+      }
+      if(this.members.length){
+        let userRole = this.members.find((x:any)=>x.resourceID==this.crrUser.userID);
+        if(userRole && userRole.roleType=='A'){
+          this.enableEdit=true;
+        }
+        else this.enableEdit = false;
+      }
+    }
+  }
+
+  removeMember(e:any){
+    if(e){
+      this.members = this.members.filter((x:any)=>x.resouceID != e.resourceID);
+      this.getListUser(this.members.map((x:any)=>x.resourceID).join(';'));
+      this.changeDetectorRef.detectChanges();
+    }
   }
 }

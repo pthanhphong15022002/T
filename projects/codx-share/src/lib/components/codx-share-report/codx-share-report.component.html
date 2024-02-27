@@ -1,123 +1,123 @@
 <ng-container *ngIf="listReport">
-    <div class="h-100">
-      <codx-view2
-        [tmpHeader]="tmpHeader"
-        [dataSource]="listReport"
-        [tmpItem]="tmp"
-        [tmpRightToolBar]="tmpRightToolBar"
-        [bodyCss]="'px-4 pb-5'"
-        [isAdd]="false"
-        (selectedChange)="selectedChange($event)"
-        (viewChange)="viewChange($event)"
-      >
-      </codx-view2>
+  <div class="h-100">
+    <codx-view2 #codxView2 [dataSource]="listReport" [tmpHeader]="tmpHeader" [tmpItem]="tmp"
+      [tmpRightToolBar]="tmpRightToolBar" [bodyCss]="'px-4 pb-5'" (selectedChange)="selectedChange($event)"
+      (viewChange)="viewChange($event)">
+    </codx-view2>
+  </div>
+</ng-container>
+
+<ng-template #tmpHeader>
+  <div class="d-flex align-items-center justify-content-between w-100 border-bottom py-2">
+    <div class="d-flex fs-5 text-dark fw-bold my-0 me-1 cursor-pointer">
+      {{title}}
     </div>
-  </ng-container>
-  
-  <ng-template #tmpHeader>
-    <ng-container *ngIf="listBookMarks && listBookMarks.length>0">
-      <div class="d-flex flex-column h-300px position-relative">
-        <codx-label class="pt-2 ms-4 fw-bold" default="Đã ghim" fiedName="lblWSBookMark" [formName]="'fmWSBookMark'"></codx-label>
-        <div class="d-flex flex-wrap h-auto pt-2 px-4">
-          <ng-container *ngFor="let item of listBookMarks ; let i = index">
-            <ng-container *ngIf="i < (countBookMarks - 1)">
-              <codx-card-img
-                imgCss="h-170px rounded border-bottom"
-                cardCss="border rounded h-100"
-                [imageSrc]="item?.background || imgDefault"
-                [footer]="footer"
-                ngClass="h-100 mx-2 w-250px"
-                (click)="selectedChange(item)"
-              >
-              </codx-card-img>
-            </ng-container>
-            <ng-template #footer>
-              <ng-container *ngTemplateOutlet="tmpFooter ; context: { $implicit: item , bookmark:true}"></ng-container>
-            </ng-template>
+  </div>
+  <ng-container *ngIf="listBookMarks && listBookMarks.length>0">
+    <div class="d-flex flex-column h-300px position-relative">
+      <codx-label class="pt-2 ms-4 fw-bold" default="Đã ghim" fiedName="lblWSBookMark"
+        [formName]="'fmWSBookMark'"></codx-label>
+      <div class="d-flex flex-wrap h-auto pt-2 px-4">
+        <ng-container *ngFor="let item of listBookMarks ; let i = index">
+          <ng-container *ngIf="i < (countBookMarks - 1)">
+            <codx-card-img imgCss="h-170px rounded border-bottom" cardCss="border rounded h-100"
+              [imageSrc]="item?.background || imgDefault" [footer]="footer" ngClass="h-100 mx-2 w-250px"
+              (click)="selectedChange(item)">
+            </codx-card-img>
           </ng-container>
-        </div>
-        <ng-container *ngIf="listBookMarks.length > (countBookMarks - 1)">
-          <div class="d-flex align-items-center justify-content-center w-35px h-35px border border-gray rounded-circle position-absolute bottom-0 end-0 ws-btn-more bg-white cursor-pointer" (click)="selectMoreBookmark()">
-            <i class="icon-more_horiz"></i>
-          </div>
+          <ng-template #footer>
+            <ng-container *ngTemplateOutlet="tmpFooter ; context: { $implicit: item , bookmark:true}"></ng-container>
+          </ng-template>
         </ng-container>
       </div>
-    </ng-container>
-  </ng-template>
+      <ng-container *ngIf="listBookMarks.length > (countBookMarks - 1)">
+        <div
+          class="d-flex align-items-center justify-content-center w-35px h-35px border border-gray rounded-circle position-absolute bottom-0 end-0 ws-btn-more bg-white cursor-pointer"
+          (click)="selectMoreBookmark()">
+          <i class="icon-more_horiz"></i>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</ng-template>
 
-  <ng-template #tmp let-data>
-    <ng-container *ngIf="viewID == '1'">
-      <div #divCard class="d-flex flex-column w-225px h-225px m-3 text-white position-relative cursor-pointer ws-report-card" 
-      >
-        <codx-card-img
-          imgCss="h-150px rounded border-bottom"
-          cardCss="border rounded h-100"
-          [imageSrc]="data?.background || imgDefault"
-          [footer]="footer"
-          ngClass="h-100 card-share-report"
-        >
-        </codx-card-img>
+<ng-template #tmp let-data>
+  <ng-container *ngIf="viewID == '1'">
+    <div #divCard
+      class="d-flex flex-column w-225px h-225px m-3 text-white position-relative cursor-pointer ws-report-card">
+      <codx-card-img imgCss="h-150px rounded border-bottom" cardCss="border rounded h-100"
+        [imageSrc]="data?.background || imgDefault" [footer]="footer" ngClass="h-100 card-share-report">
+      </codx-card-img>
+    </div>
+    <ng-template #footer>
+      <ng-container *ngTemplateOutlet="tmpFooter ; context: { $implicit: data , bookmark:true}"></ng-container>
+    </ng-template>
+  </ng-container>
+  <ng-container *ngIf="viewID == '2'">
+    <div class="d-flex align-items-center border-bottom p-4 cursor-pointer">
+      <div class="w-50px me-6">
+        <div [id]="'ws-report-bookmark' + data?.recID"
+          class="d-flex align-items-center justify-content-center w-30px h-30px cursor-pointer border border-gray rounded-circle ms-2 ws-report-bookmark"
+          [ngClass]="!data.isBookMark?'opacity-25':'opacity-100'"
+          (click)="setBookMark(data?.recID);$event.stopPropagation()">
+          <span class="icon-18 icon-bookmark text-warning"></span>
+        </div>
       </div>
-      <ng-template #footer>
-        <ng-container *ngTemplateOutlet="tmpFooter ; context: { $implicit: data , bookmark:true}"></ng-container>
-      </ng-template>
-    </ng-container>
-    <ng-container *ngIf="viewID == '2'">
-      <div class="d-flex align-items-center border-bottom p-4 cursor-pointer">
-        <div class="w-50px me-6"> 
-            <div [id]="'ws-report-bookmark' + data?.recID" class="d-flex align-items-center justify-content-center w-30px h-30px cursor-pointer border border-gray rounded-circle ms-2 ws-report-bookmark" [ngClass]="!data.isBookMark?'opacity-25':'opacity-100'"  (click)="setBookMark(data?.recID);$event.stopPropagation()">
-              <span class="icon-18 icon-bookmark text-warning"></span>
+      <div class="w-100">{{data.customName}}</div>
+      <div class="w-100">{{data.category}}</div>
+      <div class="d-flex flex-column w-200px">
+        <div class="d-flex align-items-center">
+          <i class="icon-i-star text-warning icon-14"></i>
+          <span class="text-warning ms-1 mt-2px">4.5</span>
+          <i class="icon-i-eye icon-18 ms-5"></i>
+          <span class="ms-1 mt-1px">{{data?.views}}</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+<ng-template #tmpRightToolBar>
+  <ng-container *ngIf="isToolBar && listGroupReport && listGroupReport.length > 0">
+    <div class="d-flex ms-4 pt-4">
+      <div class="ms-3 me-4 cursor-pointer fw-bold ws-dashboard-toolbar-lists"
+        [class.active]="selectedToolBar == listGroupReport[0]?.functionID"
+        (click)="selectedChangeToolBar(listGroupReport[0])">
+        <span class="text-nowrap">{{listGroupReport[0]?.customName}}</span>
+      </div>
+      <div class="d-flex flex-wrap align-items-center ws-dashboard-toolbar-list">
+        <ng-container *ngFor="let item of listGroupReport ; let i = index">
+          <ng-container *ngIf="i>0">
+            <div class="me-4 mb-2 cursor-pointer fw-bold" [class.active]="selectedToolBar == item?.functionID"
+              (click)="selectedChangeToolBar(item)">
+              <span>{{item?.customName}}</span>
             </div>
-          </div>
-        <div class="w-100">{{data.customName}}</div>
-        <div class="w-100">{{data.category}}</div>
-        <div class="d-flex flex-column w-200px">
-          <div class="d-flex align-items-center">
-            <i class="icon-i-star text-warning icon-14"></i>
-            <span class="text-warning ms-1 mt-2px">4.5</span>
-            <i class="icon-i-eye icon-18 ms-5"></i>
-            <span class="ms-1 mt-1px">{{data?.views}}</span>
-          </div>
-        </div>
-      </div>
-    </ng-container>
-  </ng-template>
-  <ng-template #tmpRightToolBar >
-    <ng-container *ngIf="isToolBar && listGroupReport && listGroupReport.length > 0">
-      <div class="d-flex ms-4 pt-4">
-        <div class="ms-3 me-4 cursor-pointer fw-bold ws-dashboard-toolbar-lists" [class.active]="selectedToolBar == listGroupReport[0]?.functionID" (click)="selectedChangeToolBar(listGroupReport[0])">
-          <span class="text-nowrap">{{listGroupReport[0]?.customName}}</span>
-        </div>
-        <div class="d-flex flex-wrap align-items-center ws-dashboard-toolbar-list">
-          <ng-container *ngFor="let item of listGroupReport ; let i = index">
-            <ng-container  *ngIf="i>0">
-              <div class="me-4 mb-2 cursor-pointer fw-bold" [class.active]="selectedToolBar == item?.functionID" (click)="selectedChangeToolBar(item)">
-                <span>{{item?.customName}}</span>
-              </div>
-            </ng-container>
           </ng-container>
-        </div>
-      </div>
-     
-    </ng-container>
-  </ng-template>
-  <ng-template #tmpFooter let-data let-bookmark="bookmark">
-    <div class="d-flex align-items-top justify-content-between">
-      <div class="d-flex flex-column w-100">
-        <div class="text-dark line-clamp line-clamp-1 text-wrap">{{data.customName}}</div>
-        <!-- <span class="fs-7 opacity-75 line-clamp line-clamp-1" [title]="data.description">{{data.description}}</span>   ///////anh Thoi keu bo nha Chung --> 
-      </div> 
-    </div>
-    <div class="d-flex align-items-center justify-content-between">
-      <div class="d-flex align-items-center">
-        <i class="icon-i-star text-warning icon-14"></i>
-        <span class="text-warning ms-1 mt-2px">4.5</span>
-        <i class="icon-i-eye icon-18 ms-5"></i>
-        <span class="ms-1 mt-1px">{{data?.views}}</span>
-      </div>
-      <div *ngIf="bookmark" [id]="'ws-report-bookmark' + data?.recID" class="d-flex align-items-center justify-content-center w-30px h-30px border border-gray rounded-circle ms-2 ws-report-bookmark" [ngClass]="!data.isBookMark?'opacity-25':'opacity-100'"  (click)="setBookMark(data?.recID);$event.stopPropagation()">
-        <span class="icon-18 icon-bookmark text-warning"></span>
+        </ng-container>
       </div>
     </div>
-    
-  </ng-template>
+
+  </ng-container>
+</ng-template>
+<ng-template #tmpFooter let-data let-bookmark="bookmark">
+  <div class="d-flex align-items-top justify-content-between">
+    <div class="d-flex flex-column w-100">
+      <div class="text-dark line-clamp line-clamp-1 text-wrap">{{data.customName}}</div>
+      <!-- <span class="fs-7 opacity-75 line-clamp line-clamp-1" [title]="data.description">{{data.description}}</span>   ///////anh Thoi keu bo nha Chung -->
+    </div>
+  </div>
+  <div class="d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center">
+      <i class="icon-i-star text-warning icon-14"></i>
+      <span class="text-warning ms-1 mt-2px">4.5</span>
+      <i class="icon-i-eye icon-18 ms-5"></i>
+      <span class="ms-1 mt-1px">{{data?.views}}</span>
+    </div>
+    <div *ngIf="bookmark" [id]="'ws-report-bookmark' + data?.recID"
+      class="d-flex align-items-center justify-content-center w-30px h-30px border border-gray rounded-circle ms-2 ws-report-bookmark"
+      [ngClass]="!data.isBookMark?'opacity-25':'opacity-100'"
+      (click)="setBookMark(data?.recID);$event.stopPropagation()">
+      <span class="icon-18 icon-bookmark text-warning"></span>
+    </div>
+  </div>
+
+</ng-template>

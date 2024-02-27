@@ -597,7 +597,8 @@ export class PdfComponent
             res?.listFile?.forEach((file: any, index) => {
               if (file) {
                 file.fileUrl = environment.urlUpload + '/' + file.fileUrl;
-                file.fileIdx = index;
+                file.fileIdx = index;                
+                file.signers= res?.approvers;
               }
             });
             this.lstFiles = res?.listFile;
@@ -932,7 +933,8 @@ export class PdfComponent
         this.fileInfo.fileID,
         this.isApprover,
         this.user.userID,
-        this.stepNo
+        this.stepNo,
+        this.modeView
       )
       .subscribe((res) => {
         if (res) {
@@ -1037,11 +1039,12 @@ export class PdfComponent
   //remove area
   removeArea() {
     this.esService
-      .deleteAreaById([
+      .deleteAreaById(
         this.recID,
         this.fileInfo.fileID,
         this.curSelectedArea.id(),
-      ])
+        this.modeView
+      )
       .subscribe((res) => {
         if (res) {
           this.esService
@@ -1050,7 +1053,8 @@ export class PdfComponent
               this.fileInfo.fileID,
               this.isApprover,
               this.user.userID,
-              this.stepNo
+              this.stepNo,
+              this.modeView
             )
             .subscribe((res) => {
               if (res) {
@@ -2385,7 +2389,8 @@ export class PdfComponent
             this.fileInfo.fileID,
             this.isApprover,
             this.user.userID,
-            this.stepNo
+            this.stepNo,
+            this.modeView
           )
           .subscribe((res) => {
             if (res) {
@@ -2701,7 +2706,8 @@ export class PdfComponent
                       this.fileInfo.fileID,
                       this.isApprover,
                       this.user.userID,
-                      this.stepNo
+                      this.stepNo,
+                      this.modeView
                     )
                     .subscribe((res) => {
                       if (res) {
@@ -2826,7 +2832,8 @@ export class PdfComponent
                         this.fileInfo.fileID,
                         this.isApprover,
                         this.user.userID,
-                        this.stepNo
+                        this.stepNo,
+                        this.modeView
                       )
                       .subscribe((res) => {
                         if (res) {
@@ -2883,7 +2890,8 @@ export class PdfComponent
               this.fileInfo.fileID,
               this.isApprover,
               this.user.userID,
-              this.stepNo
+              this.stepNo,
+              this.modeView
             )
             .subscribe((res) => {
               if (res) {
@@ -2981,7 +2989,8 @@ export class PdfComponent
                 this.fileInfo.fileID,
                 this.isApprover,
                 this.user.userID,
-                this.stepNo
+                this.stepNo,
+                this.modeView
               )
               .subscribe((res) => {
                 if (res) {

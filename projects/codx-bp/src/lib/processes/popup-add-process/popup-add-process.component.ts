@@ -317,6 +317,7 @@ export class PopupAddProcessComponent {
     stage.stepName = vllStage.text + ' 1';
     stage.reminder = this.data.reminder;
     stage.eventControl = null;
+    stage.stepType = "1";
     var processallowDrag = null;
     var processDefaultProcess = null;
     var processCompleteControl = null;
@@ -354,6 +355,7 @@ export class PopupAddProcessComponent {
     form.memo = '';
     form.duration = 0;
     form.interval = '1';
+    form.stepType = "1";
     form.settings = JSON.stringify({
       icon: vllForm.icon,
       color: vllForm.color,

@@ -32,3 +32,24 @@
   >
   </share-view-list>
 </ng-template>
+<ng-template #treeView>
+  <share-tree-view
+    #viewTree
+    [formModel]="view.formModel"
+    [vllStatus]="vllStatus"
+    [listRoles]="listRoles"
+    [dataObj]="dataObj"
+    [filter]="view.dataService.filter"
+    [favoriteID]="view.dataService.favoriteID"
+    [searchText]="view.dataService.searchText"
+    [predicate]="predicate+'&&ParentID=null'"
+    [dataValue]="datavalue"
+    [predicateChild]="'Category=@0'"
+    [dataValueChild]="'3'"
+    [showMoreFunc]="true"
+    (clickMoreFunction)="clickMF($event)"
+    [itemTemplate]="itemViewList"
+    [user]="user"
+  >
+  </share-tree-view>
+</ng-template>
