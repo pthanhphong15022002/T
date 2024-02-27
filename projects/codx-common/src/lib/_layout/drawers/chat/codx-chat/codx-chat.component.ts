@@ -40,7 +40,7 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
       'd-flex align-items-center ' + this.codxService.toolbarButtonMarginClass
     );
   }
-  
+
   @Output('countTotalMessage') countTotalMessage: EventEmitter<any> = new EventEmitter();
   loaded = false;
   loadFavorite = false;
@@ -54,6 +54,7 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   autoClose: boolean = true;
   lstBoxChat: any[] = [];
   hideChat: boolean = false;
+  isDropdownOpen: boolean = false;
   @ViewChild('codxChatContainer', { static: true })
   codxChatContainer: TemplateRef<any>;
   @ViewChild('listChat') listChat: CodxChatListComponent;
@@ -214,5 +215,15 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   }
 
   // close ngbDropdown
-  clickBtnDropdown() {}
+  clickBtnDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  renderDropDown(e){
+    // let element = document.getElementById('chatbox-dropdownPopup');
+    if(this.ngbDropdown){
+      this.ngbDropdown.open();
+      this.dt.detectChanges();
+    }
+  }
 }

@@ -26,12 +26,23 @@
       </ejs-multiselect>
     </div> -->
     <div  style="margin: 0 auto; width:100%;" *ngIf="projectMemberType=='1'">
-      <codx-input type="combobox" refType="3" refValue="ProjectMembers" [model]="projectData" [multiple]="true" (valueChange)="cbxChange($event)"></codx-input>
+      <codx-input type="combobox" refType="3" refValue="ProjectMembers" [model]="projectData" [multiple]="roleType!='A'" (valueChange)="cbxChange($event)"></codx-input>
+    </div>
+    <div class="container h-100 p-0 mt-5">
+      <div class="d-flex flex-row ms-5 p-3 align-items-center" *ngFor="let item of itemsSelected">
+        <codx-img [objectId]="item.ObjectID" imageType="circle" width="40" [objectType]="'AD_Users'"
+          [objectName]="item.ObjectName"></codx-img>
+        <div class="ms-4 d-flex flex-column" style="width: 160px">
+          <span class="text-muted fs-5">{{item.ObjectID}}</span>
+          <span class="fw-bold text-truncate" [title]="item.ObjectName">{{ item.ObjectName
+            }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
 <ng-template #footer>
-  <div class="d-flex justify-content-between">
+  <div class="d-flex align-items-center justify-content-end">
     <!-- <button
       codxLang
       name="btnApply"
@@ -44,7 +55,7 @@
       name="btnSave"
       formName="System"
       default="Lưu"
-      class="btn btn-light-success"
+      class="btn btn-light-primary"
       (click)="apply()"
     ></button>
   </div>

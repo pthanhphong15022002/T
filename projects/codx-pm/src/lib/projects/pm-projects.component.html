@@ -32,7 +32,7 @@
     </div>
     <div class="w-25 text-dark fw-bold p-3 fw-500">
       <codx-label
-        fiedName="lblProjectType"
+        fiedName="lblProjectCategory"
         [setRequire]="false"
         [formModel]="view.formModel"
         [default]="'Phân loại'"
@@ -81,7 +81,7 @@
       <div class="d-flex align-items-center cursor-pointer hover-active">
         <div class="d-flex flex-column me-4">
           <codx-img [funcId]="funcID" [objectId]="data.recID" [objectName]="data.projectName"
-            objectType="PM_Projects" [width]="40">
+            objectType="PM_Projects" [width]="35">
           </codx-img>
 
         </div>
@@ -138,10 +138,10 @@
     <div class="w-25 p-5">
       <div class="d-flex flex-column">
         <div class="d-flex mb-1">
-          {{ data.projectType }}
+          {{ data.projectType}}
           <codx-vll
             [name]="grvSetup['ProjectType']?.referedValue"
-            [value]="data.projectType"
+            [value]="data.projectCategory"
             [showBgColor]="true"
             [showText]="true"
             [className]="'badge badge-sm badge-inline'"
@@ -168,13 +168,14 @@
     </div>
     <!-- Tình trạng -->
     <div class="w-25 h-100">
-      <div class="w-100 h-100">
-        <div class="w-100 d-flex align-items-center" *ngIf="!data.taskStatus">
+      <div class="w-100 h-100 text-center">
+        <div class="fst-italic" *ngIf="!data.taskStatus">
           Chưa có công việc...
         </div>
         <div class="d-flex flex-column w-100  h-100  align-items-center" *ngIf="data.taskStatus">
-          <div class="w-100 h-30px">
+          <!-- <div class="w-100 h-30px">
             <ejs-progressbar
+            #p
             [id]="data[idField]"
             [type]="'Linear'"
             [maximum]="100"
@@ -189,8 +190,12 @@
             trackColor="#f2f2f2"
             progressColor="#1E90FF"
             cornerRadius="Round4px"
-            (textRender)="textRender($event,data.taskStatus)"
+            (textRender)="textRender($event,data.taskStatus,p)"
           >
+          <e-progressbar-annotations>
+            <e-progressbar-annotation content="Đang thực hiện ({{(data.taskStatus.done/data.taskStatus.count)*100}}%)">
+            </e-progressbar-annotation>
+        </e-progressbar-annotations>
           </ejs-progressbar>
           </div>
           <div class="w-100 d-flex align-items-center pt-5 px-2">
@@ -200,6 +205,46 @@
             <div class="w-50 d-flex justify-content-end text-truncate">
               <b>{{data.taskStatus.isOverdue}}</b> &nbsp; quá hạn
             </div>
+          </div> -->
+          <div class="container-progress">
+            <div
+              class="progress-list"
+              [style.backgroundColor]="'#88EBBC'"
+              role="progressbar"
+              [style.width]="(data.taskStatus.done/data.taskStatus.count)*100 + '%'"
+              aria-valuenow="50"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            ></div>
+            <div class="progress-text">
+              <span class="me-1">
+                Đang thực hiện
+              </span>
+              <span>({{ (data.taskStatus.done/data.taskStatus.count)*100 + "%" }})</span>
+            </div>
+          </div>
+
+          <div class="w-100 mt-2 d-flex justify-content-between">
+            <div class="d-flex justify-content-start">
+              <span class="fw-bold me-1">{{data.taskStatus.done}}/{{data.taskStatus.count}}</span>
+              <span class="text-gray-600"
+                ><codx-label
+                  default="hoàn tất"
+                  [formModel]="formModel"
+                  fiedName="list_TaskDone"
+                ></codx-label
+              ></span>
+            </div>
+            <div class="d-flex justify-content-end">
+              <span class="fw-bold me-1">{{data.taskStatus.isOverdue}}</span>
+              <span class="text-gray-600"
+                ><codx-label
+                  default="trễ hạn"
+                  [formModel]="formModel"
+                  fiedName="list_OverDueTask"
+                ></codx-label
+              ></span>
+            </div>
           </div>
         </div>
       </div>
@@ -208,7 +253,7 @@
     <div class="w-25 p-5">
       <div class="d-flex has-action-menu justify-content-between w-100">
         <codx-imgs  [objectId]="getMembers(data,'objectID')"
-            objectType="AD_Users" [width]="40"  [numberImages]="4" *ngIf="data.permissions">
+            objectType="AD_Users" [width]="35"  [numberImages]="4" *ngIf="data.permissions">
           </codx-imgs>
       </div>
     </div>
@@ -216,7 +261,7 @@
     <div class="w-25 p-5">
       <div class="d-flex has-action-menu justify-content-between w-100">
         <codx-img  [objectId]="data.projectManager" [objectName]="data.projectManager"
-            objectType="AD_Users" [width]="40">
+            objectType="AD_Users" [width]="35">
           </codx-img>
       </div>
     </div>

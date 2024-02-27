@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, OnInit, AfterViewInit, TemplateRef, ViewChild, Injector } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { ProgressAnnotationService } from "@syncfusion/ej2-angular-progressbar";
+import { FontModel, ProgressAnnotationService } from "@syncfusion/ej2-angular-progressbar";
 import { CRUDService, CodxService, DataService, DialogModel, FormModel, NotificationsService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from "codx-core";
 import { CodxShareService } from "projects/codx-share/src/public-api";
 import { PopupAddProjectComponent } from "./popup-add-project/popup-add-project.component";
@@ -35,7 +35,8 @@ export class ProjectsComponent
     backgroundColor: '#D6D6D6',
     type: 'RoundedRectangle',
     border: { width: 1 }
-}
+  }
+  labelStyle: FontModel = { textAlignment: 'Center', text: '40% Complete (Success)', color: '#000'}
   formModel:FormModel;
 
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
@@ -61,6 +62,7 @@ export class ProjectsComponent
             .subscribe((grd: any) => {
               if (grd) {
                 this.grvSetup = grd;
+                debugger
               }
             });
         }
@@ -189,8 +191,9 @@ export class ProjectsComponent
     }
   }
 
-  textRender(e:any,data:any){
-    e.text = `   Đang thực hiện (${(data.done/data.count)*100}%)`;
+  textRender(e:any,data:any,progress:any){
+    e.text=''
+       //e.text = `   Đang thực hiện (${(data.done/data.count)*100}%)`;
   }
 
   click(e:any){

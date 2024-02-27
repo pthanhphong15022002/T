@@ -1,3 +1,4 @@
+import { ViewApproverPermissionComponent } from './components/codx-approve-steps/view-approver-permission/view-approver-permission.component';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -249,6 +250,7 @@ const T_Component: Type<any>[] = [
   ApprovalTabsComponent,
   CodxViewApprovalStepComponent,
   CodxApproveStepsComponent,
+  ViewApproverPermissionComponent,
   // NotifyDrawerComponent,
   // NotifyDrawerSliderComponent,
   // MessengerDrawerComponent,

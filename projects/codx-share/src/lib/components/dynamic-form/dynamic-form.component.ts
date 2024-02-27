@@ -56,6 +56,7 @@ export class DynamicFormComponent extends UIComponent {
   function: any = {};
   tabs: TabModel[] = [];
   authStore;
+  isSubView: boolean;
   itemSelected: any;
   constructor(
     private inject: Injector,
@@ -70,6 +71,9 @@ export class DynamicFormComponent extends UIComponent {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
     this.authStore = userStore.get();
+    this.route.data.subscribe((res) => {
+      if (res && res['isSubView']) this.isSubView = res.isSubView;
+    });
   }
 
   onInit(): void {
@@ -90,30 +94,32 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
-    if(this.funcID == "FDS025"){
-      this.cache.gridViewSetup("FDIndustries", "grvFDIndustries").subscribe((grv) => {
-        if(grv){
-          const colums = {
-            field: Util.camelize("Note"),
-            headerText: grv["Note"].headerText,
-            width: grv["Note"].width,
-            template: this.note,
-          };
-          this.columnsGrid = [colums];
-          this.views = [
-            {
-              type: ViewType.grid,
-              sameData: true,
-              active: true,
-              model: {
-                resources: this.columnsGrid,
-                template2: this.morefunction,
-                //frozenColumns: 1,
+    if (this.funcID == 'FDS025') {
+      this.cache
+        .gridViewSetup('FDIndustries', 'grvFDIndustries')
+        .subscribe((grv) => {
+          if (grv) {
+            const colums = {
+              field: Util.camelize('Note'),
+              headerText: grv['Note'].headerText,
+              width: grv['Note'].width,
+              template: this.note,
+            };
+            this.columnsGrid = [colums];
+            this.views = [
+              {
+                type: ViewType.grid,
+                sameData: true,
+                active: true,
+                model: {
+                  resources: this.columnsGrid,
+                  template2: this.morefunction,
+                  //frozenColumns: 1,
+                },
               },
-            },
-          ];
-        }
-      });
+            ];
+          }
+        });
     } else {
       this.views = [
         {
@@ -128,7 +134,6 @@ export class DynamicFormComponent extends UIComponent {
         },
       ];
     }
-    
 
     // console.log('view ne', this.views);
     // console.log('view base ne', this.viewBase);
