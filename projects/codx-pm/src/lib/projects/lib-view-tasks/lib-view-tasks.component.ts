@@ -1,34 +1,10 @@
-import {
-  Component,
-  ViewEncapsulation,
-  OnInit,
-  AfterViewInit,
-  Injector,
-  Optional,
-  OnChanges,
-  SimpleChanges,
-  Input,
-  ViewChild,
-  TemplateRef,
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ProgressAnnotationService } from '@syncfusion/ej2-angular-progressbar';
-import {
-  AuthStore,
-  CodxService,
-  DialogData,
-  DialogRef,
-  FormModel,
-  NotificationsService,
-  PageTitleService,
-  ResourceModel,
-  SidebarModel,
-  UIComponent,
-  ViewModel,
-  ViewType,
-} from 'codx-core';
-import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { PopupAddTaskComponent } from '../popup-add-task/popup-add-task.component';
+import { Component, ViewEncapsulation, OnInit, AfterViewInit, Injector, Optional, OnChanges, SimpleChanges, Input, ViewChild, TemplateRef } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
+import { ProgressAnnotationService } from "@syncfusion/ej2-angular-progressbar";
+import { AuthStore, CodxService, DialogData, DialogRef, FormModel, NotificationsService, PageTitleService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from "codx-core";
+import { CodxShareService } from "projects/codx-share/src/public-api";
+import { PopupAddTaskComponent } from "../popup-add-task/popup-add-task.component";
+import { PopupViewTaskComponent } from "../popup-view-task/popup-view-task.component";
 
 @Component({
   selector: 'lib-view-tasks',
@@ -44,16 +20,18 @@ export class ProjectTasksViewComponent
   @Input() projectID: any;
   @Input() projectData: any;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
-  views: Array<ViewModel> = [];
-  entityName: string = 'TM_Tasks';
-  service: string = 'TM';
-  assemblyName: string = 'ERM.Business.TM';
-  className: string = 'TaskBusiness';
-  method: string = 'GetTasksAsync';
-  predicate: string = 'ProjectID=@0&&Category=@1';
-  datavalue: string = '';
-  idField: string = 'recID';
-  button: any;
+  @ViewChild('treeView') treeView!: TemplateRef<any>;
+
+  views:  Array<ViewModel> = [];;
+  entityName:string = 'TM_Tasks';
+  service:string='TM';
+  assemblyName:string='ERM.Business.TM';
+  className:string="TaskBusiness";
+  method:string="GetTasksAsync";
+  predicate:string = 'ProjectID=@0&&Category=@1'
+  datavalue:string=''
+  idField:string='recID';
+  button:any;
   itemSelected: any;
   grvSetup: any;
   request: ResourceModel;
@@ -179,6 +157,17 @@ export class ProjectTasksViewComponent
           eventModel: this.taskSettings,
         },
       },
+      {
+        type: ViewType.content,
+        active: false,
+        sameData: false,
+        text: this.user?.language == 'VN' ? 'Cây giao việc' : 'Tree Assign',
+        //icon: 'icon-account_tree',
+        model: {
+          panelLeftRef: this.treeView,
+        },
+      },
+
     ];
     this.detectorRef.detectChanges();
   }
@@ -234,7 +223,33 @@ export class ProjectTasksViewComponent
     }
   }
 
-  deleteTask() {}
+  deleteTask(){
+
+  }
+
+  viewTask(){
+    if(this.view.dataService.dataSelected){
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.formModel;
+      option.Width = '550px';
+      option.zIndex=9997;
+      let dialogAdd = this.callfc.openSide(
+        PopupViewTaskComponent,
+        {data:this.view.dataService.dataSelected,projectData:this.projectData},
+        option
+      );
+      dialogAdd.closed.subscribe((returnData) => {
+        if (returnData?.event) {
+
+          //this.view?.dataService?.update(returnData?.event);
+        } else {
+          this.view.dataService.clear();
+        }
+      });
+    }
+
+  }
 
   click(e: any) {
     if (e.id == 'btnAdd') {
@@ -249,9 +264,12 @@ export class ProjectTasksViewComponent
         break;
       case 'SYS02':
         this.deleteTask();
-        break;
-      default:
-        break;
+      break;
+      case "SYS05":
+        this.viewTask()
+      break;
+
+
     }
   }
 }
