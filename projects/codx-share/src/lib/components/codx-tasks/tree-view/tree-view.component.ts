@@ -58,7 +58,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   pageSize = 20;
   page = 1;
 
-  vllPriority = 'TM005';
+  @Input()vllPriority = 'TM005';
   dataTree: any[] = [];
   dialog: any;
   favorite = '';

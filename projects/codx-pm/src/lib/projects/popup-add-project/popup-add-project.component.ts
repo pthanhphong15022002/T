@@ -62,6 +62,7 @@ export class PopupAddProjectComponent extends UIComponent {
   oldDataValue:any;
   componentSub:any='';
   defaultSettings:any=[];
+  grvSetup:any;
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
@@ -81,6 +82,7 @@ export class PopupAddProjectComponent extends UIComponent {
     this.funcID = this.formModel?.funcID;
     this.data = dialogData.data[0];
     this.funcType = dialogData.data[1];
+    this.grvSetup = dialogData.data[2]
     this.user=this.authStore.get();
 
     if(this.data.settings && this.data.settings.length){
@@ -327,6 +329,13 @@ export class PopupAddProjectComponent extends UIComponent {
     let returnData:any;
     this.data.settings = this.newSetting;
     this.dialogRef.dataService.dataSelected = this.data;
+    if(this.data.permissions){
+      let pm = this.data.permissions.find((x:any)=>x.roleType=='PM' && x.objectType=='U');
+      if(pm){
+        this.data.projectManager = pm.objectID;
+        this.data.projectManeger = pm.objectID;
+      }
+    }
 
     this.dialogRef.dataService
     .save()

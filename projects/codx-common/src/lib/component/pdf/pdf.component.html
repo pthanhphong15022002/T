@@ -275,6 +275,14 @@
                 align="Left"
               ></e-item>
               <e-item
+                (click)="exportExcel($event)"
+                prefixIcon="e-icons e-export-excel"
+                id="exportExcel"
+                tooltipText="export excel"
+                showTextOn="Overflow"
+                align="Left"
+              ></e-item>
+              <e-item
                 *ngIf="isApprover && isEditable && canHighLight"
                 (click)="clickHighlightText()"
                 prefixIcon="e-icons e-style"
