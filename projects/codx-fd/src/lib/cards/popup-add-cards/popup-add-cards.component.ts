@@ -89,7 +89,7 @@ export class PopupAddCardsComponent implements OnInit, AfterViewInit {
   price: number = 0;
   totalRecorItem: number = 4;
   width = 720;
-  widthEvoucher = 747;
+  widthEvoucher = 752;
   height = window.innerHeight;
   exchangeRateEVoucher: number = 1;
 
