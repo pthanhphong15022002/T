@@ -153,7 +153,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'cashpaymentsbanks/:funcID/:journalNo',
+        path: 'bankpayments/:funcID/:journalNo',
         component: CashPaymentsComponent,
         data: { noReuse: true },
       },
