@@ -266,7 +266,7 @@ export class AddProcessDefaultComponent implements OnInit{
 
   async addFileAttach(type:any)
   {
-    if(this.attachment.fileUploadList && this.attachment.fileUploadList.length > 0)
+    if(this.attachment?.fileUploadList && this.attachment?.fileUploadList?.length > 0)
     {
       (await this.attachment.saveFilesObservable()).subscribe(item2=>{
         if(item2)

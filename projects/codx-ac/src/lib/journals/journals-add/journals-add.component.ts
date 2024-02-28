@@ -168,7 +168,7 @@ export class JournalsAddComponent extends UIComponent {
               .subscribe((res:any) => {
                 if (res) {
                   delete res?.journalNo;
-                  delete res?.status;
+                  //delete res?.status;
                   delete res?.journalName;
                   delete res?.recID;
                   delete res?.isTemplate;
@@ -282,15 +282,18 @@ export class JournalsAddComponent extends UIComponent {
               .pipe(takeUntil(this.destroy$))
               .subscribe((res: any) => {
                 if (!res) return;
-                if (res || res.save || res.update) {
-                  if (res || !res.save.error || !res.update.error) {
-                    if (this.formJournal.form.data.isAdd || this.formJournal.form.data.isCopy)
-                      this.notification.notifyCode('SYS006');
-                    else
-                      this.notification.notifyCode('SYS007');
-                    this.dialog.close();
-                  }
+                if (res.hasOwnProperty('save')) {
+                  if (res.save.hasOwnProperty('data') && !res.save.data) return;
                 }
+                if (res.hasOwnProperty('update')) {
+                  if (res.update.hasOwnProperty('data') && !res.update.data)
+                    return;
+                }
+                if (this.formJournal.form.data.isAdd || this.formJournal.form.data.isCopy)
+                    this.notification.notifyCode('SYS006');
+                else
+                    this.notification.notifyCode('SYS007');
+                    this.dialog.close();
               })
           }
         });
@@ -298,16 +301,17 @@ export class JournalsAddComponent extends UIComponent {
       this.formJournal.form.save(null, 0, '', '', false,{allowCompare:false})
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if(!res) return;
-        if (res || res.save || res.update) {
-          if (res || !res.save.error || !res.update.error) {
-            if (this.formJournal.form.data.isAdd || this.formJournal.form.data.isCopy)
-              this.notification.notifyCode('SYS006');
-            else
-              this.notification.notifyCode('SYS007');
-            this.dialog.close();
-          }
+        if (!res) return;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) return;
         }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) return;
+        }
+        if (this.formJournal.form.data.isAdd || this.formJournal.form.data.isCopy)
+          this.notification.notifyCode('SYS006');
+        else this.notification.notifyCode('SYS007');
+          this.dialog.close();
       })
     }
   }
