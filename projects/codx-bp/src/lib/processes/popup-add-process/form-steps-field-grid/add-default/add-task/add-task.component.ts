@@ -213,6 +213,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     {
       if(!this.data.extendInfo || this.data.extendInfo.length == 0)
       {
+        debugger
         this.isNewForm = true;
         this.data.extendInfo = 
         [
@@ -353,21 +354,16 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
 
   openAttach1()
   {
-    this.data.attachments = this.attachment.fileUploadList.length;
-    this.dataChange.emit(this.data);
     this.attachment.uploadFile();
-    this.dataChangeAttach.emit(true);
   }
   openAttach2()
   {
-    this.data.attachments = this.attachment2.fileUploadList.length;
     this.attachment2.uploadFile();
-    this.dataChange.emit(this.data);
-    this.dataChangeAttach.emit(true);
   }
 
   fileSave(e:any)
   {
+    let count = 0;
     var files = [];
     if(Array.isArray(e))
     {
@@ -379,6 +375,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
         }
         files.push(f);
       })
+      count = e.length;
     }
     else 
     {
@@ -388,7 +385,12 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
           type : '1'
         }
         files.push(f);
+        count = 1;
     }
+
+    if(!this.data.attachments) this.data.attachments = 0;
+    this.data.attachments += count;
+    this.dataChange.emit(this.data);
     var documentControl = 
     {
       recID : Util.uid(),
@@ -489,6 +491,11 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     }
   }
 
+  getFieldExport()
+  {
+    return this.process.steps.filter(x=>x.activityType == 'Form' && x.stepNo < this.data.stepNo);
+  }
+
   openFormTemplate(val:any , type:any ,data:any = null)
   {
     var option = new DialogModel();
@@ -507,7 +514,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
           refType: this.formModel?.entityName,
           formModel: this.formModel,
           data:data,
-          listField: this.data.extendInfo
+          groupField: this.getFieldExport()
         },
         '',
         option
