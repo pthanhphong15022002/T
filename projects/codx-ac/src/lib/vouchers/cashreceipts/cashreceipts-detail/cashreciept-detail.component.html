@@ -74,13 +74,6 @@
         *ngIf="(itemSelected?.payor == '' || itemSelected?.payor == null) && gridViewSetup"
         class="place-holder text-gray-600">{{gridViewSetup['Payor'].headerText}}</span>
       <!-- Người gửi tiền -->
-
-      <!-- Tài khoản chi (ủy nhiệm chi chi)   -->
-      <!-- <codx-label *ngIf="(formModel.funcID == 'ACT0429')" class="fw-bold label-colon text-nowrap" fiedName="lblBankAccountPay"
-              [formModel]="formModel" default="Tài khoản chi">
-          </codx-label>
-          <span *ngIf="(formModel.funcID == 'ACT0429')" class="text-gray-600">{{itemSelected?.bankPayname}}</span> -->
-      <!-- Người nhận tiền (phiếu chi)   -->
     </div>
     <div class="d-flex align-items-top mb-1">
       <!-- Sổ quỹ-->
@@ -93,13 +86,6 @@
         *ngIf="(itemSelected?.cashBookName == '' || itemSelected?.cashBookName == null) && gridViewSetup"
         class="place-holder text-gray-600">{{gridViewSetup['CashBookID'].headerText}}</span>
       <!-- Sổ quỹ -->
-
-      <!-- Tài khoản nhận (ủy nhiệm chi) -->
-      <!-- <codx-label *ngIf="(formModel.funcID == 'ACT0429')" class="fw-bold label-colon text-nowrap" fiedName="lblCashBook"
-            [formModel]="formModel" default="Tài khoản nhận">
-          </codx-label>
-          <span *ngIf="(formModel.funcID == 'ACT0429')" class="text-gray-600">{{itemSelected?.bankReceiveName}}</span> -->
-      <!-- Tài khoản nhận (ủy nhiệm chi)-->
     </div>
     <div class="d-flex align-items-top mb-1">
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="ReasonID" [formModel]="formModel">
@@ -130,7 +116,7 @@
       </div>
     </div>
     <div [ngClass]="isReadMore ? 'card-cash' : ''" class="card-add" #cardbodyRef>
-      <ejs-tab #elementTabDetail (created)="createTab($event, elementTabDetail)">
+      <ejs-tab (selecting)="selecting($event)" #elementTabDetail (created)="createTab($event, elementTabDetail)">
         <e-tabitems>
           <!--Start tab hạch toán -->
           <e-tabitem>

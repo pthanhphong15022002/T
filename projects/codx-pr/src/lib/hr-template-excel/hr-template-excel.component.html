@@ -1,4 +1,4 @@
-<codx-views #view [views]="views" [idField]="'recID'" (selectedChange)="selectedChange($event)"></codx-views>
+<codx-views #view [views]="views" [idField]="'recID'" [selectedFirst]="true" (selectedChange)="selectedChange($event)" (clickMF)="clickMF($event)" (changeDataMF)="changeDataMF($event)"></codx-views>
 <ng-template #itemTmpLeft let-data>
     <codx-temp-full 
         [dataItem]="data"
@@ -8,7 +8,8 @@
         descLine="2"
         [formModel]="view?.formModel" 
         [typeMF]="'hover'"
-        [hideMF]="true">
+        (clickMF)="clickMF($event,data)"
+        (changeDataMF)="changeDataMF($event)">
     </codx-temp-full>
 </ng-template>
 <ng-template #tmpPanelRight>

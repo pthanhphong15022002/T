@@ -126,6 +126,12 @@ export class SalesinvoicesAddComponent extends UIComponent {
     this.showHideTabMaster(this.formSalesInvoice?.data?.subType, this.elementTabMaster);
   }
 
+  selecting(event){
+    if (event.isSwiped) {
+      event.cancel = true;
+    }
+  }
+
   /**
    * *Hàm thiết lập lưới trước khi init
    * @param eleGrid 

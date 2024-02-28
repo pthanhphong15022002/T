@@ -1,0 +1,177 @@
+<codx-views
+  #view
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [method]="method"
+  [views]="views"
+  [button]="button"
+  (buttonClick)="click($event)"
+  [moreFuncs]="moreFuncs"
+  [autoLoad]="true"
+  [idField]="idField"
+  (selectedChange)="selectedChange($event)"
+  [autoSearch]="false"
+  (searchChanged)="searchChanged($event)"
+  (onMoreMulti)="onMoreMulti($event)"
+  (changeDataMF)="changeDataMF($event, dataSelected)"
+  (clickMF)="clickMF($event, dataSelected)"
+></codx-views>
+
+<!--grid view-->
+<ng-template #templateMore let-data>
+  <div class="" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (changeDataMF)="changeDataMF($event, data, 11)"
+      (clickMF)="clickMF($event, data)"
+      [isBookMark]="false"
+      type="view"
+    ></codx-mfunc>
+  </div>
+</ng-template>
+<!--grid view-->
+
+<!--List view-->
+
+<ng-template #itemViewList let-dataList>
+  <codx-view-list-cm
+    [dataSelected]="dataList"
+    [formModel]="view.formModel"
+    [entityName]="entityName"
+    [funcID]="funcID"
+    [asideMode]="asideMode"
+    [checkType]="'4'"
+    (clickMoreFunc)="clickMoreFunc($event)"
+    (changeMoreMF)="changeMoreMF($event)"
+  ></codx-view-list-cm>
+</ng-template>
+<!--List view-->
+
+<!--list details-->
+<ng-template #itemTemplate let-data>
+  <codx-temp-full
+    cardCss="card-template border-bottom p-3 list-task"
+    [typeMF]="'hover'"
+    [imageId]="data.recID"
+    [imageObjName]="data.competitorName"
+    [imgOn]="data?.modifiedOn"
+    (changeDataMF)="changeDataMF($event, data)"
+    [imageReferType]="'avt'"
+    [imageWidth]="35"
+    imgCss="me-3"
+    [imageObjType]="entityName"
+    [title]="data.competitorName"
+    [titleCss]="'fs-6 mb-1'"
+    [descTmp]="descTmp"
+    (clickMF)="clickMF($event, data)"
+    [moreFuncCss]="'me-9'"
+    [typeMF]="'hover'"
+    [formModel]="view.formModel"
+    [dataItem]="data"
+  >
+  </codx-temp-full>
+</ng-template>
+
+<ng-template #descTmp let-data>
+  <div class="d-flex flex-column w-100">
+    <div
+      class="mb-1 d-flex align-items-top text-hover-primary"
+      *ngIf="data.address"
+    >
+      <span
+        class="icon-16 icon-place me-1 text-gray-700"
+        [ngbTooltip]="popupAddress"
+      >
+      </span>
+      <span class="fs-7 text-gray-600">{{ data?.address }} </span>
+      <ng-template #popupAddress>
+        <codx-label
+          fiedName="Address"
+          [formModel]="view.formModel"
+        ></codx-label>
+      </ng-template>
+    </div>
+    <div class="mb-1 d-flex align-items-top" *ngIf="data.industries">
+      <span
+        class="icon-work_outline icon-16 me-2 text-gray-700"
+        [ngbTooltip]="popupIndustries"
+      >
+        <ng-template #popupIndustries>
+          <codx-label
+            fiedName="Industries"
+            [formModel]="view.formModel"
+          ></codx-label>
+        </ng-template>
+      </span>
+      <span class="">
+        <span *ngFor="let item of data?.industries.split(';'); index as i">
+          <span
+            [innerHTML]="
+              item | formatvalue : view.formModel : 'Industries' | async
+            "
+          ></span
+          ><span class="me-1" *ngIf="i < data?.industries.split(';').length - 1"
+            >,
+          </span>
+          <!-- {{ dataSelected?.segmentID }} -->
+        </span>
+      </span>
+    </div>
+    <div [ngClass]="'d-flex justify-content-end'">
+      <div class="d-flex align-items-center justify-content-end">
+        <span
+          class="me-3 text-gray-700"
+          [ngbTooltip]="toolTipCreatedOn"
+          [innerHTML]="
+            data?.createdOn | formatvalue : view.formModel : 'createdOn' | async
+          "
+        ></span>
+        <ng-template #toolTipCreatedOn>
+          <codx-label
+            fiedName="CreatedOn"
+            [formModel]="view.formModel"
+          ></codx-label
+        ></ng-template>
+        <codx-imgs
+          class="h-25px"
+          [isToolTip]="true"
+          [width]="25"
+          [objectId]="data?.createdBy"
+          [objectType]="'AD_Users'"
+          [numberImages]="1"
+          [ngbTooltip]="toolTipOwner"
+        >
+        </codx-imgs>
+        <ng-template #toolTipOwner>
+          <codx-label
+            [fiedName]="'CreatedBy'"
+            [formModel]="view.formModel"
+          ></codx-label
+        ></ng-template>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #templateDetail>
+  <codx-cmcustomer-detail
+    #customerDetail
+    [gridViewSetup]="gridViewSetup"
+    [dataService]="view.dataService"
+    [formModel]="view.formModel"
+    [recID]="dataSelected?.recID"
+    [dataSelected]="dataSelected"
+    [asideMode]="asideMode"
+    [funcID]="funcID"
+    (clickMoreFunc)="clickMoreFunc($event)"
+    [entityName]="entityName"
+    [checkType]="'4'"
+    (changeMoreMF)="changeMoreMF($event)"
+    (addressNameCMEmit)="addressNameCMEmit($event)"
+    [isAdmin]="isAdmin"
+  >
+  </codx-cmcustomer-detail>
+</ng-template>
