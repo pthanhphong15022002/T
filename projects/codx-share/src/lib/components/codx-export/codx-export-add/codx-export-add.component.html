@@ -370,12 +370,27 @@
       </ejs-documenteditorcontainer>
     </div>
     <div class="col-lg-2 p-0 border-top border-right border-bottom" [style.visibility]="showInsert?'visible':'hidden'" [style.height]="showInsert?'auto':'0px'">
-      <ng-container *ngFor="let item of listFeild , let i = index">
-        <div (click)="onSelect(item.text)" (dragstart)="dragStart($event)" draggable="true" [class.border-top]="i>0" class="p-2 bg-export-hover cursor-move" title="Kéo và thả vào văn bản">
-          {{item.text}}
-        </div>
+      <ng-container *ngIf="!isGroup">
+        <ng-container *ngFor="let item of listFeild , let i = index">
+          <div (click)="onSelect(item.text)" [id]="item.key" (dragstart)="dragStart($event)" draggable="true" [class.border-top]="i>0" class="p-2 bg-export-hover cursor-move" title="Kéo và thả vào văn bản">
+            {{item.text}}
+          </div>
+        </ng-container>
       </ng-container>
-    
+      <ng-container *ngIf="isGroup">
+        <ng-container *ngFor="let item of dataGoupField">
+          <div class="p-2 bg-row-text-active bg-row-active">
+            <span class="fw-bold">{{item?.stepName}}</span>
+          </div>
+          <div>
+            <ng-container *ngFor="let item2 of item?.groupChild , let i = index">
+              <div (click)="onSelect(item2.text)" [id]="item2?.key" (dragstart)="dragStart($event)" draggable="true" [class.border-top]="i>0" class="p-2 bg-export-hover cursor-move" title="Kéo và thả vào văn bản">
+                {{item2.text}}
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+      </ng-container>
       <!-- <ejs-listview id='listview' [dataSource]='listFeild' (select)="onSelect($event)" allowDragAndDrop='true' [fields]="fields" ngClass="h-100 export-add-listview"></ejs-listview>  -->
     </div>
   </div>

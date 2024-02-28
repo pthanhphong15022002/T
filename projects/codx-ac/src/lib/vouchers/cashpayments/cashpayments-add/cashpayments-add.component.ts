@@ -635,8 +635,6 @@ export class CashPaymentAddComponent extends UIComponent {
     this.formCashPayment.save(null, 0, '', '', false, { allowCompare: false })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        console.log(res);
-        console.log(this.dialog.dataService);
         if (!res) return;
         if (res.hasOwnProperty('save')) {
           if (res.save.hasOwnProperty('data') && !res.save.data) return;

@@ -122,6 +122,7 @@ import { JournalViewsettingComponent } from './journals/journals-viewsetting/jou
 import { InventoryDetailComponent } from './vouchers/inventory/inventory-detail/inventory-detail.component';
 import { InventoryComponent } from './vouchers/inventory/inventory.component';
 import { InventoryAddComponent } from './vouchers/inventory/inventory-add/inventory-add.component';
+import { CashCountingsComponent } from './vouchers/cash-countings/cash-countings.component';
 
 export const routes: Routes = [
   {
@@ -157,7 +158,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'cashpaymentsbanks/:funcID/:journalNo',
+        path: 'bankpayments/:funcID/:journalNo',
         component: CashPaymentsComponent,
         data: { noReuse: true },
       },
@@ -260,6 +261,11 @@ export const routes: Routes = [
       {
         path: 'transfers/:funcID/:journalNo',
         component: WarehouseTransfersComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'cashcountings/:funcID/:journalNo',
+        component: CashCountingsComponent,
         data: { noReuse: true },
       },
       // {
@@ -478,6 +484,7 @@ export const routes: Routes = [
     NewvoucherComponent,
     ViewresultComponent,
     JournalViewsettingComponent,
+    CashCountingsComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
