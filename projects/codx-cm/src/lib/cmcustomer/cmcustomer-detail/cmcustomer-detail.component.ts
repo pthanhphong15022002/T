@@ -47,6 +47,7 @@ export class CmCustomerDetailComponent implements OnInit {
   @Input() funcID = 'CM0101';
   @Input() entityName = '';
   @Input() gridViewSetup: any;
+  @Input() checkType: string = '1';
   @Input() lstCustGroups = [];
   @Input() isAdmin: boolean = false;
   @Input() isDbClick: boolean = false;
@@ -93,6 +94,9 @@ export class CmCustomerDetailComponent implements OnInit {
     // this.getGridviewSetup();
     // this.getVllByGridViewSetupContact();
     // this.checkAdmin();
+    if (this.checkType == '1')
+      this.checkType =
+        this.dataSelected?.category == '2' ? '5' : this.checkType;
     this.getFormModelAddress();
   }
 
@@ -143,9 +147,9 @@ export class CmCustomerDetailComponent implements OnInit {
 
   getTab() {
     if (
-      this.funcID == 'CM0101' ||
-      this.funcID == 'CM0102' ||
-      this.funcID == 'CM0105'
+      this.checkType == '1' ||
+      this.checkType == '2' ||
+      this.checkType == '5'
     ) {
       this.tabControl = [
         {
@@ -269,8 +273,8 @@ export class CmCustomerDetailComponent implements OnInit {
     }
   }
 
-  listTab(funcID) {
-    if (funcID == 'CM0101' || funcID == 'CM0105') {
+  listTab(checkType) {
+    if (checkType == '1' || checkType == '5') {
       if (this.dataSelected?.category == '1') {
         this.tabDetail = [
           {
@@ -334,7 +338,7 @@ export class CmCustomerDetailComponent implements OnInit {
           },
         ];
       }
-    } else if (funcID == 'CM0102') {
+    } else if (checkType == '2') {
       this.tabDetail = [
         {
           name: 'Information',
@@ -347,7 +351,7 @@ export class CmCustomerDetailComponent implements OnInit {
           icon: 'icon-location_on',
         },
       ];
-    } else if (funcID == 'CM0103') {
+    } else if (checkType == '3') {
       this.tabDetail = [
         {
           name: 'Information',
@@ -402,11 +406,11 @@ export class CmCustomerDetailComponent implements OnInit {
   }
 
   getNameCrm(data) {
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
+    if (this.checkType == '1' || this.checkType == '5') {
       return data.customerName;
-    } else if (this.funcID == 'CM0102') {
+    } else if (this.checkType == '2') {
       return data.contactName;
-    } else if (this.funcID == 'CM0103') {
+    } else if (this.checkType == '3') {
       return data.partnerName;
     } else {
       return data.competitorName;

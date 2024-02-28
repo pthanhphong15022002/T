@@ -752,6 +752,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   //#endregion
+  
   //#region Bankhub
   /**
    * *Hàm chuyển tiền ngân hàng điện tử

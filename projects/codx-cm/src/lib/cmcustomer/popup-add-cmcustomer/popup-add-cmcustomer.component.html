@@ -5,11 +5,11 @@
   [subHeader]="subHeader"
   [tabInfo]="tabInfo"
   [tabContent]="
-    funcID == 'CM0101'
+    checkType == '1'
       ? [tabGeneralInfo, tabDefault, tabAddress, tabContacts]
-      : funcID == 'CM0102'
+      : checkType == '2'
       ? [tabGeneralInfo, tabDefault, tabAddress]
-      : funcID == 'CM0103'
+      : checkType == '3'
       ? [tabGeneralInfo, tabDefault, tabContacts]
       : [tabGeneralInfo, tabDefault]
   "
@@ -33,16 +33,16 @@
 <ng-template #tabGeneralInfo>
   <ng-container *ngIf="form?.formGroup" (mouseenter)="closePopover()">
     <ng-container
-      *ngIf="funcID == 'CM0101' || funcID == 'CM0105'"
+      *ngIf="checkType == '1' || checkType == '5'"
       (mouseenter)="closePopover()"
     >
       <ng-container [ngTemplateOutlet]="tabCustomer"></ng-container>
     </ng-container>
-    <ng-container *ngIf="funcID == 'CM0102'" (mouseenter)="closePopover()">
+    <ng-container *ngIf="checkType == '2'" (mouseenter)="closePopover()">
       <ng-container [ngTemplateOutlet]="tabContact"></ng-container>
     </ng-container>
     <ng-container
-      *ngIf="funcID == 'CM0103' || funcID == 'CM0104'"
+      *ngIf="checkType == '3' || checkType == '4'"
       (mouseenter)="closePopover()"
     >
       <ng-container [ngTemplateOutlet]="tabPartner"></ng-container>
@@ -75,8 +75,8 @@
         (lstContactEmit)="lstContactEmit($event)"
         [funcID]="funcID"
         [objectID]="data?.recID"
-        [objectType]="funcID == 'CM0101' ? '1' : '3'"
-        [objectName]="funcID == 'CM0101' ? data.customerName : data.partnerName"
+        [objectType]="checkType == '1' ? '1' : '3'"
+        [objectName]="checkType == '1' ? data.customerName : data.partnerName"
         [hidenMF]="isView"
         [type]="'formAdd'"
       ></codx-list-contacts>
@@ -86,7 +86,7 @@
 <ng-template #tabDefault (mouseenter)="closePopover()">
   <ng-container *ngIf="form?.formGroup" (mouseenter)="closePopover()">
     <ng-container
-      *ngIf="funcID == 'CM0101' || funcID == 'CM0105'"
+      *ngIf="checkType == '1' || checkType == '5'"
       (mouseenter)="closePopover()"
     >
       <div class="mb-2" (mouseenter)="closePopover()">
@@ -102,7 +102,7 @@
           <div class="col-6" (mouseenter)="closePopover()">
             <div
               class="form-group"
-              *ngIf="funcID == 'CM0101'"
+              *ngIf="checkType == '1'"
               (mouseenter)="closePopover()"
             >
               <codx-label [formModel]="form.formModel" fiedName="AnnualRevenue">
@@ -130,7 +130,7 @@
             </div>
             <div
               class="form-group"
-              *ngIf="funcID == 'CM0101'"
+              *ngIf="checkType == '1'"
               (mouseenter)="closePopover()"
             >
               <codx-label [formModel]="form.formModel" fiedName="WorkingDays">
@@ -147,7 +147,7 @@
           <div class="col-6" (mouseenter)="closePopover()">
             <div
               class="form-group"
-              *ngIf="funcID == 'CM0101'"
+              *ngIf="checkType == '1'"
               (mouseenter)="closePopover()"
             >
               <codx-label [formModel]="form.formModel" fiedName="Headcounts">
@@ -181,7 +181,7 @@
               class="form-group"
               (mouseenter)="closePopover()"
               style="margin-top: 33px"
-              *ngIf="funcID == 'CM0101'"
+              *ngIf="checkType == '1'"
             >
               <div
                 class="d-flex justify-content-between"
@@ -263,7 +263,7 @@
 
       </div>
     </ng-container>
-    <ng-container *ngIf="funcID == 'CM0102'" (mouseenter)="closePopover()">
+    <ng-container *ngIf="checkType == '2'" (mouseenter)="closePopover()">
       <div class="row">
         <div class="col-6 form-group" (mouseenter)="closePopover()">
           <codx-label
@@ -451,7 +451,7 @@
       </div>
     </ng-container>
     <ng-container
-      *ngIf="funcID == 'CM0103' || funcID == 'CM0104'"
+      *ngIf="checkType == '3' || checkType == '4'"
       (mouseenter)="closePopover()"
     >
       <div class="mb-2" (mouseenter)="closePopover()">
@@ -498,7 +498,7 @@
       </div>
       <div
         class="mb-2 mt-5"
-        *ngIf="funcID == 'CM0103'"
+        *ngIf="checkType == '3'"
         (mouseenter)="closePopover()"
       >
         <codx-label
@@ -655,7 +655,7 @@
     </codx-input>
   </div>
 
-  <div class="row" *ngIf="funcID == 'CM0101'" (mouseenter)="closePopover()">
+  <div class="row" *ngIf="checkType == '1'" (mouseenter)="closePopover()">
     <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="ShortName">
@@ -683,7 +683,7 @@
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="funcID == 'CM0105'" (mouseenter)="closePopover()">
+  <div class="row" *ngIf="checkType == '5'" (mouseenter)="closePopover()">
     <div class="col-6" (mouseenter)="closePopover()">
       <div class="form-group" (mouseenter)="closePopover()">
         <codx-label [formModel]="form.formModel" fiedName="Gender">
@@ -711,7 +711,7 @@
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="funcID == 'CM0105'" (mouseenter)="closePopover()">
+  <div class="row" *ngIf="checkType == '5'" (mouseenter)="closePopover()">
     <div class="col-6">
       <div class="form-group" (mouseenter)="closePopover()">
         <codx-label [formModel]="form.formModel" fiedName="IDCardNo">
@@ -757,7 +757,7 @@
     >
     </codx-input>
   </div>
-  <div class="row" *ngIf="funcID == 'CM0105'" (mouseenter)="closePopover()">
+  <div class="row" *ngIf="checkType == '5'" (mouseenter)="closePopover()">
     <div class="col-6 form-group" (mouseenter)="closePopover()">
       <!-- <div class="d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
@@ -820,7 +820,7 @@
       </codx-input>
     </div>
   </div>
-  <div class="row" *ngIf="funcID == 'CM0101'" (mouseenter)="closePopover()">
+  <div class="row" *ngIf="checkType == '1'" (mouseenter)="closePopover()">
     <div class="col-6" (mouseenter)="closePopover()">
       <div class="form-group" (mouseenter)="closePopover()">
         <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
@@ -859,7 +859,7 @@
   </div>
   <div
     class="form-group"
-    *ngIf="funcID == 'CM0101'"
+    *ngIf="checkType == '1'"
     (mouseenter)="closePopover()"
   >
     <codx-label
@@ -889,7 +889,7 @@
   </div>
   <div
     class="form-group"
-    *ngIf="funcID == 'CM0105'"
+    *ngIf="checkType == '5'"
     (mouseenter)="closePopover()"
   >
     <codx-label
@@ -1251,7 +1251,7 @@
       <div class="form-group" (mouseenter)="closePopover()">
         <codx-label
           [formModel]="form.formModel"
-          [fiedName]="funcID == 'CM0103' ? 'PartnerID' : 'CompetitorID'"
+          [fiedName]="checkType == '3' ? 'PartnerID' : 'CompetitorID'"
         >
         </codx-label>
         <codx-input
@@ -1259,7 +1259,7 @@
           [Group]="form.formGroup"
           [disabled]="action == 'edit' || disabledShowInput || isView"
           [placeholder]="action != 'edit' ? planceHolderAutoNumber : ''"
-          [field]="funcID == 'CM0103' ? 'partnerID' : 'competitorID'"
+          [field]="checkType == '3' ? 'partnerID' : 'competitorID'"
         >
         </codx-input>
       </div>
@@ -1297,13 +1297,13 @@
   <div class="form-group" (mouseenter)="closePopover()">
     <codx-label
       [formModel]="form.formModel"
-      [fiedName]="funcID == 'CM0103' ? 'PartnerName' : 'CompetitorName'"
+      [fiedName]="checkType == '3' ? 'PartnerName' : 'CompetitorName'"
     >
     </codx-label>
     <codx-input
       [formModel]="form.formModel"
       [Group]="form.formGroup"
-      [field]="funcID == 'CM0103' ? 'partnerName' : 'competitorName'"
+      [field]="checkType == '3' ? 'partnerName' : 'competitorName'"
       [disabled]="isView"
     >
     </codx-input>

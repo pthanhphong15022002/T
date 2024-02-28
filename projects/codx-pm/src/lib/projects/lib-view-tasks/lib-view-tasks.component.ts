@@ -272,4 +272,11 @@ export class ProjectTasksViewComponent
 
     }
   }
+
+  clickMFTree(e:any){
+    if(e.e && e.data){
+      this.view.dataService.dataSelected = e.data;
+      this.clickMF(e.e);
+    }
+  }
 }

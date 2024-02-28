@@ -18,7 +18,7 @@
       </codx-img>
     </div>
     <div class="form-group ps-0">
-      <codx-label fiedName="ProjectName" [formModel]="form.formModel">
+      <codx-label fiedName="ProjectName" [formModel]="form.formModel" default="Tên dự án">
       </codx-label>
       <codx-input field="projectName" [crrValue]="data?.projectName" type="text"
         [disabled]="viewOnly" (valueChange)="valueChange($event)">
@@ -50,25 +50,9 @@
     <div class="form-group ps-0">
       <codx-label fiedName="ProjectType" [formModel]="form.formModel">
       </codx-label>
-      <codx-input field="projectType" [crrValue]="data?.projectType" type="valuelist" refType="2" refValue=""
+      <codx-input field="projectType" [crrValue]="data?.projectType" type="valuelist" refType="2" [refValue]="grvSetup['ProjectType'].referedValue"
         [disabled]="viewOnly" (valueChange)="valueChange($event)">
       </codx-input>
-    </div>
-    <div class="row">
-      <div class="col-6 form-group" >
-        <codx-label fiedName="CustomerID" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input field="customerID" [crrValue]="data?.customerID" type="combobox" refType="3" refValue=""
-        [disabled]="viewOnly" (valueChange)="valueChange($event)">
-      </codx-input>
-      </div>
-      <div class="col-6 form-group" >
-        <codx-label fiedName="Location" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input field="location" [crrValue]="data?.location" type="text"
-        [disabled]="viewOnly" (valueChange)="valueChange($event)">
-      </codx-input>
-      </div>
     </div>
     <div class="row">
       <div class="col-6 form-group" >
@@ -81,14 +65,34 @@
       <div class="col-6 form-group" >
         <codx-label fiedName="Priority" [formModel]="form.formModel">
         </codx-label>
-        <codx-input field="priority" [crrValue]="data?.priority" type="valuelist" refType="2" refValue=""
+        <codx-input field="priority" [crrValue]="data?.priority" type="valuelist" refType="2" [refValue]="grvSetup['Priority'].referedValue"
         [disabled]="viewOnly" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
     </div>
-    <div class="col-4 form-group" >
-      <codx-tag [entityName]="formModel.entityName" field="tags" [value]="data.tags" (valueChange)="valueChange($event)"></codx-tag>
+    <div class="row">
+      <div class="col-6 form-group" >
+        <codx-label fiedName="CustomerID" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input field="customerID" [crrValue]="data?.customerID" type="combobox" refType="3" refValue=""
+        [disabled]="viewOnly" (valueChange)="valueChange($event)">
+      </codx-input>
+      </div>
+      <div class="col-6 form-group" >
+        <codx-tag [entityName]="formModel.entityName" field="tags" [value]="data.tags" (valueChange)="valueChange($event)"></codx-tag>
+      </div>
+      <!-- <div class="col-6 form-group" >
+        <codx-label fiedName="Location" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input field="location" [crrValue]="data?.location" type="text"
+        [disabled]="viewOnly" (valueChange)="valueChange($event)">
+      </codx-input>
+      </div> -->
     </div>
+
+    <!-- <div class="col-4 form-group" >
+      <codx-tag [entityName]="formModel.entityName" field="tags" [value]="data.tags" (valueChange)="valueChange($event)"></codx-tag>
+    </div> -->
   </ng-container>
 </ng-template>
 

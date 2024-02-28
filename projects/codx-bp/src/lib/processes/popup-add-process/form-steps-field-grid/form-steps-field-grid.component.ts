@@ -96,7 +96,6 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
         i++;
         a++;
       })
-      debugger
     }
   }
 
@@ -221,6 +220,13 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
           }
         }
       });
+    }
+    else
+    {
+      if(dt?.permissions && dt?.permissions.length>0)
+      {
+        dt.permissionsName = this.getImg( dt?.permissions);
+      }
     }
     return dt;
   }

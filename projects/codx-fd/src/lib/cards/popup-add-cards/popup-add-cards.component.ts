@@ -167,7 +167,10 @@ export class PopupAddCardsComponent implements OnInit, AfterViewInit {
     this.user = this.auth.userValue;
   }
   ngAfterViewInit(): void {
-    if(this.cardType != this.CARDTYPE_EMNUM.Radio) {
+    if(
+      this.cardType != this.CARDTYPE_EMNUM.Radio && 
+      this.cardType != this.CARDTYPE_EMNUM.SuggestionImprovement
+    ) {
       this.tabInfo = [
         {
           icon: 'icon-article',
