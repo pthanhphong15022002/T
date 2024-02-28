@@ -11,7 +11,7 @@
 <ng-template #footer>
   <div class="offcanvas-footer">
     <ng-container *ngIf="amountEvoucher || amount || form?.controls['coins']?.value">
-      <div class="d-flex justify-content-between mgb-20">
+      <div class="d-flex justify-content-between mgb-10">
         <codx-label class="fw-bold font-total-coins" default="Tổng cộng"></codx-label> 
         <span class="fw-bold total-coins">{{ amountEvoucher + amount + form?.controls['coins']?.value}} Xu</span>
       </div>
