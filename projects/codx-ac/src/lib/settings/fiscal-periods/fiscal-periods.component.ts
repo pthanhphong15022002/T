@@ -1,5 +1,23 @@
-import { ChangeDetectorRef, Component, Injector, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { ButtonModel, CallFuncService, DialogModel, DialogRef, FormModel, RequestOption, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  Optional,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  ButtonModel,
+  CallFuncService,
+  DialogModel,
+  DialogRef,
+  FormModel,
+  RequestOption,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { PopAddFiscalPeriodsComponent } from './pop-add-fiscal-periods/pop-add-fiscal-periods.component';
 import { FiscalPeriodsAutoCreateComponent } from './fiscal-periods-add/fiscal-periods-auto-create.component';
 import { takeUntil, Subject } from 'rxjs';
@@ -7,10 +25,9 @@ import { takeUntil, Subject } from 'rxjs';
 @Component({
   selector: 'lib-fiscal-periods',
   templateUrl: './fiscal-periods.component.html',
-  styleUrls: ['./fiscal-periods.component.css']
+  styleUrls: ['./fiscal-periods.component.css'],
 })
 export class FiscalPeriodsComponent extends UIComponent {
-
   //Constructor
 
   views: Array<ViewModel> = [];
@@ -22,6 +39,7 @@ export class FiscalPeriodsComponent extends UIComponent {
   gridViewSetup: any;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   private destroy$ = new Subject<void>();
+  isSubView: boolean;
 
   constructor(
     private inject: Injector,
@@ -31,14 +49,16 @@ export class FiscalPeriodsComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
+    this.router.data.subscribe((res) => {
+      if (res && res['isSubView']) this.isSubView = res.isSubView;
+    });
   }
 
   //End Constructor
 
   //Init
 
-  onInit(): void {
-  }
+  onInit(): void {}
 
   ngAfterViewInit() {
     this.views = [
@@ -53,7 +73,8 @@ export class FiscalPeriodsComponent extends UIComponent {
       },
     ];
 
-    this.cache.functionList(this.view?.funcID)
+    this.cache
+      .functionList(this.view?.funcID)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         this.funcName = res.defaultName.toLowerCase();
@@ -141,31 +162,28 @@ export class FiscalPeriodsComponent extends UIComponent {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService
-      .copy()
-      .subscribe((res: any) => {
-        var obj = {
-          formType: 'copy',
-          headerText: e.text + ' ' + this.funcName,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.Width = '550px';
-        this.dialog = this.callfunc.openSide(
-          PopAddFiscalPeriodsComponent,
-          obj,
-          option
-        );
-      });
+    this.view.dataService.copy().subscribe((res: any) => {
+      var obj = {
+        formType: 'copy',
+        headerText: e.text + ' ' + this.funcName,
+      };
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfunc.openSide(
+        PopAddFiscalPeriodsComponent,
+        obj,
+        option
+      );
+    });
   }
 
   delete(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.delete([data], true).subscribe((res: any) => {
-    });
+    this.view.dataService.delete([data], true).subscribe((res: any) => {});
   }
 
   openFormAddFiscalYear() {
@@ -200,19 +218,19 @@ export class FiscalPeriodsComponent extends UIComponent {
   hideMoreFunction(e: any) {
     var bm = e.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'SYS003' ||
-        x.functionID == 'SYS004'
+        x.functionID == 'SYS003' || x.functionID == 'SYS004'
     );
     bm.forEach((morefunction) => {
       morefunction.disabled = true;
     });
 
-    this.cache.moreFunction('FiscalPeriods', 'grvFiscalPeriods')
+    this.cache
+      .moreFunction('FiscalPeriods', 'grvFiscalPeriods')
       .subscribe((res: any) => {
         if (res) {
           console.log(res);
         }
-      })
+      });
   }
   //End Function
 }

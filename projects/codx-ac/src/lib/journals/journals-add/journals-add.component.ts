@@ -60,6 +60,7 @@ export class JournalsAddComponent extends UIComponent {
   fieldSelected:any;
   oAutoNumber:any = [];
   mainFilterValue:any;
+  baseCurr:any;
   tabInfo: any[] = [ //? thiết lập tab hiển thị trên form
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description'},
     { icon: 'icon-settings', text: 'Thiết lập', name: 'Setting' },
@@ -102,17 +103,17 @@ export class JournalsAddComponent extends UIComponent {
   }
 
   ngAfterViewInit() {
-    if (!this.formJournal.form.data.isEdit) {
-      this.cache
+    this.cache
       .viewSettingValues('ACParameters')
       .pipe(
-        map((arr) => arr.filter((f) => f.category === '1')?.[0]),
-        map((data) => JSON.parse(data.dataValue)?.IDIMControl)
+        map((data) => data.filter((f) => f.category === '1')?.[0]),
       )
       .subscribe((res) => {
-        this.formJournal.form.setValue('idimControl',res,{});
+        let dataValue = JSON.parse(res.dataValue);
+        if (!this.formJournal.form.data.isEdit) this.formJournal.form.setValue('idimControl', dataValue.IDIMControl, {});
+        this.baseCurr = dataValue.BaseCurr;
       });
-    }
+    
     this.onDisableTab();
   }
   //#endregion Init
@@ -216,7 +217,7 @@ export class JournalsAddComponent extends UIComponent {
               this.detectorRef.detectChanges();
             }, 100);
           }
-          let fiscalYear = parseInt(value.substring(0, 4));
+          let fiscalYear = value.substring(0, 4);
           this.formJournal.form.setValue('fiscalYear',fiscalYear,{});
           break;
         case 'vatcontrol':
@@ -257,46 +258,25 @@ export class JournalsAddComponent extends UIComponent {
           this.formJournal.form.setValue('drAcctID','',{});
           this.detectorRef.detectChanges();
           break;
+        case 'multicurrency':
+          if (!value) {
+            this.formJournal.form.setValue('currencyID',this.baseCurr,{});
+            console.log(this.formJournal.form.data);
+          }
+          break;
       }
   }
   //#endregion Event
 
   //#region Method
   onSave(type){
-    let obj = {
-      currencyID: this.formJournal?.form?.data?.currencyID,
-      cashBookID: this.formJournal?.form?.data?.cashBookID,
-      warehouseIssue: this.formJournal?.form?.data?.warehouseIssue,
-      warehouseReceipt: this.formJournal?.form?.data?.warehouseReceipt,
-      mixedPayment: this.formJournal?.form?.data?.mixedPayment,
-      subControl: this.formJournal?.form?.data?.subControl,
-      settleControl: this.formJournal?.form?.data?.settleControl,
-      drAcctControl: this.formJournal?.form?.data?.drAcctControl,
-      drAcctID: this.formJournal?.form?.data?.drAcctID,
-      crAcctControl: this.formJournal?.form?.data?.crAcctControl,
-      crAcctID: this.formJournal?.form?.data?.crAcctID,
-      diM1Control: this.formJournal?.form?.data?.diM1Control,
-      diM2Control: this.formJournal?.form?.data?.diM2Control,
-      diM3Control: this.formJournal?.form?.data?.diM3Control,
-      diM1: this.formJournal?.form?.data?.diM1,
-      diM2: this.formJournal?.form?.data?.diM2,
-      diM3: this.formJournal?.form?.data?.diM3,
-      idimControl: this.formJournal?.form?.data?.idimControl,
-      isSettlement: this.formJournal?.form?.data?.isSettlement,
-      projectControl: this.formJournal?.form?.data?.projectControl,
-      assetControl: this.formJournal?.form?.data?.assetControl,
-      loanControl: this.formJournal?.form?.data?.loanControl,
-      multiCurrency: this.formJournal?.form?.data?.multiCurrency
-    }
-    this.formJournal.form.setValue('extras',JSON.stringify(obj),{onlySelf: true,emitEvent: false,});
-
     if (this.image?.imageUpload?.item) {
       this.formJournal.form.setValue('hasImage',1,{onlySelf: true,emitEvent: false,});
       this.image
         .updateFileDirectReload(this.formJournal?.form?.data?.recID)
         .subscribe((res) => {
           if (res) {
-            this.formJournal.form.save(null, 0, '', '', false)
+            this.formJournal.form.save(null, 0, '', '', false,{allowCompare:false})
               .pipe(takeUntil(this.destroy$))
               .subscribe((res: any) => {
                 if (!res) return;
@@ -313,7 +293,7 @@ export class JournalsAddComponent extends UIComponent {
           }
         });
     }else{
-      this.formJournal.form.save(null, 0, '', '', false)
+      this.formJournal.form.save(null, 0, '', '', false,{allowCompare:false})
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if(!res) return;

@@ -241,7 +241,7 @@
         <thead>
           <tr class="bg-gray-100">
             <th *ngIf="settingCount" scope="col" class="fw-bold ps-4">
-              <div>
+              <div style="text-align: center !important">
                 <codx-label
                   name="lblNo"
                   formName="System"
@@ -255,11 +255,17 @@
                 class="fw-bold ps-4"
                 [style]="
                   item?.columnWidth > 0 && settingWidth
-                    ? 'width :' + item.columnWidth + 'px !important'
+                    ? 'width :' + item?.columnWidth + 'px !important'
                     : ''
                 "
               >
                 <span>{{ item?.title }}</span>
+                <ng-container *ngIf="item?.dataType == 'CF'">
+                  &nbsp;
+                  <span [ngbTooltip]="item?.dataFormat" container="body"
+                    ><i class="icon-calculate icon-12 text-primary"></i
+                  ></span>
+                </ng-container>
               </th>
             </ng-container>
           </tr>
@@ -269,7 +275,7 @@
             <ng-container *ngFor="let value of arrDataValue; let index = index">
               <tr>
                 <td class="ps-4" *ngIf="settingCount">
-                  <div>
+                  <div style="text-align: center !important">
                     <span>{{ index + 1 }}</span>
                   </div>
                 </td>
@@ -284,37 +290,28 @@
                         : ''
                     "
                   >
-                    <codx-fields-format-value
-                      [data]="fieldFormat"
-                    ></codx-fields-format-value>
-                  </td>
-                </ng-container>
-              </tr>
-              <!-- //Tính tổng -->
-              <!-- <tr *ngIf="totalColumns">
-                <td class="ps-4" *ngIf="settingCount">
-                  <div>
-                    <codx-label
-                      name="lblSum"
-                      formName="System"
-                      [default]="'Tổng cộng'"
-                    ></codx-label>
-                  </div>
-                </td>
-                <ng-container *ngFor="let cell of columns">
-                  <td class="ps-4">
-                    <div>
-                      <span> {{ 0 }}</span>
+                    <div
+                      [style]="
+                        fieldFormat.dataType == 'N' ||
+                        fieldFormat.dataType == 'CF'
+                          ? 'float : right '
+                          : ''
+                      "
+                    >
+                      <codx-fields-format-value
+                        [data]="fieldFormat"
+                      ></codx-fields-format-value>
                     </div>
                   </td>
                 </ng-container>
-              </tr> -->
+              </tr>
             </ng-container>
             <!-- //Tính tổng -->
             <tr *ngIf="totalColumns">
               <td class="ps-4" *ngIf="settingCount">
                 <div>
                   <codx-label
+                    class="fw-bold"
                     name="lblSum"
                     formName="System"
                     [default]="'Tổng cộng'"
@@ -325,6 +322,8 @@
                 <td class="ps-4">
                   <div>
                     <span
+                      class="fw-bold"
+                      style="float: right"
                       [innerHTML]="cell | sumColumnsTable : arrDataValue"
                     ></span>
                   </div>

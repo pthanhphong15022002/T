@@ -1,0 +1,7 @@
+.btn-update{
+    display: flex;
+    align-items: center;
+    padding: 2px 4px;
+    border: solid 1px var(--primary);
+    border-radius: 10px;
+}

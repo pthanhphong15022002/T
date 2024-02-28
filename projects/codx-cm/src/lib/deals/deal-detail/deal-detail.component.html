@@ -409,8 +409,23 @@
                         [value]="dataSelected?.approveStatus"
                         [showText]="true"
                         [showBgColor]="true"
-                        class="badge badge-primary badge-sm"
+                        class="badge badge-primary badge-sm cursor-pointer"
+                        [ngbTooltip]="approve"
+                        placement="top"
                       >
+                      <ng-template #approve>
+                        <codx-label
+                          fiedName="approvedDate"
+                          [formModel]="formModel"
+                          [setRequire]="false"
+                          default="Ngày duyệt"
+                          class="label-colon me-1"
+                        ></codx-label>
+                        <span  [innerHTML]="dataSelected?.approvedDate
+                          | formatvalue : formModel : 'approvedDate'
+                          | async"
+                        ></span>
+                      </ng-template>
                       </codx-vll>
                     </ng-container>
                   </div>
@@ -991,7 +1006,6 @@
               </div>
             </ng-template>
             <ng-template #content let-data="value">
-              {{dataSelected?.isAdminAll}}
               <div class="mt-5 p-2" [ngClass]="isShow ? '': 'croll-m-5'" style="overflow-x: hidden !important;">
                 <step-task
                   [entityName]="'CM_Deals'"

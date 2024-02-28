@@ -1,0 +1,17 @@
+<codx-views #view [views]="views" [idField]="'recID'" [selectedFirst]="true" (selectedChange)="selectedChange($event)" (clickMF)="clickMF($event)" (changeDataMF)="changeDataMF($event)"></codx-views>
+<ng-template #itemTmpLeft let-data>
+    <codx-temp-full 
+        [dataItem]="data"
+        [title]="data?.hrTemplateName"
+        [subTitle]="data?.hrTemplateID"
+        [desc]="data?.memo"
+        descLine="2"
+        [formModel]="view?.formModel" 
+        [typeMF]="'hover'"
+        (clickMF)="clickMF($event,data)"
+        (changeDataMF)="changeDataMF($event)">
+    </codx-temp-full>
+</ng-template>
+<ng-template #tmpPanelRight>
+    <pr-view-detail-template [formModel]="view?.formModel" [runMode]="function?.runMode" [hideMF]="false" [recID]="selectedID"></pr-view-detail-template>
+</ng-template>

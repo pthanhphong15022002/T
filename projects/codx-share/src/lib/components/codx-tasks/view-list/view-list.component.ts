@@ -37,7 +37,7 @@ export class ViewListComponent implements OnInit {
   listTaskResousce = [];
   countResource = 0;
   popoverCrr: any;
-  vllPriority = 'TM005';
+  @Input()vllPriority:string = 'TM005';
 
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() changeMoreFunction = new EventEmitter<any>();

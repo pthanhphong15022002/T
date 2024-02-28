@@ -15,20 +15,34 @@
   <div class="row">
     <codx-label fiedName="Resources" [formModel]="form.formModel" default="Người xử lí">
     </codx-label>
-    <div  style="margin: 0 auto; width:100%;" *ngIf="projectMemberType=='1'">
+    <!-- <div  style="margin: 0 auto; width:100%;" *ngIf="projectMemberType=='1'">
       <ejs-multiselect id='multiselect-checkbox' #checkbox [dataSource]="projectData?.permissions" [fields]='fields'
       [mode]="'CheckBox'"  [showDropDownIcon]="true" showSelectAll='true' [popupHeight]="'400px'" [popupWidth]="'400px'" [filterBarPlaceholder]="'Tìm kiếm...'" locale="vi" (valueChange)="valueChange($event)">
         <ng-template #itemTemplate let-data>
-          <div class="">
+          <div class="ms-5 d-flex align-items-center">
             <codx-img [width]="30" [objectId]="data?.objectID" objectType="AD_Users" [objectName]="data?.objectName"></codx-img> &nbsp;&nbsp; {{data.objectName}}
           </div>
         </ng-template>
       </ejs-multiselect>
+    </div> -->
+    <div  style="margin: 0 auto; width:100%;" *ngIf="projectMemberType=='1'">
+      <codx-input type="combobox" refType="3" refValue="ProjectMembers" [model]="projectData" [multiple]="roleType!='A'" (valueChange)="cbxChange($event)"></codx-input>
+    </div>
+    <div class="container h-100 p-0 mt-5">
+      <div class="d-flex flex-row ms-5 p-3 align-items-center" *ngFor="let item of itemsSelected">
+        <codx-img [objectId]="item.ObjectID" imageType="circle" width="40" [objectType]="'AD_Users'"
+          [objectName]="item.ObjectName"></codx-img>
+        <div class="ms-4 d-flex flex-column" style="width: 160px">
+          <span class="text-muted fs-5">{{item.ObjectID}}</span>
+          <span class="fw-bold text-truncate" [title]="item.ObjectName">{{ item.ObjectName
+            }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
 <ng-template #footer>
-  <div class="d-flex justify-content-between">
+  <div class="d-flex align-items-center justify-content-end">
     <!-- <button
       codxLang
       name="btnApply"
@@ -41,7 +55,7 @@
       name="btnSave"
       formName="System"
       default="Lưu"
-      class="btn btn-light-success"
+      class="btn btn-light-primary"
       (click)="apply()"
     ></button>
   </div>

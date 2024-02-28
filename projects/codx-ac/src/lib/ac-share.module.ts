@@ -27,13 +27,8 @@ import { PopupAddAPPostingAccountComponent } from './settings/apposting-accounts
 import { APPostingAccountsComponent } from './settings/apposting-accounts/apposting-accounts.component';
 import { PopAddArComponent } from './settings/ar-posting-accounts/pop-add-ar/pop-add-ar.component';
 import { ArPostingAccountsComponent } from './settings/ar-posting-accounts/ar-posting-accounts.component';
-import { PopAddDimensionSetupComponent } from './settings/dimension-groups/pop-add-dimension-setup/pop-add-dimension-setup.component';
 import { ItemsConversionAddComponent } from './settings/items-categories/items-conversion-add/items-conversion-add.component';
-import { PopAddDimensionGroupsComponent } from './settings/dimension-groups/pop-add-dimension-groups/pop-add-dimension-groups.component';
 import { ItempostingaccountsComponent } from './settings/posting-accounts-categories/posting-accounts.component';
-import { DimensionGroupsComponent } from './settings/dimension-groups/dimension-groups.component';
-import { InventoryComponent } from './settings/inventory/inventory.component';
-import { PopAddInventoryComponent } from './settings/inventory/pop-add-inventory/pop-add-inventory.component';
 import { ConversionAddComponent } from './settings/unitsofmearsure-categories/conversion-add/conversion-add.component';
 import { UnitsOfMearSureAdd } from './settings/unitsofmearsure-categories/unitsofmearsure-add/unitsofmearsure-add.component';
 import { UnitsofmearsureComponent } from './settings/unitsofmearsure-categories/unitsofmearsure.component';
@@ -58,6 +53,11 @@ import { ExchangerateAddComponent } from './settings/currency-categories/currenc
 import { ExchangeRateSettingAddComponent } from './settings/currency-categories/currency-exchangerate-setting-add/currency-exchangerate-setting-add.component';
 import { CurrencyAddComponent } from './settings/currency-categories/currency-add/currency-add.component';
 import { CurrencyComponent } from './settings/currency-categories/currency.component';
+import { DimensionGroupsComponent } from './settings/dimension-groups-categories/dimension-groups.component';
+import { DimensionGroupsAddComponent } from './settings/dimension-groups-categories/dimension-groups-add/dimension-groups-add.component';
+import { DimensionSetupAddComponent } from './settings/dimension-groups-categories/dimension-setup-add/dimension-setup-add.component';
+import { ModelsComponent } from './settings/models-categories/models.component';
+import { ModelsAddComponent } from './settings/models-categories/models-add/models-add.component';
 
 const T_Comp: Type<any>[] = [
   CurrencyComponent,
@@ -84,13 +84,13 @@ const T_Comp: Type<any>[] = [
   UnitsofmearsureComponent,
   UnitsOfMearSureAdd,
   ConversionAddComponent,
-  InventoryComponent,
-  PopAddInventoryComponent,
+  ModelsComponent,
+  ModelsAddComponent,
   ItempostingaccountsComponent,
   DimensionGroupsComponent,
-  PopAddDimensionGroupsComponent,
+  DimensionGroupsAddComponent,
   ItemsConversionAddComponent,
-  PopAddDimensionSetupComponent,
+  DimensionSetupAddComponent,
   ArPostingAccountsComponent,
   PopAddArComponent,
   APPostingAccountsComponent,

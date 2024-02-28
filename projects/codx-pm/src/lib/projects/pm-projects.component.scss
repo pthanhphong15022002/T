@@ -1,0 +1,19 @@
+.container-progress {
+  height: 26px;
+  background: #e4e1e1;
+  width: 100%;
+  border-radius: 3px;
+}
+
+.progress-list {
+  height: 26px;
+  border-radius: 3px;
+}
+
+.progress-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: -21px;
+}

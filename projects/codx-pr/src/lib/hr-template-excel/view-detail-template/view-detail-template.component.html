@@ -1,0 +1,191 @@
+<codx-detail-tmp 
+    class="h-100 w-100"
+    [formModel]="formModel" 
+    [dataItem]="data" 
+    [header]="header" 
+    [body]="body"
+    [footer]="footer"
+    [hideMF]="hideMF"
+    (clickMF)="clickMF($event)"
+    (changeDataMF)="changeDataMF($event)">
+</codx-detail-tmp>
+<ng-template #header>
+    <div class="d-flex flex-column">
+        <div class="form-group">
+            <div class="d-flex align-items-center">
+                <div>
+                    <codx-label class="text-gray-600" [formModel]="formModel" fiedName="HRTemplateID" [default]="'Tên bảng lương'"></codx-label>
+                    <span class="text-gray-600 me-2">:</span>
+                    <span class="fw-bold cursor-pointer text-primary text-decoration-underline">{{data?.hrTemplateName}}</span>
+                </div>
+                <div class="ms-4">
+                    <codx-label class="text-gray-600" [formModel]="formModel" fiedName="HRTemplateID" [default]="'Mã bảng lương'"></codx-label>
+                    <span class="text-gray-600 me-2">:</span>
+                    <span class="fw-bold">{{data?.hrTemplateID}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="d-flex align-item-center">
+                <codx-label class="text-gray-600" [formModel]="formModel" fiedName="Memo" [default]="'Mô tả'"></codx-label>
+                <span class="text-gray-600 me-2">:</span>
+                <span class="fw-bold">{{data?.memo}}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="d-flex align-item-center">
+                <div>
+                    <codx-label class="text-gray-600" [formModel]="formModel" fiedName="GroupSalCode" [default]="'Áp dụng cho nhóm lương'"></codx-label>
+                    <span class="text-gray-600 me-2">:</span>
+                </div>
+                <div *ngIf="data && data.groupSalCodes">
+                    <ng-container *ngFor="let item of data?.groupSalCodes">
+                        <div class="badge badge-pill badge-light text-dark p-2 mx-2" 
+                            style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;" 
+                            [innerHTML]="item | formatvalue: formModel: 'groupSalCode' | async">
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center">
+                    <codx-label class="text-gray-600" [formModel]="formModel" fiedName="CreatedOn" [default]="'Ngày tạo'"></codx-label>
+                    <span class="text-gray-600 me-2">:</span>
+                    <div class="fw-bold" [innerHTML]="data?.createdOn | formatvalue: formModel : 'createdOn' | async"></div>
+                </div>
+                <div class="d-flex align-items-center ms-4">
+                    <codx-label class="text-gray-600" [formModel]="formModel" fiedName="CreatedBy" [default]="'Người tạo'"></codx-label>
+                    <span class="text-gray-600 me-2">:</span>
+                    <div class="d-flex align-items-center">
+                        <codx-img [objectId]="data?.createdBy" [objectType]="'HR_Employees'" [width]="25"></codx-img>
+                        <span class="fw-bold ms-1">{{data?.createdName}}</span>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <div class="form-group">
+            <div class="d-lfex flex-column">
+                <codx-label [formModel]="formModel" name="lblTemplateSalary" [default]="'Mẫu bảng lương'" class="fw-bold text-primary"></codx-label>
+                <ng-container *ngIf="rpReportList && rpReportList?.templateID">
+                    <codx-attachment 
+                        [objectId]="rpReportList.templateID" 
+                        [objectType]="'AD_ExcelTemplates'"
+                        [displayThumb]="'simple'" 
+                        hideImageUpload="0" 
+                        showMessage="0" 
+                        hideBtnSave="1" 
+                        hideFolder="1" 
+                        hideUploadBtn="1" 
+                        [hideDes]="'1'" 
+                        [hideDelete]="'1'" 
+                        [hideMoreF]="'0'">
+                    </codx-attachment>
+                </ng-container>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <codx-label [formModel]="formModel" name="lblEmployees" [default]="'Danh sách nhân viên'" class="fw-bold text-primary"></codx-label>
+                </div>
+                <div class="btn-update cursor-pointer" (click)="openPopupEditGroupSalCode()">
+                    <span class="me-1"><i class="icon-update text-primary"></i></span>
+                    <codx-label [formModel]="formModel" name="lblUpdateGroupSalary" [default]="'Cập nhật thông tin Nhóm lương...'" class="fw-bold text-primary"></codx-label>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #body>
+    <ng-container *ngIf="gridColumns && gridColumns?.length > 0 && loaded">
+        <codx-gridview-v2 
+            #codxGrvV2 
+            [columnsGrid]="gridColumns"
+            [entityName]="'HR_Employees'" 
+            [hideMoreFunc]="true" 
+            [autoLoad]="true"
+            [autoFitColumns]="true"
+            [dataValues]="data?.groupSalCode"
+            [service]="'HR'" 
+            [assemblyName]="'ERM.Business.HR'"
+            [className]="'TemplateExcelBusiness'" 
+            [method]="'GetEmpByGroupSalAsync'"
+            [idField]="'employeeID'">
+        </codx-gridview-v2>
+    </ng-container>
+</ng-template>
+<ng-template #footer>
+    <codx-tabs 
+        [entityName]="formModel?.entityName" 
+        [objectID]="data?.hrTemplateID"
+        [funcID]="formModel?.funcID" 
+        [refType]="formModel?.entityName"
+        [TabControl]="tabControl" 
+        [formModel]="formModel" 
+        [dataSelected]="data">
+    </codx-tabs>
+</ng-template>
+
+
+<ng-template #tmpEmpCell let-dataRow>
+    <div class="d-flex align-items-center w-100">
+        <div class="p-3 ps-5">
+            <div class="d-flex align-items-center">
+                <div class="d-flex flex-column me-4">
+                    <codx-img 
+                        [objectId]="dataRow?.employeeID"
+                        [objectName]="dataRow?.employeeName" 
+                        objectType="HR_Employees" 
+                        [width]="30"
+                        [imageType]="'circle'">
+                    </codx-img>
+                </div>
+                <div class="d-flex flex-column">
+                    <div class="fw-bold fs-6 line-clamp line-clamp-1 mb-1">{{dataRow?.employeeName}}</div>
+                    <div class="text-dark mb-1">{{dataRow?.employeeID}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #tmpCellValue let-dataRow>
+    <div *ngIf="dataRow && dataRow[dataRow?.column?.field]">
+        <span class="text-gray">{{dataRow[dataRow.column.field]}}</span>
+    </div>
+</ng-template>
+
+<ng-template #tmpUpdateGroupSal let-dialog>
+    <div class="d-flex flex-column w-100 h-100 p-4 position-relative">
+        <div class="form-group mb-0">
+                <div class="d-flex align-items-center justify-content-between p-4">
+                    <codx-label [formModel]="formModel" name="lblUpdateGroupSal" [default]="'Cập nhật thông tin Nhóm lương'" class="fs-3 fw-bold"></codx-label>
+                    <button type="button" class="btn btn-icon btn-light" (click)="dialog?.close()">
+                        <span class="icon-close icon-18"></span>
+                    </button>
+                </div> 
+        </div>
+        <div class="form-group ms-5 mb-0">
+            <div class="form-group">
+                <codx-label [formModel]="formModel" name="lblGroupSalCode" [default]="'Gán thông tin Nhóm lương'" [setRequire]="true"></codx-label>
+                <codx-input [formModel]="formModel" field="groupSalCode" type="combobox" [refType]="'3'" refValue="HRGroupSal" [multiple]="false" (valueChange)="valueChange($event)"></codx-input>
+            </div>
+            <div class="form-group">
+                <codx-label [formModel]="formModel" name="lblDepartment" [default]="'Đến nhân viên thuộc phòng ban'" [setRequire]="true"></codx-label>
+                <codx-input [formModel]="formModel" field="departmentID" type="combobox" [refType]="'P'" refValue="HRDepts" [multiple]="true" (valueChange)="valueChange($event)"></codx-input>
+            </div>
+            <div class="form-group">
+                <div class="d-flex align-items-center">
+                    <codx-input [formModel]="formModel" field="skipGroupSalCode" type="switch" [checked]="false" (valueChange)="valueChange($event)"></codx-input>
+                    <codx-label [formModel]="formModel" name="lblSkipGroupSalCode" [default]="'Bỏ qua nhân viên đã có thông tin Nhóm lương'" class="ms-2"></codx-label>
+                </div>
+            </div>
+        </div>
+        <div class="position-absolute bottom-0 end-0 m-4">
+            <button class="btn btn-primary" (click)="updateGroupSalCode(dialog)">
+                <codx-label [formModel]="formModel" name="lblUpdate" [default]="'Cập nhật'" class="text-white"></codx-label>
+            </button>
+        </div>
+    </div>
+</ng-template>

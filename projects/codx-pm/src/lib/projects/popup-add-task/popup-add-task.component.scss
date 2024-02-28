@@ -1,0 +1,21 @@
+:ng-deep{
+  .delete-btn{
+    display: none !important;
+  }
+
+  .memo-area:hover{
+    .delete-btn{
+      display: block !important;
+    }
+  }
+}
+
+.delete-btn{
+  display: none !important;
+}
+
+.memo-area:hover{
+  .delete-btn{
+    display: block !important;
+  }
+}

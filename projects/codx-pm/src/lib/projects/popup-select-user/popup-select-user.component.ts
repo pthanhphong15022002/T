@@ -7,7 +7,6 @@ import { CodxShareService } from "projects/codx-share/src/public-api";
   selector: 'popup-select-user',
   templateUrl: './popup-select-user.component.html',
   styleUrls: ['./popup-select-user.component.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class PopupSelectUserComponent implements OnInit, AfterViewInit{
 
@@ -20,6 +19,7 @@ export class PopupSelectUserComponent implements OnInit, AfterViewInit{
   title:string='';
   fields: any ={ text: 'objectName', value: 'objectID' }
   selectedUser:any=[];
+  roleType:any;
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
@@ -38,6 +38,7 @@ export class PopupSelectUserComponent implements OnInit, AfterViewInit{
     this.funcID = this.formModel?.funcID;
     this.projectData = dialogData.data.projectData;
     this.projectMemberType = dialogData.data.projectMemberType;
+    this.roleType = dialogData.data.roleType;
 
   }
   ngOnInit(): void {
@@ -50,6 +51,18 @@ export class PopupSelectUserComponent implements OnInit, AfterViewInit{
     this.selectedUser = e;
   }
 
+  itemsSelected:any=[];
+  cbxChange(e:any){
+    this.selectedUser = e.data?.split(';');
+    if(e.component){
+      this.itemsSelected = [];
+      for(let i in this.selectedUser){
+
+        let item = e.component.dataService.data?.find((x:any)=> x[e.component.fields.value]==this.selectedUser[i]);
+        if(item) this.itemsSelected.push(item);
+      }
+    }
+  }
   apply(){
     if(this.selectedUser.length)
       this.dialog.close(this.selectedUser);

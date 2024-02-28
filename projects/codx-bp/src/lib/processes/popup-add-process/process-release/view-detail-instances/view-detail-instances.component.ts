@@ -1,22 +1,26 @@
-import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { ApiHttpService } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'lib-view-detail-instances',
   templateUrl: './view-detail-instances.component.html',
-  styleUrls: ['./view-detail-instances.component.css'],
+  styleUrls: ['./view-detail-instances.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ViewDetailInstancesComponent {
   @Input() dataSelected: any;
   @Input() formModel: any;
   @Input() asideMode: string ;
   @Input() lstSteps = [];
+  process:any;
   loaded: boolean;
   id: any;
   isShow = false;
   info: any;
-  constructor(private changeDetectorRef: ChangeDetectorRef, private shareService: CodxShareService) {}
+  progressIns = 0;
+  constructor(private changeDetectorRef: ChangeDetectorRef, private shareService: CodxShareService , private api: ApiHttpService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
@@ -31,10 +35,24 @@ export class ViewDetailInstancesComponent {
           JSON.stringify(changes['dataSelected'].currentValue)
         );
         this.getInfo();
+        this.getProcess();
         this.loaded = true;
+        if(this.dataSelected?.countTasks > 0){
+          this.progressIns = this.dataSelected?.completedTasks ? this.dataSelected?.completedTasks / this.dataSelected?.countTasks : 0;
+        }
 
       }
     }
+  }
+
+  getProcess() {
+    this.api
+      .execSv('BP', 'BP', 'ProcessesBusiness', 'GetAsync', this.dataSelected.processID)
+      .subscribe((item) => {
+        if (item) {
+          this.process = item;
+        }
+      });
   }
 
   clickShowTab(isShow) {

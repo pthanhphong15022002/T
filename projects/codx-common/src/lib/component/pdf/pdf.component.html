@@ -252,7 +252,7 @@
               <e-item
                 prefixIcon="e-icons e-zoom-in"
                 (click)="changeZoom('in', $event)"
-                [disabled]="zoomValue >= 100"
+                [disabled]="zoomValue >= 400"
                 tooltipText="Zoom-In"
                 showTextOn="Overflow"
                 align="Left"
@@ -326,10 +326,10 @@
       <!-- [handTool]="!(isEditable && !isPublic && !isInteractPDF)" -->
 
       <ngx-extended-pdf-viewer
-        [showToolbar]="false"
         *ngIf="curFileUrl"
         #ngxPdfView
         [src]="curFileUrl"
+        [showToolbar]="false"
         [(zoom)]="zoomValue"
         [(page)]="curPage"
         [handTool]="showHand"
@@ -551,7 +551,7 @@
                           [title]="
                             (area.labelType | vll : 'ES015' : 'text' | async) +
                             ' - ' +
-                            getAreaOwnerName(area?.signer,area?.objectID)
+                            getAreaOwnerName(area?.signer, area?.objectID)
                           "
                           [resourceObjType]="'AD_Users'"
                           [icoCss]="
@@ -653,7 +653,7 @@
                               class="text-format d-flex align-items-center"
                               *ngIf="imgConfig.includes(area.labelType)"
                             >
-                            <!-- *ngIf="!isPublic" -->
+                              <!-- *ngIf="!isPublic" -->
                               <img
                                 [id]="area.recID"
                                 class="img"
@@ -765,7 +765,10 @@
                               </button>
                             </div>
                           </div>
-                          <div class="d-flex ms-12 align-items-center h-30px mb-2" *ngIf="area.labelType == 5">
+                          <div
+                            class="d-flex ms-12 align-items-center h-30px mb-2"
+                            *ngIf="area.labelType == 5"
+                          >
                             <span class="h-20px me-2">
                               <codx-input
                                 class="me-4 date-Type"
@@ -806,7 +809,10 @@
                             </span>
                             <!-- </div> -->
                           </div>
-                          <div class="btn-apply d-flex justify-content-end" *ngIf="!isSigned">
+                          <div
+                            class="btn-apply d-flex justify-content-end"
+                            *ngIf="!isSigned"
+                          >
                             <button
                               *ngIf="
                                 !isPublic && this.isEditable == false
@@ -936,7 +942,8 @@
                         <button
                           type="button"
                           class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
-                          [disabled]="!checkedConfirm"  (click)="popupPublicESign('5')"
+                          [disabled]="!checkedConfirm"
+                          (click)="popupPublicESign('5')"
                         >
                           <codx-vll
                             [name]="'ES002'"
@@ -949,7 +956,8 @@
                       <button
                         type="button"
                         class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4"
-                        [disabled]="!checkedConfirm" (click)="popupPublicESign('4')"
+                        [disabled]="!checkedConfirm"
+                        (click)="popupPublicESign('4')"
                       >
                         <codx-label
                           name="lblReject"
@@ -1194,32 +1202,47 @@
     <div class="d-flex justify-content-between align-items-center flex-grow-1">
       <div class="d-flex flex-column">
         <div class="fs-4 fw-bold mb-1" id="modal-basic-title">
-          <codx-label name="lblpublicSignInfo" default="Nhập thông tin xác thực" [formModel]=""></codx-label>
+          <codx-label
+            name="lblpublicSignInfo"
+            default="Nhập thông tin xác thực"
+            [formModel]=""
+          ></codx-label>
         </div>
       </div>
-      <button type="button" class="btn btn-sm btn-icon" aria-label="Close" (click)="dialog.close()">
+      <button
+        type="button"
+        class="btn btn-sm btn-icon"
+        aria-label="Close"
+        (click)="dialog.close()"
+      >
         <span class="icon-close icon-18"></span>
       </button>
     </div>
   </div>
-  <div class="modal-body pt-0 ">
+  <div class="modal-body pt-0">
     <div class="mb-1 px-5">
-      <div class="form-group" >
+      <div class="form-group">
         <codx-label name="lblEmail" default="Email" [formModel]=""></codx-label>
-        <codx-input 
-        type="text"
-        field="emailPublicSign"
-        [crrValue]="paSignature?.email"
-        (valueChange)="valueChange($event)">
+        <codx-input
+          type="text"
+          field="emailPublicSign"
+          [crrValue]="paSignature?.email"
+          (valueChange)="valueChange($event)"
+        >
         </codx-input>
       </div>
       <div class="form-group">
-        <codx-label name="lblPassword" default="Mật khẩu" [formModel]=""></codx-label>
-        <codx-input 
-        type="password"
-        field="passwordPublicSign"
-        [crrValue]=""
-        (valueChange)="valueChange($event)">
+        <codx-label
+          name="lblPassword"
+          default="Mật khẩu"
+          [formModel]=""
+        ></codx-label>
+        <codx-input
+          type="password"
+          field="passwordPublicSign"
+          [crrValue]=""
+          (valueChange)="valueChange($event)"
+        >
         </codx-input>
       </div>
     </div>
@@ -1240,5 +1263,4 @@
       </button>
     </div>
   </div>
-
 </ng-template>

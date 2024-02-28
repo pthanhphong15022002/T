@@ -810,6 +810,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
           e: JSON.stringify(this.arrDataValue),
           data: this.customField,
         });
+        this.columns = JSON.parse(this.customField.dataFormat);
         this.changeRef.detectChanges();
       }
     });
@@ -843,6 +844,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
           e: JSON.stringify(this.arrDataValue),
           data: this.customField,
         });
+        this.columns = JSON.parse(this.customField.dataFormat);
       }
     });
   }
@@ -856,6 +858,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
           e: JSON.stringify(this.arrDataValue),
           data: this.customField,
         });
+        this.columns = JSON.parse(this.customField.dataFormat);
       }
     });
   }

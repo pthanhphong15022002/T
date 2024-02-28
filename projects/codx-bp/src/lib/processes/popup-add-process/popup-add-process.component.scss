@@ -6,18 +6,19 @@
     border-right: 1px solid var(--gray-150);
     overflow: auto;
     height: 100%;
-    padding: 60px;
+    padding: 15px 25px 15px 25px;
     .dropzone.dropzone-default {
       padding: 0;
       text-align: center;
       cursor: pointer;
       border: 0.5px dashed #6c757d;
       border-radius: 0.42rem;
-      height: 238px;
+      height: 170px;
       width: 100%;
       background: #f5f8fa;
       overflow: hidden;
     }
+
     .dropzone-msg {
       border: 4px var(--white) solid;
       height: 100%;

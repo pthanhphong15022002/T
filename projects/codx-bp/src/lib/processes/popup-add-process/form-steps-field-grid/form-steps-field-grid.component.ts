@@ -1,24 +1,30 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { CallFuncService, DialogData, DialogRef, SidebarModel } from 'codx-core';
 import { StagesComponent } from './stages/stages.component';
 import { AddDefaultComponent } from './add-default/add-default.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { DomSanitizer } from '@angular/platform-browser';
-import { E } from '@angular/cdk/keycodes';
+import { CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { asapScheduler } from 'rxjs';
+import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 
 @Component({
   selector: 'lib-form-steps-field-grid',
   templateUrl: './form-steps-field-grid.component.html',
   styleUrls: ['./form-steps-field-grid.component.scss']
 })
-export class FormStepsFieldGridComponent implements OnInit, OnChanges{
+export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterViewInit{
+  @ViewChildren('todoList2') private dlq: QueryList<CdkDropList>;
+
   @Input() data: any;
   @Input() formModel: any;
   @Output() dataChange = new EventEmitter<any>();
-  
+
+  dls: CdkDropList[] = [];
   myTemplate  = '';
   listStage = [];
   count = 0;
+  listIds=[];
   constructor(
     private shareService: CodxShareService,
     private ref: ChangeDetectorRef,
@@ -30,10 +36,28 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
   {
     if(dt?.data) this.data = dt?.data
   }
-  ngOnInit(): void {
-    this.formatData();
+  ngAfterViewInit(): void {
+    //this.resetDLS();
+  
   }
 
+  ngOnInit(): void {
+    this.listIds = [];
+    this.formatData();
+  
+  }
+  resetDLS()
+  {
+    debugger
+    //this.dlq.reset();
+    let ldls: CdkDropList[] = [];
+    this.dlq.forEach((dl) => {
+      ldls.push(dl)
+    });
+    ldls = ldls.reverse()
+    asapScheduler.schedule(() => { this.dls = ldls; });
+    this.ref.detectChanges();
+  }
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes['data'] &&
@@ -41,34 +65,51 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
     ) 
     {
       this.data = changes['data']?.currentValue;
+      if(this.data) this.data = JSON.parse(JSON.stringify(this.data))
       this.formatData();
     }
   }
   
   formatData()
   {
+    this.data = JSON.parse(JSON.stringify(this.data))
     if(this.data && this.data.steps)
     {
+      let i = 0;
       this.count = this.data.steps.length;
       this.listStage = this.data.steps.filter(x=>!x.parentID);
       this.count -= this.listStage.length;
       this.listStage.forEach(elm => {
         elm.child = this.getListChild(elm) || [];
+        if(typeof elm.settings == 'string') elm.settings = JSON.parse(elm.settings);
+        i++;
+
+        if(elm.child && elm.child.length>0) elm.child.sort((a, b) => a.stepNo - b.stepNo);
       });
+
+      this.listStage = this.listStage.sort((a, b) => a.stepNo - b.stepNo);
+
+      let a = 0;
+      this.listStage.forEach(elm3=>{
+        this.listIds.push('stage'+a+'_'+elm3.recID)
+        elm3.stepNo = i;
+        i++;
+        a++;
+      })
+      debugger
     }
   }
 
   getListChild(elm:any)
   {
     if(this.count == 0) return; 
-    
+    let j = 0;
     let list = this.data.steps.filter(x=>x.parentID == elm.recID);
     this.count -= list.length;
     list.forEach(elm2 => {
       elm2.settings = typeof elm2?.settings === 'object' ? elm2.settings : (elm2?.settings ? JSON.parse(elm2.settings) : null);
       elm2.permissions = typeof elm2?.permissions === 'object' ? elm2.permissions : (elm2?.permissions ? JSON.parse(elm2.permissions) : null);
       elm2.child = this.getListChild(elm2);
-
       if(elm2.activityType == "Conditions" && elm2.child && elm2.child.length>0)
       {
         for(var i =0 ; i< elm2.child.length ; i++)
@@ -79,6 +120,11 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
       }
     });
     
+    list = list.sort((a, b) => a.stepNo - b.stepNo);
+    list.forEach(elm3=>{
+      elm3.stepNo = j;
+      j++;
+    })
     return list;
   }
 
@@ -123,6 +169,9 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
               else this.listStage.push(dt);
               if(indexP >= 0) this.data.steps[indexP] = dt;
               else this.data.steps.push(dt);
+
+              var name = "stage"+ (this.listIds.length - 1) + "_"+dt.recID;
+              this.listIds.push(name);
             }
             else
             {
@@ -140,10 +189,8 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
               }
             }
             this.ref.detectChanges();
-  
             this.dataChange.emit(this.data);
           }
-          
         }
       });
   }
@@ -186,5 +233,53 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
       .bypassSecurityTrustHtml(`<div class="col-3 d-flex align-items-center"><div class="w-30px"><i class="`+val.settings.icon+`" style="color:`+val.settings.color+`"></i></div>`+data.stepName+`</div><div class="col-1 d-flex align-items-center"><i class="`+data?.settings?.icon+`" style="color:`+data?.settings?.color+`"></i><span class="mx-2">`+data.activityType+`</span></div><div class="col-4"><span>`+(data?.memo || '')+`</span></div><div class="col-2"><span>`+data?.duration+`</span><span class="mx-1">`+data?.interval+`</span></div>`);
     }
     return "";
+  }
+
+  dropStage(event:any)
+  {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
+    for(var i = 0 ; i < event.container.data.length ; i++)
+    {
+      event.container.data[i].stepNo = i;
+    }
+
+    this.dataChange.emit(this.data);
+  }
+
+  dropStep(event:any)
+  {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      let id = event?.event.target.id.split("_");
+      event.previousContainer.data[event.previousIndex].parentID = event.previousContainer.data[event.previousIndex].stageID = id[1];
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+
+    }
+    for(var i = 0 ; i < event.container.data.length ; i++)
+    {
+      event.container.data[i].stepNo = i;
+    }
+
+    this.dataChange.emit(this.data);
+  }
+
+  getImg(data:any)
+  {
+    return data.map((u) => u.objectID).join(';');
   }
 }

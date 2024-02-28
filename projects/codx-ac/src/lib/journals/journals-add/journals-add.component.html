@@ -86,7 +86,8 @@
       </div>
       <div [ngStyle]="vllAC104.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
         <codx-label fiedName="SubType" [formModel]="dialog.formModel"></codx-label>
-        <codx-input field="subType" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+        <codx-input *ngIf="formJournal?.form?.data?.journalType == 'PI'" field="subType" type="valuelist" refValue="AC129"></codx-input>
+        <codx-input *ngIf="formJournal?.form?.data?.journalType == 'SI'" field="subType" type="valuelist" refValue="AC133"></codx-input>
       </div>
       <div [ngStyle]="vllAC105.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
         <codx-label fiedName="InvoiceForm" [formModel]="dialog.formModel"></codx-label>
@@ -131,7 +132,7 @@
     </div>
     <div class="d-flex justify-content-between form-group">
       <codx-label fiedName="MultiCurrency" [formModel]="dialog.formModel"></codx-label>
-      <codx-input field="multiCurrency" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+      <codx-input field="multiCurrency" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
     </div>
     <div class="row" [ngStyle]="formJournal?.form?.data?.multiCurrency ? '' : {display:'none'}">
       <div class="col-8">

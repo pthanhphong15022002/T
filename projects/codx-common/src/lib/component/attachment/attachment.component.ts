@@ -97,7 +97,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   title2 = 'Vui lòng chọn tài liệu tải lên';
   titleUpload = 'Tải lên';
   titleMaxFileSiate = 'File {0} tải lên vượt quá dung lượng cho phép {1}MB';
-  appName = 'hps-file-test';
+  appName = '';
   numberDes = 0;
   urlUpload = '';
   interval: ItemInterval[];
@@ -521,6 +521,9 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+
+    if(environment.saas == 0) this.appName = environment.appName || this.user.tenant;
+    else this.appName = this.user.tenant;
     this.setFormModel();
     //this.getFolderPath();
     this.dataFolder = this.dmSV.parentFolder.getValue();
@@ -1402,7 +1405,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         uploadFile = this.lstRawFile.find((x) => x.name == fileItem.item.name);
       else uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
       var obj = from(
-        this.uploadFileAsync(uploadFile, this.user.tenant, ChunkSizeInKB)
+        this.uploadFileAsync(uploadFile, this.appName, ChunkSizeInKB)
       );
 
       var chunSizeInfBytes = ChunkSizeInKB * 1024;
@@ -1569,9 +1572,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
         uploadFile = this.lstRawFile.find((x) => x.name == fileItem.item.name);
       else uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
 
+      
       await this.addFileAfterTenant(
         uploadFile,
-        this.user.tenant,
+        this.appName,
         fileItem,
         isAddFile
       );
@@ -1653,6 +1657,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   addFile(fileItem: any) {
     var that = this;
+    fileItem.avatar = null;
+    fileItem.item = null;
     var done = this.fileService.addFile(
       fileItem,
       this.actionType,
