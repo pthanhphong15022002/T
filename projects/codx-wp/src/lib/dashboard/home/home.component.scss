@@ -84,7 +84,7 @@
     min-width: 290px;
     max-width: 290px;
     height: calc(100vh - 50px);
-    overflow: auto;
+    //overflow: auto;
     
     .aside-menu{
       //width: 250px;    //Van bo nha Chung
@@ -336,5 +336,4 @@
     background-color: var(--bg-body);
     padding-left: 25px;
   } 
-
 }

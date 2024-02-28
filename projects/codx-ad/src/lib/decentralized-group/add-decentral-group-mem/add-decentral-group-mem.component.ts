@@ -32,9 +32,8 @@ export class AddDecentralGroupMemComponent extends UIComponent {
   popAddMemberState = false;
   width = 720;
   height = window.innerHeight;
-
+  lstInvalidMemberNames = [];
   isSaved = false;
-
   formType = 'add';
   @ViewChild('form') form: LayoutAddComponent;
 
@@ -70,12 +69,6 @@ export class AddDecentralGroupMemComponent extends UIComponent {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-
-    // this.cache.functionList(this.formModel.funcID).subscribe((res) => {
-    //   if (res) {
-    //     this.header = this.title;
-    //   }
-    // });
   }
 
   clickAddMemeber() {
@@ -195,10 +188,35 @@ export class AddDecentralGroupMemComponent extends UIComponent {
               this.groupData.members.push(tmpGroupMem);
             }
           });
-          // if (this.groupData.memberIDs != '') {
-          //   this.groupData.memberIDs += ';';
-          // }
-          // this.groupData.memberIDs += event?.id;
+        } else {
+          this.groupData.memberIDs = lstMemberIDs;
+        }
+      });
+  }
+
+  addMemberv2(isOverrideRoles: boolean) {
+    let lstMemberIDs = this.groupData.memberIDs;
+    this.detectorRef.detectChanges();
+    this.adServices
+      .addUserGroupMemberAsync(this.groupData, isOverrideRoles)
+      .subscribe((result) => {
+        if (result) {
+          this.groupData.members.forEach((mem) => {
+            let tmpGroupMem: GroupMembers = {
+              memberID: mem.UserID,
+              memberName: mem.UserName,
+              memberType: 'U',
+              groupID: '',
+              roleType: '',
+              description: '',
+              positionName: mem.PositionName,
+              orgUnitName: mem.OrgUnitName,
+            };
+            if (!this.groupData.members.find((x) => x.memberID == mem.UserID)) {
+              this.groupData.members.push(tmpGroupMem);
+            }
+            this.dialog.close(this.groupData);
+          });
         } else {
           this.groupData.memberIDs = lstMemberIDs;
         }
@@ -248,7 +266,6 @@ export class AddDecentralGroupMemComponent extends UIComponent {
   }
 
   onSave(closePopup: boolean) {
-    console.log('dirty', this.form.formGroup.dirty);
     if (this.form?.formGroup?.status == 'INVALID') {
       return;
     }
@@ -270,16 +287,44 @@ export class AddDecentralGroupMemComponent extends UIComponent {
             if (closePopup) {
               this.dialog.close(this.groupData);
             } else {
+              this.validateGroupMemberRoles();
               this.openPopRoles();
             }
           }
         });
     } else {
       if (closePopup) {
-        this.dialog.close(this.groupData);
+        if (this.lstInvalidMemberNames.length > 0) {
+          this.notify
+            .alertCode(
+              `Tài khoản ${this.lstInvalidMemberNames.join(
+                ', '
+              )}, bạn có muốn ghi đè quyền`
+            )
+            .subscribe((e) => {
+              if (e?.event?.status == 'Y') {
+                this.addMemberv2(true);
+              } else this.dialog.close(this.groupData);
+            });
+        } else this.dialog.close(this.groupData);
       } else {
+        this.validateGroupMemberRoles();
         this.openPopRoles();
       }
     }
+  }
+
+  validateGroupMemberRoles() {
+    this.adServices
+      .validateGroupMemberRoles(this.groupData.memberIDs)
+      .subscribe((r: any) => {
+        if (r?.length > 0) {
+          this.groupData.members.forEach((x) => {
+            if (r.includes(x.memberID)) {
+              this.lstInvalidMemberNames.push(x.memberName);
+            }
+          });
+        }
+      });
   }
 }

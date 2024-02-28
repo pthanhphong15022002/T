@@ -1,57 +1,64 @@
-<div class="d-flex flex-column w-100 h-100 field-grid-collapse overflow-auto p-4">
-    <div class="grid-collapse" ngbAccordion *ngIf="listStage.length > 0">
-        <div class="border-bottom pt-4" ngbAccordionItem [collapsed]="false" *ngFor="let item of listStage">
-            <div class="d-flex align-items-center" ngbAccordionHeader>
-                <button ngbAccordionButton></button>
-                <div (click)="addEditStages('Stage','edit',item)"><span class="fw-bold fs-5-sm">{{item.stepName}}</span></div>
-            </div>
-            <div ngbAccordionCollapse>
-                <div ngbAccordionBody>
-                    <ng-template>
-                        <div class="d-flex flex-column">
-                            <div class="d-flex flex-column ps-14 pb-4" *ngFor="let item2 of item.child" (click)="addEditStages(item2.activityType,'edit',item2)">
-                                <div class="d-flex flex-column">
-                                    <ng-container *ngTemplateOutlet="tmpRow; context: { $implicit: item2 }"></ng-container>
-                                    <ng-container *ngIf="item2.activityType == 'Conditions'" >
-                                        <div class="d-flex align-items-center cursor-pointer w-100 pt-2"  *ngFor="let item3 of item2?.child">
-                                            <ng-container *ngTemplateOutlet="tmpRow; context: { $implicit: item3 , b:true}"></ng-container>
+<div class="d-flex flex-column w-100 h-100 field-grid-collapse overflow-auto p-4" cdkDropListGroup>
+    <div
+        cdkDropList
+        #todoList="cdkDropList"
+        [cdkDropListData]="listStage"
+        class="example-list"
+        (cdkDropListDropped)="dropStage($event)"
+        >
+        <ng-container *ngFor="let item of listStage , let i = index">
+            <div class="d-flex flex-column mt-2" cdkDrag  [cdkDragDisabled]="item?.stepType == '1'">
+                <div class="d-flex align-items-center w-100">
+                    <div class="w-25px"><i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="item?.stepType != '1'"></i></div>
+                    <div class="d-flex  align-items-center py-2 bg-row-text-active bg-row-active w-100" (click)="addEditStages('Stage','edit',item)">
+                        <i class="bg-row-text-active mx-2" [ngClass]="item?.settings?.icon" [style.color]="item?.settings?.color"></i>
+                        <span class="fw-bold">{{item.stepName}}</span>
+                    </div>
+                </div>
+                <div
+                    cdkDropList
+                    #todoList2="cdkDropList"
+                    [cdkDropListData]="item.child"
+                    class="example-list min-h-20px"
+                    [id]="'stage'+i+'_'+item?.recID"
+                    (cdkDropListDropped)="dropStep($event)"
+                    [cdkDropListConnectedTo]="listIds"
+                >
+                    <ng-container *ngFor="let item2 of item.child">
+                        <div class="d-flex flex-column ps-14 pt-4" cdkDrag [cdkDragDisabled]="item2?.stepType == '1'" (click)="addEditStages(item2.activityType,'edit',item2)">
+                            <div class="d-flex flex-column">
+                                <div class="row d-flex align-items-center cursor-pointer w-100" >
+                                    <div class="col-3 d-flex align-items-center"><div class="w-25px"><i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="item2?.stepType != '1'"></i></div><div class="d-flex align-items-center ms-2 w-100px"><i [class]="item2?.settings?.icon" [style.color]="item2?.settings?.color"></i><span class="mx-2">{{item2.activityType}}</span></div><span [class.me-2]="item2?.reasonCon">{{item2?.reasonCon ? (item2?.reasonCon + " : ") : ""}}</span><span>{{item2?.stepName}}</span></div>
+                                    <ng-container *ngIf="item2?.activityType != 'Conditions'">
+                                        <div class="col-5"><span>{{item2?.memo}}</span></div>
+                                        <div class="col-2"><span>{{item2?.duration}}</span><span class="mx-1">{{item2?.interval | vll : 'VL004' : 'text' | async}}</span></div>
+                                        <div class="col-1">
+                                            <ng-container *ngIf="item2?.permissionsName">
+                                                <codx-imgs [objectId]="item2.permissionsName" [objectType]="'AD_Users'" [numberImages]="3" width="30" [referType]="'avt'"></codx-imgs>
+                                            </ng-container>
+                                        </div>
+                                        <div class="col-1 d-flex justify-content-end">
+                                            <ng-container *ngIf="item2.attachments && item2.attachments >0">
+                                                <div class="d-flex align-items-center justify-content-center position-relative border rounded w-30px p-2"><i class="icon-attach_file"></i><div class="d-flex align-items-center justify-content-center position-absolute bp-attach-number rounded-circle">{{item2.attachments}}</div></div>
+                                            </ng-container>
                                         </div>
                                     </ng-container>
                                 </div>
-                                <!-- <div class="d-flex align-items-center row-grid-collapse cursor-pointer" (click)="addEditStages('Task','add',null,item2,item)">
-                                    <codx-label default="Thêm công việc" class="my-2 ms-4" ></codx-label>
-                                </div> -->
+                                <ng-container *ngIf="item2.activityType == 'Conditions'" >
+                                    <div class="d-flex align-items-center cursor-pointer w-100 pt-2"  *ngFor="let item3 of item2?.child">
+                                        <ng-container *ngTemplateOutlet="tmpRow; context: { $implicit: item3 , b:true}"></ng-container>
+                                    </div>
+                                </ng-container>
                             </div>
                         </div>
-                        <!-- <div class="d-flex align-items-center row-grid-collapse cursor-pointer" (click)="addEditStages('Task','add',null,item,item)">
-                            <codx-label default="Thêm công việc" class="my-2 ms-14" ></codx-label>
-                        </div> -->
-                    </ng-template>
+                    </ng-container>
                 </div>
+                <ng-container *ngTemplateOutlet="addTask; context: { $implicit: item}"></ng-container>
             </div>
-        </div>
+        </ng-container>
     </div>
-   
-    <div class="grid-collapse-default py-4 px-2" ngbAccordion>
-        <div ngbAccordionItem [collapsed]="false">
-            <div class="w-100" ngbAccordionHeader>
-                <div class="d-flex align-items-center row-grid-collapse p-2" ngbAccordionButton (click)="addEditStages('Stage','add')">
-                    <i class="icon-i-plus"></i>
-                    <codx-label default="Thêm công đoạn" class="mx-2"></codx-label>
-                </div>
-            </div>
-            <div ngbAccordionCollapse>
-                <div ngbAccordionBody>
-                    <ng-template>
-                        <div class="d-flex align-items-center cursor-pointer w-100 p-2 row-grid-collapse" (click)="addEditStages('Task','add',null,listStage[(listStage.length - 1)],listStage[(listStage.length - 1)])">
-                            <i class="icon-i-plus icon-16"></i>
-                            <codx-label default="Thêm công việc" class="mx-1"></codx-label>
-                        </div>
-                    </ng-template>
-                </div>
-            </div>
-        </div>
-    </div>
+
+    <ng-container *ngTemplateOutlet="addStage"></ng-container>
 </div>
 <ng-template #tmpRow let-data let-isCon="b" let-index="c">
     <div class="row d-flex align-items-center cursor-pointer w-100" >
@@ -71,5 +78,17 @@
                 </ng-container>
             </div>
         </ng-container>
+    </div>
+</ng-template>
+<ng-template #addTask let-data>
+    <div class="d-flex align-items-center cursor-pointer w-100 p-2 pl-78px row-grid-collapse" (click)="addEditStages('Task','add',null,data,data)">
+        <i class="icon-i-plus icon-16"></i>
+        <codx-label default="Thêm công việc" class="mx-1"></codx-label>
+    </div>
+</ng-template>
+<ng-template #addStage let-data>
+    <div class="d-flex align-items-center cursor-pointer w-100 p-2 border-top ps-8 row-grid-collapse" (click)="addEditStages('Stage','add')">
+        <i class="icon-i-plus icon-16"></i>
+        <codx-label default="Thêm công đoạn" class="mx-1"></codx-label>
     </div>
 </ng-template>

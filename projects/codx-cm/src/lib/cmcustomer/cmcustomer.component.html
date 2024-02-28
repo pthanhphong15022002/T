@@ -51,6 +51,7 @@
     [gridViewSetup]="gridViewSetup"
     [lstCustGroups]="lstCustGroups"
     [funcID]="funcID"
+    [checkType]="'1'"
     [asideMode]="asideMode"
     (clickMoreFunc)="clickMoreFunc($event)"
     (changeMoreMF)="changeMoreMF($event)"
@@ -63,14 +64,14 @@
     cardCss="card-template border-bottom p-3 list-task"
     [typeMF]="'hover'"
     [imageId]="data.recID"
-    [imageObjName]="getNameCrm(data)"
+    [imageObjName]="data.customerName"
     [imgOn]="data?.modifiedOn"
     (changeDataMF)="changeDataMF($event, data)"
     [imageReferType]="'avt'"
     [imageWidth]="35"
     imgCss="me-3"
     [imageObjType]="entityName"
-    [title]="getNameCrm(data)"
+    [title]="data.customerName"
     [titleCss]="'fs-6 mb-1'"
     [descTmp]="descTmp"
     (clickMF)="clickMF($event, data)"
@@ -100,45 +101,6 @@
 <ng-template #descTmp let-data>
   <div class="d-flex flex-column w-100">
     <div
-      class="mb-1 d-flex justify-content-start align-items-center"
-      *ngIf="funcID == 'CM0102' && data?.mobile"
-      [ngbTooltip]="popupAllowCall"
-    >
-      <ng-template #popupAllowCall>
-        <codx-label
-          fiedName="Mobile"
-          [formModel]="view.formModel"
-          [setRequire]="false"
-        ></codx-label>
-      </ng-template>
-      <span
-        class="text-gray-700 text-primary text-hover-primary me-2 icon-16 icon-phone_android"
-      ></span>
-
-      <span class="text-gray-700 text-primary text-hover-primary">{{
-        data.mobile
-      }}</span>
-    </div>
-    <div
-      class="mb-1 d-flex justify-content-start align-items-center"
-      *ngIf="funcID == 'CM0102' && data?.personalEmail"
-      [ngbTooltip]="popupAllowEmail"
-    >
-      <ng-template #popupAllowEmail>
-        <codx-label
-          fiedName="PersonalEmail"
-          [formModel]="view.formModel"
-          [setRequire]="false"
-        ></codx-label>
-      </ng-template>
-      <span
-        class="text-gray-700 text-primary text-hover-primary me-2 icon-16 icon-email"
-      ></span>
-      <span class="text-gray-700 text-primary text-hover-primary">{{
-        data.personalEmail
-      }}</span>
-    </div>
-    <div
       class="mb-1 d-flex align-items-top text-hover-primary"
       *ngIf="data.address"
     >
@@ -155,10 +117,7 @@
         ></codx-label>
       </ng-template>
     </div>
-    <div
-      *ngIf="funcID == 'CM0101' || funcID == 'CM0105'"
-      class="mb-1 d-flex align-items-center"
-    >
+    <div class="mb-1 d-flex align-items-center">
       <div
         *ngIf="
           data?.custGroupID != null && data?.custGroupID?.trim() != '';
@@ -215,10 +174,7 @@
         </div>
       </ng-template>
     </div>
-    <div
-      class="mb-1 d-flex align-items-top"
-      *ngIf="funcID != 'CM0102' && data.industries"
-    >
+    <div class="mb-1 d-flex align-items-top" *ngIf="data.industries">
       <span
         class="icon-work_outline icon-16 me-2 text-gray-700"
         [ngbTooltip]="popupIndustries"
@@ -244,17 +200,8 @@
         </span>
       </span>
     </div>
-    <div
-      [ngClass]="
-        funcID == 'CM0101' || funcID == 'CM0105'
-          ? 'd-flex justify-content-between align-items-center'
-          : 'd-flex justify-content-end'
-      "
-    >
-      <div
-        class="justify-content-start align-items-end codx-badge"
-        *ngIf="funcID == 'CM0101' || funcID == 'CM0105'"
-      >
+    <div [ngClass]="'d-flex justify-content-between align-items-center'">
+      <div class="justify-content-start align-items-end codx-badge">
         <codx-vll
           [ngbTooltip]="toolTipStatus"
           [name]="gridViewSetup?.Status?.referedValue"
@@ -294,11 +241,7 @@
           class="h-25px"
           [isToolTip]="true"
           [width]="25"
-          [objectId]="
-            funcID == 'CM0101' || funcID == 'CM0105' || funcID == 'CM0102'
-              ? data?.owner
-              : data?.createdBy
-          "
+          [objectId]="data?.owner"
           [objectType]="'AD_Users'"
           [numberImages]="1"
           [ngbTooltip]="toolTipOwner"
@@ -306,11 +249,7 @@
         </codx-imgs>
         <ng-template #toolTipOwner>
           <codx-label
-            [fiedName]="
-              funcID == 'CM0101' || funcID == 'CM0105' || funcID == 'CM0102'
-                ? 'Owner'
-                : 'CreatedBy'
-            "
+            [fiedName]="'Owner'"
             [formModel]="view.formModel"
           ></codx-label
         ></ng-template>
@@ -333,6 +272,7 @@
     [lstCustGroups]="lstCustGroups"
     [asideMode]="asideMode"
     [funcID]="funcID"
+    [checkType]="'1'"
     (clickMoreFunc)="clickMoreFunc($event)"
     [entityName]="entityName"
     (changeMoreMF)="changeMoreMF($event)"

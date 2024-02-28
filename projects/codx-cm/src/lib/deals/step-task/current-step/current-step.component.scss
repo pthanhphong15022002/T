@@ -1,112 +1,114 @@
 .main-body{
-   height: 100%;
-   padding: 0 10px;
-   .left{
-      background-color: white;
-      padding-right: 15px;
-      border-radius: 5px;
-      border: 1px solid rgb(223, 223, 223);
-   }
-   .right{
-     .top{
-      background-color: white;
-      height: 45px;
-      margin-bottom: 15px;
-      box-shadow: 0px 0px 1px 1px var(--bs-gray-200);
-      border-radius: 5px 5px 0 0;
-      }
-      .main{
-        height: calc(100vh - 75px);
-        overflow: auto;
-        max-width: 1000px;
-        margin: 0 auto;
-         .item-main{
-            box-shadow: 0px 0px 1px 1px var(--bs-gray-200);
-            background-color: white;
-            border-radius: 5px;
-            padding: 10px;
-         }
-      }
-   }
- }
- ::ng-deep {
-   .e-dlg-content{
-      overflow: hidden!important;
-   }
- }
- .h-od-tab {
-   padding-top: 12px;
-   border-radius: 3px 3px 0 0!important;
- }
- .h-od-tab .nav-item {
-   .nav-link {
-     padding: 10px 5px 2px;
-     margin-right: 10px;
-     display: inline-block;
-     border: 0;
-     border-bottom: 2px transparent solid;
- 
-     &.active {
-       border-color: var(--primary-dark);
-       color: var(--primary-dark);
+  height: 96vh;
+  padding: 0 10px;
+  .left{
+     background-color: white;
+     padding-right: 15px;
+     border-radius: 5px;
+     border: 1px solid rgb(223, 223, 223);
+  }
+  .right{
+    .top{
+     background-color: white;
+     height: 45px;
+     margin-bottom: 15px;
+     box-shadow: 0px 0px 1px 1px var(--bs-gray-200);
+     border-radius: 5px 5px 0 0;
      }
-   }
- 
-   .nav-link:hover {
-     border-color: var(--primary) !important;
- 
-   }
- }
- .active1 {
-   background-color: #ecf5fd;
-   border-radius: 5px;
-   color: var(--primary-dark) !important;
- }
- .active11:hover{
-   background-color: #f3f3f3;
-   border-radius: 5px;
- }
- .top1 {
-   position: sticky;
-   top: 0;
-   left: 0;
-   width: 100%;
-   z-index: 1000; 
- }
- .top2 {
-   position: sticky;
-   top: 0px;
-   z-index: 1000; 
-    padding-top: 0px;
- }
- 
- .main::-webkit-scrollbar {
-  width: 5px!important;
-  background-color: #f0f0f0;
-   border-radius: 5px!important;
- }
- .main::-webkit-scrollbar:hover {
-  cursor: pointer!important;
- }
- .main::-webkit-scrollbar-thumb {
-  background-color: #c7c7c7!important;
-   border-radius: 5px!important;
- }
- .task{
-   background-color:  white!important;
-   padding: 10px;
-   box-shadow: 0px 0px 1px 1px var(--bs-gray-200);
- }
- .item-right{
-   min-height: calc(100vh - 115px);
-   background-color: white !important;
-   padding: 10px;
- }
- .icon-close:hover{
-  color: red;
-  box-shadow: 0px 0px 5px 4px var(--bs-gray-200);
- }
- .zom{
-  height: 100% !important;
-  max-height: 100% !important;
- }
+     .main{
+        height: calc(100vh - 140px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        margin-right: -10px;
+        padding-right: 5px;
+        .item-main{
+           box-shadow: 0px 0px 1px 1px var(--bs-gray-200);
+           background-color: white;
+           margin: 15px 0;
+           border-radius: 5px;
+           padding: 10px;
+        }
+     }
+  }
+}
+::ng-deep {
+  .e-dlg-content{
+     overflow: hidden!important;
+  }
+}
+.h-od-tab {
+  padding-top: 12px;
+  border-radius: 3px 3px 0 0!important;
+}
+.h-od-tab .nav-item {
+  .nav-link {
+    padding: 10px 5px 2px;
+    margin-right: 10px;
+    display: inline-block;
+    border: 0;
+    border-bottom: 2px transparent solid;
+
+    &.active {
+      border-color: var(--primary-dark);
+      color: var(--primary-dark);
+    }
+  }
+
+  .nav-link:hover {
+    border-color: var(--primary) !important;
+
+  }
+}
+.active1 {
+  background-color: #ecf5fd;
+  border-radius: 5px;
+  color: var(--primary-dark) !important;
+}
+.active11:hover{
+  background-color: #f3f3f3;
+  border-radius: 5px;
+}
+.top1 {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; 
+}
+.top2 {
+  position: sticky;
+  top: 0px;
+  z-index: 1000; 
+   padding-top: 0px;
+}
+
+.main::-webkit-scrollbar {
+ width: 5px!important;
+ background-color: #f0f0f0;
+  border-radius: 5px!important;
+}
+.main::-webkit-scrollbar:hover {
+ cursor: pointer!important;
+}
+.main::-webkit-scrollbar-thumb {
+ background-color: #c7c7c7!important;
+  border-radius: 5px!important;
+}
+.task{
+  background-color:  white!important;
+  padding: 10px;
+  box-shadow: 0px 0px 1px 1px var(--bs-gray-200);
+}
+.item-right{
+  min-height: calc(100vh - 115px);
+  background-color: white !important;
+  padding: 10px;
+}
+.icon-close:hover{
+ color: red;
+ box-shadow: 0px 0px 5px 4px var(--bs-gray-200);
+}
+.zom{
+ height: 100% !important;
+ max-height: 100% !important;
+}
