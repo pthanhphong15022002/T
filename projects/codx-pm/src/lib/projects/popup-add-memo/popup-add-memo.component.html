@@ -1,0 +1,48 @@
+<ng-container class="border border-dark">
+  <codx-form
+  headerText="{{ title }}"
+  #form
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog!"
+  [subHeader]=""
+  [subHeaderText]=""
+  [openMore]="false"
+  [data]="data"
+>
+<ng-template #body>
+
+  <div class="row h-100">
+    <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả công việc" class="fw-bold fs-5 mb-3">
+    </codx-label>
+
+    <div  style="margin: 0 auto; width:100%;" class="h-100">
+      <codx-input type="textarea" format="ed" [height]="'90%'" [crrValue]="data" (valueChange)="valueChange($event)"></codx-input>
+    </div>
+
+  </div>
+</ng-template>
+<ng-template #footer>
+  <div class="d-flex align-items-center justify-content-end">
+    <!-- <button
+      codxLang
+      name="btnApply"
+      formName="System"
+      default="Áp dụng"
+      class="btn btn-light-primary"
+    ></button> -->
+    <button
+      codxLang
+      name="btnSave"
+      formName="System"
+      default="Lưu"
+      class="btn btn-light-primary"
+      (click)="apply()"
+    ></button>
+  </div>
+</ng-template>
+
+</codx-form>
+
+
+</ng-container>

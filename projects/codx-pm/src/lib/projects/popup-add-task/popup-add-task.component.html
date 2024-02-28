@@ -23,9 +23,21 @@
       <div class="form-group ps-0">
         <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả công việc" [ngClass]="grvSetup['Memo']?.isRequire ? 'required' : ''">
         </codx-label>
-        <codx-input field="memo" [crrValue]="data?.memo" type="text"
-           (valueChange)="valueChange($event)" [disabled]="!enableEdit">
-        </codx-input>
+        <div class="w-100 d-flex">
+          <div style="width:90%">
+            <codx-input field="memo" [crrValue]="data?.memo" type="textarea"  format="ed2" [rows]="1"
+            (valueChange)="valueChange($event)" [disabled]="!enableEdit" *ngIf="!isHtmlContent(data?.memo)">
+         </codx-input>
+         <codx-input field="memo" [crrValue]="data?.memo" type="textarea"  format="ed3" [rows]="1"
+         (valueChange)="valueChange($event)" [disabled]="!enableEdit" *ngIf="isHtmlContent(data?.memo)">
+       </codx-input>
+          </div>
+          <div style="width:10%">
+            <button class="btn btn-sm btn-light-primary ms-3 h-100 w-auto " style="max-height:35px" (click)="extendMemo(data?.memo)">
+              <i class="icon-zoom_out_map icon-21"></i></button>
+          </div>
+        </div>
+
       </div>
       <div class="form-group ps-0">
         <codx-label fiedName="TaskGroupID" [formModel]="form.formModel" default="Nhóm công việc" [ngClass]="grvSetup['TaskGroupID']?.isRequire ? 'required' : ''">
@@ -196,7 +208,6 @@
           type="inline"
           allowMultiFile="1"
           referType="source"
-          [formModel]="dialog.formModel"
           [functionID]="funcID"
           (fileAdded)="fileAdded($event)"
           (fileCount)="getfileCount($event)"
@@ -221,7 +232,7 @@
                 placeholder="...Thêm công việc cần làm"
                 (keydown.enter)="addTask(input)"
                 (keydown.tab)="addTask(input)"
-                (blur)="addTask(input)"
+                (blur)="addTask(input,true)"
                 [disabled]="!enableEdit"
               />
               </div>
