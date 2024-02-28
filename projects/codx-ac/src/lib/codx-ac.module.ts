@@ -126,6 +126,7 @@ import { JournalViewsettingComponent } from './journals/journals-viewsetting/jou
 import { InventoryDetailComponent } from './vouchers/inventory/inventory-detail/inventory-detail.component';
 import { InventoryComponent } from './vouchers/inventory/inventory.component';
 import { InventoryAddComponent } from './vouchers/inventory/inventory-add/inventory-add.component';
+
 export const routes: Routes = [
   {
     path: '',
@@ -409,12 +410,12 @@ export const routes: Routes = [
     SalesinvoicesComponent,
     SalesinvoicesAddComponent,
     SearchingComponent,
-    ReceiptTransactionsComponent,
-    ReceiptTransactionsAddComponent,
+    // ReceiptTransactionsComponent,
+    // ReceiptTransactionsAddComponent,
     // ReportsComponent,
     InventoryComponent,
     InventoryAddComponent,
-    ReportsComponent,
+    // ReportsComponent,
     Group067Component,
     GroupShareComponent,
     SuggestionAdd,

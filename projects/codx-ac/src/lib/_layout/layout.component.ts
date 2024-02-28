@@ -10,7 +10,7 @@ import {
 } from 'codx-core';
 
 import { RoundService } from '../round.service';
-import { CodxAcService } from '../codx-ac.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
@@ -24,27 +24,13 @@ export class LayoutComponent extends LayoutBaseComponent {
     inject: Injector,
     private round: RoundService,
     private router: ActivatedRoute,
-    private acService: CodxAcService
   ) {
     super(inject);
     this.module = 'AC';
     this.round.initCache();
-    this.router.data.subscribe((res: any) => {
-      console.log(res);
-    });
   }
   onInit(): void {}
 
   onAfterViewInit(): void {
-    // this.layoutModel.toolbarDisplay = false;
-    // this.codxAC.changeToolBar.subscribe((funcID:any)=>{
-    //   if (funcID) {
-    //     if (funcID === 'ACT') {
-    //       this.funcID = funcID;
-    //     }
-    //   }else{
-    //     this.funcID = null;
-    //   }
-    // })
   }
 }
