@@ -4,7 +4,7 @@ import { StagesComponent } from './stages/stages.component';
 import { AddDefaultComponent } from './add-default/add-default.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { asapScheduler } from 'rxjs';
 import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 
@@ -96,7 +96,6 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
         i++;
         a++;
       })
-      debugger
     }
   }
 
@@ -222,6 +221,13 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
         }
       });
     }
+    else
+    {
+      if(dt?.permissions && dt?.permissions.length>0)
+      {
+        dt.permissionsName = this.getImg( dt?.permissions);
+      }
+    }
     return dt;
   }
   getNextStepHTML(val:any,id:any)
@@ -281,5 +287,19 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
   getImg(data:any)
   {
     return data.map((u) => u.objectID).join(';');
+  }
+
+  sortPredicateForDisableItem(e:any)
+  {
+    return function(index: number, item: CdkDrag, drop: CdkDropList){
+      if(e)
+      {
+        if(index>=0)
+        {
+          if(e[index]?.stepType == '1') return false;
+        } 
+      }
+      return true
+    }
   }
 }

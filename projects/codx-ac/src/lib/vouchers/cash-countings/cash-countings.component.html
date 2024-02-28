@@ -1,0 +1,12 @@
+<codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
+  (buttonClick)="toolbarClick($event)" [predicates]="predicate" [hideMoreFuncs]="!itemSelected"
+  (changeDataMF)="changeMFDetail($event,'viewdetail')" (clickMF)="clickMoreFunction($event, itemSelected)"
+  [dataValues]="journalNo" (selectedChange)="onSelectedItem($event)" [isSubView]="true"
+  (viewChanged)="viewChanged($event)" [funcID]="funcID">
+</codx-views>
+<!-- Start: templateGrid -->
+<ng-template #templateGrid let-data>
+  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFDetail($event, 'viewgrid')" [formModel]="view.formModel"
+    (clickMF)="clickMoreFunction($event, data)" type="view"></codx-mfunc>
+</ng-template>
+<!-- End: templateGrid -->

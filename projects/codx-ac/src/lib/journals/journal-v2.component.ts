@@ -89,51 +89,51 @@ export class JournalV2Component extends UIComponent implements OnInit {
 
   //#region Init
   onInit() {
-    if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
-    this.cache.viewSettings(this.funcID).subscribe((res: any) => {
-      let data = res.filter((x) => x.isDefault == true)[0];
-      if (data) {
-        this.viewActive = parseInt(data?.view);
-        this.subViews = [
-          {
-            type: ViewType.smallcard,
-            active: this.viewActive === ViewType.smallcard,
-          },
-          {
-            type: ViewType.list,
-            active: this.viewActive === ViewType.list,
-          },
-          {
-            type: ViewType.grid,
-            active: this.viewActive === ViewType.grid,
-          },
-        ];
-        this.detectorRef.detectChanges();
-      }
-    });
+    // if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
+    // this.cache.viewSettings(this.funcID).subscribe((res: any) => {
+    //   let data = res.filter((x) => x.isDefault == true)[0];
+    //   if (data) {
+    //     this.viewActive = parseInt(data?.view);
+    //     this.subViews = [
+    //       {
+    //         type: ViewType.smallcard,
+    //         active: this.viewActive === ViewType.smallcard,
+    //       },
+    //       {
+    //         type: ViewType.list,
+    //         active: this.viewActive === ViewType.list,
+    //       },
+    //       {
+    //         type: ViewType.grid,
+    //         active: this.viewActive === ViewType.grid,
+    //       },
+    //     ];
+    //     this.detectorRef.detectChanges();
+    //   }
+    // });
     this.cache.valueList('AC077').subscribe((func) => {
       if (func) this.func = func.datas;
     });
-    this.cache
-      .valueList('AC064')
-      .pipe(map((d) => d.datas))
-      .subscribe((res) => {
-        this.vllJournalTypes064 = res;
-      });
+    // this.cache
+    //   .valueList('AC064')
+    //   .pipe(map((d) => d.datas))
+    //   .subscribe((res) => {
+    //     this.vllJournalTypes064 = res;
+    //   });
 
-    this.cache.valueList('AC085').subscribe((res) => {
-      if (res) {
-        this.vll85 = res.datas;
-        this.subFilterValue = res.datas[0].value;
-      }
-    });
+    // this.cache.valueList('AC085').subscribe((res) => {
+    //   if (res) {
+    //     this.vll85 = res.datas;
+    //     this.subFilterValue = res.datas[0].value;
+    //   }
+    // });
 
-    this.cache.valueList('AC086').subscribe((res) => {
-      if (res) {
-        this.vll86 = res.datas;
-        this.mainFilterValue = res.datas[0].value;
-      }
-    });
+    // this.cache.valueList('AC086').subscribe((res) => {
+    //   if (res) {
+    //     this.vll86 = res.datas;
+    //     this.mainFilterValue = res.datas[0].value;
+    //   }
+    // });
   }
 
   ngAfterViewInit() {
@@ -144,15 +144,15 @@ export class JournalV2Component extends UIComponent implements OnInit {
     });
 
     this.views = [
-      {
-        type: ViewType.content,
-        active: false,
-        sameData: true,
-        hide: true,
-        model: {
-          panelLeftRef: this.contentTemplate,
-        },
-      },
+      // {
+      //   type: ViewType.content,
+      //   active: false,
+      //   sameData: true,
+      //   hide: true,
+      //   model: {
+      //     panelLeftRef: this.contentTemplate,
+      //   },
+      // },
       {
         type: ViewType.smallcard,
         active: true,
@@ -192,16 +192,16 @@ export class JournalV2Component extends UIComponent implements OnInit {
   //#endregion Init
 
   //#region Event
-  viewChanged(view) {
-    if (view && view.type == this.viewActive) return;
-    this.itemSelected = undefined;
-    this.viewActive = view.type;
-    this.subViews?.filter(function (v) {
-      if (v.type == view.type) v.active = true;
-      else v.active = false;
-    });
-    this.detectorRef.detectChanges();
-  }
+  // viewChanged(view) {
+  //   if (view && view.type == this.viewActive) return;
+  //   this.itemSelected = undefined;
+  //   this.viewActive = view.type;
+  //   this.subViews?.filter(function (v) {
+  //     if (v.type == view.type) v.active = true;
+  //     else v.active = false;
+  //   });
+  //   this.detectorRef.detectChanges();
+  // }
 
   clickMF(e, data) {
     switch (e.functionID) {
@@ -220,44 +220,44 @@ export class JournalV2Component extends UIComponent implements OnInit {
     }
   }
 
-  changePredicate(value: string, field: string): void {
-    if (field === 'mainFilterValue' && this.mainFilterValue == value) return;
-    if (field === 'subFilterValue' && this.subFilterValue == value) return;
-    this[field] = value;
-    this.itemSelected = undefined;
-    let journalTypes: string = '';
-    switch (this.subFilterValue) {
-      case '1':
-        journalTypes = this.journalTypes134.join(';');
-        break;
-      case '2':
-        journalTypes = this.journalTypes135.join(';');
-        break;
-      case '3':
-        journalTypes = this.journalTypes136.join(';');
-        break;
-      case '4':
-        journalTypes = this.journalTypes137.join(';');
-        break;
-      case '5':
-        journalTypes = this.journalTypes138.join(';');
-        break;
-    }
-    const predicates: string[] =
-      this.subFilterValue !== '0'
-        ? ['Status=@0 and @1.Contains(JournalType)']
-        : ['Status=@0'];
-    const dataValues: string[] = [`${this.mainFilterValue};[${journalTypes}]`];
-    this.view.dataService.data = [];
-    this.view.dataService.pageCount = 0;
-    (this.view.dataService as any).isFull = false;
-    //this.view.dataService.request.page = 1;
-    this.view.dataService.page = 0;
-    this.view.dataService.setPredicates(predicates, dataValues, () => {
-      this.grid?.refresh();
-    });
-    this.detectorRef.detectChanges();
-  }
+  // changePredicate(value: string, field: string): void {
+  //   if (field === 'mainFilterValue' && this.mainFilterValue == value) return;
+  //   if (field === 'subFilterValue' && this.subFilterValue == value) return;
+  //   this[field] = value;
+  //   this.itemSelected = undefined;
+  //   let journalTypes: string = '';
+  //   switch (this.subFilterValue) {
+  //     case '1':
+  //       journalTypes = this.journalTypes134.join(';');
+  //       break;
+  //     case '2':
+  //       journalTypes = this.journalTypes135.join(';');
+  //       break;
+  //     case '3':
+  //       journalTypes = this.journalTypes136.join(';');
+  //       break;
+  //     case '4':
+  //       journalTypes = this.journalTypes137.join(';');
+  //       break;
+  //     case '5':
+  //       journalTypes = this.journalTypes138.join(';');
+  //       break;
+  //   }
+  //   const predicates: string[] =
+  //     this.subFilterValue !== '0'
+  //       ? ['Status=@0 and @1.Contains(JournalType)']
+  //       : ['Status=@0'];
+  //   const dataValues: string[] = [`${this.mainFilterValue};[${journalTypes}]`];
+  //   this.view.dataService.data = [];
+  //   this.view.dataService.pageCount = 0;
+  //   (this.view.dataService as any).isFull = false;
+  //   //this.view.dataService.request.page = 1;
+  //   this.view.dataService.page = 0;
+  //   this.view.dataService.setPredicates(predicates, dataValues, () => {
+  //     this.grid?.refresh();
+  //   });
+  //   this.detectorRef.detectChanges();
+  // }
 
   changeMF(event) {
     if (event) {
@@ -456,9 +456,10 @@ export class JournalV2Component extends UIComponent implements OnInit {
   }
 
   setDefault() {
-    return this.api.exec('AC', 'JournalsBusiness', 'SetDefaultAsync', [
-      this.mainFilterValue,
-    ]);
+    // return this.api.exec('AC', 'JournalsBusiness', 'SetDefaultAsync', [
+    //   this.mainFilterValue,
+    // ]);
+    return this.api.exec('AC', 'JournalsBusiness', 'SetDefaultAsync');
   }
 
   sortData(): void {
