@@ -46,11 +46,11 @@
         <div class="d-flex align-items-center mb-1 min-w-200px">
           <div class="text-dark line-clamp line-clamp-1 me-2 fs-6 fw-bold">
             {{
-              funcID == "CM0101" || funcID == "CM0105"
+              checkType == '1' || checkType == '5'
                 ? data.customerName
-                : funcID == "CM0102"
+                : checkType == '2'
                 ? data.contactName
-                : funcID == "CM0103"
+                : checkType == '3'
                 ? data.partnerName
                 : data.competitorName
             }}
@@ -85,7 +85,7 @@
               "
             ></span>
           </div>
-          <div *ngIf="funcID != 'CM0102'">
+          <div *ngIf="checkType  != '2'">
             <codx-tag
               [entityName]="entityName"
               [disabled]="true"
@@ -97,7 +97,7 @@
         </div>
       </ng-template>
     </div>
-    <div class="w-250px min-w-250px pe-6" *ngIf="funcID == 'CM0102'">
+    <div class="w-250px min-w-250px pe-6" *ngIf="checkType == '2'">
       <div
         class="col-6 d-flex align-items-center"
         [ngbTooltip]="popupAllowCall"
@@ -169,11 +169,11 @@
         }}</span>
       </div>
     </div>
-    <div *ngIf="funcID != 'CM0102'" class="w-250px min-w-250px">
+    <div *ngIf="checkType  != '2'" class="w-250px min-w-250px">
       <!-- <div
         class="d-flex justify-content-start col-5"
         *ngIf="
-          (funcID == 'CM0101' || funcID == 'CM0103') && contactPerson != null
+          (checkType == '1' || checkType == '3') && contactPerson != null
         "
       >
         <div class="d-flex">
@@ -259,7 +259,7 @@
         </div>
       </div>
     </div>
-    <div class="w-300px min-w-300px" *ngIf="funcID == 'CM0102'">
+    <div class="w-300px min-w-300px" *ngIf="checkType == '2'">
       <div class="d-flex flex-column">
         <div class="d-flex align-items-top mb-1">
           <span
@@ -301,12 +301,12 @@
       </div>
     </div>
     <div
-      *ngIf="funcID != 'CM0102'"
+      *ngIf="checkType  != '2'"
       class="d-flex justify-content-end align-items-center w-150px min-w-150px"
     >
       <div class="me-4 d-flex align-items-center">
         <span
-          *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
+          *ngIf="checkType == '1' || checkType == '3'"
           class="icon-contact_phone icon-18 text-gray-500 me-2"
           [ngbTooltip]="popupCountContact"
           ><ng-template #popupCountContact>
@@ -317,14 +317,14 @@
             ></codx-label> </ng-template
         ></span>
         <span
-          *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
+          *ngIf="checkType == '1' || checkType == '3'"
           class="text-gray-900"
           >{{ listContacts.length }}</span
         >
       </div>
 
       <div
-        *ngIf="funcID == 'CM0101' || funcID == 'CM0105'"
+        *ngIf="checkType == '1' || checkType == '5'"
         class="d-flex align-items-center me-4"
       >
         <span
@@ -341,7 +341,7 @@
       </div>
 
       <div
-        *ngIf="funcID == 'CM0101' || funcID == 'CM0105'"
+        *ngIf="checkType == '1' || checkType == '5'"
         class="d-flex align-items-center me-4"
       >
         <span
@@ -357,7 +357,7 @@
         <span class="text-gray-900">{{ countContract }}</span>
       </div>
 
-      <div *ngIf="funcID == 'CM0104'" class="d-flex align-items-center me-2">
+      <div *ngIf="checkType == '4'" class="d-flex align-items-center me-2">
         <span
           class="icon-shopping_cart icon-18 text-gray-500 me-2"
           [ngbTooltip]="popupcountDealCompetitor"

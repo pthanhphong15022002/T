@@ -25,6 +25,7 @@ export class ViewListCmComponent implements OnInit {
   @Input() entityName: any;
   @Input() asideMode: string;
   @Input() gridViewSetup: any;
+  @Input() checkType: string = '1';
   @Input() lstCustGroups = [];
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMoreMF = new EventEmitter<any>();
@@ -41,16 +42,19 @@ export class ViewListCmComponent implements OnInit {
   constructor(private cmSv: CodxCmService, private callFunc: CallFuncService, private api: ApiHttpService) {}
 
   async ngOnInit() {
+    if(this.checkType == '1')
+    this.checkType = this.dataSelected?.category == '2' ? '5' : this.checkType;
+
     this.getAdressNameByIsDefault(this.dataSelected?.recID, this.entityName);
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0103')
+    if (this.checkType == '1' || this.checkType == '3')
       this.getListContactByObjectID(this.dataSelected?.recID);
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
+    if (this.checkType == '1' || this.checkType == '5') {
       this.countDealsByCustomerID(this.dataSelected?.recID);
       var lst = await firstValueFrom(this.api.execSv<any>('CM', 'ERM.Business.CM','ContractsBusiness','CountContractByCustomerIDAsync', this.dataSelected?.recID));
       this.countContract = lst > 0 ? lst : 0;
     }
 
-    if (this.funcID == 'CM0104')
+    if (this.checkType == '4')
       this.countDealCompetiorsByCompetitorID(this.dataSelected?.recID);
   }
 
@@ -80,7 +84,7 @@ export class ViewListCmComponent implements OnInit {
   }
 
   getAdressNameByIsDefault(objectID, entityName) {
-    if(this.funcID == 'CM0101' || this.funcID == 'CM0102'){
+    if(this.checkType == '1' || this.checkType == '2'){
       this.cmSv
       .getAdressNameByIsDefault(objectID, entityName)
       .subscribe((res) => {
@@ -120,11 +124,11 @@ export class ViewListCmComponent implements OnInit {
   }
 
   getNameCrm(data) {
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
+    if (this.checkType == '1' || this.checkType == '5') {
       return data.customerName;
-    } else if (this.funcID == 'CM0102') {
+    } else if (this.checkType == '2') {
       return data.contactName;
-    } else if (this.funcID == 'CM0103') {
+    } else if (this.checkType == '3') {
       return data.partnerName;
     } else {
       return data.competitorName;
@@ -149,9 +153,9 @@ export class ViewListCmComponent implements OnInit {
     this.dialogDetail.closed.subscribe((e) => {
       this.getAdressNameByIsDefault(this.dataSelected?.recID, this.entityName);
 
-      if (this.funcID == 'CM0101' || this.funcID == 'CM0103')
+      if (this.checkType == '1' || this.checkType == '3')
         this.getListContactByObjectID(this.dataSelected.recID);
-      if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
+      if (this.checkType == '1' || this.checkType == '5') {
         this.countDealsByCustomerID(this.dataSelected.recID);
       }
     });

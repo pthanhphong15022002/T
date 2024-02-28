@@ -11,7 +11,7 @@
 <ng-template #footer>
   <div class="offcanvas-footer">
     <ng-container *ngIf="amountEvoucher || amount || form?.controls['coins']?.value">
-      <div class="d-flex justify-content-between mgb-20">
+      <div class="d-flex justify-content-between mgb-10">
         <codx-label class="fw-bold font-total-coins" default="Tổng cộng"></codx-label> 
         <span class="fw-bold total-coins">{{ amountEvoucher + amount + form?.controls['coins']?.value}} Xu</span>
       </div>
@@ -605,11 +605,9 @@
       </ng-container>
     </div>
   </div>
-  <div
-    class="d-flex align-items-center nav-item w-100 mb-1"
-    *ngIf="showLabelAttachment"
-  >
-    <div class="d-flex align-items-center mb-2">
+  <div class="align-items-center nav-item w-100 mb-1">
+    <div class="d-flex align-items-center mb-2"
+      *ngIf="showLabelAttachment">
       <span class="icon-attach_file icon-18 me-2 text-primary"></span>
       <div class="fw-bold text-primary">
         <codx-label name="lblAttachments" default="Tài liệu đính kèm">
