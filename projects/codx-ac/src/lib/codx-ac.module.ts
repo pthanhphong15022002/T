@@ -38,14 +38,12 @@ import { PeriodicComponent } from './periodic/periodic.component';
 import { UpdateTheLedgerComponent } from './periodic/update-the-ledger/update-the-ledger.component';
 import { NameByIdPipe } from './pipes/name-by-id.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
-import { ReportsComponent } from './reports/reports.component';
 import { SearchingComponent } from './searching/searching.component';
 import { SalesinvoicesComponent } from './vouchers/salesinvoices/salesinvoices.component';
 import { DeductInterestExpensesComponent } from './periodic/deduct-interest-expenses/deduct-interest-expenses.component';
 import { PopAddDeductInterestExpensesComponent } from './periodic/deduct-interest-expenses/pop-add-deduct-interest-expenses/pop-add-deduct-interest-expenses.component';
 import { ClosingTransactionComponent } from './periodic/closing-transaction/closing-transaction.component';
 import { PopAddClosingTransactionComponent } from './periodic/closing-transaction/pop-add-closing-transaction/pop-add-closing-transaction.component';
-import { LayloutJournalComponent } from './laylout-journal/laylout-journal.component';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { CalculatingCostOfProductComponent } from './periodic/calculating-cost-of-product/calculating-cost-of-product.component';
@@ -83,7 +81,6 @@ import { AdvancePaymentRequestAddComponent } from './vouchers/advance-payment-re
 import { CashpaymentDetailComponent } from './vouchers/cashpayments/cashpayments-detail/cashpayment-detail.component';
 import { CashrecieptDetailComponent } from './vouchers/cashreceipts/cashreceipts-detail/cashreciept-detail.component';
 import { AdvancePaymentRequestDetailComponent } from './vouchers/advance-payment-request/advance-payment-request-detail/advance-payment-request-detail.component';
-import { LayoutNoasideAcComponent } from './_layout-noaside-ac/layout-noaside-ac.component';
 import { AdvancePaymentRequestTableComponent } from './share/ac-tableview/advance-payment-request-table/advance-payment-request-table.component';
 import { PaymentOrderComponent } from './vouchers/payment-order/payment-order.component';
 import { PaymentOrderAddComponent } from './vouchers/payment-order/payment-order-add/payment-order-add.component';
@@ -101,7 +98,6 @@ import { WarehouseTransfersAddComponent } from './vouchers/warehouse-transfers/w
 import { WarehouseTransfersDetailComponent } from './vouchers/warehouse-transfers/warehouse-transfers-detail/warehouse-transfers-detail.component';
 import { TransfersTableComponent } from './share/ac-tableview/transfers-table/transfers-table.component';
 import { AllocationAddComponent } from './vouchers/purchaseinvoices/allocation-add/allocation-add.component';
-import { LayoutNoToolbarComponent } from './_layout-no-toolbar/layout-no-toolbar.component';
 import { AllocationTableComponent } from './share/ac-tableview/allocation-table/allocation-table.component';
 import { SuggestionAdd } from './share/suggestion-add/suggestion-add.component';
 import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
@@ -121,20 +117,17 @@ import { RunDepreciationComponent } from './periodic/rundepreciation/rundeprecia
 import { NewvoucherComponent } from './share/add-newvoucher/newvoucher.component';
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { ViewresultComponent } from './share/periodic-control/viewresult/viewresult.component';
+
 import { JournalViewsettingComponent } from './journals/journals-viewsetting/journal-viewsetting/journal-viewsetting.component';
 import { InventoryDetailComponent } from './vouchers/inventory/inventory-detail/inventory-detail.component';
 import { InventoryComponent } from './vouchers/inventory/inventory.component';
 import { InventoryAddComponent } from './vouchers/inventory/inventory-add/inventory-add.component';
+
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
-      {
-        path: 'journalnames/:funcID',
-        component: JournalV2Component,
-        data: { noReuse: true },
-      },
       {
         path: 'categories/:funcID',
         component: CategoriesComponent,
@@ -142,9 +135,20 @@ export const routes: Routes = [
       {
         path: 'report/:funcID',
         component: CodxReportViewsComponent,
+      },      
+      {
+        path: 'dashboard/:funcID',
+        component: DashboardComponent,
+        data: { noReuse: true },
+      },
+
+      {
+        path: 'journalnames/:funcID',
+        component: JournalV2Component,
+        data: { noReuse: true },
       },
       {
-        path: 'report/detail/:funcID',
+        path: 'report/detail/:reportID',
         component: CodxReportViewDetailComponent,
       },
       {
@@ -222,11 +226,6 @@ export const routes: Routes = [
         path: 'cashtranfers/:funcID',
         component: CashtransfersComponent,
         data: { noReuse: true, runMode: 1 },
-      },
-      {
-        path: 'dashboard/:funcID',
-        component: DashboardComponent,
-        data: { noReuse: true },
       },
       {
         path: 'inquery/:funcID',
@@ -367,7 +366,6 @@ export const routes: Routes = [
       //-----------end--------------//
     ],
   },
-
   {
     path: '',
     component: LayoutOnlyHeaderComponent,
@@ -395,7 +393,6 @@ export const routes: Routes = [
     CodxAcComponent,
     LayoutComponent,
     CashtransfersComponent,
-    LayoutNoToolbarComponent,
     CashPaymentsComponent,
     CashPaymentAddComponent,
     PurchaseinvoicesComponent,
@@ -410,7 +407,6 @@ export const routes: Routes = [
     SearchingComponent,
     InventoryComponent,
     InventoryAddComponent,
-    ReportsComponent,
     Group067Component,
     GroupShareComponent,
     SuggestionAdd,
@@ -436,7 +432,6 @@ export const routes: Routes = [
     ClosingDataComponent,
     PopAddClosingDataComponent,
     JournalV2Component,
-    LayloutJournalComponent,
     TranformSubobjectPipe,
     TranformClassBorderPipe,
     IsObjectEmptyPipe,
@@ -456,7 +451,6 @@ export const routes: Routes = [
     AdvancePaymentRequestComponent,
     AdvancePaymentRequestAddComponent,
     AdvancePaymentRequestDetailComponent,
-    LayoutNoasideAcComponent,
     AdvancePaymentRequestTableComponent,
     PaymentOrderComponent,
     PaymentOrderAddComponent,

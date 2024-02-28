@@ -128,6 +128,9 @@ import { ViewStepComponent } from './deals/step-task/view-step/view-step.compone
 import { CostItemsComponent } from './deals/popup-cost-items/cost-items/cost-items.component';
 import { CodxDashboardViewsComponent } from 'projects/codx-share/src/lib/components/codx-dashboard/dashboard-view/dashboard-view.component';
 import { CurrentStatusComponent } from './leads/view-lead-detail/current-status/current-status.component';
+import { ContactsComponent } from './contacts/contacts.component';
+import { CompetitorsComponent } from './competitors/competitors.component';
+import { PartnersComponent } from './partners/partners.component';
 
 export const routes: Routes = [
   {
@@ -137,6 +140,21 @@ export const routes: Routes = [
       {
         path: 'customers/:funcID',
         component: CmCustomerComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'contacts/:funcID',
+        component: ContactsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'partners/:funcID',
+        component: PartnersComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'competitors/:funcID',
+        component: CompetitorsComponent,
         data: { noReuse: true },
       },
       {
@@ -234,6 +252,9 @@ const T_Component: Type<any>[] = [
   CodxCmComponent,
   LayoutComponent,
   CmCustomerComponent,
+  ContactsComponent,
+  CompetitorsComponent,
+  PartnersComponent,
   CmCustomerDetailComponent,
   InformationComponent,
   PopupAddCmCustomerComponent,
