@@ -34,7 +34,6 @@ export class AddDecentralGroupMemComponent extends UIComponent {
   height = window.innerHeight;
 
   isSaved = false;
-
   formType = 'add';
   @ViewChild('form') form: LayoutAddComponent;
 
@@ -70,12 +69,6 @@ export class AddDecentralGroupMemComponent extends UIComponent {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-
-    // this.cache.functionList(this.formModel.funcID).subscribe((res) => {
-    //   if (res) {
-    //     this.header = this.title;
-    //   }
-    // });
   }
 
   clickAddMemeber() {
@@ -248,7 +241,6 @@ export class AddDecentralGroupMemComponent extends UIComponent {
   }
 
   onSave(closePopup: boolean) {
-    console.log('dirty', this.form.formGroup.dirty);
     if (this.form?.formGroup?.status == 'INVALID') {
       return;
     }
