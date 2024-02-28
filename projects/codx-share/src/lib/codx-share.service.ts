@@ -1729,6 +1729,16 @@ export class CodxShareService {
       [JSON.stringify(lstID)]
     );
   }
+  
+  getApproverByRole(approvers=[],isSettingMode:boolean,trueUser:string){
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EmployeesBusiness',
+      'GetStepApproverAsync',
+      [approvers,isSettingMode,trueUser]
+    );
+  }
 }
 
 //#region Model
