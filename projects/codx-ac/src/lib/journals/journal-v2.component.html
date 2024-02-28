@@ -12,14 +12,11 @@
   (searchChange)="search($event)"
   (clickMF)="clickMF($event, itemSelected)"
   (changeDataMF)="changeMF($event)"
+  [hideMoreFuncs]="!itemSelected"
 >
 </codx-views>
 
-<ng-template #contentTemplate>
-  <!-- <codx-toolbar [funcId]="funcID" [dataSelected]="itemSelected" [views]="subViews" [formModel]="view.formModel"
-    [showFilter]="false" [button]="mainFilterValue != '2' ? button : null" (buttonClick)="toolbarClick($event)"
-    (searchChange)="search($event)" (clickMF)="clickMF($event, itemSelected)" (changeDataMF)="changeMF($event)"
-    (viewChange)="viewChanged($event)"></codx-toolbar> -->
+<!-- <ng-template #contentTemplate>
   <div class="px-4 bg-body list-survey h-100">
     <div class="d-flex justify-content-between py-2 hhder">
       <div class="main-list">
@@ -123,7 +120,7 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
 
 <ng-template #templateListCard let-data>
   <codx-card-img
@@ -739,7 +736,7 @@
   </ng-template>
 </ng-template>
 
-<ng-template #temptemp>
+<!-- <ng-template #temptemp>
   <div class="d-flex align-items-center">
     <codx-searchbar (searchEvent)="search($event)"></codx-searchbar>
     <codx-toolbar-button
@@ -764,4 +761,4 @@
     >
     </codx-toolbar-choose>
   </div>
-</ng-template>
+</ng-template> -->
