@@ -237,6 +237,12 @@ export class WarehouseTransfersAddComponent extends UIComponent {
         break;
     }
   }
+
+  selecting(event){
+    if (event.isSwiped) {
+      event.cancel = true;
+    }
+  }
   //#endregion Event
 
   //#region Method

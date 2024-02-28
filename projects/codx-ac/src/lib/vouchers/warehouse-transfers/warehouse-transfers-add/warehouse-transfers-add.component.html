@@ -70,7 +70,7 @@
 
     <!-- Start: Tab Detail -->
     <div class="mt-2" style="height: calc(100vh - 395px) !important">
-        <ejs-tab #elementTabDetail (selecting)="onTabSelectedDetail($event)">
+        <ejs-tab (selecting)="selecting($event)" #elementTabDetail (selecting)="onTabSelectedDetail($event)">
             <e-tabitems>
                 <e-tabitem>
                     <ng-template #headerText>

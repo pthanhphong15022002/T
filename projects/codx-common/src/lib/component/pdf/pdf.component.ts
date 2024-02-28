@@ -177,7 +177,7 @@ export class PdfComponent
 
   //zoom
   zoomValue: any = 100;
-  lstZoomValue = [10, 25, 30, 50, 90, 100];
+  lstZoomValue = [10, 25, 30, 50, 90, 100, 150, 200, 250, 300, 350, 400];
   // zoomFields = { text: 'show', value: 'realValue' };
   // lstZoomValue = [
   //   { realValue: '10', show: 10 },
@@ -597,8 +597,8 @@ export class PdfComponent
             res?.listFile?.forEach((file: any, index) => {
               if (file) {
                 file.fileUrl = environment.urlUpload + '/' + file.fileUrl;
-                file.fileIdx = index;                
-                file.signers= res?.approvers;
+                file.fileIdx = index;
+                file.signers = res?.approvers;
               }
             });
             this.lstFiles = res?.listFile;

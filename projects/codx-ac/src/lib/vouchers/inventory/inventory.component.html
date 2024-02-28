@@ -1,13 +1,13 @@
 <codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
-  (buttonClick)="toolbarClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'" assemblyName="IV"
+  (buttonClick)="toolbarClick($event)" [predicates]="'JournalNo=@0'" assemblyName="IV"
   className="VouchersBusiness" service="IV" method="GetDataAsync" idField="recID" [hideMoreFuncs]="!itemSelected"
-  (changeDataMF)="changeMFDetail($event, itemSelected,'viewdetail')" (clickMF)="clickMoreFunction($event, itemSelected)"
+  (changeDataMF)="changeMFDetail($event,'viewdetail')" (clickMF)="clickMoreFunction($event, itemSelected)"
   [dataValues]="runmode == '1' ? '' : journalNo" (selectedChange)="onSelectedItem($event)" [isSubView]="true">
 </codx-views>
 
 <!-- Start: templateGrid -->
 <ng-template #templateGrid let-data>
-  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFDetail($event, data, 'viewgrid')" [formModel]="view.formModel"
+  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFDetail($event, 'viewgrid')" [formModel]="view.formModel"
     (clickMF)="clickMoreFunction($event, data)" type="view"></codx-mfunc>
 </ng-template>
 <!-- End: templateGrid -->
@@ -22,10 +22,10 @@
 
 <ng-template #templateDetailRight>
   <ng-container *ngIf="itemSelected && viewActive == ViewType.listdetail">
-    <issue-transactions-detail [formModel]="view.formModel" [dataService]="this.view.dataService"
+    <receipt-transactions-detail [formModel]="view.formModel" [dataService]="this.view.dataService"
       [dataItem]="itemSelected" [recID]="itemSelected?.recID" [baseCurr]="baseCurr" [journal]="journal"
       [headerText]="headerText" [gridViewSetup]="view?.gridViewSetup" [hideFields]="hideFields"
-      [dataDefault]="dataDefault"></issue-transactions-detail>
+      [dataDefault]="dataDefault"></receipt-transactions-detail>
   </ng-container>
 </ng-template>
 
@@ -74,10 +74,10 @@
     <div class="d-flex justify-content-between">
       <div class="d-flex">
         <i class="icon-i-tags me-2 icon-16"></i>
-        <span class="text-gray-600 line-clamp line-clamp-1">{{data?.subType | vll : 'AC145' : 'text' | async}}</span>
+        <span class="text-gray-600 line-clamp line-clamp-1">{{data?.subType | vll : view?.gridViewSetup['SubType']?.referedValue : 'text' | async}}</span>
       </div>
     </div>
-    <div class="d-flex justify-content-between align-items-center">
+    <div style="height: 35px !important" class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-end codx-badge">
         <codx-vll *ngIf="data?.status == '1'" [formModel]="view.formModel" [field]="'Status'"
           [value]="data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
@@ -109,7 +109,7 @@
 <ng-template #listTemplate let-data>
   <codx-temp-full [titleTmp]="listtitleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
     [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" moreFuncCss="mt-5"
-    (changeDataMF)="changeMFDetail($event, data,'viewgrid')" (clickMF)="clickMoreFunction($event, data)">
+    (changeDataMF)="changeMFDetail($event,'viewgrid')" (clickMF)="clickMoreFunction($event, data)">
   </codx-temp-full>
 </ng-template>
 

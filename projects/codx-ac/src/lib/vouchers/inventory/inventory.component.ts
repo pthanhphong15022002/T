@@ -26,25 +26,23 @@ import {
   ViewType,
 } from 'codx-core';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
-import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { ActivatedRoute } from '@angular/router';
 import { CodxAcService } from '../../codx-ac.service';
-import { ReceiptTransactionsAddComponent } from './receipt-transactions-add/receipt-transactions-add.component';
-import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { InventoryAddComponent } from './inventory-add/inventory-add.component';
 import { Subject, combineLatest, map, takeUntil } from 'rxjs';
-import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
+import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
-import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 
 @Component({
   selector: 'lib-receipt-transactions',
-  templateUrl: './receipt-transactions.component.html',
-  styleUrls: ['./receipt-transactions.component.css'],
+  templateUrl: './inventory.component.html',
+  styleUrls: ['./inventory.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReceiptTransactionsComponent extends UIComponent {
+export class InventoryComponent extends UIComponent {
   //#region Constructor
   views: Array<ViewModel> = []; // model view
   @ViewChild('templateDetailLeft') templateDetailLeft?: TemplateRef<any>; //? template view danh sách chi tiết (trái)
@@ -302,7 +300,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
           optionSidebar.DataService = this.view?.dataService;
           optionSidebar.FormModel = this.view?.formModel;
           let dialog = this.callfc.openSide(
-            ReceiptTransactionsAddComponent,
+            InventoryAddComponent,
             data,
             optionSidebar,
             this.view.funcID
@@ -345,7 +343,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
         optionSidebar.DataService = this.view?.dataService;
         optionSidebar.FormModel = this.view?.formModel;
         let dialog = this.callfc.openSide(
-          ReceiptTransactionsAddComponent,
+          InventoryAddComponent,
           data,
           optionSidebar,
           this.view.funcID
@@ -414,7 +412,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
                       optionSidebar.DataService = this.view?.dataService;
                       optionSidebar.FormModel = this.view?.formModel;
                       let dialog2 = this.callfc.openSide(
-                        ReceiptTransactionsAddComponent,
+                        InventoryAddComponent,
                         data,
                         optionSidebar,
                         this.view.funcID
@@ -463,7 +461,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
                   optionSidebar.DataService = this.view?.dataService;
                   optionSidebar.FormModel = this.view?.formModel;
                   let dialog2 = this.callfc.openSide(
-                    ReceiptTransactionsAddComponent,
+                    InventoryAddComponent,
                     data,
                     optionSidebar,
                     this.view.funcID
@@ -525,7 +523,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
     optionSidebar.DataService = this.view?.dataService;
     optionSidebar.FormModel = this.view?.formModel;
     let dialog = this.callfc.openSide(
-      ReceiptTransactionsAddComponent,
+      InventoryAddComponent,
       data,
       optionSidebar,
       this.view.funcID
