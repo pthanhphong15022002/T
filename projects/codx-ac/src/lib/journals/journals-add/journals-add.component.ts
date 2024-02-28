@@ -261,8 +261,10 @@ export class JournalsAddComponent extends UIComponent {
         case 'multicurrency':
           if (!value) {
             this.formJournal.form.setValue('currencyID',this.baseCurr,{});
-            console.log(this.formJournal.form.data);
           }
+          break;
+        case 'subtype':
+          this.formJournal.form.setValue('subType',value,{});
           break;
       }
   }

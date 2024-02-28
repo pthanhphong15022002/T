@@ -68,7 +68,7 @@ export class PopupAddressComponent implements OnInit {
       this.data = JSON.parse(JSON.stringify(dt?.data?.data));
       this.isDefault = this.data?.isDefault;
     } else {
-      if (this.dialog.formModel?.funcID == 'CM0101') {
+      if (dt?.data?.objectType == 'CM_Customers') {
         this.data.adressType = '6';
       } else {
         this.data.adressType = '5';
