@@ -89,7 +89,7 @@ export class PopupAddCardsComponent implements OnInit, AfterViewInit {
   price: number = 0;
   totalRecorItem: number = 4;
   width = 720;
-  widthEvoucher = 747;
+  widthEvoucher = 752;
   height = window.innerHeight;
   exchangeRateEVoucher: number = 1;
 
@@ -167,7 +167,10 @@ export class PopupAddCardsComponent implements OnInit, AfterViewInit {
     this.user = this.auth.userValue;
   }
   ngAfterViewInit(): void {
-    if(this.cardType != this.CARDTYPE_EMNUM.Radio) {
+    if(
+      this.cardType != this.CARDTYPE_EMNUM.Radio && 
+      this.cardType != this.CARDTYPE_EMNUM.SuggestionImprovement
+    ) {
       this.tabInfo = [
         {
           icon: 'icon-article',
@@ -226,7 +229,13 @@ export class PopupAddCardsComponent implements OnInit, AfterViewInit {
         if (res) {
           console.log(res);
           this.evoucher = res.gifts?.filter((x: any) => x.category == '4');
+          this.amountEvoucher = this.evoucher.reduce((p, c) => {
+            return p + c.price * c.quantity;
+          }, 0);
           this.gifts = res.gifts?.filter((x: any) => x.category == '1');
+          this.amount = this.gifts.reduce((p, c) => {
+            return p + c.price * c.quantity;
+          }, 0);
           this.givePoint = res.point;
           this.form.patchValue({ coins: this.givePoint });
           this.lstShare = res.listShare;

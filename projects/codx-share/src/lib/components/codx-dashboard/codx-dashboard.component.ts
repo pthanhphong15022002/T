@@ -290,7 +290,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   ) {
 
     if(document.querySelector('.btn-minimize')){
-      let libLayout = document.querySelector('.codx-layout-form.codx-theme');
+      let libLayout = document.querySelector('.codx-layout.codx-theme');
       if(libLayout){
         libLayout.setAttribute('data-kt-aside-minimize','on');
         let aside = document.querySelector('#kt_aside_menu');

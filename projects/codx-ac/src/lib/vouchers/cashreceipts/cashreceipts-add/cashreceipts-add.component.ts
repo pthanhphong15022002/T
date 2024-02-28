@@ -598,6 +598,12 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         break;
     }
   }
+
+  selecting(event){
+    if (event.isSwiped) {
+      event.cancel = true;
+    }
+  }
   //#endregion Event
 
   //#region Method

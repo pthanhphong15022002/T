@@ -287,6 +287,7 @@ export class UserComponent extends UIComponent {
     var obj = {
       formType: formType,
       headerText: this.headerText,
+      data: data,
     };
     let option = new SidebarModel();
     option.DataService = this.view?.currentView?.dataService;

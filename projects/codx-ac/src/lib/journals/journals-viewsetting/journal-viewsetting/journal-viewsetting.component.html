@@ -1,0 +1,386 @@
+<codx-form
+  #formCashPayment
+  [headerText]="'Thiết lập'"
+  [body]="TmpBody"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+  [openMore]="false"
+>
+</codx-form>
+<ng-template #TmpBody>
+  <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+    <div>
+      <codx-label
+        fiedName="AssignRule"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </div>
+    <div>
+      <span
+        class="text-gray-500"
+        #assignRule
+        [innerHTML]="
+          journal?.assignRule
+            | formatvalue : dialog.formModel : 'assignRule' : assignRule
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+  <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+    <div>
+      <codx-label
+        fiedName="MultiCurrency"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </div>
+    <div>
+      <codx-input
+        type="switch"
+        [disabled]="true"
+        [crrValue]="journal?.multiCurrency"
+      ></codx-input>
+    </div>
+  </div>
+  <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+    <div>
+      <codx-label
+        fiedName="CurrencyID"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </div>
+    <div>
+      <span
+        class="text-gray-500"
+        #currencyID
+        [innerHTML]="
+          journal?.currencyID
+            | formatvalue : dialog.formModel : 'currencyID' : currencyID
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+  <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+    <div>
+      <codx-label
+        fiedName="ExchType"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </div>
+    <div class="text-gray-600">
+      <span
+        class="text-gray-500"
+        #exchType
+        [innerHTML]="
+          journal?.exchType
+            | formatvalue : dialog.formModel : 'exchType' : exchType
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+  <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+    <div>
+      <codx-label
+        fiedName="DRAcctControl"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </div>
+    <div>
+      <span
+        class="text-gray-500"
+        #drAcctControl
+        [innerHTML]="
+          journal?.drAcctControl
+            | formatvalue : dialog.formModel : 'drAcctControl' : drAcctControl
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+  <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+    <div>
+      <codx-label
+        fiedName="crAcctControl"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </div>
+    <div>
+      <span
+        class="text-gray-500"
+        #crAcctControl
+        [innerHTML]="
+          journal?.crAcctControl
+            | formatvalue : dialog.formModel : 'crAcctControl' : crAcctControl
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+  <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+    <div>
+      <codx-label
+        fiedName="DIM1Control"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </div>
+    <div>
+      <span
+        class="text-gray-600 line-clamp line-clamp-1"
+        #diM1Control
+        [innerHTML]="
+          journal?.diM1Control
+            | formatvalue : dialog.formModel : 'diM1Control' : diM1Control
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+  <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+    <div>
+      <codx-label
+        fiedName="DIM2Control"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </div>
+    <div>
+      <span
+        class="text-gray-600 line-clamp line-clamp-1"
+        #diM2Control
+        [innerHTML]="
+          journal?.diM2Control
+            | formatvalue : dialog.formModel : 'diM2Control' : diM2Control
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+  <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+    <div>
+      <codx-label
+        fiedName="DIM3Control"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </div>
+    <div>
+      <span
+        class="text-gray-600 line-clamp line-clamp-1"
+        #diM3Control
+        [innerHTML]="
+          journal?.diM3Control
+            | formatvalue : dialog.formModel : 'diM3Control' : diM3Control
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+  <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+    <div>
+      <codx-label
+        fiedName="ProjectControl"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </div>
+    <div>
+      <span
+        class="text-gray-600 line-clamp line-clamp-1"
+        #projectControl
+        [innerHTML]="
+          journal?.projectControl
+            | formatvalue : dialog.formModel : 'projectControl' : projectControl
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+  <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+    <div>
+      <codx-label
+        fiedName="LoanControl"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </div>
+    <div>
+      <span
+        class="text-gray-600 line-clamp line-clamp-1"
+        #loanControl
+        [innerHTML]="
+          journal?.loanControl
+            | formatvalue : dialog.formModel : 'loanControl' : loanControl
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+  <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+    <div>
+      <codx-label
+        fiedName="AssetControl"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </div>
+    <div>
+      <span
+        class="text-gray-600 line-clamp line-clamp-1"
+        #assetControl
+        [innerHTML]="
+          journal?.assetControl
+            | formatvalue : dialog.formModel : 'assetControl' : assetControl
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+  <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+    <div>
+      <codx-label
+        fiedName="TransLimit"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </div>
+    <div>
+      <span
+        class="text-gray-600 line-clamp line-clamp-1"
+        #transLimit
+        [innerHTML]="
+          journal?.transLimit
+            | formatvalue : dialog.formModel : 'transLimit' : transLimit
+            | async
+        "
+      ></span>
+    </div>
+  </div>
+  <ng-container *ngIf="vllAC125.includes(journal?.journalType)">
+    <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+      <div>
+        <codx-label
+          fiedName="VatControl"
+          [formModel]="dialog.formModel"
+        ></codx-label>
+      </div>
+      <div>
+        <codx-input
+          type="switch"
+          [disabled]="true"
+          [crrValue]="journal?.vatControl == '1' ? true : false"
+        ></codx-input>
+      </div>
+    </div>
+    <div
+      *ngIf="vllAC126.includes(journal?.journalType)"
+      class="w-100 d-flex align-items-center justify-content-between mb-1"
+    >
+      <div>
+        <codx-label
+          fiedName="UseDutyTax"
+          [formModel]="dialog.formModel"
+        ></codx-label>
+      </div>
+      <div>
+        <codx-input
+          type="switch"
+          [disabled]="true"
+          [crrValue]="journal?.useDutyTax"
+        ></codx-input>
+      </div>
+    </div>
+    <div
+      *ngIf="vllAC126.includes(journal?.journalType)"
+      class="w-100 d-flex align-items-center justify-content-between mb-1"
+    >
+      <div>
+        <codx-label
+          fiedName="UseExciseTax"
+          [formModel]="dialog.formModel"
+        ></codx-label>
+      </div>
+      <div>
+        <codx-input
+          type="switch"
+          [disabled]="true"
+          [crrValue]="journal?.useExciseTax"
+        ></codx-input>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="vllAC108.includes(journal?.journalType)">
+    <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+      <div>
+        <codx-label
+          fiedName="SubControl"
+          [formModel]="dialog.formModel"
+        ></codx-label>
+      </div>
+      <div>
+        <span
+          class="text-gray-600 line-clamp line-clamp-1"
+          #subControl
+          [innerHTML]="
+            journal?.subControl
+              | formatvalue : dialog.formModel : 'subControl' : subControl
+              | async
+          "
+        ></span>
+      </div>
+    </div>
+    <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+      <div>
+        <codx-label
+          fiedName="SettleControl"
+          [formModel]="dialog.formModel"
+        ></codx-label>
+      </div>
+      <div>
+        <span
+          class="text-gray-600 line-clamp line-clamp-1"
+          #settleControl
+          [innerHTML]="
+            journal?.settleControl
+              | formatvalue : dialog.formModel : 'settleControl' : settleControl
+              | async
+          "
+        ></span>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="vllAC109.includes(journal?.journalType)">
+    <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+      <div>
+        <codx-label fiedName="WarehouseIssue" [formModel]="dialog.formModel"></codx-label>
+      </div>
+      <div>
+        <span class="text-gray-600 line-clamp line-clamp-1" #warehouseIssue [innerHTML]="
+                      journal?.warehouseIssue
+                        | formatvalue : dialog.formModel : 'warehouseIssue' : warehouseIssue
+                        | async
+                    "></span>
+      </div>
+    </div>
+    <div *ngIf="vllAC111.includes(journal?.journalType)"
+      class="w-100 d-flex align-items-center justify-content-between mb-1">
+      <div>
+        <codx-label fiedName="WarehouseReceipt" [formModel]="dialog.formModel"></codx-label>
+      </div>
+      <div>
+        <span class="text-gray-600 line-clamp line-clamp-1" #warehouseReceipt [innerHTML]="
+                      journal?.warehouseReceipt
+                        | formatvalue : dialog.formModel : 'warehouseReceipt' : warehouseReceipt
+                        | async
+                    "></span>
+      </div>
+    </div>
+    <div class="w-100 d-flex align-items-center justify-content-between mb-1">
+      <div style="white-space: nowrap;" class="me-5">
+        <codx-label fiedName="IDIMControl" [formModel]="dialog.formModel"></codx-label>
+      </div>
+      <div>
+        <ng-container *ngFor="let item of journal?.idimControl?.split(';')">
+          <span class="badge ac-badge-light-primary me-2 mb-2">
+            {{item | vll : 'AC069' : 'text' | async}}
+          </span>
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
