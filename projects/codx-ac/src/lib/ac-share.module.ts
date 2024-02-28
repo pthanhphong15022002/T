@@ -44,7 +44,7 @@ import { ItemsStyleAddComponent } from './settings/items-categories/items-style-
 import { ItemsSizeAddComponent } from './settings/items-categories/items-size-add/items-size-add.component';
 import { ItemsAddComponent } from './settings/items-categories/items-add/items-add.component';
 import { ItemsComponent } from './settings/items-categories/items.component';
-import { NosubAsideComponent } from './_noSubAside/nosub-aside.component';
+// import { NosubAsideComponent } from './_noSubAside/nosub-aside.component';
 import { VendorsAddComponent } from './settings/vendors-categories/vendors-add/vendors-add.component';
 import { VendorsComponent } from './settings/vendors-categories/vendors.component';
 import { AddressAddComponent } from './settings/customers-categories/address-add/address-add.component';
@@ -73,7 +73,7 @@ const T_Comp: Type<any>[] = [
   AddressAddComponent,
   VendorsComponent,
   VendorsAddComponent,
-  NosubAsideComponent,
+  // NosubAsideComponent,
   ItemsComponent,
   ItemsAddComponent,
   ItemsSizeAddComponent,

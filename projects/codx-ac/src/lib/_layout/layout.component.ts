@@ -1,23 +1,14 @@
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  HostListener,
   Injector,
-  OnInit,
-  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {
-  AuthStore,
-  CallFuncService,
   DialogRef,
   LayoutBaseComponent,
-  UIComponent,
 } from 'codx-core';
 
 import { RoundService } from '../round.service';
-import { CodxAcService } from '../codx-ac.service';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
@@ -33,8 +24,6 @@ export class LayoutComponent extends LayoutBaseComponent {
   ) {
     super(inject);
     this.module = 'AC';
-    this.layoutModel.toolbarDisplay = true;
-    this.layoutModel.toolbarFixed = false;
     this.round.initCache();
   }
 
@@ -43,15 +32,5 @@ export class LayoutComponent extends LayoutBaseComponent {
   }
 
   onAfterViewInit(): void {
-    // this.layoutModel.toolbarDisplay = false;
-    // this.codxAC.changeToolBar.subscribe((funcID:any)=>{
-    //   if (funcID) {
-    //     if (funcID === 'ACT') {
-    //       this.funcID = funcID;
-    //     }
-    //   }else{
-    //     this.funcID = null;
-    //   }
-    // })
   }
 }
