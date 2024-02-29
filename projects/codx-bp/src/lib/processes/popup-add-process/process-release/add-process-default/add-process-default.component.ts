@@ -104,11 +104,31 @@ export class AddProcessDefaultComponent implements OnInit{
       {
         element.dataFormat = typeof element.dataFormat == 'string' ? JSON.parse(element.dataFormat) : element.dataFormat;
         element.tableFormat = typeof element.tableFormat == 'string' ? JSON.parse(element.tableFormat) : element.tableFormat;
-        this.tableField = field;
-        if(this.type == 'add') {
-          this.dataIns.datas = {};
-          this.dataIns.datas[field] = [];
+        element.columnsGrid = [];
+        element.dataFormat.forEach(elm2 => {
+          var obj = 
+          {
+            headerText: elm2.title,
+            controlType: "Text",
+            field: elm2.fieldName
+          }
+          element.columnsGrid.push(obj)
+        });
+
+        if(element?.tableFormat?.hasIndexNo) {
+          var obj2 = 
+          {
+            headerText: 'STT',
+            controlType: "Numberic",
+            field: 'indexNo'
+          }
+          element.columnsGrid.unshift(obj2)
         }
+        // this.tableField = field;
+        // if(this.type == 'add') {
+        //   this.dataIns.datas = {};
+        //   this.dataIns.datas[field] = [];
+        // }
       }
       var index = list.findIndex(x=>x.columnOrder == element.columnOrder)
       if(index >= 0)
