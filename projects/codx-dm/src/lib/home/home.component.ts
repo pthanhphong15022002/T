@@ -1146,7 +1146,6 @@ export class HomeComponent extends UIComponent implements OnDestroy {
   //   .subscribe();
   // }
   onSelectionChanged($data, noTree = false) {
-    debugger
     if(this.funcID.includes('DMT00') && this.view.dataService.dataSelected?.recID == $data.data.recID) return;
     // if ((this.funcID.includes('DMT00')) && $data.data.folderId == 'DM')
     // {
