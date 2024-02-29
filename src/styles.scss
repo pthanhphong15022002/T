@@ -4382,7 +4382,9 @@ codx-view-schedule .container-fluid.h-50px {
 .h-29px{
   height: 28px!important;
 }
-
+codx-toolbar-button .btn.h-29px{
+  margin-left: 4px;
+}
 codx-view-list-detail .codx-detail-footer {
   bottom: 0px;
 }

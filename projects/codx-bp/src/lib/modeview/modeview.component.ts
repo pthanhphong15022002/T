@@ -433,6 +433,7 @@ export class ModeviewComponent implements OnInit {
 
   formatTitle(str:any)
   {
+    str = str.toLowerCase();
     return this.xoa_dau(str.replaceAll(" ","_").replaceAll("/","_")) + "_" + this.stepNo;
   }
 

@@ -60,6 +60,7 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
 
   valueChange(e:any)
   {
+    debugger
     this.data = e;
   }
 
