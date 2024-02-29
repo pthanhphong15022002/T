@@ -31,6 +31,7 @@ import {
   CodxFormComponent,
   CodxInputComponent,
   NotificationsService,
+  TenantStore,
 } from 'codx-core';
 import { tmpInstances } from '../../models/tmpModel';
 import { CodxCmService } from '../../codx-cm.service';
@@ -246,6 +247,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   isLoadedCF = false;
   refInstance = ''; //Biến tham chiếu data từ cơ hội
   dataSourceRef: any;
+  tenant = "";
   //#endregion
 
   constructor(
@@ -259,6 +261,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     private contractService: ContractsService,
     private changeDetectorRef: ChangeDetectorRef,
     private customFieldSV: CustomFieldService,
+    private tenantStore: TenantStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -277,6 +280,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.customerID = dt?.data?.customerID;
     this.stepsTasks = dt?.data?.stepsTasks || {};
     this.contractsInput = dt?.data?.contract || dt?.data?.dataCM || null;
+    this.tenant = this.tenantStore.get().tenant;
     this.user = this.authStore.get();
     this.getHeaderText();
     this.getGrvSetup();
