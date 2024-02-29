@@ -25,6 +25,7 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
   listStage = [];
   count = 0;
   listIds=[];
+  tempPermission=[];
   constructor(
     private shareService: CodxShareService,
     private ref: ChangeDetectorRef,
@@ -43,9 +44,46 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
 
   ngOnInit(): void {
     this.listIds = [];
-    this.formatData();
+    if(this.tempPermission?.length >1){
+      this.getPermission();
+    }
+    else{
+      
+      this.formatData();
+    }
   
   }
+  getPermission() {
+    let approvers = [];
+    this.data?.steps?.forEach((step) => {
+      if (step?.permissions?.length > 0) {
+        step?.permissions.forEach((per) => {
+          if (per?.objectType != null) {
+            approvers.push({
+              approver: per?.objectID,
+              roleType: per?.objectType,
+              refID: step?.recID,
+            });
+          }
+        });
+      }
+    });
+    if (approvers?.length > 0) {
+      this.shareService
+        .getApproverByRole(approvers, false, this.data?.createdBy)
+        .subscribe((res) => {
+          if (res) {
+            this.tempPermission = res;
+            this.formatData();
+          } else {
+            this.formatData();
+          }
+        });
+    } else {
+      this.formatData();
+    }
+  }
+  
   resetDLS()
   {
     debugger
@@ -108,6 +146,7 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
     list.forEach(elm2 => {
       elm2.settings = typeof elm2?.settings === 'object' ? elm2.settings : (elm2?.settings ? JSON.parse(elm2.settings) : null);
       elm2.permissions = typeof elm2?.permissions === 'object' ? elm2.permissions : (elm2?.permissions ? JSON.parse(elm2.permissions) : null);
+      
       elm2.child = this.getListChild(elm2);
       if(elm2.activityType == "Conditions" && elm2.child && elm2.child.length>0)
       {
