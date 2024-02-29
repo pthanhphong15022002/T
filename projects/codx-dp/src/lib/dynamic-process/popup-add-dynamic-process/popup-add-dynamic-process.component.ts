@@ -5212,6 +5212,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   valueChangeChecked(event, data) {
     if (event) {
       data[event.field] = event?.data || false;
+      this.changeProgrgessStep();
     }
   }
 
@@ -5413,7 +5414,6 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   }
 
   changeProgrgessStep(){
-    if(!this.process?.instanceProgressControl){
       let count = this.stepList?.length;
       if(count > 0){
         let medium =parseFloat((100/count).toFixed(2)); 100/count;
@@ -5421,7 +5421,6 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
           step.instanceProgress = medium * step.stepNo;
         })
       }
-    }
   }
 
 }

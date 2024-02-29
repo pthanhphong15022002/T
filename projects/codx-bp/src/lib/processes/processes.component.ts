@@ -460,7 +460,7 @@ export class ProcessesComponent
       {
         this.itemSelected = item;
         this.view.dataService.update(item, true).subscribe();
-        this.codxService.reloadMenuAside();
+        // this.codxService.reloadMenuAside();
         this.notiSv.notifyCode("SV001")
       }
       else
