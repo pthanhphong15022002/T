@@ -3,8 +3,23 @@
   assemblyName="IV" className="TransfersBusiness" service="IV" method="GetDataAsync" [hideMoreFuncs]="!itemSelected"
   (changeDataMF)="changeMFDetail($event,'viewdetail')" (clickMF)="clickMoreFunction($event, itemSelected)"
   [dataValues]="runmode == '1' ? '' : journalNo" (selectedChange)="onSelectedItem($event)" [isSubView]="true" 
-  (viewChanged)="viewChanged($event)">
+  (viewChanged)="viewChanged($event)" [titleToolBarTmp]="titleToolBarTmp">
 </codx-views>
+
+<!-- titleToolBarTmp -->
+<ng-template #titleToolBarTmp let-data>
+  <div class="d-flex align-items-center">
+    <span [ngbTooltip]="tooltip" type="button" class="btn btn-icon btn-sm btn-light-primary ms-3" (click)="editJournal()">
+      <i class="icon-edit icon-16"></i>
+    </span>
+    <ng-template #tooltip let-data>
+      <span>Chỉnh sửa sổ nhật kí</span>
+    </ng-template>
+    <codx-page-title class="page-title d-flex align-items-center flex-wrap ms-2"></codx-page-title>
+  </div>
+</ng-template>
+<!-- titleToolBarTmp -->
+
 <!-- Start: templateGrid -->
 <ng-template #templateGrid let-data>
   <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFDetail($event,'viewgrid')" [formModel]="view.formModel"
