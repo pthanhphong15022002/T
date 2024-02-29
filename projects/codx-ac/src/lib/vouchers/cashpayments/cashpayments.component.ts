@@ -59,9 +59,13 @@ export class CashPaymentsComponent extends UIComponent {
   hideFields: Array<any> = [];
   button: ButtonModel[] = [
     {
-      //? nút thêm phiếu
       id: 'btnAdd',
       icon: 'icon-i-file-earmark-plus',
+    },
+    {
+      id: 'btnEditJournal',
+      icon: 'icon-edit_square',
+      text:'Chỉnh sửa sổ nhật kí',
     },
   ];
   bhLogin: boolean = false;
@@ -206,7 +210,10 @@ export class CashPaymentsComponent extends UIComponent {
   toolbarClick(event) {
     switch (event.id) {
       case 'btnAdd':
-        this.addNewVoucher(); //? thêm mới chứng từ
+        this.addNewVoucher();
+        break;
+      case 'btnEditJournal':
+        this.addNewVoucher();
         break;
     }
   }
@@ -540,6 +547,10 @@ export class CashPaymentsComponent extends UIComponent {
       });
   }
 
+  editJournal(){
+    
+  }
+
   /**
    * *Xuất file theo template(Excel,PDF,...)
    * @param data
@@ -575,6 +586,7 @@ export class CashPaymentsComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any, type: any = '') {
+    console.log(event);
     let data = this.view?.dataService?.dataSelected;
     if (this.runmode == '1') {
       this.shareService.changeMFApproval(event, data.unbounds);
