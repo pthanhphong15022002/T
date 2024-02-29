@@ -123,6 +123,7 @@ import { InventoryDetailComponent } from './vouchers/inventory/inventory-detail/
 import { InventoryComponent } from './vouchers/inventory/inventory.component';
 import { InventoryAddComponent } from './vouchers/inventory/inventory-add/inventory-add.component';
 import { CashCountingsComponent } from './vouchers/cash-countings/cash-countings.component';
+import { CashCountingsAddComponent } from './vouchers/cash-countings/cash-countings-add/cash-countings-add.component';
 
 export const routes: Routes = [
   {
@@ -485,6 +486,7 @@ export const routes: Routes = [
     ViewresultComponent,
     JournalViewsettingComponent,
     CashCountingsComponent,
+    CashCountingsAddComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

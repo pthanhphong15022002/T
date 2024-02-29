@@ -5,6 +5,7 @@ import { CodxAcService } from '../../codx-ac.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { CashCountingsAddComponent } from './cash-countings-add/cash-countings-add.component';
 
 @Component({
   selector: 'lib-cash-countings',
@@ -255,42 +256,40 @@ onDestroy() {
    * *Hàm thêm mới chứng từ
    */
   addNewVoucher() {
-    // this.view.dataService
-    //   .addNew((o) => this.setDefault(this.dataDefault))
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res) => {
-    //     if (res != null) {
-    //       res.isAdd = true;
-    //       if (this.dataDefault == null) this.dataDefault = { ...res };
-    //       let data = {
-    //         headerText: this.headerText, //? tiêu đề voucher
-    //         journal: { ...this.journal }, //?  data journal
-    //         oData: { ...res }, //?  data của cashpayment
-    //         hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-    //         baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-    //         legalName: this.legalName, //? tên company
-    //       };
-    //       let optionSidebar = new SidebarModel();
-    //       optionSidebar.DataService = this.view?.dataService;
-    //       optionSidebar.FormModel = this.view?.formModel;
-    //       let dialog = this.callfc.openSide(
-    //         CashPaymentAddComponent,
-    //         data,
-    //         optionSidebar,
-    //         this.view.funcID
-    //       );
-    //       dialog.closed.subscribe((res) => {
-    //         if (res && res?.event) {
-    //           if (res?.event?.type === 'discard') {
-    //             if (this.view.dataService.data.length == 0) {
-    //               this.itemSelected = undefined;
-    //               this.detectorRef.detectChanges();
-    //             }
-    //           }
-    //         }
-    //       });
-    //     }
-    //   });
+    this.view.dataService
+      .addNew((o) => this.setDefault(this.dataDefault))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res != null) {
+          res.isAdd = true;
+          if (this.dataDefault == null) this.dataDefault = { ...res };
+          let data = {
+            headerText: this.headerText,
+            journal: { ...this.journal },
+            oData: { ...res },
+            hideFields: [...this.hideFields],
+          };
+          let optionSidebar = new SidebarModel();
+          optionSidebar.DataService = this.view?.dataService;
+          optionSidebar.FormModel = this.view?.formModel;
+          let dialog = this.callfc.openSide(
+            CashCountingsAddComponent,
+            data,
+            optionSidebar,
+            this.view.funcID
+          );
+          dialog.closed.subscribe((res) => {
+            if (res && res?.event) {
+              if (res?.event?.type === 'discard') {
+                if (this.view.dataService.data.length == 0) {
+                  this.itemSelected = undefined;
+                  this.detectorRef.detectChanges();
+                }
+              }
+            }
+          });
+        }
+      });
   }
 
   /**
@@ -694,7 +693,7 @@ onDestroy() {
    * @returns
    */
   setDefault(data: any, action: any = '') {
-    return this.api.exec('AC', 'CashCountingsBusiness', 'SetDefaultAsync', [
+    return this.api.exec('AC', 'CountingsBusiness', 'SetDefaultAsync', [
       data,
       this.journal,
       this.journalNo,
