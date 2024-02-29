@@ -5412,4 +5412,16 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     });
   }
 
+  changeProgrgessStep(){
+    if(!this.process?.instanceProgressControl){
+      let count = this.stepList?.length;
+      if(count > 0){
+        let medium =parseFloat((100/count).toFixed(2)); 100/count;
+        this.stepList.forEach((step) => {
+          step.instanceProgress = medium * step.stepNo;
+        })
+      }
+    }
+  }
+
 }

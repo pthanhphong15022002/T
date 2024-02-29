@@ -552,9 +552,8 @@
         default="Ghi chú"
       ></codx-label>
     </div>
-    <div class>
+    <div>
       <codx-input
-        #inputQuotation
         [formModel]="dialog?.formModel"
         field="note"
         [crrValue]="contracts?.note || ''"
@@ -765,7 +764,7 @@
     </codx-input>
   </div>
 
-  <div class="row form-group">
+  <div class="row form-group" *ngIf="tenant != 'qtscdemo'">
     <codx-label
       [formModel]="dialog?.formModel"
       fiedName="quotationID"
