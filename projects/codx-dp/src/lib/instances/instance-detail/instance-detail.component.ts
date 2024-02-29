@@ -946,8 +946,6 @@ export class InstanceDetailComponent implements OnInit {
       let index = listStepConvert.findIndex((step) => step.stepID == this.dataSelect?.stepID);
       if(index <0){
         this.progress = "0";
-      }else if(index == 0){
-        this.progress = listStepConvert[0]?.progress?.toFixed(1);
       }else{
         let conut = listStepConvert?.length;
         if(conut > 0){

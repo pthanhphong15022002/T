@@ -146,7 +146,15 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
     list.forEach(elm2 => {
       elm2.settings = typeof elm2?.settings === 'object' ? elm2.settings : (elm2?.settings ? JSON.parse(elm2.settings) : null);
       elm2.permissions = typeof elm2?.permissions === 'object' ? elm2.permissions : (elm2?.permissions ? JSON.parse(elm2.permissions) : null);
-      
+      if(this.tempPermission?.length > 0){            
+        let pers = this.tempPermission.filter((x) => x.refID == elm2.recID);
+        if (pers?.length > 0) {
+          elm2.pers = pers?.map((u) => u?.userID).join(';') ?? '';
+        }
+      }
+      else{
+        elm2.pers = elm2?.permissions?.map((u) => u?.objectID).join(';') ?? '';
+      }
       elm2.child = this.getListChild(elm2);
       if(elm2.activityType == "Conditions" && elm2.child && elm2.child.length>0)
       {
