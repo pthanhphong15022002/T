@@ -4604,7 +4604,10 @@ Custom Scrollbars
 //////
 
 .dashboard-content.w-100 > codx-wrapper.hover-scroll-overlay-y{
-  overflow: hidden!important;
+  overflow-y: hidden !important;
+  &:hover {
+    overflow-y: hidden !important;
+}
 }
 
 codx-aside .menu-link .menu-icon span[class*="icon-"]::before{
