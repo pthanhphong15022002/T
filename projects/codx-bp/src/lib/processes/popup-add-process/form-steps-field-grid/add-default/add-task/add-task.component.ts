@@ -493,7 +493,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
 
   getFieldExport()
   {
-    return this.process.steps.filter(x=>x.activityType == 'Form' && x.stepNo < this.data.stepNo);
+    return this.process.steps.filter(x=>x.activityType == 'Form' && x.stepNo <= this.data.stepNo);
   }
 
   openFormTemplate(val:any , type:any ,data:any = null)
