@@ -44,7 +44,7 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
 
   ngOnInit(): void {
     this.listIds = [];
-    if(this.tempPermission?.length >1){
+    if(this.tempPermission?.length ==null || this.tempPermission?.length==0){
       this.getPermission();
     }
     else{
