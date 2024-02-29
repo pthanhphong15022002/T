@@ -308,8 +308,43 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     }
 
     this.data.permissions = this.listUses;
-    this.dataChange.emit(this.data);
+    let approvers =[];
+    if(this.listUses?.length>0){
+      this.listUses?.forEach((per) => {  
+        approvers.push({
+          approver: per?.objectID,
+          roleType: per?.objectType,
+          refID: this.data?.recID,
+        });
+      });
+      if (approvers?.length > 0) {
+        this.shareService
+          .getApproverByRole(approvers, false, this.data?.createdBy)
+          .subscribe((res) => {
+            if (res) {
+              this.data.pers = res?.map(x=>x.userID)?.join(";") ?? null; 
+              if(this.data.pers==null || this.data.pers?.length==0){
+                this.data.pers = res?.map(x=>x.approver)?.join(";")
+              }
+            }
+            this.dataChange.emit(this.data);
+            
+        });       
+      }
+      else{
+        
+        this.dataChange.emit(this.data);
+      }
+    }
+    else{
+      this.dataChange.emit(this.data);
+    }
+
+    
+
+    
   }
+  
 
   valueChangeUserEvent(e:any)
   {
