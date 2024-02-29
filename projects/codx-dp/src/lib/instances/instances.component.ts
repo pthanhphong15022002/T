@@ -1940,6 +1940,7 @@ export class InstancesComponent
             'add'
           );
         }
+        this.detailViewInstance.loadChangeData();
         this.detectorRef.detectChanges();
       }
     });
