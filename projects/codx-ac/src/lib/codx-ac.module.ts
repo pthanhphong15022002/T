@@ -138,7 +138,7 @@ export const routes: Routes = [
       {
         path: 'report/:funcID',
         component: CodxReportViewsComponent,
-      },      
+      },
       {
         path: 'dashboard/:funcID',
         component: DashboardComponent,
@@ -151,7 +151,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'report/detail/:reportID',
+        path: 'report/detail/:funcID',
         component: CodxReportViewDetailComponent,
       },
       {
