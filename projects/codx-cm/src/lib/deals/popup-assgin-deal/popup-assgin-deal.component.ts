@@ -422,12 +422,10 @@ export class PopupAssginDealComponent
       this.codxCmService.editInstance([obj]).subscribe((res) => {
         if (res) {
           this.updatePermssion(res);
-          this.isCloseCM = false;
-          this.dialogRef.close(res);
-          // if (this.isCallInstance) {
-          //   this.isCloseCM = false;
-          //   this.dialogRef.close(res);
-          // }
+          if (this.isCallInstance) {
+            this.isCloseCM = false;
+            this.dialogRef.close(res);
+          }
         }
       });
     } else {
