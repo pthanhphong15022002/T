@@ -598,7 +598,8 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.data.isDefault = false;
     }
     op.method = this.action != 'edit' ? 'AddCrmAsync' : 'UpdateCrmAsync';
-
+    op.assemblyName = 'CM';
+    op.service = "CM";
     switch (this.checkType) {
       case '1':
       case '5':

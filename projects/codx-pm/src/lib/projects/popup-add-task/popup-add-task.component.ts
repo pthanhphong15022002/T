@@ -1,11 +1,12 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild, ViewEncapsulation } from "@angular/core";
-import { NotificationsService, AuthService, CacheService, AuthStore, DialogData, DialogRef, DialogModel, CallFuncService, ApiHttpService, RequestOption, SidebarModel } from "codx-core";
+import { NotificationsService, AuthService, CacheService, AuthStore, DialogData, DialogRef, DialogModel, CallFuncService, ApiHttpService, RequestOption, SidebarModel, Util } from "codx-core";
 import { CodxCommonService } from "projects/codx-common/src/lib/codx-common.service";
 import { CodxShareService } from "projects/codx-share/src/public-api";
 import { L10n,setCulture } from '@syncfusion/ej2-base';
 import { PopupSelectUserComponent } from "../popup-select-user/popup-select-user.component";
 import { AttachmentComponent } from "projects/codx-common/src/lib/component/attachment/attachment.component";
 import moment from "moment";
+import { PopupAddMemoComponent } from "../popup-add-memo/popup-add-memo.component";
 @Component({
   selector: 'popup-add-task',
   templateUrl: './popup-add-task.component.html',
@@ -53,7 +54,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   ) {
     this.dialog = dialogRef;
     this.formModel = this.dialog?.formModel;
-    this.funcID = this.formModel?.funcID;
+    this.funcID = this.formModel?.functionID;
     this.data = dialogData.data[0];
     if(this.data.parentID){
       this.api.execSv('TM','ERM.Business.TM','TasksBusiness','GetTaskByRecIDAsync',this.data.parentID).subscribe((res:any)=>{
@@ -82,6 +83,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
           this.data.approveControl = this.projectData.settings.find((x:any)=>x.fieldName=='ApproveControl').fieldValue;
         }
       }
+
     }
     this.cacheService.valueList('PM013').subscribe((res:any)=>{
       if(res && res.datas){
@@ -122,7 +124,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   selectUser(){
     let option = new DialogModel;
     option.zIndex=9999;
-    let dialog = this.callfc.openForm(PopupSelectUserComponent,'',500,600,'',{projectData:this.projectData,projectMemberType:this.projectMemberType, roleType: this.selectedRole ? this.selectedRole : 'A'},'',option);
+    let dialog = this.callfc.openForm(PopupSelectUserComponent,'',500,600,'',{projectData:this.projectData,projectMemberType:this.projectMemberType, roleType: this.selectedRole ? this.selectedRole : 'A',listRoles:this.listRoles},'',option);
     dialog.closed.subscribe((res:any)=>{
       if(res.event){
         if(this.projectMemberType == '1'){
@@ -146,7 +148,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
             }
             else{
               if(this.members[idx].roleType != member.roleType){
-                this.members[idx=member]
+                this.members[idx]=member
               }
             }
 
@@ -180,7 +182,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
 
   newTask:any;
   todoList:any=[]
-  addTask(input:any) {
+  addTask(input:any,cancel:boolean=true) {
     if (this.newTask.trim() !== '') {
       if(!this.isEditTodo){
         const newTask: any = {
@@ -202,7 +204,8 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
       }
 
     }
-    setTimeout(()=>{input.focus()},500)
+    let _cancel = cancel;
+    setTimeout(()=>{if(!_cancel){input.focus()}},500)
   }
 
   removeTask(task: any) {
@@ -402,10 +405,9 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
           if (arrUser.length != res.length) {
             arrUser = res.map((x) => x.userID);
           }
-          this.listUser = this.listUser.concat(arrUser);
+          this.listUser = arrUser;
           this.data.assignTo = this.listUser.join(';');
           this.selectedRole=undefined;
-          debugger
         }
       });
   }
@@ -533,9 +535,24 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
 
   removeMember(e:any){
     if(e){
-      this.members = this.members.filter((x:any)=>x.resouceID != e.resourceID);
+      this.members = this.members.filter((x:any)=>x.resourceID != e.resourceID);
       this.getListUser(this.members.map((x:any)=>x.resourceID).join(';'));
       this.changeDetectorRef.detectChanges();
     }
+  }
+
+  extendMemo(memo){
+    let option = new DialogModel;
+    option.zIndex=9999;
+    let dialog = this.callfc.openForm(PopupAddMemoComponent,'',800,600,'',{data:memo},'',option);
+    dialog.closed.subscribe((res:any)=>{
+      if(res.event){
+        this.data.memo = res.event;
+      }
+    })
+  }
+  isHtmlContent(memo:any){
+    if(!memo) return false;
+    return /<\/?[a-z][\s\S]*>/i.test(memo)
   }
 }
