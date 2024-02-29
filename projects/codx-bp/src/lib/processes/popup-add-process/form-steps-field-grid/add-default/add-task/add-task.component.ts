@@ -306,7 +306,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
         )
       });
     }
-
+    
     this.data.permissions = this.listUses;
     this.dataChange.emit(this.data);
   }
