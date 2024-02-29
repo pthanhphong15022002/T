@@ -8,6 +8,7 @@ import {
 import {
   AuthStore,
   ButtonModel,
+  CRUDService,
   DataRequest,
   DialogModel,
   FormModel,
@@ -24,6 +25,7 @@ import {
   CodxAcService,
   fmCashPaymentsLines,
   fmCashPaymentsLinesOneAccount,
+  fmJournal,
   fmSettledInvoices,
   fmVATInvoices,
 } from '../../codx-ac.service';
@@ -32,6 +34,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
 import { Router } from '@angular/router';
+import { JournalsAddComponent } from '../../journals/journals-add/journals-add.component';
 declare var jsBh: any;
 @Component({
   selector: 'lib-cashpayments',
@@ -62,11 +65,6 @@ export class CashPaymentsComponent extends UIComponent {
       id: 'btnAdd',
       icon: 'icon-i-file-earmark-plus',
     },
-    {
-      id: 'btnEditJournal',
-      icon: 'icon-edit_square',
-      text:'Chỉnh sửa sổ nhật kí',
-    },
   ];
   bhLogin: boolean = false;
   bankPayID: any;
@@ -79,6 +77,8 @@ export class CashPaymentsComponent extends UIComponent {
   fmCashpaymentLineOne: FormModel = fmCashPaymentsLinesOneAccount;
   fmSettledInvoices: FormModel = fmSettledInvoices;
   fmVATInvoices: FormModel = fmVATInvoices;
+  fmJournal:FormModel =  fmJournal;
+  journalSV:CRUDService;
   private destroy$ = new Subject<void>();
   constructor(
     private inject: Injector,
@@ -87,7 +87,7 @@ export class CashPaymentsComponent extends UIComponent {
     private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore
+    private tenant: TenantStore,
   ) {
     super(inject);
     this.cache
@@ -109,6 +109,11 @@ export class CashPaymentsComponent extends UIComponent {
         this.runmode = res.runMode;
       }
     });
+    this.journalSV = this.acService.createCRUDService(
+      inject,
+      this.fmJournal,
+      'AC'
+    );
   }
   //#endregion Constructor
 
@@ -210,9 +215,6 @@ export class CashPaymentsComponent extends UIComponent {
   toolbarClick(event) {
     switch (event.id) {
       case 'btnAdd':
-        this.addNewVoucher();
-        break;
-      case 'btnEditJournal':
         this.addNewVoucher();
         break;
     }
@@ -548,7 +550,34 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   editJournal(){
-    
+    this.journalSV
+      .edit(this.journal)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        res.isEdit = true;
+        this.cache.gridViewSetup(this.fmJournal.formName,this.fmJournal.gridViewName).subscribe((o)=>{
+          let data = {
+            headerText: ('Chỉnh sửa sổ nhật kí').toUpperCase(),
+            oData: { ...res },
+          };
+          let option = new SidebarModel();
+          option.FormModel = this.fmJournal;
+          option.DataService = this.journalSV;
+          option.Width = '800px';
+          let dialog = this.callfc.openSide(
+            JournalsAddComponent,
+            data,
+            option,
+            this.fmJournal.funcID
+          );
+          dialog.closed.subscribe((res) => {
+            if (res && res.event) {
+              this.journal = res.event?.data;
+              this.detectorRef.detectChanges();
+            }
+          });
+        })
+      });
   }
 
   /**
@@ -586,7 +615,6 @@ export class CashPaymentsComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any, type: any = '') {
-    console.log(event);
     let data = this.view?.dataService?.dataSelected;
     if (this.runmode == '1') {
       this.shareService.changeMFApproval(event, data.unbounds);

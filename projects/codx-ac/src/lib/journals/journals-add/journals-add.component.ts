@@ -84,7 +84,6 @@ export class JournalsAddComponent extends UIComponent {
     this.dataDefault = { ...dialogData.data?.oData };
     this.mainFilterValue = dialogData.data?.mainFilterValue;
     this.preData = { ...dialogData.data?.oData };
-    
   }
   //#endregion Constructor
 
@@ -115,6 +114,11 @@ export class JournalsAddComponent extends UIComponent {
       });
     
     this.onDisableTab();
+    this.detectorRef.detectChanges();
+  }
+
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
   }
   //#endregion Init
 
@@ -293,7 +297,7 @@ export class JournalsAddComponent extends UIComponent {
                     this.notification.notifyCode('SYS006');
                 else
                     this.notification.notifyCode('SYS007');
-                    this.dialog.close();
+                    this.dialog.close({data:this.formJournal.form.data});
               })
           }
         });
@@ -311,7 +315,7 @@ export class JournalsAddComponent extends UIComponent {
         if (this.formJournal.form.data.isAdd || this.formJournal.form.data.isCopy)
           this.notification.notifyCode('SYS006');
         else this.notification.notifyCode('SYS007');
-          this.dialog.close();
+          this.dialog.close({data:this.formJournal.form.data});
       })
     }
   }
