@@ -1910,7 +1910,6 @@ export class InstancesComponent
         if (e.event.isReason != null) {
           this.moveReason(null, data, e.event.isReason);
         }
-        this.detailViewInstance.loadChangeData();
         this.view.dataService.update(data).subscribe();
         if (this.kanban) this.kanban.updateCard(data);
         this.dataSelected = data;
@@ -1941,6 +1940,7 @@ export class InstancesComponent
             'add'
           );
         }
+        this.detailViewInstance.loadChangeData();
         this.detectorRef.detectChanges();
       }
     });
