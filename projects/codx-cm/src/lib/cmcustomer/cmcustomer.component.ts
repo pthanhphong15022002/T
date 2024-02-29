@@ -676,8 +676,9 @@ export class CmCustomerComponent
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeleteCmAsync';
-    opt.className = 'ContactsBusiness';
+    opt.className = 'CustomersBusiness';
     opt.assemblyName = 'CM';
+    opt.service = "CM";
     opt.data = [itemSelected.recID, this.entityName];
     return true;
   }
