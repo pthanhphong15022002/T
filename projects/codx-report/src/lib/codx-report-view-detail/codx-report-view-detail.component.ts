@@ -107,7 +107,7 @@ export class CodxReportViewDetailComponent
         this.reportID = param['funcID'];
         this.getReport(this.reportID);
       }
-    });
+          });
 
     this.router.queryParams.subscribe((param: any) => {
     if (param['params'])
@@ -154,7 +154,7 @@ export class CodxReportViewDetailComponent
         },
       },
     ];
-
+    console.log(this.view);
   }
   viewChanged(e: any) {
     //this.viewBase.moreFuncs = this.moreFc;

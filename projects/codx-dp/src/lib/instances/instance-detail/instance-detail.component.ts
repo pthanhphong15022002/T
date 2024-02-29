@@ -918,6 +918,15 @@ export class InstanceDetailComponent implements OnInit {
       this.progress = '0';
       return;
     }
+    if(["3","4"].includes(this.dataSelect?.status) ){
+      this.progress = '100';
+      return;
+    }
+
+    if(this.dataSelect?.status == "2"){
+
+    }
+
     if (event) {
       let stepFind = listStepConvert?.find(
         (step) => step.recID === event.recID
@@ -934,10 +943,24 @@ export class InstanceDetailComponent implements OnInit {
         : null;
       this.progress = index > 0 ? step?.instanceProgress.toString() : '0';
     } else {
-      let sumProgress = listStepConvert.reduce((sum, step) => {
-        return sum + (Number(step.progress) || 0);
-      }, 0);
-      this.progress = (sumProgress / listStepConvert?.length).toFixed(1);
+      let index = listStepConvert.findIndex((step) => step.stepID == this.dataSelect?.stepID);
+      if(index <0){
+        this.progress = "0";
+      }else{
+        let conut = listStepConvert?.length;
+        if(conut > 0){
+          let a = parseFloat((100/conut).toFixed(2));
+          if(listStepConvert[index]?.progress == 0){
+            this.progress = (a*index).toFixed(2);
+          }else{
+            this.progress = (a*index + (listStepConvert[index]?.progress * a)/100)?.toFixed(2);
+          }
+        }
+      }
+      // let sumProgress = listStepConvert.reduce((sum, step) => {
+      //   return sum + (Number(step.progress) || 0);
+      // }, 0);
+      // this.progress = (sumProgress / listStepConvert?.length).toFixed(1);
     }
   }
 
