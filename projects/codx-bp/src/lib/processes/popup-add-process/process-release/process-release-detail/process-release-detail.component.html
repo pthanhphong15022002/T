@@ -1,7 +1,10 @@
 <div class="d-flex flex-column w-100 h-100" [ngClass]="!right ? 'bg-light py-4 px-8': ''">
-    <div class="d-flex align-items-center pb-4" *ngIf="!right">
-        <i class="icon-arrow_back cursor-pointer" (click)="dialog.close()"></i>
-        <codx-label default="Chi tiết quy trình" class="mx-2 fs-5 fw-bold"></codx-label>
+    <div class="d-flex justify-content-between align-items-center pb-4" *ngIf="!right">
+        <div>
+            <i class="icon-arrow_back cursor-pointer" (click)="dialog?.close()"></i>
+            <codx-label default="Chi tiết quy trình" class="mx-2 fs-5 fw-bold"></codx-label>
+        </div>
+        <i class="icon-close cursor-pointer" (click)="dialog?.close()"></i>
     </div>
     <div class="d-flex w-100 h-100 bg-white">
         <div class="d-flex flex-column w-400px border-right p-6" *ngIf="!right">
@@ -17,7 +20,7 @@
                 [name]="'BP014'"
                 [value]="data?.status"
                 [showText]="true"
-                [showIcon]="true"
+                [showBgColor]="true"
                 class="badge badge-light badge-sm"
                 >
                 </codx-vll>
@@ -164,14 +167,14 @@
                 [name]="'BP014'"
                 [value]="data?.status"
                 [showText]="true"
-                [showIcon]="true"
+                [showBgColor]="true"
                 class="badge badge-light badge-sm"
             >
             </codx-vll>
         </div>
         <div class="col-1">
-            <ng-container *ngIf="data?.permissions">
-                <codx-imgs [objectId]="data.permissions" [objectType]="'AD_Users'" [width]="30" [numberImages]="4" [mode]="false"></codx-imgs>
+            <ng-container *ngIf="data?.pers">
+                <codx-imgs [objectId]="data?.pers" [objectType]="'AD_Users'" [width]="30" [numberImages]="4"></codx-imgs>
             </ng-container>
         </div>
         <div class="col-2 d-flex justify-content-end">

@@ -1301,7 +1301,7 @@ export class InstancesComponent
         startControl: startControl,
         applyProcess: true,
         buid: data.buid,
-        isCallInstance: this.process?.applyFor != '0',
+        isCallInstance: this.process?.applyFor == '0',
       };
       var dialog = this.callfc.openForm(
         PopupAssginDealComponent,
@@ -1315,7 +1315,7 @@ export class InstancesComponent
       );
       dialog.closed.subscribe((e) => {
         if (e && e?.event != null) {
-          this.dataSelected.owner = e.event;
+          this.dataSelected.owner = e.event?.owner;
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           // this.detailViewInstance.loadOwnerStep(e.event.owner);
           this.isChangeOwner = ownerIdOld != e?.event?.owner;
@@ -1940,6 +1940,7 @@ export class InstancesComponent
             'add'
           );
         }
+        this.detailViewInstance.loadChangeData();
         this.detectorRef.detectChanges();
       }
     });

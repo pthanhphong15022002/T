@@ -26,16 +26,16 @@ import { CodxShareService } from '../../../codx-share.service';
 })
 export class ViewApproverPermissionComponent implements OnInit, AfterViewInit {
  
-  @Input() hideTabQuery = true;
-  @Input() isSettingMode = true;  
+  @Input() permissions = [];
+  @Input() isSettingMode = false;  
   user: import("codx-core").UserModel | null;
   dialog: DialogRef;
-
+  approvers=[];
 
   constructor(
     // private esService: CodxEsService,
     private auth: AuthStore,
-    private codxService: CodxShareService,
+    private codxShareService: CodxShareService,
     private cr: ChangeDetectorRef,
     private notifySvr: NotificationsService,
     private cache: CacheService,
@@ -50,7 +50,18 @@ export class ViewApproverPermissionComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    
+    // if(this.permissions?.length>0){
+    //   this.permissions.forEach(per=>{
+    //     if(per?.objectType !=null){
+    //       this.approvers.push({
+    //         approver:per?.objectID,
+    //         roleType:per?.objectType,
+    //         refID:per?.recID,
+    //       })
+    //     }
+    //   });
+    //   this.codxShareService.getApproverByRole(this.approvers,this.isSettingMode,this.t)
+    // }
   }
 
 

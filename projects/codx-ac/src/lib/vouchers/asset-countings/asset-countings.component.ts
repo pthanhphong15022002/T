@@ -1,19 +1,18 @@
 import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { AuthStore, ButtonModel, DataRequest, NotificationsService, SidebarModel, TenantStore, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, ButtonModel, DataRequest, NotificationsService, TenantStore, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { Subject, takeUntil } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
-import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
-import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { CashCountingsAddComponent } from './cash-countings-add/cash-countings-add.component';
 
 @Component({
-  selector: 'lib-cash-countings',
-  templateUrl: './cash-countings.component.html',
-  styleUrls: ['./cash-countings.component.css'],
+  selector: 'lib-asset-countings',
+  templateUrl: './asset-countings.component.html',
+  styleUrls: ['./asset-countings.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CashCountingsComponent extends UIComponent {
+export class AssetCountingsComponent extends UIComponent {
 //#region Constructor
 views: Array<ViewModel> = []; // model view
 @ViewChild('templateDetailLeft') templateDetailLeft?: TemplateRef<any>;
@@ -256,40 +255,40 @@ onDestroy() {
    * *Hàm thêm mới chứng từ
    */
   addNewVoucher() {
-    this.view.dataService
-      .addNew((o) => this.setDefault(this.dataDefault))
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res != null) {
-          res.isAdd = true;
-          if (this.dataDefault == null) this.dataDefault = { ...res };
-          let data = {
-            headerText: this.headerText,
-            journal: { ...this.journal },
-            oData: { ...res },
-            hideFields: [...this.hideFields],
-          };
-          let optionSidebar = new SidebarModel();
-          optionSidebar.DataService = this.view?.dataService;
-          optionSidebar.FormModel = this.view?.formModel;
-          let dialog = this.callfc.openSide(
-            CashCountingsAddComponent,
-            data,
-            optionSidebar,
-            this.view.funcID
-          );
-          dialog.closed.subscribe((res) => {
-            if (res && res?.event) {
-              if (res?.event?.type === 'discard') {
-                if (this.view.dataService.data.length == 0) {
-                  this.itemSelected = undefined;
-                  this.detectorRef.detectChanges();
-                }
-              }
-            }
-          });
-        }
-      });
+    // this.view.dataService
+    //   .addNew((o) => this.setDefault(this.dataDefault))
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((res) => {
+    //     if (res != null) {
+    //       res.isAdd = true;
+    //       if (this.dataDefault == null) this.dataDefault = { ...res };
+    //       let data = {
+    //         headerText: this.headerText,
+    //         journal: { ...this.journal },
+    //         oData: { ...res },
+    //         hideFields: [...this.hideFields],
+    //       };
+    //       let optionSidebar = new SidebarModel();
+    //       optionSidebar.DataService = this.view?.dataService;
+    //       optionSidebar.FormModel = this.view?.formModel;
+    //       let dialog = this.callfc.openSide(
+    //         CashCountingsAddComponent,
+    //         data,
+    //         optionSidebar,
+    //         this.view.funcID
+    //       );
+    //       dialog.closed.subscribe((res) => {
+    //         if (res && res?.event) {
+    //           if (res?.event?.type === 'discard') {
+    //             if (this.view.dataService.data.length == 0) {
+    //               this.itemSelected = undefined;
+    //               this.detectorRef.detectChanges();
+    //             }
+    //           }
+    //         }
+    //       });
+    //     }
+    //   });
   }
 
   /**
@@ -718,6 +717,4 @@ onDestroy() {
     //   this.view?.formModel
     // );
   }
-
-  //#endregion
 }

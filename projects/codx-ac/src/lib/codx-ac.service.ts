@@ -184,6 +184,13 @@ export const fmUMConversion: FormModel = {
   entityPer: 'BS_UMConversion',
 };
 
+export const fmJournal: FormModel = {
+  formName: 'Journals',
+  gridViewName: 'grvJournals',
+  entityName: 'AC_Journals',
+  funcID: 'ACT',
+};
+
 export enum MorfuncDefault {
   Sua = 'SYS03',
   Xoa = 'SYS02',

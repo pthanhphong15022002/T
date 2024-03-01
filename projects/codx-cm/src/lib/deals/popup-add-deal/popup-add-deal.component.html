@@ -249,10 +249,12 @@
         >
         </codx-label>
         <codx-input
+          #inputChannelID
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="channelID"
           [disabled]="viewOnly"
+          [crrValue]="deal?.channelID"
           (valueChange)="valueChange($event)"
         >
         </codx-input>

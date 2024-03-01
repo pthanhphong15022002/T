@@ -82,7 +82,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
   formatDocument()
   {
     var entityName = this.formModel.entityName;
-    this.listDocument = this.process.documentControl.filter(x=>x.stepNo == this.data.stepNo);
+    this.listDocument = this.process.documentControl.filter(x=>x.stepID == this.data.recID);
     let i = 0 ;
     this.listDocument.forEach(elm=>{
       var fieldID =  elm.fieldID;
@@ -96,14 +96,17 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       }
       else
       {
-        if(elm?.templateID) {
+        if(elm?.templateID != undefined) 
+        {
           fieldID = elm?.templateID;
-          entityName = "AD_ExcelTemplates"
-          if(elm.templateType == "word") entityName = "AD_WordTemplates"
-
-          this.getFile(fieldID, entityName , i)
+          entityName = "AD_ExcelTemplates";
+          if(elm.templateType == "word") 
+          {
+            entityName = "AD_WordTemplates"
+          }
+          this.getFile(fieldID, entityName , i);
         }
-        else if(elm.refStepNo)
+        else if(elm.refStepID)
         {
           //var index = this.getDocRef(elm.refStepID);
           var index = this.process.documentControl.findIndex(x=>x.recID == elm.refID);
@@ -129,6 +132,10 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
               this.getFile(fieldID, entityName , i)
             }
           }
+        }
+        else
+        {
+          var ssss = ''
         }
       }
       i++;
@@ -213,7 +220,6 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     {
       if(!this.data.extendInfo || this.data.extendInfo.length == 0)
       {
-        debugger
         this.isNewForm = true;
         this.data.extendInfo = 
         [
@@ -306,10 +312,45 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
         )
       });
     }
-
+    
     this.data.permissions = this.listUses;
-    this.dataChange.emit(this.data);
+    let approvers =[];
+    if(this.listUses?.length>0){
+      this.listUses?.forEach((per) => {  
+        approvers.push({
+          approver: per?.objectID,
+          roleType: per?.objectType,
+          refID: this.data?.recID,
+        });
+      });
+      if (approvers?.length > 0) {
+        this.shareService
+          .getApproverByRole(approvers, false, this.data?.createdBy)
+          .subscribe((res) => {
+            if (res) {
+              this.data.pers = res?.map(x=>x.userID)?.join(";") ?? null; 
+              if(this.data.pers==null || this.data.pers?.length==0){
+                this.data.pers = res?.map(x=>x.approver)?.join(";")
+              }
+            }
+            this.dataChange.emit(this.data);
+            
+        });       
+      }
+      else{
+        
+        this.dataChange.emit(this.data);
+      }
+    }
+    else{
+      this.dataChange.emit(this.data);
+    }
+
+    
+
+    
   }
+  
 
   valueChangeUserEvent(e:any)
   {
@@ -493,7 +534,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
 
   getFieldExport()
   {
-    return this.process.steps.filter(x=>x.activityType == 'Form' && x.stepNo < this.data.stepNo);
+    return this.process.steps.filter(x=>x.activityType == 'Form' && x.stepNo <= this.data.stepNo);
   }
 
   openFormTemplate(val:any , type:any ,data:any = null)
