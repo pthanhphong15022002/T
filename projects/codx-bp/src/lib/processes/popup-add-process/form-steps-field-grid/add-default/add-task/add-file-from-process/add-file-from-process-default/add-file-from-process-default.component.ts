@@ -36,7 +36,7 @@ export class AddFileFromProcessDefaultComponent implements OnInit{
       if(this.documentControl && this.documentControl.length > 0)
       {
         this.documentControl.forEach(elm => {
-          var dt = this.data.steps.filter(x=>x.stepNo == elm.stepNo);
+          var dt = this.data.steps.filter(x=>x.recID == elm.stepID);
           if(dt)
           {
             let fieldID =  elm.fieldID;
@@ -60,7 +60,7 @@ export class AddFileFromProcessDefaultComponent implements OnInit{
                 if(elm.templateType == "word") entityName = "AD_WordTemplates";
                 this.getFile(fieldID,entityName,i);
               }
-              else if(elm.refStepNo)
+              else if(elm.refStepID)
               {
                 //var index = this.getDocRef(elm.refStepID);
                 var index = this.documentControl.findIndex(x=>x.recID == elm.refID);

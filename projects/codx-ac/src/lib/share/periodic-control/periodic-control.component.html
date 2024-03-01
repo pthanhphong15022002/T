@@ -4,7 +4,7 @@
 </codx-views>
 <ng-template #template let-data>
   <ng-container *ngIf="setting">
-    <div style="position: absolute;margin-top: -50px;" class="w-100 d-flex align-items-center justify-content-between p-3 mb-2">
+    <div style="position: absolute;margin-top: -50px;right: 0;" class="d-flex align-items-center justify-content-between p-3 mb-2">
       <div class="d-flex align-items-center w-100 justify-content-end">
         <codx-mfunc *ngIf="setting.length" [formModel]="view.formModel" [isToolBar]="true" type="view"
           (changeDataMF)="changeDataMF($event,'M')" (clickMF)="clickMF($event)"></codx-mfunc>

@@ -5212,6 +5212,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   valueChangeChecked(event, data) {
     if (event) {
       data[event.field] = event?.data || false;
+      this.changeProgrgessStep();
     }
   }
 
@@ -5410,6 +5411,16 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.process.emailTemplate = res.event?.recID ? res.event?.recID : '';
       }
     });
+  }
+
+  changeProgrgessStep(){
+      let count = this.stepList?.length;
+      if(count > 0){
+        let medium =parseFloat((100/count).toFixed(2)); 100/count;
+        this.stepList.forEach((step) => {
+          step.instanceProgress = medium * step.stepNo;
+        })
+      }
   }
 
 }

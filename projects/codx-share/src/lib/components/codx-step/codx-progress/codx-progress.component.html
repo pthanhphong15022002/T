@@ -102,15 +102,25 @@
           </codx-label>
           <span *ngIf="progressData == 100" style="color: red"> *</span>
         </div>
-        <codx-input
-          field="actualEnd"
-          (valueChange)="changeValueDate($event, actualEnd)"
-          [crrValue]="actualEnd"
-          format="F"
-          type="datetime"
-          [disabled]="progressData == 100 ? false : true"
-        >
-        </codx-input>
+        <div [ngClass]="progressData != 100 ? 'd-none' : ''">
+          <codx-input
+            field="actualEnd"
+            (valueChange)="changeValueDate($event, actualEnd)"
+            [crrValue]="actualEnd"
+            [formModel]="formModel"
+            [disabled]="false"
+          >
+          </codx-input>
+        </div>
+        <div [ngClass]="progressData == 100 ? 'd-none' : ''">
+          <codx-input
+            field="actualEnd"
+            [crrValue]="actualEnd"
+            [formModel]="formModel"
+            [disabled]="true"
+          >
+          </codx-input>
+        </div>
       </div>
     </div>
 
@@ -152,20 +162,21 @@
       </div>
       <div>
         <codx-attachment
-        #attachment
-        [objectType]="'DP_Instances_Steps_Tasks'"
-        [objectId]="dataSource?.recID"
-        hideFolder="1"
-        hideImageUpload="0"
-        hideImageThumb="0"
-        hideUploadBtn="1"
-        [showMessage]="0"
-        hideDes="1"
-        type="inline"
-        allowMultiFile="1"
-        referType="source"
-        displayThumb="full">
-      </codx-attachment>
+          #attachment
+          [objectType]="'DP_Instances_Steps_Tasks'"
+          [objectId]="dataSource?.recID"
+          hideFolder="1"
+          hideImageUpload="0"
+          hideImageThumb="0"
+          hideUploadBtn="1"
+          [showMessage]="0"
+          hideDes="1"
+          type="inline"
+          allowMultiFile="1"
+          referType="source"
+          displayThumb="full"
+        >
+        </codx-attachment>
       </div>
     </ng-container>
   </div>
