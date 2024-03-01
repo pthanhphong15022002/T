@@ -42,7 +42,7 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
 @Component({
@@ -262,6 +262,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     private changeDetectorRef: ChangeDetectorRef,
     private customFieldSV: CustomFieldService,
     private tenantStore: TenantStore,
+    private router: Router,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -280,13 +281,16 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.customerID = dt?.data?.customerID;
     this.stepsTasks = dt?.data?.stepsTasks || {};
     this.contractsInput = dt?.data?.contract || dt?.data?.dataCM || null;
-    this.tenant = this.tenantStore.get().tenant;
+    // this.tenant = this.tenantStore.get().tenant;
     this.user = this.authStore.get();
     this.getHeaderText();
     this.getGrvSetup();
+    const currentUrl = this.router.url;
+    this.tenant = currentUrl.includes("qtsc") ? "qtsc" : "";
   }
 
   async ngOnInit() {
+    
     this.action != 'edit' && (await this.getSettingContract());
     this.setDataContract(this.contractsInput);
     if (this.type == 'task') {

@@ -654,7 +654,7 @@ export class StepService {
         };
       } else {
         this.notiService.notify('Hợp đồng không tồn tại', '3');
-        return;
+        return "not data";
       }
     } else {
       data = { ...data, stepsTasks: task, isStartIns };
@@ -698,7 +698,7 @@ export class StepService {
       }
       return task;
     } else {
-      return null;
+      return ;
     }
   }
 

@@ -66,8 +66,10 @@
                         <ng-container *ngSwitchCase="'Table'">
                             <codx-gridview-v2
                                 #gridView
+                                [outputMoreFunc]="true"
                                 [columnsGrid]="child.columnsGrid"
                                 [dataSource]="dataTable[child.fieldName]"
+                                (clickMF)="clickMFGrid($event,child)"
                             >
                             </codx-gridview-v2>
                         </ng-container>
