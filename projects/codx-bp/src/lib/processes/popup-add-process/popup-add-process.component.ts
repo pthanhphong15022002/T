@@ -318,6 +318,7 @@ export class PopupAddProcessComponent {
     stage.reminder = this.data.reminder;
     stage.eventControl = null;
     stage.stepType = "1";
+    stage.permissions = [{objectID: this.user?.userID, objectType: 'U'}]
     var processallowDrag = null;
     var processDefaultProcess = null;
     var processCompleteControl = null;
@@ -364,6 +365,7 @@ export class PopupAddProcessComponent {
       sortBy: null,
       totalControl: null,
     });
+    form.permissions = [{objectID: this.user?.userID, objectType: 'U'}]
     lstStep.push(stage, form);
     this.data.steps = lstStep;
     this.cache.message('BP001').subscribe((item) => {

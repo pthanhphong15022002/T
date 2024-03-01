@@ -217,7 +217,7 @@ export class AddProcessDefaultComponent implements OnInit{
           comments: stageF?.comments,
           isOverDue : stageF?.isOverDue,	
           owners: stageF?.owners,
-          permissions: stageF?.owners,
+          permissions: stageF?.permissions,
         }
         var step = 
         {
@@ -243,7 +243,7 @@ export class AddProcessDefaultComponent implements OnInit{
           comments: this.data?.comments,
           isOverDue : this.data?.isOverDue,	
           owners: this.data?.owners,
-          permissions: this.data?.owners,
+          permissions: this.data?.permissions,
         }
         
         var keysTable = Object.keys(this.dataTable)
