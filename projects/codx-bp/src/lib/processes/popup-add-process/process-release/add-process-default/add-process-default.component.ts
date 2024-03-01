@@ -1,9 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Optional, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Optional, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
+import { ApiHttpService, AuthStore, CallFuncService, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
-import { firstValueFrom } from 'rxjs';
+import { elementAt, firstValueFrom } from 'rxjs';
+import { AddTableRowComponent } from './add-table-row/add-table-row.component';
+import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 
 @Component({
   selector: 'lib-add-process-default',
@@ -12,7 +14,7 @@ import { firstValueFrom } from 'rxjs';
 })
 export class AddProcessDefaultComponent implements OnInit{
   @ViewChild('attachment') attachment: AttachmentComponent;
-
+  @ViewChildren('gridView') gridView:QueryList<CodxGridviewV2Component>;
   @Input() process:any;
   @Input() dataIns:any
   @Input() type = 'add';
@@ -21,6 +23,7 @@ export class AddProcessDefaultComponent implements OnInit{
   data:any;
   dialog:any;
   table:any
+  dataTable = {};
   formModel = 
   {
     funcID:'',
@@ -38,6 +41,7 @@ export class AddProcessDefaultComponent implements OnInit{
     private auth: AuthStore,
     private api: ApiHttpService,
     private bpService: CodxBpService,
+    private callFuc: CallFuncService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   )
@@ -75,6 +79,7 @@ export class AddProcessDefaultComponent implements OnInit{
 
   formatData()
   {
+    let indexTable = 0;
     var list = [];
     let extendInfo = JSON.parse(JSON.stringify(typeof this.data.extendInfo == 'string' ?  JSON.parse(this.data.extendInfo) : this.data.extendInfo))
     extendInfo.forEach(element => {
@@ -104,11 +109,38 @@ export class AddProcessDefaultComponent implements OnInit{
       {
         element.dataFormat = typeof element.dataFormat == 'string' ? JSON.parse(element.dataFormat) : element.dataFormat;
         element.tableFormat = typeof element.tableFormat == 'string' ? JSON.parse(element.tableFormat) : element.tableFormat;
-        this.tableField = field;
-        if(this.type == 'add') {
-          this.dataIns.datas = {};
-          this.dataIns.datas[field] = [];
+        element.columnsGrid = [];
+        element.indexTable = indexTable;
+        element.dataFormat.forEach(elm2 => {
+          var obj = 
+          {
+            headerText: elm2.title,
+            controlType: elm2.controlType,
+            field: elm2.fieldName
+          }
+          element.columnsGrid.push(obj)
+        });
+
+        if(element?.tableFormat?.hasIndexNo) {
+          var obj2 = 
+          {
+            headerText: 'STT',
+            controlType: "Numberic",
+            field: 'indexNo'
+          }
+          element.columnsGrid.unshift(obj2)
         }
+        indexTable ++;
+
+        if(this.type == 'edit')
+        {
+          this.dataTable[element.fieldName] = this.dataIns.datas[element.fieldName];
+        }
+        // this.tableField = field;
+        // if(this.type == 'add') {
+        //   this.dataIns.datas = {};
+        //   this.dataIns.datas[field] = [];
+        // }
       }
       var index = list.findIndex(x=>x.columnOrder == element.columnOrder)
       if(index >= 0)
@@ -185,7 +217,7 @@ export class AddProcessDefaultComponent implements OnInit{
           comments: stageF?.comments,
           isOverDue : stageF?.isOverDue,	
           owners: stageF?.owners,
-          permissions: stageF?.owners,
+          permissions: stageF?.permissions,
         }
         var step = 
         {
@@ -211,10 +243,16 @@ export class AddProcessDefaultComponent implements OnInit{
           comments: this.data?.comments,
           isOverDue : this.data?.isOverDue,	
           owners: this.data?.owners,
-          permissions: this.data?.owners,
+          permissions: this.data?.permissions,
         }
-    
-        if(this.tableField) valueForm[this.tableField] = this.dataIns.datas[this.tableField].filter(x=> typeof x === 'object');
+        
+        var keysTable = Object.keys(this.dataTable)
+        if(keysTable.length>0)
+        {
+          keysTable.forEach(k=>{
+            valueForm[k] = this.dataTable[k];
+          })
+        }
         this.dataIns.processID = this.process?.recID,
         this.dataIns.instanceNo = instanceNo,
         this.dataIns.instanceID = this.dataIns.recID,
@@ -266,7 +304,7 @@ export class AddProcessDefaultComponent implements OnInit{
 
   async addFileAttach(type:any)
   {
-    if(this.attachment.fileUploadList && this.attachment.fileUploadList.length > 0)
+    if(this.attachment?.fileUploadList && this.attachment?.fileUploadList?.length > 0)
     {
       (await this.attachment.saveFilesObservable()).subscribe(item2=>{
         if(item2)
@@ -372,11 +410,6 @@ export class AddProcessDefaultComponent implements OnInit{
     this.dataIns.datas[this.tableField][index][e?.field] = e?.data;
   }
 
-  addRow()
-  {
-    this.dataIns.datas[this.tableField].push("");
-  }
-
   startProcess(recID:any) {
     this.api
       .execSv(
@@ -402,5 +435,32 @@ export class AddProcessDefaultComponent implements OnInit{
   dataChangeAttachment(e:any)
   {
     this.isAttach = e;
+  }
+
+  addRow(data:any,fieldName:any,index=0)
+  {
+    if(!this.dataTable[fieldName.toLowerCase()]) this.dataTable[fieldName.toLowerCase()] = []
+    var option = new DialogModel();
+    option.FormModel = this.formModel;
+    option.zIndex = 1000;
+    let popup = this.callFuc.openForm(
+      AddTableRowComponent,
+      '',
+      600,
+      750,
+      '',
+      {dataTable: data},
+      '',
+      option
+    );
+
+    popup.closed.subscribe(res=>{
+      if(res?.event)
+      {
+        this.dataTable[fieldName.toLowerCase()].push(res?.event);
+        var grid = this.gridView.find((_, i) => i == index);
+        grid.refresh();
+      }
+    })
   }
 }

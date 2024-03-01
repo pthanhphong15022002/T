@@ -1,5 +1,7 @@
-import { AfterViewInit, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AfterViewInit, Component, HostBinding, Injector, TemplateRef, ViewChild } from '@angular/core';
+import { DialogModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { PopupEditTemplateComponent } from './popup/popup-edit-template/popup-edit-template.component';
+import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 
 @Component({
   selector: 'pr-template-excel',
@@ -8,7 +10,7 @@ import { UIComponent, ViewModel, ViewType } from 'codx-core';
 })
 export class HrTemplateExcelComponent extends UIComponent implements AfterViewInit {
 
-
+  @HostBinding('class') get valid() { return "w-100 h-100"; }
   views:ViewModel[];
   function:any;
   selectedID:string = "";
@@ -57,5 +59,61 @@ export class HrTemplateExcelComponent extends UIComponent implements AfterViewIn
       this.selectedID = event.hrTemplateID;
       this.detectorRef.detectChanges();
     }
+  }
+
+  clickMF(event:any, data = null){
+    switch(event.functionID){
+      case"SYS01":
+        this.add();
+        break;
+      case"SYS03":
+        if(!data) data = this.view.dataService.dataSelected;
+        this.edit(data);
+        break;
+    }
+  }
+
+  add(){
+    let sidebarModel = new SidebarModel();
+    sidebarModel.FormModel = this.view.formModel;
+    sidebarModel.Width = '550px';
+    this.view.dataService.addNew().subscribe((model:any) => {
+      if(model)
+      {
+        let option = {
+          action:'add',
+          data: model,
+          headerText: "Chi tiết bảng lương"
+        };
+        this.callfc.openSide(PopupEditTemplateComponent,option,sidebarModel,this.funcID);
+      }
+    });
+    
+
+
+    
+  }
+
+  edit(data:any){
+    let sidebarModel = new SidebarModel();
+    sidebarModel.FormModel = this.view.formModel;
+    sidebarModel.Width = '550px';
+    let option = {
+      action:'edit',
+      data: data,
+      headerText: "Chi tiết bảng lương"
+    };
+    this.callfc.openSide(PopupEditTemplateComponent,option,sidebarModel,this.funcID);
+  }
+
+  changeDataMF(event:any){
+     event.forEach(element => {
+      if(element.functionID === "SYS01" || element.functionID === "SYS02" || element.functionID === "SYS03" || element.functionID === "SYS04")
+      {
+        element.disabled = false;
+        element.isbookmark = true;
+      }
+      else element.disabled = true;
+     }); 
   }
 }

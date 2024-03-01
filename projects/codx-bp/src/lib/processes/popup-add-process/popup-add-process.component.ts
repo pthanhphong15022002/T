@@ -318,6 +318,7 @@ export class PopupAddProcessComponent {
     stage.reminder = this.data.reminder;
     stage.eventControl = null;
     stage.stepType = "1";
+    stage.permissions = [{objectID: this.user?.userID, objectType: 'U'}]
     var processallowDrag = null;
     var processDefaultProcess = null;
     var processCompleteControl = null;
@@ -364,6 +365,7 @@ export class PopupAddProcessComponent {
       sortBy: null,
       totalControl: null,
     });
+    form.permissions = [{objectID: this.user?.userID, objectType: 'U'}]
     lstStep.push(stage, form);
     this.data.steps = lstStep;
     this.cache.message('BP001').subscribe((item) => {
@@ -831,11 +833,13 @@ export class PopupAddProcessComponent {
         //       ? JSON.stringify(lstDocumentControl)
         //       : null;
         // }
+        
         if (this.data?.steps[1]?.extendInfo) {
           this.extendInfos.forEach((element) => {
             if (element.controlType == 'Attachment') {
-              if (!element?.documentControl) {
-                var obj = {
+              if (!element?.documentControl || element?.documentControl.length == 0) {
+                var obj = 
+                {
                   recID: Util.uid(),
                   title: element.title,
                   isRequired: false,
@@ -845,7 +849,7 @@ export class PopupAddProcessComponent {
                   stepNo: this.data?.steps[1].stepNo,
                   fieldID: element.recID,
                   memo: this.data?.steps[1].memo,
-                  refID: '',
+                  refID: ''
                 };
                 obj.refID = obj.recID;
                 this.data.documentControl = [obj];
@@ -853,7 +857,6 @@ export class PopupAddProcessComponent {
                 element.documentControl &&
                 element.documentControl.length > 0
               ) {
-                debugger;
                 var doc = JSON.parse(JSON.stringify(this.data.documentControl));
                 if (!doc) doc = [];
                 element.documentControl.forEach((docu) => {
@@ -1031,25 +1034,26 @@ export class PopupAddProcessComponent {
 
   formatData(datas:any)
   {
-    let x = 0;
     let data = datas.steps;
     this.countStage = data.length;
     data = data.sort((a, b) => a.stepNo - b.stepNo);
     var listStage = data.filter(x=>x.activityType == 'Stage');
     listStage.forEach(element => {
-      var index = data.findIndex(x=>x.recID == element.recID);
-      data[index].stepNo = x;
-      x++;
       if(element.child && element.child.length>0)
       {
         element.child.forEach(element2 => {
           var index2 = data.findIndex(x=>x.recID == element2.recID);
-          data[index2]= element2;
-          data[index2].stepNo = x;
-          x++
+          if(index2>=0)
+          {
+            data[index2]= element2;
+          }
         });
       }
     });
+    for(var i = 0 ; i < data.length ; i++)
+    {
+      data[i].stepNo = i;
+    }
     datas.steps = data;
     return datas;
   }

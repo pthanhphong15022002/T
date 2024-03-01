@@ -348,7 +348,7 @@ export class ModeviewComponent implements OnInit {
           var col = 
           {
             title : "Cột " + (i+1),
-            fieldName: "Cot_" + (i+1),
+            fieldName: "cot_" + (i+1),
             description: null,
             dataType: "String",
             controlType: "TextBox",
@@ -433,6 +433,7 @@ export class ModeviewComponent implements OnInit {
 
   formatTitle(str:any)
   {
+    str = str.toLowerCase();
     return this.xoa_dau(str.replaceAll(" ","_").replaceAll("/","_")) + "_" + this.stepNo;
   }
 

@@ -150,6 +150,12 @@ export class CashrecieptDetailComponent extends UIDetailComponent {
   createTab(e: any, ele: TabComponent) {
     this.showHideTab(this.itemSelected?.subType, ele);
   }
+
+  selecting(event){
+    if (event.isSwiped) {
+      event.cancel = true;
+    }
+  }
   //#endregion region
 
   //#region Event

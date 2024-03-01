@@ -157,8 +157,6 @@ export class PopRolesComponent extends UIComponent {
       // && environment.saas == 1 &&
       // !this.ermSysTenant.includes(this.user.tenant)
     ) {
-      console.log('lst uid', this.lstUserIDs);
-
       return this.adService
         .addUpdateAD_UserRoles(
           this.lstNeedAddRoles,

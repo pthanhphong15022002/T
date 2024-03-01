@@ -95,6 +95,12 @@ export class SalesinvoicesDetailComponent extends UIDetailComponent {
   ngOnChanges(value: SimpleChange) {
     this.getDataDetail(this.dataItem, this.recID);
   }
+
+  selecting(event){
+    if (event.isSwiped) {
+      event.cancel = true;
+    }
+  }
   //#endregion Init
 
   //#region Event

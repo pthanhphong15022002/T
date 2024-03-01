@@ -36,7 +36,8 @@
   <share-tree-view
     #viewTree
     [formModel]="view.formModel"
-    [vllStatus]="vllStatus"
+    [vllStatus]="'PM012'"
+    [vllPriority]="'PM010'"
     [listRoles]="listRoles"
     [dataObj]="dataObj"
     [filter]="view.dataService.filter"
@@ -47,8 +48,8 @@
     [predicateChild]="'Category=@0'"
     [dataValueChild]="'3'"
     [showMoreFunc]="true"
-    (clickMoreFunction)="clickMF($event)"
-    [itemTemplate]="itemViewList"
+    (clickMoreFunction)="clickMFTree($event)"
+    (nodeSelect)="treeSelect($event)"
     [user]="user"
   >
   </share-tree-view>

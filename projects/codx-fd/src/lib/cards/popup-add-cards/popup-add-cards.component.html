@@ -10,6 +10,12 @@
 
 <ng-template #footer>
   <div class="offcanvas-footer">
+    <ng-container *ngIf="amountEvoucher || amount || form?.controls['coins']?.value">
+      <div class="d-flex justify-content-between mgb-10">
+        <codx-label class="fw-bold font-total-coins" default="Tổng cộng"></codx-label> 
+        <span class="fw-bold total-coins">{{ amountEvoucher + amount + form?.controls['coins']?.value}} Xu</span>
+      </div>
+    </ng-container>
     <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center justify-content-between">
         <button
@@ -599,11 +605,9 @@
       </ng-container>
     </div>
   </div>
-  <div
-    class="d-flex align-items-center nav-item w-100 mb-1"
-    *ngIf="showLabelAttachment"
-  >
-    <div class="d-flex align-items-center mb-2">
+  <div class="align-items-center nav-item w-100 mb-1">
+    <div class="d-flex align-items-center mb-2"
+      *ngIf="showLabelAttachment">
       <span class="icon-attach_file icon-18 me-2 text-primary"></span>
       <div class="fw-bold text-primary">
         <codx-label name="lblAttachments" default="Tài liệu đính kèm">
@@ -639,6 +643,44 @@
   <div class="content d-flex flex-column flex-column-fluid py-0">
     <div class="extend-main">
       <ng-container *ngIf="(parameter && cardType != CARDTYPE_EMNUM.Radio) || !cardType">
+
+        <ng-container *ngIf="(parameter?.HasPoints && parameter?.HasPoints == '1') || !cardType">
+          <div class="d-flex justify-content-between form-group">
+            <codx-label
+              [formModel]="dialog.formModel"
+              name="lblHasPoints"
+              default="Quỹ cho"
+            >
+            </codx-label>
+            <div>
+              <codx-input
+              ControlName="number"
+              [formModel]="dialog.formModel"
+              [Group]="form"
+              type="number"
+              field="coins"
+              [min]="0"
+              [step]="1"
+              (valueChange)="valueChange($event)"
+              [disabled]="type == 'detail'"
+              [crrValue]="
+                form.controls['coins'] && form.controls['coins'].value
+                  ? form.controls['coins'].value
+                  : ''
+              "
+            >
+            </codx-input>
+            <div
+              *ngIf="cointsError && type != 'detail'"
+              class="errorMessage text-danger ms-3"
+              data-field="taskName"
+            >
+              {{ cointsError }}
+            </div>
+            </div>
+          </div>
+        </ng-container>
+
         <ng-container *ngIf="(parameter?.HasGifts && parameter?.HasGifts == '1') || !cardType">
           <div class="d-flex align-items-center justify-content-between mt-4">
             <div class="d-flex align-items-center">
@@ -654,25 +696,14 @@
               class="d-flex align-items-center py-1"
               style="white-space: nowrap"
             >
-              <ng-container *ngIf="amount">
-                <span
-                  ><codx-label
-                    [formModel]="dialog.formModel"
-                    name="lblfFDTotalPrice"
-                    default="Tổng xu"
-                  ></codx-label
-                  >: {{ amount }}</span
-                >
-              </ng-container>
-
               <button
                 type="button"
-                class="cursor-pointer btn btn-icon btn-light-primary"
+                class="cursor-pointer btn btn-icon"
                 style="margin-left: 5px"
                 (click)="clickAddGift()"
                 [disabled]="type == 'detail'"
               >
-                <span class="icon-add icon-18"></span>
+                <span class="icon-playlist_add icon-18"></span>
               </button>
               <ng-container *ngIf="showPopupGift">
                 <codx-combobox-popup
@@ -707,6 +738,34 @@
                     </div>
                   </div>
                 </ng-template>
+              </ng-container>
+            </div>
+          </div>
+          <div
+            class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column"
+            [ngClass]="{'cursor-unset': type == 'detail'}"
+            (click)="type != 'detail' ? clickAddGift() : ''"
+            *ngIf="!gifts || gifts.length == 0"
+          >
+            <div class="dropzone-msg dz-message needsclick"
+              [ngClass]="{'disabled': type == 'detail', 'working': type !== 'detail'}">
+              <ng-container>
+                <div class="dropzone-msg-title mb-2">
+                  <img [src]="'/assets/themes/fd/default/img/EmptyGift.svg'" class="image-100" />
+                </div>
+                <div class="dropzone-msg-title mb-2">
+                  <codx-label
+                    default="Chọn quà tặng"
+                    class="fw-bold"
+                  >
+                  </codx-label>
+                </div>
+                <span class="dropzone-msg-desc">
+                  <codx-label
+                    default="Chưa có quà tặng, vui lòng chọn món quà bạn muốn gửi đến người nhận"
+                    class="fw-bold"
+                  ></codx-label>
+                </span>
               </ng-container>
             </div>
           </div>
@@ -782,25 +841,14 @@
               class="d-flex align-items-center py-1"
               style="white-space: nowrap"
             >
-              <ng-container *ngIf="amountEvoucher">
-                <span
-                  ><codx-label
-                    [formModel]="dialog.formModel"
-                    name="lblfFDTotalPrice"
-                    default="Tổng xu"
-                  ></codx-label
-                  >: {{ amountEvoucher }}</span
-                >
-              </ng-container>
-
               <button
                 type="button"
-                class="cursor-pointer btn btn-icon btn-light-primary"
+                class="cursor-pointer btn btn-icon"
                 style="margin-left: 5px"
                 (click)="clickAddEvoucher()"
                 [disabled]="type == 'detail'"
               >
-                <span class="icon-add icon-18"></span>
+                <span class="icon-playlist_add icon-18"></span>
               </button>
               <ng-container *ngIf="showPopupEvoucher">
                 <codx-evoucher-popup
@@ -815,6 +863,34 @@
                   [entityName]="entityName"
                 >
                 </codx-evoucher-popup>
+              </ng-container>
+            </div>
+          </div>
+          <div
+            class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column"
+            [ngClass]="{'cursor-unset': type == 'detail'}"
+            (click)="type !== 'detail' ? clickAddEvoucher() : ''"
+            *ngIf="!evoucher || evoucher.length == 0"
+          >
+            <div class="dropzone-msg dz-message needsclick"
+              [ngClass]="{'disabled': type == 'detail', 'working': type !== 'detail'}">
+              <ng-container>
+                <div class="dropzone-msg-title mb-2">
+                  <img [src]="'/assets/themes/fd/default/img/EmptyGift.svg'" class="image-100" />
+                </div>
+                <div class="dropzone-msg-title mb-2">
+                  <codx-label
+                    default="Chọn quà tặng"
+                    class="fw-bold"
+                  >
+                  </codx-label>
+                </div>
+                <span class="dropzone-msg-desc">
+                  <codx-label
+                    default="Chưa có quà tặng, vui lòng chọn món quà bạn muốn gửi đến người nhận"
+                    class="fw-bold"
+                  ></codx-label>
+                </span>
               </ng-container>
             </div>
           </div>
@@ -862,42 +938,7 @@
             </div>
           </ng-container>
         </ng-container>
-        <ng-container *ngIf="(parameter?.HasPoints && parameter?.HasPoints == '1') || !cardType">
-          <div class="row mt-8">
-            <div class="col-6 form-group">
-              <codx-label
-                [formModel]="dialog.formModel"
-                name="lblHasPoints"
-                default="Quỹ cho"
-              >
-              </codx-label>
-              <codx-input
-                ControlName="number"
-                [formModel]="dialog.formModel"
-                [Group]="form"
-                type="number"
-                field="coins"
-                [min]="0"
-                [step]="1"
-                (valueChange)="valueChange($event)"
-                [disabled]="type == 'detail'"
-                [crrValue]="
-                  form.controls['coins'] && form.controls['coins'].value
-                    ? form.controls['coins'].value
-                    : ''
-                "
-              >
-              </codx-input>
-              <div
-                *ngIf="cointsError && type != 'detail'"
-                class="errorMessage text-danger ms-3"
-                data-field="taskName"
-              >
-                {{ cointsError }}
-              </div>
-            </div>
-          </div>
-        </ng-container>
+
       </ng-container>
     </div>
   </div>

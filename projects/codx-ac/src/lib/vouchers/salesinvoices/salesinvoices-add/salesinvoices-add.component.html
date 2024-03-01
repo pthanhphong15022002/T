@@ -67,7 +67,7 @@
 <ng-template #TmpBody>
   <!-- Start: Tab General -->
   <div>
-    <ejs-tab #elementTabMaster (created)="createTabMaster($event,elementTabMaster)">
+    <ejs-tab (selecting)="selecting($event)" #elementTabMaster (created)="createTabMaster($event,elementTabMaster)">
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>

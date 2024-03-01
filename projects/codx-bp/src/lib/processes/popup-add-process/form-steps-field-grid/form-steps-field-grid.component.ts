@@ -4,7 +4,7 @@ import { StagesComponent } from './stages/stages.component';
 import { AddDefaultComponent } from './add-default/add-default.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { asapScheduler } from 'rxjs';
 import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 
@@ -24,6 +24,8 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
   myTemplate  = '';
   listStage = [];
   count = 0;
+  listIds=[];
+  tempPermission=[];
   constructor(
     private shareService: CodxShareService,
     private ref: ChangeDetectorRef,
@@ -36,31 +38,62 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
     if(dt?.data) this.data = dt?.data
   }
   ngAfterViewInit(): void {
-    this.resetDLS();
-    // this.dlq.changes
-    // .subscribe((queryChanges) => {
-    //     this.dlq = queryChanges;
-    //     this.resetDLS();
-    // });
-  }
-  ngOnInit(): void {
-    this.formatData();
+    //this.resetDLS();
   
   }
-  ngAfterContentChecked() {
-    this.ref.detectChanges();
+
+  ngOnInit(): void {
+    this.listIds = [];
+    if(this.tempPermission?.length ==null || this.tempPermission?.length==0){
+      this.getPermission();
+    }
+    else{
+      
+      this.formatData();
+    }
+  
   }
+  getPermission() {
+    let approvers = [];
+    this.data?.steps?.forEach((step) => {
+      if (step?.permissions?.length > 0) {
+        step?.permissions.forEach((per) => {
+          if (per?.objectType != null) {
+            approvers.push({
+              approver: per?.objectID,
+              roleType: per?.objectType,
+              refID: step?.recID,
+            });
+          }
+        });
+      }
+    });
+    if (approvers?.length > 0) {
+      this.shareService
+        .getApproverByRole(approvers, false, this.data?.createdBy)
+        .subscribe((res) => {
+          if (res) {
+            this.tempPermission = res;
+            this.formatData();
+          } else {
+            this.formatData();
+          }
+        });
+    } else {
+      this.formatData();
+    }
+  }
+  
   resetDLS()
   {
+    debugger
     //this.dlq.reset();
     let ldls: CdkDropList[] = [];
     this.dlq.forEach((dl) => {
-      dl.connectedTo = [];
       ldls.push(dl)
     });
     ldls = ldls.reverse()
     asapScheduler.schedule(() => { this.dls = ldls; });
-    this.dls = [];
     this.ref.detectChanges();
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -94,9 +127,12 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
 
       this.listStage = this.listStage.sort((a, b) => a.stepNo - b.stepNo);
 
+      let a = 0;
       this.listStage.forEach(elm3=>{
+        this.listIds.push('stage'+a+'_'+elm3.recID)
         elm3.stepNo = i;
         i++;
+        a++;
       })
     }
   }
@@ -110,6 +146,15 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
     list.forEach(elm2 => {
       elm2.settings = typeof elm2?.settings === 'object' ? elm2.settings : (elm2?.settings ? JSON.parse(elm2.settings) : null);
       elm2.permissions = typeof elm2?.permissions === 'object' ? elm2.permissions : (elm2?.permissions ? JSON.parse(elm2.permissions) : null);
+      if(this.tempPermission?.length > 0){            
+        let pers = this.tempPermission.filter((x) => x.refID == elm2.recID);
+        if (pers?.length > 0) {
+          elm2.pers = pers?.map((u) => u?.userID).join(';') ?? '';
+        }
+      }
+      else{
+        elm2.pers = elm2?.permissions?.map((u) => u?.objectID).join(';') ?? '';
+      }
       elm2.child = this.getListChild(elm2);
       if(elm2.activityType == "Conditions" && elm2.child && elm2.child.length>0)
       {
@@ -170,7 +215,9 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
               else this.listStage.push(dt);
               if(indexP >= 0) this.data.steps[indexP] = dt;
               else this.data.steps.push(dt);
-             
+
+              var name = "stage"+ (this.listIds.length - 1) + "_"+dt.recID;
+              this.listIds.push(name);
             }
             else
             {
@@ -179,8 +226,6 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
               if(type == 'add') {
                 this.listStage[index].child.push(dt);
                 this.data.steps.push(dt);
-                let index2 = this.dls.findIndex(x=>x.id == dt.parentID);
-                this.dls[index2].data.push(dt);
               }
               else {
                 var index2 = this.listStage[index].child.findIndex(x=>x.recID == dt.recID);
@@ -192,8 +237,6 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
             this.ref.detectChanges();
             this.dataChange.emit(this.data);
           }
-          this.listStage = [...this.listStage];
-          this.resetDLS();
         }
       });
   }
@@ -224,6 +267,13 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
           }
         }
       });
+    }
+    else
+    {
+      if(dt?.permissions && dt?.permissions.length>0)
+      {
+        dt.permissionsName = this.getImg( dt?.permissions);
+      }
     }
     return dt;
   }
@@ -263,7 +313,8 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      event.previousContainer.data[event.previousIndex].parentID = event.previousContainer.data[event.previousIndex].stageID = event?.event.target.id;
+      let id = event?.event.target.id.split("_");
+      event.previousContainer.data[event.previousIndex].parentID = event.previousContainer.data[event.previousIndex].stageID = id[1];
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -278,5 +329,24 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
     }
 
     this.dataChange.emit(this.data);
+  }
+
+  getImg(data:any)
+  {
+    return data.map((u) => u.objectID).join(';');
+  }
+
+  sortPredicateForDisableItem(e:any)
+  {
+    return function(index: number, item: CdkDrag, drop: CdkDropList){
+      if(e)
+      {
+        if(index>=0)
+        {
+          if(e[index]?.stepType == '1') return false;
+        } 
+      }
+      return true
+    }
   }
 }

@@ -23,7 +23,7 @@ export class DecentralizedGroupComponent extends UIComponent {
   groupType = '3';
   moreFuncName: string = '';
   func: any;
-  itemSelected:any;
+  itemSelected: any;
   constructor(private inject: Injector, private adService: CodxAdService) {
     super(inject);
   }
@@ -107,7 +107,10 @@ export class DecentralizedGroupComponent extends UIComponent {
         option
       );
       side.closed.subscribe((x) => {
-        if (x.event == null) this.view.dataService.clear;
+        if (x.event) {
+          this.view.dataService.update(x.event).subscribe();
+        }
+        this.view.dataService.clear;
       });
     });
   }

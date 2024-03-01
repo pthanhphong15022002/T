@@ -129,7 +129,7 @@
 
 <!-- template cell Kow -->
 <ng-template #tmpCellKow let-data>
-    <div *ngIf="data && data[data.column.field]">
+    <div *ngIf="data && data[data?.column?.field]">
         {{data[data?.column?.field]}}
     </div>
 </ng-template>
