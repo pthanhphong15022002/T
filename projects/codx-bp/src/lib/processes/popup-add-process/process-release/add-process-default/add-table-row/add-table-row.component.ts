@@ -11,6 +11,7 @@ export class AddTableRowComponent implements OnInit{
   dialog:any;
   data:any[] = [];
   formModel:any;
+  result:any;
   tableForm: FormGroup;
   constructor(
     @Optional() dialog: DialogRef,
@@ -21,6 +22,7 @@ export class AddTableRowComponent implements OnInit{
     this.formModel = dialog.formModel;
     this.dialog = dialog;
     this.data = dt?.data?.dataTable;
+    this.result = dt?.data?.result;
   }
   ngOnInit(): void {
     this.formatData();
@@ -32,7 +34,9 @@ export class AddTableRowComponent implements OnInit{
     {
       this.data.forEach(element => {
         var field = element.fieldName.toLowerCase();
-        this.tableForm.addControl(field, new FormControl(element.defaultValue ? element.defaultValue : "", (element.isRequired ? Validators.required : null)));
+        var value = element.defaultValue ? element.defaultValue : "";
+        if(this.result) value = this.result[field]
+        this.tableForm.addControl(field, new FormControl(value, (element.isRequired ? Validators.required : null)));
       });
     }
   }

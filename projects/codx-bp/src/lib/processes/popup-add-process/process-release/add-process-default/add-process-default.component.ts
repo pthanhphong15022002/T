@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Optional, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ApiHttpService, AuthStore, CallFuncService, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, NotificationsService, Util } from 'codx-core';
+import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CallFuncService, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { elementAt, firstValueFrom } from 'rxjs';
@@ -437,7 +437,7 @@ export class AddProcessDefaultComponent implements OnInit{
     this.isAttach = e;
   }
 
-  addRow(data:any,fieldName:any,index=0)
+  addRow(data:any,fieldName:any,index=0,result:any=null)
   {
     if(!this.dataTable[fieldName.toLowerCase()]) this.dataTable[fieldName.toLowerCase()] = []
     var option = new DialogModel();
@@ -449,7 +449,7 @@ export class AddProcessDefaultComponent implements OnInit{
       600,
       750,
       '',
-      {dataTable: data},
+      {dataTable: data,result:result},
       '',
       option
     );
@@ -457,10 +457,43 @@ export class AddProcessDefaultComponent implements OnInit{
     popup.closed.subscribe(res=>{
       if(res?.event)
       {
-        this.dataTable[fieldName.toLowerCase()].push(res?.event);
+        if(!result) this.dataTable[fieldName.toLowerCase()].push(res?.event);
+        else this.dataTable[fieldName.toLowerCase()][result.index] = res.event
         var grid = this.gridView.find((_, i) => i == index);
         grid.refresh();
       }
     })
+  }
+  deleteRow(data:any,fieldName:any,index=0)
+  {
+    this.dataTable[fieldName.toLowerCase()].splice(data.index,1);
+    var grid = this.gridView.find((_, i) => i == index);
+    grid.refresh();
+  }
+
+  clickMFGrid(e:any,data:any)
+  {
+    let funcID = e?.event?.functionID
+    switch(funcID)
+    {
+      //Chỉnh sửa
+      case 'SYS03':
+        {
+          this.addRow(data.dataFormat,data.fieldName,data.indexTable,e.data)
+          break;
+        }
+      //Xóa
+      case 'SYS02':
+        {
+          var config = new AlertConfirmInputConfig();
+          config.type = 'YesNo';
+          this.notifySvr
+            .alert('Thông báo', 'Bạn có chắc chắn muốn xóa?', config)
+            .closed.subscribe((x) => {
+              if (x.event.status == 'Y') this.deleteRow(e?.data,data.fieldName,data.indexTable);
+            });
+          break;
+        }
+    }
   }
 }
