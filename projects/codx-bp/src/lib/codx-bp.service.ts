@@ -38,7 +38,6 @@ export class CodxBpService {
     }
     let returnStr = '';
     if (type == 'title') {
-      debugger
       returnStr = str + (count > 0 ? ' ' + count : '');
     } else {
       returnStr = format + (count > 0 ? '_' + count : '');

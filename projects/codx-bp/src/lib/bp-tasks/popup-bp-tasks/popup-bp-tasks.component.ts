@@ -70,23 +70,23 @@ export class PopupBpTasksComponent implements OnInit {
     this.checkList = this.data.checkList ?? [];
     this.getInfo();
     this.getVll();
-    if (this.dataIns == null) {
-      this.api
-        .execSv<any>(
-          'BP',
-          'BP',
-          'ProcessInstancesBusiness',
-          'GetItemsByInstanceIDAsync',
-          [this.data.instanceID]
-        )
-        .subscribe((ins) => {
-          if (ins) {
-            this.dataIns = ins;
-            this.getFile();
-          }
-        });
-    }    
-    this.getFile();
+    
+    this.api
+      .execSv<any>(
+        'BP',
+        'BP',
+        'ProcessInstancesBusiness',
+        'GetItemsByInstanceIDAsync',
+        [this.data.instanceID]
+      )
+      .subscribe((ins) => {
+        if (ins) {
+          this.dataIns = ins;
+          this.getFile();
+        }
+      });
+        
+    
     if (this.subTitle == null) {
       this.subTitle = this.dataIns?.title;
     }
@@ -180,7 +180,7 @@ export class PopupBpTasksComponent implements OnInit {
     } else this.info = info;
   }
 
-  onSave() {
+  onSave(status = "5") {
     if (this.checkList?.length > 0) {
       for (let i = 0; i < this.checkList.length; i++) {
         const item = this.checkList[i];
@@ -197,7 +197,7 @@ export class PopupBpTasksComponent implements OnInit {
         'ERM.Business.BP',
         'ProcessesBusiness',
         'UpdateStatusTaskAsync',
-        [this.data.recID, '3'] //Hoàn tất
+        [this.data.recID, status] //Hoàn tất
       )
       .subscribe((res) => {
         if (res) {
@@ -241,6 +241,11 @@ export class PopupBpTasksComponent implements OnInit {
   dataChange(e: any) {
     this.dataIns = e;
     this.dialog.close(this.dataIns);
+  }
+  
+
+  return(){
+    this.onSave("2")
   }
   eSign(){
     if(this.data?.recID){      

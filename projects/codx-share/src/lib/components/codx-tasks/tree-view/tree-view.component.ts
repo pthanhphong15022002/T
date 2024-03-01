@@ -25,6 +25,7 @@ import {
   PageTitleService,
   CodxService,
   CacheService,
+  CodxTreeviewComponent,
 } from 'codx-core';
 import { Observable, finalize, map } from 'rxjs';
 
@@ -34,6 +35,7 @@ import { Observable, finalize, map } from 'rxjs';
   styleUrls: ['./tree-view.component.css'],
 })
 export class TreeViewComponent implements OnInit, AfterViewInit {
+  @ViewChild('treeView') treeView: CodxTreeviewComponent;
   //#region Constructor
   @Input() data: any;
   @Input() formModel?: FormModel;
@@ -66,6 +68,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() changeMoreFunction = new EventEmitter<any>();
   @Output() viewTask = new EventEmitter<any>();
+  @Output() nodeSelect = new EventEmitter<any>();
 
   gridModelTree = new DataRequest();
   service = 'TM';
@@ -275,6 +278,9 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
 
   dbClick(data) {
     this.viewTask.emit(data);
+  }
+  select(data){
+    this.nodeSelect.emit(data);
   }
 
   //#endregion
