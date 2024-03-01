@@ -218,24 +218,24 @@
 
 
       <ng-container
-        *ngIf="data?.activityType == 'Approve' && data?.status != '3'"
+        *ngIf="data?.activityType == 'Approve' && data?.status != '5'"
         [ngTemplateOutlet]="buttonApprove"
       ></ng-container>
       <ng-container
-        *ngIf="data?.activityType == 'Check'  && data?.status != '3'"
+        *ngIf="data?.activityType == 'Check'  && data?.status != '5'"
         [ngTemplateOutlet]="buttonCheck"
       ></ng-container>
       <ng-container
-        *ngIf="(data?.activityType == 'Task' || data?.activityType == 'Form') && data?.status != '3'"
+        *ngIf="(data?.activityType == 'Task' || data?.activityType == 'Form') && data?.status != '5'"
         [ngTemplateOutlet]="buttonTask"
       ></ng-container>
       <ng-container
-        *ngIf="data?.activityType == 'Sign'  && data?.status != '3'"
+        *ngIf="data?.activityType == 'Sign'  && data?.status != '5'"
         [ngTemplateOutlet]="buttonSign"
       ></ng-container>
       <ng-template #buttonApprove>
         <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-light-primary ms-1">
+          <button type="button" class="btn btn-light-primary ms-1"  (click)="return()">
             <codx-label
               [name]="'lblbt1' + data?.activityType"
               [formName]="dialog?.formModel?.formName"
@@ -260,7 +260,7 @@
 
       <ng-template #buttonCheck>
         <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-light-primary ms-1">
+          <button type="button" class="btn btn-light-primary ms-1"  (click)="return()">
             <codx-label
               [name]="'lblbt1' + data?.activityType"
               [formName]="dialog?.formModel?.formName"
@@ -310,14 +310,14 @@
 
       <ng-template #buttonSign>
         <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-light-primary ms-1">
+          <button type="button" class="btn btn-light-primary ms-1" (click)="return()">
             <codx-label
               [name]="'lblbt1' + data?.activityType"
               [formName]="dialog?.formModel?.formName"
               [gridViewName]="
                 dialog?.formModel?.gridViewName + data?.activityType
               "
-              default="Trả về"
+              default="Trả về" 
             ></codx-label>
           </button>
           <button type="button" class="btn btn-primary ms-1" (click)="eSign()">
