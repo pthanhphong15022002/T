@@ -831,11 +831,13 @@ export class PopupAddProcessComponent {
         //       ? JSON.stringify(lstDocumentControl)
         //       : null;
         // }
+        
         if (this.data?.steps[1]?.extendInfo) {
           this.extendInfos.forEach((element) => {
             if (element.controlType == 'Attachment') {
-              if (!element?.documentControl) {
-                var obj = {
+              if (!element?.documentControl || element?.documentControl.length == 0) {
+                var obj = 
+                {
                   recID: Util.uid(),
                   title: element.title,
                   isRequired: false,
@@ -845,7 +847,7 @@ export class PopupAddProcessComponent {
                   stepNo: this.data?.steps[1].stepNo,
                   fieldID: element.recID,
                   memo: this.data?.steps[1].memo,
-                  refID: '',
+                  refID: ''
                 };
                 obj.refID = obj.recID;
                 this.data.documentControl = [obj];
@@ -853,7 +855,6 @@ export class PopupAddProcessComponent {
                 element.documentControl &&
                 element.documentControl.length > 0
               ) {
-                debugger;
                 var doc = JSON.parse(JSON.stringify(this.data.documentControl));
                 if (!doc) doc = [];
                 element.documentControl.forEach((docu) => {
