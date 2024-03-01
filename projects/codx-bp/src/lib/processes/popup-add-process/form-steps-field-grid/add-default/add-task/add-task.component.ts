@@ -30,8 +30,8 @@ export class AddTaskComponent
   @ViewChild('attachment2') attachment2: AttachmentComponent;
   @Input() activityType: any;
   @Output() dataChangeAttach = new EventEmitter<any>();
-  listCombobox = {};
-  //listCombobox = { P: 'PositionByOrgChart' };
+  //listCombobox = {};
+  listCombobox = { P: 'PositionByOrgChart' };
   multiple = true;
   vllShare = 'BP017';
   typeShare = '1';
@@ -774,7 +774,7 @@ export class AddTaskComponent
   }
 
   sharePerm(share: any) {
-    this.listCombobox = {};
+    this.listCombobox = { P: 'PositionByOrgChart' };
     this.multiple = true;
     this.vllShare = 'BP017';
     this.typeShare = '1';
