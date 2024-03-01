@@ -1,3 +1,4 @@
+<!-- <ng-container *ngIf="showViews; else noHavePermission"> -->
 <codx-views
   #view
   [service]="service"
@@ -20,19 +21,20 @@
   (filterReportChange)="filterChange($event)"
   (changeDataMF)="changeDataMF($event, dataSelected)"
   (clickMF)="clickMF($event, dataSelected)"
+  (onLoading)="onLoading($event)"
 >
 </codx-views>
-<!-- [hideMoreFuncs]="viewModeType == 9" -->
+<!-- </ng-container> -->
+<!-- You don`t have permisson instance -->
+<ng-template #noHavePermission>
+  <codx-error401></codx-error401>
+</ng-template>
 <!-- Dashboard -->
 <ng-template #dashBoard>
   <codx-instance-dashboard
     [vllStatus]="vllStatus"
     [processID]="processID"
   ></codx-instance-dashboard>
-  <!-- <new-dashboard-instances
-    [vllStatus]="vllStatus"
-    [processID]="processID"
-  ></new-dashboard-instances> -->
 </ng-template>
 
 <!-- KANBAN -->

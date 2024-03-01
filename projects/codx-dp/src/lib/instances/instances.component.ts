@@ -68,9 +68,7 @@ export class InstancesComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
-  // @Input() process: any;
   @Input() isCreate: boolean = true;
-  // @Input() tabInstances = [];
   @ViewChild('popupOwnerRolesTemp') popupOwnerRolesTemp: TemplateRef<any>;
   @ViewChild('templateDetail', { static: true })
   templateDetail: TemplateRef<any>;
@@ -245,6 +243,7 @@ export class InstancesComponent
   asideMode: string;
   isChangeOwner: boolean = false;
   viewModeType: any;
+  showViews = true;
 
   constructor(
     inject: Injector,
@@ -256,10 +255,7 @@ export class InstancesComponent
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
     private auth: AuthService,
-    // private pageTitle: PageTitleService,
-    // private layout: LayoutService,
-    // private layoutInstance: LayoutInstancesComponent,
-    // private layoutDP: LayoutComponent,
+
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -280,6 +276,7 @@ export class InstancesComponent
             if (res) {
               this.haveDataService = true;
               if (res.read) this.loadData(res);
+              else this.showViews = false;
             } else this.haveDataService = false;
           });
         } else {
@@ -409,12 +406,15 @@ export class InstancesComponent
         this.codxDpService
           .getProcessByProcessID(this.processID)
           .subscribe((ps) => {
-            if (ps && ps.read && !ps.isDelete) {
-              this.loadData(ps, true);
+            if (ps && ps?.read && !ps?.deleted) {
+              this.loadData(ps);
               this.getListCbxProccess(ps?.applyFor);
+              this.showViews = true;
             } else {
-              this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
+              this.showViews = false;
+              this.codxService.navigate(null, '/');
             }
+            this.detectorRef.detectChanges();
           });
       }
 
@@ -1450,7 +1450,9 @@ export class InstancesComponent
   changeView(e) {
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
+      this.processID = param['processID'];
     });
+
     if (!this.crrFunc || this.crrFunc == this.funcID) {
       if (!this.crrFunc) this.crrFunc = this.funcID;
       this.viewModeType = e?.view.type;
@@ -1470,55 +1472,18 @@ export class InstancesComponent
           break;
       }
     } else {
-      let viewModel: any;
-      this.cache.viewSettings(this.funcID).subscribe((res) => {
-        let setingViewMode = res;
-        this.views.forEach((v, index) => {
-          let idx = setingViewMode.findIndex((x) => x.view == v.type);
-          if (idx != -1) {
-            v.active = setingViewMode[idx].isDefault;
-            if (v.active) viewModel = v;
-            v.hide = false;
+      this.codxDpService
+        .getProcessByProcessID(this.processID)
+        .subscribe((ps) => {
+          if (ps && ps.read && !ps?.deleted) {
+            this.showViews = true;
+            this.loadData(ps, true);
+            this.getListCbxProccess(ps?.applyFor);
           } else {
-            v.hide = true;
-            v.active = false;
+            this.showViews = false;
+            this.codxService.navigate(null, '/');
           }
         });
-        this.crrFunc = this.funcID;
-        if (this.funcID == 'DPT0502') {
-          // this.layoutDP.viewNameProcess(null);
-
-          if (viewModel) {
-            this.view.viewActiveType = viewModel.type;
-          } else {
-            this.view.viewActiveType = 2;
-            viewModel = this.views.find((x) => x.type == 2);
-            viewModel.active = true;
-          }
-          this.view.viewChange(viewModel);
-          this.view.load();
-        }
-      });
-      // this.views.forEach((v, index) => {
-      //   if (v.type == 2) {
-      //     v.active = true;
-      //     viewModel = v;
-      //   } else {
-      //     v.active = false;
-      //     if (this.funcID == 'DPT0502') v.hide = true;
-      //     else v.hide = false;
-      //   }
-      // });
-      // this.crrFunc = this.funcID;
-      // if (this.funcID == 'DPT0502') {
-      //   this.layoutDP.viewNameProcess(null);
-
-      //   if (viewModel) {
-      //     this.view.viewActiveType = viewModel.type;
-      //     this.view.viewChange(viewModel);
-      //   }
-      //   this.view.load();
-      // }
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -2201,39 +2166,54 @@ export class InstancesComponent
     this.isUseFail = this.stepFail?.isUsed;
     this.showButtonAdd = this.isCreate;
     this.viewMode = this.process?.viewMode ?? 6;
-    //f5 hoặc copy link dán
+    //đoi view cần reload = 03/01/2024
     if (reload) {
-      // if (!this.views) {
-      //   this.views = [
-      //     {
-      //       type: ViewType.listdetail,
-      //       active: true,
-      //       sameData: true,
-      //       toolbarTemplate: this.footerButton,
-      //       model: {
-      //         template: this.itemTemplate,
-      //         panelRightRef: this.templateDetail,
-      //       },
-      //     },
-      //     {
-      //       type: ViewType.kanban,
-      //       active: false,
-      //       sameData: false,
-      //       request: this.request,
-      //       request2: this.resourceKanban,
-      //       toolbarTemplate: this.footerButton,
-      //       model: {
-      //         template: this.cardKanban,
-      //         template2: this.viewColumKaban,
-      //         setColorHeader: true,
-      //       },
-      //     },
-      //   ];
-      // }
-      // this.views.forEach((x) => {
-      //   if (x.type == this.viewMode) x.active == true;
-      //   else x.active = false;
-      // });
+      let viewModel: any;
+      this.cache.viewSettings(this.funcID).subscribe((res) => {
+        let setingViewMode = res;
+        this.views.forEach((v, index) => {
+          let idx = setingViewMode.findIndex((x) => x.view == v.type);
+          if (idx != -1) {
+            (v.active == this.viewMode) == setingViewMode[idx].type;
+            // v.active = setingViewMode[idx].isDefault;
+            if (v.active) viewModel = v;
+            v.hide = false;
+          } else {
+            v.hide = true;
+            v.active = false;
+          }
+        });
+        this.crrFunc = this.funcID;
+
+        if (viewModel) {
+          this.view.viewActiveType = viewModel.type;
+        } else {
+          this.view.viewActiveType = 2;
+          viewModel = this.views.find((x) => x.type == 2);
+          viewModel.active = true;
+        }
+
+        this.dataObj = {
+          processID: this.processID,
+          haveDataService: this.haveDataService ? '1' : '0',
+          showInstanceControl: this.process?.showInstanceControl
+            ? this.process?.showInstanceControl
+            : '2',
+          hiddenInstanceReason: this.getListStatusInstance(
+            this.isUseSuccess,
+            this.isUseFail
+          ),
+        };
+        this.view.views.forEach((x) => {
+          if (x.type == 6) {
+            x.request.dataObj = this.dataObj;
+            x.request2.dataObj = this.dataObj;
+          }
+        });
+        if ((this.view?.currentView as any)?.kanban) this.loadKanban();
+        // this.view.viewChange(this.viewMode);
+        // this.view.load();
+      });
     }
 
     if (
@@ -2868,4 +2848,37 @@ export class InstancesComponent
       }
     }
   }
+
+  loadKanban() {
+    if (!this.kanban) this.kanban = (this.view?.currentView as any)?.kanban;
+
+    let kanban = (this.view?.currentView as any)?.kanban;
+
+    let settingKanban = kanban.kanbanSetting;
+    settingKanban.isChangeColumn = true;
+    settingKanban.formName = this.view?.formModel?.formName;
+    settingKanban.gridViewName = this.view?.formModel?.gridViewName;
+    this.api
+      .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
+        settingKanban,
+        this.dataObj,
+      ])
+      .subscribe((resource) => {
+        if (resource?.columns && resource?.columns.length)
+          kanban.columns = resource.columns;
+        kanban.kanbanSetting.isChangeColumn = false;
+        kanban.dataObj = this.dataObj;
+        kanban.loadDataSource(
+          kanban.columns,
+          kanban.kanbanSetting?.swimlaneSettings,
+          false
+        );
+
+        kanban.refresh();
+        this.kanban = kanban;
+        this.detectorRef.detectChanges();
+      });
+  }
+
+  onLoading(e) {}
 }
