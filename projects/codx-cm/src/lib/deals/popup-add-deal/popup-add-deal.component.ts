@@ -296,10 +296,13 @@ export class PopupAddDealComponent
   async ngAfterViewInit(): Promise<void> {
     if(this.tenant == "qtscdemo"){
       this.tabInfo = [this.menuGeneralInfo];
+      this.tabContent = [this.tabGeneralInfoDetail];
     }else{
       this.tabInfo = [this.menuGeneralInfo, this.menuCostItems];
+      this.tabContent = [this.tabGeneralInfoDetail, this.tabCostItems];
     }
-    this.tabContent = [this.tabGeneralInfoDetail, this.tabCostItems];
+
+    
     if (this.action !== this.actionAdd || this.isviewCustomer) {
       if (this.isviewCustomer) {
         this.customerCategory = this.customerView?.category;
