@@ -33,7 +33,7 @@
                                                 <button class="w-200px border-0 rounded-0 text-start" ngbNavLink>{{item.stepName}}</button>
                                                 <ng-template ngbNavContent>
                                                     <div class="d-flex flex-column w-100 h-100 overflow-auto">
-                                                        <div class="p-2 cursor-pointer" [ngClass]="child.field == item2.fieldName ? 'div-active' : ''" *ngFor="let item2 of item.extendInfo" (click)="myDrop.close();fieldChange(child,item2)">{{item2.fieldName}}</div>
+                                                        <div class="p-2 cursor-pointer" [ngClass]="child.field == item2.fieldName ? 'div-active' : ''" *ngFor="let item2 of item.extendInfo" (click)="myDrop.close();fieldChange(child,item2)">{{item2.title}}</div>
                                                     </div>
                                                 </ng-template>
                                             </ng-container>
@@ -44,121 +44,242 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-9 d-flex align-items-center" *ngIf="child.field">
+                        <div class="col-9 d-flex align-items-center" *ngIf="child?.field">
                             <ng-container [ngSwitch]="child.item['dataType']">
-                            <ng-container *ngSwitchCase="'String'">
-                                <div class="w-25" *ngIf="child.field">
-                                <codx-input type="valuelist" class="w-100" refValue="SYS030" [placeholder]="'chọn...'" field="operator"
-                                [crrValue]="child.operator?.toUpperCase() || ''" (valueChange)="valueChange(child,$event)">
-        
-                                </codx-input>
-                                </div>
-                                <div class="w-75 ps-5" *ngIf="!child.item.refType">
-                                <codx-input
-                                    type="text"
-                                    [className]="'border'"
-                                    [field]="child.item.controlName"
-                                    [placeholder]="child.item.title"
-                                    [crrValue]="child?.value || ''"
-                                    (valueChange)="valueFieldChange(child,$event)"
-                                ></codx-input>
-                                </div>
-                                <div class="w-75 ps-5" *ngIf="child.item.refType == '3'">
-                                <codx-input
-                                    type="combobox"
-                                    [field]="child.item.controlName"
-                                    [placeholder]="child.item.title"
-                                    [crrValue]="child.value"
-                                    [refValue]="child.item.refValue"
-                                    (valueChange)="valueFieldChange(child,$event)"
-                                >
-                                </codx-input>
-                                </div>
-                                <div class="w-75 ps-5" *ngIf="child.item.refType == '2'">
-                                <codx-input
-                                    type="valuelist"
-                                    [field]="child.item.controlName"
-                                    [placeholder]="child.item.title"
-                                    [crrValue]="child.value"
-                                    [refValue]="child.item.refValue"
-                                    (valueChange)="valueFieldChange(child,$event)"
-                                >
-                                </codx-input>
-                                </div>
-                            </ng-container>
-        
-                            <ng-container *ngSwitchCase="'DateTime'">
-                                <div class="w-25" *ngIf="child.field">
-                                <codx-input type="valuelist" class="w-100" refValue="SYS032" [placeholder]="'chọn...'" field="operator"
-                                [crrValue]="child.operator?.toUpperCase() || ''" (valueChange)="valueChange(child,$event)">
-        
-                                </codx-input>
-                                </div>
-                                <div class="w-75 ps-5">
-                                <codx-input  class="form-control test-datetime"
-                                type="dateTime" style="width:100%" format="d" [crrValue]="child.value"
-                                (valueChange)="valueFieldChange(child,$event)"></codx-input>
-                                </div>
-        
-                            </ng-container>
-                            <ng-container *ngSwitchCase="'Int'">
-                                <div class="w-25" *ngIf="child.field">
-                                <codx-input type="valuelist" class="w-100" refValue="SYS031" [placeholder]="'chọn...'" field="operator"
-                                [crrValue]="child.operator?.toUpperCase() || ''" (valueChange)="valueChange(child,$event)">
-        
-                                </codx-input>
-                                </div>
-                                <div class="w-75 ps-5">
-                                <codx-input
-                                        type="number"
-                                        [field]="child.item.controlName"
-                                        [crrValue]="child.value"
-                                        (valueChange)="valueFieldChange(child,$event)"
-                                    ></codx-input>
-                                </div>
-                            </ng-container>
-                            <ng-container *ngSwitchCase="'Decimal'">
-                                <div class="w-25" *ngIf="child.field">
-                                <codx-input type="valuelist" class="w-100" refValue="SYS031" [placeholder]="'chọn...'" field="operator"
-                                [crrValue]="child.operator?.toUpperCase()" (valueChange)="valueChange(child,$event)">
-        
-                                </codx-input>
-                                </div>
-                                <div class="w-75 ps-5">
-                                <codx-input
-                                        type="number"
-                                        [field]="child.item.controlName"
-                                        [crrValue]="child.value"
-                                        (valueChange)="valueFieldChange(child,$event)"
-                                    ></codx-input>
-                                </div>
-                            </ng-container>
-                            <ng-container *ngSwitchCase="'Bool'">
-                                <div class="w-25" *ngIf="child.field">
-                                <codx-input type="valuelist" class="w-100" refValue="SYS030" [placeholder]="'chọn...'" field="operator"
-                                [crrValue]="child.operator?.toUpperCase()" (valueChange)="valueChange(child,$event)">
-        
-                                </codx-input>
-                                </div>
-                                <div class="w-75 ps-5">
-                                <codx-input
-                                        type="checkBox"
-                                        [field]="child.item.controlName"
-                                        [crrValue]="child.value"
-                                        (valueChange)="valueFieldChange(child,$event)"
-                                    ></codx-input>
-                                </div>
-                            </ng-container>
-                            <ng-container *ngSwitchDefault>
-                                <div class="w-75 ps-5">
-                                <codx-input
-                                        type="text"
-                                        [field]="child.item.controlName"
-                                        [crrValue]="child.value"
-                                        (valueChange)="valueFieldChange(child,$event)"
-                                    ></codx-input>
-                                </div>
-                            </ng-container>
+                                <ng-container *ngSwitchCase="'String'">
+                                    <div class="w-25" *ngIf="child.field">
+                                    <codx-input type="valuelist" class="w-100" refValue="SYS030" [placeholder]="'chọn...'" field="operator"
+                                        [crrValue]="child.operator?.toUpperCase() || ''" (valueChange)="valueChange(child,$event)">
+                                    </codx-input>
+                                    </div>
+                                    <div class="w-75 ps-5" *ngIf="!child.item.refType">
+                                        <codx-input
+                                            type="text"
+                                            [className]="'border'"
+                                            [field]="child.item.controlName"
+                                            [placeholder]="child.item.title"
+                                            [crrValue]="child?.value || ''"
+                                            (valueChange)="valueFieldChange(child,$event)"
+                                        ></codx-input>
+                                    </div>
+                                    <div class="w-75 ps-5" *ngIf="child.item.refType == '3'">
+                                        <codx-input
+                                            type="combobox"
+                                            [field]="child.item.controlName"
+                                            [placeholder]="child.item.title"
+                                            [crrValue]="child.value"
+                                            [refValue]="child.item.refValue"
+                                            (valueChange)="valueFieldChange(child,$event)"
+                                        >
+                                        </codx-input>
+                                    </div>
+                                    <div class="w-75 ps-5" *ngIf="child.item.refType == '2'">
+                                        <codx-input
+                                            type="valuelist"
+                                            [field]="child.item.controlName"
+                                            [placeholder]="child.item.title"
+                                            [crrValue]="child.value"
+                                            [refValue]="child.item.refValue"
+                                            (valueChange)="valueFieldChange(child,$event)"
+                                        >
+                                        </codx-input>
+                                    </div>
+                                </ng-container>
+            
+                                <ng-container *ngSwitchCase="'DateTime'">
+                                    <div class="w-25" *ngIf="child.field">
+                                        <codx-input type="valuelist" class="w-100" refValue="SYS032" [placeholder]="'chọn...'" field="operator"
+                                        [crrValue]="child.operator?.toUpperCase() || ''" (valueChange)="valueChange(child,$event)">
+                                        </codx-input>
+                                    </div>
+                                    <div class="w-75 ps-5">
+                                        <ng-container [ngSwitch]="child.operator">
+                                          <ng-container *ngSwitchCase="'between'">
+                                            <div class="w-100">
+                                              <codx-dropdown-calendar cssPopup="h-500px w-800px p-0" cssClass="w-100"
+                                              [firstChange]="false" (change)="
+                                              dateConditionSelect(
+                                                { data: $event, isDateTime: true },
+                                                child
+                                              )
+                                            "emptyText="Chọn khoảng thời gian..."></codx-dropdown-calendar>
+                                            </div>
+              
+                                          </ng-container>
+                                          <ng-container *ngSwitchCase="'duein'">
+                                            <div class="w-100 d-flex">
+                                              <codx-input type="number" [ngClass]="'pe-1'" [crrValue]="child.value"  [field]="child.field"  (valueChange)="
+                                              dateConditionSelect($event,child)
+                                            ">
+                                              </codx-input>
+                                              <codx-input type="valuelist" [ngClass]="'ps-1'" refValue="SYS033" [placeholder]="'chọn...'"  [field]="child.field"
+                                              [crrValue]="dateType[child.field]?.toUpperCase()" (valueChange)="dateTypeChange($event,child.field)">
+                                              </codx-input>
+                                            </div>
+                                          </ng-container>
+                                          <ng-container *ngSwitchCase="'yesterday'">
+                                            <div class="w-100">
+                                              <codx-input type="datetime" format="d" [disabled]="true" [crrValue]="yesterday" [field]="child.field"  (valueChange)="
+                                              dateConditionSelect({ data: $event.data, isDateTime: true },
+                                              child)
+                                            ">
+                                              </codx-input>
+                                            </div>
+                                          </ng-container>
+                                          <ng-container *ngSwitchCase="'today'">
+                                            <div class="w-100">
+                                              <codx-input type="datetime" format="d" [disabled]="true" [crrValue]="toDay" [field]="child.field"  (valueChange)="
+                                              dateConditionSelect({ data: $event.data, isDateTime: true },
+                                              child)
+                                            ">
+                                              </codx-input>
+                                            </div>
+                                          </ng-container>
+                                          <ng-container *ngSwitchCase="'inthelast'">
+                                            <div class="w-100 d-flex">
+                                              <codx-input type="number" [ngClass]="'pe-1'" [crrValue]="child.value"  [field]="child.field"  (valueChange)="
+                                              dateConditionSelect($event,
+                                              child)
+                                            ">
+                                              </codx-input>
+                                              <codx-input type="valuelist" [ngClass]="'ps-1'" refValue="SYS033" [placeholder]="'chọn...'"  [field]="child.field"
+                                              [crrValue]="dateType[child.field]?.toUpperCase()" (valueChange)="dateTypeChange($event,child.field)">
+                                              </codx-input>
+                                            </div>
+                                          </ng-container>
+                                          <ng-container *ngSwitchDefault>
+                                            <div class="w-100">
+                                              <codx-input type="datetime" format="d" [crrValue]="child.value" [field]="child.field"  (valueChange)="
+                                              dateConditionSelect({ data: $event.data?.fromDate, isDateTime: true },
+                                              child)
+                                            ">
+                                              </codx-input>
+                                            </div>
+                                          </ng-container>
+                                        </ng-container>
+                                    </div>
+                                </ng-container>
+
+                                <ng-container *ngSwitchCase="'Int'">
+                                    <div class="w-25" *ngIf="child.field">
+                                        <codx-input type="valuelist" class="w-100" refValue="SYS031" [placeholder]="'chọn...'" field="operator"
+                                        [crrValue]="child.operator?.toUpperCase() || ''" (valueChange)="valueChange(child,$event)">
+                                        </codx-input>
+                                    </div>
+                                   <div class="w-75 ps-5">
+                                        <ng-container [ngSwitch]="child.operator">
+                                            <ng-container *ngSwitchCase="'between'">
+                                            <div class="w-100 d-flex">
+                                                <codx-input type="number" [ngClass]="'pe-1'" [field]="'from'" [crrValue]="
+                                                    child.value ? child.value : 0
+                                                " (valueChange)="
+                                                    numberChange($event, child)
+                                                " placeholder="Từ">
+                                                </codx-input>
+                                            <codx-input type="number" [ngClass]="'ps-1'" [field]="'to'" [crrValue]="
+                                                child.value ? child.value : 0"
+                                                (valueChange)="numberChange($event, child)
+                                                " placeholder="Đến"></codx-input>
+                                            </div>
+                                            </ng-container>
+                                            <ng-container *ngSwitchCase="'notbetween'">
+                                            <div class="w-100 d-flex">
+                                                <codx-input type="number" [ngClass]="'pe-1'" [field]="'from'" [crrValue]="
+                                                child.value ? child.value : 0
+                                            " (valueChange)="
+                                                numberChange($event, child)
+                                            " placeholder="Từ"></codx-input>
+                                            <codx-input type="number" [ngClass]="'ps-1'" [field]="'to'" [crrValue]="
+                                            child.value ? child.value : 0
+                                            " (valueChange)="
+                                            numberChange($event, child)
+                                            " placeholder="Đến"></codx-input>
+                                            </div>
+                                            </ng-container>
+                                            <ng-container *ngSwitchDefault>
+                                            <div class="w-100">
+                                                <codx-input type="number" [field]="child.field" [crrValue]="
+                                                child.value ? child.value : 0
+                                            " (valueChange)="
+                                                valueFieldChange(child,$event)
+                                            "></codx-input>
+                                            </div>
+                                            </ng-container>
+                                        </ng-container>
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngSwitchCase="'Decimal'">
+                                    <div class="w-25" *ngIf="child.field">
+                                        <codx-input type="valuelist" class="w-100" refValue="SYS031" [placeholder]="'chọn...'" field="operator"
+                                        [crrValue]="child.operator?.toUpperCase()" (valueChange)="valueChange(child,$event)">
+                                        </codx-input>
+                                    </div>
+                                    <div class="w-75 ps-5">
+                                        <ng-container [ngSwitch]="child.operator">
+                                          <ng-container *ngSwitchCase="'between'">
+                                            <div class="w-100 d-flex">
+                                              <codx-input type="number" [ngClass]="'pe-1'" [field]="'from'" [crrValue]="
+                                              child.value ? child.value : 0
+                                            " (valueChange)="
+                                              numberChange($event, child)
+                                            " placeholder="Từ"></codx-input>
+                                            <codx-input type="number" [ngClass]="'ps-1'" [field]="'to'" [crrValue]="
+                                            child.value ? child.value : 0"
+                                            (valueChange)="numberChange($event, child)
+                                            " placeholder="Đến"></codx-input>
+                                            </div>
+                                          </ng-container>
+                                          <ng-container *ngSwitchCase="'notbetween'">
+                                            <div class="w-100 d-flex">
+                                              <codx-input type="number" [ngClass]="'pe-1'" [field]="'from'" [crrValue]="
+                                              child.value ? child.value : 0
+                                            " (valueChange)="
+                                              numberChange($event, child)
+                                            " placeholder="Từ"></codx-input>
+                                            <codx-input type="number" [ngClass]="'ps-1'" [field]="'to'" [crrValue]="
+                                            child.value ? child.value : 0
+                                            " (valueChange)="
+                                            numberChange($event, child)
+                                            " placeholder="Đến"></codx-input>
+                                            </div>
+                                          </ng-container>
+                                          <ng-container *ngSwitchDefault>
+                                            <div class="w-100">
+                                              <codx-input type="number" [field]="child.field" [crrValue]="
+                                              child.value ? child.value : 0
+                                            " (valueChange)="
+                                              valueFieldChange(child,$event)
+                                            "></codx-input>
+                                            </div>
+                                          </ng-container>
+                                        </ng-container>
+                                      </div>
+                                </ng-container>
+                                <ng-container *ngSwitchCase="'Bool'">
+                                    <div class="w-25" *ngIf="child.field">
+                                        <codx-input type="valuelist" class="w-100" refValue="SYS030" [placeholder]="'chọn...'" field="operator"
+                                        [crrValue]="child.operator?.toUpperCase()" (valueChange)="valueChange(child,$event)">
+                                        </codx-input>
+                                    </div>
+                                    <div class="w-75 ps-5">
+                                        <codx-input
+                                            type="checkBox"
+                                            [field]="child.item.controlName"
+                                            [crrValue]="child.value"
+                                            (valueChange)="valueFieldChange(child,$event)"
+                                        ></codx-input>
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngSwitchDefault>
+                                    <div class="w-75 ps-5">
+                                        <codx-input
+                                            type="text"
+                                            [field]="child.item.controlName"
+                                            [crrValue]="child.value"
+                                            (valueChange)="valueFieldChange(child,$event)"
+                                        ></codx-input>
+                                    </div>
+                                </ng-container>
                             </ng-container>
                             <div class="d-flex justify-content-start mt-1">
                                 <i
