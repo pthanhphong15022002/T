@@ -14,14 +14,13 @@
   (buttonClick)="click($event)"
   (selectedChange)="selectedChange($event)"
   [selectedFirst]="true"
-  [autoLoad]="true"
+  [autoLoad]="autoLoad"
   (onActions)="onActions($event)"
   (viewChanged)="changeView($event)"
   [viewActiveType]="viewMode"
   (filterReportChange)="filterChange($event)"
   (changeDataMF)="changeDataMF($event, dataSelected)"
   (clickMF)="clickMF($event, dataSelected)"
-  (onLoading)="onLoading($event)"
 >
 </codx-views>
 <!-- </ng-container> -->

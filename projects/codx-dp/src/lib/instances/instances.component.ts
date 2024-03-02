@@ -68,7 +68,9 @@ export class InstancesComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
-  @Input() isCreate: boolean = true;
+  @Input() showViews = true;
+  @Input() autoLoad = true;
+
   @ViewChild('popupOwnerRolesTemp') popupOwnerRolesTemp: TemplateRef<any>;
   @ViewChild('templateDetail', { static: true })
   templateDetail: TemplateRef<any>;
@@ -88,6 +90,7 @@ export class InstancesComponent
 
   @Output() valueListID = new EventEmitter<any>();
   @Output() listReasonBySteps = new EventEmitter<any>();
+  isCreate: boolean = true;
   dialogOwnerStep: DialogRef;
   views: Array<ViewModel> = [];
   showButtonAdd = true;
@@ -243,7 +246,6 @@ export class InstancesComponent
   asideMode: string;
   isChangeOwner: boolean = false;
   viewModeType: any;
-  showViews = true;
 
   constructor(
     inject: Injector,
@@ -2167,54 +2169,53 @@ export class InstancesComponent
     this.isUseFail = this.stepFail?.isUsed;
     this.showButtonAdd = this.isCreate;
     this.viewMode = this.process?.viewMode ?? 6;
-    //đoi view cần reload = 03/01/2024
+    //đoi view cần reload = 03/01/2024 => đã bùa nghiệp vụ => đợi core change data tu ngoia vao
     if (reload) {
-      let viewModel: any;
-      this.cache.viewSettings(this.funcID).subscribe((res) => {
-        let setingViewMode = res;
-        this.views.forEach((v, index) => {
-          let idx = setingViewMode.findIndex((x) => x.view == v.type);
-          if (idx != -1) {
-            (v.active == this.viewMode) == setingViewMode[idx].type;
-            // v.active = setingViewMode[idx].isDefault;
-            if (v.active) viewModel = v;
-            v.hide = false;
-          } else {
-            v.hide = true;
-            v.active = false;
-          }
-        });
-        this.crrFunc = this.funcID;
-
-        if (viewModel) {
-          this.view.viewActiveType = viewModel.type;
-        } else {
-          this.view.viewActiveType = 2;
-          viewModel = this.views.find((x) => x.type == 2);
-          viewModel.active = true;
-        }
-
-        this.dataObj = {
-          processID: this.processID,
-          haveDataService: this.haveDataService ? '1' : '0',
-          showInstanceControl: this.process?.showInstanceControl
-            ? this.process?.showInstanceControl
-            : '2',
-          hiddenInstanceReason: this.getListStatusInstance(
-            this.isUseSuccess,
-            this.isUseFail
-          ),
-        };
-        this.view.views.forEach((x) => {
-          if (x.type == 6) {
-            x.request.dataObj = this.dataObj;
-            x.request2.dataObj = this.dataObj;
-          }
-        });
-        if ((this.view?.currentView as any)?.kanban) this.loadKanban();
-        // this.view.viewChange(this.viewMode);
-        // this.view.load();
-      });
+      // let viewModel: any;
+      // this.cache.viewSettings(this.funcID).subscribe((res) => {
+      //   let setingViewMode = res;
+      //   this.views.forEach((v, index) => {
+      //     let idx = setingViewMode.findIndex((x) => x.view == v.type);
+      //     if (idx != -1) {
+      //       v.active = this.viewMode == v.type;
+      //       // v.active = setingViewMode[idx].isDefault;
+      //       if (v.active) viewModel = v;
+      //       v.hide = false;
+      //     } else {
+      //       v.hide = true;
+      //       v.active = false;
+      //     }
+      //   });
+      //   this.crrFunc = this.funcID;
+      //   if (viewModel) {
+      //     this.view.viewActiveType = viewModel.type;
+      //   } else {
+      //     this.view.viewActiveType = 2;
+      //     viewModel = this.views.find((x) => x.type == 2);
+      //     viewModel.active = true;
+      //   }
+      //   this.dataObj = {
+      //     processID: this.processID,
+      //     haveDataService: this.haveDataService ? '1' : '0',
+      //     showInstanceControl: this.process?.showInstanceControl
+      //       ? this.process?.showInstanceControl
+      //       : '2',
+      //     hiddenInstanceReason: this.getListStatusInstance(
+      //       this.isUseSuccess,
+      //       this.isUseFail
+      //     ),
+      //   };
+      //   this.view.views.forEach((x) => {
+      //     if (x.type == 6) {
+      //       x.request.dataObj = this.dataObj;
+      //       x.request2.dataObj = this.dataObj;
+      //     }
+      //   });
+      //   if ((this.view?.currentView as any)?.kanban) this.loadKanban();
+      //   this.view.viewChange(viewModel);
+      //   this.view.load();
+      //   this.kanban.refresh();
+      // });
     }
 
     if (
@@ -2877,9 +2878,6 @@ export class InstancesComponent
 
         kanban.refresh();
         this.kanban = kanban;
-        this.detectorRef.detectChanges();
       });
   }
-
-  onLoading(e) {}
 }
