@@ -78,6 +78,7 @@ export class CashtransfersAddComponent extends UIComponent {
         if (res) {
           this.postDateControl = res?.PostedDateControl;
           this.feeVATID = res?.FeeVATID || '';
+          this.getVATCode();
         }
       })
   }
@@ -98,10 +99,12 @@ export class CashtransfersAddComponent extends UIComponent {
           'LoadDataAsync',
           option
         ).subscribe((res:any)=>{
-          let data = res[0][0];
-          this.fmVATInvoice.currentData = data;
-          this.fgVATInvoice.patchValue(data);
-          this.detectorRef.detectChanges();
+          if (res && res[0].length) {
+            let data = res[0][0];
+            this.fmVATInvoice.currentData = data;
+            this.fgVATInvoice.patchValue(data);
+            this.detectorRef.detectChanges();
+          }
         })
     }
 
@@ -136,8 +139,8 @@ export class CashtransfersAddComponent extends UIComponent {
 
   createTabDetail(event: any, eleTab: TabComponent) {
     if (eleTab) {
-      if (!this.formCashTranfer.data.feeControl) {
-        eleTab.hideTab(0,true);
+      if (this.formCashTranfer.data.vatControl) {
+        eleTab.hideTab(0,false);
       }else{
         eleTab.hideTab(0,true);
       }
@@ -217,33 +220,15 @@ export class CashtransfersAddComponent extends UIComponent {
         if(value){
           if (this.feeVATID != '' && this.feeVATID != null) {
             this.fmVATInvoice.currentData.vatid = this.feeVATID;
-            let option = new DataRequest();
-            option.entityName = 'AC_VATCodes';
-            option.predicate = 'VATID=@0';
-            option.pageLoading = false;
-            option.dataValue = this.feeVATID;
-            this.api
-              .execSv(
-                'AC',
-                'ERM.Business.Core',
-                'DataBusiness',
-                'LoadDataAsync',
-                option
-              )
-              .subscribe((res: any) => {
-                if (res && res[0].length) {
-                  let data = res[0][0];
-                  if (data && data?.vatPct) {
-                    this.vatPct = data?.vatPct;
-                    let vatbase = (this.formCashTranfer.data.fees ? this.formCashTranfer.data.fees : 0) * data?.vatPct;
-                    this.fmVATInvoice.currentData.vatBase = vatbase;
-                  }
-                }
-                this.fgVATInvoice.patchValue(this.fmVATInvoice.currentData);
-                this.elementTabDetail.hideTab(0,false);
-              });
+            let vatbase = (this.formCashTranfer.data.fees ? this.formCashTranfer.data.fees : 0) * this.vatPct;
+            this.fmVATInvoice.currentData.vatBase = vatbase;
+            this.fgVATInvoice.patchValue(this.fmVATInvoice.currentData);
+            this.elementTabDetail.hideTab(0,false);
           }
         }else{
+          this.api
+            .execAction('AC_VATInvoices', [this.fmVATInvoice.currentData], 'DeleteAsync')
+            .subscribe((res: any) => {});
           this.elementTabDetail.hideTab(0,true);
         }
         break;
@@ -310,7 +295,7 @@ export class CashtransfersAddComponent extends UIComponent {
     if(validate) return;
     this.api
       .exec('AC', 'CashTranfersBusiness', 
-      (this.formCashTranfer.data.isAdd || this.formCashTranfer.data.isCopy) ? 'SaveAsync' : '', [
+      (this.formCashTranfer.data.isAdd || this.formCashTranfer.data.isCopy) ? 'SaveAsync' : 'UpdateAsync', [
         this.formCashTranfer.data,
         this.formCashTranfer.data.vatControl ? this.fmVATInvoice.currentData : null
       ])
@@ -432,6 +417,30 @@ export class CashtransfersAddComponent extends UIComponent {
     
     newMemo = cashbookName + cashbookName2;
     return newMemo;
+  }
+
+  getVATCode(){
+    let option = new DataRequest();
+    option.entityName = 'AC_VATCodes';
+    option.predicate = 'VATID=@0';
+    option.pageLoading = false;
+    option.dataValue = this.feeVATID;
+    this.api
+      .execSv(
+        'AC',
+        'ERM.Business.Core',
+        'DataBusiness',
+        'LoadDataAsync',
+        option
+      )
+      .subscribe((res: any) => {
+        if (res && res[0].length) {
+          let data = res[0][0];
+          if (data && data?.vatPct) {
+            this.vatPct = data?.vatPct;
+          }
+        }
+      });
   }
   //#endregion Function
 
