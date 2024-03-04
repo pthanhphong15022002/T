@@ -62,7 +62,6 @@ export class ProjectsComponent
             .subscribe((grd: any) => {
               if (grd) {
                 this.grvSetup = grd;
-                debugger
               }
             });
         }

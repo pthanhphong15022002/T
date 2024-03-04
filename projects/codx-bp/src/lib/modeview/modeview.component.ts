@@ -274,6 +274,7 @@ export class ModeviewComponent implements OnInit {
         data.title += " " + this.count.datetime;
         data.controlType = "MaskBox";
         data.dataFormat = "d";
+        data.dataType = "DateTime"
         break;
       }
       case "Attachment":
@@ -348,7 +349,7 @@ export class ModeviewComponent implements OnInit {
           var col = 
           {
             title : "Cột " + (i+1),
-            fieldName: "Cot_" + (i+1),
+            fieldName: "cot_" + (i+1),
             description: null,
             dataType: "String",
             controlType: "TextBox",
@@ -422,7 +423,7 @@ export class ModeviewComponent implements OnInit {
     data.columnOrder = this.table.length;
     data.columnNo = 0;
     data.isRequired = data?.isRequired != null ? data.isRequired : false;
-    data.dataType = data.controlType || "String";
+    data.dataType = data?.dataType ? data.dataType : (data.controlType || "String");
     data.controlType = data.controlType || data.value;
     data.dataFormat = data.dataFormat || "";
     data.defaultValue = data.defaultValue || null;

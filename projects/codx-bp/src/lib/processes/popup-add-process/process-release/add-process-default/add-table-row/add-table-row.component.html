@@ -1,1 +1,37 @@
-<p>add-table-row works!</p>
+<codx-form
+    [headerText]="'Thêm dòng'"
+    [dialog]="dialog"
+    [body]="body"
+    [footer]="footer"
+>
+</codx-form>
+<ng-template #body>
+    <div class="d-flex flex-column w-100 mt-2" *ngFor="let item of data , let i =index">
+        <div class="d-flex align-items-center" >
+            <codx-label 
+                [formModel]="formModel"               
+                [fieldName]="item?.fieldName" 
+                [default]="item?.title" 
+                [ngClass]="item?.fieldType == 'Title' ? 'fw-bold fs-3 mt-1': 'fw-bold'">
+            </codx-label> 
+            <span *ngIf="item?.isRequired" class="text-danger mx-2">(*)</span>
+        </div>
+        <codx-input
+            [formName]="formModel.formName" 
+            [gridViewName]="formModel.gridViewName + item.fieldType"
+            [type]="(item?.controlType | addProcessDefaultPrice : item?.controlType : item?.dataType : item?.dataFormat: item?.refType)"
+            [refValue]="item.refValue"
+            [refType]="item.refType" 
+            [field]="getField(item?.fieldName)"
+            [placeholder]="item?.description || ''"
+            [Group]="tableForm"
+            [ControlName]="item?.fieldName"
+            >
+        </codx-input>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSave()"><codx-label [formName]="formModel.formName" fiedName="lblSave" default="Lưu"></codx-label></button>
+      </div>
+</ng-template>
