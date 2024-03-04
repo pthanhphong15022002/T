@@ -63,6 +63,9 @@ export class PopupAddProjectComponent extends UIComponent {
   componentSub:any='';
   defaultSettings:any=[];
   grvSetup:any;
+  enableEdit:boolean=true;
+  initComplete:boolean=false;
+
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
@@ -123,8 +126,29 @@ export class PopupAddProjectComponent extends UIComponent {
     }
   }
 
-  showPopover(e:any,dat:any){
+  selectedMember:any;
+  popover:any;
+  showPopover(e:any,data:any){
+    this.selectedMember = data;
+    this.popover =e;
+  }
 
+  changeRole(item:any){
+    let idx = this.listRoles.indexOf(item);
+    if(idx >-1){
+      if(this.selectedMember){
+       let index= this.members.findIndex((x:any)=>x.objectID==this.selectedMember.objectID);
+       if(index>-1){
+        this.members[idx].roleType=item.value;
+        this.members[idx].roleName=item.text;
+        this.members[idx].icon=item.icon;
+
+       }
+       this.members = this.members.slice();
+       this.changeDetectorRef.detectChanges();
+       if(this.popover) this.popover.close();
+      }
+    }
   }
 
   initForm(){
@@ -139,6 +163,7 @@ export class PopupAddProjectComponent extends UIComponent {
         });
         //thêm người đặt(người dùng hiên tại) khi thêm mới
         if (this.funcType == 'add' || this.funcType == 'copy') {
+          this.initComplete=true;
           let people = this.authService.userValue;
           let tmpResource :any={};
           tmpResource.objectID = people?.userID;
@@ -185,7 +210,12 @@ export class PopupAddProjectComponent extends UIComponent {
           this.data.permissions =  this.members;
           this.attendeesNumber = this.data.attendees;
           if(this.data && !this.data.projectManager) this.data.projectManager = this.user.userID;
+
           }
+
+          let lstUserID = this.members.map((x:any)=>{if(x.objectType=='U'){return x.objectID}}).join(';');
+          this.getListUser(lstUserID);
+
         }
       }
     });
@@ -282,6 +312,7 @@ export class PopupAddProjectComponent extends UIComponent {
               tmpResource.objectID = emp?.userID;
               tmpResource.objectName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
+              tmpResource.organizationName = emp?.organizationName;
               tmpResource.objectType = 'U';
               tmpResource.roleType = 'PM';
               tmpResource.optional = false;
@@ -291,11 +322,21 @@ export class PopupAddProjectComponent extends UIComponent {
                   tmpResource.roleName = element.text;
                 }
               });
-              this.members.push(tmpResource);
+              let idx = this.members.findIndex((x:any)=>x.objectID==tmpResource.objectID)
+              if(idx>-1){
+                if(this.members[idx].recID){
+                  tmpResource.recID = this.members[idx].recID;
+                  tmpResource.id = this.members[idx].id;
+                }
+                this.members[idx]=tmpResource;
+              }
+              else
+                this.members.push(tmpResource);
             } else {
               tmpResource.objectID = emp?.userID;
               tmpResource.objectName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
+              tmpResource.organizationName = emp?.organizationName;
               tmpResource.objectType = 'U';
               tmpResource.roleType = 'M';
               tmpResource.optional = false;
@@ -305,17 +346,32 @@ export class PopupAddProjectComponent extends UIComponent {
                   tmpResource.roleName = element.text;
                 }
               });
-              this.members.push(tmpResource);
+              let idx = this.members.findIndex((x:any)=>x.objectID==tmpResource.objectID)
+              if(idx >-1){
+                if(this.members[idx].recID){
+                  tmpResource.recID = this.members[idx].recID;
+                  tmpResource.id = this.members[idx].id;
+                }
+                this.members[idx]=tmpResource;
+              }
+              else
+                this.members.push(tmpResource);
             }
           }
-          this.members.forEach((item) => {
-            if (item.userID != this.curUser?.userID) {
-              this.members.push(item);
-            }
-          });
+          // this.members.forEach((item) => {
+          //   if (item.userID != this.curUser?.userID) {
+          //     this.members.push(item);
+          //   }
+          // });
           this.members = this.filterArray(this.members);
           this.data.permissions = this.members;
+          // this.data.permissions.map((x:any)=>{
+          //   let item = this.members.find((y:any)=>y.objectID==x.objectID);
+          //   if(item) x.project
+          // });
+          this.members = this.members.slice();
           this.attendeesNumber = this.data.permissions.length;
+          if(!this.initComplete) this.initComplete=true;
           this.detectorRef.detectChanges();
         }
       });
@@ -328,7 +384,6 @@ export class PopupAddProjectComponent extends UIComponent {
   saveForm(){
     let returnData:any;
     this.data.settings = this.newSetting;
-    this.dialogRef.dataService.dataSelected = this.data;
     if(this.data.permissions){
       let pm = this.data.permissions.find((x:any)=>x.roleType=='PM' && x.objectType=='U');
       if(pm){
@@ -336,6 +391,8 @@ export class PopupAddProjectComponent extends UIComponent {
         this.data.projectManeger = pm.objectID;
       }
     }
+    this.dialogRef.dataService.dataSelected = this.data;
+    debugger
 
     this.dialogRef.dataService
     .save()

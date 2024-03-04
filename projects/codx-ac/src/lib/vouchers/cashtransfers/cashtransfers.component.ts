@@ -88,6 +88,12 @@ export class CashtransfersComponent extends UIComponent {
       this.fmVATInvoice.gridViewName,
       this.fmVATInvoice.entityName
     );
+    this.VATInvoiceSV.addNew().subscribe((res: any) => {
+      if (res) {
+        this.fgVATInvoice.patchValue(res);
+        this.fmVATInvoice.currentData = res;
+      }
+    })
     this.getJournal();
   }
 
@@ -258,39 +264,33 @@ export class CashtransfersComponent extends UIComponent {
         if (res != null) {
           res.isAdd = true;
           if (this.dataDefault == null) this.dataDefault = { ...res };
-          this.VATInvoiceSV.addNew().subscribe((res: any) => {
-            if (res) {
-              this.fgVATInvoice.patchValue(res);
-              this.fmVATInvoice.currentData = res;
-              let data = {
-                headerText: this.headerText,
-                journal: { ...this.journal },
-                oData: { ...this.dataDefault }, 
-                hideFields: [...this.hideFields],
-                baseCurr: this.baseCurr,
-                fgVATInvoice : this.fgVATInvoice,
-                fmVATInvoices : this.fmVATInvoice,
-                VATInvoiceSV: this.VATInvoiceSV
-              };
-              let optionSidebar = new SidebarModel();
-              optionSidebar.DataService = this.view?.dataService;
-              optionSidebar.FormModel = this.view?.formModel;
-              let dialog = this.callfc.openSide(
-                CashtransfersAddComponent,
-                data,
-                optionSidebar,
-                this.view.funcID
-              );
-              dialog.closed.subscribe((res) => {
-                if (res && res?.event) {
-                  if (res?.event?.type === 'discard') {
-                    if(this.view.dataService.data.length == 0){
-                      this.itemSelected = undefined;
-                      this.detectorRef.detectChanges();
-                    } 
-                  }
-                }
-              })
+          let data = {
+            headerText: this.headerText,
+            journal: { ...this.journal },
+            oData: { ...this.dataDefault }, 
+            hideFields: [...this.hideFields],
+            baseCurr: this.baseCurr,
+            fgVATInvoice : this.fgVATInvoice,
+            fmVATInvoice : this.fmVATInvoice,
+            VATInvoiceSV: this.VATInvoiceSV
+          };
+          let optionSidebar = new SidebarModel();
+          optionSidebar.DataService = this.view?.dataService;
+          optionSidebar.FormModel = this.view?.formModel;
+          let dialog = this.callfc.openSide(
+            CashtransfersAddComponent,
+            data,
+            optionSidebar,
+            this.view.funcID
+          );
+          dialog.closed.subscribe((res) => {
+            if (res && res?.event) {
+              if (res?.event?.type === 'discard') {
+                if(this.view.dataService.data.length == 0){
+                  this.itemSelected = undefined;
+                  this.detectorRef.detectChanges();
+                } 
+              }
             }
           })
         }
@@ -307,36 +307,38 @@ export class CashtransfersComponent extends UIComponent {
       .edit(dataEdit)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        res.isEdit = true;
-        let data = {
-          headerText: this.headerText,
-          journal: { ...this.journal },
-          oData: { ...res },
-          hideFields: [...this.hideFields],
-          baseCurr: this.baseCurr,
-          fgVATInvoice: this.fgVATInvoice,
-          fmVATInvoices: this.fmVATInvoice,
-          VATInvoiceSV: this.VATInvoiceSV
-        };
-        let optionSidebar = new SidebarModel();
-        optionSidebar.DataService = this.view?.dataService;
-        optionSidebar.FormModel = this.view?.formModel;
-        let dialog = this.callfc.openSide(
-          CashtransfersAddComponent,
-          data,
-          optionSidebar,
-          this.view.funcID
-        );
-        dialog.closed.subscribe((res) => {
-          if (res && res?.event) {
-            if (res?.event?.type === 'discard') {
-              if(this.view.dataService.data.length == 0){
-                this.itemSelected = undefined;
-                this.detectorRef.detectChanges();
-              } 
+        if(res){
+          res.isEdit = true;
+          let data = {
+            headerText: this.headerText,
+            journal: { ...this.journal },
+            oData: { ...res }, 
+            hideFields: [...this.hideFields],
+            baseCurr: this.baseCurr,
+            fgVATInvoice : this.fgVATInvoice,
+            fmVATInvoice : this.fmVATInvoice,
+            VATInvoiceSV: this.VATInvoiceSV
+          };
+          let optionSidebar = new SidebarModel();
+          optionSidebar.DataService = this.view?.dataService;
+          optionSidebar.FormModel = this.view?.formModel;
+          let dialog = this.callfc.openSide(
+            CashtransfersAddComponent,
+            data,
+            optionSidebar,
+            this.view.funcID
+          );
+          dialog.closed.subscribe((res) => {
+            if (res && res?.event) {
+              if (res?.event?.type === 'discard') {
+                if(this.view.dataService.data.length == 0){
+                  this.itemSelected = undefined;
+                  this.detectorRef.detectChanges();
+                } 
+              }
             }
-          }
-        })
+          })
+        }
       });
   }
 
@@ -394,6 +396,7 @@ export class CashtransfersComponent extends UIComponent {
     return this.api.exec('AC', 'CashTranfersBusiness', 'SetDefaultAsync', [
       data,
       this.journal,
+      this.journalNo,
       action,
     ]);
   }

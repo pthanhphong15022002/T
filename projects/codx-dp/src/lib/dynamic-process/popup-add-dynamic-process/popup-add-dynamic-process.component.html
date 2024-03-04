@@ -302,8 +302,9 @@
               type="button"
               class="btn btn-primary"
               (click)="onSave()"
+              [ngClass]="checkSaveNow() ? '' : 'disabled'"
             >
-              <codx-label [name]="'lblSave'" [default]="'Lưu'"></codx-label>
+              <codx-label [name]="'lblSave'"  [default]="'Lưu'"></codx-label>
             </button>
           </div>
         </div>

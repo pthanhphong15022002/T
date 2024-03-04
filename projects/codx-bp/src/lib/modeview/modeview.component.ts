@@ -23,7 +23,6 @@ export class ModeviewComponent implements OnInit {
   vllBP002:any;
   table: Array<any> = [];
   basic = ["Text","ValueList","ComboBox","DateTime","Attachment","Number","YesNo","User","Share"];
-  advanced = ["Rank","Table","Progress","Phone","Email","Address","Expression"];
   lstDataAdd = [];
   count = count;
   dataSelected: any;
@@ -90,7 +89,7 @@ export class ModeviewComponent implements OnInit {
   {
     item.datas.forEach(elm => {
       if(this.basic.includes(elm.value)) elm.groupType = 0;
-      else if(this.advanced.includes(elm.value)) elm.groupType = 1;
+      else if(elm.value != 'Title' && elm.value != '"SubTitle"') elm.groupType = 1;
     }); 
     this.vllBP002 = item;
     if(!this.data) this.default();

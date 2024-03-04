@@ -594,7 +594,14 @@ export class AddTaskComponent
           templateID: res?.event[0].recID,
           templateName: res?.event[0].templateName,
         };
+
         if (val == 'add') {
+          var files = 
+          {
+            fileID: res?.event[0].recID,
+            type: '2',
+          };
+
           var documentControl = {
             recID: Util.uid(),
             title: this.data.stepName,
@@ -608,6 +615,7 @@ export class AddTaskComponent
             templateID: res?.event[0].recID,
             templateType: type,
             refID: '',
+            files: [files]
           };
           documentControl.refID = documentControl.recID;
           this.process.documentControl.push(documentControl);
