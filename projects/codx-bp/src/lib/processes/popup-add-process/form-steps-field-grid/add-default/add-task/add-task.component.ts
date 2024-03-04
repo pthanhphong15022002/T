@@ -329,6 +329,11 @@ export class AddTaskComponent
     this.dataChange.emit(this.data);
   }
 
+  showCheck(e: any){
+    console.log('show check: ', e)
+    e.show = e?.item?.Show ?? false;
+  }
+
   valueChangeUser(e: any) {
     if (e) {
       e.forEach((element) => {
@@ -596,7 +601,7 @@ export class AddTaskComponent
         };
 
         if (val == 'add') {
-          var files = 
+          var files =
           {
             fileID: res?.event[0].recID,
             type: '2',
