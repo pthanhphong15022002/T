@@ -158,13 +158,15 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
     this.initForm();
 
     // get return url from route parameters or default to '/'
-    this.returnUrl = this.router.snapshot.queryParams['returnUrl'.toString()] || '/';
+    this.returnUrl =
+      this.router.snapshot.queryParams['returnUrl'.toString()] || '/';
 
     this.realHub.start('ad').then((x: RealHub) => {
       if (x) {
         x.$subjectReal.asObservable().subscribe((z) => {
           if (z.event == 'Connected') {
-            this.hubConnectionID = x.hub["_connectionId"];
+            this.hubConnectionID = x.hub['_connectionId'];
+            this.detectorRef.detectChanges();
           } else if (z.event == 'AcceptLoginQR') {
             if (z.data?.hubConnection == this.hubConnectionID) {
               this.authService.setLogin(JSON.parse(z.data.user));
@@ -470,7 +472,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
             });
           } else {
             this.authService.setLogin(data.data);
-            this.loginService.loginAfter(data, type=='otp');
+            this.loginService.loginAfter(data, type == 'otp');
           }
         } else {
           this.loginService.loginAfter(data);

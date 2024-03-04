@@ -269,7 +269,7 @@ export class CashtransfersComponent extends UIComponent {
                 hideFields: [...this.hideFields],
                 baseCurr: this.baseCurr,
                 fgVATInvoice : this.fgVATInvoice,
-                fmVATInvoices : this.fmVATInvoice,
+                fmVATInvoice : this.fmVATInvoice,
                 VATInvoiceSV: this.VATInvoiceSV
               };
               let optionSidebar = new SidebarModel();
@@ -394,6 +394,7 @@ export class CashtransfersComponent extends UIComponent {
     return this.api.exec('AC', 'CashTranfersBusiness', 'SetDefaultAsync', [
       data,
       this.journal,
+      this.journalNo,
       action,
     ]);
   }
