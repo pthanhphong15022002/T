@@ -24,6 +24,7 @@ import { PopupAddLineTableComponent } from './popup-add-line-table/popup-add-lin
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { PopupSelectFieldReferenceComponent } from './popup-select-field-reference/popup-select-field-reference.component';
+import moment from 'moment';
 
 @Component({
   selector: 'codx-input-custom-field',
@@ -173,8 +174,14 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   ngOnInit(): void {
     //gia tri mặc dinh khi them moi
-    if (this.isAdd && this.customField.defaultValue)
-      this.customField.dataValue = this.customField.defaultValue;
+    if (this.isAdd) {
+      if (this.customField.defaultValue) {
+        this.customField.dataValue = this.customField.defaultValue;
+      } else if (this.customField.dataType == 'D') {
+        this.customField.dataValue = moment(new Date()).toDate();
+      }
+    }
+
     //gia tri tung form
     if (this.refVersion && this.customField?.versions?.length > 0) {
       let idx = this.customField.versions.findIndex(
