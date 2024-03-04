@@ -4,509 +4,403 @@
 </codx-form>
 <!-- Start: Sub toolbar -->
 <ng-template #TmpSubToolbar>
-    <div *ngIf="formCashTranfer" class="w-100">
-        <div class="d-flex align-items-center justify-content-between pt-3 ac-popupfull">
-            <div class="d-flex align-items-center me-2">
-                <div style="background-color: var(--primary-dark)"
-                    class="w-25px symbol h-25px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
-                    <i *ngIf="formCashTranfer.data?.isAdd" class="text-white icon-i-file-earmark-plus icon-16"></i>
-                    <i *ngIf="formCashTranfer.data?.isEdit" class="text-white icon-edit-one icon-16"></i>
-                    <i *ngIf="formCashTranfer.data?.isCopy" class="text-white icon-content_copy icon-16"></i>
-                </div>
-                <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
-                    {{ headerText }}
-                </div>
-                <div class="input-circle input-sm" *ngIf="formCashTranfer?.formGroup">
-                    <span class="me-2">
-                        <codx-vll *ngIf="formCashTranfer.data?.status == '1'" [formModel]="dialog.formModel"
-                            [field]="'Status'" [value]="formCashTranfer.data?.validated ? '1' : '7'" [showText]="true"
-                            [showBgColor]="true" class="badge badge-light badge-sm">
-                        </codx-vll>
-                        <codx-vll *ngIf="formCashTranfer.data?.status != '1'" [formModel]="dialog.formModel"
-                            [field]="'Status'" [value]="formCashTranfer.data?.status" [showText]="true"
-                            [showBgColor]="true" class="badge badge-light badge-sm">
-                        </codx-vll>
-                    </span>
-                </div>
-            </div>
-            <div class="d-flex align-items-center me-3">
-                <div class="ms-2">
-                    <button class="btn btn-icon btn-light-danger btn-circle" (click)="closeForm()">
-                        <i class="icon-close icon-18"></i>
-                    </button>
-                </div>
-            </div>
+  <div *ngIf="formCashTranfer" class="w-100">
+    <div class="d-flex align-items-center justify-content-between pt-3 ac-popupfull">
+      <div class="d-flex align-items-center me-2">
+        <div style="background-color: var(--primary-dark)"
+          class="w-25px symbol h-25px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
+          <i *ngIf="formCashTranfer.data?.isAdd" class="text-white icon-i-file-earmark-plus icon-16"></i>
+          <i *ngIf="formCashTranfer.data?.isEdit" class="text-white icon-edit-one icon-16"></i>
+          <i *ngIf="formCashTranfer.data?.isCopy" class="text-white icon-content_copy icon-16"></i>
         </div>
+        <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
+          {{ headerText }}
+        </div>
+      </div>
+      <div class="d-flex align-items-center me-3">
+        <div class="ms-2">
+          <button class="btn btn-icon btn-light-danger btn-circle" (click)="closeForm()">
+            <i class="icon-close icon-18"></i>
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
 </ng-template>
 <!-- End: Sub toolbar -->
 
 <!-- Start: TmpBody -->
 <ng-template #TmpBody>
-    <!-- Start: Tab General -->
-    <ejs-tab>
-      <e-tabitems>
-        <e-tabitem>
-          <ng-template #headerText>
-            <div class="d-flex align-items-top me-2 mt-2">
-              <i class="icon-info icon-18 me-2"></i>
-              <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
-                [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
-            </div>
-          </ng-template>
-          <ng-template #content>
-            <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
-          </ng-template>
-        </e-tabitem>
-        <!-- <e-tabitem>
-          <ng-template #headerText>
-            <div class="d-flex align-items-top me-2 mt-2">
-              <i class="icon-i-file-earmark-text icon-18 me-2"></i>
-              <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral2"
-                [formModel]="dialog.formModel" default="Thông tin hóa đơn"></codx-label>
-            </div>
-          </ng-template>
-          <ng-template #content>
-            <ng-container *ngTemplateOutlet="TmpTabInvoiceInfo"></ng-container>
-          </ng-template>
-        </e-tabitem> -->
-      </e-tabitems>
-    </ejs-tab>
-    <ejs-tab>
-      <e-tabitems>
-        <!-- <e-tabitem>
-          <ng-template #headerText>
-            <div class="d-flex align-items-top me-2 mt-2">
-              <i class="icon-info icon-18 me-2"></i>
-              <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
-                [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
-            </div>
-          </ng-template>
-          <ng-template #content>
-            <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
-          </ng-template>
-        </e-tabitem> -->
-        <e-tabitem>
-          <ng-template #headerText>
-            <div class="d-flex align-items-top me-2 mt-2">
-              <i class="icon-i-file-earmark-text icon-18 me-2"></i>
-              <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral2"
-                [formModel]="dialog.formModel" default="Thông tin hóa đơn"></codx-label>
-            </div>
-          </ng-template>
-          <ng-template #content>
-            <ng-container *ngTemplateOutlet="TmpTabInvoiceInfo"></ng-container>
-          </ng-template>
-        </e-tabitem>
-      </e-tabitems>
-    </ejs-tab>
-    <!-- End: Tab General -->
+  <!-- Start: Tab General -->
+  <ejs-tab>
+    <e-tabitems>
+      <e-tabitem>
+        <ng-template #headerText>
+          <div class="d-flex align-items-top me-2 mt-2">
+            <i class="icon-info icon-18 me-2"></i>
+            <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
+              [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
+          </div>
+        </ng-template>
+        <ng-template #content>
+          <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
+        </ng-template>
+      </e-tabitem>
+    </e-tabitems>
+  </ejs-tab>
+  <ejs-tab #elementTabDetail (selecting)="selecting($event)" (created)="createTabDetail($event,elementTabDetail)">
+    <e-tabitems>
+      <e-tabitem>
+        <ng-template #headerText>
+          <div class="d-flex align-items-top me-2 mt-2">
+            <i class="icon-i-file-earmark-text icon-18 me-2"></i>
+            <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblDetail"
+              [formModel]="dialog.formModel" default="Thông tin hóa đơn"></codx-label>
+          </div>
+        </ng-template>
+        <ng-template #content>
+          <ng-container *ngTemplateOutlet="TmpTabInvoiceInfo"></ng-container>
+        </ng-template>
+      </e-tabitem>
+    </e-tabitems>
+  </ejs-tab>
+  <!-- End: Tab General -->
 </ng-template>
 <!-- End: TmpBody -->
 
 <!-- Start: Footer -->
 <ng-template #TmpFooter>
-    <div style="display: grid !important" ngClass="collape"
-      class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="formCashTranfer.data">
-      <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
-        <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true" tab-index="14"
-          *ngIf="!formCashTranfer.data?.validated" style="border: 1px solid" type="button"
-          class="btn btn-md btn-light-danger me-2 rounded-15" (keydown.enter)="onDiscardVoucher(); $event.preventDefault()"
-          (click)="onDiscardVoucher()">
-          <div class="d-flex align-items-center">
-            <i class="icon-cancel icon-16"></i>
-            <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
-          </div>
-        </button>
-        <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index="15" [disabled]="isload"
-          style="border: 1px solid var(--primary-dark) !important" type="button"
-          class="btn btn-md btn-light-primary me-2 rounded-15" (keydown.enter)="onSaveVoucher('saveadd'); $event.preventDefault()"
-          (click)="onSaveVoucher('saveadd')">
-          <div class="d-flex align-items-center">
-            <i class="icon-add_to_photos icon-16"></i>
-            <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
-          </div>
-        </button>
-        <button [shortcut]="'alt+s'" [autoClick]="true" tab-index="16" id="btnsave" type="button" [disabled]="isload"
-          class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important"
-          (keydown.enter)="onSaveVoucher('save'); $event.preventDefault()" (click)="onSaveVoucher('save')">
-          <div class="d-flex align-items-center">
-            <i class="icon-save_alt icon-16"></i>
-            <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
-          </div>
-        </button>
-      </div>
-      <codx-tabs [entityName]="dialog.formModel.entityName" [formModel]="dialog.formModel"
-        [objectID]="formCashTranfer.data?.recID" [funcID]="dialog.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
+  <div id="tab-footer-ac" style="display: grid !important" ngClass="collape"
+    class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="formCashTranfer.data">
+    <div *ngIf="!formCashTranfer.data.isReadOnly"
+      class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
+      <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true" *ngIf="!formCashTranfer.data?.validated"
+        type="button" class="btn btn-md btn-danger me-2" (keydown.enter)="onDiscardVoucher(); $event.preventDefault()"
+        (click)="onDiscardVoucher()">
+        <div class="d-flex align-items-center">
+          <i class="icon-cancel icon-16"></i>
+          <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
+        </div>
+      </button>
+      <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" [disabled]="isload" type="button"
+        class="btn btn-md btn-primary me-2" (keydown.enter)="onSaveVoucher('saveadd'); $event.preventDefault()"
+        (click)="onSaveVoucher('saveadd')">
+        <div class="d-flex align-items-center">
+          <i class="icon-add_to_photos icon-16"></i>
+          <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
+        </div>
+      </button>
+      <button [shortcut]="'alt+s'" [autoClick]="true" tab-index="16" id="btnsave" type="button" [disabled]="isload"
+        class="btn btn-md btn-light-primary" style="border: 1px solid var(--primary-dark) !important"
+        (keydown.enter)="onSaveVoucher('save'); $event.preventDefault()" (click)="onSaveVoucher('save')">
+        <div class="d-flex align-items-center">
+          <i class="icon-save_alt icon-16"></i>
+          <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+        </div>
+      </button>
     </div>
+    <codx-tabs [entityName]="dialog.formModel.entityName" [formModel]="dialog.formModel"
+      [objectID]="formCashTranfer.data?.recID" [funcID]="dialog.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
+  </div>
 </ng-template>
 <!-- End: Footer -->
 
 <!-- Start: TmpTabGeneral -->
 <ng-template #TmpTabGeneral>
-    <ng-container *ngIf="formCashTranfer?.formGroup">
-        <div class="mt-3">
-            <div class="row">
-                <div class="col-xl-8 col-lg-8 col-md-6">
-                    <div style="max-width: 850px;">
-                        <div class="row">
-                            <div class="col-xl-4 col-lg-4 col-md-5">
-                                <div class="form-group">
-                                  <codx-label style="white-space: nowrap !important" fiedName="CashBookID"
-                                    [formModel]="dialog?.formModel">
-                                  </codx-label>
-                                  <codx-input #eleCbxCashBook [Group]="formCashTranfer?.formGroup" field="cashBookID"
-                                      [formModel]="dialog?.formModel" (valueChange)="valueChangeMaster($event)">
-                                  </codx-input>
-                                </div>
-                              </div>
-                              <div class="col-xl-5 col-lg-4 col-md-5">
-                                <div class="form-group">
-                                  <codx-label style="white-space: nowrap !important" default="Đối tượng chuyển"></codx-label>
-                                  <codx-input type="text" [disabled]="true" [crrValue]="eleCbxCashBook?.ComponentCurrent?.itemsSelected[0]?.CashBookName"></codx-input>
-                                </div>
-                              </div>
-                              <div class="col-xl-3 col-lg-4 col-md-5">
-                                <div class="form-group">
-                                  <codx-label style="white-space: nowrap !important" fiedName="ReasonID"
-                                    [formModel]="dialog?.formModel">
-                                  </codx-label>
-                                  <codx-input [Group]="formCashTranfer?.formGroup" field="reasonID"
-                                      [formModel]="dialog?.formModel" (valueChange)="valueChangeMaster($event)">
-                                  </codx-input>
-                                </div>
-                              </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-4 col-lg-4 col-md-5">
-                                <div class="form-group">
-                                  <codx-label style="white-space: nowrap !important" fiedName="CashBookID2"
-                                    [formModel]="dialog?.formModel">
-                                  </codx-label>
-                                  <codx-input #eleCbxCashBook2 [Group]="formCashTranfer?.formGroup" field="cashBookID2"
-                                      [formModel]="dialog?.formModel" (valueChange)="valueChangeMaster($event)">
-                                  </codx-input>
-                                </div>
-                              </div>
-                              <div class="col-xl-5 col-lg-4 col-md-5">
-                                <div class="form-group">
-                                  <codx-label style="white-space: nowrap !important" default="Đối tượng nhận"></codx-label>
-                                  <codx-input type="text" [disabled]="true" [crrValue]="eleCbxCashBook2?.ComponentCurrent?.itemsSelected[0]?.CashBookName"></codx-input>
-                                </div>
-                              </div>
-                              <div class="col-xl-3 col-lg-4 col-md-5">
-                                <div class="form-group">
-                                  <codx-label style="white-space: nowrap !important" fiedName="ExchangeAmt"
-                                    [formModel]="dialog?.formModel">
-                                  </codx-label>
-                                  <codx-input #eleCbxCashBook [Group]="formCashTranfer?.formGroup" field="exchangeAmt"
-                                      [formModel]="dialog?.formModel">
-                                  </codx-input>
-                                </div>
-                              </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-12 col-lg-12 col-md-5">
-                                <div class="form-group">
-                                  <codx-label style="white-space: nowrap !important" fiedName="Memo"
-                                    [formModel]="dialog?.formModel">
-                                  </codx-label>
-                                  <codx-input [Group]="formCashTranfer?.formGroup" field="memo"
-                                      [formModel]="dialog?.formModel">
-                                  </codx-input>
-                                </div>
-                              </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-2 col-lg-3 col-md-5 d-flex align-items-center mt-2">
-                                <codx-input class="me-3 mt-1" field="feeControl" [Group]="formCashTranfer?.formGroup" [formModel]="dialog?.formModel" (valueChange)="valueChangeMaster($event)">
-                                </codx-input>
-                                <codx-label class="fw-bold" style="white-space: nowrap !important" fiedName="FeeControl" [formModel]="dialog?.formModel" >
-                                </codx-label>
-                            </div>
-                            <div class="col-xl-4 col-lg-3 col-md-5">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="Fees"
-                                      [formModel]="dialog?.formModel">
-                                    </codx-label>
-                                    <codx-input [Group]="formCashTranfer?.formGroup" field="fees"
-                                        [formModel]="dialog?.formModel">
-                                    </codx-input>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-lg-3 col-md-5">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="CashAcctID"
-                                      [formModel]="dialog?.formModel">
-                                    </codx-label>
-                                    <codx-input [Group]="formCashTranfer?.formGroup" field="cashAcctID"
-                                        [formModel]="dialog?.formModel">
-                                    </codx-input>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-lg-3 col-md-5">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="OffsetAcctID"
-                                      [formModel]="dialog?.formModel">
-                                    </codx-label>
-                                    <codx-input [Group]="formCashTranfer?.formGroup" field="offsetAcctID"
-                                        [formModel]="dialog?.formModel">
-                                    </codx-input>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-lg-4 col-md-6 d-flex justify-content-end">
-                    <div style="max-width: 500px;"  class="d-flex flex-column w-100">
-                      <div *ngIf="journal" class="row justify-content-end">
-                        <div class="col-xl-4 col-lg-6 col-md-2">
-                          <div class="form-group">
-                            <codx-label style="white-space: nowrap !important" fiedName="CurrencyID"
-                              [formModel]="dialog.formModel">
-                            </codx-label>
-                            <codx-input #cbxCurrencyID [disabled]="!journal.multiCurrency" [Group]="formCashTranfer.formGroup"
-                                field="currencyID" [formModel]="dialog.formModel"
-                                (valueChange)="valueChangeMaster($event)">
-                              </codx-input>
-                          </div>
-                        </div>
-                        <div class="col-xl-4 col-lg-6 col-md-2">
-                          <div class="form-group">
-                            <codx-label style="white-space: nowrap !important" fiedName="ExchangeRate"
-                              [formModel]="dialog.formModel">
-                            </codx-label>
-                            <codx-input [disabled]="
-                                  !journal.multiCurrency ||
-                                  formCashTranfer.data.currencyID == baseCurr ||
-                                  (formCashTranfer.data.currencyID == null || formCashTranfer.data.currencyID == '')
-                                " [Group]="formCashTranfer.formGroup" field="exchangeRate"
-                                [formModel]="dialog.formModel" (controlBlur)="valueChangeMaster($event)">
-                              </codx-input>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row justify-content-end">
-                        <div class="col-xl-4 col-lg-6 col-md-2">
-                          <div class="form-group">
-                            <codx-label style="white-space: nowrap !important" fiedName="VoucherDate"
-                              [formModel]="dialog.formModel">
-                            </codx-label>
-                            <codx-input [Group]="formCashTranfer.formGroup"
-                                [formModel]="dialog.formModel" field="voucherDate"
-                                (valueChange)="valueChangeMaster($event)">
-                              </codx-input>
-                          </div>
-                        </div>
-                        <div class="col-xl-4 col-lg-6 col-md-2">
-                          <div class="form-group">
-                            <codx-label style="white-space: nowrap !important" fiedName="VoucherNo"
-                              [formModel]="dialog.formModel">
-                            </codx-label>
-                            <codx-input [Group]="formCashTranfer.formGroup" field="voucherNo"
-                                [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)"
-                                [disabled]="journal?.assignRule != '0'">
-                              </codx-input>
-                          </div>
-                        </div>
-                      </div>
-                      <div *ngIf="postDateControl == '1'" class="row justify-content-end">
-                        <div class="col-xl-8 col-lg-12 col-md-4">
-                          <div class="form-group">
-                            <codx-label style="white-space: nowrap !important" fiedName="PostedDate"
-                              [formModel]="dialog.formModel">
-                            </codx-label>
-                            <codx-input [Group]="formCashTranfer.formGroup" field="postedDate"
-                                [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)">
-                              </codx-input>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+  <ng-container *ngIf="formCashTranfer?.formGroup">
+    <div style="height: 345px;" class="mt-3 ac-master">
+      <div style="flex-wrap: nowrap;" class="row d-flex overflow-auto">
+        <div style="min-width: 850px;" class="col-8">
+          <div class="row">
+            <div style="width: 250px;" class="col-3">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="CashBookID"
+                  [formModel]="dialog?.formModel">
+                </codx-label>
+                <codx-input [disabled]="formCashTranfer.data?.isReadOnly ? true : false" #eleCbxCashBook
+                  [Group]="formCashTranfer?.formGroup" field="cashBookID" [formModel]="dialog?.formModel"
+                  (valueChange)="valueChangeMaster($event)">
+                </codx-input>
+              </div>
             </div>
+            <div style="width: 450px;" class="col-3">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" default="Đối tượng chuyển"></codx-label>
+                <codx-input type="text" [disabled]="true" [crrValue]="cashbookname1"></codx-input>
+              </div>
+            </div>
+            <div style="width: 200px;" class="col-3">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="AccountID" [formModel]="dialog?.formModel">
+                </codx-label>
+                <codx-input [Group]="formCashTranfer?.formGroup" field="accountID" [formModel]="dialog?.formModel">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div style="width: 250px;" class="col-3">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="CashBookID2"
+                  [formModel]="dialog?.formModel">
+                </codx-label>
+                <codx-input #eleCbxCashBook2 [Group]="formCashTranfer?.formGroup" field="cashBookID2"
+                  [formModel]="dialog?.formModel" (valueChange)="valueChangeMaster($event)">
+                </codx-input>
+              </div>
+            </div>
+            <div style="width: 450px;" class="col-3">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" default="Đối tượng chuyển"></codx-label>
+                <codx-input type="text" [disabled]="true" [crrValue]="cashbookname2"></codx-input>
+              </div>
+            </div>
+            <div style="width: 200px;" class="col-3">
+
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="OffsetAcctID"
+                  [formModel]="dialog?.formModel">
+                </codx-label>
+                <codx-input [Group]="formCashTranfer?.formGroup" field="offsetAcctID" [formModel]="dialog?.formModel">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div style="width: 250px;" class="col-3">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="TransferAmt"
+                  [formModel]="dialog?.formModel">
+                </codx-label>
+                <codx-input [Group]="formCashTranfer?.formGroup" field="transferAmt" [formModel]="dialog?.formModel">
+                </codx-input>
+              </div>
+            </div>
+            <div style="width: 450px;" class="col-3">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="ReasonID" [formModel]="dialog?.formModel">
+                </codx-label>
+                <codx-input [Group]="formCashTranfer?.formGroup" field="reasonID" [formModel]="dialog?.formModel"
+                  (valueChange)="valueChangeMaster($event)">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div style="width: 700px;" class="col-3">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="Memo" [formModel]="dialog?.formModel">
+                </codx-label>
+                <codx-input [Group]="formCashTranfer?.formGroup" field="memo" [formModel]="dialog?.formModel">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div style="width: 250px;" class="col-3">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="Fees" [formModel]="dialog?.formModel">
+                </codx-label>
+                <codx-input [Group]="formCashTranfer?.formGroup" field="fees" [formModel]="dialog?.formModel" (controlBlur)="valueChangeMaster($event)">
+                </codx-input>
+              </div>
+            </div>
+            <div style="width: 200px;" class="col-3">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="FeeControl" [formModel]="dialog?.formModel">
+                </codx-label>
+                <codx-input [Group]="formCashTranfer?.formGroup" field="feeControl" [formModel]="dialog?.formModel">
+                </codx-input>
+              </div>
+            </div>
+            <div style="width: 250px;" class="col-3">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="FeeCashBookID"
+                  [formModel]="dialog?.formModel">
+                </codx-label>
+                <codx-input [Group]="formCashTranfer?.formGroup" field="feeCashBookID" [formModel]="dialog?.formModel">
+                </codx-input>
+              </div>
+            </div>
+            <div *ngIf="formCashTranfer.data?.fees > 0" class="col-3 d-flex align-items-center mt-2" style="width: 250px;">
+              <codx-input [disabled]="formCashTranfer.data?.isReadOnly ? true : false" class="me-3 mt-1"
+                [Group]="formCashTranfer.formGroup" field="vatControl" [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)">
+              </codx-input>
+              <codx-label class="fw-bold" style="white-space: nowrap !important" fiedName="VATControl"
+                [formModel]="formCashTranfer.formModel">
+              </codx-label>
+            </div>
+          </div>
         </div>
-    </ng-container>
+        <div style="min-width: 420px;" class="col-4">
+          <div class="row justify-content-end">
+            <div class="col-3" style="width: 160px;">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="VoucherDate"
+                  [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [disabled]="formCashTranfer.data?.isReadOnly ? true : false" #tVoucherDate
+                  [Group]="formCashTranfer.formGroup" [formModel]="dialog.formModel" field="voucherDate"
+                  (valueChange)="valueChangeMaster($event)">
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-3" style="width: 160px;">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="VoucherNo" [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [Group]="formCashTranfer.formGroup" field="voucherNo" [formModel]="dialog.formModel"
+                  (valueChange)="valueChangeMaster($event)"
+                  [disabled]="(journal?.assignRule != '0' || formCashTranfer.data?.isReadOnly)">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="journal" class="row justify-content-end">
+            <div class="col-3" style="width: 160px;">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="CurrencyID" [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input #cbxCurrencyID
+                  [disabled]="(!journal.multiCurrency) || (formCashTranfer.data?.isReadOnly ? true : false)"
+                  [Group]="formCashTranfer.formGroup" field="currencyID" [formModel]="dialog.formModel"
+                  (valueChange)="valueChangeMaster($event)">
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-3" style="width: 160px;">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="ExchangeRate"
+                  [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [disabled]="
+                        !journal.multiCurrency ||
+                        formCashTranfer.data.currencyID == baseCurr ||
+                        (formCashTranfer.data.currencyID == null || formCashTranfer.data.currencyID == '') || formCashTranfer.data?.isReadOnly
+                      " [Group]="formCashTranfer.formGroup" field="exchangeRate" [formModel]="dialog.formModel"
+                  (controlBlur)="valueChangeMaster($event)">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-end">
+            <div class="col-3" style="width: 160px;">
+              <div class="form-group mb-0">
+                <codx-label style="white-space: nowrap !important" fiedName="PostedDate" [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [disabled]="(formCashTranfer.data?.isReadOnly || postDateControl != '1') ? true : false"
+                  [Group]="formCashTranfer.formGroup" field="postedDate" [formModel]="dialog.formModel">
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-3" style="width: 160px;">
+              <div class="form-group mb-0 d-flex" style="flex-direction: column;">
+                <codx-label style="white-space: nowrap !important" fiedName="Status" [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input *ngIf="formCashTranfer.data?.status == '1'" [disabled]="true" field="status"
+                  [formModel]="dialog.formModel" [crrValue]="formCashTranfer.data?.validated ? '1' : '7'">
+                </codx-input>
+                <codx-input *ngIf="formCashTranfer.data?.status != '1'" [disabled]="true" field="status"
+                  [formModel]="dialog.formModel" [crrValue]="formCashTranfer.data?.status">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 </ng-template>
 <!-- End: TmpTabGeneral -->
 
 <!-- Start: TmpTabInvoiceInfo -->
 <ng-template #TmpTabInvoiceInfo>
-    <ng-container *ngIf="fgVATInvoice">
-        <div class="mt-3">
-            <div class="row">
-                <div class="col-xl-8 col-lg-8 col-md-6">
-                    <div style="max-width: 850px;">
-                        <div class="row">
-                            <div class="col-xl-2 col-lg-4 col-md-5">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="InvoiceForm"
-                                      [formModel]="fmVATInvoices">
-                                    </codx-label>
-                                    <codx-input [Group]="fgVATInvoice" field="invoiceForm"
-                                        [formModel]="fmVATInvoices">
-                                    </codx-input>
-                                  </div>
-                            </div>
-                            <div class="col-xl-2 col-lg-4 col-md-5">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="InvoiceSeri"
-                                      [formModel]="fmVATInvoices">
-                                    </codx-label>
-                                    <codx-input [Group]="fgVATInvoice" field="invoiceSeri"
-                                        [formModel]="fmVATInvoices">
-                                    </codx-input>
-                                  </div>
-                            </div>
-                            <div class="col-xl-2 col-lg-4 col-md-5">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="InvoiceNo"
-                                      [formModel]="fmVATInvoices">
-                                    </codx-label>
-                                    <codx-input [Group]="fgVATInvoice" field="invoiceNo"
-                                        [formModel]="fmVATInvoices">
-                                    </codx-input>
-                                  </div>
-                            </div>
-                            <div class="col-xl-2 col-lg-4 col-md-5">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="InvoiceDate"
-                                      [formModel]="fmVATInvoices">
-                                    </codx-label>
-                                    <codx-input [Group]="fgVATInvoice" field="invoiceDate"
-                                        [formModel]="fmVATInvoices">
-                                    </codx-input>
-                                  </div>
-                            </div>
-                            <!-- <div class="col-xl-2 col-lg-4 col-md-5">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="VATBase"
-                                      [formModel]="fmVATInvoices">
-                                    </codx-label>
-                                    <codx-input [Group]="fgVATInvoice" field="vatBase"
-                                        [formModel]="fmVATInvoices">
-                                    </codx-input>
-                                  </div>
-                            </div>
-                            <div class="col-xl-2 col-lg-4 col-md-5">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="VATID"
-                                      [formModel]="fmVATInvoices">
-                                    </codx-label>
-                                    <codx-input [Group]="fgVATInvoice" field="vatid"
-                                        [formModel]="fmVATInvoices">
-                                    </codx-input>
-                                  </div>
-                            </div>
-                            <div class="col-xl-2 col-lg-4 col-md-5">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="VATAmt"
-                                      [formModel]="fmVATInvoices">
-                                    </codx-label>
-                                    <codx-input [Group]="fgVATInvoice" field="vatAmt"
-                                        [formModel]="fmVATInvoices">
-                                    </codx-input>
-                                  </div>
-                            </div> -->
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-6 col-lg-4 col-md-5">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="ObjectID"
-                                      [formModel]="fmVATInvoices">
-                                    </codx-label>
-                                    <codx-input [Group]="fgVATInvoice" field="objectID"
-                                        [formModel]="fmVATInvoices">
-                                    </codx-input>
-                                  </div>
-                            </div>
-                            <div class="col-xl-6 col-lg-4 col-md-5">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="Goods"
-                                      [formModel]="fmVATInvoices">
-                                    </codx-label>
-                                    <codx-input [Group]="fgVATInvoice" field="goods"
-                                        [formModel]="fmVATInvoices" (valueChange)="valueChangeVATInvoice($event)">
-                                    </codx-input>
-                                  </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-12 col-lg-4 col-md-5">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="Note"
-                                      [formModel]="fmVATInvoices">
-                                    </codx-label>
-                                    <codx-input [Group]="fgVATInvoice" field="note"
-                                        [formModel]="fmVATInvoices">
-                                    </codx-input>
-                                  </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-lg-4 col-md-6 d-flex justify-content-end">
-                  <div style="max-width: 500px;"  class="d-flex flex-column w-100">
-                    <div class="row justify-content-end">
-                      <div class="col-xl-4 col-lg-6 col-md-2">
-                        <div class="form-group">
-                          <codx-label style="white-space: nowrap !important" fiedName="VATID"
-                            [formModel]="fmVATInvoices">
-                          </codx-label>
-                          <codx-input [Group]="fgVATInvoice" field="vatid"
-                              [formModel]="fmVATInvoices" (valueChange)="valueChangeVATInvoice($event)">
-                          </codx-input>
-                        </div>
-                      </div>                   
-                    </div>
-                    <div class="row justify-content-end">
-                      <div class="col-xl-4 col-lg-6 col-md-2">
-                        <div class="form-group">
-                          <codx-label style="white-space: nowrap !important" fiedName="Quantity"
-                            [formModel]="fmVATInvoices">
-                          </codx-label>
-                          <codx-input [Group]="fgVATInvoice" field="quantity"
-                              [formModel]="fmVATInvoices" (controlBlur)="valueChangeVATInvoice($event)">
-                          </codx-input>
-                        </div>
-                      </div>
-                      <div class="col-xl-4 col-lg-6 col-md-2">
-                        <div class="form-group">
-                          <codx-label style="white-space: nowrap !important" fiedName="UnitPrice"
-                            [formModel]="fmVATInvoices">
-                          </codx-label>
-                          <codx-input [Group]="fgVATInvoice" field="UnitPrice"
-                              [formModel]="fmVATInvoices" (controlBlur)="valueChangeVATInvoice($event)">
-                          </codx-input>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row justify-content-end">
-                      <div class="col-xl-4 col-lg-6 col-md-2">
-                        <div class="form-group">
-                          <codx-label style="white-space: nowrap !important" fiedName="VATBase"
-                            [formModel]="fmVATInvoices">
-                          </codx-label>
-                          <codx-input [Group]="fgVATInvoice" field="vatBase"
-                              [formModel]="fmVATInvoices" (controlBlur)="valueChangeVATInvoice($event)">
-                          </codx-input>
-                        </div>
-                      </div>
-                      <div class="col-xl-4 col-lg-6 col-md-2">
-                        <div class="form-group">
-                          <codx-label style="white-space: nowrap !important" fiedName="VATAmt"
-                            [formModel]="fmVATInvoices">
-                          </codx-label>
-                          <codx-input [Group]="fgVATInvoice" field="vatAmt"
-                              [formModel]="fmVATInvoices" (controlBlur)="valueChangeVATInvoice($event)">
-                          </codx-input>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            </div>
+  <ng-container *ngIf="fgVATInvoice">
+    <div class="mt-3 ac-master">
+      <div class="row">
+        <div style="width: 300px;" class="col-3">
+          <div class="form-group">
+            <codx-label style="white-space: nowrap !important" fiedName="InvoiceForm" [formModel]="fmVATInvoice">
+            </codx-label>
+            <codx-input [Group]="fgVATInvoice" field="invoiceForm" [formModel]="fmVATInvoice">
+            </codx-input>
+          </div>
         </div>
-    </ng-container>
+        <div style="width: 200px;" class="col-3">
+          <div class="form-group">
+            <codx-label style="white-space: nowrap !important" fiedName="InvoiceSeri" [formModel]="fmVATInvoice">
+            </codx-label>
+            <codx-input [Group]="fgVATInvoice" field="invoiceSeri" [formModel]="fmVATInvoice">
+            </codx-input>
+          </div>
+        </div>
+        <div style="width: 200px;" class="col-3">
+          <div class="form-group">
+            <codx-label style="white-space: nowrap !important" fiedName="InvoiceNo" [formModel]="fmVATInvoice">
+            </codx-label>
+            <codx-input [Group]="fgVATInvoice" field="invoiceNo" [formModel]="fmVATInvoice">
+            </codx-input>
+          </div>
+        </div>
+        <div style="width: 200px;" class="col-3">
+          <div class="form-group">
+            <codx-label style="white-space: nowrap !important" fiedName="InvoiceDate" [formModel]="fmVATInvoice">
+            </codx-label>
+            <codx-input [Group]="fgVATInvoice" field="invoiceDate" [formModel]="fmVATInvoice">
+            </codx-input>
+          </div>
+        </div>
+        <div style="width: 200px;" class="col-3">
+          <div class="form-group">
+            <codx-label style="white-space: nowrap !important" fiedName="VATID" [formModel]="fmVATInvoice">
+            </codx-label>
+            <codx-input [Group]="fgVATInvoice" field="vatid" [formModel]="fmVATInvoice"
+              (valueChange)="valueChangeVATInvoice($event)">
+            </codx-input>
+          </div>
+        </div>
+        <div style="width: 200px;" class="col-3">
+          <div class="form-group">
+            <codx-label style="white-space: nowrap !important" fiedName="VATBase" [formModel]="fmVATInvoice">
+            </codx-label>
+            <codx-input [Group]="fgVATInvoice" field="vatBase" [formModel]="fmVATInvoice">
+            </codx-input>
+          </div>
+        </div>
+        <div style="width: 300px;" class="col-3">
+          <div class="form-group">
+            <codx-label style="white-space: nowrap !important" fiedName="Goods" [formModel]="fmVATInvoice">
+            </codx-label>
+            <codx-input [Group]="fgVATInvoice" field="goods" [formModel]="fmVATInvoice">
+            </codx-input>
+          </div>
+        </div>
+        <div style="width: 250px;" class="col-3">
+          <div class="form-group">
+            <codx-label style="white-space: nowrap !important" fiedName="DIM1" [formModel]="fmVATInvoice">
+            </codx-label>
+            <codx-input [Group]="fgVATInvoice" field="diM1" [formModel]="fmVATInvoice">
+            </codx-input>
+          </div>
+        </div>
+        <div style="width: 250px;" class="col-3">
+          <div class="form-group">
+            <codx-label style="white-space: nowrap !important" fiedName="DIM2" [formModel]="fmVATInvoice">
+            </codx-label>
+            <codx-input [Group]="fgVATInvoice" field="diM2" [formModel]="fmVATInvoice">
+            </codx-input>
+          </div>
+        </div>
+        <div style="width: 250px;" class="col-3">
+          <div class="form-group">
+            <codx-label style="white-space: nowrap !important" fiedName="DIM3" [formModel]="fmVATInvoice">
+            </codx-label>
+            <codx-input [Group]="fgVATInvoice" field="diM3" [formModel]="fmVATInvoice">
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 </ng-template>
 <!-- End: TmpTabInvoiceInfo -->

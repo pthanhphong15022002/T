@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, Injector, Optional, ViewChild } from '@angular/core';
-import { CRUDService, CodxFormComponent, CodxInputComponent, DataRequest, DialogData, DialogRef, FormModel, NotificationsService, UIComponent, Util } from 'codx-core';
+import { CRUDService, CodxFormComponent, CodxInputComponent, DataRequest, DialogData, DialogRef, FormModel, NotificationsService, RequestOption, UIComponent, Util } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CodxAcService} from '../../../codx-ac.service';
+import { CodxAcService, fmVATInvoices} from '../../../codx-ac.service';
 import { RoundService } from '../../../round.service';
 import { FormGroup } from '@angular/forms';
+import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 
 @Component({
   selector: 'lib-cashtransfers-add',
@@ -17,13 +18,15 @@ export class CashtransfersAddComponent extends UIComponent {
   @ViewChild('formCashTranfer') public formCashTranfer: CodxFormComponent;
   @ViewChild('eleCbxCashBook') eleCbxCashBook: CodxInputComponent;
   @ViewChild('eleCbxCashBook2') eleCbxCashBook2: CodxInputComponent;
+  @ViewChild('elementTabDetail') elementTabDetail: any;
   headerText: string;
   dialog!: DialogRef;
   dialogData?: any;
   dataDefault: any;
   journal: any;
-  fgVATInvoice:any;
-  fmVATInvoices:FormModel;
+  fgVATInvoice: FormGroup;
+  fmVATInvoice : FormModel = fmVATInvoices;
+  VATInvoiceSV:CRUDService;
   tabInfo: TabModel[] = [ //? thiết lập footer
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -35,7 +38,10 @@ export class CashtransfersAddComponent extends UIComponent {
   postDateControl:any;
   isload:any = false;
   isPreventChange:any = false;
-  VATInvoiceSV:any;
+  cashbookname1:any='';
+  cashbookname2:any='';
+  feeVATID:any='';
+  vatPct:any=0;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
@@ -54,7 +60,7 @@ export class CashtransfersAddComponent extends UIComponent {
     this.journal = { ...dialogData.data?.journal };
     this.baseCurr = dialogData.data?.baseCurr;
     this.fgVATInvoice = dialogData.data?.fgVATInvoice;
-    this.fmVATInvoices = dialogData.data?.fmVATInvoices;
+    this.fmVATInvoice = dialogData.data?.fmVATInvoice;
     this.VATInvoiceSV = dialogData.data?.VATInvoiceSV;
   }
   //#endregion Constructor
@@ -71,17 +77,13 @@ export class CashtransfersAddComponent extends UIComponent {
       ).subscribe((res:any)=>{
         if (res) {
           this.postDateControl = res?.PostedDateControl;
+          this.feeVATID = res?.FeeVATID || '';
         }
       })
   }
 
   ngAfterViewInit() {
     if(this.formCashTranfer?.data?.coppyForm) this.formCashTranfer.data._isEdit = true; //? test copy để tạm
-    if (this.formCashTranfer?.data?.feeControl == "0") {
-      this.formCashTranfer.setValue('feeControl',false,{});
-    }else{
-      this.formCashTranfer.setValue('feeControl',true,{});
-    }
     if (this.formCashTranfer?.data?.isEdit) {
       let option = new DataRequest();
       option.entityName = 'AC_VATInvoices';
@@ -97,11 +99,12 @@ export class CashtransfersAddComponent extends UIComponent {
           option
         ).subscribe((res:any)=>{
           let data = res[0][0];
-          this.fmVATInvoices.currentData = data;
+          this.fmVATInvoice.currentData = data;
           this.fgVATInvoice.patchValue(data);
           this.detectorRef.detectChanges();
         })
     }
+
   }
 
   ngDoCheck() {
@@ -123,6 +126,22 @@ export class CashtransfersAddComponent extends UIComponent {
    */
   onAfterInitForm(event){
     this.detectorRef.detectChanges();
+  }
+
+  selecting(event){
+    if (event.isSwiped) {
+      event.cancel = true;
+    }
+  }
+
+  createTabDetail(event: any, eleTab: TabComponent) {
+    if (eleTab) {
+      if (!this.formCashTranfer.data.feeControl) {
+        eleTab.hideTab(0,true);
+      }else{
+        eleTab.hideTab(0,true);
+      }
+    }
   }
   //#endregion Init
 
@@ -152,14 +171,15 @@ export class CashtransfersAddComponent extends UIComponent {
         if(value == '' || value == null || indexcb == -1){
           this.isPreventChange = true;
           this.formCashTranfer.setValue(field,null,{});
-          this.eleCbxCashBook.ComponentCurrent.itemsSelected[0].CashBookName = "";
+          this.cashbookname1 = '';
           let memo = this.getMemoMaster();
           this.formCashTranfer.setValue('memo',memo,{});
           this.isPreventChange = false;
           this.detectorRef.detectChanges();
           return;
         } 
-        this.cashBookIDChange(field)
+        this.cashbookname1 = this.eleCbxCashBook.ComponentCurrent.itemsSelected[0].CashBookName;
+        this.cashBookIDChange(field);
         break;
 
       case 'cashbookid2':
@@ -167,13 +187,14 @@ export class CashtransfersAddComponent extends UIComponent {
         if(value == '' || value == null || indexcb2 == -1){
           this.isPreventChange = true;
           this.formCashTranfer.setValue(field,null,{});
-          this.eleCbxCashBook2.ComponentCurrent.itemsSelected[0].CashBookName = "";
+          this.cashbookname2 = '';
           let memo = this.getMemoMaster();
           this.formCashTranfer.setValue('memo',memo,{});
           this.isPreventChange = false;
           this.detectorRef.detectChanges();
           return;
         } 
+        this.cashbookname2 = this.eleCbxCashBook2.ComponentCurrent.itemsSelected[0].CashBookName;
         this.cashBookID2Change(field)
         break;
 
@@ -192,6 +213,47 @@ export class CashtransfersAddComponent extends UIComponent {
         }
         this.currencyIDChange(field);
         break;
+      case 'vatcontrol':
+        if(value){
+          if (this.feeVATID != '' && this.feeVATID != null) {
+            this.fmVATInvoice.currentData.vatid = this.feeVATID;
+            let option = new DataRequest();
+            option.entityName = 'AC_VATCodes';
+            option.predicate = 'VATID=@0';
+            option.pageLoading = false;
+            option.dataValue = this.feeVATID;
+            this.api
+              .execSv(
+                'AC',
+                'ERM.Business.Core',
+                'DataBusiness',
+                'LoadDataAsync',
+                option
+              )
+              .subscribe((res: any) => {
+                if (res && res[0].length) {
+                  let data = res[0][0];
+                  if (data && data?.vatPct) {
+                    this.vatPct = data?.vatPct;
+                    let vatbase = (this.formCashTranfer.data.fees ? this.formCashTranfer.data.fees : 0) * data?.vatPct;
+                    this.fmVATInvoice.currentData.vatBase = vatbase;
+                  }
+                }
+                this.fgVATInvoice.patchValue(this.fmVATInvoice.currentData);
+                this.elementTabDetail.hideTab(0,false);
+              });
+          }
+        }else{
+          this.elementTabDetail.hideTab(0,true);
+        }
+        break;
+      case 'fees':
+        if (this.formCashTranfer.data.vatControl) {
+          let vatbase = (this.formCashTranfer.data.fees ? this.formCashTranfer.data.fees : 0) * this.vatPct;
+          this.fmVATInvoice.currentData.vatBase = vatbase;
+          this.fgVATInvoice.patchValue(this.fmVATInvoice.currentData);
+        }
+        break;
     }
   }
 
@@ -201,25 +263,12 @@ export class CashtransfersAddComponent extends UIComponent {
     }
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
-    let data = this.fmVATInvoices.currentData;
+    let data = this.fmVATInvoice.currentData;
     data.updateColumns = '';
-    if (field.toLowerCase() === 'goods') {
-      data.itemID = event?.component?.itemsSelected[0]?.ItemID;
+    switch (field.toLowerCase()) {
+      case 'currencyid':
+        break;
     }
-    this.api.exec('AC', 'VATInvoicesBusiness', 'ValueChangeAsync', [
-      'AC_CashTranfers',
-      this.formCashTranfer.data,
-      data,
-      event.field
-    ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-      if (res) {
-        this.isPreventChange = true;
-        this.fmVATInvoices.currentData = res;
-        this.fgVATInvoice.patchValue({...res});
-        this.detectorRef.detectChanges();
-        this.isPreventChange = false;
-      }
-    })
   }
 
   //#endregion Event
@@ -257,60 +306,48 @@ export class CashtransfersAddComponent extends UIComponent {
    * @returns
    */
   onSaveVoucher(type) {
-    if (this.formCashTranfer?.data?.feeControl) {
-      this.formCashTranfer.setValue('feeControl','1',{});
-    }else{
-      this.formCashTranfer.setValue('feeControl','0',{});
-    }
-    this.formCashTranfer.save(null, 0, '', '', false)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if(!res) return;
-      if (res || res.save || res.update) {
-        if (res || !res.save.error || !res.update.error) {
-          this.fmVATInvoices.currentData.transID = this.formCashTranfer?.data?.recID;
-          this.api
-            .execAction(
-              'AC_VATInvoices',
-              [this.fmVATInvoices.currentData],
-              (this.formCashTranfer?.data?.isAdd || this.formCashTranfer?.data?.isCopy) ? 'SaveAsync' : 'UpdateAsync'
-            )
-            .subscribe((res:any)=>{
-              if (res) {
-                if (type == 'save') {
-                  this.onDestroy();
-                  this.dialog.close();
-                }else{
-                  this.api
-                    .exec('AC', 'CashTranfersBusiness', 'SetDefaultAsync', [
-                      null,
-                      this.journal,
-                    ])
-                    .subscribe((res: any) => {
-                      if (res) {
-                        res.data.isAdd = true;
-                        this.formCashTranfer.refreshData({ ...res.data });
-                        this.detectorRef.detectChanges();
-                      }
-                    });
-                  
-                    this.VATInvoiceSV.addNew().subscribe((res: any) => {
-                      if (res) {
-                        this.fgVATInvoice.patchValue(res);
-                        this.fmVATInvoices.currentData = res;
-                        this.detectorRef.detectChanges();
-                      }
-                    })
-                }
-              }
-              if (this.formCashTranfer.data.isAdd || this.formCashTranfer.data.isCopy)
-                this.notification.notifyCode('SYS006');
-              else
-                this.notification.notifyCode('SYS007');
-            });
+    let validate = this.formCashTranfer.validation();
+    if(validate) return;
+    this.api
+      .exec('AC', 'CashTranfersBusiness', 
+      (this.formCashTranfer.data.isAdd || this.formCashTranfer.data.isCopy) ? 'SaveAsync' : '', [
+        this.formCashTranfer.data,
+        this.formCashTranfer.data.vatControl ? this.fmVATInvoice.currentData : null
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        this.isload = false;
+        if (res?.update) {
+          if (type == 'save') {
+            this.onDestroy();
+            this.dialog.close();
+          } else {
+            // this.api
+            //   .exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
+            //     null,
+            //     this.journal,
+            //   ])
+            //   .subscribe((res: any) => {
+            //     if (res) {
+            //       res.data.isAdd = true;
+            //       this.formCashPayment.refreshData({ ...res.data });
+            //       setTimeout(() => {
+            //         this.refreshGrid();
+            //       }, 100);
+            //       this.detectorRef.detectChanges();
+            //     }
+            //   });
+          }
+          if (this.formCashTranfer.data.isAdd || this.formCashTranfer.data.isCopy){
+            this.dialog.dataService.add(res.data).subscribe();
+            this.notification.notifyCode('SYS006');
+            
+          }else{
+            this.dialog.dataService.update(res.data).subscribe();
+            this.notification.notifyCode('SYS007');
+          }
         }
-      }
-    });
+      });
   }
   //#endregion Method
 

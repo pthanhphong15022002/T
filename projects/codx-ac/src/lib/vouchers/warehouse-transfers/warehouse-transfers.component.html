@@ -13,7 +13,7 @@
       <i class="icon-edit icon-16"></i>
     </span>
     <ng-template #tooltip let-data>
-      <span>Chỉnh sửa sổ nhật kí</span>
+      <span *ngIf="this.journal">{{'Chỉnh sửa sổ nhật kí('+this.journal.journalDesc+')'}}</span>
     </ng-template>
     <codx-page-title class="page-title d-flex align-items-center flex-wrap ms-2"></codx-page-title>
   </div>
