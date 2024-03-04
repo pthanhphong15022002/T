@@ -44,7 +44,7 @@ export class ProjectTasksViewComponent
     type: 'RoundedRectangle',
     border: { width: 1 },
   };
-  formModel: FormModel;
+  formModel: any;
   vllTab: any;
   dataObj: any = {};
   listRoles: any = [];
@@ -67,21 +67,27 @@ export class ProjectTasksViewComponent
     this.button = [{ id: 'btnAdd' }];
     this.cache.functionList(this.funcID).subscribe((res: any) => {
       this.formModel = res;
-    });
-    this.router.params.subscribe((res: any) => {
-      if (res['projectID']) {
-        this.projectID = res['projectID'];
-        this.datavalue = this.projectID + ';3';
-        this.getProject(this.projectID);
+      if(this.formModel){
+        this.datavalue = this.formModel.dataValue;
+        this.predicate = this.formModel.predicate;
+        this.predicate = '('+this.predicate+')&&ProjectID=@2'
       }
+      this.router.params.subscribe((res: any) => {
+        if (res['projectID']) {
+          this.projectID = res['projectID'];
+          this.datavalue = this.datavalue+';'+this.projectID ;
+          this.getProject(this.projectID);
+        }
+      });
+      this.router.queryParams.subscribe((res: any) => {
+        if (res['ProjectID']) {
+          this.projectID = res['ProjectID'];
+          this.datavalue = this.datavalue+';'+this.projectID ;;
+          this.getProject(this.projectID);
+        }
+      });
     });
-    this.router.queryParams.subscribe((res: any) => {
-      if (res['ProjectID']) {
-        this.projectID = res['ProjectID'];
-        this.datavalue = this.projectID + ';3';
-        this.getProject(this.projectID);
-      }
-    });
+
     this.cache.valueList('PM013').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
