@@ -894,6 +894,9 @@ export class PopupAddProcessComponent {
           });
 
           this.data.steps[1].extendInfo = this.extendInfos;
+
+          this.data = Object.assign({},  this.data);
+          
         }
         this.detectorRef.detectChanges();
       }

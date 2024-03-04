@@ -180,7 +180,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'cashreceiptsbanks/:funcID/:journalNo',
+        path: 'bankreceipts/:funcID/:journalNo',
         component: CashreceiptsComponent,
         data: { noReuse: true },
       },
@@ -251,12 +251,12 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'vouchersreceipts/:funcID/:journalNo',
+        path: 'inventoryreceipts/:funcID/:journalNo',
         component: InventoryComponent,
         data: { noReuse: true },
       },
       {
-        path: 'vouchersissues/:funcID/:journalNo',
+        path: 'inventoryissues/:funcID/:journalNo',
         component: InventoryComponent,
         data: { noReuse: true },
       },
