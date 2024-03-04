@@ -4621,3 +4621,18 @@ codx-aside .menu-link .menu-icon span[class*="icon-"]::before{
 .hover-scroll-overlay-y, .hover-scroll-overlay-y:hover {
   overflow-y: auto!important;
 }
+lib-layoutonlyheader codx-page-title{
+  padding-top: 15px;
+}
+codx-dynamic-form 
+{
+  codx-views{
+    height: 100%;
+    codx-toolbar + .h-100.row-content{
+      height: calc(100vh - 142px)!important;
+    }
+  }
+  .e-gridcontent{
+    height: calc(100% - 50px)!important;
+  }
+}

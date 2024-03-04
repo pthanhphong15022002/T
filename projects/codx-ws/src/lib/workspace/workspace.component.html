@@ -1,10 +1,10 @@
 
-<div class="d-flex align-items-center w-100 h-100vh">
+<div class="d-flex align-items-center w-100" style="height: calc(100vh - 52px);">
   <div class="d-flex flex-column position-relative min-w-250px w-275px h-100 bg-white overflow-auto me-5">
     <div id="kt_aside_menu" class="aside-menu flex-column-fluid">
       <div
         #ktAsideScroll
-        class="hover-scroll-overlay-y"
+        class="h-100 red"
         data-kt-scroll="true"
         data-kt-scroll-activate="{default: false, lg: true}"
         data-kt-scroll-height="auto"
@@ -15,7 +15,7 @@
         <div
           id="#kt_aside_menu"
           data-kt-menu="true"
-          class="menu menu-column menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary py-1"
+          class="menu menu-column menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary"
         >
           <ng-container *ngFor="let f of funcs">
             <div
