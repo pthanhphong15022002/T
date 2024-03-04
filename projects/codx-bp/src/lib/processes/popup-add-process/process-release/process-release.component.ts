@@ -78,10 +78,40 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     this.codxService = this.codxSv;
     this.router.params.subscribe((param) => {
       if (!this.funcID) this.funcID = param['funcID'];
-      if (!this.recID) this.recID = param['id'];
+      if (param['id']) 
+      {
+        this.recID = param['id'];
+        if(this.view)
+        {
+          this.onInits();
+          (this.view.currentView as any).request2.dataObj = this.recID;
+          (this.view.currentView as any).loadResource();
+          this.refesh(this.funcID);
+          this.getProcess();
+        }
+      }
     });
   }
 
+  refesh(funcId:any)
+  {
+    this.view.dataService.data = [];
+    this.view.dataService.page = 0;
+    this.view.dataService.pageCount = 0;
+    (this.view.dataService as any).isFull = false;
+    this.view.dataService.loaded = false;
+    this.view.dataService.loading = false;
+    this.view.dataService.currentComponent = null;
+    this.view.dataService.searchText = '';
+    this.view.dataService.predicates = '';
+    this.view.dataService.dataValues = '';
+    this.view.funcID = '';
+    // this.view.components = new Map<string, ComponentRef<ViewBaseComponent>>();
+    // this.view.setDefault = false;
+    //this.view.dataService.autoLoad = true;
+    this.view.restoreDefault();
+    this.view.load(funcId);
+  }
   ngAfterViewInit(): void {
     this.button = [
       {
@@ -161,6 +191,11 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+   this.onInits();
+  }
+
+  onInits()
+  {
     this.dataObj = {
       processID: this.recID,
     };
@@ -182,7 +217,6 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
 
     this.getProcess();
   }
-
   selectedChange(data) {
     this.dataSelected = data?.data ? data?.data : data;
 

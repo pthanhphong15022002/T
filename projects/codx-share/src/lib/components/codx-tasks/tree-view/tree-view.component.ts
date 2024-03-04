@@ -238,8 +238,8 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
 
     this.loadedTree = false;
     if (parent.isItem) {
-      if(this.predicateChild && this.dataValue){
-        let predicate = this.predicateChild+'&&ParentID=@1';
+      if(this.predicateChild && this.dataValueChild){
+        let predicate = this.predicateChild+'&&ParentID=@2';
         let datavalue = this.dataValueChild+';'+parent.data.recID.toString()
         this.api
         .execSv<any>(
