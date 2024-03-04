@@ -371,8 +371,6 @@ export class PartnersComponent
                 this.view.dataService.update(data, true).subscribe();
                 // this.customerDetail.loadTag(this.dataSelected);
                 this.detectorRef.detectChanges();
-
-                this.detectorRef.detectChanges();
               }
             });
           });

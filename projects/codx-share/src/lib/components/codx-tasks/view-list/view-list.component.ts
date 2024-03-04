@@ -33,6 +33,7 @@ export class ViewListComponent implements OnInit {
   @Input() showMoreFunc?: any;
   @Input() user: any;
   @Input() popoverSelected: any;
+  @Input() isTreeView: boolean=false;
   listTaskResousceSearch = [];
   listTaskResousce = [];
   countResource = 0;
@@ -243,5 +244,9 @@ export class ViewListComponent implements OnInit {
       }
     });
     this.listTaskResousceSearch = listTaskResousceSearch;
+  }
+
+  logData(data){
+    console.log(data)
   }
 }

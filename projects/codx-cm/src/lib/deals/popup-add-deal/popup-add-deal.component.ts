@@ -42,6 +42,7 @@ import { PopupQuickaddContactComponent } from '../../cmcustomer/cmcustomer-detai
 import { firstValueFrom } from 'rxjs';
 import { Contact } from 'projects/codx-sm/src/lib/models/Contact.model';
 import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'lib-popup-add-deal',
@@ -205,6 +206,7 @@ export class PopupAddDealComponent
     private codxCmService: CodxCmService,
     private customFieldSV: CustomFieldService,
     private tenantStore: TenantStore,
+    private routerLink: Router,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -219,7 +221,9 @@ export class PopupAddDealComponent
     this.model = { ApplyFor: '1' };
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.copyTransID = dt?.data?.copyTransID;
-    this.tenant = this.tenantStore.get().tenant;
+    // this.tenant = this.tenantStore.get().tenant;
+    const currentUrl = this.routerLink.url;
+    this.tenant = currentUrl.includes("qtsc") ? "qtsc" : "";
 
     // add view from customer
     this.isviewCustomer = dt?.data?.isviewCustomer;
@@ -294,12 +298,15 @@ export class PopupAddDealComponent
   onInit(): void {}
 
   async ngAfterViewInit(): Promise<void> {
-    if(this.tenant == "qtscdemo"){
+    if(this.tenant == "qtsc"){
       this.tabInfo = [this.menuGeneralInfo];
+      this.tabContent = [this.tabGeneralInfoDetail];
     }else{
       this.tabInfo = [this.menuGeneralInfo, this.menuCostItems];
+      this.tabContent = [this.tabGeneralInfoDetail, this.tabCostItems];
     }
-    this.tabContent = [this.tabGeneralInfoDetail, this.tabCostItems];
+
+    
     if (this.action !== this.actionAdd || this.isviewCustomer) {
       if (this.isviewCustomer) {
         this.customerCategory = this.customerView?.category;

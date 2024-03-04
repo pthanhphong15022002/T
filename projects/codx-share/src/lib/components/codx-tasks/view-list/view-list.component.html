@@ -4,8 +4,9 @@
     (dblclick)="dbClick(data)"
   >
     <div class="w-100 ps-3">
-      <div class="a">
-
+      <div class="a d-flex">
+        <i class="icon-keyboard_arrow_right pe-2" *ngIf="(data.isAssign || data.category=='G')&&isTreeView&&!data.isCollapse "></i>
+        <i class="icon-keyboard_arrow_down pe-2" *ngIf="(data.isAssign || data.category=='G')&&isTreeView&&data.isCollapse "></i>
         <span
           [ngbPopover]="toolTipTaskName"
           #popToolTip="ngbPopover"
