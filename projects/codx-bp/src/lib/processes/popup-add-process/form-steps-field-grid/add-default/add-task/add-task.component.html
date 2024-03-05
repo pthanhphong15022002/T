@@ -2,7 +2,7 @@
     <div class="d-flex flex-column mt-4">
         <codx-label formName="fmBPFieldGrid" fiedName="lblTaskTitle" default="Giai đoạn thực hiện" class="fw-bold"></codx-label>
         <!-- <codx-input type="text" field="stepName" [crrValue]="stage?.stepName" (valueChange)="valueChange($event)"></codx-input> -->
-    
+
         <div ngbDropdown #myDrop="ngbDropdown" class="d-inline-block bp-ffg-dropdown">
             <div class="d-flex align-items-center justify-content-between border p-2 w-100 rounder cursor-pointer" ngbDropdownToggle>
                 <span>{{stage?.stepName}}</span>
@@ -75,7 +75,7 @@
                     <i class="icon-person_add_alt_1 icon-16"></i>
               </button>
             </div>
-        
+
             <div class="d-flex flex-column">
                 <div class="d-flex align-items-center justify-content-between mt-2" *ngFor="let item of listUses , let i = index">
                     <div class="d-flex align-items-center">
@@ -189,7 +189,7 @@
                         </div>
                     </div>
                 </ng-template>
-               
+
             </div>
         </ng-container>
         <ng-container *ngIf="activityType == 'Task' || activityType == 'Event' || activityType == 'Stamp'">
@@ -202,19 +202,19 @@
                 <div class="mt-6">
                     <div class="d-flex flex-column px-4 py-2" [class.border-top]="(listDocument && listDocument.length>1 && i>0)" *ngFor="let item of listDocument , let i = index">
                         <span class="fw-bold">{{item.title}}</span>
-                        <codx-thumbnail  
-                            [files]="item?.filess" 
-                            displayThumb="simple" 
+                        <codx-thumbnail
+                            [files]="item?.filess"
+                            displayThumb="simple"
                             [hideDelete]="'1'"
-                            [hideMoreF]="'0'" 
-                            [isClick]="false" 
+                            [hideMoreF]="'0'"
+                            [isClick]="false"
                         >
                         </codx-thumbnail>
                     </div>
                 </div>
                 <div class="mt-6">
                     <codx-attachment #attachment hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-                    hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel" 
+                    hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel"
                     [idField]="'RecID'" [hideImageThumb]="'1'" [isSaveSelected]="'1'" [objectId]="data?.recID" [objectType]="formModel?.entityName" (fileSave)="fileSave($event)" (fileDelete)="fileDelete($event)">
                     </codx-attachment>
                 </div>
@@ -245,19 +245,19 @@
                 <div class="mt-6">
                     <div class="d-flex flex-column px-4" *ngFor="let item of listDocument">
                         <span>{{item.title}}</span>
-                        <codx-thumbnail  
-                            [files]="item?.filess" 
-                            displayThumb="simple" 
+                        <codx-thumbnail
+                            [files]="item?.filess"
+                            displayThumb="simple"
                             [hideDelete]="'1'"
-                            [hideMoreF]="'0'" 
-                            [isClick]="false" 
+                            [hideMoreF]="'0'"
+                            [isClick]="false"
                         >
                         </codx-thumbnail>
                     </div>
                 </div>
                 <!-- <div class="mt-6">
                     <codx-attachment #attachment2 hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-                    hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel" 
+                    hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel"
                     [idField]="'RecID'" [isSaveSelected]="'1'" [objectId]="data?.recID" [objectType]="formModel?.entityName" (fileSave)="fileSave($event)" (fileDelete)="fileDelete($event)">
                     </codx-attachment>
                 </div> -->
@@ -282,7 +282,7 @@
                         </div>
                         <codx-input type="Combobox" [refValue]="'Share_Users'" [showInput]="false"
                             refType="P" field="popup"
-                            (valueChange)="valueChangeEmail($event,'to')"    
+                            (valueChange)="valueChangeEmail($event,'to')"
                         >
                         </codx-input>
                     </div>
@@ -299,7 +299,7 @@
                         </div>
                         <codx-input type="Combobox" [refValue]="'Share_Users'" [showInput]="false"
                             refType="P" field="popup"
-                            (valueChange)="valueChangeEmail($event,'cc')"    
+                            (valueChange)="valueChangeEmail($event,'cc')"
                         >
                         </codx-input>
                     </div>
@@ -325,6 +325,7 @@
       [multiple]="multiple"
       [listCombobox]="listCombobox"
       (eventApply)="valueChangeUser($event)"
+      (showCheck)="showCheck($event)"
       [listName]="vllShare"
     >
     </codx-share>

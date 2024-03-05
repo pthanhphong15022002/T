@@ -97,7 +97,7 @@
 </ng-template>
 
 <ng-template #tabMembers>
-  <ng-container *ngIf="form && form.formGroup">
+  <ng-container *ngIf="form && form.formGroup && initComplete">
     <div class="d-flex justify-content-start align-items-center" >
       <div class="">
         <codx-label fiedName="lblMembers" [formModel]="form.formModel" default="Thành viên">
@@ -139,8 +139,69 @@
         </span>
       </div> -->
     </div>
+    <div class="w-100">
+      <div class="d-flex align-items-center mb-4 pb-2 position-relative parent-container mt-3" *ngFor="let item of members">
+        <div class="symbol symbol-30px symbol-circle me-4"
+        popoverClass="userPopoverClass"
+        [ngbPopover]="popoverSelectRoles"
+        placement="right"
+        #p="ngbPopover"
+        (mouseenter)="enableEdit ? showPopover(p, item):''"
+        autoClose="outside"
+        >
+          <codx-img [width]="30" [objectId]="item?.objectID" objectType="AD_Users" [objectName]="item?.objectName"></codx-img>
+          <div style="position: absolute; right: 0px; bottom: 0px">
+            <ng-container *ngFor="let role of listRoles">
+              <ng-container  *ngIf="item.icon && role.value == item.roleType">
+                <span
+                  ><img
+                    src="/assets/themes/pm/default/img/{{ item?.icon }}"
+                    alt=""
+                /></span>
+              </ng-container>
+            </ng-container>
+          </div>
+          <!-- <div role="button" class="pe-auto"  *ngIf="item.icon">
+            <span popoverClass="userPopoverClass"  placement="right"
+              autoClose="outside" class="position-absolute attendees-tag"
+              [inlineSVG]="'./assets/themes/pm/default/img/'+ item?.icon" >
+            </span>
+          </div> -->
+        </div>
 
-    <div class="d-flex align-items-center mb-4 pb-2 position-relative parent-container" *ngFor="let item of members">
+        <div class="d-flex flex-column w-50">
+          <div class="text-dark fw-bold fs-6 fw-bolder">
+            {{ item?.objectName }}
+          </div>
+          <div>
+            <!-- <span class="text-muted">{{
+              item?.roleType | vll : "PM003" : "text" | async
+              }}</span> -->
+              <span class="text-muted">{{item.positionName}}</span>
+          </div>
+          <div>
+
+              <span class="text-muted">{{item.organizationName}}</span>
+          </div>
+        </div>
+        <div class="d-flex flex-column w-25">
+          <codx-vll
+              [name]="'PM003'"
+              [value]="item.roleType"
+              [showBgColor]="true"
+              [showText]="true"
+              [className]="'rounded-pill'"
+            >
+            </codx-vll>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center me-5 ">
+        <i class="icon-clear icon-16 " (click)="removeMember(item)"></i>
+        </div>
+
+
+      </div>
+    </div>
+    <!-- <div class="d-flex align-items-center mb-4 pb-2 position-relative parent-container" *ngFor="let item of members">
       <div class="symbol symbol-30px symbol-circle me-4">
         <codx-img [width]="30" [objectId]="item?.objectID" objectType="AD_Users" [objectName]="item?.objectName"></codx-img>
         <div role="button" class="pe-auto" (click)="showPopover(p, item?.objectID)" *ngIf="item.icon">
@@ -176,7 +237,7 @@
       </div>
 
 
-    </div>
+    </div> -->
 
   </ng-container>
 </ng-template>
@@ -368,7 +429,7 @@
   <div class="d-flex flex-column mb-1 w-150px">
     <ng-container *ngIf="members && members.length > 0 ">
       <ng-container *ngFor="let item of listRoles">
-        <div class="d-flex align-items-center btn btn-sm btn-white cursor-pointer"
+        <div class="d-flex align-items-center btn btn-sm btn-white cursor-pointer" (click)="changeRole(item)"
           >
           <span [inlineSVG]="'./assets/themes/pm/default/img/'+ item?.icon"></span>
           <div class="fs-7 ms-2 text-gray-600">
