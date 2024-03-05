@@ -319,7 +319,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                       if (saved) {
                         //Trả về thông tin khi upload file thành công
                         let fileName = saved.data?.fileName; // report cần trả về fileName để set reportName
-                        this.dialog.close([item[1], this.type, fileName]);
+                        this.dialog.close([item[1], this.type, fileName,saved.data]);
                       } else {
                         this.notifySvr.notify('SYS023');
                       }
@@ -413,7 +413,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
               });
               this.onSaveWord().subscribe((saveW) => {
                 if (saveW) {
-                  this.dialog.close([item[1][0], this.type, this.nameFile]);
+                  this.dialog.close([item[1][0], this.type, this.nameFile,saveW.data]);
                   this.notifySvr.notifyCode('RS002');
                 } else this.notifySvr.notifyCode('SYS023');
               });

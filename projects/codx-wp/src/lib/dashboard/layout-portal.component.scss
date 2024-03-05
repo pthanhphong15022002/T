@@ -3,15 +3,16 @@
     display: none;
   }
 
-  .wp-portal #kt_aside_menu_header{
-    margin-top: 25px;
+  .wp-portal {
+    #kt_aside_menu_header{
+      margin-top: 25px;
+    }
+    div[data-kt-scroll-wrappers="#kt_aside_menu"]{
+      height: calc(100% - 75px) !important;
+    }
   }
 
   .wrapper-portal{
     overflow: hidden;
-
-    div[data-kt-scroll-wrappers="#kt_aside_menu"]{
-      height: calc(100% - 75px) !important;
-    }
   }
 }
