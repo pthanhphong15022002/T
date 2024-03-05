@@ -87,11 +87,24 @@ export class ModeviewComponent implements OnInit {
 
   perform(item:any)
   {
+    let data1 =[];
+    let data2 =[];
+    let data3 =[];
     item.datas.forEach(elm => {
-      if(this.basic.includes(elm.value)) elm.groupType = 0;
-      else if(elm.value != 'Title' && elm.value != 'SubTitle') elm.groupType = 1;
+      if(this.basic.includes(elm.value)) {
+        elm.groupType = 0;
+        data1.push(elm);
+      }
+      else if(elm.value != 'Title' && elm.value != 'SubTitle') {
+        elm.groupType = 1;
+        data2.push(elm);
+      }
+      else 
+      {
+        data3.push(elm);
+      }
     }); 
-    item.datas =  item.datas.sort((a,b) => (a.groupType < b.groupType) ? 1 : ((b.groupType < a.groupType) ? -1 : 0))
+    item.datas = data1.concat(data2.concat(data3));
     this.vllBP002 = item;
     if(!this.data) this.default();
     else this.formatData(this.data);
