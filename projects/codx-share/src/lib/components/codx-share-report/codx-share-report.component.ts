@@ -36,16 +36,12 @@ export class CodxShareReportComponent
   imgDefault = 'assets/themes/ws/default/img/Report_Empty.svg';
   dataModel = new FormModel();
   shareService: CodxShareService;
-  title: string = '';
   constructor(inject: Injector, private cache: CacheService) {
     super(inject);
     this.shareService = inject.get(CodxShareService);
   }
 
   override onInit(): void {
-    this.cache.functionList(this.funcID).subscribe((f) => {
-      if (f) this.title = f.customName;
-    });
     this.formatListGroupReport();
     this.getModuleByUserID();
     this.getCountBookMark();
@@ -53,7 +49,7 @@ export class CodxShareReportComponent
   }
 
   ngAfterViewInit(): void {
-    this.setCSS();
+    // this.setCSS();
   }
 
   getCountBookMark() {
@@ -61,13 +57,13 @@ export class CodxShareReportComponent
     this.countBookMarks = Math.ceil(widthBody / 260);
   }
 
-  setCSS() {
-    var elems = document.querySelectorAll('.header-fixed');
+  // setCSS() {
+  //   var elems = document.querySelectorAll('.header-fixed');
 
-    [].forEach.call(elems, function (el) {
-      el.classList.remove('toolbar-fixed');
-    });
-  }
+  //   [].forEach.call(elems, function (el) {
+  //     el.classList.remove('toolbar-fixed');
+  //   });
+  // }
 
   formatListGroupReport() {
     var obj = {

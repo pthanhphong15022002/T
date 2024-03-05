@@ -768,6 +768,19 @@
       ></codx-label>
     </button>
     <button
+      *ngIf="data?.task?.taskType == 'CO' && data?.task?.objectLinked"
+      type="button"
+      class="btn btn-outline-primary btn-sm"
+      (click)="viewTask(data?.task, data?.task?.taskType || 'T')"
+    >
+      <codx-label
+        class="text-nowrap"
+        name="Save"
+        formName="Sprints"
+        default="Xem hợp đồng"
+      ></codx-label>
+    </button>
+    <button
       *ngIf="data?.task?.taskType == 'M'"
       type="button"
       class="btn btn-outline-primary btn-sm"

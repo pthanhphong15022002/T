@@ -390,6 +390,8 @@
           [customField]="fieldCus"
           [showTitle]="false"
           [checkValid]="false"
+          [isDropRef]="field.dataType == 'PA'"
+          (dropDataFormatPA)="dropDataFormatPA($event)"
           (valueChangeCustom)="valueChangeCustom($event)"
         >
         </codx-input-custom-field>

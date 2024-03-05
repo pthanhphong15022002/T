@@ -1353,4 +1353,16 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   //-----------------end CACULATE FIELD------------------//
+
+  dropDataFormatPA(e) {
+    this.field.dataFormat = JSON.stringify(e);
+    this.fieldCus = JSON.parse(
+      JSON.stringify(
+        Object.assign(this.field, {
+          dataValue: this.field.defaultValue,
+        })
+      )
+    );
+    if (this.tempView) this.tempView.parseValuePA(this.fieldCus.dataValue);
+  }
 }
