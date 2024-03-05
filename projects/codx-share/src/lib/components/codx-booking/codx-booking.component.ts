@@ -872,7 +872,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         );
         if (curRes?.length > 0) {
           this.resourceOwner = new Approver();
-          this.resourceOwner.roleID = curRes[0]?.owner;
+          this.resourceOwner.approver = curRes[0]?.owner;
+          this.resourceOwner.roleType = "RO";
         }
       } else {
         this.resourceOwner = null;
@@ -881,12 +882,14 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         );
         if (curWarehourse?.length > 0) {
           this.resourceOwner = new Approver();
-          this.resourceOwner.roleID = curWarehourse[0]?.owner;
+          this.resourceOwner.approver = curWarehourse[0]?.owner;
+          this.resourceOwner.roleType = "RO";
         } else {
           curWarehourse = this.lstWarehourse.filter((x) => x.isSystem == true);
           if (curWarehourse?.length > 0) {
             this.resourceOwner = new Approver();
-            this.resourceOwner.roleID = curWarehourse[0]?.owner;
+            this.resourceOwner.approver = curWarehourse[0]?.owner;
+            this.resourceOwner.roleType = "RO";
           }
         }
       }

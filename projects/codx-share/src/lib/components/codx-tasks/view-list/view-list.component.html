@@ -1,11 +1,14 @@
 <div class="tm-viewlist w-100">
   <div
-    class="d-flex justify-content-between align-items-top p-3 border-bottom w-100"
+    class="  border-bottom w-100"
     (dblclick)="dbClick(data)"
+    (click)="selectNode(data)"
+    [ngClass]="isTreeView ? 'd-flex justify-content-between p-1 align-items-center': 'd-flex justify-content-between p-3 align-items-top'"
   >
     <div class="w-100 ps-3">
-      <div class="a">
-
+      <div class="a d-flex">
+        <!-- <i class="icon-keyboard_arrow_right pe-2" *ngIf="(data.isAssign || data.category=='G')&&isTreeView&&!data.isCollapse "></i>
+        <i class="icon-keyboard_arrow_down pe-2" *ngIf="(data.isAssign || data.category=='G')&&isTreeView&&data.isCollapse "></i> -->
         <span
           [ngbPopover]="toolTipTaskName"
           #popToolTip="ngbPopover"
@@ -14,6 +17,7 @@
           (mouseleave)="popToolTip.close()"
           placement="top right bottom left"
           container="body"
+          [ngClass]="isTreeView ? 'fw-bold': ''"
           >{{ data?.taskName }}</span
         >
       </div>
@@ -21,7 +25,7 @@
         <div>{{ data?.taskName }}</div>
       </ng-template>
     </div>
-    <div class="d-flex align-items-start">
+    <div  [ngClass]="isTreeView ? 'd-flex align-items-center':'d-flex align-items-start'">
       <div class="w-50px min-w-50px">
         <div class="d-flex align-items-center">
           <span
@@ -121,7 +125,7 @@
       </div>
       <div class="d-flex w-100px">
         <div class="w-auto">
-          <div *ngIf="data.category == '3'" id="{{ data.taskID }}">
+          <div *ngIf="data.category == '3'" id="{{ data.taskID }}" class="pt-1">
             <codx-imgs
               [isToolTip]="false"
               [width]="30"

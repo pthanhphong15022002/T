@@ -161,6 +161,9 @@
                     <ng-container *ngSwitchCase="'Title'">
                       <ng-container *ngTemplateOutlet="form ; context: { $implicit: subItem }"></ng-container>
                     </ng-container>
+                    <ng-container *ngSwitchCase="'UserInfo'">
+                      <ng-container *ngTemplateOutlet="userInfo ; context: { $implicit: subItem }"></ng-container>
+                    </ng-container>
                     <ng-container *ngSwitchDefault>...</ng-container>
                   </ng-container>
 
@@ -456,6 +459,21 @@
 
                   <!-- Phone -->
                   <ng-template #phone let-data>
+                    <div class="d-flex flex-column w-100">
+                      <div class="d-flex align-items-center">
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
+                        <span class="fw-bold">{{data.title}}</span>
+                        <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
+                      </div>
+                      <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
+                        <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
+                        <i class="icon-settings_phone text-dark"></i>
+                      </div>
+                    </div>
+                  </ng-template>
+
+                  <!-- UserInfo -->
+                  <ng-template #userInfo let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
                         <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>

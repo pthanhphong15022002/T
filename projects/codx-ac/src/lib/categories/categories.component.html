@@ -1,8 +1,8 @@
 <ng-container *ngIf="lstGroup">
     <div class="h-100">
-        <codx-view2 [dataSource]="datas" [isAdd]="false" [tmpItem]="tmp" [tmpRightToolBar]="tmpRightToolBar"
+        <codx-view2 [dataSource]="datas" [tmpItem]="tmp" [tmpRightToolBar]="tmpRightToolBar"
             [showRightToolbar]="false" (selectedChange)="selectedChange($event)"
-            (viewChange)="viewChange($event)"></codx-view2>
+            (viewChange)="viewChange($event)" [toolbarMode]="'1'"></codx-view2>
     </div>
 </ng-container>
 

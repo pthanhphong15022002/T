@@ -286,7 +286,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.getHeaderText();
     this.getGrvSetup();
     const currentUrl = this.router.url;
-    this.tenant = currentUrl.includes("qtsc") ? "qtsc" : "";
+    // this.tenant = currentUrl.includes("qtsc") ? "qtsc" : "";
+    this.tenant = "qtsc";
   }
 
   async ngOnInit() {
@@ -711,6 +712,17 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   valueChangeCombobox(event) {
     this.contracts[event?.field] = event?.data;
     switch (event?.field) {
+      case 'parentID':
+        let customerID = event?.component?.itemsSelected[0]?.CustomerID;
+        let businessLineID = event?.component?.itemsSelected[0]?.BusinessLineID;
+        if(customerID){
+          this.contracts.customerID = customerID;
+          this.getContactByCustomerID(customerID);
+        }
+        if(businessLineID){
+          this.contracts.businessLineID = businessLineID;
+        }
+        break;
       case 'customerID':
         this.getContactByCustomerID(event?.data);
         this.contracts.dealID = null;
@@ -1785,10 +1797,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     } else {
       instance.startDate = null;
       instance.status = '1';
-      instance.stepID = this.listInstanceSteps[0].stepID;
-      contract.stepID = instance.stepID;
+      instance.stepID = this.listInstanceSteps[0]?.stepID;
+      contract.stepID = instance?.stepID;
       contract.status = '1';
-      contract.refID = instance.recID;
+      contract.refID = instance?.recID;
     }
 
     instance.title = contract?.contractName?.trim();

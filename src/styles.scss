@@ -4573,7 +4573,7 @@ lib-bp-tasks{
 
 /***
 Custom Scrollbars
-***/
+
 ::-webkit-scrollbar {  
   width: 5px;  
 }  
@@ -4602,15 +4602,12 @@ Custom Scrollbars
   box-shadow: none;
   border: 0; 
 }
-
+***/
 //////
 
-.dashboard-content.w-100 > codx-wrapper.hover-scroll-overlay-y{
-  overflow-y: hidden !important;
-  &:hover {
-    overflow-y: hidden !important;
-}
-}
+// .dashboard-content.w-100 > codx-wrapper.hover-scroll-overlay-y{
+//   overflow: hidden!important;
+// }
 
 codx-aside .menu-link .menu-icon span[class*="icon-"]::before{
   color:var(--primary);
@@ -4618,6 +4615,6 @@ codx-aside .menu-link .menu-icon span[class*="icon-"]::before{
 .card-body.scroll-y{
   overflow: auto;
 }
-.hover-scroll-overlay-y, .hover-scroll-overlay-y:hover {
-  overflow-y: auto!important;
-}
+// .hover-scroll-overlay-y, .hover-scroll-overlay-y:hover {
+//   overflow-y: auto!important;
+// }
