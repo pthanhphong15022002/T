@@ -122,6 +122,9 @@ import { JournalViewsettingComponent } from './journals/journals-viewsetting/jou
 import { InventoryDetailComponent } from './vouchers/inventory/inventory-detail/inventory-detail.component';
 import { InventoryComponent } from './vouchers/inventory/inventory.component';
 import { InventoryAddComponent } from './vouchers/inventory/inventory-add/inventory-add.component';
+import { CashCountingsComponent } from './vouchers/cash-countings/cash-countings.component';
+import { CashCountingsAddComponent } from './vouchers/cash-countings/cash-countings-add/cash-countings-add.component';
+import { AssetCountingsComponent } from './vouchers/asset-countings/asset-countings.component';
 
 export const routes: Routes = [
   {
@@ -135,7 +138,7 @@ export const routes: Routes = [
       {
         path: 'report/:funcID',
         component: CodxReportViewsComponent,
-      },      
+      },
       {
         path: 'dashboard/:funcID',
         component: DashboardComponent,
@@ -157,7 +160,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'cashpaymentsbanks/:funcID/:journalNo',
+        path: 'bankpayments/:funcID/:journalNo',
         component: CashPaymentsComponent,
         data: { noReuse: true },
       },
@@ -177,7 +180,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'cashreceiptsbanks/:funcID/:journalNo',
+        path: 'bankreceipts/:funcID/:journalNo',
         component: CashreceiptsComponent,
         data: { noReuse: true },
       },
@@ -248,18 +251,28 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'vouchersreceipts/:funcID/:journalNo',
+        path: 'inventoryreceipts/:funcID/:journalNo',
         component: InventoryComponent,
         data: { noReuse: true },
       },
       {
-        path: 'vouchersissues/:funcID/:journalNo',
+        path: 'inventoryissues/:funcID/:journalNo',
         component: InventoryComponent,
         data: { noReuse: true },
       },
       {
         path: 'transfers/:funcID/:journalNo',
         component: WarehouseTransfersComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'cashcountings/:funcID/:journalNo',
+        component: CashCountingsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'assetcountings/:funcID/:journalNo',
+        component: AssetCountingsComponent,
         data: { noReuse: true },
       },
       // {
@@ -478,6 +491,9 @@ export const routes: Routes = [
     NewvoucherComponent,
     ViewresultComponent,
     JournalViewsettingComponent,
+    CashCountingsComponent,
+    CashCountingsAddComponent,
+    AssetCountingsComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

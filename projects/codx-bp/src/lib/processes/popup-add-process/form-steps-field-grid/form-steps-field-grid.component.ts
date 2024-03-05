@@ -1,12 +1,13 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
-import { CallFuncService, DialogData, DialogRef, SidebarModel } from 'codx-core';
+import { CallFuncService, DialogData, DialogModel, DialogRef, SidebarModel } from 'codx-core';
 import { StagesComponent } from './stages/stages.component';
 import { AddDefaultComponent } from './add-default/add-default.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { asapScheduler } from 'rxjs';
 import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
+import { ModeviewComponent } from '../../../modeview/modeview.component';
 
 @Component({
   selector: 'lib-form-steps-field-grid',
@@ -25,6 +26,7 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
   listStage = [];
   count = 0;
   listIds=[];
+  tempPermission=[];
   constructor(
     private shareService: CodxShareService,
     private ref: ChangeDetectorRef,
@@ -43,9 +45,46 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
 
   ngOnInit(): void {
     this.listIds = [];
-    this.formatData();
+    if(this.tempPermission?.length ==null || this.tempPermission?.length==0){
+      this.getPermission();
+    }
+    else{
+      
+      this.formatData();
+    }
   
   }
+  getPermission() {
+    let approvers = [];
+    this.data?.steps?.forEach((step) => {
+      if (step?.permissions?.length > 0) {
+        step?.permissions.forEach((per) => {
+          if (per?.objectType != null) {
+            approvers.push({
+              approver: per?.objectID,
+              roleType: per?.objectType,
+              refID: step?.recID,
+            });
+          }
+        });
+      }
+    });
+    if (approvers?.length > 0) {
+      this.shareService
+        .getApproverByRole(approvers, false, this.data?.createdBy)
+        .subscribe((res) => {
+          if (res) {
+            this.tempPermission = res;
+            this.formatData();
+          } else {
+            this.formatData();
+          }
+        });
+    } else {
+      this.formatData();
+    }
+  }
+  
   resetDLS()
   {
     debugger
@@ -96,7 +135,6 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
         i++;
         a++;
       })
-      debugger
     }
   }
 
@@ -109,6 +147,15 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
     list.forEach(elm2 => {
       elm2.settings = typeof elm2?.settings === 'object' ? elm2.settings : (elm2?.settings ? JSON.parse(elm2.settings) : null);
       elm2.permissions = typeof elm2?.permissions === 'object' ? elm2.permissions : (elm2?.permissions ? JSON.parse(elm2.permissions) : null);
+      if(this.tempPermission?.length > 0){            
+        let pers = this.tempPermission.filter((x) => x.refID == elm2.recID);
+        if (pers?.length > 0) {
+          elm2.pers = pers?.map((u) => u?.userID).join(';') ?? '';
+        }
+      }
+      else{
+        elm2.pers = elm2?.permissions?.map((u) => u?.objectID).join(';') ?? '';
+      }
       elm2.child = this.getListChild(elm2);
       if(elm2.activityType == "Conditions" && elm2.child && elm2.child.length>0)
       {
@@ -222,6 +269,13 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
         }
       });
     }
+    else
+    {
+      if(dt?.permissions && dt?.permissions.length>0)
+      {
+        dt.permissionsName = this.getImg( dt?.permissions);
+      }
+    }
     return dt;
   }
   getNextStepHTML(val:any,id:any)
@@ -281,5 +335,40 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
   getImg(data:any)
   {
     return data.map((u) => u.objectID).join(';');
+  }
+
+  sortPredicateForDisableItem(e:any)
+  {
+    return function(index: number, item: CdkDrag, drop: CdkDropList){
+      if(e)
+      {
+        if(index>=0)
+        {
+          if(e[index]?.stepType == '1') return false;
+        } 
+      }
+      return true
+    }
+  }
+  openFormModeView(data:any) {
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 1056;
+    let popupDialog = this.callFunc.openForm(
+      ModeviewComponent,
+      '',
+      null,
+      null,
+      '',
+      { extendInfo: data.extendInfo, stepNo: data.stepNo },
+      '',
+      option
+    );
+    popupDialog.closed.subscribe((res) => {
+      if (res?.event) {
+       var indexP = this.data.steps.findIndex(x=>x.recID == data?.recID);
+       if(indexP>=0)this.data.steps[indexP].extendInfo= res?.event
+      }
+    });
   }
 }

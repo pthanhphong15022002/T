@@ -62,7 +62,6 @@ export class ProjectsComponent
             .subscribe((grd: any) => {
               if (grd) {
                 this.grvSetup = grd;
-                debugger
               }
             });
         }
@@ -106,7 +105,7 @@ export class ProjectsComponent
       option.Width = '800px';
       let dialogAdd = this.callfc.openSide(
         PopupAddProjectComponent,
-        [res,'add'],
+        [res,'add',this.grvSetup],
         option
       );
       dialogAdd.closed.subscribe((returnData) => {
@@ -129,7 +128,7 @@ export class ProjectsComponent
       option.Width = '800px';
       let dialog = this.callfc.openSide(
         PopupAddProjectComponent,
-        [this.view?.dataService.dataSelected,'edit'],
+        [this.view?.dataService.dataSelected,'edit',this.grvSetup],
         option
       );
       dialog.closed.subscribe((returnData) => {

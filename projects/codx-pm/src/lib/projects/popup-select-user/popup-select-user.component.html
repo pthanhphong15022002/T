@@ -12,19 +12,10 @@
 >
 <ng-template #body>
 
-  <div class="row">
-    <codx-label fiedName="Resources" [formModel]="form.formModel" default="Người xử lí">
+  <div class="row h-100">
+    <!-- <codx-label fiedName="Resources" [formModel]="form.formModel" default="Người xử lí" class="fw-bold mb-5">
     </codx-label>
-    <!-- <div  style="margin: 0 auto; width:100%;" *ngIf="projectMemberType=='1'">
-      <ejs-multiselect id='multiselect-checkbox' #checkbox [dataSource]="projectData?.permissions" [fields]='fields'
-      [mode]="'CheckBox'"  [showDropDownIcon]="true" showSelectAll='true' [popupHeight]="'400px'" [popupWidth]="'400px'" [filterBarPlaceholder]="'Tìm kiếm...'" locale="vi" (valueChange)="valueChange($event)">
-        <ng-template #itemTemplate let-data>
-          <div class="ms-5 d-flex align-items-center">
-            <codx-img [width]="30" [objectId]="data?.objectID" objectType="AD_Users" [objectName]="data?.objectName"></codx-img> &nbsp;&nbsp; {{data.objectName}}
-          </div>
-        </ng-template>
-      </ejs-multiselect>
-    </div> -->
+
     <div  style="margin: 0 auto; width:100%;" *ngIf="projectMemberType=='1'">
       <codx-input type="combobox" refType="3" refValue="ProjectMembers" [model]="projectData" [multiple]="roleType!='A'" (valueChange)="cbxChange($event)"></codx-input>
     </div>
@@ -38,7 +29,44 @@
             }}</span>
         </div>
       </div>
+    </div> -->
+    <div class="col h-100 p-3">
+      <codx-listview
+      #listview
+      [comboboxName]="comboboxName"
+      [itemTemplate]="templates"
+      [headerTemplate]="headerSearch"
+      [funcId]="funcID"
+      [entityName]="entityName"
+      [service]="service"
+      [assemblyName]="assemblyName"
+      [className]="className"
+      [method]="'LoadDataCbxAsync'"
+      [predicate]="predicate"
+      [dataValue]="dataValue"
+      [predicates]="predicates"
+      [parentIdField]="parentIdField"
+      [type]="type"
+      [fields]="{id:valueMember}"
+      [enableCheck]="true"
+      [selectFirst]="false"
+      (onSelectionChanged)="onSelectionChanged($event)"
+      (dataLoaded)="cbxLoaded($event)"
+      *ngIf="isLoad"
+    >
+    </codx-listview>
     </div>
+    <!-- <div class="col-4 h-100 p-3">
+      <div class="d-flex flex-row ms-5 p-3 align-items-center" *ngFor="let item of selectedItems">
+        <codx-img [objectId]="item.ObjectID" imageType="circle" width="25" [objectType]="'AD_Users'"
+          [objectName]="item.ObjectName"></codx-img>
+        <div class="ms-4 d-flex flex-column w-auto">
+          <span class="text-muted">{{item.ObjectID}}</span>
+          <span class="fw-bold text-truncate" [title]="item.ObjectName">{{ item.ObjectName
+            }}</span>
+        </div>
+      </div>
+    </div> -->
   </div>
 </ng-template>
 <ng-template #footer>
@@ -65,3 +93,64 @@
 
 
 </ng-container>
+<ng-template #templates let-dtitem>
+  <ng-container
+    [ngTemplateOutlet]="item"
+    [ngTemplateOutletContext]="{ $implicit: dtitem }"
+  ></ng-container>
+  <ng-template #item let-dataitem>
+    <ng-container *ngIf="itemTemplate; else html">
+      <ng-container
+        *ngTemplateOutlet="itemTemplate; context: { $implicit: dataitem }"
+      ></ng-container>
+    </ng-container>
+    <ng-template #html>
+      <div
+        class="d-flex align-items-center user-card hover-gray-100 rounded-1 p-2"
+      >
+        <div class="symbol symbol-35px symbol-circle me-3">
+          <!-- <img alt="Pic" [src]="setImage(dataitem)" /> -->
+          <codx-img
+            [width]="35"
+            [objectId]="dataitem.UserID"
+            [objectType]="'AD_Users'"
+          >
+          </codx-img>
+        </div>
+        <div class="d-flex flex-column flex-grow-1">
+          <div class="text-dark fw-bold" *ngIf="arrDisplay[0]">
+            {{ dataitem[arrDisplay[0]] }}
+          </div>
+          <div class="text-gray-600 fs-7" *ngIf="arrDisplay[1]">
+            {{ dataitem[arrDisplay[1]] }}
+          </div>
+          <div class="text-gray-500 fs-7" *ngIf="arrDisplay[2]">
+            {{ dataitem[arrDisplay[2]] }}
+          </div>
+          <div class="text-gray-400 fs-7" *ngIf="arrDisplay[3]">
+            {{ dataitem[arrDisplay[3]] }}
+          </div>
+        </div>
+        <div class="list-radio">
+          <codx-input
+            type="checkbox"
+            label=""
+            [checked]="false"
+            [disabled]="true"
+            #checkbox
+            [attr.data-id]="dataitem[valueMember]"
+            class="checkbox check-circle"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </ng-template>
+  </ng-template>
+</ng-template>
+<ng-template #headerSearch>
+  <!-- <span class="fw-bold fs-6 pb-2" *ngIf="title">{{title}}</span> -->
+  <codx-searchbar
+    (searchEvent)="onSearch($event)"
+    [ngClass]="'pb-3'"
+  ></codx-searchbar>
+</ng-template>

@@ -268,7 +268,7 @@ export class CodxListContactsComponent implements OnInit {
             break;
           case 'CM0102_2':
             if (
-              this.funcID == 'CM0103' ||
+              this.objectType == '3' ||
               this.objectType == '2' ||
               this.objectType == '4'
             )
@@ -276,7 +276,7 @@ export class CodxListContactsComponent implements OnInit {
             break;
           case 'CM0102_3':
             if (
-              this.funcID == 'CM0101' ||
+              this.objectType == '1' ||
               this.objectType == '2' ||
               this.objectType == '4'
             )

@@ -2,7 +2,7 @@
     <div class="d-flex flex-column mt-4">
         <codx-label formName="fmBPFieldGrid" fiedName="lblTaskTitle" default="Giai đoạn thực hiện" class="fw-bold"></codx-label>
         <!-- <codx-input type="text" field="stepName" [crrValue]="stage?.stepName" (valueChange)="valueChange($event)"></codx-input> -->
-    
+
         <div ngbDropdown #myDrop="ngbDropdown" class="d-inline-block bp-ffg-dropdown">
             <div class="d-flex align-items-center justify-content-between border p-2 w-100 rounder cursor-pointer" ngbDropdownToggle>
                 <span>{{stage?.stepName}}</span>
@@ -60,7 +60,7 @@
                 <codx-input type="valuelist" [refValue]="'BP019'" [crrValue]="data?.interval"  field="interval" (valueChange)="valueChange($event)" [ngClass]="'mx-2 w-80px'"></codx-input>
             </div>
         </div>
-        <div class="d-flex flex-column mt-4" *ngIf="activityType != 'Email'">
+        <div class="d-flex flex-column mt-4" *ngIf="activityType == 'Event'">
             <codx-label formName="fmBPFieldGrid" fiedName="lblTaskLocation" default="Địa điểm" class="fw-bold"></codx-label>
             <codx-input type="text" field="location" [crrValue]="data?.location" (valueChange)="valueChange($event)"></codx-input>
         </div>
@@ -75,7 +75,7 @@
                     <i class="icon-person_add_alt_1 icon-16"></i>
               </button>
             </div>
-        
+
             <div class="d-flex flex-column">
                 <div class="d-flex align-items-center justify-content-between mt-2" *ngFor="let item of listUses , let i = index">
                     <div class="d-flex align-items-center">
@@ -189,7 +189,7 @@
                         </div>
                     </div>
                 </ng-template>
-               
+
             </div>
         </ng-container>
         <ng-container *ngIf="activityType == 'Task' || activityType == 'Event' || activityType == 'Stamp'">
@@ -202,19 +202,19 @@
                 <div class="mt-6">
                     <div class="d-flex flex-column px-4 py-2" [class.border-top]="(listDocument && listDocument.length>1 && i>0)" *ngFor="let item of listDocument , let i = index">
                         <span class="fw-bold">{{item.title}}</span>
-                        <codx-thumbnail  
-                            [files]="item?.filess" 
-                            displayThumb="simple" 
+                        <codx-thumbnail
+                            [files]="item?.filess"
+                            displayThumb="simple"
                             [hideDelete]="'1'"
-                            [hideMoreF]="'0'" 
-                            [isClick]="false" 
+                            [hideMoreF]="'0'"
+                            [isClick]="false"
                         >
                         </codx-thumbnail>
                     </div>
                 </div>
                 <div class="mt-6">
                     <codx-attachment #attachment hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-                    hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel" 
+                    hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel"
                     [idField]="'RecID'" [hideImageThumb]="'1'" [isSaveSelected]="'1'" [objectId]="data?.recID" [objectType]="formModel?.entityName" (fileSave)="fileSave($event)" (fileDelete)="fileDelete($event)">
                     </codx-attachment>
                 </div>
@@ -238,29 +238,29 @@
                 <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentApproval'" [default]="'Tài liệu duyệt'" class="fw-bold" *ngIf="activityType == 'Approve'"></codx-label>
                 <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentCheck'" [default]="'Tài liệu kiểm tra'" class="fw-bold" *ngIf="activityType == 'Check'"></codx-label>
                 <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentSign'" [default]="'Tài liệu ký số'" class="fw-bold" *ngIf="activityType == 'Sign'"></codx-label>
-                <div class="d-flex align-items-center justify-content-between px-4">
-                    <button type="button" class="btn btn-light w-100 mt-4 me-1" (click)="openFormFileProcess()"><i class="icon-i-file-earmark-text"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment1" default="Chọn từ quy trình"></codx-label></button>
-                    <button type="button" class="btn btn-light w-100 mt-4 ms-1" (click)="openAttach2()"><i class="icon-attach_file"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment2" default="Đính kèm mới"></codx-label></button>
+                <div class="d-flex align-items-center justify-content-end px-4">
+                    <button type="button" class="btn btn-light mt-4 me-1" (click)="openFormFileProcess()"><i class="icon-attach_file"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment1" default="Chọn từ quy trình"></codx-label></button>
+                    <!-- <button type="button" class="btn btn-light w-100 mt-4 ms-1" (click)="openAttach2()"><i class="icon-attach_file"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment2" default="Đính kèm mới"></codx-label></button> -->
                 </div>
                 <div class="mt-6">
                     <div class="d-flex flex-column px-4" *ngFor="let item of listDocument">
                         <span>{{item.title}}</span>
-                        <codx-thumbnail  
-                            [files]="item?.filess" 
-                            displayThumb="simple" 
+                        <codx-thumbnail
+                            [files]="item?.filess"
+                            displayThumb="simple"
                             [hideDelete]="'1'"
-                            [hideMoreF]="'0'" 
-                            [isClick]="false" 
+                            [hideMoreF]="'0'"
+                            [isClick]="false"
                         >
                         </codx-thumbnail>
                     </div>
                 </div>
-                <div class="mt-6">
+                <!-- <div class="mt-6">
                     <codx-attachment #attachment2 hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-                    hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel" 
+                    hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel"
                     [idField]="'RecID'" [isSaveSelected]="'1'" [objectId]="data?.recID" [objectType]="formModel?.entityName" (fileSave)="fileSave($event)" (fileDelete)="fileDelete($event)">
                     </codx-attachment>
-                </div>
+                </div> -->
             </div>
         </ng-container>
         <ng-container *ngIf="activityType == 'Email'">
@@ -282,7 +282,7 @@
                         </div>
                         <codx-input type="Combobox" [refValue]="'Share_Users'" [showInput]="false"
                             refType="P" field="popup"
-                            (valueChange)="valueChangeEmail($event,'to')"    
+                            (valueChange)="valueChangeEmail($event,'to')"
                         >
                         </codx-input>
                     </div>
@@ -299,7 +299,7 @@
                         </div>
                         <codx-input type="Combobox" [refValue]="'Share_Users'" [showInput]="false"
                             refType="P" field="popup"
-                            (valueChange)="valueChangeEmail($event,'cc')"    
+                            (valueChange)="valueChangeEmail($event,'cc')"
                         >
                         </codx-input>
                     </div>
@@ -325,6 +325,7 @@
       [multiple]="multiple"
       [listCombobox]="listCombobox"
       (eventApply)="valueChangeUser($event)"
+      (showCheck)="showCheck($event)"
       [listName]="vllShare"
     >
     </codx-share>

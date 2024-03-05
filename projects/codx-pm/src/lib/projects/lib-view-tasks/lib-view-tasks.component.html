@@ -29,6 +29,8 @@
     [listRoles]="listRoles"
     [showMoreFunc]="true"
     [user]="user"
+    [isTreeView]="false"
+    (nodeSelected)="treeSelect($event)"
   >
   </share-view-list>
 </ng-template>
@@ -36,7 +38,8 @@
   <share-tree-view
     #viewTree
     [formModel]="view.formModel"
-    [vllStatus]="vllStatus"
+    [vllStatus]="'PM012'"
+    [vllPriority]="'PM010'"
     [listRoles]="listRoles"
     [dataObj]="dataObj"
     [filter]="view.dataService.filter"
@@ -44,12 +47,13 @@
     [searchText]="view.dataService.searchText"
     [predicate]="predicate+'&&ParentID=null'"
     [dataValue]="datavalue"
-    [predicateChild]="'Category=@0'"
-    [dataValueChild]="'3'"
+    [predicateChild]="'(Category=@0 OR Category=@1)'"
+    [dataValueChild]="'3;G'"
     [showMoreFunc]="true"
-    (clickMoreFunction)="clickMF($event)"
-    [itemTemplate]="itemViewList"
+    (clickMoreFunction)="clickMFTree($event)"
+    (nodeSelect)="treeSelect($event)"
     [user]="user"
+    [itemTemplate]="itemViewList"
   >
   </share-tree-view>
 </ng-template>

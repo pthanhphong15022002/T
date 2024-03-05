@@ -32,23 +32,24 @@ export class ViewListInstancesComponent {
   }
 
   getProcess() {
-    this.api
-      .execSv<any>(
-        'BP',
-        'BP',
-        'ProcessesBusiness',
-        'GetAsync',
-        this.dataSelected.processID
-      )
-      .subscribe((item) => {
-        if (item) {
-          const process = item;
-          this.process = process;
-          this.lstStages = process?.steps?.filter(
-            (x) => x.activityType == 'Stage'
-          );
-        }
-      });
+    if (this.dataSelected?.processID)
+      this.api
+        .execSv<any>(
+          'BP',
+          'BP',
+          'ProcessesBusiness',
+          'GetAsync',
+          this.dataSelected.processID
+        )
+        .subscribe((item) => {
+          if (item) {
+            const process = item;
+            this.process = process;
+            this.lstStages = process?.steps?.filter(
+              (x) => x.activityType == 'Stage'
+            );
+          }
+        });
   }
 
   getInfo() {

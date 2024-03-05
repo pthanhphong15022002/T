@@ -37,6 +37,8 @@
                             [ngClass]="child.fieldType == 'Title' ? 'fw-bold fs-3 mt-1': 'fw-bold'">
                         </codx-label> 
                         <span *ngIf="child.isRequired" class="text-danger mx-2">(*)</span>
+
+                        <i class="icon-add_box ms-2 text-primary cursor-pointer" *ngIf="child.fieldType == 'Table'" (click)="addRow(child.dataFormat,child.fieldName,child.indexTable)"></i>
                     </div>
                     
                     <ng-container [ngSwitch]="child?.fieldType">
@@ -56,40 +58,20 @@
                                 </codx-attachment>
                             </ng-container>
                             <ng-container *ngIf="child.documentControl">
-                                <lib-attachment-grid [data]="child.documentControl" [dataIns]="dataIns" [formModel]="formModel" (dataChange)="dataChangeAttachmentGrid($event)" (dataChangeAttachment)="dataChangeAttachment($event)"></lib-attachment-grid>
+                                <div class="pt-2">
+                                    <lib-attachment-grid [data]="child.documentControl" [dataIns]="dataIns" [formModel]="formModel" (dataChange)="dataChangeAttachmentGrid($event)" (dataChangeAttachment)="dataChangeAttachment($event)"></lib-attachment-grid>
+                                </div>
                             </ng-container>
                         </ng-container>
                         <ng-container *ngSwitchCase="'Table'">
-                            <table class="table table-bordered mt-2">
-                                <thead>
-                                  <tr>
-                                    <th scope="col" *ngIf="child?.tableFormat?.hasIndexNo">#</th>
-                                    <th scope="col" *ngFor="let col of child.dataFormat">{{col.title}}</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                    <ng-container *ngFor="let s of dataIns?.datas[tableField] , let i = index">
-                                    <tr>
-                                        <th scope="row" *ngIf="child?.tableFormat?.hasIndexNo"></th>
-                                            <td *ngFor="let col of child.dataFormat">
-                                                <codx-input
-                                                    [formName]="formModel.formName" 
-                                                    [gridViewName]="formModel.gridViewName + col.fieldType"
-                                                    [type]="(col?.controlType | addProcessDefaultPrice : col?.controlType : col?.dataType : col?.dataFormat: col?.refType)"
-                                                    [refValue]="col.refValue"
-                                                    [refType]="col.refType" 
-                                                    [field]="getField(col?.fieldName)"
-                                                    [placeholder]="col?.description"
-                                                    (valueChange)="editTable(i,$event)"
-                                                    [crrValue]="s[getField(col?.fieldName)]"
-                                                    >
-                                                </codx-input>
-                                            </td>
-                                        </tr>
-                                    </ng-container>
-                                </tbody>
-                              </table>
-                              <span (click)="addRow()">Thêm</span>
+                            <codx-gridview-v2
+                                #gridView
+                                [outputMoreFunc]="true"
+                                [columnsGrid]="child.columnsGrid"
+                                [dataSource]="dataTable[child.fieldName]"
+                                (clickMF)="clickMFGrid($event,child)"
+                            >
+                            </codx-gridview-v2>
                         </ng-container>
                         <ng-container *ngSwitchDefault>
                             <codx-input

@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, Optional, ViewChild, ViewEncapsulation } from "@angular/core";
 import { AuthService, AuthStore, CacheService, DialogData, DialogModel, DialogRef, FormModel, ImageViewerComponent, NotificationsService, UIComponent } from "codx-core";
 import { CodxCommonService } from "projects/codx-common/src/lib/codx-common.service";
-import { CodxBookingService } from "projects/codx-share/src/lib/components/codx-booking/codx-booking.service";
 import { DynamicSettingControlComponent } from "projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component";
 import { CodxShareService } from "projects/codx-share/src/public-api";
 
@@ -62,6 +61,10 @@ export class PopupAddProjectComponent extends UIComponent {
   oldDataValue:any;
   componentSub:any='';
   defaultSettings:any=[];
+  grvSetup:any;
+  enableEdit:boolean=true;
+  initComplete:boolean=false;
+
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
@@ -81,6 +84,7 @@ export class PopupAddProjectComponent extends UIComponent {
     this.funcID = this.formModel?.funcID;
     this.data = dialogData.data[0];
     this.funcType = dialogData.data[1];
+    this.grvSetup = dialogData.data[2]
     this.user=this.authStore.get();
 
     if(this.data.settings && this.data.settings.length){
@@ -121,8 +125,29 @@ export class PopupAddProjectComponent extends UIComponent {
     }
   }
 
-  showPopover(e:any,dat:any){
+  selectedMember:any;
+  popover:any;
+  showPopover(e:any,data:any){
+    this.selectedMember = data;
+    this.popover =e;
+  }
 
+  changeRole(item:any){
+    let idx = this.listRoles.indexOf(item);
+    if(idx >-1){
+      if(this.selectedMember){
+       let index= this.members.findIndex((x:any)=>x.objectID==this.selectedMember.objectID);
+       if(index>-1){
+        this.members[idx].roleType=item.value;
+        this.members[idx].roleName=item.text;
+        this.members[idx].icon=item.icon;
+
+       }
+       this.members = this.members.slice();
+       this.changeDetectorRef.detectChanges();
+       if(this.popover) this.popover.close();
+      }
+    }
   }
 
   initForm(){
@@ -137,6 +162,7 @@ export class PopupAddProjectComponent extends UIComponent {
         });
         //thêm người đặt(người dùng hiên tại) khi thêm mới
         if (this.funcType == 'add' || this.funcType == 'copy') {
+          this.initComplete=true;
           let people = this.authService.userValue;
           let tmpResource :any={};
           tmpResource.objectID = people?.userID;
@@ -183,7 +209,12 @@ export class PopupAddProjectComponent extends UIComponent {
           this.data.permissions =  this.members;
           this.attendeesNumber = this.data.attendees;
           if(this.data && !this.data.projectManager) this.data.projectManager = this.user.userID;
+
           }
+
+          let lstUserID = this.members.map((x:any)=>{if(x.objectType=='U'){return x.objectID}}).join(';');
+          this.getListUser(lstUserID);
+
         }
       }
     });
@@ -248,16 +279,16 @@ export class PopupAddProjectComponent extends UIComponent {
         if (arrayNew.length > 0) {
           resourceID = arrayNew.join(';');
           id += ';' + resourceID;
-          this.getListUser(resourceID);
+          this.getListUser(resourceID,true);
         }
       } else {
-        this.getListUser(resourceID);
+        this.getListUser(resourceID,true);
       }
     }
   }
 
   listUserID:any=[]
-  getListUser(resource) {
+  getListUser(resource:any,isNew:boolean=false) {
     while (resource.includes(' ')) {
       resource = resource.replace(' ', '');
     }
@@ -276,10 +307,28 @@ export class PopupAddProjectComponent extends UIComponent {
           for (var i = 0; i < res.length; i++) {
             let emp = res[i];
             var tmpResource:any={};
-            if (emp.userID == this.user.userID) {
+            if(!isNew){
+              if(this.members && this.members.length){
+                let member = this.members.find((x:any)=>x.objectID==emp.userID);
+                if(member){
+                  member.positionName=emp?.positionName;
+                  member.objectName=emp?.userName;
+                  member.organizationName = emp?.organizationName;
+                  this.listRoles.forEach((element) => {
+                        if (element.value == member.roleType) {
+                          member.icon = element.icon;
+                          member.roleName = element.text;
+                        }
+                      });
+                }
+              }
+            }
+            else{
+              if (emp.userID == this.user.userID) {
               tmpResource.objectID = emp?.userID;
               tmpResource.objectName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
+              tmpResource.organizationName = emp?.organizationName;
               tmpResource.objectType = 'U';
               tmpResource.roleType = 'PM';
               tmpResource.optional = false;
@@ -289,11 +338,21 @@ export class PopupAddProjectComponent extends UIComponent {
                   tmpResource.roleName = element.text;
                 }
               });
-              this.members.push(tmpResource);
+              let idx = this.members.findIndex((x:any)=>x.objectID==tmpResource.objectID)
+              if(idx>-1){
+                if(this.members[idx].recID){
+                  tmpResource.recID = this.members[idx].recID;
+                  tmpResource.id = this.members[idx].id;
+                }
+                this.members[idx]=tmpResource;
+              }
+              else
+                this.members.push(tmpResource);
             } else {
               tmpResource.objectID = emp?.userID;
               tmpResource.objectName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
+              tmpResource.organizationName = emp?.organizationName;
               tmpResource.objectType = 'U';
               tmpResource.roleType = 'M';
               tmpResource.optional = false;
@@ -303,17 +362,34 @@ export class PopupAddProjectComponent extends UIComponent {
                   tmpResource.roleName = element.text;
                 }
               });
-              this.members.push(tmpResource);
+              let idx = this.members.findIndex((x:any)=>x.objectID==tmpResource.objectID)
+              if(idx >-1){
+                if(this.members[idx].recID){
+                  tmpResource.recID = this.members[idx].recID;
+                  tmpResource.id = this.members[idx].id;
+                }
+                this.members[idx]=tmpResource;
+              }
+              else
+                this.members.push(tmpResource);
             }
+            }
+
           }
-          this.members.forEach((item) => {
-            if (item.userID != this.curUser?.userID) {
-              this.members.push(item);
-            }
-          });
+          // this.members.forEach((item) => {
+          //   if (item.userID != this.curUser?.userID) {
+          //     this.members.push(item);
+          //   }
+          // });
           this.members = this.filterArray(this.members);
           this.data.permissions = this.members;
+          // this.data.permissions.map((x:any)=>{
+          //   let item = this.members.find((y:any)=>y.objectID==x.objectID);
+          //   if(item) x.project
+          // });
+          this.members = this.members.slice();
           this.attendeesNumber = this.data.permissions.length;
+          if(!this.initComplete) this.initComplete=true;
           this.detectorRef.detectChanges();
         }
       });
@@ -326,6 +402,13 @@ export class PopupAddProjectComponent extends UIComponent {
   saveForm(){
     let returnData:any;
     this.data.settings = this.newSetting;
+    if(this.data.permissions){
+      let pm = this.data.permissions.find((x:any)=>x.roleType=='PM' && x.objectType=='U');
+      if(pm){
+        this.data.projectManager = pm.objectID;
+        this.data.projectManeger = pm.objectID;
+      }
+    }
     this.dialogRef.dataService.dataSelected = this.data;
 
     this.dialogRef.dataService
@@ -339,6 +422,7 @@ export class PopupAddProjectComponent extends UIComponent {
         }
         if (!returnData?.error) {
           if (this.imageUpload?.imageUpload?.item) {
+            returnData.taskStatus = this.data.taskStatus;
             this.imageUpload
               .updateFileDirectReload(returnData.data.recID)
               .subscribe((result) => {

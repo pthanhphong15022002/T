@@ -25,6 +25,8 @@ import {
   NotificationsService,
   ScrollComponent,
   UIComponent,
+  UrlUtil,
+  Util,
 } from 'codx-core';
 import Konva from 'konva';
 import { qr } from './model/mode';
@@ -55,6 +57,7 @@ import {
   tempLoadPDF,
   tempSignPDFInput,
 } from '../../models/ApproveProcess.model';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -76,7 +79,8 @@ export class PdfComponent
     private esService: CodxEsService,
     private codxCommonService: CodxCommonService,
     private datePipe: DatePipe,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private http: HttpClient
   ) {
     // pdfDefaultOptions.renderInteractiveForms = false;
     // pdfDefaultOptions.annotationEditorEnabled = false;
@@ -699,6 +703,8 @@ export class PdfComponent
       ngxService.addPageToRenderQueue(this.curPage);
     }
   }
+
+  pdfDownloaded(e: any) {}
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Event----------------------------------//
   //---------------------------------------------------------------------------------//
@@ -983,6 +989,21 @@ export class PdfComponent
       this.tr?.draw();
     }
   }
+
+  exportExcel(e: any) {
+    let url = UrlUtil.setUrl(this.inputUrl, 'isPdf', 'false');
+    this.http
+      .get(url, { responseType: 'blob' as 'json' })
+      .subscribe((res: Blob) => {
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(res);
+        link.download = 'excel.xlsx';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+  }
+
   changeSigner(e: any) {
     //reset
     if (this.needAddKonva) {

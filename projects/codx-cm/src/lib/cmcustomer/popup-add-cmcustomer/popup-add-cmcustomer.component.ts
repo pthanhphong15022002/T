@@ -109,6 +109,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   isSaved = false;
   user: any;
   isView: boolean = false;
+  checkType: string;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -127,22 +128,21 @@ export class PopupAddCmCustomerComponent implements OnInit {
     this.titleAction = dt?.data?.title;
     this.autoNumber = dt?.data?.autoNumber;
     this.isView = dt?.data?.isView ?? false;
+    this.checkType = dt?.data?.checkType;
     this.user = this.authStore.get();
     if (this.action == 'copy') {
       this.recID = dt?.data[2];
     }
     this.recID = dt?.data[2];
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
-      if (this.action == 'add') {
-        this.data.category = this.funcID == 'CM0101' ? '1' : '2';
-      }
+    if (this.checkType == '1') {
+      this.checkType = this.data?.category == '2' ? '5' : this.checkType;
     }
     if (this.data?.objectType == '1') {
       this.refValueCbx = 'CMCustomers';
     } else {
       this.refValueCbx = 'CMPartners';
     }
-    if (this.funcID == 'CM0102') {
+    if (this.checkType == '2') {
       if (this.action == 'add') {
         this.data.owner = null;
         this.data.contactType = null;
@@ -203,7 +203,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   async ngAfterViewInit() {
-    if (this.funcID == 'CM0102') {
+    if (this.checkType == '2') {
       if (this.action == 'edit') {
         this.api
           .execSv<any>(
@@ -254,7 +254,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   getTab() {
-    if (this.funcID == 'CM0101') {
+    if (this.checkType == '1') {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
         {
@@ -273,7 +273,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           name: 'Contacts',
         },
       ];
-    } else if (this.funcID == 'CM0102') {
+    } else if (this.checkType == '2') {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
         {
@@ -287,7 +287,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           name: 'Address',
         },
       ];
-    } else if (this.funcID == 'CM0103') {
+    } else if (this.checkType == '3') {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
         {
@@ -311,28 +311,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
           name: 'InformationDefault',
         },
       ];
-    }
-  }
-
-  getAutoNumber(autoNumber) {
-    switch (this.funcID) {
-      case 'CM0105':
-      case 'CM0101':
-        this.data.customerID =
-          this.action != 'edit' ? autoNumber : this.data.customerID;
-        break;
-      case 'CM0102':
-        this.data.contactID =
-          this.action != 'edit' ? autoNumber : this.data.contactID;
-        break;
-      case 'CM0103':
-        this.data.partnerID =
-          this.action != 'edit' ? autoNumber : this.data.partnerID;
-        break;
-      case 'CM0104':
-        this.data.competitorID =
-          this.action != 'edit' ? autoNumber : this.data.competitorID;
-        break;
     }
   }
 
@@ -473,7 +451,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
             this.listAddress[index].countryID = this.data.countryID;
           } else {
             tmp.recID = Util.uid();
-            tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
+            tmp.adressType = this.checkType == '2' ? '5' : '6';
             tmp.address = name;
             tmp.provinceID = this.data.provinceID;
             tmp.districtID = this.data.districtID;
@@ -485,7 +463,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           }
         } else {
           tmp.recID = Util.uid();
-          tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
+          tmp.adressType = this.checkType == '2' ? '5' : '6';
           tmp.address = name;
           tmp.isDefault = true;
           tmp.provinceID = this.data.provinceID;
@@ -509,7 +487,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
 
           } else {
             tmp.recID = Util.uid();
-            tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
+            tmp.adressType = this.checkType == '2' ? '5' : '6';
             tmp.address = name;
             tmp.isDefault = true;
             tmp.provinceID = this.data.provinceID;
@@ -522,7 +500,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           }
         } else {
           tmp.recID = Util.uid();
-          tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
+          tmp.adressType = this.checkType == '2' ? '5' : '6';
           tmp.address = name;
           tmp.isDefault = true;
           tmp.provinceID = this.data.provinceID;
@@ -545,7 +523,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
         var indexDelete = this.listAddress.findIndex(
           (x) => x.isDefault == true
         );
-        if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
+        if (this.checkType == '1' || this.checkType == '2') {
           if (indexDelete != -1) {
             this.listAddress[indexDelete].isDefault = false;
           }
@@ -555,7 +533,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
         }
       }
     }
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
+    if (this.checkType == '1' || this.checkType == '2') {
       if (this.codxListAddress)
         this.codxListAddress.loadListAdress(this.listAddress);
     }
@@ -620,10 +598,11 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.data.isDefault = false;
     }
     op.method = this.action != 'edit' ? 'AddCrmAsync' : 'UpdateCrmAsync';
-
-    switch (this.funcID) {
-      case 'CM0101':
-      case 'CM0105':
+    op.assemblyName = 'CM';
+    op.service = "CM";
+    switch (this.checkType) {
+      case '1':
+      case '5':
         op.className = 'CustomersBusiness';
         data =
           this.action != 'edit'
@@ -636,14 +615,14 @@ export class PopupAddCmCustomerComponent implements OnInit {
                 this.listAddressDelete,
               ];
         break;
-      case 'CM0102':
+      case '2':
         op.className = 'ContactsBusiness';
         data =
           this.action != 'edit'
             ? [this.data, this.listAddress]
             : [this.data, this.listAddress, this.listAddressDelete];
         break;
-      case 'CM0103':
+      case '3':
         op.className = 'PartnersBusiness';
         data =
           this.action != 'edit'
@@ -656,7 +635,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
                 this.listAddressDelete,
               ];
         break;
-      case 'CM0104':
+      case '4':
         op.className = 'CompetitorsBusiness';
         data =
           this.action != 'edit'
@@ -701,10 +680,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   async onSave() {
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
+    if (this.checkType == '1' || this.checkType == '5') {
       this.data.customerName = this.data?.customerName;
-      this.data.category = this.funcID == 'CM0101' ? '1' : '2';
-    } else if (this.funcID == 'CM0103') {
+    } else if (this.checkType == '3') {
       this.data.partnerName = this.data?.partnerName;
       this.data.annualRevenue =
         this.data?.annualRevenue != null &&
@@ -713,7 +691,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           : 0;
     }
 
-    if (this.funcID == 'CM0104') {
+    if (this.checkType == '4') {
       this.data.annualRevenue =
         this.data?.annualRevenue != null &&
         parseFloat(this.data?.annualRevenue) >= 0
@@ -721,12 +699,11 @@ export class PopupAddCmCustomerComponent implements OnInit {
           : 0;
     }
 
-    if (this.funcID == 'CM0102') {
+    if (this.checkType == '2') {
       if (this.data.objectType == null || this.data.objectType.trim() == '') {
         this.gridViewSetup['ContactType'].isRequire = false;
         this.gridViewSetup['ObjectID'].isRequire = false;
       }
-      this.gridViewSetup['FirstName'].isRequire = false;
     }
     this.count = this.cmSv.checkValidate(this.gridViewSetup, this.data);
     if (this.count > 0) {
@@ -743,11 +720,11 @@ export class PopupAddCmCustomerComponent implements OnInit {
           'IsExitCoincideIDAsync',
           [
             this.data?.recID,
-            this.funcID == 'CM0102'
+            this.checkType == '2'
               ? this.data?.contactID
-              : this.funcID == 'CM0103'
+              : this.checkType == '3'
               ? this.data?.partnerID
-              : this.funcID == 'CM0104'
+              : this.checkType == '4'
               ? this.data?.competitorID
               : this.data?.customerID,
             this.dialog?.formModel?.entityName,
@@ -760,11 +737,11 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.notiService.notifyCode(
         'SYS031',
         null,
-        this.funcID == 'CM0102'
+        this.checkType == '2'
           ? this.data?.contactID
-          : this.funcID == 'CM0103'
+          : this.checkType == '3'
           ? this.data?.partnerID
-          : this.funcID == 'CM0104'
+          : this.checkType == '4'
           ? this.data?.competitorID
           : this.data?.customerID
       );
@@ -791,7 +768,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       }
     }
 
-    if (this.funcID == 'CM0102') {
+    if (this.checkType == '2') {
       if (this.data.mobile != null && this.data.mobile.trim() != '') {
         if (!this.checkEmailOrPhone(this.data.mobile, 'P')) return;
       } else {
@@ -816,7 +793,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   async onSaveHanle() {
-    if (this.funcID == 'CM0102') {
+    if (this.checkType == '2') {
       if (this.lstContact != null && this.lstContact.length > 0) {
         var checkMainLst = this.lstContact.some(
           (x) => x.isDefault && x.recID != this.data.recID
@@ -976,11 +953,11 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   getNameCrm(data) {
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
+    if (this.checkType == '1' || this.checkType == '5') {
       return data.customerName;
-    } else if (this.funcID == 'CM0102') {
+    } else if (this.checkType == '2') {
       return data.contactName;
-    } else if (this.funcID == 'CM0103') {
+    } else if (this.checkType == '3') {
       return data.partnerName;
     } else {
       return data.opponentName;

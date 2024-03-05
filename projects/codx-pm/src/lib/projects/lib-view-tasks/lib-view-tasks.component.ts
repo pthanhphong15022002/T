@@ -5,6 +5,7 @@ import { AuthStore, CodxService, DialogData, DialogRef, FormModel, Notifications
 import { CodxShareService } from "projects/codx-share/src/public-api";
 import { PopupAddTaskComponent } from "../popup-add-task/popup-add-task.component";
 import { PopupViewTaskComponent } from "../popup-view-task/popup-view-task.component";
+import { TreeViewComponent } from "projects/codx-share/src/lib/components/codx-tasks/tree-view/tree-view.component";
 
 @Component({
   selector: 'lib-view-tasks',
@@ -21,6 +22,7 @@ export class ProjectTasksViewComponent
   @Input() projectData: any;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('treeView') treeView!: TemplateRef<any>;
+  @ViewChild('viewTree') viewTree!: TreeViewComponent;
 
   views:  Array<ViewModel> = [];;
   entityName:string = 'TM_Tasks';
@@ -42,7 +44,7 @@ export class ProjectTasksViewComponent
     type: 'RoundedRectangle',
     border: { width: 1 },
   };
-  formModel: FormModel;
+  formModel: any;
   vllTab: any;
   dataObj: any = {};
   listRoles: any = [];
@@ -65,21 +67,27 @@ export class ProjectTasksViewComponent
     this.button = [{ id: 'btnAdd' }];
     this.cache.functionList(this.funcID).subscribe((res: any) => {
       this.formModel = res;
-    });
-    this.router.params.subscribe((res: any) => {
-      if (res['projectID']) {
-        this.projectID = res['projectID'];
-        this.datavalue = this.projectID + ';3';
-        this.getProject(this.projectID);
+      if(this.formModel){
+        this.datavalue = this.formModel.dataValue;
+        this.predicate = this.formModel.predicate;
+        this.predicate = '('+this.predicate+')&&ProjectID=@2'
       }
+      this.router.params.subscribe((res: any) => {
+        if (res['projectID']) {
+          this.projectID = res['projectID'];
+          this.datavalue = this.datavalue+';'+this.projectID ;
+          this.getProject(this.projectID);
+        }
+      });
+      this.router.queryParams.subscribe((res: any) => {
+        if (res['ProjectID']) {
+          this.projectID = res['ProjectID'];
+          this.datavalue = this.datavalue+';'+this.projectID ;;
+          this.getProject(this.projectID);
+        }
+      });
     });
-    this.router.queryParams.subscribe((res: any) => {
-      if (res['ProjectID']) {
-        this.projectID = res['ProjectID'];
-        this.datavalue = this.projectID + ';3';
-        this.getProject(this.projectID);
-      }
-    });
+
     this.cache.valueList('PM013').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -132,21 +140,21 @@ export class ProjectTasksViewComponent
   };
   ngAfterViewInit(): void {
     this.views = [
-      {
-        id: '1',
-        type: ViewType.listtree,
-        sameData: true,
-        //active: true,
-        request: {
-          parentIDField: 'parentID',
-        },
-        model: {
-          template: this.itemViewList,
-          resourceModel: {
-            parentIdField: 'parentID',
-          },
-        },
-      },
+      // {
+      //   id: '1',
+      //   type: ViewType.listtree,
+      //   sameData: true,
+      //   //active: true,
+      //   request: {
+      //     parentIDField: 'parentID',
+      //   },
+      //   model: {
+      //     template: this.itemViewList,
+      //     resourceModel: {
+      //       parentIdField: 'parentID',
+      //     },
+      //   },
+      // },
       {
         id: '2',
         type: ViewType.gantt,
@@ -159,9 +167,9 @@ export class ProjectTasksViewComponent
       },
       {
         type: ViewType.content,
-        active: false,
+        active: true,
         sameData: false,
-        text: this.user?.language == 'VN' ? 'Cây giao việc' : 'Tree Assign',
+        text: this.user?.language == 'VN' ? 'Cây công việc' : 'Tree Assign',
         //icon: 'icon-account_tree',
         model: {
           panelLeftRef: this.treeView,
@@ -176,7 +184,7 @@ export class ProjectTasksViewComponent
     this.view.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
-      option.FormModel = this.formModel;
+      option.FormModel = this.view?.formModel;
       option.Width = '550px';
       option.zIndex = 9997;
       res.projectID = this.projectData.projectID;
@@ -188,6 +196,11 @@ export class ProjectTasksViewComponent
       );
       dialogAdd.closed.subscribe((returnData) => {
         if (returnData?.event) {
+          if(this.viewTree && this.viewTree.dataTree){
+            this.viewTree.treeView.setNodeTree(returnData?.event);
+            //this.viewTree.dataTree = this.viewTree.dataTree;
+            this.detectorRef.detectChanges();
+          }
           //this.view?.dataService?.update(returnData?.event);
         } else {
           this.view.dataService.clear();
@@ -200,7 +213,7 @@ export class ProjectTasksViewComponent
     if (this.view.dataService.dataSelected) {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
-      option.FormModel = this.formModel;
+      option.FormModel = this.view?.formModel;
       option.Width = '850px';
       option.zIndex = 9997;
       let dialogAdd = this.callfc.openSide(
@@ -215,6 +228,7 @@ export class ProjectTasksViewComponent
               this.addTask(this.view.dataService.dataSelected?.recID);
             }, 100);
           }
+          this.viewTree.treeView.setNodeTree(returnData?.event);
           //this.view?.dataService?.update(returnData?.event);
         } else {
           this.view.dataService.clear();
@@ -223,8 +237,80 @@ export class ProjectTasksViewComponent
     }
   }
 
-  deleteTask(){
+  deleteTask(data){
+    //this.view.dataService.dataSelected = data;
+    if (data.status == '90') {
+      this.notificationSv.notifyCode('TM017');
+      return;
+    }
+    if (
+      data.category == '2' &&
+      !(data.parentID == null && data.createdBy == this.user.userID)
+    ) {
+      this.notificationSv.notifyCode('TM018');
+      return;
+    }
+    if (data.category == '1') {
+      this.deleteConfirm(data);
+      return;
+    }
+    var isCanDelete = true;
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTaskChildDetailAsync',
+        data.taskID
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          res.forEach((element) => {
+            if (element.status != '00' && element.status != '10') {
+              isCanDelete = false;
+              return;
+            }
+          });
+          if (!isCanDelete) {
+            this.notificationSv.notifyCode('TM001');
+          } else {
+            this.deleteConfirm(data);
+          }
+        }
+      });
+  }
 
+  deleteConfirm(data) {
+    this.notificationSv.alertCode('TM003').subscribe((confirm) => {
+      if (confirm?.event && confirm?.event?.status == 'Y') {
+        this.api.execSv<any>(
+          'TM',
+          'TM',
+          'TaskBusiness',
+          'DeleteTaskAsync',
+          data.taskID
+        ).subscribe((res:any)=>{
+          if (res) {
+            var listTaskDelete = res[0];
+            var parent = res[1];
+            listTaskDelete.forEach((x) => {
+              this.view.dataService.remove(x).subscribe();
+            });
+            this.view.dataService.onAction.next({ type: 'delete', data: data });
+            this.notificationSv.notifyCode('TM004');
+            if (parent) {
+              this.view.dataService.update(parent).subscribe();
+            }
+            this.itemSelected = this.view.dataService.data[0];
+            if(this.viewTree.treeView){
+              this.viewTree.treeView.removeNodeTree(data.recID);
+            }
+            this.detectorRef.detectChanges();
+          }
+        })
+
+      }
+    });
   }
 
   viewTask(){
@@ -263,13 +349,26 @@ export class ProjectTasksViewComponent
         this.editTask();
         break;
       case 'SYS02':
-        this.deleteTask();
+        this.deleteTask(this.view.dataService.dataSelected);
       break;
       case "SYS05":
         this.viewTask()
       break;
-
+      case "PMT01011":
+        this.addTask(this.view.dataService.dataSelected?.recID);
+      break;
 
     }
+  }
+
+  clickMFTree(e:any){
+    if(e.e && e.data){
+      this.view.dataService.dataSelected = e.data;
+      this.clickMF(e.e);
+    }
+  }
+
+  treeSelect(e:any){
+    this.view.dataService.dataSelected = e;
   }
 }

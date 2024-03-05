@@ -30,7 +30,7 @@ import { FormTestDiagramComponent } from './popup-add-process/form-test-diagram/
   selector: 'lib-processes',
   templateUrl: './processes.component.html',
   styleUrls: ['./processes.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class ProcessesComponent
   extends UIComponent
@@ -62,7 +62,7 @@ export class ProcessesComponent
     inject: Injector,
     private bpService: CodxBpService,
     private notiSv: NotificationsService,
-    private codxShareService: CodxShareService,
+    private codxShareService: CodxShareService
   ) {
     super(inject);
     this.heightWin = Util.getViewPort().height - 100;
@@ -112,11 +112,11 @@ export class ProcessesComponent
       },
     ];
 
-    this.cache.valueList('BP016').subscribe(vll => {
+    this.cache.valueList('BP016').subscribe((vll) => {
       if (vll && vll?.datas?.length > 0) {
         this.vllBP016 = vll.datas;
       }
-    })
+    });
   }
 
   //#region  event emit change codx-view
@@ -250,17 +250,18 @@ export class ProcessesComponent
       case 'SYS04':
         this.copy(data);
         break;
-      case "SYS008":
+      case 'SYS008':
         this.openFormDiagram();
         break;
-      case "BPT0101":
-      {
-        this.codxService.navigate('',"/bp/instances/BPT011/"+this.itemSelected.recID);
+      case 'BPT0101': {
+        this.codxService.navigate(
+          '',
+          '/bp/instances/BPT011/' + this.itemSelected.recID
+        );
         break;
       }
       //Phát hành quy trình
-      case "BPT0105":
-      {
+      case 'BPT0105': {
         this.releaseProcess();
         break;
       }
@@ -278,18 +279,26 @@ export class ProcessesComponent
     }
   }
 
-  openFormDiagram(){
-    let option = new DialogModel;
+  openFormDiagram() {
+    let option = new DialogModel();
     option.IsFull = true;
-    this.callfc.openForm(FormTestDiagramComponent,'',0,0,this.funcID,null,'',option);
+    this.callfc.openForm(
+      FormTestDiagramComponent,
+      '',
+      0,
+      0,
+      this.funcID,
+      null,
+      '',
+      option
+    );
   }
 
-  changeDataMF(e:any,data:any) {
+  changeDataMF(e: any, data: any) {
     var approvelCL = e.filter(
-      (x: { functionID: string }) =>
-        x.functionID == 'BPT0105'
+      (x: { functionID: string }) => x.functionID == 'BPT0105'
     );
-    if (approvelCL[0] && data?.status == "5") approvelCL[0].disabled = true;
+    if (approvelCL[0] && data?.status == '5') approvelCL[0].disabled = true;
   }
   //#endregion
 
@@ -311,7 +320,7 @@ export class ProcessesComponent
             let obj = {
               gridViewSetup: res,
               action: 'add',
-              title: this.titleAction
+              title: this.titleAction,
             };
             var dialog = this.callfc.openForm(
               PopupAddProcessComponent,
@@ -398,7 +407,7 @@ export class ProcessesComponent
             let obj = {
               gridViewSetup: res,
               action: 'copy',
-              title: this.titleAction
+              title: this.titleAction,
             };
             var dialog = this.callfc.openForm(
               PopupAddProcessComponent,
@@ -453,19 +462,24 @@ export class ProcessesComponent
   //#endregion
 
   //Phát hành quy trình
-  releaseProcess()
-  {
-    this.api.execSv("BP","BP","ProcessesBusiness","ReleaseAsync",this.view.dataService.dataSelected?.recID).subscribe(item=>{
-      if(item)
-      {
-        this.itemSelected = item;
-        this.view.dataService.update(item, true).subscribe();
-        this.notiSv.notifyCode("SV001")
-      }
-      else
-      {
-        this.notiSv.notifyCode("SV002")
-      }
-    })
+  releaseProcess() {
+    this.api
+      .execSv(
+        'BP',
+        'BP',
+        'ProcessesBusiness',
+        'ReleaseAsync',
+        this.view.dataService.dataSelected?.recID
+      )
+      .subscribe((item) => {
+        if (item) {
+          this.itemSelected = item;
+          this.view.dataService.update(item, true).subscribe();
+          this.codxService.reloadMenuAside();
+          this.notiSv.notifyCode('SV001');
+        } else {
+          this.notiSv.notifyCode('SV002');
+        }
+      });
   }
 }

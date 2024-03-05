@@ -91,7 +91,7 @@ export class CodxReportViewDetailComponent
         this.reportID = param['funcID'];
         this.getReport(this.reportID);
       }
-    });
+          });
 
     this.router.queryParams.subscribe((param: any) => {
     if (param['params'])
