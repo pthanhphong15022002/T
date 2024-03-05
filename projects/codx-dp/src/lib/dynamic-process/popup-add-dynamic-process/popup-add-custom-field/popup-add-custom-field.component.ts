@@ -169,6 +169,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   arrFieldNum = [];
   showCaculate = true;
   titleField: any = '';
+  viewOnly = false;
 
   constructor(
     private cache: CacheService,
@@ -193,6 +194,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.titleAction = dt?.data?.titleAction;
     this.stepList = dt?.data?.stepList;
     this.grvSetup = dt.data?.grvSetup;
+    this.viewOnly = this.action == 'view';
 
     this.creatFieldCustom();
     this.widthDefault = this.dialog.dialog.width

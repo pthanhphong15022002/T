@@ -18,7 +18,7 @@
         >
         </codx-label>
         <ejs-combobox
-          [enabled]="enabled"
+          [enabled]="!viewOnly && enabled"
           [dataSource]="stepList"
           [fields]="fieldsResource"
           [value]="field.stepID"
@@ -41,6 +41,7 @@
             [Group]="form.formGroup"
             (controlBlur)="valueChangeText($event)"
             (valueChange)="valueChange($event)"
+            [disabled]="viewOnly"
           >
           </codx-input>
         </div>
@@ -60,15 +61,9 @@
             [gridViewName]="'grvDPStepsField'"
             (controlBlur)="valueChangeText($event)"
             (valueChange)="valueChange($event)"
+            [disabled]="viewOnly"
           >
           </codx-input>
-          <!-- <codx-input
-            field="fieldName"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input> -->
         </div>
       </div>
       <div class="form-group">
@@ -77,14 +72,6 @@
           [formModel]="form.formModel"
           [default]="'Loại dữ liệu'"
         ></codx-label>
-        <!-- <codx-input
-          field="dataType"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="valueChange($event)"
-          [disabled]="action == 'edit'"
-        >
-        </codx-input> -->
         <codx-input
           type="valuelist"
           ngDefaultControl
@@ -93,7 +80,7 @@
           [refValue]="refValueDataType"
           [placeholder]="grvSetup['DataType']['headerText']"
           (valueChange)="valueChange($event)"
-          [disabled]="action == 'edit' || this.isDuplicateField"
+          [disabled]="action == 'edit' || this.isDuplicateField || viewOnly"
         >
         </codx-input>
       </div>
@@ -124,6 +111,7 @@
               type="button"
               class="btn btn-icon btn-sm btn-light-primary me-2"
               (click)="showMore()"
+              [disabled]="viewOnly"
             >
               <span>
                 <i
@@ -144,6 +132,7 @@
               type="button"
               class="btn btn-icon btn-sm btn-light-primary me-2"
               (click)="clickSettingTable()"
+              [disabled]="viewOnly"
             >
               <i class="icon-settings icon-16"></i>
             </button>
@@ -153,6 +142,7 @@
             *ngIf="field.dataType == 'AT'"
           >
             <button
+              [disabled]="viewOnly"
               type="button"
               class="btn btn-icon btn-sm btn-light-primary me-2"
               (click)="openAutoNumPopup()"
@@ -168,6 +158,7 @@
               class="btn btn-sm btn-light-primary me-2"
               type="button"
               (click)="openCaculate()"
+              [disabled]="viewOnly"
             >
               <i class="icon-calculate icon-16"></i>
               <i
@@ -218,7 +209,7 @@
           refValue="DP0272"
           [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
-          [disabled]="action == 'edit' || this.isDuplicateField"
+          [disabled]="action == 'edit' || this.isDuplicateField || viewOnly"
         >
         </codx-input>
         <codx-input
@@ -230,6 +221,7 @@
           refValue="DP0273"
           [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
+          [disabled]="viewOnly"
         >
         </codx-input>
         <codx-input
@@ -241,6 +233,7 @@
           refValue="DP0274"
           [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
+          [disabled]="viewOnly"
         >
         </codx-input>
         <codx-input
@@ -252,6 +245,7 @@
           refValue="DP0275"
           [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
+          [disabled]="viewOnly"
         >
         </codx-input>
       </div>
@@ -304,6 +298,7 @@
                   type="button"
                   class="btn btn-icon btn-sm btn-light-primary me-2"
                   (click)="clickSettingReference()"
+                  [disabled]="viewOnly"
                 >
                   <i class="icon-settings icon-16"></i>
                 </button>
@@ -317,7 +312,7 @@
             [crrValue]="field.refValue"
             [refValue]="'DPComboboxList'"
             (valueChange)="valueChange($event)"
-            [disabled]="action == 'edit' || this.isDuplicateField"
+            [disabled]="action == 'edit' || this.isDuplicateField || viewOnly"
           ></codx-input>
 
           <ng-container *ngIf="field.dataFormat == 'V'">
@@ -329,7 +324,7 @@
               [allowFiltering]="true"
               [placeholder]="grvSetup['refValue']?.description"
               (valueChange)="cbxChangeVll($event)"
-              [enabled]="action != 'edit'"
+              [enabled]="action != 'edit' && !viewOnly"
             ></ejs-combobox
           ></ng-container>
         </div>
@@ -393,6 +388,7 @@
           [isDropRef]="field.dataType == 'PA'"
           (dropDataFormatPA)="dropDataFormatPA($event)"
           (valueChangeCustom)="valueChangeCustom($event)"
+          [disable]="viewOnly"
         >
         </codx-input-custom-field>
         <ng-container *ngIf="field.defaultValue && field.dataType == 'PA'">
@@ -411,6 +407,7 @@
           labelPosition="After"
           label="Cho phép chọn nhiều giá trị"
           [crrValue]="field?.multiselect"
+          [disabled]="viewOnly"
         ></codx-input>
       </div>
 
@@ -430,6 +427,7 @@
               [iconOnly]="true"
               [crrValue]="field?.rankIcon"
               (valueChange)="valueChangeIcon($event)"
+              [disabled]="viewOnly"
             >
             </codx-input>
           </div>
@@ -452,6 +450,7 @@
               [ticks]="ticks"
               [tooltip]="tooltip"
               (change)="sliderChange($event)"
+              [disabled]="viewOnly"
             ></ejs-slider>
           </div>
         </div>
@@ -471,6 +470,7 @@
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               (valueChange)="valueChange($event)"
+              [disabled]="viewOnly"
             >
             </codx-input>
           </div>
@@ -488,6 +488,7 @@
           field="isRequired"
           [checked]="field?.isRequired"
           (valueChange)="changeRequired($event)"
+          [disabled]="viewOnly"
         >
         </codx-input>
       </div>
@@ -495,7 +496,12 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-primary" (click)="saveData()">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="saveData()"
+        [disabled]="viewOnly"
+      >
         <codx-label
           name="Save"
           formName="StepsFields"
