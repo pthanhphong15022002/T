@@ -48,3 +48,21 @@
   min-height: 30px;
   transition: transform 100ms cubic-bezier(0, 0, 0.2, 1);
 }
+
+.inner {
+  /* background-color: #e9edf2; */
+  cursor: move;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  .inner-item {
+    padding: 2px;
+  }
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
