@@ -78,7 +78,6 @@ export class CashtransfersAddComponent extends UIComponent {
         if (res) {
           this.postDateControl = res?.PostedDateControl;
           this.feeVATID = res?.FeeVATID || '';
-          this.getVATCode();
         }
       })
   }
@@ -220,9 +219,7 @@ export class CashtransfersAddComponent extends UIComponent {
         if(value){
           if (this.feeVATID != '' && this.feeVATID != null) {
             this.fmVATInvoice.currentData.vatid = this.feeVATID;
-            let vatbase = (this.formCashTranfer.data.fees ? this.formCashTranfer.data.fees : 0) * this.vatPct;
-            this.fmVATInvoice.currentData.vatBase = vatbase;
-            this.fgVATInvoice.patchValue(this.fmVATInvoice.currentData);
+            this.VATChange();
             this.elementTabDetail.hideTab(0,false);
           }
         }else{
@@ -233,11 +230,15 @@ export class CashtransfersAddComponent extends UIComponent {
         }
         break;
       case 'fees':
-        if (this.formCashTranfer.data.vatControl) {
-          let vatbase = (this.formCashTranfer.data.fees ? this.formCashTranfer.data.fees : 0) * this.vatPct;
-          this.fmVATInvoice.currentData.vatBase = vatbase;
-          this.fgVATInvoice.patchValue(this.fmVATInvoice.currentData);
+        if (this.formCashTranfer.data.vatControl){
+          this.VATChange();
         }
+       
+        // if (this.formCashTranfer.data.vatControl) {
+        //   let vatbase = (this.formCashTranfer.data.fees ? this.formCashTranfer.data.fees : 0) * this.vatPct;
+        //   this.fmVATInvoice.currentData.vatBase = vatbase;
+        //   this.fgVATInvoice.patchValue(this.fmVATInvoice.currentData);
+        // }
         break;
     }
   }
@@ -248,10 +249,10 @@ export class CashtransfersAddComponent extends UIComponent {
     }
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
-    let data = this.fmVATInvoice.currentData;
-    data.updateColumns = '';
+    this.fmVATInvoice.currentData.updateColumns = '';
     switch (field.toLowerCase()) {
-      case 'currencyid':
+      case 'vatid':
+        this.VATChange();
         break;
     }
   }
@@ -419,28 +420,15 @@ export class CashtransfersAddComponent extends UIComponent {
     return newMemo;
   }
 
-  getVATCode(){
-    let option = new DataRequest();
-    option.entityName = 'AC_VATCodes';
-    option.predicate = 'VATID=@0';
-    option.pageLoading = false;
-    option.dataValue = this.feeVATID;
-    this.api
-      .execSv(
-        'AC',
-        'ERM.Business.Core',
-        'DataBusiness',
-        'LoadDataAsync',
-        option
-      )
-      .subscribe((res: any) => {
-        if (res && res[0].length) {
-          let data = res[0][0];
-          if (data && data?.vatPct) {
-            this.vatPct = data?.vatPct;
-          }
-        }
-      });
+  VATChange(){
+    this.api.exec('AC','CashTranfersBusiness','VATChangedAsync',[this.fmVATInvoice.currentData,this.formCashTranfer.data.fees]).subscribe((res: any) => {
+      if (res) {
+        this.fmVATInvoice.currentData = {...res};
+        this.isPreventChange = true;
+        this.fgVATInvoice.patchValue(res);
+        this.isPreventChange = false;
+      }
+    });
   }
   //#endregion Function
 
