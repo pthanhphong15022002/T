@@ -1,0 +1,18 @@
+<div class="d-flex flex-column w-100 h-100 px-4 py-6">
+    <lib-property-default-title [data]="data" [isBack]="isBack" (dataChange)="changeValue($event)" (back)="backDefault()"></lib-property-default-title>
+    <div class="mt-4">
+        <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'title'" default="Tên ô nhập liệu" class="fw-bold"></codx-label>
+        <codx-input type="text" [crrValue]="data.title" field="title" (valueChange)="changeValue($event)"></codx-input>
+    </div>
+
+    <div class="border-top mt-8">
+        <div class="d-flex align-items-center mt-1">
+            <codx-input type="switch" [crrValue]="data.isRequired" field="isRequired" label="Bắt buộc"  (valueChange)="changeValue($event)" class="mt-2"></codx-input>
+            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Bắt buộc" class="fw-bold ms-2"></codx-label>
+        </div>
+        <div class="d-flex align-items-center mt-1">
+            <codx-input type="switch"  field="isRequired" label="Bắt buộc"  class="mt-2"></codx-input>
+            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Điều kiện hiển thị" class="fw-bold ms-2"></codx-label>
+        </div>
+    </div>
+</div>
