@@ -1,6 +1,6 @@
 <codx-layout-add #formJournal [title]="headerText" [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel"
-  [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescription, tabestablish,tabRole]" (setTitle)="setTitle($event)"
-  [data]="dataDefault" class="ac-form">
+  [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescription, tabestablish,tabRole]"
+  (setTitle)="setTitle($event)" [data]="dataDefault" class="ac-form">
 </codx-layout-add>
 
 <!-- Start: TabDescription -->
@@ -11,33 +11,33 @@
         <div class="form-group">
           <ng-container *ngIf="formJournal?.form?.data.isTemplate">
             <codx-label fiedName="JournalType" [formModel]="dialog.formModel"></codx-label>
-            <codx-input field="journalType" [formModel]="dialog.formModel"
-            (valueChange)="valueChange($event)" [Group]="formJournal?.form?.formGroup"></codx-input>
+            <codx-input field="journalType" [formModel]="dialog.formModel" (valueChange)="valueChange($event)"
+              [Group]="formJournal?.form?.formGroup"></codx-input>
           </ng-container>
           <ng-container *ngIf="!formJournal?.form?.data.isTemplate">
             <codx-label fiedName="JournalName" [formModel]="dialog.formModel"></codx-label>
-            <codx-input #eleCbxJournalName field="journalName" [formModel]="dialog.formModel" (valueChange)="valueChange($event)"
-              [Group]="formJournal?.form?.formGroup"></codx-input>
+            <codx-input #eleCbxJournalName field="journalName" [formModel]="dialog.formModel"
+              (valueChange)="valueChange($event)" [Group]="formJournal?.form?.formGroup"></codx-input>
           </ng-container>
         </div>
         <div class="col-6 form-group">
           <codx-label fiedName="FiscalYear" [formModel]="dialog.formModel"></codx-label>
           <codx-input field="fiscalYear" [formModel]="dialog.formModel"
-            [Group]="formJournal?.form?.formGroup" ></codx-input>
-            <!-- <codx-input #periodID field="periodID" (valueChange)="valueChange($event)" type="combobox"></codx-input> -->
-            <!-- <ejs-combobox [dataSource]="fiscalYears" [value]="formJournal?.form?.data?.fiscalYear" (change)="valueChange($event,'fiscalYear')">
+            [Group]="formJournal?.form?.formGroup"></codx-input>
+          <!-- <codx-input #periodID field="periodID" (valueChange)="valueChange($event)" type="combobox"></codx-input> -->
+          <!-- <ejs-combobox [dataSource]="fiscalYears" [value]="formJournal?.form?.data?.fiscalYear" (change)="valueChange($event,'fiscalYear')">
             </ejs-combobox> -->
         </div>
         <div class="col-6 form-group">
           <codx-label fiedName="PeriodID" [formModel]="dialog.formModel"></codx-label>
-          <codx-input #periodID field="periodID" [formModel]="dialog.formModel"
-          (valueChange)="valueChange($event)" [Group]="formJournal?.form?.formGroup"></codx-input>
+          <codx-input #periodID field="periodID" [formModel]="dialog.formModel" (valueChange)="valueChange($event)"
+            [Group]="formJournal?.form?.formGroup"></codx-input>
         </div>
       </div>
       <div class="col-4">
-        <codx-img #image class="col-4" [funcId]="dialog.formModel?.funcID"
-          [objectId]="formJournal?.form?.data.recID" [objectType]="dialog.formModel?.entityName" [width]="125"
-          [imgOn]="formJournal?.form?.data?.modifiedOn" [isAllowEdit]="true" [isDefaulImg]="true" imageType="square">
+        <codx-img #image class="col-4" [funcId]="dialog.formModel?.funcID" [objectId]="formJournal?.form?.data.recID"
+          [objectType]="dialog.formModel?.entityName" [width]="125" [imgOn]="formJournal?.form?.data?.modifiedOn"
+          [isAllowEdit]="true" [isDefaulImg]="true" imageType="square">
         </codx-img>
       </div>
     </div>
@@ -67,29 +67,39 @@
         <codx-label fiedName="AddNewMode" [formModel]="dialog.formModel"></codx-label>
         <codx-input field="addNewMode" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
       </div> -->
-      <div [ngStyle]="vllAC122.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
+      <div [ngStyle]="vllAC122.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}"
+        class="form-group">
         <codx-label fiedName="EntryMode" [formModel]="dialog.formModel"></codx-label>
-        <codx-input field="entryMode" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+        <codx-input field="entryMode" [formModel]="dialog.formModel"
+          [Group]="formJournal?.form?.formGroup"></codx-input>
       </div>
-      <div [ngStyle]="vllAC122.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
+      <div [ngStyle]="vllAC122.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}"
+        class="form-group">
         <codx-label fiedName="CashBookID" [formModel]="dialog.formModel"></codx-label>
-        <codx-input field="cashBookID" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+        <codx-input field="cashBookID" [formModel]="dialog.formModel"
+          [Group]="formJournal?.form?.formGroup"></codx-input>
       </div>
-      <div [ngStyle]="vllAC122.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
+      <div [ngStyle]="vllAC122.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}"
+        class="form-group">
         <codx-label fiedName="ReasonID" [formModel]="dialog.formModel"></codx-label>
         <codx-input field="reasonID" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
       </div>
-      <div [ngStyle]="vllAC107.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
+      <div [ngStyle]="vllAC107.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}"
+        class="form-group">
         <codx-label fiedName="ReasonID" [formModel]="dialog.formModel"></codx-label>
         <codx-input type="combobox" field="reasonID" refType="3" refValue="InventoryReasonsAC"
           [crrValue]="formJournal?.form?.data?.reasonID" (valueChange)="valueChange($event)"></codx-input>
       </div>
-      <div [ngStyle]="vllAC104.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
+      <div [ngStyle]="vllAC104.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}"
+        class="form-group">
         <codx-label fiedName="SubType" [formModel]="dialog.formModel"></codx-label>
-        <codx-input *ngIf="formJournal?.form?.data?.journalType == 'PI'" field="subType" type="valuelist" refValue="AC129"></codx-input>
-        <codx-input *ngIf="formJournal?.form?.data?.journalType == 'SI'" field="subType" type="valuelist" refValue="AC133"></codx-input>
+        <codx-input *ngIf="formJournal?.form?.data?.journalType == 'PI'" field="subType" type="valuelist"
+          refValue="AC129"></codx-input>
+        <codx-input *ngIf="formJournal?.form?.data?.journalType == 'SI'" field="subType" type="valuelist"
+          refValue="AC133"></codx-input>
       </div>
-      <div [ngStyle]="vllAC105.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
+      <div [ngStyle]="vllAC105.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}"
+        class="form-group">
         <codx-label fiedName="InvoiceForm" [formModel]="dialog.formModel"></codx-label>
         <codx-input field="invoiceForm" [formModel]="dialog.formModel"
           [Group]="formJournal?.form?.formGroup"></codx-input>
@@ -103,13 +113,15 @@
 <ng-template #tabestablish>
   <ng-container *ngIf="formJournal?.form?.formGroup">
     <div class="line-around-flex pb-3">
-      <codx-label style="font-size: 15px !important;" default="Thiết lập chung" class="fw-bold text-primary"></codx-label>
+      <codx-label style="font-size: 15px !important;" default="Thiết lập chung"
+        class="fw-bold text-primary"></codx-label>
     </div>
     <div class="row">
       <div class="col-6">
         <div class="form-group">
           <codx-label fiedName="AssignRule" [formModel]="dialog.formModel"></codx-label>
-          <codx-input field="assignRule" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+          <codx-input field="assignRule" [formModel]="dialog.formModel"
+            [Group]="formJournal?.form?.formGroup"></codx-input>
         </div>
       </div>
       <div class="col-6">
@@ -117,12 +129,15 @@
           <codx-label fiedName="VoucherFormat" [formModel]="dialog.formModel"></codx-label>
           <div class="d-flex align-items-center">
             <div class="w-100 me-2">
-              <codx-input [ngStyle]="formJournal?.form?.data?.assignRule === '0' ? '' :{display:'none'}" type="text" [disabled]="true"></codx-input>
+              <codx-input [ngStyle]="formJournal?.form?.data?.assignRule === '0' ? '' :{display:'none'}" type="text"
+                [disabled]="true"></codx-input>
               <!-- <codx-input [ngStyle]="formJournal?.form?.data?.assignRule != '0' ? '' :{display:'none'}" field="voucherFormat" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input> -->
-              <ejs-combobox [ngStyle]="formJournal?.form?.data?.assignRule != '0' ? '' :{display:'none'}" [dataSource]="oAutoNumber" (beforeOpen)="beforeOpenCbxAutoNumber($event)">
+              <ejs-combobox [ngStyle]="formJournal?.form?.data?.assignRule != '0' ? '' :{display:'none'}"
+                [dataSource]="oAutoNumber" (beforeOpen)="beforeOpenCbxAutoNumber($event)">
               </ejs-combobox>
             </div>
-            <button (click)="openAutoNumberForm()" [disabled]="formJournal?.form?.data?.assignRule === '0'" type="button" class="btn btn-icon btn-light-primary" role="button">
+            <button (click)="openAutoNumberForm()" [disabled]="formJournal?.form?.data?.assignRule === '0'"
+              type="button" class="btn btn-icon btn-light-primary" role="button">
               <span class="icon-edit-one icon-18"></span>
             </button>
           </div>
@@ -132,7 +147,8 @@
     </div>
     <div class="d-flex justify-content-between form-group">
       <codx-label fiedName="MultiCurrency" [formModel]="dialog.formModel"></codx-label>
-      <codx-input field="multiCurrency" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
+      <codx-input field="multiCurrency" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"
+        (valueChange)="valueChange($event)"></codx-input>
     </div>
     <div class="row" [ngStyle]="formJournal?.form?.data?.multiCurrency ? '' : {display:'none'}">
       <div class="col-8">
@@ -140,11 +156,12 @@
           <div>
             <codx-label class="fw-bold" fiedName="CurrencyID" [formModel]="dialog.formModel"></codx-label>
           </div>
-          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['CurrencyID'].description}}</span>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['CurrencyID']?.description}}</span>
         </div>
       </div>
       <div class="col-4">
-        <codx-input field="currencyID" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+        <codx-input field="currencyID" [formModel]="dialog.formModel"
+          [Group]="formJournal?.form?.formGroup"></codx-input>
       </div>
     </div>
     <div class="row" [ngStyle]="formJournal?.form?.data?.multiCurrency ? '' : {display:'none'}">
@@ -153,7 +170,7 @@
           <div>
             <codx-label class="fw-bold" fiedName="ExchType" [formModel]="dialog.formModel"></codx-label>
           </div>
-          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['ExchType'].description}}</span>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['ExchType']?.description}}</span>
         </div>
       </div>
       <div class="col-4">
@@ -162,26 +179,32 @@
     </div>
     <div class="row">
       <div class="col-8">
-        <div [ngClass]="(formJournal?.form?.data?.drAcctID == null || formJournal?.form?.data?.drAcctID == '') ? 'form-group' : ''">
+        <div
+          [ngClass]="(formJournal?.form?.data?.drAcctID == null || formJournal?.form?.data?.drAcctID == '') ? 'form-group' : ''">
           <div>
             <codx-label class="fw-bold" fiedName="DRAcctControl" [formModel]="dialog.formModel"></codx-label>
           </div>
-          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['DRAcctControl'].description}}</span>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['DRAcctControl']?.description}}</span>
         </div>
       </div>
       <div class="col-4">
         <div class="d-flex align-items-center">
           <div class="w-100 me-2">
-            <codx-input field="drAcctControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
+            <codx-input field="drAcctControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"
+              (valueChange)="valueChange($event)"></codx-input>
           </div>
-          <button [disabled]="formJournal?.form?.data?.drAcctControl === null || formJournal?.form?.data?.drAcctControl === '0' || formJournal?.form?.data?.drAcctControl === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
-          (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DRAcctID'].referedValue,formJournal?.form?.data?.drAcctID,formJournal?.form?.data?.drAcctControl,'drAcctID')">
+          <button
+            [disabled]="formJournal?.form?.data?.drAcctControl === null || formJournal?.form?.data?.drAcctControl === '0' || formJournal?.form?.data?.drAcctControl === '3'"
+            type="button" class="btn btn-icon btn-light-primary" role="button"
+            (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DRAcctID'].referedValue,formJournal?.form?.data?.drAcctID,formJournal?.form?.data?.drAcctControl,'drAcctID')">
             <span class="icon-edit-one icon-18"></span>
           </button>
-        </div>  
+        </div>
       </div>
     </div>
-    <div *ngIf="formJournal?.form?.data?.drAcctID && (formJournal?.form?.data?.drAcctID?.split(';').length > 0)" [ngClass]="formJournal?.form?.data?.drAcctID && (formJournal?.form?.data?.drAcctID.split(';').length > 0) ? 'form-group' : ''" class="d-flex justify-content-start mt-1">
+    <div *ngIf="formJournal?.form?.data?.drAcctID && (formJournal?.form?.data?.drAcctID?.split(';').length > 0)"
+      [ngClass]="formJournal?.form?.data?.drAcctID && (formJournal?.form?.data?.drAcctID.split(';').length > 0) ? 'form-group' : ''"
+      class="d-flex justify-content-start mt-1">
       <ng-container *ngFor="let item of formJournal?.form?.data?.drAcctID?.split(';')| slice:0:10; let i=index">
         <span class="badge ac-badge-light-primary me-2">
           {{item}}
@@ -190,26 +213,32 @@
     </div>
     <div class="row">
       <div class="col-8">
-        <div [ngClass]="(formJournal?.form?.data?.crAcctID == null || formJournal?.form?.data?.crAcctID == '') ? 'form-group' : ''">
+        <div
+          [ngClass]="(formJournal?.form?.data?.crAcctID == null || formJournal?.form?.data?.crAcctID == '') ? 'form-group' : ''">
           <div>
             <codx-label class="fw-bold" fiedName="CRAcctControl" [formModel]="dialog.formModel"></codx-label>
           </div>
-          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['CRAcctControl'].description}}</span>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['CRAcctControl']?.description}}</span>
         </div>
       </div>
       <div class="col-4">
         <div class="d-flex align-items-center">
           <div class="w-100 me-2">
-            <codx-input field="crAcctControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
+            <codx-input field="crAcctControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"
+              (valueChange)="valueChange($event)"></codx-input>
           </div>
-          <button [disabled]="formJournal?.form?.data?.crAcctControl === null || formJournal?.form?.data?.crAcctControl === '0' || formJournal?.form?.data?.crAcctControl === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
-          (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['CRAcctID'].referedValue,formJournal?.form?.data?.crAcctID,formJournal?.form?.data?.crAcctControl,'crAcctID')">
+          <button
+            [disabled]="formJournal?.form?.data?.crAcctControl === null || formJournal?.form?.data?.crAcctControl === '0' || formJournal?.form?.data?.crAcctControl === '3'"
+            type="button" class="btn btn-icon btn-light-primary" role="button"
+            (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['CRAcctID'].referedValue,formJournal?.form?.data?.crAcctID,formJournal?.form?.data?.crAcctControl,'crAcctID')">
             <span class="icon-edit-one icon-18"></span>
           </button>
         </div>
       </div>
     </div>
-    <div *ngIf="formJournal?.form?.data?.crAcctID && (formJournal?.form?.data?.crAcctID?.split(';').length > 0)" [ngClass]="formJournal?.form?.data?.crAcctID && (formJournal?.form?.data?.crAcctID.split(';').length > 0) ? 'form-group' : ''" class="d-flex justify-content-start mt-1">
+    <div *ngIf="formJournal?.form?.data?.crAcctID && (formJournal?.form?.data?.crAcctID?.split(';').length > 0)"
+      [ngClass]="formJournal?.form?.data?.crAcctID && (formJournal?.form?.data?.crAcctID.split(';').length > 0) ? 'form-group' : ''"
+      class="d-flex justify-content-start mt-1">
       <ng-container *ngFor="let item of formJournal?.form?.data?.crAcctID?.split(';')| slice:0:10; let i=index">
         <span class="badge ac-badge-light-primary me-2">
           {{item}}
@@ -218,26 +247,32 @@
     </div>
     <div class="row">
       <div class="col-8">
-        <div [ngClass]="(formJournal?.form?.data?.diM1 == null || formJournal?.form?.data?.diM1 == '') ? 'form-group' : ''">
+        <div
+          [ngClass]="(formJournal?.form?.data?.diM1 == null || formJournal?.form?.data?.diM1 == '') ? 'form-group' : ''">
           <div>
             <codx-label class="fw-bold" fiedName="DIM1Control" [formModel]="dialog.formModel"></codx-label>
           </div>
-          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['DIM1Control'].description}}</span>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['DIM1Control']?.description}}</span>
         </div>
       </div>
       <div class="col-4">
         <div class="d-flex align-items-center">
           <div class="w-100 me-2">
-            <codx-input field="diM1Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
+            <codx-input field="diM1Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"
+              (valueChange)="valueChange($event)"></codx-input>
           </div>
-          <button [disabled]="formJournal?.form?.data?.diM1Control === null || formJournal?.form?.data?.diM1Control === '0' || formJournal?.form?.data?.diM1Control === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
-          (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DIM1'].referedValue,formJournal?.form?.data?.diM1,formJournal?.form?.data?.diM1Control,'diM1')">
+          <button
+            [disabled]="formJournal?.form?.data?.diM1Control === null || formJournal?.form?.data?.diM1Control === '0' || formJournal?.form?.data?.diM1Control === '3'"
+            type="button" class="btn btn-icon btn-light-primary" role="button"
+            (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DIM1'].referedValue,formJournal?.form?.data?.diM1,formJournal?.form?.data?.diM1Control,'diM1')">
             <span class="icon-edit-one icon-18"></span>
           </button>
         </div>
       </div>
     </div>
-    <div *ngIf="formJournal?.form?.data?.diM1 && (formJournal?.form?.data?.diM1?.split(';').length > 0)" [ngClass]="formJournal?.form?.data?.diM1 && (formJournal?.form?.data?.diM1.split(';').length > 0) ? 'form-group' : ''" class="d-flex justify-content-start mt-1">
+    <div *ngIf="formJournal?.form?.data?.diM1 && (formJournal?.form?.data?.diM1?.split(';').length > 0)"
+      [ngClass]="formJournal?.form?.data?.diM1 && (formJournal?.form?.data?.diM1.split(';').length > 0) ? 'form-group' : ''"
+      class="d-flex justify-content-start mt-1">
       <ng-container *ngFor="let item of formJournal?.form?.data?.diM1?.split(';')| slice:0:10; let i=index">
         <span class="badge ac-badge-light-primary me-2">
           {{item}}
@@ -246,26 +281,32 @@
     </div>
     <div class="row">
       <div class="col-8">
-        <div [ngClass]="(formJournal?.form?.data?.diM2 == null || formJournal?.form?.data?.diM2 == '') ? 'form-group' : ''">
+        <div
+          [ngClass]="(formJournal?.form?.data?.diM2 == null || formJournal?.form?.data?.diM2 == '') ? 'form-group' : ''">
           <div>
             <codx-label class="fw-bold" fiedName="DIM2Control" [formModel]="dialog.formModel"></codx-label>
           </div>
-          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['DIM2Control'].description}}</span>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['DIM2Control']?.description}}</span>
         </div>
       </div>
       <div class="col-4">
         <div class="d-flex align-items-center">
           <div class="w-100 me-2">
-            <codx-input field="diM2Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
+            <codx-input field="diM2Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"
+              (valueChange)="valueChange($event)"></codx-input>
           </div>
-          <button [disabled]="formJournal?.form?.data?.diM2Control === null || formJournal?.form?.data?.diM2Control === '0' || formJournal?.form?.data?.diM2Control === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
-          (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DIM2'].referedValue,formJournal?.form?.data?.diM2,formJournal?.form?.data?.diM2Control,'diM2')">
+          <button
+            [disabled]="formJournal?.form?.data?.diM2Control === null || formJournal?.form?.data?.diM2Control === '0' || formJournal?.form?.data?.diM2Control === '3'"
+            type="button" class="btn btn-icon btn-light-primary" role="button"
+            (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DIM2'].referedValue,formJournal?.form?.data?.diM2,formJournal?.form?.data?.diM2Control,'diM2')">
             <span class="icon-edit-one icon-18"></span>
           </button>
         </div>
       </div>
     </div>
-    <div *ngIf="formJournal?.form?.data?.diM2 && (formJournal?.form?.data?.diM2?.split(';').length > 0)" [ngClass]="formJournal?.form?.data?.diM2 && (formJournal?.form?.data?.diM2.split(';').length > 0) ? 'form-group' : ''" class="d-flex justify-content-start mt-1">
+    <div *ngIf="formJournal?.form?.data?.diM2 && (formJournal?.form?.data?.diM2?.split(';').length > 0)"
+      [ngClass]="formJournal?.form?.data?.diM2 && (formJournal?.form?.data?.diM2.split(';').length > 0) ? 'form-group' : ''"
+      class="d-flex justify-content-start mt-1">
       <ng-container *ngFor="let item of formJournal?.form?.data?.diM2?.split(';')| slice:0:10; let i=index">
         <span class="badge ac-badge-light-primary me-2">
           {{item}}
@@ -274,26 +315,32 @@
     </div>
     <div class="row">
       <div class="col-8">
-        <div [ngClass]="(formJournal?.form?.data?.diM3 == null || formJournal?.form?.data?.diM3 == '') ? 'form-group' : ''">
+        <div
+          [ngClass]="(formJournal?.form?.data?.diM3 == null || formJournal?.form?.data?.diM3 == '') ? 'form-group' : ''">
           <div>
             <codx-label class="fw-bold" fiedName="DIM3Control" [formModel]="dialog.formModel"></codx-label>
           </div>
-          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['DIM3Control'].description}}</span>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['DIM3Control']?.description}}</span>
         </div>
       </div>
       <div class="col-4">
         <div class="d-flex align-items-center">
           <div class="w-100 me-2">
-            <codx-input field="diM3Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
+            <codx-input field="diM3Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"
+              (valueChange)="valueChange($event)"></codx-input>
           </div>
-          <button [disabled]="formJournal?.form?.data?.diM3Control === null || formJournal?.form?.data?.diM3Control === '0' || formJournal?.form?.data?.diM3Control === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
-          (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DIM3'].referedValue,formJournal?.form?.data?.diM3,formJournal?.form?.data?.diM3Control,'diM3')">
+          <button
+            [disabled]="formJournal?.form?.data?.diM3Control === null || formJournal?.form?.data?.diM3Control === '0' || formJournal?.form?.data?.diM3Control === '3'"
+            type="button" class="btn btn-icon btn-light-primary" role="button"
+            (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DIM3'].referedValue,formJournal?.form?.data?.diM3,formJournal?.form?.data?.diM3Control,'diM3')">
             <span class="icon-edit-one icon-18"></span>
           </button>
         </div>
       </div>
     </div>
-    <div *ngIf="formJournal?.form?.data?.diM3 && (formJournal?.form?.data?.diM3?.split(';').length > 0)" [ngClass]="formJournal?.form?.data?.diM3 && (formJournal?.form?.data?.diM3.split(';').length > 0) ? 'form-group' : ''" class="d-flex justify-content-start mt-1">
+    <div *ngIf="formJournal?.form?.data?.diM3 && (formJournal?.form?.data?.diM3?.split(';').length > 0)"
+      [ngClass]="formJournal?.form?.data?.diM3 && (formJournal?.form?.data?.diM3.split(';').length > 0) ? 'form-group' : ''"
+      class="d-flex justify-content-start mt-1">
       <ng-container *ngFor="let item of formJournal?.form?.data?.diM3?.split(';')| slice:0:10; let i=index">
         <span class="badge ac-badge-light-primary me-2">
           {{item}}
@@ -306,12 +353,13 @@
           <div>
             <codx-label class="fw-bold" fiedName="ProjectControl" [formModel]="dialog.formModel"></codx-label>
           </div>
-          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['ProjectControl'].description}}</span>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['ProjectControl']?.description}}</span>
         </div>
       </div>
       <div class="col-4">
         <div class="d-flex align-items-center">
-          <codx-input field="projectControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+          <codx-input field="projectControl" [formModel]="dialog.formModel"
+            [Group]="formJournal?.form?.formGroup"></codx-input>
         </div>
       </div>
     </div>
@@ -321,12 +369,13 @@
           <div>
             <codx-label class="fw-bold" fiedName="LoanControl" [formModel]="dialog.formModel"></codx-label>
           </div>
-          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['LoanControl'].description}}</span>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['LoanControl']?.description}}</span>
         </div>
       </div>
       <div class="col-4">
         <div class="d-flex align-items-center">
-          <codx-input field="loanControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+          <codx-input field="loanControl" [formModel]="dialog.formModel"
+            [Group]="formJournal?.form?.formGroup"></codx-input>
         </div>
       </div>
     </div>
@@ -336,17 +385,19 @@
           <div>
             <codx-label class="fw-bold" fiedName="AssetControl" [formModel]="dialog.formModel"></codx-label>
           </div>
-          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['AssetControl'].description}}</span>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['AssetControl']?.description}}</span>
         </div>
       </div>
       <div class="col-4">
         <div class="d-flex align-items-center">
-          <codx-input field="assetControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+          <codx-input field="assetControl" [formModel]="dialog.formModel"
+            [Group]="formJournal?.form?.formGroup"></codx-input>
         </div>
       </div>
     </div>
     <div class="line-around-flex pb-3">
-      <codx-label style="font-size: 15px !important;" default="Thiết lập hạn mức" class="fw-bold text-primary"></codx-label>
+      <codx-label style="font-size: 15px !important;" default="Thiết lập hạn mức"
+        class="fw-bold text-primary"></codx-label>
     </div>
     <div class="row">
       <div class="col-8">
@@ -354,35 +405,44 @@
           <div>
             <codx-label class="fw-bold" fiedName="TransLimit" [formModel]="dialog.formModel"></codx-label>
           </div>
-          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['TransLimit'].description}}</span>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['TransLimit']?.description}}</span>
         </div>
       </div>
       <div class="col-4">
         <div class="d-flex align-items-center">
-          <codx-input field="transLimit" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+          <codx-input field="transLimit" [formModel]="dialog.formModel"
+            [Group]="formJournal?.form?.formGroup"></codx-input>
         </div>
       </div>
     </div>
-    <div [ngStyle]="vllAC125.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" >
+    <div [ngStyle]="vllAC125.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}">
       <div class="line-around-flex pb-3">
-        <codx-label style="font-size: 15px !important;" default="Thiết lập thuế" class="fw-bold text-primary"></codx-label>
+        <codx-label style="font-size: 15px !important;" default="Thiết lập thuế"
+          class="fw-bold text-primary"></codx-label>
       </div>
       <div class="d-flex justify-content-between form-group">
         <codx-label fiedName="VatControl" [formModel]="dialog.formModel"></codx-label>
-        <codx-input field="vatControl" [formModel]="dialog.formModel" [crrValue]="formJournal?.form?.data?.vatControl == '1' ? true : false" (valueChange)="valueChange($event)"></codx-input>
+        <codx-input field="vatControl" [formModel]="dialog.formModel"
+          [crrValue]="formJournal?.form?.data?.vatControl == '1' ? true : false"
+          (valueChange)="valueChange($event)"></codx-input>
       </div>
-      <div [style]="vllAC126.includes(formJournal?.form?.data?.journalType) ? '' : 'display: none !important;'" class="d-flex justify-content-between form-group">
+      <div [style]="vllAC126.includes(formJournal?.form?.data?.journalType) ? '' : 'display: none !important;'"
+        class="d-flex justify-content-between form-group">
         <codx-label fiedName="UseDutyTax" [formModel]="dialog.formModel"></codx-label>
-        <codx-input field="useDutyTax" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+        <codx-input field="useDutyTax" [formModel]="dialog.formModel"
+          [Group]="formJournal?.form?.formGroup"></codx-input>
       </div>
-      <div [style]="vllAC126.includes(formJournal?.form?.data?.journalType) ? '' : 'display: none !important;'" class="d-flex justify-content-between form-group">
+      <div [style]="vllAC126.includes(formJournal?.form?.data?.journalType) ? '' : 'display: none !important;'"
+        class="d-flex justify-content-between form-group">
         <codx-label fiedName="UseExciseTax" [formModel]="dialog.formModel"></codx-label>
-        <codx-input field="useExciseTax" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+        <codx-input field="useExciseTax" [formModel]="dialog.formModel"
+          [Group]="formJournal?.form?.formGroup"></codx-input>
       </div>
     </div>
-    <div [ngStyle]="vllAC108.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" >
+    <div [ngStyle]="vllAC108.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}">
       <div class="line-around-flex pb-3">
-        <codx-label style="font-size: 15px !important;" default="Thiết lập công nợ" class="fw-bold text-primary"></codx-label>
+        <codx-label style="font-size: 15px !important;" default="Thiết lập công nợ"
+          class="fw-bold text-primary"></codx-label>
       </div>
       <div class="row">
         <div class="col-8">
@@ -390,12 +450,13 @@
             <div>
               <codx-label class="fw-bold" fiedName="SubControl" [formModel]="dialog.formModel"></codx-label>
             </div>
-            <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['SubControl'].description}}</span>
+            <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['SubControl']?.description}}</span>
           </div>
         </div>
         <div class="col-4">
           <div class="d-flex align-items-center">
-            <codx-input field="subControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+            <codx-input field="subControl" [formModel]="dialog.formModel"
+              [Group]="formJournal?.form?.formGroup"></codx-input>
           </div>
         </div>
       </div>
@@ -405,19 +466,21 @@
             <div>
               <codx-label class="fw-bold" fiedName="SettleControl" [formModel]="dialog.formModel"></codx-label>
             </div>
-            <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['SettleControl'].description}}</span>
+            <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['SettleControl']?.description}}</span>
           </div>
         </div>
         <div class="col-4">
           <div class="d-flex align-items-center">
-            <codx-input field="settleControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+            <codx-input field="settleControl" [formModel]="dialog.formModel"
+              [Group]="formJournal?.form?.formGroup"></codx-input>
           </div>
         </div>
       </div>
     </div>
-    <div [ngStyle]="vllAC109.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" >
+    <div [ngStyle]="vllAC109.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}">
       <div class="line-around-flex pb-3">
-        <codx-label style="font-size: 15px !important;" default="Thiết lập kho" class="fw-bold text-primary"></codx-label>
+        <codx-label style="font-size: 15px !important;" default="Thiết lập kho"
+          class="fw-bold text-primary"></codx-label>
       </div>
       <div [ngStyle]="vllAC110.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="row">
         <div class="col-8">
@@ -425,12 +488,13 @@
             <div>
               <codx-label class="fw-bold" fiedName="WarehouseIssue" [formModel]="dialog.formModel"></codx-label>
             </div>
-            <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['WarehouseIssue'].description}}</span>
+            <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['WarehouseIssue']?.description}}</span>
           </div>
         </div>
         <div class="col-4">
           <div class="d-flex align-items-center">
-            <codx-input field="warehouseIssue" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+            <codx-input field="warehouseIssue" [formModel]="dialog.formModel"
+              [Group]="formJournal?.form?.formGroup"></codx-input>
           </div>
         </div>
       </div>
@@ -441,12 +505,13 @@
               <div>
                 <codx-label class="fw-bold" fiedName="WarehouseReceipt" [formModel]="dialog.formModel"></codx-label>
               </div>
-              <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['WarehouseReceipt'].description}}</span>
+              <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['WarehouseReceipt']?.description}}</span>
             </div>
           </div>
           <div class="col-4">
             <div class="d-flex align-items-center">
-              <codx-input field="warehouseReceipt" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+              <codx-input field="warehouseReceipt" [formModel]="dialog.formModel"
+                [Group]="formJournal?.form?.formGroup"></codx-input>
             </div>
           </div>
         </div>
@@ -457,14 +522,16 @@
           <span class="icon-edit-one icon-18"></span>
         </button>
       </div>
-      <div style="flex-wrap: wrap !important;" *ngIf="formJournal?.form?.data?.idimControl && (formJournal?.form?.data?.idimControl?.split(';').length > 0)" class="d-flex justify-content-start mt-1">
+      <div style="flex-wrap: wrap !important;"
+        *ngIf="formJournal?.form?.data?.idimControl && (formJournal?.form?.data?.idimControl?.split(';').length > 0)"
+        class="d-flex justify-content-start mt-1">
         <ng-container *ngFor="let item of formJournal?.form?.data?.idimControl?.split(';')">
           <span class="badge ac-badge-light-primary me-2 mb-2">
             {{item | vll : 'AC069' : 'text' | async}}
           </span>
         </ng-container>
       </div>
-    </div> 
+    </div>
   </ng-container>
 </ng-template>
 <!-- End: TabEstablish -->
@@ -478,16 +545,15 @@
           <div>
             <codx-label class="fw-bold" fiedName="Creater" [formModel]="dialog.formModel"></codx-label>
           </div>
-          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Creater'].description}}</span>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Creater']?.description}}</span>
         </div>
       </div>
       <div class="col-4">
         <div class="d-flex align-items-center justify-content-end">
-          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button"
-          >
+          <button type="button" class="btn btn-icon btn-light-primary" role="button" (click)="openUserPopup($event,1)">
             <span class="icon-i-person-plus icon-18"></span>
           </button>
-        </div>  
+        </div>
       </div>
     </div>
     <div class="row">
@@ -496,19 +562,19 @@
           <div>
             <codx-label class="fw-bold" fiedName="ApprovalControl" [formModel]="dialog.formModel"></codx-label>
           </div>
-          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['ApprovalControl'].description}}</span>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['ApprovalControl']?.description}}</span>
         </div>
       </div>
       <div class="col-5">
         <div class="d-flex align-items-center">
           <div class="w-100 me-2">
-            <codx-input field="approvalControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+            <codx-input field="approvalControl" [formModel]="dialog.formModel"
+              [Group]="formJournal?.form?.formGroup"></codx-input>
           </div>
-          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button"
-          >
+          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button">
             <span class="icon-i-person-plus icon-18"></span>
           </button>
-        </div>  
+        </div>
       </div>
     </div>
     <div class="row">
@@ -517,21 +583,22 @@
           <div>
             <codx-label class="fw-bold" fiedName="Approver" [formModel]="dialog.formModel"></codx-label>
           </div>
-          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Approver'].description}}</span>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Approver']?.description}}</span>
         </div>
       </div>
       <div class="col-4">
         <div class="d-flex align-items-center justify-content-end">
-          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button"
-          >
+          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button">
             <span class="icon-i-person-plus icon-18"></span>
           </button>
-        </div>  
+        </div>
       </div>
     </div>
     <div class="d-flex justify-content-between form-group">
       <codx-label fiedName="AutoPost" [formModel]="dialog.formModel"></codx-label>
-      <codx-input field="autoPost" [formModel]="dialog.formModel" [crrValue]="formJournal?.form?.data?.autoPost == 1 ? true : false" (valueChange)="valueChange($event)"></codx-input>
+      <codx-input field="autoPost" [formModel]="dialog.formModel"
+        [crrValue]="formJournal?.form?.data?.autoPost == 1 ? true : false"
+        (valueChange)="valueChange($event)"></codx-input>
     </div>
     <div class="row">
       <div class="col-8">
@@ -539,55 +606,55 @@
           <div>
             <codx-label class="fw-bold" fiedName="Poster" [formModel]="dialog.formModel"></codx-label>
           </div>
-          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Poster'].description}}</span>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Poster']?.description}}</span>
         </div>
       </div>
       <div class="col-4">
         <div class="d-flex align-items-center justify-content-end">
-          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button"
-          >
+          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button">
             <span class="icon-i-person-plus icon-18"></span>
           </button>
-        </div>  
+        </div>
       </div>
     </div>
     <div class="d-flex justify-content-between form-group">
-      <codx-label fiedName="UnpostControl" [formModel]="dialog.formModel"></codx-label>
-      <codx-input field="unpostControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+      <codx-label fiedName="unPostControl" [formModel]="dialog.formModel"></codx-label>
+      <codx-input field="unPostControl" [formModel]="dialog.formModel"
+        [Group]="formJournal?.form?.formGroup"></codx-input>
     </div>
-    <div class="row" [ngStyle]="formJournal?.form?.data?.unpostControl ? '' : {display:'none'}">
+    <div class="row" [ngStyle]="formJournal?.form?.data?.unPostControl ? '' : {display:'none'}">
       <div class="col-8">
         <div class="form-group">
           <div>
             <codx-label class="fw-bold" fiedName="Unposter" [formModel]="dialog.formModel"></codx-label>
           </div>
-          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Unposter'].description}}</span>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Unposter']?.description}}</span>
         </div>
       </div>
       <div class="col-4">
         <div class="d-flex align-items-center justify-content-end">
-          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button"
-          >
+          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button">
             <span class="icon-i-person-plus icon-18"></span>
           </button>
-        </div>  
+        </div>
       </div>
     </div>
-    <div class="row" [ngStyle]="formJournal?.form?.data?.unpostControl ? '' : {display:'none'}">
+    <div class="row" [ngStyle]="formJournal?.form?.data?.unPostControl ? '' : {display:'none'}">
       <div class="col-7">
         <div class="form-group">
           <div>
             <codx-label class="fw-bold" fiedName="UnPostDays" [formModel]="dialog.formModel"></codx-label>
           </div>
-          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['UnPostDays'].description}}</span>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['UnPostDays']?.description}}</span>
         </div>
       </div>
       <div class="col-5">
         <div class="d-flex align-items-center justify-content-end">
           <div class="w-100 me-2">
-            <codx-input field="unPostDays" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+            <codx-input field="unPostDays" [formModel]="dialog.formModel"
+              [Group]="formJournal?.form?.formGroup"></codx-input>
           </div>
-        </div>  
+        </div>
       </div>
     </div>
     <div class="row">
@@ -596,16 +663,15 @@
           <div>
             <codx-label class="fw-bold" fiedName="Sharer" [formModel]="dialog.formModel"></codx-label>
           </div>
-          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Sharer'].description}}</span>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Sharer']?.description}}</span>
         </div>
       </div>
       <div class="col-4">
         <div class="d-flex align-items-center justify-content-end">
-          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button"
-          >
+          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button">
             <span class="icon-i-person-plus icon-18"></span>
           </button>
-        </div>  
+        </div>
       </div>
     </div>
   </ng-container>
@@ -616,11 +682,6 @@
 <!-- Start: Footer -->
 <ng-template #footer>
   <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
-    <!-- <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index=""
-      style="border: 1px solid var(--primary-dark) !important" type="button"
-      (keydown.enter)="onSave('saveadd'); $event.preventDefault()" (click)="onSave('saveadd')" class="btn btn-md btn-light-primary me-2">
-      <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
-    </button> -->
     <button [shortcut]="'alt+s'" [autoClick]="true" id="btnsave" type="button" tab-index=""
       class="btn btn-md btn-light-primary" style="border: 1px solid var(--primary-dark) !important"
       (keydown.enter)="onSave('save'); $event.preventDefault()" (click)="onSave('save')">
@@ -633,5 +694,11 @@
 <ng-container *ngIf="isOpenCbb">
   <codx-combobox-popup [comboboxName]="comboboxName" [multiple]="isMultiple" [width]="600" [height]="500"
     [value]="comboboxValue" (clickSave)="onClickSaveCombobox($event)">
+  </codx-combobox-popup>
+</ng-container>
+
+<ng-container *ngIf="isPopupUsr">
+  <codx-combobox-popup comboboxName="UserGroupPermissions" [multiple]="isMultiple" [width]="600" [height]="500"
+    [value]="permissionCreate" (clickSave)="onSelectedCombobox($event)">
   </codx-combobox-popup>
 </ng-container>
