@@ -1,0 +1,50 @@
+<div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex flex-column w-100 py-2 pe-1">
+            <codx-label default="Họ và tên" [formName]="formModel?.formName" [fiedName]="'lblProcessInfoFullName'" ></codx-label>
+            <codx-input type="text"></codx-input>
+        </div>
+        <div class="d-flex flex-column w-100 py-2 ps-1">
+            <codx-label default="Số CMT/CCCD/Hộ chiếu" [formName]="formModel?.formName" [fiedName]="'lblProcessInfoCMT'" ></codx-label>
+            <codx-input type="text"></codx-input>
+        </div>
+    </div>
+    <div class="d-flex align-items-start justify-content-between">
+        <div class="d-flex flex-column w-100 py-2 pe-1">
+            <codx-label default="Email" [formName]="formModel?.formName" [fiedName]="'lblProcessInfoEmail'" ></codx-label>
+            <codx-input type="text"></codx-input>
+            <codx-label default="** Nhận mail kích hoạt dịch vụ" [formName]="formModel?.formName" [fiedName]="'lblProcessInfoOTP'" class="text-primary fs-7 pt-2" ></codx-label>
+        </div>
+        <div class="d-flex flex-column w-100 py-2 ps-1">
+            <codx-label default="Số điện thoại" [formName]="formModel?.formName" [fiedName]="'lblProcessInfoPhone'" ></codx-label>
+            <codx-input type="text"></codx-input>
+        </div>
+    </div>
+    <div class="d-flex align-items-center justify-content-between p-2">
+        <codx-label default="Ảnh chụp hai mặt của giấy tờ" class="w-100"></codx-label>
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <ng-container *ngFor="let item of vllBP022?.datas">
+                <codx-input 
+                    type="radio"
+                    name="ipCCCD"
+                    [crrValue]="item.value"
+                    [label]="item.text"
+                    [checked]="true"
+                >
+                </codx-input>
+            </ng-container>
+        </div>
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex flex-column align-items-center w-100 p-2">
+              <div class="image-add-file border bg-F5F8FA rd-3px w-100">
+              </div>
+              <codx-label default="Mặt trước" class="pt-2"></codx-label>
+            </div>
+            <div class="d-flex flex-column align-items-center w-100 p-2">
+              <div class="image-add-file border bg-F5F8FA rd-3px w-100">
+              </div>
+              <codx-label default="Mặt sau" class="pt-2"></codx-label>
+            </div>
+          </div>
+      </div>
+</div>
