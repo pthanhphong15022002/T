@@ -4573,7 +4573,7 @@ lib-bp-tasks{
 
 /***
 Custom Scrollbars
-***/
+
 ::-webkit-scrollbar {  
   width: 5px;  
 }  
@@ -4602,22 +4602,37 @@ Custom Scrollbars
   box-shadow: none;
   border: 0; 
 }
-
+***/
 //////
 
-.dashboard-content.w-100 > codx-wrapper.hover-scroll-overlay-y{
-  overflow-y: hidden !important;
-  &:hover {
-    overflow-y: hidden !important;
-}
-}
+// .dashboard-content.w-100 > codx-wrapper.hover-scroll-overlay-y{
+//   overflow-y: hidden !important;
+//   &:hover {
+//     overflow-y: hidden !important;
+// }
+// }
 
 codx-aside .menu-link .menu-icon span[class*="icon-"]::before{
   color:var(--primary);
 }
-.card-body.scroll-y{
-  overflow: auto;
-}
-.hover-scroll-overlay-y, .hover-scroll-overlay-y:hover {
-  overflow-y: auto!important;
-}
+// .card-body.scroll-y{
+//   overflow: auto;
+// }
+// .hover-scroll-overlay-y, .hover-scroll-overlay-y:hover {
+//   overflow-y: auto!important;
+// }
+// lib-layoutonlyheader codx-page-title{
+//   padding-top: 15px;
+// }
+// codx-dynamic-form 
+// {
+//   codx-views{
+//     height: 100%;
+//     codx-toolbar + .h-100.row-content{
+//       height: calc(100vh - 142px)!important;
+//     }
+//   }
+//   .e-gridcontent{
+//     height: calc(100% - 50px)!important;
+//   }
+// }
