@@ -1,6 +1,5 @@
 import {
   Component,
-  HostListener,
   Injector,
   ViewEncapsulation,
 } from '@angular/core';
@@ -10,7 +9,6 @@ import {
 } from 'codx-core';
 
 import { RoundService } from '../round.service';
-import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
@@ -23,7 +21,6 @@ export class LayoutComponent extends LayoutBaseComponent {
   constructor(
     inject: Injector,
     private round: RoundService,
-    private router: ActivatedRoute,
   ) {
     super(inject);
     this.module = 'AC';

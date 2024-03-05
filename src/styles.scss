@@ -4603,9 +4603,9 @@ Custom Scrollbars
 
 //////
 
-.dashboard-content.w-100 > codx-wrapper.hover-scroll-overlay-y{
-  overflow: hidden!important;
-}
+// .dashboard-content.w-100 > codx-wrapper.hover-scroll-overlay-y{
+//   overflow: hidden!important;
+// }
 
 codx-aside .menu-link .menu-icon span[class*="icon-"]::before{
   color:var(--primary);
@@ -4613,6 +4613,6 @@ codx-aside .menu-link .menu-icon span[class*="icon-"]::before{
 .card-body.scroll-y{
   overflow: auto;
 }
-.hover-scroll-overlay-y, .hover-scroll-overlay-y:hover {
-  overflow-y: auto!important;
-}
+// .hover-scroll-overlay-y, .hover-scroll-overlay-y:hover {
+//   overflow-y: auto!important;
+// }
