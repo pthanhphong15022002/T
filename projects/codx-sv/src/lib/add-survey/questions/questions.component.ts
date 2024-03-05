@@ -719,7 +719,7 @@ export class QuestionsComponent
     else data[seqNoQuestion - 1].active = true;
     this.questions[seqNoSession].children = data;
     this.SVServices.signalSave.next('saving');
-    this.setTimeoutDeleteData([tempQuestion]);
+    this.setTimeoutDeleteData([tempQuestion],this.questions[seqNoSession].children);
   }
 
   addOtherAnswer(indexSession, indexQuestion) {
