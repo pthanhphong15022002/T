@@ -207,181 +207,182 @@ export class AddSettingConditionsComponent {
   }
 
   saveForm() {
-    if (!this.isAdvance) {
-      this.advFilters.filters = this.filters.filters;
-      this.filters.filters?.forEach((filter: FilterModel, index: number) => {
-        let _condition: FilterModel = JSON.parse(JSON.stringify(filter)); //
-        filter.filters!.forEach((child: FilterModel) => {
-          let item = this.fields.find((x: any) => x.fieldName == child.field);
-          let _newF: FilterModel = JSON.parse(JSON.stringify(child)); //
-          let _exFilter: any = undefined;
-          if (item) {
-            switch (item.dataType) {
-              case 'String':
-                switch (child.operator) {
-                  case 'empty':
-                    _newF.operator = '=';
-                    _newF.value = null;
-                    break;
-                  case 'notempty':
-                    _newF.operator = '!=';
-                    _newF.value = null;
-                    break;
+    let fields = [];
+    this.listSteps.forEach(x=>{
+      fields = fields.concat(x.extendInfo);
+    })
+    this.advFilters.filters = this.filters.filters;
+    this.filters.filters?.forEach((filter: FilterModel, index: number) => {
+      let _condition: FilterModel = JSON.parse(JSON.stringify(filter)); //
+      filter.filters!.forEach((child: FilterModel) => {
+        let item = fields.find((x: any) => x.fieldName == child.field);
+        let _newF: FilterModel = JSON.parse(JSON.stringify(child)); //
+        let _exFilter: any = undefined;
+        if (item) {
+          switch (item.dataType) {
+            case 'String':
+              switch (child.operator) {
+                case 'empty':
+                  _newF.operator = '=';
+                  _newF.value = null;
+                  break;
+                case 'notempty':
+                  _newF.operator = '!=';
+                  _newF.value = null;
+                  break;
+              }
+              break;
+            case 'Int':
+            case 'Decimal':
+              if (child.value && typeof child.value == 'object') {
+                if (child.value.from != undefined) {
+                  _newF.operator = 'gte';
+                  _newF.value = child.value.from;
                 }
-                break;
-              case 'Int':
-              case 'Decimal':
-                if (child.value && typeof child.value == 'object') {
-                  if (child.value.from != undefined) {
+                if (child.value.to != undefined) {
+                  if (!_exFilter) _exFilter = new FilterModel();
+                  _exFilter.field = child.field;
+                  _exFilter.operator = 'lte';
+                  _exFilter.value = child.value.to;
+                  _exFilter.logic = 'and';
+                }
+              }
+              break;
+            case 'DateTime':
+              switch (child.operator) {
+                case 'duein':
+                  if (child.value) {
                     _newF.operator = 'gte';
-                    _newF.value = child.value.from;
-                  }
-                  if (child.value.to != undefined) {
-                    if (!_exFilter) _exFilter = new FilterModel();
-                    _exFilter.field = child.field;
-                    _exFilter.operator = 'lte';
-                    _exFilter.value = child.value.to;
-                    _exFilter.logic = 'and';
-                  }
-                }
-                break;
-              case 'DateTime':
-                switch (child.operator) {
-                  case 'duein':
-                    if (child.value) {
-                      _newF.operator = 'gte';
-                      if (!_exFilter) _exFilter = new FilterModel();
-                      _exFilter.operator = 'lte';
-                      _exFilter.logic = 'and';
-                      _exFilter.field = child.field;
-                      if (this.dateType[child.field!] == '1') {
-                        _newF.value = moment().startOf('d').toDate();
-                        _exFilter.value = moment()
-                          .add(child.value, 'd')
-                          .endOf('d')
-                          .toDate();
-                      }
-                      if (this.dateType[child.field!] == '2') {
-                        _newF.value = moment().startOf('h').toDate();
-                        _exFilter.value = moment()
-                          .add(child.value, 'h')
-                          .endOf('h')
-                          .toDate();
-                      }
-                    }
-                    break;
-                  case 'inthelast':
-                    if (child.value) {
-                      _newF.operator = 'gte';
-                      if (!_exFilter) _exFilter = new FilterModel();
-                      _exFilter.operator = 'lte';
-                      _exFilter.logic = 'and';
-                      _exFilter.field = child.field;
-                      if (this.dateType[child.field!] == '1') {
-                        _newF.value = moment()
-                          .subtract(child.value, 'd')
-                          .startOf('d')
-                          .toDate();
-                        _exFilter.value = moment().endOf('d').toDate();
-                      }
-                      if (this.dateType[child.field!] == '2') {
-                        _newF.value = moment()
-                          .subtract(child.value, 'h')
-                          .startOf('h')
-                          .toDate();
-                        _exFilter.value = moment().endOf('h').toDate();
-                      }
-                    }
-                    break;
-                  case 'between':
                     if (!_exFilter) _exFilter = new FilterModel();
                     _exFilter.operator = 'lte';
                     _exFilter.logic = 'and';
                     _exFilter.field = child.field;
-                    if (child.value.fromDate && child.value.toDate) {
-                      _newF.operator = 'gte';
-                      _newF.value = child.value.fromDate;
-                      _exFilter.value = child.value.toDate;
-                    }
-                    break;
-                  case 'on':
-                    if (!_exFilter) _exFilter = new FilterModel();
-                    _exFilter.operator = 'lte';
-                    _exFilter.logic = 'and';
-                    _exFilter.field = child.field;
-                    if (child.value.fromDate && child.value.toDate) {
-                      _newF.operator = 'gte';
-                      _newF.value = moment(child.value.fromDate)
-                        .startOf('d')
-                        .toDate();
-                      _exFilter.value = moment(child.value.toDate)
+                    if (this.dateType[child.field!] == '1') {
+                      _newF.value = moment().startOf('d').toDate();
+                      _exFilter.value = moment()
+                        .add(child.value, 'd')
                         .endOf('d')
                         .toDate();
                     }
-                    break;
-                  case 'before':
-                    _newF.operator = 'lte';
-                    if (child.value.fromDate && child.value.toDate) {
-                      _newF.value = moment(child.value.fromDate)
-                        .endOf('d')
+                    if (this.dateType[child.field!] == '2') {
+                      _newF.value = moment().startOf('h').toDate();
+                      _exFilter.value = moment()
+                        .add(child.value, 'h')
+                        .endOf('h')
                         .toDate();
                     }
-                    break;
-                  case 'after':
+                  }
+                  break;
+                case 'inthelast':
+                  if (child.value) {
                     _newF.operator = 'gte';
-                    if (child.value.fromDate && child.value.toDate) {
-                      _newF.value = moment(child.value.fromDate)
-                        .startOf('d')
-                        .toDate();
-                    }
-                    break;
-                  case 'yesterday':
-                    _newF.operator = 'gte';
-                    _newF.value = moment(this.yesterday).startOf('d').toDate();
                     if (!_exFilter) _exFilter = new FilterModel();
                     _exFilter.operator = 'lte';
                     _exFilter.logic = 'and';
                     _exFilter.field = child.field;
-                    _exFilter.value = moment(this.yesterday)
+                    if (this.dateType[child.field!] == '1') {
+                      _newF.value = moment()
+                        .subtract(child.value, 'd')
+                        .startOf('d')
+                        .toDate();
+                      _exFilter.value = moment().endOf('d').toDate();
+                    }
+                    if (this.dateType[child.field!] == '2') {
+                      _newF.value = moment()
+                        .subtract(child.value, 'h')
+                        .startOf('h')
+                        .toDate();
+                      _exFilter.value = moment().endOf('h').toDate();
+                    }
+                  }
+                  break;
+                case 'between':
+                  if (!_exFilter) _exFilter = new FilterModel();
+                  _exFilter.operator = 'lte';
+                  _exFilter.logic = 'and';
+                  _exFilter.field = child.field;
+                  if (child.value.fromDate && child.value.toDate) {
+                    _newF.operator = 'gte';
+                    _newF.value = child.value.fromDate;
+                    _exFilter.value = child.value.toDate;
+                  }
+                  break;
+                case 'on':
+                  if (!_exFilter) _exFilter = new FilterModel();
+                  _exFilter.operator = 'lte';
+                  _exFilter.logic = 'and';
+                  _exFilter.field = child.field;
+                  if (child.value) {
+                    _newF.operator = 'gte';
+                    _newF.value = moment(child.value)
+                      .startOf('d')
+                      .toDate();
+                    _exFilter.value = moment(child.value)
                       .endOf('d')
                       .toDate();
-                    break;
-                  case 'today':
-                    _newF.operator = 'gte';
-                    _newF.value = moment(this.toDay).startOf('d').toDate();
-                    if (!_exFilter) _exFilter = new FilterModel();
-                    _exFilter.operator = 'lte';
-                    _exFilter.logic = 'and';
-                    _exFilter.field = child.field;
-                    _exFilter.value = moment(this.toDay).endOf('d').toDate();
-                    break;
-                }
-                break;
-            }
+                  }
+                  break;
+                case 'before':
+                  _newF.operator = 'lte';
+                  if (child.value.fromDate && child.value.toDate) {
+                    _newF.value = moment(child.value.fromDate)
+                      .endOf('d')
+                      .toDate();
+                  }
+                  break;
+                case 'after':
+                  _newF.operator = 'gte';
+                  if (child.value.fromDate && child.value.toDate) {
+                    _newF.value = moment(child.value.fromDate)
+                      .startOf('d')
+                      .toDate();
+                  }
+                  break;
+                case 'yesterday':
+                  _newF.operator = 'gte';
+                  _newF.value = moment(this.yesterday).startOf('d').toDate();
+                  if (!_exFilter) _exFilter = new FilterModel();
+                  _exFilter.operator = 'lte';
+                  _exFilter.logic = 'and';
+                  _exFilter.field = child.field;
+                  _exFilter.value = moment(this.yesterday)
+                    .endOf('d')
+                    .toDate();
+                  break;
+                case 'today':
+                  _newF.operator = 'gte';
+                  _newF.value = moment(this.toDay).startOf('d').toDate();
+                  if (!_exFilter) _exFilter = new FilterModel();
+                  _exFilter.operator = 'lte';
+                  _exFilter.logic = 'and';
+                  _exFilter.field = child.field;
+                  _exFilter.value = moment(this.toDay).endOf('d').toDate();
+                  break;
+              }
+              break;
           }
-          _condition.filters = _condition.filters?.filter(
-            (f: any) => f.field != _newF.field
-          );
-          _condition.filters?.push(_newF);
-          if (_exFilter && _exFilter.value) _condition.filters?.push(_exFilter);
-        });
-
-        if (!this.advFilters.filters) this.advFilters.filters = [];
-        this.advFilters.filters[index] = _condition;
+        }
+        _condition.filters = _condition.filters?.filter(
+          (f: any) => f.field != _newF.field
+        );
+        _condition.filters?.push(_newF);
+        if (_exFilter && _exFilter.value) _condition.filters?.push(_exFilter);
       });
-      this.isPopup && this.dialog.close(this.advFilters);
-    } else {
-      this.genPerdicate();
-      var obj = 
-      {
-        predicateName: this.predicateName,
-        paraValues: this.filters,
-        predicate: this.predicateV,
-        dataValue: this.dataValueV,
-        nextStepID: this.nextStepDefault?.recID
-      }
-      this.isPopup && this.dialog.close(obj);
+
+      if (!this.advFilters.filters) this.advFilters.filters = [];
+      this.advFilters.filters[index] = _condition;
+    });
+    //this.isPopup && this.dialog.close(this.advFilters);
+    this.genPerdicate();
+    var obj = 
+    {
+      predicateName: this.predicateName,
+      paraValues: this.filters,
+      predicate: this.predicateV,
+      dataValue: this.dataValueV,
+      nextStepID: this.nextStepDefault?.recID
     }
+    this.isPopup && this.dialog.close(obj);
     if(!this.isPopup){
       this.change.emit(this.filters)
     }
@@ -409,7 +410,7 @@ export class AddSettingConditionsComponent {
       }
     }
     if (evt.field == 'operator') {
-      filter.operator = evt.data;
+      filter.operator = evt.data.toLowerCase();;
     }
   }
 
@@ -583,16 +584,18 @@ export class AddSettingConditionsComponent {
 
   convertOperator(data:any, number:any)
   {
-    switch(data.operator)
+    switch(data.operator.toLowerCase())
     {
-      case 'EQ' : return data.field + "==" + "@" + number;
-      case 'NEQ' : return data.field + "!=" + "@" + number;
-      case 'CONTAINS':  return data.field + ".contains(@" + number + ")";
-      case 'NOTCONTAINS': return "!"+ data.field + ".contains(@" + number + ")";
-      case 'STARTSWITCH': return data.field + ".startswitch(@" + number + ")";
-      case 'NOTSTARTSWITCH': return "!"+ data.field + ".startswitch(@" + number + ")";
-      case 'EMPTY': return  data.field + "==" + 'NULL';
-      case 'NOTEMPTY': return data.field + "!=" + 'NULL';
+      case 'eq' : case '=' : return data.field + "==" + "@" + number;
+      case 'neq' : case '<>' : case '!=' : return data.field + "!=" + "@" + number;
+      case 'contains':  return data.field + ".contains(@" + number + ")";
+      case 'nocontains': return "!"+ data.field + ".contains(@" + number + ")";
+      case 'startswitch': return data.field + ".startswitch(@" + number + ")";
+      case 'nostartswitch': return "!"+ data.field + ".startswitch(@" + number + ")";
+      case 'empty': return  data.field + "==" + 'NULL';
+      case 'noempty': return data.field + "!=" + 'NULL';
+      case 'gte' : case '>=' : return data.field + ">=" + "@" + number;
+      case 'lte' : case '<=' : return   data.field + "<=" + "@" + number;
     }
     return "";
   }

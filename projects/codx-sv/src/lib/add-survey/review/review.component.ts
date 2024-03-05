@@ -403,8 +403,9 @@ export class ReviewComponent extends UIComponent implements OnInit {
       block: 'start',
       inline: 'nearest',
     });
+
     this.itemSession = this.questions[pageNum];
-    this.lstQuestion = JSON.parse(JSON.stringify(this.lstQuestionTemp));
+    //this.lstQuestion = JSON.parse(JSON.stringify(this.lstQuestionTemp));
     this.change.detectChanges();
   }
 
@@ -469,7 +470,10 @@ export class ReviewComponent extends UIComponent implements OnInit {
         }
         else this.lstQuestion[itemSession.seqNo].children[itemQuestion.seqNo].answers[index]= data;
       }
-     
+      else if(e.field == 'O')
+      {
+        this.lstQuestion[itemSession.seqNo].children[itemQuestion.seqNo].answers[0] = itemAnswer
+      }
       else
       {
         this.lstQuestion[itemSession.seqNo].children[itemQuestion.seqNo].answers[0] = itemAnswer;

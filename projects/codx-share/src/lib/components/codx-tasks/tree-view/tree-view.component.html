@@ -14,6 +14,7 @@
       [autoLoad]="false"
       [isOutput]="true"
       [isLoadChild]="false"
+      [fieldCheck]="'hasChild'"
       (selectionChange)="selectionChange($event)"
     >
     </codx-treeview>
@@ -23,6 +24,7 @@
   <div
     class="d-flex align-items-center p-2 border-bottom"
     (dblclick)="dbClick(item)"
+    (click)="select(item)"
   >
     <div class="d-flex align-items-center justify-content-between w-100">
       <div class="d-flex align-items-center w-100">

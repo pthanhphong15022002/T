@@ -1,26 +1,21 @@
 import {
   AfterViewInit,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   Injector,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
 import {
   AuthService,
   AuthStore,
+  CodxService,
   DialogModel,
-  LayoutService,
   NotificationsService,
   PageLink,
-  PageTitleService,
   UIComponent,
   Util,
   ViewModel,
@@ -29,11 +24,8 @@ import {
 } from 'codx-core';
 import { PopupAddReportComponent } from '../popup-add-report/popup-add-report.component';
 import { PopupShowDatasetComponent } from '../popup-show-dataset/popup-show-dataset.component';
-import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { setTime } from '@syncfusion/ej2-angular-schedule';
 import { NgxCaptureService } from 'ngx-capture';
-import { tap } from 'rxjs';
 
 @Component({
   selector: 'codx-report-view-detail',
@@ -42,13 +34,12 @@ import { tap } from 'rxjs';
 })
 export class CodxReportViewDetailComponent
   extends UIComponent
-  implements OnInit, AfterViewInit, OnChanges, OnDestroy
+  implements OnInit, AfterViewInit, OnDestroy
 {
   @Input() predicate: any = '';
   @Input() dataValue: any = '';
   @Input() print: any = 'false';
   @ViewChild('report') report: TemplateRef<any>;
-  @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('breadCrumb') breadCrumb!: ElementRef<any>;
   @ViewChild('upload') upload: ElementRef<any>;
 
@@ -70,11 +61,6 @@ export class CodxReportViewDetailComponent
       icon: 'icon-list-chechbox',
       text: 'Thông tin báo cáo',
     },
-    // {
-    //   id: 'btnScreenshot',
-    //   icon: 'icon-insert_photo',
-    //   text: 'Screenshot',
-    // },
     {
       id: 'btnUploadAvatar',
       icon: 'icon-cloud_upload',
@@ -86,14 +72,11 @@ export class CodxReportViewDetailComponent
   reportList: any = [];
   user: any = null;
   constructor(
-    private changeDetectorRef: ChangeDetectorRef,
     injector: Injector,
-    private layout: LayoutService,
-    private pageTitle: PageTitleService,
-    private routerNg: Router,
     private auth: AuthStore,
     private authSV: AuthService,
-    private apihttp: HttpClient,
+    private elRef: ElementRef,
+    private codx: CodxService,
     private notiService: NotificationsService,
     private captureService: NgxCaptureService
   ) {
@@ -102,12 +85,13 @@ export class CodxReportViewDetailComponent
   }
 
   onInit(): void {
+    this.codx.setStyleToolbarLayout(this.elRef.nativeElement, 'toolbar2');
     this.router.params.subscribe((param: any) => {
       if (param['funcID']) {
         this.reportID = param['funcID'];
         this.getReport(this.reportID);
       }
-    });
+          });
 
     this.router.queryParams.subscribe((param: any) => {
     if (param['params'])
@@ -123,11 +107,8 @@ export class CodxReportViewDetailComponent
   }
 
   ngOnDestroy(): void {
-    (this.viewBase as any).pageTitle.setSubTitle('');
-    let wrapper = document.querySelector('codx-wrapper');
-    wrapper && wrapper.classList.remove('p-0', 'px-1');
+    (this.view as any).pageTitle.setSubTitle('');
   }
-  ngOnChanges(changes: SimpleChanges): void {}
 
   ngAfterViewInit(): void {
     this.reportID && this.getReport(this.reportID);
@@ -154,12 +135,9 @@ export class CodxReportViewDetailComponent
         },
       },
     ];
-
   }
+
   viewChanged(e: any) {
-    //this.viewBase.moreFuncs = this.moreFc;
-    let wrapper = document.querySelector('codx-wrapper');
-    wrapper && wrapper.classList.add('p-0', 'px-1');
   }
   //get report by ID
   getReport(recID: string) {
@@ -176,17 +154,7 @@ export class CodxReportViewDetailComponent
           this.data = res;
           this.reportID = res.reportID;
           this.isRunMode = res.runMode == '1';
-          //this.pageTitle.setRootNode(res.customName);
           this.getRootFunction(res.moduleID, res.reportType);
-          // if (
-          //   res.displayMode == '2' ||
-          //   res.displayMode == '3' ||
-          //   res.displayMode == '4'
-          // )
-          // {
-
-          //   this.getReportPDF(res.recID);
-          // }
         }
       });
   }
@@ -207,11 +175,11 @@ export class CodxReportViewDetailComponent
             return;
           }
           this.rootFunction = res;
-          this.viewBase.formModel.funcID = this.rootFunction?.functionID;
-          this.viewBase.formModel.formName = this.rootFunction?.formName;
-          this.viewBase.formModel.gridViewName =
+          this.view.formModel.funcID = this.rootFunction?.functionID;
+          this.view.formModel.formName = this.rootFunction?.formName;
+          this.view.formModel.gridViewName =
             this.rootFunction?.gridViewName;
-          this.viewBase.pageTitle.setRootNode(this.rootFunction.customName);
+          this.view.pageTitle.setRootNode(this.rootFunction.customName);
           let parent: PageLink = {
             title: this.rootFunction.customName,
             path:
@@ -219,7 +187,7 @@ export class CodxReportViewDetailComponent
               '/report/' +
               this.rootFunction.functionID,
           };
-          this.viewBase.pageTitle.setParent(parent);
+          this.view.pageTitle.setParent(parent);
 
           this.getReportList(this.data.moduleID, this.data.reportType);
         }
@@ -249,7 +217,7 @@ export class CodxReportViewDetailComponent
           };
           arrChildren.push(pageLink);
         }
-        this.viewBase.pageTitle.setChildren(arrChildren);
+        this.view.pageTitle.setChildren(arrChildren);
         this.reportList = this.orgReportList.filter(
           (x: any) => x.recID != this.data.recID
         );
@@ -259,8 +227,8 @@ export class CodxReportViewDetailComponent
 
   setBreadCrumb(func: any, deleteChild: boolean = false) {
     if (func) {
-      !deleteChild && this.viewBase.pageTitle.setSubTitle(func.customName);
-      deleteChild && this.viewBase.pageTitle.setSubTitle('');
+      !deleteChild && this.view.pageTitle.setSubTitle(func.customName);
+      deleteChild && this.view.pageTitle.setSubTitle('');
     }
   }
 
@@ -316,8 +284,8 @@ export class CodxReportViewDetailComponent
   editReport() {
     if (this.data) {
       let option = new DialogModel();
-      option.DataService = this.viewBase.dataService;
-      option.FormModel = this.viewBase.formModel;
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
       this.callfc.openForm(
         PopupAddReportComponent,
         '',
@@ -405,7 +373,7 @@ export class CodxReportViewDetailComponent
         if(this.params[key])
           objParam[key] = this.params[key];
         else
-         objParam[key] = e[1][key];
+          objParam[key] = e[1][key];
       });
       if(this.params)
       {
@@ -435,19 +403,6 @@ export class CodxReportViewDetailComponent
       this.getReportPDF(this.data.recID);
     }
   }
-
-  // itemSelect(e: any) {
-  //   if (e) {
-  //     this.data = e;
-  //     this.codxService.navigate(
-  //       '',
-  //       e.moduleID.toLowerCase() + '/report/detail/' + e.recID
-  //     );
-  //     this.reportList = this.orgReportList.filter(
-  //       (x: any) => x.recID != this.data.recID
-  //     );
-  //   }
-  // }
 
   homeClick() {
     this.codxService.navigate(

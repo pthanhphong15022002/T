@@ -22,27 +22,27 @@
       </div>
       <div class="form-group ps-0">
         <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả công việc" [ngClass]="grvSetup['Memo']?.isRequire ? 'required' : ''">
-        </codx-label>
+        </codx-label> <i class="icon-zoom_out_map icon-21 text-hover-primary d-flex float-end" (click)="extendMemo(data?.memo)"></i>
         <div class="w-100 d-flex">
-          <div style="width:90%">
-            <codx-input field="memo" [crrValue]="data?.memo" type="textarea"  format="ed2" [rows]="1"
+          <div style="width:100%">
+            <codx-input field="memo" [crrValue]="data?.memo" type="textarea" [height]="'100%'"  format="ed2" [rows]="1"
             (valueChange)="valueChange($event)" [disabled]="!enableEdit" *ngIf="!isHtmlContent(data?.memo)">
          </codx-input>
          <codx-input field="memo" [crrValue]="data?.memo" type="textarea"  format="ed3" [rows]="1"
          (valueChange)="valueChange($event)" [disabled]="!enableEdit" *ngIf="isHtmlContent(data?.memo)">
        </codx-input>
           </div>
-          <div style="width:10%">
+          <!-- <div style="width:10%">
             <button class="btn btn-sm btn-light-primary ms-3 h-100 w-auto " style="max-height:35px" (click)="extendMemo(data?.memo)">
               <i class="icon-zoom_out_map icon-21"></i></button>
-          </div>
+          </div> -->
         </div>
 
       </div>
-      <div class="form-group ps-0">
-        <codx-label fiedName="TaskGroupID" [formModel]="form.formModel" default="Nhóm công việc" [ngClass]="grvSetup['TaskGroupID']?.isRequire ? 'required' : ''">
+      <div class="form-group ps-0" *ngIf="!isAssign">
+        <codx-label fiedName="ParentID" [formModel]="form.formModel" default="Giai đoạn công việc cha" [ngClass]="grvSetup['ParentID']?.isRequire ? 'required' : ''">
         </codx-label>
-        <codx-input field="taskGroupID" [crrValue]="data?.taskGroupID" type="combobox" refType="3" refValue="TaskGroupProjects"
+        <codx-input field="taskGroupID" [crrValue]="data?.parentID" [model]="data" type="combobox" refType="3" [formModel]="formModel" [refValue]="grvSetup['ParentID']?.referedValue"
            (valueChange)="valueChange($event)" [disabled]="!enableEdit">
         </codx-input>
       </div>
@@ -69,7 +69,7 @@
           </codx-input>
         </div>
       </div>
-      <div class="row pt-3 border-bottom">
+      <div class="row py-3 border-bottom">
         <div class="container w-100 h-100">
           <div class="row">
               <div class="col-2 p-0 ps-1">
@@ -97,11 +97,11 @@
         <div class="d-flex justify-content-between">
 
 
-          <div class="d-flex flex-row text-end align-items-start">
+          <!-- <div class="d-flex flex-row text-end align-items-start">
             <div class="my-2">
               <span class="border rounded-circle w-30px h-30px btn-outline-primary d-flex justify-content-center" (click)="selectUser()"><i class="icon-groups icon-21 pt-1"></i></span>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="w-100">
           <div class="d-flex align-items-center mb-4 pb-2 position-relative parent-container mt-3" *ngFor="let item of members">
@@ -286,22 +286,35 @@
     </div>
     <div class="h-100 ms-1 ps-3" style="border-left: 2px solid #ddd" [ngStyle]="{width: action == 'add' ? '0%' : '40%'}" [ngClass]="action=='edit' ? '' : 'd-none'">
       <h5><codx-label name="lblTaskHistory" [formModel]="formModel" default="Lịch sử cập nhật"></codx-label></h5>
-      <div class="pt-3 h-75">
+      <div class="pt-3 overflow-scroll"style="height:85%">
         <codx-history
           [objectID]="data?.recID"
           [formModel]="dialog?.formModel"
         ></codx-history>
       </div>
       <div class="pt-3 border-top h-auto">
-        <codx-tree-comment
-        [objectID]="data?.recID"
-        [objectType]="entityName"
-        [actionType]="'C'"
-        [addNew]="true"
-        [funcID]="funcID"
-        (totalCommentChange)="changeCountFooter($event, 'comment')"
-      >
-      </codx-tree-comment>
+        <div class="row h-75 w-100">
+          <codx-tree-comment
+          [objectID]="data?.recID"
+          [objectType]="entityName"
+          [actionType]="'C'"
+          [addNew]="true"
+          [funcID]="funcID"
+          (totalCommentChange)="changeCountFooter($event, 'comment')"
+        >
+        </codx-tree-comment>
+        </div>
+        <div class="row h-25 w-100 d-flex">
+          <div class="col-2 d-flex align-items-center pb-3 ps-5">
+            <codx-input type="checkbox" [class]="'check-circle'"  ></codx-input>
+          </div>
+          <div class="col-10 d-flex justify-content-start">
+            <codx-label fiedName="lblInProcess" [formModel]="form.formModel" default="Đang xử lý"  >
+            </codx-label>
+          </div>
+        </div>
+
+
       </div>
     </div>
   </div>

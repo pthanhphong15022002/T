@@ -2,17 +2,12 @@
   <div class="h-100">
     <codx-view2 #codxView2 [dataSource]="listReport" [tmpHeader]="tmpHeader" [tmpItem]="tmp"
       [tmpRightToolBar]="tmpRightToolBar" [bodyCss]="'px-4 pb-5'" (selectedChange)="selectedChange($event)"
-      (viewChange)="viewChange($event)">
+      (viewChange)="viewChange($event)" [toolbarMode]="'1'">
     </codx-view2>
   </div>
 </ng-container>
 
 <ng-template #tmpHeader>
-  <div class="d-flex align-items-center justify-content-between w-100 border-bottom py-2">
-    <div class="d-flex fs-5 text-dark fw-bold my-0 me-1 cursor-pointer">
-      {{title}}
-    </div>
-  </div>
   <ng-container *ngIf="listBookMarks && listBookMarks.length>0">
     <div class="d-flex flex-column h-300px position-relative">
       <codx-label class="pt-2 ms-4 fw-bold" default="Đã ghim" fiedName="lblWSBookMark"

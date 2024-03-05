@@ -75,6 +75,7 @@ import { ViewListBpTasksComponent } from './bp-tasks/view-list-bp-tasks/view-lis
 import { PopupBpTasksComponent } from './bp-tasks/popup-bp-tasks/popup-bp-tasks.component';
 import { AddFileFromProcessDefaultComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-task/add-file-from-process/add-file-from-process-default/add-file-from-process-default.component';
 import { ImgSvgVllPipe } from './pipes/img-svg-vll.pipe';
+import { AddTableRowComponent } from './processes/popup-add-process/process-release/add-process-default/add-table-row/add-table-row.component';
 
 export const routes: Routes = [
   {
@@ -152,6 +153,7 @@ export const routes: Routes = [
     FormTestDiagramComponent,
     AddDefaultComponent,
     AddProcessDefaultComponent,
+    AddTableRowComponent,
 
     AddStageComponent,
     AddTaskComponent,

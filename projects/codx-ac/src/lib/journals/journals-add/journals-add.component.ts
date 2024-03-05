@@ -115,6 +115,11 @@ export class JournalsAddComponent extends UIComponent {
       });
 
     this.onDisableTab();
+    this.detectorRef.detectChanges();
+  }
+
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
   }
   //#endregion Init
 

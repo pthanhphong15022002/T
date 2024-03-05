@@ -36,6 +36,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   validEditStatus:any=['00','07','09','10','20'];
   crrUser:any;
   parentTask:any;
+  isAssign:boolean=false;
 
   constructor(
     injector: Injector,
@@ -56,13 +57,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     this.formModel = this.dialog?.formModel;
     this.funcID = this.formModel?.functionID;
     this.data = dialogData.data[0];
-    if(this.data.parentID){
-      this.api.execSv('TM','ERM.Business.TM','TasksBusiness','GetTaskByRecIDAsync',this.data.parentID).subscribe((res:any)=>{
-        if(res){
-          this.parentTask = res;
-        }
-      })
-    }
+
     this.crrUser = this.authStore.get();
     if(dialogData.data[1]){
       this.action = dialogData.data[1];
@@ -71,6 +66,14 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
         this.enableChecklist=true;
         this.getTaskUpdate(this.data.recID);
       }
+    }
+    if(this.data.parentID && this.action=='add') this.isAssign=true;
+    if(this.data.parentID){
+      this.api.execSv('TM','ERM.Business.TM','TasksBusiness','GetTaskByRecIDAsync',this.data.parentID).subscribe((res:any)=>{
+        if(res){
+          this.parentTask = res;
+        }
+      })
     }
     if(dialogData.data[2]){
       this.projectData = dialogData.data[2];
@@ -182,7 +185,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
 
   newTask:any;
   todoList:any=[]
-  addTask(input:any,cancel:boolean=true) {
+  addTask(input:any,cancel:boolean=false) {
     if (this.newTask.trim() !== '') {
       if(!this.isEditTodo){
         const newTask: any = {
@@ -204,14 +207,17 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
       }
 
     }
-    let _cancel = cancel;
-    setTimeout(()=>{if(!_cancel){input.focus()}},500)
-  }
+      if(!cancel){
+        setTimeout(()=>{input.focus()},500)
+      }
+    }
 
+  deletedTodo:any=[]
   removeTask(task: any) {
     const taskIndex = this.todoList.indexOf(task);
     if (taskIndex !== -1) {
       this.todoList.splice(taskIndex, 1);
+      if(task.recID) this.deletedTodo.push(task.recID);
     }
   }
 
@@ -308,7 +314,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
         if (this.action == 'edit') {
           this.data.attachments += attachments;
           //this.checkUpdateStatusTask();
-          // this.updateTask();
+           this.updateTask();
         } else {
           this.data.attachments = attachments;
           this.createTask();
@@ -318,7 +324,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   else {
     if (this.action == 'edit') {
       //this.checkUpdateStatusTask();
-      //this.updateTask();
+      this.updateTask();
     } else{
       this.createTask();
     }
@@ -456,12 +462,14 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
       .subscribe((res: any) => {
 
         this.attachment?.clearData();
-        this.dialog.close(res);
+
         if (res) {
           if(res.length){
             let item= res.find((x:any)=>x.category=='3');
             if(item){
-              this.dialog.dataService.add(item, 0, false).subscribe()
+
+              this.dialog.dataService.add(item, 0, false).subscribe();
+              this.dialog.close(item);
             }
           }
           this.notificationsService.notifyCode('SYS006');
@@ -469,6 +477,57 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
       });
     }
 
+  }
+
+  updateTask(){
+    if(this.action=='edit'){
+      this.data.assignTo = this.members.map((x:any)=>x.resourceID).join(';');
+      if(this.todoList?.length){
+        if(this.todoList.filter((x:any)=>x.status=='90').length == this.todoList.length){
+         let abc =  this.notificationsService.alert('PMT001','hehehe',null,'6');
+         abc.closed.subscribe((res:any)=>{
+          if(res.event.status=='Y'){
+            this.data.status = '90';
+          }
+          else this.data.status='20';
+         this.api
+            .exec('TM', 'TasksBusiness', 'UpdateTaskAsync', [
+              this.data,
+              this.funcID,
+              this.members,
+              this.todoList,
+              this.deletedMembers,
+              this.deletedTodo.length ? this.deletedTodo.join(';') : null
+            ])
+            .subscribe((res: any) => {
+              this.dialog.dataService.update(this.data, 0, false).subscribe();
+              this.dialog.close(this.data);
+
+            });
+         })
+            // debugger;
+
+        }
+        else{
+          this.data.status='20';
+          this.api
+            .exec('TM', 'TasksBusiness', 'UpdateTaskAsync', [
+              this.data,
+              this.funcID,
+              this.members,
+              this.todoList,
+              this.deletedMembers,
+              this.deletedTodo.length ? this.deletedTodo.join(';') : null
+            ])
+            .subscribe((res: any) => {
+              this.dialog.dataService.update(this.data, 0, false).subscribe();
+              this.dialog.close(this.data);
+
+            });
+        }
+      }
+
+    }
   }
 
   selectRoseType(value) {
@@ -482,6 +541,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
         }
         if(member.roleType == value) return;
         member.roleType=value;
+        member.icon = this.listRoles.find((x:any)=>x.value==value)?.icon
         this.members = this.members.slice();
         this.popover.close();
         this.changeDetectorRef.detectChanges();
@@ -533,8 +593,12 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     }
   }
 
+  deletedMembers:any=[];
   removeMember(e:any){
     if(e){
+      let item = this.members.find((x:any)=>x.resourceID == e.resourceID);
+      if(item) this.deletedMembers.push(item);
+      this.deletedMembers = this.getUniqueListBy(this.deletedMembers,'resourceID');
       this.members = this.members.filter((x:any)=>x.resourceID != e.resourceID);
       this.getListUser(this.members.map((x:any)=>x.resourceID).join(';'));
       this.changeDetectorRef.detectChanges();
@@ -554,5 +618,11 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   isHtmlContent(memo:any){
     if(!memo) return false;
     return /<\/?[a-z][\s\S]*>/i.test(memo)
+  }
+
+  getUniqueListBy(arr: any, key: any) {
+    return [
+      ...new Map(arr.map((item: any) => [item[key], item])).values(),
+    ] as any;
   }
 }

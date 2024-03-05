@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -59,6 +60,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     private api: ApiHttpService,
     private authStore: AuthStore,
     private notiService: NotificationsService,
+    private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -138,6 +140,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
       this.actualEnd = null;
     }
     this.disabledProgressInput = event?.data;
+    this.changeDetectorRef.markForCheck();
   }
 
   changeProgress(e, data) {
@@ -148,6 +151,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     if (this.progressData == 100 && !this.actualEnd) {
       this.actualEnd = new Date();
     }
+    this.changeDetectorRef.markForCheck();
   }
 
   changeValueDate(event, data) {
