@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
-import { CallFuncService, DialogData, DialogRef, SidebarModel } from 'codx-core';
+import { CallFuncService, DialogData, DialogModel, DialogRef, SidebarModel } from 'codx-core';
 import { StagesComponent } from './stages/stages.component';
 import { AddDefaultComponent } from './add-default/add-default.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -7,6 +7,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { CdkDrag, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { asapScheduler } from 'rxjs';
 import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
+import { ModeviewComponent } from '../../../modeview/modeview.component';
 
 @Component({
   selector: 'lib-form-steps-field-grid',
@@ -348,5 +349,26 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
       }
       return true
     }
+  }
+  openFormModeView(data:any) {
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 1056;
+    let popupDialog = this.callFunc.openForm(
+      ModeviewComponent,
+      '',
+      null,
+      null,
+      '',
+      { extendInfo: data.extendInfo, stepNo: data.stepNo },
+      '',
+      option
+    );
+    popupDialog.closed.subscribe((res) => {
+      if (res?.event) {
+       var indexP = this.data.steps.findIndex(x=>x.recID == data?.recID);
+       if(indexP>=0)this.data.steps[indexP].extendInfo= res?.event
+      }
+    });
   }
 }
