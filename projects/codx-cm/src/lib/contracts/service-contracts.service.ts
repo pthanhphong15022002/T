@@ -84,6 +84,14 @@ export class ContractsService {
       ID
     );
   }
+  getAutonumber(ID) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetCodeAutoByDisposalNoSettingAsync',
+      ID
+    );
+  }
 
   getCustomerBydealID(data) {
     return this.api.exec<any>(

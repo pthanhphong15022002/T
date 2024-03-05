@@ -88,12 +88,6 @@ export class CashtransfersComponent extends UIComponent {
       this.fmVATInvoice.gridViewName,
       this.fmVATInvoice.entityName
     );
-    this.VATInvoiceSV.addNew().subscribe((res: any) => {
-      if (res) {
-        this.fgVATInvoice.patchValue(res);
-        this.fmVATInvoice.currentData = res;
-      }
-    })
     this.getJournal();
   }
 
