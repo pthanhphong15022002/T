@@ -31,6 +31,7 @@ export class SearchingComponent extends UIComponent {
     
   }
   ngAfterViewInit(): void {
+    this.codxService.setStyleToolbarLayout(this.view.elementRef.nativeElement, 'toolbar1');
     this.views = [
       {
         type: ViewType.smallcard,
