@@ -2377,13 +2377,28 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   //add trường tùy chỉnh
   changeMFFields(e, item) {
     //bi gọi 2 lần
-    var arEvent = this.uniqueMore(e);
-    if (arEvent?.length == e?.length) return;
     e.forEach((x, index) => {
-      if (index >= arEvent?.length) {
+      let checkFunc =
+        x.functionID != 'SYS02' &&
+        x.functionID != 'SYS03' &&
+        x.functionID != 'SYS04' &&
+        x.functionID != 'SYS05';
+      if (checkFunc) {
         x.disabled = true;
       }
     });
+    // var arEvent = this.uniqueMore(e);
+    // if (arEvent?.length == e?.length) return;
+    // e.forEach((x, index) => {
+    //   let checkFunc =
+    //     x.functionID != 'SYS02' &&
+    //     x.functionID != 'SYS03' &&
+    //     x.functionID != 'SYS04' &&
+    //     x.functionID != 'SYS05';
+    //   if (index >= arEvent?.length || checkFunc) {
+    //     x.disabled = true;
+    //   }
+    // });
   }
 
   uniqueMore(arr) {
@@ -2407,6 +2422,9 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         break;
       case 'SYS04':
         this.copyCustomField(data, e.text, enabled);
+        break;
+      case 'SYS05':
+        this.viewCustomField(data, e.text);
         break;
     }
   }
@@ -2708,6 +2726,39 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
               this.changeDetectorRef.markForCheck();
             }
           });
+        });
+    });
+  }
+
+  viewCustomField(data, textTitle) {
+    this.cache.gridView('grvDPStepsFields').subscribe((res) => {
+      this.cache
+        .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
+        .subscribe((res) => {
+          let option = new SidebarModel();
+          option.FormModel = this.formModelField;
+          option.Width = '550px';
+          option.zIndex = 1010;
+
+          let object = {
+            field: data,
+            action: 'view',
+            titleAction:
+              textTitle +
+              ' ' +
+              this.titleDefaultCF.charAt(0).toLocaleLowerCase() +
+              this.titleDefaultCF.slice(1),
+            stepList: this.stepList,
+            grvSetup: res,
+            refValueDataType:
+              this.process.applyFor == '1' ? 'DP022_1' : 'DP022',
+            processNo: this.process.processNo,
+          };
+          let dialogCustomField = this.callfc.openSide(
+            PopupAddCustomFieldComponent,
+            object,
+            option
+          );
         });
     });
   }
@@ -3867,9 +3918,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   }
 
   async changeDataMF(e, type, step?) {
-    if(type == 'group'){
+    if (type == 'group') {
       console.log('ok');
-      
     }
     if (e != null) {
       e.forEach((res) => {
@@ -5394,7 +5444,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       showIsPublish: true,
       showSendLater: true,
       files: null,
-      isAddNew: this.action == 'edit' && this.process?.emailTemplate ? false : true,
+      isAddNew:
+        this.action == 'edit' && this.process?.emailTemplate ? false : true,
       notSendMail: true,
     };
 
@@ -5413,14 +5464,14 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     });
   }
 
-  changeProgrgessStep(){
-      let count = this.stepList?.length;
-      if(count > 0){
-        let medium =parseFloat((100/count).toFixed(2)); 100/count;
-        this.stepList.forEach((step) => {
-          step.instanceProgress = medium * step.stepNo;
-        })
-      }
+  changeProgrgessStep() {
+    let count = this.stepList?.length;
+    if (count > 0) {
+      let medium = parseFloat((100 / count).toFixed(2));
+      100 / count;
+      this.stepList.forEach((step) => {
+        step.instanceProgress = medium * step.stepNo;
+      });
+    }
   }
-
 }
