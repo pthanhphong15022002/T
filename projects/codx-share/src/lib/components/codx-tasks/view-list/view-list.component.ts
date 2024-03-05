@@ -43,6 +43,7 @@ export class ViewListComponent implements OnInit {
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() changeMoreFunction = new EventEmitter<any>();
   @Output() viewTask = new EventEmitter<any>();
+  @Output() nodeSelected = new EventEmitter<any>();
   @Output() hoverPopover = new EventEmitter<any>();
 
   lstTaskbyParent = [];
@@ -67,6 +68,10 @@ export class ViewListComponent implements OnInit {
 
   dbClick(data) {
     this.viewTask.emit(data);
+  }
+
+  selectNode(data){
+    this.nodeSelected.emit(data);
   }
 
   changeDataMF(e, data) {

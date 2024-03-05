@@ -7,7 +7,7 @@
   [dialog]="dialog"
 >
   <ng-template #body>
-    <div class="w-100 h-0100" *ngIf="dataSource && dataSource.length">
+    <div class="w-auto h-100" *ngIf="dataSource && dataSource.length">
       <ejs-grid
         [dataSource]="dataSource"
         height="100%"
@@ -17,7 +17,9 @@
         [enableStickyHeader]="true"
         [allowResizing]="true"
         [allowSorting]="true"
-        [autoFit]="true"
+        [autoFit]="false"
+        (created)="onDatabound($event)"
+        #grid
         >
       </ejs-grid>
     </div>

@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit, Optional, ChangeDetectorRef, Input, ViewChild, ElementRef } from "@angular/core";
+import { GridComponent } from "@syncfusion/ej2-angular-grids";
 import { ApiHttpService, CodxInputComponent, DialogData, DialogRef, NotificationsService } from "codx-core";
 
 @Component({
@@ -9,6 +10,7 @@ import { ApiHttpService, CodxInputComponent, DialogData, DialogRef, Notification
 export class PopupShowDatasetComponent implements OnInit, AfterViewInit {
   @Input() maxPin: number = 2;
   @ViewChild('switchBox') switchBox: ElementRef<any>;
+  @ViewChild('grid') grid: GridComponent;
   data: any ;
   dialog: DialogRef;
   headerTitle:string =  "DATASET";
@@ -94,7 +96,6 @@ export class PopupShowDatasetComponent implements OnInit, AfterViewInit {
   }
 
   loadData(){
-    debugger
 
     if(this.data){
       let mapParams = new Map();
@@ -113,6 +114,16 @@ export class PopupShowDatasetComponent implements OnInit, AfterViewInit {
         })
       }
     }
+  }
+
+  onDatabound(e:any){
+    setTimeout(()=>{
+      if(this.grid && this.grid.columns){
+        this.grid.columns.forEach((item:any)=> item.minWidth='150');
+        this.grid.refresh();
+      }
+    },200)
+
   }
 
 }

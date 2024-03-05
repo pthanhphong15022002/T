@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, Optional, ViewChild, ViewEncapsulation } from "@angular/core";
 import { AuthService, AuthStore, CacheService, DialogData, DialogModel, DialogRef, FormModel, ImageViewerComponent, NotificationsService, UIComponent } from "codx-core";
 import { CodxCommonService } from "projects/codx-common/src/lib/codx-common.service";
-import { CodxBookingService } from "projects/codx-share/src/lib/components/codx-booking/codx-booking.service";
 import { DynamicSettingControlComponent } from "projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component";
 import { CodxShareService } from "projects/codx-share/src/public-api";
 
@@ -280,16 +279,16 @@ export class PopupAddProjectComponent extends UIComponent {
         if (arrayNew.length > 0) {
           resourceID = arrayNew.join(';');
           id += ';' + resourceID;
-          this.getListUser(resourceID);
+          this.getListUser(resourceID,true);
         }
       } else {
-        this.getListUser(resourceID);
+        this.getListUser(resourceID,true);
       }
     }
   }
 
   listUserID:any=[]
-  getListUser(resource) {
+  getListUser(resource:any,isNew:boolean=false) {
     while (resource.includes(' ')) {
       resource = resource.replace(' ', '');
     }
@@ -308,7 +307,24 @@ export class PopupAddProjectComponent extends UIComponent {
           for (var i = 0; i < res.length; i++) {
             let emp = res[i];
             var tmpResource:any={};
-            if (emp.userID == this.user.userID) {
+            if(!isNew){
+              if(this.members && this.members.length){
+                let member = this.members.find((x:any)=>x.objectID==emp.userID);
+                if(member){
+                  member.positionName=emp?.positionName;
+                  member.objectName=emp?.userName;
+                  member.organizationName = emp?.organizationName;
+                  this.listRoles.forEach((element) => {
+                        if (element.value == member.roleType) {
+                          member.icon = element.icon;
+                          member.roleName = element.text;
+                        }
+                      });
+                }
+              }
+            }
+            else{
+              if (emp.userID == this.user.userID) {
               tmpResource.objectID = emp?.userID;
               tmpResource.objectName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
@@ -357,6 +373,8 @@ export class PopupAddProjectComponent extends UIComponent {
               else
                 this.members.push(tmpResource);
             }
+            }
+
           }
           // this.members.forEach((item) => {
           //   if (item.userID != this.curUser?.userID) {
@@ -392,7 +410,6 @@ export class PopupAddProjectComponent extends UIComponent {
       }
     }
     this.dialogRef.dataService.dataSelected = this.data;
-    debugger
 
     this.dialogRef.dataService
     .save()
@@ -405,6 +422,7 @@ export class PopupAddProjectComponent extends UIComponent {
         }
         if (!returnData?.error) {
           if (this.imageUpload?.imageUpload?.item) {
+            returnData.taskStatus = this.data.taskStatus;
             this.imageUpload
               .updateFileDirectReload(returnData.data.recID)
               .subscribe((result) => {
