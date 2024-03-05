@@ -20,8 +20,8 @@
 </ng-container>
 <div *ngIf="formModel">
   <div id="newfeed" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto"
-    data-kt-scroll-dependencies="#postnew, .pw-profile, .pw-menu"
-    data-kt-scroll-wrappers=".wrapper-portal, .wrapper, #newfeed, .pw-content" data-kt-scroll-offset="0">
+    data-kt-scroll-dependencies="codx-header.header, #postnew"
+    data-kt-scroll-wrappers="#newfeed" data-kt-scroll-offset="0" class="hover-scroll-overlay-y">
     <codx-listview #listview [dataService]="dataService" [funcId]="funcID" [formModel]="formModel"
       [entityName]="entityName" [itemTemplate]="itemTemplate" [emptyTemplate]="empty" [selectFirst]="true"
       (onSelectionChanged)="onAction($event)">

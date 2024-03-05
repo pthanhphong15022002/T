@@ -1,32 +1,47 @@
-<div class="d-flex flex-column w-100 h-100">
-    <div id="view2-header" *ngIf="showHeader">
-        <ng-container *ngTemplateOutlet="tmpHeader || defaultHeader"></ng-container>
-    </div>
-    <div class="d-flex flex-column bg-white w-100 h-100">
-        <ng-container *ngTemplateOutlet="toolbar"></ng-container>
-        <ng-container *ngTemplateOutlet="body"></ng-container>
-    </div>
+<ng-container *ngIf="toolbarDisplay">    
+    <codx-toolbar #toolbar [ngClass]="'container-toolbar'" [showButton]="showButton" [showFilter]="showFilter"
+    [views]="views" 
+    [sortFields]="sortFields" 
+    (viewChange)="viewChanged($event)"
+    (sortChange)="sortChanged($event)"
+    [button]="button" 
+    [moreFuncs]="moreFuncs"
+    [hideMoreFuncs]="hideMoreFuncs" 
+    (buttonClick)="clickButton($event)"
+    (searchChange)="onSearch($event)"
+    [showSearchBar]="showSearchBar"
+    [funcId]="funcID"
+    (clickMF)="clickToolbarMore($event)"
+    [titleToolBarTmp]="titleToolBarTmp"
+    [mode]="toolbarMode">
+    </codx-toolbar>
+</ng-container>
+<div id="view2-header" *ngIf="showHeader">
+    <ng-container *ngTemplateOutlet="tmpHeader || defaultHeader"></ng-container>
+</div>
+<div class="d-flex flex-column bg-white w-100 h-100">
+    <ng-container *ngTemplateOutlet="toolbar"></ng-container>
+    <ng-container *ngTemplateOutlet="body"></ng-container>
 </div>
 
-
 <ng-template #defaultHeader>
-    <div class="d-flex align-items-center justify-content-between w-100 pb-2 border-bottom">
+    <!--<div class="d-flex align-items-center justify-content-between w-100 pb-2 border-bottom">
         <div class="d-flex fs-5 text-dark fw-bold my-0 me-1 cursor-pointer">
             {{title}}
         </div>
-        <div class="d-flex align-items-center justify-content-end w-200px">
+         <div class="d-flex align-items-center justify-content-end w-200px">
             <codx-searchbar class="mt-1" [type]="'slide'" (searchEvent)="onSearch($event)"></codx-searchbar>
-            <codx-toolbar-choose class="mt-2 mx-2" [views]="viewList" (viewChange)="viewChanged($event)"
+            <codx-toolbar-choose class="mt-2 mx-2" [views]="views" (viewChange)="viewChanged($event)"
                 (sortChange)="sortChanged($event)">
             </codx-toolbar-choose>
             <button type="button" class="btn btn-sm btn-primary mt-2 mx-2" (click)="addClick()" *ngIf="isAdd">
                 <codx-label fiedName="lblSave" default="Thêm">
                 </codx-label>
             </button>
-            <codx-toolbar-more class="mt-2 me-2" [buttons]="fMoreFuncs" (buttonClick)="clickToolbarMore($event)">
+            <codx-toolbar-more class="mt-2 me-2" [buttons]="moreFuncs" (buttonClick)="clickToolbarMore($event)">
             </codx-toolbar-more>
-        </div>
-    </div>
+        </div> 
+    </div>-->
 </ng-template>
 
 
@@ -37,18 +52,18 @@
                 <ng-container *ngTemplateOutlet="tmpRightToolBar"></ng-container>
             </div>
         </ng-container>
-        <div *ngIf="showRightToolbar" class="d-flex align-items-center justify-content-end w-200px">
+        <!-- <div *ngIf="showRightToolbar" class="d-flex align-items-center justify-content-end w-200px">
             <codx-searchbar class="mt-1" [type]="'slide'" (searchEvent)="onSearch($event)"></codx-searchbar>
-            <codx-toolbar-choose class="mt-2 mx-2" [views]="viewList" (viewChange)="viewChanged($event)"
+            <codx-toolbar-choose class="mt-2 mx-2" [views]="views" (viewChange)="viewChanged($event)"
                 (sortChange)="sortChanged($event)">
             </codx-toolbar-choose>
             <button type="button" class="btn btn-sm btn-primary mt-2 mx-2" (click)="addClick()" *ngIf="isAdd">
                 <codx-label fiedName="lblSave" default="Thêm">
                 </codx-label>
             </button>
-            <codx-toolbar-more class="mt-2 me-2" [buttons]="fMoreFuncs" (buttonClick)="clickToolbarMore($event)">
+            <codx-toolbar-more class="mt-2 me-2" [buttons]="moreFuncs" (buttonClick)="clickToolbarMore($event)">
             </codx-toolbar-more>
-        </div>
+        </div> -->
     </div>
 </ng-template>
 
