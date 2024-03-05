@@ -63,6 +63,7 @@ export class ModeviewComponent implements OnInit {
     this.count.email = 0,
     this.count.address = 0,
     this.count.expression = 0;
+    this.count.userInfo = 0;
   }
 
   btnClick()
@@ -203,7 +204,6 @@ export class ModeviewComponent implements OnInit {
 
   drop(event: any) {
     if (event.previousContainer !== event.container) {
-      debugger
       let data = JSON.parse(JSON.stringify(event.previousContainer.data[event.previousIndex]));
       data = this.genData(data);
       //this.selectedItem(data);
@@ -426,6 +426,12 @@ export class ModeviewComponent implements OnInit {
         data.title += " " + this.count.phone;
         data.dataFormat = "Phone";
         data.controlType = "TextBox";
+        break;
+      }
+      case "UserInfo":
+      {
+        this.count.userInfo ++;
+        data.title += " " + this.count.userInfo;
         break;
       }
     }

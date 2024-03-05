@@ -76,6 +76,7 @@ import { PopupBpTasksComponent } from './bp-tasks/popup-bp-tasks/popup-bp-tasks.
 import { AddFileFromProcessDefaultComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-task/add-file-from-process/add-file-from-process-default/add-file-from-process-default.component';
 import { ImgSvgVllPipe } from './pipes/img-svg-vll.pipe';
 import { AddTableRowComponent } from './processes/popup-add-process/process-release/add-process-default/add-table-row/add-table-row.component';
+import { PropertyUserinfoComponent } from './modeview/properties/property-userinfo/property-userinfo.component';
 
 export const routes: Routes = [
   {
@@ -145,6 +146,7 @@ export const routes: Routes = [
     PropertyComboboxComponent,
     PropertyShareComponent,
     PropertyTableComponent,
+    PropertyUserinfoComponent,
 
     FormSettingComboboxComponent,
     FormAdvancedSettingsComponent,
