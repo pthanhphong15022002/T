@@ -197,8 +197,8 @@ export class ProjectTasksViewComponent
       dialogAdd.closed.subscribe((returnData) => {
         if (returnData?.event) {
           if(this.viewTree && this.viewTree.dataTree){
-            this.viewTree.treeView.setNodeTree(res.event);
-            this.viewTree.dataTree = this.viewTree.dataTree;
+            this.viewTree.treeView.setNodeTree(returnData?.event);
+            //this.viewTree.dataTree = this.viewTree.dataTree;
             this.detectorRef.detectChanges();
           }
           //this.view?.dataService?.update(returnData?.event);
@@ -228,6 +228,7 @@ export class ProjectTasksViewComponent
               this.addTask(this.view.dataService.dataSelected?.recID);
             }, 100);
           }
+          this.viewTree.treeView.setNodeTree(returnData?.event);
           //this.view?.dataService?.update(returnData?.event);
         } else {
           this.view.dataService.clear();
