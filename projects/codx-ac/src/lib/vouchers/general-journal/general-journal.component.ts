@@ -729,7 +729,6 @@ export class GeneralJournalComponent extends UIComponent {
   setDefault(data: any, action: any = '') {
     return this.api.exec('AC', 'GeneralJournalsBusiness', 'SetDefaultAsync', [
       data,
-      this.journal,
       this.journalNo,
       action,
     ]);
