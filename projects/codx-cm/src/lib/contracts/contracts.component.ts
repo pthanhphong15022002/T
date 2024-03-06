@@ -16,7 +16,6 @@ import {
   FormModel,
   AuthStore,
   ButtonModel,
-  DataRequest,
   DialogModel,
   UIComponent,
   SidebarModel,
@@ -27,8 +26,6 @@ import {
 import {
   CM_Contracts,
   CM_Quotations,
-  CM_QuotationsLines,
-  CM_ContractsPayments,
 } from '../models/cm_model';
 import {
   DP_Instances_Steps_Tasks,
