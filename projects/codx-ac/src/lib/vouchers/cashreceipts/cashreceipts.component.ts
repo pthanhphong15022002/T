@@ -516,8 +516,7 @@ export class CashreceiptsComponent extends UIComponent {
           );
           dialog.closed.subscribe((res) => {
             if (res && res.event) {
-              this.journal = res.event?.data;
-              this.detectorRef.detectChanges();
+              this.getJournal();
             }
           });
         })

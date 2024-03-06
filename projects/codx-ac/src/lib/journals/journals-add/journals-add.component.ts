@@ -471,9 +471,9 @@ export class JournalsAddComponent extends UIComponent {
           share,
         ])
         .subscribe((res) => {
-          this.dialog.close({data:this.formJournal.form.data});
+          this.dialog.close(true);
         });
-    } else this.dialog.close({data:this.formJournal.form.data});
+    } else this.dialog.close(true);
   }
   //#endregion Method
 
