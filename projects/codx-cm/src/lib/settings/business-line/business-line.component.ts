@@ -277,7 +277,7 @@ export class BusinessLineComponent
     opt.assemblyName = 'ERM.Business.CM';
     opt.className = 'BusinessLinesBusiness';
     opt.methodName = 'DeleteAsync';
-    opt.data = [this.itemSelected];
+    opt.data = [this.itemSelected.businessLineID];
     return true;
   }
   //======================end=============================//
