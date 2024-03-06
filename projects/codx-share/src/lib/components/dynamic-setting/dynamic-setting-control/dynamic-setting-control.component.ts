@@ -58,7 +58,7 @@ export class DynamicSettingControlComponent extends UIComponent implements OnCha
         if (this.setting && this.lineType) {
           this.newSetting = this.setting.filter(x => x.lineType == this.lineType);
         }
-        this.dataValue = JSON.parse(this.settingFull?.paraValues);
+        if(this.settingFull?.paraValues) this.dataValue = JSON.parse(this.settingFull?.paraValues);
         this.detectorRef.detectChanges();
       }
     }
@@ -73,7 +73,7 @@ export class DynamicSettingControlComponent extends UIComponent implements OnCha
         if (this.setting) {
           this.newSetting = this.setting.filter(x => x.lineType == this.lineType);
         }
-        this.dataValue = JSON.parse(this.settingFull?.paraValues);
+         if(this.settingFull?.paraValues) this.dataValue = JSON.parse(this.settingFull?.paraValues);
         this.detectorRef.detectChanges();
       }
     }
@@ -86,8 +86,64 @@ export class DynamicSettingControlComponent extends UIComponent implements OnCha
 
   //#region Event
   valueChange(event:any,data: any = null,autoDefault: any = null){
+    var value = event.data;
+    var field = event.field;
+    if (
+      !data.dataType ||
+      (typeof value == 'boolean' &&
+        data.dataType.toLowerCase() != 'boolean' &&
+        data.dataType.toLowerCase() != 'bool')
+    ) {
+      value = +value + '';
+    }
+    if (data.displayMode !== '4' && data.displayMode !== '5') {
+      this.dataValue[field] = value;
+    } else {
+      if (event.component?.controlType == 'share' && !value) return;
+      if (!Array.isArray(value)) {
+        if (this.dataValue[field] == value) return;
+        this.dataValue[field] = value;
+      }
+
+      let fID = '',
+        id = '',
+        fName = '',
+        name = '',
+        fType = '',
+        type = '';
+      var settingChild = this.setting.filter((item: any) => {
+        if (item.refLineID === data.recID) {
+          if (item.dataFormat === 'ID') fID = item.fieldName;
+          if (item.dataFormat === 'Name') fName = item.fieldName;
+          if (item.dataFormat === 'Type') fType = item.fieldName;
+          return item;
+        }
+      });
+      if (Array.isArray(value)) {
+        value.forEach((element, i) => {
+          let space = '';
+          if (i > 0) space = ';';
+          id += space + (element.id || '');
+          name += space + (element.text || element.objectName || '');
+          type += space + (element.objectType || '');
+        });
+      }
+      if (fID) this.dataValue[fID] = id;
+      if (fName) this.dataValue[fName] = name;
+      if (fType) this.dataValue[fType] = type;
+      var ele = document.querySelector(
+        '.share-object-name[data-recid="' + data.recID + '"]'
+      );
+      if (ele) ele.innerHTML = name;
+    }
     this.valueChanges.emit(event);
-    this.dataValue[event.field] = event.data;
+  }
+
+  valueShareChange(event:any,data: any = null ,autoDefault: any = null){
+    if(data.fieldName=='ApproveControl'){
+      this.dataValue['ApproveBy']=event.data[0].objectType;
+      this.dataValue['ApproveByName']=event.data[0].objectName;
+    }
   }
 
   changeAutoSchedule(event:any){

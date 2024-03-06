@@ -568,8 +568,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
           );
           dialog.closed.subscribe((res) => {
             if (res && res.event) {
-              this.journal = res.event?.data;
-              this.detectorRef.detectChanges();
+              this.getJournal();
             }
           });
         })
@@ -858,7 +857,6 @@ export class PurchaseinvoicesComponent extends UIComponent {
   setDefault(data: any, action: any = '') {
     return this.api.exec('AC', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
       data,
-      this.journal,
       this.journalNo,
       action,
     ]);

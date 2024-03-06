@@ -211,29 +211,35 @@ export class ProjectTasksViewComponent
 
   editTask() {
     if (this.view.dataService.dataSelected) {
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = '850px';
-      option.zIndex = 9997;
-      let dialogAdd = this.callfc.openSide(
-        PopupAddTaskComponent,
-        [this.view.dataService.dataSelected, 'edit', this.projectData],
-        option
-      );
-      dialogAdd.closed.subscribe((returnData) => {
-        if (returnData?.event) {
-          if (returnData.event == 'assignTask') {
-            setTimeout(() => {
-              this.addTask(this.view.dataService.dataSelected?.recID);
-            }, 100);
+      if(this.view.dataService.dataSelected.category == 'G'){
+        //do something here
+      }
+      else{
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '850px';
+        option.zIndex = 9997;
+        let dialogAdd = this.callfc.openSide(
+          PopupAddTaskComponent,
+          [this.view.dataService.dataSelected, 'edit', this.projectData],
+          option
+        );
+        dialogAdd.closed.subscribe((returnData) => {
+          if (returnData?.event) {
+            if (returnData.event == 'assignTask') {
+              setTimeout(() => {
+                this.addTask(this.view.dataService.dataSelected?.recID);
+              }, 100);
+            }
+            this.viewTree.treeView.setNodeTree(returnData?.event);
+            //this.view?.dataService?.update(returnData?.event);
+          } else {
+            this.view.dataService.clear();
           }
-          this.viewTree.treeView.setNodeTree(returnData?.event);
-          //this.view?.dataService?.update(returnData?.event);
-        } else {
-          this.view.dataService.clear();
-        }
-      });
+        });
+      }
+
     }
   }
 
@@ -314,27 +320,51 @@ export class ProjectTasksViewComponent
   }
 
   viewTask(){
-    if(this.view.dataService.dataSelected){
+    // if(this.view.dataService.dataSelected){
+    //   let option = new SidebarModel();
+    //   option.DataService = this.view?.dataService;
+    //   option.FormModel = this.formModel;
+    //   option.Width = '550px';
+    //   option.zIndex=9997;
+    //   let dialogAdd = this.callfc.openSide(
+    //     PopupViewTaskComponent,
+    //     {data:this.view.dataService.dataSelected,projectData:this.projectData},
+    //     option
+    //   );
+    //   dialogAdd.closed.subscribe((returnData) => {
+    //     if (returnData?.event) {
+
+    //       //this.view?.dataService?.update(returnData?.event);
+    //     } else {
+    //       this.view.dataService.clear();
+    //     }
+    //   });
+    // }
+
+    if (this.view.dataService.dataSelected) {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
-      option.FormModel = this.formModel;
-      option.Width = '550px';
-      option.zIndex=9997;
+      option.FormModel = this.view?.formModel;
+      option.Width = '850px';
       let dialogAdd = this.callfc.openSide(
-        PopupViewTaskComponent,
-        {data:this.view.dataService.dataSelected,projectData:this.projectData},
+        PopupAddTaskComponent,
+        [this.view.dataService.dataSelected, 'view', this.projectData],
         option
       );
       dialogAdd.closed.subscribe((returnData) => {
         if (returnData?.event) {
-
+          // if (returnData.event == 'assignTask') {
+          //   setTimeout(() => {
+          //     this.addTask(this.view.dataService.dataSelected?.recID);
+          //   }, 100);
+          // }
+          // this.viewTree.treeView.setNodeTree(returnData?.event);
           //this.view?.dataService?.update(returnData?.event);
         } else {
           this.view.dataService.clear();
         }
       });
     }
-
   }
 
   click(e: any) {

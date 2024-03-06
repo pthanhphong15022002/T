@@ -13,6 +13,7 @@ import { CodxShareService } from "projects/codx-share/src/public-api";
 export class PopupAddProjectComponent extends UIComponent {
 
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
+  @ViewChild('dynamic') dynamic: DynamicSettingControlComponent;
 
   data: any;
   funcType: any;
@@ -89,7 +90,11 @@ export class PopupAddProjectComponent extends UIComponent {
 
     if(this.data.settings && this.data.settings.length){
       this.newSetting = JSON.parse(JSON.stringify(this.data.settings));
-      this.paravalues = this.data.settings.map((x:any)=>  x.fieldValue);
+      this.paravalues = {};
+      this.data.settings.map((x:any)=>{
+        this.paravalues[x.fieldName] = x.fieldValue;
+        return x;
+      });
       this.paravalues = JSON.stringify(this.paravalues)
     }
     else{
@@ -99,7 +104,12 @@ export class PopupAddProjectComponent extends UIComponent {
           this.defaultSettings = res['1'];
           this.data.settings = this.defaultSettings;
           this.newSetting = JSON.parse(JSON.stringify(this.data.settings));
-          this.paravalues = this.data.settings.map((x:any)=>  x.fieldValue);
+          //this.paravalues = this.data.settings.map((x:any)=>  x.fieldValue);
+          this.paravalues = {};
+          this.data.settings.map((x:any)=>{
+            this.paravalues[x.fieldName] = x.fieldValue;
+            return x;
+          });
           this.paravalues = JSON.stringify(this.paravalues)
         }
       })
@@ -400,7 +410,13 @@ export class PopupAddProjectComponent extends UIComponent {
   }
 
   saveForm(){
+
     let returnData:any;
+    if(this.dynamic){
+      this.newSetting.forEach((x:any)=>{
+        x.fieldValue = this.dynamic.dataValue[x.fieldName];
+      })
+    }
     this.data.settings = this.newSetting;
     if(this.data.permissions){
       let pm = this.data.permissions.find((x:any)=>x.roleType=='PM' && x.objectType=='U');

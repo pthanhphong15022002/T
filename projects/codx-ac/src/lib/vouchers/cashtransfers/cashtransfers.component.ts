@@ -97,18 +97,18 @@ export class CashtransfersComponent extends UIComponent {
 
   ngAfterViewInit() {
     this.views = [
-      // {
-      //   type: ViewType.listdetail, //? thiết lập view danh sách chi tiết
-      //   active: true,
-      //   sameData: true,
-      //   model: {
-      //     template: this.templateDetailLeft,
-      //     panelRightRef: this.templateDetailRight,
-      //     collapsed: true,
-      //     widthLeft: '23%',
-      //     //separatorSize:3
-      //   },
-      // },
+      {
+        type: ViewType.listdetail, //? thiết lập view danh sách chi tiết
+        active: true,
+        sameData: true,
+        model: {
+          template: this.templateDetailLeft,
+          panelRightRef: this.templateDetailRight,
+          collapsed: true,
+          widthLeft: '23%',
+          //separatorSize:3
+        },
+      },
       // {
       //   type: ViewType.list, //? thiết lập view danh sách
       //   active: false,

@@ -487,8 +487,7 @@ export class WarehouseTransfersComponent extends UIComponent {
           );
           dialog.closed.subscribe((res) => {
             if (res && res.event) {
-              this.journal = res.event?.data;
-              this.detectorRef.detectChanges();
+              this.getJournal();
             }
           });
         })
@@ -698,7 +697,6 @@ export class WarehouseTransfersComponent extends UIComponent {
   setDefault(data: any, action: any = '') {
     return this.api.exec('IV', 'TransfersBusiness', 'SetDefaultAsync', [
       data,
-      this.journal,
       this.journalNo,
       action,
     ]);

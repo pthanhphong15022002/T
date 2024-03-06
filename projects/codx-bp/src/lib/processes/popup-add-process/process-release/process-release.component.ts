@@ -370,7 +370,10 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
           (this.view.currentView as any).kanban.addCard(res?.event);
         else {
           (this.view.currentView as any).kanban.updateCard(res?.event);
-          this.view.dataService.update(res?.event).subscribe()
+          this.view.dataService.update(res?.event).subscribe();
+          this.view.dataService.dataSelected = res?.event;
+          var index = (this.view.currentView as any).kanban.dataSource.findIndex(x=>x.recID == res?.event?.recID);
+          if(index>=0)(this.view.currentView as any).kanban.dataSource[index] = res?.event
         }
       }
     });

@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '@shared/shared.module';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxBpComponent } from './codx-bp.component';
-import { TesthtmlComponent } from './testhtml/testhtml.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { ProcessesComponent } from './processes/processes.component';
 import { NgbAccordionModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -77,7 +76,7 @@ import { AddFileFromProcessDefaultComponent } from './processes/popup-add-proces
 import { ImgSvgVllPipe } from './pipes/img-svg-vll.pipe';
 import { AddTableRowComponent } from './processes/popup-add-process/process-release/add-process-default/add-table-row/add-table-row.component';
 import { PropertyUserinfoComponent } from './modeview/properties/property-userinfo/property-userinfo.component';
-import { AddProcessUserinfoComponent } from './processes/popup-add-process/process-release/add-process-default/add-process-userinfo/add-process-userinfo.component';
+import { BpSignPDFComponent } from './sign-pdf/bp-sign-pdf.component';
 import { FormSettingAdvancedTasksComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/form-setting-advanced-tasks/form-setting-advanced-tasks.component';
 import { SettingMailComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/form-setting-advanced-tasks/setting-mail/setting-mail.component';
 
@@ -122,7 +121,6 @@ export const routes: Routes = [
 @NgModule({
   declarations: [
     CodxBpComponent,
-    TesthtmlComponent,
     LayoutComponent,
     ProcessesComponent,
     PopupAddProcessComponent,
@@ -159,7 +157,6 @@ export const routes: Routes = [
     AddDefaultComponent,
     AddProcessDefaultComponent,
     AddTableRowComponent,
-    AddProcessUserinfoComponent,
 
     AddStageComponent,
     AddTaskComponent,
@@ -175,6 +172,7 @@ export const routes: Routes = [
     CustomStagesPipe,
     ViewDetailInstancesComponent,
     PopupBpTasksComponent,
+    BpSignPDFComponent,
 
     MyInstancesComponent,
     CheckDuedateValuePipe,
