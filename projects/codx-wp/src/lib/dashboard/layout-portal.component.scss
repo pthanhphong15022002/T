@@ -4,15 +4,15 @@
   }
 
   .wp-portal {
-    #kt_aside_menu_header{
+    #kt_aside_menu_header {
       margin-top: 25px;
     }
-    div[data-kt-scroll-wrappers="#kt_aside_menu"]{
-      height: calc(100% - 75px) !important;
+    div[data-kt-scroll-wrappers="#kt_aside_menu"] {
+      height: calc(100vh - 75px) !important;
     }
   }
 
-  .wrapper-portal{
+  codx-wrapper {
     overflow: hidden;
   }
 }
