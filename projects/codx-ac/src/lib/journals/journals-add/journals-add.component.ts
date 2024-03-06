@@ -611,6 +611,7 @@ export class JournalsAddComponent extends UIComponent {
   }
 
   compareDataArray(str1: string, str2: string) {
+    if (!str1 && !str2) return false;
     if (!str1 && str2) return true;
 
     if (str1.length != str2.length) return true;
