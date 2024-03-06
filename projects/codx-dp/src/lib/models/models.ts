@@ -18,6 +18,7 @@ export class DP_Processes {
   recID: string;
   category: string;
   processNo: string;
+  disposalNoSetting: string;
   processName: string;
   groupID: string;
   applyFor: string;

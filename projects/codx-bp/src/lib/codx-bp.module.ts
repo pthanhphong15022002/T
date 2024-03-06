@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '@shared/shared.module';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxBpComponent } from './codx-bp.component';
-import { TesthtmlComponent } from './testhtml/testhtml.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { ProcessesComponent } from './processes/processes.component';
 import { NgbAccordionModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -76,6 +75,8 @@ import { PopupBpTasksComponent } from './bp-tasks/popup-bp-tasks/popup-bp-tasks.
 import { AddFileFromProcessDefaultComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-task/add-file-from-process/add-file-from-process-default/add-file-from-process-default.component';
 import { ImgSvgVllPipe } from './pipes/img-svg-vll.pipe';
 import { AddTableRowComponent } from './processes/popup-add-process/process-release/add-process-default/add-table-row/add-table-row.component';
+import { PropertyUserinfoComponent } from './modeview/properties/property-userinfo/property-userinfo.component';
+import { BpSignPDFComponent } from './sign-pdf/bp-sign-pdf.component';
 
 export const routes: Routes = [
   {
@@ -118,7 +119,6 @@ export const routes: Routes = [
 @NgModule({
   declarations: [
     CodxBpComponent,
-    TesthtmlComponent,
     LayoutComponent,
     ProcessesComponent,
     PopupAddProcessComponent,
@@ -145,6 +145,7 @@ export const routes: Routes = [
     PropertyComboboxComponent,
     PropertyShareComponent,
     PropertyTableComponent,
+    PropertyUserinfoComponent,
 
     FormSettingComboboxComponent,
     FormAdvancedSettingsComponent,
@@ -169,6 +170,7 @@ export const routes: Routes = [
     CustomStagesPipe,
     ViewDetailInstancesComponent,
     PopupBpTasksComponent,
+    BpSignPDFComponent,
 
     MyInstancesComponent,
     CheckDuedateValuePipe,

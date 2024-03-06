@@ -16,5 +16,6 @@ export var count =
     phone:0,
     email:0,
     address: 0,
-    expression: 0
+    expression: 0,
+    userInfo: 0
 }

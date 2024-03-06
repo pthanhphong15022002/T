@@ -137,6 +137,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit() {
+    this.codxService.setStyleToolbarLayout(this.view.elementRef.nativeElement, 'toolbar2');
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) {
         this.funcName = res.defaultName;

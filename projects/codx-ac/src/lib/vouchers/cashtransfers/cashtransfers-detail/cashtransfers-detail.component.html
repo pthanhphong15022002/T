@@ -1,0 +1,71 @@
+<!-- Start: template listdetail -->
+<ng-container *ngIf="itemSelected">
+  <codx-detail-tmp [header]="TmpHeaderDetail" [body]="TmpBodyDetail" [formModel]="formModel" [dataItem]="itemSelected"
+    [footer]="TmpFooterDetail" [hideMF]="codxService.asideMode == '2'">
+  </codx-detail-tmp>
+</ng-container>
+<!-- End: template listdetail -->
+
+<!-- Start: template listdetail Header-->
+<ng-template #TmpHeaderDetail>
+  <ng-container *ngIf="itemSelected">
+    <div class="d-flex justify-content-between flex-grow-1 mb-2">
+      <div class="d-flex">
+        <div class="d-flex me-5">
+          <codx-label class="fw-bold label-colon" default="Số chứng từ" [formModel]="formModel">
+          </codx-label>
+          <span *ngIf="itemSelected?.voucherNo" class="text-gray-600">
+            {{ itemSelected?.voucherNo }}
+          </span>
+          <span *ngIf="(itemSelected?.voucherNo == '' || itemSelected?.voucherNo == null) && gridViewSetup"
+            class="place-holder">
+            {{ gridViewSetup['VoucherNo'].headerText }}
+          </span>
+        </div>
+        <div class="d-flex">
+          <img style="width: 18px;height: 18px;" class="me-2" src="../assets/themes/ac/default/img/calendar.svg">
+          <codx-label class="fw-bold label-colon" default="Ngày chứng từ" [formModel]="formModel">
+          </codx-label>
+          <span #voucherDate [innerHTML]="
+                              itemSelected?.voucherDate
+                                    | formatvalue : formModel : 'voucherDate' : voucherDate
+                                    | async
+                                " class="text-gray-600"></span>
+        </div>
+      </div>
+      <div class="d-flex align-self-center">
+        <codx-vll *ngIf="itemSelected?.status == '1'" [formModel]="formModel" [field]="'Status'"
+          [value]="itemSelected?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
+          class="badge badge-light badge-sm">
+        </codx-vll>
+        <codx-vll *ngIf="itemSelected?.status != '1'" [formModel]="formModel" [field]="'Status'"
+          [value]="itemSelected?.status" [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+        </codx-vll>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between flex-grow-1 mb-2">
+      <div class="d-flex">
+        <i class="icon-autorenew me-2 icon-20"></i>
+        <span *ngIf="itemSelected?.memo"
+          class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5">{{itemSelected?.memo}}</span>
+        <span *ngIf="(itemSelected?.memo == '' || itemSelected?.memo == null) && gridViewSetup"
+          class="place-holder line-clamp line-clamp-1 fs-5 text-uppercase me-5">{{gridViewSetup['Memo'].headerText}}</span>
+      </div>
+      <div class="d-flex align-self-center">
+        <span class="badge badge-pill badge-primary me-3">
+          <span class="fw-bold"
+            [innerHTML]="(itemSelected?.transferAmt | tranformValueNumber : (itemSelected?.currencyID !=  baseCurr ? 'S' : 'B') | async)+' '+itemSelected?.currencyID"></span>
+        </span>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+<!-- End: template listdetail Header-->
+
+<!-- Start: template listdetail Body-->
+<ng-template #TmpBodyDetail></ng-template>
+<!-- End: template listdetail Body-->
+
+<!-- Start: template listdetail Footer-->
+<ng-template #TmpFooterDetail let-data></ng-template>
+<!-- End: template listdetail Footer-->

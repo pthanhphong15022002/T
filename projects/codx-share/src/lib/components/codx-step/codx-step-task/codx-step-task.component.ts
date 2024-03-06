@@ -3124,7 +3124,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       titleHeader: task?.taskName,
       objectIdParent: task?.stepID,
       // customerID: '',
-      isAdd: false, ///là add form để lấy giá trị mặc định gán vào
+      isAdd: true, ///là add form để lấy giá trị mặc định gán vào
       taskID: task.recID,
       fieldOther: this.getFieldsOther(this.currentStep?.fields, task?.fieldID),
     };
