@@ -6,7 +6,8 @@
     [ngClass]="isTreeView ? 'd-flex justify-content-between p-1 align-items-center': 'd-flex justify-content-between p-3 align-items-top'"
   >
     <div class="w-100 ps-3">
-      <div class="a d-flex">
+      <div class="text-primary fw-bold fs-5 py-3" *ngIf="data?.category == 'G'">{{data?.taskName}}</div>
+      <div class="a d-flex" *ngIf="data?.category != 'G'">
         <!-- <i class="icon-keyboard_arrow_right pe-2" *ngIf="(data.isAssign || data.category=='G')&&isTreeView&&!data.isCollapse "></i>
         <i class="icon-keyboard_arrow_down pe-2" *ngIf="(data.isAssign || data.category=='G')&&isTreeView&&data.isCollapse "></i> -->
         <span
@@ -25,7 +26,7 @@
         <div>{{ data?.taskName }}</div>
       </ng-template>
     </div>
-    <div  [ngClass]="isTreeView ? 'd-flex align-items-center':'d-flex align-items-start'">
+    <div  [ngClass]="isTreeView ? 'd-flex align-items-center':'d-flex align-items-start'" *ngIf="data?.category != 'G'">
       <div class="w-50px min-w-50px">
         <div class="d-flex align-items-center">
           <span
