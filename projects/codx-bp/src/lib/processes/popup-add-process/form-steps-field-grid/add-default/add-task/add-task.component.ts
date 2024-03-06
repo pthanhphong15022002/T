@@ -599,11 +599,10 @@ export class AddTaskComponent
           templateID: res?.event[0].recID,
           templateName: res?.event[0].templateName,
         };
-
         if (val == 'add') {
           var files =
           {
-            fileID: res?.event[0].recID,
+            fileID: res?.event[3].recID,
             type: '2',
           };
 

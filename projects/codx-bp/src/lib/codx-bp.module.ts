@@ -77,6 +77,7 @@ import { AddFileFromProcessDefaultComponent } from './processes/popup-add-proces
 import { ImgSvgVllPipe } from './pipes/img-svg-vll.pipe';
 import { AddTableRowComponent } from './processes/popup-add-process/process-release/add-process-default/add-table-row/add-table-row.component';
 import { PropertyUserinfoComponent } from './modeview/properties/property-userinfo/property-userinfo.component';
+import { AddProcessUserinfoComponent } from './processes/popup-add-process/process-release/add-process-default/add-process-userinfo/add-process-userinfo.component';
 
 export const routes: Routes = [
   {
@@ -156,6 +157,7 @@ export const routes: Routes = [
     AddDefaultComponent,
     AddProcessDefaultComponent,
     AddTableRowComponent,
+    AddProcessUserinfoComponent,
 
     AddStageComponent,
     AddTaskComponent,

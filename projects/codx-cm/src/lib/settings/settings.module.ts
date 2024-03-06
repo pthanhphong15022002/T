@@ -13,6 +13,8 @@ import { StatusCodeComponent } from './status-code/status-code.component';
 import { PopupAddStatusCodeComponent } from './status-code/popup-add-status-code/popup-add-status-code.component';
 import { DocCategoryComponent } from 'projects/codx-es/src/lib/setting/category/category.component';
 import { ResourcesComponent } from 'projects/codx-ep/src/lib/resources/resources.component';
+import { BusinessLineComponent } from './business-line/business-line.component';
+import { PopupAddBusinessLineComponent } from './business-line/popup-add-business-line/popup-add-business-line.component';
 
 const routes: Routes = [
   {
@@ -40,6 +42,10 @@ const routes: Routes = [
         path: 'stationery/:funcID',
         component: ResourcesComponent,
       },
+      {
+        path: 'businessline/:funcID',
+        component: BusinessLineComponent,
+      },
     ],
   },
 ];
@@ -50,6 +56,8 @@ const routes: Routes = [
     PopupAddCustomerGroupsComponent,
     StatusCodeComponent,
     PopupAddStatusCodeComponent,
+    BusinessLineComponent,
+    PopupAddBusinessLineComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
