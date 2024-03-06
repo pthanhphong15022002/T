@@ -546,6 +546,11 @@
             <codx-label class="fw-bold" fiedName="Creater" [formModel]="dialog.formModel"></codx-label>
           </div>
           <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Creater']?.description}}</span>
+          <div *ngIf="perCreate">
+            <codx-imgs [isToolTip]="true" [objectId]="perCreate" [objectType]="'AD_Users'" [width]="30"
+              [numberImages]="5">
+            </codx-imgs>
+          </div>
         </div>
       </div>
       <div class="col-4">
@@ -584,11 +589,16 @@
             <codx-label class="fw-bold" fiedName="Approver" [formModel]="dialog.formModel"></codx-label>
           </div>
           <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Approver']?.description}}</span>
+          <div *ngIf="perApproval">
+            <codx-imgs [isToolTip]="true" [objectId]="perApproval" [objectType]="'AD_Users'" [width]="30"
+              [numberImages]="5">
+            </codx-imgs>
+          </div>
         </div>
       </div>
       <div class="col-4">
         <div class="d-flex align-items-center justify-content-end">
-          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button">
+          <button type="button" class="btn btn-icon btn-light-primary" role="button" (click)="openUserPopup($event,5)">
             <span class="icon-i-person-plus icon-18"></span>
           </button>
         </div>
@@ -607,11 +617,16 @@
             <codx-label class="fw-bold" fiedName="Poster" [formModel]="dialog.formModel"></codx-label>
           </div>
           <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Poster']?.description}}</span>
+          <div *ngIf="perPost">
+            <codx-imgs [isToolTip]="true" [objectId]="perPost" [objectType]="'AD_Users'" [width]="30"
+              [numberImages]="5">
+            </codx-imgs>
+          </div>
         </div>
       </div>
       <div class="col-4">
         <div class="d-flex align-items-center justify-content-end">
-          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button">
+          <button type="button" class="btn btn-icon btn-light-primary" role="button" (click)="openUserPopup($event,6)">
             <span class="icon-i-person-plus icon-18"></span>
           </button>
         </div>
@@ -629,11 +644,16 @@
             <codx-label class="fw-bold" fiedName="Unposter" [formModel]="dialog.formModel"></codx-label>
           </div>
           <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Unposter']?.description}}</span>
+          <div *ngIf="perUnPost">
+            <codx-imgs [isToolTip]="true" [objectId]="perUnPost" [objectType]="'AD_Users'" [width]="30"
+              [numberImages]="5">
+            </codx-imgs>
+          </div>
         </div>
       </div>
       <div class="col-4">
         <div class="d-flex align-items-center justify-content-end">
-          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button">
+          <button type="button" class="btn btn-icon btn-light-primary" role="button" (click)="openUserPopup($event,9)">
             <span class="icon-i-person-plus icon-18"></span>
           </button>
         </div>
@@ -664,11 +684,16 @@
             <codx-label class="fw-bold" fiedName="Sharer" [formModel]="dialog.formModel"></codx-label>
           </div>
           <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Sharer']?.description}}</span>
+          <div *ngIf="perShare">
+            <codx-imgs [isToolTip]="true" [objectId]="perShare" [objectType]="'AD_Users'" [width]="30"
+              [numberImages]="5">
+            </codx-imgs>
+          </div>
         </div>
       </div>
       <div class="col-4">
         <div class="d-flex align-items-center justify-content-end">
-          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button">
+          <button type="button" class="btn btn-icon btn-light-primary" role="button" (click)="openUserPopup($event,10)">
             <span class="icon-i-person-plus icon-18"></span>
           </button>
         </div>
@@ -699,6 +724,6 @@
 
 <ng-container *ngIf="isPopupUsr">
   <codx-combobox-popup comboboxName="UserGroupPermissions" [multiple]="isMultiple" [width]="600" [height]="500"
-    [value]="permissionCreate" (clickSave)="onSelectedCombobox($event)">
+    [value]="dataRolsePopup" (clickSave)="onSelectedCombobox($event)">
   </codx-combobox-popup>
 </ng-container>
