@@ -11,6 +11,7 @@ import {
   CallFuncService,
   DialogModel,
   FormModel,
+  RequestOption,
   SidebarModel,
   UIComponent,
   Util,
@@ -33,12 +34,21 @@ export class BusinessLineComponent
   implements OnInit, AfterViewInit
 {
   @ViewChild('morefunction') morefunction: TemplateRef<any>;
+  // service = 'CM';
+  // // assemblyName = 'ERM.Business.Core';
+  // entityName = 'CM_BusinessLines';
+  // className = 'DataBusiness';
+  // method = 'LoadDataAsync';
+
+  // config BE
   service = 'CM';
-  assemblyName = 'ERM.Business.Core';
-  entityName = 'CM_BusinessLines';
-  className = 'DataBusiness';
+  assemblyName = 'ERM.Business.CM';
+  className = 'BusinessLinesBusiness';
   method = 'LoadDataAsync';
+  entityName = 'CM_BusinessLines';
+
   idField = 'businessLineID';
+
   itemSelected: any;
   grvSetup: any;
   views: Array<ViewModel> = [];
@@ -99,20 +109,21 @@ export class BusinessLineComponent
   }
 
   clickMF(e, data) {
+    if (!data) return;
     this.titleAction = e.text;
     this.itemSelected = data;
     switch (e.functionID) {
       case 'SYS02':
-        this.delete();
+        this.delete(data);
         break;
       case 'SYS03':
-        this.edit();
+        this.edit(data);
         break;
       case 'SYS04':
         this.copy();
         break;
       case 'SYS05':
-        this.viewDetail();
+        this.viewDetail(data);
         break;
       case 'CMS0105_1':
         this.openEditProcess(data, e, '1');
@@ -133,8 +144,8 @@ export class BusinessLineComponent
     }
   }
 
-  selectedChange(e: any) {
-    this.itemSelected = e?.data;
+  selectedChange(data) {
+    if (data || data?.data) this.itemSelected = data?.data ? data?.data : data;
   }
 
   // region CRUD
@@ -156,14 +167,119 @@ export class BusinessLineComponent
         option,
         this.view.funcID
       );
+      // dialog.closed.subscribe((res) => {
+      //   if (res && res.event) {
+      //     this.view.dataService.update(res.event).subscribe();
+      //     this.detectorRef.detectChanges();
+      //   }
+      // });
     });
   }
 
-  copy() {}
-  edit() {}
-  viewDetail() {}
-  delete() {}
+  copy() {
+    this.view.dataService.copy().subscribe((res) => {
+      let option = new SidebarModel();
 
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '550px';
+      let obj = {
+        action: 'copy',
+        headerText: this.titleAction + ' ' + this.description,
+        gridViewSetup: this.grvSetup,
+      };
+      let dialog = this.callfc.openSide(
+        PopupAddBusinessLineComponent,
+        obj,
+        option,
+        this.view.funcID
+      );
+      // dialog.closed.subscribe((res) => {
+      //   if (res && res.event) {
+      //     this.view.dataService.update(res.event).subscribe();
+      //     this.detectorRef.detectChanges();
+      //   }
+      // });
+    });
+  }
+
+  edit(data) {
+    if (data) this.view.dataService.dataSelected = data;
+    this.view.dataService.edit(data).subscribe((res) => {
+      let option = new SidebarModel();
+
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '550px';
+      let obj = {
+        action: 'edit',
+        headerText: this.titleAction + ' ' + this.description,
+        gridViewSetup: this.grvSetup,
+      };
+      let dialog = this.callfc.openSide(
+        PopupAddBusinessLineComponent,
+        obj,
+        option,
+        this.view.funcID
+      );
+      // dialog.closed.subscribe((res) => {
+      //   if (res && res.event) {
+      //     this.view.dataService.update(res.event).subscribe();
+      //     this.detectorRef.detectChanges();
+      //   }
+      // });
+    });
+  }
+  viewDetail(data) {
+    let option = new SidebarModel();
+
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '550px';
+    let obj = {
+      action: 'view',
+      headerText: this.titleAction + ' ' + this.description,
+      gridViewSetup: this.grvSetup,
+    };
+    let dialog = this.callfc.openSide(
+      PopupAddBusinessLineComponent,
+      obj,
+      option,
+      this.view.funcID
+    );
+    // dialog.closed.subscribe((res) => {
+    //   if (res && res.event) {
+    //     this.view.dataService.update(res.event).subscribe();
+    //     this.detectorRef.detectChanges();
+    //   }
+    // });
+  }
+
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({
+            type: 'delete',
+            data: data,
+          });
+        }
+      });
+    this.detectorRef.detectChanges();
+  }
+
+  beforeDel(opt: RequestOption) {
+    opt.service = 'CM';
+    opt.assemblyName = 'ERM.Business.CM';
+    opt.className = 'BusinessLinesBusiness';
+    opt.methodName = 'DeleteAsync';
+    opt.data = [this.itemSelected];
+    return true;
+  }
   //======================end=============================//
 
   viewChanged(e) {}

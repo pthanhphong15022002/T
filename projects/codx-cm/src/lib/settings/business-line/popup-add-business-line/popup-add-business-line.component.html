@@ -7,13 +7,13 @@
   [footer]="footer"
   [formModel]="dialog.formModel"
   [autoFocus]="false"
-  [dataItem]="data"
+  [data]="data"
 >
 </codx-form>
 <ng-template #body>
   <ng-container *ngFor="let fieldName of arrFieldForm">
-    <div class="form-group" *ngIf="fieldName == 'BusinessLineID'">
-      <codx-label [formModel]="form.formModel" fiedName="BusinessLineID">
+    <div class="form-group" *ngIf="fieldName == 'businessLineID'">
+      <codx-label [formModel]="form.formModel" fiedName="businessLineID">
       </codx-label>
       <codx-input
         [field]="'businessLineID'"
@@ -24,37 +24,41 @@
                 ? planceHolderAutoNumber
                 : gridViewSetup?.['BusinessLineID']?.description
             "
-        [disabled]="disabledShowInput || action == 'edit'"
+        [disabled]="disabledShowInput || action == 'edit' || viewOnly"
         [crrValue]="data?.businessLineID"
         (valueChange)="valueChange($event)"
       >
       </codx-input>
     </div>
-    <div class="form-group" *ngIf="fieldName == 'ProcessID'">
-      <codx-label [formModel]="form.formModel" fiedName="ProcessID">
+    <div class="form-group" *ngIf="fieldName == 'processID'">
+      <codx-label [formModel]="form.formModel" fiedName="processID">
       </codx-label>
       <codx-input
-        [field]="'ProcessID'"
+        [field]="'processID'"
         [formModel]="form.formModel"
         [Group]="form?.formGroup"
+        (valueChange)="valueChange($event)"
+        [disabled]="viewOnly"
       >
       </codx-input>
     </div>
-    <div class="form-group" *ngIf="fieldName == 'ProcessContractID'">
-      <codx-label [formModel]="form.formModel" fiedName="ProcessContractID">
+    <div class="form-group" *ngIf="fieldName == 'processContractID'">
+      <codx-label [formModel]="form.formModel" fiedName="processContractID">
       </codx-label>
       <codx-input
-        [field]="'ProcessContractID'"
+        [field]="'processContractID'"
         [formModel]="form.formModel"
         [Group]="form?.formGroup"
+        (valueChange)="valueChange($event)"
+        [disabled]="viewOnly"
       >
       </codx-input>
     </div>
     <ng-container
       *ngIf="
-        fieldName != 'BusinessLineID' &&
-        fieldName != 'ProcessID' &&
-        fieldName != 'ProcessContractID'
+        fieldName != 'businessLineID' &&
+        fieldName != 'processID' &&
+        fieldName != 'processContractID'
       "
     >
       <div class="form-group">
@@ -65,6 +69,8 @@
             [field]="fieldName"
             [formModel]="form.formModel"
             [Group]="form?.formGroup"
+            (valueChange)="valueChange($event)"
+            [disabled]="viewOnly"
           >
           </codx-input>
         </div>
@@ -75,7 +81,12 @@
 <ng-template #footer>
   <div class="d-flex flex-stack justify-content-end" *ngIf="dialog">
     <div class="right">
-      <button type="button" class="btn btn-primary" (click)="onSave()">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="onSave()"
+        [disabled]="viewOnly"
+      >
         <codx-label name="lblSave" formName="Settings" default="Lưu">
         </codx-label>
       </button>
