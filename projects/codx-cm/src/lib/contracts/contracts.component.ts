@@ -1755,8 +1755,13 @@ export class ContractsComponent extends UIComponent {
 
   liquidationContract(data) {
     this.liquidation = JSON.parse(JSON.stringify(data));
+    this.contractService.getAutonumber(this.liquidation?.processID).subscribe( (res) => {
+      if(res){
+        this.liquidation.disposalID = res;
+      }
+    })
     this.liquidation.status = '17';
-    this.liquidation.disposalID = this.liquidation?.contractID;
+    // this.liquidation.disposalID = this.liquidation?.contractID;
     this.liquidation.disposalOn = new Date();
     this.liquidation.debtClosingOn = new Date();
     this.liquidation.disposalID = this.liquidation?.contractID;

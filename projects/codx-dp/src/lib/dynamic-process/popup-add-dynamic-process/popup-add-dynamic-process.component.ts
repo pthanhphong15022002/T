@@ -261,6 +261,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   vllType = 'DP022';
   dataChild = [];
   instanceNoEx: string = '';
+  contractNoEx: string = '';
   listTemp = [];
   tempCrr: any;
   type = 'excel';
@@ -1943,8 +1944,9 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         )
           this.isChange = true;
         this.process.instanceNoSetting = res?.event?.autoNoCode;
-        this.setViewAutoNumber(res?.event);
-
+        let code = this.setViewAutoNumber(res?.event)
+        this.instanceNoEx = code || this.instanceNoEx;
+        this.changeDetectorRef.markForCheck();
         //bo canh bao
         // let input: any;
         // if (this.autoNumberSetting.nativeElement) {
@@ -1963,6 +1965,53 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     });
   }
 
+  async openAutoNumContractPopup() {
+    //view new
+    if (!this.process?.disposalNoSetting) {
+      this.process.disposalNoSetting = await firstValueFrom(
+        this.dpService
+          .genAutoNumber("CM0204", "CM_Contracts", 'ContractID')
+          .pipe(takeUntil(this.destroyFrom$))
+      );
+    }
+    let obj = {};
+    if (!this.process?.instanceNoSetting) {
+      //save new autoNumber
+      obj = {
+        autoNoCode: this.process.disposalNoSetting,
+        description: 'DP_Contracts',
+        newAutoNoCode: this.process.disposalNoSetting,
+        isSaveNew: '1',
+      };
+    } else {
+      //cap nhật
+      obj = {
+        autoNoCode: this.process.disposalNoSetting,
+        description: 'DP_Contracts',
+      };
+    }
+    let op = new DialogModel();
+    op.IsFull = true;
+    let popupAutoNum = this.callfc.openForm(
+      PopupAddAutoNumberComponent,
+      '',
+      0,
+      0,
+      '',
+      obj,
+      '',
+      op
+    );
+    popupAutoNum.closed.subscribe((res) => {
+      if (res?.event) {
+        this.process.disposalNoSetting = res?.event?.autoNoCode;
+        let code = this.setViewAutoNumber(res?.event)
+        this.contractNoEx = code || this.instanceNoEx;
+        this.changeDetectorRef.markForCheck();
+      }
+    });
+  }
+
   setViewAutoNumber(data) {
     if (this.vllDateFormat?.datas.length > 0) {
       let dateFormat = '';
@@ -1974,63 +2023,63 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
       let lengthNumber;
       let strNumber = '';
-      this.instanceNoEx = data?.fixedString + data?.separator + dateFormat;
-      lengthNumber = data?.maxLength - this.instanceNoEx.length;
+      let instanceNoEx = data?.fixedString + data?.separator + dateFormat;
+      lengthNumber = data?.maxLength - instanceNoEx.length;
       strNumber = '#'.repeat(lengthNumber);
       switch (data?.stringFormat) {
         // {value: '0', text: 'Chuỗi & Ngày - Số', default: 'Chuỗi & Ngày - Số', color: null, textColor: null, …}
         case '0': {
-          this.instanceNoEx =
+          instanceNoEx =
             data?.fixedString + dateFormat + data?.separator + strNumber;
           break;
         }
         // {value: '1', text: 'Chuỗi & Số - Ngày', default: 'Chuỗi & Số - Ngày', color: null, textColor: null, …}
         case '1': {
-          this.instanceNoEx =
+          instanceNoEx =
             data?.fixedString + strNumber + data?.separator + dateFormat;
           break;
         }
         // {value: '2', text: 'Số - Chuỗi & Ngày', default: 'Số - Chuỗi & Ngày', color: null, textColor: null, …}
         case '2':
-          this.instanceNoEx =
+          instanceNoEx =
             strNumber + data?.separator + data?.fixedString + dateFormat;
           break;
         // {value: '3', text: 'Số - Ngày & Chuỗi', default: 'Số - Ngày & Chuỗi', color: null, textColor: null, …}
         case '3':
-          this.instanceNoEx =
+          instanceNoEx =
             strNumber + data?.separator + dateFormat + data?.fixedString;
           break;
 
         // {value: '4', text: 'Ngày - Số & Chuỗi', default: 'Ngày - Số & Chuỗi', color: null, textColor: null, …}
         case '4': {
-          this.instanceNoEx =
+          instanceNoEx =
             dateFormat + data?.separator + strNumber + data?.fixedString;
           break;
         }
         // {value: '5', text: 'Ngày & Chuỗi & Số', default: 'Ngày & Chuỗi & Số', color: null, textColor: null, …}
         case '5': {
-          this.instanceNoEx = data?.fixedString + dateFormat;
-          lengthNumber = data?.maxLength - this.instanceNoEx.length;
+          instanceNoEx = data?.fixedString + dateFormat;
+          lengthNumber = data?.maxLength - instanceNoEx.length;
           strNumber = '#'.repeat(lengthNumber);
-          this.instanceNoEx = dateFormat + data?.fixedString + strNumber;
+          instanceNoEx = dateFormat + data?.fixedString + strNumber;
           break;
         }
         // {value: '6', text: 'Chuỗi - Ngày', default: 'Chuỗi - Ngày', color: null, textColor: null, …}
         case '6': {
-          this.instanceNoEx = data?.fixedString + data?.separator + dateFormat;
+          instanceNoEx = data?.fixedString + data?.separator + dateFormat;
           break;
         }
         // {value: '7', text: 'Ngày - Chuỗi', default: 'Ngày - Chuỗi', color: null, textColor: null, …}
         case '7': {
-          this.instanceNoEx = dateFormat + data?.separator + data?.fixedString;
+          instanceNoEx = dateFormat + data?.separator + data?.fixedString;
           break;
         }
       }
 
-      this.instanceNoEx = this.instanceNoEx.substring(0, data?.maxLength);
-      // this.changeDetectorRef.detectChanges();
-      this.changeDetectorRef.markForCheck();
+      instanceNoEx = instanceNoEx.substring(0, data?.maxLength);
+      return instanceNoEx;   
     }
+    return "";
   }
 
   async getVllFormat() {
@@ -2042,7 +2091,21 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             this.process.instanceNoSetting
           )
         );
-        if (this.adAutoNumber) this.setViewAutoNumber(this.adAutoNumber);
+        if (this.adAutoNumber){
+          this.instanceNoEx = this.setViewAutoNumber(this.adAutoNumber);
+          this.changeDetectorRef.markForCheck();
+        } 
+      }
+      if (this.process.disposalNoSetting) {
+        let adAutoNumber = await firstValueFrom(
+          this.dpService.getADAutoNumberByAutoNoCode(
+            this.process.disposalNoSetting
+          )
+        );
+        if (adAutoNumber){
+          this.contractNoEx = this.setViewAutoNumber(adAutoNumber);
+          this.changeDetectorRef.markForCheck();
+        } 
       }
     }
   }
@@ -2377,13 +2440,28 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   //add trường tùy chỉnh
   changeMFFields(e, item) {
     //bi gọi 2 lần
-    var arEvent = this.uniqueMore(e);
-    if (arEvent?.length == e?.length) return;
     e.forEach((x, index) => {
-      if (index >= arEvent?.length) {
+      let checkFunc =
+        x.functionID != 'SYS02' &&
+        x.functionID != 'SYS03' &&
+        x.functionID != 'SYS04' &&
+        x.functionID != 'SYS05';
+      if (checkFunc) {
         x.disabled = true;
       }
     });
+    // var arEvent = this.uniqueMore(e);
+    // if (arEvent?.length == e?.length) return;
+    // e.forEach((x, index) => {
+    //   let checkFunc =
+    //     x.functionID != 'SYS02' &&
+    //     x.functionID != 'SYS03' &&
+    //     x.functionID != 'SYS04' &&
+    //     x.functionID != 'SYS05';
+    //   if (index >= arEvent?.length || checkFunc) {
+    //     x.disabled = true;
+    //   }
+    // });
   }
 
   uniqueMore(arr) {
@@ -2407,6 +2485,9 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         break;
       case 'SYS04':
         this.copyCustomField(data, e.text, enabled);
+        break;
+      case 'SYS05':
+        this.viewCustomField(data, e.text);
         break;
     }
   }
@@ -2708,6 +2789,39 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
               this.changeDetectorRef.markForCheck();
             }
           });
+        });
+    });
+  }
+
+  viewCustomField(data, textTitle) {
+    this.cache.gridView('grvDPStepsFields').subscribe((res) => {
+      this.cache
+        .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
+        .subscribe((res) => {
+          let option = new SidebarModel();
+          option.FormModel = this.formModelField;
+          option.Width = '550px';
+          option.zIndex = 1010;
+
+          let object = {
+            field: data,
+            action: 'view',
+            titleAction:
+              textTitle +
+              ' ' +
+              this.titleDefaultCF.charAt(0).toLocaleLowerCase() +
+              this.titleDefaultCF.slice(1),
+            stepList: this.stepList,
+            grvSetup: res,
+            refValueDataType:
+              this.process.applyFor == '1' ? 'DP022_1' : 'DP022',
+            processNo: this.process.processNo,
+          };
+          let dialogCustomField = this.callfc.openSide(
+            PopupAddCustomFieldComponent,
+            object,
+            option
+          );
         });
     });
   }
@@ -3867,9 +3981,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   }
 
   async changeDataMF(e, type, step?) {
-    if(type == 'group'){
+    if (type == 'group') {
       console.log('ok');
-      
     }
     if (e != null) {
       e.forEach((res) => {
@@ -5394,7 +5507,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       showIsPublish: true,
       showSendLater: true,
       files: null,
-      isAddNew: this.action == 'edit' && this.process?.emailTemplate ? false : true,
+      isAddNew:
+        this.action == 'edit' && this.process?.emailTemplate ? false : true,
       notSendMail: true,
     };
 
@@ -5413,14 +5527,14 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     });
   }
 
-  changeProgrgessStep(){
-      let count = this.stepList?.length;
-      if(count > 0){
-        let medium =parseFloat((100/count).toFixed(2)); 100/count;
-        this.stepList.forEach((step) => {
-          step.instanceProgress = medium * step.stepNo;
-        })
-      }
+  changeProgrgessStep() {
+    let count = this.stepList?.length;
+    if (count > 0) {
+      let medium = parseFloat((100 / count).toFixed(2));
+      100 / count;
+      this.stepList.forEach((step) => {
+        step.instanceProgress = medium * step.stepNo;
+      });
+    }
   }
-
 }

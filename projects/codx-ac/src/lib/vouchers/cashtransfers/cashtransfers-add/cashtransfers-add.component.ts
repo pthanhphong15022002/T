@@ -217,11 +217,16 @@ export class CashtransfersAddComponent extends UIComponent {
         break;
       case 'vatcontrol':
         if(value){
-          if (this.feeVATID != '' && this.feeVATID != null) {
-            this.fmVATInvoice.currentData.vatid = this.feeVATID;
-            this.VATChange();
-            this.elementTabDetail.hideTab(0,false);
-          }
+          this.VATInvoiceSV.addNew().subscribe((res: any) => {
+            if (res) {
+              this.fmVATInvoice.currentData = res;
+              if (this.feeVATID != '' && this.feeVATID != null) {
+                this.fmVATInvoice.currentData.vatid = this.feeVATID;
+                this.VATChange();
+              }
+              this.elementTabDetail.hideTab(0,false);
+            }
+          })
         }else{
           this.api
             .execAction('AC_VATInvoices', [this.fmVATInvoice.currentData], 'DeleteAsync')
@@ -233,12 +238,6 @@ export class CashtransfersAddComponent extends UIComponent {
         if (this.formCashTranfer.data.vatControl){
           this.VATChange();
         }
-       
-        // if (this.formCashTranfer.data.vatControl) {
-        //   let vatbase = (this.formCashTranfer.data.fees ? this.formCashTranfer.data.fees : 0) * this.vatPct;
-        //   this.fmVATInvoice.currentData.vatBase = vatbase;
-        //   this.fgVATInvoice.patchValue(this.fmVATInvoice.currentData);
-        // }
         break;
     }
   }
@@ -292,18 +291,31 @@ export class CashtransfersAddComponent extends UIComponent {
    * @returns
    */
   onSaveVoucher(type) {
-    let validate = this.formCashTranfer.validation();
-    if(validate) return;
+    this.formCashTranfer
+      .save(null, 0, '', '', false, { allowCompare: false })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (!res) return;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) return;
+        }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) return;
+        }
+        this.saveVoucher(type);
+      });
+  }
+
+  saveVoucher(type){
     this.api
-      .exec('AC', 'CashTranfersBusiness', 
-      (this.formCashTranfer.data.isAdd || this.formCashTranfer.data.isCopy) ? 'SaveAsync' : 'UpdateAsync', [
+      .exec('AC', 'CashTranfersBusiness', 'UpdateVoucherAsync', [
         this.formCashTranfer.data,
-        this.formCashTranfer.data.vatControl ? this.fmVATInvoice.currentData : null
+        this.formCashTranfer.data.vatControl ? this.fmVATInvoice.currentData : null,
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        this.isload = false;
         if (res?.update) {
+          this.dialog.dataService.update(res.data).subscribe();
           if (type == 'save') {
             this.onDestroy();
             this.dialog.close();
@@ -316,22 +328,15 @@ export class CashtransfersAddComponent extends UIComponent {
             //   .subscribe((res: any) => {
             //     if (res) {
             //       res.data.isAdd = true;
-            //       this.formCashPayment.refreshData({ ...res.data });
-            //       setTimeout(() => {
-            //         this.refreshGrid();
-            //       }, 100);
+            //       this.formCashTranfer.refreshData({ ...res.data });             
             //       this.detectorRef.detectChanges();
             //     }
             //   });
           }
-          if (this.formCashTranfer.data.isAdd || this.formCashTranfer.data.isCopy){
-            this.dialog.dataService.add(res.data).subscribe();
+          if (this.formCashTranfer.data.isAdd || this.formCashTranfer.data.isCopy)
             this.notification.notifyCode('SYS006');
-            
-          }else{
-            this.dialog.dataService.update(res.data).subscribe();
+          else 
             this.notification.notifyCode('SYS007');
-          }
         }
       });
   }

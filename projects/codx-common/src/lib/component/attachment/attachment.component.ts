@@ -316,7 +316,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   setFormModel() {
     if (this.formModel) {
-      this.objectType = this.formModel.entityName;
+      this.objectType = this.objectType || this.formModel.entityName;
       this.functionID = this.formModel.funcID;
     }
   }

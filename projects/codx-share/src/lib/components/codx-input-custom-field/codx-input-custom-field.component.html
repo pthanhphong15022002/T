@@ -721,9 +721,46 @@
       [disabled]="disable"
     >
     </codx-input>
-    <div class="text-gray-600 ms-3" data-field="">
-      {{ dataRef }}
+    <!-- <ng-container
+      *ngIf="!eventDropRef && this.dataFormatRef?.length > 0; else dropField"
+    >
+       <div class="text-gray-600 ms-3" data-field="">
+        {{ dataRef }}
+      </div>
+    </ng-container> -->
+    <!-- <ng-template #dropField> -->
+    <div
+      *ngIf="this.dataFormatRef?.length > 0"
+      class="categories"
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      [cdkDropListData]="dataFormatRef"
+      [cdkDropListDisabled]="!isDropRef"
+      (cdkDropListDropped)="dropFieldPA($event)"
+    >
+      <ng-container *ngFor="let itemF of dataFormatRef">
+        <div cdkDrag class="inner">
+          <div *cdkDragPlaceholder></div>
+          <div
+            [ngbTooltip]="itemF?.title"
+            container="body"
+            placement="top"
+            class="d-flex justify-content-between align-items-center w-100 text-hover-primary"
+          >
+            <span
+              class="my-1 mx-2 line-clamp line-clamp-1"
+              style="font-size: 12px; max-width: 100px"
+              >{{ itemF?.title }}</span
+            >
+            <!-- <span
+                class="icon-close icon-16 cursor-pointer fw-bold"
+                (click)="removeField(field)"
+              ></span> -->
+          </div>
+        </div>
+      </ng-container>
     </div>
+    <!-- </ng-template> -->
   </ng-container>
 
   <ng-container *ngIf="customField.dataType == 'AT'">

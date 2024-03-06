@@ -100,8 +100,8 @@ export class CodxView2Component implements OnInit, AfterViewInit {
     else
       this.codx.setStyleToolbarLayout(this.elRef.nativeElement, null);
 
-    const elem = document.querySelector('#view2-header');
-    if (elem) new ResizeObserver(this.setHeight).observe(elem);
+    // const elem = document.querySelector('#view2-header');
+    // if (elem) new ResizeObserver(this.setHeight).observe(elem);
   }
 
   ngOnInit(): void {
@@ -259,23 +259,23 @@ export class CodxView2Component implements OnInit, AfterViewInit {
     );
   }
 
-  setHeight() {
-    if (!document.getElementById('view2-header')) return;
+  // setHeight() {
+  //   if (!document.getElementById('view2-header')) return;
 
-    var h = document.getElementById('view2-header').offsetHeight;
+  //   var h = document.getElementById('view2-header').offsetHeight;
 
-    if (h > 0) {
-      h += 90;
-      let height = window.innerHeight - h;
-      if (document.getElementById('codx-view2-body'))
-        document.getElementById('codx-view2-body').style.cssText =
-          'height:' + height + 'px !important';
-    } else {
-      if (document.getElementById('codx-view2-body'))
-        document.getElementById('codx-view2-body').style.cssText =
-          'height:auto';
-    }
-  }
+  //   if (h > 0) {
+  //     h += 90;
+  //     let height = window.innerHeight - h;
+  //     if (document.getElementById('codx-view2-body'))
+  //       document.getElementById('codx-view2-body').style.cssText =
+  //         'height:' + height + 'px !important';
+  //   } else {
+  //     if (document.getElementById('codx-view2-body'))
+  //       document.getElementById('codx-view2-body').style.cssText =
+  //         'height:auto';
+  //   }
+  // }
   //#endregion
 
   //#region Func

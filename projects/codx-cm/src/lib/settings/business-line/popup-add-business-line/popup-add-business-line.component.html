@@ -1,0 +1,84 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [body]="body"
+  [showHeader]="dialog"
+  [dialog]="dialog!"
+  [footer]="footer"
+  [formModel]="dialog.formModel"
+  [autoFocus]="false"
+  [dataItem]="data"
+>
+</codx-form>
+<ng-template #body>
+  <ng-container *ngFor="let fieldName of arrFieldForm">
+    <div class="form-group" *ngIf="fieldName == 'BusinessLineID'">
+      <codx-label [formModel]="form.formModel" fiedName="BusinessLineID">
+      </codx-label>
+      <codx-input
+        [field]="'businessLineID'"
+        [formModel]="form.formModel"
+        [Group]="form?.formGroup"
+        [placeholder]="
+              disabledShowInput
+                ? planceHolderAutoNumber
+                : gridViewSetup?.['BusinessLineID']?.description
+            "
+        [disabled]="disabledShowInput || action == 'edit'"
+        [crrValue]="data?.businessLineID"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+    <div class="form-group" *ngIf="fieldName == 'ProcessID'">
+      <codx-label [formModel]="form.formModel" fiedName="ProcessID">
+      </codx-label>
+      <codx-input
+        [field]="'ProcessID'"
+        [formModel]="form.formModel"
+        [Group]="form?.formGroup"
+      >
+      </codx-input>
+    </div>
+    <div class="form-group" *ngIf="fieldName == 'ProcessContractID'">
+      <codx-label [formModel]="form.formModel" fiedName="ProcessContractID">
+      </codx-label>
+      <codx-input
+        [field]="'ProcessContractID'"
+        [formModel]="form.formModel"
+        [Group]="form?.formGroup"
+      >
+      </codx-input>
+    </div>
+    <ng-container
+      *ngIf="
+        fieldName != 'BusinessLineID' &&
+        fieldName != 'ProcessID' &&
+        fieldName != 'ProcessContractID'
+      "
+    >
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" [fiedName]="fieldName">
+        </codx-label>
+        <div>
+          <codx-input
+            [field]="fieldName"
+            [formModel]="form.formModel"
+            [Group]="form?.formGroup"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-template>
+<ng-template #footer>
+  <div class="d-flex flex-stack justify-content-end" *ngIf="dialog">
+    <div class="right">
+      <button type="button" class="btn btn-primary" (click)="onSave()">
+        <codx-label name="lblSave" formName="Settings" default="Lưu">
+        </codx-label>
+      </button>
+    </div>
+  </div>
+</ng-template>
