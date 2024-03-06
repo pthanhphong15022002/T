@@ -262,7 +262,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'transfers/:funcID/:journalNo',
+        path: 'inventorytransfers/:funcID/:journalNo',
         component: WarehouseTransfersComponent,
         data: { noReuse: true },
       },
