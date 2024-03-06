@@ -301,6 +301,9 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
             }
           }
           this.data.parameters = this.parameters;
+          this.parameters = this.parameters.slice();
+          this.blockBtn=false;
+          this.changeDetectorRef.detectChanges();
         }
       });
     }
