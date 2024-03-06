@@ -698,7 +698,6 @@ export class WarehouseTransfersComponent extends UIComponent {
   setDefault(data: any, action: any = '') {
     return this.api.exec('IV', 'TransfersBusiness', 'SetDefaultAsync', [
       data,
-      this.journal,
       this.journalNo,
       action,
     ]);

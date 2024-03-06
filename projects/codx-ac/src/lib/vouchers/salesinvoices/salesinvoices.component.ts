@@ -808,11 +808,9 @@ export class SalesinvoicesComponent extends UIComponent {
   setDefault(data: any, action: any = '') {
     return this.api.exec('AC', 'SalesInvoicesBusiness', 'SetDefaultAsync', [
       data,
-      this.journal,
       this.journalNo,
       action,
     ]);
   }
-
   //#endregion
 }

@@ -858,7 +858,6 @@ export class PurchaseinvoicesComponent extends UIComponent {
   setDefault(data: any, action: any = '') {
     return this.api.exec('AC', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
       data,
-      this.journal,
       this.journalNo,
       action,
     ]);

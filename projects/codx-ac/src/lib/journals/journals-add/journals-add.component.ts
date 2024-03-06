@@ -64,10 +64,22 @@ export class JournalsAddComponent extends UIComponent {
   preData: any;
   isPopupUsr = false;
   roleType: number = 0;
-  permissionCreate: any;
-  permissionApproval: any;
-  permissionPost: any;
-  permissionShare: any;
+  isChangePerCreate: boolean = false;
+  perCreate: any;
+  oldPerCreate: any;
+  isChangePerApproval: boolean = false;
+  perApproval: any;
+  oldPerApproval: any;
+  isChangePerPost: boolean = false;
+  perPost: any;
+  oldPerPost: any;
+  isChangePerUnPost: boolean = false;
+  perUnPost: any;
+  oldPerUnPost: any;
+  isChangePerShare: boolean = false;
+  perShare: any;
+  oldPerShare: any;
+  dataRolsePopup = '';
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
@@ -97,6 +109,37 @@ export class JournalsAddComponent extends UIComponent {
     this.getVll('AC109', 'vllAC109');
     this.getVll('AC110', 'vllAC110');
     this.getVll('AC111', 'vllAC111');
+    this.api
+      .exec<any>(
+        'AC',
+        'JournalsPermissionBusiness',
+        'GetPermissionByJournalAsync',
+        this.dataDefault.journalNo
+      )
+      .subscribe((res) => {
+        if (res) {
+          if (res['1']) {
+            this.perCreate = res['1'].join(';');
+            this.oldPerCreate = this.perCreate;
+          }
+          if (res['5']) {
+            this.perApproval = res['5'].join(';');
+            this.oldPerApproval = this.perApproval;
+          }
+          if (res['6']) {
+            this.perPost = res['6'].join(';');
+            this.oldPerPost = this.perPost;
+          }
+          if (res['9']) {
+            this.perShare = res['9'].join(';');
+            this.oldPerShare = this.perShare;
+          }
+          if (res['10']) {
+            this.perPost = res['10'].join(';');
+            this.oldPerPost = this.perPost;
+          }
+        }
+      });
   }
 
   ngAfterViewInit() {
@@ -127,23 +170,51 @@ export class JournalsAddComponent extends UIComponent {
   openUserPopup(e, type) {
     this.isPopupUsr = true;
     this.roleType = type;
+    switch (this.roleType) {
+      case 1:
+        this.dataRolsePopup = this.perCreate;
+        break;
+      case 5:
+        this.dataRolsePopup = this.perApproval;
+        break;
+      case 6:
+        this.dataRolsePopup = this.perPost;
+        break;
+      case 9:
+        this.dataRolsePopup = this.perUnPost;
+        break;
+      default:
+        this.dataRolsePopup = this.perShare;
+        break;
+    }
   }
 
   onSelectedCombobox(e) {
-    switch (this.roleType) {
-      case 1:
-        this.permissionCreate = e.id;
-        break;
-      case 5:
-        this.permissionApproval = e.id;
-        break;
-      case 7:
-        this.permissionPost = e.id;
-        break;
-      default:
-        this.permissionShare = e.id;
-        break;
+    if (e) {
+      switch (this.roleType) {
+        case 1:
+          this.perCreate = e.id;
+          this.isChangePerCreate = true;
+          break;
+        case 5:
+          this.perApproval = e.id;
+          this.isChangePerApproval = true;
+          break;
+        case 6:
+          this.perPost = e.id;
+          this.isChangePerPost = true;
+          break;
+        case 9:
+          this.perUnPost = e.id;
+          this.isChangePerUnPost = true;
+          break;
+        default:
+          this.perShare = e.id;
+          this.isChangePerShare = true;
+          break;
+      }
     }
+    this.isPopupUsr = false;
   }
 
   onclickOpenCbx(cbxName: any, cbxValue: any, value: any, fieldSelected: any) {
@@ -338,7 +409,6 @@ export class JournalsAddComponent extends UIComponent {
                   this.notification.notifyCode('SYS006');
                 else this.notification.notifyCode('SYS007');
                 this.savePermission();
-                this.dialog.close();
               });
           }
         });
@@ -361,28 +431,49 @@ export class JournalsAddComponent extends UIComponent {
             this.notification.notifyCode('SYS006');
           else this.notification.notifyCode('SYS007');
           this.savePermission();
-          this.dialog.close();
         });
     }
   }
 
   savePermission() {
     if (
-      this.permissionCreate ||
-      this.permissionApproval ||
-      this.permissionPost ||
-      this.permissionShare
+      (this.perCreate && this.oldPerCreate != this.perCreate) ||
+      (this.perApproval && this.oldPerApproval != this.perApproval) ||
+      (this.perPost && this.oldPerPost != this.perPost) ||
+      (this.perUnPost && this.oldPerUnPost != this.perUnPost) ||
+      (this.perShare && this.oldPerShare != this.perShare)
     ) {
+      let create = this.compareDataArray(this.oldPerCreate, this.perCreate)
+        ? this.perCreate
+        : '';
+      let approval = this.compareDataArray(
+        this.oldPerApproval,
+        this.perApproval
+      )
+        ? this.perApproval
+        : '';
+      let poster = this.compareDataArray(this.oldPerPost, this.perPost)
+        ? this.perPost
+        : '';
+      let unPoster = this.compareDataArray(this.oldPerUnPost, this.perUnPost)
+        ? this.perUnPost
+        : '';
+      let share = this.compareDataArray(this.oldPerShare, this.perShare)
+        ? this.perShare
+        : '';
       this.api
         .exec('AC', 'JournalsPermissionBusiness', 'AddOrUpdateAsync', [
           this.dataDefault.journalNo,
-          this.permissionCreate,
-          this.permissionApproval,
-          this.permissionPost,
-          this.permissionShare,
+          create,
+          approval,
+          poster,
+          unPoster,
+          share,
         ])
-        .subscribe((res) => {});
-    }
+        .subscribe((res) => {
+          this.dialog.close();
+        });
+    } else this.dialog.close();
   }
   //#endregion Method
 
@@ -517,6 +608,24 @@ export class JournalsAddComponent extends UIComponent {
             });
         }
       });
+  }
+
+  compareDataArray(str1: string, str2: string) {
+    if (!str1 && !str2) return false;
+    if (!str1 && str2) return true;
+
+    if (str1.length != str2.length) return true;
+
+    let arr1 = str1.split(';');
+    let arr2 = str2.split(';');
+    if (arr1.length && arr2.length) {
+      return arr1.some((e) => {
+        if (arr2.includes(e) == false) {
+          return true;
+        } else return false;
+      });
+    }
+    return false;
   }
   //#endregion Function
 }
