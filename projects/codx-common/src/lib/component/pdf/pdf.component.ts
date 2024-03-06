@@ -114,7 +114,8 @@ export class PdfComponent
   @Input() hideActions = false;
   @Input() isSignMode = false;
   @Input() dynamicApprovers = [];
-  @Input() hideThumbnail: boolean = false; //thumbnail
+  @Input() hideThumbnail: boolean = false; //thumbnail  
+  @Input() fileIDs = '';
   @Output() changeSignerInfo = new EventEmitter();
   @Output() eventHighlightText = new EventEmitter();
 
@@ -593,6 +594,9 @@ export class PdfComponent
   getProcessESign() {
     let request = new tempLoadPDF();
     request.recID = this.recID;
+    request.dynamicApprovers = this.dynamicApprovers;
+    request.isSettingMode=this.isSettingMode;
+    request.fileIDs=this.fileIDs;
     this.api
       .execSv('BP', 'BP', 'ProcessesBusiness', 'GetPDFFormAsync', [request])
       .subscribe((res: any) => {
@@ -940,7 +944,8 @@ export class PdfComponent
         this.isApprover,
         this.user.userID,
         this.stepNo,
-        this.modeView
+        this.modeView,
+        this.isSettingMode,
       )
       .subscribe((res) => {
         if (res) {
@@ -1064,7 +1069,8 @@ export class PdfComponent
         this.recID,
         this.fileInfo.fileID,
         this.curSelectedArea.id(),
-        this.modeView
+        this.modeView,
+        this.isSettingMode,
       )
       .subscribe((res) => {
         if (res) {
@@ -1075,7 +1081,8 @@ export class PdfComponent
               this.isApprover,
               this.user.userID,
               this.stepNo,
-              this.modeView
+              this.modeView,
+              this.isSettingMode,
             )
             .subscribe((res) => {
               if (res) {
@@ -1943,7 +1950,8 @@ export class PdfComponent
                   this.curFileID,
                   area,
                   area.recID,
-                  this.modeView
+                  this.modeView,
+                  this.isSettingMode,
                 )
                 .subscribe((res) => {});
             } else {
@@ -2401,7 +2409,8 @@ export class PdfComponent
         this.curFileID,
         tmpArea,
         tmpArea.recID,
-        this.modeView
+        this.modeView,
+        this.isSettingMode,
       )
       .subscribe((res) => {
         this.esService
@@ -2411,7 +2420,8 @@ export class PdfComponent
             this.isApprover,
             this.user.userID,
             this.stepNo,
-            this.modeView
+            this.modeView,
+            this.isSettingMode,
           )
           .subscribe((res) => {
             if (res) {
@@ -2698,7 +2708,8 @@ export class PdfComponent
               this.curFileID,
               tmpArea,
               recID,
-              this.modeView
+              this.modeView,
+              this.isSettingMode,
             )
             .subscribe((res) => {
               if (res) {
@@ -2728,7 +2739,8 @@ export class PdfComponent
                       this.isApprover,
                       this.user.userID,
                       this.stepNo,
-                      this.modeView
+                      this.modeView,
+                      this.isSettingMode,
                     )
                     .subscribe((res) => {
                       if (res) {
@@ -2825,7 +2837,8 @@ export class PdfComponent
                 this.curFileID,
                 tmpArea,
                 recID,
-                this.modeView
+                this.modeView,
+                this.isSettingMode,
               )
               .subscribe((res) => {
                 if (res) {
@@ -2854,7 +2867,8 @@ export class PdfComponent
                         this.isApprover,
                         this.user.userID,
                         this.stepNo,
-                        this.modeView
+                        this.modeView,
+                        this.isSettingMode,
                       )
                       .subscribe((res) => {
                         if (res) {
@@ -2901,7 +2915,8 @@ export class PdfComponent
         this.curFileID,
         tmpArea,
         tmpArea.recID,
-        this.modeView
+        this.modeView,
+        this.isSettingMode,
       )
       .subscribe((res) => {
         if (res) {
@@ -2912,7 +2927,8 @@ export class PdfComponent
               this.isApprover,
               this.user.userID,
               this.stepNo,
-              this.modeView
+              this.modeView,
+              this.isSettingMode,
             )
             .subscribe((res) => {
               if (res) {
@@ -2984,7 +3000,8 @@ export class PdfComponent
           this.curFileID,
           tmpArea,
           recID,
-          this.modeView
+          this.modeView,
+          this.isSettingMode,
         )
         .subscribe((res) => {
           if (res) {
@@ -3011,7 +3028,8 @@ export class PdfComponent
                 this.isApprover,
                 this.user.userID,
                 this.stepNo,
-                this.modeView
+                this.modeView,
+                this.isSettingMode,
               )
               .subscribe((res) => {
                 if (res) {
@@ -3277,22 +3295,23 @@ export class PdfComponent
   //---------------------------------------------------------------------------------//
 
   popupPublicESign(status) {
-    if (this.oApprovalTrans.approverType == 'PE') {
-      this.codxCommonService
-        .codxApprove(this.transRecID, status, null, null, null, null, '3')
-        .subscribe((res: ResponseModel) => {
-          if (res?.msgCodeError == null && res?.rowCount > 0) {
-            this.notificationsService.notifyCode('SYS034');
-            this.isSigned = true;
-            this.detectorRef.detectChanges();
-            this.changeConfirmState(res);
-          }
-        });
-    } else {
+    // if (this.oApprovalTrans.approverType == 'PE') {
+    //   this.codxCommonService
+    //     .codxApprove(this.transRecID, status, null, null, null, null, '3')
+    //     .subscribe((res: ResponseModel) => {
+    //       if (res?.msgCodeError == null && res?.rowCount > 0) {
+    //         this.notificationsService.notifyCode('SYS034');
+    //         this.isSigned = true;
+    //         this.detectorRef.detectChanges();
+    //         this.changeConfirmState(res);
+    //       }
+    //     });
+    // } 
+    // else {
       this.publicSignStatus = status;
       var dialog = this.callfc.openForm(this.publicSignInfo, '', 450, 270);
       this.detectorRef.detectChanges();
-    }
+    //}
   }
 
   addSignature(setupShowForm, area = null) {

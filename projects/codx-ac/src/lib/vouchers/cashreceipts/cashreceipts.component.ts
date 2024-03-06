@@ -516,8 +516,7 @@ export class CashreceiptsComponent extends UIComponent {
           );
           dialog.closed.subscribe((res) => {
             if (res && res.event) {
-              this.journal = res.event?.data;
-              this.detectorRef.detectChanges();
+              this.getJournal();
             }
           });
         })
@@ -771,7 +770,6 @@ export class CashreceiptsComponent extends UIComponent {
   setDefault(data: any, action: any = '') {
     return this.api.exec('AC', 'CashReceiptsBusiness', 'SetDefaultAsync', [
       data,
-      this.journal,
       this.journalNo,
       action,
     ]);
