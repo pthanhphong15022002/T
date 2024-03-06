@@ -37,6 +37,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   crrUser:any;
   parentTask:any;
   isAssign:boolean=false;
+  enableEdit:boolean=true;
 
   constructor(
     injector: Injector,
@@ -65,6 +66,13 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
         this.enableAttachment=true;
         this.enableChecklist=true;
         this.getTaskUpdate(this.data.recID);
+      }
+      if(this.action=="view"){
+        this.enableEdit=false;
+        this.title ='Thông tin công việc'
+      }
+      if(this.action == 'edit'){
+        this.title = 'Chỉnh sửa công việc'
       }
     }
     if(this.data.parentID && this.action=='add') this.isAssign=true;
@@ -125,6 +133,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   }
 
   selectUser(){
+    if(!this.enableEdit) return;
     let option = new DialogModel;
     option.zIndex=9999;
     let dialog = this.callfc.openForm(PopupSelectUserComponent,'',500,600,'',{projectData:this.projectData,projectMemberType:this.projectMemberType, roleType: this.selectedRole ? this.selectedRole : 'A',listRoles:this.listRoles},'',option);
@@ -186,6 +195,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   newTask:any;
   todoList:any=[]
   addTask(input:any,cancel:boolean=false) {
+    if(!this.enableEdit) return;
     if (this.newTask.trim() !== '') {
       if(!this.isEditTodo){
         const newTask: any = {
@@ -225,6 +235,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   todoSeleted:any;
   todoSelectedIndex:any;
   editTodo(task:any,input:any){
+    if(!this.enableEdit) return;
     this.newTask = task.text;
     this.isEditTodo=true;
     this.todoSeleted=task;
@@ -235,6 +246,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   }
 
   toggleCompleted(task:any){
+    if(!this.enableEdit) return;
     if(task.status == '1'){
       task.status='90';
     }
@@ -246,6 +258,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   }
 
   checkboxChange(e:any){
+    if(!this.enableEdit) return;
     if(e.data){
       this.data[e.field]='1';
     }
@@ -255,6 +268,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   }
 
   async save(){
+    if(!this.enableEdit) return;
     if(this.action == 'add'){
       this.data.status='10';
       this.data.category='3';
@@ -564,10 +578,14 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     this.selectUser();
   }
 
-  enableEdit:boolean=true;
+
   checkAllowedEdit(){
     if(this.action=='add'){
       this.enableEdit=true;
+      return
+    }
+    if(this.action=='view'){
+      this.enableEdit=false;
       return
     }
     if(!this.crrUser){
@@ -579,13 +597,13 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
         this.enableEdit = false;
         return;
       }
-      if(this.data.createdBy == this.crrUser.userID){
+      if(this.data.createdBy == this.crrUser.userID && this.action=='edit'){
         this.enableEdit = true;
         return;
       }
       if(this.members.length){
         let userRole = this.members.find((x:any)=>x.resourceID==this.crrUser.userID);
-        if(userRole && userRole.roleType=='A'){
+        if(userRole && userRole.roleType=='A' && this.action=='edit'){
           this.enableEdit=true;
         }
         else this.enableEdit = false;
@@ -615,6 +633,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
       }
     })
   }
+
   isHtmlContent(memo:any){
     if(!memo) return false;
     return /<\/?[a-z][\s\S]*>/i.test(memo)
@@ -624,5 +643,32 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     return [
       ...new Map(arr.map((item: any) => [item[key], item])).values(),
     ] as any;
+  }
+
+  checkAssignPermission(){
+    if(this.data){
+      if(this.crrUser.administrator || this.crrUser.functionAdmin || this.crrUser.systemAdmin) return true;
+      if(this.crrUser.userID == this.data.createdBy) return true;
+      if(this.members.length && this.members.find((x:any)=>x.roleType=='A' && x.resourceID==this.crrUser.userID)) return true;
+      return false;
+    }
+    else{
+      return false;
+    }
+  }
+
+  checkEditPermission(){
+    if(this.data){
+      if(this.crrUser.administrator || this.crrUser.functionAdmin || this.crrUser.systemAdmin) return true;
+      if(this.crrUser.userID == this.data.createdBy) return true;
+      if(this.projectData &&
+         this.projectData.settings.length &&
+         this.projectData.settings.find((x:any)=>x.fieldName=='EditControlControl')?.fieldValue == 1 &&
+         this.members.find((x:any)=>x.roleType=='A' && x.resourceID==this.crrUser.userID)) return true;
+      return false;
+    }
+    else{
+      return false;
+    }
   }
 }

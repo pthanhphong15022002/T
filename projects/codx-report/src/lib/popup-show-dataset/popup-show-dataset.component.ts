@@ -119,7 +119,7 @@ export class PopupShowDatasetComponent implements OnInit, AfterViewInit {
   onDatabound(e:any){
     setTimeout(()=>{
       if(this.grid && this.grid.columns){
-        this.grid.columns.forEach((item:any)=> item.minWidth='150');
+        this.grid.columns.forEach((item:any)=> item.minWidth=150);
         this.grid.refresh();
       }
     },200)
