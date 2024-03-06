@@ -171,12 +171,12 @@
             </div>
           </div>
           <div class="row"
-            [ngStyle]="formVouchers?.data?.subType == '0301' || formVouchers?.data?.subType == '0311' ? '' : {display:'none'}">
+            [ngStyle]="formVouchers.data.subType == (journal.journalType + '1') ? '' : {display:'none'}">
             <div class="col-3" style="width: 360px;">
               <div class="form-group">
                 <codx-label style="white-space: nowrap !important" fiedName="DIM1" [formModel]="dialog.formModel">
                 </codx-label>
-                <ng-container *ngIf="formVouchers?.data?.subType == '0301' || formVouchers?.data?.subType == '0311'">
+                <ng-container *ngIf="formVouchers.data.subType == (journal.journalType + '1')">
                   <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" [Group]="formVouchers.formGroup"
                     field="diM1" [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)">
                   </codx-input>
@@ -187,7 +187,7 @@
               <div class="form-group">
                 <codx-label style="white-space: nowrap !important" fiedName="DIM2" [formModel]="dialog.formModel">
                 </codx-label>
-                <ng-container *ngIf="formVouchers?.data?.subType == '0301' || formVouchers?.data?.subType == '0311'">
+                <ng-container *ngIf="formVouchers.data.subType == (journal.journalType + '1')">
                   <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" [Group]="formVouchers.formGroup"
                     field="diM2" [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)">
                   </codx-input>
@@ -196,12 +196,12 @@
             </div>
           </div>
           <div class="row"
-            [ngClass]="formVouchers?.data?.subType == '0302' || formVouchers?.data?.subType == '0312' ? '' : 'd-none'">
+            [ngClass]="formVouchers?.data?.subType == (journal.journalType + '2') ? '' : 'd-none'">
             <div class="col-3" style="width: 360px;">
               <div class="form-group">
                 <codx-label style="white-space: nowrap !important" fiedName="ObjectID" [formModel]="dialog.formModel">
                 </codx-label>
-                <ng-container *ngIf="formVouchers?.data?.subType == '0302' || formVouchers?.data?.subType == '0312'">
+                <ng-container *ngIf="formVouchers?.data?.subType == (journal.journalType + '2')">
                   <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" #eleCbxObjectID
                     [Group]="formVouchers?.formGroup" field="objectID" [formModel]="dialog.formModel"
                     (valueChange)="valueChangeMaster($event)">
@@ -226,7 +226,7 @@
                 <codx-label style="white-space: nowrap !important" fiedName="RequestDate"
                   [formModel]="dialog.formModel">
                 </codx-label>
-                <ng-container *ngIf="formVouchers?.data?.subType == '0302' || formVouchers?.data?.subType == '0312'">
+                <ng-container *ngIf="formVouchers?.data?.subType == (journal.journalType + '2')">
                   <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" [Group]="formVouchers.formGroup"
                     field="requestDate" [formModel]="dialog.formModel">
                   </codx-input>

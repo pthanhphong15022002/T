@@ -76,6 +76,7 @@ import { AddFileFromProcessDefaultComponent } from './processes/popup-add-proces
 import { ImgSvgVllPipe } from './pipes/img-svg-vll.pipe';
 import { AddTableRowComponent } from './processes/popup-add-process/process-release/add-process-default/add-table-row/add-table-row.component';
 import { PropertyUserinfoComponent } from './modeview/properties/property-userinfo/property-userinfo.component';
+import { BpSignPDFComponent } from './sign-pdf/bp-sign-pdf.component';
 
 export const routes: Routes = [
   {
@@ -169,6 +170,7 @@ export const routes: Routes = [
     CustomStagesPipe,
     ViewDetailInstancesComponent,
     PopupBpTasksComponent,
+    BpSignPDFComponent,
 
     MyInstancesComponent,
     CheckDuedateValuePipe,
