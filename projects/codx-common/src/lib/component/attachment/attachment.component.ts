@@ -252,6 +252,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         this.changeDetectorRef.detectChanges();
       }
     });
+
   }
 
   ngAfterViewInit(): void {
@@ -522,8 +523,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
 
-    if(environment.saas == 0) this.appName = environment.appName || this.user.tenant;
-    else this.appName = this.user.tenant;
+    this.appName = environment.appName || this.user.tenant;
     this.setFormModel();
     //this.getFolderPath();
     this.dataFolder = this.dmSV.parentFolder.getValue();

@@ -166,7 +166,7 @@ export class tempLoadPDF {
   recID: string;
   transRecID: string;
   isApproveMode: boolean;
-  isTemplateMode: boolean;
+  fileIDs: string;
   isSettingMode: boolean;
   dynamicApprovers: Array<Approver>;
 }
