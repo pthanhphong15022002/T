@@ -119,14 +119,14 @@
                             </ng-template>
                           </e-tabitem>
 
-                          <e-tabitem>
+                          <e-tabitem [disabled]="disabledTabQR">
                             <ng-template #headerText>
                               <div class="nav-item w-100">
                                 <div class="d-flex flex-column text-center">
                                   <div [class]="
                                       'icon-20 mb-2 icon-qr_code_scanner'
                                     "></div>
-                                  <span class="text-gray-700 fw-bold">
+                                  <span class="text-gray-700 fw-bold" [ngClass]="{'disabled': disabledTabQR}">
                                     <codx-label default="QR"></codx-label>
                                   </span>
                                 </div>
