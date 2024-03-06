@@ -767,7 +767,6 @@ export class CashPaymentsComponent extends UIComponent {
   setDefault(data: any, action: any = '') {
     return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
       data,
-      this.journal,
       this.journalNo,
       action,
     ]);
