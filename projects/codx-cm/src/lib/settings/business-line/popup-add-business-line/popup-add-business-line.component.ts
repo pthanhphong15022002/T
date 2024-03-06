@@ -1,8 +1,16 @@
-import { AfterViewInit, Component, OnInit, Optional } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import {
   ApiHttpService,
   CRUDService,
   CacheService,
+  CodxComboboxComponent,
+  CodxInputComponent,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -16,6 +24,8 @@ import { CodxCmService } from '../../../codx-cm.service';
   styleUrls: ['./popup-add-business-line.component.css'],
 })
 export class PopupAddBusinessLineComponent implements OnInit, AfterViewInit {
+  @ViewChild('cbxProcessDeals') cbxProcessDeals: CodxInputComponent;
+  @ViewChild('cbxProcessContracts') cbxProcessContracts: CodxInputComponent;
   dialog: any;
   gridViewSetup: any;
 
@@ -48,6 +58,7 @@ export class PopupAddBusinessLineComponent implements OnInit, AfterViewInit {
     let arrField = Object.values(this.gridViewSetup).filter(
       (x: any) => x.allowPopup
     );
+
     if (Array.isArray(arrField)) {
       this.arrFieldForm = arrField
         .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
@@ -76,7 +87,9 @@ export class PopupAddBusinessLineComponent implements OnInit, AfterViewInit {
         }
       });
   }
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.changeCbx();
+  }
   ngOnInit(): void {}
 
   valueChange(e) {
@@ -163,6 +176,40 @@ export class PopupAddBusinessLineComponent implements OnInit, AfterViewInit {
           }
         }
       }
+    }
+  }
+
+  changeCbx() {
+    if (this.cbxProcessContracts && this.cbxProcessDeals) {
+      this.cbxProcessDeals.model = {
+        BusinessLineID: this.data.businessLineID ?? 'null',
+      };
+
+      this.cbxProcessContracts.model = {
+        BusinessLineID: this.data.businessLineID ?? 'null',
+      };
+
+      // let predicate = 'Deleted=@0 && BusinessLineID == null';
+      // let dataValue = 'false';
+      // if (this.action == 'edit') {
+      //   predicate =
+      //     'Deleted =@0 && ( BusinessLineID == null || BusinessLineID=@1 )';
+      //   dataValue = 'false;' + this.data.businessLineID;
+      // }
+
+      // (
+      //   this.cbxProcessContracts.ComponentCurrent as CodxComboboxComponent
+      // ).dataService.predicates = predicate;
+      // (
+      //   this.cbxProcessContracts.ComponentCurrent as CodxComboboxComponent
+      // ).dataService.dataValues = dataValue;
+
+      // (
+      //   this.cbxProcessDeals.ComponentCurrent as CodxComboboxComponent
+      // ).dataService.predicates = predicate;
+      // (
+      //   this.cbxProcessDeals.ComponentCurrent as CodxComboboxComponent
+      // ).dataService.dataValues = dataValue;
     }
   }
 }

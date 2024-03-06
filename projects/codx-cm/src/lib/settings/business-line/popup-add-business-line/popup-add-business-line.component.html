@@ -34,6 +34,7 @@
       <codx-label [formModel]="form.formModel" fiedName="processID">
       </codx-label>
       <codx-input
+        #cbxProcessDeals
         [field]="'processID'"
         [formModel]="form.formModel"
         [Group]="form?.formGroup"
@@ -46,6 +47,7 @@
       <codx-label [formModel]="form.formModel" fiedName="processContractID">
       </codx-label>
       <codx-input
+        #cbxProcessContracts
         [field]="'processContractID'"
         [formModel]="form.formModel"
         [Group]="form?.formGroup"
