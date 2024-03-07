@@ -870,7 +870,7 @@
                     </div> -->
                   </div>
                 </div>
-                <div class="mt-5">
+                <!-- <div class="mt-5">
                   <div class="text-dark text-primary fw-bold fs-6 mb-3">
                     <codx-label
                       fiedName="Memo"
@@ -878,21 +878,13 @@
                       [formModel]="formModel"
                     ></codx-label>
                   </div>
-                  <!-- <span
-                    #memo
-                    [innerHTML]="
-                      dataSelected.memo
-                        | formatvalue : formModel : 'memo' : memo
-                        | async
-                    "
-                  ></span> -->
                   <codx-show-more-less
                     [formModel]="formModel"
                     [value]="dataSelected?.memo"
                     [text]="'memo'"
                   >
                   </codx-show-more-less>
-                </div>
+                </div> -->
                 <div *ngIf="isHaveField">
                   <div class="d-flex flex-column mt-5">
                     <ng-container *ngFor="let item of listSteps">
