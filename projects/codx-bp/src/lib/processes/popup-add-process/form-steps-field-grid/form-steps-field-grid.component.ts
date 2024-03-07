@@ -243,22 +243,45 @@ export class FormStepsFieldGridComponent
     let option = new SidebarModel();
     option.Width = 'Auto';
     option.FormModel = this.formModel;
-    let popup = this.callFunc.openSide(AddDefaultComponent, obj, option);
-    popup.closed.subscribe((res) => {
-      if (res?.event) {
-        if (res?.event?.delete) {
-          this.data = res?.event?.process;
-          let deleteDt = res?.event?.data;
-        } else {
-          this.data = res?.event?.process;
-          let dt = res?.event?.data;
-          if (dt.activityType == 'Stage') {
-            var index = this.listStage.findIndex((x) => x.recID == dt.recID);
-            var indexP = this.data.steps.findIndex((x) => x.recID == dt.recID);
-            if (index >= 0) this.listStage[index] = dt;
-            else this.listStage.push(dt);
-            if (indexP >= 0) this.data.steps[indexP] = dt;
-            else this.data.steps.push(dt);
+    let popup = this.callFunc.openSide(AddDefaultComponent,obj,option);
+    popup.closed.subscribe(res=>
+      {
+        if(res?.event)
+        {
+          if(res?.event?.delete)
+          {
+            this.data = res?.event?.process || this.data;
+            let deleteDt = res?.event?.delete;
+            if(deleteDt)
+            {
+              let indexParent = this.data.steps.findIndex(x=>x.recID == deleteDt.parentID);
+              if(indexParent>=0)
+              {
+                this.data.steps[indexParent].child = this.data.steps[indexParent].child.filter(x=>x.recID != deleteDt.recID);
+              }
+
+              this.data.steps = this.data.steps.filter(x=>x.recID != deleteDt.recID);
+
+              let indexParent2 = this.listStage.findIndex(x=>x.recID == deleteDt.parentID);
+              if(indexParent2>=0)
+              {
+                this.listStage[indexParent2].child = this.listStage[indexParent2].child.filter(x=>x.recID != deleteDt.recID);
+              }
+            }
+            this.dataChange.emit(this.data);
+          }
+          else
+          {
+            this.data = res?.event?.process || this.data;
+            let dt = res?.event?.data;
+            if(dt.activityType == "Stage")
+            {
+              var index = this.listStage.findIndex(x=>x.recID == dt.recID);
+              var indexP = this.data.steps.findIndex(x=>x.recID == dt.recID);
+              if(index >= 0) this.listStage[index] = dt;
+              else this.listStage.push(dt);
+              if(indexP >= 0) this.data.steps[indexP] = dt;
+              else this.data.steps.push(dt);
 
             var name = 'stage' + (this.listIds.length - 1) + '_' + dt.recID;
             this.listIds.push(name);

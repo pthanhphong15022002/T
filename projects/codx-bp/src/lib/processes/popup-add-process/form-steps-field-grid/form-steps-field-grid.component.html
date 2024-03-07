@@ -65,7 +65,7 @@
     <ng-container *ngTemplateOutlet="addStage"></ng-container>
 </div>
 <ng-template #tmpRow let-data let-isCon="b" let-index="c">
-    <div class="row d-flex align-items-center cursor-pointer w-100" >
+    <div class="row d-flex align-items-center cursor-pointer w-100" (click)="$event.stopPropagation();addEditStages(data.activityType,'edit',data)">
         <div class="col-3 d-flex align-items-center"><div class="w-30px"><i *ngIf="isCon" class="icon-arrow_right_alt"></i><i *ngIf="data?.activityType == 'Conditions'" [class]="data?.settings?.icon" [style.color]="data?.settings?.color"></i></div><span [class.me-2]="data?.reasonCon">{{data?.reasonCon ? (data?.reasonCon + " : ") : ""}}</span><span>{{data?.stepName}}</span></div>
         <ng-container *ngIf="data?.activityType != 'Conditions'">
             <div class="col-1 d-flex align-items-center"><i [class]="data?.settings?.icon" [style.color]="data?.settings?.color"></i><span class="mx-2">{{data.activityType}}</span></div>
