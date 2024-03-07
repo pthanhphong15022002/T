@@ -43,7 +43,7 @@
         <codx-label fiedName="ParentID" [formModel]="form.formModel" default="Giai đoạn công việc cha" [ngClass]="grvSetup['ParentID']?.isRequire ? 'required' : ''">
         </codx-label>
         <codx-input field="parentID" [crrValue]="data?.parentID" [model]="data" type="combobox" refType="3" [formModel]="formModel" [refValue]="grvSetup['ParentID']?.referedValue"
-           (valueChange)="valueChange($event)" [disabled]="!enableEdit">
+           (valueChange)="valueChange($event)" [disabled]="!enableEdit" (dataSourceChange)="onCbxDataAdded($event)">
         </codx-input>
       </div>
       <div class="row border-bottom">
@@ -288,8 +288,10 @@
       <h5><codx-label name="lblTaskHistory" [formModel]="formModel" default="Lịch sử cập nhật"></codx-label></h5>
       <div class="pt-3 overflow-scroll"style="height:85%">
         <codx-history
+        #history
           [objectID]="data?.recID"
           [formModel]="dialog?.formModel"
+          [showIcon]="false"
         ></codx-history>
       </div>
       <div class="pt-3 border-top h-auto">
@@ -300,16 +302,25 @@
           [actionType]="'C'"
           [addNew]="true"
           [funcID]="funcID"
-          (totalCommentChange)="changeCountFooter($event, 'comment')"
+          [showCommentTree]="false"
+          (typed)="commentTyped($event, 'comment')"
         >
         </codx-tree-comment>
         </div>
-        <div class="row h-25 w-100 d-flex">
-          <div class="col-2 d-flex align-items-center pb-3 ps-5">
+        <div class="row h-25 w-100 d-flex justify-content-center flex-row ">
+          <div class="d-flex align-items-center pb-3 ps-1 w-auto" *ngIf="showInprogress">
             <codx-input type="checkbox" [class]="'check-circle'"  ></codx-input>
+            <codx-label fiedName="lblInProcess" class="ps-2" [formModel]="form.formModel" default="Đang xử lý"  >
+            </codx-label>
           </div>
-          <div class="col-10 d-flex justify-content-start">
-            <codx-label fiedName="lblInProcess" [formModel]="form.formModel" default="Đang xử lý"  >
+          <div class="d-flex align-items-center pb-3 ps-1 w-auto" *ngIf="showFinish">
+            <codx-input type="checkbox" [class]="'check-circle'"  ></codx-input>
+            <codx-label fiedName="lblFinish" class="ps-2" [formModel]="form.formModel" default="Hoàn tất"  >
+            </codx-label>
+          </div>
+          <div class="d-flex align-items-center pb-3 ps-1 w-auto" *ngIf="showReport">
+            <codx-input type="checkbox" [class]="'check-circle'"  ></codx-input>
+            <codx-label fiedName="lblReport" class="ps-2" [formModel]="form.formModel" default="Báo cáo"  >
             </codx-label>
           </div>
         </div>
@@ -344,7 +355,7 @@
         name="btnAssign"
         formName="System"
         default="Giao việc"
-        class="btn btn-light-primary"
+        class="btn btn-light-primary me-3"
         (click)="assignTask()"
         [disabled]="!enableEdit"
       ></button>

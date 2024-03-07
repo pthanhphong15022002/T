@@ -119,14 +119,14 @@
                             </ng-template>
                           </e-tabitem>
 
-                          <e-tabitem [disabled]="disabledTabQR">
+                          <e-tabitem>
                             <ng-template #headerText>
                               <div class="nav-item w-100">
                                 <div class="d-flex flex-column text-center">
                                   <div [class]="
                                       'icon-20 mb-2 icon-qr_code_scanner'
                                     "></div>
-                                  <span class="text-gray-700 fw-bold" [ngClass]="{'disabled': disabledTabQR}">
+                                  <span class="text-gray-700 fw-bold">
                                     <codx-label default="QR"></codx-label>
                                   </span>
                                 </div>
@@ -142,13 +142,13 @@
                                       alt="/assets/codx/bg/qrCodx.png" />
                                     <div class="w-50 bg-secondary ratio ratio-1x1 position-absolute rounded-3"
                                       [ngClass]="{}" [ngStyle]="{
-                                        'z-index': qrTimeout > 0 ? -1 : 1,
-                                        'opacity': qrTimeout > 0 ? 0 : 0.9,
+                                        'z-index': disabledTabQR ? 1 : (qrTimeout > 0 ? -1 : 1),
+                                        'opacity': disabledTabQR ? 0.9 : (qrTimeout > 0 ? 0 : 0.9),
                                       }"></div>
                                     <div
                                       class="otp-btn w-100 h-100 d-flex justify-content-center align-items-center position-absolute">
-                                      <button [disabled]="qrTimeout > 0" [ngStyle]="{
-                                          'z-index': qrTimeout > 0 ? -1 : 2,
+                                      <button [disabled]="disabledTabQR ? false : (qrTimeout > 0)" [ngStyle]="{
+                                          'z-index': disabledTabQR ? 2 : (qrTimeout > 0 ? -1 : 2),
                                           'border':'none',
                                           'opacity': 0.8,
                                           'border-radius': '50%',
