@@ -301,6 +301,7 @@ export class AddProcessDefaultComponent implements OnInit{
           isOverDue : stageF?.isOverDue,	
           owners: stageF?.owners,
           permissions: stageF?.permissions,
+          indexNo: stageF.stepNo
         }
         var step = 
         {
@@ -327,6 +328,7 @@ export class AddProcessDefaultComponent implements OnInit{
           isOverDue : this.data?.isOverDue,	
           owners: this.data?.owners,
           permissions: this.data?.permissions,
+          indexNo: this.data.stepNo
         }
         
       

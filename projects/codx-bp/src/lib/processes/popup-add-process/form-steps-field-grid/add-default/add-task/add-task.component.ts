@@ -525,7 +525,11 @@ export class AddTaskComponent
         this.isNewForm = false;
         this.data.extendInfo =
           res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
+
+        var index = this.process.steps.findIndex(x=>x.recID == this.data.recID);
+        if(index >=0) this.process.steps[index].extendInfo = this.data.extendInfo;
         this.dataChange.emit(this.data);
+        this.dataChangeProcess.emit(this.process);
       }
     });
   }

@@ -380,7 +380,6 @@ export class PopupAddProcessComponent {
   setLstExtends() {
     let lst = [];
     if (this.extendInfos?.length > 0) {
-      console.log('extendInfos: ', this.extendInfos);
       this.extendInfos.forEach((res) => {
         let count = 1;
         let tmp = {};
@@ -803,38 +802,8 @@ export class PopupAddProcessComponent {
         this.extendInfos =
           res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
         this.setLstExtends();
-        // let extDocumentControls = this.extendInfos.filter(
-        //   (x) => x.fieldType == 'Attachment' && x.documentControl != null
-        // );
-        // if (extDocumentControls?.length > 0) {
-        //   let lstDocumentControl = [];
-        //   extDocumentControls.forEach((ele) => {
-        //     const documents =
-        //       typeof ele.documentControl == 'string'
-        //         ? ele.documentControl
-        //           ? JSON.parse(ele.documentControl)
-        //           : []
-        //         : ele.documentControl ?? [];
-        //     documents.forEach((res) => {
-        //       var tmpDoc = {};
-        //       tmpDoc['recID'] = Util.uid();
-        //       tmpDoc['stepNo'] = 1;
-        //       tmpDoc['fieldID'] = res.recID;
-        //       tmpDoc['title'] = res.title;
-        //       tmpDoc['memo'] = res.memo;
-        //       tmpDoc['isRequired'] = res.isRequired ?? false;
-        //       tmpDoc['count'] = res.count ?? 0;
-        //       tmpDoc['templateID'] = res.templateID;
-        //       lstDocumentControl.push(tmpDoc);
-        //     });
-        //   });
-        //   this.data.documentControl =
-        //     lstDocumentControl.length > 0
-        //       ? JSON.stringify(lstDocumentControl)
-        //       : null;
-        // }
-        
-        if (this.data?.steps[1]?.extendInfo) {
+        let index = this.data?.steps.findIndex(x=>x.activityType == "Form");
+        if (this.data?.steps[index]?.extendInfo) {
           this.extendInfos.forEach((element) => {
             if (element.controlType == 'Attachment') {
               if (!element?.documentControl || element?.documentControl.length == 0) {
@@ -893,7 +862,7 @@ export class PopupAddProcessComponent {
             }
           });
 
-          this.data.steps[1].extendInfo = this.extendInfos;
+          this.data.steps[index].extendInfo = this.extendInfos;
 
           this.data = Object.assign({},  this.data);
           
@@ -1037,6 +1006,7 @@ export class PopupAddProcessComponent {
 
   formatData(datas:any)
   {
+    debugger
     let data = datas.steps;
     this.countStage = data.length;
     data = data.sort((a, b) => a.stepNo - b.stepNo);
@@ -1058,6 +1028,10 @@ export class PopupAddProcessComponent {
       data[i].stepNo = i;
     }
     datas.steps = data;
+
+    var fristForm = datas.steps.filter(x=>x.activityType == "Form")[0]
+    this.extendInfos = fristForm?.extendInfo;
+    this.setLstExtends();
     return datas;
   }
 }
