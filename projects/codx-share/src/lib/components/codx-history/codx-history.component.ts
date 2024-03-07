@@ -11,20 +11,21 @@ export class CodxHistoryComponent implements OnInit,OnChanges {
   @Input() objectID:string = "";
   @Input() funcID:string = "";
   @Input() formModel:FormModel = null;
+  @Input() showIcon:boolean=true;
   pridicate:string = "";
   dataValue:string = "";
-  listHistory:any = []; 
+  listHistory:any = [];
   constructor(
     private api:ApiHttpService,
     private cache:CacheService,
     private auth:AuthService,
     private dt:ChangeDetectorRef,
-  ) 
-  { 
-    
+  )
+  {
+
   }
 
-  ngOnInit(): void 
+  ngOnInit(): void
   {
     this.getDataAsync(this.objectID);
   }
@@ -46,7 +47,7 @@ export class CodxHistoryComponent implements OnInit,OnChanges {
         "GetLogByIDAsync",
         [objectID]).
         subscribe((res:any[]) =>{
-        if(res) 
+        if(res)
           this.listHistory = JSON.parse(JSON.stringify(res));
         else
           this.listHistory = null;
@@ -54,4 +55,7 @@ export class CodxHistoryComponent implements OnInit,OnChanges {
     }
   }
 
+  refresh(){
+    if(this.objectID)  this.getDataAsync(this.objectID);
+  }
 }

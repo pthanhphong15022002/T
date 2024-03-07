@@ -86,7 +86,7 @@
 <ng-template #C>
   <div class="position-relative pb-3 send-comt">
     <div class="d-flex">
-      <div class="me-3">
+      <div class="me-3" *ngIf="showIcon">
         <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
           [path]="'assets/themes/sys/default/img/'"></codx-vll>
       </div>
@@ -141,7 +141,7 @@
 <!-- NEW -->
 <ng-template #N>
   <div class="d-flex align-items-top">
-    <div class="me-3">
+    <div class="me-3"*ngIf="showIcon">
       <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
         [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
@@ -162,7 +162,7 @@
 <!-- MAIL -->
 <ng-template #E>
   <div class="d-flex align-items-top">
-    <div class="me-3">
+    <div class="me-3" *ngIf="showIcon">
       <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
         [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
@@ -192,7 +192,7 @@
 <!-- TASK -->
 <ng-template #T>
   <div class="d-flex align-items-top">
-    <div class="me-3">
+    <div class="me-3" *ngIf="showIcon">
       <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
         [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
@@ -222,7 +222,7 @@
 <!-- TASK -->
 <ng-template #RE>
   <div class="d-flex align-items-top">
-    <div class="me-3">
+    <div class="me-3" *ngIf="showIcon">
       <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
         [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
@@ -264,7 +264,7 @@
 <!-- UPDATE -->
 <ng-template #U>
   <div class="d-flex align-items-top pb-2">
-    <div class="me-3">
+    <div class="me-3" *ngIf="showIcon">
       <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
         [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
@@ -361,7 +361,7 @@
 <!-- ATTACHMENT -->
 <ng-template #A>
   <div class="d-flex align-items-top">
-    <div class="me-3">
+    <div class="me-3" *ngIf="showIcon">
       <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
         [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
@@ -392,7 +392,7 @@
 <!-- SHARE -->
 <ng-template #S>
   <div class="d-flex align-items-top">
-    <div class="me-3">
+    <div class="me-3" *ngIf="showIcon">
       <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
         [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
@@ -413,7 +413,7 @@
 <!-- DELETED -->
 <ng-template #D>
   <div class="d-flex align-items-top">
-    <div class="me-3">
+    <div class="me-3" *ngIf="showIcon">
       <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
         [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
@@ -439,7 +439,7 @@
 <!-- C1 -->
 <ng-template #C1>
   <div class="d-flex align-items-top">
-    <div class="me-3">
+    <div class="me-3" *ngIf="showIcon">
       <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
         [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
@@ -473,7 +473,7 @@
 <!-- C2 -->
 <ng-template #C2>
   <div class="d-flex align-items-top">
-    <div class="me-3">
+    <div class="me-3" *ngIf="showIcon">
       <img *ngIf="data.image; else noImage" class="w-30px iconHistory" [src]="data.image" alt="" />
       <ng-template #noImage>
         <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
@@ -510,7 +510,7 @@
 <!-- C3 -->
 <ng-template #C3>
   <div class="d-flex align-items-top">
-    <div class="me-3">
+    <div class="me-3"*ngIf="showIcon">
       <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
         [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
@@ -544,7 +544,7 @@
 <!-- V -->
 <ng-template #V>
   <div class="d-flex align-items-top">
-    <div class="me-3">
+    <div class="me-3" *ngIf="showIcon">
       <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
         [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
@@ -565,7 +565,7 @@
 <!-- A0 -->
 <ng-template #A0>
   <div class="d-flex align-items-top">
-    <div class="me-3">
+    <div class="me-3" *ngIf="showIcon">
       <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
         [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
