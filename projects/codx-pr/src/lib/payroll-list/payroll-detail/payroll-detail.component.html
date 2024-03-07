@@ -77,10 +77,10 @@
 
 <ng-template #tmpToolBarTmp>
     <div class="d-flex align-items-center cursor-pointer">
-        <div class="fw-bold fs-4" >{{view?.function?.customName}}</div>
+        <div class="fw-bold">{{view?.function?.customName}}</div>
         <div class="icon-navigate_next"></div>
         <div [innerHTML]="data?.hrTemplateID | formatvalue : view?.formModel : 'hrTemplateID' | async"></div>
-        <div class="ms-2 fs-4">|</div>
+        <div class="mx-2">|</div>
         <div>({{codxGridView ? codxGridView?.dataService?.rowCount : 0}})</div>
     </div>
 </ng-template>

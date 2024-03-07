@@ -58,7 +58,7 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes && changes?.recID && changes?.recID?.currentValue !== changes?.recID?.previousValue)
+    if(changes && changes?.recID)
     {
       this.loadData(this.recID);
     }
@@ -110,6 +110,7 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
       if(!this.loaded) this.loaded = true;
       this.data = res;
       this.detectorRef.detectChanges();
+      this.codxGrvV2?.refresh();
     });
   }
   
@@ -146,7 +147,7 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
   }
 
   openPopupEditGroupSalCode(){
-    if(this.tmpUpdateGroupSal)
+    if(this.tmpUpdateGroupSal && this.data)
     {
       let dialogModel = new DialogModel();
       dialogModel.FormModel = this.formModel;
@@ -198,6 +199,7 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
           {
             this.notiSV.notifyCode("SYS007");
             dialog.close();
+            this.codxGrvV2?.refresh();
           }
           else this.notiSV.notifyCode("SYS021");
         });

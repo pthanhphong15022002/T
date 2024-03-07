@@ -395,7 +395,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
     let model : any = new IV_TransfersLines();
     let oLine = Util.camelizekeyObj(model);
     oLine.transID = this.formWareHouse.data.recID;
-    oLine.idiM41 = this.formWareHouse.data.fromWHID;
+    oLine.idiM4 = this.formWareHouse.data.fromWHID;
     oLine.idiM42 = this.formWareHouse.data.toWHID;
     oLine.reasonID = this.formWareHouse.data.reasonID;
     let indexReason = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value);
