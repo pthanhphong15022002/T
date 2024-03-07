@@ -96,7 +96,8 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
     option.zIndex = 1010;
     option.FormModel = this.formModel;
     var obj = {
-
+      dataReminder: this.data?.reminder,
+      dataEventControl: this.data?.eventControl
     };
     let popupDialog = this.callFuc.openForm(
       FormSettingAdvancedTasksComponent,

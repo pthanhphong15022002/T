@@ -641,25 +641,24 @@ export class ViewDetailComponent
     delete datas.hasChildren;
     delete datas.includeTables;
     switch (funcID) {
-      case 'ODT116':
-        {
-          this.dataService = new CRUDService(this.inject);
-          // this.cache.functionList("ODS25").subscribe(item=>{
-            
-          // })
-          this.api
+      case 'ODT116': {
+        this.dataService = new CRUDService(this.inject);
+        // this.cache.functionList("ODS25").subscribe(item=>{
+
+        // })
+        this.api
           .execSv(
             'SYS',
             'ERM.Business.SYS',
             'ComboboxListBusiness',
             'GetFormAddNewAsync',
-            "ODS25"
+            'ODS25'
           )
           .subscribe((res: any) => {
             if (res) {
               //this.settingAddnew = res;
               var func = res[0];
-              var gridView = res[1];           
+              var gridView = res[1];
               this.cache.setGridView(func.gridViewName, gridView);
               var grvSetup = res[2];
               this.cache.setGridViewSetup(
@@ -672,15 +671,16 @@ export class ViewDetailComponent
               this.formModelAdd.gridViewName = func.gridViewName;
               this.formModelAdd.entityName = entity.physicalName;
               this.formModelAdd.entityPer = func.entityName;
-              this.formModelAdd.funcID = "ODS25";
+              this.formModelAdd.funcID = 'ODS25';
               this.dataService.request.funcID = this.formModelAdd.funcID;
-              this.dataService.request.entityName = this.formModelAdd.entityName;
-              this.dataService.service = "PM";
+              this.dataService.request.entityName =
+                this.formModelAdd.entityName;
+              this.dataService.service = 'PM';
               (this.dataService as CRUDService).addNew().subscribe((res) => {
                 res.projectID = datas.refNo;
                 res.projectName = datas.title;
                 res.refType = this.formModel.entityName;
-                res.refNo = datas.refNo
+                res.refNo = datas.refNo;
                 this.dataService.dataSelected = res;
                 var obj = {
                   gridViewName: this.formModelAdd.gridViewName,
@@ -699,58 +699,56 @@ export class ViewDetailComponent
                   this.formModelAdd.funcID,
                   obj
                 );
-              
-                dialog.closed.subscribe(res=>{
-                  if(res?.event?.save?.data)
-                  {
+
+                dialog.closed.subscribe((res) => {
+                  if (res?.event?.save?.data) {
                     let ress = res?.event?.save?.data;
                     this.data.projectID = ress.projectID;
                     this.odService
-                    .updateDispatch(
-                      this.data,
-                      this.formModel.funcID,
-                      false,
-                      this.referType,
-                      this.formModel?.entityName
-                    )
-                    .subscribe(res4=>{
-                      // if (res4?.status == 0) this.notifySvr.notifyCode("SYS007")
-                      // else this.notifySvr.notifyCode("SYS021")
-                    })
+                      .updateDispatch(
+                        this.data,
+                        this.formModel.funcID,
+                        false,
+                        this.referType,
+                        this.formModel?.entityName
+                      )
+                      .subscribe((res4) => {
+                        // if (res4?.status == 0) this.notifySvr.notifyCode("SYS007")
+                        // else this.notifySvr.notifyCode("SYS021")
+                      });
                   }
-                })
+                });
               });
             }
           });
-          break;
-        }
-      case "ODT117":
-        {
-          let option = new DialogModel();
-          option.IsFull = true;
-          this.callfc
-            .openForm(
-              EditFileComponent,
-              null,
-              600,
-              400,
-              null,
-              { 
-                headerText: val?.data?.customName,
-                data: datas,
-                formModel: this.formModel, 
-              },
-              '',
-              option
-            )
-            .closed.subscribe((x) => {
-              if (x.event) {
-                this.data = x.event;
-                this.view.dataService.update(x.event).subscribe();
-              }
-            });
-          break;
-        }
+        break;
+      }
+      case 'ODT117': {
+        let option = new DialogModel();
+        option.IsFull = true;
+        this.callfc
+          .openForm(
+            EditFileComponent,
+            null,
+            600,
+            400,
+            null,
+            {
+              headerText: val?.data?.customName,
+              data: datas,
+              formModel: this.formModel,
+            },
+            '',
+            option
+          )
+          .closed.subscribe((x) => {
+            if (x.event) {
+              this.data = x.event;
+              this.view.dataService.update(x.event).subscribe();
+            }
+          });
+        break;
+      }
       //chỉ xem
       case 'read': {
         let option = new SidebarModel();
@@ -1657,9 +1655,9 @@ export class ViewDetailComponent
       }
       //Gửi mail
       case 'SYS004': {
-        this.data = e?.result[0];
-        this.data.lstUserID = getListImg(e?.result[0].relations);
-        this.data.listInformationRel = e?.result[1];
+        // this.data = e?.result?.data;
+        // this.data.lstUserID = getListImg(e?.result?.data?.relations);
+        // this.data.listInformationRel = e?.result[1];
         break;
       }
     }

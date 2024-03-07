@@ -31,6 +31,8 @@
     [user]="user"
     [isTreeView]="true"
     (nodeSelected)="treeSelect($event)"
+    [treeCmp]="viewTree"
+    (addChild)="addChild($event)"
   >
   </share-view-list>
 </ng-template>

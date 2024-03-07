@@ -110,10 +110,10 @@
 <!-- Start: TemplateRight -->
 <ng-template #templateRight>
   <ng-container *ngIf="view.formModel">
-    <div class="tabposting-content">
+    <div class="tabposting-content w-100 overflow-scroll">
       <codx-gridview-v2 #eleGrid class="tabLine" [formName]="view.formModel.formName" [editOnClick]="true"
         [gridViewName]="view.formModel.gridViewName" [entityName]="view.formModel.entityName" predicates="PostType=@0"
-        [dataValues]="postType" [hideMoreFunc]="true"></codx-gridview-v2>
+        [dataValues]="postType" [hideMoreFunc]="true" [rowHeight]="42"></codx-gridview-v2>
     </div>
   </ng-container>
 </ng-template>

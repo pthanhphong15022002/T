@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { DialogData, DialogRef } from 'codx-core';
+import { DialogData, DialogRef, NotificationsService } from 'codx-core';
 import {
   BP_Processes_Steps_EventControl,
   BP_Processes_Steps_Reminder,
@@ -29,14 +29,12 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
   isSendMail: boolean = false;
   dataReminder = new BP_Processes_Steps_Reminder();
   dataEventControl = new BP_Processes_Steps_EventControl();
-  vllDurations = [
-    {time: 1, duration: '15 phút', alertType: '1;2'},
-    {time: 2, duration: '30 phút', alertType: '1'},
-    {time: 3, duration: '45 phút', alertType: '2'},
-    {time: 4, duration: '60 phút', alertType: ''},
-  ];
+  vllDurations = [];
+  countTime = 1;
+  checkValidate: boolean = true;
   constructor(
     private detectorRef: ChangeDetectorRef,
+    private notiSv: NotificationsService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -48,6 +46,7 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
   }
   ngOnInit(): void {
     this.dataReminder.control = '0';
+    this.countTime = this.vllDurations.length + 1;
   }
 
   changeRadio(e) {}
@@ -62,15 +61,51 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
     }
     this.detectorRef.detectChanges();
   }
-  checkType(item, type){
+
+  addNNewReminder() {
+    var check = this.checkValidateTimes();
+    if(check == false) return;
+    var obj = {};
+    obj['time'] = this.countTime;
+    obj['duration'] = '';
+    obj['alertType'] = '';
+    this.vllDurations.push(obj);
+    this.countTime++;
+    this.checkValidate = false;
+    this.detectorRef.detectChanges();
+  }
+
+  checkType(item, type) {
     let check = false;
-    if(item){
-      check = item?.split(';').some(x => x == type);
+    if (item) {
+      check = item?.split(';').some((x) => x == type);
     }
     return check;
   }
 
-  valueChangeAlertType(e, index){
+  valueChangeAlertType(e, index) {
+    if(index != -1){
 
+    }
   }
+
+  checkValidateTimes(){
+    if (this.vllDurations.length > 0) {
+      let check = this.vllDurations.findIndex(
+        (x) => x.duration == '' && x.alertType == ''
+      );
+      if (check != -1) {
+        this.notiSv.notifyCode(
+          'Vui lòng nhập thời gian ở lần ' + this.vllDurations[check].time + ' đầy đủ'
+        );
+        this.checkValidate = false;
+        return false;
+      }else{
+        this.checkValidate = true;
+      }
+    }
+    return true;
+  }
+
+  onSave() {}
 }

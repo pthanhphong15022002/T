@@ -1,0 +1,72 @@
+<!-- -----------------------------------LAO ĐỘNG NƯỚC NGOÀI------------------------------------------------ -->
+<div class="container mb-4 bg-body">
+    <div class="row mt-2 mb-3">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="text-left">
+                <span class="icon-folder_special icon-20 me-2"></span>
+                <codx-label name="lblForeignWork" [formModel]="formModel" [default]="'Lao động nước ngoài'" class="fs-5-sm fw-bold text-primary text-uppercase">
+                </codx-label>
+            </div>
+            <ng-contaniner *ngIf="function && function?.write == true">
+                <div>
+                    <button type="button" class="btn btn-icon btn-white" (click)="openPopupEdit()">
+                        <span class="icon-edit icon-18"></span>
+                    </button>
+                </div>
+            </ng-contaniner>
+        </div>
+    </div>
+    <div class="row mt-5 mb-3" *ngIf="data?.isForeigner || data?.foNotReside || data?.foNationalities">
+        <div class="col-4" *ngIf="data?.isForeigner">
+          <div class="d-flex align-items-center">
+            <span class="me-2">
+                <codx-input [type]="'checkbox'" field="isForeigner" [formModel]="formModel" [checked]="data?.isForeigner"
+                  [disabled]="true"></codx-input>
+              </span>
+              <codx-label name="IsForeigner" [formModel]="formModel" [default]="'Là lao động nước ngoài'"></codx-label>
+          </div>
+        </div>
+        <div class="col-4" *ngIf="data?.foNotReside">
+          <div class="d-flex align-items-center">
+            <span class="me-2">
+                <codx-input [type]="'checkbox'" field="foNotReside" [formModel]="formModel" [checked]="data?.foNotReside"
+                  [disabled]="true"></codx-input>
+            </span>
+            <codx-label name="FoNotReside" [formModel]="formModel" [default]="'Là cá nhân không cư trú'"></codx-label>
+          </div>
+        </div>
+        <div class="col-4" *ngIf="data?.foNationalities">
+          <div class="d-flex align-items-center">
+            <span class="me-2">
+                <codx-input [type]="'checkbox'" field="foNationalities" [formModel]="formModel" [checked]="data?.foNationalities"></codx-input>
+            </span>
+            <codx-label name="FoNationalities" [formModel]="formModel" [default]="'Là người nước ngoài có quốc tịch VN'"></codx-label>
+          </div>
+          </div>
+    </div>
+    <!-- Hình thức làm việc -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="d-flex flex-column">
+                <div class="d-flex align-items-center text-gray-600 me-2 pb-1">
+                    <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
+                    <codx-label name="FoWorking" [formModel]="formModel" [setRequire]="false" [default]="'Hình thức làm việc'"></codx-label>
+                </div>
+                <div class="ms-7 fw-bold text-dark">{{data?.foWorking | formatvalue : formModel : 'foWorking' | async}}</div>
+            </div>
+        </div>
+    </div>
+        <!-- Diện lao động -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="d-flex flex-column">
+                <div class="d-flex align-items-center text-gray-600 me-2 pb-1">
+                    <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
+                    <codx-label name="FoKind" [formModel]="formModel" [default]="'Diện lao động'">
+                    </codx-label>
+                </div>
+                <div class="ms-7 fw-bold text-dark" [innerHTML]="data?.foKind | formatvalue : formModel : 'foKind' | async"></div>
+            </div>
+        </div>
+    </div>
+</div>  

@@ -6,7 +6,7 @@ import { ApiHttpService, AuthStore, CRUDService, CacheService, CallFuncService, 
   templateUrl: './personal-info.component.html',
   styleUrls: ['./personal-info.component.css']
 })
-export class PersonalInfoComponent implements OnInit,AfterViewInit{
+export class PersonalInfoComponent implements OnInit,AfterViewInit {
 
   @Input() function:any;
   @Input() employeeID:any;

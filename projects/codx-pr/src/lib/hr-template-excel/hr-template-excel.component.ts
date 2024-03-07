@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, HostBinding, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { DialogModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { DialogModel, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopupEditTemplateComponent } from './popup/popup-edit-template/popup-edit-template.component';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 
@@ -19,7 +19,8 @@ export class HrTemplateExcelComponent extends UIComponent implements AfterViewIn
 
   constructor
   (
-    private injector:Injector
+    private injector:Injector,
+    private notiSV:NotificationsService
   ) 
   {
     super(injector);
@@ -62,9 +63,14 @@ export class HrTemplateExcelComponent extends UIComponent implements AfterViewIn
   }
 
   clickMF(event:any, data = null){
-    switch(event.functionID){
+    switch(event.functionID)
+    {
       case"SYS01":
         this.add();
+        break;
+      case"SYS02":
+        if(!data) data = this.view.dataService.dataSelected;
+        this.delete(data);
         break;
       case"SYS03":
         if(!data) data = this.view.dataService.dataSelected;
@@ -77,7 +83,8 @@ export class HrTemplateExcelComponent extends UIComponent implements AfterViewIn
     let sidebarModel = new SidebarModel();
     sidebarModel.FormModel = this.view.formModel;
     sidebarModel.Width = '550px';
-    this.view.dataService.addNew().subscribe((model:any) => {
+    this.view.dataService.addNew()
+    .subscribe((model:any) => {
       if(model)
       {
         let option = {
@@ -85,13 +92,16 @@ export class HrTemplateExcelComponent extends UIComponent implements AfterViewIn
           data: model,
           headerText: "Chi tiết bảng lương"
         };
-        this.callfc.openSide(PopupEditTemplateComponent,option,sidebarModel,this.funcID);
+        this.callfc.openSide(PopupEditTemplateComponent,option,sidebarModel,this.funcID)
+        .closed.subscribe((res:any) => 
+        {
+          if(res && res.event)
+          {
+            this.view.dataService.add(res.event).subscribe();
+          }
+        });
       }
     });
-    
-
-
-    
   }
 
   edit(data:any){
@@ -103,7 +113,36 @@ export class HrTemplateExcelComponent extends UIComponent implements AfterViewIn
       data: data,
       headerText: "Chi tiết bảng lương"
     };
-    this.callfc.openSide(PopupEditTemplateComponent,option,sidebarModel,this.funcID);
+    this.callfc.openSide(PopupEditTemplateComponent,option,sidebarModel,this.funcID)
+    .closed.subscribe((res:any) => 
+    {
+      if(res && res.event)
+      {
+        this.view.dataService.update(res.event).subscribe();
+      }
+    });
+  }
+
+  delete(data:any){
+    if(data)
+    {
+      this.notiSV.alertCode("SYS003")
+      .subscribe((confirm:any) => {
+        if(confirm && confirm?.event?.status === "Y")
+        {
+          this.api.execSv("HR","HR","TemplateExcelBusiness","DeleteAsync",data)
+          .subscribe((res:any) => {
+            if(res)
+            {
+              this.view.dataService.remove(data).subscribe();
+              this.notiSV.notifyCode("SYS008");
+              this.selectedID = "";
+            }
+            else this.notiSV.notifyCode("SYS022");
+          });
+        }
+      })
+    }
   }
 
   changeDataMF(event:any){
@@ -111,7 +150,7 @@ export class HrTemplateExcelComponent extends UIComponent implements AfterViewIn
       if(element.functionID === "SYS01" || element.functionID === "SYS02" || element.functionID === "SYS03" || element.functionID === "SYS04")
       {
         element.disabled = false;
-        element.isbookmark = true;
+        element.isbookmark = element.functionID === "SYS01";
       }
       else element.disabled = true;
      }); 
