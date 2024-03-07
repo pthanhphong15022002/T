@@ -1367,7 +1367,7 @@ export class CodxEsService {
   }
 
   //#endregion
-  addOrEditSignArea(recID, fileID, area, areaID,mode="1"): Observable<any> {
+  addOrEditSignArea(recID, fileID, area, areaID,mode="1",isSettingMode=false): Observable<any> {
     let data = [recID, fileID, area, areaID];
     if(mode =="1"){
       return this.api.execSv(
@@ -1384,20 +1384,20 @@ export class CodxEsService {
         'ERM.Business.BP',
         'ProcessesBusiness',
         'AddOrEditAreaAsync',
-        [recID, fileID, area, areaID]
+        [recID, fileID, area, areaID,isSettingMode]
       );
     }
     
   }
 
-  deleteAreaById(recID, fileID, areaID, modeView="1"): Observable<any> {
+  deleteAreaById(recID, fileID, areaID, modeView="1",isSettingMode=false): Observable<any> {
     if(modeView=="1"){
       return this.api.execSv(
         'ES',
         'ERM.Business.ES',
         'SignFilesBusiness',
         'DeleteAreaAsync',
-        [recID, fileID, areaID, modeView]
+        [recID, fileID, areaID]
       );
     }
     else{
@@ -1406,13 +1406,13 @@ export class CodxEsService {
         'ERM.Business.BP',
         'ProcessesBusiness',
         'DeleteAreaAsync',
-        [recID, fileID, areaID, modeView]
+        [recID, fileID, areaID, isSettingMode]
       );
     }
     
   }
 
-  getSignAreas(sfID, fileID, isApprover, userID, stepNo,mode ="1"): Observable<any> {
+  getSignAreas(sfID, fileID, isApprover, userID, stepNo,mode ="1",isSettingMode=false): Observable<any> {
     let data = [sfID, fileID, isApprover, userID, stepNo];
     if(mode =="1"){
       return this.api.execSv(
@@ -1429,7 +1429,7 @@ export class CodxEsService {
         'ERM.Business.BP',
         'ProcessesBusiness',
         'GetAllAreasAsync',
-        [sfID, fileID, isApprover, userID]
+        [sfID, fileID, isApprover, userID,isSettingMode]
       );
     }
     

@@ -302,8 +302,9 @@
               type="button"
               class="btn btn-primary"
               (click)="onSave()"
+              [ngClass]="checkSaveNow() ? '' : 'disabled'"
             >
-              <codx-label [name]="'lblSave'" [default]="'Lưu'"></codx-label>
+              <codx-label [name]="'lblSave'"  [default]="'Lưu'"></codx-label>
             </button>
           </div>
         </div>
@@ -1039,6 +1040,46 @@
           </div>
         </div>
       </div>
+
+
+      <div class="form-group margin-form mb-4" *ngIf="process.applyFor == '4'">
+        <div class="row">
+          <div class="col-6">
+            <codx-label
+              fiedName="DisposalNoSetting"
+              [formName]="'DPProcesses'"
+              [gridViewName]="'grvDPProcesses'"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6 row">
+            <div
+              #autoNumberSetting
+              class="position-relative col-lg-12 col-xl-8"
+            >
+              <codx-input
+                type="text"
+                [crrValue]="contractNoEx"
+                [placeholder]="gridViewSetup['DisposalNoSetting']?.description"
+                [disabled]="true"
+              >
+              </codx-input>
+              <div
+                class="position-absolute cursor-pointer text-primary form-control-feedback"
+                style="top: 7px; right: 13px"
+              >
+                <i
+                  class="icon-settings form-control-feedback text-hover-primary"
+                  (click)="viewOnly ? '' : openAutoNumContractPopup()"
+                ></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
@@ -2607,7 +2648,7 @@
         </div>
       </div>
     </div>
-
+  <!-- Công việc -->
     <div id="job-main" class="main-job p-6" [ngClass]="'show-main'">
       <!-- drap drop công việc ngoài-->
       <div class="main-body" *ngIf="taskGroupList?.length > 0">
@@ -2911,8 +2952,10 @@
         </button>
       </div>
     </div>
+  <!-- Công việc -->
   </div>
 </ng-template>
+
 <!-- Popup thêm giai đoạn  -->
 <ng-template #popupAddStep>
   <div class="d-flex flex-column p-5 h-100">

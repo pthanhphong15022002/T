@@ -1,6 +1,6 @@
 <div class="d-flex flex-column justify-content-between w-100 h-100 py-4 bg-white w-400px">
     <div class="d-flex align-items-center justify-content-between px-4">
-        <div class="d-flex align-items-center" *ngIf="type == 'edit'; else elseA">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+        <div class="d-flex align-items-center" *ngIf="type == 'edit'; else elseA">
             <i class="icon-24 me-2" [ngClass]="vllDefault?.icon" [style.color]="vllDefault?.color"></i>
             <span class="fs-5 fw-bold">{{vllDefault?.text}}</span>
         </div>
@@ -12,15 +12,15 @@
                     <i [ngClass]="!myDrop.isOpen() ? 'icon-arrow_drop_down' : 'icon-arrow_drop_up' "></i>
                 </div>
                 <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                    <button ngbDropdownItem [class.active]="vllDefault?.value == item.value" *ngFor="let item of vllBP001.datas" (click)="changeActivity(item)">{{item.text}}</button>
+                    <button ngbDropdownItem [class.active]="vllDefault?.value == item.value" *ngFor="let item of vllBP001.datas" (click)="changeActivity(item)"><i [ngClass]="item.icon" class="me-3" [style.color]="item?.color"></i>{{item.text}}</button>
                 </div>
             </div>
         </ng-template>
-        
-        <div class="d-flex align-items-center"> 
-            <i class="icon-20 icon-settings cursor-pointer"></i>
-            <i class="icon-20 icon-delete cursor-pointer mx-2" (click)="deleteItem()"></i> 
-            <i class="icon-20 icon-close cursor-pointer" (click)="dialog.close()"></i>      
+
+        <div class="d-flex align-items-center">
+            <i class="icon-20 icon-settings cursor-pointer" (click)="settingAdvancedTask()"></i>
+            <i class="icon-20 icon-delete cursor-pointer mx-2" (click)="deleteItem()"></i>
+            <i class="icon-20 icon-close cursor-pointer" (click)="dialog.close()"></i>
         </div>
     </div>
     <div class="d-flex flex-column w-100 h-100 p-4 overflow-auto">

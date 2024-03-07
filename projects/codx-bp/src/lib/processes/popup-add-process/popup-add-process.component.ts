@@ -318,6 +318,7 @@ export class PopupAddProcessComponent {
     stage.reminder = this.data.reminder;
     stage.eventControl = null;
     stage.stepType = "1";
+    stage.permissions = [{objectID: this.user?.userID, objectType: 'U'}]
     var processallowDrag = null;
     var processDefaultProcess = null;
     var processCompleteControl = null;
@@ -364,6 +365,7 @@ export class PopupAddProcessComponent {
       sortBy: null,
       totalControl: null,
     });
+    form.permissions = [{objectID: this.user?.userID, objectType: 'U'}]
     lstStep.push(stage, form);
     this.data.steps = lstStep;
     this.cache.message('BP001').subscribe((item) => {
@@ -378,7 +380,6 @@ export class PopupAddProcessComponent {
   setLstExtends() {
     let lst = [];
     if (this.extendInfos?.length > 0) {
-      console.log('extendInfos: ', this.extendInfos);
       this.extendInfos.forEach((res) => {
         let count = 1;
         let tmp = {};
@@ -801,41 +802,13 @@ export class PopupAddProcessComponent {
         this.extendInfos =
           res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
         this.setLstExtends();
-        // let extDocumentControls = this.extendInfos.filter(
-        //   (x) => x.fieldType == 'Attachment' && x.documentControl != null
-        // );
-        // if (extDocumentControls?.length > 0) {
-        //   let lstDocumentControl = [];
-        //   extDocumentControls.forEach((ele) => {
-        //     const documents =
-        //       typeof ele.documentControl == 'string'
-        //         ? ele.documentControl
-        //           ? JSON.parse(ele.documentControl)
-        //           : []
-        //         : ele.documentControl ?? [];
-        //     documents.forEach((res) => {
-        //       var tmpDoc = {};
-        //       tmpDoc['recID'] = Util.uid();
-        //       tmpDoc['stepNo'] = 1;
-        //       tmpDoc['fieldID'] = res.recID;
-        //       tmpDoc['title'] = res.title;
-        //       tmpDoc['memo'] = res.memo;
-        //       tmpDoc['isRequired'] = res.isRequired ?? false;
-        //       tmpDoc['count'] = res.count ?? 0;
-        //       tmpDoc['templateID'] = res.templateID;
-        //       lstDocumentControl.push(tmpDoc);
-        //     });
-        //   });
-        //   this.data.documentControl =
-        //     lstDocumentControl.length > 0
-        //       ? JSON.stringify(lstDocumentControl)
-        //       : null;
-        // }
-        if (this.data?.steps[1]?.extendInfo) {
+        let index = this.data?.steps.findIndex(x=>x.activityType == "Form");
+        if (this.data?.steps[index]?.extendInfo) {
           this.extendInfos.forEach((element) => {
             if (element.controlType == 'Attachment') {
-              if (!element?.documentControl) {
-                var obj = {
+              if (!element?.documentControl || element?.documentControl.length == 0) {
+                var obj = 
+                {
                   recID: Util.uid(),
                   title: element.title,
                   isRequired: false,
@@ -845,7 +818,7 @@ export class PopupAddProcessComponent {
                   stepNo: this.data?.steps[1].stepNo,
                   fieldID: element.recID,
                   memo: this.data?.steps[1].memo,
-                  refID: '',
+                  refID: ''
                 };
                 obj.refID = obj.recID;
                 this.data.documentControl = [obj];
@@ -853,7 +826,6 @@ export class PopupAddProcessComponent {
                 element.documentControl &&
                 element.documentControl.length > 0
               ) {
-                debugger;
                 var doc = JSON.parse(JSON.stringify(this.data.documentControl));
                 if (!doc) doc = [];
                 element.documentControl.forEach((docu) => {
@@ -890,7 +862,10 @@ export class PopupAddProcessComponent {
             }
           });
 
-          this.data.steps[1].extendInfo = this.extendInfos;
+          this.data.steps[index].extendInfo = this.extendInfos;
+
+          this.data = Object.assign({},  this.data);
+          
         }
         this.detectorRef.detectChanges();
       }
@@ -982,11 +957,12 @@ export class PopupAddProcessComponent {
     } else {
       op.methodName = 'UpdateProcessAsync';
     }
-
+    let i = 0;
     let result = JSON.parse(JSON.stringify(this.data));
     result.steps.forEach((elm: any) => {
       delete elm.child;
-
+      elm.stepNo = i;
+      i++;
       if (typeof elm.settings === 'object')
         elm.settings = JSON.stringify(elm.settings);
     });
@@ -1031,26 +1007,31 @@ export class PopupAddProcessComponent {
 
   formatData(datas:any)
   {
-    let x = 0;
     let data = datas.steps;
     this.countStage = data.length;
     data = data.sort((a, b) => a.stepNo - b.stepNo);
     var listStage = data.filter(x=>x.activityType == 'Stage');
     listStage.forEach(element => {
-      var index = data.findIndex(x=>x.recID == element.recID);
-      data[index].stepNo = x;
-      x++;
       if(element.child && element.child.length>0)
       {
         element.child.forEach(element2 => {
           var index2 = data.findIndex(x=>x.recID == element2.recID);
-          data[index2]= element2;
-          data[index2].stepNo = x;
-          x++
+          if(index2>=0)
+          {
+            data[index2]= element2;
+          }
         });
       }
     });
+    for(var i = 0 ; i < data.length ; i++)
+    {
+      data[i].stepNo = i;
+    }
     datas.steps = data;
+
+    var fristForm = datas.steps.filter(x=>x.activityType == "Form")[0]
+    this.extendInfos = fristForm?.extendInfo;
+    this.setLstExtends();
     return datas;
   }
 }

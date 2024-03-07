@@ -161,6 +161,9 @@
                     <ng-container *ngSwitchCase="'Title'">
                       <ng-container *ngTemplateOutlet="form ; context: { $implicit: subItem }"></ng-container>
                     </ng-container>
+                    <ng-container *ngSwitchCase="'UserInfo'">
+                      <ng-container *ngTemplateOutlet="userInfo ; context: { $implicit: subItem }"></ng-container>
+                    </ng-container>
                     <ng-container *ngSwitchDefault>...</ng-container>
                   </ng-container>
 
@@ -468,6 +471,104 @@
                       </div>
                     </div>
                   </ng-template>
+
+                  <!-- UserInfo -->
+                  <ng-template #userInfo let-data>
+                    <div class="d-flex flex-column w-100">
+                      <div class="d-flex align-items-center">
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
+                        <span class="fw-bold">{{data.title}}</span>
+                        <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
+                      </div>
+                      <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center justify-content-between">
+                          <div class="d-flex flex-column w-100 p-2">
+                            <div class="d-flex align-items-center">
+                              <codx-label default="Họ và tên" class="text-gray-500"></codx-label>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-5 rd-3px">
+                            </div>
+                          </div>
+                          <div class="d-flex flex-column w-100 p-2">
+                            <div class="d-flex align-items-center">
+                              <codx-label default="Số CMT/CCCD/Hộ chiếu" class="text-gray-500"></codx-label>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-5 rd-3px">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="d-flex align-items-start justify-content-between">
+                          <div class="d-flex flex-column w-100 p-2">
+                            <div class="d-flex align-items-center">
+                              <codx-label default="Email" class="text-gray-500"></codx-label>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-5 rd-3px">
+                            </div>
+                            <span class="text-primary fs-7 pt-2">** Nhận mail kích hoạt dịch vụ</span>
+                          </div>
+                          <div class="d-flex flex-column w-100 p-2">
+                            <div class="d-flex align-items-center">
+                              <codx-label default="Số điện thoại" class="text-gray-500"></codx-label>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-5 rd-3px">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="d-flex flex-column">
+                          <div class="d-flex align-items-center justify-content-between p-2">
+                            <codx-label default="Ảnh chụp hai mặt của giấy tờ" class="text-gray-500 w-100"></codx-label>
+                            <div class="d-flex align-items-center justify-content-between w-100">
+                              <codx-input 
+                                type="radio"
+                                name="ipCCCD"
+                                crrValue="CMT"
+                                label="CMT"
+                                [disabled]="true"
+                                [checked]="true"
+                              >
+                              </codx-input>
+                              <codx-input 
+                                type="radio"
+                                name="ipCCCD"
+                                crrValue="CCCD"
+                                label="CCCD"
+                                [disabled]="true"
+                              >
+                              </codx-input>
+                              <codx-input 
+                                type="radio"
+                                name="ipCCCD"
+                                crrValue="HC"
+                                label="Hộ chiếu"
+                                [disabled]="true"
+                              >
+                              </codx-input>
+                            </div>
+                          </div>
+                          <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex flex-column align-items-center w-100 p-2">
+                              <div class="image-add-file border bg-F5F8FA rd-3px w-100">
+                              </div>
+                              <codx-label default="Mặt trước" class="pt-2"></codx-label>
+                            </div>
+                            <div class="d-flex flex-column align-items-center w-100 p-2">
+                              <div class="image-add-file border bg-F5F8FA rd-3px w-100">
+                              </div>
+                              <codx-label default="Mặt sau" class="pt-2"></codx-label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="d-flex flex-column w-50 p-2">
+                          <codx-label default="Ảnh chân dung" class="text-gray-500 w-100"></codx-label>
+                          <div class="d-flex flex-column align-items-center w-100">
+                            <div class="image-add-file border bg-F5F8FA rd-3px w-100">
+                            </div>
+                            <codx-label default="Ảnh chân dung" class="pt-2"></codx-label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
                 </div>
               </div>
             </div>
@@ -532,7 +633,9 @@
         <ng-container *ngSwitchCase="'Table'">
           <lib-property-table [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-table>
         </ng-container>
-        
+        <ng-container *ngSwitchCase="'UserInfo'">
+          <lib-property-userinfo [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-userinfo>
+        </ng-container>
       </ng-container>
     </div>
   </div>

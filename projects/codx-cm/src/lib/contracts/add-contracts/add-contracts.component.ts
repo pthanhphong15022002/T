@@ -31,6 +31,7 @@ import {
   CodxFormComponent,
   CodxInputComponent,
   NotificationsService,
+  TenantStore,
 } from 'codx-core';
 import { tmpInstances } from '../../models/tmpModel';
 import { CodxCmService } from '../../codx-cm.service';
@@ -41,7 +42,7 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
 @Component({
@@ -246,6 +247,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   isLoadedCF = false;
   refInstance = ''; //Biến tham chiếu data từ cơ hội
   dataSourceRef: any;
+  tenant = "";
   //#endregion
 
   constructor(
@@ -259,6 +261,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     private contractService: ContractsService,
     private changeDetectorRef: ChangeDetectorRef,
     private customFieldSV: CustomFieldService,
+    private tenantStore: TenantStore,
+    private router: Router,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -277,12 +281,17 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.customerID = dt?.data?.customerID;
     this.stepsTasks = dt?.data?.stepsTasks || {};
     this.contractsInput = dt?.data?.contract || dt?.data?.dataCM || null;
+    // this.tenant = this.tenantStore.get().tenant;
     this.user = this.authStore.get();
     this.getHeaderText();
     this.getGrvSetup();
+    const currentUrl = this.router.url;
+    // this.tenant = currentUrl.includes("qtsc") ? "qtsc" : "";
+    this.tenant = "qtsc";
   }
 
   async ngOnInit() {
+    
     this.action != 'edit' && (await this.getSettingContract());
     this.setDataContract(this.contractsInput);
     if (this.type == 'task') {
@@ -703,6 +712,17 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   valueChangeCombobox(event) {
     this.contracts[event?.field] = event?.data;
     switch (event?.field) {
+      case 'parentID':
+        let customerID = event?.component?.itemsSelected[0]?.CustomerID;
+        let businessLineID = event?.component?.itemsSelected[0]?.BusinessLineID;
+        if(customerID){
+          this.contracts.customerID = customerID;
+          this.getContactByCustomerID(customerID);
+        }
+        if(businessLineID){
+          this.contracts.businessLineID = businessLineID;
+        }
+        break;
       case 'customerID':
         this.getContactByCustomerID(event?.data);
         this.contracts.dealID = null;
@@ -1777,10 +1797,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     } else {
       instance.startDate = null;
       instance.status = '1';
-      instance.stepID = this.listInstanceSteps[0].stepID;
-      contract.stepID = instance.stepID;
+      instance.stepID = this.listInstanceSteps[0]?.stepID;
+      contract.stepID = instance?.stepID;
       contract.status = '1';
-      contract.refID = instance.recID;
+      contract.refID = instance?.recID;
     }
 
     instance.title = contract?.contractName?.trim();

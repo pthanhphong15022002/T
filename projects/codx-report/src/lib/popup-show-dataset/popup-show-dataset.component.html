@@ -7,8 +7,7 @@
   [dialog]="dialog"
 >
   <ng-template #body>
-    <div class="w-100 h-0100" *ngIf="dataSource && dataSource.length">
-      <ejs-grid
+    <ejs-grid
         [dataSource]="dataSource"
         height="100%"
         allowExcelExport="true"
@@ -17,10 +16,13 @@
         [enableStickyHeader]="true"
         [allowResizing]="true"
         [allowSorting]="true"
-        [autoFit]="true"
+        [autoFit]="false"
+        [enableAdaptiveUI]="true"
+        (created)="onDatabound($event)"
+        *ngIf="dataSource && dataSource.length"
+        #grid
         >
       </ejs-grid>
-    </div>
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">

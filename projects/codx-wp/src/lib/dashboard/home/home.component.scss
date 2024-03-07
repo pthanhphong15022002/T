@@ -47,9 +47,7 @@
   padding-bottom: 10px !important;
 }
 
-.wp-portal #kt_aside_menu {
-  margin-top: 27px;
-  
+.wp-portal #kt_aside_menu {  
   .menu-state-title-primary .menu-item .menu-link.active .menu-title,
   .menu-state-title-primary .menu-item .menu-link:hover .menu-title {
     color: var(--primary-darker)!important;
@@ -83,8 +81,8 @@
     width: 290px;
     min-width: 290px;
     max-width: 290px;
-    height: calc(100vh - 50px);
-    overflow: auto;
+    // height: calc(100vh - 50px);
+    //overflow: auto;
     
     .aside-menu{
       //width: 250px;    //Van bo nha Chung
@@ -117,9 +115,6 @@
   
   .aside-menu .menu .menu-item .menu-link {
     padding-left: 0;
-  }
-  #kt_aside_menu>div.hover-scroll-overlay-y{
-    height: auto!important;
   }
 }
 
@@ -336,5 +331,4 @@
     background-color: var(--bg-body);
     padding-left: 25px;
   } 
-
 }

@@ -20,7 +20,7 @@
 
   <codx-view2 service="rptrp" entityName="RP_ReportList" idField="recID" assemblyName="Codx.RptBusiness.RP"
     className="ReportListBusiness" method="GetReportsByModuleAsync" [dataRequest]="['D',module]" [tmpItem]="tmp"
-    [isAdd]="false" [tmpRightToolBar]="tmpRightToolBar" (dataChange)="dataChange($event)"
+    [tmpRightToolBar]="tmpRightToolBar" (dataChange)="dataChange($event)"
     (selectedChange)="cardClick($event)" (viewChange)="viewChange($event)" [tmpHeader]="tmpHeader">
   </codx-view2>
 

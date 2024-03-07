@@ -33,6 +33,7 @@ export class ViewListComponent implements OnInit {
   @Input() showMoreFunc?: any;
   @Input() user: any;
   @Input() popoverSelected: any;
+  @Input() isTreeView: boolean=false;
   listTaskResousceSearch = [];
   listTaskResousce = [];
   countResource = 0;
@@ -42,6 +43,7 @@ export class ViewListComponent implements OnInit {
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() changeMoreFunction = new EventEmitter<any>();
   @Output() viewTask = new EventEmitter<any>();
+  @Output() nodeSelected = new EventEmitter<any>();
   @Output() hoverPopover = new EventEmitter<any>();
 
   lstTaskbyParent = [];
@@ -66,6 +68,10 @@ export class ViewListComponent implements OnInit {
 
   dbClick(data) {
     this.viewTask.emit(data);
+  }
+
+  selectNode(data){
+    this.nodeSelected.emit(data);
   }
 
   changeDataMF(e, data) {
@@ -243,5 +249,9 @@ export class ViewListComponent implements OnInit {
       }
     });
     this.listTaskResousceSearch = listTaskResousceSearch;
+  }
+
+  logData(data){
+    console.log(data)
   }
 }

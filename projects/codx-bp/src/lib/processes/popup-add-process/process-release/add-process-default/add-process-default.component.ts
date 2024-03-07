@@ -1,9 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Optional, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Optional, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
+import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
-import { firstValueFrom } from 'rxjs';
+import { elementAt, firstValueFrom } from 'rxjs';
+import { AddTableRowComponent } from './add-table-row/add-table-row.component';
+import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'lib-add-process-default',
@@ -12,7 +15,8 @@ import { firstValueFrom } from 'rxjs';
 })
 export class AddProcessDefaultComponent implements OnInit{
   @ViewChild('attachment') attachment: AttachmentComponent;
-
+  @ViewChild('attachmentUserInfo') attachmentUserInfo: AttachmentComponent;
+  @ViewChildren('gridView') gridView:QueryList<CodxGridviewV2Component>;
   @Input() process:any;
   @Input() dataIns:any
   @Input() type = 'add';
@@ -21,6 +25,8 @@ export class AddProcessDefaultComponent implements OnInit{
   data:any;
   dialog:any;
   table:any
+  dataTable = {};
+  dataUserInfo = {};
   formModel = 
   {
     funcID:'',
@@ -33,11 +39,18 @@ export class AddProcessDefaultComponent implements OnInit{
   tableField:any;
   user:any;
   isAttach= false;
+  vllBP022:any;
+  urlDefault = '../../../../../src/assets/themes/sys/default/img/Avatar_Default.svg';
+  listFileUserInfo = {};
+  indexUploadUserInfo = {};
+  defaultFieldName = "";
   constructor(
     private notifySvr: NotificationsService,
     private auth: AuthStore,
+    private cache: CacheService,
     private api: ApiHttpService,
     private bpService: CodxBpService,
+    private callFuc: CallFuncService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   )
@@ -56,8 +69,14 @@ export class AddProcessDefaultComponent implements OnInit{
       this.dataIns.documentControl = this.process?.documentControl || [];
     }
     this.getData();
+    this.getVll();
   }
-
+  getVll()
+  {
+    this.cache.valueList("BP022").subscribe(item=>{
+      this.vllBP022 = item;
+    })
+  }
   getData()
   {
     var index = 0;
@@ -75,6 +94,7 @@ export class AddProcessDefaultComponent implements OnInit{
 
   formatData()
   {
+    let indexTable = 0;
     var list = [];
     let extendInfo = JSON.parse(JSON.stringify(typeof this.data.extendInfo == 'string' ?  JSON.parse(this.data.extendInfo) : this.data.extendInfo))
     extendInfo.forEach(element => {
@@ -104,11 +124,65 @@ export class AddProcessDefaultComponent implements OnInit{
       {
         element.dataFormat = typeof element.dataFormat == 'string' ? JSON.parse(element.dataFormat) : element.dataFormat;
         element.tableFormat = typeof element.tableFormat == 'string' ? JSON.parse(element.tableFormat) : element.tableFormat;
-        this.tableField = field;
-        if(this.type == 'add') {
-          this.dataIns.datas = {};
-          this.dataIns.datas[field] = [];
+        element.columnsGrid = [];
+        element.indexTable = indexTable;
+        element.dataFormat.forEach(elm2 => {
+          var obj = 
+          {
+            headerText: elm2.title,
+            controlType: elm2.controlType,
+            field: elm2.fieldName
+          }
+          element.columnsGrid.push(obj)
+        });
+
+        if(element?.tableFormat?.hasIndexNo) {
+          var obj2 = 
+          {
+            headerText: 'STT',
+            controlType: "Numberic",
+            field: 'indexNo'
+          }
+          element.columnsGrid.unshift(obj2)
         }
+        indexTable ++;
+
+        if(this.type == 'edit')
+        {
+          this.dataTable[field] = this.dataIns.datas[field];
+        }
+        // this.tableField = field;
+        // if(this.type == 'add') {
+        //   this.dataIns.datas = {};
+        //   this.dataIns.datas[field] = [];
+        // }
+      }
+      if(element.fieldType == "UserInfo")
+      {
+        if(this.type == "add")
+        {
+          this.dataUserInfo[field] = {
+            idCardType: "1"
+          }
+        }
+        else
+        {
+          this.dataUserInfo[field] = this.dataIns.datas[field];
+          this.listFileUserInfo[field] = 
+          [ 
+            {
+              fileID: this.dataUserInfo[field]?.idFront
+            },
+            {
+              fileID: this.dataUserInfo[field]?.idBack
+            },
+            {
+              fileID: this.dataUserInfo[field]?.idAvatar
+            }
+          ];
+          this.getFileUserInfo(field);
+        }
+        this.indexUploadUserInfo[field] = 0;
       }
       var index = list.findIndex(x=>x.columnOrder == element.columnOrder)
       if(index >= 0)
@@ -139,13 +213,54 @@ export class AddProcessDefaultComponent implements OnInit{
     return Util.camelize(key);
   }
 
+  getFileUserInfo(field:any)
+  {
+    let strID = this.listFileUserInfo[field].map((u) => u.fileID);
+    this.api.execSv("DM","DM","FileBussiness","GetListFileByIDAsync",JSON.stringify(strID)).subscribe((item:any)=>{
+      if(item)
+      {
+        item.forEach(element => {
+          var index = this.listFileUserInfo[field].findIndex(x=>x.fileID == element.recID);
+          if(index>=0)
+          {
+            this.listFileUserInfo[field][index].avatar = environment.urlUpload + "/" + element.pathDisk;
+          }
+        });
+      }
+      
+    })
+  }
+
   async onSave(type=1)
   {
+    var valueForm = this.dynamicFormsForm.value;
+    var keysUserInfo = Object.keys(this.dataUserInfo)
+    if(keysUserInfo.length>0)
+    {
+      var flag=false;
+      keysUserInfo.forEach(k=>{
+        if(this.checkUserInfo(k))flag = true;
+        else
+        {
+          this.dynamicFormsForm.controls[k].setValue(this.dataUserInfo[k]);
+        }
+        valueForm[k] = this.dataUserInfo[k];
+      })
+
+      if(flag) return;
+    }
+    
     if(!this.checkAttachment()) return;
     if(this.dynamicFormsForm.invalid) this.findInvalidControls();
     else
     {
-      var valueForm = this.dynamicFormsForm.value;
+      var keysTable = Object.keys(this.dataTable)
+      if(keysTable.length>0)
+      {
+        keysTable.forEach(k=>{
+          valueForm[k] = this.dataTable[k];
+        })
+      }
       if(this.type == 'add')
       {
         this.dataIns.title= valueForm[this.subTitle];
@@ -168,6 +283,7 @@ export class AddProcessDefaultComponent implements OnInit{
           applyFor: this.process?.applyFor,
           status: "1",
           taskType: stageF?.activityType,
+          activityType: stageF?.activityType,
           taskName: stageF?.stepName,
           memo: stageF.memo,
           location: stageF.location,
@@ -185,7 +301,8 @@ export class AddProcessDefaultComponent implements OnInit{
           comments: stageF?.comments,
           isOverDue : stageF?.isOverDue,	
           owners: stageF?.owners,
-          permissions: stageF?.owners,
+          permissions: stageF?.permissions,
+          indexNo: 0
         }
         var step = 
         {
@@ -194,6 +311,7 @@ export class AddProcessDefaultComponent implements OnInit{
           applyFor: this.process?.applyFor,
           status: "1",
           taskType: this.data?.activityType,
+          activityType: this.data?.activityType,
           taskName: this.data?.stepName,
           memo: this.data.memo,
           location: this.data.location,
@@ -211,10 +329,12 @@ export class AddProcessDefaultComponent implements OnInit{
           comments: this.data?.comments,
           isOverDue : this.data?.isOverDue,	
           owners: this.data?.owners,
-          permissions: this.data?.owners,
+          permissions: this.data?.permissions,
+          indexNo: 1
         }
-    
-        if(this.tableField) valueForm[this.tableField] = this.dataIns.datas[this.tableField].filter(x=> typeof x === 'object');
+        
+      
+
         this.dataIns.processID = this.process?.recID,
         this.dataIns.instanceNo = instanceNo,
         this.dataIns.instanceID = this.dataIns.recID,
@@ -247,15 +367,18 @@ export class AddProcessDefaultComponent implements OnInit{
       }
       else if(this.type == 'edit')
       {
+        this.dataIns.title= valueForm[this.subTitle];
         this.dataIns.modifiedOn= new Date(),
         this.dataIns.modifiedBy = this.user?.userID;
         if(this.dataIns.datas)
         {
-          if(typeof this.dataIns.datas == 'string') this.dataIns.datas = JSON.parse(this.dataIns.datas)
+          if(typeof this.dataIns.datas == 'string') this.dataIns.datas = JSON.parse(this.dataIns.datas);
+          
           let keys = Object.keys(valueForm)
           keys.forEach(k => {
             this.dataIns.datas[k] = valueForm[k];
           });
+          
           this.dataIns.datas = JSON.stringify(this.dataIns.datas)
         }
         else this.dataIns.datas = JSON.stringify(valueForm)
@@ -266,7 +389,7 @@ export class AddProcessDefaultComponent implements OnInit{
 
   async addFileAttach(type:any)
   {
-    if(this.attachment.fileUploadList && this.attachment.fileUploadList.length > 0)
+    if(this.attachment?.fileUploadList && this.attachment?.fileUploadList?.length > 0)
     {
       (await this.attachment.saveFilesObservable()).subscribe(item2=>{
         if(item2)
@@ -304,6 +427,31 @@ export class AddProcessDefaultComponent implements OnInit{
     }
    
   }
+
+  checkUserInfo(data:any)
+  {
+    var isRequired = this.data.extendInfo.filter(x=>x.fieldName == data)[0].isRequired;
+    if(isRequired)
+    {
+      let arr = [];
+      if(!this.dataUserInfo[data]?.userName) arr.push("Họ và tên");
+      if(!this.dataUserInfo[data]?.idCardNo) arr.push("Số CMT/CCCD/Hộ chiếu");
+      if(!this.dataUserInfo[data]?.email) arr.push("Email");
+      if(!this.dataUserInfo[data]?.phone) arr.push("Phone");
+      if(!this.dataUserInfo[data]?.idFront) arr.push("Ảnh mặt trước");
+      if(!this.dataUserInfo[data]?.idBack) arr.push("Ảnh mặt trước");
+      if(!this.dataUserInfo[data]?.idAvatar) arr.push("Ảnh chân dung");
+
+      if(arr.length>0) 
+      {
+        var mess = arr.join(", ");
+        this.notifySvr.notify(mess + " không được để trống.");
+        return true;
+      }
+    }
+    return false;
+  }
+
   updateIns()
   {
     this.api.execSv("BP","BP","ProcessInstancesBusiness","UpdateInsAsync",this.dataIns).subscribe(item=>{
@@ -372,11 +520,6 @@ export class AddProcessDefaultComponent implements OnInit{
     this.dataIns.datas[this.tableField][index][e?.field] = e?.data;
   }
 
-  addRow()
-  {
-    this.dataIns.datas[this.tableField].push("");
-  }
-
   startProcess(recID:any) {
     this.api
       .execSv(
@@ -392,7 +535,7 @@ export class AddProcessDefaultComponent implements OnInit{
             this.dataIns=res;
           }
           else{
-            this.dataIns.status = '2';
+            this.dataIns.status = '3';
           }
           this.dialog.close(this.dataIns);
         }
@@ -402,5 +545,108 @@ export class AddProcessDefaultComponent implements OnInit{
   dataChangeAttachment(e:any)
   {
     this.isAttach = e;
+  }
+
+  addRow(data:any,fieldName:any,index=0,result:any=null)
+  {
+    if(!this.dataTable[fieldName.toLowerCase()]) this.dataTable[fieldName.toLowerCase()] = []
+    var option = new DialogModel();
+    option.FormModel = this.formModel;
+    option.zIndex = 1000;
+    let popup = this.callFuc.openForm(
+      AddTableRowComponent,
+      '',
+      600,
+      750,
+      '',
+      {dataTable: data,result:result},
+      '',
+      option
+    );
+
+    popup.closed.subscribe(res=>{
+      if(res?.event)
+      {
+        if(!result) this.dataTable[fieldName.toLowerCase()].push(res?.event);
+        else this.dataTable[fieldName.toLowerCase()][result.index] = res.event
+        var grid = this.gridView.find((_, i) => i == index);
+        grid.refresh();
+      }
+    })
+  }
+  deleteRow(data:any,fieldName:any,index=0)
+  {
+    this.dataTable[fieldName.toLowerCase()].splice(data.index,1);
+    var grid = this.gridView.find((_, i) => i == index);
+    grid.refresh();
+  }
+
+  clickMFGrid(e:any,data:any)
+  {
+    let funcID = e?.event?.functionID
+    switch(funcID)
+    {
+      //Chỉnh sửa
+      case 'SYS03':
+        {
+          this.addRow(data.dataFormat,data.fieldName,data.indexTable,e.data)
+          break;
+        }
+      //Xóa
+      case 'SYS02':
+        {
+          var config = new AlertConfirmInputConfig();
+          config.type = 'YesNo';
+          this.notifySvr
+            .alert('Thông báo', 'Bạn có chắc chắn muốn xóa?', config)
+            .closed.subscribe((x) => {
+              if (x.event.status == 'Y') this.deleteRow(e?.data,data.fieldName,data.indexTable);
+            });
+          break;
+        }
+    }
+  }
+
+  clickUploadFile(index:any,fieldName:any,objectID:any)
+  {
+    this.defaultFieldName = fieldName;
+    this.indexUploadUserInfo[fieldName] = index;
+    this.attachmentUserInfo.objectId = objectID;
+    this.attachmentUserInfo.uploadFile();
+  }
+
+  fileSave(e:any)
+  {
+    var obj = 
+    {
+      avatar: environment.urlUpload + "/" + e?.pathDisk
+    }
+
+    if(!this.listFileUserInfo[this.defaultFieldName]) this.listFileUserInfo[this.defaultFieldName] = [];
+    this.listFileUserInfo[this.defaultFieldName][this.indexUploadUserInfo[this.defaultFieldName]] = obj
+
+    let fieldName = "idAvatar";
+    if(this.indexUploadUserInfo[this.defaultFieldName] == 0) fieldName = "idFront";
+    else if(this.indexUploadUserInfo[this.defaultFieldName] == 1) fieldName = "idBack";
+    this.dataUserInfo[this.defaultFieldName][fieldName] = e?.recID;
+  }
+
+  valueChangeUserInfo(e:any, fieldName:any)
+  {
+    if(e?.component?.type == "radio" && !e?.component?.checked) return;
+    if(!this.dataUserInfo[fieldName.toLowerCase()]) this.dataUserInfo[fieldName.toLowerCase()] = {}
+
+    this.dataUserInfo[fieldName.toLowerCase()][e?.field] = e?.data;
+  }
+
+  getUrl(field:any,index:any)
+  {
+    if(!this.listFileUserInfo[field]) return this.urlDefault;
+    else
+    {
+      if(!this.listFileUserInfo[field][index]) return this.urlDefault;
+      return (this.listFileUserInfo[field][index]?.avatar || this.urlDefault)
+    }
+
   }
 }

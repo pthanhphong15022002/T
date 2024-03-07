@@ -69,7 +69,8 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
   showInsert = false;
   gridViewSetupWord:any;
   isHasFields = false;
-
+  isGroup = false;
+  dataGoupField = [];
   constructor(
     private tenant: TenantStore,
     private readonly auth: AuthService,
@@ -88,9 +89,11 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     this.refID = dt.data?.refID; // Thảo thêm để thêm biến lưu cho temEx
     this.refType = dt.data?.refType || dt.data?.formModel?.entityName; // Thảo thêm để thêm biến lưu cho temEx
     this.formModel = dt.data.formModel;
-    if(dt.data?.listField) {
+    if(dt.data?.groupField) {
       this.isHasFields = true;
-      this.formatField(dt.data?.listField);
+      this.isGroup = true;
+      this.dataGoupField = dt.data?.groupField;
+      this.formatGroupField();
     }
     if (this.action == 'add') {
       this.headerText = 'Thêm ' + this.type + ' Template';
@@ -129,7 +132,9 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
         groupTotal2: this.data?.groupTotal2,
         groupTotal3: this.data?.groupTotal3,
       });
-    } else {
+    } 
+    else 
+    {
       this.api
         .execSv('SYS', 'AD', 'WordTemplatesBusiness', 'GetDefaultAsync', [
           'WordTemplates',
@@ -186,6 +191,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
           if (item[key[i]]?.isTemplate == '1') {
             var obj = {
               text: item[key[i]]?.headerText,
+              key: key[i],
               category: 'Drag or click the field to insert.',
               htmlAttributes: { draggable: true },
             };
@@ -226,6 +232,39 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
 
       this.listFeild.push(obj);
     });
+  }
+
+  formatGroupField()
+  {
+    let list = [];
+    this.gridViewSettup = [];
+    // this.dataGoupField.forEach(elm=>{
+    //   list = list.concat(elm.extendInfo);
+    // })
+
+    for(var i = 0 ; i < this.dataGoupField.length ; i ++)
+    {
+      this.dataGoupField[i].groupChild = [];
+      this.dataGoupField[i].extendInfo.forEach(element=>{
+        var obj = {
+          text: element?.title,
+          key: element?.fieldName,
+          category: 'Drag or click the field to insert.',
+          htmlAttributes: { draggable: true },
+        };
+  
+        var obj2 = {
+          key: element.fieldName,
+          headerText: element.title,
+          referedType: element.refType,
+          referedValue: element.refValue,
+        };
+  
+        this.gridViewSettup.push(obj2);
+        this.dataGoupField[i].groupChild.push(obj);
+      })
+      debugger
+    }
   }
 
   get f(): { [key: string]: AbstractControl } {
@@ -280,7 +319,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                       if (saved) {
                         //Trả về thông tin khi upload file thành công
                         let fileName = saved.data?.fileName; // report cần trả về fileName để set reportName
-                        this.dialog.close([item[1], this.type, fileName]);
+                        this.dialog.close([item[1], this.type, fileName,saved.data]);
                       } else {
                         this.notifySvr.notify('SYS023');
                       }
@@ -374,7 +413,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
               });
               this.onSaveWord().subscribe((saveW) => {
                 if (saveW) {
-                  this.dialog.close([item[1][0], this.type, this.nameFile]);
+                  this.dialog.close([item[1][0], this.type, this.nameFile,saveW.data]);
                   this.notifySvr.notifyCode('RS002');
                 } else this.notifySvr.notifyCode('SYS023');
               });
@@ -543,7 +582,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
   }
 
   dragStart(event: any) {
-    event.dataTransfer.setData('Text', (event.target as any).innerText);
+    event.dataTransfer.setData('Text', (event.target as any).id);
     //(event.target as any).classList.add('de-drag-target');
   }
 
@@ -558,7 +597,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     let fieldCode: any = 'MERGEFIELD  ' + fileName + '  \\* MERGEFORMAT ';
     var text = fieldName;
 
-    var check = this.gridViewSettup.filter((x) => x.headerText == text);
+    var check = this.gridViewSettup.filter((x) => x.key == text);
     if (Array.isArray(check))
     {
       text = check[0].key;

@@ -22,8 +22,13 @@ import { CodxShareService } from '../../codx-share.service';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { PopupAddLineTableComponent } from './popup-add-line-table/popup-add-line-table.component';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
-import { moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 import { PopupSelectFieldReferenceComponent } from './popup-select-field-reference/popup-select-field-reference.component';
+import moment from 'moment';
 
 @Component({
   selector: 'codx-input-custom-field',
@@ -52,10 +57,12 @@ export class CodxInputCustomFieldComponent implements OnInit {
   @Input() refStepID = ''; //là recID của step Ins liên quan
   @Input() dataSourceRef: any; //data load để ref
   @Input() isLoadDataRef = false;
+  @Input() isDropRef = false; // chỉnh sửa vị trí field
 
   @Output() valueChangeCustom = new EventEmitter<any>();
   @Output() addFileCompleted = new EventEmitter<boolean>();
   @Output() rezisePopup = new EventEmitter<any>();
+  @Output() dropDataFormatPA = new EventEmitter<any>();
 
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('comboxValue') comboxValue: ComboBoxComponent; ///value seclect 1
@@ -140,6 +147,9 @@ export class CodxInputCustomFieldComponent implements OnInit {
   listFieldRef = []; //All field
   listFieldsSelect = []; //fields selectd
   isShowMore = false;
+  //ref
+  dataFormatRef = [];
+  eventDropRef = true;
 
   constructor(
     private cache: CacheService,
@@ -173,8 +183,14 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   ngOnInit(): void {
     //gia tri mặc dinh khi them moi
-    if (this.isAdd && this.customField.defaultValue)
-      this.customField.dataValue = this.customField.defaultValue;
+    if (this.isAdd) {
+      if (this.customField.defaultValue) {
+        this.customField.dataValue = this.customField.defaultValue;
+      } else if (this.customField.dataType == 'D') {
+        this.customField.dataValue = moment(new Date()).toDate();
+      }
+    }
+
     //gia tri tung form
     if (this.refVersion && this.customField?.versions?.length > 0) {
       let idx = this.customField.versions.findIndex(
@@ -872,44 +888,6 @@ export class CodxInputCustomFieldComponent implements OnInit {
   }
   //--------------end------------//
 
-  //------------PA---------------//
-  valueChangeCbxPA(e) {
-    // if (!e.data) {
-    this.valueChangeCustom.emit({
-      e: e.data,
-      data: this.customField,
-    });
-  }
-  refValuePA(crrData) {
-    this.dataRef = '';
-    let dataFormat = JSON.parse(this.customField.dataFormat);
-    if (Array.isArray(dataFormat) && dataFormat?.length > 0) {
-      dataFormat.forEach((x) => {
-        let value = '';
-        for (var key in crrData) {
-          if (key.toLocaleLowerCase() == x.fieldName.toLocaleLowerCase()) {
-            value = crrData[key];
-          }
-        }
-        this.modelJSON += '"' + x.fieldName + '":"' + value + '",';
-      });
-      this.modelJSON = this.modelJSON.substring(0, this.modelJSON.length - 1);
-      this.modelJSON = '[{' + this.modelJSON + '}]';
-    }
-  }
-
-  viewFieldRef() {
-    this.dataRef = '';
-    let dataFormat = JSON.parse(this.customField.dataFormat);
-    if (Array.isArray(dataFormat) && dataFormat?.length > 0) {
-      dataFormat.forEach((x) => {
-        this.dataRef += x.fieldName + ', ';
-      });
-      this.dataRef = this.dataRef.substring(0, this.dataRef.length - 2);
-    }
-  }
-  //-----------------------------//
-
   //-------------RADIO-----------------//
   valueChangeRadio(e) {
     let value = '0';
@@ -995,8 +973,44 @@ export class CodxInputCustomFieldComponent implements OnInit {
   //-----------------------------------------------//
 
   //-----------------------------------------------//
-  //-------------- Data tham chiếu ---------------//
+  //-------------- Data tham chiếu -PA ------------//
   //-----------------------------------------------//
+  valueChangeCbxPA(e) {
+    // if (!e.data) {
+    this.valueChangeCustom.emit({
+      e: e.data,
+      data: this.customField,
+    });
+  }
+  refValuePA(crrData) {
+    this.dataRef = '';
+    let dataFormat = JSON.parse(this.customField.dataFormat);
+    if (Array.isArray(dataFormat) && dataFormat?.length > 0) {
+      dataFormat.forEach((x) => {
+        let value = '';
+        for (var key in crrData) {
+          if (key.toLocaleLowerCase() == x.fieldName.toLocaleLowerCase()) {
+            value = crrData[key];
+          }
+        }
+        this.modelJSON += '"' + x.fieldName + '":"' + value + '",';
+      });
+      this.modelJSON = this.modelJSON.substring(0, this.modelJSON.length - 1);
+      this.modelJSON = '[{' + this.modelJSON + '}]';
+    }
+  }
+
+  viewFieldRef() {
+    this.dataRef = '';
+    this.dataFormatRef = JSON.parse(this.customField.dataFormat);
+    if (Array.isArray(this.dataFormatRef) && this.dataFormatRef?.length > 0) {
+      this.dataFormatRef.forEach((x) => {
+        this.dataRef += x.fieldName + ', ';
+      });
+      this.dataRef = this.dataRef.substring(0, this.dataRef.length - 2);
+    }
+  }
+
   selectDataRef() {
     if (this.isLoadDataRef) {
       if (this.dataSourceRef?.length > 0) {
@@ -1067,6 +1081,24 @@ export class CodxInputCustomFieldComponent implements OnInit {
         this.changeRef.detectChanges();
       }
     });
+  }
+
+  dropFieldPA(event: CdkDragDrop<string[]>) {
+    //if (event.previousContainer === event.container) {
+    moveItemInArray(
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex
+    );
+    this.dropDataFormatPA.emit(event.container.data);
+    // } else {
+    //   transferArrayItem(
+    //     event.previousContainer.data,
+    //     event.container.data,
+    //     event.previousIndex,
+    //     event.currentIndex
+    //   );
+    // }
   }
 
   // loadDataRef() {

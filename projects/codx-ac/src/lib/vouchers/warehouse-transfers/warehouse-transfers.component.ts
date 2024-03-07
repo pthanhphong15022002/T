@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, Injector, Input, SimpleChange, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { AuthStore, ButtonModel, DataRequest, DialogModel, FormModel, NotificationsService, SidebarModel, TenantStore, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, ButtonModel, CRUDService, DataRequest, DialogModel, FormModel, NotificationsService, SidebarModel, TenantStore, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
-import { CodxAcService } from '../../codx-ac.service';
+import { CodxAcService, fmJournal } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { WarehouseTransfersAddComponent } from './warehouse-transfers-add/warehouse-transfers-add.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
+import { JournalsAddComponent } from '../../journals/journals-add/journals-add.component';
 
 @Component({
   selector: 'lib-warehouse-transfers',
@@ -38,6 +39,8 @@ export class WarehouseTransfersComponent extends UIComponent {
   }];
   viewActive: number = ViewType.listdetail;
   ViewType = ViewType;
+  fmJournal:FormModel =  fmJournal;
+  journalSV:CRUDService;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
@@ -62,6 +65,11 @@ export class WarehouseTransfersComponent extends UIComponent {
       .subscribe((params) => {
         this.journalNo = params?.journalNo; //? get số journal từ router
       });
+    this.journalSV = this.acService.createCRUDService(
+      inject,
+      this.fmJournal,
+      'AC'
+    );
   }
   //#endregion Contrucstor
 
@@ -456,6 +464,36 @@ export class WarehouseTransfersComponent extends UIComponent {
       });
   }
 
+  editJournal(){
+    this.journalSV
+      .edit(this.journal)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        res.isEdit = true;
+        this.cache.gridViewSetup(this.fmJournal.formName,this.fmJournal.gridViewName).subscribe((o)=>{
+          let data = {
+            headerText: ('Chỉnh sửa sổ nhật kí').toUpperCase(),
+            oData: { ...res },
+          };
+          let option = new SidebarModel();
+          option.FormModel = this.fmJournal;
+          option.DataService = this.journalSV;
+          option.Width = '800px';
+          let dialog = this.callfc.openSide(
+            JournalsAddComponent,
+            data,
+            option,
+            this.fmJournal.funcID
+          );
+          dialog.closed.subscribe((res) => {
+            if (res && res.event) {
+              this.getJournal();
+            }
+          });
+        })
+      });
+  }
+
   /**
    * *Hàm xem chứng từ
    * @param dataEdit : data chứng từ chỉnh sửa
@@ -659,7 +697,6 @@ export class WarehouseTransfersComponent extends UIComponent {
   setDefault(data: any, action: any = '') {
     return this.api.exec('IV', 'TransfersBusiness', 'SetDefaultAsync', [
       data,
-      this.journal,
       this.journalNo,
       action,
     ]);

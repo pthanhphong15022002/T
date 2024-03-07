@@ -130,4 +130,14 @@ export class CodxBpService {
       [startDate, interval, duration, calendarID]
     );
   }
+
+  authorityTask(recID, approvers=[]) {
+    return this.api.execSv<any>(
+      APICONSTANT.SERVICES.BP,
+      APICONSTANT.ASSEMBLY.BP,
+      'UsersBusiness',
+      'GetUserByIDAsync',
+      [recID, approvers]
+    );
+  }
 }

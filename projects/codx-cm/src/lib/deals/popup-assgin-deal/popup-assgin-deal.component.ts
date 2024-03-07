@@ -160,6 +160,7 @@ export class PopupAssginDealComponent
   //     : permissions;
   // }
   async getInformationUser(objectID) {
+    if(objectID == "ADMIN") return;
     this.codxCmService.getEmployeesByDomainID(objectID).subscribe((user) => {
       if (user) {
         this.assignToSetting(user);
@@ -415,23 +416,9 @@ export class PopupAssginDealComponent
 
   async saveOwner() {
     this.isLockStep = true;
-    // if(this.applyFor == '0' || this.isCallInstance) {
-    //   let datas = [this.recID, this.owner];
-    //   this.codxCmService.editInstance(datas).subscribe((res) => {
-    //     if (res) {
-    //       let instance = res;
-    //       if(this.isCallInstance) {
-    //         this.isCloseCM = false;
-    //         this.updatePermssion(instance);
-    //       }
-    //       this.dialogRef.close(instance);
-    //     }
-    //   });
-    // }
-    // else {
     if (this.applyProcess) {
       let obj = new tmpInstances();
-      obj.recID = this.data?.refID;
+      obj.recID = this.data?.refID || this.data?.recID;
       obj.owner = this.owner;
       this.codxCmService.editInstance([obj]).subscribe((res) => {
         if (res) {

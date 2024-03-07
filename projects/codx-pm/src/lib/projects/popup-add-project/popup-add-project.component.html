@@ -18,7 +18,7 @@
       </codx-img>
     </div>
     <div class="form-group ps-0">
-      <codx-label fiedName="ProjectName" [formModel]="form.formModel">
+      <codx-label fiedName="ProjectName" [formModel]="form.formModel" default="Tên dự án">
       </codx-label>
       <codx-input field="projectName" [crrValue]="data?.projectName" type="text"
         [disabled]="viewOnly" (valueChange)="valueChange($event)">
@@ -50,25 +50,9 @@
     <div class="form-group ps-0">
       <codx-label fiedName="ProjectType" [formModel]="form.formModel">
       </codx-label>
-      <codx-input field="projectType" [crrValue]="data?.projectType" type="valuelist" refType="2" refValue=""
+      <codx-input field="projectType" [crrValue]="data?.projectType" type="valuelist" refType="2" [refValue]="grvSetup['ProjectType'].referedValue"
         [disabled]="viewOnly" (valueChange)="valueChange($event)">
       </codx-input>
-    </div>
-    <div class="row">
-      <div class="col-6 form-group" >
-        <codx-label fiedName="CustomerID" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input field="customerID" [crrValue]="data?.customerID" type="combobox" refType="3" refValue=""
-        [disabled]="viewOnly" (valueChange)="valueChange($event)">
-      </codx-input>
-      </div>
-      <div class="col-6 form-group" >
-        <codx-label fiedName="Location" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input field="location" [crrValue]="data?.location" type="text"
-        [disabled]="viewOnly" (valueChange)="valueChange($event)">
-      </codx-input>
-      </div>
     </div>
     <div class="row">
       <div class="col-6 form-group" >
@@ -81,19 +65,39 @@
       <div class="col-6 form-group" >
         <codx-label fiedName="Priority" [formModel]="form.formModel">
         </codx-label>
-        <codx-input field="priority" [crrValue]="data?.priority" type="valuelist" refType="2" refValue=""
+        <codx-input field="priority" [crrValue]="data?.priority" type="valuelist" refType="2" [refValue]="grvSetup['Priority'].referedValue"
         [disabled]="viewOnly" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
     </div>
-    <div class="col-4 form-group" >
-      <codx-tag [entityName]="formModel.entityName" field="tags" [value]="data.tags" (valueChange)="valueChange($event)"></codx-tag>
+    <div class="row">
+      <div class="col-6 form-group" >
+        <codx-label fiedName="CustomerID" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input field="customerID" [crrValue]="data?.customerID" type="combobox" refType="3" refValue=""
+        [disabled]="viewOnly" (valueChange)="valueChange($event)">
+      </codx-input>
+      </div>
+      <div class="col-6 form-group" >
+        <codx-tag [entityName]="formModel.entityName" field="tags" [value]="data.tags" (valueChange)="valueChange($event)"></codx-tag>
+      </div>
+      <!-- <div class="col-6 form-group" >
+        <codx-label fiedName="Location" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input field="location" [crrValue]="data?.location" type="text"
+        [disabled]="viewOnly" (valueChange)="valueChange($event)">
+      </codx-input>
+      </div> -->
     </div>
+
+    <!-- <div class="col-4 form-group" >
+      <codx-tag [entityName]="formModel.entityName" field="tags" [value]="data.tags" (valueChange)="valueChange($event)"></codx-tag>
+    </div> -->
   </ng-container>
 </ng-template>
 
 <ng-template #tabMembers>
-  <ng-container *ngIf="form && form.formGroup">
+  <ng-container *ngIf="form && form.formGroup && initComplete">
     <div class="d-flex justify-content-start align-items-center" >
       <div class="">
         <codx-label fiedName="lblMembers" [formModel]="form.formModel" default="Thành viên">
@@ -135,8 +139,69 @@
         </span>
       </div> -->
     </div>
+    <div class="w-100">
+      <div class="d-flex align-items-center mb-4 pb-2 position-relative parent-container mt-3" *ngFor="let item of members">
+        <div class="symbol symbol-30px symbol-circle me-4"
+        popoverClass="userPopoverClass"
+        [ngbPopover]="popoverSelectRoles"
+        placement="right"
+        #p="ngbPopover"
+        (mouseenter)="enableEdit ? showPopover(p, item):''"
+        autoClose="outside"
+        >
+          <codx-img [width]="30" [objectId]="item?.objectID" objectType="AD_Users" [objectName]="item?.objectName"></codx-img>
+          <div style="position: absolute; right: 0px; bottom: 0px">
+            <ng-container *ngFor="let role of listRoles">
+              <ng-container  *ngIf="item.icon && role.value == item.roleType">
+                <span
+                  ><img
+                    src="/assets/themes/pm/default/img/{{ item?.icon }}"
+                    alt=""
+                /></span>
+              </ng-container>
+            </ng-container>
+          </div>
+          <!-- <div role="button" class="pe-auto"  *ngIf="item.icon">
+            <span popoverClass="userPopoverClass"  placement="right"
+              autoClose="outside" class="position-absolute attendees-tag"
+              [inlineSVG]="'./assets/themes/pm/default/img/'+ item?.icon" >
+            </span>
+          </div> -->
+        </div>
 
-    <div class="d-flex align-items-center mb-4 pb-2 position-relative parent-container" *ngFor="let item of members">
+        <div class="d-flex flex-column w-50">
+          <div class="text-dark fw-bold fs-6 fw-bolder">
+            {{ item?.objectName }}
+          </div>
+          <div>
+            <!-- <span class="text-muted">{{
+              item?.roleType | vll : "PM003" : "text" | async
+              }}</span> -->
+              <span class="text-muted">{{item.positionName}}</span>
+          </div>
+          <div>
+
+              <span class="text-muted">{{item.organizationName}}</span>
+          </div>
+        </div>
+        <div class="d-flex flex-column w-25">
+          <codx-vll
+              [name]="'PM003'"
+              [value]="item.roleType"
+              [showBgColor]="true"
+              [showText]="true"
+              [className]="'rounded-pill'"
+            >
+            </codx-vll>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center me-5 ">
+        <i class="icon-clear icon-16 " (click)="removeMember(item)"></i>
+        </div>
+
+
+      </div>
+    </div>
+    <!-- <div class="d-flex align-items-center mb-4 pb-2 position-relative parent-container" *ngFor="let item of members">
       <div class="symbol symbol-30px symbol-circle me-4">
         <codx-img [width]="30" [objectId]="item?.objectID" objectType="AD_Users" [objectName]="item?.objectName"></codx-img>
         <div role="button" class="pe-auto" (click)="showPopover(p, item?.objectID)" *ngIf="item.icon">
@@ -172,172 +237,13 @@
       </div>
 
 
-    </div>
+    </div> -->
 
   </ng-container>
 </ng-template>
 <ng-template #tabSettings>
-   <div *ngIf="!newSetting.length" class="list-content">
-    <div style="justify-content: center !important;
-    display: flex;
-    align-items: center;
-    flex-direction: column !important;">
-      <img style="width: 13%;" src="../assets/themes/sys/default/img/DataEmpty.svg" />
-      <div class="fs-6 text-dark mt-2 text-center">
-        {{ "SYS011" | mssg | async }}
-      </div>
-    </div>
-  </div>
-  <div *ngIf="newSetting.length" class="list-content">
-    <ng-container *ngFor="let item of newSetting">
-      <ng-container *ngTemplateOutlet="
-            template;
-            context: {
-              $implicit: item,
-              isGroup:
-                item.controlType &&
-                item.controlType.toLowerCase() == 'groupcontrol'
-            }
-          ">
-      </ng-container>
-    </ng-container>
-  </div>
-  <ng-template #template let-data let-collapse="collapse" let-isGroup="isGroup">
-    <div class="list-item bg-hover py-3" [ngClass]="collapse ? ' d-none ms-5' : ''" [attr.data-group]="data.refLineID">
-      <div class="d-flex justify-content-between">
-        <div class="w-40px min-w-40px">
-          <div *ngIf="!isGroup && (data.refLineID || data.icon)">
-            <ng-container *ngIf="data?.icon && data?.icon.includes('.svg'); else icon">
-              <span [inlineSVG]="'./assets/themes/sys/default/img/' + data?.icon" class="svg-icon"></span>
-            </ng-container>
-            <ng-template #icon>
-              <span [ngClass]="data?.icon" class="icon-16"></span>
-            </ng-template>
-          </div>
-        </div>
-        <div class="d-flex flex-column w-100" *ngIf="data.tilte || data.description">
-          <div class="fw-bold text-dark" [ngClass]="isGroup ? 'category-title fs-4' : ''">
-            {{ data.tilte }}
-          </div>
-          <div class="text-gray-500 pt-1 setting-description" [attr.data-id]="data?.recID">
-            {{ data | formatDescription : oldDataValue }}
-          </div>
-        </div>
-        <div *ngIf="!isGroup"
-          class="d-flex align-items-center ms-4 justify-content-end category-control w-250px min-w-250px" [ngClass]="
-              data?.controlType &&
-              data?.controlType != 'GroupControl' &&
-              data?.category
-                ? 'min-w-250px'
-                : ''
-            ">
-          <ng-container *ngIf="data.controlType && data.controlType != 'GroupControl'">
-            <codx-input [style]="
-              data.controlType &&
-              (data.controlType.toLowerCase() == 'textbox' ||
-                data.controlType.toLowerCase() == 'combobox')
-                ? 'width: 200px'
-                : ''
-            " [type]="data | type" [name]="data.controlType" placeholder="" ngDefaultControl [refType]="data.referedType"
-              [refValue]="data.referedValue || data.referdValue" [loadFull]="true" [field]="data.fieldName" [checked]="
-              data.controlType != 'Switch' &&
-              data.controlType != 'Checkbox' &&
-              data.controlType != 'Radio'
-                ? false
-                : data.fieldValue
-                ?  data.fieldValue
-                : false
-            " [crrValue]="
-              data.controlType == 'Switch' ||
-              data.controlType == 'Checkbox' ||
-              data.controlType == 'Radio'
-                ? ''
-                :  data.fieldValue
-                ?  data.fieldValue || ''
-                : ''
 
-            " (valueChange)="valueSettingChange($event, data)">
-            </codx-input>
-          </ng-container>
-          <div class="setting-btnright" *ngIf="!componentSub">
-            <a *ngIf="data.displayMode === '1'" [routerLink]="
-                  data.reference ? '../../../' + data.reference : null
-                " (click)="
-                  !data.reference &&
-                    openSub($event, data, data.fieldValue)
-                ">
-              <span class="w-30px d-flex justify-content-center"><span
-                  class="icon-keyboard_arrow_right icon-22"></span></span></a>
-            <a href="javascript:void(0)" (click)="openPopup($event, data)" *ngIf="data.displayMode === '2'"><span
-                class="w-30px d-flex justify-content-center"><span class="icon-18" [ngClass]="
-                      data.category == '5' ? 'icon-email' : 'icon-edit-one'
-                    "></span></span></a>
-            <a href="javascript:void(0)" *ngIf="data.displayMode === '3'" (click)="collapseItem($event, data)"><span
-                class="w-30px d-flex justify-content-center"><span
-                  class="button-collapse icon-keyboard_arrow_right icon-22" [attr.data-id]="data.recID"></span></span></a>
-            <ng-container *ngIf="data.displayMode === '4' || data.displayMode === '5'">
-              <codx-input type="Share" [refValue]="data.referdValue || 'L1901'" [field]="data.fieldName" [dataShared]="[]"
-                [showInput]="false" [listCombobox]="data.reference" [multiple]="data.displayMode === '5'" [disabled]="false" (valueChange)="valueSettingChange($event, data)">
-              </codx-input>
-            </ng-container>
-
-            <a *ngIf="data.displayMode === '6'" href="javascript:void(0)" (click)="
-                  data.reference &&
-                    openSub($event, data, data.fieldValue)
-                ">
-              <span class="w-30px d-flex justify-content-center"><span
-                  class="icon-keyboard_arrow_right icon-22"></span></span></a>
-          </div>
-        </div>
-      </div>
-      <!-- <div class="ms-20 mt-3 lh-lg" *ngIf="data.displayMode === '4' || data.displayMode === '5'">
-        <span class="me-3 text-dark fw-bold"> {{ data.tilte }}: </span>
-        <span class="text-gray-600 share-object-name" [attr.data-recid]="data.recID">
-          {{
-          dataValue && dataValue[data.transType]
-          ? (
-          data.recID
-          | shareSetting : settingFull : dataValue[data.transType]
-          )?.objectName == "null" ||
-          !(
-          data.recID
-          | shareSetting : settingFull : dataValue[data.transType]
-          )?.objectName
-          ? (
-          data.recID
-          | shareSetting : settingFull : dataValue[data.transType]
-          )?.objectID || ""
-          : (
-          data.recID
-          | shareSetting : settingFull : dataValue[data.transType]
-          )?.objectName ||
-          (
-          data.recID
-          | shareSetting : settingFull : dataValue[data.transType]
-          )?.objectID ||
-          ""
-          : ""
-          }}
-        </span>
-      </div> -->
-    </div>
-    <ng-container *ngIf="data.displayMode === '3'">
-      <ng-container *ngFor="let itemchild of newSetting | group : data.recID : '2'">
-        <ng-container *ngTemplateOutlet="
-              template;
-              context: {
-                $implicit: itemchild,
-                isGroup: false,
-                collapse: true
-              }
-            ">
-        </ng-container>
-      </ng-container>
-    </ng-container>
-
-    <hr class="ms-12 my-0" style="margin-top: -1px;" *ngIf="!isGroup" />
-  </ng-template>
-  <!-- <dynamic-setting-control [settingFull]="{paras:data.settings,paraValues:paravalues}" [lineType]="'1'" *ngIf="data.settings"></dynamic-setting-control> -->
+  <dynamic-setting-control #dynamic [settingFull]="{paras:newSetting,paraValues:paravalues}"[isDialog]="false" [lineType]="'1'" ></dynamic-setting-control>
 </ng-template>
 
 <ng-template #footer>
@@ -364,7 +270,7 @@
   <div class="d-flex flex-column mb-1 w-150px">
     <ng-container *ngIf="members && members.length > 0 ">
       <ng-container *ngFor="let item of listRoles">
-        <div class="d-flex align-items-center btn btn-sm btn-white cursor-pointer"
+        <div class="d-flex align-items-center btn btn-sm btn-white cursor-pointer" (click)="changeRole(item)"
           >
           <span [inlineSVG]="'./assets/themes/pm/default/img/'+ item?.icon"></span>
           <div class="fs-7 ms-2 text-gray-600">

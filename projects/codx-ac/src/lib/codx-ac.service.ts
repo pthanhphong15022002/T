@@ -184,6 +184,13 @@ export const fmUMConversion: FormModel = {
   entityPer: 'BS_UMConversion',
 };
 
+export const fmJournal: FormModel = {
+  formName: 'Journals',
+  gridViewName: 'grvJournals',
+  entityName: 'AC_Journals',
+  funcID: 'ACT',
+};
+
 export enum MorfuncDefault {
   Sua = 'SYS03',
   Xoa = 'SYS02',
@@ -260,15 +267,6 @@ export enum MorfuncVoucher {
   KiemTraHopLeXK = 'ACT071403',
 }
 
-// export enum MorfuncIssueVoucher {
-//   GhiSo = 'ACT071406',
-//   GuiDuyet = 'ACT071404',
-//   HuyDuyet = 'ACT071405',
-//   KhoiPhuc = 'ACT071407',
-//   In = 'ACT071408',
-//   KiemTraHopLe = 'ACT071403',
-// }
-
 export enum MorfuncGeneralJournals {
   GhiSo = 'ACT090104',
   GuiDuyet = 'ACT090102',
@@ -285,6 +283,15 @@ export enum MorfuncTranfers {
   KhoiPhuc = 'ACT072205',
   In = 'ACT072206',
   KiemTraHopLe = 'ACT072201',
+}
+
+export enum MorfuncCashTranfers {
+  GhiSo = 'ACT042204',
+  GuiDuyet = 'ACT042202',
+  HuyDuyet = 'ACT042203',
+  KhoiPhuc = 'ACT042205',
+  In = 'ACT042206',
+  KiemTraHopLe = 'ACT042201',
 }
 
 @Injectable({
@@ -794,6 +801,107 @@ export class CodxAcService {
     }, {});
   }
 
+  changeMFCashTranfers(event, data, type: any = '', journal, formModel) {
+    event.reduce((pre, element) => {
+      if (
+        !Object.values(MorfuncCashTranfers).includes(element.functionID) &&
+        !Object.values(MorfuncDefault).includes(element.functionID)
+      )
+        element.disabled = true;
+      if (type === 'viewgrid') element.isbookmark = false;
+      if (type === 'viewdetail') {
+        if (![MorfuncDefault.XuatDuLieu].includes(element.functionID)) {
+          element.isbookmark = true;
+        }
+      }
+      if (
+        [MorfuncDefault.Sua, MorfuncDefault.Xoa].includes(element.functionID) &&
+        data?.status != '1' &&
+        data?.status != '2'
+      )
+        element.disabled = true;
+      if (Object.values(MorfuncCashTranfers).includes(element.functionID)) {
+        switch (data?.status) {
+          case '1':
+            if (!data?.validated) {
+              if (
+                ![
+                  MorfuncCashTranfers.KiemTraHopLe,
+                  MorfuncCashTranfers.In,
+                ].includes(element.functionID)
+              )
+                element.disabled = true;
+            } else {
+              if (journal.approvalControl == '0') {
+                if (
+                  ![
+                    MorfuncCashTranfers.GhiSo,
+                    MorfuncCashTranfers.In,
+                  ].includes(element.functionID)
+                )
+                  element.disabled = true;
+              } else {
+                if (
+                  ![
+                    MorfuncCashTranfers.GuiDuyet,
+                    MorfuncCashTranfers.In,
+                  ].includes(element.functionID)
+                )
+                  element.disabled = true;
+              }
+            }
+            break;
+
+          case '2':
+            if (
+              ![
+                MorfuncCashTranfers.KiemTraHopLe,
+                MorfuncCashTranfers.In,
+              ].includes(element.functionID)
+            )
+              element.disabled = true;
+            break;
+
+          case '3':
+            if (
+              ![
+                MorfuncCashTranfers.HuyDuyet,
+                MorfuncCashTranfers.In,
+              ].includes(element.functionID)
+            )
+              element.disabled = true;
+            break;
+
+          case '5':
+          case '9':
+            if (
+              ![
+                MorfuncCashTranfers.GhiSo,
+                MorfuncCashTranfers.In,
+              ].includes(element.functionID)
+            )
+              element.disabled = true;
+            break;
+
+          case '6':
+            if (
+              ![
+                MorfuncCashTranfers.KhoiPhuc,
+                MorfuncCashTranfers.In,
+              ].includes(element.functionID)
+            )
+              element.disabled = true;
+            break;
+
+          default:
+            element.disabled = true;
+            break;
+        }
+      }
+      event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
+    }, {});
+  }
+
   changeMFPur(event, data, type: any = '', journal, formModel) {
     event.reduce((pre, element) => {
       if (
@@ -992,51 +1100,6 @@ export class CodxAcService {
       }
       event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
     }, {});
-    // //* thiet lap bookmark cac morefunc tai cac mode view
-    // event.filter((x) => !Object.values(MorfuncSale).includes(x.functionID) && !Object.values(MorfuncDefault).includes(x.functionID))
-    //   .reduce((pre, element) => { element.disabled = true }, {}); //? disable cac morfunc ko xai
-    // if (type === 'viewgrid') event.reduce((pre,element) => {element.isbookmark = false},{}); //? view grid thi morfunc ko bookmark ra ngoai
-    // if (type === 'viewdetail') event.filter((x) => ![MorfuncDefault.XuatDuLieu].includes(x.functionID)).reduce((pre,element) => {element.isbookmark = true},{});
-
-    // //* an hien morefunc theo nghiep vu
-    // if(data?.status != '1' && data?.status != '2') event.filter((x) => [MorfuncDefault.Sua].includes(x.functionID)).reduce((pre,element) => {element.disabled = true},{});
-    // event = event.filter((x) => Object.values(MorfuncSale).includes(x.functionID));
-    // switch (data?.status) {
-    //   case '1':
-    //     if (!data?.validated) {
-    //       event.filter((x) => ![MorfuncSale.KiemTraHopLe,MorfuncSale.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //     }else{
-    //       if (journal.approvalControl == '0') {
-    //         event.filter((x) => ![MorfuncSale.GhiSo,MorfuncSale.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //       }else{
-    //         event.filter((x) => ![MorfuncSale.GuiDuyet,MorfuncSale.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //       }
-    //     }
-    //     break;
-    //   case '2':
-    //     event.filter((x) => ![MorfuncSale.KiemTraHopLe,MorfuncSale.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //       break;
-    //   case '3':
-    //     event.filter((x) => ![MorfuncSale.HuyDuyet,MorfuncSale.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //       break;
-    //   case '5':
-    //   case '9':
-    //     event.filter((x) => ![MorfuncSale.GhiSo,MorfuncSale.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //       break;
-    //   case '6':
-    //     event.filter((x) => ![MorfuncSale.KhoiPhuc,MorfuncSale.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //       break;
-    //   default:
-    //     event.reduce((pre, element) => { element.disabled = true }, {});
-    //       break;
-    // }
   }
 
   changeMFVoucher(event, data, type: any = '', journal, formModel) {
@@ -1154,53 +1217,6 @@ export class CodxAcService {
     }, {});
   }
 
-  changeMFIssueVoucher(event, data, type: any = '', journal, formModel) {
-    //* thiet lap bookmark cac morefunc tai cac mode view
-    // event.filter((x) => !Object.values(MorfuncVoucher).includes(x.functionID) && !Object.values(MorfuncDefault).includes(x.functionID))
-    //   .reduce((pre, element) => { element.disabled = true }, {}); //? disable cac morfunc ko xai
-    // if (type === 'viewgrid') event.reduce((pre,element) => {element.isbookmark = false},{}); //? view grid thi morfunc ko bookmark ra ngoai
-    // if (type === 'viewdetail') event.filter((x) => ![MorfuncDefault.XuatDuLieu].includes(x.functionID)).reduce((pre,element) => {element.isbookmark = true},{});
-    // //* an hien morefunc theo nghiep vu
-    // if(data?.status != '1' && data?.status != '2') event.filter((x) => [MorfuncDefault.Sua].includes(x.functionID)).reduce((pre,element) => {element.disabled = true},{});
-    // event = event.filter((x) => Object.values(MorfuncIssueVoucher).includes(x.functionID));
-    // switch (data?.status) {
-    //   case '1':
-    //     if (!data?.validated) {
-    //       event.filter((x) => ![MorfuncIssueVoucher.KiemTraHopLe,MorfuncIssueVoucher.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //     }else{
-    //       if (journal.approvalControl == '0') {
-    //         event.filter((x) => ![MorfuncIssueVoucher.GhiSo,MorfuncIssueVoucher.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //       }else{
-    //         event.filter((x) => ![MorfuncIssueVoucher.GuiDuyet,MorfuncIssueVoucher.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //       }
-    //     }
-    //     break;
-    //   case '2':
-    //     event.filter((x) => ![MorfuncIssueVoucher.KiemTraHopLe,MorfuncIssueVoucher.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //       break;
-    //   case '3':
-    //     event.filter((x) => ![MorfuncIssueVoucher.HuyDuyet,MorfuncIssueVoucher.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //       break;
-    //   case '5':
-    //   case '9':
-    //     event.filter((x) => ![MorfuncIssueVoucher.GhiSo,MorfuncIssueVoucher.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //       break;
-    //   case '6':
-    //     event.filter((x) => ![MorfuncIssueVoucher.KhoiPhuc,MorfuncIssueVoucher.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //       break;
-    //   default:
-    //     event.reduce((pre, element) => { element.disabled = true }, {});
-    //       break;
-    // }
-  }
-
   changeMFTranfers(event, data, type: any = '', journal, formModel) {
     event.reduce((pre, element) => {
       if (
@@ -1293,51 +1309,6 @@ export class CodxAcService {
       }
       event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
     }, {});
-    // //* thiet lap bookmark cac morefunc tai cac mode view
-    // event.filter((x) => !Object.values(MorfuncTranfers).includes(x.functionID) && !Object.values(MorfuncDefault).includes(x.functionID))
-    //   .reduce((pre, element) => { element.disabled = true }, {}); //? disable cac morfunc ko xai
-    // if (type === 'viewgrid') event.reduce((pre,element) => {element.isbookmark = false},{}); //? view grid thi morfunc ko bookmark ra ngoai
-    // if (type === 'viewdetail') event.filter((x) => ![MorfuncDefault.XuatDuLieu].includes(x.functionID)).reduce((pre,element) => {element.isbookmark = true},{});
-
-    // //* an hien morefunc theo nghiep vu
-    // if(data?.status != '1' && data?.status != '2') event.filter((x) => [MorfuncDefault.Sua].includes(x.functionID)).reduce((pre,element) => {element.disabled = true},{});
-    // event = event.filter((x) => Object.values(MorfuncTranfers).includes(x.functionID));
-    // switch (data?.status) {
-    //   case '1':
-    //     if (!data?.validated) {
-    //       event.filter((x) => ![MorfuncTranfers.KiemTraHopLe,MorfuncTranfers.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //     }else{
-    //       if (journal.approvalControl == '0') {
-    //         event.filter((x) => ![MorfuncTranfers.GhiSo,MorfuncTranfers.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //       }else{
-    //         event.filter((x) => ![MorfuncTranfers.GuiDuyet,MorfuncTranfers.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //       }
-    //     }
-    //     break;
-    //   case '2':
-    //     event.filter((x) => ![MorfuncTranfers.KiemTraHopLe,MorfuncTranfers.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //       break;
-    //   case '3':
-    //     event.filter((x) => ![MorfuncTranfers.HuyDuyet,MorfuncTranfers.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //       break;
-    //   case '5':
-    //   case '9':
-    //     event.filter((x) => ![MorfuncTranfers.GhiSo,MorfuncTranfers.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //       break;
-    //   case '6':
-    //     event.filter((x) => ![MorfuncTranfers.KhoiPhuc,MorfuncTranfers.In].includes(x.functionID))
-    //         .reduce((pre, element) => { element.disabled = true }, {});
-    //       break;
-    //   default:
-    //     event.reduce((pre, element) => { element.disabled = true }, {});
-    //       break;
-    // }
   }
 
   changeMFJournal(event, type) {

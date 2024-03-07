@@ -17,15 +17,8 @@ export class CategoriesComponent
   lstGroup: Array<any> = [];
   selectedToolBar: string = '';
   imgDefault = 'assets/themes/ws/default/img/Report_Empty.svg';
-  title: string = '';
   constructor(inject: Injector, private acService: CodxAcService) {
     super(inject);
-    if (this.router.snapshot.params['funcID']) {
-      this.funcID = this.router.snapshot.params['funcID'];
-      this.cache.functionList(this.funcID).subscribe((f) => {
-        if (f) this.title = f.customName;
-      });
-    }
   }
   //#endregion
 

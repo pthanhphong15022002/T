@@ -971,25 +971,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   async startTask(task: DP_Instances_Steps_Tasks, groupTask) {
     let objectLinked = task?.objectLinked;
     if (task?.taskType == 'Q') {
-      //báo giá
       this.addQuotation();
     } else if (task?.taskType == 'CO' && !task?.objectLinked) {
-      let data = {
-        action: 'add',
-        type: 'task',
-        entityName: this.entityName,
-        parentID: this.recIDParent,
-        processID: this.processID,
-        businessLineID: this.businessLineID,
-      };
-      let taskContract = await this.stepService.openPopupTaskContract(
-        data,
-        'add',
-        task,
-        this.currentStep?.recID,
-        groupTask,
-        this.isStart
-      );
+      let taskContract = await this.addContract(task, groupTask);
       objectLinked = taskContract?.objectLinked;
       if (!taskContract) {
         return;
@@ -1058,6 +1042,25 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         } else this.openPopup(quotation, 'add');
       }
     });
+  }
+
+  async addContract(task: DP_Instances_Steps_Tasks, groupTask){
+    let data = {
+      action: 'add',
+      type: 'task',
+      entityName: this.entityName,
+      parentID: this.recIDParent,
+      processID: this.processID,
+      businessLineID: this.businessLineID,
+    };
+    return await this.stepService.openPopupTaskContract(
+      data,
+      'add',
+      task,
+      this.currentStep?.recID,
+      groupTask,
+      this.isStart
+    );
   }
 
   getDefault() {
@@ -1358,29 +1361,54 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         task?.taskType == 'CO' &&
         ((task?.isTaskDefault && task?.objectLinked) || !task?.isTaskDefault)
       ) {
-        let data = {
-          action: 'edit',
-          type: 'task',
-          recIDContract: task.objectLinked,
-          stepsTasks: task,
-        };
-        let taskContract = await this.stepService.openPopupTaskContract(
-          data,
-          'edit',
-          task,
-          this.currentStep?.recID,
-          null,
-          this.isStart
-        );
-        this.api
-          .exec<any>('DP', 'InstancesStepsBusiness', 'UpdateTaskStepAsync', [
-            taskContract,
-          ])
-          .subscribe((res) => {
-            if (res) {
-              this.changeTaskEdit(res, res?.taskGroupID);
-            }
-          });
+        if (task?.objectLinked) {
+          let data = {
+            action: 'edit',
+            type: 'task',
+            recIDContract: task.objectLinked,
+            stepsTasks: task,
+          };
+          let taskContract = await this.stepService.openPopupTaskContract(
+            data,
+            'edit',
+            task,
+            this.currentStep?.recID,
+            null,
+            this.isStart
+          );
+          if (taskContract == "not data") {
+            task.objectLinked = null;
+            this.api
+              .exec<any>(
+                'DP',
+                'InstancesStepsBusiness',
+                'UpdateTaskStepAsync',
+                [task]
+              )
+              .subscribe((res) => {
+                if (res) {
+                  this.changeDetectorRef.markForCheck();
+                }
+              });
+
+          }else if (taskContract?.recID) {
+            this.api
+              .exec<any>(
+                'DP',
+                'InstancesStepsBusiness',
+                'UpdateTaskStepAsync',
+                [taskContract]
+              )
+              .subscribe((res) => {
+                if (res) {
+                  this.changeTaskEdit(res, res?.taskGroupID);
+                }
+              });
+          } 
+        }else{
+          this.notiService.notify('Hợp đồng không tồn tại', '3');
+          this.startTask(task, task?.taskGroupID);
+        }
       } else if (task?.taskType == 'E') {
         this.handelMail(task, 'edit');
       } else {
@@ -3096,7 +3124,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       titleHeader: task?.taskName,
       objectIdParent: task?.stepID,
       // customerID: '',
-      isAdd: false, ///là add form để lấy giá trị mặc định gán vào
+      isAdd: true, ///là add form để lấy giá trị mặc định gán vào
       taskID: task.recID,
       fieldOther: this.getFieldsOther(this.currentStep?.fields, task?.fieldID),
     };

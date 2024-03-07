@@ -37,6 +37,8 @@
                             [ngClass]="child.fieldType == 'Title' ? 'fw-bold fs-3 mt-1': 'fw-bold'">
                         </codx-label> 
                         <span *ngIf="child.isRequired" class="text-danger mx-2">(*)</span>
+
+                        <i class="icon-add_box ms-2 text-primary cursor-pointer" *ngIf="child.fieldType == 'Table'" (click)="addRow(child.dataFormat,child.fieldName,child.indexTable)"></i>
                     </div>
                     
                     <ng-container [ngSwitch]="child?.fieldType">
@@ -56,40 +58,23 @@
                                 </codx-attachment>
                             </ng-container>
                             <ng-container *ngIf="child.documentControl">
-                                <lib-attachment-grid [data]="child.documentControl" [dataIns]="dataIns" [formModel]="formModel" (dataChange)="dataChangeAttachmentGrid($event)" (dataChangeAttachment)="dataChangeAttachment($event)"></lib-attachment-grid>
+                                <div class="pt-2">
+                                    <lib-attachment-grid [data]="child.documentControl" [dataIns]="dataIns" [formModel]="formModel" (dataChange)="dataChangeAttachmentGrid($event)" (dataChangeAttachment)="dataChangeAttachment($event)"></lib-attachment-grid>
+                                </div>
                             </ng-container>
                         </ng-container>
                         <ng-container *ngSwitchCase="'Table'">
-                            <table class="table table-bordered mt-2">
-                                <thead>
-                                  <tr>
-                                    <th scope="col" *ngIf="child?.tableFormat?.hasIndexNo">#</th>
-                                    <th scope="col" *ngFor="let col of child.dataFormat">{{col.title}}</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                    <ng-container *ngFor="let s of dataIns?.datas[tableField] , let i = index">
-                                    <tr>
-                                        <th scope="row" *ngIf="child?.tableFormat?.hasIndexNo"></th>
-                                            <td *ngFor="let col of child.dataFormat">
-                                                <codx-input
-                                                    [formName]="formModel.formName" 
-                                                    [gridViewName]="formModel.gridViewName + col.fieldType"
-                                                    [type]="(col?.controlType | addProcessDefaultPrice : col?.controlType : col?.dataType : col?.dataFormat: col?.refType)"
-                                                    [refValue]="col.refValue"
-                                                    [refType]="col.refType" 
-                                                    [field]="getField(col?.fieldName)"
-                                                    [placeholder]="col?.description"
-                                                    (valueChange)="editTable(i,$event)"
-                                                    [crrValue]="s[getField(col?.fieldName)]"
-                                                    >
-                                                </codx-input>
-                                            </td>
-                                        </tr>
-                                    </ng-container>
-                                </tbody>
-                              </table>
-                              <span (click)="addRow()">Thêm</span>
+                            <codx-gridview-v2
+                                #gridView
+                                [outputMoreFunc]="true"
+                                [columnsGrid]="child.columnsGrid"
+                                [dataSource]="dataTable[child.fieldName]"
+                                (clickMF)="clickMFGrid($event,child)"
+                            >
+                            </codx-gridview-v2>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'UserInfo'">
+                           <ng-container *ngTemplateOutlet="userInfo ; context: { $implicit: child.fieldName , b: child.recID}"></ng-container>
                         </ng-container>
                         <ng-container *ngSwitchDefault>
                             <codx-input
@@ -115,3 +100,69 @@
         <button class="btn btn-primary ms-2" [disabled]="isAttach" (click)="!isAttach?onSave(2):undefined" *ngIf="type != 'edit'"><codx-label [formName]="formModel.formName" fiedName="lblDone" default="Lưu & Bắt đầu thực hiện"></codx-label></button>
     </div>
 </div>
+<ng-template #userInfo let-data let-id="b">
+    <div class="d-flex flex-column w-100">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex flex-column w-100 py-2 pe-1">
+                <codx-label default="Họ và tên" [formName]="formModel?.formName" [fiedName]="'lblProcessInfoFullName'" ></codx-label>
+                <codx-input type="text" [crrValue]="dataUserInfo[data]?.userName" field="userName" (valueChange)="valueChangeUserInfo($event , data)"></codx-input>
+            </div>
+            <div class="d-flex flex-column w-100 py-2 ps-1">
+                <codx-label default="Số CMT/CCCD/Hộ chiếu" [formName]="formModel?.formName" [fiedName]="'lblProcessInfoCMT'" ></codx-label>
+                <codx-input type="text" [crrValue]="dataUserInfo[data]?.idCardNo" field="idCardNo" (valueChange)="valueChangeUserInfo($event , data)"></codx-input>
+            </div>
+        </div>
+        <div class="d-flex align-items-start justify-content-between">
+            <div class="d-flex flex-column w-100 py-2 pe-1">
+                <codx-label default="Email" [formName]="formModel?.formName" [fiedName]="'lblProcessInfoEmail'" ></codx-label>
+                <codx-input type="text" [crrValue]="dataUserInfo[data]?.email" field="email" (valueChange)="valueChangeUserInfo($event , data)"></codx-input>
+                <codx-label default="** Nhận mail kích hoạt dịch vụ" [formName]="formModel?.formName" [fiedName]="'lblProcessInfoOTP'" class="text-primary fs-7 pt-2" ></codx-label>
+            </div>
+            <div class="d-flex flex-column w-100 py-2 ps-1">
+                <codx-label default="Số điện thoại" [formName]="formModel?.formName" [fiedName]="'lblProcessInfoPhone'" ></codx-label>
+                <codx-input type="text" [crrValue]="dataUserInfo[data]?.phone" field="phone" (valueChange)="valueChangeUserInfo($event , data)"></codx-input>
+            </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-between p-2">
+            <codx-label default="Ảnh chụp hai mặt của giấy tờ" class="w-100"></codx-label>
+            <div class="d-flex align-items-center justify-content-between w-100">
+                <ng-container *ngFor="let item of vllBP022?.datas">
+                    <codx-input 
+                        type="radio"
+                        name="ipCCCD"
+                        field="idCardType"
+                        [crrValue]="item.value.toString()"
+                        [label]="item.text"
+                        [checked]="dataUserInfo[data].idCardType == item.value.toString() ? true : false"
+                        (valueChange)="valueChangeUserInfo($event , data)"
+                    >
+                    </codx-input>
+                </ng-container>
+            </div>
+          </div>
+          <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex flex-column align-items-center w-100 p-2 cursor-pointer" (click)="clickUploadFile(0,data,id)">
+                    <div class="image-add-file border bg-F5F8FA rd-3px w-100" [ngStyle]="{'background-image' : 'url('+(getUrl(data,0))+')'}">
+                    </div>
+                    <codx-label default="Mặt trước" class="pt-2"></codx-label>
+                </div>
+                <div class="d-flex flex-column align-items-center w-100 p-2 cursor-pointer" (click)="clickUploadFile(1,data,id)">
+                    <div class="image-add-file border bg-F5F8FA rd-3px w-100" [ngStyle]="{'background-image' : 'url('+(getUrl(data,1))+')'}">
+                    </div>
+                    <codx-label default="Mặt sau" class="pt-2"></codx-label>
+                </div>
+          </div>
+          <div class="d-flex flex-column w-50 p-2">
+            <codx-label default="Ảnh chân dung" class="w-100"></codx-label>
+            <div class="d-flex flex-column align-items-center w-100 py-2 cursor-pointer" (click)="clickUploadFile(2,data,id)">
+                <div class="image-add-file border bg-F5F8FA rd-3px w-100" [ngStyle]="{'background-image' : 'url('+(getUrl(data,2))+')'}">
+                </div>
+                <codx-label default="Ảnh chân dung" class="pt-2"></codx-label>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<codx-attachment #attachmentUserInfo hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel"
+[idField]="'RecID'" [hideImageThumb]="'1'" [isSaveSelected]="'1'"  [objectType]="formModel?.entityName" (fileSave)="fileSave($event)">
+</codx-attachment>

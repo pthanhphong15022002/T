@@ -502,13 +502,15 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
                     let curWarehourse= this.lstWarehourse.filter(x=>x.warehouseID == item?.warehouseID);
                     if(curWarehourse?.length>0){
                       curRO = new Approver()
-                      curRO.roleID= curWarehourse[0]?.owner;
+                      curRO.approver= curWarehourse[0]?.owner;
+                      curRO.roleType="RO";
                     }
                     else{
                       curWarehourse= this.lstWarehourse.filter(x=>x.isSystem == true);
                       if(curWarehourse?.length>0){
                         curRO = new Approver()
-                        curRO.roleID= curWarehourse[0]?.owner;
+                        curRO.roleType= curWarehourse[0]?.owner;
+                        curRO.roleType="RO";
                       }
                     }
                     this.codxCommonService

@@ -2,7 +2,9 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
+  HostBinding,
   Input,
   OnInit,
   Output,
@@ -14,7 +16,10 @@ import {
   ApiHttpService,
   ButtonModel,
   CacheService,
+  CodxService,
   DataRequest,
+  PageTitleService,
+  SortView,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -28,6 +33,7 @@ import { Observable } from 'rxjs';
 export class CodxView2Component implements OnInit, AfterViewInit {
   //#region Contructor
   @Input() funcID?: string;
+  @Input() toolbarDisplay: boolean = true;
   @Input() tmpRightToolBar?: TemplateRef<any>;
   @Input() showHeader: boolean = true;
   @Input() showRightToolbar: boolean = true;
@@ -48,22 +54,37 @@ export class CodxView2Component implements OnInit, AfterViewInit {
   @Input() dataSource: any;
   @Input() bodyCss: any;
   @Input() viewActive = '1';
-  @Input() isAdd: boolean = true;
+  @Input() showButton: boolean = true;
   @Input() isToolBar: boolean = true;
   @Input() dataRequest: any;
+  
+  @Input() hideMoreFuncs: boolean = false;
+  @Input() showFilter: boolean = true;
+  @Input() showSearchBar: boolean = true;
+  @Input() toolbarMode: '1' | '2'| null = '2';
+  @Input() titleToolBarTmp: TemplateRef<any> | null = null;
+  @Input() button?: ButtonModel[];
+
   @Output() btnClick = new EventEmitter();
   @Output() dataChange = new EventEmitter();
   @Output() selectedChange = new EventEmitter();
   @Output() viewChange = new EventEmitter();
+  sortFields: SortView[] = [];
   request: DataRequest;
-  viewList: Array<ViewModel> = [];
-  fMoreFuncs: ButtonModel[];
+  views: Array<ViewModel> = [];
+  moreFuncs: ButtonModel[];
   title: string = '';
+
+  @HostBinding('class') class='d-flex flex-column w-100 h-100';
+  
   constructor(
     private ref: ChangeDetectorRef,
+    private codx: CodxService,
     private cache: CacheService,
     private api: ApiHttpService,
-    private router: ActivatedRoute
+    private router: ActivatedRoute,
+    private pageTitle: PageTitleService,
+    private elRef: ElementRef,
   ) {
     this.request = new DataRequest();
     this.request.page = 1;
@@ -72,8 +93,15 @@ export class CodxView2Component implements OnInit, AfterViewInit {
   //#endregion
   //#region Init
   ngAfterViewInit(): void {
-    const elem = document.querySelector('#view2-header');
-    if (elem) new ResizeObserver(this.setHeight).observe(elem);
+    if(this.toolbarMode == '1')
+      this.codx.setStyleToolbarLayout(this.elRef.nativeElement, 'toolbar1');
+    else if(this.toolbarMode == '2')
+      this.codx.setStyleToolbarLayout(this.elRef.nativeElement, 'toolbar2');
+    else
+      this.codx.setStyleToolbarLayout(this.elRef.nativeElement, null);
+
+    // const elem = document.querySelector('#view2-header');
+    // if (elem) new ResizeObserver(this.setHeight).observe(elem);
   }
 
   ngOnInit(): void {
@@ -84,7 +112,7 @@ export class CodxView2Component implements OnInit, AfterViewInit {
     this.request.entityName = this.entityName;
     this.request.gridViewName = this.gridViewName;
     this.request.formName = this.formName;
-    this.viewList = [
+    this.views = [
       {
         id: '1',
         type: ViewType.card,
@@ -99,7 +127,7 @@ export class CodxView2Component implements OnInit, AfterViewInit {
       },
     ];
 
-    this.fMoreFuncs = [
+    this.moreFuncs = [
       {
         id: 'id-select-multi',
         formName: 'System',
@@ -130,11 +158,21 @@ export class CodxView2Component implements OnInit, AfterViewInit {
           this.entityName,
         ])
         .subscribe((res: any) => {
-          if (res && res.viewSettings && res.viewSettings.length) {
-            this.title = res.func?.customName;
+          if(!res || !res.func) return;
+
+          this.cache.setFuncList(res.func.functionID, res.func);
+          //this.pageTitle.setBreadcrumbs([]);
+          this.pageTitle.setChildren([]);
+          this.pageTitle.setFavs(null);
+          this.pageTitle.setRootNode(res.func.customName);
+
+          if (res.labels)
+            this.cache.setFormLabel(res.func.formName, res.labels);
+
+          if (res.viewSettings && res.viewSettings.length) {
             this.cache.setViewSetting(res.func.functionID, res.viewSettings);
-            if (this.viewList && this.viewList.length > 0) {
-              this.viewList?.filter(function (o) {
+            if (this.views && this.views.length > 0) {
+              this.views?.filter(function (o) {
                 var v = res.viewSettings?.find(
                   (x) => x.view == o.type.toString()
                 );
@@ -146,10 +184,44 @@ export class CodxView2Component implements OnInit, AfterViewInit {
                   o.active = false;
                 }
               });
-              let active = this.viewList.find(
+              let active = this.views.find(
                 (x) => x.active == true && !x.hide
               );
               this.acitveMenuView(active);
+            }
+
+            if (res.gridViews) {
+              this.cache.setGridView(res.func.gridViewName, res.gridViews);
+              //this.gridView = this.dataService.gridView = res.gridViews;
+            }
+
+            if (res.gridViewSetups) {
+              //this.gridViewSetup = res.gridViewSetups;
+              this.cache.setGridViewSetup(
+                res.func.formName,
+                res.func.gridViewName,
+                res.gridViewSetups
+              );
+  
+              this.sortFields = [];
+              Object.keys(res.gridViewSetups).forEach((n) => {
+                let grv = res.gridViewSetups[n];
+                if (grv.allowSort) {
+                  let oText = res.labels ? res.labels[grv.fieldName] : undefined;
+                  let text = oText ? oText.customName : grv.headerText;
+                  let active =
+                    grv.fieldName.toLowerCase() ==
+                    res.gridViews?.sortColumns?.toLowerCase();
+                  let dir = active && res.gridViews?.sortDirections == 'asc';
+  
+                  this.sortFields.push({
+                    field: grv.fieldName,
+                    text: text,
+                    active: active,
+                    dir: dir ? 'asc' : 'desc',
+                  });
+                }
+              });
             }
           }
         });
@@ -187,27 +259,30 @@ export class CodxView2Component implements OnInit, AfterViewInit {
     );
   }
 
-  setHeight() {
-    if (!document.getElementById('view2-header')) return;
+  // setHeight() {
+  //   if (!document.getElementById('view2-header')) return;
 
-    var h = document.getElementById('view2-header').offsetHeight;
+  //   var h = document.getElementById('view2-header').offsetHeight;
 
-    if (h > 0) {
-      h += 90;
-      let height = window.innerHeight - h;
-      if (document.getElementById('codx-view2-body'))
-        document.getElementById('codx-view2-body').style.cssText =
-          'height:' + height + 'px !important';
-    } else {
-      if (document.getElementById('codx-view2-body'))
-        document.getElementById('codx-view2-body').style.cssText =
-          'height:auto';
-    }
-  }
+  //   if (h > 0) {
+  //     h += 90;
+  //     let height = window.innerHeight - h;
+  //     if (document.getElementById('codx-view2-body'))
+  //       document.getElementById('codx-view2-body').style.cssText =
+  //         'height:' + height + 'px !important';
+  //   } else {
+  //     if (document.getElementById('codx-view2-body'))
+  //       document.getElementById('codx-view2-body').style.cssText =
+  //         'height:auto';
+  //   }
+  // }
   //#endregion
 
   //#region Func
-  onSearch(e: any) {}
+  onSearch(val: string) {
+    this.request.searchText = val;
+    this.loadData();
+  }
 
   viewChanged(e: any) {
     this.acitveMenuView(e);
@@ -215,7 +290,7 @@ export class CodxView2Component implements OnInit, AfterViewInit {
 
   acitveMenuView(view: ViewModel) {
     let that = this;
-    this.viewList?.filter(function (v) {
+    this.views?.filter(function (v) {
       if (v.type == view.type) {
         v.active = true;
         that.viewActive = v.id;
@@ -227,8 +302,8 @@ export class CodxView2Component implements OnInit, AfterViewInit {
 
   clickToolbarMore(e: any) {}
 
-  addClick() {
-    this.btnClick.emit();
+  clickButton(event: any) {
+    this.btnClick.emit(event);
   }
 
   addDataSource(data: any) {

@@ -10,13 +10,13 @@
         >
         </codx-label>
       </div>
-      <ng-container *ngIf="funcID == 'CM0101' || funcID == 'CM0105'">
+      <ng-container *ngIf="checkType == '1' || checkType == '5'">
         <ng-container [ngTemplateOutlet]="customers"></ng-container>
       </ng-container>
-      <ng-container *ngIf="funcID == 'CM0102'">
+      <ng-container *ngIf="checkType == '2'">
         <ng-container [ngTemplateOutlet]="contacts"></ng-container>
       </ng-container>
-      <ng-container *ngIf="funcID == 'CM0103' || funcID == 'CM0104'">
+      <ng-container *ngIf="checkType == '3' || checkType == '4'">
         <ng-container [ngTemplateOutlet]="partners"></ng-container>
       </ng-container>
     </div>
@@ -37,7 +37,7 @@
     <div
       class="mt-5 mb-2"
       *ngIf="
-        (funcID == 'CM0102' && dataSelected?.objectType) ||
+        (checkType == '2' && dataSelected?.objectType) ||
         dataSelected?.objectID ||
         dataSelected?.contactType
       "
@@ -778,7 +778,7 @@
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
-              [fiedName]="funcID == 'CM0103' ? 'PartnerID' : 'CompetitorID'"
+              [fiedName]="checkType == '3' ? 'PartnerID' : 'CompetitorID'"
               [formModel]="formModel"
             >
             </codx-label>
@@ -786,12 +786,12 @@
           <div
             class="text-dark fw-bold codx-textcontent"
             [innerHTML]="
-              funcID == 'CM0103'
+              checkType == '3'
                 ? dataSelected?.partnerID
                 : (dataSelected?.competitorID
                   | formatvalue
                     : formModel
-                    : (funcID == 'CM0103' ? 'PartnerID' : 'CompetitorID')
+                    : (checkType == '3' ? 'PartnerID' : 'CompetitorID')
                   | async)
             "
           ></div>
@@ -957,7 +957,7 @@
             "
           ></div>
         </div> -->
-        <div class="mb-5px d-flex align-items-top" *ngIf="funcID == 'CM0103'">
+        <div class="mb-5px d-flex align-items-top" *ngIf="checkType == '3'">
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"

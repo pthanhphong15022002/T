@@ -80,10 +80,10 @@ export class CmCustomerComponent
   dataSelected: any;
   //region Method
   service = 'CM';
-  assemblyName = 'ERM.Business.CM';
-  entityName = '';
-  className = '';
-  method = '';
+  assemblyName = 'ERM.Business.Core';
+  method = 'LoadDataAsync';
+  className = 'DataBusiness';
+  entityName = 'CM_Customers';
   idField = 'recID';
   //endregion
   predicate = '';
@@ -123,7 +123,10 @@ export class CmCustomerComponent
         this.loaded = false;
         // this.view.dataService = JSON.parse(JSON.stringify(this.view.dataService));
         this.funcID = param.funcID;
-        this.loadMethod();
+        if (this.queryParams?.recID) {
+          this.predicate = 'RecID=@0';
+          this.dataValue = this.queryParams?.recID;
+        }
         this.isButton = true;
         this.afterLoad();
         this.loaded = true;
@@ -138,39 +141,6 @@ export class CmCustomerComponent
     //Add '${implements OnChanges}' to the class.
   }
 
-  loadMethod() {
-    switch (this.funcID) {
-      case 'CM0101':
-      case 'CM0105':
-        this.method = 'GetListCustomersAsync';
-        this.className = 'CustomersBusiness';
-        this.entityName = 'CM_Customers';
-        if (this.queryParams?.recID) {
-          this.predicate = 'RecID=@0';
-          this.dataValue = this.queryParams?.recID;
-        }
-        break;
-      case 'CM0102':
-        this.method = 'GetListContactAsync';
-        this.className = 'ContactsBusiness';
-        this.entityName = 'CM_Contacts';
-        break;
-      case 'CM0103':
-        this.method = 'GetListPartnersAsync';
-        this.className = 'PartnersBusiness';
-        this.entityName = 'CM_Partners';
-        this.predicate = '';
-        this.dataValue = '';
-        break;
-      case 'CM0104':
-        this.method = 'GetListCompetitorsAsync';
-        this.className = 'CompetitorsBusiness';
-        this.entityName = 'CM_Competitors';
-        this.predicate = '';
-        this.dataValue = '';
-        break;
-    }
-  }
 
   async onInit() {
     this.asideMode = this.codxService.asideMode;
@@ -253,11 +223,9 @@ export class CmCustomerComponent
   }
 
   async afterLoad() {
-    let funcID = this.funcID == 'CM0105' ? 'CM0101' : this.funcID;
+    let funcID = this.funcID
     this.cache.functionList(funcID).subscribe(async (fun) => {
-      var formMD = new FormModel();
       this.entityName = JSON.parse(JSON.stringify(fun?.entityName));
-      if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
         this.lstCustGroups = await firstValueFrom(
           this.api.execSv<any>(
             'CM',
@@ -273,7 +241,7 @@ export class CmCustomerComponent
               this.gridViewSetup = res;
             }
           });
-      }
+
     });
   }
 
@@ -322,10 +290,6 @@ export class CmCustomerComponent
       case 'CM0105_3':
       case 'CM0101_3':
         this.setIsBlackList(data, false);
-        break;
-      case 'CM0102_3':
-      case 'CM0102_2':
-        this.deleteContactToCM(data);
         break;
       //Cập nhật status
       case 'CM0105_6':
@@ -500,6 +464,7 @@ export class CmCustomerComponent
         var obj = {
           action: 'add',
           title: this.titleAction,
+          checkType: '1' //Customer
         };
         var dialog = this.callfc.openSide(
           PopupAddCmCustomerComponent,
@@ -546,6 +511,7 @@ export class CmCustomerComponent
           var obj = {
             action: 'edit',
             title: this.titleAction,
+            checkType: '1' //Customer
           };
           var dialog = this.callfc.openSide(
             PopupAddCmCustomerComponent,
@@ -595,13 +561,7 @@ export class CmCustomerComponent
           .getAutonumber(
             this.funcID,
             fun.entityName,
-            this.funcID == 'CM0101' || this.funcID == 'CM0105'
-              ? 'CustomerID'
-              : this.funcID == 'CM0102'
-              ? 'ContactID'
-              : this.funcID == 'CM0103'
-              ? 'PartnerID'
-              : 'CompetitorID'
+            'CustomerID'
           )
           .subscribe((x) => {
             var obj = {
@@ -609,6 +569,7 @@ export class CmCustomerComponent
               title: this.titleAction,
               recIdOld: this.dataSelected.recID,
               autoNumber: x,
+              checkType: '1' //Customer
             };
             var dialog = this.callfc.openSide(
               PopupAddCmCustomerComponent,
@@ -657,7 +618,8 @@ export class CmCustomerComponent
           var obj = {
             action: 'edit',
             title: this.titleAction,
-            isView: true
+            isView: true,
+            checkType: '1' //Customer
           };
           var dialog = this.callfc.openSide(
             PopupAddCmCustomerComponent,
@@ -714,6 +676,9 @@ export class CmCustomerComponent
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeleteCmAsync';
+    opt.className = 'CustomersBusiness';
+    opt.assemblyName = 'CM';
+    opt.service = "CM";
     opt.data = [itemSelected.recID, this.entityName];
     return true;
   }
@@ -940,47 +905,7 @@ export class CmCustomerComponent
   }
 
   //contact
-  async deleteContactToCM(data) {
-    var check = await firstValueFrom(
-      this.api.execSv<any>(
-        'CM',
-        'ERM.Business.CM',
-        'ContactsBusiness',
-        'CheckContactDealAsync',
-        [data.recID]
-      )
-    );
-    if (check) {
-      this.notiService.notifyCode('CM012');
-      return;
-    }
-    var config = new AlertConfirmInputConfig();
-    config.type = 'YesNo';
-    this.notiService.alertCode('SYS030').subscribe((x) => {
-      if (x?.event?.status == 'Y') {
-        if (data.objectID != null && data.objectType != null) {
-          if (!data?.contactType.split(';').some((x) => x == '1')) {
-            this.cmSv.updateContactCrm(data.recID).subscribe((res) => {
-              if (res) {
-                this.dataSelected.objectID = null;
-                this.dataSelected.contactType = null;
-                this.dataSelected.objectType = null;
-                this.dataSelected.objectName = null;
-                this.view.dataService
-                  .update(this.dataSelected, true)
-                  .subscribe();
-                this.notiService.notifyCode('SYS008');
-                this.detectorRef.detectChanges();
-              }
-            });
-          } else {
-            this.notiService.notifyCode('CM004');
-            return;
-          }
-        }
-      }
-    });
-  }
+
 
   //#endregion
 
@@ -993,19 +918,6 @@ export class CmCustomerComponent
   }
   //#endregion
 
-  getNameCrm(data) {
-    var name = '';
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
-      name = data?.customerName;
-    } else if (this.funcID == 'CM0102') {
-      name = data.contactName;
-    } else if (this.funcID == 'CM0103') {
-      name = data.partnerName;
-    } else {
-      name = data.competitorName;
-    }
-    return name;
-  }
 
   addressNameCMEmit(e) {
     this.dataSelected.address = e ? e?.address : null;

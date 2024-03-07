@@ -22,8 +22,7 @@ export class ModeviewComponent implements OnInit {
   @Input() stepNo:any;
   vllBP002:any;
   table: Array<any> = [];
-  basic = ["Text","ValueList","ComboBox","DateTime","Attachment","Number","YesNo","User","Share"];
-  advanced = ["Rank","Table","Progress","Phone","Email","Address","Expression"];
+  basic = ["Text","ValueList","ComboBox","DateTime","Attachment","Number","YesNo","User","Share","UserInfo"];
   lstDataAdd = [];
   count = count;
   dataSelected: any;
@@ -64,6 +63,7 @@ export class ModeviewComponent implements OnInit {
     this.count.email = 0,
     this.count.address = 0,
     this.count.expression = 0;
+    this.count.userInfo = 0;
   }
 
   btnClick()
@@ -88,10 +88,24 @@ export class ModeviewComponent implements OnInit {
 
   perform(item:any)
   {
+    let data1 =[];
+    let data2 =[];
+    let data3 =[];
     item.datas.forEach(elm => {
-      if(this.basic.includes(elm.value)) elm.groupType = 0;
-      else if(this.advanced.includes(elm.value)) elm.groupType = 1;
+      if(this.basic.includes(elm.value)) {
+        elm.groupType = 0;
+        data1.push(elm);
+      }
+      else if(elm.value != 'Title' && elm.value != 'SubTitle') {
+        elm.groupType = 1;
+        data2.push(elm);
+      }
+      else 
+      {
+        data3.push(elm);
+      }
     }); 
+    item.datas = data1.concat(data2.concat(data3));
     this.vllBP002 = item;
     if(!this.data) this.default();
     else this.formatData(this.data);
@@ -190,7 +204,6 @@ export class ModeviewComponent implements OnInit {
 
   drop(event: any) {
     if (event.previousContainer !== event.container) {
-   
       let data = JSON.parse(JSON.stringify(event.previousContainer.data[event.previousIndex]));
       data = this.genData(data);
       //this.selectedItem(data);
@@ -274,6 +287,7 @@ export class ModeviewComponent implements OnInit {
         data.title += " " + this.count.datetime;
         data.controlType = "MaskBox";
         data.dataFormat = "d";
+        data.dataType = "DateTime"
         break;
       }
       case "Attachment":
@@ -348,7 +362,7 @@ export class ModeviewComponent implements OnInit {
           var col = 
           {
             title : "Cột " + (i+1),
-            fieldName: "Cot_" + (i+1),
+            fieldName: "cot_" + (i+1),
             description: null,
             dataType: "String",
             controlType: "TextBox",
@@ -414,6 +428,12 @@ export class ModeviewComponent implements OnInit {
         data.controlType = "TextBox";
         break;
       }
+      case "UserInfo":
+      {
+        this.count.userInfo ++;
+        data.title += " " + this.count.userInfo;
+        break;
+      }
     }
     data.recID = Util.uid();
     data.width = "";
@@ -422,7 +442,7 @@ export class ModeviewComponent implements OnInit {
     data.columnOrder = this.table.length;
     data.columnNo = 0;
     data.isRequired = data?.isRequired != null ? data.isRequired : false;
-    data.dataType = data.controlType || "String";
+    data.dataType = data?.dataType ? data.dataType : (data.controlType || "String");
     data.controlType = data.controlType || data.value;
     data.dataFormat = data.dataFormat || "";
     data.defaultValue = data.defaultValue || null;
@@ -433,6 +453,7 @@ export class ModeviewComponent implements OnInit {
 
   formatTitle(str:any)
   {
+    str = str.toLowerCase();
     return this.xoa_dau(str.replaceAll(" ","_").replaceAll("/","_")) + "_" + this.stepNo;
   }
 
