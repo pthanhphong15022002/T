@@ -136,7 +136,13 @@
             <span>{{ item?.time ?? 1 }}</span>
           </td>
           <td>
-            {{ item?.duration }}
+            <codx-input
+              field="duration"
+              refValue="BP024"
+              type="valuelist"
+              [crrValue]="item?.duration"
+              (valueChange)="valueChangeAlertType($event, i)"
+            ></codx-input>
           </td>
           <td>
             <div class="d-flex">
@@ -164,6 +170,57 @@
                   [crrValue]="checkType(item?.alertType, '2') ?? false"
                   (valueChange)="valueChangeAlertType($event, i)"
                   [disabled]="true"
+                ></codx-input>
+                <codx-label
+                  default="Mail"
+                  formName="advanced"
+                  name="lblAlertMail"
+                  class="ms-1"
+                ></codx-label>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr (click)="addNNewReminder()">
+          <td scope="row" style="border: none">
+            <span>{{ countTime }}</span>
+          </td>
+          <td>
+            <codx-input
+              field="duration"
+              refValue="BP024"
+              type="valuelist"
+              [crrValue]="''"
+              (valueChange)="valueChangeAlertType($event, -1)"
+              [disabled]="!checkValidate"
+            ></codx-input>
+          </td>
+          <td>
+            <div class="d-flex">
+              <div class="d-flex me-2">
+                <codx-input
+                  field="noti"
+                  type="checkbox"
+                  [class]="'check-circle'"
+                  [crrValue]="checkType(null, '1') ?? false"
+                  (valueChange)="valueChangeAlertType($event, -1)"
+                  [disabled]="!checkValidate"
+                ></codx-input>
+                <codx-label
+                  default="Thông báo"
+                  formName="advanced"
+                  name="lblNotiRemin"
+                  class="ms-1"
+                ></codx-label>
+              </div>
+              <div class="d-flex">
+                <codx-input
+                  field="alertMail"
+                  [class]="'check-circle'"
+                  type="checkbox"
+                  [crrValue]="checkType(null, '2') ?? false"
+                  (valueChange)="valueChangeAlertType($event, -1)"
+                  [disabled]="!checkValidate"
                 ></codx-input>
                 <codx-label
                   default="Mail"
@@ -223,4 +280,13 @@
   </div>
 </ng-template>
 
-<ng-template #footer></ng-template>
+<ng-template #footer>
+  <div class="d-flex flex-stack justify-content-end">
+    <div class="right">
+      <button type="button" class="btn btn-primary" (click)="onSave()">
+        <codx-label name="lblSave" formName="SettingsField" default="Lưu">
+        </codx-label>
+      </button>
+    </div>
+  </div>
+</ng-template>
