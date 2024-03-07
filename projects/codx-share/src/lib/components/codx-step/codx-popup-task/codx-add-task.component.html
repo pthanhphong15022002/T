@@ -336,7 +336,8 @@
         [objectId]="item.recID"
         [objectType]="'DP_Instances_Steps_Fields'"
         [formModel]="dialog.formModel"
-        [isAdd]="action == 'add'"
+        [isAdd]="action == 'add' || action == 'copy'"
+        [refVersion]="stepsTasks.recID"
         (valueChangeCustom)="valueChangeCustom($event)"
         (addFileCompleted)="addFileCompleted($event)"
       ></codx-input-custom-field>
