@@ -807,20 +807,19 @@ export class AddTaskComponent
     this.callFuc.openForm(share, '', 420, 600, null, null, null, option);
   }
   esign(){
-    debugger
     let fileIDs="";
     let dynamicApprovers=[];
     this.listDocument.forEach(doc=>{
       if(doc?.filess?.length>0){
-        fileIDs+= doc?.filess?.filter(x=>x?.esign==true)?.map(x=>x.recID)?.join(";");        
+        fileIDs+= doc?.filess?.map(x=>x?.recID)?.join(";");        
       }
     });
 
     this.data.permissions.forEach(per=>{
       if(per?.objectType!=null){
-        let tempPer = new Approver();
-        tempPer.approver=per?.objectID;
-        tempPer.roleType=per?.objectType;   
+        let tempPer ={approver:per?.objectID,
+        roleType:per?.objectType,  
+        signer:per?.recID  } 
         dynamicApprovers.push(tempPer);   
       }
     });
@@ -846,6 +845,9 @@ export class AddTaskComponent
           this.dataChange.emit(this.data);
         }
       });
+    }
+    else{
+      this.notifySvr.notify("Biểu mẫu và người ký không được bỏ trống, vui lòng kiểm tra lại!","2");
     }
   }
   fileCheckChange(evt: any, file: any) {
