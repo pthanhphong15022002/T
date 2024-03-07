@@ -354,9 +354,7 @@ export class CashtransfersAddComponent extends UIComponent {
     .subscribe((res: any) => {
       if (res) {
         this.isPreventChange = true;
-        this.formCashTranfer.setValue('currencyID',res?.data?.currencyID,{});
-        this.formCashTranfer.setValue('exchangeRate',(res?.data?.exchangeRate),{});
-        this.formCashTranfer.setValue('cashAcctID',(res?.data?.cashAcctID),{});
+        this.formCashTranfer.setValue('accountID',(res?.data?.accountID),{});
         this.isPreventChange = false;
         this.preData = {...this.formCashTranfer?.data};
         this.detectorRef.detectChanges();
