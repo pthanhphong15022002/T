@@ -18,7 +18,6 @@ export class LegalInfoComponent implements OnInit,AfterViewInit{
   data:any;
   constructor
   (
-    private injector:Injector,
     private api:ApiHttpService,
     private cache:CacheService,
     private auth:AuthStore,
@@ -40,13 +39,13 @@ export class LegalInfoComponent implements OnInit,AfterViewInit{
       this.formModel.gridViewName = this.function.gridViewName;
       this.formModel.entityName = this.function.entityName;
     }
-    this.getDataEmployee(this.employeeID);
+    this.getData(this.employeeID);
   }
   ngAfterViewInit(): void {
   }
 
-  // get legal information
-  getDataEmployee(employeeID:string){
+  // get Data
+  getData(employeeID:string){
     if(employeeID){
       this.api.execSv("HR","HR","EmployeesBusiness","GetPersonalAndContactAsync",[employeeID])
       .subscribe((res:any) => {

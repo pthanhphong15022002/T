@@ -206,6 +206,7 @@ import { DiagramModule } from '@syncfusion/ej2-angular-diagrams';
 import { FormEditConnectorComponent } from './components/codx-diagram/form-edit-connector/form-edit-connector.component';
 import { CodxApproverStepComponent } from './components/codx-view-approval-step/codx-approver-step/codx-approver-step.component';
 import { ViewContentScheduleMeetingsComponent } from './components/codx-tmmeetings/view-content-schedule-meetings/view-content-schedule-meetings.component';
+import { ContentEmailComponent } from './components/codx-email/content-email/content-email.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -399,6 +400,8 @@ const T_Component: Type<any>[] = [
   //View File
   CodxViewFileComponent,
   CodxAuthFileComponent,
+  ContentEmailComponent,
+
 ];
 
 const T_Pipe: Type<any>[] = [

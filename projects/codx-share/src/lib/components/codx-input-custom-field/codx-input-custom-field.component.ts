@@ -182,15 +182,6 @@ export class CodxInputCustomFieldComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //gia tri mặc dinh khi them moi
-    if (this.isAdd) {
-      if (this.customField.defaultValue) {
-        this.customField.dataValue = this.customField.defaultValue;
-      } else if (this.customField.dataType == 'D') {
-        this.customField.dataValue = moment(new Date()).toDate();
-      }
-    }
-
     //gia tri tung form
     if (this.refVersion && this.customField?.versions?.length > 0) {
       let idx = this.customField.versions.findIndex(
@@ -199,6 +190,15 @@ export class CodxInputCustomFieldComponent implements OnInit {
       if (idx != -1)
         this.customField.dataValue = this.customField.versions[idx].dataValue;
     }
+    //gia tri mặc dinh khi them moi
+    if (this.isAdd && !this.customField.dataValue) {
+      if (this.customField.defaultValue) {
+        this.customField.dataValue = this.customField.defaultValue;
+      } else if (this.customField.dataType == 'D') {
+        this.customField.dataValue = moment(new Date()).toDate();
+      }
+    }
+
     //danh sach data chuyen qua
     if (this.isLoadDataRef && this.dataSourceRef?.length > 0) {
       let data = this.dataSourceRef.find(

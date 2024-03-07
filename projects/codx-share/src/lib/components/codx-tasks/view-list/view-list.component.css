@@ -54,3 +54,7 @@ td p {
     padding-top: 5px;
     clear: both;
 }
+
+.isActive{
+  background-color: #f2f2f2 !important;
+}

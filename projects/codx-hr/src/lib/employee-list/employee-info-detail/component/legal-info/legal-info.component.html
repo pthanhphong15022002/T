@@ -1,6 +1,6 @@
-<div class="container mb-4">
+<div class="container mb-4 bg-body">
     <!-- -----------------------------------THÔNG TIN PHÁP LÍ------------------------------------------------ -->
-    <div class="row mt-2">
+    <div class="row mt-2 mb-3">
         <div class="d-flex align-items-center justify-content-between">
             <div class="text-left">
                 <span class="icon-person_outline icon-20 me-2"></span>
@@ -16,127 +16,306 @@
             </ng-contaniner>
         </div>
     </div>
-    <div class="row mt-5 mt-2 mb-3">
-        <div class="d-flex align-items-center mt-6 mb-4">
-            <span class="icon-i-filter-right icon-20 me-2"></span>
-            <codx-label name="lblInsurance" [formModel]="formModel" default="Bảo hiểm"  class="fw-bold text-uppercase fs-5-sm text-gray-600"></codx-label>
-        </div>
-    </div>
-    <!-- Số BHXH / Ngày cấp -->
+    <!-- BẢO HIỂM -->
     <div class="row mt-5 mb-3">
-        <div class="col-4">
+        <div class="row mb-2">
+            <div class="d-flex align-items-center mt-6 mb-4">
+                <span class="icon-i-filter-right icon-20 me-2"></span>
+                <codx-label name="lblInsurance" [formModel]="formModel" default="Bảo hiểm"  class="fw-bold text-uppercase fs-5-sm text-gray-600"></codx-label>
+            </div>
+        </div>
+        <!-- Số BHXH / Ngày cấp -->
+        <div class="row mb-3">
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 me-2 pb-1">
+                        <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
+                        <codx-label name="SIRegisterNo" [formModel]="formModel" [setRequire]="false" [default]="'Số BHXH'"></codx-label>
+                    </div>
+                    <div class="ms-7 fw-bold text-dark">{{data?.siRegisterNo}}</div>
+                </div>
+            </div>
+            <div class="col-4">
             <div class="d-flex flex-column">
                 <div class="text-gray-600 me-2 pb-1">
-                    <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
-                    <codx-label name="SIRegisterNo" [formModel]="formModel" [setRequire]="false" [default]="'Số BHXH'"></codx-label>
-                </div>
-                <div class="ms-7 fw-bold text-dark">{{data?.siRegisterNo}}</div>
-            </div>
-        </div>
-        <div class="col-4">
-          <div class="d-flex flex-column">
-            <div class="text-gray-600 me-2 pb-1">
-                <codx-label name="SIRegisterOn" [formModel]="formModel" [default]="'Ngày cấp'">
-                </codx-label>
-              </div>
-              <div class="fw-bold text-dark" [innerHTML]="data?.siRegisterOn | formatvalue : formModel : 'siRegisterOn' | async"></div>
-          </div>
-        </div>
-    </div>
-    <!-- Số thẻ BHYT / Hạn thẻ BHYT -->
-    <div class="row mb-3">
-        <div class="col-4">
-            <div class="d-flex flex-column">
-                <div class="text-gray-600 mb-1 d-flex">
-                    <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
-                    <codx-label name="HICardNo" [formModel]="formModel" [default]="'Số thẻ BHYT'">
+                    <codx-label name="SIRegisterOn" [formModel]="formModel" [default]="'Ngày cấp'">
                     </codx-label>
                 </div>
-                <div class="text-dark fw-bold ms-7" [innerHTML]="data?.hiCardNo | formatvalue : formModel : 'HICardNo' | async">
-                </div>
+                <div class="fw-bold text-dark" [innerHTML]="data?.siRegisterOn | formatvalue : formModel : 'siRegisterOn' | async"></div>
+            </div>
             </div>
         </div>
-        <div class="col-4">
-            <div class="d-flex flex-column">
-                <div class="text-gray-600 mb-1">
-                    <codx-label name="HICardFrom" [formModel]="formModel" [default]="'Hạn thẻ BHYT'">
-                    </codx-label>
+        <!-- Số thẻ BHYT / Hạn thẻ BHYT -->
+        <div class="row mb-3">
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1 d-flex">
+                        <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
+                        <codx-label name="HICardNo" [formModel]="formModel" [default]="'Số thẻ BHYT'">
+                        </codx-label>
+                    </div>
+                    <div class="text-dark fw-bold ms-7" [innerHTML]="data?.hiCardNo | formatvalue : formModel : 'HICardNo' | async">
+                    </div>
                 </div>
-                <div class="d-flex align-items-center">
-                    <div class="text-dark fw-bold" [innerHTML]="data?.hiCardFrom | formatvalue : formModel : 'hiCardFrom' | async"></div>
-                    <span>-</span>
-                    <div class="text-dark fw-bold" [innerHTML]="data?.hiCardTo | formatvalue : formModel : 'hiCardTo' | async"></div>
+            </div>
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1">
+                        <codx-label name="HICardFrom" [formModel]="formModel" [default]="'Hạn thẻ BHYT'">
+                        </codx-label>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="text-dark fw-bold" [innerHTML]="data?.hiCardFrom | formatvalue : formModel : 'hiCardFrom' | async"></div>
+                        <span>-</span>
+                        <div class="text-dark fw-bold" [innerHTML]="data?.hiCardTo | formatvalue : formModel : 'hiCardTo' | async"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Thời hạn đủ 5 năm / Khám chữa bệnh ban đầu -->
-    <div class="row mb-3">
-        <div class="col-4">
-            <div class="d-flex flex-column">
-                <div class="text-gray-600 mb-1 d-flex">
-                    <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
-                    <codx-label name="HIDateOf5Years" [formModel]="formModel" [default]="'Thời hạn đủ 5 năm liên tục'">
-                    </codx-label>
-                </div>
-                <div class="text-dark fw-bold ms-7" [innerHTML]="data?.hiDateOf5Years | formatvalue : formModel : 'hiDateOf5Years' | async">
+        <!-- Thời hạn đủ 5 năm / Khám chữa bệnh ban đầu -->
+        <div class="row mb-3">
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1 d-flex">
+                        <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
+                        <codx-label name="HIDateOf5Years" [formModel]="formModel" [default]="'Thời hạn đủ 5 năm liên tục'">
+                        </codx-label>
+                    </div>
+                    <div class="text-dark fw-bold ms-7" [innerHTML]="data?.hiDateOf5Years | formatvalue : formModel : 'hiDateOf5Years' | async">
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-4">
-            <div class="d-flex flex-column">
-                <div class="text-gray-600 mb-1">
-                    <codx-label name="HIHospitalID" [formModel]="formModel" [default]="'Hạn thẻ BHYT'">
-                    </codx-label>
-                </div>
-                <div class="d-flex align-items-center">
-                    <div class="text-dark fw-bold" [innerHTML]="data?.hiHospitalID | formatvalue : formModel : 'hiHospitalID' | async"></div>
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1">
+                        <codx-label name="HIHospitalID" [formModel]="formModel" [default]="'Hạn thẻ BHYT'">
+                        </codx-label>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="text-dark fw-bold" [innerHTML]="data?.hiHospitalID | formatvalue : formModel : 'hiHospitalID' | async"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    
     <!-- MÃ SỐ THUẾ THU NHẬP CÁ NHÂN -->
-    <div class="row mt-5 mt-2 mb-3">
-        <div class="d-flex align-items-center mt-6 mb-4">
-            <span class="icon-i-filter-right icon-20 me-2"></span>
-            <codx-label name="lblInsurance" [formModel]="formModel" default="MÃ SỐ THUẾ THU NHẬP CÁ NHÂN" class="fw-bold text-uppercase fs-5-sm text-gray-600"></codx-label>
+    <div class="row mt-5 mb-3">
+        <div class="row mb-2">
+            <div class="d-flex align-items-center mt-6 mb-4">
+                <span class="icon-i-filter-right icon-20 me-2"></span>
+                <codx-label name="lblInsurance" [formModel]="formModel" default="MÃ SỐ THUẾ THU NHẬP CÁ NHÂN" class="fw-bold text-uppercase fs-5-sm text-gray-600"></codx-label>
+            </div>
+        </div>
+        <!-- Mã số thuế/ Ngày cấp/ Nơi cấp -->
+        <div class="row mb-3">
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1 d-flex">
+                        <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
+                        <codx-label name="PITNumber" [formModel]="formModel" [default]="'Mã số thuế TNCN'">
+                        </codx-label>
+                    </div>
+                    <div class="text-dark fw-bold ms-7" [innerHTML]="data?.pitNumber | formatvalue : formModel : 'pitNumber' | async">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1">
+                        <codx-label name="PITIssuedOn" [formModel]="formModel" [default]="'Ngày cấp'">
+                        </codx-label>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="text-dark fw-bold" [innerHTML]="data?.pitIssuedOn | formatvalue : formModel : 'pitIssuedOn' | async"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1">
+                        <codx-label name="PITPlace" [formModel]="formModel" [default]="'Nơi cấp'">
+                        </codx-label>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="text-dark fw-bold" [innerHTML]="data?.pitPlace | formatvalue : formModel : 'pitPlace' | async"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- Mã số thuế/ Ngày cấp/ Nơi cấp -->
-    <div class="row mb-3">
-        <div class="col-4">
-            <div class="d-flex flex-column">
-                <div class="text-gray-600 mb-1 d-flex">
-                    <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
-                    <codx-label name="PITNumber" [formModel]="formModel" [default]="'Mã số thuế TNCN'">
-                    </codx-label>
+    
+    <!-- TÀI KHOẢN CÁ NHÂN -->
+    <div class="row mt-5 mb-3">
+        <div class="row mb-2">
+            <div class="d-flex align-items-center mt-6 mb-4">
+                <span class="icon-i-filter-right icon-20 me-2"></span>
+                <codx-label name="lblPersonalAccount" [formModel]="formModel" [default]="'Tài khoản cá nhân'"  class="fw-bold text-uppercase fs-5-sm text-gray-600"></codx-label>
+            </div>
+        </div>
+        <!-- Số tài khoản/ Ngân hàng -->
+        <div class="row mb-3">
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1 d-flex">
+                        <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
+                        <codx-label name="AccountNo" [formModel]="formModel" [default]="'Số tài khoản'">
+                        </codx-label>
+                    </div>
+                    <div class="text-dark fw-bold ms-7">{{data?.accountNo | formatvalue : formModel : 'accountNo' | async}}</div>
                 </div>
-                <div class="text-dark fw-bold ms-7" [innerHTML]="data?.pitNumber | formatvalue : formModel : 'pitNumber' | async">
+            </div>
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1">
+                        <codx-label name="AccountBankID" [formModel]="formModel" [default]="'Ngân hàng'">
+                        </codx-label>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="text-dark fw-bold" [innerHTML]="data?.accountBankID | formatvalue : formModel : 'accountBankID' | async"></div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-4">
-            <div class="d-flex flex-column">
-                <div class="text-gray-600 mb-1">
-                    <codx-label name="PITIssuedOn" [formModel]="formModel" [default]="'Ngày cấp'">
-                    </codx-label>
-                </div>
-                <div class="d-flex align-items-center">
-                    <div class="text-dark fw-bold" [innerHTML]="data?.pitIssuedOn | formatvalue : formModel : 'pitIssuedOn' | async"></div>
+        <div class="row mb-3">
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1 d-flex">
+                        <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
+                        <codx-label name="AccountName" [formModel]="formModel" [default]="'Tên chủ tài khoản'">
+                        </codx-label>
+                    </div>
+                    <div class="text-dark fw-bold ms-7">{{data?.accountName | formatvalue : formModel : 'accountName' | async}}</div>
                 </div>
             </div>
-        </div>
-        <div class="col-4">
-            <div class="d-flex flex-column">
-                <div class="text-gray-600 mb-1">
-                    <codx-label name="PITPlace" [formModel]="formModel" [default]="'Nơi cấp'">
-                    </codx-label>
-                </div>
-                <div class="d-flex align-items-center">
-                    <div class="text-dark fw-bold" [innerHTML]="data?.pitPlace | formatvalue : formModel : 'pitPlace' | async"></div>
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1">
+                        <codx-label name="AccountBankBranch" [formModel]="formModel" [default]="'Chi nhánh ngân hàng'">
+                        </codx-label>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="text-dark fw-bold" [innerHTML]="data?.accountBankBranch | formatvalue : formModel : 'accountBankBranch' | async"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
+    
+    <!-- HỘ CHIẾU -->
+    <div class="row mt-5 mb-3">
+        <div class="row mb-2">
+            <div class="d-flex align-items-center mt-6 mb-4">
+                <span class="icon-i-filter-right icon-20 me-2"></span>
+                <codx-label name="lblEmployeePassport" [formModel]="formModel" [default]="'Hộ chiếu'"  class="fw-bold text-uppercase fs-5-sm text-gray-600"></codx-label>
+            </div>
+        </div>
+        <!-- Số hộ chiếu/ Loại/ Ngày hết hạn -->
+        <div class="row mb-3">
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1 d-flex">
+                        <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
+                        <codx-label name="PassportNo" [formModel]="formModel" [default]="'Số hộ chiếu'">
+                        </codx-label>
+                    </div>
+                    <div class="text-dark fw-bold ms-7">{{data?.passportNo | formatvalue : formModel : 'passportNo' | async}}</div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1">
+                        <codx-label name="PassportType" [formModel]="formModel" [default]="'Loại'">
+                        </codx-label>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="text-dark fw-bold" [innerHTML]="data?.passportType | formatvalue : formModel : 'passportType' | async"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1">
+                        <codx-label name="ExpiredDate" [formModel]="formModel" [default]="'Loại'">
+                        </codx-label>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="text-dark fw-bold" [innerHTML]="data?.expiredDate | formatvalue : formModel : 'expiredDate' | async"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- THỊ LỰC -->
+    <div class="row mt-5 mb-3">
+        <div class="row mb-2">
+            <div class="d-flex align-items-center mt-6 mb-4">
+                <span class="icon-i-filter-right icon-20 me-2"></span>
+                <codx-label name="lblVision" [formModel]="formModel" [default]="'Thị thực'"  class="fw-bold text-uppercase fs-5-sm text-gray-600"></codx-label>
+            </div>
+        </div>
+        <!-- Số thị lực/ Loại thị lực / Thời hạn -->
+        <div class="row mb-3">
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1 d-flex">
+                        <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
+                        <codx-label name="PassportNo" [formModel]="formModel" [default]="'Số thị lực'">
+                        </codx-label>
+                    </div>
+                    <div class="text-dark fw-bold ms-7">{{data?.visaNo | formatvalue : formModel : 'visaNo' | async}}</div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1">
+                        <codx-label name="PassportType" [formModel]="formModel" [default]="'Loại thị lực'">
+                        </codx-label>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="text-dark fw-bold" [innerHTML]="data?.visaType | formatvalue : formModel : 'passportType' | async"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1">
+                        <codx-label name="EffectedDate" [formModel]="formModel" [default]="'Thời hạn'">
+                        </codx-label>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="text-dark fw-bold" [innerHTML]="data?.effectedDate | formatvalue : formModel : 'effectedDate' | async"></div>
+                        <span>-</span>
+                        <div class="text-dark fw-bold" [innerHTML]="data?.expiredDate | formatvalue : formModel : 'expiredDate' | async"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Quốc gia đến / Nơi cấp -->
+        <div class="row mb-3">
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1 d-flex">
+                        <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
+                        <codx-label name="NationalityID" [formModel]="formModel" [default]="'Quốc gia đến'">
+                        </codx-label>
+                    </div>
+                    <div class="text-dark fw-bold ms-7">{{data?.nationalityID | formatvalue : formModel : 'nationalityID' | async}}</div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <div class="text-gray-600 mb-1">
+                        <codx-label name="IssuedPlace" [formModel]="formModel" [default]="'Nơi cấp'">
+                        </codx-label>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="text-dark fw-bold" [innerHTML]="data?.issuedPlace | formatvalue : formModel : 'issuedPlace' | async"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 </div>

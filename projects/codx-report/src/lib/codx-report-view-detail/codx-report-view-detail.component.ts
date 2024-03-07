@@ -13,6 +13,7 @@ import {
   AuthService,
   AuthStore,
   CodxService,
+  DataRequest,
   DialogModel,
   NotificationsService,
   PageLink,
@@ -26,6 +27,7 @@ import { PopupAddReportComponent } from '../popup-add-report/popup-add-report.co
 import { PopupShowDatasetComponent } from '../popup-show-dataset/popup-show-dataset.component';
 import { environment } from 'src/environments/environment';
 import { NgxCaptureService } from 'ngx-capture';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 
 @Component({
   selector: 'codx-report-view-detail',
@@ -53,7 +55,7 @@ export class CodxReportViewDetailComponent
   _paramString: any = '';
   _labelString: any = '';
   _formatString: any = '';
-  params:any = {};
+  params: any = {};
   orgReportList: any = [];
   moreFc: any = [
     {
@@ -65,6 +67,11 @@ export class CodxReportViewDetailComponent
       id: 'btnUploadAvatar',
       icon: 'icon-cloud_upload',
       text: 'Upload avatar',
+    },
+    {
+      id: 'btnExeclTemplate',
+      icon: '',
+      text: 'Excel template',
     },
   ];
   rootFunction: any;
@@ -91,14 +98,13 @@ export class CodxReportViewDetailComponent
         this.reportID = param['funcID'];
         this.getReport(this.reportID);
       }
-          });
+    });
 
     this.router.queryParams.subscribe((param: any) => {
-    if (param['params'])
-    {
-      this._paramString = decodeURIComponent(param['params']);
-      this.params = JSON.parse(this._paramString);
-    }
+      if (param['params']) {
+        this._paramString = decodeURIComponent(param['params']);
+        this.params = JSON.parse(this._paramString);
+      }
     });
     let objFormat: any = {};
     objFormat['timeZone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -137,8 +143,7 @@ export class CodxReportViewDetailComponent
     ];
   }
 
-  viewChanged(e: any) {
-  }
+  viewChanged(e: any) {}
   //get report by ID
   getReport(recID: string) {
     this.api
@@ -170,15 +175,17 @@ export class CodxReportViewDetailComponent
       )
       .subscribe((res: any) => {
         if (res) {
-          if(this.rootFunction && this.rootFunction.functionID == res.functionID){
+          if (
+            this.rootFunction &&
+            this.rootFunction.functionID == res.functionID
+          ) {
             this.getReportList(this.data.moduleID, this.data.reportType);
             return;
           }
           this.rootFunction = res;
           this.view.formModel.funcID = this.rootFunction?.functionID;
           this.view.formModel.formName = this.rootFunction?.formName;
-          this.view.formModel.gridViewName =
-            this.rootFunction?.gridViewName;
+          this.view.formModel.gridViewName = this.rootFunction?.gridViewName;
           this.view.pageTitle.setRootNode(this.rootFunction.customName);
           let parent: PageLink = {
             title: this.rootFunction.customName,
@@ -264,6 +271,22 @@ export class CodxReportViewDetailComponent
         '',
         dialog
       );
+    } else if (e.id == 'btnExeclTemplate') {
+      var gridModel = new DataRequest();
+      gridModel.formName = this.view.formModel.formName;
+      gridModel.entityName =
+        this.view.formModel.entityName || this.data.entityName;
+      gridModel.funcID = this.view.formModel.funcID;
+      gridModel.gridViewName = this.view.formModel.gridViewName;
+      this.callfc.openForm(
+        CodxExportComponent,
+        null,
+        900,
+        700,
+        '',
+        [gridModel, this.data.recID, null, null, null, true, this.data],
+        null
+      );
     }
   }
 
@@ -304,7 +327,7 @@ export class CodxReportViewDetailComponent
 
   screenshot() {
     let recID = this.router.snapshot.params['funcID'];
-    if(!document.querySelector('iframe')) return;
+    if (!document.querySelector('iframe')) return;
     this.captureService
       .getImage(document.querySelector('iframe'), true)
       .subscribe((imgBase64: string) => {
@@ -370,19 +393,15 @@ export class CodxReportViewDetailComponent
     // parameters
     if (e[1]) {
       Object.keys(e[1]).map((key) => {
-        if(this.params[key])
-          objParam[key] = this.params[key];
-        else
-          objParam[key] = e[1][key];
+        if (this.params[key]) objParam[key] = this.params[key];
+        else objParam[key] = e[1][key];
       });
-      if(this.params)
-      {
-        for(const key in this.params){
-          objParam[key] = this.params[key]
+      if (this.params) {
+        for (const key in this.params) {
+          objParam[key] = this.params[key];
         }
       }
       this._paramString = JSON.stringify(objParam);
-
     }
     // labels
     if (e[2]) {
@@ -421,15 +440,14 @@ export class CodxReportViewDetailComponent
   }
 
   url: string = '';
-  getReportPDF(recID: string)
-  {
+  getReportPDF(recID: string) {
     let sk =
       'sk=' +
       btoa(
         this.authSV.userValue.userID + '|' + this.authSV.userValue.securityKey
       );
-    this.url = `${environment.apiUrl}/api/${
-      this.data.service
-    }/GetReportByPDF?reportID=${recID}&parameters=${this._paramString}&${sk}&=`+Util.uid();
+    this.url =
+      `${environment.apiUrl}/api/${this.data.service}/GetReportByPDF?reportID=${recID}&parameters=${this._paramString}&${sk}&=` +
+      Util.uid();
   }
 }

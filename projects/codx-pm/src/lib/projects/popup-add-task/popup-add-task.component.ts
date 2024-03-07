@@ -7,6 +7,7 @@ import { PopupSelectUserComponent } from "../popup-select-user/popup-select-user
 import { AttachmentComponent } from "projects/codx-common/src/lib/component/attachment/attachment.component";
 import moment from "moment";
 import { PopupAddMemoComponent } from "../popup-add-memo/popup-add-memo.component";
+import { CodxHistoryComponent } from "projects/codx-share/src/lib/components/codx-history/codx-history.component";
 @Component({
   selector: 'popup-add-task',
   templateUrl: './popup-add-task.component.html',
@@ -16,6 +17,7 @@ import { PopupAddMemoComponent } from "../popup-add-memo/popup-add-memo.componen
 export class PopupAddTaskComponent implements OnInit, AfterViewInit{
 
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('history') history: CodxHistoryComponent;
 
   entityName:string = 'TM_Tasks';
   action:string='add';
@@ -38,6 +40,8 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   parentTask:any;
   isAssign:boolean=false;
   enableEdit:boolean=true;
+  viewTree:any;
+  approveControl:any;
 
   constructor(
     injector: Injector,
@@ -92,6 +96,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
         }
         if(this.projectData.settings.find((x:any)=>x.fieldName=='ApproveControl')){
           this.data.approveControl = this.projectData.settings.find((x:any)=>x.fieldName=='ApproveControl').fieldValue;
+          this.approveControl = this.projectData.settings.find((x:any)=>x.fieldName=='ApproveControl').fieldValue;
         }
       }
 
@@ -106,6 +111,9 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
         this.grvSetup=res;
       }
     })
+    if(dialogData.data[3]){
+      this.viewTree =dialogData.data[3]
+    }
     this.getParam();
   }
   ngOnInit(): void {
@@ -321,6 +329,11 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
       return
     }
 
+    if(this.members?.length && this.members.findIndex((x:any)=>x.roleType =='A')==-1){
+      this.notificationsService.notify("Phải có người thực hiện công việc!",'2');
+      return
+    }
+
     if (this.attachment && this.attachment.fileUploadList.length)
     (await this.attachment.saveFilesObservable()).subscribe((res) => {
       if (res) {
@@ -376,12 +389,15 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
         }
         this.todoList = res[2];
         this.checkAllowedEdit();
+        this.updateStatusCheck();
       }
     })
   }
 
   oCountFooter:any;
-  changeCountFooter(value: number, key: string) {
+  commentTyped(value: number, key: string) {
+    if(this.history) this.history.refresh();
+    debugger
     if(this.oCountFooter){
       let oCountFooter = JSON.parse(JSON.stringify(this.oCountFooter));
       oCountFooter[key] = value;
@@ -669,6 +685,51 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     }
     else{
       return false;
+    }
+  }
+
+  onCbxDataAdded(e:any){
+
+    if(e && this.viewTree){
+      this.viewTree?.treeView?.setNodeTree(e);
+    }
+  }
+
+  showInprogress:boolean=false;
+  showReport:boolean=false;
+  showFinish:boolean=false;
+  updateStatusCheck(){
+    let userRole = this.members.find((x:any)=>x.resourceID == this.crrUser.userID)?.roleType;
+    if(userRole){
+      switch (userRole) {
+        case 'A':
+          this.showInprogress=true;
+          if(this.approveControl=='1'){
+            this.showReport =true;
+            this.showFinish=false;
+          }
+          else{
+            this.showReport=false;
+            this.showFinish=true;
+          }
+          break;
+        case 'R':
+          this.showInprogress=false;
+          this.showReport=false;
+          this.showFinish=true;
+        break;
+        case 'I':
+          this.showInprogress=false;
+          this.showReport=false;
+          this.showFinish=false;
+        break;
+
+      }
+    }
+    else{
+          this.showInprogress=false;
+          this.showReport=false;
+          this.showFinish=false;
     }
   }
 }

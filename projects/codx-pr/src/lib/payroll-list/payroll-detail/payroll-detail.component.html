@@ -1,0 +1,86 @@
+<codx-views #view 
+    [views]="views" 
+    [autoLoad]="false"
+    [titleToolBarTmp]="tmpToolBarTmp" 
+    [service]="'HR'">
+</codx-views>
+<ng-template #tmpPanelLeft>
+    <codx-listview 
+        class="h-100"
+        [itemTemplate]="tmpItemTemplate" 
+        type="treeView" 
+        entityName="HR_OrganizationUnits"
+        service="HR" 
+        assemblyName="ERM.Business.HR" 
+        className="OrganizationUnitsBusiness"
+        [method]="'GetDataOrgAsync'" 
+        textField="orgUnitName" 
+        gridViewName="grvOrganizationUnits" 
+        formName="OrganizationUnits" 
+        [enableCheck]="false"
+        [selectFirst]="true"
+        idField="orgUnitID" 
+        [dataService]="dtService"
+        (onSelectionChanged)="onSelectionChanged($event)">
+    </codx-listview>
+</ng-template>
+<ng-template #tmpPanelRight>
+    <codx-gridview-v2 *ngIf="columnGrid && columnGrid?.length > 0"
+        #codxGridView 
+        [columnsGrid]="columnGrid" 
+        [entityName]="view?.formModel?.entityName" 
+        [hideMoreFunc]="true"
+        [autoLoad]="true"
+        [autoFitColumns]="true"
+        [enableCheck]="false"
+        [dataValues]="dataValues"
+        [service]="'HR'"
+        [assemblyName]="'PR'" 
+        [className]="'PayrollListBusiness'" 
+        [method]="'GetDataGridPayRollAsync'"
+        [idField]="'EmployeeID'">
+    </codx-gridview-v2>
+</ng-template>
+
+<ng-template #tmpItemTemplate let-data>
+    <div class="d-flex align-items-top py-1">
+        <i class="icon-home me-2"></i>
+        <span>{{data?.orgUnitName}}</span>
+    </div>
+</ng-template>
+
+<ng-template #tempEmployee let-data>
+    <div class="d-flex align-items-center w-100">
+        <div class="p-3 ps-5">
+            <div class="d-flex align-items-center">
+                <div class="d-flex flex-column me-4">
+                    <codx-img [objectId]="data?.EmployeeID" [objectName]="data?.EmployeeName"
+                    objectType="HR_Employees" [width]="40" [imageType]="'circle'" class="pic-emloyee">
+                    </codx-img>
+                </div>
+                <div class="d-flex flex-column">
+                    <div class="fw-bold fs-6 line-clamp line-clamp-1 mb-1">{{data?.EmployeeName}}</div>
+                    <div class="text-dark mb-1">{{data?.EmployeeID}}</div>
+                    <div class="text-gray-600 fs-7 mb-1">{{data?.PositionName}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #tempCellData let-data>
+    <div class="text-dark text-center">
+      {{data[data.column.field]}}
+    </div>
+</ng-template>
+
+
+
+<ng-template #tmpToolBarTmp>
+    <div class="d-flex align-items-center cursor-pointer">
+        <div class="fw-bold">{{view?.function?.customName}}</div>
+        <div class="icon-navigate_next"></div>
+        <div [innerHTML]="data?.hrTemplateID | formatvalue : view?.formModel : 'hrTemplateID' | async"></div>
+        <div class="mx-2">|</div>
+        <div>({{codxGridView ? codxGridView?.dataService?.rowCount : 0}})</div>
+    </div>
+</ng-template>

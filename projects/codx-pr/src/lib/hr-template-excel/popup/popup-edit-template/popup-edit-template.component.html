@@ -21,12 +21,12 @@
         </div>
         <div class="form-group">
             <codx-label [formModel]="dialog?.formModel" fiedName="GroupSalCode" [default]="'Tên bảng lương'"></codx-label>
-            <codx-input [formModel]="dialog?.formModel" field="groupSalCode" (valueChange)="valueChange($event)"></codx-input>
+            <codx-input [formModel]="dialog?.formModel" field="groupSalCode" [crrValue]="data?.groupSalCode" (valueChange)="valueChange($event)"></codx-input>
         </div>
         <div class="form-group">
-            <div class="d-flex align-items-center justify-content-between w-100 mb-2">
+            <div class="d-flex align-items-center justify-content-between w-100 mb-2" >
                 <codx-label [formModel]="dialog?.formModel" fiedName="lblTemplateSalary" [default]="'Mẫu bảng lương'" class="fw-bold text-primary"></codx-label>
-                <span><i class="icon-info text-primary"></i></span>
+                <span (click)="viewInfo()"><i class="icon-info text-primary"></i></span>
             </div>
             <ng-container *ngIf="rpReportList && rpReportList?.templateID;else noTemplate">
                 <div class="flex flex-column w-100">
@@ -112,4 +112,53 @@
             </ng-container>
         </div>
       </div>
+</ng-template>
+
+<ng-template #tmpPopTutorial let-dialogPopup>
+    <div class="d-flex flex-column align-items-stretch w-100 h-100 p-4">
+        <div class="form-group">
+          <div class="d-flex align-items-center justify-content-between p-2">
+              <h4 class="fw-bold text-primary">Hướng dẫn tạo file Excel Mẫu Bảng lương</h4>
+              <button type="button" class="btn btn-icon btn-light" (click)="dialogPopup?.close()">
+                  <span class="icon-close icon-18"></span>
+              </button>
+          </div> 
+        </div>
+        <div class="overflow-auto">
+            <div class="form-group p-2">
+                <div class="mb-1">
+                    <span><b>Bước 1:</b> Tạo file Excel Bảng lương gồm các cột thông tin cần thiết.</span>
+                </div>
+                <div class="ps-2">
+                    <span>
+                        <i class="fst-italic text-decoration-underline">Lưu ý:</i> có thể bấm nút <b>[Template mẫu]</b> để xem tham khảo mẫu HOẶC download file mẫu -> SaveAs -> chỉnh sửa lại cột thông tin theo như cầu.
+                    </span>
+                </div>
+            </div>
+            <div class="form-group p-2">
+                <div class="mb-1">
+                    <span><b>Bước 2:</b> Gán nguồn dữ liệu cho các cột tại file Excel: gán tại các cột thông tin cần xuất từ hệ thống ra.</span>
+                </div>
+                <div class="ps-2">
+                    <ul>
+                        <li><span>Bấm nút <b>[Xem tập dữ liệu] để xem danh sách tập dữ liệu được sử dụng.</b></span></li>
+                        <li><span>Các giá trị tại cột <b>Tên trường dữ liệu</b> chính là tên nguồn dữ liệu cần gán vào cột thông tin tại file Excel.</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group p-2">
+                <p><b>Bước 3:</b> Tại các cột thông tin cần lập công thức tính toán: lập công thức ngay tại file Excel.</p>
+                <p><b>Bước 4:</b> lưu file Excel. (VD: Template1.xlsx)</p>
+            </div>
+            <div class="form-group">
+                <div class="d-flex align-items-center justify-content-between p-4">
+                    <h4 class="fw-bold text-primary">Chọn file Mẫu bảng lương</h4>
+                </div> 
+                <div class="p-2">
+                    <p>- Bấm nút <b>[Chọn mẫu] để chọn file Excel (VD:Template1.xlsx).</b></p>
+                    <p><i class="me-1">Ghi chú:</i> mỗi bảng lương sẽ có 1 file Excel template tại 1 thời điểm. Nếu thay đổi file Excel template, mẫu mới này sẽ được áp dụng cho Bảng lương được tính từ thời điểm thay đổi.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </ng-template>

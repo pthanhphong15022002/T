@@ -148,9 +148,9 @@ export class PopupAddProjectComponent extends UIComponent {
       if(this.selectedMember){
        let index= this.members.findIndex((x:any)=>x.objectID==this.selectedMember.objectID);
        if(index>-1){
-        this.members[idx].roleType=item.value;
-        this.members[idx].roleName=item.text;
-        this.members[idx].icon=item.icon;
+        this.members[index].roleType=item.value;
+        this.members[index].roleName=item.text;
+        this.members[index].icon=item.icon;
 
        }
        this.members = this.members.slice();
@@ -423,6 +423,10 @@ export class PopupAddProjectComponent extends UIComponent {
       if(pm){
         this.data.projectManager = pm.objectID;
         this.data.projectManeger = pm.objectID;
+      }
+      else{
+        this.notificationsService.notify("Phải có Quản lý dự án!",'2');
+        return
       }
     }
     this.dialogRef.dataService.dataSelected = this.data;
