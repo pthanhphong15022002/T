@@ -250,7 +250,7 @@ export class PopupEditTemplateComponent implements OnInit,AfterViewInit {
     {
       let dialogModel = new DialogModel();
       dialogModel.FormModel = this.dialog.formModel;
-      this.callFC.openForm(this.tmpPopTutorial,"",600, 500,"",null,"",dialogModel);
+      this.callFC.openForm(this.tmpPopTutorial,"",600, 600,"",null,"",dialogModel);
     }
   }
 }

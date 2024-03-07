@@ -16,10 +16,11 @@
             descLine="2"
             [formModel]="view?.formModel" 
             [typeMF]="'hover'"
-            [hideMF]="true">
+            (clickMF)="clickMF($event,data)" 
+            (changeDataMF)="changeDataMF($event)">
         </codx-temp-full>
     </div>
 </ng-template>
 <ng-template #tmpPanelRight>
-    <pr-view-detail-template [formModel]="view?.formModel" [runMode]="function?.runMode" [hideMF]="false" [recID]="selectedID"></pr-view-detail-template>
+    <pr-view-detail-template [formModel]="view?.formModel" [runMode]="function?.runMode" [hideMF]="true" [recID]="selectedID"></pr-view-detail-template>
 </ng-template>
