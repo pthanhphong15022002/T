@@ -52,21 +52,7 @@
       <span *ngIf="showInfo" class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
       <span *ngIf="!showInfo" class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
     </div>
-    <!-- <div class="extend-function pt-0">
-      <hr />
-      <div class="d-flex justify-content-center" (click)="showInfo = !showInfo">
-        <div class="d-flex align-items-center w-auto extend-title">
-          <codx-label class="text-primary text-hover-primary_darker fw-bold me-1" default="Thông tin mặc định"></codx-label>
-          <span *ngIf="showInfo" class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
-          <span *ngIf="!showInfo" class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
-        </div>
-      </div>
-    </div> -->
     <div [ngStyle]="showInfo ? '' : {display:'none'}">
-      <!-- <div class="form-group">
-        <codx-label fiedName="AddNewMode" [formModel]="dialog.formModel"></codx-label>
-        <codx-input field="addNewMode" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
-      </div> -->
       <div [ngStyle]="vllAC122.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}"
         class="form-group">
         <codx-label fiedName="EntryMode" [formModel]="dialog.formModel"></codx-label>

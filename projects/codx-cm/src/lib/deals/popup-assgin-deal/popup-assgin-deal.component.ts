@@ -160,6 +160,7 @@ export class PopupAssginDealComponent
   //     : permissions;
   // }
   async getInformationUser(objectID) {
+    if(objectID == "ADMIN") return;
     this.codxCmService.getEmployeesByDomainID(objectID).subscribe((user) => {
       if (user) {
         this.assignToSetting(user);
