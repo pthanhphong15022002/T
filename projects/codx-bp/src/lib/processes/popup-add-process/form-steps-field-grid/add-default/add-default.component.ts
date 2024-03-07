@@ -82,7 +82,8 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
 
   deleteItem()
   {
-    //this.dialog.close({delete: this.data});
+    debugger
+    this.dialog.close({delete: this.data});
   }
 
   dataChangeAttach(e:any)
@@ -92,7 +93,6 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
 
   settingAdvancedTask(){
     let option = new DialogModel();
-    option.IsFull = true;
     option.zIndex = 1010;
     option.FormModel = this.formModel;
     var obj = {
@@ -102,12 +102,19 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
     let popupDialog = this.callFuc.openForm(
       FormSettingAdvancedTasksComponent,
       '',
-      null,
-      null,
+      900,
+      800,
       '',
       obj,
       '',
       option
     );
+    popupDialog.closed.subscribe((e) => {
+      if (e?.event && e?.event.length > 0) {
+        this.data.reminder = e.event[0];
+        this.data.eventControl = e.event[1];
+        // this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 }

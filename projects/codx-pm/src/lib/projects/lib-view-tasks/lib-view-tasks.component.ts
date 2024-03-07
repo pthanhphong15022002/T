@@ -191,7 +191,7 @@ export class ProjectTasksViewComponent
       if (parentID) res.parentID = parentID;
       let dialogAdd = this.callfc.openSide(
         PopupAddTaskComponent,
-        [res, 'add', this.projectData],
+        [res, 'add', this.projectData,this.viewTree],
         option
       );
       dialogAdd.closed.subscribe((returnData) => {
@@ -219,7 +219,7 @@ export class ProjectTasksViewComponent
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '850px';
-        option.zIndex = 9997;
+        //option.zIndex = 9997;
         let dialogAdd = this.callfc.openSide(
           PopupAddTaskComponent,
           [this.view.dataService.dataSelected, 'edit', this.projectData],
@@ -271,9 +271,15 @@ export class ProjectTasksViewComponent
       )
       .subscribe((res: any) => {
         if (res) {
+          if(data.category == "G" && res.length){
+            isCanDelete = false;
+            this.notificationSv.notifyCode('TM001');
+            return;
+          }
           res.forEach((element) => {
             if (element.status != '00' && element.status != '10') {
               isCanDelete = false;
+              this.notificationSv.notifyCode('TM001');
               return;
             }
           });
@@ -388,6 +394,12 @@ export class ProjectTasksViewComponent
         this.addTask(this.view.dataService.dataSelected?.recID);
       break;
 
+    }
+  }
+
+  addChild(data:any){
+    if(data){
+      this.addTask(data.recID);
     }
   }
 

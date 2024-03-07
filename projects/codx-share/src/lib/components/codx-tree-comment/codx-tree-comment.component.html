@@ -1,21 +1,21 @@
 <div class="treehis-main">
     <ng-container *ngIf="addNew">
         <div class="tree-footer">
-            <codx-comment-history 
-                [new]="true" 
-                [dVll]="dVll" 
-                [vllIcon]="vllIcon" 
-                [funcID]="funcID" 
+            <codx-comment-history
+                [new]="true"
+                [dVll]="dVll"
+                [vllIcon]="vllIcon"
+                [funcID]="funcID"
                 [formModel]="formModel"
-                [actionType]="actionType" 
+                [actionType]="actionType"
                 [objectID]="objectID"
-                [objectType]="objectType" 
-                [reference]="null" 
+                [objectType]="objectType"
+                [reference]="null"
                 (evtSend)="sendComment($event)">
             </codx-comment-history>
         </div>
     </ng-container>
-    <div class="tree-body">
+    <div class="tree-body" *ngIf="showCommentTree">
         <ng-container *ngFor="let node of root.listSubComment">
             <ng-container *ngIf="node">
                 <ng-container *ngTemplateOutlet="NodeHistory; context: { $implicit: node }"></ng-container>
@@ -27,12 +27,12 @@
     <div class="c1 task-his" [attr.dt]="setDicData(item)">
         <codx-comment-history
             [data]="item"
-            [dVll]="dVll" 
-            [vllIcon]="vllIcon"  
-            [actionType]="item.actionType" 
+            [dVll]="dVll"
+            [vllIcon]="vllIcon"
+            [actionType]="item.actionType"
             [formModel]="formModel"
-            (evtDelete)="deleteComment($event)" 
-            (evtReply)="replyTo($event)" 
+            (evtDelete)="deleteComment($event)"
+            (evtReply)="replyTo($event)"
             [viewIcon]="viewIcon"
             [allowVotes]="viewVote"
             [allowEdit]="allowEdit">
@@ -45,13 +45,13 @@
             </ng-container>
         </ng-container>
         <ng-container *ngIf="item.showReply">
-            <codx-comment-history 
+            <codx-comment-history
                 [new]="true"
-                [funcID]="funcID" 
+                [funcID]="funcID"
                 [actionType]="actionType"
                 [formModel]="formModel"
-                [objectID]="objectID" 
-                [objectType]="objectType" 
+                [objectID]="objectID"
+                [objectType]="objectType"
                 [reference]="item.recID"
                 (evtSend)="sendComment($event,item)">
             </codx-comment-history>

@@ -336,8 +336,9 @@
         [objectId]="item.recID"
         [objectType]="'DP_Instances_Steps_Fields'"
         [formModel]="dialog.formModel"
-        [isAdd]="action == 'add'"
-        (valueChangeCustom)="changeValueField($event)"
+        [isAdd]="action == 'add' || action == 'copy'"
+        [refVersion]="stepsTasks.recID"
+        (valueChangeCustom)="valueChangeCustom($event)"
         (addFileCompleted)="addFileCompleted($event)"
       ></codx-input-custom-field>
     </ng-container>
