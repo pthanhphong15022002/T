@@ -82,7 +82,8 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
 
   deleteItem()
   {
-    //this.dialog.close({delete: this.data});
+    debugger
+    this.dialog.close({delete: this.data});
   }
 
   dataChangeAttach(e:any)

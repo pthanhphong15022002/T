@@ -200,12 +200,29 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
         {
           if(res?.event?.delete)
           {
-            this.data = res?.event?.process;
-            let deleteDt = res?.event?.data;
+            this.data = res?.event?.process || this.data;
+            let deleteDt = res?.event?.delete;
+            if(deleteDt)
+            {
+              let indexParent = this.data.steps.findIndex(x=>x.recID == deleteDt.parentID);
+              if(indexParent>=0)
+              {
+                this.data.steps[indexParent].child = this.data.steps[indexParent].child.filter(x=>x.recID != deleteDt.recID);
+              }
+
+              this.data.steps = this.data.steps.filter(x=>x.recID != deleteDt.recID);
+
+              let indexParent2 = this.listStage.findIndex(x=>x.recID == deleteDt.parentID);
+              if(indexParent2>=0)
+              {
+                this.listStage[indexParent2].child = this.listStage[indexParent2].child.filter(x=>x.recID != deleteDt.recID);
+              }
+            }
+            this.dataChange.emit(this.data);
           }
           else
           {
-            this.data = res?.event?.process;
+            this.data = res?.event?.process || this.data;
             let dt = res?.event?.data;
             if(dt.activityType == "Stage")
             {

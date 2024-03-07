@@ -939,7 +939,6 @@ export class PopupAddProcessComponent {
   beforeSave(op) {
     op.className = 'ProcessesBusiness';
     op.service = 'BP';
-    debugger
     if (
       (this.action == 'add' || this.action == 'copy') &&
       this.currentTab == 0
