@@ -907,8 +907,8 @@
                     </ng-template>
                   </ejs-listview>
 
-                  <ng-container class="form-group mt-6" *ngIf="isPublic">
-                    <div class="text-center mb-6">
+                  <ng-container class="form-group mt-6" *ngIf="isPublic ">
+                    <div class="text-center "*ngIf="oApprovalTrans?.signatureType=='1' ">
                       <ul
                         class="flex-center nav nav-tabs nav-pills flex-row border-0 mb-6"
                       >
@@ -922,7 +922,7 @@
                               [ngClass]="currentTab == index ? 'active' : ''"
                               data-bs-toggle="tab"
                               id="'#pane_' + index"
-                              (click)="changeTab(index)"
+                              (click)="changeTab(index,spl)"
                             >
                               <span class="d-flex flex-column">
                                 <span>
@@ -945,7 +945,7 @@
                       </ul>
                     </div>
 
-                    <div class="d-flex justify-content-end" *ngIf="!isSigned">
+                    <div class="d-flex justify-content-end mt-6" *ngIf="!isSigned">
                       <div>
                         <button
                           type="button"

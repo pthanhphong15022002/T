@@ -73,6 +73,7 @@ export class PdfComponent
   emailPublicSign: any;
   publicSignStatus: any;
   isSigned = false;
+  supplier = '3';
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
@@ -114,7 +115,8 @@ export class PdfComponent
   @Input() hideActions = false;
   @Input() isSignMode = false;
   @Input() dynamicApprovers = [];
-  @Input() hideThumbnail: boolean = false; //thumbnail
+  @Input() hideThumbnail: boolean = false; //thumbnail  
+  @Input() fileIDs = '';
   @Output() changeSignerInfo = new EventEmitter();
   @Output() eventHighlightText = new EventEmitter();
 
@@ -471,7 +473,7 @@ export class PdfComponent
       this.signPerRow = res?.SignPerRow;
       this.align = res?.Align;
       this.direction = res?.Direction;
-      this.areaControl = res?.AreaControl == '1';
+      this.areaControl = false;//lay tu category
       this.isAwait = res?.Await == '1';
       this.labels = res?.Label?.filter((label) => {
         return label.Language == this.user.language;
@@ -593,6 +595,9 @@ export class PdfComponent
   getProcessESign() {
     let request = new tempLoadPDF();
     request.recID = this.recID;
+    request.dynamicApprovers = this.dynamicApprovers;
+    request.isSettingMode=this.isSettingMode;
+    request.fileIDs=this.fileIDs;
     this.api
       .execSv('BP', 'BP', 'ProcessesBusiness', 'GetPDFFormAsync', [request])
       .subscribe((res: any) => {
@@ -940,7 +945,8 @@ export class PdfComponent
         this.isApprover,
         this.user.userID,
         this.stepNo,
-        this.modeView
+        this.modeView,
+        this.isSettingMode,
       )
       .subscribe((res) => {
         if (res) {
@@ -1064,7 +1070,8 @@ export class PdfComponent
         this.recID,
         this.fileInfo.fileID,
         this.curSelectedArea.id(),
-        this.modeView
+        this.modeView,
+        this.isSettingMode,
       )
       .subscribe((res) => {
         if (res) {
@@ -1075,7 +1082,8 @@ export class PdfComponent
               this.isApprover,
               this.user.userID,
               this.stepNo,
-              this.modeView
+              this.modeView,
+              this.isSettingMode,
             )
             .subscribe((res) => {
               if (res) {
@@ -1098,8 +1106,9 @@ export class PdfComponent
   imgSignature2: ImageViewerComponent;
   @ViewChild('imgStamp', { static: false }) imgStamp: ImageViewerComponent;
 
-  changeTab(currTab) {
+  changeTab(currTab,supplier:any) {
     this.currentTab = currTab;
+    this.supplier = supplier?.value;
   }
 
   changeEditMode() {
@@ -1943,7 +1952,8 @@ export class PdfComponent
                   this.curFileID,
                   area,
                   area.recID,
-                  this.modeView
+                  this.modeView,
+                  this.isSettingMode,
                 )
                 .subscribe((res) => {});
             } else {
@@ -2401,7 +2411,8 @@ export class PdfComponent
         this.curFileID,
         tmpArea,
         tmpArea.recID,
-        this.modeView
+        this.modeView,
+        this.isSettingMode,
       )
       .subscribe((res) => {
         this.esService
@@ -2411,7 +2422,8 @@ export class PdfComponent
             this.isApprover,
             this.user.userID,
             this.stepNo,
-            this.modeView
+            this.modeView,
+            this.isSettingMode,
           )
           .subscribe((res) => {
             if (res) {
@@ -2698,7 +2710,8 @@ export class PdfComponent
               this.curFileID,
               tmpArea,
               recID,
-              this.modeView
+              this.modeView,
+              this.isSettingMode,
             )
             .subscribe((res) => {
               if (res) {
@@ -2728,7 +2741,8 @@ export class PdfComponent
                       this.isApprover,
                       this.user.userID,
                       this.stepNo,
-                      this.modeView
+                      this.modeView,
+                      this.isSettingMode,
                     )
                     .subscribe((res) => {
                       if (res) {
@@ -2825,7 +2839,8 @@ export class PdfComponent
                 this.curFileID,
                 tmpArea,
                 recID,
-                this.modeView
+                this.modeView,
+                this.isSettingMode,
               )
               .subscribe((res) => {
                 if (res) {
@@ -2854,7 +2869,8 @@ export class PdfComponent
                         this.isApprover,
                         this.user.userID,
                         this.stepNo,
-                        this.modeView
+                        this.modeView,
+                        this.isSettingMode,
                       )
                       .subscribe((res) => {
                         if (res) {
@@ -2901,7 +2917,8 @@ export class PdfComponent
         this.curFileID,
         tmpArea,
         tmpArea.recID,
-        this.modeView
+        this.modeView,
+        this.isSettingMode,
       )
       .subscribe((res) => {
         if (res) {
@@ -2912,7 +2929,8 @@ export class PdfComponent
               this.isApprover,
               this.user.userID,
               this.stepNo,
-              this.modeView
+              this.modeView,
+              this.isSettingMode,
             )
             .subscribe((res) => {
               if (res) {
@@ -2984,7 +3002,8 @@ export class PdfComponent
           this.curFileID,
           tmpArea,
           recID,
-          this.modeView
+          this.modeView,
+          this.isSettingMode,
         )
         .subscribe((res) => {
           if (res) {
@@ -3011,7 +3030,8 @@ export class PdfComponent
                 this.isApprover,
                 this.user.userID,
                 this.stepNo,
-                this.modeView
+                this.modeView,
+                this.isSettingMode,
               )
               .subscribe((res) => {
                 if (res) {
@@ -3277,7 +3297,7 @@ export class PdfComponent
   //---------------------------------------------------------------------------------//
 
   popupPublicESign(status) {
-    if (this.oApprovalTrans.approverType == 'PE') {
+    if (this.oApprovalTrans?.signatureType == '2') {
       this.codxCommonService
         .codxApprove(this.transRecID, status, null, null, null, null, '3')
         .subscribe((res: ResponseModel) => {
@@ -3288,7 +3308,8 @@ export class PdfComponent
             this.changeConfirmState(res);
           }
         });
-    } else {
+    } 
+    else {
       this.publicSignStatus = status;
       var dialog = this.callfc.openForm(this.publicSignInfo, '', 450, 270);
       this.detectorRef.detectChanges();

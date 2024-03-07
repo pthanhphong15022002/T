@@ -16,6 +16,8 @@ import { AddSettingConditionsComponent } from './add-setting-conditions/add-sett
 import { ModeviewComponent } from 'projects/codx-bp/src/lib/modeview/modeview.component';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { AddFileFromProcessComponent } from './add-file-from-process/add-file-from-process.component';
+import { Approver } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
+import { BpSignPDFComponent } from 'projects/codx-bp/src/lib/sign-pdf/bp-sign-pdf.component';
 
 @Component({
   selector: 'lib-add-task',
@@ -184,8 +186,11 @@ export class AddTaskComponent
         recID + ';',
         entityName,
       ])
-      .subscribe((item) => {
+      .subscribe((item:any) => {
         if (item) {
+          item?.forEach(x=>{
+            x.eSign = true;
+          });
           this.listDocument[i].filess = item;
         }
       });
@@ -194,8 +199,11 @@ export class AddTaskComponent
     let i = index;
     this.api
       .execSv('DM', 'DM', 'FileBussiness', 'GetListFile', recID)
-      .subscribe((item) => {
+      .subscribe((item:any) => {
         if (item) {
+          item?.forEach(x=>{
+            x.eSign = true;
+          });
           this.listDocument[i].filess = item;
         }
       });
@@ -517,7 +525,11 @@ export class AddTaskComponent
         this.isNewForm = false;
         this.data.extendInfo =
           res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
+
+        var index = this.process.steps.findIndex(x=>x.recID == this.data.recID);
+        if(index >=0) this.process.steps[index].extendInfo = this.data.extendInfo;
         this.dataChange.emit(this.data);
+        this.dataChangeProcess.emit(this.process);
       }
     });
   }
@@ -793,5 +805,57 @@ export class AddTaskComponent
     let option = new DialogModel();
     option.zIndex = 1010;
     this.callFuc.openForm(share, '', 420, 600, null, null, null, option);
+  }
+  esign(){
+    debugger
+    let fileIDs="";
+    let dynamicApprovers=[];
+    this.listDocument.forEach(doc=>{
+      if(doc?.filess?.length>0){
+        fileIDs+= doc?.filess?.filter(x=>x?.esign==true)?.map(x=>x.recID)?.join(";");        
+      }
+    });
+
+    this.data.permissions.forEach(per=>{
+      if(per?.objectType!=null){
+        let tempPer = new Approver();
+        tempPer.approver=per?.objectID;
+        tempPer.roleType=per?.objectType;   
+        dynamicApprovers.push(tempPer);   
+      }
+    });
+    if(fileIDs?.length>0 && dynamicApprovers?.length>0){
+      let option = new DialogModel();
+      option.IsFull = true;
+      option.zIndex = 1010;
+      let popupDialog = this.callFuc.openForm(
+        BpSignPDFComponent,
+        '',
+        null,
+        null,
+        '',
+        { fileIDs: fileIDs, dynamicApprovers: dynamicApprovers,processID:this.process?.recID },
+        '',
+        option
+      );
+      popupDialog.closed.subscribe((res) => {
+        if (res?.event) {
+          this.isNewForm = false;
+          this.data.extendInfo =
+            res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
+          this.dataChange.emit(this.data);
+        }
+      });
+    }
+  }
+  fileCheckChange(evt: any, file: any) {
+    this.listDocument.forEach(doc=>{
+      if(doc?.filess?.length>0){
+        let f= doc?.filess?.find(x=>x?.recID==file?.recID);       
+        if(f!=null){
+          f.esign =!f.esign;
+        } 
+      }
+    });
   }
 }
