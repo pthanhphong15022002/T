@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
 import {
   BP_Processes_Steps_EventControl,
@@ -34,7 +35,8 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
   countTime = 1;
   checkValidate: boolean = true;
   templateID = '';
-  dataMail: any;
+  dataMail: any = {};
+  dialogETemplate: FormGroup;
   lstTo = [];
   lstFrom = [];
   lstCc = [];
