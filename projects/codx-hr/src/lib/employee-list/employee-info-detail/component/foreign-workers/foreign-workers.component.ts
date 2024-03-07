@@ -2,11 +2,11 @@ import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnInit } 
 import { FormModel, ApiHttpService, CacheService, AuthStore, CallFuncService, NotificationsService } from 'codx-core';
 
 @Component({
-  selector: 'hr-legal-info',
-  templateUrl: './legal-info.component.html',
-  styleUrls: ['./legal-info.component.css']
+  selector: 'hr-foreign-workers',
+  templateUrl: './foreign-workers.component.html',
+  styleUrls: ['./foreign-workers.component.css']
 })
-export class LegalInfoComponent implements OnInit,AfterViewInit{
+export class ForeignWorkersComponent implements OnInit,AfterViewInit {
 
   @Input() function:any;
   @Input() employeeID:any;
@@ -44,22 +44,14 @@ export class LegalInfoComponent implements OnInit,AfterViewInit{
   ngAfterViewInit(): void {
   }
 
-  // get Data
+  // get data
   getData(employeeID:string){
-    if(employeeID){
-      this.api.execSv("HR","HR","EmployeesBusiness","GetPersonalAndContactAsync",[employeeID])
-      .subscribe((res:any) => {
-        if(res)
-        {
-          this.data = res;
-          this.dt.detectChanges();
-        }
-      });
-    }
+    
   }
 
   //openPopupEdit()
   openPopupEdit(){
     
   }
+
 }
