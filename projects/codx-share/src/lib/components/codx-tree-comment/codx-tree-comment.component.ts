@@ -28,10 +28,12 @@ export class CodxTreeCommentComponent implements OnInit, OnChanges {
   @Input() viewIcon: boolean = false;
   @Input() viewVote: boolean = false;
   @Input() allowEdit: boolean = false;
+  @Input() showCommentTree: boolean = true;
   @Input() totalComment: number = 0;
   @Output() totalCommentChange = new EventEmitter<number>();
+  @Output() typed = new EventEmitter<any>();
   /////////////////////////////
-  vllL1480 = 'L1480'; // valueList icon 
+  vllL1480 = 'L1480'; // valueList icon
   vllIcon: any = [];
   dVll: any = {};
   lstHistory: any[] = [];
@@ -69,11 +71,11 @@ export class CodxTreeCommentComponent implements OnInit, OnChanges {
       }
     });
   }
-  getDataAsync() {    
+  getDataAsync() {
     this.getCommentsAsync(this.objectID);
     this.getValueIcon();
   }
-  // get data comments 
+  // get data comments
   getCommentsAsync(objectID: string) {
     if(objectID ){
       this.api
@@ -104,16 +106,17 @@ export class CodxTreeCommentComponent implements OnInit, OnChanges {
     this.removeNodeTree(event.recID);
     this.dt.detectChanges();
   }
-  // send comments 
+  // send comments
   sendComment(event: any, data: any = null) {
     if(event){
       event.showReply = false;
-      if (data) 
+      if (data)
       {
         data.showReply = false;
       }
       this.totalComment++;
       this.totalCommentChange.emit(this.totalComment);
+      this.typed.emit(event)
       this.dicDatas[event['recID']] = event;
       this.setNodeTree(event);
       this.dt.detectChanges();

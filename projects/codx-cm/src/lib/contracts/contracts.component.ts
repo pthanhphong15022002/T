@@ -790,17 +790,44 @@ export class ContractsComponent extends UIComponent {
 
   deleteContract(contract) {
     if (contract?.recID) {
-      this.view.dataService
-        .delete([contract], true, (option: RequestOption) =>
-          this.beforeDelete(option, contract.recID)
-        )
-        .subscribe((res: any) => {
-          if (res?.contractName && res?.contractID) {
-            this.view.dataService.add(res).subscribe();
-            this.view.currentView['schedule'].refresh();
-            this.detectorRef.markForCheck();
+      if(["3", "4", "5", "6"].includes(contract?.status )){
+        this.cmService.getProcessSettingByRecID(contract?.processID).subscribe((res) => {
+          if(res){
+            if(res?.isEdit){
+              this.view.dataService
+                .delete([contract], true, (option: RequestOption) =>
+                  this.beforeDelete(option, contract.recID)
+                )
+                .subscribe((res: any) => {
+                  if (res?.contractName && res?.contractID) {
+                    this.view.dataService.add(res).subscribe();
+                    this.view.currentView['schedule'].refresh();
+                    this.detectorRef.markForCheck();
+                  }
+                });
+            }else{
+              this.notiService.notify(
+                'Hợp đồng không thể xóa khi đã thành công!',
+                '3'
+              );
+            }
+            
           }
-        });
+        })
+      }else{
+        this.view.dataService
+          .delete([contract], true, (option: RequestOption) =>
+            this.beforeDelete(option, contract.recID)
+          )
+          .subscribe((res: any) => {
+            if (res?.contractName && res?.contractID) {
+              this.view.dataService.add(res).subscribe();
+              this.view.currentView['schedule'].refresh();
+              this.detectorRef.markForCheck();
+            }
+          });
+      }
+      
     }
   }
 

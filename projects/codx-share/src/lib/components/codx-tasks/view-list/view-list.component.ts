@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnInit,
@@ -34,6 +35,7 @@ export class ViewListComponent implements OnInit {
   @Input() user: any;
   @Input() popoverSelected: any;
   @Input() isTreeView: boolean=false;
+  @Input() treeCmp:any;
   listTaskResousceSearch = [];
   listTaskResousce = [];
   countResource = 0;
@@ -45,6 +47,7 @@ export class ViewListComponent implements OnInit {
   @Output() viewTask = new EventEmitter<any>();
   @Output() nodeSelected = new EventEmitter<any>();
   @Output() hoverPopover = new EventEmitter<any>();
+  @Output() addChild = new EventEmitter<any>();
 
   lstTaskbyParent = [];
   isHoverPop = false;
@@ -54,6 +57,7 @@ export class ViewListComponent implements OnInit {
     private api: ApiHttpService,
     private callfc: CallFuncService,
     private codxService: CodxService,
+    private elementRef: ElementRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {}
@@ -72,6 +76,25 @@ export class ViewListComponent implements OnInit {
 
   selectNode(data){
     this.nodeSelected.emit(data);
+    if(this.treeCmp){
+      let treeContent = this.treeCmp.treeView.elRef.nativeElement.querySelector('.content-tree');
+      if(treeContent){
+        let itemlist = treeContent.querySelectorAll('.item-view-list');
+        if(itemlist.length && this.isTreeView){
+          itemlist.forEach((item:any)=>{
+            if(item.id==data.recID){
+              !item.classList.contains('isActive') && item.classList.add('isActive')
+            }
+            else{
+              if(item.classList.contains('isActive')){
+                item.classList.remove('isActive');
+              }
+            }
+          })
+      }
+      }
+    }
+
   }
 
   changeDataMF(e, data) {
@@ -251,7 +274,7 @@ export class ViewListComponent implements OnInit {
     this.listTaskResousceSearch = listTaskResousceSearch;
   }
 
-  logData(data){
-    console.log(data)
+  addChildClick(data){
+    this.addChild.emit(data)
   }
 }

@@ -99,6 +99,10 @@ export class CodxExportComponent implements OnInit, OnChanges {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @Input() refType: any;
   @Input() refID: any;
+
+  ////Dùng cho report
+  @Input() isReport: any;
+  @Input() dataReport: any;
   constructor(
     private callfunc: CallFuncService,
     private api: ApiHttpService,
@@ -115,6 +119,8 @@ export class CodxExportComponent implements OnInit, OnChanges {
     this.dataSource = dt.data?.[2];
     this.refID = dt.data?.[3];
     this.refType = dt.data?.[4];
+    this.isReport = dt.data?.[5];
+    this.dataReport = dt.data?.[6];
   }
   ngOnInit(): void {
     //Tạo formGroup
@@ -224,7 +230,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
               refType: this.refType,
               refID: this.refID,
               formModel: this.formModel,
-              data: data
+              data: data,
             },
             '',
             option
@@ -308,25 +314,15 @@ export class CodxExportComponent implements OnInit, OnChanges {
     switch (splitFormat[0]) {
       case 'excel':
       case 'excelTemp':
-        if (value?.dataExport == 'all') {
-          this.gridModel.page = 1;
-          this.gridModel.pageSize = -1;
-          this.gridModel.pageLoading = false;
-          this.gridModel.predicates = null;
-          this.gridModel.dataValues = null;
-        } else if (value?.dataExport == 'selected') {
-          this.gridModel.predicates = this.idField + '=@0';
-          this.gridModel.dataValues = [this.recID].join(';');
-        }
-
-        if (!this.dataSource || !this.show) {
+        //this.data.report.service,"Codx.RptBusiness","ReportBusiness","GetReportSourceAsync",[this.data.report,this.data.parameters]
+        if (this.isReport) {
           this.api
             .execSv<any>(
-              this.services,
-              'Core',
-              'CMBusiness',
-              'ExportExcelAsync',
-              [this.gridModel, idTemp]
+              this.dataReport.report.service,
+              'Codx.RptBusiness',
+              'ReportBusiness',
+              'ExportExcelReportAsync',
+              [this.dataReport.report, this.dataReport.parameters, idTemp]
             )
             .subscribe((item) => {
               if (item) {
@@ -334,19 +330,46 @@ export class CodxExportComponent implements OnInit, OnChanges {
               }
             });
         } else {
-          this.api
-            .execSv<any>(
-              this.services,
-              'Core',
-              'CMBusiness',
-              'ExportExcelDataAsync',
-              [this.dataSource, idTemp]
-            )
-            .subscribe((item) => {
-              if (item) {
-                this.downloadFile(item);
-              }
-            });
+          if (value?.dataExport == 'all') {
+            this.gridModel.page = 1;
+            this.gridModel.pageSize = -1;
+            this.gridModel.pageLoading = false;
+            this.gridModel.predicates = null;
+            this.gridModel.dataValues = null;
+          } else if (value?.dataExport == 'selected') {
+            this.gridModel.predicates = this.idField + '=@0';
+            this.gridModel.dataValues = [this.recID].join(';');
+          }
+
+          if (!this.dataSource || !this.show) {
+            this.api
+              .execSv<any>(
+                this.services,
+                'Core',
+                'CMBusiness',
+                'ExportExcelAsync',
+                [this.gridModel, idTemp]
+              )
+              .subscribe((item) => {
+                if (item) {
+                  this.downloadFile(item);
+                }
+              });
+          } else {
+            this.api
+              .execSv<any>(
+                this.services,
+                'Core',
+                'CMBusiness',
+                'ExportExcelDataAsync',
+                [this.dataSource, idTemp]
+              )
+              .subscribe((item) => {
+                if (item) {
+                  this.downloadFile(item);
+                }
+              });
+          }
         }
 
         break;

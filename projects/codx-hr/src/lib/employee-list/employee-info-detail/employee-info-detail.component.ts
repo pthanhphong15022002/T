@@ -4222,9 +4222,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     }
   }
 
+  // open popup Kinh nghiệm
   openFormExperiences(option, actionHeaderText, actionType, data) {
     data.employeeID = this.employeeID;
-    let dialogAdd = this.callfunc.openSide(
+    this.callfunc.openSide(
       CodxFormDynamicComponent,
       {
         formModel: option.FormModel,
@@ -4238,16 +4239,23 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           this.transText(this.eExperienceFuncID, this.lstFuncCurriculumVitae),
       },
       option
-    );
-    dialogAdd.closed.subscribe((res) => {
-      if (res.event) {
-        res.event.fromDate = res.event.fromDate.toISOString();
-        let temp = JSON.parse(JSON.stringify(res.event));
-        if (actionType == 'add' || actionType == 'copy') {
-          this.lstExperiences.push(temp);
-        } else if (actionType == 'edit') {
-          let index = this.lstExperiences.indexOf(data);
-          this.lstExperiences[index] = temp;
+    ).closed.subscribe((res) => {
+      if (res && res?.event) 
+      {
+        if(actionType === "add" || actionType === "copy")
+        {
+          let data = res.event.save.data;
+          if(!this.lstExperiences) this.lstExperiences = [];
+          this.lstExperiences.push(data);
+        }
+        else if (actionType == 'edit') 
+        {
+          let data = res.event.update.data;
+          let idx = this.lstExperiences.indexOf(data);
+          if(idx < -1)
+          {
+            this.lstExperiences[idx] = data;
+          }
         }
       }
       this.df.detectChanges();
