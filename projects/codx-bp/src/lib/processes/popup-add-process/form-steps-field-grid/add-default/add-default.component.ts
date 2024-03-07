@@ -1,8 +1,9 @@
 import { Component, Injector, Input, OnInit, Optional } from '@angular/core';
-import { DialogData, DialogRef } from 'codx-core';
+import { DialogData, DialogModel, DialogRef } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
 import { BaseFieldComponent } from '../base.component';
+import { FormSettingAdvancedTasksComponent } from './form-setting-advanced-tasks/form-setting-advanced-tasks.component';
 
 @Component({
   selector: 'lib-add-default',
@@ -46,7 +47,7 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
         this.getVllDefault(this.vllBP001);
       })
     }
-    else 
+    else
     {
       this.vllBP001 = vll;
       this.getVllDefault(this.vllBP001);
@@ -87,5 +88,25 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
   dataChangeAttach(e:any)
   {
     this.isAttach = e;
+  }
+
+  settingAdvancedTask(){
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 1010;
+    option.FormModel = this.formModel;
+    var obj = {
+
+    };
+    let popupDialog = this.callFuc.openForm(
+      FormSettingAdvancedTasksComponent,
+      '',
+      null,
+      null,
+      '',
+      obj,
+      '',
+      option
+    );
   }
 }

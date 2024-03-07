@@ -1,0 +1,76 @@
+import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { DialogData, DialogRef } from 'codx-core';
+import {
+  BP_Processes_Steps_EventControl,
+  BP_Processes_Steps_Reminder,
+} from 'projects/codx-bp/src/lib/models/BP_Processes.model';
+
+@Component({
+  selector: 'lib-form-setting-advanced-tasks',
+  templateUrl: './form-setting-advanced-tasks.component.html',
+  styleUrls: ['./form-setting-advanced-tasks.component.scss'],
+})
+export class FormSettingAdvancedTasksComponent implements OnInit {
+  dialog: any;
+  title = 'Thiết lập nâng cao';
+  tabInfos: any[] = [
+    {
+      icon: 'icon-notifications',
+      text: 'Thông báo công việc',
+      name: 'notifiTask',
+    },
+    {
+      icon: 'icon-i-alarm-outline',
+      text: 'Nhắc nhở quá hạn',
+      name: 'reminderOver',
+    },
+  ];
+  isAlert: boolean = false;
+  isSendMail: boolean = false;
+  dataReminder = new BP_Processes_Steps_Reminder();
+  dataEventControl = new BP_Processes_Steps_EventControl();
+  vllDurations = [
+    {time: 1, duration: '15 phút', alertType: '1;2'},
+    {time: 2, duration: '30 phút', alertType: '1'},
+    {time: 3, duration: '45 phút', alertType: '2'},
+    {time: 4, duration: '60 phút', alertType: ''},
+  ];
+  constructor(
+    private detectorRef: ChangeDetectorRef,
+    @Optional() dialog: DialogRef,
+    @Optional() dt: DialogData
+  ) {
+    this.dialog = dialog;
+    if (dt?.data?.dataReminder)
+      this.dataReminder = JSON.parse(JSON.stringify(this.dataReminder));
+    if (dt?.data?.dataEventControl)
+      this.dataEventControl = JSON.parse(JSON.stringify(this.dataEventControl));
+  }
+  ngOnInit(): void {
+    this.dataReminder.control = '0';
+  }
+
+  changeRadio(e) {}
+
+  valueChange(e) {
+    if (e.field === 'reminder0' && e.component.checked === true) {
+      this.dataReminder.control = '0';
+    } else if (e.field === 'reminder1' && e.component.checked === true) {
+      this.dataReminder.control = '1';
+    } else if (e.field === 'reminder2' && e.component.checked === true) {
+      this.dataReminder.control = '2';
+    }
+    this.detectorRef.detectChanges();
+  }
+  checkType(item, type){
+    let check = false;
+    if(item){
+      check = item?.split(';').some(x => x == type);
+    }
+    return check;
+  }
+
+  valueChangeAlertType(e, index){
+
+  }
+}
