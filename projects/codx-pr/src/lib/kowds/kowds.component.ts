@@ -156,7 +156,7 @@ export class KowdsComponent extends UIComponent {
           panelRightRef: this.tmpPanelRight,
           panelLeftRef: this.tmpPanelLeft,
           collapsed: true,
-          resizable: true,
+          resizable: true
         },
       },
     ];

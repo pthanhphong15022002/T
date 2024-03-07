@@ -1,0 +1,66 @@
+<!-- -----------------------------------KINH NGHIỆM TRƯỚC ĐÂY------------------------------------------------ -->
+<div class="container mb-4 bg-body">
+    <div class="row mt-2 mb-3">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="text-left">
+                <span class="icon-check icon-20 me-2"></span>
+                <codx-label name="lblPreviousExperience" [formModel]="formModel" [default]="'Kinh nghiệm trước đây'" class="fs-5-sm fw-bold text-primary text-uppercase">
+                </codx-label>
+            </div>
+            <ng-contaniner *ngIf="function && function?.write == true">
+                <div>
+                    <button type="button" class="btn btn-icon btn-white" (click)="openPopupEdit()">
+                        <span class="icon-edit icon-18"></span>
+                    </button>
+                </div>
+            </ng-contaniner>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div *ngIf="lstExperiences?.length > 0; else tmpEmptyData">
+            <div class="mt-6 ms-9">
+              <div class="timeline-exper">
+                <div class="timeline-exper-items">
+                  <ng-container *ngFor="let item of lstExperiences">
+                    <div class="timeline-exper-item" [ngClass]="lstExperiences ? 'has-action-menu' : ''">
+                      <div class="timeline-exper-nav w-100 d-flex pb-5">
+                        <div class="timeline-media w-125px min-w-125px">
+                            <div class="stepper-number fw-bold">
+                                <span *ngIf="item.fromDate">
+                                {{ item.fromDate | date : "MM/y" }}
+                                </span>
+                                <ng-container *ngIf="item.toDate">
+                                    <span class="mx-1">-</span>
+                                    <span>{{ item.toDate | date : "MM/y" }}</span>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <div class="me-3 timeline-exper-node">
+                          <span class="icon-fiber_manual_record text-gray-600"></span>
+                        </div>
+                        <div class="stepper-label min-w-350px has-action-menu hover-active bg-hover cursor-pointer">
+                          <div class="stepper-title line-clamp line-clamp-3 mb-1">
+                            <i class="icon-business icon-16 text-gray-700 me-2"></i>
+                            <span class="fs-6 fw-bold item-active">{{item?.companyName}}</span>
+                          </div>
+                          <div class="stepper-desc text-gray-500 ">{{item?.position}}</div>
+                          <div class="stepper-desc text-gray-500 ">{{item?.note}}</div>
+                          <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, item)" type="hover" [dataItem]="item"></codx-mfunc>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+</div>  
+
+<ng-template #tmpEmptyData>
+    <div class="ms-9 mt-5">
+      <span class="text-gray-700">
+        {{ "SYS011" | mssg | async }}
+      </span>
+    </div>
+  </ng-template>

@@ -148,6 +148,8 @@ import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts
 import { GetHeaderTextPipe } from './pipe/get-header-text.pipe';
 import { PersonalInfoComponent } from './employee-list/employee-info-detail/component/personal-info/personal-info.component';
 import { LegalInfoComponent } from './employee-list/employee-info-detail/component/legal-info/legal-info.component';
+import { ForeignWorkersComponent } from './employee-list/employee-info-detail/component/foreign-workers/foreign-workers.component';
+import { PreviousExperienceComponent } from './employee-list/employee-info-detail/component/previous-experience/previous-experience.component';
 export const routes: Routes = [
   {
     path: '',
@@ -468,7 +470,9 @@ const T_Component = [
   ViewDetailEquitComponent,
   HolidayComponent,
   PersonalInfoComponent,
-  LegalInfoComponent
+  LegalInfoComponent,
+  ForeignWorkersComponent,
+  PreviousExperienceComponent
  
 ];
 @NgModule({

@@ -957,11 +957,12 @@ export class PopupAddProcessComponent {
     } else {
       op.methodName = 'UpdateProcessAsync';
     }
-
+    let i = 0;
     let result = JSON.parse(JSON.stringify(this.data));
     result.steps.forEach((elm: any) => {
       delete elm.child;
-
+      elm.stepNo = i;
+      i++;
       if (typeof elm.settings === 'object')
         elm.settings = JSON.stringify(elm.settings);
     });
@@ -1006,7 +1007,6 @@ export class PopupAddProcessComponent {
 
   formatData(datas:any)
   {
-    debugger
     let data = datas.steps;
     this.countStage = data.length;
     data = data.sort((a, b) => a.stepNo - b.stepNo);

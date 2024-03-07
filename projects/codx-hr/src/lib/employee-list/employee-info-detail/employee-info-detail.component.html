@@ -239,18 +239,10 @@
                 </div>
               </div>
               <div class="w-30px min-w-30px">
-                <!-- cũ của hiệp -->
                 <span *ngIf="(crrIndex < totalCount -1) || (pageNum <= maxPageNum && crrIndex < listEmp.length - 1)"
                   type="button" class="btn btn-icon btn-light-primary rounded-circle" (click)="nextEmp()">
                   <i class="icon-arrow_forward_ios icon-16"></i>
                 </span>
-                <!-- tiến fix bug mất nút next khi từ view grid qua -->
-                <!-- <span *ngIf="(pageNum < maxPageNum - 1) || ((pageNum == maxPageNum - 1 || pageNum == maxPageNum) && crrIndex < listEmp.length - 1)"
-              type="button"
-              class="btn btn-icon btn-light-primary rounded-circle"
-              (click)="nextEmp()">
-              <i class="icon-arrow_forward_ios icon-16"></i>
-            </span> -->
               </div>
             </div>
             <div class="d-flex flex-center">
@@ -267,11 +259,6 @@
               *ngIf="infoPersonal">
               {{this.infoPersonal.PositionName}}
             </div>
-            <!-- [innerHTML]="
-                infoPersonal.positionID
-                  | formatvalue : eInfoFormModel : 'positionID'
-                  | async
-              " -->
             <div class="d-flex flex-column flex-center">
               <div [title]="eInfoHeaderText?.OrgUnitID" class="text-gray-500 mb-1" *ngIf="infoPersonal">{{orgUnitStr}}
               </div>
@@ -279,22 +266,7 @@
               <div [title]="eInfoHeaderText?.DepartmentID" class="text-gray-500 mb-1"
                 *ngIf="infoPersonal && orgUnitStr != DepartmentStr">{{DepartmentStr}}</div>
             </div>
-            <!-- <div style="line-height: 20px;" class="text-dark d-flex flex-wrap h-40px border-gray-150 line-clamp line-clamp-2"> -->
-            <!-- <div
-                  *ngFor="let org of lstOrg; let i = index"
-                  class="d-flex align-items-center"
-                >
-                  <span
-                    class="icon-i-info-circle-fill icon-4 mx-2 text-gray-500"
-                    *ngIf="i > 0"
-                  ></span>
-                  <span>{{ org.orgUnitName }}</span>
-                </div> -->
-
-            <!-- </div> -->
           </div>
-          <!-- </div> -->
-
           <div class="user-menu scroll-y w-100 border-top">
             <div class="d-flex flex-column ps-4 pt-3 pb-1 border-bottom" *ngIf="infoPersonal && LoadedEInfo == true">
               <div class="d-flex flex-wrap mb-1">
@@ -402,13 +374,12 @@
   </div>
 </ng-template>
 
-<!-- pane_1 Sơ yếu lí lịch -->
-
+<!-- panel Sơ yếu lí lịch -->
 <ng-template #curriculumVitae>
   <div class="tab-scroll mb-4">
     <div class="tab-horizone bg-white h-od-tab">
       <ul class="nav nav-tabs px-4">
-        <ng-container *ngFor="let item of lstFuncCurriculumVitae; let i = index">
+        <ng-container *ngFor="let item of lstFuncCurriculumVitae">
           <li class="nav-item" (click)="navChange(item.functionID, 0, $event.target)">
             <a class="nav-link" [ngClass]="item.functionID == active[0] ? 'active' : ''">
               <div class="text-uppercase fw-bold">{{ item.customName }}</div>
@@ -422,19 +393,12 @@
   <div class="pw-content w-100 scroll-y" data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto"
     data-kt-scroll-dependencies=".pw-profile,.pw-menu" data-kt-scroll-wrappers=".employee-container"
     data-kt-scroll-offset="0px" scrollSpy [spiedTags]="['DIV']" (sectionChange)="onSectionChange($event, 0)">
-    <!-- <div
-      class="user-content flex-row-fluid"
-      scrollSpy
-      [spiedTags]="['DIV']"
-      (sectionChange)="onSectionChange($event)"
-    > -->
     <ng-container>
       <!-- Thông tin bản thân -->
       <div class="user-profile overview d-block" [id]="eInfoFuncID"
         *ngIf="curriculumVitaePermission.eInfoFuncID.view == true">
         <hr-personal-info *ngIf="eInfoFunc" [employeeID]="employeeID" [function]="eInfoFunc"></hr-personal-info>
       </div>
-
       <!--Thông tin pháp lý -->
       <div class="user-profile overview d-block" [id]="legalInfoFuncID"
         *ngIf="curriculumVitaePermission.legalInfoFuncID.view == true">
@@ -650,15 +614,6 @@
                         ">
 
                     </span>
-
-                    <!-- <codx-vll
-                    class="badge"
-                    [field]="'AccountBankID'"
-                    [value]="infoPersonal?.accountBankID"
-                    [formModel]="eInfoFormModel"
-                    [showText]="true"
-                    [showBgColor]="false"
-                  ></codx-vll> -->
                   </div>
                 </div>
               </div>
@@ -740,9 +695,6 @@
                 </div>
                 <div class="d-flex align-items-center"
                   [innerHTML]="crrPassport?.passportType | formatvalue : ePassportFormModel : 'passportType'| async">
-                  <!-- <span [ngClass]="crrPassport ? 'fw-bold text-dark' : ''">
-                      {{ crrPassport?.issuedDate | fmDT }}
-                    </span> -->
                 </div>
               </div>
               <div class="col has-action-menu">
@@ -755,9 +707,6 @@
                     [innerHTML]="crrPassport?.expiredDate | formatvalue : ePassportFormModel : 'expiredDate'| async"></span>
                   <span *ngIf="passPortIsExpired == true" class="icon-notifications" [style.color]="'#F64E60'"
                     [title]="'Hết hạn'"></span>
-                  <!-- <span [ngClass]="crrPassport ? 'fw-bold text-dark' : ''">
-                      {{ crrPassport?.expiredDate | fmDT }}
-                    </span> -->
                 </div>
                 <codx-mfunc *ngIf="crrPassport && fromWS == false && infoPersonal && infoPersonal.status != '90'"
                   [formModel]="ePassportFormModel" (clickMF)="clickMF($event, crrPassport, 'passport')" type="hover"
@@ -770,28 +719,7 @@
                 </codx-mfunc>
               </div>
             </div>
-
-            <!-- <div class="mt-4 profile-grid">
-                  <codx-gridview
-                    *ngIf="passportColumnGrid && ePassportFormModel"
-                    #passportGridview
-                    [formModel]="ePassportFormModel"
-                    [columnsGrid]="passportColumnGrid"
-                    [service]="'HR'"
-                    [assemblyName]="'Core'"
-                    [className]="'DataBusiness'"
-                    [method]="'LoadDataAsync'"
-                    [predicates]="'EmployeeID=@0'"
-                    [dataValues]="employeeID"
-                    [dataService]="dataService"
-                    [pageSize]="numPageSizeGridView"
-                    [rowHeight]="40"
-                    height="auto"
-                    [sort]="[passportSortModel]"
-                  ></codx-gridview>
-                </div> -->
           </div>
-
           <hr />
           <div #Visa class="mb-1"
             *ngIf="eVisaFormModel && curriculumVitaePermission.legalInfoFuncID.visaFuncID.view == true">
@@ -812,8 +740,6 @@
               </div>
             </div>
           </div>
-
-
           <div class="row mb-2 py-2 hover-active bg-hover cursor-pointer">
             <div class="row mb-5 ">
               <div class="col">
@@ -852,12 +778,6 @@
                   </codx-label>
                 </div>
                 <div class="d-flex align-items-center">
-                  <!-- <span [ngClass]="crrVisa ? 'fw-bold text-dark' : ''">
-                        {{ crrVisa?.effectedDate | fmDT }} -
-                        {{ crrVisa?.expiredDate | fmDT }}
-
-                        
-                      </span> -->
                   <span [innerHTML]="crrVisa?.effectedDate
                         | formatvalue : eVisaFormModel : 'effectedDate'
                         | async">
@@ -915,30 +835,9 @@
               </div>
             </div>
           </div>
-
-          <!-- <div class="mt-4 profile-grid">
-                  <codx-gridview
-                    *ngIf="visaColumnGrid && eVisaFormModel"
-                    #visaGridview
-                    [formModel]="eVisaFormModel"
-                    [columnsGrid]="visaColumnGrid"
-                    [service]="'HR'"
-                    [assemblyName]="'Core'"
-                    [className]="'DataBusiness'"
-                    [method]="'LoadDataAsync'"
-                    [predicates]="'EmployeeID=@0'"
-                    [dataValues]="employeeID"
-                    [pageSize]="numPageSizeGridView"
-                    [rowHeight]="40"
-                    height="auto"
-                    [sort]="[visaSortModel]"
-                  ></codx-gridview>
-                </div> -->
         </div>
       </div>
-
       <!-- Lao động nước ngoài -->
-
       <div class="user-profile overview d-block" [id]="foreignWorkerFuncID"
         *ngIf="curriculumVitaePermission.foreignWorkerFuncID.view == true">
         <div class="rounded-2 p-5 bg-white mb-4" *ngIf="eInfoFormModel && LoadedEInfo == true">
@@ -1110,29 +1009,9 @@
                 </div>
               </div>
             </div>
-
-            <!-- <div class="mt-4 profile-grid">
-              <codx-gridview
-                *ngIf="workPermitColumnGrid && eWorkPermitFormModel"
-                #workPermitGridview
-                [formModel]="eWorkPermitFormModel"
-                [columnsGrid]="workPermitColumnGrid"
-                [service]="'HR'"
-                [assemblyName]="'Core'"
-                [className]="'DataBusiness'"
-                [method]="'LoadDataAsync'"
-                [predicates]="'EmployeeID=@0'"
-                [dataValues]="employeeID"
-                [pageSize]="numPageSizeGridView"
-                [rowHeight]="40"
-                height="auto"
-                [sort]="[workPermitSortModel]"
-              ></codx-gridview>
-            </div> -->
           </div>
         </div>
       </div>
-
       <!-- Thông tin Đảng - Đoàn -->
       <div class="user-profile overview d-block" [id]="ePartyFuncID"
         *ngIf="curriculumVitaePermission.ePartyFuncID.view == true">
@@ -1245,8 +1124,6 @@
                       [imgCss]="'me-3 '" [titleTmp]="titleTmp" [subTitleTmp]="subtitleTmp"
                       [formModel]="eFamilyFormModel" [dataItem]="item" [imgOn]="item?.modifiedOn" [typeMF]="'hover'"
                       [baseHeaderRightTmp]="baseHeaderRightTmp">
-                      <!-- [title]="item?.relationName"
-                    [titleCss]="'fs-6 mb-1 item-active'" -->
                     </codx-temp-full>
 
                     <codx-temp-full *ngIf="fromWS == true || infoPersonal && infoPersonal.status == '90'"
@@ -1257,8 +1134,6 @@
                       [formModel]="eFamilyFormModel" [dataItem]="item" [imgOn]="item?.modifiedOn" [typeMF]="'hover'"
                       [baseHeaderRightTmp]="baseHeaderRightTmp"
                       (changeDataMF)="handleShowHideMfWs($event, eFamiliesFunc)">
-                      <!-- [title]="item?.relationName"
-                    [titleCss]="'fs-6 mb-1 item-active'" -->
                     </codx-temp-full>
                     <ng-template #titleTmp let-data>
                       <div class="fs-6 mb-1 item-active" (click)="clickViewDetail(data, eFamiliesFuncID)">
@@ -1276,15 +1151,6 @@
                               | async
                               }}</span>
                             <span>
-                              <!-- <codx-label
-                                class="text-gray-600 label-colon ms-1"
-                                fiedName="Birthday"
-                                [formModel]="eFamilyFormModel"
-                              >
-                              </codx-label>
-                              <span class="text-dark" *ngIf="item.birthday">
-                                {{ item.birthday | fmDT }}</span
-                              > -->
                               <span *ngIf="data.birthday">
                                 <codx-label [default]="'| Tuổi:'" [name]="'lblNameEFam'" [formModel]="formModel">
                                 </codx-label>
@@ -1300,17 +1166,6 @@
                                   | formatvalue : eFamilyFormModel : 'mobile'
                                   | async
                               "></span>
-
-
-                          <!-- <span class="mb-1"
-                          [innerHTML]="
-                          data?.personalEmail
-                                      | formatvalue
-                                        : eFamilyFormModel
-                                        : 'personalEmail'
-                                      | async
-                                  "
-                          ></span> -->
                         </div>
                       </div>
                     </ng-template>
@@ -1367,11 +1222,11 @@
                         <div class="timeline-media w-125px min-w-125px">
                           <span class="stepper-number fw-bold">
                             <span *ngIf="item.fromDate">
-                              {{ item.fromDate | date : "MM/y" }}
+                              {{ item.fromDate | date : "MM/yyyy" }}
                             </span>
                             <span *ngIf="item.toDate">
                               -
-                              {{ item.toDate | date : "MM/y" }}
+                              {{ item.toDate | date : "MM/yyyy" }}
                             </span>
                           </span>
                         </div>
@@ -1402,89 +1257,20 @@
                           </codx-mfunc>
                         </div>
                       </div>
-                      <!-- <div class="timeline-content mx-auto">
-                        <div class="d-flex flex-wrap">
-                          <ng-container *ngFor="let approver of lstFamily">
-                            <div class="border border-1 border-gray-300 rounded min-w-250px mw-250px me-4 mb-2">
-                              <codx-temp-full cardCss="card-template p-3" *ngIf="
-                                  approver.roleType=='U' ||
-                                  approver.roleType == 'PA' 
-                                " [imageId]="approver.approver" [title]="approver.name" [subTitle]="
-                                  approver.position ?? lstFamily
-                                " [status]="lstFamily.status" [imageObjType]="'AD_Users'" [modeImgs]="true"
-                                [titleLine]="3" [footer]="footer1" [dataItem]="item">
-                              </codx-temp-full>
-  
-                              <codx-temp-full cardCss="card-template p-3" *ngIf="                                  
-                              approver.roleType!='U' &&
-                              approver.roleType != 'PA' 
-                                " [imageSrc]="
-                                  './assets/themes/sys/default/img/' +
-                                  (item?.icon ? item?.icon : 'share_default.svg')
-                                " imgCss="me-3 p-3 user-mini-icon w-40px h-40px" [title]="
-                                  approver.approver
-                                    | vll : 'ES014' : 'text'
-                                    | async
-                                " [subTitle]="
-                                  approver.approver
-                                    | vll : 'ES014' : 'text'
-                                    | async
-                                " [status]="lstFamily.status" [modeImgs]="true" [titleLine]="3" [footer]="footer1"
-                                [dataItem]="item">
-                              </codx-temp-full>
-  
-                              <ng-template #footer1 let-data>
-                                <div class="d-flex align-items-center justify-content-end">
-                                  <span class="icon-access_time icon-14 me-1"></span>hahaha giờ
-                                </div>
-                              </ng-template>
-                            </div>
-                          </ng-container>
-                        </div>
-                      </div> 
-                    </div>
-                    <div class="timeline-item" *ngIf="index == lstFamily.length - 1 && !lstFamily">
-                      <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex">
-                        <div class="step-add cursor-pointer w-30px h-30px" title="Thêm mới" (click)="initPersonalInfo()">
-                          <span class="stepper-number">+</span>
-                        </div>
-                      </div>
-                    </div>  -->
                     </div>
                   </ng-container>
                 </div>
               </div>
             </div>
           </div>
-          <!-- <div class="mb-1 mt-5">
-            <codx-gridview
-              *ngIf="eExperienceColumnGrid"
-              #eExperienceGridView
-              [sort]="[experienceSortModel]"
-              [formModel]="eExperienceFormModel"
-              [columnsGrid]="eExperienceColumnGrid"
-              [service]="'HR'"
-              [assemblyName]="'Core'"
-              [className]="'DataBusiness'"
-              [method]="'LoadDataAsync'"
-              [predicates]="'EmployeeID=@0'"
-              [dataValues]="employeeID"
-              [pageSize]="numPageSizeGridView"
-              [entityName]="'HR_EExperiences'"
-              [emptyTemplate]="emptyDataTemplate"
-              height="auto"
-            ></codx-gridview>
-          </div> -->
         </div>
       </div>
-
       <div class="div_final"></div>
     </ng-container>
-    <!-- </div> -->
   </div>
 </ng-template>
 
-<!-- pane_2 Thông tin công việc-->
+<!-- panel Thông tin công việc-->
 <ng-template #jobInfo>
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul class="nav nav-tabs px-4">
@@ -2073,7 +1859,7 @@
   </div>
 </ng-template>
 
-<!-- pane_3 Lương & Phúc lợi -->
+<!-- panel Lương & Phúc lợi -->
 <ng-template #benefit>
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul class="nav nav-tabs px-4">
@@ -2402,7 +2188,7 @@
   </div>
 </ng-template>
 
-<!-- pane_4 Quá trình làm việc-->
+<!-- panel Quá trình làm việc-->
 <ng-template #workingProcess>
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul class="nav nav-tabs px-4">
@@ -2866,7 +2652,7 @@
   </div>
 </ng-template>
 
-<!-- pane_5 Kiến thức-->
+<!-- panel Kiến thức-->
 <ng-template #knowledge>
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul class="nav nav-tabs px-4">
@@ -3054,7 +2840,7 @@
   </div>
 </ng-template>
 
-<!-- pane_6 Sức khỏe-->
+<!-- panel Sức khỏe-->
 <ng-template #healthInfo>
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul class="nav nav-tabs px-4">
@@ -3217,7 +3003,7 @@
   </div>
 </ng-template>
 
-<!-- pane_7 Thôi việc-->
+<!-- panel Thôi việc-->
 <ng-template #quitJob>
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul class="nav nav-tabs px-4">
