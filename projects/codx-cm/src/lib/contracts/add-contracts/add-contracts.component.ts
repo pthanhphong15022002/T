@@ -703,7 +703,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       const startDate = new Date(this.contracts?.effectiveFrom) || new Date();
       let interval = parseInt(event?.data || 0);
       this.contracts.effectiveTo = new Date(
-        startDate.setMonth(startDate.getMonth() + interval)
+        startDate.setFullYear(startDate.getFullYear() + interval)
       );
     }
     this.changeDetectorRef.markForCheck();
@@ -899,37 +899,50 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     const endDate = this.contracts?.effectiveTo
       ? new Date(this.contracts?.effectiveTo)
       : null;
-    if (event?.field == 'effectiveTo' && this.isLoadDate) {
-      if (endDate && startDate > endDate) {
-        // this.isSaveTimeTask = false;
-        this.isLoadDate = !this.isLoadDate;
-        this.notiService.notifyCode(
-          'CM010',
-          0,
-          this.view['effectiveTo'],
-          this.view['effectiveFrom']
-        );
-        return;
-      } else {
-        // this.isSaveTimeTask = true;
-      }
-    } else {
-      this.isLoadDate = !this.isLoadDate;
-    }
 
-    if (
-      (event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') &&
-      startDate &&
-      endDate
-    ) {
-      let startYear = startDate.getFullYear();
-      let endYear = endDate.getFullYear();
-      let startMonth = startDate.getMonth();
-      let endMonth = endDate.getMonth();
+    // if (event?.field == 'effectiveFrom' && this.contracts?.interval) { 
+    //   let interval = parseInt(this.contracts?.interval) || 0;
+    //   this.contracts.effectiveTo = new Date(
+    //     startDate.setFullYear(startDate.getFullYear() + interval)
+    //   );
+    // }
+    // if (event?.field == 'effectiveTo' && this.contracts?.interval) { 
+    //   let interval = parseInt(this.contracts?.interval) || 0;
+    //   this.contracts.effectiveFrom = new Date(
+    //     endDate.setFullYear(endDate.getFullYear() - interval)
+    //   );
+    // }
+    // if (event?.field == 'effectiveTo' && this.isLoadDate) {
+    //   if (endDate && startDate > endDate) {
+    //     // this.isSaveTimeTask = false;
+    //     this.isLoadDate = !this.isLoadDate;
+    //     this.notiService.notifyCode(
+    //       'CM010',
+    //       0,
+    //       this.view['effectiveTo'],
+    //       this.view['effectiveFrom']
+    //     );
+    //     return;
+    //   } else {
+    //     // this.isSaveTimeTask = true;
+    //   }
+    // } else {
+    //   this.isLoadDate = !this.isLoadDate;
+    // }
 
-      let interval = (endYear - startYear) * 12 + (endMonth - startMonth);
-      this.contracts.interval = interval.toFixed(1);
-    }
+    // if (
+    //   (event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') &&
+    //   startDate &&
+    //   endDate
+    // ) {
+    //   let startYear = startDate.getFullYear();
+    //   let endYear = endDate.getFullYear();
+    //   let startMonth = startDate.getMonth();
+    //   let endMonth = endDate.getMonth();
+
+    //   let interval = (endYear - startYear) * 12 + (endMonth - startMonth);
+    //   this.contracts.interval = interval.toFixed(1);
+    // }
   }
 
   //#endregion

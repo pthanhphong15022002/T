@@ -121,7 +121,7 @@ export class PopupAddPayrollListComponent implements OnInit,AfterContentInit{
           .subscribe((res:any) => {
             if(res && res?.length > 0 && res[0])
             {
-              this.downloadFile(res[1]);
+              this.downloadFile(res[1],this.hrTemplate.hrTemplateName);
               this.notiSV.notifyCode("SYS006");
               this.dialog.close(this.data);
             }
@@ -147,9 +147,9 @@ export class PopupAddPayrollListComponent implements OnInit,AfterContentInit{
     return true;
   }
 
-  downloadFile(data: any) {
+  downloadFile(data: any,fielName:string) {
     var sampleArr = this.base64ToArrayBuffer(data[0]);
-    this.saveByteArray(sampleArr);
+    this.saveByteArray(sampleArr,fielName);
   }
 
   base64ToArrayBuffer(base64) {
@@ -163,7 +163,7 @@ export class PopupAddPayrollListComponent implements OnInit,AfterContentInit{
     return bytes;
   }
 
-  saveByteArray(byte) {
+  saveByteArray(byte,fielName) {
     var dataType =
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
     var blob = new Blob([byte], {
@@ -171,8 +171,7 @@ export class PopupAddPayrollListComponent implements OnInit,AfterContentInit{
     });
     var link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
-    var fileName = "test.xlsx";
-    link.download = fileName;
+    link.download = fielName;
     link.click();
   }
 }

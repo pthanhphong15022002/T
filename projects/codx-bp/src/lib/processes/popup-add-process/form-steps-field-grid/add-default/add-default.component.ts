@@ -93,7 +93,6 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
 
   settingAdvancedTask(){
     let option = new DialogModel();
-    option.IsFull = true;
     option.zIndex = 1010;
     option.FormModel = this.formModel;
     var obj = {
@@ -103,8 +102,8 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
     let popupDialog = this.callFuc.openForm(
       FormSettingAdvancedTasksComponent,
       '',
-      null,
-      null,
+      900,
+      800,
       '',
       obj,
       '',

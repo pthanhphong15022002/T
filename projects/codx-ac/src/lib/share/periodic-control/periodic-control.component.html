@@ -3,6 +3,7 @@
   (requestEnded)="requestEnded($event)" (viewChanged)="viewChanged($event)">
 </codx-views>
 <ng-template #template let-data>
+  
   <ng-container *ngIf="setting">
     <div style="position: absolute;margin-top: -50px;right: 0;" class="d-flex align-items-center justify-content-between p-3 mb-2">
       <div class="d-flex align-items-center w-100 justify-content-end">
@@ -86,7 +87,7 @@
                                 <span #runDate [innerHTML]="item?.runDate | dateformat"></span>
                               </div>
                               <div>
-                                <codx-vll [name]="'AC174'" [value]="data?.status" [showText]="true" [showBgColor]="true"
+                                <codx-vll [name]="'AC174'" [value]="item?.status" [showText]="true" [showBgColor]="true"
                                   class="badge badge-light-primary badge-sm mt-1">
                                 </codx-vll>
                               </div>

@@ -400,6 +400,8 @@ const T_Component: Type<any>[] = [
   //View File
   CodxViewFileComponent,
   CodxAuthFileComponent,
+  ContentEmailComponent,
+
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -428,7 +430,6 @@ const T_Pipe: Type<any>[] = [
     LayoutComponent,
     T_Pipe,
     ViewContentScheduleMeetingsComponent,
-    ContentEmailComponent,
   ],
   exports: [T_Component, T_Pipe, CodxCommonModule],
   imports: [
