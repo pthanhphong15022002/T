@@ -110,5 +110,12 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
       '',
       option
     );
+    popupDialog.closed.subscribe((e) => {
+      if (e?.event && e?.event.length > 0) {
+        this.data.reminder = e.event[0];
+        this.data.eventControl = e.event[1];
+        // this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 }
