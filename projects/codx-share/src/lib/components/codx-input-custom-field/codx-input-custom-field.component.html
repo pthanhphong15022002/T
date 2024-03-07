@@ -154,7 +154,6 @@
       type="text"
       [placeholder]="customField.note || ''"
       [crrValue]="customField.dataValue || ''"
-      (keyUpEnter)="valueChange($event)"
       (valueChange)="valueChange($event)"
       [disabled]="disable"
     >
@@ -166,7 +165,6 @@
       format="ed2"
       [placeholder]="customField.note || ''"
       [crrValue]="customField.dataValue || ''"
-      (keyUpEnter)="valueChange($event)"
       (valueChange)="valueChange($event)"
       [disabled]="disable"
     >
@@ -180,7 +178,6 @@
         [showSpinButton]="false"
         [crrValue]="customField.dataValue"
         [placeholder]="customField.note || ''"
-        (keyUpEnter)="valueChange($event)"
         (valueChange)="valueChange($event)"
         [disabled]="disable"
       ></codx-input>
@@ -208,7 +205,6 @@
         [refValue]="customField.refValue"
         [placeholder]="customField.note || ''"
         [crrValue]="customField.dataValue || ''"
-        (keyUpEnter)="valueChangeCbx($event)"
         (valueChange)="valueChangeCbx($event)"
         [disabled]="disable"
       >
@@ -716,7 +712,6 @@
       [refValue]="customField.refValue"
       [placeholder]="customField.note || ''"
       [crrValue]="customField.dataValue || ''"
-      (keyUpEnter)="valueChangeCbxPA($event)"
       (valueChange)="valueChangeCbxPA($event)"
       [disabled]="disable"
     >
@@ -769,7 +764,6 @@
       type="text"
       [placeholder]="customField.note || customField.dataFormat"
       [crrValue]="customField.dataValue || ''"
-      (keyUpEnter)="valueChange($event)"
       (valueChange)="valueChange($event)"
       [disabled]="disable"
     >
