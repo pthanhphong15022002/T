@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
+import { CodxInputComponent, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
 import {
   BP_Processes_Steps_EventControl,
   BP_Processes_Steps_Reminder,
@@ -33,7 +33,7 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
   dataEventControl = new BP_Processes_Steps_EventControl();
   vllDurations = [];
   countTime = 1;
-  checkValidate: boolean = true;
+  checkValidate: boolean = false;
   templateID = '';
   dataMail: any = {};
   dialogETemplate: FormGroup;
@@ -131,7 +131,7 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
   }
 
   addNNewReminder() {
-    // this.checkValidate = this.checkValidateTimes(true);
+    // this.checkValidate = this.checkValidateTimes(false);
     // if (this.checkValidate == false) {
     //   return;
     // }
@@ -142,7 +142,7 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
     obj['email'] = '';
     this.vllDurations.push(obj);
     this.countTime++;
-    // this.checkValidate = false;
+    this.checkValidate = false;
     this.detectorRef.detectChanges();
   }
 

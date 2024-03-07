@@ -79,7 +79,7 @@
   </div>
 </ng-template>
 <ng-template #tabReminderOver>
-  <div class="border-setting">
+  <div class="border-setting cursor-pointer" (click)="valueChange({field: 'reminder0', component: {checked: true}})">
     <div class="d-flex justify-content-between w-100">
       <div class="d-flex flex-column">
         <codx-label
@@ -102,7 +102,7 @@
       ></codx-input>
     </div>
   </div>
-  <div class="border-setting flex-column mt-2">
+  <div class="border-setting flex-column cursor-pointer mt-2" (click)="valueChange({field: 'reminder1', component: {checked: true}})">
     <div class="d-flex justify-content-between w-100">
       <div class="d-flex flex-column">
         <codx-label
@@ -215,7 +215,6 @@
                 type="valuelist"
                 [crrValue]="''"
                 (valueChange)="valueChangeAlertType($event, -1)"
-                [disabled]="!checkValidate"
               ></codx-input>
             </td>
             <td>
@@ -227,7 +226,7 @@
                     [class]="'check-circle'"
                     [crrValue]="checkType(null, '1') ?? false"
                     (valueChange)="valueChangeAlertType($event, -1)"
-                    [disabled]="!checkValidate"
+                    [disabled]="true"
                   ></codx-input>
                   <codx-label
                     default="Thông báo"
@@ -243,7 +242,7 @@
                     type="checkbox"
                     [crrValue]="checkType(null, '2') ?? false"
                     (valueChange)="valueChangeAlertType($event, -1)"
-                    [disabled]="!checkValidate"
+                    [disabled]="true"
                   ></codx-input>
                   <codx-label
                     default="Mail"
@@ -283,7 +282,7 @@
       </div>
     </ng-container>
   </div>
-  <div class="border-setting flex-column mt-2">
+  <div class="border-setting flex-column cursor-pointer mt-2" (click)="valueChange({field: 'reminder2', component: {checked: true}})">
     <div class="d-flex justify-content-between w-100">
       <div class="d-flex flex-column">
         <codx-label
