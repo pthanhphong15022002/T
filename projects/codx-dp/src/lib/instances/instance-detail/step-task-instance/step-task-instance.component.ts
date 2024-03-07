@@ -20,6 +20,7 @@ import {
   DialogRef,
   NotificationsService,
 } from 'codx-core';
+import { tmpInstancesStepsReasons } from 'projects/codx-cm/src/lib/models/tmpModel';
 import { CodxStepTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-task/codx-step-task.component';
 
 @Component({
@@ -251,29 +252,36 @@ export class StepTaskInstanceComponent
     });
   }
   async getListReason(processId, applyFor) {
-    // var datas = [processId, applyFor];
-    // this.codxCmService.getListReasonByProcessId(datas).subscribe((res) => {
-    //   if (res) {
-    //     // this.listStepSuccess = this.convertStepsReason(res[0]);
-    //     // this.listStepFail = this.convertStepsReason(res[1]);
-    //     this.listStepReason = this.getReasonByStepId(this.dataCM.status);
-    //   }
-    // });
+    this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetListReasonByProcessIdAsync',
+      [processId, applyFor]
+    ).subscribe((res) => {
+      if (res) {
+        if (this.instance?.status == '3' || this.instance?.status == '4'){
+          this.listStepReason = this.convertStepsReason(res[0]);
+        }
+        if (this.instance?.status == '5' || this.instance?.status == '6'){
+          this.listStepReason = this.convertStepsReason(res[1]);
+        }
+      }
+    });
   }
 
   convertStepsReason(reasons: any) {
-    // var listReasonInstance = [];
-    // for (let item of reasons) {
-    //   var reasonInstance = new tmpInstancesStepsReasons();
-    //   reasonInstance.processID = this.dataCM.processID;
-    //   reasonInstance.stepID = item.stepID;
-    //   reasonInstance.instanceID = this.dataCM.refID;
-    //   reasonInstance.reasonName = item.reasonName;
-    //   reasonInstance.reasonType = item.reasonType;
-    //   reasonInstance.createdBy = item.createdBy;
-    //   listReasonInstance.push(reasonInstance);
-    // }
-    //   return listReasonInstance;
+    var listReasonInstance = [];
+    for (let item of reasons) {
+      var reasonInstance = new tmpInstancesStepsReasons();
+      reasonInstance.processID = this.instance?.processID;
+      reasonInstance.stepID = item.stepID;
+      reasonInstance.instanceID = this.instance?.recID;
+      reasonInstance.reasonName = item.reasonName;
+      reasonInstance.reasonType = item.reasonType;
+      reasonInstance.createdBy = item.createdBy;
+      listReasonInstance.push(reasonInstance);
+    }
+      return listReasonInstance;
   }
 
   getNameReason(isReason) {
@@ -327,20 +335,25 @@ export class StepTaskInstanceComponent
   onSaveReason() {
     if (this.listReasonsClick.length > 0 && this.listReasonsClick) {
       var data = [
-        this.instance.refID,
+        this.instance.recID,
         this.stepIdReason,
         this.listReasonsClick,
       ];
-      // this.codxCmService.updateListReason(data).subscribe((res) => {
-      //   if (res) {
-      //     this.listStepReasonValue = JSON.parse(
-      //       JSON.stringify(this.listReasonsClick)
-      //     );
-      //     this.dialogPopupReason.close();
-      //     this.notiService.notifyCode('SYS007');
-      //     return;
-      //   }
-      // });
+      this.api.exec<any>(
+        'DP',
+        'InstancesStepsBusiness',
+        'UpdateReasonStepAsync',
+        data
+      ).subscribe((res) => {
+        if (res) {
+          this.listStepReasonValue = JSON.parse(
+            JSON.stringify(this.listReasonsClick)
+          );
+          this.dialogPopupReason.close();
+          this.notiService.notifyCode('SYS007');
+          return;
+        }
+      });
     }
   }
   changeReasonMF(e) {

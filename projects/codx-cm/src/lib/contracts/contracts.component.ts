@@ -401,7 +401,7 @@ export class ContractsComponent extends UIComponent {
         this.moveReason(data, false);
         break;
       case 'CM0204_14'://phan cong nguoi phu trach
-        this.popupOwnerRoles(data);
+        this.changeOwner(data);
         break;
       //export core làm
       case 'SYS002':
@@ -1443,8 +1443,7 @@ export class ContractsComponent extends UIComponent {
     e && this.moveReason(this.dataSelected, true);
   }
 
-  popupOwnerRoles(data) {
-    let owner = data?.owner;
+  changeOwner(contract) {
     var formMD = new FormModel();
     let dialogModel = new DialogModel();
     formMD.funcID = this.view?.formModel?.funcID;
@@ -1454,18 +1453,18 @@ export class ContractsComponent extends UIComponent {
     dialogModel.zIndex = 1011;
     dialogModel.FormModel = formMD;
     var obj = {
-      recID: data?.recID,
-      refID: data?.refID,
-      processID: data?.processID,
-      stepID: data?.stepID,
-      data: data,
-      gridViewSetup: null,
-      formModel: this.view.formModel,
       applyFor: '4',
+      data: contract,
+      gridViewSetup: null,
+      buid: contract.buid,
+      owner: contract.owner,
+      recID: contract?.recID,
+      refID: contract?.refID,
+      stepID: contract?.stepID,
+      processID: contract?.processID,
+      formModel: this.view.formModel,
       titleAction: this.actionName,
-      owner: data.owner,
-      applyProcess: data?.applyProcess,
-      buid: data.buid,
+      applyProcess: contract?.applyProcess,
     };
     var dialog = this.callfc.openForm(
       PopupAssginDealComponent,
