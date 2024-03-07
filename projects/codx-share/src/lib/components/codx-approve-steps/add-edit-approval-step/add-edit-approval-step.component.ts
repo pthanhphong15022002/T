@@ -65,6 +65,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   currentApproveMode: string;
 
   confirmControl: string = '0';
+  negative: string = '0';
   allowEditAreas: boolean;
   positionDefault: string = '';
 
@@ -148,6 +149,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
 
     this.allowEditAreas = data?.data?.allowEditAreas;
     this.confirmControl = data?.data?.confirmControl;
+    this.negative = data?.data?.negative ?? "0";
 
     this.eSign = data?.data?.eSign ?? false;
     let vllStepTypeName = this.eSign ? 'ES002' : 'ES026';
@@ -315,6 +317,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
           if (this.lstApprover?.length > 0) {
             this.lstApprover.forEach((element) => {
               this.confirmControl = element?.confirmControl ?? '0';
+              this.negative = element?.negative ?? '0';
               this.allowEditAreas = element?.allowEditAreas ?? false;
 
               if (element.roleType == 'PA' || element.roleType == 'PE') element.write = true;
@@ -406,6 +409,9 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
         case 'confirmControl':
           this.newAppr.confirmControl = evt?.data ? '1' : '0';
           break;
+          case 'negative':
+            this.newAppr.negative = evt?.data ? '1' : '0';
+            break;
         default:
           this.newAppr[evt?.field] = evt?.data;
           break;
@@ -419,6 +425,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     this.newAppr.stepType = 'A2';
     this.newAppr.idCardType = '1';
     this.newAppr.confirmControl = this.confirmControl ?? '0';
+    this.newAppr.negative= this.negative ?? '0';
     this.newAppr.allowEditAreas = this.allowEditAreas ?? true;
     this.newAppr.createdBy= this.user?.userID;
     this.indexAppr=-1;
@@ -434,6 +441,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
           this.newAppr.stepType = 'A2';
           this.newAppr.idCardType = '1';
           this.newAppr.confirmControl = this.confirmControl ?? '0';
+          this.newAppr.negative = this.negative ?? '0';
           this.newAppr.allowEditAreas = this.allowEditAreas ?? true;
           this.newAppr.createdBy= this.user?.userID;
           this.cr.detectChanges();
@@ -718,6 +726,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       return;
     }
     this.lstApprover.forEach((appr) => {
+      appr.negative = appr?.negative ?? this.negative;
       appr.confirmControl = appr?.confirmControl ?? this.confirmControl;
       appr.allowEditAreas = appr?.allowEditAreas ?? this.allowEditAreas;
       appr.stepType = appr?.stepType ?? this.data?.stepType;
