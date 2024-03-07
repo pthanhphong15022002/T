@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  Input,
   OnInit,
   Optional,
   Renderer2,
@@ -40,6 +41,8 @@ import axios from 'axios';
   styleUrls: ['./codx-email.component.scss'],
 })
 export class CodxEmailComponent implements OnInit {
+  @Input() showFooter = true;
+
   @ViewChild('addTemplateName') addTemplateName: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('dataView', { static: false }) dataView: ElementRef;
@@ -100,7 +103,7 @@ export class CodxEmailComponent implements OnInit {
 
   email?: email;
   option?: option;
-  dataAI:any;
+  dataAI: any;
   public cssClass: string = 'e-list-template';
 
   //(1)(2)(3)(4) => ưu tiên get danh sách
@@ -129,6 +132,7 @@ export class CodxEmailComponent implements OnInit {
     if (data?.data) {
       this.templateID = data.data.templateID;
       if (data.data.type) this.type = data.data.type;
+      if (data.data.showFooter) this.showFooter = data.data.showFooter;
       this.email = data.data.email as email;
       this.option = data.data.option as option;
       this.functionID = data.data.functionID;
@@ -852,47 +856,44 @@ export class CodxEmailComponent implements OnInit {
 
   onActionComplete(args: any): void {}
 
-  valueChangeContentEmail(e:any)
-  {
+  valueChangeContentEmail(e: any) {
     this.dataAI = {
-      content : e?.data,
+      content: e?.data,
     };
   }
-  // Gợi ý nội dung email bằng AI 
-  createContentEmail()
-  {
+  // Gợi ý nội dung email bằng AI
+  createContentEmail() {
     this.isLoadingAI = true;
     let prompt = `Mẫu promt (tiếng Việt): Bạn hãy tạo email dạng html theo nội dung ${this.dataAI.content}.`;
-    this.fetch(this.dataAI,prompt).then((res:any) => 
-      {
+    this.fetch(this.dataAI, prompt)
+      .then((res: any) => {
         this.data.message = res.data.Data;
         this.isLoadingAI = false;
-      }).catch((err)=> {
-    });
+      })
+      .catch((err) => {});
   }
 
-  fetch(data:any,prompt:any)
-  {
-    let url = "https://api.trogiupluat.vn/api/OpenAI/v1/get-gpt-action";
+  fetch(data: any, prompt: any) {
+    let url = 'https://api.trogiupluat.vn/api/OpenAI/v1/get-gpt-action';
     return axios.post(
       url,
       {
-        'Prompt': prompt,
-        'openAIKey': '',
-        'SourceText': JSON.stringify(data).replace(/\"/g,"'")
+        Prompt: prompt,
+        openAIKey: '',
+        SourceText: JSON.stringify(data).replace(/\"/g, "'"),
       },
       {
-        headers: 
-        {
-          'api_key': "OTcNmUMmYxNDQzNJmMWQMDgxMTAMWJiMDYYTUZjANWUxZTgwOTBiNzQyNGYNMOGIOTENGFhNg",
-          'Content-Type': 'multipart/form-data'
-        }
-      })
+        headers: {
+          api_key:
+            'OTcNmUMmYxNDQzNJmMWQMDgxMTAMWJiMDYYTUZjANWUxZTgwOTBiNzQyNGYNMOGIOTENGFhNg',
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
   }
 
-  showHide()
-  {
-    this.showAI = !this.showAI
+  showHide() {
+    this.showAI = !this.showAI;
   }
 }
 
