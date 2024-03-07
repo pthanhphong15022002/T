@@ -113,25 +113,30 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
     this.data = JSON.parse(JSON.stringify(this.data))
     if(this.data && this.data.steps)
     {
-      let i = 0;
       this.count = this.data.steps.length;
       this.listStage = this.data.steps.filter(x=>!x.parentID);
       this.count -= this.listStage.length;
       this.listStage.forEach(elm => {
         elm.child = this.getListChild(elm) || [];
         if(typeof elm.settings == 'string') elm.settings = JSON.parse(elm.settings);
-        i++;
-
         if(elm.child && elm.child.length>0) elm.child.sort((a, b) => a.stepNo - b.stepNo);
       });
 
-      this.listStage = this.listStage.sort((a, b) => a.stepNo - b.stepNo);
+      //this.listStage = this.listStage.sort((a, b) => a.stepNo - b.stepNo);
 
       let a = 0;
+      let i = 0;
       this.listStage.forEach(elm3=>{
         this.listIds.push('stage'+a+'_'+elm3.recID)
         elm3.stepNo = i;
         i++;
+        if(elm3.child && elm3.child.length>0)
+        {
+          elm3.child.forEach(elm4 => {
+            elm4.stepNo = i;
+            i++
+          });
+        }
         a++;
       })
     }
@@ -140,8 +145,9 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
   getListChild(elm:any)
   {
     if(this.count == 0) return; 
-    let j = 0;
+ 
     let list = this.data.steps.filter(x=>x.parentID == elm.recID);
+    list = list.sort((a, b) => a.stepNo - b.stepNo);
     this.count -= list.length;
     list.forEach(elm2 => {
       elm2.settings = typeof elm2?.settings === 'object' ? elm2.settings : (elm2?.settings ? JSON.parse(elm2.settings) : null);
@@ -165,12 +171,6 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
         }
       }
     });
-    
-    list = list.sort((a, b) => a.stepNo - b.stepNo);
-    list.forEach(elm3=>{
-      elm3.stepNo = j;
-      j++;
-    })
     return list;
   }
 

@@ -937,18 +937,9 @@ export class PopupAddProcessComponent {
   }
 
   beforeSave(op) {
-    let data = [];
     op.className = 'ProcessesBusiness';
     op.service = 'BP';
-    if (this.data?.steps?.length > 0) {
-      this.data?.steps?.forEach((ele) => {
-        if (typeof ele.settings !== 'string') {
-          ele.settings = JSON.stringify(ele.settings);
-        }
-      });
-    }
-    data = [this.data];
-
+    debugger
     if (
       (this.action == 'add' || this.action == 'copy') &&
       this.currentTab == 0
@@ -958,15 +949,28 @@ export class PopupAddProcessComponent {
       op.methodName = 'UpdateProcessAsync';
     }
     let i = 0;
+    let result2 = [];
     let result = JSON.parse(JSON.stringify(this.data));
+
+    result.steps = result.steps.filter(x=>x.activityType == "Stage");
     result.steps.forEach((elm: any) => {
-      delete elm.child;
       elm.stepNo = i;
       i++;
-      if (typeof elm.settings === 'object')
-        elm.settings = JSON.stringify(elm.settings);
+      result2.push(elm);
+      if(elm.child && elm.child.length>0)
+      {
+        elm.child.forEach(elm2 => {
+          elm2.stepNo = i;
+          if (typeof elm2.settings === 'object') elm2.settings = JSON.stringify(elm2.settings);
+          i++;
+          result2.push(elm2);
+          result.steps = result.steps.filter(x=>x.recID != elm2.recID);
+        });
+      }
+      if (typeof elm.settings === 'object') elm.settings = JSON.stringify(elm.settings);
     });
 
+    result.steps = result2;
     op.data = result;
     return true;
   }
@@ -1009,6 +1013,7 @@ export class PopupAddProcessComponent {
   {
     let data = datas.steps;
     this.countStage = data.length;
+    debugger
     data = data.sort((a, b) => a.stepNo - b.stepNo);
     var listStage = data.filter(x=>x.activityType == 'Stage');
     listStage.forEach(element => {
