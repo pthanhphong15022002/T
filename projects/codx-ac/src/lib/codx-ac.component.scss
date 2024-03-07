@@ -494,11 +494,15 @@
 
 .card-transfer {
     .table-ac {
-        height: calc(100vh - 455px) !important;
+        height: calc(100vh - 395px) !important;
     }
 
     .ac-empty {
         height: calc(100vh - 495px) !important;
+    }
+
+    .table-body-ac{
+        height: calc(100vh - 485px) !important;
     }
 }
 
