@@ -87,7 +87,6 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
   
   resetDLS()
   {
-    debugger
     //this.dlq.reset();
     let ldls: CdkDropList[] = [];
     this.dlq.forEach((dl) => {
@@ -368,6 +367,7 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges , AfterVie
       if (res?.event) {
        var indexP = this.data.steps.findIndex(x=>x.recID == data?.recID);
        if(indexP>=0)this.data.steps[indexP].extendInfo= res?.event
+       this.dataChange.emit(this.data);
       }
     });
   }

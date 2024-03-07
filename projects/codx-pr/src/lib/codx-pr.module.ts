@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CoreModule } from '@core/core.module';
-import { SliderModule } from '@syncfusion/ej2-angular-inputs';
+import { SliderModule, UploaderModule } from '@syncfusion/ej2-angular-inputs';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { NgbModule, NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
 import { DiagramAllModule } from '@syncfusion/ej2-angular-diagrams';
@@ -39,6 +39,9 @@ import { PopupRequestKowdComponent } from './kowds/popup/popup-request-kowd/popu
 import { HrTemplateExcelComponent } from './hr-template-excel/hr-template-excel.component';
 import { ViewDetailTemplateComponent } from './hr-template-excel/view-detail-template/view-detail-template.component';
 import { PopupEditTemplateComponent } from './hr-template-excel/popup/popup-edit-template/popup-edit-template.component';
+import { PayrollListComponent } from './payroll-list/payroll-list.component';
+import { PopupAddPayrollListComponent } from './payroll-list/popup/popup-add-payroll-list/popup-add-payroll-list.component';
+import { PayrollDetailComponent } from './payroll-list/payroll-detail/payroll-detail.component';
 
 
 export const routes: Routes = [
@@ -66,6 +69,15 @@ export const routes: Routes = [
         path: 'HRTemplateExcel/:funcID',
         component: HrTemplateExcelComponent,
       },
+      {
+        path: 'PayrollList/:funcID',
+        component: PayrollListComponent,
+      },
+      {
+        path: 'PayrollList/:funcID/:recID',
+        component: PayrollDetailComponent,
+      },
+      
       //----phát hành quy trình DP-CRM----//
       {
         path: 'deals/:funcID',
@@ -114,7 +126,10 @@ const T_Component: Type<any>[] = [
   PopupRequestKowdComponent,
   HrTemplateExcelComponent,
   ViewDetailTemplateComponent,
-  PopupEditTemplateComponent
+  PopupEditTemplateComponent,
+  PayrollListComponent,
+  PopupAddPayrollListComponent,
+  PayrollDetailComponent
 ];
 
 @NgModule({
@@ -132,6 +147,7 @@ const T_Component: Type<any>[] = [
     DiagramAllModule,
     NgbModule,
     DateRangePickerModule,
+    UploaderModule
   ],
   exports: [T_Component],
   declarations: [T_Component],

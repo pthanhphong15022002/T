@@ -1,6 +1,5 @@
 import {
   Input,
-  OnInit,
   Injector,
   Optional,
   Component,
@@ -10,26 +9,23 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import {
+  Util,
   ViewType,
   ViewModel,
   DialogRef,
   FormModel,
+  AuthStore,
   ButtonModel,
-  DataRequest,
   DialogModel,
   UIComponent,
+  SidebarModel,
   RequestOption,
   CallFuncService,
   NotificationsService,
-  Util,
-  SidebarModel,
-  AuthStore,
 } from 'codx-core';
 import {
   CM_Contracts,
   CM_Quotations,
-  CM_QuotationsLines,
-  CM_ContractsPayments,
 } from '../models/cm_model';
 import {
   DP_Instances_Steps_Tasks,
@@ -41,17 +37,17 @@ import { CodxCmService } from '../codx-cm.service';
 import { ContractsService } from './service-contracts.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { AddContractsComponent } from './add-contracts/add-contracts.component';
-import { PopupAddPaymentComponent } from './payment/popup-add-payment/popup-add-payment.component';
-import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
-import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
-import { ContractsViewDetailComponent } from './contracts-view-right/contracts-view-right.component';
-import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
-import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
-import { ContractsDetailComponent } from './contracts-detail/contracts-detail.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
+import { ContractsDetailComponent } from './contracts-detail/contracts-detail.component';
+import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
+import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
+import { PopupAddPaymentComponent } from './payment/popup-add-payment/popup-add-payment.component';
+import { ContractsViewDetailComponent } from './contracts-view-right/contracts-view-right.component';
 import { PopupUpdateStatusComponent } from '../deals/popup-update-status/popup-update-status.component';
+import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
+import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
 
 @Component({
   selector: 'contracts-detail',
@@ -67,44 +63,19 @@ export class ContractsComponent extends UIComponent {
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('templateDetail') templateDetail: TemplateRef<any>;
   //temGird
-  @ViewChild('tempContractName') tempContractName: TemplateRef<any>;
-  @ViewChild('tempCustomerID') tempCustomerID: TemplateRef<any>;
-  @ViewChild('tempContractAmt') tempContractAmt: TemplateRef<any>;
-  @ViewChild('tempPaidAmt') tempPaidAmt: TemplateRef<any>;
-  @ViewChild('tempCurrencyID') tempCurrencyID: TemplateRef<any>;
-  @ViewChild('tempApplyProcess') tempApplyProcess: TemplateRef<any>;
+  @ViewChild('tempOwner') tempOwner: TemplateRef<any>;
   @ViewChild('tempStepID') tempStepID: TemplateRef<any>;
   @ViewChild('tempStatus') tempStatus: TemplateRef<any>;
-  @ViewChild('tempOwner') tempOwner: TemplateRef<any>;
+  @ViewChild('tempPaidAmt') tempPaidAmt: TemplateRef<any>;
+  @ViewChild('tempCustomerID') tempCustomerID: TemplateRef<any>;
+  @ViewChild('tempCurrencyID') tempCurrencyID: TemplateRef<any>;
+  @ViewChild('tempContractAmt') tempContractAmt: TemplateRef<any>;
+  @ViewChild('tempContractName') tempContractName: TemplateRef<any>;
+  @ViewChild('tempApplyProcess') tempApplyProcess: TemplateRef<any>;
 
   @ViewChild('liquidationTmp') liquidationTmp: TemplateRef<any>;
-
   @ViewChild('detailViewContract')
   detailViewContract: ContractsViewDetailComponent;
-
-  listClicked = [];
-  views: Array<ViewModel> = [];
-  listPayment: CM_ContractsPayments[] = [];
-  listQuotationsLine: CM_QuotationsLines[];
-  listPaymentHistory: CM_ContractsPayments[] = [];
-
-  account: any;
-  quotations: CM_Quotations;
-  listInsStep = [];
-
-  tabClicked = '';
-  actionName = '';
-  isAddContract = true;
-  contractAppendix;
-  readonly applyFor = '4';
-
-  service = 'CM';
-  entityName = 'CM_Contracts';
-  className = 'ContractsBusiness';
-  assemblyName = 'ERM.Business.CM';
-  methodLoadData = 'GetListContractsAsync';
-  contactPerson;
-
   fmQuotations: FormModel = {
     funcID: 'CM02021',
     formName: 'CMQuotations',
@@ -129,14 +100,11 @@ export class ContractsComponent extends UIComponent {
     formName: 'CMContractsPaymentsHistory',
     gridViewName: 'grvCMContractsPaymentsHistory',
   };
-
   frmModelExport: FormModel = {
     formName: 'CMTempDataSources',
     gridViewName: 'grvCMTempDataSources',
     entityName: 'CM_TempDataSources',
   };
-  functionMappings;
-  //test
   moreDefaut = {
     share: true,
     write: true,
@@ -144,62 +112,65 @@ export class ContractsComponent extends UIComponent {
     download: true,
     delete: true,
   };
+  service = 'CM';
+  entityName = 'CM_Contracts';
+  className = 'ContractsBusiness';
+  assemblyName = 'ERM.Business.CM';
+  methodLoadData = 'GetListContractsAsync';
+  predicates = 'RefType==@0 && RefID==@1';
+  button?: ButtonModel[] = [{ id: 'btnAdd' }];
+  views: Array<ViewModel> = [];
+  account: any;
+  quotations: CM_Quotations;
+  listInsStep = [];
+
+  tabClicked = '';
+  actionName = '';
+  contractAppendix; //phụ lục
+  isAddContract = true;
+  readonly applyFor = '4';
+
+  user;
+  taskAdd;
+  runMode: any;
   grvSetup: any;
   vllStatus = '';
   vllApprove = '';
-
-  customerIDCrr = '';
-  requestData = new DataRequest();
-  listQuotations = [];
-  predicates = 'RefType==@0 && RefID==@1';
-  dataValues = '';
   columnGrids: any;
-  arrFieldIsVisible = [];
-  button?: ButtonModel[] = [{ id: 'btnAdd' }];
   tabControl = [];
-  //param
   approveRule = '0';
-  paramDefault: any;
-  runMode: any;
-  user;
-  taskAdd;
   popupLiquidation;
-  liquidation: CM_Contracts;
   dataSelected: any;
-
   statusCodeID: any;
   statusCodeCmt: any;
+  arrFieldIsVisible = [];
+  liquidation: CM_Contracts;
   processID = '';
   constructor(
     private inject: Injector,
+    private authStore: AuthStore,
     private cmService: CodxCmService,
+    private stepService: StepService,
     private callFunc: CallFuncService,
+    private activedRouter: ActivatedRoute,
     private contractService: ContractsService,
     private notiService: NotificationsService,
     private codxShareService: CodxShareService,
     private codxCommonService: CodxCommonService,
     private changeDetectorRef: ChangeDetectorRef,
-    private stepService: StepService,
-    private authStore: AuthStore,
-    private activedRouter: ActivatedRoute,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
+    this.user = this.authStore.get();
     this.funcID = this.router.snapshot.params['funcID'];
     this.cache.functionList(this.funcID).subscribe((f) => {
-      if (f) {
-        this.runMode = f?.runMode;
-      }
+      if (f) this.runMode = f?.runMode;
     });
-    this.user = this.authStore.get();
   }
 
   async onInit() {
     this.loadParam();
-    this.grvSetup = await firstValueFrom(
-      this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
-    );
-
+    this.grvSetup = await firstValueFrom(this.cache.gridViewSetup('CMContracts', 'grvCMContracts'));
     let arrField = Object.values(this.grvSetup).filter((x: any) => x.isVisible);
     if (Array.isArray(arrField)) {
       this.arrFieldIsVisible = arrField
@@ -207,7 +178,6 @@ export class ContractsComponent extends UIComponent {
         .map((x: any) => x.fieldName);
       this.getColumsGrid(this.grvSetup);
     }
-
     this.vllStatus = this.grvSetup['Status'].referedValue;
     this.vllApprove = this.grvSetup['ApproveStatus'].referedValue;
     this.tabControl = this.contractService?.footerTab;
@@ -216,13 +186,10 @@ export class ContractsComponent extends UIComponent {
     this.getColumsGrid(this.grvSetup);
   }
 
-  async ngOnChanges(changes: SimpleChanges) {
-    this.listClicked = JSON.parse(JSON.stringify(this.listClicked));
-  }
+  async ngOnChanges(changes: SimpleChanges) {}
 
   ngAfterViewInit() {
     this.getColumsGrid(this.grvSetup);
-    console.log(this.view.dataService);
   }
 
   changeTab(e) {
@@ -240,6 +207,7 @@ export class ContractsComponent extends UIComponent {
         break;
     }
   }
+
   onActions(e) {
     switch (e.type) {
       case 'dbClick':
@@ -247,13 +215,10 @@ export class ContractsComponent extends UIComponent {
         break;
     }
   }
+
   selectedChange(val: any) {
     if (!val?.data) return;
     this.dataSelected = val?.data;
-    this.getQuotationsAndQuotationsLinesByTransID(
-      this.dataSelected.quotationID
-    );
-    this.getPayMentByContractID(this.dataSelected?.recID);
     this.detectorRef.detectChanges();
   }
 
@@ -267,17 +232,18 @@ export class ContractsComponent extends UIComponent {
       this.codxShareService.changeMFApproval(event, data?.unbounds);
     } else if (event != null) {
       event.forEach((res) => {
-        res.isblur =
-          data?.approveStatus == '3' && res?.functionID != 'CM0204_2';
-        if (isDetail) {
-          res.isbookmark = false;
-        }
+        res.isblur = data?.approveStatus == '3' && res?.functionID != 'CM0204_2';
+        if (isDetail) res.isbookmark = false;
         switch (res.functionID) {
           case 'CM0204_3':
           case 'CM0204_17':
           case 'CM0204_21':
           case 'CM0204_22':
             res.disabled = data?.closed;
+            break;
+          case 'CM0204_5': //Đã giao hàng
+          case 'CM0204_4':
+            res.disabled = true;
             break;
           case 'SYS02':
             res.disabled = data?.delete
@@ -299,32 +265,21 @@ export class ContractsComponent extends UIComponent {
                 (data.status != '13' && this.checkMoreReason(data, false)) ||
                 (!data.applyProcess && ['3', '5'].includes(data.status))
               : true;
-
             break;
-          //Gửi duyệt
-          case 'CM0204_1':
+          case 'CM0204_1': //Gửi duyệt
             res.disabled =
               data?.closed ||
               data?.status == '0' ||
-              // (data?.closed && data?.status != '1') ||
               (this.approveRule != '1' && !data?.applyApprover) ||
               (data?.applyApprover && data?.approveRule != '1') ||
               data?.approveStatus >= '3';
             break;
-          //Hủy yêu cầu duyệt
-          case 'CM0204_2':
+          case 'CM0204_2'://Hủy yêu cầu duyệt
             res.disabled =
               data?.closed ||
-              // (data?.closed && data?.status != '1') ||
               data?.status == '0' ||
               data?.approveStatus != '3';
-            break;
-          case 'CM0204_4':
-            res.disabled = true;
-            break;
-          case 'CM0204_5': //Đã giao hàng
-            res.disabled = true;
-            break;
+            break;         
           case 'CM0204_6': //hoàn tất hợp đồng
             res.disabled = data?.status == '1' || data?.closed;
             break;
@@ -418,45 +373,35 @@ export class ContractsComponent extends UIComponent {
       case 'SYS05':
         this.viewContract(data);
         break;
-      case 'CM0204_3':
-        //tạo hợp đồng gia hạn
+      case 'CM0204_3'://tạo hợp đồng gia hạn
         this.addContractAdjourn(data);
         break;
-      case 'CM0204_5':
-        //Đã giao hàng
+      case 'CM0204_5'://Đã giao hàng
         this.updateDelStatus(data);
         break;
-      case 'CM0204_6':
-        //hoàn tất hợp đồng
+      case 'CM0204_6'://hoàn tất hợp đồng
         this.completedContract(data);
         break;
-      case 'CM0204_1':
-        //Gửi duyệt
+      case 'CM0204_1'://Gửi duyệt
         this.approvalTrans(data);
         break;
-      case 'CM0204_2':
-        //Hủy yêu cầu duyệt
+      case 'CM0204_2'://Hủy yêu cầu duyệt
         this.cancelApprover(data);
         break;
-      case 'CM0204_9':
-        //Bắt đầu
+      case 'CM0204_9'://Bắt đầu
         this.startInstance(data);
         break;
-      case 'CM0204_8':
-        //Chuyển giai đoạn
+      case 'CM0204_8'://Chuyển giai đoạn
         this.moveStage(data);
         break;
-      case 'CM0204_10':
-        //thành công
+      case 'CM0204_10'://thành công
         this.moveReason(data, true);
         break;
-      case 'CM0204_11':
-        //thất bại
+      case 'CM0204_11'://thất bại
         this.moveReason(data, false);
         break;
-      case 'CM0204_14':
-        //phan cong nguoi phu trach
-        this.popupOwnerRoles(data);
+      case 'CM0204_14'://phan cong nguoi phu trach
+        this.changeOwner(data);
         break;
       //export core làm
       case 'SYS002':
@@ -496,14 +441,6 @@ export class ContractsComponent extends UIComponent {
         this.sendMail(data);
         break;
       default: {
-        // var customData = {
-        //   refID: data.recID,
-        //   refType: 'CM_Contracts',
-        // };
-        // if (data?.refID && data.applyProcess) {
-        //   customData.refID = data.processID;
-        //   customData.refType = 'DP_Processes';
-        // }
         this.codxShareService.defaultMoreFunc(
           e,
           data,
@@ -511,7 +448,6 @@ export class ContractsComponent extends UIComponent {
           this.view.formModel,
           this.view.dataService,
           this
-          //customData
         );
         this.detectorRef.detectChanges();
         break;
@@ -613,14 +549,6 @@ export class ContractsComponent extends UIComponent {
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.notiService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected, true).subscribe();
-        // if (this.dataSelected.applyProcess) {
-        //   this.detailViewDeal.promiseAllAsync();
-        // } else {
-        //   this.detailViewDeal.reloadListStep([]);
-        // }
-        // if (this.kanban) {
-        //   this.renderKanban(this.dataSelected);
-        // }
       }
       this.detectorRef.detectChanges();
     });
@@ -657,6 +585,7 @@ export class ContractsComponent extends UIComponent {
         }
       });
   }
+
   async addTask(contract: CM_Contracts) {
     let taskOutput = await this.stepService.addTaskCM(contract, 'CM_Contracts');
     this.taskAdd = taskOutput;
@@ -683,35 +612,6 @@ export class ContractsComponent extends UIComponent {
                 this.changeDetectorRef.markForCheck();
               }
             });
-        }
-      });
-  }
-
-  getQuotationsAndQuotationsLinesByTransID(recID) {
-    this.contractService.getQuotationsLinesByTransID(recID).subscribe((res) => {
-      if (res) {
-        this.quotations = res[0];
-        this.listQuotationsLine = res[1];
-      } else {
-        this.quotations = null;
-        this.listQuotationsLine = [];
-      }
-    });
-  }
-
-  getPayMentByContractID(contractID) {
-    this.contractService
-      .getPaymentsByContractID(contractID)
-      .subscribe((res) => {
-        if (res) {
-          let listPayAll = res as CM_ContractsPayments[];
-          this.listPayment = listPayAll.filter((pay) => pay.lineType == '0');
-          this.listPaymentHistory = listPayAll.filter(
-            (pay) => pay.lineType == '1'
-          );
-        } else {
-          this.listPayment = [];
-          this.listPaymentHistory = [];
         }
       });
   }
@@ -890,17 +790,44 @@ export class ContractsComponent extends UIComponent {
 
   deleteContract(contract) {
     if (contract?.recID) {
-      this.view.dataService
-        .delete([contract], true, (option: RequestOption) =>
-          this.beforeDelete(option, contract.recID)
-        )
-        .subscribe((res: any) => {
-          if (res?.contractName && res?.contractID) {
-            this.view.dataService.add(res).subscribe();
-            this.view.currentView['schedule'].refresh();
-            this.detectorRef.markForCheck();
+      if(["3", "4", "5", "6"].includes(contract?.status )){
+        this.cmService.getProcessSettingByRecID(contract?.processID).subscribe((res) => {
+          if(res){
+            if(res?.isEdit){
+              this.view.dataService
+                .delete([contract], true, (option: RequestOption) =>
+                  this.beforeDelete(option, contract.recID)
+                )
+                .subscribe((res: any) => {
+                  if (res?.contractName && res?.contractID) {
+                    this.view.dataService.add(res).subscribe();
+                    this.view.currentView['schedule'].refresh();
+                    this.detectorRef.markForCheck();
+                  }
+                });
+            }else{
+              this.notiService.notify(
+                'Hợp đồng không thể xóa khi đã thành công!',
+                '3'
+              );
+            }
+            
           }
-        });
+        })
+      }else{
+        this.view.dataService
+          .delete([contract], true, (option: RequestOption) =>
+            this.beforeDelete(option, contract.recID)
+          )
+          .subscribe((res: any) => {
+            if (res?.contractName && res?.contractID) {
+              this.view.dataService.add(res).subscribe();
+              this.view.currentView['schedule'].refresh();
+              this.detectorRef.markForCheck();
+            }
+          });
+      }
+      
     }
   }
 
@@ -986,11 +913,9 @@ export class ContractsComponent extends UIComponent {
   addPayHistory() {
     this.openPopupPay('add', 'payHistory', null);
   }
-
   addPay() {
     this.openPopupPay('add', 'pay', null);
   }
-
   async openPopupPay(action, type, data) {
     let dataInput = {
       action,
@@ -1017,7 +942,6 @@ export class ContractsComponent extends UIComponent {
     let dataPopupOutput = await firstValueFrom(popupTask.closed);
     return dataPopupOutput;
   }
-
   //------------------------- Ký duyệt -contacType ưu tiên trước ----------------------------------------//
   approvalTrans(dt) {
     if (dt.contactType) {
@@ -1106,16 +1030,6 @@ export class ContractsComponent extends UIComponent {
       this.dataSelected.approveStatus = res?.returnStatus;
       this.dataSelected.status = res?.returnStatus;
       this.view.dataService.update(this.dataSelected).subscribe();
-      // this.notiService.notifyCode('ES007');
-      // this.cmService
-      //   .getOneObject(this.itemSelected.recID, 'ContractsBusiness')
-      //   .subscribe((q) => {
-      //     if (q) {
-      //       this.itemSelected = q;
-      //       this.view.dataService.update(this.itemSelected).subscribe();
-      //     }
-      //     this.notiService.notifyCode('ES007');
-      //   });
     }
   }
 
@@ -1141,17 +1055,11 @@ export class ContractsComponent extends UIComponent {
         }
       }
     });
-    //   }
-    // });
   }
 
   cancelAction(dt, categoryID, category = null) {
     this.getESCategory(categoryID, category).subscribe((res2: any) => {
       if (res2) {
-        // if (res2?.eSign == true) {
-        //   //trình ký
-        // } else if (res2?.eSign == false) {
-        //kí duyet
         this.codxCommonService
           .codxCancel(
             'CM',
@@ -1167,13 +1075,11 @@ export class ContractsComponent extends UIComponent {
               this.notiService.notifyCode('SYS007');
             } else this.notiService.notifyCode('SYS021');
           });
-        // }
       } else this.notiService.notifyCode('ES028');
     });
   }
   //end duyet
-  //--------------------------------------------------------------------//
-  // "Permissions", "Closed", "ClosedOn", "ClosedBy"
+  //------------------------------"Permissions", "Closed", "ClosedOn", "ClosedBy"--------------------------------------//
   getColumsGrid(grvSetup) {
     this.views = [
       {
@@ -1190,41 +1096,12 @@ export class ContractsComponent extends UIComponent {
         active: false,
         sameData: true,
         model: {
-          // resources: this.columnGrids,
           template2: this.templateMore,
         },
       },
     ];
     this.detectorRef.detectChanges();
   }
-
-  // startInstance(data) {
-  //   this.notiService
-  //     .alertCode('DP033', null, ['"' + data?.contractName + '"' || ''])
-  //     .subscribe((x) => {
-  //       if (x.event && x.event.status == 'Y') {
-  //         this.api
-  //           .exec<any>('DP', 'InstancesBusiness', 'StartInstanceAsync', [
-  //             data?.refID,
-  //           ])
-  //           .subscribe((res) => {
-  //             if (res) {
-  //               this.listInsStep = res;
-  //             }
-  //           });
-  //         this.contractService
-  //           .updateStatus([data?.recID, '2'])
-  //           .subscribe((res) => {
-  //             if (res) {
-  //               data.status = '2';
-  //               this.view.dataService.update(data, true).subscribe();
-  //               this.moreDefaut = Object.assign(this.moreDefaut);
-  //               this.changeDetectorRef.markForCheck();
-  //             }
-  //           });
-  //       }
-  //     });
-  // }
 
   startInstance(data) {
     this.notiService
@@ -1261,9 +1138,6 @@ export class ContractsComponent extends UIComponent {
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     this.cache.functionList('DPT0402').subscribe((fun) => {
-      // this.cache
-      //   .gridViewSetup(fun.formName, fun.gridViewName)
-      //   .subscribe((grvSt) => {
       let stepReason = {
         isUseFail: false,
         isUseSuccess: false,
@@ -1327,7 +1201,6 @@ export class ContractsComponent extends UIComponent {
             });
           }
         }
-        //  });
       });
     });
   }
@@ -1434,11 +1307,6 @@ export class ContractsComponent extends UIComponent {
                     this.view.dataService
                       .update(this.dataSelected, true)
                       .subscribe();
-                    // if (this.detailViewDeal)
-                    //   this.detailViewDeal.dataSelected = this.dataSelected;
-                    // this.detailViewDeal?.reloadListStep(res[0]);
-                    // this.detectorRef.detectChanges();
-                    // this.resetStatusCode();
                   }
                 });
             }
@@ -1446,78 +1314,6 @@ export class ContractsComponent extends UIComponent {
         }
       });
   }
-
-  // moveReason(data: any, isMoveSuccess: boolean) {
-  //   //lay step Id cu de gen lai total
-  //   // if (!this.crrStepID || this.crrStepID != data.stepID)
-  //   //   this.crrStepID = data.stepID;
-  //   let option = new SidebarModel();
-  //   option.DataService = this.view.dataService;
-  //   option.FormModel = this.view.formModel;
-  //   var functionID = isMoveSuccess ? 'DPT0403' : 'DPT0404';
-  //   this.cache.functionList(functionID).subscribe((fun) => {
-  //     this.openFormReason(data, fun, isMoveSuccess);
-  //   });
-  // }
-
-  // openFormReason(data, fun, isMoveSuccess) {
-  //   var formMD = new FormModel();
-  //   formMD.funcID = fun.functionID;
-  //   formMD.entityName = fun.entityName;
-  //   formMD.formName = fun.formName;
-  //   formMD.gridViewName = fun.gridViewName;
-  //   let oldStatus = data.status;
-  //   let oldStepId = data.stepID;
-  //   var dataCM = {
-  //     refID: data?.refID,
-  //     processID: data?.processID,
-  //     stepID: data?.stepID,
-  //   };
-  //   var obj = {
-  //     headerTitle: fun.defaultName,
-  //     formModel: formMD,
-  //     isReason: isMoveSuccess,
-  //     processID: data?.processID,
-  //     applyFor: '4',
-  //     dataCM: dataCM,
-  //     stepName: data.currentStepName,
-  //   };
-
-  //   var dialogRevision = this.callfc.openForm(
-  //     PopupMoveReasonComponent,
-  //     '',
-  //     800,
-  //     600,
-  //     '',
-  //     obj
-  //   );
-  //   dialogRevision.closed.subscribe((e) => {
-  //     if (e && e.event != null) {
-  //       //   data = this.updateReasonDeal(e.event?.instance, data);
-  //       //   var datas = [data, oldStepId, oldStatus, e.event?.comment];
-  //       //   this.codxCmService.moveDealReason(datas).subscribe((res) => {
-  //       //     if (res) {
-  //       //       data = res[0];
-  //       //       this.view.dataService.update(data).subscribe();
-  //       //       //up kaban
-  //       //       if (this.kanban) {
-  //       //         let money = data.dealValue * data.exchangeRate;
-  //       //         this.renderTotal(data.stepID, 'add', money);
-  //       //         this.renderTotal(this.crrStepID, 'minus', money);
-  //       //         this.kanban.refresh();
-  //       //       }
-  //       //       this.detectorRef.detectChanges();
-  //       //     }
-  //       //   });
-  //       //   // }
-  //       // } else {
-  //       //   if (this.kanban) {
-  //       //     this.dataSelected.stepID = this.crrStepID;
-  //       //     this.kanban.updateCard(this.dataSelected);
-  //       //   }
-  //     }
-  //   });
-  // }
 
   moveReason(data: any, isMoveSuccess: boolean) {
     let option = new SidebarModel();
@@ -1562,7 +1358,6 @@ export class ContractsComponent extends UIComponent {
     dialogReason.closed.subscribe((e) => {
       if (e && e.event != null) {
         let listSteps = e.event?.listStep;
-        //    data = this.updateReasonContract(e.event?.instance, data, isMoveSuccess);
         this.cmService
           .moveContractReason([
             data.recID,
@@ -1577,15 +1372,9 @@ export class ContractsComponent extends UIComponent {
               this.detectorRef.detectChanges();
             }
           });
-        // }
       }
     });
   }
-  // updateReasonContract(instance: any, contract: any, isMoveSuccess: boolean) {
-  //   contract.status = isMoveSuccess ? '3' : '5';
-  //   contract.stepID = instance.stepID;
-  //   return contract;
-  // }
 
   autoStart(event) {
     if (event) {
@@ -1676,12 +1465,12 @@ export class ContractsComponent extends UIComponent {
       this.detectorRef.detectChanges();
     }
   }
+
   autoOpenPopupSusscess(e) {
     e && this.moveReason(this.dataSelected, true);
   }
 
-  popupOwnerRoles(data) {
-    let owner = data?.owner;
+  changeOwner(contract) {
     var formMD = new FormModel();
     let dialogModel = new DialogModel();
     formMD.funcID = this.view?.formModel?.funcID;
@@ -1691,19 +1480,18 @@ export class ContractsComponent extends UIComponent {
     dialogModel.zIndex = 1011;
     dialogModel.FormModel = formMD;
     var obj = {
-      recID: data?.recID,
-      refID: data?.refID,
-      processID: data?.processID,
-      stepID: data?.stepID,
-      data: data,
-      gridViewSetup: null,
-      formModel: this.view.formModel,
       applyFor: '4',
+      data: contract,
+      gridViewSetup: null,
+      buid: contract.buid,
+      owner: contract.owner,
+      recID: contract?.recID,
+      refID: contract?.refID,
+      stepID: contract?.stepID,
+      processID: contract?.processID,
+      formModel: this.view.formModel,
       titleAction: this.actionName,
-      owner: data.owner,
-      // startControl: data.steps.startControl,
-      applyProcess: data?.applyProcess,
-      buid: data.buid,
+      applyProcess: contract?.applyProcess,
     };
     var dialog = this.callfc.openForm(
       PopupAssginDealComponent,
@@ -1723,7 +1511,6 @@ export class ContractsComponent extends UIComponent {
       }
     });
   }
-
   //Export----------------------------------------------------//
   exportTemplet(e, data) {
     this.cmService
@@ -1755,41 +1542,51 @@ export class ContractsComponent extends UIComponent {
 
   liquidationContract(data) {
     this.liquidation = JSON.parse(JSON.stringify(data));
-    this.contractService.getAutonumber(this.liquidation?.processID).subscribe( (res) => {
-      if(res){
-        this.liquidation.disposalID = res;
-      }
-    })
+    this.contractService
+      .getAutonumber(this.liquidation?.processID)
+      .subscribe((res) => {
+        if (res) {
+          this.liquidation.disposalID = res;
+        }
+      });
     this.liquidation.status = '17';
-    // this.liquidation.disposalID = this.liquidation?.contractID;
     this.liquidation.disposalOn = new Date();
     this.liquidation.debtClosingOn = new Date();
     this.liquidation.disposalID = this.liquidation?.contractID;
     this.liquidation.pmtMethodID = 'CK';
     try {
-      let datas = data?.datas;      
-      if(datas){
+      let datas = data?.datas;
+      if (datas) {
         console.log(datas);
         datas = datas.replace(/'/g, '"');
         console.log(datas);
         let jsonData = JSON.parse(datas);
-        if(jsonData){
-          this.liquidation.disposalNewAddress = this.liquidation.disposalNewAddress ? this.liquidation.disposalNewAddress :  jsonData[0].NewAddress;
+        if (jsonData) {
+          this.liquidation.disposalNewAddress = this.liquidation
+            .disposalNewAddress
+            ? this.liquidation.disposalNewAddress
+            : jsonData[0].NewAddress;
         }
       }
     } catch (error) {
       console.log(error);
-      
     }
     this.contractService
-    .getContactByRecID(this.liquidation?.contactID)
-    .subscribe((res) => {
-      if (res) {
-        this.liquidation.disposalNewContact = this.liquidation.disposalNewContact ? this.liquidation.disposalNewContact : res?.contactName;
-        this.liquidation.disposalEmail = this.liquidation.disposalEmail ? this.liquidation.disposalEmail : res?.personalEmail;
-        this.liquidation.disposalPhone = this.liquidation.disposalPhone ? this.liquidation.disposalPhone : res?.mobile;
-      }
-    });
+      .getContactByRecID(this.liquidation?.contactID)
+      .subscribe((res) => {
+        if (res) {
+          this.liquidation.disposalNewContact = this.liquidation
+            .disposalNewContact
+            ? this.liquidation.disposalNewContact
+            : res?.contactName;
+          this.liquidation.disposalEmail = this.liquidation.disposalEmail
+            ? this.liquidation.disposalEmail
+            : res?.personalEmail;
+          this.liquidation.disposalPhone = this.liquidation.disposalPhone
+            ? this.liquidation.disposalPhone
+            : res?.mobile;
+        }
+      });
     let opt = new DialogModel();
     opt.zIndex = 1015;
     this.popupLiquidation = this.callFunc.openForm(
@@ -1833,11 +1630,6 @@ export class ContractsComponent extends UIComponent {
       });
   }
   reloadListStep(listSteps: any) {
-    // this.isDataLoading = true;
-    // this.listSteps = listSteps;
-    // this.getStepCurrent(this.dataSelected);
-    // this.isDataLoading = false;
-    // this.changeDetectorRef.detectChanges();
   }
 
   handelMoveStage(event, contract) {
@@ -1846,58 +1638,3 @@ export class ContractsComponent extends UIComponent {
     }
   }
 }
-
-// this.columnGrids = [];
-// this.arrFieldIsVisible.forEach((key) => {
-//   let field = Util.camelize(key);
-//   let template: any;
-//   let colums: any;
-// switch (key) {
-// case 'ContractName':
-//   template = this.tempContractName;
-//   break;
-// case 'CustomerID':
-//   template = this.tempCustomerID;
-//   break;
-// case 'ContractAmt':
-//   template = this.tempContractAmt;
-//   break;
-// case 'PaidAmt':
-//   template = this.tempPaidAmt;
-//   break;
-// case 'CurrencyID':
-//   template = this.tempCurrencyID;
-//   break;
-// case 'ApplyProcess':
-//   template = this.tempApplyProcess;
-//   break;
-// case 'StepID':
-//   template = this.tempStepID;
-//   break;
-// case 'Status':
-//   template = this.tempStatus;
-//   break;
-// case 'Owner':
-//   template = this.tempOwner;
-//   break;
-// default:
-//   break;
-// }
-//   if (template) {
-//     colums = {
-//       field: field,
-//       headerText: grvSetup[key].headerText,
-//       width: grvSetup[key].width,
-//       template: template,
-//       // textAlign: 'center',
-//     };
-//   } else {
-//     colums = {
-//       field: field,
-//       headerText: grvSetup[key].headerText,
-//       width: grvSetup[key].width,
-//     };
-//   }
-
-//   this.columnGrids.push(colums);
-// });

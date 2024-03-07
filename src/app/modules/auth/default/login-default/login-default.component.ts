@@ -7,6 +7,8 @@ import {
   Output,
   EventEmitter,
   Injector,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -28,7 +30,7 @@ import { DisplayTextModel } from '@syncfusion/ej2-angular-barcode-generator';
   styleUrls: ['./login-default.component.scss'],
 })
 //implements OnInit, OnDestroy, AfterViewInit
-export class LoginDefaultComponent extends UIComponent {
+export class LoginDefaultComponent extends UIComponent implements OnChanges {
   environment = environment;
   @ViewChild('Error') error: ElementRef;
   @Input() defaultAuth: any = {
@@ -94,6 +96,7 @@ export class LoginDefaultComponent extends UIComponent {
 
   public qrDisplayText?: DisplayTextModel;
   interval: number;
+  disabledTabQR = true;
 
   constructor(
     private injector: Injector,
@@ -105,6 +108,11 @@ export class LoginDefaultComponent extends UIComponent {
     this.enableCaptcha = environment.captchaEnable;
     if (this.enableCaptcha == 0) {
       this.captChaValid = true;
+    }
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(this.hubConnectionID){
+      this.disabledTabQR = false;
     }
   }
 

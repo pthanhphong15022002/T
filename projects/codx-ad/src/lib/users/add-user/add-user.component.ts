@@ -101,6 +101,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.funcID = dt?.data?.funcID;
     if (this.formType == 'invite') {
       this.isSaved = false;
+      this.adUser = JSON.parse(JSON.stringify(dt.data.data));
       this.adUser.administrator = false;
       this.adUser['phone'] = this.adUser.mobile;
       this.countListViewChoose();

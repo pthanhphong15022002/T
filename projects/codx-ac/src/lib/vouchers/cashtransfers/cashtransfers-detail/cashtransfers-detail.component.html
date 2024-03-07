@@ -63,9 +63,100 @@
 <!-- End: template listdetail Header-->
 
 <!-- Start: template listdetail Body-->
-<ng-template #TmpBodyDetail></ng-template>
+<ng-template #TmpBodyDetail>
+  <ng-container *ngIf="itemSelected">
+    <div class="d-flex align-items-top mb-1">
+      <!-- Chuyển từ-->
+      <codx-label class="fw-bold label-colon text-nowrap" fiedName="lblCashBook"
+        [formModel]="formModel" default="Chuyển từ">
+      </codx-label>
+      <span *ngIf="itemSelected?.cashBook1Name"
+        class="text-gray-600">{{itemSelected?.cashBook1Name}}</span>
+      <span
+        *ngIf="(itemSelected?.cashBook1Name == '' || itemSelected?.cashBook1Name == null) && gridViewSetup"
+        class="place-holder text-gray-600">{{gridViewSetup['CashBookID'].headerText}}</span>
+      <!-- Chuyển từ -->
+    </div>
+    <div class="d-flex align-items-top mb-1">
+      <!-- Chuyển đến-->
+      <codx-label class="fw-bold label-colon text-nowrap" fiedName="lblCashBook2"
+        [formModel]="formModel" default="Chuyển đến">
+      </codx-label>
+      <span *ngIf="itemSelected?.cashBook2Name"
+        class="text-gray-600">{{itemSelected?.cashBook2Name}}</span>
+      <span
+        *ngIf="(itemSelected?.cashBook2Name == '' || itemSelected?.cashBook2Name == null) && gridViewSetup"
+        class="place-holder text-gray-600">{{gridViewSetup['CashBookID2'].headerText}}</span>
+      <!-- Chuyển đến -->
+    </div>
+    <div class="d-flex align-items-top mb-1">
+      <codx-label class="fw-bold label-colon text-nowrap" fiedName="ReasonID" [formModel]="formModel">
+      </codx-label>
+      <span *ngIf="itemSelected?.reasonName" class="text-gray-600">{{itemSelected?.reasonName}}</span>
+      <span *ngIf="(itemSelected?.reasonName == '' || itemSelected?.reasonName == null) && gridViewSetup"
+        class="place-holder text-gray-600">{{gridViewSetup['ReasonID'].headerText}}</span>
+    </div>
+    <div class="card-add" #cardbodyRef>
+      <ejs-tab (selecting)="selecting($event)" #elementTabDetail (created)="createTab($event, elementTabDetail)">
+        <e-tabitems>
+          <!--Start tab hạch toán -->
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex align-items-top me-2 mt-2">
+                <i class="icon-i-file-earmark-spreadsheet icon-16 me-2"></i>
+                <codx-label class="fw-bold fs-6" fiedName="lblDetail1" [formModel]="formModel"
+                  default="Hạch toán"></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="tabAcctTrans"></ng-container>
+            </ng-template>
+          </e-tabitem>
+          <!--End tab hạch toán -->
+
+          <!--Start tab Hóa đơn GTGT -->
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex align-items-top me-2 mt-2">
+                <i class="icon-i-graph-up icon-16 me-2"></i>
+                <codx-label class="fw-bold fs-6" fiedName="lblDetail3" [formModel]="formModel"
+                  default="Hóa đơn GTGT"></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="tabVatInvoices"></ng-container>
+            </ng-template>
+          </e-tabitem>
+          <!-- Tab Hóa đơn GTGT -->
+        </e-tabitems>
+      </ejs-tab>
+    </div>
+  </ng-container>
+</ng-template>
 <!-- End: template listdetail Body-->
 
 <!-- Start: template listdetail Footer-->
-<ng-template #TmpFooterDetail let-data></ng-template>
+<ng-template #TmpFooterDetail let-data>
+  <ng-container *ngIf="itemSelected">
+    <codx-tabs [entityName]="formModel.entityName" [formModel]="formModel" [objectID]="itemSelected?.recID"
+      [funcID]="formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
+  </ng-container>
+</ng-template>
 <!-- End: template listdetail Footer-->
+
+<!-- Start: template Tab AcctTrans-->
+<ng-template #tabAcctTrans>
+  <ng-container *ngIf="itemSelected">
+    <acctrants-table [itemSelected]="itemSelected" [baseCurr]="baseCurr">
+    </acctrants-table>
+  </ng-container>
+</ng-template>
+<!-- End: template Tab AcctTrans-->
+
+<!-- Start: template Tab VatInvoices-->
+<ng-template #tabVatInvoices>
+  <ng-container *ngIf="itemSelected">
+    <vatinvoices-table [itemSelected]="itemSelected" [baseCurr]="baseCurr"></vatinvoices-table>
+  </ng-container>
+</ng-template>
+<!-- End: template Tab VatInvoices-->

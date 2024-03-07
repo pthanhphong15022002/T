@@ -73,6 +73,7 @@ export class PdfComponent
   emailPublicSign: any;
   publicSignStatus: any;
   isSigned = false;
+  supplier = '3';
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
@@ -472,7 +473,7 @@ export class PdfComponent
       this.signPerRow = res?.SignPerRow;
       this.align = res?.Align;
       this.direction = res?.Direction;
-      this.areaControl = res?.AreaControl == '1';
+      this.areaControl = false;//lay tu category
       this.isAwait = res?.Await == '1';
       this.labels = res?.Label?.filter((label) => {
         return label.Language == this.user.language;
@@ -1105,8 +1106,9 @@ export class PdfComponent
   imgSignature2: ImageViewerComponent;
   @ViewChild('imgStamp', { static: false }) imgStamp: ImageViewerComponent;
 
-  changeTab(currTab) {
+  changeTab(currTab,supplier:any) {
     this.currentTab = currTab;
+    this.supplier = supplier?.value;
   }
 
   changeEditMode() {
@@ -3295,23 +3297,23 @@ export class PdfComponent
   //---------------------------------------------------------------------------------//
 
   popupPublicESign(status) {
-    // if (this.oApprovalTrans.approverType == 'PE') {
-    //   this.codxCommonService
-    //     .codxApprove(this.transRecID, status, null, null, null, null, '3')
-    //     .subscribe((res: ResponseModel) => {
-    //       if (res?.msgCodeError == null && res?.rowCount > 0) {
-    //         this.notificationsService.notifyCode('SYS034');
-    //         this.isSigned = true;
-    //         this.detectorRef.detectChanges();
-    //         this.changeConfirmState(res);
-    //       }
-    //     });
-    // } 
-    // else {
+    if (this.oApprovalTrans?.signatureType == '2') {
+      this.codxCommonService
+        .codxApprove(this.transRecID, status, null, null, null, null, '3')
+        .subscribe((res: ResponseModel) => {
+          if (res?.msgCodeError == null && res?.rowCount > 0) {
+            this.notificationsService.notifyCode('SYS034');
+            this.isSigned = true;
+            this.detectorRef.detectChanges();
+            this.changeConfirmState(res);
+          }
+        });
+    } 
+    else {
       this.publicSignStatus = status;
       var dialog = this.callfc.openForm(this.publicSignInfo, '', 450, 270);
       this.detectorRef.detectChanges();
-    //}
+    }
   }
 
   addSignature(setupShowForm, area = null) {

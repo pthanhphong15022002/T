@@ -1822,4 +1822,12 @@ export class CodxCmService {
     );
   }
 
+  getProcessSettingByRecID(procesID) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetProcessSettingByRecIDAsync',
+      procesID
+    );
+  }
 }
