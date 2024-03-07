@@ -1,0 +1,26 @@
+<codx-views #view 
+    [views]="views" 
+    [idField]="'payrollID'"
+    [groupField]="'yearID'"
+    [service]="'HR'"
+    (clickMF)="clickMF($event)" 
+    (changeDataMF)="changeDataMF($event)">
+</codx-views>
+<ng-template #headerTemplate>
+    <div class="row w-100">
+        <div class="col-4 text-left">
+            <codx-label [formModel]="view.formModel" name="DowCode" [default]="'Kỳ lương'" class="fw-bold"></codx-label>
+        </div>
+        <div class="col-8 text-left">
+            <codx-label [formModel]="view.formModel" name="HRTemplateID" [default]="'Tên Bảng lương'" class="fw-bold"></codx-label>
+        </div>
+    </div>
+</ng-template>
+<ng-template #itemTemplate let-data>
+    <div class="row p-4">
+        <div class="col-4 text-left">
+            <span>{{data.dowCode}}</span>
+        </div>
+        <div (click)="viewDetailPayroll(data)" class="col-8 text-left text-primary text-decoration-underline" [innerHTML]="data.hrTemplateID | formatvalue : view.formModel : 'hrTemplateID' | async"></div>
+    </div>
+</ng-template>

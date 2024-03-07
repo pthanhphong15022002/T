@@ -1564,30 +1564,61 @@ export class DealsComponent
         );
         return;
       } else {
-        this.view.dataService.dataSelected = data;
-        this.view.dataService
-          .delete([this.view.dataService.dataSelected], true, (opt) =>
-            this.beforeDel(opt)
-          )
-          .subscribe((res) => {
-            if (res) {
-              this.view.dataService.onAction.next({
-                type: 'delete',
-                data: data,
-              });
-              //up kaban
-              if (this.kanban) {
-                let money = data.dealValue * data.exchangeRate;
-                this.renderTotal(data.stepID, 'minus', money);
-                this.kanban?.refresh();
-
-                // //looix
-                // this.kanban?.kanbanObj?.refreshHeader();
-                // this.kanban?.kanbanObj.refreshUI();
+        if(data?.processID && ["3", "4", "5", "6"].includes(data?.status )){
+          this.codxCmService.getProcessSettingByRecID(data?.processID).subscribe((res) => {
+            if(res){
+              if(res?.isEdit){
+                this.view.dataService.dataSelected = data;
+                this.view.dataService
+                  .delete([this.view.dataService.dataSelected], true, (opt) =>
+                    this.beforeDel(opt)
+                  )
+                  .subscribe((res) => {
+                    if (res) {
+                      this.view.dataService.onAction.next({
+                        type: 'delete',
+                        data: data,
+                      });
+                      //up kaban
+                      if (this.kanban) {
+                        let money = data.dealValue * data.exchangeRate;
+                        this.renderTotal(data.stepID, 'minus', money);
+                        this.kanban?.refresh();
+                      }
+                    }
+                    this.changeDetectorRef.detectChanges();
+                  });
+              }else{
+                this.notificationsService.notify(
+                  'Cơ hội không thể xóa khi đã thành công!',
+                  '3'
+                );
               }
+              
             }
-            this.changeDetectorRef.detectChanges();
-          });
+          })
+        }else{
+          this.view.dataService.dataSelected = data;
+          this.view.dataService
+            .delete([this.view.dataService.dataSelected], true, (opt) =>
+              this.beforeDel(opt)
+            )
+            .subscribe((res) => {
+              if (res) {
+                this.view.dataService.onAction.next({
+                  type: 'delete',
+                  data: data,
+                });
+                //up kaban
+                if (this.kanban) {
+                  let money = data.dealValue * data.exchangeRate;
+                  this.renderTotal(data.stepID, 'minus', money);
+                  this.kanban?.refresh();
+                }
+              }
+              this.changeDetectorRef.detectChanges();
+            });
+        }
       }
     });
   }

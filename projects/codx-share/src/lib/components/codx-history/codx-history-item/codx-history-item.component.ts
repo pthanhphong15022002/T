@@ -24,6 +24,7 @@ export class CodxHistoryItemComponent implements OnInit {
   @Input() funcID: string;
   @Input() formModel: FormModel;
   @Input() data: any;
+  @Input() showIcon:boolean=true;
   user: any = null;
   lstFile: any[] = [];
   grdSetUp: any;

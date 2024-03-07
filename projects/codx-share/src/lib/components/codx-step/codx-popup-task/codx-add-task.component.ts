@@ -623,9 +623,8 @@ export class CodxAddTaskComponent implements OnInit {
             let lstModule = res;
             this.isBoughtTM = lstModule?.some(
               (md) =>
-                !md?.boughtModule?.refID &&
-                md.boughtModule?.moduleID == 'TM1'
-                // && md.bought
+                !md?.boughtModule?.refID && md.boughtModule?.moduleID == 'TM1'
+              // && md.bought
             );
             this.stepsTasks.createTask = this.isBoughtTM;
           }
@@ -916,30 +915,7 @@ export class CodxAddTaskComponent implements OnInit {
     }
     this.setStatusFormDate();
   }
-  changeValueField(event) {
-    if (event && event.data) {
-      var result = event.e?.data;
-      var field = event.data;
-      switch (field.dataType) {
-        case 'D':
-          result = event.e?.data.fromDate;
-          break;
-        case 'P':
-        case 'R':
-        case 'A':
-        case 'C':
-        case 'L':
-        case 'TA':
-        case 'PA':
-          result = event.e;
-          break;
-      }
-      var index = this.listField.findIndex((x) => x.recID == field.recID);
-      if (index != -1) {
-        this.listField[index].dataValue = result;
-      }
-    }
-  }
+
   changeTypeCM(event) {
     if (event?.data) {
       if (this.typeCM != event?.data) {
@@ -1184,6 +1160,7 @@ export class CodxAddTaskComponent implements OnInit {
             task,
             isCreateMeeting,
             isAddTask,
+            this.listField,
           ])
           .subscribe((res) => {
             if (res) {
@@ -1383,4 +1360,177 @@ export class CodxAddTaskComponent implements OnInit {
     this.viewApprover = data;
     p.open();
   }
+
+  // ------------------- FIELDS -----------------------------//
+  valueChangeCustom(event) {
+    if (event && event.data) {
+      var result = event.e?.data;
+      var field = event.data;
+      switch (field.dataType) {
+        case 'D':
+          result = event.e?.data.fromDate;
+          break;
+        case 'P':
+        case 'R':
+        case 'A':
+        case 'C':
+        case 'L':
+        case 'TA':
+        case 'PA':
+          result = event.e;
+          break;
+      }
+      var index = this.listField.findIndex((x) => x.recID == field.recID);
+      if (index != -1) {
+        // this.listField[index].dataValue = result;
+        //upDataVersion
+        this.listField[index] = this.upDataVersion(
+          this.listField[index],
+          result
+        );
+        //chua tính toán
+      }
+    }
+  }
+  //----------------------CACULATE---------------------------//
+  // caculateField() {
+  //   if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
+  //   let fieldsNum = this.fields.filter((x) => x.dataType == 'N');
+  //   // let fieldsNum = this.fields.filter(
+  //   //   (x) => x.dataType == 'N' || x.dataType == 'CF'
+  //   // );
+  //   if (!fieldsNum || fieldsNum?.length == 0) return;
+  //   if (this.fieldOther?.length > 0) {
+  //     //lấy các trường liên quan
+  //     fieldsNum = fieldsNum.concat(this.fieldOther);
+  //   }
+
+  //   this.arrCaculateField.forEach((obj) => {
+  //     let dataFormat = obj.dataFormat;
+  //     // let check = field == null ? true : obj.recID == field.recID;
+  //     // if (!check) return;
+  //     // if (field != null && fieldName != null && dataValue != null)
+  //     //   dataFormat.replaceAll('[' + fieldName + ']', dataValue);
+  //     fieldsNum.forEach((f) => {
+  //       if (dataFormat.includes('[' + f.fieldName + ']')) {
+  //         if (!f.dataValue?.toString()) return;
+  //         let dataValue = f.dataValue;
+  //         // if (versionID) {
+  //         //   let ver = f?.version?.find((x) => x.refID == versionID);
+  //         //   if (ver) dataValue = ver?.dataValue;
+  //         // }
+
+  //         if (f.dataFormat == 'P') dataValue = dataValue + '/100';
+  //         dataFormat = dataFormat.replaceAll(
+  //           '[' + f.fieldName + ']',
+  //           dataValue
+  //         );
+  //       }
+  //     });
+
+  //     this.arrCaculateField.forEach((x) => {
+  //       if (dataFormat.includes('[' + x.fieldName + ']')) {
+  //         if (!x.dataValue?.toString()) return;
+  //         let dataValue = x.dataValue;
+  //         dataFormat = dataFormat.replaceAll(
+  //           '[' + x.fieldName + ']',
+  //           dataValue
+  //         );
+  //       }
+  //     });
+
+  //     if (!dataFormat.includes('[')) {
+  //       //tinh toán
+  //       obj.dataValue = this.customFieldSV.caculate(dataFormat);
+  //       //tính toan end
+  //       let index = this.fields.findIndex((x) => x.recID == obj.recID);
+  //       if (index != -1) {
+  //         this.fields[index] = this.upDataVersion(
+  //           this.fields[index],
+  //           obj.dataValue,
+  //           fieldsNum
+  //         );
+  //       }
+
+  //       this.setElement(obj.recID, obj.dataValue);
+  //       this.changeDetectorRef.detectChanges();
+  //     } else if (obj.dataValue) {
+  //       //Chua xu ly
+  //     }
+  //   });
+  // }
+  //  //cacule Version
+  //  caculateVersionField(fieldsN, fieldCF) {
+  //   let dataFormat = fieldCF.dataFormat;
+  //   fieldsN.forEach((f) => {
+  //     if (
+  //       dataFormat.includes('[' + f.fieldName + ']') &&
+  //       f.dataValue?.toString()
+  //     ) {
+  //       let dataValue = f.dataValue;
+  //       if (f.dataFormat == 'P') dataValue = dataValue + '/100';
+  //       dataFormat = dataFormat.replaceAll('[' + f.fieldName + ']', dataValue);
+  //     }
+  //   });
+
+  //   if (!dataFormat.includes('[')) {
+  //     //tinh toán
+  //     return this.customFieldSV.caculate(dataFormat);
+  //   }
+  //   return null;
+  // }
+
+  //------------------END_CACULATE--------------------//
+
+  //---------------------- Version ---------------------------//
+  upDataVersion(field, value) {
+    field.dataValue = value;
+    // if (this.taskID) {
+    let refIDVersion = this.stepsTasks.recID;
+    if (field?.versions?.length > 0) {
+      let idx = field?.versions.findIndex((x) => x.refID == refIDVersion);
+      if (idx != -1) field.versions[idx].dataValue = value;
+      else {
+        let vs = field?.versions;
+        let obj = {
+          refID: refIDVersion,
+          dataValue: value,
+          createdOn: new Date(),
+        };
+        vs.push(obj);
+        field.versions = vs;
+      }
+    } else {
+      field['versions'] = [
+        {
+          refID: refIDVersion,
+          dataValue: value,
+          createdOn: new Date(),
+        },
+      ];
+    }
+    // }
+    // else {
+    //   //update cac version
+    //   if (listFN?.length > 0) {
+    //     var versions = field.versions;
+    //     if (versions?.length > 0) {
+    //       versions.forEach((vs) => {
+    //         let listConver = [];
+    //         listFN.forEach((fn) => {
+    //           let f = JSON.parse(JSON.stringify(fn));
+    //           var vsion = f?.versions.find((x) => x.refID == vs.refID);
+    //           if (vsion != null) f.dataValue = vsion.dataValue;
+    //           listConver.push(f);
+    //         });
+    //         let dataVer = this.caculateVersionField(listConver, field);
+    //         if (dataVer != null) vs.dataValue = dataVer;
+    //       });
+    //     }
+    //   }
+    // }
+
+    return field;
+  }
+  // ------------------- FIELDS -----------------------------//
 }
