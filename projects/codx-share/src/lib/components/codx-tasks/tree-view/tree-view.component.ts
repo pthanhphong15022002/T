@@ -60,7 +60,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   pageSize = 20;
   page = 1;
 
-  @Input()vllPriority = 'TM005';
+  @Input() vllPriority = 'TM005';
   dataTree: any[] = [];
   dialog: any;
   favorite = '';
@@ -112,9 +112,9 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     this.gridModelTree.filter = this.filter;
     this.gridModelTree.favoriteID = this.favoriteID;
     this.gridModelTree.searchText = this.searchText;
-    if(this.predicate && this.dataValue){
-      this.gridModelTree.predicate=this.predicate;
-      this.gridModelTree.dataValue=this.dataValue;
+    if (this.predicate && this.dataValue) {
+      this.gridModelTree.predicate = this.predicate;
+      this.gridModelTree.dataValue = this.dataValue;
     }
     this.loadData();
     //cu ne
@@ -237,17 +237,17 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     // }
 
     this.loadedTree = false;
-    if (parent.isItem) {
-      if(this.predicateChild && this.dataValueChild){
-        let predicate = this.predicateChild+'&&ParentID=@2';
-        let datavalue = this.dataValueChild+';'+parent.data.recID.toString()
-        this.api
+    //if (parent.isItem) {
+    if (this.predicateChild && this.dataValueChild) {
+      let predicate = this.predicateChild + '&&ParentID=@2';
+      let datavalue = this.dataValueChild + ';' + parent.data.recID.toString();
+      this.api
         .execSv<any>(
           'TM',
           'ERM.Business.TM',
           'TaskBusiness',
           'GetListTasksChildrenDeTailsTreeOneStepAsync',
-          [parent.data.taskID,predicate,datavalue]
+          [parent.data.taskID, predicate, datavalue]
         )
         .subscribe((res) => {
           if (res && res?.length > 0) {
@@ -255,9 +255,8 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
             this.loadedTree = true;
           }
         });
-      }
-      else{
-        this.api
+    } else {
+      this.api
         .execSv<any>(
           'TM',
           'ERM.Business.TM',
@@ -271,15 +270,15 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
             this.loadedTree = true;
           }
         });
-      }
-
     }
+
+    //}
   }
 
   dbClick(data) {
     this.viewTask.emit(data);
   }
-  select(data){
+  select(data) {
     this.nodeSelect.emit(data);
   }
 
