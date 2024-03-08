@@ -1764,6 +1764,7 @@ export class Approvers {
   orgUnitName: string;
   idCardType: string;
   idCardNo: string;
+  negative: string;
 }
 
 //#endregion

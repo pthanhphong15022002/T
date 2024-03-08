@@ -79,6 +79,9 @@ import { PropertyUserinfoComponent } from './modeview/properties/property-userin
 import { BpSignPDFComponent } from './sign-pdf/bp-sign-pdf.component';
 import { FormSettingAdvancedTasksComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/form-setting-advanced-tasks/form-setting-advanced-tasks.component';
 import { SettingMailComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/form-setting-advanced-tasks/setting-mail/setting-mail.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
+import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 
 export const routes: Routes = [
   {
@@ -104,6 +107,18 @@ export const routes: Routes = [
         path: 'bptasks/:funcID',
         component: BpTasksComponent,
         data: { noReuse: true },
+      },
+      {
+        path: 'report/:funcID',
+        component: CodxReportViewsComponent,
+      },
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
+      },
+      {
+        path: 'share/dynamic/:funcID',
+        component: DynamicFormComponent,
       },
     ],
   },

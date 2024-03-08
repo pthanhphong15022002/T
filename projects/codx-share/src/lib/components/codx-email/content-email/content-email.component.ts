@@ -14,6 +14,7 @@ import {
   CacheService,
   CallFuncService,
   CodxInputComponent,
+  CodxService,
   DialogRef,
   FormModel,
   Util,
@@ -54,6 +55,7 @@ export class ContentEmailComponent {
   @Input() isAfterRender = false;
   @Input() showFooter = true;
   @Input() showAttachment = true;
+  @Input() email?: email;
 
   @ViewChild('addTemplateName') addTemplateName: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -75,12 +77,123 @@ export class ContentEmailComponent {
     private cr: ChangeDetectorRef,
     private codxService: CodxShareService,
     private dmSV: CodxDMService,
-    private cache: CacheService
+    private cache: CacheService,
+    private mainService: CodxService
   ) {
     this.cache.valueList('ES014').subscribe((res) => {
       this.vllShareData = res;
       console.log('vll', res);
     });
+  }
+
+  ngOnInit(): void {
+    if (!this.formModel.entityName) {
+      this.formModel = new FormModel();
+      this.formModel.entityName = 'AD_EmailTemplates';
+      this.formModel.formName = 'EmailTemplates';
+      this.formModel.gridViewName = 'grvEmailTemplates';
+      this.formModel.funcID = '';
+
+      this.cache.gridView(this.formModel.gridViewName).subscribe((gridView) => {
+        // this.cache.setGridView(this.formModel.gridViewName, gridView);
+        this.cache
+          .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+          .subscribe((gridViewSetup) => {
+            // this.cache.setGridViewSetup(
+            //   this.formModel.formName,
+            //   this.formModel.gridViewName,
+            //   gridViewSetup
+            // );
+            this.dialogETemplate = this.mainService.buildFormGroup(
+              this.formModel.formName,
+              this.formModel.gridViewName,
+              ''
+            );
+
+            if (this.templateID) {
+              this.codxService
+                .getEmailTemplate(this.templateID)
+                .subscribe((res1) => {
+                  if (res1 != null) {
+                    console.log('getEmailTemplate', res1);
+                    this.data = res1[0];
+                    this.dialogETemplate.patchValue(this.data);
+                    if (this.data?.gridviewName) {
+                      //Load field theo cubeID của EmailTemplate
+                      this.loadListFieldByGridViewName(
+                        this.data?.gridviewName,
+                        this.data?.formName
+                      );
+                    } else {
+                      this.loadListFieldByFuntion();
+                    }
+                    // this.setViewBody();
+                    this.dialogETemplate.addControl(
+                      'recID',
+                      new FormControl(res1[0].recID)
+                    );
+                    // if (res[0].isTemplate) {
+                    //   this.methodEdit = true;
+                    // }
+                    let lstUser = res1[1];
+                    if (lstUser && lstUser.length > 0) {
+                      console.log(lstUser);
+                      lstUser.forEach((element) => {
+                        switch (element.sendType) {
+                          case '1':
+                            this.lstFrom.push(element);
+                            break;
+                          case '2':
+                            this.lstTo.push(element);
+                            break;
+                          case '3':
+                            this.lstCc.push(element);
+                            break;
+                          case '4':
+                            this.lstBcc.push(element);
+                            break;
+                        }
+                      });
+                    }
+
+                    if (res1.length > 1 && res1[2]) {
+                      let lstCube = res1[2] as any[];
+                      this.dataSource = [...this.dataSource, ...lstCube];
+                    }
+                    this.formModel.currentData = this.data =
+                      this.dialogETemplate.value;
+                    this.isAfterRender = true;
+                  }
+                  //this.cr.detectChanges();
+                });
+            }
+            // else if (this.templateType) {
+            // }
+            else {
+              this.codxService
+                .getDataDefault(this.functionID)
+                .subscribe((res) => {
+                  if (res) {
+                    //this.setViewBody();
+
+                    this.data = res;
+                    this.dialogETemplate.patchValue(this.data);
+                    if (this.email) this.dialogETemplate.patchValue(this.email);
+                    this.dialogETemplate.addControl(
+                      'recID',
+                      new FormControl(this.data.recID)
+                    );
+                    this.loadListFieldByFuntion();
+                    this.formModel.currentData = this.data =
+                      this.dialogETemplate.value;
+                    this.isAfterRender = true;
+                    //this.cr.detectChanges();
+                  }
+                });
+            }
+          });
+      });
+    }
   }
 
   deleteItem(data, sendType) {
@@ -596,4 +709,9 @@ export class ContentEmailComponent {
       }
     );
   }
+}
+
+class email {
+  subject?: string;
+  message?: string;
 }

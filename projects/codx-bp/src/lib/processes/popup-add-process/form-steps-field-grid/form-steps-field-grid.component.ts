@@ -225,7 +225,8 @@ export class FormStepsFieldGridComponent
     type: any,
     item: any = null,
     parent: any = null,
-    stage: any = null
+    stage: any = null,
+    isCondistion = false
   ) {
     let lstParent = JSON.parse(JSON.stringify(this.listStage));
     lstParent.forEach((elm) => {
@@ -288,17 +289,30 @@ export class FormStepsFieldGridComponent
           } else {
             var index = this.listStage.findIndex((x) => x.recID == dt.parentID);
             dt = this.setDataCondition(dt);
+
             if (type == 'add') {
               this.listStage[index].child.push(dt);
               this.data.steps.push(dt);
             } else {
+              
+              if(isCondistion)
+              {
+                index = this.listStage.findIndex(x=>x.recID == dt?.stageID);
+                var indexP = this.listStage[index].child.findIndex(x=>x.recID == dt.parentID);
+                var indexC = this.listStage[index].child[indexP].child.findIndex(x=>x.recID == dt.recID);
+                this.listStage[index].child[indexP].child[indexC] = dt;
+              }
+             
               var index2 = this.listStage[index].child.findIndex(
                 (x) => x.recID == dt.recID
               );
               var indexP = this.data.steps.findIndex(
                 (x) => x.recID == dt.recID
               );
-              if (index2 >= 0) {
+              
+              if (index2 >= 0) 
+              {
+               
                 this.listStage[index].child[index2] = dt;
                 this.listStage = JSON.parse(JSON.stringify(this.listStage));
               }

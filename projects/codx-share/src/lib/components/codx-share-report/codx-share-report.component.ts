@@ -49,21 +49,12 @@ export class CodxShareReportComponent
   }
 
   ngAfterViewInit(): void {
-    // this.setCSS();
   }
 
   getCountBookMark() {
     let widthBody = document.body.offsetWidth - 40;
     this.countBookMarks = Math.ceil(widthBody / 260);
   }
-
-  // setCSS() {
-  //   var elems = document.querySelectorAll('.header-fixed');
-
-  //   [].forEach.call(elems, function (el) {
-  //     el.classList.remove('toolbar-fixed');
-  //   });
-  // }
 
   formatListGroupReport() {
     var obj = {
@@ -101,7 +92,7 @@ export class CodxShareReportComponent
         if (item) {
           var results = this.formatBookMark(item);
           this.listReport = results;
-          this.listReports = JSON.parse(JSON.stringify(results)); //this.formatData(item);
+          this.listReports = JSON.parse(JSON.stringify(results));
           this.formatData(this.listReport);
         }
       });
@@ -110,7 +101,7 @@ export class CodxShareReportComponent
       this.listReport = results;
       this.listReports = JSON.parse(JSON.stringify(results));
       this.formatData(this.listReport);
-    } //this.formatData(result);
+    }
   }
 
   formatBookMark(data: any) {
