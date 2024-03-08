@@ -186,7 +186,6 @@ export class ProjectTasksViewComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      option.zIndex = 9997;
       res.projectID = this.projectData.projectID;
       if (parentID) res.parentID = parentID;
       let dialogAdd = this.callfc.openSide(
@@ -218,7 +217,7 @@ export class ProjectTasksViewComponent
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = '850px';
+        option.Width = '550px';
         //option.zIndex = 9997;
         let dialogAdd = this.callfc.openSide(
           PopupAddTaskComponent,
@@ -243,6 +242,39 @@ export class ProjectTasksViewComponent
     }
   }
 
+  copyTask(){
+    if(!this.view.dataService.dataSelected) return;
+    let data = JSON.parse(JSON.stringify(this.view.dataService.dataSelected));
+    this.view.dataService.copy().subscribe((res) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      res.parentID=data.parentID;
+      res.startDate = data.startDate;
+      res.endDate = data.endDate;
+      res.priority = data.priority;
+      res.approveControl = data.approveControl;
+      res.status = '10';
+      let dialogAdd = this.callfc.openSide(
+        PopupAddTaskComponent,
+        [res, 'copy', this.projectData,this.viewTree],
+        option
+      );
+      dialogAdd.closed.subscribe((returnData) => {
+        if (returnData?.event) {
+          if(this.viewTree && this.viewTree.dataTree){
+            this.viewTree.treeView.setNodeTree(returnData?.event);
+            //this.viewTree.dataTree = this.viewTree.dataTree;
+            this.detectorRef.detectChanges();
+          }
+          //this.view?.dataService?.update(returnData?.event);
+        } else {
+          this.view.dataService.clear();
+        }
+      });
+    });
+  }
   deleteTask(data){
     //this.view.dataService.dataSelected = data;
     if (data.status == '90') {
@@ -325,6 +357,10 @@ export class ProjectTasksViewComponent
     });
   }
 
+  dbClick(data:any){
+    this.view.dataService.dataSelected=data;
+    this.viewTask();
+  }
   viewTask(){
     // if(this.view.dataService.dataSelected){
     //   let option = new SidebarModel();
@@ -389,6 +425,9 @@ export class ProjectTasksViewComponent
       break;
       case "SYS05":
         this.viewTask()
+        break;
+      case "SYS04":
+        this.copyTask()
       break;
       case "PMT01011":
         this.addTask(this.view.dataService.dataSelected?.recID);

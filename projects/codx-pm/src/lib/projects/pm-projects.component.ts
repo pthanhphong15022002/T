@@ -38,9 +38,11 @@ export class ProjectsComponent
   }
   labelStyle: FontModel = { textAlignment: 'Center', text: '40% Complete (Success)', color: '#000'}
   formModel:FormModel;
+  animation: any = { enable: true, duration: 2000, delay: 0 };
 
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('templateList') templateList: TemplateRef<any>;
+  @ViewChild('templateCard') templateCard: TemplateRef<any>;
 
   constructor(
     private injector: Injector,
@@ -82,6 +84,16 @@ export class ProjectsComponent
         model: {
           headerTemplate:this.headerTemplate,
           template:this.templateList
+        },
+      },
+      {
+        id: '2',
+        type: ViewType.card,
+        sameData: true,
+        //active: true,
+        model: {
+
+          template:this.templateCard
         },
       },
 
@@ -225,5 +237,11 @@ export class ProjectsComponent
     //   this.view?.dataService.dataSelected,'',
     //   option
     // );
+  }
+  toFixed(value: number) {
+    if (!value || isNaN(value)) {
+      return 0;
+    }
+    return value % 1 === 0 ? value : value.toFixed(2);
   }
 }

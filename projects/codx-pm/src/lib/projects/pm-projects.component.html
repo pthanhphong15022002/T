@@ -219,7 +219,7 @@
               <span class="me-1">
                 Đang thực hiện
               </span>
-              <span>({{ (data.taskStatus.done/data.taskStatus.count)*100 + "%" }})</span>
+              <span>({{ toFixed((data.taskStatus.done/data.taskStatus.count)*100) + "%" }})</span>
             </div>
           </div>
 
@@ -267,3 +267,62 @@
   </div>
 </ng-template>
 <!-- end template list -->
+
+<ng-template #templateCard let-data>
+  <ng-container>
+    <div class=" w-350px h-300px container h-100 border rounded p-0">
+      <div class="row w-100 d-flex align-items-center m-0 border-bottom" style="background-color: #e6f2ff;">
+        <div class="w-100 fs-4 fw-bold p-0 text-center pt-3">{{data.projectName}}</div>
+      </div>
+      <div class="row w-100 m-0 text-center" style="background-color: #e6f2ff;">
+        <span class="py-3">Thời gian: {{data.startDate| fmDT}} - {{data.finishDate| fmDT}}</span>
+      </div>
+      <div class="row w-100 m-0" *ngIf="data.taskStatus">
+        <div class="col-4 h-100 pt-5">
+          <ejs-progressbar  [type]="'Circular'" [maximum]="100" [minimum]="0"
+          [value]="(data.taskStatus?.done/data.taskStatus?.count)*100" [width]="'120'" [height]="'120'"
+          [animation]="animation" [progressThickness]="12" [trackThickness]="12"
+           [id]="data.projectID" [cornerRadius]="'Round'"
+          >
+          <e-progressbar-annotations>
+              <e-progressbar-annotation
+                  content='<div  style="font-size:20px;font-weight:bold;color:#b52123;fill:#b52123" class="text-primary"><span>{{toFixed((data.taskStatus.done/data.taskStatus.count)*100)}}%</span></div>'>
+              </e-progressbar-annotation>
+          </e-progressbar-annotations>
+           </ejs-progressbar>
+
+
+        </div>
+        <div class="col-8 h-100 d-flex flex-column">
+            <div class="w-100 h-30px"></div>
+            <div class="w-100 h-40px d-flex align-items-center px-5">
+              <i class="text-success fs-5 pe-5">*</i>
+              <span class="fw-bold fs-5">{{data.taskStatus.done}}/{{data.taskStatus.count}}</span>
+              <codx-label [formModel]="formModel" class="ps-3" default="Đang thực hiện" ></codx-label>
+
+            </div>
+            <div class="w-100 h-40px d-flex align-items-center px-5">
+              <i class="text-danger fs-5 pe-5">*</i>
+              <span class="fw-bold fs-5">{{data.taskStatus.isOverdue}}</span>
+              <codx-label [formModel]="formModel" class="ps-3" default="Trễ hạn" ></codx-label>
+            </div>
+        </div>
+      </div>
+      <div class="row w-100 m-0 d-flex align-items-center justify-content-center" *ngIf="!data.taskStatus">   <i class="text-muted fs-6 pt-5" >Chưa có công việc...</i></div>
+      <div class="row w-100 m-0 pt-3" *ngIf="data.taskPriority">
+        <div class="col-4 border-right p-2 d-flex flex-column">
+          <div class="w-100 text-muted fw-bold fs-5 text-center"> {{data.taskPriority["1"]}}</div>
+          <div class="w-100 text-muted text-center"> Thấp</div>
+        </div>
+        <div class="col-4 border-right p-2 d-flex flex-column">
+          <div class="w-100 fw-bold fs-5 text-center"> {{data.taskPriority["2"]}}</div>
+          <div class="w-100 text-muted text-center"> Bình thường</div>
+        </div>
+        <div class="col-4 b p-2 d-flex flex-column">
+          <div class="w-100 fw-bold fs-5 text-center">{{data.taskPriority["3"]}}</div>
+          <div class="w-100 text-muted text-center"> Cao</div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>

@@ -443,6 +443,7 @@ export class PopupAddProjectComponent extends UIComponent {
         if (!returnData?.error) {
           if (this.imageUpload?.imageUpload?.item) {
             returnData.taskStatus = this.data.taskStatus;
+            returnData.taskPriority=this.data.taskPriority;
             this.imageUpload
               .updateFileDirectReload(returnData.data.recID)
               .subscribe((result) => {

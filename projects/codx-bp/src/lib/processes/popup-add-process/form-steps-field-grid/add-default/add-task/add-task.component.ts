@@ -348,7 +348,7 @@ export class AddTaskComponent
         this.listUses.push({
           objectID: element.id,
           objectName: element.text,
-          objectType: element.objectType,
+          objectType: element?.objectType =="SYS061" ? element?.id : element?.objectType,
           roleType: 'O',
         });
       });
@@ -807,6 +807,20 @@ export class AddTaskComponent
     this.callFuc.openForm(share, '', 420, 600, null, null, null, option);
   }
   esign(){
+    let result = JSON.parse(JSON.stringify(this.process));
+    result.steps.forEach((elm: any) => {
+      delete elm.child;
+      if (typeof elm.settings === 'object')
+        elm.settings = JSON.stringify(elm.settings);
+    });
+    this.api.execSv("BP","BP","ProcessesBusiness","UpdateProcessAsync",result).subscribe(item=>{
+      this.esignB();
+    })
+   
+  }
+
+  esignB()
+  {
     let fileIDs="";
     let dynamicApprovers=[];
     this.listDocument.forEach(doc=>{
@@ -819,6 +833,7 @@ export class AddTaskComponent
       if(per?.objectType!=null){
         let tempPer ={approver:per?.objectID,
         roleType:per?.objectType,  
+        userName:per?.objectName,  
         signer:per?.recID  } 
         dynamicApprovers.push(tempPer);   
       }

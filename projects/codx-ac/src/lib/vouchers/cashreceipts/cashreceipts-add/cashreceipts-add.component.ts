@@ -96,7 +96,9 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
       })
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    if (this.formCashReceipt?.data?.coppyForm) this.formCashReceipt.data._isEdit = true; //? test copy để tạm
+  }
 
   /**
    * *Hàm init sau khi form được vẽ xong
