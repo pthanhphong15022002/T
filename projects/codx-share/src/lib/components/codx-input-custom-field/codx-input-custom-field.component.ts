@@ -404,7 +404,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
         break;
     }
 
-    this.valueChangeCustom.emit({ e: e, data: this.customField });
+    this.valueChangeCustom.emit({ e: e.data, data: this.customField });
   }
   //combox user
   openUserPopup() {
@@ -449,7 +449,10 @@ export class CodxInputCustomFieldComponent implements OnInit {
       if (!this.checkValid) return;
     } else this.showErrMess = false;
 
-    this.valueChangeCustom.emit({ e: e, data: this.customField });
+    this.valueChangeCustom.emit({
+      e: e?.data?.fromDate,
+      data: this.customField,
+    });
   }
 
   addFile() {
@@ -733,15 +736,6 @@ export class CodxInputCustomFieldComponent implements OnInit {
   }
 
   valueChangeCbx(e) {
-    // let checkNull = !e || !e.data;
-    // if (this.customField.isRequired && checkNull) {
-    //   this.cache.message('SYS028').subscribe((res) => {
-    //     if (res) this.errorMessage = res.customName || res.defaultName;
-    //     this.showErrMess = true;
-    //   });
-    //   if (!this.checkValid) return;
-    // } else this.showErrMess = false;
-
     this.valueChangeCustom.emit({
       e: e.data,
       data: this.customField,
@@ -982,23 +976,6 @@ export class CodxInputCustomFieldComponent implements OnInit {
       data: this.customField,
     });
   }
-  refValuePA(crrData) {
-    this.dataRef = '';
-    let dataFormat = JSON.parse(this.customField.dataFormat);
-    if (Array.isArray(dataFormat) && dataFormat?.length > 0) {
-      dataFormat.forEach((x) => {
-        let value = '';
-        for (var key in crrData) {
-          if (key.toLocaleLowerCase() == x.fieldName.toLocaleLowerCase()) {
-            value = crrData[key];
-          }
-        }
-        this.modelJSON += '"' + x.fieldName + '":"' + value + '",';
-      });
-      this.modelJSON = this.modelJSON.substring(0, this.modelJSON.length - 1);
-      this.modelJSON = '[{' + this.modelJSON + '}]';
-    }
-  }
 
   viewFieldRef() {
     this.dataRef = '';
@@ -1036,7 +1013,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
           );
       } else
         this.notiService.notify(
-          'Không có data phù hợp với trường được chọn ! Vui lòng nhập giá trị của bạn !',
+          'Không có data tham chiếu phù hợp ! Vui lòng nhập giá trị của bạn !',
           '3'
         );
     } else if (this.refInstance) {
@@ -1051,7 +1028,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
             this.openPopupRef(fiels);
           } else
             this.notiService.notify(
-              'Không có data phù hợp với trường được chọn ! Vui lòng nhập giá trị của bạn !',
+              'Không có data tham chiếu phù hợp ! Vui lòng nhập giá trị của bạn !',
               '3'
             );
         });
@@ -1078,6 +1055,10 @@ export class CodxInputCustomFieldComponent implements OnInit {
     pop.closed.subscribe((res) => {
       if (res?.event) {
         this.customField = res.event;
+        this.valueChangeCustom.emit({
+          e: this.customField.dataValue,
+          data: this.customField,
+        });
         this.changeRef.detectChanges();
       }
     });

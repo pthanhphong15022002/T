@@ -1,10 +1,24 @@
-import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { CodxInputComponent, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
+import {
+  CodxInputComponent,
+  DialogData,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+} from 'codx-core';
 import {
   BP_Processes_Steps_EventControl,
   BP_Processes_Steps_Reminder,
 } from 'projects/codx-bp/src/lib/models/BP_Processes.model';
+import { ContentEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/content-email/content-email.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
@@ -13,6 +27,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
   styleUrls: ['./form-setting-advanced-tasks.component.scss'],
 })
 export class FormSettingAdvancedTasksComponent implements OnInit {
+  @ViewChild('mailControl') mailControl: ContentEmailComponent;
   dialog: any;
   title = 'Thiết lập nâng cao';
   tabInfos: any[] = [
@@ -55,7 +70,9 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
     if (dt?.data?.dataReminder)
       this.dataReminder = JSON.parse(JSON.stringify(dt?.data?.dataReminder));
     if (dt?.data?.dataEventControl)
-      this.dataEventControl = JSON.parse(JSON.stringify(dt?.data?.dataEventControl));
+      this.dataEventControl = JSON.parse(
+        JSON.stringify(dt?.data?.dataEventControl)
+      );
   }
   ngOnInit(): void {
     this.formModelMail = new FormModel();
@@ -78,33 +95,7 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
       let alertType = startControl['alertType'];
       this.isAlert = alertType?.split(';')?.some((x) => x == '1') ?? false;
       this.isSendMail = alertType?.split(';')?.some((x) => x == '2') ?? false;
-    }
-
-    if (this.templateID) {
-      this.codxService.getEmailTemplate(this.templateID).subscribe((res1) => {
-        if (res1 != null) {
-          this.dataMail = res1[0];
-          let lstUser = res1[1];
-          if (lstUser && lstUser.length > 0) {
-            lstUser.forEach((element) => {
-              switch (element.sendType) {
-                case '1':
-                  this.lstFrom.push(element);
-                  break;
-                case '2':
-                  this.lstTo.push(element);
-                  break;
-                case '3':
-                  this.lstCc.push(element);
-                  break;
-                case '4':
-                  this.lstBcc.push(element);
-                  break;
-              }
-            });
-          }
-        }
-      });
+      this.templateID = startControl?.email;
     }
   }
 
@@ -262,7 +253,7 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
     }
   }
 
-  onSave() {
+  async onSave() {
     if (this.dataReminder?.control == '0') {
       this.dataReminder.times = '';
       this.dataReminder.autoComplete = '';
@@ -293,6 +284,11 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
       alertType: alertType,
       email: '',
     };
+    if (this.mailControl){
+      this.mailControl.onSaveForm(null);
+      objControl.email = this.mailControl.data?.recID;
+    }
+
     this.dataEventControl.startControl = JSON.stringify(objControl);
     this.dialog.close([this.dataReminder, this.dataEventControl]);
   }

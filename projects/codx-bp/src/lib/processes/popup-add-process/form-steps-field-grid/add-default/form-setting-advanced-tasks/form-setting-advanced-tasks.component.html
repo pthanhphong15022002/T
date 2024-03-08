@@ -54,26 +54,15 @@
     </div>
     <div class="mt-5">
       <lib-content-email
+        #mailControl
         [showFrom]="true"
         [showCC]="false"
         [showBCC]="false"
-        [lstTo]="lstTo"
-        [lstFrom]="lstFrom"
-        [lstCc]="lstCc"
-        [lstBcc]="lstBcc"
-        [vllShare]="'ES014'"
-        [data]="dataMail"
-        [showAI]="false"
-        [isLoadingAI]="false"
-        [isInside]="false"
-        [formModel]="formModelMail"
-        [dialogETemplate]="dialogETemplate"
-        [saveIsTemplate]="false"
-        [isAddNew]="true"
-        [templateID]="templateID"
-        [dialog]="dialog"
-        [showAttachment]="false"
         [showFooter]="false"
+        [showAttachment]="false"
+        [vllShare]="'ES014'"
+        [templateID]="templateID"
+        [isAddNew]="templateID != '' && templateID != null ? false : true"
       ></lib-content-email>
     </div>
   </div>
