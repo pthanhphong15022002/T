@@ -255,27 +255,31 @@ export class PeriodicControlComponent extends UIComponent{
   }
 
   deletePeriodic(data:any){
-    this.api.exec('AC','RunPeriodicBusiness','DeletelAsync',[
-      data.recID,
-      this.view.dataService.request
-    ]).pipe(takeUntil(this.destroy$))
-    .subscribe((res:any)=>{
-      if (res) {
-        if (this.oData.length == 1) {
-          if (res[0].length) {
-            this.oData = [res[0][0]];
-            let total = res[1];
-            if(total == 1) this.showAll = false;
-          }else{
-            this.oData = [];
-            this.showAll = false;
+    this.notification.alertCode('AC0014', null).subscribe((res) => {
+      if (res.event.status === 'Y') {
+        this.api.exec('AC','RunPeriodicBusiness','DeletelAsync',[
+          data.recID,
+          this.view.dataService.request
+        ]).pipe(takeUntil(this.destroy$))
+        .subscribe((res:any)=>{
+          if (res) {
+            if (this.oData.length == 1) {
+              if (res[0].length) {
+                this.oData = [res[0][0]];
+                let total = res[1];
+                if(total == 1) this.showAll = false;
+              }else{
+                this.oData = [];
+                this.showAll = false;
+              }
+            }else{
+              this.oData = res[0];
+              let total = res[1];
+              if (this.oData.length <= total) this.showAll = false; 
+            }
+            this.detectorRef.detectChanges();
           }
-        }else{
-          this.oData = res[0];
-          let total = res[1];
-          if (this.oData.length <= total) this.showAll = false; 
-        }
-        this.detectorRef.detectChanges();
+        })
       }
     })
   }
