@@ -110,7 +110,9 @@ export class SalesinvoicesAddComponent extends UIComponent {
       })
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void { 
+    if (this.formSalesInvoice?.data?.coppyForm) this.formSalesInvoice.data._isEdit = true; //? test copy để tạm
+  }
 
   onAfterInitForm(event) {
     this.setValidateForm();

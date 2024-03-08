@@ -66,20 +66,25 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     this.crrUser = this.authStore.get();
     if(dialogData.data[1]){
       this.action = dialogData.data[1];
-      if(this.action!='add'){
+      if(this.action=='edit'){
+        this.title = 'Chỉnh sửa công việc'
         this.enableAttachment=true;
         this.enableChecklist=true;
         this.getTaskUpdate(this.data.recID);
       }
       if(this.action=="view"){
+        this.getTaskUpdate(this.data.recID,true);
         this.enableEdit=false;
         this.title ='Thông tin công việc'
       }
-      if(this.action == 'edit'){
-        this.title = 'Chỉnh sửa công việc'
+
+      if(this.action=='copy'){
+        this.enableAttachment=true;
+        this.enableChecklist=true;
+        this.getTaskUpdate(this.data.coppyForm,true);
       }
     }
-    if(this.data.parentID && this.action=='add') this.isAssign=true;
+    if(this.data.parentID && (this.action=='add' || this.action=='copy')) this.isAssign=true;
     if(this.data.parentID){
       this.api.execSv('TM','ERM.Business.TM','TasksBusiness','GetTaskByRecIDAsync',this.data.parentID).subscribe((res:any)=>{
         if(res){
@@ -95,7 +100,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
           this.projectMemberType = memberType.fieldValue;
         }
         if(this.projectData.settings.find((x:any)=>x.fieldName=='ApproveControl')){
-          this.data.approveControl = this.projectData.settings.find((x:any)=>x.fieldName=='ApproveControl').fieldValue;
+          if(!this.data.approveControl) this.data.approveControl = this.projectData.settings.find((x:any)=>x.fieldName=='ApproveControl').fieldValue;
           this.approveControl = this.projectData.settings.find((x:any)=>x.fieldName=='ApproveControl').fieldValue;
         }
       }
@@ -253,8 +258,9 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     }
   }
 
+  enableCompleteTodo:boolean = true;
   toggleCompleted(task:any){
-    if(!this.enableEdit) return;
+    if(!this.enableEdit && !this.enableCompleteTodo) return;
     if(task.status == '1'){
       task.status='90';
     }
@@ -277,10 +283,10 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
 
   async save(){
     if(!this.enableEdit) return;
-    if(this.action == 'add'){
+    if(this.action == 'add' || this.action=='copy'){
       this.data.status='10';
       this.data.category='3';
-      this.data.projectID=this.projectData.projectID;
+      if(!this.data.projectID )this.data.projectID=this.projectData.projectID;
     }
     if(this.projectData.settings){
       let deadlineControl = this.projectData.settings.find((x:any)=> x.fieldName=="DeadlineControl");
@@ -377,32 +383,62 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
       });
   }
 
-  getTaskUpdate(recID:any){
-    this.api.execSv('TM','ERM.Business.TM','TaskBusiness','GetTaskUpdateByRecIDAsync',recID).subscribe((res:any)=>{
+  getTaskUpdate(recID:any,isNotValidate:boolean=false){
+    this.api.execSv('TM','ERM.Business.TM','TasksBusiness','GetTaskUpdateByRecIDAsync',[recID,isNotValidate]).subscribe((res:any)=>{
       if(res  && res.length==4){
         this.listUserDetail=res[1]
         this.members = res[3];
         if(this.members.length){
           for(let i=0;i<this.members.length;i++){
             if(this.members[i].roleType)this.members[i].icon = this.listRoles.find((x:any)=>x.value==this.members[i].roleType)?.icon;
+            if(this.action=='copy'){
+              //delete old taskID of resources
+              this.members[i].taskID=undefined;
+            }
           }
         }
         this.todoList = res[2];
-        this.checkAllowedEdit();
-        this.updateStatusCheck();
+        if(this.action=='copy'){
+         this.todoList = this.todoList.map((x:any)=>{x.recID=undefined; return x;});
+        }
+        if(this.action == 'edit'){
+           this.checkAllowedEdit();
+           this.updateStatusCheck();
+        }
+
       }
     })
   }
 
   oCountFooter:any;
-  commentTyped(value: number, key: string) {
+  commentTyped(e: any, key: string) {
     if(this.history) this.history.refresh();
-    debugger
-    if(this.oCountFooter){
-      let oCountFooter = JSON.parse(JSON.stringify(this.oCountFooter));
-      oCountFooter[key] = value;
-      this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
-      this.changeDetectorRef.detectChanges();
+    if(e.comment){
+      let status="00";
+      let hours="8";
+      if(this.isInProgress) status="20";
+      if(this.isFinish) status ="90";
+      if(this.data){
+        if(this.todoList?.length){
+
+          if(this.todoList.filter((x:any)=>x.status=='90').length == this.todoList.length){
+            let dialogConfirm =  this.notificationsService.alert('PMT001','Danh sách công việc cần làm đã hoàn tất, bạn có muốn hoàn tất công việc này?',null,'6');
+            dialogConfirm.closed.subscribe((res:any)=>{
+            if(res.event.status=='Y'){
+              status = '90';
+            }
+            this.updateTaskStatus(this.data.recID,status,e.comment);
+            })
+          }
+          else{
+            this.updateTaskStatus(this.data.recID,status,e.comment);
+          }
+        }
+        else{
+          this.updateTaskStatus(this.data.recID,status,e.comment);
+        }
+
+      }
     }
 
   }
@@ -427,6 +463,15 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
       .subscribe((res) => {
         if (res && res.length > 0) {
           this.listUserDetail = this.listUserDetail.concat(res);
+          this.listUserDetail = this.getUniqueListBy(this.listUserDetail,'userID');
+          if(this.members?.length){
+            this.members.forEach((item:any)=>{
+              let usr = this.listUserDetail.find((x:any)=>x.userID==item.resourceID);
+              if(usr){
+                item.positionName = usr.positionName;
+              }
+            })
+          }
 
           // for (var i = 0; i < res.length; i++) {
           //   let emp = res[i];
@@ -480,7 +525,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   }
 
   createTask(){
-    if(this.action=='add'){
+    if(this.action=='add' || this.action=='copy'){
 
       this.api
       .exec('TM', 'TaskBusiness', 'AddTaskAsync', [
@@ -514,12 +559,12 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
       this.data.assignTo = this.members.map((x:any)=>x.resourceID).join(';');
       if(this.todoList?.length){
         if(this.todoList.filter((x:any)=>x.status=='90').length == this.todoList.length){
-         let abc =  this.notificationsService.alert('PMT001','hehehe',null,'6');
+         let abc =  this.notificationsService.alert('PMT001','Danh sách công việc cần làm đã hoàn tất, bạn có muốn hoàn tất công việc này?',null,'6');
          abc.closed.subscribe((res:any)=>{
           if(res.event.status=='Y'){
             this.data.status = '90';
           }
-          else this.data.status='20';
+          //else this.data.status='20';
          this.api
             .exec('TM', 'TasksBusiness', 'UpdateTaskAsync', [
               this.data,
@@ -539,7 +584,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
 
         }
         else{
-          this.data.status='20';
+          //this.data.status='20';
           this.api
             .exec('TM', 'TasksBusiness', 'UpdateTaskAsync', [
               this.data,
@@ -555,6 +600,24 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
 
             });
         }
+
+      }
+      else{
+        //this.data.status='20';
+        this.api
+          .exec('TM', 'TasksBusiness', 'UpdateTaskAsync', [
+            this.data,
+            this.funcID,
+            this.members,
+            this.todoList,
+            this.deletedMembers,
+            this.deletedTodo.length ? this.deletedTodo.join(';') : null
+          ])
+          .subscribe((res: any) => {
+            this.dialog.dataService.update(this.data, 0, false).subscribe();
+            this.dialog.close(this.data);
+
+          });
       }
 
     }
@@ -598,31 +661,40 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   checkAllowedEdit(){
     if(this.action=='add'){
       this.enableEdit=true;
+      this.enableCompleteTodo=true;
       return
     }
     if(this.action=='view'){
       this.enableEdit=false;
+      this.enableCompleteTodo=true;
       return
     }
     if(!this.crrUser){
       this.enableEdit = false;
+      this.enableCompleteTodo=false;
       return;
     }
     if(this.data){
       if(this.validEditStatus.indexOf(this.data.status)==-1){
         this.enableEdit = false;
+        this.enableCompleteTodo=false;
         return;
       }
       if(this.data.createdBy == this.crrUser.userID && this.action=='edit'){
         this.enableEdit = true;
+        this.enableCompleteTodo=true;
         return;
       }
       if(this.members.length){
         let userRole = this.members.find((x:any)=>x.resourceID==this.crrUser.userID);
         if(userRole && userRole.roleType=='A' && this.action=='edit'){
           this.enableEdit=true;
+          this.enableCompleteTodo=true;
         }
-        else this.enableEdit = false;
+        else{
+          this.enableCompleteTodo=false;
+          this.enableEdit = false;
+        }
       }
     }
   }
@@ -677,10 +749,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     if(this.data){
       if(this.crrUser.administrator || this.crrUser.functionAdmin || this.crrUser.systemAdmin) return true;
       if(this.crrUser.userID == this.data.createdBy) return true;
-      if(this.projectData &&
-         this.projectData.settings.length &&
-         this.projectData.settings.find((x:any)=>x.fieldName=='EditControlControl')?.fieldValue == 1 &&
-         this.members.find((x:any)=>x.roleType=='A' && x.resourceID==this.crrUser.userID)) return true;
+      if(this.members.find((x:any)=>x.roleType=='A' && x.resourceID==this.crrUser.userID)) return true;
       return false;
     }
     else{
@@ -695,13 +764,47 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     }
   }
 
+
+  checkStatusChange(e:any){
+    switch (e.field) {
+      case 'inProgress':
+        this.isInProgress=e.data;
+        if(this.isInProgress){
+          this.isFinish=false;
+          this.isSendReport=false;
+        }
+        break;
+
+      case 'finish':
+        this.isFinish=e.data;
+        if(this.isFinish){
+          this.isInProgress=false;
+          this.isSendReport=false;
+        }
+        break;
+
+      case 'report':
+        this.isSendReport=e.data;
+        if(this.isSendReport){
+          this.isInProgress=false;
+          this.isFinish=false;
+        }
+        break;
+
+    }
+  }
+
   showInprogress:boolean=false;
   showReport:boolean=false;
   showFinish:boolean=false;
+  isSendReport:boolean=false;
+  isFinish:boolean=false;
+  isInProgress:boolean=false;
+  userRole:any;
   updateStatusCheck(){
-    let userRole = this.members.find((x:any)=>x.resourceID == this.crrUser.userID)?.roleType;
-    if(userRole){
-      switch (userRole) {
+    this.userRole = this.members.find((x:any)=>x.resourceID == this.crrUser.userID)?.roleType;
+    if(this.userRole){
+      switch (this.userRole) {
         case 'A':
           this.showInprogress=true;
           if(this.approveControl=='1'){
@@ -731,5 +834,34 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
           this.showReport=false;
           this.showFinish=false;
     }
+  }
+
+  checkApproveControl(data:any){
+    if(data == '1') return true;
+    return false;
+  }
+
+  updateTaskStatus(recID:any, status:any,comment:any){
+    let hours="8";
+    this.api.execSv("TM","ERM.Business.TM","TasksBusiness","GetTaskAsync",recID).subscribe((res:any)=>{
+      if(res){
+        this.api.execSv<any>(
+          'TM',
+          'TM',
+          'TasksBusiness',
+          'SetStatusTaskAsync',
+          [this.funcID, res.taskID, status, new Date, hours, comment]
+        ).subscribe((result) => {
+          if (result && result.length > 0) {
+            this.data.status=status;
+            this.dialog.close(this.data);
+            this.notificationsService.notifyCode('TM009');
+          } else {
+            this.dialog.close();
+            this.notificationsService.notifyCode('TM008');
+          }
+        });
+      }
+    })
   }
 }

@@ -423,8 +423,8 @@ export class WarehouseTransfersAddComponent extends UIComponent {
       if (this.eleGridReceipt && this.eleGridReceipt.rowDataSelected) {
         this.eleGridReceipt.rowDataSelected = null;
       }
-      if(this.eleGridIssue.isSaveOnClick) this.eleGridIssue.isSaveOnClick = false;
-      if(this.eleGridReceipt.isSaveOnClick) this.eleGridReceipt.isSaveOnClick = false;
+      if(this.eleGridIssue && this.eleGridIssue.isSaveOnClick) this.eleGridIssue.isSaveOnClick = false;
+      if(this.eleGridReceipt && this.eleGridReceipt.isSaveOnClick) this.eleGridReceipt.isSaveOnClick = false;
       setTimeout(() => {
         let element = document.getElementById('btnAddVou'); //? focus lại nút thêm dòng
         element.focus();

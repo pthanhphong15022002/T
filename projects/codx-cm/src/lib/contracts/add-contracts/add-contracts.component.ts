@@ -699,7 +699,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       }
       this.checkPhone = !this.checkPhone;
     }
-    if (event?.field == 'interval' && event?.data != valueOld) {
+    if (event?.field == 'interval') {
       const startDate = new Date(this.contracts?.effectiveFrom) || new Date();
       let interval = parseInt(event?.data || 0);
       this.contracts.effectiveTo = new Date(

@@ -521,6 +521,6 @@
 <!-- End: Grid VATInvoices -->
 
 <ng-template #templateMore let-data>
-  <codx-mfunc [formModel]="dialog.formModel" (changeDataMF)="changeMF($event,'gridgeneral')"
+  <codx-mfunc [formModel]="dialog.formModel" [dataItem]="data" (changeDataMF)="changeMF($event,'gridgeneral')"
     (clickMF)="clickMF($event, data)" type="view"></codx-mfunc>
 </ng-template>

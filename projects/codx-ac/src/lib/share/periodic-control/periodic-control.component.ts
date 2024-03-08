@@ -181,7 +181,6 @@ export class PeriodicControlComponent extends UIComponent{
 
   //#region Function
   loadData() {
-    this.ngxLoader.start();
     if(this.oData.length != 1) this.view.dataService.request.page += 1;
     this.api.exec('AC', 'RunPeriodicBusiness', 'GetDataAsync', [this.view.dataService.request]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if (res && res[0].length) {
@@ -225,14 +224,23 @@ export class PeriodicControlComponent extends UIComponent{
     ]).pipe(takeUntil(this.destroy$))
     .subscribe((res:any)=>{
       if (res) {
-        if (this.oData.length == 1) {
-          let i = this.oData.findIndex(x => x.recID == res.recID);
-          if(i == -1) this.oData[0] = res;
-        }else{
-          let i = this.oData.findIndex(x => x.recID == res.recID);
-          if(i == -1) this.oData.unshift(res);
+        switch(runMode){
+          case '1':
+          case '2':
+            if (this.oData.length == 1) {
+              let i = this.oData.findIndex(x => x.recID == res.recID);
+              if(i == -1) this.oData[0] = res;
+            }else{
+              let i = this.oData.findIndex(x => x.recID == res.recID);
+              if(i == -1) this.oData.unshift(res);
+            }
+            this.detectorRef.detectChanges();
+            break;
+          case '3':
+
+            break;
         }
-        this.detectorRef.detectChanges();
+        
       }
       this.ngxLoader.stop();
     })
@@ -247,31 +255,31 @@ export class PeriodicControlComponent extends UIComponent{
   }
 
   deletePeriodic(data:any){
-    this.api.exec('AC','RunPeriodicBusiness','DeletelAsync',[
-      data.recID,
-      this.view.dataService.request
-    ]).pipe(takeUntil(this.destroy$))
-    .subscribe((res:any)=>{
-      if (res) {
-        if (this.oData.length == 1) {
-          if (res[0].length) {
-            this.oData = [res[0][0]];
-            let total = res[1];
-            if(total == 1) this.showAll = false;
-          }else{
-            this.oData = [];
-            this.showAll = false;
+    this.notification.alertCode('SYS030', null).subscribe((res) => {
+      if (res.event.status === 'Y') {
+        this.api.exec('AC','RunPeriodicBusiness','DeletelAsync',[
+          data.recID,
+          this.view.dataService.request
+        ]).pipe(takeUntil(this.destroy$))
+        .subscribe((res:any)=>{
+          if (res) {
+            if (this.oData.length == 1) {
+              if (res[0].length) {
+                this.oData = [res[0][0]];
+                let total = res[1];
+                if(total == 1) this.showAll = false;
+              }else{
+                this.oData = [];
+                this.showAll = false;
+              }
+            }else{
+              this.oData = res[0];
+              let total = res[1];
+              if (this.oData.length <= total) this.showAll = false; 
+            }
+            this.detectorRef.detectChanges();
           }
-        }else{
-          this.oData = res[0];
-          let total = res[1];
-          if (this.oData.length <= total) this.showAll = false; 
-          // let index = this.oData.findIndex(x => x.recID == data.recID);
-          //   if (index > -1) {
-          //     this.oData.splice(index, 1);
-          // }
-        }
-        this.detectorRef.detectChanges();
+        })
       }
     })
   }

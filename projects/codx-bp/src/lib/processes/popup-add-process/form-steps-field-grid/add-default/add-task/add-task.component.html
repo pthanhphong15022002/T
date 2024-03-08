@@ -89,9 +89,10 @@
                     </div>
                 </div>
 
-                <ng-container *ngIf="(activityType == 'Approve' || activityType == 'Check' || activityType == 'Sign') && listUses.length > 0">
-                    <div class="d-flex align-items-center justify-content-between mt-4">
-                        <div class="d-flex align-items-center mt-4" *ngFor="let item of vllBP013.datas , let i = index">
+                <ng-container *ngIf="(activityType == 'Approve' || activityType == 'Check' || activityType == 'Sign') && listUses?.length > 1">
+                    <div class="d-flex align-items-center justify-content-between mt-4" >
+                        
+                        <div class="d-flex align-items-center mt-4" *ngFor="let item of vllBP013?.datas , let i = index">
                             <input class="form-check-input" [id]="'radioAttachApprovel' + i" type="radio" name="radioAttachApprovel" [value]="item.value" [checked]="item.value == data?.settings?.approveMode" (change)="valueChangeRadio($event)">
                             <label class="form-check-label ms-2 fw-normal" [for]="'radioAttachApprovel' + i">
                                 {{item.text}}
