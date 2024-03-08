@@ -181,7 +181,6 @@ export class PeriodicControlComponent extends UIComponent{
 
   //#region Function
   loadData() {
-    this.ngxLoader.start();
     if(this.oData.length != 1) this.view.dataService.request.page += 1;
     this.api.exec('AC', 'RunPeriodicBusiness', 'GetDataAsync', [this.view.dataService.request]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if (res && res[0].length) {
@@ -238,7 +237,7 @@ export class PeriodicControlComponent extends UIComponent{
             this.detectorRef.detectChanges();
             break;
           case '3':
-            
+
             break;
         }
         

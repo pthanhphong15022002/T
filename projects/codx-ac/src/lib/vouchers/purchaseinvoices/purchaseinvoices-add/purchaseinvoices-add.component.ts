@@ -114,7 +114,9 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
       })
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void { 
+    if (this.formPurchaseInvoices?.data?.coppyForm) this.formPurchaseInvoices.data._isEdit = true; //? test copy để tạm
+  }
 
   onAfterInitForm(event) {
     this.setValidateForm();
