@@ -366,6 +366,7 @@ export class PopupAddProcessComponent {
       totalControl: null,
     });
     form.permissions = [{objectID: this.user?.userID, objectType: 'U'}]
+    stage.child = [form]
     lstStep.push(stage, form);
     this.data.steps = lstStep;
     this.cache.message('BP001').subscribe((item) => {
@@ -951,7 +952,7 @@ export class PopupAddProcessComponent {
     let result2 = [];
     let result = JSON.parse(JSON.stringify(this.data));
 
-    result.steps = result.steps.filter(x=>x.activityType == "Stage");
+    result.steps = result.steps.filter(x=>x.activityType == "Stage" || x.activityType == "Conditions");
     result.steps.forEach((elm: any) => {
       elm.stepNo = i;
       i++;

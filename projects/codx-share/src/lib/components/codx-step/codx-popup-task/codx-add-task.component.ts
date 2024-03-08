@@ -1164,6 +1164,14 @@ export class CodxAddTaskComponent implements OnInit {
           ])
           .subscribe((res) => {
             if (res) {
+              if(this.instanceStep.fields?.length > 0){
+                this.instanceStep.fields?.forEach((fieldStep) => {
+                  let field = this.listField?.find(x => x.recID == fieldStep.recID);
+                  if(field){
+                    fieldStep.versions = field?.versions;
+                  }
+                })
+              }
               this.dialog.close({
                 task: res[0],
                 progressGroup: res[1],
