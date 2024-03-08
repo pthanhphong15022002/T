@@ -217,7 +217,22 @@ export class ModeviewComponent implements OnInit {
       }
 
       this.table.splice(event.currentIndex,0,object);
-      this.selectedItem(object.children[0]);
+
+      let i = 0;
+      this.table.forEach(elm=>{
+        elm.columnOrder = i;
+        if(elm.children && elm.children.length>0)
+        {
+          elm.children.forEach(elm2 => {
+            elm2.columnOrder = i;
+          });
+        }
+        i++;
+      })
+      debugger
+      let objectIndex = JSON.parse(JSON.stringify(this.table[event.currentIndex]));
+      this.selectedItem(objectIndex.children[0]);
+      //moveItemInArray( this.table, (event.currentIndex + 1), event.currentIndex);
       //this.setTimeoutSaveData(data);
     } else {
       // this.table[event.currentIndex].columnOrder = event.previousIndex;
@@ -535,7 +550,7 @@ export class ModeviewComponent implements OnInit {
   
   selectedItem(data:any)
   {
-    if(this.dataSelected == data) return;
+    if(this.dataSelected?.columnOrder == data.columnOrder && this.dataSelected?.columnNo == data.columnNo) return;
     this.dataSelected = data;
   }
 

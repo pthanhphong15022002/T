@@ -196,7 +196,7 @@ export class PopupAddDealComponent
   viewOnly = false;
   cost: any;
   copyTransID: any; //copy transID cost
-  tenant = "";
+  tenant = '';
 
   constructor(
     private inject: Injector,
@@ -223,7 +223,7 @@ export class PopupAddDealComponent
     this.copyTransID = dt?.data?.copyTransID;
     // this.tenant = this.tenantStore.get().tenant;
     const currentUrl = this.routerLink.url;
-    this.tenant = "qtsc";
+    this.tenant = 'qtsc';
     // this.tenant = currentUrl.includes("qtsc") ? "qtsc" : "";
 
     // add view from customer
@@ -299,15 +299,14 @@ export class PopupAddDealComponent
   onInit(): void {}
 
   async ngAfterViewInit(): Promise<void> {
-    if(this.tenant == "qtsc"){
+    if (this.tenant == 'qtsc') {
       this.tabInfo = [this.menuGeneralInfo];
       this.tabContent = [this.tabGeneralInfoDetail];
-    }else{
+    } else {
       this.tabInfo = [this.menuGeneralInfo, this.menuCostItems];
       this.tabContent = [this.tabGeneralInfoDetail, this.tabCostItems];
     }
 
-    
     if (this.action !== this.actionAdd || this.isviewCustomer) {
       if (this.isviewCustomer) {
         this.customerCategory = this.customerView?.category;
@@ -760,27 +759,36 @@ export class PopupAddDealComponent
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
-      let result = event.e?.data;
-      let field = event.data;
-      switch (field.dataType) {
-        case 'D':
-          result = event.e?.data.fromDate;
-          break;
-        case 'P':
-        case 'R':
-        case 'A':
-        case 'L':
-        case 'TA':
-        case 'PA':
-          result = event?.e;
-          break;
-        case 'C':
-          result = event?.e;
-          let type = event?.type ?? '';
-          let contact = event?.result ?? '';
-          this.convertToFieldDp(contact, type);
-          break;
+      var result = event.e;
+      var field = event.data;
+
+      if (field.dataType == 'C') {
+        let type = event?.type ?? '';
+        let contact = event?.result ?? '';
+        this.convertToFieldDp(contact, type);
       }
+
+      // let result = event.e?.data;
+      // let field = event.data;
+      // switch (field.dataType) {
+      //   case 'D':
+      //     result = event.e?.data.fromDate;
+      //     break;
+      //   case 'P':
+      //   case 'R':
+      //   case 'A':
+      //   case 'L':
+      //   case 'TA':
+      //   case 'PA':
+      //     result = event?.e;
+      //     break;
+      //   case 'C':
+      //     result = event?.e;
+      //     let type = event?.type ?? '';
+      //     let contact = event?.result ?? '';
+      //     this.convertToFieldDp(contact, type);
+      //     break;
+      // }
       let index = this.listInstanceSteps.findIndex(
         (x) => x.recID == field.stepID
       );

@@ -1036,15 +1036,18 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //lưu giá trị mặc định
   valueChangeCustom(event) {
     if (event && event.data) {
-      var result = event.e?.data;
+      var result = event.e;
       var field = event.data;
-      switch (field.dataType) {
-        case 'P':
-        case 'L':
-        case 'PA':
-          result = event.e;
-          break;
-      }
+
+      // var result = event.e?.data;
+      // var field = event.data;
+      // switch (field.dataType) {
+      //   case 'P':
+      //   case 'L':
+      //   case 'PA':
+      //     result = event.e;
+      //     break;
+      // }
       this.field.defaultValue = result;
       if (this.fieldCus) {
         this.fieldCus.defaultValue = this.fieldCus.dataValue = result;

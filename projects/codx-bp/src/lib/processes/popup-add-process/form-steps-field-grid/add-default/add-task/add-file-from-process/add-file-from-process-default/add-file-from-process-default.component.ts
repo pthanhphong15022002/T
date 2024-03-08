@@ -37,7 +37,7 @@ export class AddFileFromProcessDefaultComponent implements OnInit{
       {
         this.documentControl.forEach(elm => {
           var dt = this.data.steps.filter(x=>x.recID == elm.stepID);
-          if(dt)
+          if(dt && dt.length>0)
           {
             let fieldID =  elm.fieldID;
             let entityName = this.formModel.entityName;

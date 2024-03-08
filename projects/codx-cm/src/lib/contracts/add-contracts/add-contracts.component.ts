@@ -118,7 +118,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   contractRefID = '';
   view = [];
   listField = [];
-  customerID = "";
+  customerID = '';
   listProcessNo = [];
   listTypeContract = [];
   listCustomFile: any[] = [];
@@ -247,7 +247,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   isLoadedCF = false;
   refInstance = ''; //Biến tham chiếu data từ cơ hội
   dataSourceRef: any;
-  tenant = "";
+  tenant = '';
   //#endregion
 
   constructor(
@@ -287,11 +287,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.getGrvSetup();
     const currentUrl = this.router.url;
     // this.tenant = currentUrl.includes("qtsc") ? "qtsc" : "";
-    this.tenant = "qtsc";
+    this.tenant = 'qtsc';
   }
 
   async ngOnInit() {
-    
     this.action != 'edit' && (await this.getSettingContract());
     this.setDataContract(this.contractsInput);
     if (this.type == 'task') {
@@ -365,6 +364,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   loadSoureRef() {
+    /// this.refInstance = '20620ac0-c45d-431d-99d7-1e7c7503785d'; //gán cứng test chứ lỗi 1 đống
     this.cmService.getListFieldsRef(this.refInstance).subscribe((lstF) => {
       this.dataSourceRef = lstF;
     });
@@ -715,11 +715,11 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       case 'parentID':
         let customerID = event?.component?.itemsSelected[0]?.CustomerID;
         let businessLineID = event?.component?.itemsSelected[0]?.BusinessLineID;
-        if(customerID){
+        if (customerID) {
           this.contracts.customerID = customerID;
           this.getContactByCustomerID(customerID);
         }
-        if(businessLineID){
+        if (businessLineID) {
           this.contracts.businessLineID = businessLineID;
         }
         break;
@@ -1434,27 +1434,30 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
-      let result = event.e?.data;
-      let field = event.data;
-      switch (field.dataType) {
-        case 'D':
-          result = event.e?.data.fromDate;
-          break;
-        case 'P':
-        case 'R':
-        case 'A':
-        case 'L':
-        case 'TA':
-        case 'PA':
-          result = event?.e;
-          break;
-        case 'C':
-          result = event?.e;
-          let type = event?.type ?? '';
-          let contact = event?.result ?? '';
-          this.convertToFieldDp(contact, type);
-          break;
-      }
+      var result = event.e;
+      var field = event.data;
+
+      // let result = event.e?.data;
+      // let field = event.data;
+      // switch (field.dataType) {
+      //   case 'D':
+      //     result = event.e?.data.fromDate;
+      //     break;
+      //   case 'P':
+      //   case 'R':
+      //   case 'A':
+      //   case 'L':
+      //   case 'TA':
+      //   case 'PA':
+      //     result = event?.e;
+      //     break;
+      //   case 'C':
+      //     result = event?.e;
+      //     let type = event?.type ?? '';
+      //     let contact = event?.result ?? '';
+      //     this.convertToFieldDp(contact, type);
+      //     break;
+      // }
       let index = this.listInstanceSteps.findIndex(
         (x) => x.recID == field.stepID
       );
