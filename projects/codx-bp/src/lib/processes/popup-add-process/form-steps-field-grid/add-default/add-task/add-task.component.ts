@@ -348,7 +348,7 @@ export class AddTaskComponent
         this.listUses.push({
           objectID: element.id,
           objectName: element.text,
-          objectType: element.objectType,
+          objectType: element?.objectType =="SYS061" ? element?.id : element?.objectType,
           roleType: 'O',
         });
       });
@@ -819,6 +819,7 @@ export class AddTaskComponent
       if(per?.objectType!=null){
         let tempPer ={approver:per?.objectID,
         roleType:per?.objectType,  
+        userName:per?.objectName,  
         signer:per?.recID  } 
         dynamicApprovers.push(tempPer);   
       }
