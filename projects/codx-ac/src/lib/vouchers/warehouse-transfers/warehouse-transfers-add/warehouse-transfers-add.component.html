@@ -441,6 +441,6 @@
 <!-- End: Grid Tranfer -->
 
 <ng-template #templateMore let-data>
-    <codx-mfunc [formModel]="dialog.formModel" (changeDataMF)="changeMF($event)" (clickMF)="clickMF($event, data)"
+    <codx-mfunc [formModel]="dialog.formModel" [dataItem]="data" (changeDataMF)="changeMF($event)" (clickMF)="clickMF($event, data)"
         type="view"></codx-mfunc>
 </ng-template>
