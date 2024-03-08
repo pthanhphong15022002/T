@@ -363,22 +363,24 @@ export class PopupAddCasesComponent
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
-      var result = event.e?.data;
+      var result = event.e;
       var field = event.data;
-      switch (field.dataType) {
-        case 'D':
-          result = event.e?.data.fromDate;
-          break;
-        case 'P':
-        case 'R':
-        case 'A':
-        // case 'C':case ko có
-        case 'L':
-        case 'TA':
-        case 'PA':
-          result = event.e;
-          break;
-      }
+      // cũ
+      // var result = event.e?.data;
+      // switch (field.dataType) {
+      //   case 'D':
+      //     result = event.e?.data.fromDate;
+      //     break;
+      //   case 'P':
+      //   case 'R':
+      //   case 'A':
+      //   // case 'C':case ko có
+      //   case 'L':
+      //   case 'TA':
+      //   case 'PA':
+      //     result = event.e;
+      //     break;
+      // }
       var index = this.listInstanceSteps.findIndex(
         (x) => x.recID == field.stepID
       );

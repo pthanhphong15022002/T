@@ -1364,22 +1364,26 @@ export class CodxAddTaskComponent implements OnInit {
   // ------------------- FIELDS -----------------------------//
   valueChangeCustom(event) {
     if (event && event.data) {
-      var result = event.e?.data;
+      var result = event.e;
       var field = event.data;
-      switch (field.dataType) {
-        case 'D':
-          result = event.e?.data.fromDate;
-          break;
-        case 'P':
-        case 'R':
-        case 'A':
-        case 'C':
-        case 'L':
-        case 'TA':
-        case 'PA':
-          result = event.e;
-          break;
-      }
+
+      // var result = event.e?.data;
+      // var field = event.data;
+      // switch (field.dataType) {
+      //   case 'D':
+      //     result = event.e?.data.fromDate;
+      //     break;
+      //   case 'P':
+      //   case 'R':
+      //   case 'A':
+      //   case 'C':
+      //   case 'L':
+      //   case 'TA':
+      //   case 'PA':
+      //     result = event.e;
+      //     break;
+      // }
+
       var index = this.listField.findIndex((x) => x.recID == field.recID);
       if (index != -1) {
         // this.listField[index].dataValue = result;
