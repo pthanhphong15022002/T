@@ -237,7 +237,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     // }
 
     this.loadedTree = false;
-    //if (parent.isItem) {
+    //if (parent.isItem) { //xử lý khi bấm collapse k load data
     if (this.predicateChild && this.dataValueChild) {
       let predicate = this.predicateChild + '&&ParentID=@2';
       let datavalue = this.dataValueChild + ';' + parent.data.recID.toString();
