@@ -255,7 +255,7 @@ export class PeriodicControlComponent extends UIComponent{
   }
 
   deletePeriodic(data:any){
-    this.notification.alertCode('AC0014', null).subscribe((res) => {
+    this.notification.alertCode('SYS030', null).subscribe((res) => {
       if (res.event.status === 'Y') {
         this.api.exec('AC','RunPeriodicBusiness','DeletelAsync',[
           data.recID,
