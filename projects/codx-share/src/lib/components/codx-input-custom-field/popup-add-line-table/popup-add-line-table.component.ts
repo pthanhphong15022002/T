@@ -61,23 +61,26 @@ export class PopupAddLineTableComponent implements OnInit {
 
   valueChangeCustom(event) {
     if (event && event.data) {
-      let result = event.e?.data;
-      let field = event.data;
+      var result = event.e;
+      var field = event.data;
 
-      switch (field.dataType) {
-        case 'D':
-          result = event.e?.data.fromDate;
-          break;
-        case 'P':
-        case 'R':
-        case 'A':
-        case 'C':
-        case 'L':
-        case 'TA':
-        case 'PA':
-          result = event?.e;
-          break;
-      }
+      // let result = event.e?.data;
+      // let field = event.data;
+
+      // switch (field.dataType) {
+      //   case 'D':
+      //     result = event.e?.data.fromDate;
+      //     break;
+      //   case 'P':
+      //   case 'R':
+      //   case 'A':
+      //   case 'C':
+      //   case 'L':
+      //   case 'TA':
+      //   case 'PA':
+      //     result = event?.e;
+      //     break;
+      // }
 
       let idxUp = this.fieldFormat.findIndex((x) => x.recID == field.recID);
       if (idxUp != -1) {

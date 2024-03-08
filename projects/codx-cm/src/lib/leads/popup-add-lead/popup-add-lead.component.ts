@@ -1122,22 +1122,25 @@ export class PopupAddLeadComponent
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
-      let result = event.e?.data;
-      let field = event.data;
-      switch (field.dataType) {
-        case 'D':
-          result = event.e?.data.fromDate;
-          break;
-        case 'P':
-        case 'R':
-        case 'A':
-        case 'L':
-        case 'TA':
-        case 'PA':
-          // case 'C': lead ko co
-          result = event.e;
-          break;
-      }
+      var result = event.e;
+      var field = event.data;
+
+      // let result = event.e?.data;
+      // let field = event.data;
+      // switch (field.dataType) {
+      //   case 'D':
+      //     result = event.e?.data.fromDate;
+      //     break;
+      //   case 'P':
+      //   case 'R':
+      //   case 'A':
+      //   case 'L':
+      //   case 'TA':
+      //   case 'PA':
+      //     // case 'C': lead ko co
+      //     result = event.e;
+      //     break;
+      // }
       var index = this.listInstanceSteps.findIndex(
         (x) => x.recID == field.stepID
       );

@@ -137,21 +137,18 @@ export class FormStepsFieldGridComponent
     this.data = JSON.parse(JSON.stringify(this.data))
     if(this.data && this.data.steps)
     {
-      let i = 0;
+    
       this.count = this.data.steps.length;
       this.listStage = this.data.steps.filter((x) => !x.parentID);
       this.count -= this.listStage.length;
       this.listStage.forEach((elm) => {
         elm.child = this.getListChild(elm) || [];
         if(typeof elm.settings == 'string') elm.settings = JSON.parse(elm.settings);
-        i++;
-
         if(elm.child && elm.child.length>0) elm.child.sort((a, b) => a.stepNo - b.stepNo);
       });
 
-      //this.listStage = this.listStage.sort((a, b) => a.stepNo - b.stepNo);
-
       let a = 0;
+      let i = 0;
       this.listStage.forEach(elm3=>{
         this.listIds.push('stage'+a+'_'+elm3.recID)
         elm3.stepNo = i;
@@ -273,6 +270,7 @@ export class FormStepsFieldGridComponent
           }
           else
           {
+            debugger
             this.data = res?.event?.process || this.data;
             let dt = res?.event?.data;
             if(dt.activityType == "Stage")
@@ -286,7 +284,8 @@ export class FormStepsFieldGridComponent
 
             var name = 'stage' + (this.listIds.length - 1) + '_' + dt.recID;
             this.listIds.push(name);
-          } else {
+          } 
+          else {
             var index = this.listStage.findIndex((x) => x.recID == dt.parentID);
             dt = this.setDataCondition(dt);
 

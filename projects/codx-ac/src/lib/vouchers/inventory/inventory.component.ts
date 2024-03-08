@@ -739,6 +739,7 @@ export class InventoryComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any, type: any = '') {
+    console.log(event);
     let data = this.view.dataService.dataSelected;
     this.acService.changeMFVoucher(event, data, type, this.journal, this.view.formModel);
   }
