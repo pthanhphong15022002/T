@@ -225,14 +225,23 @@ export class PeriodicControlComponent extends UIComponent{
     ]).pipe(takeUntil(this.destroy$))
     .subscribe((res:any)=>{
       if (res) {
-        if (this.oData.length == 1) {
-          let i = this.oData.findIndex(x => x.recID == res.recID);
-          if(i == -1) this.oData[0] = res;
-        }else{
-          let i = this.oData.findIndex(x => x.recID == res.recID);
-          if(i == -1) this.oData.unshift(res);
+        switch(runMode){
+          case '1':
+          case '2':
+            if (this.oData.length == 1) {
+              let i = this.oData.findIndex(x => x.recID == res.recID);
+              if(i == -1) this.oData[0] = res;
+            }else{
+              let i = this.oData.findIndex(x => x.recID == res.recID);
+              if(i == -1) this.oData.unshift(res);
+            }
+            this.detectorRef.detectChanges();
+            break;
+          case '3':
+            
+            break;
         }
-        this.detectorRef.detectChanges();
+        
       }
       this.ngxLoader.stop();
     })
@@ -266,10 +275,6 @@ export class PeriodicControlComponent extends UIComponent{
           this.oData = res[0];
           let total = res[1];
           if (this.oData.length <= total) this.showAll = false; 
-          // let index = this.oData.findIndex(x => x.recID == data.recID);
-          //   if (index > -1) {
-          //     this.oData.splice(index, 1);
-          // }
         }
         this.detectorRef.detectChanges();
       }
