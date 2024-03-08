@@ -698,16 +698,14 @@
 <ng-template #TmpTabVATInvoices>
   <ng-container *ngIf="formPurchaseInvoices?.data?.subType == '2'">
     <div class="tabline-content  header-table-ac position-relative">
-      <codx-gridview-v2 #eleGridVatInvoices [formName]="fmVATInvoices.formName"
-        [gridViewName]="fmVATInvoices.gridViewName" [entityName]="fmVATInvoices.entityName" rowNoField="rowNo"
-        [showEmptyRecord]="false" [editOnClick]="true" [templateMore]="templateMore" predicates="TransID=@0"
-        gridLines="Both" [autoFitColumns]="true" [allowRowDragAndDrop]="true"
+      <codx-gridview-v2 #eleGridVatInvoices [formName]="fmVATInvoices.formName" [gridViewName]="fmVATInvoices.gridViewName"
+        [entityName]="fmVATInvoices.entityName" rowNoField="rowNo" [showEmptyRecord]="false" [editOnClick]="true"
+        [templateMore]="templateMore" predicates="TransID=@0" gridLines="Both" [autoFitColumns]="true"
         [editSettings]="formPurchaseInvoices.data?.isReadOnly ? editSettings : {}"
         [dataValues]="formPurchaseInvoices?.data?.recID" service="AC" (eventAction)="onActionGridVatInvoice($event)"
         [hideMoreFunc]="formPurchaseInvoices.data?.isReadOnly ? true : false"
-        [editOnClick]="formPurchaseInvoices.data?.isReadOnly ? false : true"
-        (beforeSaveRow)="beforeSaveRowVATInvoice($event)" (cellChanged)="valueChangeLineVATInvoices($event)"
-        (actionCompleted)="onActionGridVatInvoice($event)">
+        [editOnClick]="formPurchaseInvoices.data?.isReadOnly ? false : true" (beforeSaveRow)="beforeSaveRowVATInvoice($event)"
+        (cellChanged)="valueChangeLineVATInvoices($event)" (actionCompleted)="onActionGridVatInvoice($event)">
       </codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
@@ -728,6 +726,6 @@
 <!-- End: Grid VATInvoices -->
 
 <ng-template #templateMore let-data>
-  <codx-mfunc [formModel]="dialog.formModel" (changeDataMF)="changeMF($event)" (clickMF)="clickMF($event, data)"
+  <codx-mfunc [formModel]="dialog.formModel" [dataItem]="data" (changeDataMF)="changeMF($event)" (clickMF)="clickMF($event, data)"
     type="view"></codx-mfunc>
 </ng-template>

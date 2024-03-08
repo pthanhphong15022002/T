@@ -1,44 +1,29 @@
 <div class="table-responsive table-ac">
-    <table style="table-layout: fixed;" class="table mb-0">
-      <thead class="border-gray-200 table-thead-ac">
-        <tr class="border-bottom">
-          <th class="w-30 border-bottom">
-            <div class="d-flex align-items-center justify-content-start ps-3">
-              <codx-label class="fw-bold" fiedName="lblItem" default="Mặt hàng">
-              </codx-label>
-            </div>
-          </th>
-          <th class="w-15 border-bottom">
-            <div class="d-flex align-items-center justify-content-end ps-3">
-              <codx-label class="fw-bold" fiedName="lblQuantity" default="Số lượng">
-              </codx-label>
-            </div>
-          </th>
-          <th class="w-15 border-bottom">
-            <div class="d-flex align-items-center justify-content-end ps-3">
-              <codx-label class="fw-bold" fiedName="lblUnitPrice" default="Đơn giá">
-              </codx-label>
-            </div>
-          </th>
-          <th class="w-15 border-bottom">
-            <div class="d-flex align-items-center justify-content-end ps-3">
-              <codx-label class="fw-bold" fiedName="lblPrice" default="Thành tiền">
-              </codx-label>
-            </div>
-          </th>
-          <th class="w-40 border-bottom">
-            <div class="d-flex align-items-center justify-content-start ps-3">
-              <codx-label class="fw-bold" fiedName="lblPrice" default="Ghi chú">
-              </codx-label>
-            </div>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
+  <table class="table mb-0">
+    <thead class="border-gray-200 table-thead-ac">
+      <tr class="border-bottom">
+        <th class="border-bottom" style="width: 30em;min-width: 25em;">
+          <span class="fw-bold">Mặt hàng</span>
+        </th>
+        <th class="border-bottom text-end" style="width: 15em;min-width: 10em;">
+          <span class="fw-bold">Số lượng</span>
+        </th>
+        <th class="border-bottom text-end" style="width: 15em;min-width: 10em;">
+          <span class="fw-bold">Đơn giá</span>
+        </th>
+        <th class="border-bottom text-end" style="width: 15em;min-width: 10em;">
+          <span class="fw-bold">Thành tiền</span>
+        </th>
+        <th class="border-bottom" style="width: 30em;min-width: 25em;">
+          <span class="fw-bold">Ghi chú</span>
+        </th>
+      </tr>
+    </thead>
+      <tbody *ngIf="listTransfer && listTransfer.length" class="table-body-ac">
         <ng-container *ngFor="let item of listTransfer;trackBy: trackByFn">
           <tr style="border-bottom: 1px solid var(--bs-border-color) !important;">
-            <td class="text-center">
-              <div class="d-flex justify-content-start ps-3">
+            <td style="width: 30em;min-width: 25em;">
+              <div class="d-flex justify-content-start">
                 <div class="align-items-center w-100">
                   <div *ngIf="(item.itemName != null && item.itemName != '')" class="d-flex align-items-center justify-content-start">
                     <ng-container>
@@ -232,50 +217,72 @@
                 </div>
               </div>
             </td>
-            <td class="text-center">
-              <div class="d-flex justify-content-end ps-3">
+            <td style="width: 15em;min-width: 10em;" class="text-center">
+              <div class="d-flex justify-content-end">
                 <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.qty
                       | tranformValueNumber : 'B' | async"></span>
               </div>
-              <div *ngIf="item?.umid" class="d-flex justify-content-end ps-3">
+              <div *ngIf="item?.umid" class="d-flex justify-content-end">
                 <span class="fw-bold line-clamp line-clamp-1">{{item.umid}}</span>
               </div>
             </td>
-            <td class="text-center">
-              <div class="d-flex justify-content-end ps-3">
+            <td style="width: 15em;min-width: 10em;" class="text-center">
+              <div class="d-flex justify-content-end">
                 <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.costPrice
                       | tranformValueNumber : 'B' | async"></span>
               </div>
             </td>
-            <td class="text-center">
-              <div class="d-flex justify-content-end ps-3">
+            <td style="width: 15em;min-width: 10em;" class="text-center">
+              <div class="d-flex justify-content-end">
                 <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.costAmt
                       | tranformValueNumber : 'B' | async"></span>
               </div>
             </td>
-            <td class="text-center">
-              <div class="d-flex justify-content-start ps-3">
+            <td style="width: 30em;min-width: 25em;" class="text-center">
+              <div class="d-flex justify-content-start">
                 <span class="text-gray-600 fs-7">{{item?.note}}</span>
               </div>
             </td>
           </tr>
         </ng-container>
       </tbody>
+      <div *ngIf="listTransfer && listTransfer.length == 0" class="ac-empty">
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" />
+        <div class="fs-6 text-dark mt-2 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
     </table>
-    <div *ngIf="listTransfer && listTransfer.length == 0" class="ac-empty">
-      <img src="../assets/themes/sys/default/img/DataEmpty.svg" />
-                <div class="fs-6 text-dark mt-2 text-center">
-                    {{ "SYS011" | mssg | async }}
-                </div>
-    </div>
+    <table *ngIf="listTransfer && listTransfer.length" class="table mb-0 table-footer-ac">
+      <thead class="border-gray-200 bg-gray-100">
+        <tr class="border-bottom">
+          <th class="text-end" style="width: 30em;min-width: 25em;">
+            <codx-label *ngIf="listTransfer && listTransfer.length > 0" class="fw-bold line-clamp line-clamp-1" fiedName="lblTotal"
+                default="Tổng cộng">
+            </codx-label>
+          </th>
+          <th class="border-bottom text-end" style="width: 15em;min-width: 10em;"> 
+          </th>
+          <th class="border-bottom text-end" style="width: 15em;min-width: 10em;">
+          </th>
+          <th class="border-bottom text-end" style="width: 15em;min-width: 10em;">
+            <span *ngIf="listTransfer && listTransfer.length > 0"
+              class="fw-bold line-clamp line-clamp-1" [innerHTML]="totalCostAmt
+                      | tranformValueNumber : 'B' | async"></span>
+          </th>
+          <th class="border-bottom" style="width: 30em;min-width: 25em;">
+          </th>
+        </tr>
+      </thead>
+    </table>
   </div>
-  <table style="table-layout: fixed;" class="table mb-0">
+  <!-- <table style="table-layout: fixed;" class="table mb-0">
     <tfoot class="table-footer-ac">
       <td class="w-30">
-        <!-- <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+        <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
           <codx-label  *ngIf="listTransfer && listTransfer.length > 0" class="fw-bold line-clamp line-clamp-1" fiedName="lblTotal" default="Tổng cộng">
           </codx-label>
-        </div> -->
+        </div>
       </td>
       <td class="w-15">
       </td>
@@ -289,4 +296,4 @@
       <td class="w-40">
       </td>
     </tfoot>
-  </table>
+  </table> -->

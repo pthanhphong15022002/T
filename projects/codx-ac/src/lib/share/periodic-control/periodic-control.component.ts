@@ -5,6 +5,7 @@ import { PeriodicComponent } from '../../periodic/periodic.component';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { Router } from '@angular/router';
 import { ViewresultComponent } from './viewresult/viewresult.component';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'lib-periodic-control',
@@ -34,6 +35,7 @@ export class PeriodicControlComponent extends UIComponent{
     private inject: Injector,
     private notification: NotificationsService,
     private route: Router,
+    private ngxLoader: NgxUiLoaderService,
   ) {
     super(inject);
   }
@@ -179,10 +181,9 @@ export class PeriodicControlComponent extends UIComponent{
 
   //#region Function
   loadData() {
-    this.view.dataService.request.pageSize = 10;
+    if(this.oData.length != 1) this.view.dataService.request.page += 1;
     this.api.exec('AC', 'RunPeriodicBusiness', 'GetDataAsync', [this.view.dataService.request]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if (res && res[0].length) {
-        this.view.dataService.request.page += 1;
         let data = res[0];
         data.reduce((pre,item) => {
           let i = this.oData.findIndex(x => x.recID == item.recID);
@@ -211,6 +212,7 @@ export class PeriodicControlComponent extends UIComponent{
   }
 
   runPeriodic(runtype:any,recID:any,runMode:any,text:any){
+    this.ngxLoader.start();
     let storeName = (runMode === '1' || runMode === '2') ? 'AC_spRunPeriodic' : 'AC_spCancelPeriodic';
     this.api.exec('AC','RunPeriodicBusiness','RunPeriodicAsync',[
       runtype,
@@ -218,18 +220,29 @@ export class PeriodicControlComponent extends UIComponent{
       recID,
       runMode,
       JSON.stringify(this.dataValue),
-      text,
+      text
     ]).pipe(takeUntil(this.destroy$))
     .subscribe((res:any)=>{
-      if (res && !res.isError) {
-        this.notification.notifyCode('AC0029', 0, text);
-        if (res.data) {
-          this.oData = [res?.data];
-          this.detectorRef.detectChanges();
+      if (res) {
+        switch(runMode){
+          case '1':
+          case '2':
+            if (this.oData.length == 1) {
+              let i = this.oData.findIndex(x => x.recID == res.recID);
+              if(i == -1) this.oData[0] = res;
+            }else{
+              let i = this.oData.findIndex(x => x.recID == res.recID);
+              if(i == -1) this.oData.unshift(res);
+            }
+            this.detectorRef.detectChanges();
+            break;
+          case '3':
+
+            break;
         }
-      }else{
-        this.notification.notifyCode('AC0030', 0, text);
+        
       }
+      this.ngxLoader.stop();
     })
   }
 
@@ -242,31 +255,31 @@ export class PeriodicControlComponent extends UIComponent{
   }
 
   deletePeriodic(data:any){
-    this.api.exec('AC','RunPeriodicBusiness','DeletelAsync',[
-      data.recID,
-      this.view.dataService.request
-    ]).pipe(takeUntil(this.destroy$))
-    .subscribe((res:any)=>{
-      if (res) {
-        if (this.oData.length == 1) {
-          if (res[0].length) {
-            this.oData = [res[0][0]];
-            let total = res[1];
-            if(total == 1) this.showAll = false;
-          }else{
-            this.oData = [];
-            this.showAll = false;
+    this.notification.alertCode('SYS030', null).subscribe((res) => {
+      if (res.event.status === 'Y') {
+        this.api.exec('AC','RunPeriodicBusiness','DeletelAsync',[
+          data.recID,
+          this.view.dataService.request
+        ]).pipe(takeUntil(this.destroy$))
+        .subscribe((res:any)=>{
+          if (res) {
+            if (this.oData.length == 1) {
+              if (res[0].length) {
+                this.oData = [res[0][0]];
+                let total = res[1];
+                if(total == 1) this.showAll = false;
+              }else{
+                this.oData = [];
+                this.showAll = false;
+              }
+            }else{
+              this.oData = res[0];
+              let total = res[1];
+              if (this.oData.length <= total) this.showAll = false; 
+            }
+            this.detectorRef.detectChanges();
           }
-        }else{
-          this.oData = res[0];
-          let total = res[1];
-          if (this.oData.length <= total) this.showAll = false; 
-          // let index = this.oData.findIndex(x => x.recID == data.recID);
-          //   if (index > -1) {
-          //     this.oData.splice(index, 1);
-          // }
-        }
-        this.detectorRef.detectChanges();
+        })
       }
     })
   }

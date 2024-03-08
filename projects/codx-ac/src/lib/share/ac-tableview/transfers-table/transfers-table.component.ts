@@ -55,7 +55,6 @@ export class TransfersTableComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res) {
           this.listTransfer = res;
-          console.log(this.listTransfer);
           this.setTotalRecord();
           this.detectorRef.detectChanges();
         }
