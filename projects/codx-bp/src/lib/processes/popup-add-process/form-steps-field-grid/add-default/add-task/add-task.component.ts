@@ -807,6 +807,20 @@ export class AddTaskComponent
     this.callFuc.openForm(share, '', 420, 600, null, null, null, option);
   }
   esign(){
+    let result = JSON.parse(JSON.stringify(this.process));
+    result.steps.forEach((elm: any) => {
+      delete elm.child;
+      if (typeof elm.settings === 'object')
+        elm.settings = JSON.stringify(elm.settings);
+    });
+    this.api.execSv("BP","BP","ProcessesBusiness","UpdateProcessAsync",result).subscribe(item=>{
+      this.esignB();
+    })
+   
+  }
+
+  esignB()
+  {
     let fileIDs="";
     let dynamicApprovers=[];
     this.listDocument.forEach(doc=>{
