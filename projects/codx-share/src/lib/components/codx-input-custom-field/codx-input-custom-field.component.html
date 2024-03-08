@@ -129,13 +129,7 @@
       </div>
     </div>
     <!-- Table chưa làm nên tạm ẩn -->
-    <div
-      *ngIf="
-        refInstance &&
-        customField.dataType != 'CF' &&
-        customField.dataType != 'TA'
-      "
-    >
+    <div *ngIf="refInstance && customField.dataType != 'CF'">
       <button
         type="button"
         class="btn btn-icon btn-light-primary me-2"

@@ -79,22 +79,25 @@ export class PopupCustomFieldComponent implements OnInit {
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
-      var result = event.e?.data;
+      var result = event.e;
       var field = event.data;
-      switch (field.dataType) {
-        case 'D':
-          result = event.e?.data.fromDate;
-          break;
-        case 'P':
-        case 'R':
-        case 'A':
-        case 'C':
-        case 'L':
-        case 'TA':
-        case 'PA':
-          result = event.e;
-          break;
-      }
+
+      // var result = event.e?.data;
+      // var field = event.data;
+      // switch (field.dataType) {
+      //   case 'D':
+      //     result = event.e?.data.fromDate;
+      //     break;
+      //   case 'P':
+      //   case 'R':
+      //   case 'A':
+      //   case 'C':
+      //   case 'L':
+      //   case 'TA':
+      //   case 'PA':
+      //     result = event.e;
+      //     break;
+      // }
 
       // this.fields.forEach((x) => {
       //   if (x.recID == field.recID) x.dataValue = result;
