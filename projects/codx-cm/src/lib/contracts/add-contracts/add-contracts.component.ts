@@ -364,7 +364,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   loadSoureRef() {
-    this.refInstance = '20620ac0-c45d-431d-99d7-1e7c7503785d'; //gán cứng test chứ lỗi 1 đống
+    /// this.refInstance = '20620ac0-c45d-431d-99d7-1e7c7503785d'; //gán cứng test chứ lỗi 1 đống
     this.cmService.getListFieldsRef(this.refInstance).subscribe((lstF) => {
       this.dataSourceRef = lstF;
     });
@@ -900,13 +900,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       ? new Date(this.contracts?.effectiveTo)
       : null;
 
-    // if (event?.field == 'effectiveFrom' && this.contracts?.interval) { 
+    // if (event?.field == 'effectiveFrom' && this.contracts?.interval) {
     //   let interval = parseInt(this.contracts?.interval) || 0;
     //   this.contracts.effectiveTo = new Date(
     //     startDate.setFullYear(startDate.getFullYear() + interval)
     //   );
     // }
-    // if (event?.field == 'effectiveTo' && this.contracts?.interval) { 
+    // if (event?.field == 'effectiveTo' && this.contracts?.interval) {
     //   let interval = parseInt(this.contracts?.interval) || 0;
     //   this.contracts.effectiveFrom = new Date(
     //     endDate.setFullYear(endDate.getFullYear() - interval)
