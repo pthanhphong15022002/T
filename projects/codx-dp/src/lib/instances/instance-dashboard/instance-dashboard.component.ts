@@ -4,12 +4,10 @@ import {
   Input,
   OnInit,
   QueryList,
-  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CacheService, FormModel, Util } from 'codx-core';
-import { DP_Processes } from '../../models/models';
 import { firstValueFrom } from 'rxjs';
 import {
   AnimationModel,
@@ -220,7 +218,7 @@ export class InstanceDashboardComponent implements OnInit {
   countFails;
   countSuscess;
   currency;
-  productivityOwner = []
+  productivityOwner = [];
   productivityYear: ProductivityYear[] = [];
 
   CountInsSteps: any;
@@ -285,32 +283,33 @@ export class InstanceDashboardComponent implements OnInit {
 
   public chartArea: Object = {
     border: {
-        width: 0
-    }
-};
-public width: string = Browser.isDevice ? '100%' : '75%';
+      width: 0,
+    },
+  };
+  public width: string = Browser.isDevice ? '100%' : '75%';
 
-primaryXAxis;
-primaryYAxis;
+  primaryXAxis;
+  primaryYAxis;
 
-public legend: Object = {
+  public legend: Object = {
     visible: true,
-    enableHighlight : true
-};
-public marker1: Object = {
-  visible: true,
-  shape: 'Circle',
-  fill: 'gray',
-  width: 2,
-  height: 2,
-  border: { color: 'black', width: 0 }
-};
-tooltip = {};
-tooltipCountStep = {
-  enable: true,
-  format: '<b>${point.x}</b><br>Số lượng: <b>${point.y}%</b><br> tỷ lệ: <b>${point.y}%</b>',
-  header:""
-};
+    enableHighlight: true,
+  };
+  public marker1: Object = {
+    visible: true,
+    shape: 'Circle',
+    fill: 'gray',
+    width: 2,
+    height: 2,
+    border: { color: 'black', width: 0 },
+  };
+  tooltip = {};
+  tooltipCountStep = {
+    enable: true,
+    format:
+      '<b>${point.x}</b><br>Số lượng: <b>${point.y}%</b><br> tỷ lệ: <b>${point.y}%</b>',
+    header: '',
+  };
 
   constructor(
     private api: ApiHttpService,
@@ -374,7 +373,7 @@ tooltipCountStep = {
     );
     if (data) {
       console.log(data);
-      
+
       this.dataDashBoard = data;
       this.countStep = this.dataDashBoard?.countStep;
       this.topOwnersLow = this.dataDashBoard?.topOwnersLow;
@@ -386,7 +385,7 @@ tooltipCountStep = {
       this.currency = this.dataDashBoard?.currency;
 
       let counts = this.countStep;
-      for (var prop of counts) { 
+      for (var prop of counts) {
         this.sumStep += prop?.count || 0;
       }
       this.setDataProductivityYear(this.dataDashBoard?.revenue);
@@ -402,7 +401,7 @@ tooltipCountStep = {
       console.log(this.dataDashBoard);
       this.isLoaded = true;
       this.changeDetectorRef.detectChanges();
-    }else{
+    } else {
       this.countStep = null;
       this.topOwnersLow = null;
       this.countFails = null;
@@ -412,33 +411,38 @@ tooltipCountStep = {
     }
   }
 
-  setDataProductivityYear(data){
-    if(data && data.length > 0){
+  setDataProductivityYear(data) {
+    if (data && data.length > 0) {
       let max = 0;
-      data?.forEach(item => {
+      data?.forEach((item) => {
         let productivity = new ProductivityYear();
-        productivity.month = "Tháng " + item?.month.toString(); 
+        productivity.month = 'Tháng ' + item?.month.toString();
         productivity.expected = item?.expectedRevenue || 0;
         productivity.reality = item?.revenue || 0;
         this.productivityYear.push(productivity);
-        let maxProductivity =  productivity.expected > productivity.reality ? productivity.expected : productivity.reality;
+        let maxProductivity =
+          productivity.expected > productivity.reality
+            ? productivity.expected
+            : productivity.reality;
         max = maxProductivity > max ? maxProductivity : max;
       });
-      this.settingChart(max)
+      this.settingChart(max);
     }
   }
 
-  settingChart(max){
+  settingChart(max) {
     let interval = Math.ceil(max / 10);
-    let maximum = interval*10;
-    
+    let maximum = interval * 10;
+
     this.primaryXAxis = {
       title: null,
       interval: Browser.isDevice ? 2 : 1,
       labelIntersectAction: 'Rotate45',
       valueType: 'Category',
-      majorGridLines: { width: 0 }, minorGridLines: { width: 0 },
-      majorTickLines: { width: 0 }, minorTickLines: { width: 0 },
+      majorGridLines: { width: 0 },
+      minorGridLines: { width: 0 },
+      majorTickLines: { width: 0 },
+      minorTickLines: { width: 0 },
       lineStyle: { width: 0 },
     };
     this.primaryYAxis = {
@@ -447,8 +451,10 @@ tooltipCountStep = {
       maximum: maximum,
       interval: interval,
       lineStyle: { width: 0 },
-      majorTickLines: { width: 0 }, majorGridLines: { width: 1 },
-      minorGridLines: { width: 1 }, minorTickLines: { width: 0 },
+      majorTickLines: { width: 0 },
+      majorGridLines: { width: 1 },
+      minorGridLines: { width: 1 },
+      minorTickLines: { width: 0 },
       labelFormat: '{value}',
     };
 
@@ -457,7 +463,6 @@ tooltipCountStep = {
       shared: true,
       format: '${series.name} : <b>${point.y}</b>',
     };
-  
   }
 
   setID() {

@@ -131,6 +131,7 @@ import { CurrentStatusComponent } from './leads/view-lead-detail/current-status/
 import { ContactsComponent } from './contacts/contacts.component';
 import { CompetitorsComponent } from './competitors/competitors.component';
 import { PartnersComponent } from './partners/partners.component';
+import { ShareCrmModule } from 'projects/codx-dp/src/lib/share-crm/share-crm.module';
 
 export const routes: Routes = [
   {
@@ -293,8 +294,6 @@ const T_Component: Type<any>[] = [
   CampaignsDetailComponent,
   PopupConvertLeadComponent,
   ContractsComponent,
-  // CustomergroupsComponent,
-  // PopupAddCustgroupComponent,
   //test
   CodxAsideCustomComponent,
   PopupAddPaymentComponent,
@@ -340,15 +339,16 @@ const T_Component: Type<any>[] = [
   CurrentStatusComponent,
 ];
 
+const T_Pipe: Type<any>[] = [
+  CustomIconPipe,
+  FormatTargetPipe,
+  FormatStatusPipe,
+  StyleHeaderColumnsPipe,
+  FormatStatusCodePipe,
+];
+
 @NgModule({
-  declarations: [
-    T_Component,
-    CustomIconPipe,
-    FormatTargetPipe,
-    FormatStatusPipe,
-    StyleHeaderColumnsPipe,
-    FormatStatusCodePipe,
-  ],
+  declarations: [T_Component, T_Pipe],
   imports: [
     CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),
@@ -371,6 +371,7 @@ const T_Component: Type<any>[] = [
     ChartModule,
     BulletChartModule,
     AccumulationChartModule,
+    ShareCrmModule,
   ],
   exports: [RouterModule],
   providers: [

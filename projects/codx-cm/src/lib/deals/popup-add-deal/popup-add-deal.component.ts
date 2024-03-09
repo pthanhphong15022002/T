@@ -1,6 +1,3 @@
-import { async } from '@angular/core/testing';
-import { load } from '@syncfusion/ej2-angular-charts';
-import { update } from '@syncfusion/ej2-angular-inplace-editor';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -15,16 +12,12 @@ import {
   DialogRef,
   DialogData,
   FormModel,
-  CacheService,
   NotificationsService,
   AuthStore,
   UIComponent,
   RequestOption,
   Util,
-  CodxComboboxComponent,
   CodxInputComponent,
-  DataRequest,
-  DialogModel,
   CodxFormComponent,
   TenantStore,
 } from 'codx-core';
@@ -36,13 +29,10 @@ import {
 } from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
 import { tmpInstances } from '../../models/tmpModel';
-import { debug } from 'console';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
-import { PopupQuickaddContactComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { firstValueFrom } from 'rxjs';
-import { Contact } from 'projects/codx-sm/src/lib/models/Contact.model';
-import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
 import { Router } from '@angular/router';
+import { CustomFieldService } from 'projects/codx-dp/src/lib/share-crm/codx-input-custom-field/custom-field.service';
 
 @Component({
   selector: 'lib-popup-add-deal',

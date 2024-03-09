@@ -25,20 +25,23 @@ import {
   ResourceModel,
   ViewModel,
 } from 'codx-core';
-import { CodxStepTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-task/codx-step-task.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { tmpInstancesStepsReasons } from '../../models/tmpModel';
-import { falseLine } from '@syncfusion/ej2-gantt/src/gantt/base/css-constants';
-import { CM_Deals } from '../../models/cm_model';
-import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
-import { CardRenderedEventArgs, CardSettingsModel, ColumnsModel, DialogSettingsModel } from '@syncfusion/ej2-angular-kanban';
+import {
+  CardRenderedEventArgs,
+  CardSettingsModel,
+  ColumnsModel,
+  DialogSettingsModel,
+} from '@syncfusion/ej2-angular-kanban';
 import { extend, addClass } from '@syncfusion/ej2-base';
+import { CodxStepTaskComponent } from 'projects/codx-dp/src/lib/share-crm/codx-step/codx-step-task/codx-step-task.component';
+import { StepService } from 'projects/codx-dp/src/lib/share-crm/codx-step/step.service';
 @Component({
   selector: 'step-task',
   templateUrl: './step-task.component.html',
   styleUrls: ['./step-task.component.scss'],
 })
-export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
+export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('task') task: CodxStepTaskComponent;
   @ViewChild('popupGuide') popupGuide;
   @ViewChild('cardKanban') cardKanban: TemplateRef<any>;
@@ -142,7 +145,7 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
     private callFunc: CallFuncService,
     private codxCmService: CodxCmService,
     private notiService: NotificationsService,
-    private changeDetectorRef: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.promiseAll();
     this.user = this.authstore.get();
@@ -171,14 +174,14 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
     this.request.className = 'InstancesStepsBusiness';
     this.request.method = 'LoadDataColumnsAsync';
     this.request.idField = 'recID';
-    this.request.dataObj = {instanceID: this.dataCM?.refID};
+    this.request.dataObj = { instanceID: this.dataCM?.refID };
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'DP';
     this.resourceKanban.assemblyName = 'DP';
     this.resourceKanban.className = 'ProcessesBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = {processID: this.dataCM?.processID};;
+    this.resourceKanban.dataObj = { processID: this.dataCM?.processID };
 
     this.funcID = 'CM0201';
   }
@@ -187,19 +190,19 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
     if (changes?.listInstanceStep) {
       let listInStep = changes?.listInstanceStep?.currentValue;
       this.listInstanceStepShow = [];
-      if(!listInStep){
+      if (!listInStep) {
         this.isDataLoading = true;
-      }else if(listInStep?.length == 0){
+      } else if (listInStep?.length == 0) {
         this.isDataLoading = false;
-      }else{
+      } else {
         this.isDataLoading = false;
         this.listInstanceStepShow = this.listInstanceStep;
-        if (!['0', '1', '2','15'].includes(this.dataCM?.status)) {
+        if (!['0', '1', '2', '15'].includes(this.dataCM?.status)) {
           this.stepIdReason =
             this.listInstanceStep[this.listInstanceStep?.length - 1].stepID;
           this.listStepReasonValue =
             this.listInstanceStep[this.listInstanceStep.length - 1].reasons;
-            this.isShowSuccess =  true;
+          this.isShowSuccess = true;
         }
         if (this.listInstanceStep?.length > 0) {
           this.stepViews = [];
@@ -215,53 +218,51 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
         }
         this.listInstanceStepShow?.forEach((step) => {
           this.listTask = [...this.listTask, ...step?.tasks];
-
-        })
+        });
       }
     }
     if (changes?.dataCM) {
       this.type = this.dataCM.viewModeDetail || 'S';
       if (this.isAdmin) {
         this.isRoleFullStep = true;
-      }else{
+      } else {
         this.isRoleFullStep = this.dataCM?.owner == this.user?.userID;
-        if(!this.isRoleFullStep){
-          let checkRole = this.dataCM?.permissions?.some(x => x?.objectID == this.user?.userID && x?.memberType == "1");
+        if (!this.isRoleFullStep) {
+          let checkRole = this.dataCM?.permissions?.some(
+            (x) => x?.objectID == this.user?.userID && x?.memberType == '1'
+          );
           this.isRoleFullStep = checkRole ? true : false;
         }
       }
-      if(this.entityName == 'CM_Customers'){
+      if (this.entityName == 'CM_Customers') {
         this.applyProcess = false;
       }
       // else if(this.entityName == 'CM_Deals')
       // {
       //   this.applyProcess = true;
       // }
-      else{
+      else {
         this.applyProcess = this.dataCM?.applyProcess;
       }
       this.owner = this.dataCM?.owner;
-
     }
 
-    if(changes?.taskAdd && changes?.taskAdd?.currentValue?.task){
+    if (changes?.taskAdd && changes?.taskAdd?.currentValue?.task) {
       this.dataTaskAdd = JSON.parse(JSON.stringify(this.taskAdd));
       this.taskAdd.task = null;
       this.isAddTask = true;
-    }else{
+    } else {
       this.isAddTask = false;
     }
-
   }
 
   ngAfterViewInit(): void {
     !this.isHeightAuto && this.setHeight();
     let a = document.getElementById('container-step');
-    if(a){
-      console.log('------------',a);
+    if (a) {
+      console.log('------------', a);
       const computedWidth = window.getComputedStyle(a).width;
       console.log(computedWidth);
-      
     }
     this.views = [
       {
@@ -311,7 +312,7 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
   }
 
   handelContinueStep(event, step) {
-    if(event){
+    if (event) {
       this.nextStep();
     }
   }
@@ -361,8 +362,10 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
   }
 
   addTask() {
-    let index = this.listInstanceStep.findIndex((step) => step.stepStatus == '1');
-    this.indexAddTask = index >-1 ? index : 0;
+    let index = this.listInstanceStep.findIndex(
+      (step) => step.stepStatus == '1'
+    );
+    this.indexAddTask = index > -1 ? index : 0;
     setTimeout(() => {
       this.indexAddTask = -1;
     }, 1000);
@@ -467,11 +470,7 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
 
   onSaveReason() {
     if (this.listReasonsClick.length > 0 && this.listReasonsClick) {
-      var data = [
-        this.dataCM.refID,
-        this.stepIdReason,
-        this.listReasonsClick,
-      ];
+      var data = [this.dataCM.refID, this.stepIdReason, this.listReasonsClick];
       this.codxCmService.updateListReason(data).subscribe((res) => {
         if (res) {
           this.listStepReasonValue = JSON.parse(
@@ -520,11 +519,7 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
     });
   }
   onDeleteReason(dataReason) {
-    var data = [
-      this.dataCM.refID,
-      this.dataCM.stepID,
-      dataReason.recID,
-    ];
+    var data = [this.dataCM.refID, this.dataCM.stepID, dataReason.recID];
     this.codxCmService.deleteListReason(data).subscribe((res) => {
       if (res) {
         let idx = this.listStepReasonValue.findIndex(
@@ -641,21 +636,22 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
   toggleReason() {
     this.isShowSuccess = !this.isShowSuccess;
   }
-  setTask(stepID){
-    if(!this.dataTaskAdd || !this.dataTaskAdd?.task){
+  setTask(stepID) {
+    if (!this.dataTaskAdd || !this.dataTaskAdd?.task) {
       return null;
-    }else{
-      let data = stepID == this.dataTaskAdd?.task?.stepID ? this.dataTaskAdd : null;
-      if(data){
+    } else {
+      let data =
+        stepID == this.dataTaskAdd?.task?.stepID ? this.dataTaskAdd : null;
+      if (data) {
         this.isAddTask = false;
       }
       return data;
     }
   }
-  nextStep(){
+  nextStep() {
     this.moveStage.emit(true);
   }
-  startStepFunction(){
+  startStepFunction() {
     this.startStep.emit(true);
   }
   getObjectName(data) {
@@ -666,31 +662,35 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
     headerField: 'Id',
     tagsField: 'Tags',
     grabberField: 'Color',
-    footerCssField: 'ClassName'
+    footerCssField: 'ClassName',
   };
 
   public dialogSettings: DialogSettingsModel = {
     fields: [
-        { text: 'ID', key: 'Title', type: 'TextBox' },
-        { key: 'Status', type: 'DropDown' },
-        { key: 'Assignee', type: 'DropDown' },
-        { key: 'RankId', type: 'TextBox' },
-        { key: 'Summary', type: 'TextArea' }
-    ]
-};
-public getString(assignee: string) {
-  return assignee.match(/\b(\w)/g).join('').toUpperCase();
-}
-// public columns: ColumnsModel[] = [
-//   { headerText: 'To Do', keyField: 'Open', allowToggle: true },
-//   { headerText: 'In Progress', keyField: 'InProgress', allowToggle: true },
-//   { headerText: 'In Review', keyField: 'Review', allowToggle: true },
-//   { headerText: 'Done', keyField: 'Close', allowToggle: true }
-// ];
-cardRendered(args: CardRenderedEventArgs): void {
-  const val: string = (<{[key: string]: Object}>(args.data)).Priority as string;
-  addClass([args.element], val);
-}
+      { text: 'ID', key: 'Title', type: 'TextBox' },
+      { key: 'Status', type: 'DropDown' },
+      { key: 'Assignee', type: 'DropDown' },
+      { key: 'RankId', type: 'TextBox' },
+      { key: 'Summary', type: 'TextArea' },
+    ],
+  };
+  public getString(assignee: string) {
+    return assignee
+      .match(/\b(\w)/g)
+      .join('')
+      .toUpperCase();
+  }
+  // public columns: ColumnsModel[] = [
+  //   { headerText: 'To Do', keyField: 'Open', allowToggle: true },
+  //   { headerText: 'In Progress', keyField: 'InProgress', allowToggle: true },
+  //   { headerText: 'In Review', keyField: 'Review', allowToggle: true },
+  //   { headerText: 'Done', keyField: 'Close', allowToggle: true }
+  // ];
+  cardRendered(args: CardRenderedEventArgs): void {
+    const val: string = (<{ [key: string]: Object }>args.data)
+      .Priority as string;
+    addClass([args.element], val);
+  }
   kanbanData: Object[] = [
     {
       Id: 'Task 1',
@@ -724,7 +724,8 @@ cardRendered(args: CardRenderedEventArgs): void {
       Id: 'Task 3',
       Title: 'Task - 29003',
       Status: ' 25e80568-288f-4981-af25-964c6d5e1f7e',
-      Summary: 'Arrange a web meeting with the customer to get new requirements.',
+      Summary:
+        'Arrange a web meeting with the customer to get new requirements.',
       Type: 'Others',
       Priority: 'Critical',
       Tags: 'Meeting',
@@ -845,5 +846,6 @@ cardRendered(args: CardRenderedEventArgs): void {
       RankId: 4,
       Color: '#E64A19',
       ClassName: 'e-bug, e-critical, e-janet-leverling',
-    },]
+    },
+  ];
 }

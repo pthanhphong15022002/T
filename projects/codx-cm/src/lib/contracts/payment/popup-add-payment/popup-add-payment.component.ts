@@ -8,7 +8,7 @@ import {
 import { CM_Contracts, CM_ContractsPayments } from '../../../models/cm_model';
 import { CodxCmService } from '../../../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
-import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
+import { StepService } from 'projects/codx-dp/src/lib/share-crm/codx-step/step.service';
 
 @Component({
   selector: 'lib-popup-add-payment',
@@ -71,7 +71,8 @@ export class PopupAddPaymentComponent {
     }, 0);
     this.sumScheduleAmt = this.sumScheduleAmtAllPayment;
     this.remaining = this.contract?.contractAmt - this.sumScheduleAmt;
-    this.percent =(this.payment.scheduleAmt / this.contract?.contractAmt) * 100;
+    this.percent =
+      (this.payment.scheduleAmt / this.contract?.contractAmt) * 100;
     this.setDataInput();
     this.view = await this.stepService.getFormModel(this.dialog.formModel);
   }
@@ -82,7 +83,8 @@ export class PopupAddPaymentComponent {
     }
     if (this.action == 'edit') {
       this.payment = JSON.parse(JSON.stringify(this.payment));
-      this.sumScheduleAmtAllPaymentEdit = this.sumScheduleAmtAllPayment - this.payment?.scheduleAmt || 0;
+      this.sumScheduleAmtAllPaymentEdit =
+        this.sumScheduleAmtAllPayment - this.payment?.scheduleAmt || 0;
     }
     if (this.action == 'copy') {
     }
@@ -101,7 +103,7 @@ export class PopupAddPaymentComponent {
 
   //#region change value
   valueChangePercent(e) {
-    if(this.percentChanged){
+    if (this.percentChanged) {
       this.percent = e?.value;
       this.payment.scheduleAmt = Number(
         ((this.percent * this.contract.contractAmt) / 100).toFixed(0)
@@ -114,20 +116,26 @@ export class PopupAddPaymentComponent {
   valueChangeText(event) {
     this.payment[event?.field] = event?.data;
     if (event?.field == 'scheduleAmt' && this.valueChanged) {
-      this.percent = Number(((this.payment.scheduleAmt / this.contract?.contractAmt) * 100).toFixed(1));
+      this.percent = Number(
+        ((this.payment.scheduleAmt / this.contract?.contractAmt) * 100).toFixed(
+          1
+        )
+      );
       this.checkRemaining(event?.data);
       this.percentChanged = false;
     }
   }
 
-  checkRemaining(scheduleAmt){
-    if(this.action == 'edit'){
+  checkRemaining(scheduleAmt) {
+    if (this.action == 'edit') {
       this.sumScheduleAmt = this.sumScheduleAmtAllPaymentEdit + scheduleAmt;
-    }else{
+    } else {
       this.sumScheduleAmt = this.sumScheduleAmtAllPayment + scheduleAmt; // đã thanh toán
     }
     this.remaining = this.contract?.contractAmt - this.sumScheduleAmt; // còn lại
-    if(this.remaining < 0){this.notiService.notifyCode('CM018');}
+    if (this.remaining < 0) {
+      this.notiService.notifyCode('CM018');
+    }
   }
 
   valueChangeCombobox(event) {
@@ -137,15 +145,19 @@ export class PopupAddPaymentComponent {
   changeValueDate(event) {
     this.payment[event?.field] = new Date(event?.data?.fromDate);
     if (this.action == 'add') {
-      this.checkDate = this.stepService.compareDates(this.payment?.scheduleDate, new Date(), 'h');
+      this.checkDate = this.stepService.compareDates(
+        this.payment?.scheduleDate,
+        new Date(),
+        'h'
+      );
       if (this.checkDate < 0 && this.isErorrDate) {
-        this.notiService.notifyCode('CM017',0,[this.view?.scheduleDate]);
+        this.notiService.notifyCode('CM017', 0, [this.view?.scheduleDate]);
       }
       this.isErorrDate = !this.isErorrDate;
     }
   }
 
-  clickTesk(event){
+  clickTesk(event) {
     this[event] = true;
   }
 
@@ -153,10 +165,10 @@ export class PopupAddPaymentComponent {
   //#region Save
   saveAndClose() {
     if (this.stepService.checkRequire(this.REQUIRE, this.payment, this.view)) {
-      return
+      return;
     }
     if (this.checkDate < 0) {
-      this.notiService.notifyCode('CM017',0,[this.view?.scheduleDate]);
+      this.notiService.notifyCode('CM017', 0, [this.view?.scheduleDate]);
       return;
     }
 
@@ -170,10 +182,10 @@ export class PopupAddPaymentComponent {
 
   saveAndContinue() {
     if (this.stepService.checkRequire(this.REQUIRE, this.payment, this.view)) {
-      return
+      return;
     }
     if (this.checkDate < 0) {
-      this.notiService.notifyCode('CM017',0,[this.view?.scheduleDate]);
+      this.notiService.notifyCode('CM017', 0, [this.view?.scheduleDate]);
       return;
     }
 
