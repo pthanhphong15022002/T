@@ -145,7 +145,7 @@
             </div>
             <div class="d-flex flex-column border-top mt-4 pt-4 ">
                 <div class="d-flex align-items-center justify-content-between mt-2 pb-2">
-                    <codx-label formName="fmBPFieldGrid" fiedName="lblTaskExport" default="Xuất khẩu nhập liệu" class="fw-bold"></codx-label>
+                    <codx-label formName="fmBPFieldGrid" fiedName="lblTaskExport" default="Biểu mẫu" class="fw-bold"></codx-label>
                     <codx-input type="switch" field="isTemplate" [crrValue]="data?.settings?.isTemplate" (valueChange)="valueChangeSetting($event)"></codx-input>
                 </div>
                 <ng-container *ngIf="data?.settings?.template?.templateID , else tmpTemplate">
