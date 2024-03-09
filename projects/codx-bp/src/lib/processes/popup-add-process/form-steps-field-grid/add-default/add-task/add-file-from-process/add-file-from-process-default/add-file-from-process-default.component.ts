@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ApiHttpService } from 'codx-core';
 
 @Component({
@@ -6,7 +6,7 @@ import { ApiHttpService } from 'codx-core';
   templateUrl: './add-file-from-process-default.component.html',
   styleUrls: ['./add-file-from-process-default.component.css']
 })
-export class AddFileFromProcessDefaultComponent implements OnInit{
+export class AddFileFromProcessDefaultComponent implements OnInit,OnChanges{
   @Input() data:any;
   @Input() formModel:any;
   @Input() step:any;
@@ -20,6 +20,16 @@ export class AddFileFromProcessDefaultComponent implements OnInit{
     private api: ApiHttpService,
   ) 
   {
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['data'] &&
+      changes['data']?.currentValue != changes['data']?.previousValue
+    ) {
+      this.data = changes['data']?.currentValue;
+      if (this.data) this.data = JSON.parse(JSON.stringify(this.data));
+      this.formatData();
+    }
   }
 
   ngOnInit(): void {
