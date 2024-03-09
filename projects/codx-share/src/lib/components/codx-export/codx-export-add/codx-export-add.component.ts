@@ -457,7 +457,11 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                       });
                     }
                   });
-              } else this.dialog.close([item[1][0], this.type]);
+              } else {
+                let r = item[1][0];
+                r.recID = this.data.recID;
+                this.dialog.close([r, this.type]);
+              }
               this.notifySvr.notifyCode('RS002');
             } else {
               this.notifySvr.notify('SYS021');
