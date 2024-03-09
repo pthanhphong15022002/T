@@ -339,14 +339,6 @@ const T_Component: Type<any>[] = [
   CurrentStatusComponent,
 ];
 
-// const T_Pipe: Type<any>[] = [
-//   FormatDataValuePipe,
-//   SumColumnsTablePipe,
-//   ChangeMemoryCellsPipe,
-//   CheckRoleStepPipe,
-//   SetColorTaskPipe,
-// ];
-
 const T_Pipe: Type<any>[] = [
   CustomIconPipe,
   FormatTargetPipe,
