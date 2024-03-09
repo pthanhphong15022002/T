@@ -453,7 +453,11 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                         elm.funcID = 'AD002';
                       });
                       this.onSaveWord().subscribe((saveW) => {
-                        if (saveW) this.dialog.close([item[1][0], this.type]);
+                        if (saveW) {
+                          let r = item[1][0];
+                          r.recID = this.data.recID;
+                          this.dialog.close([r, this.type]);
+                        }
                       });
                     }
                   });
