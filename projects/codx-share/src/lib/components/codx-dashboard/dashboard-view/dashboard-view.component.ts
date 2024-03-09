@@ -41,7 +41,6 @@ export class CodxDashboardViewsComponent
 {
   @ViewChild('templateListCard') templateListCard!: TemplateRef<any>;
   @ViewChild('empty') empty!: TemplateRef<any>;
-  @ViewChild('view') viewBase: ViewsComponent;
 
   views: ViewModel[];
   viewType = ViewType;
@@ -108,6 +107,7 @@ export class CodxDashboardViewsComponent
   ngOnChanges(changes: SimpleChanges): void {}
 
   ngAfterViewInit(): void {
+    this.codxService.setStyleToolbarLayout(this.view.elementRef.nativeElement, 'toolbar1');
     this.views = [
       {
         type: ViewType.report,
@@ -133,24 +133,7 @@ export class CodxDashboardViewsComponent
       //   // },
       // },
     ];
-    // this.routerNg.events.subscribe((event: any) => {
-    //   if (event instanceof NavigationEnd) {
-    //     let arr = event.url.split('/');
-    //     if (arr.findIndex((item: any) => item == this.funcID) > -1) {
-    //       this.view.viewChanged.emit(this.view.currentView);
-    //     }
-    //     this.changeDetectorRef.detectChanges();
-    //   }
-    // });
-
-    this.setStyle();
     this.changeDetectorRef.detectChanges();
-  }
-
-  setStyle()
-  {
-    var el = document.getElementsByClassName("wrapper")[0] as HTMLElement;
-    if(el) el.style.paddingTop = "50px";
   }
 
   formatListGroupReport()
@@ -166,7 +149,6 @@ export class CodxDashboardViewsComponent
   viewChanged(e: any) {
     this.funcID = this.router.snapshot.params['funcID'];
     this.pageTitle.setSubTitle('');
-    //this.pageTitle.setTitle(this.funcItem.customName ? this.funcItem.customName : "" );
   }
 
   onActions(e: any) {

@@ -30,7 +30,7 @@ import { Observable } from 'rxjs';
   templateUrl: './codx-view2.component.html',
   styleUrls: ['./codx-view2.component.css'],
 })
-export class CodxView2Component implements OnInit, AfterViewInit {
+export class CodxView2Component implements OnInit {
   //#region Contructor
   @Input() funcID?: string;
   @Input() toolbarDisplay: boolean = true;
@@ -92,7 +92,7 @@ export class CodxView2Component implements OnInit, AfterViewInit {
   }
   //#endregion
   //#region Init
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     if(this.toolbarMode == '1')
       this.codx.setStyleToolbarLayout(this.elRef.nativeElement, 'toolbar1');
     else if(this.toolbarMode == '2')
@@ -100,11 +100,6 @@ export class CodxView2Component implements OnInit, AfterViewInit {
     else
       this.codx.setStyleToolbarLayout(this.elRef.nativeElement, null);
 
-    // const elem = document.querySelector('#view2-header');
-    // if (elem) new ResizeObserver(this.setHeight).observe(elem);
-  }
-
-  ngOnInit(): void {
     this.request.predicate = this.predicate;
     this.request.dataValue = this.dataValue;
     this.request.predicates = this.predicates;
