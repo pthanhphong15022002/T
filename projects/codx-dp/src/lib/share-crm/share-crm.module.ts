@@ -33,7 +33,7 @@ import {
   AccumulationTooltipService,
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
-import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { TabModule, TreeViewModule } from '@syncfusion/ej2-angular-navigations';
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -89,6 +89,7 @@ const T_Pipe: Type<any>[] = [
     DragDropModule,
     SliderModule,
     CoreModule,
+    TreeViewModule,
   ],
   exports: [T_Component, T_Pipe],
   providers: [AccumulationTooltipService],
