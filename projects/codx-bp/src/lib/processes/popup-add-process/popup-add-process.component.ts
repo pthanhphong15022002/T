@@ -1028,7 +1028,6 @@ export class PopupAddProcessComponent {
   {
     let data = datas.steps;
     this.countStage = data.length;
-    debugger
     data = data.sort((a, b) => a.stepNo - b.stepNo);
     var listStage = data.filter(x=>x.activityType == 'Stage');
     listStage.forEach(element => {

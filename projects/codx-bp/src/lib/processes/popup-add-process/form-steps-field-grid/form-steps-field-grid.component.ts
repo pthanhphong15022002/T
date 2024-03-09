@@ -270,7 +270,6 @@ export class FormStepsFieldGridComponent
           }
           else
           {
-            debugger
             this.data = res?.event?.process || this.data;
             let dt = res?.event?.data;
             if(dt.activityType == "Stage")
