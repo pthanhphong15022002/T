@@ -24,7 +24,7 @@ import { tmpInstances } from '../../models/tmpModel';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, firstValueFrom, map, tap } from 'rxjs';
-import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
+import { CustomFieldService } from 'projects/codx-dp/src/lib/share-crm/codx-input-custom-field/custom-field.service';
 
 @Component({
   selector: 'lib-popup-add-cases',
