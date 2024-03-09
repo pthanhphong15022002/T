@@ -658,7 +658,7 @@ export class AddTaskComponent
     config.type = 'YesNo';
     //SYS003
     this.notifySvr
-      .alert('Thông báo', 'Bạn có chắc chắn muốn xóa ?', config)
+      .alert('Thông báo', 'Thao tác sẽ hủy liên kết tệp tin với tất cả các quy trình. Bạn có chắc chắn muốn xóa ?', config)
       .closed.subscribe((x) => {
         if (x.event.status == 'Y') {
           var className =
@@ -675,10 +675,12 @@ export class AddTaskComponent
             )
             .subscribe((item) => {
               if (item) {
+                this.deleteDocByTemplateID(this.data.settings.template.templateID);
                 this.notifySvr.notifyCode('RS002');
                 delete this.data.settings.template;
                 this.data.settings.isTemplate = false;
                 this.dataChange.emit(this.data);
+                this.dataChangeProcess.emit(this.process);
               } else {
                 this.notifySvr.notifyCode('SYS022');
               }
@@ -865,6 +867,7 @@ export class AddTaskComponent
       this.notifySvr.notify("Biểu mẫu và người ký không được bỏ trống, vui lòng kiểm tra lại!","2");
     }
   }
+
   fileCheckChange(evt: any, file: any) {
     this.listDocument.forEach(doc=>{
       if(doc?.filess?.length>0){
@@ -874,5 +877,17 @@ export class AddTaskComponent
         } 
       }
     });
+  }
+
+  //Xóa documentcontrol bỏi templateID
+  deleteDocByTemplateID(tmpID:any)
+  {
+    var index = this.process.documentControl.findIndex(x=>x.templateID == tmpID);
+
+    if(index>=0)
+    {
+      var id = this.process.documentControl[index].recID;
+      this.process.documentControl = this.process.documentControl.filter(x=>x.refID != id);
+    }
   }
 }
