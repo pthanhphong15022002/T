@@ -856,6 +856,7 @@ export class AddTaskComponent
       );
       popupDialog.closed.subscribe((res) => {
         if (res?.event) {
+          debugger
           this.isNewForm = false;
           this.data.extendInfo =
             res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
