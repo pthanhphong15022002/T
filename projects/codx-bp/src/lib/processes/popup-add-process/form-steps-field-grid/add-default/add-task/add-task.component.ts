@@ -419,9 +419,11 @@ export class AddTaskComponent
   }
 
   openAttach1() {
+    this.dataChangeAttach.emit(true);
     this.attachment.uploadFile();
   }
   openAttach2() {
+    this.dataChangeAttach.emit(true);
     this.attachment2.uploadFile();
   }
 
@@ -856,12 +858,31 @@ export class AddTaskComponent
       );
       popupDialog.closed.subscribe((res) => {
         if (res?.event) {
-          debugger
-          this.isNewForm = false;
-          this.data.extendInfo =
-            res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
-          this.dataChange.emit(this.data);
+          // this.isNewForm = false;
+          // this.data.extendInfo =
+          //   res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
+          // this.dataChange.emit(this.data);
         }
+
+        this.dataChangeAttach.emit(true);
+        this.api.execSv("BP","BP","ProcessesBusiness","GetAsync",this.process.recID).subscribe((item:any)=>{
+          if(item?.documentControl)
+          {
+            var listF = item.documentControl.filter(x=>x.stepID == this.data?.recID);
+            if(listF && listF.length>0)
+            {
+              listF.forEach(element => {
+                let index = this.process.documentControl.findIndex(x=>x.recID == element.recID);
+                if(index > 0)
+                {
+                  this.process.documentControl[index]= element;
+                }
+              });
+              this.dataChangeProcess.emit(this.process);
+            }
+          }
+          this.dataChangeAttach.emit(false);
+        })
       });
     }
     else{

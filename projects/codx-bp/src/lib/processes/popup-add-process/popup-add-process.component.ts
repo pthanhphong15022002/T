@@ -1037,7 +1037,7 @@ export class PopupAddProcessComponent {
           var index2 = data.findIndex(x=>x.recID == element2.recID);
           if(index2>=0)
           {
-            element2.extendInfo = data[index2]?.extendInfo;
+            //element2.extendInfo = data[index2]?.extendInfo;
             data[index2]= element2;
           }
         });
