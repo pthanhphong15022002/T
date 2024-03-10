@@ -876,10 +876,18 @@ export class AddTaskComponent
                 if(index > 0)
                 {
                   this.process.documentControl[index]= element;
+                  var indexRef = item.documentControl.findIndex(x=>x.recID == element.refID);
+                  if(indexRef >= 0)
+                  {
+                    var indexP = this.process.documentControl.findIndex(x=>x.recID == item.documentControl[indexRef].recID)
+                    if(indexP >= 0) this.process.documentControl[indexP] = item.documentControl[indexRef];
+                  }
                 }
               });
               this.dataChangeProcess.emit(this.process);
             }
+
+           
           }
           this.dataChangeAttach.emit(false);
         })
