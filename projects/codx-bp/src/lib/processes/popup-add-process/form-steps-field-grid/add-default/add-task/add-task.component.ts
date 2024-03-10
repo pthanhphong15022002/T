@@ -886,8 +886,6 @@ export class AddTaskComponent
               });
               this.dataChangeProcess.emit(this.process);
             }
-
-           
           }
           this.dataChangeAttach.emit(false);
         })
