@@ -21,8 +21,8 @@
 
 <!-- header -->
 <ng-template #headerTemplate let-data>
-  <div class="d-flex w-100 ps-2 pe-4 border-bottom">
-    <div class="w-40 text-dark fw-bold p-3 fw-500">
+  <div class="d-flex w-100 ps-2 pe-4 border-bottom row">
+    <div class="col-3 text-dark fw-bold p-3 fw-500">
       <codx-label
         fiedName="lblProjectName"
         [setRequire]="false"
@@ -30,7 +30,7 @@
         [default]="'Tên dự án'"
       ></codx-label>
     </div>
-    <div class="w-25 text-dark fw-bold p-3 fw-500">
+    <div class="col-1 text-dark fw-bold p-3 fw-500">
       <codx-label
         fiedName="lblProjectCategory"
         [setRequire]="false"
@@ -38,7 +38,7 @@
         [default]="'Phân loại'"
       ></codx-label>
     </div>
-    <div class="w-25 text-dark fw-bold p-3 fw-500">
+    <div class="col-2 text-dark fw-bold p-3 fw-500">
       <codx-label
         fiedName="lblScheduleFinishDate"
         [setRequire]="false"
@@ -46,7 +46,7 @@
         [default]="'Ngày hết hạn'"
       ></codx-label>
     </div>
-    <div class="w-25 text-dark fw-bold p-3 fw-500">
+    <div class="col-2 text-dark fw-bold p-3 fw-500">
       <codx-label
         fiedName="lblStatus"
         [setRequire]="false"
@@ -54,7 +54,7 @@
         [default]="'Tình Trạng'"
       ></codx-label>
     </div>
-    <div class="w-25 text-dark fw-bold p-3 fw-500">
+    <div class="col-2 text-dark fw-bold p-3 fw-500">
       <codx-label
         fiedName="lblMembers"
         [setRequire]="false"
@@ -62,7 +62,7 @@
         [default]="'Thành viên'"
       ></codx-label>
     </div>
-    <div class="w-25 text-dark fw-bold p-3 fw-500">
+    <div class="col-2 text-dark fw-bold p-3 fw-500">
       <codx-label
         fiedName="lblProjectManeger"
         [setRequire]="false"
@@ -75,20 +75,20 @@
 <!-- end header -->
 <!-- template list -->
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center border-bottom">
+  <div class="d-flex align-items-center border-bottom row">
     <!-- ProjectName -->
-    <div class="w-40 p-5">
-      <div class="d-flex align-items-center cursor-pointer hover-active">
+    <div class="col-3 p-5">
+      <div class=" w-100 d-flex align-items-center cursor-pointer hover-active">
         <div class="d-flex flex-column me-4">
           <codx-img [funcId]="funcID" [objectId]="data.recID" [objectName]="data.projectName"
             objectType="PM_Projects" [width]="35">
           </codx-img>
 
         </div>
-        <div class="d-flex flex-column">
+        <div class="w-75 d-flex flex-column">
           <div #nameField
-            class="align-items-center line-clamp line-clamp-1 mb-1">
-            <span class="fw-bold fs-6 me-3 text-nowrap item-active" >
+            class="w-100 d-flex align-items-center mb-1" [title]="data.projectName">
+            <span class="fw-bold fs-6 me-3 text-wrap item-active" >
               {{data.projectName}}</span>
 
 
@@ -135,7 +135,7 @@
       </div>
     </div>
     <!-- Phân loại-->
-    <div class="w-25 p-5">
+    <div class="col-1 p-5">
       <div class="d-flex flex-column">
         <div class="d-flex mb-1">
           <codx-vll
@@ -150,7 +150,7 @@
       </div>
     </div>
     <!-- ngày hết hạn -->
-    <div class="w-25 p-5">
+    <div class="col-2 p-5">
       <div class="d-flex flex-column">
         <div class="d-flex w-100 align-items-center">
           <div class="fw-bold"> <codx-label fiedName="Schedule" [formModel]="formModel" default="Kế hoạch">
@@ -166,7 +166,7 @@
       </div>
     </div>
     <!-- Tình trạng -->
-    <div class="w-25 h-100">
+    <div class="col-2 h-100">
       <div class="w-100 h-100 text-center">
         <div class="fst-italic" *ngIf="!data.taskStatus">
           Chưa có công việc...
@@ -249,7 +249,7 @@
       </div>
     </div>
     <!-- Thành viên-->
-    <div class="w-25 p-5">
+    <div class="col-2 p-5">
       <div class="d-flex has-action-menu justify-content-between w-100">
         <codx-imgs  [objectId]="getMembers(data,'objectID')"
             objectType="AD_Users" [width]="35"  [numberImages]="4" *ngIf="data.permissions">
@@ -257,7 +257,7 @@
       </div>
     </div>
     <!-- Quản lý-->
-    <div class="w-25 p-5">
+    <div class="col-2 p-5">
       <div class="d-flex has-action-menu justify-content-between w-100">
         <codx-img  [objectId]="data.projectManager" [objectName]="data.projectManager"
             objectType="AD_Users" [width]="35">

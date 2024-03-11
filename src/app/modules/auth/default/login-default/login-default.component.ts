@@ -30,7 +30,7 @@ import { DisplayTextModel } from '@syncfusion/ej2-angular-barcode-generator';
   styleUrls: ['./login-default.component.scss'],
 })
 //implements OnInit, OnDestroy, AfterViewInit
-export class LoginDefaultComponent extends UIComponent{
+export class LoginDefaultComponent extends UIComponent implements OnChanges{
   environment = environment;
   @ViewChild('Error') error: ElementRef;
   @Input() defaultAuth: any = {
@@ -96,6 +96,7 @@ export class LoginDefaultComponent extends UIComponent{
 
   public qrDisplayText?: DisplayTextModel;
   interval: number;
+  tabIndex: number = 0;
 
   constructor(
     private injector: Injector,
@@ -107,6 +108,12 @@ export class LoginDefaultComponent extends UIComponent{
     this.enableCaptcha = environment.captchaEnable;
     if (this.enableCaptcha == 0) {
       this.captChaValid = true;
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(this.hubConnectionID && this.tabIndex === 2 && !this.isFirstQR) {
+      this.generateQR();
     }
   }
 
@@ -313,6 +320,7 @@ export class LoginDefaultComponent extends UIComponent{
   }
 
   selectedTab(evt) {
+    this.tabIndex = evt.selectedIndex;
     if (evt.selectedIndex === 2 && this.isFirstQR) {
       this.isFirstQR = false;
       this.generateQR();

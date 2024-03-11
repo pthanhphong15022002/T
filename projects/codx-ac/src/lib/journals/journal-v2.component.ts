@@ -16,24 +16,14 @@ import {
   UrlUtil,
   ButtonModel,
   CodxGridviewV2Component,
-  ScrollComponent,
   DialogModel,
 } from 'codx-core';
 import { JournalsAddComponent } from '../journals/journals-add/journals-add.component';
 import { NameByIdPipe } from '../pipes/name-by-id.pipe';
-import {
-  BehaviorSubject,
-  Subject,
-  combineLatest,
-  map,
-  takeUntil,
-  tap,
-} from 'rxjs';
+import { BehaviorSubject, Subject, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { CodxAcService } from '../codx-ac.service';
-import { IJournalPermission } from '../journals/interfaces/IJournalPermission.interface';
 import { IJournal } from '../journals/interfaces/IJournal.interface';
-import { toCamelCase } from '../utils';
 import { JournalViewsettingComponent } from './journals-viewsetting/journal-viewsetting/journal-viewsetting.component';
 
 @Component({
@@ -137,7 +127,10 @@ export class JournalV2Component extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.codxService.setStyleToolbarLayout(this.view.elementRef.nativeElement, 'toolbar2');
+    this.codxService.setStyleToolbarLayout(
+      this.view.elementRef.nativeElement,
+      'toolbar2'
+    );
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) {
         this.funcName = res.defaultName;
@@ -518,22 +511,22 @@ export class JournalV2Component extends UIComponent implements OnInit {
   //       this[propName] = res;
   //     });
   // }
-  viewSetting(journal:any){
+  viewSetting(journal: any) {
     let data = {
       journal: journal,
     };
     let opt = new DialogModel();
-      opt.FormModel = this.view.formModel;
-      let dialog = this.callfc.openForm(
-        JournalViewsettingComponent,
-        null,
-        null,
-        null,
-        '',
-        data,
-        '',
-        opt
-      );
+    opt.FormModel = this.view.formModel;
+    let dialog = this.callfc.openForm(
+      JournalViewsettingComponent,
+      null,
+      null,
+      null,
+      '',
+      data,
+      '',
+      opt
+    );
   }
   //#endregion Function
 }

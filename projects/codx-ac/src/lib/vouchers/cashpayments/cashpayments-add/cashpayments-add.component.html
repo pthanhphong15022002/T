@@ -653,7 +653,7 @@
             </div>
             <div *ngIf="formCashPayment?.data?.subType == '3' || formCashPayment?.data?.subType == '4'" class="ms-2">
               <button style="border: 1px solid !important" tab-index="12"
-                class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="onAddLine(); $event.preventDefault()"
+                class="btn btn-sm btn-light-primary" (keydown.enter)="onAddLine(); $event.preventDefault()"
                 (click)="onAddLine()">
                 <i class="icon-i-receipt icon-16"></i>
                 <codx-label *ngIf="formCashPayment.data.subType == '3'" [formModel]="dialog.formModel"
@@ -729,7 +729,7 @@
           <div class="d-flex align-items-center">
             <div *ngIf="formCashPayment.data?.subType == '9'" class="ms-2">
               <button tabindex="-1" style="border: 1px solid !important" tab-index="12"
-                class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="onAddLine(); $event.preventDefault()"
+                class="btn btn-sm btn-light-primary" (keydown.enter)="onAddLine(); $event.preventDefault()"
                 (click)="onAddLine()" id="btnAddVAT">
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label [formModel]="dialog.formModel" fiedName="lblAddVat" default="Thêm dòng"></codx-label>

@@ -33,6 +33,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { AC_PurchaseInvoicesLines } from '../../../models/AC_PurchaseInvoicesLines.model';
 import { AC_VATInvoices } from '../../../models/AC_VATInvoices.model';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'lib-purchaseinvoices-add',
@@ -83,6 +84,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     private acService: CodxAcService,
     private notification: NotificationsService,
     private tranform: DatePipe,
+    private ngxLoader: NgxUiLoaderService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -472,15 +474,21 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * @param type 
    */
   onSaveVoucher(type) {
+    this.ngxLoader.start();
     this.formPurchaseInvoices.save(null, 0, '', '', false, { allowCompare: false })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if (!res) return;
+        let isError = false;
+        if (!res) isError = true;
         if (res.hasOwnProperty('save')) {
-          if (res.save.hasOwnProperty('data') && !res.save.data) return;
+          if (res.save.hasOwnProperty('data') && !res.save.data) isError = true;
         }
         if (res.hasOwnProperty('update')) {
-          if (res.update.hasOwnProperty('data') && !res.update.data) return;
+          if (res.update.hasOwnProperty('data') && !res.update.data) isError = true;
+        }
+        if(isError){
+          this.ngxLoader.stop();
+          return;
         }
         if ((this.eleGridPurchaseInvoice || this.eleGridPurchaseInvoice?.isEdit) && this.elementTabDetail?.selectingID == '0') {
           this.eleGridPurchaseInvoice.saveRow((res: any) => { //? save lưới trước
@@ -542,6 +550,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         }
         if (this.eleGridPurchaseInvoice && this.eleGridPurchaseInvoice?.isSaveOnClick) this.eleGridPurchaseInvoice.isSaveOnClick = false;
         if (this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false;
+        this.ngxLoader.stop();
       });
   }
   //#endregion Method
