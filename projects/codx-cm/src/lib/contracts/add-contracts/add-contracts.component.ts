@@ -44,6 +44,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { StepService } from 'projects/codx-dp/src/lib/share-crm/codx-step/step.service';
 import { CustomFieldService } from 'projects/codx-dp/src/lib/share-crm/codx-input-custom-field/custom-field.service';
+import { CodxInputCustomFieldComponent } from 'projects/codx-dp/src/lib/share-crm/codx-input-custom-field/codx-input-custom-field.component';
 
 @Component({
   selector: 'add-contracts',
@@ -364,7 +365,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   loadSoureRef() {
-    /// this.refInstance = '20620ac0-c45d-431d-99d7-1e7c7503785d'; //gán cứng test chứ lỗi 1 đống
+    //this.refInstance = '20620ac0-c45d-431d-99d7-1e7c7503785d'; //gán cứng test chứ lỗi 1 đống
     this.cmService.getListFieldsRef(this.refInstance).subscribe((lstF) => {
       this.dataSourceRef = lstF;
     });

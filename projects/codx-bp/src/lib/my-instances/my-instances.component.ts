@@ -72,6 +72,7 @@ export class MyInstancesComponent
       e.forEach((res) => {
         switch (res.functionID) {
           case 'BPT0501':
+          case 'BPT0502':
           case 'SYS003':
           case 'SYS004':
           case 'SYS001':
@@ -89,8 +90,10 @@ export class MyInstancesComponent
   clickMF(e, data) {
     this.dataSelected = data;
     switch (e.functionID) {
-      case 'SYS03':
+      case 'BPT0501':
         this.openFormDetail(data);
+        break;
+      case 'BPT0502':
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
