@@ -56,6 +56,14 @@ export const environment = {
     appId: '1:319703529330:web:d0569f86d85524c1ca0feb',
     measurementId: 'G-HH40VHYRF0',
   },
+  multiService: {
+    active: false,
+    mongo: 'BG,BI,BP,CM,CO,DM,DP,EI,EP,ES,FD,OD,OM,PM,RP,SV,WP',
+    postgre: 'AC,AM,AR,BS,HR,IV,PS,PR,SM,SYS,Tenant,TM,TR,WR',
+    reportMongo: 'RPTBP,RPTCM,RPTDM,RPTDP,RPTEP,RPTES,RPTOD,RPTOM,RPTRP,RPTSV',
+    reportPostgre:
+      'RPTAC,RPTAD,RPTAM,RPTHR,RPTIV,RPTSM,RPTTenant,RPTTM,RPTPR,RPTTR',
+  },
   serviceMapping: {
     RP: {
       service: 'rptrp',
