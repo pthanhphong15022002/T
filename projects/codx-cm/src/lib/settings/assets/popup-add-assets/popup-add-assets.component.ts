@@ -102,6 +102,7 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
     switch (e.field) {
       case 'place':
         if (this.data.place != this.parentID) {
+          this.data.zone = null;
           this.cbxZone.ComponentCurrent.dataService.data = [];
           this.cbxZone.crrValue = null;
           this.cbxZone.model = {
