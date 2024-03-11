@@ -8,6 +8,7 @@ import { AC_GeneralJournalsLines } from '../../../models/AC_GeneralJournalsLines
 import { SettledInvoicesAdd } from '../../../share/settledinvoices-add/settledinvoices-add.component';
 import { AC_VATInvoices } from '../../../models/AC_VATInvoices.model';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'lib-general-journal-add',
@@ -73,6 +74,7 @@ export class GeneralJournalAddComponent extends UIComponent {
     private acService: CodxAcService,
     private notification: NotificationsService,
     private roundService: RoundService,
+    private ngxLoader: NgxUiLoaderService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -564,41 +566,47 @@ export class GeneralJournalAddComponent extends UIComponent {
    * @returns
    */
   onSaveVoucher(type) {
-    this.formGeneral.save(null, 0, '', '', false,{allowCompare:false})
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (!res) return;
-      if (res.hasOwnProperty('save')) {
-        if (res.save.hasOwnProperty('data') && !res.save.data) return;
-      }
-      if (res.hasOwnProperty('update')) {
-        if (res.update.hasOwnProperty('data') && !res.update.data) return;
-      }
-      if ((this.eleGridGeneral || this.eleGridGeneral?.isEdit) && this.elementTabDetail?.selectingID == '0') {
-        this.eleGridGeneral.saveRow((res:any)=>{ //? save lưới trước
-          if(res){
-            this.saveVoucher(type);
-          }
-        })
-        return;
-      }
-      if ((this.eleGridSettledInvoices || this.eleGridSettledInvoices?.isEdit) && this.elementTabDetail?.selectingID == '1') {
-        this.eleGridSettledInvoices.saveRow((res:any)=>{ //? save lưới trước
-          if(res){
-            this.saveVoucher(type);
-          }
-        })
-        return;
-      }
-      if ((this.eleGridVatInvoices || this.eleGridVatInvoices?.isEdit) && this.elementTabDetail?.selectingID == '2') {
-        this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
-          if(res){
-            this.saveVoucher(type);
-          }
-        })
-        return;
-      }
-    });
+    this.ngxLoader.start();
+    this.formGeneral.save(null, 0, '', '', false, { allowCompare: false })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        let isError = false;
+        if (!res) isError = true;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) isError = true;
+        }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) isError = true;
+        }
+        if (isError) {
+          this.ngxLoader.stop();
+          return;
+        }
+        if ((this.eleGridGeneral || this.eleGridGeneral?.isEdit) && this.elementTabDetail?.selectingID == '0') {
+          this.eleGridGeneral.saveRow((res: any) => { //? save lưới trước
+            if (res) {
+              this.saveVoucher(type);
+            }
+          })
+          return;
+        }
+        if ((this.eleGridSettledInvoices || this.eleGridSettledInvoices?.isEdit) && this.elementTabDetail?.selectingID == '1') {
+          this.eleGridSettledInvoices.saveRow((res: any) => { //? save lưới trước
+            if (res) {
+              this.saveVoucher(type);
+            }
+          })
+          return;
+        }
+        if ((this.eleGridVatInvoices || this.eleGridVatInvoices?.isEdit) && this.elementTabDetail?.selectingID == '2') {
+          this.eleGridVatInvoices.saveRow((res: any) => { //? save lưới trước
+            if (res) {
+              this.saveVoucher(type);
+            }
+          })
+          return;
+        }
+      });
   }
 
   /**
@@ -643,6 +651,7 @@ export class GeneralJournalAddComponent extends UIComponent {
         if(this.eleGridGeneral && this.eleGridGeneral?.isSaveOnClick) this.eleGridGeneral.isSaveOnClick = false;
         if(this.eleGridSettledInvoices && this.eleGridSettledInvoices.isSaveOnClick) this.eleGridSettledInvoices.isSaveOnClick = false;
         if(this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false;
+        this.ngxLoader.stop();
       });
   }
   //#endregion Method

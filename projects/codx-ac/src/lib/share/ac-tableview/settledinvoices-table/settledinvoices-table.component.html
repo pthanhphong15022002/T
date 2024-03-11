@@ -28,7 +28,7 @@
           </th>
         </tr>
       </thead>
-      <tbody *ngIf="listSettledInvoices && listSettledInvoices.length" class="table mb-0 table-footer-ac">
+      <tbody *ngIf="listSettledInvoices && listSettledInvoices.length" class="table-body-ac">
         <tr *ngFor="let item of listSettledInvoices;trackBy: trackByFn" style="border-bottom: 1px solid var(--bs-border-color) !important">
           <td style="width: 15em;min-width: 10em;">
             <ng-container *ngIf="(item.invoiceNo != null && item.invoiceNo != '')">

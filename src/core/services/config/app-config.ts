@@ -19,6 +19,7 @@ export abstract class AppConfig {
   externalLogin: ExternalLogin;
   loginHCS: string;
   serviceMapping: any;
+  multiService: any;
 }
 
 export abstract class ExternalLogin {
