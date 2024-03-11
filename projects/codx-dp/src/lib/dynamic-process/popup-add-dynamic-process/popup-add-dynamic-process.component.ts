@@ -62,16 +62,15 @@ import { PopupRolesDynamicComponent } from '../popup-roles-dynamic/popup-roles-d
 import { firstValueFrom, Observable, finalize, map } from 'rxjs';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
-import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-type-task/codx-type-task.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CodxViewApproveComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { CodxTypeTaskComponent } from '../../share-crm/codx-step/codx-step-common/codx-type-task/codx-type-task.component';
+import { CodxViewApproveComponent } from '../../share-crm/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -1944,7 +1943,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         )
           this.isChange = true;
         this.process.instanceNoSetting = res?.event?.autoNoCode;
-        let code = this.setViewAutoNumber(res?.event)
+        let code = this.setViewAutoNumber(res?.event);
         this.instanceNoEx = code || this.instanceNoEx;
         this.changeDetectorRef.markForCheck();
         //bo canh bao
@@ -1970,7 +1969,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     if (!this.process?.disposalNoSetting) {
       this.process.disposalNoSetting = await firstValueFrom(
         this.dpService
-          .genAutoNumber("CM0204", "CM_Contracts", 'ContractID')
+          .genAutoNumber('CM0204', 'CM_Contracts', 'ContractID')
           .pipe(takeUntil(this.destroyFrom$))
       );
     }
@@ -2005,7 +2004,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     popupAutoNum.closed.subscribe((res) => {
       if (res?.event) {
         this.process.disposalNoSetting = res?.event?.autoNoCode;
-        let code = this.setViewAutoNumber(res?.event)
+        let code = this.setViewAutoNumber(res?.event);
         this.contractNoEx = code || this.instanceNoEx;
         this.changeDetectorRef.markForCheck();
       }
@@ -2077,9 +2076,9 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       }
 
       instanceNoEx = instanceNoEx.substring(0, data?.maxLength);
-      return instanceNoEx;   
+      return instanceNoEx;
     }
-    return "";
+    return '';
   }
 
   async getVllFormat() {
@@ -2091,10 +2090,10 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             this.process.instanceNoSetting
           )
         );
-        if (this.adAutoNumber){
+        if (this.adAutoNumber) {
           this.instanceNoEx = this.setViewAutoNumber(this.adAutoNumber);
           this.changeDetectorRef.markForCheck();
-        } 
+        }
       }
       if (this.process.disposalNoSetting) {
         let adAutoNumber = await firstValueFrom(
@@ -2102,10 +2101,10 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             this.process.disposalNoSetting
           )
         );
-        if (adAutoNumber){
+        if (adAutoNumber) {
           this.contractNoEx = this.setViewAutoNumber(adAutoNumber);
           this.changeDetectorRef.markForCheck();
-        } 
+        }
       }
     }
   }
@@ -5342,6 +5341,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
               md.bought &&
               md.boughtModule?.moduleID == 'TM1'
           );
+          this.changeDetectorRef.markForCheck();
         }
       });
   }

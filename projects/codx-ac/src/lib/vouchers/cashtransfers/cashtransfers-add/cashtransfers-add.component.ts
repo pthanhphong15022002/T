@@ -6,6 +6,7 @@ import { CodxAcService, fmVATInvoices} from '../../../codx-ac.service';
 import { RoundService } from '../../../round.service';
 import { FormGroup } from '@angular/forms';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'lib-cashtransfers-add',
@@ -48,6 +49,7 @@ export class CashtransfersAddComponent extends UIComponent {
     private acService: CodxAcService,
     private notification: NotificationsService,
     private roundService: RoundService,
+    private ngxLoader: NgxUiLoaderService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -291,16 +293,22 @@ export class CashtransfersAddComponent extends UIComponent {
    * @returns
    */
   onSaveVoucher(type) {
+    this.ngxLoader.start();
     this.formCashTranfer
       .save(null, 0, '', '', false, { allowCompare: false })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if (!res) return;
+        let isError = false;
+        if (!res) isError = true;
         if (res.hasOwnProperty('save')) {
-          if (res.save.hasOwnProperty('data') && !res.save.data) return;
+          if (res.save.hasOwnProperty('data') && !res.save.data) isError = true;
         }
         if (res.hasOwnProperty('update')) {
-          if (res.update.hasOwnProperty('data') && !res.update.data) return;
+          if (res.update.hasOwnProperty('data') && !res.update.data) isError = true;
+        }
+        if(isError){
+          this.ngxLoader.stop();
+          return;
         }
         this.saveVoucher(type);
       });
@@ -338,6 +346,7 @@ export class CashtransfersAddComponent extends UIComponent {
           else 
             this.notification.notifyCode('SYS007');
         }
+        this.ngxLoader.stop();
       });
   }
   //#endregion Method
@@ -432,7 +441,7 @@ export class CashtransfersAddComponent extends UIComponent {
   }
 
   VATChange(){
-    this.api.exec('AC','CashTranfersBusiness','VATChangedAsync',[this.fmVATInvoice.currentData,this.formCashTranfer.data.fees]).subscribe((res: any) => {
+    this.api.exec('AC','CashTranfersBusiness','VATChangedAsync',[this.fmVATInvoice.currentData,this.formCashTranfer.data]).subscribe((res: any) => {
       if (res) {
         this.fmVATInvoice.currentData = {...res};
         this.isPreventChange = true;

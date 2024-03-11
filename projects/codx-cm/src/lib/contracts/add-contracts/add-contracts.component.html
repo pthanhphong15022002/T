@@ -480,6 +480,8 @@
         [formModel]="dialog?.formModel"
         field="interval"
         [crrValue]="contracts?.interval"
+        [min]="0"
+        [max]="50"
         (valueChange)="valueChangeText($event)"
         [disabled]="action == 'view'"
       >

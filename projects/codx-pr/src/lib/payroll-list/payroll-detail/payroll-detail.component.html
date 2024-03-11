@@ -2,7 +2,9 @@
     [views]="views" 
     [autoLoad]="false"
     [titleToolBarTmp]="tmpToolBarTmp" 
-    [service]="'HR'">
+    [service]="'HR'"
+    (clickMF)="clickMF($event)"
+    (changeDataMF)="changeDataMF($event)">
 </codx-views>
 <ng-template #tmpPanelLeft>
     <codx-listview 
@@ -17,7 +19,7 @@
         textField="orgUnitName" 
         gridViewName="grvOrganizationUnits" 
         formName="OrganizationUnits" 
-        [enableCheck]="false"
+        [enableCheck]="true"
         [selectFirst]="true"
         idField="orgUnitID" 
         [dataService]="dtService"
@@ -76,10 +78,10 @@
 
 
 <ng-template #tmpToolBarTmp>
-    <div class="d-flex align-items-center cursor-pointer">
-        <div class="fw-bold">{{view?.function?.customName}}</div>
+    <div class="d-flex align-items-center">
+        <div class="fw-bold text-primary cursor-pointer fs-5" (click)="navigatePayroll()">{{view?.function?.customName}}</div>
         <div class="icon-navigate_next"></div>
-        <div [innerHTML]="data?.hrTemplateID | formatvalue : view?.formModel : 'hrTemplateID' | async"></div>
+        <div class="fw-bold fs-5" [innerHTML]="data?.hrTemplateID | formatvalue : view?.formModel : 'hrTemplateID' | async"></div>
         <div class="mx-2">|</div>
         <div>({{codxGridView ? codxGridView?.dataService?.rowCount : 0}})</div>
     </div>

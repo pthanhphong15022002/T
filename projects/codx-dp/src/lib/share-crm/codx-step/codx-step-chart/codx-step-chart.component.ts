@@ -9,9 +9,9 @@ import {
 } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-gantt';
 import { UIComponent, FormModel, SidebarModel } from 'codx-core';
-import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
 import { DP_Instances_Steps } from 'projects/codx-dp/src/lib/models/models';
 import { firstValueFrom } from 'rxjs';
+import { CodxViewTaskComponent } from '../codx-view-task/codx-view-task.component';
 
 @Component({
   selector: 'codx-step-chart',

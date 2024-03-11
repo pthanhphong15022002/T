@@ -30,7 +30,7 @@ import {
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CodxAcService, fmJournal } from '../../codx-ac.service';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
@@ -92,16 +92,22 @@ export class CashreceiptsComponent extends UIComponent {
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
-    this.userID = this.authStore.get().userID; //? get tên user đăng nhập
+    // this.cache
+    //   .companySetting()
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((res: any) => {
+    //     if (res.length > 0) {
+    //       this.legalName = res[0].legalName;
+    //     }
+    //   });
     this.cache
-      .companySetting()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res.length > 0) {
-          this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
-          this.legalName = res[0].legalName; //? get tên company
-        }
-      });
+      .viewSettingValues('ACParameters')
+      .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
+      .subscribe((res) => {
+        let dataValue = JSON.parse(res.dataValue);
+        this.baseCurr = dataValue?.BaseCurr || '';
+      })
+      
     this.router.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       this.journalNo = params?.journalNo; //? get số journal từ router
     });

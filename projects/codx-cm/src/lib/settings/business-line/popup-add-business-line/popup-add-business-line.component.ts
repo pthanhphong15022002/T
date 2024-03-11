@@ -43,7 +43,6 @@ export class PopupAddBusinessLineComponent implements OnInit, AfterViewInit {
 
   constructor(
     private cache: CacheService,
-    private api: ApiHttpService,
     private notiService: NotificationsService,
     private codxCmService: CodxCmService,
     @Optional() dialog: DialogRef,

@@ -21,7 +21,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { tmpInstancesStepsReasons } from 'projects/codx-cm/src/lib/models/tmpModel';
-import { CodxStepTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-task/codx-step-task.component';
+import { CodxStepTaskComponent } from '../../../share-crm/codx-step/codx-step-task/codx-step-task.component';
 
 @Component({
   selector: 'step-task-instance',
@@ -252,21 +252,21 @@ export class StepTaskInstanceComponent
     });
   }
   async getListReason(processId, applyFor) {
-    this.api.exec<any>(
-      'DP',
-      'ProcessesBusiness',
-      'GetListReasonByProcessIdAsync',
-      [processId, applyFor]
-    ).subscribe((res) => {
-      if (res) {
-        if (this.instance?.status == '3' || this.instance?.status == '4'){
-          this.listStepReason = this.convertStepsReason(res[0]);
+    this.api
+      .exec<any>('DP', 'ProcessesBusiness', 'GetListReasonByProcessIdAsync', [
+        processId,
+        applyFor,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          if (this.instance?.status == '3' || this.instance?.status == '4') {
+            this.listStepReason = this.convertStepsReason(res[0]);
+          }
+          if (this.instance?.status == '5' || this.instance?.status == '6') {
+            this.listStepReason = this.convertStepsReason(res[1]);
+          }
         }
-        if (this.instance?.status == '5' || this.instance?.status == '6'){
-          this.listStepReason = this.convertStepsReason(res[1]);
-        }
-      }
-    });
+      });
   }
 
   convertStepsReason(reasons: any) {
@@ -281,7 +281,7 @@ export class StepTaskInstanceComponent
       reasonInstance.createdBy = item.createdBy;
       listReasonInstance.push(reasonInstance);
     }
-      return listReasonInstance;
+    return listReasonInstance;
   }
 
   getNameReason(isReason) {
@@ -339,21 +339,23 @@ export class StepTaskInstanceComponent
         this.stepIdReason,
         this.listReasonsClick,
       ];
-      this.api.exec<any>(
-        'DP',
-        'InstancesStepsBusiness',
-        'UpdateReasonStepAsync',
-        data
-      ).subscribe((res) => {
-        if (res) {
-          this.listStepReasonValue = JSON.parse(
-            JSON.stringify(this.listReasonsClick)
-          );
-          this.dialogPopupReason.close();
-          this.notiService.notifyCode('SYS007');
-          return;
-        }
-      });
+      this.api
+        .exec<any>(
+          'DP',
+          'InstancesStepsBusiness',
+          'UpdateReasonStepAsync',
+          data
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.listStepReasonValue = JSON.parse(
+              JSON.stringify(this.listReasonsClick)
+            );
+            this.dialogPopupReason.close();
+            this.notiService.notifyCode('SYS007');
+            return;
+          }
+        });
     }
   }
   changeReasonMF(e) {

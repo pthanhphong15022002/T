@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { AuthStore, ButtonModel, CRUDService, DataRequest, DialogModel, FormModel, NotificationsService, SidebarModel, TenantStore, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CodxAcService, fmJournal, fmVATInvoices } from '../../codx-ac.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -55,14 +55,22 @@ export class CashtransfersComponent extends UIComponent {
     private tenant: TenantStore,
   ) {
     super(inject);
+    // this.cache
+    //   .companySetting()
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((res: any) => {
+    //     if (res.length > 0) {
+    //       this.baseCurr = res[0].baseCurr;
+    //     }
+    //   });
+      
     this.cache
-      .companySetting()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res.length > 0) {
-          this.baseCurr = res[0].baseCurr;
-        }
-      });
+      .viewSettingValues('ACParameters')
+      .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
+      .subscribe((res) => {
+        let dataValue = JSON.parse(res.dataValue);
+        this.baseCurr = dataValue?.BaseCurr || '';
+      })
     this.router.params
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {

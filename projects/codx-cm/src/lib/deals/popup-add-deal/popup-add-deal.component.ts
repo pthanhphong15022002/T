@@ -1,6 +1,3 @@
-import { async } from '@angular/core/testing';
-import { load } from '@syncfusion/ej2-angular-charts';
-import { update } from '@syncfusion/ej2-angular-inplace-editor';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -15,16 +12,12 @@ import {
   DialogRef,
   DialogData,
   FormModel,
-  CacheService,
   NotificationsService,
   AuthStore,
   UIComponent,
   RequestOption,
   Util,
-  CodxComboboxComponent,
   CodxInputComponent,
-  DataRequest,
-  DialogModel,
   CodxFormComponent,
   TenantStore,
 } from 'codx-core';
@@ -36,13 +29,10 @@ import {
 } from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
 import { tmpInstances } from '../../models/tmpModel';
-import { debug } from 'console';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
-import { PopupQuickaddContactComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { firstValueFrom } from 'rxjs';
-import { Contact } from 'projects/codx-sm/src/lib/models/Contact.model';
-import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
 import { Router } from '@angular/router';
+import { CustomFieldService } from 'projects/codx-dp/src/lib/share-crm/codx-input-custom-field/custom-field.service';
 
 @Component({
   selector: 'lib-popup-add-deal',
@@ -196,7 +186,7 @@ export class PopupAddDealComponent
   viewOnly = false;
   cost: any;
   copyTransID: any; //copy transID cost
-  tenant = "";
+  tenant = '';
 
   constructor(
     private inject: Injector,
@@ -223,7 +213,7 @@ export class PopupAddDealComponent
     this.copyTransID = dt?.data?.copyTransID;
     // this.tenant = this.tenantStore.get().tenant;
     const currentUrl = this.routerLink.url;
-    this.tenant = "qtsc";
+    this.tenant = 'qtsc';
     // this.tenant = currentUrl.includes("qtsc") ? "qtsc" : "";
 
     // add view from customer
@@ -299,15 +289,14 @@ export class PopupAddDealComponent
   onInit(): void {}
 
   async ngAfterViewInit(): Promise<void> {
-    if(this.tenant == "qtsc"){
+    if (this.tenant == 'qtsc') {
       this.tabInfo = [this.menuGeneralInfo];
       this.tabContent = [this.tabGeneralInfoDetail];
-    }else{
+    } else {
       this.tabInfo = [this.menuGeneralInfo, this.menuCostItems];
       this.tabContent = [this.tabGeneralInfoDetail, this.tabCostItems];
     }
 
-    
     if (this.action !== this.actionAdd || this.isviewCustomer) {
       if (this.isviewCustomer) {
         this.customerCategory = this.customerView?.category;
@@ -760,27 +749,36 @@ export class PopupAddDealComponent
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
-      let result = event.e?.data;
-      let field = event.data;
-      switch (field.dataType) {
-        case 'D':
-          result = event.e?.data.fromDate;
-          break;
-        case 'P':
-        case 'R':
-        case 'A':
-        case 'L':
-        case 'TA':
-        case 'PA':
-          result = event?.e;
-          break;
-        case 'C':
-          result = event?.e;
-          let type = event?.type ?? '';
-          let contact = event?.result ?? '';
-          this.convertToFieldDp(contact, type);
-          break;
+      var result = event.e;
+      var field = event.data;
+
+      if (field.dataType == 'C') {
+        let type = event?.type ?? '';
+        let contact = event?.result ?? '';
+        this.convertToFieldDp(contact, type);
       }
+
+      // let result = event.e?.data;
+      // let field = event.data;
+      // switch (field.dataType) {
+      //   case 'D':
+      //     result = event.e?.data.fromDate;
+      //     break;
+      //   case 'P':
+      //   case 'R':
+      //   case 'A':
+      //   case 'L':
+      //   case 'TA':
+      //   case 'PA':
+      //     result = event?.e;
+      //     break;
+      //   case 'C':
+      //     result = event?.e;
+      //     let type = event?.type ?? '';
+      //     let contact = event?.result ?? '';
+      //     this.convertToFieldDp(contact, type);
+      //     break;
+      // }
       let index = this.listInstanceSteps.findIndex(
         (x) => x.recID == field.stepID
       );

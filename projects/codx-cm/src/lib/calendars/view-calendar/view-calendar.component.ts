@@ -33,11 +33,8 @@ import {
   CM_Deals,
   CM_Leads,
 } from '../../models/cm_model';
-import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-type-task/codx-type-task.component';
-import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
-import { CM_Contacts } from '../../models/tmpCrm.model';
-import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
-import { PopupAddTaskCalendarComponent } from './popup-add-task-calendar/popup-add-task-calendar.component';
+import { StepService } from 'projects/codx-dp/src/lib/share-crm/codx-step/step.service';
+import { CodxViewTaskComponent } from 'projects/codx-dp/src/lib/share-crm/codx-step/codx-view-task/codx-view-task.component';
 
 @Component({
   selector: 'lib-view-calendar',
@@ -46,7 +43,8 @@ import { PopupAddTaskCalendarComponent } from './popup-add-task-calendar/popup-a
 })
 export class ViewCalendarComponent
   extends UIComponent
-  implements OnInit, AfterViewInit, OnChanges {
+  implements OnInit, AfterViewInit, OnChanges
+{
   @ViewChild('cellTemplate') cellTemplate!: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp!: TemplateRef<any>;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>; //ressouce cuar schedule
@@ -91,9 +89,11 @@ export class ViewCalendarComponent
   viewCrr: any;
 
   titleAction: string;
-  button: ButtonModel[] = [{
-    id: 'btnAdd',
-  }];
+  button: ButtonModel[] = [
+    {
+      id: 'btnAdd',
+    },
+  ];
 
   taskType;
   popupTypeCM: DialogRef;
@@ -193,7 +193,13 @@ export class ViewCalendarComponent
       });
   }
   //#region view
-  viewTask(data, customerName = '', dealName = '', contractName = '', leadName = '') {
+  viewTask(
+    data,
+    customerName = '',
+    dealName = '',
+    contractName = '',
+    leadName = ''
+  ) {
     if (data) {
       let frmModel: FormModel = {
         entityName: 'DP_Instances_Steps_Tasks',
@@ -380,11 +386,11 @@ export class ViewCalendarComponent
     }
   }
 
-  settingViews() { }
+  settingViews() {}
 
   //------------------More Func-----------------//
   //chua goi tho phan quyền -- đang full true
-  changeDataMF(e, data) { }
+  changeDataMF(e, data) {}
 
   clickMF(e, data) {
     this.actionName = e.text;
@@ -420,23 +426,26 @@ export class ViewCalendarComponent
       let instanceID = task?.instanceID;
       let objectID = task?.objectID;
       let objectType = task?.objectType;
-      this.api.exec<any>(
-        'DP',
-        'ActivitiesBusiness',
-        'GetParentOfTaskAsync',
-        [recID, taskGroupID, stepID, instanceID, objectID, objectType]
-      ).subscribe((res) => {
-        if (res) {
-          let customerName = res?.customerName;
-          let dealName = res?.applyFor == '1' ? res?.parentTaskName : '';
-          let contractName = res?.applyFor == '4' ? res?.parentTaskName : '';
-          let leadName = res?.applyFor == '5' ? res?.parentTaskName : '';
-          this.viewTask(task, customerName, dealName, contractName, leadName);
-        } else {
-          this.viewTask(task);
-        }
-
-      })
+      this.api
+        .exec<any>('DP', 'ActivitiesBusiness', 'GetParentOfTaskAsync', [
+          recID,
+          taskGroupID,
+          stepID,
+          instanceID,
+          objectID,
+          objectType,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            let customerName = res?.customerName;
+            let dealName = res?.applyFor == '1' ? res?.parentTaskName : '';
+            let contractName = res?.applyFor == '4' ? res?.parentTaskName : '';
+            let leadName = res?.applyFor == '5' ? res?.parentTaskName : '';
+            this.viewTask(task, customerName, dealName, contractName, leadName);
+          } else {
+            this.viewTask(task);
+          }
+        });
     }
   }
 
@@ -472,7 +481,7 @@ export class ViewCalendarComponent
   }
 
   async chooseTask() {
-    let typeTask = await this.stepService.chooseTypeTask(['G','F']);
+    let typeTask = await this.stepService.chooseTypeTask(['G', 'F']);
     console.log(typeTask);
     if (typeTask) {
       this.beforeAddTask(typeTask);
@@ -480,10 +489,16 @@ export class ViewCalendarComponent
   }
 
   async beforeAddTask(taskType) {
-    this.handleTask('calendar', taskType, "add");
+    this.handleTask('calendar', taskType, 'add');
   }
 
-  async handleTask(type, taskType, action, taskData = null, listInsStep = null) {
+  async handleTask(
+    type,
+    taskType,
+    action,
+    taskData = null,
+    listInsStep = null
+  ) {
     let dataInput = {
       action,
       titleName: this.titleAction,
@@ -494,7 +509,10 @@ export class ViewCalendarComponent
       isSave: false,
     };
 
-    let taskOutput = await this.stepService.openPopupCodxTask(dataInput,'right');
+    let taskOutput = await this.stepService.openPopupCodxTask(
+      dataInput,
+      'right'
+    );
     let task = taskOutput?.task;
     this.isActivitie = taskOutput?.isActivitie;
     if (task && (action == 'add' || action == 'copy')) {
@@ -565,10 +583,12 @@ export class ViewCalendarComponent
           let fields = taskEdit.fields;
           if (!this.isActivitie) {
             this.api
-              .exec<any>('DP', 'InstancesStepsBusiness', 'UpdateTaskStepAsync', [
-                taskEdit,
-                fields,
-              ])
+              .exec<any>(
+                'DP',
+                'InstancesStepsBusiness',
+                'UpdateTaskStepAsync',
+                [taskEdit, fields]
+              )
               .subscribe((res) => {
                 if (res) {
                   this.convertDataCalendar(res);

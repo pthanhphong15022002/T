@@ -3,49 +3,56 @@
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
+  [data]="data"
 ></codx-form>
 
 <ng-template #body>
-    <div class="container p-4">
+    <div class="container">
         <div class="form-group">
             <codx-label [formModel]="dialog?.formModel" fiedName="HRTemplateID" [default]="'Mã bảng lương'"></codx-label>
-            <codx-input [formModel]="dialog?.formModel" field="hrTemplateID" [crrValue]="data?.hrTemplateID" (valueChange)="valueChange($event)"></codx-input>
+            <codx-input [formModel]="dialog?.formModel" field="hrTemplateID" [crrValue]="data?.hrTemplateID" [disabled]="data?.hrTemplateID ? true : false" (valueChange)="valueChange($event)"></codx-input>
         </div>
         <div class="form-group">
             <codx-label [formModel]="dialog?.formModel" fiedName="HRTemplateName" [default]="'Tên bảng lương'"></codx-label>
             <codx-input [formModel]="dialog?.formModel" field="hrTemplateName" [crrValue]="data?.hrTemplateName" (valueChange)="valueChange($event)"></codx-input>
         </div>
         <div class="form-group">
-            <codx-label [formModel]="dialog?.formModel" fiedName="Memo" [default]="'Tên bảng lương'"></codx-label>
+            <codx-label [formModel]="dialog?.formModel" fiedName="Memo" [default]="'Mô tả'"></codx-label>
             <codx-input [formModel]="dialog?.formModel" field="memo" [crrValue]="data?.memo" (valueChange)="valueChange($event)"></codx-input>
         </div>
         <div class="form-group">
-            <codx-label [formModel]="dialog?.formModel" fiedName="GroupSalCode" [default]="'Tên bảng lương'"></codx-label>
+            <codx-label [formModel]="dialog?.formModel" fiedName="GroupSalCode" [default]="'Áp dụng cho Nhóm lương'"></codx-label>
             <codx-input [formModel]="dialog?.formModel" field="groupSalCode" [crrValue]="data?.groupSalCode" (valueChange)="valueChange($event)"></codx-input>
         </div>
         <div class="form-group">
             <div class="d-flex align-items-center justify-content-between w-100 mb-2" >
                 <codx-label [formModel]="dialog?.formModel" fiedName="lblTemplateSalary" [default]="'Mẫu bảng lương'" class="fw-bold text-primary"></codx-label>
-                <span (click)="viewInfo()"><i class="icon-info text-primary"></i></span>
+                <span class="cursor-pointer" (click)="viewInfo()"><i class="icon-info text-primary"></i></span>
             </div>
             <ng-container *ngIf="rpReportList && rpReportList?.templateID;else noTemplate">
                 <div class="flex flex-column w-100">
-                    <codx-attachment 
-                        class="mb-2"
-                        [objectId]="rpReportList.templateID" 
-                        [objectType]="'AD_ExcelTemplates'"
-                        [displayThumb]="'simple'" 
-                        hideImageUpload="0" 
-                        showMessage="0" 
-                        hideBtnSave="1" 
-                        hideFolder="1" 
-                        hideUploadBtn="1" 
-                        [hideDes]="'1'" 
-                        [hideDelete]="'1'" 
-                        [hideMoreF]="'0'">
-                    </codx-attachment>
+                    <div class="d-flex aling-items-center justify-content-between">
+                        <codx-attachment 
+                            class="mb-2"
+                            [objectId]="rpReportList.templateID" 
+                            [objectType]="'AD_ExcelTemplates'"
+                            [formModel]="dialog?.formModel"
+                            [displayThumb]="'simple'" 
+                            hideImageUpload="0" 
+                            showMessage="0" 
+                            hideBtnSave="1" 
+                            hideFolder="1" 
+                            hideUploadBtn="1" 
+                            [hideDes]="'1'" 
+                            [hideDelete]="'1'">
+                        </codx-attachment>
+                        <div class="cursor-pointer" (click)="editTemplate()">
+                            <span><i class="icon-create text-primary"></i></span>
+                            <codx-label [formModel]="dialog.formModel" name="lblEditTemplate" [default]="'Chỉnh sửa'" class="text-primary"></codx-label>
+                        </div>
+                    </div>
                     <div class="btn btn-outline-primary" (click)="addTemplate()">
-                        <span class="me-1"><i class="swap_vertical_circle text-primary"></i></span>
+                        <span><i class="icon-swap_vertical_circle text-primary"></i></span>
                         <codx-label [formModel]="dialog?.formModel" name="lblChangeTemplate" [default]="'Thay mẫu khác'" class="text-primary"></codx-label>
                     </div>
                 </div>

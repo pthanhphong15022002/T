@@ -15,6 +15,8 @@ import { DocCategoryComponent } from 'projects/codx-es/src/lib/setting/category/
 import { ResourcesComponent } from 'projects/codx-ep/src/lib/resources/resources.component';
 import { BusinessLineComponent } from './business-line/business-line.component';
 import { PopupAddBusinessLineComponent } from './business-line/popup-add-business-line/popup-add-business-line.component';
+import { AssetsComponent } from './assets/assets.component';
+import { PopupAddAssetsComponent } from './assets/popup-add-assets/popup-add-assets.component';
 
 const routes: Routes = [
   {
@@ -46,6 +48,10 @@ const routes: Routes = [
         path: 'businessline/:funcID',
         component: BusinessLineComponent,
       },
+      {
+        path: 'assets/:funcID',
+        component: AssetsComponent,
+      },
     ],
   },
 ];
@@ -58,6 +64,8 @@ const routes: Routes = [
     PopupAddStatusCodeComponent,
     BusinessLineComponent,
     PopupAddBusinessLineComponent,
+    AssetsComponent,
+    PopupAddAssetsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

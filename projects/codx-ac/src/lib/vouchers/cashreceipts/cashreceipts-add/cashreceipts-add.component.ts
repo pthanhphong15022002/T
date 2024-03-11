@@ -10,6 +10,7 @@ import { SettledInvoicesAdd } from '../../../share/settledinvoices-add/settledin
 import { Validators } from '@angular/forms';
 import { AC_CashReceiptsLines } from '../../../models/AC_CashReceiptsLines.model';
 import { SuggestionAdd } from '../../../share/suggestion-add/suggestion-add.component';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'lib-cashreceipts-add',
@@ -67,6 +68,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     private acService: CodxAcService,
     private notification: NotificationsService,
     private roundService: RoundService,
+    private ngxLoader: NgxUiLoaderService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -614,33 +616,39 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @returns
    */
   onSaveVoucher(type) {
-    this.formCashReceipt.save(null, 0, '', '', false,{allowCompare:false})
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (!res) return;
-      if (res.hasOwnProperty('save')) {
-        if (res.save.hasOwnProperty('data') && !res.save.data) return;
-      }
-      if (res.hasOwnProperty('update')) {
-        if (res.update.hasOwnProperty('data') && !res.update.data) return;
-      }
-      if ((this.eleGridCashReceipt || this.eleGridCashReceipt?.isEdit) && this.elementTabDetail?.selectingID == '0') {
-        this.eleGridCashReceipt.saveRow((res:any)=>{ //? save lưới trước
-          if(res){
-            this.saveVoucher(type);
-          }
-        })
-        return;
-      }
-      if ((this.eleGridSettledInvoices || this.eleGridSettledInvoices?.isEdit) && this.elementTabDetail?.selectingID == '1') {
-        this.eleGridSettledInvoices.saveRow((res:any)=>{ //? save lưới trước
-          if(res){
-            this.saveVoucher(type);
-          }
-        })
-        return;
-      }
-    });
+    this.ngxLoader.start();
+    this.formCashReceipt.save(null, 0, '', '', false, { allowCompare: false })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        let isError = false;
+        if (!res) isError = true;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) isError = true;
+        }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) isError = true;
+        }
+        if (isError) {
+          this.ngxLoader.stop();
+          return;
+        }
+        if ((this.eleGridCashReceipt || this.eleGridCashReceipt?.isEdit) && this.elementTabDetail?.selectingID == '0') {
+          this.eleGridCashReceipt.saveRow((res: any) => { //? save lưới trước
+            if (res) {
+              this.saveVoucher(type);
+            }
+          })
+          return;
+        }
+        if ((this.eleGridSettledInvoices || this.eleGridSettledInvoices?.isEdit) && this.elementTabDetail?.selectingID == '1') {
+          this.eleGridSettledInvoices.saveRow((res: any) => { //? save lưới trước
+            if (res) {
+              this.saveVoucher(type);
+            }
+          })
+          return;
+        }
+      });
   }
 
   /**
@@ -684,6 +692,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         }
         if(this.eleGridCashReceipt && this.eleGridCashReceipt?.isSaveOnClick) this.eleGridCashReceipt.isSaveOnClick = false;
         if(this.eleGridSettledInvoices && this.eleGridSettledInvoices.isSaveOnClick) this.eleGridSettledInvoices.isSaveOnClick = false;
+        this.ngxLoader.stop();
       });
   }
 
