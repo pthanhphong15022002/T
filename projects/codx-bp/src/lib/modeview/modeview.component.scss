@@ -136,19 +136,22 @@
 }
 .bp-mw-accordion-a
 {
-  .e-accordion .e-acrdn-item.e-selected>.e-acrdn-header:focus
+  .e-accordion .e-acrdn-item.e-selected>.e-acrdn-header:focus , .e-accordion .e-acrdn-item:first-child .e-acrdn-header:focus
   {
     box-shadow: none !important;
   }
+
   .e-accordion , .e-accordion .e-acrdn-item.e-select.e-selected:first-child , .e-accordion .e-acrdn-item.e-select
   {
     border: none !important;
   }
+  
   .e-accordion .e-acrdn-item.e-selected.e-select>.e-acrdn-header
   {
     background-color: transparent !important;
     border: none !important;
   }
+  
   .e-accordion .e-acrdn-item.e-selected>.e-acrdn-header>.e-acrdn-header-content
   {
     color: black !important;
