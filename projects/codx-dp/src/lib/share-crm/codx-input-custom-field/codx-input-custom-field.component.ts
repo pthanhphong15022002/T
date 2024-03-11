@@ -1059,6 +1059,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
           e: this.customField.dataValue,
           data: this.customField,
         });
+        if (this.customField.dataType == 'TA' && this.customField.dataValue)
+          this.getColumnTable(this.customField);
         this.changeRef.detectChanges();
       }
     });
