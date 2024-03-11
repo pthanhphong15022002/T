@@ -309,7 +309,7 @@
         >
         </codx-tree-comment>
         </div>
-        <div class="row h-25 w-100 d-flex justify-content-center flex-row ">
+        <div class="row h-25 w-100 d-flex justify-content-start flex-row ps-3 pt-5 ">
           <div class="d-flex align-items-center justify-content-start pb-3 ps-1 w-auto" *ngIf="showInprogress">
             <codx-input type="checkbox" [class]="'check-circle'" [crrValue]="isInProgress" field="inProgress" (valueChange)="checkStatusChange($event)" ></codx-input>
             <codx-label fiedName="lblInProcess" class="ps-2" [formModel]="form.formModel" default="Đang xử lý"  >

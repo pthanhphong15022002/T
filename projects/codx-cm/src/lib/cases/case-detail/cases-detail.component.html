@@ -682,6 +682,8 @@
     [refID]="dataSelected.recID"
     [transID]="dataSelected.recID"
     [approveStatus]="dataSelected.approveStatus"
+    [data]="dataSelected" 
+    [keyField]="'recID'"
     (tabChange)="changeFooter($event)"
   ></codx-tabs>
 </ng-template>

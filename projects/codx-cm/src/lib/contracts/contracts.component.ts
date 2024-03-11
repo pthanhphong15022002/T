@@ -218,6 +218,8 @@ export class ContractsComponent extends UIComponent {
   selectedChange(val: any) {
     if (!val?.data) return;
     this.dataSelected = val?.data;
+    console.log("log kiểm tr data sẽ xóa sau",this.dataSelected);
+    
     this.detectorRef.detectChanges();
   }
 
@@ -246,11 +248,15 @@ export class ContractsComponent extends UIComponent {
             res.disabled = true;
             break;
           case 'SYS02':
-            res.disabled = data?.delete
+            if(this.user?.userID == "thuykt"){
+
+            }else{
+              res.disabled = data?.delete
               ? data.closed ||
                 this.checkMoreReason(data) ||
                 (!data.applyProcess && ['3', '5'].includes(data.status))
               : true;
+            }
             break;
           case 'SYS03':
             res.disabled = data?.write
@@ -325,7 +331,11 @@ export class ContractsComponent extends UIComponent {
             res.disabled = !data?.closed;
             break;
           case 'CM0204_18': // thanh lý
+          if(this.user?.userID == "thuykt"){
+
+          }else{
             res.disabled = data?.status == '17' || data?.closed;
+          }
             break;
           case 'CM0204_19': // đưa vào quy trình xử lý
             res.disabled = data?.full

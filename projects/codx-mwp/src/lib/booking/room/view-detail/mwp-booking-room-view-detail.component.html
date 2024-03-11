@@ -175,8 +175,16 @@
   </ng-template>
 
   <ng-template #footer>
-    <codx-tabs [entityName]="formModel?.entityName" [objectID]="itemDetail?.recID" [funcID]="formModel?.funcID"
-      [dataTree]="data?.tasks ? data.tasks : []" [TabControl]="tabControl" [transID]="itemDetail?.recID" [approveStatus]="itemDetail?.approveStatus"></codx-tabs>
+    <codx-tabs 
+      [entityName]="formModel?.entityName" 
+      [objectID]="itemDetail?.recID" 
+      [funcID]="formModel?.funcID"
+      [dataTree]="data?.tasks ? data.tasks : []" [TabControl]="tabControl" 
+      [transID]="itemDetail?.recID" 
+      [approveStatus]="itemDetail?.approveStatus" 
+      [data]="itemDetail" 
+      [keyField]="'recID'">
+    </codx-tabs>
   </ng-template>
 </codx-detail-tmp>
 

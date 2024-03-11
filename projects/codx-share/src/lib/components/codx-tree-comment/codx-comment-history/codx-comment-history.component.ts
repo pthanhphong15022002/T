@@ -35,6 +35,7 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
   encapsulation: ViewEncapsulation.None,
 })
 export class CodxCommentHistoryComponent implements OnInit {
+
   @Input() funcID: string;
   @Input() objectID: string;
   @Input() objectType: string;
@@ -48,6 +49,7 @@ export class CodxCommentHistoryComponent implements OnInit {
   @Input() allowEdit: boolean = true;
   @Input() dVll: any = {};
   @Input() vllIcon: any = [];
+  @Input() dataBusiness:any; // bổ sung 11/03/2024 - comment and default push noti to createdBy and Owner
 
   @Output() evtReply = new EventEmitter();
   @Output() evtDelete = new EventEmitter();
@@ -72,7 +74,6 @@ export class CodxCommentHistoryComponent implements OnInit {
     private cache: CacheService,
     private notifySV: NotificationsService,
     private callFuc: CallFuncService,
-    private codxShareSV: CodxShareService,
     private dt: ChangeDetectorRef
   ) {
     this.user = this.auth.userValue;
@@ -165,52 +166,26 @@ export class CodxCommentHistoryComponent implements OnInit {
     data.objectType = this.objectType;
     data.functionID = this.funcID;
     data.reference = this.reference;
-    if (this.files) {
+    if (this.files) 
+    {
       data.attachments = 1;
       this.codxATM.objectId = data.recID;
       let lstFile = [];
       lstFile.push(this.files);
       this.codxATM.fileUploadList = lstFile;
       this.codxATM.objectType = 'BG_Comments';
-      this.codxATM.saveFilesMulObservable().subscribe((res: any) => {
-        if (res) {
-          this.api
-            .execSv(
-              'BG',
-              'ERM.Business.BG',
-              'CommentLogsBusiness',
-              'InsertCommentAsync',
-              [data]
-            )
-            .subscribe((res: any[]) => {
-              if (res[0]) {
-                this.evtSend.emit(res[1]);
-                this.notifySV.notifyCode('WP034');
-              } else this.notifySV.notifyCode('SYS023');
-              this.clearData();
-            });
-        } else {
+      this.codxATM.saveFilesMulObservable()
+      .subscribe((res: any) => {
+        if (res) 
+        {
+          this.save(data,this.dataBusiness.createdBy,this.dataBusiness.owner);
+        } 
+        else 
+        {
           this.notifySV.notifyCode('SYS023');
-          this.clearData();
         }
       });
-    } else {
-      this.api
-        .execSv(
-          'BG',
-          'ERM.Business.BG',
-          'CommentLogsBusiness',
-          'InsertCommentAsync',
-          [data]
-        )
-        .subscribe((res: any[]) => {
-          if (res[0]) {
-            this.evtSend.emit(res[1]);
-            this.notifySV.notifyCode('WP034');
-          } else this.notifySV.notifyCode('SYS023');
-          this.clearData();
-        });
-    }
+    } else this.save(data,this.dataBusiness.createdBy,this.dataBusiness.owner);
   }
   // clear data
   clearData() {
@@ -335,4 +310,26 @@ export class CodxCommentHistoryComponent implements OnInit {
     });
   }
   
+
+  save(data:tmpHistory,createdBy:string,owner:string){
+    if(data)
+    {
+      this.api
+        .execSv(
+          'BG',
+          'ERM.Business.BG',
+          'CommentLogsBusiness',
+          'InsertCommentAsync',
+          [data,createdBy,owner]
+        ).subscribe((res: any[]) => {
+          if(res && res[0]) 
+          {
+            this.evtSend.emit(res[1]);
+            this.notifySV.notifyCode('WP034');
+            this.clearData();
+          } 
+          else this.notifySV.notifyCode('SYS023');
+        });
+    }
+  }
 }
