@@ -12,9 +12,6 @@ import {
   SidebarModel,
   Util,
 } from 'codx-core';
-import { TM_Tasks } from '../codx-tasks/model/task.model';
-import { AssignTaskModel } from '../../models/assign-task.model';
-import { AssignInfoComponent } from '../assign-info/assign-info.component';
 import { CodxTypeTaskComponent } from './codx-step-common/codx-type-task/codx-type-task.component';
 import { Subject, firstValueFrom } from 'rxjs';
 import {
@@ -24,11 +21,14 @@ import {
 } from 'projects/codx-dp/src/lib/models/models';
 import { CodxAddGroupTaskComponent } from './codx-popup-group/codx-add-group-task.component';
 import { CodxAddTaskComponent } from './codx-popup-task/codx-add-task.component';
-import { CodxAddBookingCarComponent } from '../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
 import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
 import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';
-import { PopupAddMeetingComponent } from '../codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
-import { CodxBookingService } from '../codx-booking/codx-booking.service';
+import { CodxBookingService } from 'projects/codx-share/src/lib/components/codx-booking/codx-booking.service';
+import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
+import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
+import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
+import { CodxAddBookingCarComponent } from 'projects/codx-share/src/lib/components/codx-booking/codx-add-booking-car/codx-add-booking-car.component';
+import { PopupAddMeetingComponent } from 'projects/codx-share/src/lib/components/codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
 
 @Injectable({
   providedIn: 'root',
@@ -654,7 +654,7 @@ export class StepService {
         };
       } else {
         this.notiService.notify('Hợp đồng không tồn tại', '3');
-        return "not data";
+        return 'not data';
       }
     } else {
       data = { ...data, stepsTasks: task, isStartIns };
@@ -698,7 +698,7 @@ export class StepService {
       }
       return task;
     } else {
-      return ;
+      return;
     }
   }
 

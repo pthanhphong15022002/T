@@ -46,9 +46,9 @@ import { CodxDpService } from '../../../codx-dp.service';
 import { PopupAddVllCustomComponent } from './popup-add-vll-custom/popup-add-vll-custom.component';
 import { PopupSettingTableComponent } from './popup-setting-table/popup-setting-table.component';
 import { PopupSettingReferenceComponent } from './popup-setting-reference/popup-setting-reference.component';
-import { CodxInputCustomFieldComponent } from 'projects/codx-share/src/lib/components/codx-input-custom-field/codx-input-custom-field.component';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
-import { CodxFieldsFormatValueComponent } from 'projects/codx-share/src/lib/components/codx-input-custom-field/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
+import { CodxInputCustomFieldComponent } from '../../../share-crm/codx-input-custom-field/codx-input-custom-field.component';
+import { CodxFieldsFormatValueComponent } from '../../../share-crm/codx-input-custom-field/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
 
 @Component({
   selector: 'lib-popup-add-custom-field',
@@ -1036,15 +1036,18 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //lưu giá trị mặc định
   valueChangeCustom(event) {
     if (event && event.data) {
-      var result = event.e?.data;
+      var result = event.e;
       var field = event.data;
-      switch (field.dataType) {
-        case 'P':
-        case 'L':
-        case 'PA':
-          result = event.e;
-          break;
-      }
+
+      // var result = event.e?.data;
+      // var field = event.data;
+      // switch (field.dataType) {
+      //   case 'P':
+      //   case 'L':
+      //   case 'PA':
+      //     result = event.e;
+      //     break;
+      // }
       this.field.defaultValue = result;
       if (this.fieldCus) {
         this.fieldCus.defaultValue = this.fieldCus.dataValue = result;
