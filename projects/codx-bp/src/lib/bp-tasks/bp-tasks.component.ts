@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopupBpTasksComponent } from './popup-bp-tasks/popup-bp-tasks.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-bp-tasks',
@@ -27,7 +28,7 @@ export class BpTasksComponent
 
   dataSelected: any;
   hidenMF: boolean = false;
-  constructor(inject: Injector) {
+  constructor(inject: Injector, private codxShareService: CodxShareService) {
     super(inject);
   }
 
@@ -60,7 +61,44 @@ export class BpTasksComponent
     this.detectorRef.detectChanges();
   }
 
-  clickMF(e, data) {}
+  clickMF(e, data) {
+    this.dataSelected = data;
+    switch (e.functionID) {
+      case 'BPT0601':
+
+        break;
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        break;
+      }
+    }
+  }
+
+  changeDataMF(e, data){
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'BPT0601':
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+            res.disabled = false;
+            break;
+          default:
+            res.disabled = true;
+            break;
+        }
+      });
+    }
+  }
 
   dbClickEvent(e) {
     if (e && e?.data) {

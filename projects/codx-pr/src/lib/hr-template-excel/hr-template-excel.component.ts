@@ -2,6 +2,7 @@ import { AfterViewInit, Component, HostBinding, Injector, TemplateRef, ViewChild
 import { DialogModel, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopupEditTemplateComponent } from './popup/popup-edit-template/popup-edit-template.component';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
+import { ViewDetailTemplateComponent } from './view-detail-template/view-detail-template.component';
 
 @Component({
   selector: 'pr-template-excel',
@@ -16,7 +17,7 @@ export class HrTemplateExcelComponent extends UIComponent implements AfterViewIn
   selectedID:string = "";
   @ViewChild("itemTmpLeft") itemTmpLeft:TemplateRef<any>;
   @ViewChild("tmpPanelRight") tmpPanelRight:TemplateRef<any>;
-
+  @ViewChild("detailTemplate") detailTemplate:ViewDetailTemplateComponent;
   constructor
   (
     private injector:Injector,
@@ -45,13 +46,13 @@ export class HrTemplateExcelComponent extends UIComponent implements AfterViewIn
       {
         type: ViewType.listdetail,
         sameData: true,
-        showFilter: false,
         model : {
           template: this.itemTmpLeft,
           panelRightRef:this.tmpPanelRight,
         }
       }
     ]
+    
   }
 
   selectedChange(event:any){
@@ -98,6 +99,7 @@ export class HrTemplateExcelComponent extends UIComponent implements AfterViewIn
           if(res && res.event)
           {
             this.view.dataService.add(res.event).subscribe();
+            this.detectorRef.detectChanges();
           }
         });
       }
@@ -119,6 +121,8 @@ export class HrTemplateExcelComponent extends UIComponent implements AfterViewIn
       if(res && res.event)
       {
         this.view.dataService.update(res.event).subscribe();
+        this.detailTemplate.loadData(res.event.hrTemplateID);
+        this.detectorRef.detectChanges();
       }
     });
   }
@@ -147,7 +151,7 @@ export class HrTemplateExcelComponent extends UIComponent implements AfterViewIn
 
   changeDataMF(event:any){
      event.forEach(element => {
-      if(element.functionID === "SYS01" || element.functionID === "SYS02" || element.functionID === "SYS03" || element.functionID === "SYS04")
+      if(element.functionID === "SYS01" || element.functionID === "SYS02" || element.functionID === "SYS03")
       {
         element.disabled = false;
         element.isbookmark = element.functionID === "SYS01";
@@ -155,4 +159,6 @@ export class HrTemplateExcelComponent extends UIComponent implements AfterViewIn
       else element.disabled = true;
      }); 
   }
+
+  
 }
