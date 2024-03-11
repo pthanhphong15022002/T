@@ -9,7 +9,6 @@ import {
   ApiHttpService,
   CRUDService,
   CacheService,
-  CodxComboboxComponent,
   CodxInputComponent,
   DialogData,
   DialogRef,
@@ -19,13 +18,15 @@ import {
 import { CodxCmService } from '../../../codx-cm.service';
 
 @Component({
-  selector: 'lib-popup-add-business-line',
-  templateUrl: './popup-add-business-line.component.html',
-  styleUrls: ['./popup-add-business-line.component.css'],
+  selector: 'lib-popup-add-assets',
+  templateUrl: './popup-add-assets.component.html',
+  styleUrls: ['./popup-add-assets.component.css'],
 })
-export class PopupAddBusinessLineComponent implements OnInit, AfterViewInit {
-  @ViewChild('cbxProcessDeals') cbxProcessDeals: CodxInputComponent;
-  @ViewChild('cbxProcessContracts') cbxProcessContracts: CodxInputComponent;
+export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
+  @ViewChild('cbxPlace') cbxPlace: CodxInputComponent;
+  @ViewChild('objectID') objectID: CodxInputComponent;
+  @ViewChild('cbxZone') zone: CodxInputComponent;
+
   dialog: any;
   gridViewSetup: any;
 
@@ -86,9 +87,7 @@ export class PopupAddBusinessLineComponent implements OnInit, AfterViewInit {
         }
       });
   }
-  ngAfterViewInit(): void {
-    this.changeCbx();
-  }
+  ngAfterViewInit(): void {}
   ngOnInit(): void {}
 
   valueChange(e) {
@@ -96,9 +95,9 @@ export class PopupAddBusinessLineComponent implements OnInit, AfterViewInit {
   }
 
   beforeSave(op: RequestOption) {
-    op.service = 'CM';
-    op.assemblyName = 'ERM.Business.CM';
-    op.className = 'BusinessLinesBusiness';
+    op.service = 'AM';
+    op.assemblyName = 'ERM.Business.AM';
+    op.className = 'AssetsBusiness';
     let data = [];
     if (this.action == 'add' || this.action == 'copy') {
       op.methodName = 'SaveAsync';
@@ -175,40 +174,6 @@ export class PopupAddBusinessLineComponent implements OnInit, AfterViewInit {
           }
         }
       }
-    }
-  }
-
-  changeCbx() {
-    if (this.cbxProcessContracts && this.cbxProcessDeals) {
-      this.cbxProcessDeals.model = {
-        BusinessLineID: this.data.businessLineID ?? 'null',
-      };
-
-      this.cbxProcessContracts.model = {
-        BusinessLineID: this.data.businessLineID ?? 'null',
-      };
-
-      // let predicate = 'Deleted=@0 && BusinessLineID == null';
-      // let dataValue = 'false';
-      // if (this.action == 'edit') {
-      //   predicate =
-      //     'Deleted =@0 && ( BusinessLineID == null || BusinessLineID=@1 )';
-      //   dataValue = 'false;' + this.data.businessLineID;
-      // }
-
-      // (
-      //   this.cbxProcessContracts.ComponentCurrent as CodxComboboxComponent
-      // ).dataService.predicates = predicate;
-      // (
-      //   this.cbxProcessContracts.ComponentCurrent as CodxComboboxComponent
-      // ).dataService.dataValues = dataValue;
-
-      // (
-      //   this.cbxProcessDeals.ComponentCurrent as CodxComboboxComponent
-      // ).dataService.predicates = predicate;
-      // (
-      //   this.cbxProcessDeals.ComponentCurrent as CodxComboboxComponent
-      // ).dataService.dataValues = dataValue;
     }
   }
 }
