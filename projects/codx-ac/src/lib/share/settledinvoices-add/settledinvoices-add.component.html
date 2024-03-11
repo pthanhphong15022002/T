@@ -76,7 +76,7 @@
       <span class="fw-bold fs-5">{{'Đã chọn: '+grid.arrSelectedRows.length+'/'+grid.dataSource.length+' bản ghi'}}</span>
     </div>
     <div *ngIf="grid" class="ms-2 d-flex justify-content-end">
-      <button [disabled]="grid.arrSelectedRows.length > 0 ? false : true" type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;" (click)="apply()">
+      <button [disabled]="grid.arrSelectedRows.length > 0 ? false : true" type="button" class="btn btn-md btn-light-primary" style="border: 1px solid var(--primary-dark) !important;" (click)="apply()">
         <div class="d-flex align-items-center">
           <i class="icon-i-check2 icon-16 me-1"></i>
           <codx-label class="fw-normal" fiedName="lblSave" [formName]="fmSettledInvoices?.formName"
@@ -134,7 +134,7 @@
         </div>
       </div>
       <div style="min-width: 150px;" class="col-xl-2 d-flex align-items-center mt-5">
-        <button type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;"
+        <button type="button" class="btn btn-md btn-light-primary" style="border: 1px solid var(--primary-dark) !important;"
           (click)="getDataSubInvoice(0)">
           <codx-label style="white-space: nowrap;" class="fs-6 fw-normal" fiedName="lblSave" default="Lấy dữ liệu"></codx-label>
         </button>
@@ -171,7 +171,7 @@
         </div>
       </div>
       <div  style="min-width: 150px;" class="col-xl-2 d-flex align-items-center mt-5">
-        <button type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;"
+        <button type="button" class="btn btn-md btn-light-primary" style="border: 1px solid var(--primary-dark) !important;"
           (click)="getDataSubInvoice(1)">
           <codx-label style="white-space: nowrap;" class="fs-6 fw-normal" fiedName="lblSave" default="Cấn trừ"></codx-label>
         </button>

@@ -52,6 +52,7 @@ export class JournalsAddComponent extends UIComponent {
   oAutoNumber: any = [];
   mainFilterValue: any;
   baseCurr: any;
+  
   tabInfo: any[] = [
     //? thiết lập tab hiển thị trên form
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },

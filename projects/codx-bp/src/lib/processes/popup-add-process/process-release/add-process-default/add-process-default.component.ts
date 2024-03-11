@@ -283,6 +283,7 @@ export class AddProcessDefaultComponent implements OnInit{
           applyFor: this.process?.applyFor,
           status: "1",
           taskType: stageF?.activityType,
+          activityType: stageF?.activityType,
           taskName: stageF?.stepName,
           memo: stageF.memo,
           location: stageF.location,
@@ -301,7 +302,7 @@ export class AddProcessDefaultComponent implements OnInit{
           isOverDue : stageF?.isOverDue,	
           owners: stageF?.owners,
           permissions: stageF?.permissions,
-          indexNo: stageF.stepNo
+          indexNo: 0
         }
         var step = 
         {
@@ -310,6 +311,7 @@ export class AddProcessDefaultComponent implements OnInit{
           applyFor: this.process?.applyFor,
           status: "1",
           taskType: this.data?.activityType,
+          activityType: this.data?.activityType,
           taskName: this.data?.stepName,
           memo: this.data.memo,
           location: this.data.location,
@@ -328,7 +330,7 @@ export class AddProcessDefaultComponent implements OnInit{
           isOverDue : this.data?.isOverDue,	
           owners: this.data?.owners,
           permissions: this.data?.permissions,
-          indexNo: this.data.stepNo
+          indexNo: 1
         }
         
       
@@ -533,7 +535,7 @@ export class AddProcessDefaultComponent implements OnInit{
             this.dataIns=res;
           }
           else{
-            this.dataIns.status = '2';
+            this.dataIns.status = '3';
           }
           this.dialog.close(this.dataIns);
         }

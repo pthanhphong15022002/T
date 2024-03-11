@@ -24,7 +24,7 @@ import { tmpInstances } from '../../models/tmpModel';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, firstValueFrom, map, tap } from 'rxjs';
-import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
+import { CustomFieldService } from 'projects/codx-dp/src/lib/share-crm/codx-input-custom-field/custom-field.service';
 
 @Component({
   selector: 'lib-popup-add-cases',
@@ -363,22 +363,24 @@ export class PopupAddCasesComponent
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
-      var result = event.e?.data;
+      var result = event.e;
       var field = event.data;
-      switch (field.dataType) {
-        case 'D':
-          result = event.e?.data.fromDate;
-          break;
-        case 'P':
-        case 'R':
-        case 'A':
-        // case 'C':case ko có
-        case 'L':
-        case 'TA':
-        case 'PA':
-          result = event.e;
-          break;
-      }
+      // cũ
+      // var result = event.e?.data;
+      // switch (field.dataType) {
+      //   case 'D':
+      //     result = event.e?.data.fromDate;
+      //     break;
+      //   case 'P':
+      //   case 'R':
+      //   case 'A':
+      //   // case 'C':case ko có
+      //   case 'L':
+      //   case 'TA':
+      //   case 'PA':
+      //     result = event.e;
+      //     break;
+      // }
       var index = this.listInstanceSteps.findIndex(
         (x) => x.recID == field.stepID
       );

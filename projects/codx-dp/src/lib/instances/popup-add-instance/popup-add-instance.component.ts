@@ -21,8 +21,7 @@ import {
 import moment from 'moment';
 import { CodxDpService } from '../../codx-dp.service';
 import { DP_Instances } from '../../models/models';
-
-import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
+import { CustomFieldService } from '../../share-crm/codx-input-custom-field/custom-field.service';
 
 @Component({
   selector: 'lib-popup-add-instance',
@@ -289,22 +288,25 @@ export class PopupAddInstanceComponent implements OnInit {
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
-      let result = event.e?.data;
-      let field = event.data;
-      switch (field.dataType) {
-        case 'D':
-          result = event.e?.data.fromDate;
-          break;
-        case 'P':
-        case 'R':
-        case 'A':
-        case 'C':
-        case 'L':
-        case 'TA':
-        case 'PA':
-          result = event.e;
-          break;
-      }
+      var result = event.e;
+      var field = event.data;
+
+      // let result = event.e?.data;
+      // let field = event.data;
+      // switch (field.dataType) {
+      //   case 'D':
+      //     result = event.e?.data.fromDate;
+      //     break;
+      //   case 'P':
+      //   case 'R':
+      //   case 'A':
+      //   case 'C':
+      //   case 'L':
+      //   case 'TA':
+      //   case 'PA':
+      //     result = event.e;
+      //     break;
+      // }
       let index = this.listStep.findIndex((x) => x.recID == field.stepID);
 
       if (index != -1) {

@@ -37,13 +37,14 @@ import { tmpInstances } from '../../models/tmpModel';
 import { CodxCmService } from '../../codx-cm.service';
 import { ContractsService } from '../service-contracts.service';
 import { Observable, Subject, takeUntil, filter, firstValueFrom } from 'rxjs';
-import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
-import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { StepService } from 'projects/codx-dp/src/lib/share-crm/codx-step/step.service';
+import { CustomFieldService } from 'projects/codx-dp/src/lib/share-crm/codx-input-custom-field/custom-field.service';
+import { CodxInputCustomFieldComponent } from 'projects/codx-dp/src/lib/share-crm/codx-input-custom-field/codx-input-custom-field.component';
 
 @Component({
   selector: 'add-contracts',
@@ -118,7 +119,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   contractRefID = '';
   view = [];
   listField = [];
-  customerID = "";
+  customerID = '';
   listProcessNo = [];
   listTypeContract = [];
   listCustomFile: any[] = [];
@@ -247,7 +248,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   isLoadedCF = false;
   refInstance = ''; //Biến tham chiếu data từ cơ hội
   dataSourceRef: any;
-  tenant = "";
+  tenant = '';
   //#endregion
 
   constructor(
@@ -287,11 +288,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.getGrvSetup();
     const currentUrl = this.router.url;
     // this.tenant = currentUrl.includes("qtsc") ? "qtsc" : "";
-    this.tenant = "qtsc";
+    this.tenant = 'qtsc';
   }
 
   async ngOnInit() {
-    
     this.action != 'edit' && (await this.getSettingContract());
     this.setDataContract(this.contractsInput);
     if (this.type == 'task') {
@@ -365,6 +365,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   loadSoureRef() {
+    //this.refInstance = '20620ac0-c45d-431d-99d7-1e7c7503785d'; //gán cứng test chứ lỗi 1 đống
     this.cmService.getListFieldsRef(this.refInstance).subscribe((lstF) => {
       this.dataSourceRef = lstF;
     });
@@ -631,7 +632,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   async getAutoNumberSetting() {
     this.cmService
       .genAutoNumberDefault(
-        this.dialog.formModel.funcID,
+        "CM0204",
         this.dialog.formModel.entityName,
         'ContractID'
       )
@@ -699,11 +700,11 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       }
       this.checkPhone = !this.checkPhone;
     }
-    if (event?.field == 'interval' && event?.data != valueOld) {
+    if (event?.field == 'interval') {
       const startDate = new Date(this.contracts?.effectiveFrom) || new Date();
       let interval = parseInt(event?.data || 0);
       this.contracts.effectiveTo = new Date(
-        startDate.setMonth(startDate.getMonth() + interval)
+        startDate.setFullYear(startDate.getFullYear() + interval)
       );
     }
     this.changeDetectorRef.markForCheck();
@@ -715,11 +716,11 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       case 'parentID':
         let customerID = event?.component?.itemsSelected[0]?.CustomerID;
         let businessLineID = event?.component?.itemsSelected[0]?.BusinessLineID;
-        if(customerID){
+        if (customerID) {
           this.contracts.customerID = customerID;
           this.getContactByCustomerID(customerID);
         }
-        if(businessLineID){
+        if (businessLineID) {
           this.contracts.businessLineID = businessLineID;
         }
         break;
@@ -899,37 +900,51 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     const endDate = this.contracts?.effectiveTo
       ? new Date(this.contracts?.effectiveTo)
       : null;
-    if (event?.field == 'effectiveTo' && this.isLoadDate) {
-      if (endDate && startDate > endDate) {
-        // this.isSaveTimeTask = false;
-        this.isLoadDate = !this.isLoadDate;
-        this.notiService.notifyCode(
-          'CM010',
-          0,
-          this.view['effectiveTo'],
-          this.view['effectiveFrom']
+
+    if (this.contracts?.interval) {
+      if (event?.field == 'effectiveFrom') {
+        let interval = parseInt(this.contracts?.interval) || 0;
+        this.contracts.effectiveTo = new Date(
+          startDate.setFullYear(startDate.getFullYear() + interval)
         );
-        return;
-      } else {
-        // this.isSaveTimeTask = true;
+      }
+      if (event?.field == 'effectiveTo') {
+        let interval = parseInt(this.contracts?.interval) || 0;
+        this.contracts.effectiveFrom = new Date(
+          endDate.setFullYear(endDate.getFullYear() - interval)
+        );
       }
     } else {
-      this.isLoadDate = !this.isLoadDate;
+      if (
+        (event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') &&
+        startDate &&
+        endDate
+      ) {
+        let startYear = startDate.getFullYear();
+        let endYear = endDate.getFullYear();
+        let startMonth = startDate.getMonth();
+        let endMonth = endDate.getMonth();
+        let interval = (endYear - startYear) * 12 + (endMonth - startMonth);
+        this.contracts.interval = (interval / 12).toFixed(1);
+      }
     }
-
-    if (
-      (event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') &&
-      startDate &&
-      endDate
-    ) {
-      let startYear = startDate.getFullYear();
-      let endYear = endDate.getFullYear();
-      let startMonth = startDate.getMonth();
-      let endMonth = endDate.getMonth();
-
-      let interval = (endYear - startYear) * 12 + (endMonth - startMonth);
-      this.contracts.interval = interval.toFixed(1);
-    }
+    // if (event?.field == 'effectiveTo' && this.isLoadDate) {
+    //   if (endDate && startDate > endDate) {
+    //     // this.isSaveTimeTask = false;
+    //     this.isLoadDate = !this.isLoadDate;
+    //     this.notiService.notifyCode(
+    //       'CM010',
+    //       0,
+    //       this.view['effectiveTo'],
+    //       this.view['effectiveFrom']
+    //     );
+    //     return;
+    //   } else {
+    //     // this.isSaveTimeTask = true;
+    //   }
+    // } else {
+    //   this.isLoadDate = !this.isLoadDate;
+    // }
   }
 
   //#endregion
@@ -1423,27 +1438,30 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
-      let result = event.e?.data;
-      let field = event.data;
-      switch (field.dataType) {
-        case 'D':
-          result = event.e?.data.fromDate;
-          break;
-        case 'P':
-        case 'R':
-        case 'A':
-        case 'L':
-        case 'TA':
-        case 'PA':
-          result = event?.e;
-          break;
-        case 'C':
-          result = event?.e;
-          let type = event?.type ?? '';
-          let contact = event?.result ?? '';
-          this.convertToFieldDp(contact, type);
-          break;
-      }
+      var result = event.e;
+      var field = event.data;
+
+      // let result = event.e?.data;
+      // let field = event.data;
+      // switch (field.dataType) {
+      //   case 'D':
+      //     result = event.e?.data.fromDate;
+      //     break;
+      //   case 'P':
+      //   case 'R':
+      //   case 'A':
+      //   case 'L':
+      //   case 'TA':
+      //   case 'PA':
+      //     result = event?.e;
+      //     break;
+      //   case 'C':
+      //     result = event?.e;
+      //     let type = event?.type ?? '';
+      //     let contact = event?.result ?? '';
+      //     this.convertToFieldDp(contact, type);
+      //     break;
+      // }
       let index = this.listInstanceSteps.findIndex(
         (x) => x.recID == field.stepID
       );

@@ -1,10 +1,7 @@
 <codx-views class="ac-views ac-animation-none" #view [views]="views" [entityName]="view.entityName"
   predicate="ParentID=@0 && Language=@1" [dataValue]="funcID +';'+(user.language == '' ? 'VN' : user.language | uppercase)"
-  [hideMoreFuncs]="true" [titleToolBarTmp]="titleToolBarTmp" [toolbarDisplay]="false">
+  [hideMoreFuncs]="true" [toolbarDisplay]="false">
 </codx-views>
-<ng-template #titleToolBarTmp let-data>
-
-</ng-template>
 
 <ng-template #tmpContent let-data>
   <div style="position: relative" class="w-100 d-flex align-items-center justify-content-between p-3">

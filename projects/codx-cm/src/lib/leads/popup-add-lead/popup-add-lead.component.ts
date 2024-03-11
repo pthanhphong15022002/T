@@ -26,12 +26,9 @@ import {
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Deals, CM_Leads, CM_Permissions } from '../../models/cm_model';
 import { tmpInstances } from '../../models/tmpModel';
-import { recordEdited } from '@syncfusion/ej2-pivotview';
-import { environment } from 'src/environments/environment';
-import { T } from '@angular/cdk/keycodes';
 import { filter, firstValueFrom } from 'rxjs';
 import moment from 'moment';
-import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
+import { CustomFieldService } from 'projects/codx-dp/src/lib/share-crm/codx-input-custom-field/custom-field.service';
 
 @Component({
   selector: 'lib-popup-add-lead',
@@ -1122,22 +1119,25 @@ export class PopupAddLeadComponent
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
-      let result = event.e?.data;
-      let field = event.data;
-      switch (field.dataType) {
-        case 'D':
-          result = event.e?.data.fromDate;
-          break;
-        case 'P':
-        case 'R':
-        case 'A':
-        case 'L':
-        case 'TA':
-        case 'PA':
-          // case 'C': lead ko co
-          result = event.e;
-          break;
-      }
+      var result = event.e;
+      var field = event.data;
+
+      // let result = event.e?.data;
+      // let field = event.data;
+      // switch (field.dataType) {
+      //   case 'D':
+      //     result = event.e?.data.fromDate;
+      //     break;
+      //   case 'P':
+      //   case 'R':
+      //   case 'A':
+      //   case 'L':
+      //   case 'TA':
+      //   case 'PA':
+      //     // case 'C': lead ko co
+      //     result = event.e;
+      //     break;
+      // }
       var index = this.listInstanceSteps.findIndex(
         (x) => x.recID == field.stepID
       );

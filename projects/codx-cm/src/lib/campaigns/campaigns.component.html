@@ -66,33 +66,6 @@
             "
           ></div>
         </div>
-        <!-- <div
-          class="d-flex justify-content-between align-items-start w-100 h-40px"
-        >
-          <div
-            #description
-            [id]="data?.recID"
-            class="fs-6 text-gray-800"
-            [style.height]="checkIsCollapsed(data?.recID) ? '40px' : 'auto'"
-            [ngClass]="
-              checkIsCollapsed(data?.recID)
-                ? 'line-clamp line-clamp-2 text-popover'
-                : ''
-            "
-            [ngbPopover]="setTextPopover(data?.description)"
-            #p1="ngbPopover"
-            [openDelay]="500"
-            (mouseenter)="PopoverDetail($event, p1, data, 'description')"
-            (mouseleave)="p1.close()"
-            placement="bottom right top"
-            [popoverClass]="data?.recID"
-            [innerHTML]="
-              data?.description
-                | formatvalue : view.formModel : 'Description'
-                | async
-            "
-          ></div>
-        </div> -->
         <div class="d-flex justify-content-start footerCard-item">
           <span class="icon-access_alarm icon-16 me-2"></span>
           <span

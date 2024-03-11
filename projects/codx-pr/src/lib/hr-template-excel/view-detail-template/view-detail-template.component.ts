@@ -1,6 +1,6 @@
 import { E } from '@angular/cdk/keycodes';
 import { AfterViewInit, Component, HostBinding, Injector, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { CodxGridviewV2Component, DialogModel, DialogRef, FormModel, NotificationsService, SidebarModel, UIDetailComponent } from 'codx-core';
+import { CRUDService, CodxGridviewV2Component, DialogModel, DialogRef, FormModel, NotificationsService, SidebarModel, UIDetailComponent } from 'codx-core';
 import { PopupEditTemplateComponent } from '../popup/popup-edit-template/popup-edit-template.component';
 
 @Component({
@@ -13,11 +13,16 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
   @HostBinding('class') get valid() { return "d-block w-100 h-100"; }
   @Input() runMode:string;
   @Input() formModel:FormModel;
+  @Input() dataService:CRUDService;
   @Input() hideMF:boolean = true;
 
   data:any;
   gridColumns:any[] = [];
   loaded:boolean = false;
+  rpReportList:any;
+  groupSalCode:string = "";
+  departmentIDs:string = "";
+  skipGroupSalCode:boolean = false;
   tabControl = [
     {
       name: 'History',
@@ -57,7 +62,7 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes && changes?.recID && changes?.recID?.currentValue !== changes?.recID?.previousValue)
+    if(changes && changes?.recID)
     {
       this.loadData(this.recID);
     }
@@ -92,50 +97,6 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
     this.detectorRef.detectChanges();
   }
 
-  loadData(recID:string){
-    if(recID)
-    {
-      this.api.execSv("HR","HR","TemplateExcelBusiness","GetByIDAsync",[recID])
-      .subscribe((res:any) => {
-        if(res)
-        {
-          this.data = res;
-          this.getADExcelTemplates(this.data.hrTemplateID,this.formModel.entityName);
-          this.detectorRef.detectChanges();
-        }
-        this.loaded = true;
-      });
-    }
-  }
-  
-  rpReportList:any;
-  getADExcelTemplates(reportID:string,entityName:string){
-    if(reportID && entityName)
-    {
-      let predicate = "ReportID = @0 && EntityName = @1"
-      this.api.execSv("rptrp",'Codx.RptBusiness.RP',"ReportListBusiness","GetReportByPredidateAsync",[predicate,reportID,entityName])
-      .subscribe((res:any) => {
-        this.rpReportList = res;
-        this.detectorRef.detectChanges();
-      });
-    }
-  }
-
-  clickMF(event:any){
-    switch(event.functionID){
-      case"SYS03":
-        this.edit();
-        break;
-    }
-  }
-
-  edit(){
-    let sidebarModel = new SidebarModel();
-    sidebarModel.FormModel = this.formModel;
-    sidebarModel.Width = '550px';
-    this.callfc.openSide(PopupEditTemplateComponent,this.data,sidebarModel,this.funcID);
-  }
-
   setDetailBody(){
     let header = document.getElementsByClassName("codx-detail-header")[0] as HTMLElement;
     let body = document.getElementsByClassName("codx-detail-body")[0] as HTMLElement;
@@ -144,7 +105,79 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
       header.classList.remove("mt-3");
       body.classList.remove("mt-2");
       body.style.setProperty("height",`calc(100% - ${header.clientHeight}px)`);
+      this.detectorRef.detectChanges();
     }
+  }
+
+  loadData(hrTemplateID:string){
+    this.api.execSv("HR","HR","TemplateExcelBusiness","GetByIDAsync",hrTemplateID)
+    .subscribe((res:any) => {
+      if(!this.loaded) this.loaded = true;
+      this.data = res;
+      this.detectorRef.detectChanges();
+      this.codxGrvV2?.refresh();
+    });
+  }
+  
+  clickMF(event:any){
+    if(event)
+    {
+      switch(event.functionID)
+      {
+        case"SYS01":
+          this.add();
+          break;
+        case"SYS03":
+          this.edit();
+          break;
+      }
+    }
+  }
+
+  add(){
+    let sidebarModel = new SidebarModel();
+    sidebarModel.FormModel = this.formModel;
+    sidebarModel.Width = '550px';
+    this.dataService.addNew()
+    .subscribe((model:any) => {
+      if(model)
+      {
+        let option = {
+          action:'add',
+          data: model,
+          headerText: "Chi tiết bảng lương"
+        };
+        this.callfc.openSide(PopupEditTemplateComponent,option,sidebarModel,this.funcID)
+        .closed.subscribe((res:any) => 
+        {
+          if(res && res.event)
+          {
+            this.dataService.add(res.event).subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
+      }
+    });
+  }
+
+  edit(){
+    let sidebarModel = new SidebarModel();
+    sidebarModel.FormModel = this.formModel;
+    sidebarModel.Width = '550px';
+    let option = {
+      action:'edit',
+      data: this.data,
+      headerText: "Chi tiết bảng lương"
+    };
+    this.callfc.openSide(PopupEditTemplateComponent,option,sidebarModel,this.funcID)
+    .closed.subscribe((res:any) => 
+    {
+      if(res && res.event)
+      {
+        this.dataService.update(res.event).subscribe();
+        this.detectorRef.detectChanges();
+      }
+    });
   }
 
   changeDataMF(event:any){
@@ -159,7 +192,7 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
   }
 
   openPopupEditGroupSalCode(){
-    if(this.tmpUpdateGroupSal)
+    if(this.tmpUpdateGroupSal && this.data)
     {
       let dialogModel = new DialogModel();
       dialogModel.FormModel = this.formModel;
@@ -168,9 +201,7 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
     }
   }
 
-  groupSalCode:string = "";
-  departmentIDs:string = "";
-  skipGroupSalCode:boolean = false;
+  
   valueChange(event:any){
     if(event && event.field)
     {
@@ -203,7 +234,7 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
     }
     this.notiSV.alertCode("HR063")
     .subscribe((confirm:any) => {
-      if(confirm && confirm?.event?.status == "Y")
+      if(confirm && confirm?.event?.status === "Y")
       {
         this.api.execSv("HR","HR","TemplateExcelBusiness","UpdateGroupSalCodeAsync",[this.groupSalCode,this.departmentIDs,this.skipGroupSalCode])
         .subscribe((res:boolean) => {
@@ -211,10 +242,11 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
           {
             this.notiSV.notifyCode("SYS007");
             dialog.close();
+            this.codxGrvV2?.refresh();
           }
           else this.notiSV.notifyCode("SYS021");
         });
       }
-    })
+    });
   }
 }

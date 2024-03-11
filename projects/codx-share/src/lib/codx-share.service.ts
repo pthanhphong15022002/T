@@ -1035,7 +1035,7 @@ export class CodxShareService {
       else if (width <= 500 * widthThumb) wt = 500;
       else if (width <= 650 * widthThumb) wt = 600;
 
-      let tenant = this.tenant.getName();
+      let tenant = environment.appName || this.tenant.getName();
       return (
         environment.urlUpload +
         '/api/' +
@@ -1764,6 +1764,7 @@ export class Approvers {
   orgUnitName: string;
   idCardType: string;
   idCardNo: string;
+  negative: string;
 }
 
 //#endregion

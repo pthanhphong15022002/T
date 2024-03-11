@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { AuthStore, ButtonModel, CRUDService, DataRequest, DialogModel, FormModel, NotificationsService, SidebarModel, TenantStore, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CodxAcService, fmJournal } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { GeneralJournalAddComponent } from './general-journal-add/general-journal-add.component';
@@ -31,7 +31,6 @@ export class GeneralJournalComponent extends UIComponent {
   dataCategory: any; //? data của category
   journal: any; //? data sổ nhật kí
   baseCurr: any; //? đồng tiền hạch toán
-  legalName: any; //? tên công ty
   dataDefault: any; //? data default của phiếu
   hideFields: Array<any> = []; //? array field được ẩn lấy từ journal
   button: ButtonModel[] = [{
@@ -54,15 +53,21 @@ export class GeneralJournalComponent extends UIComponent {
     private tenant: TenantStore,
   ) {
     super(inject);
+    // this.cache
+    //   .companySetting()
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((res: any) => {
+    //     if (res.length > 0) {
+    //       this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
+    //     }
+    //   });
     this.cache
-      .companySetting()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res.length > 0) {
-          this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
-          this.legalName = res[0].legalName; //? get tên company
-        }
-      });
+      .viewSettingValues('ACParameters')
+      .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
+      .subscribe((res) => {
+        let dataValue = JSON.parse(res.dataValue);
+        this.baseCurr = dataValue?.BaseCurr || '';
+      })
     this.router.params
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
@@ -520,7 +525,6 @@ export class GeneralJournalComponent extends UIComponent {
       oData: { ...dataView },
       hideFields: [...this.hideFields],
       baseCurr: this.baseCurr,
-      legalName: this.legalName,
     };
     let optionSidebar = new SidebarModel();
     optionSidebar.DataService = this.view?.dataService;

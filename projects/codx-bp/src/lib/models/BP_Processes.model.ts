@@ -67,6 +67,7 @@ export class BP_Processes_Steps {
   settings: string;
   stepType:string;
   permissions: any;
+  child:any
 }
 export class BP_ProcessRevisions {
   recID: string;
@@ -193,4 +194,25 @@ export class TabModel {
   template?: any;
   isActive: boolean = false;
   id: number;
+}
+
+export class BP_Processes_Steps_Reminder{
+  type: string;
+  control: string;
+  times: string;
+  autoComplete: string;
+}
+
+export class BP_Processes_Time{
+  time: number;
+  alertType: string;
+  duration: number;
+  email: string;
+}
+
+export class BP_Processes_Steps_EventControl{
+  startControl: string;
+  isRequire: string;
+  alertFail: string;
+  alertFailTemplate: string;
 }

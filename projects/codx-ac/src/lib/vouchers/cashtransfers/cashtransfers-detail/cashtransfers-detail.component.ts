@@ -90,7 +90,7 @@ ngDoCheck() {
  * @param ele
  */
 createTab(e: any, ele: TabComponent) {
-  //this.showHideTab(this.itemSelected?.subType, ele);
+  this.showHideTab(this.itemSelected?.vatControl, ele);
 }
 
 selecting(event){
@@ -116,7 +116,7 @@ getDataDetail(dataItem, recID) {
     this.isReadMore = false;
     this.isShowMore = true;
     this.isShowLess = false;
-    //this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
+    this.showHideTab(this.itemSelected?.vatControl); // ẩn hiện các tab detail
     this.detectorRef.detectChanges();
   } else {
     this.api
@@ -124,7 +124,7 @@ getDataDetail(dataItem, recID) {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         this.itemSelected = res;
-        //this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
+        this.showHideTab(this.itemSelected?.vatControl); // ẩn hiện các tab detail
         this.detectorRef.detectChanges();
       });
   }
@@ -135,29 +135,18 @@ getDataDetail(dataItem, recID) {
  * @param event
  * @param ele
  */
-// showHideTab(type: any, ele?: TabComponent) {
-//   ele = this.elementTabDetail;
-//   if (ele) {
-//     ele.hideTab(0, false);
-//     ele.select(0);
-//     switch (type) {
-//       case '1':
-//       case '3':
-//       case '4':
-//         ele.hideTab(1, true);
-//         ele.hideTab(2, true);
-//         break;
-//       case '2':
-//         ele.hideTab(1, false);
-//         ele.hideTab(2, true);
-//         break;
-//       case '9':
-//         ele.hideTab(1, false);
-//         ele.hideTab(2, false);
-//         break;
-//     }
-//   }
-// }
+showHideTab(type: any, ele?: TabComponent) {
+  ele = this.elementTabDetail;
+  if (ele) {
+    ele.hideTab(0, false);
+    ele.select(0);
+    if (type) {
+      ele.hideTab(1, false);
+    }else{
+      ele.hideTab(1, true);
+    }
+  }
+}
 
 /**
  * *Hàm hỗ trợ ngFor không render lại toàn bộ data

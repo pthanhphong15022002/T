@@ -186,12 +186,11 @@ export class ProjectTasksViewComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      option.zIndex = 9997;
       res.projectID = this.projectData.projectID;
       if (parentID) res.parentID = parentID;
       let dialogAdd = this.callfc.openSide(
         PopupAddTaskComponent,
-        [res, 'add', this.projectData],
+        [res, 'add', this.projectData,this.viewTree],
         option
       );
       dialogAdd.closed.subscribe((returnData) => {
@@ -218,8 +217,8 @@ export class ProjectTasksViewComponent
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = '850px';
-        option.zIndex = 9997;
+        option.Width = '550px';
+        //option.zIndex = 9997;
         let dialogAdd = this.callfc.openSide(
           PopupAddTaskComponent,
           [this.view.dataService.dataSelected, 'edit', this.projectData],
@@ -243,6 +242,39 @@ export class ProjectTasksViewComponent
     }
   }
 
+  copyTask(){
+    if(!this.view.dataService.dataSelected) return;
+    let data = JSON.parse(JSON.stringify(this.view.dataService.dataSelected));
+    this.view.dataService.copy().subscribe((res) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      res.parentID=data.parentID;
+      res.startDate = data.startDate;
+      res.endDate = data.endDate;
+      res.priority = data.priority;
+      res.approveControl = data.approveControl;
+      res.status = '10';
+      let dialogAdd = this.callfc.openSide(
+        PopupAddTaskComponent,
+        [res, 'copy', this.projectData,this.viewTree],
+        option
+      );
+      dialogAdd.closed.subscribe((returnData) => {
+        if (returnData?.event) {
+          if(this.viewTree && this.viewTree.dataTree){
+            this.viewTree.treeView.setNodeTree(returnData?.event);
+            //this.viewTree.dataTree = this.viewTree.dataTree;
+            this.detectorRef.detectChanges();
+          }
+          //this.view?.dataService?.update(returnData?.event);
+        } else {
+          this.view.dataService.clear();
+        }
+      });
+    });
+  }
   deleteTask(data){
     //this.view.dataService.dataSelected = data;
     if (data.status == '90') {
@@ -271,9 +303,15 @@ export class ProjectTasksViewComponent
       )
       .subscribe((res: any) => {
         if (res) {
+          if(data.category == "G" && res.length){
+            isCanDelete = false;
+            this.notificationSv.notifyCode('TM001');
+            return;
+          }
           res.forEach((element) => {
             if (element.status != '00' && element.status != '10') {
               isCanDelete = false;
+              this.notificationSv.notifyCode('TM001');
               return;
             }
           });
@@ -319,6 +357,10 @@ export class ProjectTasksViewComponent
     });
   }
 
+  dbClick(data:any){
+    this.view.dataService.dataSelected=data;
+    this.viewTask();
+  }
   viewTask(){
     // if(this.view.dataService.dataSelected){
     //   let option = new SidebarModel();
@@ -383,11 +425,20 @@ export class ProjectTasksViewComponent
       break;
       case "SYS05":
         this.viewTask()
+        break;
+      case "SYS04":
+        this.copyTask()
       break;
       case "PMT01011":
         this.addTask(this.view.dataService.dataSelected?.recID);
       break;
 
+    }
+  }
+
+  addChild(data:any){
+    if(data){
+      this.addTask(data.recID);
     }
   }
 

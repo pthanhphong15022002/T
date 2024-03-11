@@ -11,6 +11,7 @@ import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { itemMove } from '@syncfusion/ej2-angular-treemap';
 import { Validators } from '@angular/forms';
 import { IV_VouchersLines } from '../../../models/IV_VouchersLines.model';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 
 @Component({
@@ -56,6 +57,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
     inject: Injector,
     private acService: CodxAcService,
     private notification: NotificationsService,
+    private ngxLoader: NgxUiLoaderService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -88,7 +90,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    console.log(this.formVouchers);
+    if (this.formVouchers?.data?.coppyForm) this.formVouchers.data._isEdit = true; //? test copy để tạm
   }
 
   onAfterInitForm(event) {
@@ -308,26 +310,32 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
    * *Hàm lưu chứng từ
    * @param type 
    */
-  onSaveVoucher(type){
-    this.formVouchers.save(null, 0, '', '', false,{allowCompare:false})
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (!res) return;
-      if (res.hasOwnProperty('save')) {
-        if (res.save.hasOwnProperty('data') && !res.save.data) return;
-      }
-      if (res.hasOwnProperty('update')) {
-        if (res.update.hasOwnProperty('data') && !res.update.data) return;
-      }
-      if ((this.eleGridVouchers || this.eleGridVouchers?.isEdit)) { //?
-        this.eleGridVouchers.saveRow((res:any)=>{ //? save lưới trước
-          if(res){
-            this.saveVoucher(type);
-          }
-        })
-        return;
-      }  
-    });
+  onSaveVoucher(type) {
+    this.ngxLoader.start();
+    this.formVouchers.save(null, 0, '', '', false, { allowCompare: false })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        let isError = false;
+        if (!res) isError = true;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) isError = true;
+        }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) isError = true;
+        }
+        if (isError) {
+          this.ngxLoader.stop();
+          return;
+        }
+        if ((this.eleGridVouchers || this.eleGridVouchers?.isEdit)) { //?
+          this.eleGridVouchers.saveRow((res: any) => { //? save lưới trước
+            if (res) {
+              this.saveVoucher(type);
+            }
+          })
+          return;
+        }
+      });
   }
 
   /**
@@ -371,6 +379,8 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
           
         }
         if(this.eleGridVouchers && this.eleGridVouchers?.isSaveOnClick) this.eleGridVouchers.isSaveOnClick = false;
+        if(this.eleGridVouchers && this.eleGridVouchers?.isSaveOnClick) this.eleGridVouchers.isSaveOnClick = false;
+        this.ngxLoader.stop();
       });
   }
   //#endregion Method

@@ -167,12 +167,6 @@ export class BusinessLineComponent
         option,
         this.view.funcID
       );
-      // dialog.closed.subscribe((res) => {
-      //   if (res && res.event) {
-      //     this.view.dataService.update(res.event).subscribe();
-      //     this.detectorRef.detectChanges();
-      //   }
-      // });
     });
   }
 
@@ -194,12 +188,6 @@ export class BusinessLineComponent
         option,
         this.view.funcID
       );
-      // dialog.closed.subscribe((res) => {
-      //   if (res && res.event) {
-      //     this.view.dataService.update(res.event).subscribe();
-      //     this.detectorRef.detectChanges();
-      //   }
-      // });
     });
   }
 
@@ -222,12 +210,6 @@ export class BusinessLineComponent
         option,
         this.view.funcID
       );
-      // dialog.closed.subscribe((res) => {
-      //   if (res && res.event) {
-      //     this.view.dataService.update(res.event).subscribe();
-      //     this.detectorRef.detectChanges();
-      //   }
-      // });
     });
   }
   viewDetail(data) {
@@ -247,12 +229,6 @@ export class BusinessLineComponent
       option,
       this.view.funcID
     );
-    // dialog.closed.subscribe((res) => {
-    //   if (res && res.event) {
-    //     this.view.dataService.update(res.event).subscribe();
-    //     this.detectorRef.detectChanges();
-    //   }
-    // });
   }
 
   delete(data: any) {

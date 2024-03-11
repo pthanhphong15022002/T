@@ -3,6 +3,7 @@
   (requestEnded)="requestEnded($event)" (viewChanged)="viewChanged($event)">
 </codx-views>
 <ng-template #template let-data>
+  
   <ng-container *ngIf="setting">
     <div style="position: absolute;margin-top: -50px;right: 0;" class="d-flex align-items-center justify-content-between p-3 mb-2">
       <div class="d-flex align-items-center w-100 justify-content-end">
@@ -55,7 +56,7 @@
                                             item?.runDate
                                             | dateformat
                                           " class="me-3"></span>
-                                <ng-container *ngIf="displayMode && displayMode === '1'">
+                                <ng-container>
                                   <span *ngIf="item?.runMode === '1'" class="badge ac-badge-light-warning">
                                     Mô phỏng
                                   </span>
@@ -86,9 +87,9 @@
                                 <span #runDate [innerHTML]="item?.runDate | dateformat"></span>
                               </div>
                               <div>
-                                <span class="badge ac-badge-light-primary">
-                                  Đã hoàn tất
-                                </span>
+                                <codx-vll [name]="'AC174'" [value]="item?.status" [showText]="true" [showBgColor]="true"
+                                  class="badge badge-light-primary badge-sm mt-1">
+                                </codx-vll>
                               </div>
                             </div>
                             <div class="d-flex ms-4 justify-content-end category-control w-250px min-w-250px">

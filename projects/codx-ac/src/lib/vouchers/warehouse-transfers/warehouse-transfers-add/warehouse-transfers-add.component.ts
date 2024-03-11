@@ -6,6 +6,7 @@ import { CodxAcService, fmIssueTransfersLines, fmReceiptTransfersLines } from '.
 import { RoundService } from '../../../round.service';
 import { IV_TransfersLines } from '../../../models/IV_TransfersLines.model';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'lib-warehouse-transfers-add',
@@ -51,6 +52,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
     private acService: CodxAcService,
     private notification: NotificationsService,
     private roundService: RoundService,
+    private ngxLoader: NgxUiLoaderService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -274,33 +276,39 @@ export class WarehouseTransfersAddComponent extends UIComponent {
    * @param type 
    */
   onSaveVoucher(type) {
-    this.formWareHouse.save(null, 0, '', '', false,{allowCompare:false})
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (!res) return;
-      if (res.hasOwnProperty('save')) {
-        if (res.save.hasOwnProperty('data') && !res.save.data) return;
-      }
-      if (res.hasOwnProperty('update')) {
-        if (res.update.hasOwnProperty('data') && !res.update.data) return;
-      }
-      if ((this.eleGridIssue || this.eleGridIssue?.isEdit) && this.elementTabDetail?.selectingID == '0') {
-        this.eleGridIssue.saveRow((res:any)=>{
-          if(res){
-            this.saveVoucher(type);
-          }
-        })
-        return;
-      }    
-      if ((this.eleGridReceipt || this.eleGridReceipt?.isEdit) && this.elementTabDetail?.selectingID == '1') {
-        this.eleGridReceipt.saveRow((res:any)=>{
-          if(res){
-            this.saveVoucher(type);
-          }
-        })
-        return;
-      }    
-    });
+    this.ngxLoader.start();
+    this.formWareHouse.save(null, 0, '', '', false, { allowCompare: false })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        let isError = false;
+        if (!res) isError = true;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) isError = true;
+        }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) isError = true;
+        }
+        if (isError) {
+          this.ngxLoader.stop();
+          return;
+        }
+        if ((this.eleGridIssue || this.eleGridIssue?.isEdit) && this.elementTabDetail?.selectingID == '0') {
+          this.eleGridIssue.saveRow((res: any) => {
+            if (res) {
+              this.saveVoucher(type);
+            }
+          })
+          return;
+        }
+        if ((this.eleGridReceipt || this.eleGridReceipt?.isEdit) && this.elementTabDetail?.selectingID == '1') {
+          this.eleGridReceipt.saveRow((res: any) => {
+            if (res) {
+              this.saveVoucher(type);
+            }
+          })
+          return;
+        }
+      });
   }
 
   /**
@@ -347,6 +355,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
         }
         if(this.eleGridIssue && this.eleGridIssue?.isSaveOnClick) this.eleGridIssue.isSaveOnClick = false;
         if(this.eleGridReceipt && this.eleGridReceipt?.isSaveOnClick) this.eleGridReceipt.isSaveOnClick = false;
+        this.ngxLoader.stop();
       });
   }
   //#endregion Method
@@ -395,7 +404,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
     let model : any = new IV_TransfersLines();
     let oLine = Util.camelizekeyObj(model);
     oLine.transID = this.formWareHouse.data.recID;
-    oLine.idiM41 = this.formWareHouse.data.fromWHID;
+    oLine.idiM4 = this.formWareHouse.data.fromWHID;
     oLine.idiM42 = this.formWareHouse.data.toWHID;
     oLine.reasonID = this.formWareHouse.data.reasonID;
     let indexReason = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value);
@@ -423,8 +432,8 @@ export class WarehouseTransfersAddComponent extends UIComponent {
       if (this.eleGridReceipt && this.eleGridReceipt.rowDataSelected) {
         this.eleGridReceipt.rowDataSelected = null;
       }
-      if(this.eleGridIssue.isSaveOnClick) this.eleGridIssue.isSaveOnClick = false;
-      if(this.eleGridReceipt.isSaveOnClick) this.eleGridReceipt.isSaveOnClick = false;
+      if(this.eleGridIssue && this.eleGridIssue.isSaveOnClick) this.eleGridIssue.isSaveOnClick = false;
+      if(this.eleGridReceipt && this.eleGridReceipt.isSaveOnClick) this.eleGridReceipt.isSaveOnClick = false;
       setTimeout(() => {
         let element = document.getElementById('btnAddVou'); //? focus lại nút thêm dòng
         element.focus();

@@ -23,10 +23,7 @@ import {
   CallFuncService,
   NotificationsService,
 } from 'codx-core';
-import {
-  CM_Contracts,
-  CM_Quotations,
-} from '../models/cm_model';
+import { CM_Contracts, CM_Quotations } from '../models/cm_model';
 import {
   DP_Instances_Steps_Tasks,
   DP_Instances_Steps_Tasks_Roles,
@@ -40,7 +37,6 @@ import { AddContractsComponent } from './add-contracts/add-contracts.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
 import { ContractsDetailComponent } from './contracts-detail/contracts-detail.component';
-import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
 import { PopupAddPaymentComponent } from './payment/popup-add-payment/popup-add-payment.component';
@@ -48,6 +44,7 @@ import { ContractsViewDetailComponent } from './contracts-view-right/contracts-v
 import { PopupUpdateStatusComponent } from '../deals/popup-update-status/popup-update-status.component';
 import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
+import { StepService } from 'projects/codx-dp/src/lib/share-crm/codx-step/step.service';
 
 @Component({
   selector: 'contracts-detail',
@@ -170,7 +167,9 @@ export class ContractsComponent extends UIComponent {
 
   async onInit() {
     this.loadParam();
-    this.grvSetup = await firstValueFrom(this.cache.gridViewSetup('CMContracts', 'grvCMContracts'));
+    this.grvSetup = await firstValueFrom(
+      this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
+    );
     let arrField = Object.values(this.grvSetup).filter((x: any) => x.isVisible);
     if (Array.isArray(arrField)) {
       this.arrFieldIsVisible = arrField
@@ -232,7 +231,8 @@ export class ContractsComponent extends UIComponent {
       this.codxShareService.changeMFApproval(event, data?.unbounds);
     } else if (event != null) {
       event.forEach((res) => {
-        res.isblur = data?.approveStatus == '3' && res?.functionID != 'CM0204_2';
+        res.isblur =
+          data?.approveStatus == '3' && res?.functionID != 'CM0204_2';
         if (isDetail) res.isbookmark = false;
         switch (res.functionID) {
           case 'CM0204_3':
@@ -274,12 +274,10 @@ export class ContractsComponent extends UIComponent {
               (data?.applyApprover && data?.approveRule != '1') ||
               data?.approveStatus >= '3';
             break;
-          case 'CM0204_2'://Hủy yêu cầu duyệt
+          case 'CM0204_2': //Hủy yêu cầu duyệt
             res.disabled =
-              data?.closed ||
-              data?.status == '0' ||
-              data?.approveStatus != '3';
-            break;         
+              data?.closed || data?.status == '0' || data?.approveStatus != '3';
+            break;
           case 'CM0204_6': //hoàn tất hợp đồng
             res.disabled = data?.status == '1' || data?.closed;
             break;
@@ -373,35 +371,35 @@ export class ContractsComponent extends UIComponent {
       case 'SYS05':
         this.viewContract(data);
         break;
-      case 'CM0204_3'://tạo hợp đồng gia hạn
+      case 'CM0204_3': //tạo hợp đồng gia hạn
         this.addContractAdjourn(data);
         break;
-      case 'CM0204_5'://Đã giao hàng
+      case 'CM0204_5': //Đã giao hàng
         this.updateDelStatus(data);
         break;
-      case 'CM0204_6'://hoàn tất hợp đồng
+      case 'CM0204_6': //hoàn tất hợp đồng
         this.completedContract(data);
         break;
-      case 'CM0204_1'://Gửi duyệt
+      case 'CM0204_1': //Gửi duyệt
         this.approvalTrans(data);
         break;
-      case 'CM0204_2'://Hủy yêu cầu duyệt
+      case 'CM0204_2': //Hủy yêu cầu duyệt
         this.cancelApprover(data);
         break;
-      case 'CM0204_9'://Bắt đầu
+      case 'CM0204_9': //Bắt đầu
         this.startInstance(data);
         break;
-      case 'CM0204_8'://Chuyển giai đoạn
+      case 'CM0204_8': //Chuyển giai đoạn
         this.moveStage(data);
         break;
-      case 'CM0204_10'://thành công
+      case 'CM0204_10': //thành công
         this.moveReason(data, true);
         break;
-      case 'CM0204_11'://thất bại
+      case 'CM0204_11': //thất bại
         this.moveReason(data, false);
         break;
-      case 'CM0204_14'://phan cong nguoi phu trach
-        this.popupOwnerRoles(data);
+      case 'CM0204_14': //phan cong nguoi phu trach
+        this.changeOwner(data);
         break;
       //export core làm
       case 'SYS002':
@@ -790,17 +788,44 @@ export class ContractsComponent extends UIComponent {
 
   deleteContract(contract) {
     if (contract?.recID) {
-      this.view.dataService
-        .delete([contract], true, (option: RequestOption) =>
-          this.beforeDelete(option, contract.recID)
-        )
-        .subscribe((res: any) => {
-          if (res?.contractName && res?.contractID) {
-            this.view.dataService.add(res).subscribe();
-            this.view.currentView['schedule'].refresh();
-            this.detectorRef.markForCheck();
-          }
-        });
+      if (['3', '4', '5', '6'].includes(contract?.status)) {
+        this.cmService
+          .getProcessSettingByRecID(contract?.processID)
+          .subscribe((res) => {
+            if (res) {
+              if (res?.isEdit) {
+                this.view.dataService
+                  .delete([contract], true, (option: RequestOption) =>
+                    this.beforeDelete(option, contract.recID)
+                  )
+                  .subscribe((res: any) => {
+                    if (res?.contractName && res?.contractID) {
+                      this.view.dataService.add(res).subscribe();
+                      this.view.currentView['schedule'].refresh();
+                      this.detectorRef.markForCheck();
+                    }
+                  });
+              } else {
+                this.notiService.notify(
+                  'Hợp đồng không thể xóa khi đã thành công!',
+                  '3'
+                );
+              }
+            }
+          });
+      } else {
+        this.view.dataService
+          .delete([contract], true, (option: RequestOption) =>
+            this.beforeDelete(option, contract.recID)
+          )
+          .subscribe((res: any) => {
+            if (res?.contractName && res?.contractID) {
+              this.view.dataService.add(res).subscribe();
+              this.view.currentView['schedule'].refresh();
+              this.detectorRef.markForCheck();
+            }
+          });
+      }
     }
   }
 
@@ -1443,8 +1468,7 @@ export class ContractsComponent extends UIComponent {
     e && this.moveReason(this.dataSelected, true);
   }
 
-  popupOwnerRoles(data) {
-    let owner = data?.owner;
+  changeOwner(contract) {
     var formMD = new FormModel();
     let dialogModel = new DialogModel();
     formMD.funcID = this.view?.formModel?.funcID;
@@ -1454,18 +1478,18 @@ export class ContractsComponent extends UIComponent {
     dialogModel.zIndex = 1011;
     dialogModel.FormModel = formMD;
     var obj = {
-      recID: data?.recID,
-      refID: data?.refID,
-      processID: data?.processID,
-      stepID: data?.stepID,
-      data: data,
-      gridViewSetup: null,
-      formModel: this.view.formModel,
       applyFor: '4',
+      data: contract,
+      gridViewSetup: null,
+      buid: contract.buid,
+      owner: contract.owner,
+      recID: contract?.recID,
+      refID: contract?.refID,
+      stepID: contract?.stepID,
+      processID: contract?.processID,
+      formModel: this.view.formModel,
       titleAction: this.actionName,
-      owner: data.owner,
-      applyProcess: data?.applyProcess,
-      buid: data.buid,
+      applyProcess: contract?.applyProcess,
     };
     var dialog = this.callfc.openForm(
       PopupAssginDealComponent,
@@ -1603,8 +1627,7 @@ export class ContractsComponent extends UIComponent {
         }
       });
   }
-  reloadListStep(listSteps: any) {
-  }
+  reloadListStep(listSteps: any) {}
 
   handelMoveStage(event, contract) {
     if (event) {

@@ -348,7 +348,7 @@ export class AddTaskComponent
         this.listUses.push({
           objectID: element.id,
           objectName: element.text,
-          objectType: element.objectType,
+          objectType: element?.objectType =="SYS061" ? element?.id : element?.objectType,
           roleType: 'O',
         });
       });
@@ -419,9 +419,11 @@ export class AddTaskComponent
   }
 
   openAttach1() {
+    this.dataChangeAttach.emit(true);
     this.attachment.uploadFile();
   }
   openAttach2() {
+    this.dataChangeAttach.emit(true);
     this.attachment2.uploadFile();
   }
 
@@ -658,7 +660,7 @@ export class AddTaskComponent
     config.type = 'YesNo';
     //SYS003
     this.notifySvr
-      .alert('Thông báo', 'Bạn có chắc chắn muốn xóa ?', config)
+      .alert('Thông báo', 'Thao tác sẽ hủy liên kết tệp tin với tất cả các quy trình. Bạn có chắc chắn muốn xóa ?', config)
       .closed.subscribe((x) => {
         if (x.event.status == 'Y') {
           var className =
@@ -675,10 +677,12 @@ export class AddTaskComponent
             )
             .subscribe((item) => {
               if (item) {
+                this.deleteDocByTemplateID(this.data.settings.template.templateID);
                 this.notifySvr.notifyCode('RS002');
                 delete this.data.settings.template;
                 this.data.settings.isTemplate = false;
                 this.dataChange.emit(this.data);
+                this.dataChangeProcess.emit(this.process);
               } else {
                 this.notifySvr.notifyCode('SYS022');
               }
@@ -807,20 +811,34 @@ export class AddTaskComponent
     this.callFuc.openForm(share, '', 420, 600, null, null, null, option);
   }
   esign(){
-    debugger
+    let result = JSON.parse(JSON.stringify(this.process));
+    result.steps.forEach((elm: any) => {
+      delete elm.child;
+      if (typeof elm.settings === 'object')
+        elm.settings = JSON.stringify(elm.settings);
+    });
+    this.api.execSv("BP","BP","ProcessesBusiness","UpdateProcessAsync",result).subscribe(item=>{
+      this.esignB();
+    })
+   
+  }
+
+  esignB()
+  {
     let fileIDs="";
     let dynamicApprovers=[];
     this.listDocument.forEach(doc=>{
       if(doc?.filess?.length>0){
-        fileIDs+= doc?.filess?.filter(x=>x?.esign==true)?.map(x=>x.recID)?.join(";");        
+        fileIDs+= doc?.filess?.map(x=>x?.recID)?.join(";");        
       }
     });
 
     this.data.permissions.forEach(per=>{
       if(per?.objectType!=null){
-        let tempPer = new Approver();
-        tempPer.approver=per?.objectID;
-        tempPer.roleType=per?.objectType;   
+        let tempPer ={approver:per?.objectID,
+        roleType:per?.objectType,  
+        userName:per?.objectName,  
+        signer:per?.recID  } 
         dynamicApprovers.push(tempPer);   
       }
     });
@@ -840,14 +858,47 @@ export class AddTaskComponent
       );
       popupDialog.closed.subscribe((res) => {
         if (res?.event) {
-          this.isNewForm = false;
-          this.data.extendInfo =
-            res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
-          this.dataChange.emit(this.data);
+          // this.isNewForm = false;
+          // this.data.extendInfo =
+          //   res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
+          // this.dataChange.emit(this.data);
         }
+
+        this.dataChangeAttach.emit(true);
+        this.api.execSv("BP","BP","ProcessesBusiness","GetAsync",this.process.recID).subscribe((item:any)=>{
+          if(item?.documentControl)
+          {
+            var listF = item.documentControl.filter(x=>x.stepID == this.data?.recID);
+            if(listF && listF.length>0)
+            {
+              listF.forEach(element => {
+                let index = this.process.documentControl.findIndex(x=>x.recID == element.recID);
+                if(index > 0)
+                {
+                  this.process.documentControl[index]= element;
+                  if(element?.refID)
+                  {
+                    var indexRef = item.documentControl.findIndex(x=>x.recID == element.refID);
+                    if(indexRef >= 0)
+                    {
+                      var indexP = this.process.documentControl.findIndex(x=>x.recID == item.documentControl[indexRef].recID)
+                      if(indexP >= 0) this.process.documentControl[indexP] = item.documentControl[indexRef];
+                    }
+                  }
+                }
+              });
+              this.dataChangeProcess.emit(this.process);
+            }
+          }
+          this.dataChangeAttach.emit(false);
+        })
       });
     }
+    else{
+      this.notifySvr.notify("Biểu mẫu và người ký không được bỏ trống, vui lòng kiểm tra lại!","2");
+    }
   }
+
   fileCheckChange(evt: any, file: any) {
     this.listDocument.forEach(doc=>{
       if(doc?.filess?.length>0){
@@ -857,5 +908,17 @@ export class AddTaskComponent
         } 
       }
     });
+  }
+
+  //Xóa documentcontrol bỏi templateID
+  deleteDocByTemplateID(tmpID:any)
+  {
+    var index = this.process.documentControl.findIndex(x=>x.templateID == tmpID);
+
+    if(index>=0)
+    {
+      var id = this.process.documentControl[index].recID;
+      this.process.documentControl = this.process.documentControl.filter(x=>x.refID != id);
+    }
   }
 }

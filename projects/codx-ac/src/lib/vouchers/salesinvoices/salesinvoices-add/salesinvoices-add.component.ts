@@ -30,6 +30,7 @@ import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { AC_SalesInvoicesLines } from '../../../models/AC_SalesInvoicesLines.model';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { AC_VATInvoices } from '../../../models/AC_VATInvoices.model';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'lib-salesinvoices-add',
@@ -78,6 +79,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
     inject: Injector,
     private acService: CodxAcService,
     private notification: NotificationsService,
+    private ngxLoader: NgxUiLoaderService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -110,7 +112,9 @@ export class SalesinvoicesAddComponent extends UIComponent {
       })
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void { 
+    if (this.formSalesInvoice?.data?.coppyForm) this.formSalesInvoice.data._isEdit = true; //? test copy để tạm
+  }
 
   onAfterInitForm(event) {
     this.setValidateForm();
@@ -476,15 +480,21 @@ export class SalesinvoicesAddComponent extends UIComponent {
    * @param type 
    */
   onSaveVoucher(type) {
+    this.ngxLoader.start();
     this.formSalesInvoice.save(null, 0, '', '', false, { allowCompare: false })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if (!res) return;
+        let isError = false;
+        if (!res) isError = true;
         if (res.hasOwnProperty('save')) {
-          if (res.save.hasOwnProperty('data') && !res.save.data) return;
+          if (res.save.hasOwnProperty('data') && !res.save.data) isError = true;
         }
         if (res.hasOwnProperty('update')) {
-          if (res.update.hasOwnProperty('data') && !res.update.data) return;
+          if (res.update.hasOwnProperty('data') && !res.update.data) isError = true;
+        }
+        if(isError){
+          this.ngxLoader.stop();
+          return;
         }
         if ((this.eleGridSalesInvoice || this.eleGridSalesInvoice?.isEdit)) {
           this.eleGridSalesInvoice.saveRow((res: any) => { //? save lưới trước
@@ -537,6 +547,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
 
         }
         if (this.eleGridSalesInvoice && this.eleGridSalesInvoice?.isSaveOnClick) this.eleGridSalesInvoice.isSaveOnClick = false;
+        this.ngxLoader.stop();
       });
   }
 

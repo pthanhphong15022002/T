@@ -10,7 +10,9 @@
   [autoLoad]="true"
   idField="recID"
   (selectedChange)="selectedChange($event)"
-  [hideMoreFuncs]="true"
+  (clickMF)="clickMF($event, dataSelected)"
+  (changeDataMF)="changeDataMF($event, dataSelected)"
+  [hideMoreFuncs]="false"
 >
 </codx-views>
 

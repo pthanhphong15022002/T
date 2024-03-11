@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { ApiHttpService, CallFuncService, DialogData, DialogModel, DialogRef, NotificationsService, Util } from 'codx-core';
+import { ApiHttpService, AuthStore, CallFuncService, DialogData, DialogModel, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
-import { map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -16,95 +16,62 @@ export class PopupEditTemplateComponent implements OnInit,AfterViewInit {
   action:string;
   headerText:string = "Chi tiết bảng lương";
   rpReportList:any;
-  adTemplate:any;
+  adExcelTemplate:any;
   rootReport:any;
   rootTemplate:any;
   dataSets:any[] = [];
-
+  user:any;
+  isUpdateFileTemplate:boolean = false;
   @ViewChild("tmpViewDataSet") tmpViewDataSet:TemplateRef<any>;
+  @ViewChild("tmpPopTutorial") tmpPopTutorial:TemplateRef<any>;
 
   constructor
   (
     private api:ApiHttpService,
     private notiSV:NotificationsService,
     private callFC:CallFuncService,
+    private auth:AuthStore,
     private detectorRef:ChangeDetectorRef,
     @Optional() dialogRef?:DialogRef,
     @Optional() dialogData?:DialogData
   ) 
   {
+    this.user = auth.get();
     this.dialog = dialogRef;
     if(dialogData && dialogData?.data)
     {
-      let obj = JSON.parse(JSON.stringify(dialogData.data));
+      let obj = dialogData.data;
       if(obj)
       {
-        this.data = obj.data;
-        this.action = obj.data;
+        this.data = JSON.parse(JSON.stringify(obj.data));
+        this.action = obj.action;
         this.headerText = dialogData.data.headerText;
-        if(obj.groupSalCode)
-        {
-          this.data.groupSalCodes = obj.groupSalCode.split(",").join(";");
-        }
       }
     }
   }
   ngOnInit(): void {
-    this.getReportList(this.data.hrTemplateID,this.dialog?.formModel?.entityName);
-    this.getRootReport();
+    this.getReportList(this.data.hrTemplateID,this.dialog?.formModel?.entityName,true);
+    this.getReportList(this.dialog?.formModel?.funcID,this.dialog?.formModel?.entityName,false);
   }
 
   ngAfterViewInit(): void {
   }
 
-  // get RP_ReportList default
-  getRootReport(){
+  getReportList(reportID:string,entityName:string,isCustomize:boolean){
     let predicate = "ReportID = @0 && EntityName = @1 && IsCustomize = @2"
-    let isCustomize = false;
-    this.api.execSv("rptrp",'Codx.RptBusiness.RP',"ReportListBusiness","GetReportByPredidateAsync",[predicate,this.dialog?.formModel?.funcID,this.dialog?.formModel?.entityName,isCustomize])
+    this.api.execSv("rptrp",'Codx.RptBusiness.RP',"ReportListBusiness","GetReportByPredidateAsync",[predicate,reportID,entityName,isCustomize])
     .subscribe((res:any) => {
       if(res && res?.length > 0)
       {
-        this.rootReport = res[0];
-        this.getADTemplate(this.rootReport.templateID,true);
-        this.getDataSet(this.rootReport.cubeID);
-        this.detectorRef.detectChanges();
-      }
-    });
-  }
-
-  getADTemplate(templateID:string, root:boolean = false){
-    this.api.execSv("SYS",'AD',"ExcelTemplatesBusiness","GetAsync",templateID)
-    .subscribe((res:any) => {
-      if(res)
-      {
-        if(root)
-          this.rootTemplate = res;
-        else
-          this.adTemplate = res;
-        this.detectorRef.detectChanges();
-      }
-    });
-  }
-
-  // get RP_ReportList by HRTemplateID
-  getReportList(reportID:string,entityName:string){
-    if(reportID && entityName)
-    {
-      let predicate = "ReportID = @0 && EntityName = @1"
-      this.api.execSv("rptrp",'Codx.RptBusiness.RP',"ReportListBusiness","GetReportByPredidateAsync",[predicate,reportID,entityName])
-      .subscribe((res:any) => {
-        if(res && res.length > 0)
-        {
+        if(isCustomize) 
           this.rpReportList = res[0];
-          this.getADTemplate(this.rootReport.templateID,false);
-          this.detectorRef.detectChanges();
-        }
-      });
-    }
+        else
+          this.rootReport = res[0];
+        this.detectorRef.detectChanges();
+      }
+    });
   }
 
-  //value change
   valueChange(event:any){
     if(event && event?.field)
     {
@@ -113,7 +80,6 @@ export class PopupEditTemplateComponent implements OnInit,AfterViewInit {
     }
   }
 
-  //on seo phôn
   onSaveForm(){
     if(!this.data.hrTemplateID)
       this.notiSV.notify("Vui lòng nhập mã bảng lương");
@@ -128,18 +94,20 @@ export class PopupEditTemplateComponent implements OnInit,AfterViewInit {
     }
   }
 
-  // ác
   add(data:any){
     if(data)
     {
       data.recID = Util.uid();
       data.templateCategory = "Payroll";
-      this.api.execSv("HR","HR","TemplateExcelBusiness","SaveAsync",[data, this.rpReportList.templateID])
+      if(this.rpReportList) this.data.templateID = this.rpReportList.templateID;
+      data.createdBy = this.user.userID;
+      data.createdOn = new Date();
+      this.api.execSv("HR","HR","TemplateExcelBusiness","SaveAsync",[data])
       .subscribe((res:boolean) => {
         if(res)
         {
           this.notiSV.notifyCode("SYS006");
-          this.dialog.close();
+          this.dialog.close(data);
         }
         else this.notiSV.notifyCode("SYS023");
       });  
@@ -147,23 +115,21 @@ export class PopupEditTemplateComponent implements OnInit,AfterViewInit {
       
   }
 
-  // e đích
   edit(data:any){
     if(data)
     {
-      this.api.execSv("HR","HR","TemplateExcelBusiness","UpdateAsync",[data, this.rpReportList.templateID])
+      this.api.execSv("HR","HR","TemplateExcelBusiness","UpdateAsync",[data,this.isUpdateFileTemplate])
       .subscribe((res:boolean) => {
         if(res)
         {
-          this.notiSV.notifyCode("SYS006");
-          this.dialog.close();
+          this.notiSV.notifyCode("SYS007");
+          this.dialog.close(data);
         }
-        else this.notiSV.notifyCode("SYS023");
+        else this.notiSV.notifyCode("SYS021");
       });  
     }
   }
 
-  //đao lót phai tem léc
   dowloadExampleTemplate(){
     if(this.rootReport)
     {
@@ -174,9 +140,9 @@ export class PopupEditTemplateComponent implements OnInit,AfterViewInit {
       'GetFilesByIbjectIDAsync',
       [this.rootReport?.templateID].join(";"))
       .subscribe(async (files:any) => {
-        if (files && files?.length > 0){
+        if (files && files?.length > 0)
+        {
           let file = files.pop();
-          // let pathDisk = `${environment.urlUpload}/${file.pathDisk}`;
           let blob = await fetch(`${environment.urlUpload}/${file.pathDisk}`).then((r) => r.blob());
           let url = window.URL.createObjectURL(blob);
           var link = document.createElement('a');
@@ -190,31 +156,23 @@ export class PopupEditTemplateComponent implements OnInit,AfterViewInit {
       });
     }
   }
-
-  // gét đa ta séc
-  getDataSet(cubeID:string){
-    if(cubeID)
+  
+  viewDataSet(){
+    if(this.rootReport)
     {
-      this.api.execSv("BI","BI","CubesBusiness","GetByCubeIDAsync",[cubeID])
+      this.api.execSv("BI","BI","CubesBusiness","GetByCubeIDAsync",this.rpReportList.cubeID)
       .subscribe((res:any) => {
-        if(res){
-          this.dataSets = res;
-          this.detectorRef.detectChanges();
-        }
+        this.dataSets = res;
+        this.detectorRef.detectChanges();
+        let dialogModel = new DialogModel();
+        dialogModel.FormModel = this.dialog.formModel;
+        this.callFC.openForm(this.tmpViewDataSet,"",500, 700,"",null,"",dialogModel);
       });
     }
   }
-  
-  // viu đa ta séc
-  viewDataSet(){
-    let dialogModel = new DialogModel();
-    dialogModel.FormModel = this.dialog.formModel;
-    this.callFC.openForm(this.tmpViewDataSet,"",500, 700,"",null,"",dialogModel);
-  }
 
-  // add template
   addTemplate(){
-    if(this.data && this.data.hrTemplateID)
+    if(this.data && this.data?.hrTemplateID)
     {
       let dialogModel = new DialogModel();
       dialogModel.FormModel = this.dialog.formModel;
@@ -231,32 +189,65 @@ export class PopupEditTemplateComponent implements OnInit,AfterViewInit {
       popup.closed.subscribe((res: any) => {
         if(res && res?.event) 
         {
-          let adTemplateExcel = res.event[0];
-          this.rpReportList = JSON.parse(JSON.stringify(this.rootReport));
-          this.rpReportList.recID = Util.uid();
-          this.rpReportList.reportID = this.data.hrTemplateID;
-          this.rpReportList.templateID = adTemplateExcel.recID;
-          this.rpReportList.isCustomize = true;
-          this.api.execSv("rptrp",'Codx.RptBusiness.RP',"ReportListBusiness","AddUpdateAsync",this.rpReportList)
-          .subscribe();
+          let adExcelTemplateExcel = res.event[0];
+          this.isUpdateFileTemplate = true;
+          this.addUpdateReport(this.data.hrTemplateID,adExcelTemplateExcel.recID).subscribe();
         }
       });
     }
     else this.notiSV.notify("Vui lòng nhập mã bảng lương");
   }
 
-  // edit template
   editTemplate(){
-    let dialogModel = new DialogModel();
-    dialogModel.FormModel = this.dialog.formModel;
-    this.callFC.openForm(
-    CodxExportAddComponent,
-    '',
-    screen.width,
-    screen.height,
-    this.dialog.formModel.funcID,
-    { action: 'edit', type: 'excel', refType: 'RP_ReportList' },
-    '',
-    dialogModel);
+    if(this.rpReportList)
+    {
+      this.api.execSv("SYS","AD","ExcelTemplatesBusiness","GetAsync",this.rpReportList.templateID)
+      .subscribe((res:any) => {
+        if(res)
+        {
+          let dialogModel = new DialogModel();
+          dialogModel.FormModel = this.dialog.formModel;
+          let popup = this.callFC.openForm(
+          CodxExportAddComponent,
+          '',
+          screen.width,
+          screen.height,
+          this.dialog.formModel.funcID,
+          { data: res, action: 'edit', type: 'excel', refType: 'RP_ReportList' },
+          '',
+          dialogModel);
+          popup.closed.subscribe((res: any) => {
+            if(res && res?.event) 
+            {
+              this.isUpdateFileTemplate = true;
+            }
+          });
+        }
+      });
+    }
+  }
+
+  viewInfo(){
+    if(this.tmpPopTutorial)
+    {
+      let dialogModel = new DialogModel();
+      dialogModel.FormModel = this.dialog.formModel;
+      this.callFC.openForm(this.tmpPopTutorial,"",600, 600,"",null,"",dialogModel);
+    }
+  }
+
+  addUpdateReport(hrTemplateID:string, adTemplateID){
+    if(!this.rpReportList)
+    {
+      this.rpReportList = JSON.parse(JSON.stringify(this.rootReport));
+      this.rpReportList.recID = Util.uid();
+      this.rpReportList.id = "";
+    }
+    this.rpReportList.reportID = hrTemplateID;
+    this.rpReportList.templateID = adTemplateID;
+    this.rpReportList.isCustomize = true;
+    this.rpReportList.createdBy = this.user.userID;
+    this.rpReportList.createdOn = new Date();
+    return this.api.execSv("rptrp",'Codx.RptBusiness.RP',"ReportListBusiness","AddUpdateAsync",this.rpReportList);
   }
 }

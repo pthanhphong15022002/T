@@ -1,0 +1,37 @@
+.border-setting {
+  border: 1px solid var(--gray-150);
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 5px;
+  padding: 15px 20px 15px 20px;
+  height: auto;
+  border-radius: 5px;
+  table {
+    border-collapse: collapse;
+    width: 100% !important;
+  }
+
+  th,
+  td {
+    padding: 2px 7px !important;
+    white-space: nowrap;
+    border-bottom: 1px var(--gray-100) solid !important;
+    height: 32px;
+    vertical-align: middle;
+  }
+  .table tbody tr:last-child td {
+    border-bottom: 1px var(--gray-100) solid !important;
+  }
+  .bg-150 {
+    border-top: 2px var(--primary-lighter) solid;
+  }
+
+  th {
+    position: sticky;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    background-color: var(--gray-100) !important;
+  }
+}

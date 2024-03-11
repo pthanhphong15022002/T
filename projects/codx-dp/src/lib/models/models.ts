@@ -556,6 +556,7 @@ export class DP_Instance_Steps_Fields {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  versions: any[];
 }
 
 export class DP_Instances_Steps_Reasons {

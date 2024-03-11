@@ -1,9 +1,10 @@
 <div class="tm-viewlist w-100">
   <div
-    class="  border-bottom w-100"
+    class="w-100 item-view-list"
     (dblclick)="dbClick(data)"
     (click)="selectNode(data)"
-    [ngClass]="isTreeView ? 'd-flex justify-content-between p-1 align-items-center': 'd-flex justify-content-between p-3 align-items-top'"
+    [id]="data.recID"
+    [ngClass]="[isTreeView ? 'd-flex justify-content-between p-1 align-items-center': 'd-flex justify-content-between p-3 align-items-top border-bottom',data?.category =='G' ? ' border-bottom': '' ]"
   >
     <div class="w-100 ps-3">
       <div class="text-primary fw-bold fs-5 py-3" *ngIf="data?.category == 'G'">{{data?.taskName}}</div>
@@ -14,8 +15,8 @@
           [ngbPopover]="toolTipTaskName"
           #popToolTip="ngbPopover"
           [openDelay]="500"
-          (mouseenter)="popToolTip.open()"
-          (mouseleave)="popToolTip.close()"
+          (mouseenter)="isTreeView ? '' :popToolTip.open()"
+          (mouseleave)="isTreeView ? '' :popToolTip.close()"
           placement="top right bottom left"
           container="body"
           [ngClass]="isTreeView ? 'fw-bold': ''"
@@ -141,6 +142,7 @@
               placement="right bottom left"
               container="body"
               autoClose="outside"
+              [showDropDown]="false"
             >
             </codx-imgs>
           </div>
@@ -235,6 +237,9 @@
         >
         </codx-mfunc>
       </div>
+    </div>
+    <div [ngClass]="isTreeView ?'d-flex align-items-center':''"*ngIf="data?.category == 'G'" >
+      <button class="btn btn-sm fs-6 text-primary w-200px" (click)="$event.preventDefault();addChildClick(data)"><i class="icon-add text-primary  me-2"></i>Thêm công việc</button>
     </div>
   </div>
 </div>

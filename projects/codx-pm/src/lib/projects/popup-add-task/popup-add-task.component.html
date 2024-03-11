@@ -12,7 +12,7 @@
 >
 <ng-template #body>
   <div class="w-100 h-100 d-flex">
-    <div class="h-100" [ngStyle]="{width: action == 'add' ? '100%' : '60%'}" [ngClass]="action=='edit' ? 'me-1':''">
+    <div class="h-100" [ngStyle]="{width: action!='view' ? '100%' : '60%'}" [ngClass]="action=='edit' ? 'me-1':''">
       <div class="form-group ps-0">
         <codx-label fiedName="TaskName" [formModel]="form.formModel" default="Tên công việc" [ngClass]="grvSetup['TaskName']?.isRequire ? 'required' : ''">
         </codx-label>
@@ -39,11 +39,11 @@
         </div>
 
       </div>
-      <div class="form-group ps-0" *ngIf="!isAssign">
+      <div class="form-group ps-0" *ngIf="!data.parentID">
         <codx-label fiedName="ParentID" [formModel]="form.formModel" default="Giai đoạn công việc cha" [ngClass]="grvSetup['ParentID']?.isRequire ? 'required' : ''">
         </codx-label>
         <codx-input field="parentID" [crrValue]="data?.parentID" [model]="data" type="combobox" refType="3" [formModel]="formModel" [refValue]="grvSetup['ParentID']?.referedValue"
-           (valueChange)="valueChange($event)" [disabled]="!enableEdit">
+           (valueChange)="valueChange($event)" [disabled]="!enableEdit" (dataSourceChange)="onCbxDataAdded($event)">
         </codx-input>
       </div>
       <div class="row border-bottom">
@@ -138,12 +138,14 @@
                 {{ item?.resourceName }}
               </div>
               <div>
-                <span class="text-muted">{{
+                <!-- <span class="text-muted">{{
                   item?.roleType | vll : "PM013" : "text" | async
-                  }}</span>
+                  }}</span> -->
+                <span class="text-muted">{{item.positionName}}</span>
               </div>
             </div>
             <div class="d-flex flex-column w-25">
+
               <codx-vll
                   [name]="'PM013'"
                   [value]="item.roleType"
@@ -165,7 +167,7 @@
       </div>
       <div class="row border-bottom pt-3">
         <div class="col-1 d-flex align-items-center pb-3 ps-5">
-          <codx-input type="checkbox" [class]="'check-circle'" field="approveControl" [disabled]="!enableEdit" [crrValue]="data.approveControl=='1'" (valueChange)="checkboxChange($event)"></codx-input>
+          <codx-input type="checkbox" [class]="'check-circle'" field="approveControl" [disabled]="!enableEdit" [crrValue]="checkApproveControl(data.approveControl)" (valueChange)="checkboxChange($event)"></codx-input>
         </div>
         <div class="col-11 d-flex justify-content-start">
           <codx-label fiedName="ApproveControl" [formModel]="form.formModel" default="Có báo cáo kết quả thực hiện"  >
@@ -254,7 +256,7 @@
                 <div class="w-100 d-flex align-items-center memo-area">
                   <div class="w-75 row" [ngClass]="task.status!='1' ? 'text-decoration-line-through' : ''">
                     <div class="col-1">
-                      <ejs-checkbox #checkbox [cssClass]="'check-circle'" [disabled]="!enableEdit" [checked]="task.status!='1'" (change)="toggleCompleted(task)"></ejs-checkbox>
+                      <ejs-checkbox #checkbox [cssClass]="'check-circle'" [disabled]="!enableEdit && !enableCompleteTodo" [checked]="task.status!='1'" (change)="toggleCompleted(task)"></ejs-checkbox>
                       <!-- <codx-input type="checkbox" [class]="'check-circle'" [crrValue]="task.status!='1'" (valueChange)="toggleCompleted(task)"></codx-input> -->
                     </div>
                     <div class="col-11" (click)="editTodo(task,input)">
@@ -284,12 +286,14 @@
       ></codx-tag>
       </div>
     </div>
-    <div class="h-100 ms-1 ps-3" style="border-left: 2px solid #ddd" [ngStyle]="{width: action == 'add' ? '0%' : '40%'}" [ngClass]="action!='add' ? '' : 'd-none'">
+    <div class="h-100 ms-1 ps-3" style="border-left: 2px solid #ddd" [ngStyle]="{width: action != 'view' ? '0%' : '40%'}" [ngClass]="action=='view' ? '' : 'd-none'">
       <h5><codx-label name="lblTaskHistory" [formModel]="formModel" default="Lịch sử cập nhật"></codx-label></h5>
       <div class="pt-3 overflow-scroll"style="height:85%">
         <codx-history
+        #history
           [objectID]="data?.recID"
           [formModel]="dialog?.formModel"
+          [showIcon]="false"
         ></codx-history>
       </div>
       <div class="pt-3 border-top h-auto">
@@ -300,16 +304,25 @@
           [actionType]="'C'"
           [addNew]="true"
           [funcID]="funcID"
-          (totalCommentChange)="changeCountFooter($event, 'comment')"
+          [showCommentTree]="false"
+          (typed)="commentTyped($event, 'comment')"
         >
         </codx-tree-comment>
         </div>
-        <div class="row h-25 w-100 d-flex">
-          <div class="col-2 d-flex align-items-center pb-3 ps-5">
-            <codx-input type="checkbox" [class]="'check-circle'"  ></codx-input>
+        <div class="row h-25 w-100 d-flex justify-content-center flex-row ">
+          <div class="d-flex align-items-center justify-content-start pb-3 ps-1 w-auto" *ngIf="showInprogress">
+            <codx-input type="checkbox" [class]="'check-circle'" [crrValue]="isInProgress" field="inProgress" (valueChange)="checkStatusChange($event)" ></codx-input>
+            <codx-label fiedName="lblInProcess" class="ps-2" [formModel]="form.formModel" default="Đang xử lý"  >
+            </codx-label>
           </div>
-          <div class="col-10 d-flex justify-content-start">
-            <codx-label fiedName="lblInProcess" [formModel]="form.formModel" default="Đang xử lý"  >
+          <div class="d-flex align-items-center justify-content-start pb-3 ps-1 w-auto" *ngIf="showFinish">
+            <codx-input type="checkbox" [class]="'check-circle'" [crrValue]="isFinish" field="finish" (valueChange)="checkStatusChange($event)" ></codx-input>
+            <codx-label fiedName="lblFinish" class="ps-2" [formModel]="form.formModel" default="Hoàn tất"  >
+            </codx-label>
+          </div>
+          <div class="d-flex align-items-center justify-content-start pb-3 ps-1 w-auto" *ngIf="showReport">
+            <codx-input type="checkbox" [class]="'check-circle'"[crrValue]="isSendReport" field="report"  (valueChange)="checkStatusChange($event)" ></codx-input>
+            <codx-label fiedName="lblReport" class="ps-2" [formModel]="form.formModel" default="Báo cáo"  >
             </codx-label>
           </div>
         </div>
@@ -322,7 +335,7 @@
 
 </ng-template>
 <ng-template #footer>
-  <div class="d-flex align-items-center" [ngStyle]="{width: action == 'add' ? '100%' : '60%'}">
+  <div class="d-flex align-items-center" [ngStyle]="{width: action != 'view' ? '100%' : '60%'}">
     <div class=" w-50 d-flex justify-content-start">
       <button
         *ngIf="!enableAttachment "
@@ -344,7 +357,7 @@
         name="btnAssign"
         formName="System"
         default="Giao việc"
-        class="btn btn-light-primary"
+        class="btn btn-light-primary me-3"
         (click)="assignTask()"
         [disabled]="!enableEdit"
       ></button>
@@ -366,7 +379,7 @@
         class="btn btn-primary"
         (click)="save()"
         [disabled]="!enableEdit"
-        *ngIf="action=='add'"
+        *ngIf="action=='add' || action=='copy'"
       ></button>
     </div>
   </div>
