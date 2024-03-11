@@ -15,6 +15,7 @@ import {
   DialogRef,
   NotificationsService,
   RequestOption,
+  Util,
 } from 'codx-core';
 import { CodxCmService } from '../../../codx-cm.service';
 
@@ -61,9 +62,7 @@ export class PopupAddBusinessLineComponent implements OnInit, AfterViewInit {
     if (Array.isArray(arrField)) {
       this.arrFieldForm = arrField
         .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-        .map(
-          (x: any) => x.fieldName.charAt(0).toLowerCase() + x.fieldName.slice(1)
-        );
+        .map((x: any) => (x: any) => Util.camelize(x.fieldName));
     }
     this.getAutoNumber();
   }

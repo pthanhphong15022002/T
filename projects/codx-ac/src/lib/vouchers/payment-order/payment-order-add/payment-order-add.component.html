@@ -118,7 +118,7 @@
         </div>
         <codx-tabs [entityName]="dialog.formModel.entityName" [formModel]="dialog.formModel"
             [objectID]="formPaymentOrder.data?.recID" [funcID]="dialog.formModel.funcID"
-            [TabControl]="tabInfo"></codx-tabs>
+            [TabControl]="tabInfo" [data]="formPaymentOrder.data" [keyField]="'recID'"></codx-tabs>
     </div>
 </ng-template>
 <!-- End: Footer -->

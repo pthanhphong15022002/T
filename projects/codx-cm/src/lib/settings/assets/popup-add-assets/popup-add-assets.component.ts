@@ -9,11 +9,13 @@ import {
   ApiHttpService,
   CRUDService,
   CacheService,
+  CodxFormComponent,
   CodxInputComponent,
   DialogData,
   DialogRef,
   NotificationsService,
   RequestOption,
+  Util,
 } from 'codx-core';
 import { CodxCmService } from '../../../codx-cm.service';
 
@@ -24,8 +26,9 @@ import { CodxCmService } from '../../../codx-cm.service';
 })
 export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
   @ViewChild('cbxPlace') cbxPlace: CodxInputComponent;
-  @ViewChild('objectID') objectID: CodxInputComponent;
-  @ViewChild('cbxZone') zone: CodxInputComponent;
+  @ViewChild('cbxObjectID') cbxObjectID: CodxInputComponent;
+  @ViewChild('cbxZone') cbxZone: CodxInputComponent;
+  @ViewChild('form') form: CodxFormComponent;
 
   dialog: any;
   gridViewSetup: any;
@@ -41,6 +44,7 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
   arrFieldForm: any[];
   validate = 0;
   viewOnly = true;
+  parentID: any;
 
   constructor(
     private cache: CacheService,
@@ -62,10 +66,9 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
     if (Array.isArray(arrField)) {
       this.arrFieldForm = arrField
         .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-        .map(
-          (x: any) => x.fieldName.charAt(0).toLowerCase() + x.fieldName.slice(1)
-        );
+        .map((x: any) => Util.camelize(x.fieldName));
     }
+    this.parentID = this.data.assetID;
     this.getAutoNumber();
   }
 
@@ -92,6 +95,43 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
 
   valueChange(e) {
     this.data[e.field] = e.data;
+  }
+
+  valueChangeCbx(e) {
+    this.data[e.field] = e.data;
+    switch (e.field) {
+      case 'place':
+        if (this.data.place != this.parentID) {
+          this.data.zone = null;
+          this.cbxZone.ComponentCurrent.dataService.data = [];
+          this.cbxZone.crrValue = null;
+          this.cbxZone.model = {
+            ParentID: this.data.place,
+          };
+
+          this.cbxObjectID.ComponentCurrent.dataService.data = [];
+          this.cbxObjectID.crrValue = null;
+        }
+        break;
+      case 'zone':
+        if (e?.component?.itemsSelected[0]?.ParentID != this.data.place) {
+          this.data.place = e?.component?.itemsSelected[0]?.ParentID;
+          this.parentID = this.data.place;
+          this.cbxPlace.ComponentCurrent.dataService.data = [];
+          this.cbxPlace.crrValue = null;
+          this.cbxPlace.model = {
+            AssetID: this.data.place,
+          };
+
+          this.cbxObjectID.ComponentCurrent.dataService.data = [];
+          this.cbxObjectID.crrValue = null;
+        }
+        break;
+      case 'objectID':
+        break;
+    }
+
+    this.form.formGroup.patchValue(this.data);
   }
 
   beforeSave(op: RequestOption) {

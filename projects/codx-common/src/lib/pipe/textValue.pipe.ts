@@ -15,8 +15,9 @@ export class TextValuePipe implements PipeTransform {
   {}
   transform(value: string,mssgCode:string) : Observable<any>{
     return this.cache.message(mssgCode).pipe(map(res => {
-      let _strMssg = res?.customName ;
-      if(value){
+      let _strMssg = res?.customName;
+      if(value)
+      {
         let _param = JSON.parse(value);
         let _obj:any = {};
         _param.forEach(element => {
@@ -37,7 +38,8 @@ export class TextValuePipe implements PipeTransform {
         });
         return UrlUtil.modifiedByObj(_strMssg,_obj);;
       }
-      else{
+      else
+      {
         value = res?.customName;
       }
       return value;

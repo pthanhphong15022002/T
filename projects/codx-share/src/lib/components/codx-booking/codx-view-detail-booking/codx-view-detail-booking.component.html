@@ -435,7 +435,7 @@
     <codx-tabs #tabModel [entityName]="formModel?.entityName" [objectID]="data?.recID" [funcID]="formModel?.funcID" 
       [dataTree]="[]" [TabControl]="tabControl" [transID]="data?.recID" 
       [approveStatus]="this.runMode != '1' ? data?.approveStatus : data?.unbounds?.statusApproval" [addPermissions]="listFilePermission" [referType]="'source'"
-      [isEdit]="allowUploadFile"></codx-tabs>
+      [isEdit]="allowUploadFile" [data]="data" [keyField]="'recID'"></codx-tabs>
   </ng-template>
 </codx-detail-tmp>
 

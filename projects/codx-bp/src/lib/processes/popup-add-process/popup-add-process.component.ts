@@ -985,6 +985,21 @@ export class PopupAddProcessComponent {
       });
     }
    
+    if(result2.length>0)
+    {
+      result2.forEach(elm=>{
+        if(elm.activityType == "Form") 
+        {
+          if(elm.extendInfo && elm.extendInfo.length>0)
+          {
+            elm.extendInfo.forEach(element => {
+              if(typeof element.documentControl == 'object') element.documentControl = JSON.stringify(element.documentControl);
+            });
+          }
+         
+        }
+      })
+    }
     result.steps = result2;
     op.data = result;
     return true;

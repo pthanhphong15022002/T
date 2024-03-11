@@ -137,7 +137,7 @@
       </button>
     </div>
     <codx-tabs [entityName]="dialog.formModel.entityName" [formModel]="dialog.formModel"
-      [objectID]="formVouchers.data?.recID" [funcID]="dialog.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
+      [objectID]="formVouchers.data?.recID" [funcID]="dialog.formModel.funcID" [TabControl]="tabInfo" [data]="formVouchers.data" [keyField]="'recID'"></codx-tabs>
   </div>
 </ng-template>
 <!-- End: Footer -->
