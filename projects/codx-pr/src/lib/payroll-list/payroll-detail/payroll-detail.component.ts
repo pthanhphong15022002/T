@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CRUDService, CodxGridviewV2Component, CodxService, NotificationsService, RealHubService, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { CRUDService, CodxGridviewV2Component, CodxService, DialogModel, NotificationsService, RealHubService, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { PopupAddPayrollListComponent } from '../popup/popup-add-payroll-list/popup-add-payroll-list.component';
 
 @Component({
   selector: 'pr-payroll-detail',
@@ -27,6 +28,7 @@ export class PayrollDetailComponent extends UIComponent implements AfterViewInit
     public override codxService: CodxService,
     private notify: NotificationsService,
     private routeActive: ActivatedRoute,
+    private notiSV:NotificationsService
   ) 
   {
     super(inject);
@@ -114,5 +116,77 @@ export class PayrollDetailComponent extends UIComponent implements AfterViewInit
       this.detectorRef.detectChanges();
       this.codxGridView?.refresh();
     }
+  }
+
+  navigatePayroll(){
+    this.codxService.navigate(this.view.funcID);
+  }
+
+  changeDataMF(event:any){
+    event.forEach(element => {
+     if(element.functionID === "PRTPro19A15" || element.functionID === "SYS02")
+     {
+       element.disabled = false;
+       element.isbookmark = true;
+       element.isblur = false;
+     }
+     else element.disabled = true;
+    }); 
+  }
+
+  clickMF(event:any){
+    switch(event.functionID)
+    {
+      case"PRTPro19A15":
+        this.add();
+        break;
+      case"SYS02":
+        this.delete(this.payrollID);
+        break;
+    }
+  }
+
+  add(){
+    let arrIdx = this.codxGridView.selectedIndexes;
+    if(arrIdx && arrIdx.length > 0)
+    {
+      this.view.dataService.addNew()
+      .subscribe((model:any) => {
+        if(model)
+        {
+          let dialogModel = new DialogModel();
+          dialogModel.FormModel = this.view.formModel;
+          dialogModel.DataService = this.view.dataService;
+          let obj = {
+            data: model,
+            headerText: "Tính lương"
+          };
+          this.callfc.openForm(PopupAddPayrollListComponent,"",500,500,this.view.funcID,obj,"",dialogModel)
+          .closed.subscribe((res:any) => {
+            if(res && res?.event)
+            {
+              this.view.dataService.add(res.event).subscribe();
+            }
+          });
+        }
+      });
+    }
+    else this.notify.notifyCode("HR040");
+  }
+
+  delete(payrollID:string){
+    if(payrollID)
+    {
+      this.api.execSv("HR","PR","PayrollListBusiness","DeleteByIDAsync",payrollID)
+      .subscribe((res:any) => {
+        if(res) 
+        {
+          this.notiSV.notifyCode("SYS008");
+          this.navigatePayroll();
+        }
+        else this.notiSV.notifyCode("SYS022");
+      });
+    }
+    
   }
 }

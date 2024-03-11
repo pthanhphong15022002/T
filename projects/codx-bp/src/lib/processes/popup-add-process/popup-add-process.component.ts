@@ -1028,7 +1028,6 @@ export class PopupAddProcessComponent {
   {
     let data = datas.steps;
     this.countStage = data.length;
-    debugger
     data = data.sort((a, b) => a.stepNo - b.stepNo);
     var listStage = data.filter(x=>x.activityType == 'Stage');
     listStage.forEach(element => {
@@ -1038,6 +1037,7 @@ export class PopupAddProcessComponent {
           var index2 = data.findIndex(x=>x.recID == element2.recID);
           if(index2>=0)
           {
+            //element2.extendInfo = data[index2]?.extendInfo;
             data[index2]= element2;
           }
         });

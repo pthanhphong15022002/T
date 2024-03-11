@@ -1,29 +1,9 @@
 <div class="card-ep-report h-100 w-100" *ngIf="module">
-  <!-- <codx-views
-    #view
-    service="rptrp"
-    entityName="RP_ReportList"
-    idField="recID"
-    assemblyName="Codx.RptBusiness.RP"
-    className="ReportListBusiness"
-    method="GetReportsByModuleAsync"
-    [predicates]="predicates"
-    [dataValues]="dataValues"
-    (viewChanged)="viewChanged($event)"
-    [toolbarDisplay]="true"
-    [views]="views"
-    [autoLoad]="false"
-    [button]="button"
-    (onActions)="onActions($event)"
-  >
-  </codx-views> -->
-
-  <codx-view2 service="rptrp" entityName="RP_ReportList" idField="recID" assemblyName="Codx.RptBusiness.RP"
+  <codx-view2  #view service="rptrp" entityName="RP_ReportList" idField="recID" assemblyName="Codx.RptBusiness.RP"
     className="ReportListBusiness" method="GetReportsByModuleAsync" [dataRequest]="['D',module]" [tmpItem]="tmp"
     [tmpRightToolBar]="tmpRightToolBar" (dataChange)="dataChange($event)"
-    (selectedChange)="cardClick($event)" (viewChange)="viewChange($event)" [tmpHeader]="tmpHeader">
+    (selectedChange)="cardClick($event)" (viewChange)="viewChange($event)" [tmpHeader]="tmpHeader" [toolbarMode]="'1'">
   </codx-view2>
-
 </div>
 
 <ng-template #tmpHeader>

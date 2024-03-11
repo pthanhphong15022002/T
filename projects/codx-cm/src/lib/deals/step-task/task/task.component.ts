@@ -29,21 +29,20 @@ import {
 import { firstValueFrom } from 'rxjs';
 import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
 import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
-import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
-import { CodxAddTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-popup-task/codx-add-task.component';
-import { UpdateProgressComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-progress/codx-progress.component';
-import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-type-task/codx-type-task.component';
-import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
 import { CodxCmService } from '../../../codx-cm.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { ActivatedRoute } from '@angular/router';
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
-import { ContractsDetailComponent } from '../../../contracts/contracts-detail/contracts-detail.component';
-import { CodxViewApproveComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { Location } from '@angular/common';
+import { StepService } from 'projects/codx-dp/src/lib/share-crm/codx-step/step.service';
+import { CodxTypeTaskComponent } from 'projects/codx-dp/src/lib/share-crm/codx-step/codx-step-common/codx-type-task/codx-type-task.component';
+import { CodxAddTaskComponent } from 'projects/codx-dp/src/lib/share-crm/codx-step/codx-popup-task/codx-add-task.component';
+import { UpdateProgressComponent } from 'projects/codx-dp/src/lib/share-crm/codx-step/codx-progress/codx-progress.component';
+import { CodxViewTaskComponent } from 'projects/codx-dp/src/lib/share-crm/codx-step/codx-view-task/codx-view-task.component';
+import { CodxViewApproveComponent } from 'projects/codx-dp/src/lib/share-crm/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
 @Component({
   selector: 'task',
   templateUrl: './task.component.html',
@@ -100,7 +99,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private location: Location,
-    private tenantStore: TenantStore,
+    private tenantStore: TenantStore
   ) {
     this.user = this.authstore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -417,7 +416,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         }
       });
     } else if (this.taskType?.value == 'CO') {
-      let data = { action: 'edit', type: 'task'};
+      let data = { action: 'edit', type: 'task' };
       let taskContract = await this.stepService.openPopupTaskContract(
         data,
         'edit',
@@ -428,21 +427,20 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       );
       let dataSave = { task: taskContract };
       this.api
-          .exec<any>('DP', 'ActivitiesBusiness', 'EditActivitiesAsync', [
-            taskContract,
-            this.entityName,
-          ])
-          .subscribe((res) => {
-            if (res) {
-              let index = this.listActivitie?.findIndex(
-                (activitie) => activitie.recID == res.recID
-              );
-              this.listActivitie?.splice(index, 1, res);
-              this.notiService.notifyCode('SYS007');
-              this.changeDetectorRef.markForCheck();
-            }
-          });
-      
+        .exec<any>('DP', 'ActivitiesBusiness', 'EditActivitiesAsync', [
+          taskContract,
+          this.entityName,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            let index = this.listActivitie?.findIndex(
+              (activitie) => activitie.recID == res.recID
+            );
+            this.listActivitie?.splice(index, 1, res);
+            this.notiService.notifyCode('SYS007');
+            this.changeDetectorRef.markForCheck();
+          }
+        });
     } else {
       let taskOutput = await this.openPopupTask('edit', taskEdit);
       if (taskOutput?.event) {
@@ -719,17 +717,17 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       }
     }
   }
-  viewDetailContract(task) { 
+  viewDetailContract(task) {
     if (task?.objectLinked) {
       const url1 = this.location.prepareExternalUrl(this.location.path());
-        const parser = document.createElement('a');
-        parser.href = url1;
-        const domain = parser.origin;
+      const parser = document.createElement('a');
+      parser.href = url1;
+      const domain = parser.origin;
 
-        let tenant = this.tenantStore.get().tenant;
-        let url = `${domain}/${tenant}/cm/contracts/CM0206?predicate=RecID=@0&dataValue=${task?.objectLinked}`;
-        window.open(url, '_blank');
-        return; 
+      let tenant = this.tenantStore.get().tenant;
+      let url = `${domain}/${tenant}/cm/contracts/CM0206?predicate=RecID=@0&dataValue=${task?.objectLinked}`;
+      window.open(url, '_blank');
+      return;
     } else {
       this.notiService.notify('Không tìm thấy hợp đồng', '3');
     }

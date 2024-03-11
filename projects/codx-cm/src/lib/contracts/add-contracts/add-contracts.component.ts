@@ -37,13 +37,13 @@ import { tmpInstances } from '../../models/tmpModel';
 import { CodxCmService } from '../../codx-cm.service';
 import { ContractsService } from '../service-contracts.service';
 import { Observable, Subject, takeUntil, filter, firstValueFrom } from 'rxjs';
-import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
-import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { StepService } from 'projects/codx-dp/src/lib/share-crm/codx-step/step.service';
+import { CustomFieldService } from 'projects/codx-dp/src/lib/share-crm/codx-input-custom-field/custom-field.service';
 
 @Component({
   selector: 'add-contracts',
@@ -364,7 +364,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   loadSoureRef() {
-    this.refInstance = '20620ac0-c45d-431d-99d7-1e7c7503785d'; //gán cứng test chứ lỗi 1 đống
+    /// this.refInstance = '20620ac0-c45d-431d-99d7-1e7c7503785d'; //gán cứng test chứ lỗi 1 đống
     this.cmService.getListFieldsRef(this.refInstance).subscribe((lstF) => {
       this.dataSourceRef = lstF;
     });
@@ -900,18 +900,33 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       ? new Date(this.contracts?.effectiveTo)
       : null;
 
-    // if (event?.field == 'effectiveFrom' && this.contracts?.interval) { 
-    //   let interval = parseInt(this.contracts?.interval) || 0;
-    //   this.contracts.effectiveTo = new Date(
-    //     startDate.setFullYear(startDate.getFullYear() + interval)
-    //   );
-    // }
-    // if (event?.field == 'effectiveTo' && this.contracts?.interval) { 
-    //   let interval = parseInt(this.contracts?.interval) || 0;
-    //   this.contracts.effectiveFrom = new Date(
-    //     endDate.setFullYear(endDate.getFullYear() - interval)
-    //   );
-    // }
+    if (this.contracts?.interval) {
+      if (event?.field == 'effectiveFrom') {
+        let interval = parseInt(this.contracts?.interval) || 0;
+        this.contracts.effectiveTo = new Date(
+          startDate.setFullYear(startDate.getFullYear() + interval)
+        );
+      }
+      if (event?.field == 'effectiveTo') {
+        let interval = parseInt(this.contracts?.interval) || 0;
+        this.contracts.effectiveFrom = new Date(
+          endDate.setFullYear(endDate.getFullYear() - interval)
+        );
+      }
+    } else {
+      if (
+        (event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') &&
+        startDate &&
+        endDate
+      ) {
+        let startYear = startDate.getFullYear();
+        let endYear = endDate.getFullYear();
+        let startMonth = startDate.getMonth();
+        let endMonth = endDate.getMonth();
+        let interval = (endYear - startYear) * 12 + (endMonth - startMonth);
+        this.contracts.interval = (interval / 12).toFixed(1);
+      }
+    }
     // if (event?.field == 'effectiveTo' && this.isLoadDate) {
     //   if (endDate && startDate > endDate) {
     //     // this.isSaveTimeTask = false;
@@ -928,20 +943,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     //   }
     // } else {
     //   this.isLoadDate = !this.isLoadDate;
-    // }
-
-    // if (
-    //   (event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') &&
-    //   startDate &&
-    //   endDate
-    // ) {
-    //   let startYear = startDate.getFullYear();
-    //   let endYear = endDate.getFullYear();
-    //   let startMonth = startDate.getMonth();
-    //   let endMonth = endDate.getMonth();
-
-    //   let interval = (endYear - startYear) * 12 + (endMonth - startMonth);
-    //   this.contracts.interval = interval.toFixed(1);
     // }
   }
 

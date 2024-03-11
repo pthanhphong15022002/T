@@ -68,6 +68,7 @@ import { PopupMapContractComponent } from './dynamic-process/popup-add-dynamic-p
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 import { DashboardInstancesComponent } from './instances/dashboard-instances/dashboard-instances.component';
+import { ShareCrmModule } from './share-crm/share-crm.module';
 
 export const routes: Routes = [
   {
@@ -198,6 +199,7 @@ const T_Component: Type<any>[] = [
     PinchZoomModule,
     // CdkTableModule,
     CodxCmModule.forRoot({ environment }),
+    ShareCrmModule,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

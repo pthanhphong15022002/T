@@ -270,59 +270,61 @@ export class FormStepsFieldGridComponent
           }
           else
           {
-            debugger
             this.data = res?.event?.process || this.data;
             let dt = res?.event?.data;
             if(dt.activityType == "Stage")
             {
-              var index = this.listStage.findIndex(x=>x.recID == dt.recID);
-              var indexP = this.data.steps.findIndex(x=>x.recID == dt.recID);
-              if(index >= 0) this.listStage[index] = dt;
-              else this.listStage.push(dt);
-              if(indexP >= 0) this.data.steps[indexP] = dt;
-              else this.data.steps.push(dt);
+                var index = this.listStage.findIndex(x=>x.recID == dt.recID);
+                var indexP = this.data.steps.findIndex(x=>x.recID == dt.recID);
+                if(index >= 0) this.listStage[index] = dt;
+                else this.listStage.push(dt);
+                if(indexP >= 0) this.data.steps[indexP] = dt;
+                else this.data.steps.push(dt);
 
-            var name = 'stage' + (this.listIds.length - 1) + '_' + dt.recID;
-            this.listIds.push(name);
-          } 
-          else {
-            var index = this.listStage.findIndex((x) => x.recID == dt.parentID);
-            dt = this.setDataCondition(dt);
+              var name = 'stage' + (this.listIds.length - 1) + '_' + dt.recID;
+              this.listIds.push(name);
+            } 
+            else 
+            {
+              var index = this.listStage.findIndex((x) => x.recID == dt.parentID);
+              dt = this.setDataCondition(dt);
 
-            if (type == 'add') {
-              this.listStage[index].child.push(dt);
-              this.data.steps.push(dt);
-            } else {
+              if (type == 'add') {
+                this.listStage[index].child.push(dt);
+                this.data.steps.push(dt);
+              } else {
+                
+                if(isCondistion)
+                {
+                  index = this.listStage.findIndex(x=>x.recID == dt?.stageID);
+                  var indexP = this.listStage[index].child.findIndex(x=>x.recID == dt.parentID);
+                  var indexC = this.listStage[index].child[indexP].child.findIndex(x=>x.recID == dt.recID);
+                  this.listStage[index].child[indexP].child[indexC] = dt;
+                }
               
-              if(isCondistion)
-              {
-                index = this.listStage.findIndex(x=>x.recID == dt?.stageID);
-                var indexP = this.listStage[index].child.findIndex(x=>x.recID == dt.parentID);
-                var indexC = this.listStage[index].child[indexP].child.findIndex(x=>x.recID == dt.recID);
-                this.listStage[index].child[indexP].child[indexC] = dt;
+                var index2 = this.listStage[index].child.findIndex(
+                  (x) => x.recID == dt.recID
+                );
+                var indexP = this.data.steps.findIndex(
+                  (x) => x.recID == dt.recID
+                );
+                
+                if (index2 >= 0) 
+                {
+                
+                  this.listStage[index].child[index2] = dt;
+                  this.listStage = JSON.parse(JSON.stringify(this.listStage));
+                }
+                if (indexP >= 0) this.data.steps[indexP] = dt;
               }
-             
-              var index2 = this.listStage[index].child.findIndex(
-                (x) => x.recID == dt.recID
-              );
-              var indexP = this.data.steps.findIndex(
-                (x) => x.recID == dt.recID
-              );
-              
-              if (index2 >= 0) 
-              {
-               
-                this.listStage[index].child[index2] = dt;
-                this.listStage = JSON.parse(JSON.stringify(this.listStage));
-              }
-              if (indexP >= 0) this.data.steps[indexP] = dt;
             }
+
+            if(res?.event?.process) this.data = Object.assign({},  this.data);
+            this.ref.detectChanges();
+            this.dataChange.emit(this.data);
           }
-          this.ref.detectChanges();
-          this.dataChange.emit(this.data);
         }
-      }
-    });
+      });
   }
 
   setDataCondition(dt: any) {

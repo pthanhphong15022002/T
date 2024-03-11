@@ -22,7 +22,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { PurchaseinvoicesAddComponent } from './purchaseinvoices-add/purchaseinvoices-add.component';
 import { CodxAcService, fmJournal } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -92,14 +92,21 @@ export class PurchaseinvoicesComponent extends UIComponent {
     private tenant: TenantStore,
   ) {
     super(inject);
-    this.cache
-      .companySetting()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res.length > 0) {
-          this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
-        }
-      });
+    // this.cache
+    //   .companySetting()
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((res: any) => {
+    //     if (res.length > 0) {
+    //       this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
+    //     }
+    //   });
+  this.cache
+      .viewSettingValues('ACParameters')
+      .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
+      .subscribe((res) => {
+        let dataValue = JSON.parse(res.dataValue);
+        this.baseCurr = dataValue?.BaseCurr || '';
+      })
     this.router.params
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
