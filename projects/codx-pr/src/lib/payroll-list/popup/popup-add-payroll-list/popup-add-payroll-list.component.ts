@@ -117,7 +117,7 @@ export class PopupAddPayrollListComponent implements OnInit,AfterContentInit{
           this.data.payrollID = Util.uid(); 
           this.data.createdBy = this.user.user;
           this.data.createdOn = new Date();
-          this.api.execSv("HR","PR","PayrollListBusiness","SaveAsync",this.data)
+          this.api.execSv("HR","PR","PayrollListBusiness","SaveAsync",[this.data, this.skipPayroll])
           .subscribe((res:any) => {
             if(res && res?.length > 0 && res[0])
             {
@@ -133,7 +133,6 @@ export class PopupAddPayrollListComponent implements OnInit,AfterContentInit{
   }
 
   validate():boolean{
-    if(!this.data) return false;
     if(!this.data.dowCode)
     {
       this.notiSV.notifyCode("HR064");
@@ -147,9 +146,9 @@ export class PopupAddPayrollListComponent implements OnInit,AfterContentInit{
     return true;
   }
 
-  downloadFile(data: any,fielName:string) {
+  downloadFile(data: any,fileName:string) {
     var sampleArr = this.base64ToArrayBuffer(data[0]);
-    this.saveByteArray(sampleArr,fielName);
+    this.saveByteArray(sampleArr,fileName);
   }
 
   base64ToArrayBuffer(base64) {
@@ -163,7 +162,7 @@ export class PopupAddPayrollListComponent implements OnInit,AfterContentInit{
     return bytes;
   }
 
-  saveByteArray(byte,fielName) {
+  saveByteArray(byte,fileName) {
     var dataType =
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
     var blob = new Blob([byte], {
@@ -171,7 +170,7 @@ export class PopupAddPayrollListComponent implements OnInit,AfterContentInit{
     });
     var link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
-    link.download = fielName;
+    link.download = fileName;
     link.click();
   }
 }

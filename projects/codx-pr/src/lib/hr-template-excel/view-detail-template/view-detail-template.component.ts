@@ -1,6 +1,6 @@
 import { E } from '@angular/cdk/keycodes';
 import { AfterViewInit, Component, HostBinding, Injector, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { CodxGridviewV2Component, DialogModel, DialogRef, FormModel, NotificationsService, SidebarModel, UIDetailComponent } from 'codx-core';
+import { CRUDService, CodxGridviewV2Component, DialogModel, DialogRef, FormModel, NotificationsService, SidebarModel, UIDetailComponent } from 'codx-core';
 import { PopupEditTemplateComponent } from '../popup/popup-edit-template/popup-edit-template.component';
 
 @Component({
@@ -13,12 +13,16 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
   @HostBinding('class') get valid() { return "d-block w-100 h-100"; }
   @Input() runMode:string;
   @Input() formModel:FormModel;
+  @Input() dataService:CRUDService;
   @Input() hideMF:boolean = true;
 
   data:any;
   gridColumns:any[] = [];
   loaded:boolean = false;
   rpReportList:any;
+  groupSalCode:string = "";
+  departmentIDs:string = "";
+  skipGroupSalCode:boolean = false;
   tabControl = [
     {
       name: 'History',
@@ -101,6 +105,7 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
       header.classList.remove("mt-3");
       body.classList.remove("mt-2");
       body.style.setProperty("height",`calc(100% - ${header.clientHeight}px)`);
+      this.detectorRef.detectChanges();
     }
   }
 
@@ -119,6 +124,9 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
     {
       switch(event.functionID)
       {
+        case"SYS01":
+          this.add();
+          break;
         case"SYS03":
           this.edit();
           break;
@@ -126,14 +134,51 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
     }
   }
 
+  add(){
+    let sidebarModel = new SidebarModel();
+    sidebarModel.FormModel = this.formModel;
+    sidebarModel.Width = '550px';
+    this.dataService.addNew()
+    .subscribe((model:any) => {
+      if(model)
+      {
+        let option = {
+          action:'add',
+          data: model,
+          headerText: "Chi tiết bảng lương"
+        };
+        this.callfc.openSide(PopupEditTemplateComponent,option,sidebarModel,this.funcID)
+        .closed.subscribe((res:any) => 
+        {
+          if(res && res.event)
+          {
+            this.dataService.add(res.event).subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
+      }
+    });
+  }
+
   edit(){
     let sidebarModel = new SidebarModel();
     sidebarModel.FormModel = this.formModel;
     sidebarModel.Width = '550px';
-    this.callfc.openSide(PopupEditTemplateComponent,this.data,sidebarModel,this.funcID);
+    let option = {
+      action:'edit',
+      data: this.data,
+      headerText: "Chi tiết bảng lương"
+    };
+    this.callfc.openSide(PopupEditTemplateComponent,option,sidebarModel,this.funcID)
+    .closed.subscribe((res:any) => 
+    {
+      if(res && res.event)
+      {
+        this.dataService.update(res.event).subscribe();
+        this.detectorRef.detectChanges();
+      }
+    });
   }
-
-  
 
   changeDataMF(event:any){
     event.forEach(element => {
@@ -156,9 +201,7 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
     }
   }
 
-  groupSalCode:string = "";
-  departmentIDs:string = "";
-  skipGroupSalCode:boolean = false;
+  
   valueChange(event:any){
     if(event && event.field)
     {
