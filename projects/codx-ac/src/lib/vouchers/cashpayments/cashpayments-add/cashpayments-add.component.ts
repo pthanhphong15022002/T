@@ -1129,6 +1129,9 @@ export class CashPaymentAddComponent extends UIComponent {
    * *Hàm thêm mới dòng cashpayments
    */
   addLine() {
+    // this.api.exec('AC','CashPaymentsLinesBusiness','SetDefaultAsync',[this.formCashPayment.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+    //   console.log(res);
+    // })
     let oLine = this.setDefaultLine();
     this.eleGridCashPayment.addRow(oLine, this.eleGridCashPayment.dataSource.length);
   }
