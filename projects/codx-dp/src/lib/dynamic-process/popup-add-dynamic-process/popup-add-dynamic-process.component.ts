@@ -5341,6 +5341,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
               md.bought &&
               md.boughtModule?.moduleID == 'TM1'
           );
+          this.changeDetectorRef.markForCheck();
         }
       });
   }

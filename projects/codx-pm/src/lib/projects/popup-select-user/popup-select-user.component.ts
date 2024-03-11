@@ -75,7 +75,7 @@ export class PopupSelectUserComponent implements OnInit, AfterViewInit{
         break;
       case '2':
         this.comboboxName = 'Users';
-        this.predicate = 'CompanyID=="'+this.crrUser.employee?.companyID+'"'
+        this.predicate = 'CompanyName=="'+this.crrUser.employee?.companyName+'"'
         break;
       case '3':
         this.comboboxName = 'Users';
