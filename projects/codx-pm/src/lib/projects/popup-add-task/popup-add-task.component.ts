@@ -403,9 +403,9 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
         }
         if(this.action == 'edit'){
            this.checkAllowedEdit();
-           this.updateStatusCheck();
-        }
 
+        }
+        this.updateStatusCheck();
       }
     })
   }
