@@ -245,7 +245,7 @@ export class CodxViewFilesComponent implements OnInit {
     }
   }
   // save
-  save(): Observable<boolean> {
+  save(permissions:any[]): Observable<boolean> {
     if (this.objectID) {
       let lstFileAdd = this.files.filter((x) => x.isNew);
       let $obs1 = this.deleteFiles(this.lstFileRemove);

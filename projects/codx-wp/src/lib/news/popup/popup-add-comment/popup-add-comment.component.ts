@@ -241,7 +241,7 @@ export class PopupAddCommentComponent {
     this.data.createdOn = new Date();
     this.data.attachments = this.codxViewFiles.files.length;
     this.data.medias = this.codxViewFiles.medias;
-    this.codxViewFiles.save().subscribe((res1: boolean) => {
+    this.codxViewFiles.save([]).subscribe((res1: boolean) => {
       if (res1) {
         this.insertPost(this.data).subscribe((res2: any) => {
           if (res2) this.notifySvr.notifyCode('WP024');
@@ -271,7 +271,7 @@ export class PopupAddCommentComponent {
     this.loaded = true;
     this.data.attachments = this.codxViewFiles.files.length;
     this.data.medias = this.codxViewFiles.medias;
-    this.codxViewFiles.save().subscribe((res1: boolean) => {
+    this.codxViewFiles.save([]).subscribe((res1: boolean) => {
       if (res1) {
         this.api
           .execSv(
@@ -301,7 +301,7 @@ export class PopupAddCommentComponent {
     this.data.createdOn = new Date();
     this.data.attachments = this.codxViewFiles.files.length;
     this.data.medias = this.codxViewFiles.medias;
-    this.codxViewFiles.save().subscribe((res1: boolean) => {
+    this.codxViewFiles.save([]).subscribe((res1: boolean) => {
       if (res1) {
         this.insertPost(this.data).subscribe((res2: any) => {
           if (res2) this.notifySvr.notifyCode('WP020');
