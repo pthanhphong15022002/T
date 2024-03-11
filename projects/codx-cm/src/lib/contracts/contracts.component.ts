@@ -218,6 +218,8 @@ export class ContractsComponent extends UIComponent {
   selectedChange(val: any) {
     if (!val?.data) return;
     this.dataSelected = val?.data;
+    console.log("log kiểm tr data sẽ xóa sau",this.dataSelected);
+    
     this.detectorRef.detectChanges();
   }
 
