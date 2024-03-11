@@ -117,6 +117,7 @@ export class MyInstancesComponent
     var option = new DialogModel();
     option.IsFull = true;
     option.FormModel = this.view.formModel;
+    option.zIndex = 100;
     this.api
       .execSv<any>('BP', 'ERM.Business.BP', 'ProcessesBusiness', 'GetAsync', [
         dt?.processID,
