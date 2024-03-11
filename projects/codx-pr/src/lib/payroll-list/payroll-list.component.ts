@@ -1,14 +1,14 @@
-import { AfterViewInit, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { CodxGridviewV2Component, DialogModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AfterViewInit, Component, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { DialogModel, NotificationsService, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopupAddPayrollListComponent } from './popup/popup-add-payroll-list/popup-add-payroll-list.component';
 import { UploaderComponent } from '@syncfusion/ej2-angular-inputs';
-import { Template } from 'ngx-basic-primitives/lib/diagrams/graphics';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'pr-payroll-list',
   templateUrl: './payroll-list.component.html',
-  styleUrls: ['./payroll-list.component.css']
+  styleUrls: ['./payroll-list.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PayrollListComponent extends UIComponent implements AfterViewInit {
   
@@ -16,18 +16,21 @@ export class PayrollListComponent extends UIComponent implements AfterViewInit {
   @ViewChild("tmpContent") tmpContent:TemplateRef<any>;
   @ViewChild("headerTemplate") headerTemplate:TemplateRef<any>;
   @ViewChild("itemTemplate") itemTemplate:TemplateRef<any>;
+  @ViewChild("tmpGroup") tmpGroup:TemplateRef<any>;
   @ViewChild("ej2Uploader") ej2Uploader: UploaderComponent;
 
   constructor
   (
     private injector:Injector,
-    private router2: Router ,
+    private notiSV:NotificationsService,
+    private router2: Router,
   )
   {
     super(injector);
 
   }
   override onInit(): void {
+    
   }
 
 
@@ -40,7 +43,10 @@ export class PayrollListComponent extends UIComponent implements AfterViewInit {
         model : 
         {
           headerTemplate : this.headerTemplate,
-          template : this.itemTemplate
+          collapsed : true,
+          template : this.itemTemplate,
+          groupBy: 'yearID',
+          groupTemplate: this.tmpGroup
         }
       }
     ];
@@ -48,7 +54,7 @@ export class PayrollListComponent extends UIComponent implements AfterViewInit {
 
   changeDataMF(event:any){
     event.forEach(element => {
-     if(element.functionID === "SYS01" || element.functionID === "SYS02")
+     if(element.functionID === "PRTPro19A15" || element.functionID === "SYS02")
      {
        element.disabled = false;
        element.isbookmark = true;
@@ -58,16 +64,34 @@ export class PayrollListComponent extends UIComponent implements AfterViewInit {
     }); 
   }
 
-  clickMF(event:any, data = null){
+  clickMF(event:any){
     switch(event.functionID)
     {
-      case"SYS01":
+      case"PRTPro19A15":
         this.add();
         break;
-      case"SYS01":
-        this.view.dataService.delete([this.view.dataService.dataSelected],true).subscribe();
+      case"SYS02":
+        this.delete(this.view.dataService.dataSelected);
         break;
     }
+  }
+
+  delete(data:any){
+    this.notiSV.alertCode("SYS030")
+    .subscribe((confirm:any) => {
+      if(confirm && confirm.event.status === "Y")
+      {
+        this.api.execSv("HR","PR","PayrollListBusiness","DeleteAsync",data)
+        .subscribe((res:any) => {
+          if(res) 
+          {
+            this.notiSV.notifyCode("SYS008");
+            this.view.dataService.remove(data).subscribe();
+          }
+          else this.notiSV.notifyCode("SYS022");
+        });
+      }
+    })
   }
 
   add(){

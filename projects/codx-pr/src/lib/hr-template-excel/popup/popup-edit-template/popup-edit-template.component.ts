@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { ApiHttpService, AuthStore, CallFuncService, DialogData, DialogModel, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
-import { map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -16,11 +16,12 @@ export class PopupEditTemplateComponent implements OnInit,AfterViewInit {
   action:string;
   headerText:string = "Chi tiết bảng lương";
   rpReportList:any;
-  adTemplate:any;
+  adExcelTemplate:any;
   rootReport:any;
   rootTemplate:any;
   dataSets:any[] = [];
   user:any;
+  isUpdateFileTemplate:boolean = false;
   @ViewChild("tmpViewDataSet") tmpViewDataSet:TemplateRef<any>;
   @ViewChild("tmpPopTutorial") tmpPopTutorial:TemplateRef<any>;
 
@@ -45,42 +46,27 @@ export class PopupEditTemplateComponent implements OnInit,AfterViewInit {
         this.data = JSON.parse(JSON.stringify(obj.data));
         this.action = obj.action;
         this.headerText = dialogData.data.headerText;
-        if(obj.groupSalCode) this.data.groupSalCodes = obj.groupSalCode.split(";").join(";");
       }
     }
   }
   ngOnInit(): void {
-    if(this.data) this.getReportList(this.data.hrTemplateID,this.dialog?.formModel?.entityName);
-    this.getRootReport();
+    this.getReportList(this.data.hrTemplateID,this.dialog?.formModel?.entityName,true);
+    this.getReportList(this.dialog?.formModel?.funcID,this.dialog?.formModel?.entityName,false);
   }
 
   ngAfterViewInit(): void {
   }
 
-  getReportList(reportID:string,entityName:string){
-    if(reportID && entityName)
-    {
-      let predicate = "ReportID = @0 && EntityName = @1"
-      this.api.execSv("rptrp",'Codx.RptBusiness.RP',"ReportListBusiness","GetReportByPredidateAsync",[predicate,reportID,entityName])
-      .subscribe((res:any) => {
-        if(res && res.length > 0)
-        {
-          this.rpReportList = res[0];
-          this.detectorRef.detectChanges();
-        }
-      });
-    }
-  }
-
-  
-  getRootReport(){
+  getReportList(reportID:string,entityName:string,isCustomize:boolean){
     let predicate = "ReportID = @0 && EntityName = @1 && IsCustomize = @2"
-    let isCustomize = false;
-    this.api.execSv("rptrp",'Codx.RptBusiness.RP',"ReportListBusiness","GetReportByPredidateAsync",[predicate,this.dialog?.formModel?.funcID,this.dialog?.formModel?.entityName,isCustomize])
+    this.api.execSv("rptrp",'Codx.RptBusiness.RP',"ReportListBusiness","GetReportByPredidateAsync",[predicate,reportID,entityName,isCustomize])
     .subscribe((res:any) => {
       if(res && res?.length > 0)
       {
-        this.rootReport = res[0];
+        if(isCustomize) 
+          this.rpReportList = res[0];
+        else
+          this.rootReport = res[0];
         this.detectorRef.detectChanges();
       }
     });
@@ -132,12 +118,12 @@ export class PopupEditTemplateComponent implements OnInit,AfterViewInit {
   edit(data:any){
     if(data)
     {
-      this.api.execSv("HR","HR","TemplateExcelBusiness","UpdateAsync",[data])
+      this.api.execSv("HR","HR","TemplateExcelBusiness","UpdateAsync",[data,this.isUpdateFileTemplate])
       .subscribe((res:boolean) => {
         if(res)
         {
           this.notiSV.notifyCode("SYS007");
-          this.dialog.close();
+          this.dialog.close(data);
         }
         else this.notiSV.notifyCode("SYS021");
       });  
@@ -154,7 +140,8 @@ export class PopupEditTemplateComponent implements OnInit,AfterViewInit {
       'GetFilesByIbjectIDAsync',
       [this.rootReport?.templateID].join(";"))
       .subscribe(async (files:any) => {
-        if (files && files?.length > 0){
+        if (files && files?.length > 0)
+        {
           let file = files.pop();
           let blob = await fetch(`${environment.urlUpload}/${file.pathDisk}`).then((r) => r.blob());
           let url = window.URL.createObjectURL(blob);
@@ -173,16 +160,13 @@ export class PopupEditTemplateComponent implements OnInit,AfterViewInit {
   viewDataSet(){
     if(this.rootReport)
     {
-      this.api.execSv("BI","BI","CubesBusiness","GetByCubeIDAsync",this.rootReport.cubeID)
+      this.api.execSv("BI","BI","CubesBusiness","GetByCubeIDAsync",this.rpReportList.cubeID)
       .subscribe((res:any) => {
-        if(res)
-        {
-          this.dataSets = res;
-          this.detectorRef.detectChanges();
-          let dialogModel = new DialogModel();
-          dialogModel.FormModel = this.dialog.formModel;
-          this.callFC.openForm(this.tmpViewDataSet,"",500, 700,"",null,"",dialogModel);
-        }
+        this.dataSets = res;
+        this.detectorRef.detectChanges();
+        let dialogModel = new DialogModel();
+        dialogModel.FormModel = this.dialog.formModel;
+        this.callFC.openForm(this.tmpViewDataSet,"",500, 700,"",null,"",dialogModel);
       });
     }
   }
@@ -205,19 +189,9 @@ export class PopupEditTemplateComponent implements OnInit,AfterViewInit {
       popup.closed.subscribe((res: any) => {
         if(res && res?.event) 
         {
-          let adTemplateExcel = res.event[0];
-          this.rpReportList = JSON.parse(JSON.stringify(this.rootReport));
-          this.rpReportList.recID = Util.uid();
-          this.rpReportList.id = "";
-          this.rpReportList.reportID = this.data.hrTemplateID;
-          this.rpReportList.templateID = adTemplateExcel.recID;
-          this.rpReportList.isCustomize = true;
-          this.rpReportList.createdBy = this.user.userID;
-          this.rpReportList.createdOn = new Date();
-          this.rpReportList.modifiedBy = "";
-          this.rpReportList.modifiedOn = null;
-          this.api.execSv("rptrp",'Codx.RptBusiness.RP',"ReportListBusiness","AddUpdateAsync",this.rpReportList)
-          .subscribe();
+          let adExcelTemplateExcel = res.event[0];
+          this.isUpdateFileTemplate = true;
+          this.addUpdateReport(this.data.hrTemplateID,adExcelTemplateExcel.recID).subscribe();
         }
       });
     }
@@ -225,24 +199,32 @@ export class PopupEditTemplateComponent implements OnInit,AfterViewInit {
   }
 
   editTemplate(){
-    this.api.execSv("SYS","AD","ExcelTemplatesBusiness","GetAsync",this.rootReport.templateID)
-    .subscribe((res:any) => {
-      if(res)
-      {
-        let dialogModel = new DialogModel();
-        dialogModel.FormModel = this.dialog.formModel;
-        this.callFC.openForm(
-        CodxExportAddComponent,
-        '',
-        screen.width,
-        screen.height,
-        this.dialog.formModel.funcID,
-        { data: res ,action: 'edit', type: 'excel', refType: 'RP_ReportList' },
-        '',
-        dialogModel);
-      }
-    });
-    
+    if(this.rpReportList)
+    {
+      this.api.execSv("SYS","AD","ExcelTemplatesBusiness","GetAsync",this.rpReportList.templateID)
+      .subscribe((res:any) => {
+        if(res)
+        {
+          let dialogModel = new DialogModel();
+          dialogModel.FormModel = this.dialog.formModel;
+          let popup = this.callFC.openForm(
+          CodxExportAddComponent,
+          '',
+          screen.width,
+          screen.height,
+          this.dialog.formModel.funcID,
+          { data: res, action: 'edit', type: 'excel', refType: 'RP_ReportList' },
+          '',
+          dialogModel);
+          popup.closed.subscribe((res: any) => {
+            if(res && res?.event) 
+            {
+              this.isUpdateFileTemplate = true;
+            }
+          });
+        }
+      });
+    }
   }
 
   viewInfo(){
@@ -252,5 +234,20 @@ export class PopupEditTemplateComponent implements OnInit,AfterViewInit {
       dialogModel.FormModel = this.dialog.formModel;
       this.callFC.openForm(this.tmpPopTutorial,"",600, 600,"",null,"",dialogModel);
     }
+  }
+
+  addUpdateReport(hrTemplateID:string, adTemplateID){
+    if(!this.rpReportList)
+    {
+      this.rpReportList = JSON.parse(JSON.stringify(this.rootReport));
+      this.rpReportList.recID = Util.uid();
+      this.rpReportList.id = "";
+    }
+    this.rpReportList.reportID = hrTemplateID;
+    this.rpReportList.templateID = adTemplateID;
+    this.rpReportList.isCustomize = true;
+    this.rpReportList.createdBy = this.user.userID;
+    this.rpReportList.createdOn = new Date();
+    return this.api.execSv("rptrp",'Codx.RptBusiness.RP',"ReportListBusiness","AddUpdateAsync",this.rpReportList);
   }
 }

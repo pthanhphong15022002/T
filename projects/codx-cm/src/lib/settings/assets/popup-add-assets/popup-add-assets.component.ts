@@ -9,7 +9,7 @@ import {
   ApiHttpService,
   CRUDService,
   CacheService,
-  CodxComboboxComponent,
+  CodxFormComponent,
   CodxInputComponent,
   DialogData,
   DialogRef,
@@ -20,13 +20,16 @@ import {
 import { CodxCmService } from '../../../codx-cm.service';
 
 @Component({
-  selector: 'lib-popup-add-business-line',
-  templateUrl: './popup-add-business-line.component.html',
-  styleUrls: ['./popup-add-business-line.component.css'],
+  selector: 'lib-popup-add-assets',
+  templateUrl: './popup-add-assets.component.html',
+  styleUrls: ['./popup-add-assets.component.css'],
 })
-export class PopupAddBusinessLineComponent implements OnInit, AfterViewInit {
-  @ViewChild('cbxProcessDeals') cbxProcessDeals: CodxInputComponent;
-  @ViewChild('cbxProcessContracts') cbxProcessContracts: CodxInputComponent;
+export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
+  @ViewChild('cbxPlace') cbxPlace: CodxInputComponent;
+  @ViewChild('cbxObjectID') cbxObjectID: CodxInputComponent;
+  @ViewChild('cbxZone') cbxZone: CodxInputComponent;
+  @ViewChild('form') form: CodxFormComponent;
+
   dialog: any;
   gridViewSetup: any;
 
@@ -41,6 +44,7 @@ export class PopupAddBusinessLineComponent implements OnInit, AfterViewInit {
   arrFieldForm: any[];
   validate = 0;
   viewOnly = true;
+  parentID: any;
 
   constructor(
     private cache: CacheService,
@@ -62,8 +66,9 @@ export class PopupAddBusinessLineComponent implements OnInit, AfterViewInit {
     if (Array.isArray(arrField)) {
       this.arrFieldForm = arrField
         .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-        .map((x: any) => (x: any) => Util.camelize(x.fieldName));
+        .map((x: any) => Util.camelize(x.fieldName));
     }
+    this.parentID = this.data.assetID;
     this.getAutoNumber();
   }
 
@@ -85,19 +90,53 @@ export class PopupAddBusinessLineComponent implements OnInit, AfterViewInit {
         }
       });
   }
-  ngAfterViewInit(): void {
-    this.changeCbx();
-  }
+  ngAfterViewInit(): void {}
   ngOnInit(): void {}
 
   valueChange(e) {
     this.data[e.field] = e.data;
   }
 
+  valueChangeCbx(e) {
+    this.data[e.field] = e.data;
+    switch (e.field) {
+      case 'place':
+        if (this.data.place != this.parentID) {
+          this.cbxZone.ComponentCurrent.dataService.data = [];
+          this.cbxZone.crrValue = null;
+          this.cbxZone.model = {
+            ParentID: this.data.place,
+          };
+
+          this.cbxObjectID.ComponentCurrent.dataService.data = [];
+          this.cbxObjectID.crrValue = null;
+        }
+        break;
+      case 'zone':
+        if (e?.component?.itemsSelected[0]?.ParentID != this.data.place) {
+          this.data.place = e?.component?.itemsSelected[0]?.ParentID;
+          this.parentID = this.data.place;
+          this.cbxPlace.ComponentCurrent.dataService.data = [];
+          this.cbxPlace.crrValue = null;
+          this.cbxPlace.model = {
+            AssetID: this.data.place,
+          };
+
+          this.cbxObjectID.ComponentCurrent.dataService.data = [];
+          this.cbxObjectID.crrValue = null;
+        }
+        break;
+      case 'objectID':
+        break;
+    }
+
+    this.form.formGroup.patchValue(this.data);
+  }
+
   beforeSave(op: RequestOption) {
-    op.service = 'CM';
-    op.assemblyName = 'ERM.Business.CM';
-    op.className = 'BusinessLinesBusiness';
+    op.service = 'AM';
+    op.assemblyName = 'ERM.Business.AM';
+    op.className = 'AssetsBusiness';
     let data = [];
     if (this.action == 'add' || this.action == 'copy') {
       op.methodName = 'SaveAsync';
@@ -174,40 +213,6 @@ export class PopupAddBusinessLineComponent implements OnInit, AfterViewInit {
           }
         }
       }
-    }
-  }
-
-  changeCbx() {
-    if (this.cbxProcessContracts && this.cbxProcessDeals) {
-      this.cbxProcessDeals.model = {
-        BusinessLineID: this.data.businessLineID ?? 'null',
-      };
-
-      this.cbxProcessContracts.model = {
-        BusinessLineID: this.data.businessLineID ?? 'null',
-      };
-
-      // let predicate = 'Deleted=@0 && BusinessLineID == null';
-      // let dataValue = 'false';
-      // if (this.action == 'edit') {
-      //   predicate =
-      //     'Deleted =@0 && ( BusinessLineID == null || BusinessLineID=@1 )';
-      //   dataValue = 'false;' + this.data.businessLineID;
-      // }
-
-      // (
-      //   this.cbxProcessContracts.ComponentCurrent as CodxComboboxComponent
-      // ).dataService.predicates = predicate;
-      // (
-      //   this.cbxProcessContracts.ComponentCurrent as CodxComboboxComponent
-      // ).dataService.dataValues = dataValue;
-
-      // (
-      //   this.cbxProcessDeals.ComponentCurrent as CodxComboboxComponent
-      // ).dataService.predicates = predicate;
-      // (
-      //   this.cbxProcessDeals.ComponentCurrent as CodxComboboxComponent
-      // ).dataService.dataValues = dataValue;
     }
   }
 }

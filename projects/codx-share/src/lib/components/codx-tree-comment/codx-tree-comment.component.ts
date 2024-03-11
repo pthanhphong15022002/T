@@ -18,6 +18,8 @@ import { ApiHttpService, AuthService, CacheService } from 'codx-core';
   encapsulation: ViewEncapsulation.None,
 })
 export class CodxTreeCommentComponent implements OnInit, OnChanges {
+
+  @Input() data:any; // bổ sung 11/03/2024 - comment and push noti to createdBy and owner
   @Input() funcID: string;
   @Input() objectType: string;
   @Input() objectID: string;

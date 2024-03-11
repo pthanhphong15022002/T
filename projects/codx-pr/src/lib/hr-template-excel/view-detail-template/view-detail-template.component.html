@@ -10,13 +10,13 @@
     (changeDataMF)="changeDataMF($event)">
 </codx-detail-tmp>
 <ng-template #header>
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column py-6">
         <div class="form-group">
             <div class="d-flex align-items-center">
                 <div>
                     <codx-label class="text-gray-600" [formModel]="formModel" fiedName="HRTemplateID" [default]="'Tên bảng lương'"></codx-label>
                     <span class="text-gray-600 me-2">:</span>
-                    <span class="fw-bold cursor-pointer text-primary text-decoration-underline">{{data?.hrTemplateName}}</span>
+                    <span class="fw-bold cursor-pointer text-primary text-decoration-underline" (click)="edit()">{{data?.hrTemplateName}}</span>
                 </div>
                 <div class="ms-4">
                     <codx-label class="text-gray-600" [formModel]="formModel" fiedName="HRTemplateID" [default]="'Mã bảng lương'"></codx-label>
@@ -59,7 +59,7 @@
                     <codx-label class="text-gray-600" [formModel]="formModel" fiedName="CreatedBy" [default]="'Người tạo'"></codx-label>
                     <span class="text-gray-600 me-2">:</span>
                     <div class="d-flex align-items-center">
-                        <codx-img [objectId]="data?.createdBy" [objectType]="'HR_Employees'" [width]="25"></codx-img>
+                        <codx-img [objectId]="data?.createdBy" [objectType]="'HR_Employees'" [width]="30"></codx-img>
                         <span class="fw-bold ms-1">{{data?.createdName}}</span>
                     </div>
                 </div>
@@ -72,6 +72,7 @@
                     <codx-attachment 
                         [objectId]="data.templateID" 
                         [objectType]="'AD_ExcelTemplates'"
+                        [formModel]="formModel"
                         [displayThumb]="'simple'" 
                         hideImageUpload="0" 
                         showMessage="0" 
@@ -80,12 +81,12 @@
                         hideUploadBtn="1" 
                         [hideDes]="'1'" 
                         [hideDelete]="'1'" 
-                        [hideMoreF]="'0'">
+                        [hideMoreF]="'1'">
                     </codx-attachment>
                 </ng-container>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group m-0">
             <div class="d-flex align-items-center justify-content-between">
                 <div>
                     <codx-label [formModel]="formModel" name="lblEmployees" [default]="'Danh sách nhân viên'" class="fw-bold text-primary"></codx-label>
@@ -102,7 +103,6 @@
     <ng-container *ngIf="gridColumns && gridColumns?.length > 0 && loaded">
         <codx-gridview-v2 
             #codxGrvV2 
-            [formModel]="formModel"
             [columnsGrid]="gridColumns"
             [entityName]="'HR_Employees'" 
             [hideMoreFunc]="true" 
@@ -125,7 +125,8 @@
         [refType]="formModel?.entityName"
         [TabControl]="tabControl" 
         [formModel]="formModel" 
-        [dataSelected]="data">
+        [dataSelected]="data"
+        [data]="data" [keyField]="'recID'">
     </codx-tabs>
 </ng-template>
 

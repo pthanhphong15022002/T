@@ -72,6 +72,8 @@ export class CodxTabsComponent implements OnInit, OnChanges {
 
   @Input() referType: string = '';
 
+  @Input() data:any; // data nghiệp vụ
+  @Input() keyField:string = ""; // primary key nghiệp vụ
   private all: TabModel[] = [
     {
       name: 'History',
