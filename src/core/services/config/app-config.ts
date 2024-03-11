@@ -18,7 +18,7 @@ export abstract class AppConfig {
   captchaEnable: number;
   externalLogin: ExternalLogin;
   loginHCS: string;
-  //multiService: any;
+  multiService: any;
   serviceMapping: any;
 }
 
