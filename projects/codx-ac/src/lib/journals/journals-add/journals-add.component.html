@@ -104,6 +104,12 @@
         <codx-input field="invoiceForm" [formModel]="dialog.formModel"
           [Group]="formJournal?.form?.formGroup"></codx-input>
       </div>
+      <div [ngStyle]="vllAC105.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}"
+        class="form-group">
+        <codx-label fiedName="InvoiceSeriNo" [formModel]="dialog.formModel"></codx-label>
+        <codx-input field="invoiceSeriNo" [formModel]="dialog.formModel"
+          [Group]="formJournal?.form?.formGroup"></codx-input>
+      </div>
     </div>
   </ng-container>
 </ng-template>
@@ -699,6 +705,14 @@
         </div>
       </div>
     </div>
+
+    <div class="line-around-flex pb-3">
+      <codx-label style="font-size: 15px !important;" default="BUID" class="fw-bold text-primary"></codx-label>
+    </div>
+    <div class="form-group">
+      <codx-label fiedName="BUID" [formModel]="dialog.formModel"></codx-label>
+      <codx-input field="buid" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+    </div>
   </ng-container>
 </ng-template>
 <!-- End: TabRole -->
@@ -709,7 +723,7 @@
   <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
     <button [shortcut]="'alt+s'" [autoClick]="true" id="btnsave" type="button" tab-index=""
       class="btn btn-md btn-light-primary" style="border: 1px solid var(--primary-dark) !important"
-      (keydown.enter)="onSave('save'); $event.preventDefault()" (click)="onSave('save')">
+      (keydown.enter)="onSave(); $event.preventDefault()" (click)="onSave()">
       <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
     </button>
   </div>

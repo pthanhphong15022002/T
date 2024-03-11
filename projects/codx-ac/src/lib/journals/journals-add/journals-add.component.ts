@@ -380,7 +380,8 @@ export class JournalsAddComponent extends UIComponent {
   //#endregion Event
 
   //#region Method
-  onSave(type) {
+  onSave() {
+    this.setPerforData();
     if (this.image?.imageUpload?.item) {
       this.formJournal.form.setValue('hasImage', 1, {
         onlySelf: true,
@@ -435,7 +436,7 @@ export class JournalsAddComponent extends UIComponent {
     }
   }
 
-  savePermission() {
+  savePermission(saveAfter = true) {
     if (
       (this.perCreate && this.oldPerCreate != this.perCreate) ||
       (this.perApproval && this.oldPerApproval != this.perApproval) ||
@@ -478,6 +479,41 @@ export class JournalsAddComponent extends UIComponent {
   //#endregion Method
 
   //#region Function
+  setPerforData() {
+    if (
+      (this.perCreate && this.oldPerCreate != this.perCreate) ||
+      (this.perApproval && this.oldPerApproval != this.perApproval) ||
+      (this.perPost && this.oldPerPost != this.perPost) ||
+      (this.perUnPost && this.oldPerUnPost != this.perUnPost) ||
+      (this.perShare && this.oldPerShare != this.perShare)
+    ) {
+      let creator = this.compareDataArray(this.oldPerCreate, this.perCreate)
+        ? this.perCreate
+        : '';
+      let approval = this.compareDataArray(
+        this.oldPerApproval,
+        this.perApproval
+      )
+        ? this.perApproval
+        : '';
+      let post = this.compareDataArray(this.oldPerPost, this.perPost)
+        ? this.perPost
+        : '';
+      let unPost = this.compareDataArray(this.oldPerUnPost, this.perUnPost)
+        ? this.perUnPost
+        : '';
+      let share = this.compareDataArray(this.oldPerShare, this.perShare)
+        ? this.perShare
+        : '';
+      this.formJournal.form.data['unbounds'] = {
+        creator: creator,
+        approval,
+        postor: post,
+        unPost,
+        share,
+      };
+    }
+  }
 
   openIDimControlForm() {
     let obj = {
