@@ -81,14 +81,21 @@ export class InventoryComponent extends UIComponent {
     private tenant: TenantStore,
   ) {
     super(inject);
+    // this.cache
+    //   .companySetting()
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((res: any) => {
+    //     if (res.length > 0) {
+    //       this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
+    //     }
+    //   });
     this.cache
-      .companySetting()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res.length > 0) {
-          this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
-        }
-      });
+      .viewSettingValues('ACParameters')
+      .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
+      .subscribe((res) => {
+        let dataValue = JSON.parse(res.dataValue);
+        this.baseCurr = dataValue?.BaseCurr || '';
+      })
     this.router.params
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {

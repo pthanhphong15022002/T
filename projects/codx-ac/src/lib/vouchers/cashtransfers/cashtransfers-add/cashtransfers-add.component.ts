@@ -432,7 +432,7 @@ export class CashtransfersAddComponent extends UIComponent {
   }
 
   VATChange(){
-    this.api.exec('AC','CashTranfersBusiness','VATChangedAsync',[this.fmVATInvoice.currentData,this.formCashTranfer.data.fees]).subscribe((res: any) => {
+    this.api.exec('AC','CashTranfersBusiness','VATChangedAsync',[this.fmVATInvoice.currentData,this.formCashTranfer.data]).subscribe((res: any) => {
       if (res) {
         this.fmVATInvoice.currentData = {...res};
         this.isPreventChange = true;

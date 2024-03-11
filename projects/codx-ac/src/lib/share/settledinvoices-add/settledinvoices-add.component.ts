@@ -350,6 +350,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
    * @param type 
    */
   loadData(type) {
+    this.typePay = type;
     let predicates = Array.from(
       this.mapPredicates,
       ([name, value]) => value
