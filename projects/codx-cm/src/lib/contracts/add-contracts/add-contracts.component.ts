@@ -631,7 +631,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   async getAutoNumberSetting() {
     this.cmService
       .genAutoNumberDefault(
-        this.dialog.formModel.funcID,
+        "CM0204",
         this.dialog.formModel.entityName,
         'ContractID'
       )
