@@ -1,13 +1,27 @@
-import { Component, Directive, ElementRef, EventEmitter, HostListener, Input, OnInit, Optional, Output } from '@angular/core';
-import { ApiHttpService, AuthStore, DataRequest, DialogData, DialogRef } from 'codx-core';
-import { log } from 'console';
-import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnInit,
+  Optional,
+  Output,
+} from '@angular/core';
+import {
+  ApiHttpService,
+  AuthStore,
+  DataRequest,
+  DialogData,
+  DialogRef,
+} from 'codx-core';
+import { StepService } from 'projects/codx-dp/src/lib/share-crm/codx-step/step.service';
 import { Observable, finalize, map } from 'rxjs';
 
 @Component({
   selector: 'lib-popup-add-task-calendar',
   templateUrl: './popup-add-task-calendar.component.html',
-  styleUrls: ['./popup-add-task-calendar.component.css']
+  styleUrls: ['./popup-add-task-calendar.component.css'],
 })
 export class PopupAddTaskCalendarComponent implements OnInit {
   @Input() lstParticipants = [];
@@ -60,47 +74,42 @@ export class PopupAddTaskCalendarComponent implements OnInit {
   ) {
     this.user = this.authStore.get();
     this.dialog = dialog;
-    this.taskType =  dt?.data?.taskType;
+    this.taskType = dt?.data?.taskType;
     this.isAdmin = dt?.data?.isAdmin;
   }
 
-  ngOnInit(): void {
-   
-  }
+  ngOnInit(): void {}
 
-  async ngAfterViewInit() {
-
-  }
+  async ngAfterViewInit() {}
   async continue() {
-    this.dialog.close({taskType: this.taskType, dataCheck: this.dataCheck});
+    this.dialog.close({ taskType: this.taskType, dataCheck: this.dataCheck });
   }
 
-  changeType(type){
-    if(this.type != type){
+  changeType(type) {
+    if (this.type != type) {
       this.type = type;
-      let typeCM = this.typeCMs?.find(typeFind => typeFind.entityName == type);
+      let typeCM = this.typeCMs?.find(
+        (typeFind) => typeFind.entityName == type
+      );
       this.dataCheck = null;
       this.dataCombobox = [];
       this.entityName = typeCM?.entityName;
       this.funcID = typeCM?.funcID;
       this.page = 1;
       this.canceLoad = false;
-      this.getDatas(this.entityName,  this.funcID, this.page);
+      this.getDatas(this.entityName, this.funcID, this.page);
     }
   }
 
-  chooseCM(item){
-    if(item && this.dataCheck != item){
+  chooseCM(item) {
+    if (item && this.dataCheck != item) {
       this.dataCheck = item;
       console.log(this.dataCheck);
-      
     }
   }
- 
-  valueChangeCombobox(event, type) {}
-  valueChangeRadio(event){
 
-  }
+  valueChangeCombobox(event, type) {}
+  valueChangeRadio(event) {}
   searchName(e) {}
 
   getDatas(entityName, funcID, page) {
@@ -111,49 +120,54 @@ export class PopupAddTaskCalendarComponent implements OnInit {
     this.requestData.pageSize = 20;
     this.isLoad = true;
     this.fetch().subscribe((res) => {
-     if(res && res?.length > 0){
-      let dataConvert = this.setData(res,entityName);
-      if(dataConvert?.length > 0){
-        this.dataCombobox = [...this.dataCombobox,...dataConvert];
+      if (res && res?.length > 0) {
+        let dataConvert = this.setData(res, entityName);
+        if (dataConvert?.length > 0) {
+          this.dataCombobox = [...this.dataCombobox, ...dataConvert];
+        }
+        this.isLoad = false;
+        console.log(this.dataCombobox);
+      } else {
+        this.canceLoad = true;
+        this.isLoad = false;
       }
-      this.isLoad = false;
-      console.log(this.dataCombobox);      
-     }else{
-      this.canceLoad = true;
-      this.isLoad = false;
-     }
     });
   }
 
-  setData(data, entityName){
+  setData(data, entityName) {
     let dataMap = [];
     let applyProcess = null;
     let isAdminClone = false;
-    if(entityName == "CM_Deals"){
+    if (entityName == 'CM_Deals') {
       applyProcess = true;
-    }else if(entityName == "CM_Customers"){
+    } else if (entityName == 'CM_Customers') {
       applyProcess = false;
     }
-    dataMap = data?.map(item =>{
-      if(entityName != "CM_Customers" && entityName != "CM_Deals"){
+    dataMap = data?.map((item) => {
+      if (entityName != 'CM_Customers' && entityName != 'CM_Deals') {
         applyProcess = item?.applyProcess ? true : false;
       }
-      if(this.isAdmin){
+      if (this.isAdmin) {
         isAdminClone = true;
-      }else{
-        isAdminClone = item?.permissions?.some(x => x.full) || false;
+      } else {
+        isAdminClone = item?.permissions?.some((x) => x.full) || false;
       }
       return {
-        name:item?.customerName || item?.dealName || item?.contractName || item?.leadName || item?.caseName,
-        recID:item?.recID,
-        refID:item?.refID,
-        applyProcess: applyProcess, 
+        name:
+          item?.customerName ||
+          item?.dealName ||
+          item?.contractName ||
+          item?.leadName ||
+          item?.caseName,
+        recID: item?.recID,
+        refID: item?.refID,
+        applyProcess: applyProcess,
         owner: item?.owner,
         full: isAdminClone,
         entityName: entityName,
-      }
-    } );
-    return dataMap;  
+      };
+    });
+    return dataMap;
   }
 
   fetch(): Observable<any[]> {
@@ -174,11 +188,11 @@ export class PopupAddTaskCalendarComponent implements OnInit {
   }
   @HostListener('scroll', ['$event'])
   onScroll(event: Event): void {
-    if(!this.canceLoad){
+    if (!this.canceLoad) {
       const element = event.target as HTMLElement;
       if (element.scrollHeight - element.scrollTop === element.clientHeight) {
         this.page = this.page + 1;
-        this.getDatas(this.entityName,  this.funcID, this.page);
+        this.getDatas(this.entityName, this.funcID, this.page);
       }
     }
   }

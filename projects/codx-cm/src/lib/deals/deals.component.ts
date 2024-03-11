@@ -42,14 +42,13 @@ import { PopupBantDealComponent } from './popup-bant-deal/popup-bant-deal.compon
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 import { PopupAssginDealComponent } from './popup-assgin-deal/popup-assgin-deal.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
-import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 
-import { Internationalization } from '@syncfusion/ej2-base';
 import { ViewDealDetailComponent } from './view-deal-detail/view-deal-detail.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
 import { CurrentStepComponent } from './step-task/current-step/current-step.component';
 import { PopupCostItemsComponent } from './popup-cost-items/popup-cost-items.component';
+import { StepService } from 'projects/codx-dp/src/lib/share-crm/codx-step/step.service';
 
 @Component({
   selector: 'lib-deals',
@@ -1564,40 +1563,41 @@ export class DealsComponent
         );
         return;
       } else {
-        if(data?.processID && ["3", "4", "5", "6"].includes(data?.status )){
-          this.codxCmService.getProcessSettingByRecID(data?.processID).subscribe((res) => {
-            if(res){
-              if(res?.isEdit){
-                this.view.dataService.dataSelected = data;
-                this.view.dataService
-                  .delete([this.view.dataService.dataSelected], true, (opt) =>
-                    this.beforeDel(opt)
-                  )
-                  .subscribe((res) => {
-                    if (res) {
-                      this.view.dataService.onAction.next({
-                        type: 'delete',
-                        data: data,
-                      });
-                      //up kaban
-                      if (this.kanban) {
-                        let money = data.dealValue * data.exchangeRate;
-                        this.renderTotal(data.stepID, 'minus', money);
-                        this.kanban?.refresh();
+        if (data?.processID && ['3', '4', '5', '6'].includes(data?.status)) {
+          this.codxCmService
+            .getProcessSettingByRecID(data?.processID)
+            .subscribe((res) => {
+              if (res) {
+                if (res?.isEdit) {
+                  this.view.dataService.dataSelected = data;
+                  this.view.dataService
+                    .delete([this.view.dataService.dataSelected], true, (opt) =>
+                      this.beforeDel(opt)
+                    )
+                    .subscribe((res) => {
+                      if (res) {
+                        this.view.dataService.onAction.next({
+                          type: 'delete',
+                          data: data,
+                        });
+                        //up kaban
+                        if (this.kanban) {
+                          let money = data.dealValue * data.exchangeRate;
+                          this.renderTotal(data.stepID, 'minus', money);
+                          this.kanban?.refresh();
+                        }
                       }
-                    }
-                    this.changeDetectorRef.detectChanges();
-                  });
-              }else{
-                this.notificationsService.notify(
-                  'Cơ hội không thể xóa khi đã thành công!',
-                  '3'
-                );
+                      this.changeDetectorRef.detectChanges();
+                    });
+                } else {
+                  this.notificationsService.notify(
+                    'Cơ hội không thể xóa khi đã thành công!',
+                    '3'
+                  );
+                }
               }
-              
-            }
-          })
-        }else{
+            });
+        } else {
           this.view.dataService.dataSelected = data;
           this.view.dataService
             .delete([this.view.dataService.dataSelected], true, (opt) =>
@@ -1739,7 +1739,7 @@ export class DealsComponent
       this.releaseCallback.bind(this),
       null,
       null,
-      "CM_Deals", //null thích đổi mãi
+      'CM_Deals', //null thích đổi mãi
       null,
       null,
       exportData

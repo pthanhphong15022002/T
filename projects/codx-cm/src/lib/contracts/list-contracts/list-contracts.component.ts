@@ -19,8 +19,8 @@ import {
 import { AddContractsComponent } from '../add-contracts/add-contracts.component';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { CM_Contracts } from '../../models/cm_model';
-import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { ContractsViewDetailComponent } from '../contracts-view-right/contracts-view-right.component';
+import { StepService } from 'projects/codx-dp/src/lib/share-crm/codx-step/step.service';
 
 @Component({
   selector: 'list-contracts',
@@ -219,7 +219,7 @@ export class ListContractsComponent implements OnInit, OnChanges {
     }
     let contractOutput = await this.openPopupContract(null, 'add', contracts);
     if (contractOutput?.event?.contract) {
-      if(!this.listContract) this.listContract = [];
+      if (!this.listContract) this.listContract = [];
       this.listContract.push(contractOutput?.event?.contract);
       this.isData = this.listContract?.length > 0 ? true : false;
     }
@@ -283,7 +283,7 @@ export class ListContractsComponent implements OnInit, OnChanges {
     }
   }
   //#endregion
-  
+
   //#region open Popup Contract
   async openPopupContract(projectID, action, contract?) {
     let data = {
@@ -312,9 +312,9 @@ export class ListContractsComponent implements OnInit, OnChanges {
     return dataPopupOutput;
   }
   //#endregion
-  
+
   //#region vỉew contract
-  viewContract(contract){
+  viewContract(contract) {
     var obj = {
       contract,
       formModel: this.formModel,

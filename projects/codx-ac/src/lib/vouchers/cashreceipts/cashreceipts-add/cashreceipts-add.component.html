@@ -626,7 +626,7 @@
 
 <!-- Start: More function CashReceipts -->
 <ng-template #templateMore let-data>
-  <codx-mfunc [formModel]="dialog.formModel" (changeDataMF)="changeMF($event,'gridcash')"
+  <codx-mfunc [formModel]="dialog.formModel" [dataItem]="data" (changeDataMF)="changeMF($event,'gridcash')"
     (clickMF)="clickMF($event, data)" type="view"></codx-mfunc>
 </ng-template>
 <!-- End: More function CashReceipts -->

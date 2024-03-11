@@ -224,6 +224,12 @@
             (valueChange)="valueApprChange($event)">
           </codx-input>
         </div>
+        <div class="d-flex flex-row">
+          <codx-input type="checkbox" field="negative" [checked]="newAppr?.negative =='1'"
+            (valueChange)="valueApprChange($event)">
+          </codx-input>
+          <codx-label class="ps-2" name="lblNegative" default="Quyền phủ quyết"></codx-label>
+        </div>
       </div>
     </div>
 

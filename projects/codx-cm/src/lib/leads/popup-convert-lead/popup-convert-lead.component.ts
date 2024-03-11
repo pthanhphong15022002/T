@@ -462,15 +462,17 @@ export class PopupConvertLeadComponent implements OnInit {
           this.customer.districtID = lstDis?.DistrictID;
           this.customer.wardID = lstDis?.WardID;
           this.customer.countryID = lstDis?.CountryID;
-
         } else {
           this.customer.provinceID = null;
           this.customer.districtID = null;
           this.customer.wardID = null;
           this.customer.countryID = null;
         }
-        if(this.customer?.countryID == null || this.customer?.countryID?.trim() == ''){
-          if(this.customer.provinceID){
+        if (
+          this.customer?.countryID == null ||
+          this.customer?.countryID?.trim() == ''
+        ) {
+          if (this.customer.provinceID) {
             let province = await firstValueFrom(
               this.api.execSv<any>(
                 'BS',
@@ -809,27 +811,36 @@ export class PopupConvertLeadComponent implements OnInit {
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
-      var result = event.e?.data;
+      var result = event.e;
       var field = event.data;
-      switch (field.dataType) {
-        case 'D':
-          result = event.e?.data.fromDate;
-          break;
-        case 'P':
-        case 'R':
-        case 'A':
-        case 'L':
-        case 'TA':
-        case 'PA':
-          result = event.e;
-          break;
-        case 'C':
-          result = event?.e;
-          var type = event?.type ?? '';
-          var contact = event?.result ?? '';
-          this.convertToFieldDp(contact, type);
-          break;
+
+      if (field.dataType == 'C') {
+        let type = event?.type ?? '';
+        let contact = event?.result ?? '';
+        this.convertToFieldDp(contact, type);
       }
+
+      // var result = event.e?.data;
+      // var field = event.data;
+      // switch (field.dataType) {
+      //   case 'D':
+      //     result = event.e?.data.fromDate;
+      //     break;
+      //   case 'P':
+      //   case 'R':
+      //   case 'A':
+      //   case 'L':
+      //   case 'TA':
+      //   case 'PA':
+      //     result = event.e;
+      //     break;
+      //   case 'C':
+      //     result = event?.e;
+      //     var type = event?.type ?? '';
+      //     var contact = event?.result ?? '';
+      //     this.convertToFieldDp(contact, type);
+      //     break;
+      // }
       var index = this.listInstanceSteps.findIndex(
         (x) => x.recID == field.stepID
       );

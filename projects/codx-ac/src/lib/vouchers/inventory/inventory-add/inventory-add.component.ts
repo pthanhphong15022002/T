@@ -88,7 +88,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    console.log(this.formVouchers);
+    if (this.formVouchers?.data?.coppyForm) this.formVouchers.data._isEdit = true; //? test copy để tạm
   }
 
   onAfterInitForm(event) {

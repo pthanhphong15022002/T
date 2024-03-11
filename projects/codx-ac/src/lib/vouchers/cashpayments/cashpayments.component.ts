@@ -30,7 +30,7 @@ import {
   fmVATInvoices,
 } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
 import { Router } from '@angular/router';
@@ -95,10 +95,18 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res.length > 0) {
-          this.baseCurr = res[0].baseCurr;
           this.legalName = res[0].legalName;
         }
       });
+
+    this.cache
+      .viewSettingValues('ACParameters')
+      .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
+      .subscribe((res) => {
+        let dataValue = JSON.parse(res.dataValue);
+        this.baseCurr = dataValue?.BaseCurr || '';
+      })
+      
     this.router.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       this.journalNo = params?.journalNo;
     });

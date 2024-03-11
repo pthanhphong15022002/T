@@ -35,10 +35,6 @@ import {
 import { FormGroup } from '@angular/forms';
 import { StepService } from '../step.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { TM_Tasks } from '../../codx-tasks/model/task.model';
-import { AssignTaskModel } from '../../../models/assign-task.model';
-import { CodxEmailComponent } from '../../codx-email/codx-email.component';
-import { AssignInfoComponent } from '../../assign-info/assign-info.component';
 import { CodxTypeTaskComponent } from '../codx-step-common/codx-type-task/codx-type-task.component';
 import {
   Progress,
@@ -46,16 +42,8 @@ import {
 } from '../codx-progress/codx-progress.component';
 import { CodxViewTaskComponent } from '../codx-view-task/codx-view-task.component';
 import { CodxAddGroupTaskComponent } from '../codx-popup-group/codx-add-group-task.component';
-import { PopupAddMeetingComponent } from '../../codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
-import { CodxAddBookingCarComponent } from '../../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
 import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
-import {
-  CO_Meetings,
-  CO_Permissions,
-} from '../../codx-tmmeetings/models/CO_Meetings.model';
-import { CodxBookingService } from '../../codx-booking/codx-booking.service';
-import { CodxShareService } from '../../../codx-share.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CodxViewApproveComponent } from '../codx-step-common/codx-view-approve/codx-view-approve.component';
@@ -67,6 +55,18 @@ import { Location } from '@angular/common';
 import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
 import { PopupCustomFieldComponent } from '../../codx-input-custom-field/codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
 import { CustomFieldService } from '../../codx-input-custom-field/custom-field.service';
+import { CodxBookingService } from 'projects/codx-share/src/lib/components/codx-booking/codx-booking.service';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import {
+  CO_Meetings,
+  CO_Permissions,
+} from 'projects/codx-share/src/lib/components/codx-tmmeetings/models/CO_Meetings.model';
+import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
+import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
+import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
+import { PopupAddMeetingComponent } from 'projects/codx-share/src/lib/components/codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
+import { CodxAddBookingCarComponent } from 'projects/codx-share/src/lib/components/codx-booking/codx-add-booking-car/codx-add-booking-car.component';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 @Component({
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
@@ -1044,7 +1044,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     });
   }
 
-  async addContract(task: DP_Instances_Steps_Tasks, groupTask){
+  async addContract(task: DP_Instances_Steps_Tasks, groupTask) {
     let data = {
       action: 'add',
       type: 'task',
@@ -1376,7 +1376,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             null,
             this.isStart
           );
-          if (taskContract == "not data") {
+          if (taskContract == 'not data') {
             task.objectLinked = null;
             this.api
               .exec<any>(
@@ -1390,8 +1390,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                   this.changeDetectorRef.markForCheck();
                 }
               });
-
-          }else if (taskContract?.recID) {
+          } else if (taskContract?.recID) {
             this.api
               .exec<any>(
                 'DP',
@@ -1404,8 +1403,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                   this.changeTaskEdit(res, res?.taskGroupID);
                 }
               });
-          } 
-        }else{
+          }
+        } else {
           this.notiService.notify('Hợp đồng không tồn tại', '3');
           this.startTask(task, task?.taskGroupID);
         }

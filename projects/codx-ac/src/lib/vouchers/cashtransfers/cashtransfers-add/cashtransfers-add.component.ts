@@ -355,6 +355,10 @@ export class CashtransfersAddComponent extends UIComponent {
       if (res) {
         this.isPreventChange = true;
         this.formCashTranfer.setValue('accountID',(res?.data?.accountID),{});
+        this.formCashTranfer.setValue('currencyID',(res?.data?.currencyID),{});
+        this.formCashTranfer.setValue('exchangeRate',(res?.data?.exchangeRate),{});
+        this.formCashTranfer.setValue('multi',(res?.data?.multi),{});
+        this.formCashTranfer.setValue('transferAmt2',(res?.data?.transferAmt2),{});
         this.isPreventChange = false;
         this.preData = {...this.formCashTranfer?.data};
         this.detectorRef.detectChanges();
@@ -374,6 +378,10 @@ export class CashtransfersAddComponent extends UIComponent {
       if (res) {
         this.isPreventChange = true;
         this.formCashTranfer.setValue('offsetAcctID',(res?.data?.offsetAcctID),{});
+        this.formCashTranfer.setValue('currencyID',(res?.data?.currencyID),{});
+        this.formCashTranfer.setValue('exchangeRate',(res?.data?.exchangeRate),{});
+        this.formCashTranfer.setValue('multi',(res?.data?.multi),{});
+        this.formCashTranfer.setValue('transferAmt2',(res?.data?.transferAmt2),{});
         this.isPreventChange = false;
         this.preData = {...this.formCashTranfer?.data};
         this.detectorRef.detectChanges();
@@ -424,7 +432,7 @@ export class CashtransfersAddComponent extends UIComponent {
   }
 
   VATChange(){
-    this.api.exec('AC','CashTranfersBusiness','VATChangedAsync',[this.fmVATInvoice.currentData,this.formCashTranfer.data.fees]).subscribe((res: any) => {
+    this.api.exec('AC','CashTranfersBusiness','VATChangedAsync',[this.fmVATInvoice.currentData,this.formCashTranfer.data]).subscribe((res: any) => {
       if (res) {
         this.fmVATInvoice.currentData = {...res};
         this.isPreventChange = true;

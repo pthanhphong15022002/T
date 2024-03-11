@@ -395,7 +395,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
     let model : any = new IV_TransfersLines();
     let oLine = Util.camelizekeyObj(model);
     oLine.transID = this.formWareHouse.data.recID;
-    oLine.idiM41 = this.formWareHouse.data.fromWHID;
+    oLine.idiM4 = this.formWareHouse.data.fromWHID;
     oLine.idiM42 = this.formWareHouse.data.toWHID;
     oLine.reasonID = this.formWareHouse.data.reasonID;
     let indexReason = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value);
@@ -423,8 +423,8 @@ export class WarehouseTransfersAddComponent extends UIComponent {
       if (this.eleGridReceipt && this.eleGridReceipt.rowDataSelected) {
         this.eleGridReceipt.rowDataSelected = null;
       }
-      if(this.eleGridIssue.isSaveOnClick) this.eleGridIssue.isSaveOnClick = false;
-      if(this.eleGridReceipt.isSaveOnClick) this.eleGridReceipt.isSaveOnClick = false;
+      if(this.eleGridIssue && this.eleGridIssue.isSaveOnClick) this.eleGridIssue.isSaveOnClick = false;
+      if(this.eleGridReceipt && this.eleGridReceipt.isSaveOnClick) this.eleGridReceipt.isSaveOnClick = false;
       setTimeout(() => {
         let element = document.getElementById('btnAddVou'); //? focus lại nút thêm dòng
         element.focus();

@@ -89,9 +89,10 @@
                     </div>
                 </div>
 
-                <ng-container *ngIf="(activityType == 'Approve' || activityType == 'Check' || activityType == 'Sign') && listUses.length > 0">
-                    <div class="d-flex align-items-center justify-content-between mt-4">
-                        <div class="d-flex align-items-center mt-4" *ngFor="let item of vllBP013.datas , let i = index">
+                <ng-container *ngIf="(activityType == 'Approve' || activityType == 'Check' || activityType == 'Sign') && listUses?.length > 1">
+                    <div class="d-flex align-items-center justify-content-between mt-4" >
+                        
+                        <div class="d-flex align-items-center mt-4" *ngFor="let item of vllBP013?.datas , let i = index">
                             <input class="form-check-input" [id]="'radioAttachApprovel' + i" type="radio" name="radioAttachApprovel" [value]="item.value" [checked]="item.value == data?.settings?.approveMode" (change)="valueChangeRadio($event)">
                             <label class="form-check-label ms-2 fw-normal" [for]="'radioAttachApprovel' + i">
                                 {{item.text}}
@@ -144,7 +145,7 @@
             </div>
             <div class="d-flex flex-column border-top mt-4 pt-4 ">
                 <div class="d-flex align-items-center justify-content-between mt-2 pb-2">
-                    <codx-label formName="fmBPFieldGrid" fiedName="lblTaskExport" default="Xuất khẩu nhập liệu" class="fw-bold"></codx-label>
+                    <codx-label formName="fmBPFieldGrid" fiedName="lblTaskExport" default="Biểu mẫu" class="fw-bold"></codx-label>
                     <codx-input type="switch" field="isTemplate" [crrValue]="data?.settings?.isTemplate" (valueChange)="valueChangeSetting($event)"></codx-input>
                 </div>
                 <ng-container *ngIf="data?.settings?.template?.templateID , else tmpTemplate">
@@ -235,12 +236,11 @@
         </ng-container>
         <ng-container *ngIf="activityType == 'Approve' || activityType == 'Check' || activityType == 'Sign'">
             <div class="d-flex flex-column border-top mt-4 pt-4">
-                <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentApproval'" [default]="'Tài liệu duyệt'" class="fw-bold" *ngIf="activityType == 'Approve'"></codx-label>
-                <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentCheck'" [default]="'Tài liệu kiểm tra'" class="fw-bold" *ngIf="activityType == 'Check'"></codx-label>
-                <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentSign'" [default]="'Tài liệu ký số'" class="fw-bold" *ngIf="activityType == 'Sign'"></codx-label>
-                <div class="d-flex align-items-center justify-content-end px-4">
-                    <button type="button" class="btn btn-light mt-4 me-1" (click)="openFormFileProcess()"><i class="icon-attach_file"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment1" default="Chọn từ quy trình"></codx-label></button>
-                    <!-- <button type="button" class="btn btn-light w-100 mt-4 ms-1" (click)="openAttach2()"><i class="icon-attach_file"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment2" default="Đính kèm mới"></codx-label></button> -->
+                <div class="d-flex align-items-center justify-content-between">
+                    <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentApproval'" [default]="'Tài liệu duyệt'" class="fw-bold" *ngIf="activityType == 'Approve'"></codx-label>
+                    <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentCheck'" [default]="'Tài liệu kiểm tra'" class="fw-bold" *ngIf="activityType == 'Check'"></codx-label>
+                    <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentSign'" [default]="'Tài liệu ký số'" class="fw-bold" *ngIf="activityType == 'Sign'"></codx-label>
+                    <button type="button" class="btn btn-outline-secondary" (click)="openFormFileProcess()"><i class="icon-attach_file"></i></button>
                 </div>
                 <div class="mt-6">
                     

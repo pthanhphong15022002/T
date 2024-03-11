@@ -67,6 +67,7 @@ export class BP_Processes_Steps {
   settings: string;
   stepType:string;
   permissions: any;
+  child:any
 }
 export class BP_ProcessRevisions {
   recID: string;

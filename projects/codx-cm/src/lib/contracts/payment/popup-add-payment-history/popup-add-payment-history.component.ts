@@ -3,7 +3,7 @@ import { DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { CM_Contracts, CM_ContractsPayments } from '../../../models/cm_model';
 import { CodxCmService } from '../../../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
-import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
+import { StepService } from 'projects/codx-dp/src/lib/share-crm/codx-step/step.service';
 
 @Component({
   selector: 'lib-popup-add-payment-history',
@@ -69,8 +69,14 @@ export class PopupAddPaymentHistoryComponent {
       this.setPaymentHistory();
     }
     if (this.action == 'edit') {
-      this.percent =  Number(((this.paymentHistory.paidAmt / this.paymentHistory?.scheduleAmt) * 100).toFixed(1));
-      this.remainAmtOld = this.paymentHistory.paidAmt + this.paymentHistory?.remainAmt;
+      this.percent = Number(
+        (
+          (this.paymentHistory.paidAmt / this.paymentHistory?.scheduleAmt) *
+          100
+        ).toFixed(1)
+      );
+      this.remainAmtOld =
+        this.paymentHistory.paidAmt + this.paymentHistory?.remainAmt;
     }
     if (this.action == 'copy') {
     }
@@ -90,39 +96,43 @@ export class PopupAddPaymentHistoryComponent {
     this.paymentHistory.transID = (Math.random() * 10000000000).toFixed(0);
   }
 
-  clickTesk(event){
+  clickTesk(event) {
     this[event] = true;
   }
 
-  checkRemaining(){
-    if(this.action == 'add'){
-      this.paymentHistory.remainAmt -=  this.paymentHistory.paidAmt;
-    }else{
-      this.paymentHistory.remainAmt = this.remainAmtOld - this.paymentHistory.paidAmt;
+  checkRemaining() {
+    if (this.action == 'add') {
+      this.paymentHistory.remainAmt -= this.paymentHistory.paidAmt;
+    } else {
+      this.paymentHistory.remainAmt =
+        this.remainAmtOld - this.paymentHistory.paidAmt;
     }
   }
 
   valueChangePercent(e) {
-    if(this.percentChanged){
+    if (this.percentChanged) {
       this.percent = e?.value;
-     this.paymentHistory.paidAmt = Number(
-      ((this.percent * this.paymentHistory?.scheduleAmt) / 100).toFixed(2)
-    );
+      this.paymentHistory.paidAmt = Number(
+        ((this.percent * this.paymentHistory?.scheduleAmt) / 100).toFixed(2)
+      );
       this.checkRemaining();
       this.valueChanged = false;
     }
   }
 
-
   valueChangeText(event) {
     this.paymentHistory[event?.field] = event?.data;
     if (event?.field == 'paidAmt' && this.valueChanged) {
-      this.percent = Number(((this.paymentHistory.paidAmt / this.paymentHistory?.scheduleAmt) * 100).toFixed(1));
+      this.percent = Number(
+        (
+          (this.paymentHistory.paidAmt / this.paymentHistory?.scheduleAmt) *
+          100
+        ).toFixed(1)
+      );
       this.checkRemaining();
       this.percentChanged = false;
     }
   }
-
 
   valueChangeCombobox(event) {
     this.paymentHistory[event?.field] = event?.data;

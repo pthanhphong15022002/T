@@ -56,6 +56,7 @@ import { AC_VATInvoices } from '../../../models/AC_VATInvoices.model';
 import { AC_CashPaymentsLines } from '../../../models/AC_CashPaymentsLines.model';
 import { SuggestionAdd } from '../../../share/suggestion-add/suggestion-add.component';
 import { CodxTabsComponent } from 'projects/codx-share/src/lib/components/codx-tabs/codx-tabs.component';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 @Component({
   selector: 'lib-cashpayments-add',
   templateUrl: './cashpayments-add.component.html',
@@ -112,7 +113,6 @@ export class CashPaymentAddComponent extends UIComponent {
   refNo: any;
   refTotalAmt: any = 0;
   preData: any;
-  isload: any = false;
   totalAmount:any = 0;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
@@ -120,8 +120,10 @@ export class CashPaymentAddComponent extends UIComponent {
     private acService: CodxAcService,
     private notification: NotificationsService,
     private roundService: RoundService,
+    private ngxLoader: NgxUiLoaderService,
     @Optional() dialog?: DialogRef,
-    @Optional() dialogData?: DialogData
+    @Optional() dialogData?: DialogData,
+    
   ) {
     super(inject);
     this.dialog = dialog;
@@ -785,16 +787,22 @@ export class CashPaymentAddComponent extends UIComponent {
    * @returns
    */
   onSaveVoucher(type) {
+    this.ngxLoader.start();
     this.formCashPayment.save(null, 0, '', '', false, { allowCompare: false })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if (!res) return;
+        let isError = false;
+        if (!res) isError = true;
         if (res.hasOwnProperty('save')) {
-          if (res.save.hasOwnProperty('data') && !res.save.data) return;
+          if (res.save.hasOwnProperty('data') && !res.save.data) isError = true;
         }
         if (res.hasOwnProperty('update')) {
-          if (res.update.hasOwnProperty('data') && !res.update.data) return;
+          if (res.update.hasOwnProperty('data') && !res.update.data) isError = true;
         }
+        if(isError){
+          this.ngxLoader.stop();
+          return;
+        } 
         if ((this.eleGridCashPayment || this.eleGridCashPayment?.isEdit) && this.elementTabDetail?.selectingID == '0') {
           this.eleGridCashPayment.saveRow((res: any) => { //? save lưới trước
             if (res) {
@@ -826,7 +834,6 @@ export class CashPaymentAddComponent extends UIComponent {
    * lưu chứng từ
    */
   saveVoucher(type) {
-    this.isload = true;
     this.api
       .exec('AC', 'CashPaymentsBusiness', 'UpdateVoucherAsync', [
         this.formCashPayment.data,
@@ -834,7 +841,6 @@ export class CashPaymentAddComponent extends UIComponent {
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        this.isload = false;
         if (res?.update) {
           this.dialog.dataService.update(res.data).subscribe();
           if (type == 'save') {
@@ -866,6 +872,7 @@ export class CashPaymentAddComponent extends UIComponent {
         if (this.eleGridCashPayment && this.eleGridCashPayment?.isSaveOnClick) this.eleGridCashPayment.isSaveOnClick = false;
         if (this.eleGridSettledInvoices && this.eleGridSettledInvoices.isSaveOnClick) this.eleGridSettledInvoices.isSaveOnClick = false;
         if (this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false;
+        this.ngxLoader.stop();
       });
   }
 
@@ -1353,7 +1360,7 @@ export class CashPaymentAddComponent extends UIComponent {
     if (indexObject > -1) {
       oLine.objectName = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName + ' - ';
     }
-    oLine.lineID = this.eleGridCashPayment?.rowDataSelected?.recID || Util.uid();
+    oLine.lineID = this.eleGridCashPayment?.rowDataSelected?.recID || oLine.transID;
     oLine.journalNo = this.formCashPayment.data.journalNo;
     this.eleGridVatInvoices.addRow(oLine, this.eleGridVatInvoices.dataSource.length);
   }

@@ -10,7 +10,6 @@ import {
   Input,
   OnInit,
   SimpleChanges,
-  TemplateRef,
   ViewChild,
   ChangeDetectorRef,
   Output,
@@ -21,7 +20,6 @@ import {
   ApiHttpService,
   CacheService,
   CallFuncService,
-  DialogModel,
   DialogRef,
   FormModel,
   AuthStore,
@@ -29,14 +27,12 @@ import {
   SidebarModel,
   CodxService,
 } from 'codx-core';
-import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
 import { InstancesComponent } from '../instances.component';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ViewJobComponent } from '../../dynamic-process/popup-add-dynamic-process/step-task/view-step-task/view-step-task.component';
-import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
 import { StagesDetailComponent } from './stages-detail/stages-detail.component';
-import { ActivatedRoute, Route } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { CodxTabsComponent } from 'projects/codx-share/src/lib/components/codx-tabs/codx-tabs.component';
+import { CodxViewTaskComponent } from '../../share-crm/codx-step/codx-view-task/codx-view-task.component';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -729,7 +725,11 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   checkCompletedInstance(instanceStatus: any) {
-    if (instanceStatus == '1' || instanceStatus == '2' || instanceStatus == '15' ) {
+    if (
+      instanceStatus == '1' ||
+      instanceStatus == '2' ||
+      instanceStatus == '15'
+    ) {
       this.deleteListReason(this.listSteps);
     }
   }
@@ -918,13 +918,12 @@ export class InstanceDetailComponent implements OnInit {
       this.progress = '0';
       return;
     }
-    if(["3","4"].includes(this.dataSelect?.status) ){
+    if (['3', '4'].includes(this.dataSelect?.status)) {
       this.progress = '100';
       return;
     }
 
-    if(this.dataSelect?.status == "2"){
-
+    if (this.dataSelect?.status == '2') {
     }
 
     if (event) {
@@ -943,17 +942,22 @@ export class InstanceDetailComponent implements OnInit {
         : null;
       this.progress = index > 0 ? step?.instanceProgress.toString() : '0';
     } else {
-      let index = listStepConvert.findIndex((step) => step.stepID == this.dataSelect?.stepID);
-      if(index <0){
-        this.progress = "0";
-      }else{
+      let index = listStepConvert.findIndex(
+        (step) => step.stepID == this.dataSelect?.stepID
+      );
+      if (index < 0) {
+        this.progress = '0';
+      } else {
         let conut = listStepConvert?.length;
-        if(conut > 0){
-          let a = parseFloat((100/conut).toFixed(2));
-          if(listStepConvert[index]?.progress == 0){
-            this.progress = (a*index).toFixed(2);
-          }else{
-            this.progress = (a*index + (listStepConvert[index]?.progress * a)/100)?.toFixed(2);
+        if (conut > 0) {
+          let a = parseFloat((100 / conut).toFixed(2));
+          if (listStepConvert[index]?.progress == 0) {
+            this.progress = (a * index).toFixed(2);
+          } else {
+            this.progress = (
+              a * index +
+              (listStepConvert[index]?.progress * a) / 100
+            )?.toFixed(2);
           }
         }
       }

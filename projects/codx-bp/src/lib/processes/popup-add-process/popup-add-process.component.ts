@@ -366,6 +366,7 @@ export class PopupAddProcessComponent {
       totalControl: null,
     });
     form.permissions = [{objectID: this.user?.userID, objectType: 'U'}]
+    stage.child = [form]
     lstStep.push(stage, form);
     this.data.steps = lstStep;
     this.cache.message('BP001').subscribe((item) => {
@@ -950,9 +951,10 @@ export class PopupAddProcessComponent {
     let i = 0;
     let result2 = [];
     let result = JSON.parse(JSON.stringify(this.data));
-
-    result.steps = result.steps.filter(x=>x.activityType == "Stage");
-    result.steps.forEach((elm: any) => {
+    let count = result.steps.length;
+    let result_1 = result.steps.filter(x=>x.activityType == "Stage");
+  
+    result_1.forEach((elm: any) => {
       elm.stepNo = i;
       i++;
       result2.push(elm);
@@ -969,6 +971,20 @@ export class PopupAddProcessComponent {
       if (typeof elm.settings === 'object') elm.settings = JSON.stringify(elm.settings);
     });
 
+    if(result2.length < count)
+    {
+      let result_2 = result.steps.filter(x=>x.activityType != "Stage");
+      result_2.forEach((elm: any) => {
+        if(!result2.some(x=>x.recID == elm.recID))
+        {
+          elm.stepNo = i;
+          i++;
+          result2.push(elm);
+          if (typeof elm.settings === 'object') elm.settings = JSON.stringify(elm.settings);
+        }
+      });
+    }
+   
     result.steps = result2;
     op.data = result;
     return true;
@@ -1012,7 +1028,6 @@ export class PopupAddProcessComponent {
   {
     let data = datas.steps;
     this.countStage = data.length;
-    debugger
     data = data.sort((a, b) => a.stepNo - b.stepNo);
     var listStage = data.filter(x=>x.activityType == 'Stage');
     listStage.forEach(element => {
@@ -1022,6 +1037,7 @@ export class PopupAddProcessComponent {
           var index2 = data.findIndex(x=>x.recID == element2.recID);
           if(index2>=0)
           {
+            //element2.extendInfo = data[index2]?.extendInfo;
             data[index2]= element2;
           }
         });
