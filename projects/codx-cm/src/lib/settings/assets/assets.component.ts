@@ -230,11 +230,11 @@ export class AssetsComponent
   }
 
   beforeDel(opt: RequestOption) {
-    opt.service = 'AM';
-    opt.assemblyName = 'ERM.Business.AM';
-    opt.className = 'AssetsBusiness';
-    opt.methodName = 'DeleteAsync';
-    opt.data = [this.itemSelected];
+    // opt.service = 'AM';
+    // opt.assemblyName = 'ERM.Business.AM';
+    // opt.className = 'AssetsBusiness';
+    // opt.methodName = 'DeleteAsync';
+    // opt.data = [this.itemSelected];
     return true;
   }
 }
