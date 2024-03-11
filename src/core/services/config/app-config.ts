@@ -18,8 +18,8 @@ export abstract class AppConfig {
   captchaEnable: number;
   externalLogin: ExternalLogin;
   loginHCS: string;
-  serviceMapping: any;
   multiService: any;
+  serviceMapping: any;
 }
 
 export abstract class ExternalLogin {

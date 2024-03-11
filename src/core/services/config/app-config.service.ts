@@ -35,8 +35,8 @@ export class AppConfigService extends AppConfig {
         environment.captchaKey = res.captchaKey;
         environment.captchaEnable = res.captchaEnable;
         environment.loginHCS = res.loginHCS;
-        environment.serviceMapping = res.serviceMapping;
         environment.multiService = res.multiService;
+        environment.serviceMapping = res.serviceMapping;
         this.tenantStore.initDefault();
       })
     );

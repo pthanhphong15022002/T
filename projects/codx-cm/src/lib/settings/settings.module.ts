@@ -49,7 +49,7 @@ const routes: Routes = [
         component: BusinessLineComponent,
       },
       {
-        path: 'assets/:funcID',
+        path: 'metermonitor/:funcID',
         component: AssetsComponent,
       },
     ],
