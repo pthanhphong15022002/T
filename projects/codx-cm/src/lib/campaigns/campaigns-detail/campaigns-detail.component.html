@@ -411,6 +411,8 @@
           [TabControl]="tabControl"
           [objectID]="dataSelected.recID"
           [funcID]="formModel?.funcID"
+          [data]="dataSelected" 
+          [keyField]="'recID'"
         ></codx-tabs>
       </ng-template>
     </codx-detail-tmp>

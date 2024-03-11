@@ -8,7 +8,7 @@
 <ng-template #expand>
   <codx-tabs #tabModel [entityName]="'PM_Projects'" [objectID]="data?.recID" [funcID]="formModel?.funcID"
     [dataTree]="[]" [TabControl]="tabControl" [transID]="data?.recID" [dataTree]="data?.tasks ? data?.tasks : []"
-    [approveStatus]="data?.approveStatus" [addPermissions]="listFilePermission" [isEdit]="true"></codx-tabs>
+    [approveStatus]="data?.approveStatus" [addPermissions]="listFilePermission" [isEdit]="true" [data]="data" [keyField]="'recID'"></codx-tabs>
 </ng-template>
 <ng-template #tabGeneralInfo>
   <ng-container *ngIf="form && form?.formGroup">

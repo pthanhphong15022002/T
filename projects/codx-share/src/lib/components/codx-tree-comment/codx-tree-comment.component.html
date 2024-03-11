@@ -2,6 +2,7 @@
     <ng-container *ngIf="addNew">
         <div class="tree-footer">
             <codx-comment-history
+                [dataBusiness]="data"
                 [new]="true"
                 [dVll]="dVll"
                 [vllIcon]="vllIcon"
@@ -26,6 +27,7 @@
 <ng-template #NodeHistory let-item>
     <div class="c1 task-his" [attr.dt]="setDicData(item)">
         <codx-comment-history
+            [dataBusiness]="data"
             [data]="item"
             [dVll]="dVll"
             [vllIcon]="vllIcon"
@@ -46,6 +48,7 @@
         </ng-container>
         <ng-container *ngIf="item.showReply">
             <codx-comment-history
+                [dataBusiness]="data"
                 [new]="true"
                 [funcID]="funcID"
                 [actionType]="actionType"
