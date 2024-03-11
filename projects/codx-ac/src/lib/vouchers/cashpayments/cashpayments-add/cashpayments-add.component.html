@@ -205,7 +205,7 @@
           <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
         </div>
       </button>
-      <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" [disabled]="isload" type="button"
+      <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" type="button"
         class="btn btn-md btn-primary me-2" (keydown.enter)="onSaveVoucher('saveadd'); $event.preventDefault()"
         (click)="onSaveVoucher('saveadd')">
         <div class="d-flex align-items-center">
@@ -213,7 +213,7 @@
           <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
         </div>
       </button>
-      <button [shortcut]="'alt+s'" [autoClick]="true" tab-index="16" id="btnsave" type="button" [disabled]="isload"
+      <button [shortcut]="'alt+s'" [autoClick]="true" tab-index="16" id="btnsave" type="button"
         class="btn btn-md btn-light-primary" style="border: 1px solid var(--primary-dark) !important"
         (keydown.enter)="onSaveVoucher('save'); $event.preventDefault()" (click)="onSaveVoucher('save')">
         <div class="d-flex align-items-center">
@@ -684,7 +684,7 @@
           <div class="d-flex align-items-center">
             <div>
               <button style="border: 1px solid !important" tab-index="12" id="btnAddSet" tabindex="-1"
-                class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="onAddLine();$event.preventDefault()"
+                class="btn btn-sm btn-light-primary" (keydown.enter)="onAddLine();$event.preventDefault()"
                 (click)="onAddLine()">
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label [formModel]="dialog.formModel" fiedName="lblAddSettledInvoice1"
