@@ -1,6 +1,6 @@
 <div class="d-flex flex-column justify-content-between w-100 h-100 py-4 bg-white w-400px">
     <div class="d-flex align-items-center justify-content-between px-4">
-        <div class="d-flex align-items-center" *ngIf="type == 'edit'; else elseA">
+        <div class="d-flex align-items-center" *ngIf="(type == 'edit' || activityType == 'Stage'); else elseA">
             <i class="icon-24 me-2" [ngClass]="vllDefault?.icon" [style.color]="vllDefault?.color"></i>
             <span class="fs-5 fw-bold">{{vllDefault?.text}}</span>
         </div>
