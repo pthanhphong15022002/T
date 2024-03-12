@@ -58,11 +58,8 @@ export const environment = {
   },
   multiService: {
     active: false,
-    mongo: 'BG,BI,BP,CM,CO,DM,DP,EI,EP,ES,FD,OD,OM,PM,RP,SV,WP',
-    postgre: 'AC,AM,AR,BS,HR,IV,PS,PR,SM,SYS,Tenant,TM,TR,WR',
-    reportMongo: 'RPTBP,RPTCM,RPTDM,RPTDP,RPTEP,RPTES,RPTOD,RPTOM,RPTRP,RPTSV',
-    reportPostgre:
-      'RPTAC,RPTAD,RPTAM,RPTHR,RPTIV,RPTSM,RPTTenant,RPTTM,RPTPR,RPTTR',
+    mapping:
+      'BG,BI,BP,CM,CO,DM,DP,EI,EP,ES,FD,OD,OM,PM,RP,SV,WP|sv1;AC,AM,AR,BS,HR,IV,PS,PR,SM,SYS,Tenant,TM,TR,WR|sv2',
   },
   serviceMapping: {
     RP: {
