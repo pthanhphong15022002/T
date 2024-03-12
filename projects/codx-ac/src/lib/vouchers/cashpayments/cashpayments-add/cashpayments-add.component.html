@@ -634,11 +634,11 @@
         [formName]="journal.entryMode == '1'? fmCashpaymentLine.formName : fmCashpaymentLineOne.formName"
         idField="recID" [hideMoreFunc]="formCashPayment.data?.isReadOnly ? true : false"
         [gridViewName]="journal.entryMode == '1' ? fmCashpaymentLine.gridViewName : fmCashpaymentLineOne.gridViewName"
-        (beforeSaveRow)="beforeSaveRowCashPayment($event)" [entityName]="fmCashpaymentLine.entityName"
-        predicates="TransID=@0" [dataValues]="formCashPayment?.data?.recID" [templateMore]="templateMore" service="AC"
-        [editOnClick]="formCashPayment.data?.isReadOnly ? false : true" (gridInit)="beforeInitGridCashpayments($event)"
-        rowNoField="rowNo" (eventAction)="onActionGridCashpayment($event)"
-        (actionCompleted)="onActionGridCashpayment($event)" (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
+        [entityName]="fmCashpaymentLine.entityName" predicates="TransID=@0" [dataValues]="formCashPayment?.data?.recID"
+        service="AC" [editOnClick]="formCashPayment.data?.isReadOnly ? false : true" [templateMore]="templateMore"
+        (gridInit)="beforeInitGridCashpayments($event)" rowNoField="rowNo"
+        (eventAction)="onActionGridCashpayment($event)" (actionCompleted)="onActionGridCashpayment($event)"
+        (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
       <ng-container *ngIf="!formCashPayment.data?.isReadOnly">
         <div #btnRef class="btn-addline">
           <div class="d-flex align-items-center">
@@ -652,9 +652,8 @@
               </button>
             </div>
             <div *ngIf="formCashPayment?.data?.subType == '3' || formCashPayment?.data?.subType == '4'" class="ms-2">
-              <button style="border: 1px solid !important" tab-index="12"
-                class="btn btn-sm btn-light-primary" (keydown.enter)="onAddLine(); $event.preventDefault()"
-                (click)="onAddLine()">
+              <button style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary"
+                (keydown.enter)="onAddLine(); $event.preventDefault()" (click)="onAddLine()">
                 <i class="icon-i-receipt icon-16"></i>
                 <codx-label *ngIf="formCashPayment.data.subType == '3'" [formModel]="dialog.formModel"
                   fiedName="lblAddVat" default="Thêm đề nghị tạm ứng"></codx-label>
