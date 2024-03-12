@@ -28,7 +28,7 @@
 </ng-template>
 
 <ng-template #body>
-  <div class="d-flex align-items-center w-100 h-100 bp-mw-accordion-a overflow-auto" *ngIf="vllBP002">
+  <div class="d-flex align-items-center w-100 h-100 bp-mw-accordion-a overflow-auto " *ngIf="vllBP002">
     <div
       cdkDropList
       #menuList="cdkDropList"
@@ -81,14 +81,14 @@
       >
         <ng-container *ngTemplateOutlet="form ; context: { $implicit: table[0].children[0] }"></ng-container>
         <div
-          class="h-100 mt-2 px-4 "
+          class="h-100 mt-2 px-4 example-box1"
           cdkDropList
           #tableList="cdkDropList"
           [cdkDropListData]="table"
           (cdkDropListDropped)="drop($event)"
         >
           <div cdkDropListGroup>
-            <div  *ngFor="let item of table ; let i = index" cdkDrag [cdkDragDisabled]="true">
+            <div class="example-box"  *ngFor="let item of table ; let i = index" cdkDrag [cdkDragDisabled]="true">
               <div
                 class="d-flex align-items-center justify-content-between"
                 #childList="cdkDropList" *ngIf="item.children && item.children.length>0 && i>0"

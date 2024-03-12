@@ -76,6 +76,9 @@
                         <ng-container *ngSwitchCase="'UserInfo'">
                            <ng-container *ngTemplateOutlet="userInfo ; context: { $implicit: child.fieldName , b: child.recID}"></ng-container>
                         </ng-container>
+                        <ng-container *ngSwitchCase="'YesNo'">
+                            <ng-container *ngTemplateOutlet="yesno ; context: { $implicit: child }"></ng-container>
+                         </ng-container>
                         <ng-container *ngSwitchDefault>
                             <codx-input
                                 [formName]="formModel.formName" 
@@ -100,6 +103,18 @@
         <button class="btn btn-primary ms-2" [disabled]="isAttach" (click)="!isAttach?onSave(2):undefined" *ngIf="type != 'edit'"><codx-label [formName]="formModel.formName" fiedName="lblDone" default="Lưu & Bắt đầu thực hiện"></codx-label></button>
     </div>
 </div>
+<ng-template #yesno let-data let-id="b">
+    <ng-container *ngIf="data.controlType == 'CheckBox'">
+        <div class="d-flex align-items-center">
+            <codx-input [name]="data.fieldName" [field]="data.fieldName" type="radio" [crrValue]="true" label="Yes" (valueChange)="valueChange($event)"></codx-input>
+            <codx-input [name]="data.fieldName" [field]="data.fieldName" type="radio" [crrValue]="false" label="No" class="ms-4" (valueChange)="valueChange($event)"></codx-input>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="data.controlType != 'CheckBox'">
+        <codx-input type="switch" [field]="data.fieldName" [crrValue]="false" (valueChange)="valueChange($event)"></codx-input>
+    </ng-container>
+</ng-template>
+
 <ng-template #userInfo let-data let-id="b">
     <div class="d-flex flex-column w-100">
         <div class="d-flex align-items-center justify-content-between">

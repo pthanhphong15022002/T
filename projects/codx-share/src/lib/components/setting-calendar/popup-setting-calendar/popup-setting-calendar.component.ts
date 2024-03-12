@@ -1,6 +1,6 @@
 import { SettingCalendarService } from '../setting-calender.service';
 import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components/setting-calendar/setting-calendar.component';
-import 'lodash';
+// import 'lodash';
 import { Component, Injector, Optional } from '@angular/core';
 import { APICONSTANT } from '@shared/constant/api-const';
 import {
