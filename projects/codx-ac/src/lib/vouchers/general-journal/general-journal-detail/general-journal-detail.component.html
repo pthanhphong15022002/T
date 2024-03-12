@@ -170,7 +170,7 @@
 <ng-template #TmpFooterDetail let-data>
     <ng-container *ngIf="itemSelected">
         <codx-tabs [entityName]="formModel.entityName" [formModel]="formModel" [objectID]="itemSelected?.recID"
-            [funcID]="formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
+            [funcID]="formModel.funcID" [TabControl]="tabInfo" [data]="itemSelected" [keyField]="'recID'"></codx-tabs>
     </ng-container>
 </ng-template>
 <!-- End: template listdetail Footer-->

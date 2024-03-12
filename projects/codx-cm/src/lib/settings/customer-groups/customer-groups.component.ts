@@ -335,7 +335,7 @@ export class CustomerGroupsComponent extends UIComponent {
                 customName.charAt(0).toLowerCase() +
                 customName.slice(1),
               gridViewSetup: this.gridViewSetup,
-              isView: true
+              isView: true,
             },
             option
           );

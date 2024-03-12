@@ -7,7 +7,13 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  AuthStore,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { PopupBpTasksComponent } from './popup-bp-tasks/popup-bp-tasks.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 
@@ -25,11 +31,17 @@ export class BpTasksComponent
   @ViewChild('headerTemplateList') headerTemplateList?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore: TemplateRef<any>;
   views: Array<ViewModel> = [];
+  user: any;
 
   dataSelected: any;
   hidenMF: boolean = false;
-  constructor(inject: Injector, private codxShareService: CodxShareService) {
+  constructor(
+    inject: Injector,
+    private codxShareService: CodxShareService,
+    private auth: AuthStore
+  ) {
     super(inject);
+    this.user = this.auth.get();
   }
 
   onInit(): void {}
@@ -65,7 +77,7 @@ export class BpTasksComponent
     this.dataSelected = data;
     switch (e.functionID) {
       case 'BPT0601':
-
+        this.openForm(data);
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
@@ -81,7 +93,7 @@ export class BpTasksComponent
     }
   }
 
-  changeDataMF(e, data){
+  changeDataMF(e, data) {
     if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
@@ -106,6 +118,22 @@ export class BpTasksComponent
     }
   }
 
+  openForm(data) {
+    this.api
+      .execSv<any>(
+        'BP',
+        'ERM.Business.BP',
+        'ProcessTasksBusiness',
+        'GetProcessAndInstanceAsync',
+        data.instanceID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.popupTasks({process: res[1], dataIns: res[0], data: data}, 'edit');
+        }
+      });
+  }
+
   popupTasks(e, action) {
     if (e?.process != null && e?.dataIns) {
       var option = new SidebarModel();
@@ -115,6 +143,12 @@ export class BpTasksComponent
         gridViewName: 'grvBPTasks',
         entityName: 'BP_Tasks',
       };
+      let privileged = true;
+      if (e?.data?.permissions) {
+        privileged = e?.data?.permissions.some(
+          (x) => x.objectID == this.user.userID && x.objectType == 'U'
+        );
+      }
       option.zIndex = 1010;
       this.cache.gridViewSetup('BPTasks', 'grvBPTasks').subscribe((grid) => {
         const obj = {
@@ -122,6 +156,7 @@ export class BpTasksComponent
           action: action,
           process: e?.process,
           dataIns: e?.dataIns,
+          privileged: privileged,
         };
         let popup = this.callfc.openSide(PopupBpTasksComponent, obj, option);
         popup.closed.subscribe((res) => {

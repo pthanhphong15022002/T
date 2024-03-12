@@ -63,7 +63,6 @@ export class AddTaskComponent
   listDocument = [];
   dataEmail: any;
   showEmail = false;
-  hideOwner = false;
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes?.activityType &&
@@ -280,8 +279,20 @@ export class AddTaskComponent
         this.data.settings?.isTemplate == null
       )
         this.data.settings.isTemplate = false;
-      if (this.data.stepNo == 1) {
-        this.hideOwner = true;
+      // if (this.data.stepNo == 1) {
+      //   this.hideOwner = true;
+      //   this.data.permissions = [
+      //     {
+      //       objectID: this.user?.userID,
+      //       objectName: this.user?.userName,
+      //       objectType: 'U',
+      //       roleType: 'O',
+      //     },
+      //   ];
+      //   this.dataChange.emit(this.data);
+      // }
+      if(!this.data.permissions || (this.data.permissions && this.data.permissions.length == 0))
+      {
         this.data.permissions = [
           {
             objectID: this.user?.userID,

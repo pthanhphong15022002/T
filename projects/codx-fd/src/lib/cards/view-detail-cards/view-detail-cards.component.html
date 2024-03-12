@@ -2,7 +2,8 @@
     <codx-detail-tmp [formModel]="formModel" [body]="body" [footer]="footer" [hideMF]="true" [dataItem]="data">
         <ng-template #footer>
             <codx-tabs [entityName]="formModel.entityName" [formModel]="formModel" [TabControl]="tabControl"
-                [objectID]="data.recID" [funcID]="formModel.funcID" [isUpPermission]="true" [isEdit]="true"></codx-tabs>
+                [objectID]="data.recID" [funcID]="formModel.funcID" [isUpPermission]="true" [isEdit]="true" 
+                [data]="data" [keyField]="'recID'"></codx-tabs>
         </ng-template>
     </codx-detail-tmp>
 </ng-container>
