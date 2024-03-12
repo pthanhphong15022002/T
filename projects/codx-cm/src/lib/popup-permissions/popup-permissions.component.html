@@ -437,6 +437,28 @@
                   </codx-input>
                 </td>
               </tr>
+
+              <tr>
+                <td class="font-size-lg text-dark d-flex align-items-center">
+                  <codx-label
+                    [default]="'Cho phép xem các trường'"
+                    [formModel]="dialog.formModel"
+                    [fiedName]="'viewTab'"
+                  ></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input
+                    type="valuelist"
+                    field="config"
+                    placeholder=""
+                    refValue="CRM086"
+                    [multiple]="true"
+                    [crrValue]="config"
+                    (valueChange)="valueChangeCbx($event)"
+                  ></codx-input>
+                </td>
+                
+              </tr>
             </tbody>
           </table>
         </div>

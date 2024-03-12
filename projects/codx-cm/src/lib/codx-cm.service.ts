@@ -1830,4 +1830,23 @@ export class CodxCmService {
       procesID
     );
   }
+  async getSettingContract() {
+    let res = await firstValueFrom(
+      this.getParam('CMParameters', '1')
+    );
+    if (res?.dataValue) {
+      let dataValue = JSON.parse(res?.dataValue);
+      return dataValue;
+    }else{
+      return null;
+    }
+  }
+  async getValueList(funtionID) {
+    let res = await firstValueFrom(this.cache.valueList(funtionID))
+    if(res?.datas){
+      return res.datas;
+    }else{
+      return null;
+    }
+  }
 }

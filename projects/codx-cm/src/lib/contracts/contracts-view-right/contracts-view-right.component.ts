@@ -42,6 +42,8 @@ export class ContractsViewDetailComponent
   @Input() contract: CM_Contracts;
   @Input() contractAppendix: CM_Contracts;
   @Input() processID: string;
+  @Input() tabDefaut: "";
+  @Input() valueListTab: [];
 
   // @Input() dataSelected: any;
   @Output() changeMF = new EventEmitter<any>();
