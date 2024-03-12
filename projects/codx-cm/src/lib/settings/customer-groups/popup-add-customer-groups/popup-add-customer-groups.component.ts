@@ -24,7 +24,8 @@ export class PopupAddCustomerGroupsComponent implements OnInit, AfterViewInit {
   disabledShowInput = false;
   gridViewSetup: any;
   isView: boolean = false;
-  arrFieldForm: ((x: any) => any)[];
+  arrFieldForm: any;
+
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -37,15 +38,15 @@ export class PopupAddCustomerGroupsComponent implements OnInit, AfterViewInit {
     this.headerText = dt?.data?.headerText;
     this.action = dt?.data?.action;
     this.gridViewSetup = dt?.data?.gridViewSetup;
-    // let arrField = Object.values(this.gridViewSetup).filter(
-    //   (x: any) => x.allowPopup
-    // );
+    let arrField = Object.values(this.gridViewSetup).filter(
+      (x: any) => x.allowPopup
+    );
 
-    // if (Array.isArray(arrField)) {
-    //   this.arrFieldForm = arrField
-    //     .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-    //     .map((x: any) => Util.camelize(x.fieldName));
-    // }
+    if (Array.isArray(arrField)) {
+      this.arrFieldForm = arrField
+        .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+        .map((x: any) => Util.camelize(x.fieldName));
+    }
     this.isView = dt?.data?.isView ?? false;
   }
 
