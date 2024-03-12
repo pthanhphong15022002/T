@@ -10,7 +10,7 @@
             <div class="d-flex flex-column mt-2" cdkDrag [cdkDragDisabled]="item?.stepType == '1'">
                 <div class="d-flex align-items-center w-100">
                     <div class="w-25px"><i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="item?.stepType != '1'"></i><i class="icon-drag_indicator me-2 text-gray-300" *ngIf="item?.stepType == '1'"></i></div>
-                    <div class="d-flex align-items-center py-2 bg-row-text-active cursor-pointer bg-row-active w-100" (click)="addEditStages('Stage','edit',item)">
+                    <div class="d-flex align-items-center py-3 bg-row-text-active cursor-pointer bg-row-active w-100" (click)="addEditStages('Stage','edit',item,null,null,false,i==0?true:false)">
                         <i class="bg-row-text-active mx-2" [ngClass]="item?.settings?.icon" [style.color]="item?.settings?.color"></i>
                         <span class="fw-bold">{{item.stepName}}</span>
                     </div>
@@ -25,8 +25,8 @@
                     [cdkDropListConnectedTo]="listIds"
                     [cdkDropListSortPredicate]="sortPredicateForDisableItem(item.child)"
                 >
-                    <ng-container *ngFor="let item2 of item.child">
-                        <div class="d-flex flex-column ps-14 pt-4" cdkDrag [cdkDragDisabled]="item2?.stepType == '1'" (click)="addEditStages(item2.activityType,'edit',item2)">
+                    <ng-container *ngFor="let item2 of item.child , let y = index">
+                        <div class="d-flex flex-column ps-14 pt-4" cdkDrag [cdkDragDisabled]="item2?.stepType == '1'" (click)="addEditStages(item2.activityType,'edit',item2,null,null,false,(i==0 && y == 0 ? true : false))">
                             <div class="d-flex flex-column">
                                 <div class="row d-flex align-items-center cursor-pointer w-100" >
                                     <div class="col-3 d-flex align-items-center"><div class="w-25px"><i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="item2?.stepType != '1'"></i> <i class="icon-drag_indicator me-2 text-gray-300" *ngIf="item2?.stepType == '1'"></i></div><div class="d-flex align-items-center ms-2 w-100px"><i [class]="item2?.settings?.icon" [style.color]="item2?.settings?.color"></i><span class="mx-2">{{item2.activityType}}</span></div><span [class.me-2]="item2?.reasonCon">{{item2?.reasonCon ? (item2?.reasonCon + " : ") : ""}}</span><span>{{item2?.stepName}}</span></div>
@@ -35,8 +35,13 @@
                                         <div class="col-2"><span>{{item2?.duration}}</span><span class="mx-1">{{item2?.interval | vll : 'VL004' : 'text' | async}}</span></div>
                                         <div class="col-1">
                                             <ng-container *ngIf="item2?.pers">
-                                                <codx-imgs [objectId]="item2.pers" [objectType]="'AD_Users'" [numberImages]="3" width="30" [referType]="'avt'"></codx-imgs>
-                                            </ng-container>
+                                                <ng-container *ngIf="i==0 && y == 0 , else elseTmp">
+                                                    <div class="bp-cricle-user rounded-circle w-30px h-30px d-flex align-items-center justify-content-center" title="Người yêu cầu"><i class="icon-i-person-check"></i></div>
+                                                </ng-container>
+                                                <ng-template #elseTmp>
+                                                        <codx-imgs [objectId]="item2.pers" [objectType]="'AD_Users'" [numberImages]="3" width="30" [referType]="'avt'"></codx-imgs>
+                                                </ng-template>
+                                        </ng-container>
                                         </div>
                                         <div class="col-1 d-flex align-items-center">
                                             <ng-container *ngIf="item2?.extendInfo">
