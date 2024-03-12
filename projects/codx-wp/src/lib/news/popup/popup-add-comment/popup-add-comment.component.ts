@@ -4,6 +4,7 @@ import {
   Optional,
   ViewChild,
 } from '@angular/core';
+import { Permission } from '@shared/models/file.model';
 import {
   DialogRef,
   FormModel,
@@ -241,7 +242,9 @@ export class PopupAddCommentComponent {
     this.data.createdOn = new Date();
     this.data.attachments = this.codxViewFiles.files.length;
     this.data.medias = this.codxViewFiles.medias;
-    this.codxViewFiles.save([]).subscribe((res1: boolean) => {
+    let permissisons = this.getPermission();
+    this.codxViewFiles.save(permissisons)
+    .subscribe((res1: boolean) => {
       if (res1) {
         this.insertPost(this.data).subscribe((res2: any) => {
           if (res2) this.notifySvr.notifyCode('WP024');
@@ -271,7 +274,9 @@ export class PopupAddCommentComponent {
     this.loaded = true;
     this.data.attachments = this.codxViewFiles.files.length;
     this.data.medias = this.codxViewFiles.medias;
-    this.codxViewFiles.save([]).subscribe((res1: boolean) => {
+    let permissisons = this.getPermission();
+    this.codxViewFiles.save(permissisons)
+    .subscribe((res1: boolean) => {
       if (res1) {
         this.api
           .execSv(
@@ -301,7 +306,9 @@ export class PopupAddCommentComponent {
     this.data.createdOn = new Date();
     this.data.attachments = this.codxViewFiles.files.length;
     this.data.medias = this.codxViewFiles.medias;
-    this.codxViewFiles.save([]).subscribe((res1: boolean) => {
+    let permissisons = this.getPermission();
+    this.codxViewFiles.save(permissisons)
+    .subscribe((res1: boolean) => {
       if (res1) {
         this.insertPost(this.data).subscribe((res2: any) => {
           if (res2) this.notifySvr.notifyCode('WP020');
@@ -476,5 +483,50 @@ export class PopupAddCommentComponent {
           this.fileRef = file;
         }
       });
+  }
+  getPermission(): Permission[]{
+    let lstPermission:Permission[] = [];
+    let owner = new Permission();
+    owner.objectID = this.data.createdBy;
+    owner.objectName = this.data.createdName;
+    owner.objectType = "U";
+    owner.read = true;
+    owner.create = true;
+    owner.delete = true;
+    owner.update = true;
+    owner.share = true;
+    owner.download = true;
+    owner.full = true;
+    owner.assign = true;
+    owner.upload = true;
+    owner.isActive = true;
+    lstPermission.push(owner);
+    if(this.data.permissions && this.data.permissions.length > 0)
+    {
+      this.data.permissions.forEach(x => {
+        let per = new Permission();
+        per.objectID = x.objectName;
+        per.objectName = x.objectName;
+        per.objectType = x.objectType;
+        per.read = true;
+        per.share = true;
+        per.download = true;
+        per.isActive = true;
+        lstPermission.push(per);
+      });
+    }
+    else 
+    {
+      let per = new Permission();
+      per.objectID = "";
+      per.objectName = "";
+      per.objectType = this.data.shareControl;
+      per.read = true;
+      per.share = true;
+      per.download = true;
+      per.isActive = true;
+      lstPermission.push(per);
+    }
+    return lstPermission;
   }
 }
