@@ -16,7 +16,7 @@ export class CustomFieldService {
   operator = ['+', '-', 'x', '/', 'Avg('];
   operatorAddMinus = ['+', '-'];
   operatorMulDiv = ['x', '/'];
-  //chung all
+  //total all - Sư dụng hàm "eval()" để thay thế thử
   caculate(stringMath) {
     if (!this.point) this.decimalPointSeparation();
     if (stringMath.includes('_')) return stringMath;

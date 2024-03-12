@@ -478,107 +478,14 @@ export class CashPaymentAddComponent extends UIComponent {
    */
   valueChangeLine(event: any) {
     let oLine = event.data;
-    let oAccount = this.acService.getCacheValue('account', oLine.accountID);
-    let oOffsetAccount = this.acService.getCacheValue('account', oLine.offsetAcctID);
-    switch (event.field.toLowerCase()) {
-      case 'accountid':
-        this.setLockAndRequireFields(oLine, oAccount, oOffsetAccount);
-        break;
-      case 'offsetacctid':
-        if (oOffsetAccount) {
-          oLine.isBrigdeAcct = false;
-        } else {
-          oLine.isBrigdeAcct =
-            (oOffsetAccount as any)?.accountType == '5' ? true : false;
-        }
-        this.setLockAndRequireFields(oLine, oAccount, oOffsetAccount);
-        break;
-      case 'dr':
-        this.eleGridCashPayment.startProcess();
-        if (oLine.dr == null) oLine.dr = 0;
-        if (oLine.dr != 0 && oLine.cR2 != 0) {
-          oLine.cr = 0;
-          oLine.cR2 = 0;
-        }
-        setTimeout(() => {
-          oLine = this.calcAmt2(this.formCashPayment.data, oLine, true);
-          if (this.journal.entryMode == '2') {
-            this.setLockAndRequireFields(oLine, oAccount, oOffsetAccount);
-          }
-          this.detectorRef.detectChanges();
-          this.eleGridCashPayment.endProcess();
-        }, 200);
-        break;
-      case 'cr':
-        this.eleGridCashPayment.startProcess();
-        if (oLine.cr == null) oLine.cr = 0;
-        if ((oLine.cr! = 0 && oLine.dR2 != 0)) {
-          oLine.dr = 0;
-          oLine.dR2 = 0;
-        }
-        setTimeout(() => {
-          oLine = this.calcAmt2(this.formCashPayment.data, oLine, false);
-          if (this.journal.entryMode == '2') {
-            this.setLockAndRequireFields(oLine, oAccount, oOffsetAccount);
-          }
-          this.detectorRef.detectChanges();
-          this.eleGridCashPayment.endProcess();
-        }, 200);
-        break;
-      case 'dr2':
-        this.eleGridCashPayment.startProcess();
-        if (oLine.dr2 == null) oLine.dr2 = 0;
-        if (oLine.dR2 != 0 && oLine.cR2 != 0) {
-          oLine.cr = 0;
-          oLine.cR2 = 0;
-        }
-        if (oLine.dr == 0 && (oOffsetAccount as any)?.multiCurrency) {
-          setTimeout(() => {
-            if (this.formCashPayment.data.multi) {
-              oLine.dr = this.formCashPayment.data.exchangeRate != 0 ? this.roundService.amount(oLine.cR2 / this.formCashPayment.data.exchangeRate, this.formCashPayment.data.currencyID) : oLine.cR2;
-            } else {
-              oLine.dr = this.roundService.amount(oLine.cR2 * this.formCashPayment.data.exchangeRate, this.formCashPayment.data.currencyID);
-            }
-            if (oLine.updateColumns && !oLine.updateColumns.includes('DR')) oLine.updateColumns += 'DR;';
-            if (oLine.updateColumns && !oLine.updateColumns.includes('CR')) oLine.updateColumns += 'CR;';
-            if (oLine.updateColumns && !oLine.updateColumns.includes('CR2')) oLine.updateColumns += 'CR2;';
-            this.eleGridCashPayment.endProcess();
-          }, 200);
-        }
-        this.eleGridCashPayment.endProcess();
-        break;
-      case 'cr2':
-        this.eleGridCashPayment.startProcess();
-        if (oLine.cr2 == null) oLine.cr2 = 0;
-        if (oLine.cR2 != 0 && oLine.dR2 != 0) {
-          oLine.dr = 0;
-          oLine.dR2 = 0;
-        }
-        if (oLine.cr == 0 && (oOffsetAccount as any)?.multiCurrency) {
-          setTimeout(() => {
-            if (this.formCashPayment.data.multi) {
-              oLine.cr = this.formCashPayment.data.exchangeRate != 0 ? this.roundService.amount(oLine.cR2 / this.formCashPayment.data.exchangeRate, this.formCashPayment.data.currencyID) : oLine.cR2;
-            } else {
-              oLine.cr = this.roundService.amount(oLine.cR2 * this.formCashPayment.data.exchangeRate, this.formCashPayment.data.currencyID);
-            }
-            if (oLine.updateColumns && !oLine.updateColumns.includes('DR')) oLine.updateColumns += 'DR;';
-            if (oLine.updateColumns && !oLine.updateColumns.includes('DR2')) oLine.updateColumns += 'DR2;';
-            if (oLine.updateColumns && !oLine.updateColumns.includes('CR')) oLine.updateColumns += 'CR;';
-            this.eleGridCashPayment.endProcess();
-          }, 200);
-        }
-        break;
-      case 'note':
-        oLine.reasonID = event?.itemData?.ReasonID;
-        if (oLine.updateColumns && !oLine.updateColumns.includes('AccountID')) oLine.updateColumns += 'AccountID;';
-        setTimeout(() => {
-          oLine.accountID = event?.itemData?.OffsetAcctID;
-          this.detectorRef.detectChanges();
-          oAccount = this.acService.getCacheValue('account', oLine.accountID);
-          this.setLockAndRequireFields(oLine, oAccount, oOffsetAccount);
-        }, 200);
-        break;
-    }
+    let field = event.field;
+    this.eleGridCashPayment.startProcess();
+    this.api.exec('AC','CashPaymentsLinesBusiness','ValueChangedAsync',[this.formCashPayment.data,oLine,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      Object.assign(oLine, res);
+      oLine.updateColumns = '';
+      this.detectorRef.detectChanges();
+      this.eleGridCashPayment.endProcess();
+    })
   }
 
   /**
@@ -850,7 +757,8 @@ export class CashPaymentAddComponent extends UIComponent {
             this.api
               .exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
                 null,
-                this.journal,
+                this.journal.journalNo,
+                ""
               ])
               .subscribe((res: any) => {
                 if (res) {
@@ -883,6 +791,7 @@ export class CashPaymentAddComponent extends UIComponent {
     if (this.formCashPayment && this.formCashPayment.data._isEdit) {
       this.notification.alertCode('AC0010', null).subscribe((res) => {
         if (res.event.status === 'Y') {
+          this.ngxLoader.start();
           this.detectorRef.detectChanges();
           this.dialog.dataService
             .delete([this.formCashPayment.data], false, null, '', '', null, null, false)
@@ -890,15 +799,29 @@ export class CashPaymentAddComponent extends UIComponent {
             .subscribe((res) => {
               if (res.data != null) {
                 this.notification.notifyCode('E0860');
-                this.dialog.close({ type: 'discard' });
-                this.onDestroy();
+                this.api
+                  .exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
+                    null,
+                    this.journal.journalNo,
+                    ""
+                  ])
+                  .subscribe((res: any) => {
+                    if (res) {
+                      res.data.isAdd = true;
+                      this.formCashPayment.refreshData({ ...res.data });
+                      setTimeout(() => {
+                        this.refreshGrid();
+                      }, 100);
+                    }
+                    this.ngxLoader.stop();
+                    this.detectorRef.detectChanges();
+                  });
+              }else{
+                this.ngxLoader.stop();
               }
             });
         }
       });
-    } else {
-      this.dialog.close();
-      this.onDestroy();
     }
   }
 
@@ -1129,138 +1052,11 @@ export class CashPaymentAddComponent extends UIComponent {
    * *Hàm thêm mới dòng cashpayments
    */
   addLine() {
-    // this.api.exec('AC','CashPaymentsLinesBusiness','SetDefaultAsync',[this.formCashPayment.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-    //   console.log(res);
-    // })
-    let oLine = this.setDefaultLine();
-    this.eleGridCashPayment.addRow(oLine, this.eleGridCashPayment.dataSource.length);
-  }
-
-  /**
-   * *Hàm set data mặc định từ master khi thêm dòng mới
-   */
-  setDefaultLine() {
-    let oOffsetAcct = null;
-    let oAccount = null;
-    let model = new AC_CashPaymentsLines();
-    let oLine = Util.camelizekeyObj(model);
-    oLine.transID = this.formCashPayment.data.recID;
-    oLine.objectID = this.formCashPayment.data.objectID;
-    oLine.objectType = this.formCashPayment.data.objectType;
-    oLine.reasonID = this.formCashPayment.data.reasonID;
-
-    let indexCashBook = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CashBookID == this.eleCbxCashBook?.ComponentCurrent?.value);
-    if (indexCashBook > -1) {
-      oLine.offsetAcctID = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data[indexCashBook].CashAcctID;
-    }
-
-    let indexReason = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value);
-    if (indexReason > -1) {
-      oLine.accountID = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].OffsetAcctID;
-      oLine.note = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].ReasonName;
-    }
-
-    oLine = this.acService.getDataSettingFromJournal(oLine, this.journal);
-
-    if (this.journal?.entryMode != '1') oLine.offsetAcctID = null;
-
-    oAccount = this.acService.getCacheValue('account', oLine?.accountID);
-    oOffsetAcct = this.acService.getCacheValue('account', oLine?.offsetAcctID);
-    if (oLine?.offsetAcctID) {
-      if (oOffsetAcct && oOffsetAcct?.accountType == '5') {
-        oLine.isBrigdeAcct = true;
+    this.api.exec('AC','CashPaymentsLinesBusiness','SetDefaultAsync',[this.formCashPayment.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      if (res) {
+        this.eleGridCashPayment.addRow(res, this.eleGridCashPayment.dataSource.length);
       }
-    }
-    if (oLine?.accountID) {
-      if (oAccount) {
-        oLine.singleEntry = oAccount?.accountType == '0' ? true : false;
-        // let bSubLGControl = oAccount?.subLGControl;
-        // if (!bSubLGControl && !oLine?.offsetAcctID) {
-        //   bSubLGControl = oOffsetAcct?.subLGControl;
-        // }
-      }
-    }
-    // this.oLine.createdBy = this.userID;
-    let dRAmt = this.calcRemainAmt(this.formCashPayment.data?.totalAmt);
-    if (dRAmt > 0) {
-      oLine.dr = dRAmt;
-      oLine = this.calcAmt2(this.formCashPayment.data, oLine, true);
-    }
-    return oLine;
-  }
-
-  /**
-   * *Hàm tính số tiền khi thêm dòng
-   * @param totalAmt
-   * @returns
-   */
-  calcRemainAmt(totalAmt) {
-    if (totalAmt == 0) {
-      return 0;
-    }
-    let dRemainAmt = totalAmt;
-    let dPayAmt = this.eleGridCashPayment.dataSource.reduce((sum, data: any) => sum + data?.dr, 0);
-    dRemainAmt = dRemainAmt - dPayAmt;
-    return dRemainAmt;
-  }
-
-  /**
-   * *Hàm ràng buộc không được bỏ trống phòng ban,mục phí,ttcp của tài khoản
-   * @param oLine
-   * @param oAccount
-   * @param oOffsetAcct
-   * @returns
-   */
-  setLockAndRequireFields(oLine, oAccount, oOffsetAcct) {
-    if ((oAccount == null && oOffsetAcct == null) || (this.journal.entryMode == '2' && oLine.dr == 0 && oLine.cr == 0)) {
-      return;
-    } else {
-      let rDIM1 = false;
-      let rDIM2 = false;
-      let rDIM3 = false;
-
-      let lDIM1 = true;
-      let lDIM2 = true;
-      let lDIM3 = true;
-
-      //* Set require field
-      if (this.journal.entryMode == '1' && (oAccount?.diM1Control == '1' || oAccount?.diM1Control == '3' || oOffsetAcct?.diM1Control == '2' || oOffsetAcct?.diM1Control == '3'))
-        rDIM1 = true;
-      if (this.journal.entryMode == '2' && ((oAccount?.diM1Control == '1' && oLine.dr > 0) || (oAccount?.diM1Control == '2' && oLine.cr > 0) || oAccount?.diM1Control == '3'))
-        rDIM1 = true;
-      this.eleGridCashPayment.setRequiredFields(['diM1'], rDIM1);
-
-      if (this.journal.entryMode == '1' && (oAccount?.diM2Control == '1' || oAccount?.diM2Control == '3' || oOffsetAcct?.diM2Control == '2' || oOffsetAcct?.diM2Control == '3'))
-        rDIM2 = true;
-      if (this.journal.entryMode == '2' && ((oAccount?.diM2Control == '1' && oLine.dr > 0) || (oAccount?.diM2Control == '2' && oLine.cr > 0) || oAccount?.diM2Control == '3'))
-        rDIM2 = true;
-      this.eleGridCashPayment.setRequiredFields(['diM2'], rDIM2);
-
-      if (this.journal.entryMode == '1' && (oAccount?.diM3Control == '1' || oAccount?.diM3Control == '3' || oOffsetAcct?.diM3Control == '2' || oOffsetAcct?.diM3Control == '3'))
-        rDIM3 = true;
-      if (this.journal.entryMode == '2' && ((oAccount?.diM3Control == '1' && oLine.dr > 0) || (oAccount?.diM3Control == '2' && oLine.cr > 0) || oAccount?.diM3Control == '3'))
-        rDIM3 = true;
-      this.eleGridCashPayment.setRequiredFields(['diM3'], rDIM3);
-
-      //* Set lock field
-      if (this.journal.entryMode == '1' && (oAccount?.diM1Control == '4' || oOffsetAcct?.diM1Control == '5'))
-        lDIM1 = false;
-      if (this.journal.entryMode == '2' && ((oAccount?.diM1Control == '4' && oLine.dr > 0) || (oAccount?.diM1Control == '5' && oLine.cr > 0)))
-        lDIM1 = false;
-      this.eleGridCashPayment.setEditableFields(['diM1'], lDIM1);
-
-      if (this.journal.entryMode == '1' && (oAccount?.diM2Control == '4' || oOffsetAcct?.diM2Control == '5'))
-        lDIM2 = false;
-      if (this.journal.entryMode == '2' && ((oAccount?.diM2Control == '4' && oLine.dr > 0) || (oAccount?.diM2Control == '5' && oLine.cr > 0)))
-        lDIM2 = false;
-      this.eleGridCashPayment.setEditableFields(['diM2'], lDIM2);
-
-      if (this.journal.entryMode == '1' && (oAccount?.diM3Control == '4' || oOffsetAcct?.diM3Control == '5'))
-        lDIM3 = false;
-      if (this.journal.entryMode == '2' && ((oAccount?.diM3Control == '4' && oLine.dr > 0) || (oAccount?.diM3Control == '5' && oLine.cr > 0)))
-        lDIM3 = false;
-      this.eleGridCashPayment.setEditableFields(['diM3'], lDIM3);
-    }
+    })
   }
 
   /**
@@ -1479,54 +1275,6 @@ export class CashPaymentAddComponent extends UIComponent {
   }
 
   /**
-   * *Hàm tính tiền theo tỷ giá
-   * @param master
-   * @param line
-   * @param isdr
-   * @returns
-   */
-  calcAmt2(master, line, isdr) {
-    if (isdr) {
-      let dDR2 = 0;
-      if (master.multi) {
-        dDR2 = this.roundService.baseCurr(line.dr * master.exchangeRate);
-      } else {
-        dDR2 =
-          master.exchangeRate != 0
-            ? this.roundService.baseCurr(line.dr / master.exchangeRate)
-            : line.dr;
-      }
-      if (line.dR2 != dDR2) {
-        line.dR2 = dDR2;
-        if (line.updateColumns && !line.updateColumns.includes('DR2')) line.updateColumns += 'DR2;';
-      }
-      if (line.cR2 != 0) {
-        line.cR2 = 0;
-        if (line.updateColumns && !line.updateColumns.includes('CR2')) line.updateColumns += 'CR2;';
-      }
-    } else {
-      let dCR2 = 0;
-      if (master.multi) {
-        dCR2 = this.roundService.baseCurr(line.cr * master.exchangeRate);
-      } else {
-        dCR2 =
-          master.exchangeRate != 0
-            ? this.roundService.baseCurr(line.cr / master.exchangeRate)
-            : line.cr;
-      }
-      if (line.cR2 != dCR2) {
-        line.cR2 = dCR2;
-        if (line.updateColumns && !line.updateColumns.includes('CR2')) line.updateColumns += 'CR2;';
-      }
-      if (line.dR2 != 0) {
-        line.dR2 = 0;
-        if (line.updateColumns && !line.updateColumns.includes('DR2')) line.updateColumns += 'DR2;';
-      }
-    }
-    return line;
-  }
-
-  /**
    * *Hàm các sự kiện của lưới cashpayment
    * @param event
    */
@@ -1556,9 +1304,9 @@ export class CashPaymentAddComponent extends UIComponent {
         }, 100);
         break;
       case 'beginEdit':
-        let oAccount = this.acService.getCacheValue('account', event?.data.accountID);
-        let oOffsetAccount = this.acService.getCacheValue('account', event?.data.offsetAcctID);
-        this.setLockAndRequireFields(event?.data, oAccount, oOffsetAccount);
+        // let oAccount = this.acService.getCacheValue('account', event?.data.accountID);
+        // let oOffsetAccount = this.acService.getCacheValue('account', event?.data.offsetAcctID);
+        // this.setLockAndRequireFields(event?.data, oAccount, oOffsetAccount);
         break;
     }
   }
@@ -1683,21 +1431,6 @@ export class CashPaymentAddComponent extends UIComponent {
       lstRequire.push({ field: 'VoucherNo', isDisable: false, require: false });
     }
     this.formCashPayment.setRequire(lstRequire);
-  }
-
-  /**
-   * *Hàm check validate trước khi save line (cashpayment)
-   * @param data 
-   * @returns 
-   */
-  beforeSaveRowCashPayment(event: any) {
-    if (event.rowData) {
-      if (event.rowData.dr == 0 && event.rowData.dR2 == 0) {
-        this.eleGridCashPayment.showErrorField('dr', 'E0094');
-        event.cancel = true;
-        return;
-      }
-    }
   }
 
   /**

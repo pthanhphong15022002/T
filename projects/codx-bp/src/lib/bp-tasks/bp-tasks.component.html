@@ -23,6 +23,7 @@
       [dataItem]="data"
       [formModel]="view.formModel"
       (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
       [isBookMark]="false"
       type="view"
     ></codx-mfunc>
@@ -35,7 +36,7 @@
     <div class="w-30px px-2 py-3">
       <div></div>
     </div>
-    <div class="w-150px text-dark fw-bold px-2 py-3 fw-500">
+    <div class="w-200px text-dark fw-bold px-2 py-3 fw-500">
       <codx-label
         fiedName="list_ActivityType"
         [setRequire]="false"
@@ -43,7 +44,15 @@
         [default]="'Loại công việc'"
       ></codx-label>
     </div>
-    <div class="w-250px text-dark fw-bold px-2 py-3 fw-500">
+    <div class="w-350px text-dark fw-bold px-2 py-3 fw-500">
+      <codx-label
+        fiedName="list_Request"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Yêu cầu'"
+      ></codx-label>
+    </div>
+    <div class="w-350px text-dark fw-bold px-2 py-3 fw-500">
       <codx-label
         fiedName="list_TaskName"
         [setRequire]="false"
@@ -51,15 +60,7 @@
         [default]="'Tên công việc'"
       ></codx-label>
     </div>
-    <div class="w-250px text-dark fw-bold px-2 py-3 fw-500">
-      <codx-label
-        fiedName="list_Memo"
-        [setRequire]="false"
-        [formModel]="view.formModel"
-        [default]="'Nội dung công việc'"
-      ></codx-label>
-    </div>
-    <div class="w-300px text-dark fw-bold px-2 py-3 fw-500">
+    <div class="w-350px text-dark fw-bold px-2 py-3 fw-500">
       <codx-label
         fiedName="list_StartDate"
         [setRequire]="false"
@@ -67,7 +68,7 @@
         [default]="'Thời gian thực hiện'"
       ></codx-label>
     </div>
-    <div class="w-100px text-dark fw-bold px-2 py-3 fw-500">
+    <div class="w-200px text-dark fw-bold px-2 py-3 fw-500">
       <codx-label
         fiedName="list_Status"
         [setRequire]="false"
@@ -81,22 +82,6 @@
         [setRequire]="false"
         [formModel]="view.formModel"
         [default]="'Người tạo'"
-      ></codx-label>
-    </div>
-    <div class="w-200px text-dark fw-bold px-2 py-3 fw-500">
-      <codx-label
-        fiedName="list_Process"
-        [setRequire]="false"
-        [formModel]="view.formModel"
-        [default]="'Quy trình'"
-      ></codx-label>
-    </div>
-    <div class="w-200px text-dark fw-bold px-2 py-3 fw-500">
-      <codx-label
-        fiedName="list_Request"
-        [setRequire]="false"
-        [formModel]="view.formModel"
-        [default]="'Yêu cầu'"
       ></codx-label>
     </div>
     <div class="w-100px text-dark fw-bold px-2 py-3 fw-500">

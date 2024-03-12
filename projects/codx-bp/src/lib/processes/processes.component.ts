@@ -265,6 +265,11 @@ export class ProcessesComponent
         this.releaseProcess();
         break;
       }
+
+      case 'BPT0106': {
+        this.evictionAsync(data);
+        break;
+      }
       default: {
         this.codxShareService.defaultMoreFunc(
           e,
@@ -295,10 +300,20 @@ export class ProcessesComponent
   }
 
   changeDataMF(e: any, data: any) {
-    var approvelCL = e.filter(
-      (x: { functionID: string }) => x.functionID == 'BPT0105'
-    );
-    if (approvelCL[0] && data?.status == '5') approvelCL[0].disabled = true;
+    if (data) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'BPT0105':
+          case 'SYS03': {
+            res.disabled = data?.status == '5' ? true : false;
+            break;
+          }
+          case 'BPT0106':
+            res.disabled = data?.status == '5' ? false : true;
+            break;
+        }
+      });
+    }
   }
   //#endregion
 
@@ -471,14 +486,35 @@ export class ProcessesComponent
         'ReleaseAsync',
         this.view.dataService.dataSelected?.recID
       )
-      .subscribe((item) => {
+      .subscribe((item: any) => {
         if (item) {
-          this.itemSelected = item;
-          this.view.dataService.update(item, true).subscribe();
+          this.itemSelected.status = item?.status;
+          this.view.dataService.update(this.itemSelected, true).subscribe();
           this.codxService.reloadMenuAside();
           this.notiSv.notifyCode('SV001');
         } else {
           this.notiSv.notifyCode('SV002');
+        }
+      });
+  }
+
+  evictionAsync(data) {
+    this.api
+      .execSv(
+        'BP',
+        'BP',
+        'ProcessesBusiness',
+        'EvictionAsync',
+        this.view.dataService.dataSelected?.recID
+      )
+      .subscribe((item: any) => {
+        if (item) {
+          this.itemSelected.status = item?.status;
+          this.view.dataService.update(this.itemSelected, true).subscribe();
+          this.codxService.reloadMenuAside();
+          this.notiSv.notifyCode('OD011');
+        } else {
+          this.notiSv.notifyCode('SYS021');
         }
       });
   }

@@ -216,7 +216,7 @@ export class PopupUpdateStatusComponent
   }
 
   getFieldName(applyFor){
-    if(applyFor == '1' || applyFor == '4') return 'statusCodeID';
+    if(applyFor == '1') return 'statusCodeID';
     return 'statusCode';
   }
 }

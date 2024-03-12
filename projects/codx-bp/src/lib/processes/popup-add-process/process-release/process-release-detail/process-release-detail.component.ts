@@ -106,7 +106,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
         }
       });
   }
- 
+
   getPermission() {
     let approvers = [];
     this.process.steps?.forEach((step) => {
@@ -183,17 +183,20 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       if (this.listTask && this.listTask.length > 0) {
         var index = this.listTask.findIndex((x) => x.stepID == elm2.recID);
         if (index >= 0) {
-          if(this.listTask[index].status !='1'){
+          if (this.listTask[index].status != '1') {
             elm2.permissions =
-            typeof this.listTask[index]?.permissions === 'object'
-              ? this.listTask[index].permissions
-              : this.listTask[index]?.permissions
-              ? JSON.parse(this.listTask[index].permissions)
-              : null;
+              typeof this.listTask[index]?.permissions === 'object'
+                ? this.listTask[index].permissions
+                : this.listTask[index]?.permissions
+                ? JSON.parse(this.listTask[index].permissions)
+                : null;
             elm2.permissions = elm2?.permissions
               ? elm2.permissions.map((u) => u.objectID).join(';')
               : null;
-            elm2.pers = this.listTask[index]?.permissions?.map((u) => u?.objectID)?.join(';') ?? null;
+            elm2.pers =
+              this.listTask[index]?.permissions
+                ?.map((u) => u?.objectID)
+                ?.join(';') ?? null;
           }
           elm2.startDate = this.listTask[index].startDate
             ? moment(this.listTask[index].startDate).format('dd/MM/yyyy')
@@ -209,16 +212,14 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
             : 'dd/MM/yyyy';
           elm2.status = this.listTask[index].status;
           elm2.dataTask = this.listTask[index];
-        }         
-        else elm2.permissions = null;
-        if(elm2?.pers==null && this.tempPermission?.length > 0){            
+        } else elm2.permissions = null;
+        if (elm2?.pers == null && this.tempPermission?.length > 0) {
           let pers = this.tempPermission.filter((x) => x.refID == elm2.recID);
           if (pers?.length > 0) {
             elm2.pers = pers?.map((u) => u?.userID).join(';') ?? '';
           }
         }
-      } 
-      
+      }
 
       if (
         elm2.activityType == 'Conditions' &&
@@ -260,57 +261,56 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   }
 
   openForm(dt: any) {
-    if (dt?.activityType == 'Email') {
-      let data = {
-        dialog: this.dialog,
-        formGroup: null,
-        templateID: '',
-        showIsTemplate: true,
-        showIsPublish: true,
-        showSendLater: true,
-        files: null,
-        isAddNew: false,
-        notSendMail: true,
-      };
+    // if (dt?.activityType == 'Email') {
+    //   let data = {
+    //     dialog: this.dialog,
+    //     formGroup: null,
+    //     templateID: '',
+    //     showIsTemplate: true,
+    //     showIsPublish: true,
+    //     showSendLater: true,
+    //     files: null,
+    //     isAddNew: false,
+    //     notSendMail: true,
+    //   };
 
-      let popEmail = this.callFc.openForm(
-        CodxEmailComponent,
-        '',
-        800,
-        screen.height,
-        '',
-        data
+    //   let popEmail = this.callFc.openForm(
+    //     CodxEmailComponent,
+    //     '',
+    //     800,
+    //     screen.height,
+    //     '',
+    //     data
+    //   );
+    // } else if (dt) {
+    let privileged = true;
+    if (dt?.permissions) {
+      privileged = dt?.permissions.some(
+        (x) => x.objectID == this.user.userID && x.objectType == 'U'
       );
-    } else if (dt) {
-      let privileged = true;
-      if (dt?.permissions) {
-        privileged = dt?.permissions.some(
-          (x) => x.objectID == this.user.userID && x.objectType == 'U'
-        );
-      }
-      var option = new SidebarModel();
-      // option.FormModel = this.view.formModel; //Đợi có grid mở lên
-      option.FormModel = {
-        formName: 'BPTasks',
-        gridViewName: 'grvBPTasks',
-        entityName: 'BP_Tasks',
-      };
-      option.zIndex = 1060;
-      let popup = this.callFc.openSide(
-        PopupBpTasksComponent,
-        {
-          data: dt,
-          process: this.process,
-          dataIns: this.data,
-          privileged: privileged,
-        },
-        option
-      );
-      popup.closed.subscribe((res) => {
-        if (res && res?.event) {
-          this.data = res?.event;
-        }
-      });
     }
+    var option = new SidebarModel();
+    // option.FormModel = this.view.formModel; //Đợi có grid mở lên
+    option.FormModel = {
+      formName: 'BPTasks',
+      gridViewName: 'grvBPTasks',
+      entityName: 'BP_Tasks',
+    };
+    option.zIndex = 1060;
+    let popup = this.callFc.openSide(
+      PopupBpTasksComponent,
+      {
+        data: dt,
+        process: this.process,
+        dataIns: this.data,
+        privileged: privileged,
+      },
+      option
+    );
+    popup.closed.subscribe((res) => {
+      if (res && res?.event) {
+        this.data = res?.event;
+      }
+    });
   }
 }
