@@ -287,6 +287,7 @@ export class ModeviewComponent implements OnInit {
         data.title += " " + this.count.valueList;
         data.refType = "2";
         data.refValue = null;
+        data.dataType = "String";
         break;
       }
       case "ComboBox":
@@ -294,6 +295,7 @@ export class ModeviewComponent implements OnInit {
         this.count.combobox ++;
         data.title += " " + this.count.combobox;
         data.refType = "3";
+        data.dataType = "String";
         break;
       }
       case "DateTime":
@@ -338,6 +340,7 @@ export class ModeviewComponent implements OnInit {
         data.defaultValue = false;
         data.refType = "3";
         data.refValue = "Users";
+        data.dataType = "String"
         break;
       }
       case "Share":

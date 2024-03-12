@@ -10,6 +10,7 @@ import {
   AuthStore,
   DialogModel,
   NotificationsService,
+  SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
@@ -17,6 +18,7 @@ import {
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxBpService } from '../codx-bp.service';
 import { ProcessReleaseDetailComponent } from '../processes/popup-add-process/process-release/process-release-detail/process-release-detail.component';
+import { PopupBpTasksComponent } from '../bp-tasks/popup-bp-tasks/popup-bp-tasks.component';
 
 @Component({
   selector: 'lib-my-instances',
@@ -94,6 +96,7 @@ export class MyInstancesComponent
         this.openFormDetail(data);
         break;
       case 'BPT0502':
+        this.openTask(data);
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
@@ -134,6 +137,58 @@ export class MyInstancesComponent
             '',
             option
           );
+        }
+      });
+  }
+
+  openTask(data) {
+    this.api
+      .execSv<any>(
+        'BP',
+        'ERM.Business.BP',
+        'ProcessInstancesBusiness',
+        'GetTaskActivedByInstanceIDAsync',
+        [data?.recID]
+      )
+      .subscribe((res) => {
+        if (res && res[0] && res[1]) {
+          var option = new SidebarModel();
+          // option.FormModel = this.view.formModel; //Đợi có grid mở lên
+          option.FormModel = {
+            formName: 'BPTasks',
+            gridViewName: 'grvBPTasks',
+            entityName: 'BP_Tasks',
+          };
+          let privileged = true;
+          if (res[0].permissions) {
+            privileged = res[0].permissions.some(
+              (x) => x.objectID == this.user.userID && x.objectType == 'U'
+            );
+          }
+          option.zIndex = 1010;
+          this.cache
+            .gridViewSetup('BPTasks', 'grvBPTasks')
+            .subscribe((grid) => {
+              const obj = {
+                data: res[0],
+                action: 'edt',
+                process: res[1],
+                dataIns: res[2],
+                privileged: privileged,
+              };
+              let popup = this.callfc.openSide(
+                PopupBpTasksComponent,
+                obj,
+                option
+              );
+              popup.closed.subscribe((res) => {
+                if (res && res.event != null) {
+                  // this.view.dataService.update(res.event, true).subscribe();
+                  // this.dataSelected = JSON.parse(JSON.stringify(res.event));
+                  // this.detectorRef.detectChanges();
+                }
+              });
+            });
         }
       });
   }

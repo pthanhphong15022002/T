@@ -223,7 +223,8 @@ export class FormStepsFieldGridComponent
     item: any = null,
     parent: any = null,
     stage: any = null,
-    isCondistion = false
+    isCondistion = false,
+    hideDelete = false,
   ) {
     let lstParent = JSON.parse(JSON.stringify(this.listStage));
     lstParent.forEach((elm) => {
@@ -237,6 +238,7 @@ export class FormStepsFieldGridComponent
       parent: parent,
       stage: stage,
       listStage: lstParent,
+      hideDelete: hideDelete
     };
     let option = new SidebarModel();
     option.Width = 'Auto';
