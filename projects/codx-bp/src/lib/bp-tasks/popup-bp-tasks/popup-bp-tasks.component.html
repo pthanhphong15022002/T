@@ -286,7 +286,7 @@
                   type="radio"
                   style="width: 100%"
                   field="yes"
-                  [checked]="true"
+                  [checked]="data?.result == '1'"
                   (valueChange)="changeRadio($event)"
                 ></codx-input>
               </span>
@@ -308,7 +308,7 @@
                   type="radio"
                   style="width: 100%"
                   field="no"
-                  [checked]="false"
+                  [checked]="data?.result != '1'"
                   (valueChange)="changeRadio($event)"
                 ></codx-input>
               </span>
@@ -328,9 +328,10 @@
         <codx-input
           type="textarea"
           format="ed2"
-          field="memo"
+          field="comment"
+          (valueChange)="valueChange($event)"
           placeholder="Nhập ý kiến"
-          [crrValue]="''"
+          [crrValue]="data?.comment ?? ''"
         >
         </codx-input>
       </div>
