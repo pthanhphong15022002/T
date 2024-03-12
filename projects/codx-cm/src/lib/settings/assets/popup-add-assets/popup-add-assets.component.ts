@@ -26,10 +26,10 @@ import { CodxCmService } from '../../../codx-cm.service';
   styleUrls: ['./popup-add-assets.component.css'],
 })
 export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
+  @ViewChild('form') form: CodxFormComponent;
   @ViewChild('cbxPlace') cbxPlace: CodxInputComponent;
   @ViewChild('cbxObjectID') cbxObjectID: CodxInputComponent;
   @ViewChild('cbxZone') cbxZone: CodxInputComponent;
-  @ViewChild('form') form: CodxFormComponent;
 
   dialog: any;
   gridViewSetup: any;
@@ -110,8 +110,6 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
       case 'place':
         if (this.data.place != this.parentID) {
           this.parentID = this.data.place;
-
-          this.data.zone = null;
           (
             this.cbxZone.ComponentCurrent as CodxComboboxComponent
           ).dataService.data = [];
@@ -124,10 +122,12 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
           (
             this.cbxObjectID.ComponentCurrent as CodxComboboxComponent
           ).dataService.data = [];
+
           this.cbxObjectID.crrValue = null;
           // this.changeCbxCustomer();
-          this.form.formGroup.patchValue({ zone: this.data['zone'] });
-          this.form.formGroup.patchValue({ objectID: this.data['objectID'] });
+          this.data.zone = null;
+          // this.form.formGroup.patchValue({ zone: this.data['zone'] });
+          // this.form.formGroup.patchValue({ objectID: this.data['objectID'] });
         }
         break;
       case 'zone':
@@ -151,15 +151,15 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
           this.cbxObjectID.crrValue = null;
           // this.changeCbxCustomer();
 
-          this.form.formGroup.patchValue({ place: this.data['place'] });
-          this.form.formGroup.patchValue({ objectID: this.data['objectID'] });
+          // this.form.formGroup.patchValue({ place: this.data['place'] });
+          // this.form.formGroup.patchValue({ objectID: this.data['objectID'] });
         }
         break;
       case 'objectID':
         break;
     }
 
-    //this.form.formGroup.patchValue(this.data);
+    this.form.formGroup.patchValue(this.data);
   }
 
   beforeSave(op: RequestOption) {
