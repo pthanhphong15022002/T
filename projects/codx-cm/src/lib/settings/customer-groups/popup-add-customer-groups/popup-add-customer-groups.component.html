@@ -59,7 +59,27 @@
         >
         </codx-input>
       </div>
-      <div class="form-group">
+      <ng-container *ngFor="let fieldName of arrFieldForm">
+        <div
+          class="form-group"
+          *ngIf="
+            fieldName != 'custGroupID' &&
+            fieldName != 'iconColor' &&
+            fieldName != 'icon'
+          "
+        >
+          <codx-label [formModel]="form.formModel" [fiedName]="fieldName">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [field]="fieldName"
+            [disabled]="isView"
+          >
+          </codx-input>
+        </div>
+      </ng-container>
+      <!-- <div class="form-group">
         <codx-label [formModel]="form.formModel" [fiedName]="'CustGroupName'">
         </codx-label>
         <codx-input
@@ -80,7 +100,7 @@
           [disabled]="isView"
         >
         </codx-input>
-      </div>
+      </div> -->
     </ng-container>
   </ng-template>
   <ng-template #footer>

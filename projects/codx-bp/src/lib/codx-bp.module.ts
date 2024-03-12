@@ -82,6 +82,7 @@ import { SettingMailComponent } from './processes/popup-add-process/form-steps-f
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
+import { ShareCrmModule } from 'projects/codx-dp/src/lib/share-crm/share-crm.module';
 
 export const routes: Routes = [
   {
@@ -220,6 +221,7 @@ export const routes: Routes = [
     SplitterAllModule,
     DynamicSettingModule,
     NgbAccordionModule,
+    ShareCrmModule
     // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],

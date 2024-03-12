@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { ApiHttpService, AuthService, CacheService, CallFuncService, CodxListviewComponent, CRUDService, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, CodxListviewComponent, CRUDService, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
 @Component({
   selector: 'lib-popup-save',
   templateUrl: './popup-save.component.html',
@@ -26,13 +26,13 @@ export class PopupSavePostComponent implements OnInit {
     private dt: ChangeDetectorRef,
     private notifiSV: NotificationsService,
     private callFC: CallFuncService,
-    private auth: AuthService,
+    private authStore: AuthStore,
     private cache : CacheService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
-  ) 
+  )
   {
-    this.user = auth.userValue;
+    this.user = this.authStore.get();
     this.dialogData = dialogData?.data;
     this.data = this.dialogData.data;
     this.headerText = this.dialogData.headerText;
@@ -79,7 +79,7 @@ export class PopupSavePostComponent implements OnInit {
           if(mssg){
             let messageCode = mssg.defaultName;
             let strMessage = Util.stringFormat(messageCode,"Tên kho lưu trữ");
-            this.notifiSV.notify(strMessage); 
+            this.notifiSV.notify(strMessage);
           }
         });
       }
@@ -93,9 +93,9 @@ export class PopupSavePostComponent implements OnInit {
         }
         this.api.execSv(
           "WP",
-          "ERM.Business.WP", 
-          "StoragesBusiness", 
-          "InsertAsync", 
+          "ERM.Business.WP",
+          "StoragesBusiness",
+          "InsertAsync",
           [data])
           .subscribe((res: any) => {
             if (res){
@@ -109,7 +109,7 @@ export class PopupSavePostComponent implements OnInit {
           });
       }
     }
-    
+
   }
   //open popup add
   openPopupAdd() {

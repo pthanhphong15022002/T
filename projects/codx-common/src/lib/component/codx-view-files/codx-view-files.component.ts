@@ -245,11 +245,12 @@ export class CodxViewFilesComponent implements OnInit {
     }
   }
   // save
-  save(): Observable<boolean> {
-    if (this.objectID) {
+  save(permissions:Permission[]): Observable<boolean> {
+    if (permissions.length > 0 && this.objectID) 
+    {
       let lstFileAdd = this.files.filter((x) => x.isNew);
       let $obs1 = this.deleteFiles(this.lstFileRemove);
-      let $obs2 = this.addFiles(lstFileAdd, this.objectID);
+      let $obs2 = this.addFiles(lstFileAdd, this.objectID, permissions);
       return forkJoin([$obs1, $obs2], (res1, res2) => {
         return res1 && res2;
       });
@@ -276,19 +277,11 @@ export class CodxViewFilesComponent implements OnInit {
     }
     return of(true);
   }
-  addFiles(files: any[], objectID: string): Observable<boolean> {
+  addFiles(files: any[], objectID: string, permisisons:Permission[]): Observable<boolean> {
     if (files.length > 0) {
       this.codxATM.objectId = objectID;
-      var p = new Permission();
-      p.read = true;
-      p.download = true;
-      p.objectType = '9';
-      p.isActive = true;
-      if (!Array.isArray(this.codxATM.addPermissions)) {
-        this.codxATM.addPermissions = [];
-      }
-      this.codxATM.addPermissions.push(p);
-      this.codxATM.fileUploadList = JSON.parse(JSON.stringify(files));
+      this.codxATM.addPermissions = [...permisisons];
+      this.codxATM.fileUploadList = [...files];
       return this.codxATM.saveFilesMulObservable().pipe(
         map((res: any) => {
           return res ? true : false;
