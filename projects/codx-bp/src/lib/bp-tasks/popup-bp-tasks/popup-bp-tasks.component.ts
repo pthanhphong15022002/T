@@ -69,6 +69,12 @@ export class PopupBpTasksComponent implements OnInit {
     this.subTitle = dt?.data?.subTitle;
   }
   ngOnInit(): void {
+    if (this.data?.activityType == 'Check') {
+      this.data.result =
+        this.data?.result == null || this.data?.result?.trim() == ''
+          ? '1'
+          : this.data?.result;
+    }
     this.checkList = this.data.checkList ?? [];
     this.countCheck = this.checkList.filter((x) => x.status == '1').length;
     this.getInfo();
@@ -238,7 +244,10 @@ export class PopupBpTasksComponent implements OnInit {
     );
   }
 
-  valueChange(e) {}
+  valueChange(e) {
+    this.data[e?.field] = e?.data;
+    this.detectorRef.detectChanges();
+  }
 
   //#region ActivityType = 'Task'
   addCheckList() {
@@ -260,7 +269,14 @@ export class PopupBpTasksComponent implements OnInit {
     this.detectorRef.detectChanges();
   }
 
-  changeRadio(e) {}
+  changeRadio(e) {
+    if (e.field === 'yes' && e.component.checked === true) {
+      this.data.result = '1';
+    } else if (e.field === 'no' && e.component.checked === true) {
+      this.data.result = '0';
+    }
+    this.detectorRef.detectChanges();
+  }
   //#endregion
 
   addFile(evt: any) {
