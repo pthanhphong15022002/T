@@ -12,11 +12,13 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { APICONSTANT } from '@shared/constant/api-const';
 import {
+  AlertConfirmInputConfig,
   AuthStore,
   ButtonModel,
   DataRequest,
   DialogModel,
   DialogRef,
+  NotificationsService,
   RequestOption,
   ResourceModel,
   SidebarModel,
@@ -115,7 +117,8 @@ export class CodxTmmeetingsComponent
     private dt: ChangeDetectorRef,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
-    private tmService: CodxTMService
+    private tmService: CodxTMService,
+    private notiSv: NotificationsService
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -627,15 +630,20 @@ export class CodxTmmeetingsComponent
 
   delete(data) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], true, (opt) =>
-        this.beforeDel(opt)
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.view.dataService.onAction.next({ type: 'delete', data: data });
-        }
-      });
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notiSv.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x?.event?.status == 'Y') {
+        this.api.execSv<any>('CO','ERM.Business.CO','MeetingsBusiness','DeleteMeetingsAsync',[data?.recID]).subscribe((res)=>{
+          if(res){
+            this.view.dataService.remove(data).subscribe();
+            this.notiSv.notifyCode('SYS008');
+            this.notiSv.alertCode
+            this.detectorRef.detectChanges();
+          }
+        });
+      }});
+
   }
 
   beforeDel(opt: RequestOption) {

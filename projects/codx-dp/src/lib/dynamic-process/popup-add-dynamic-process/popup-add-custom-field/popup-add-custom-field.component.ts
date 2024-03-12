@@ -139,6 +139,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   idxDeleted = -1;
   processNo: any; //de sinh ma vll
   maxNumber = 0;
+  checkBoxVL: any;
 
   //column Table
   // column: ColumnTable;
@@ -170,6 +171,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   showCaculate = true;
   titleField: any = '';
   viewOnly = false;
+  plancehoderVll = '';
 
   constructor(
     private cache: CacheService,
@@ -225,7 +227,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.field.dataType == 'L' && this.field.dataFormat == 'V')
+    if (
+      this.field.dataType == 'L' &&
+      (this.field.dataFormat == 'V' || this.field.dataFormat == 'S')
+    )
       this.loadDataVll();
     if (this.field.dataType == 'TA') {
       this.getColumnTable(this.field);
@@ -271,8 +276,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
     if (e.field == 'title' || e.field == 'fieldName')
       this.removeAccents(e.data);
-    if (e.field == 'dataFormat' && (e.data == 'V' || e.data == 'C')) {
-      if (e.data == 'V') this.loadDataVll();
+    if (
+      e.field == 'dataFormat' &&
+      (e.data == 'V' || e.data == 'C' || e.data == 'S')
+    ) {
+      if (e.data == 'V' || e.data == 'S') this.loadDataVll();
       this.field.refType = e.data == 'C' ? '3' : '2';
       if (this.action != 'edit' && !this.field.refValue) {
         // this.crrVll = new tempVllDP();
@@ -578,7 +586,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   //---------------End - DuplicateField ------------------//
 
-  //----------------Value List -----------------------//
+  //---------------- L - Value List -----------------------//
   async clickAddVll() {
     // 'add vll'
     let action = !this.field.refValue ? 'add' : 'edit';
@@ -606,11 +614,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
     let option = new DialogModel();
     option.FormModel = this.dialog.formModel;
     option.zIndex = 1099;
-    // this.dialogVll = this.callfc.openForm(this.addVll, '', 500, 550, '');
+
     let obj = {
       data: this.crrVll,
       datasVll: this.datasVll,
       action: action,
+      isCheckBox: this.field.dataFormat == 'S',
     };
     let dialogVll = this.callfc.openForm(
       PopupAddVllCustomComponent,
@@ -622,6 +631,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       '',
       option
     );
+
     dialogVll.closed.subscribe((res) => {
       if (res && res.event) {
         this.crrVll = JSON.parse(JSON.stringify(res.event));
@@ -648,8 +658,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.requestTemp.entityName = 'SYS_ValueList';
     this.requestTemp.predicate = 'Language=@0 && ListName.StartsWith(@1)';
     this.requestTemp.dataValue = this.user.language + ';DPF' + this.processNo;
-    // this.requestTemp.predicate = 'Language=@0 ';
-    // this.requestTemp.dataValue = this.user.language;
     this.requestTemp.pageLoading = false; //load all
 
     this.fetch().subscribe((item) => {
@@ -863,6 +871,15 @@ export class PopupAddCustomFieldComponent implements OnInit {
         this.getDefaultVll(timeOut);
       }
     }, timeOut);
+  }
+
+  valueChangeCheckBox(e, idx) {
+    // if (e.data) {
+    //   this.checkBoxVL = e.field;
+    // } else {
+    //   this.checkBoxVL = null;
+    // }
+    //this.datasVllCrr[idx]['check'] = e.data;
   }
   //---------------------End  Vll-----------------------------//
 

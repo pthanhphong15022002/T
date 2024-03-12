@@ -102,8 +102,15 @@ export class AddProcessDefaultComponent implements OnInit{
       if(element.fieldType != "Title") 
       {
         if(this.type == 'add') {
-          this.dynamicFormsForm.addControl(field, new FormControl(element.defaultValue , (element.isRequired ? Validators.required : null)));
-          if(element.fieldType == "Attachment") {
+          let validate = element.isRequired ? Validators.required : null;
+          
+          if(element.fieldType == "Email") validate = Validators.email;
+          else if(element.fieldType == "Phone") validate = Validators.pattern("[0-9 ]{11}");
+          
+          this.dynamicFormsForm.addControl(field, new FormControl(element.defaultValue , validate));
+          
+          if(element.fieldType == "Attachment") 
+          {
             //this.dataIns.documentControl = JSON.parse(element.documentControl);
             element.documentControl = typeof element.documentControl == 'string' ? JSON.parse(element.documentControl): element.documentControl;
           }
@@ -487,14 +494,31 @@ export class AddProcessDefaultComponent implements OnInit{
 
   findInvalidControls() {
     const invalid = [];
+    const email = [];
+    const phone = [];
     const controls = this.dynamicFormsForm.controls;
     for (const name in controls) {
-        if (controls[name].invalid) {
+        if (controls[name].invalid && controls[name].errors)
+        {
+          if(controls[name].errors?.email) email.push(name);
+          else if(controls[name].errors?.pattern) phone.push(name);
+        }
+        else if (controls[name].invalid) {
             invalid.push(name);
         }
     }
     var name = invalid.join(" , ");
-    this.notifySvr.notifyCode('SYS009', 0, name);
+    var nameEmail = email.join(" , ");
+    var namePhone = phone.join(" , ");
+    if(email.length == 0 && phone.length == 0) this.notifySvr.notifyCode('SYS009', 0, name);
+    else 
+    {
+      var str = "";
+      if(nameEmail) str += nameEmail + " sai định dạng email. ";
+      if(namePhone) str += namePhone + " sai định dạng. ";
+      if(name) str += name + "không được phép bỏ trống.";
+      this.notifySvr.notify(str);
+    }
   }
 
   dataChangeAttachmentGrid(e:any)
@@ -639,6 +663,12 @@ export class AddProcessDefaultComponent implements OnInit{
     this.dataUserInfo[fieldName.toLowerCase()][e?.field] = e?.data;
   }
 
+  valueChange(e:any)
+  {
+    if(!this.dynamicFormsForm.get(e?.field).value) this.dynamicFormsForm.controls[e?.field].setValue(e?.data);
+    else this.dynamicFormsForm.value[e?.field] = e?.data
+  }
+
   getUrl(field:any,index:any)
   {
     if(!this.listFileUserInfo[field]) return this.urlDefault;
@@ -647,6 +677,11 @@ export class AddProcessDefaultComponent implements OnInit{
       if(!this.listFileUserInfo[field][index]) return this.urlDefault;
       return (this.listFileUserInfo[field][index]?.avatar || this.urlDefault)
     }
-
   }
+
+  validateEmail = (email) => {
+    return email.match(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  };
 }

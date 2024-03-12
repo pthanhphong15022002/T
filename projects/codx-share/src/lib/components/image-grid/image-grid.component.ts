@@ -9,11 +9,8 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import 'lodash';
-import {
-  AuthService,
-  CallFuncService,
-} from 'codx-core';
+// import 'lodash';
+import { AuthService, CallFuncService } from 'codx-core';
 import { ErmComponent } from '../ermcomponent/erm.component';
 import { environment } from 'src/environments/environment';
 @Component({
@@ -57,7 +54,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   ngOnInit() {
     if (this.objectID) {
       this.getFileByObjectID();
-    } 
+    }
   }
   getFileByObjectID() {
     this.api
@@ -66,15 +63,15 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
         'ERM.Business.DM',
         'FileBussiness',
         'GetFilesByIbjectIDAsync',
-        [this.objectID])
-        .subscribe((result: any[]) => {
+        [this.objectID]
+      )
+      .subscribe((result: any[]) => {
         if (result.length > 0) {
           result.forEach((f: any) => {
-            switch(f['referType'])
-            {
+            switch (f['referType']) {
               case this.FILE_REFERTYPE.IMAGE:
               case this.FILE_REFERTYPE.VIDEO:
-                f["source"] = `${environment.urlUpload}`+"/"+f.url; 
+                f['source'] = `${environment.urlUpload}` + '/' + f.url;
                 this.file_img_video.push(f);
                 break;
               case this.FILE_REFERTYPE.APPLICATION:
@@ -133,29 +130,22 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
     this.dt.detectChanges();
   }
   addFiles(files: any[]) {
-    if(this.files.length == 0)
-    {
+    if (this.files.length == 0) {
       this.files = [];
       this.file_img_video = [];
-      this.file_application = []
+      this.file_application = [];
     }
     files.forEach((f) => {
       let isExist = this.files.some((x) => x.fileName === f.fileName);
-      if(isExist) return;
-      if (f.mimeType.includes('image') || f.mimeType.includes('video')) 
-      {
-        if(f.mimeType.includes('image'))
-        {
+      if (isExist) return;
+      if (f.mimeType.includes('image') || f.mimeType.includes('video')) {
+        if (f.mimeType.includes('image')) {
           f['referType'] = this.FILE_REFERTYPE.IMAGE;
-        }
-        else
-        {
+        } else {
           f['referType'] = this.FILE_REFERTYPE.VIDEO;
         }
         this.file_img_video.push(f);
-      }
-      else 
-      {
+      } else {
         f['referType'] = this.FILE_REFERTYPE.APPLICATION;
         this.file_application.push(f);
       }

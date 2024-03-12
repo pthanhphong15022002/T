@@ -120,6 +120,13 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
           this.cbxZone.model = {
             ParentID: this.parentID,
           };
+          // (
+          //   this.cbxZone.ComponentCurrent as CodxComboboxComponent
+          // ).dataService.predicates = 'ParentID=@0';
+          // (
+          //   this.cbxZone.ComponentCurrent as CodxComboboxComponent
+          // ).dataService.dataValues = `${this.parentID}`;
+
           this.form.formGroup.patchValue({ zone: this.data['zone'] });
 
           (
@@ -139,6 +146,7 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
             this.cbxPlace.ComponentCurrent as CodxComboboxComponent
           ).dataService.data = [];
           this.cbxPlace.crrValue = this.parentID;
+
           this.cbxPlace.model = {
             AssetID: this.data.place,
           };

@@ -200,7 +200,7 @@
       ></span>
     </ng-container>
 
-    <ng-container *ngIf="data.dataFormat == 'V'">
+    <ng-container *ngIf="data.dataFormat == 'V' || this.data.dataFormat == 'S'">
       <div class="flex flex-column">
         <div *ngFor="let item of dataValueTypeV">
           <span>{{ item }}</span>

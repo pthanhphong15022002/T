@@ -16,6 +16,7 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
   vllBP001:any;
   vllDefault:any;
   isAttach = false;
+  hideDelete = false;
   constructor(
     public inject: Injector,
     @Optional() dt?: DialogData,
@@ -32,6 +33,7 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
     if(dt?.data?.parent) this.parent = dt.data.parent;
     if(dt?.data?.activityType) this.activityType = dt.data.activityType;
     if(dt?.data?.listStage) this.listStage = dt.data.listStage;
+    if(dt?.data?.hideDelete) this.hideDelete = dt?.data?.hideDelete
   }
   ngOnInit(): void {
     this.getVll();
@@ -70,8 +72,14 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
   }
   close()
   {
+    if(!this.data.permissions || this.data.permissions.length == 0)
+    {
+      //Nhớ nhắc thêm mã noti
+      this.notifySvr.notify("Người thực hiện không được bỏ trống.");
+    }
+    else if(this.data?.duration == 0)  this.notifySvr.notify("Thời gian thực hiện phải lớn hơn 0."); 
+    else  this.dialog.close({data: this.data , process: this.process});
     //this.data.settings = JSON.stringify(this.data.settings);
-    this.dialog.close({data: this.data , process: this.process});
   }
 
   changeActivity(e:any)

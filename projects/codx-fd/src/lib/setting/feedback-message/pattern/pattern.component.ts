@@ -16,7 +16,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import _ from 'lodash';
+// import _ from 'lodash';
 import { environment } from 'src/environments/environment';
 import { EditPatternComponent } from './edit-pattern/edit-pattern.component';
 import { PatternService } from './pattern.service';
@@ -116,7 +116,10 @@ export class PatternComponent extends UIComponent implements OnInit {
       this.lstPattern = [...arr];
     }
     if (data.cardType != this.type) {
-      _.remove(this.lstPattern, { recID: data.recID });
+      this.lstPattern = (this.lstPattern as any[]).filter(
+        (x) => x.recID != data.recID
+      );
+      //_.remove(this.lstPattern, { recID: data.recID });
     } else {
       if (this.patternSV.indexEdit > -1)
         this.lstPattern[this.patternSV.indexEdit] = data;
