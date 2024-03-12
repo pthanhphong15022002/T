@@ -320,6 +320,17 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       });
       this.tabContent.push(this.task);
     }
+    this.waitForInputContactRendered(100);
+  }
+
+  waitForInputContactRendered(time: number) {
+    if (this.inputContact && this.inputContact.ComponentCurrent) {
+      this.changeCbbContact(this.contracts?.contactID);
+    } else {
+      setTimeout(() => {
+        this.waitForInputContactRendered(time + 100);
+      }, time);
+    }
   }
 
   // tra và sink mã tự động
@@ -826,21 +837,25 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.contractService
       .getOneContactByObjectID(customerID)
       .subscribe((contactID) => {
-        if (contactID) {
-          if (this.inputContact && this.inputContact?.ComponentCurrent) {
-            this.contracts.contactID = contactID;
-            this.inputContact.crrValue = contactID;
-            this.inputContact.ComponentCurrent.dataService.data = [];
-            this.inputContact.model = { objectID: this.contracts.customerID };
-          }
-        } else {
-          this.contracts.contactID = null;
-          this.inputContact.crrValue = null;
-          this.inputContact.ComponentCurrent.dataService.data = [];
-          this.inputContact.model = { objectID: this.contracts.customerID };
-        }
-        this.form.formGroup.patchValue(this.contracts);
+        this.changeCbbContact(contactID);
       });
+  }
+
+  changeCbbContact(contactID){
+    if (contactID) {
+      if (this.inputContact && this.inputContact?.ComponentCurrent) {
+        this.contracts.contactID = contactID;
+        this.inputContact.crrValue = contactID;
+        this.inputContact.ComponentCurrent.dataService.data = [];
+        this.inputContact.model = { objectID: this.contracts.customerID };
+      }
+    } else {
+      this.contracts.contactID = null;
+      this.inputContact.crrValue = null;
+      this.inputContact.ComponentCurrent.dataService.data = [];
+      this.inputContact.model = { objectID: this.contracts.customerID };
+    }
+    this.form.formGroup.patchValue(this.contracts);
   }
 
   valueChangeOwner(event) {
