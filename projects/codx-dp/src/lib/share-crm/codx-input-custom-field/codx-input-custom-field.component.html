@@ -275,6 +275,7 @@
               [label]="val.textValue"
               [checked]="valCheckBox.includes(val.value)"
               (change)="valueChangeCheckBox($event, val.value)"
+              [disabled]="disable"
             ></ejs-checkbox>
             <!-- <codx-input
               type="checkbox"

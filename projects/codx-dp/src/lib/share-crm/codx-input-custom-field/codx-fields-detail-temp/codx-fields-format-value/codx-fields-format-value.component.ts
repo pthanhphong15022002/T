@@ -56,7 +56,7 @@ export class CodxFieldsFormatValueComponent implements OnInit {
         this.dataValueTypeC = this.parseValue(this.data.dataValue);
         break;
       case 'L':
-        if (this.data.dataFormat == 'V')
+        if (this.data.dataFormat == 'V' || this.data.dataFormat == 'S')
           this.dataValueTypeV = this.listValue(this.data.dataValue);
         break;
       case 'PA':
