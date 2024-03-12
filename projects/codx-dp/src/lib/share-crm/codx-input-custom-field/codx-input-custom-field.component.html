@@ -259,6 +259,29 @@
         </div>
       </div>
     </ng-container>
+
+    <ng-container *ngIf="customField.dataFormat == 'S'">
+      <div class="d-flex align-items-center">
+        <div class="me-5" style="font-style: italic">
+          {{ plancehoderVll }}
+        </div>
+      </div>
+      <ng-container *ngFor="let val of datasVll; let idx = index">
+        <div class="d-flex align-items-center">
+          <div class="me-5">
+            <codx-input
+              type="checkbox"
+              [checked]="valCheckBox.includes(val.value)"
+              [field]="val.value"
+              [label]="val.textValue"
+              (valueChange)="valueChangeCheckBox($event, idx)"
+              [disabled]="disable"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
   </ng-container>
 
   <ng-container *ngIf="customField.dataType == 'P'">

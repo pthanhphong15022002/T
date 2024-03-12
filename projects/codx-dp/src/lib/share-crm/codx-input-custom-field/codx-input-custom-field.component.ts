@@ -150,6 +150,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   //ref
   dataFormatRef = [];
   eventDropRef = true;
+  valCheckBox = [];
 
   constructor(
     private cache: CacheService,
@@ -248,8 +249,14 @@ export class CodxInputCustomFieldComponent implements OnInit {
           : 0;
         break;
       case 'L':
-        if (this.customField.dataFormat == 'V') this.loadDataVll();
-        if (this.customField.dataFormat == 'B') {
+        if (
+          this.customField.dataFormat == 'V' ||
+          this.customField.dataFormat == 'S'
+        ) {
+          this.loadDataVll();
+          if (this.customField.dataFormat == 'S' && this.customField.dataValue)
+            this.valCheckBox = this.customField.dataValue.split(';');
+        } else if (this.customField.dataFormat == 'B') {
           this.cache.valueList('DP0272').subscribe((res) => {
             if (res) {
               let values = res.datas;
@@ -907,6 +914,31 @@ export class CodxInputCustomFieldComponent implements OnInit {
   }
 
   //-----------------------------//
+
+  //-------------CheckBox-----------------//
+  valueChangeCheckBox(e, idx) {
+    // let value = [];
+    // if (this.customField.dataValue)
+    //   this.valCheckBox = this.customField.dataValue.split(';');
+    if (e.data) {
+      if (this.mutiSelectVll) {
+        this.valCheckBox.push(e.field);
+      } else this.valCheckBox = [e.field];
+    } else {
+      if (this.mutiSelectVll) {
+        this.valCheckBox = this.valCheckBox.filter((x) => x != e.field);
+      } else this.valCheckBox = [];
+    }
+
+    let dtValue = '';
+    if (this.valCheckBox?.length > 0) dtValue = this.valCheckBox.join(';');
+    this.valueChangeCustom.emit({
+      e: dtValue,
+      data: this.customField,
+    });
+  }
+
+  //-----------------------------------//
 
   //-------------AUTONUM-----------------//
   getAutoNumberSetting() {
