@@ -916,19 +916,32 @@ export class CodxInputCustomFieldComponent implements OnInit {
   //-----------------------------//
 
   //-------------CheckBox-----------------//
-  valueChangeCheckBox(e, idx) {
+  valueChangeCheckBox(e, value) {
     // let value = [];
     // if (this.customField.dataValue)
     //   this.valCheckBox = this.customField.dataValue.split(';');
-    if (e.data) {
+    if (e.checked) {
       if (this.mutiSelectVll) {
-        this.valCheckBox.push(e.field);
-      } else this.valCheckBox = [e.field];
+        // this.valCheckBox = this.valCheckBox.filter((x) => x != e.field);
+        this.valCheckBox.push(value);
+      } else this.valCheckBox = [value];
     } else {
       if (this.mutiSelectVll) {
-        this.valCheckBox = this.valCheckBox.filter((x) => x != e.field);
+        this.valCheckBox = this.valCheckBox.filter((x) => x != value);
       } else this.valCheckBox = [];
     }
+
+    //dung core fail
+    // if (e.data) {
+    //   if (this.mutiSelectVll) {
+    //     // this.valCheckBox = this.valCheckBox.filter((x) => x != e.field);
+    //     this.valCheckBox.push(e.field);
+    //   } else this.valCheckBox = [e.field];
+    // } else {
+    //   if (this.mutiSelectVll) {
+    //     this.valCheckBox = this.valCheckBox.filter((x) => x != e.field);
+    //   } else this.valCheckBox = [];
+    // }
 
     let dtValue = '';
     if (this.valCheckBox?.length > 0) dtValue = this.valCheckBox.join(';');

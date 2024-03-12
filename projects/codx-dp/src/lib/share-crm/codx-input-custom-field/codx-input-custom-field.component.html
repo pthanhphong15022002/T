@@ -269,7 +269,14 @@
       <ng-container *ngFor="let val of datasVll; let idx = index">
         <div class="d-flex align-items-center">
           <div class="me-5">
-            <codx-input
+            <ejs-checkbox
+              #checkbox
+              [field]="val.value"
+              [label]="val.textValue"
+              [checked]="valCheckBox.includes(val.value)"
+              (change)="valueChangeCheckBox($event, val.value)"
+            ></ejs-checkbox>
+            <!-- <codx-input
               type="checkbox"
               [checked]="valCheckBox.includes(val.value)"
               [field]="val.value"
@@ -277,7 +284,7 @@
               (valueChange)="valueChangeCheckBox($event, idx)"
               [disabled]="disable"
             >
-            </codx-input>
+            </codx-input> -->
           </div>
         </div>
       </ng-container>
