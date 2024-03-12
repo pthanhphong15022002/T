@@ -55,7 +55,7 @@
           <div class="">
             {{ data?.taskName }}
           </div>
-          <div class="d-flex justify-content-end">
+          <div class="d-flex justify-content-end" *ngIf="data?.activityType == 'Task'">
             <codx-progressbar
               [progress]="data?.progress ?? 0"
               [stype]="2"
@@ -213,7 +213,7 @@
         <hr />
       </div>
 
-      <div class="mt-4 pt-4">
+      <div class="mt-4 pt-4" *ngIf="data?.activityType != 'Email'">
         <div class="d-flex justify-content-between align-items-center">
           <codx-label
             name="lblAttachments"
@@ -265,15 +265,74 @@
       <!-- <a (click)="eSign()">Ký số</a> -->
     </ng-template>
     <ng-template #footer>
-      <div class="form-group mb-5" *ngIf="data?.activityType == 'Approve' || data?.activityType == 'Check'">
-        <div class="d-flex justify-content-between">
+      <div
+        class="form-group mb-5"
+        *ngIf="data?.activityType == 'Approve' || data?.activityType == 'Check'"
+      >
+        <div class="d-flex align-items-center justify-content-between">
           <codx-label
             default="Ý kiến"
             [formModel]="form.formModel"
             fiedName="Idea"
           ></codx-label>
+          <div
+            class="d-flex justify-content-end"
+            *ngIf="data?.activityType == 'Check'"
+          >
+            <div class="d-flex me-2">
+              <span class="w-15px mt-n3" style="margin-right: 20px !important">
+                <codx-input
+                  name="idea"
+                  type="radio"
+                  style="width: 100%"
+                  field="yes"
+                  [checked]="true"
+                  (valueChange)="changeRadio($event)"
+                ></codx-input>
+              </span>
+              <span class="d-flex align-items-center">
+                <codx-label
+                  [name]="'lblrd1' + data?.activityType"
+                  [formName]="dialog?.formModel?.formName"
+                  [gridViewName]="
+                    dialog?.formModel?.gridViewName + data?.activityType
+                  "
+                  default="Đồng ý"
+                ></codx-label>
+              </span>
+            </div>
+            <div class="me-2 d-flex">
+              <span class="w-15px mt-n3" style="margin-right: 20px !important">
+                <codx-input
+                  name="idea"
+                  type="radio"
+                  style="width: 100%"
+                  field="no"
+                  [checked]="false"
+                  (valueChange)="changeRadio($event)"
+                ></codx-input>
+              </span>
+              <span class="d-flex align-items-center">
+                <codx-label
+                  [name]="'lblrd2' + data?.activityType"
+                  [formName]="dialog?.formModel?.formName"
+                  [gridViewName]="
+                    dialog?.formModel?.gridViewName + data?.activityType
+                  "
+                  default="Không đồng ý"
+                ></codx-label>
+              </span>
+            </div>
+          </div>
         </div>
-        <codx-input type="textarea" format="ed2" field="memo"> </codx-input>
+        <codx-input
+          type="textarea"
+          format="ed2"
+          field="memo"
+          placeholder="Nhập ý kiến"
+          [crrValue]="''"
+        >
+        </codx-input>
       </div>
 
       <div *ngIf="privileged">
@@ -305,6 +364,13 @@
           *ngIf="data?.activityType == 'Stamp' && data?.status != '5'"
           [ngTemplateOutlet]="buttonStamp"
         ></ng-container>
+
+        <!--Stamp-->
+        <ng-container
+          *ngIf="data?.activityType == 'Email'"
+          [ngTemplateOutlet]="buttonEmail"
+        ></ng-container>
+
         <ng-template #buttonApprove>
           <div class="d-flex justify-content-end">
             <button type="button" class="btn btn-outline-primary ms-1">
@@ -504,6 +570,40 @@
                 default="Xem và đóng dấu"
               ></codx-label>
             </button>
+          </div>
+        </ng-template>
+
+        <ng-template #buttonEmail>
+          <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-start">
+              <button type="button" class="btn btn-light-primary">
+                <codx-label
+                  [name]="'lblbt1' + data?.activityType"
+                  [formName]="dialog?.formModel?.formName"
+                  [gridViewName]="
+                    dialog?.formModel?.gridViewName + data?.activityType
+                  "
+                  default="Bộ hồ sơ"
+                ></codx-label>
+              </button>
+            </div>
+
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="sendMail()"
+              >
+                <codx-label
+                  [name]="'lblbt2' + data?.activityType"
+                  [formName]="dialog?.formModel?.formName"
+                  [gridViewName]="
+                    dialog?.formModel?.gridViewName + data?.activityType
+                  "
+                  default="Soạn mail"
+                ></codx-label>
+              </button>
+            </div>
           </div>
         </ng-template>
       </div>

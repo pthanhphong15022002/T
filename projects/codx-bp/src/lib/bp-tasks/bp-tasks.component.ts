@@ -77,6 +77,7 @@ export class BpTasksComponent
     this.dataSelected = data;
     switch (e.functionID) {
       case 'BPT0601':
+        this.openForm(data);
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
@@ -115,6 +116,22 @@ export class BpTasksComponent
     if (e && e?.data) {
       this.popupTasks(e, 'edit');
     }
+  }
+
+  openForm(data) {
+    this.api
+      .execSv<any>(
+        'BP',
+        'ERM.Business.BP',
+        'ProcessTasksBusiness',
+        'GetProcessAndInstanceAsync',
+        data.instanceID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.popupTasks({process: res[1], dataIns: res[0], data: data}, 'edit');
+        }
+      });
   }
 
   popupTasks(e, action) {

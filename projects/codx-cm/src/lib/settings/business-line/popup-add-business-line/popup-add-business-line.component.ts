@@ -62,7 +62,7 @@ export class PopupAddBusinessLineComponent implements OnInit, AfterViewInit {
     if (Array.isArray(arrField)) {
       this.arrFieldForm = arrField
         .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-        .map((x: any) => (x: any) => Util.camelize(x.fieldName));
+        .map((x: any) => Util.camelize(x.fieldName));
     }
     this.getAutoNumber();
   }

@@ -109,17 +109,25 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
     switch (e.field) {
       case 'place':
         if (this.data.place != this.parentID) {
+          this.parentID = this.data.place;
+
           this.data.zone = null;
-          this.data.objectID = null;
-          this.cbxZone.ComponentCurrent.dataService.data = [];
+          (
+            this.cbxZone.ComponentCurrent as CodxComboboxComponent
+          ).dataService.data = [];
           this.cbxZone.crrValue = null;
-          this.cbxZone.model = {
-            ParentID: this.data.place,
+          (this.cbxZone.ComponentCurrent as CodxComboboxComponent).model = {
+            ParentID: this.parentID,
           };
 
-          this.cbxObjectID.ComponentCurrent.dataService.data = [];
+          this.data.objectID = null;
+          (
+            this.cbxObjectID.ComponentCurrent as CodxComboboxComponent
+          ).dataService.data = [];
           this.cbxObjectID.crrValue = null;
           // this.changeCbxCustomer();
+          this.form.formGroup.patchValue({ zone: this.data['zone'] });
+          this.form.formGroup.patchValue({ objectID: this.data['objectID'] });
         }
         break;
       case 'zone':
@@ -128,21 +136,30 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
           this.data.objectID = null;
           this.parentID = this.data.place;
 
-          this.cbxPlace.ComponentCurrent.dataService.data = [];
-          this.cbxPlace.crrValue = null;
+          (
+            this.cbxPlace.ComponentCurrent as CodxComboboxComponent
+          ).dataService.data = [];
+
+          this.cbxPlace.crrValue = this.parentID;
           this.cbxPlace.model = {
             AssetID: this.data.place,
           };
-          this.cbxObjectID.ComponentCurrent.dataService.data = [];
+
+          (
+            this.cbxObjectID.ComponentCurrent as CodxComboboxComponent
+          ).dataService.data = [];
           this.cbxObjectID.crrValue = null;
           // this.changeCbxCustomer();
+
+          this.form.formGroup.patchValue({ place: this.data['place'] });
+          this.form.formGroup.patchValue({ objectID: this.data['objectID'] });
         }
         break;
       case 'objectID':
         break;
     }
 
-    this.form.formGroup.patchValue(this.data);
+    //this.form.formGroup.patchValue(this.data);
   }
 
   beforeSave(op: RequestOption) {
@@ -255,7 +272,7 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
           (
             this.cbxObjectID.ComponentCurrent as CodxComboboxComponent
           ).dataService.dataValues = dataValue;
-          this.form.formGroup.patchValue(this.data);
+          // this.form.formGroup.patchValue(this.data);
         } else {
           this.notiService.notify(
             'Không tìm thấy khách hàng ! Vui lòng kiểm tra lại thông tin tòa nhà !',
