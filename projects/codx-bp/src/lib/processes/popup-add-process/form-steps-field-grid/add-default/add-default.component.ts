@@ -95,8 +95,9 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
     option.zIndex = 1010;
     option.FormModel = this.formModel;
     var obj = {
-      dataReminder: this.data?.reminder,
-      dataEventControl: this.data?.eventControl
+      data: this.data,
+      dataReminder: typeof this.data?.reminder == 'string' ? JSON.parse(this.data.reminder) : this.data.reminder,
+      dataEventControl: typeof this.data?.reminder == 'string' ? JSON.parse(this.data?.eventControl) : this.data?.eventControl,
     };
     let popupDialog = this.callFuc.openForm(
       FormSettingAdvancedTasksComponent,
@@ -110,8 +111,12 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
     );
     popupDialog.closed.subscribe((e) => {
       if (e?.event && e?.event.length > 0) {
-        this.data.reminder = e.event[0];
-        this.data.eventControl = e.event[1];
+        let reminder = e.event[0];
+        let eventControl = e.event[1];
+
+
+        this.data.reminder = typeof reminder != 'string' ? JSON.stringify(reminder) : reminder;
+        this.data.eventControl = typeof eventControl != 'string' ? JSON.stringify(eventControl) : eventControl;
         // this.changeDetectorRef.detectChanges();
       }
     });
