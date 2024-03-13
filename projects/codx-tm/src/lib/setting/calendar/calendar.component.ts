@@ -18,7 +18,7 @@ import {
 
 import { CalendarModel, CalendarWeekModel } from '../../models/calendar.model';
 import { APICONSTANT } from '@shared/constant/api-const';
-import 'lodash';
+// import 'lodash';
 import { SelectweekComponent } from 'projects/codx-share/src/lib/components/selectweek/selectweek.component';
 import { CodxTMService } from '../../codx-tm.service';
 import { ActivatedRoute } from '@angular/router';

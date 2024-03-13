@@ -9,9 +9,9 @@
     <div class="">
       <div class="form-group">
         <codx-label
-          name="ListName"
+          [name]="!isCheckBox ? 'ListName' : 'CheckBox'"
           [formModel]="formModelVll"
-          default="Tên value list"
+          [default]="!isCheckBox ? 'Tên value list' : 'Tên check box'"
         >
         </codx-label>
         <codx-input
@@ -24,6 +24,7 @@
         >
         </codx-input>
       </div>
+
       <div class="form-group">
         <codx-label
           [fiedName]="'Note'"
@@ -69,12 +70,17 @@
             class="cursor-pointer ms-5 mb-2 has-action-menu d-flex position-relative"
           >
             <div class="crr-value-vll">
+              <span *ngIf="isCheckBox && i != idxEdit">
+                <codx-input type="checkbox" [field]="" class="me-5">
+                </codx-input>
+              </span>
               <span
                 class="no-border"
                 *ngIf="i != idxEdit"
                 (click)="handelTextValue(i)"
                 [innerText]="item?.textValue ?? ''"
               ></span>
+
               <input
                 *ngIf="i == idxEdit"
                 class="no-border"
@@ -115,7 +121,7 @@
           />
         </div>
 
-        <div class="form-group">
+        <div class="form-group" *ngIf="!isCheckBox">
           <codx-label
             class="label-colon"
             name="demoVll"

@@ -47,6 +47,7 @@ export class PopupAddVllCustomComponent implements OnInit {
   listVllCus: any;
   dialog: DialogRef;
   action = 'add';
+  isCheckBox = false;
 
   constructor(
     private changeRef: ChangeDetectorRef,
@@ -60,6 +61,7 @@ export class PopupAddVllCustomComponent implements OnInit {
     this.crrVll = JSON.parse(JSON.stringify(dt?.data?.data));
     this.datasVll = JSON.parse(JSON.stringify(dt?.data?.datasVll));
     this.action = dt?.data?.action;
+    this.isCheckBox = dt?.data?.isCheckBox;
   }
 
   ngOnInit(): void {}
