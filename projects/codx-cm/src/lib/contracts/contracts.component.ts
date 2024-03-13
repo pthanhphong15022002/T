@@ -274,7 +274,8 @@ export class ContractsComponent extends UIComponent {
             res.disabled = data?.write
               ? data?.closed ||
                 this.checkMoreReason(data) ||
-                (!data.applyProcess && ['3', '5'].includes(data.status))
+                (!data.applyProcess && ['3', '5'].includes(data.status)) ||
+                data?.approveStatus == '3'
               : true;
             break;
           case 'SYS04':
