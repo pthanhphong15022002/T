@@ -474,6 +474,7 @@ export class PopupPermissionsComponent implements OnInit {
         .allowUpdateStatus
         ? '1'
         : '0';
+      this.lstPermissions[this.currentPemission].config = this.getConfig();
     }
     this.api
       .execSv<any>(
