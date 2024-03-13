@@ -88,6 +88,7 @@ import { AttachmentGridComponent } from './component/attachment-grid/attachment-
 import { AttachmentGridFilesComponent } from './component/attachment-grid/attachment-grid-files/attachment-grid-files.component';
 import { CodxMentionComponent } from './component/codx-mention/codx-mention.component';
 import { MentionModule } from '@syncfusion/ej2-angular-dropdowns';
+import { SelectViettelCertificateComponent } from './component/pdf/public-esign/select-viettel-certificate/select-viettel-certificate.component';
 //#endregion
 
 const T_Component: Type<any>[] = [
@@ -137,6 +138,7 @@ const T_Component: Type<any>[] = [
   CoDxAddApproversComponent,
   CoDxViewReleaseSignFileComponent,
   CoDxGetTemplateSignFileComponent,
+  SelectViettelCertificateComponent,
 
   //Ai Tool
   CodxAiComponent,

@@ -1073,7 +1073,7 @@
 <ng-template #referencesDeal>
   <div *ngIf="isViewLink; else noData">
     <div *ngIf=" listContracts && listContracts.length > 0 ">
-      <div *ngFor="let item of listContracts" class="p-3">
+      <div *ngFor="let item of listContracts" class="p-3" (dblclick)="linkData('contract', item?.recID)">
         <div class="d-flex justify-content-start">
           <div>
             <i class="icon-sticky_note_2"></i>

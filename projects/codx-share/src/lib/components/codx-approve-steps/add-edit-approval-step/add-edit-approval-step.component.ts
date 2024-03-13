@@ -42,7 +42,8 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   @ViewChild('tabQuery', { static: true }) tabQuery: TemplateRef<any>;
   @ViewChild('tabEmail', { static: true }) tabEmail: TemplateRef<any>;
   @ViewChild('tabAnother', { static: true }) tabAnother: TemplateRef<any>;
-  @ViewChild('addApproverTmp', { static: true })addApproverTmp: TemplateRef<any>;
+  @ViewChild('addApproverTmp', { static: true })
+  addApproverTmp: TemplateRef<any>;
   @ViewChild('queryBuilder', { static: false })
   queryBuilder: QueryBuilderComponent;
 
@@ -104,7 +105,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   userOrg: any;
   lblAllowEditAreas: any;
   lblConfirmControl: any;
-  indexAppr=-1;
+  indexAppr = -1;
   stepGrv: any;
   setTitle(e: any) {
     console.log(e);
@@ -149,7 +150,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
 
     this.allowEditAreas = data?.data?.allowEditAreas;
     this.confirmControl = data?.data?.confirmControl;
-    this.negative = data?.data?.negative ?? "0";
+    //this.negative = data?.data?.negative ?? "0";
 
     this.eSign = data?.data?.eSign ?? false;
     let vllStepTypeName = this.eSign ? 'ES002' : 'ES026';
@@ -317,10 +318,11 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
           if (this.lstApprover?.length > 0) {
             this.lstApprover.forEach((element) => {
               this.confirmControl = element?.confirmControl ?? '0';
-              this.negative = element?.negative ?? '0';
+              //this.negative = element?.negative ?? '0';
               this.allowEditAreas = element?.allowEditAreas ?? false;
 
-              if (element.roleType == 'PA' || element.roleType == 'PE') element.write = true;
+              if (element.roleType == 'PA' || element.roleType == 'PE')
+                element.write = true;
               else element.write = false;
 
               element.delete = true;
@@ -388,11 +390,34 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
           break;
         }
         case 'approveMode': {
-          this.currentApproveMode =event?.data
-          this.data.approveMode = event?.data;
-          this.dialogApprovalStep?.patchValue({ approveMode: this.data.approveMode });
-          
-
+          if (
+            this.lstApprover?.filter((x) => x.negative == '1')?.length > 0 &&
+            event?.data != '2'
+          ) {
+            this.notifySvr.alertCode('ES038').subscribe((x) => {
+              if (x.event?.status == 'Y') {
+                this.lstApprover?.forEach((apr) => {
+                  apr.negative = '0';
+                  this.currentApproveMode = event?.data;
+                  this.data.approveMode = event?.data;
+                  this.dialogApprovalStep?.patchValue({
+                    approveMode: this.data.approveMode,
+                  });
+                });
+              } else {
+                this.data.approveMode = this.data.approveMode;
+                this.dialogApprovalStep?.patchValue({
+                  approveMode: this.data.approveMode,
+                });
+              }
+            });
+          } else {
+            this.currentApproveMode = event?.data;
+            this.data.approveMode = event?.data;
+            this.dialogApprovalStep?.patchValue({
+              approveMode: this.data.approveMode,
+            });
+          }
           break;
         }
         default: {
@@ -409,9 +434,9 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
         case 'confirmControl':
           this.newAppr.confirmControl = evt?.data ? '1' : '0';
           break;
-          case 'negative':
-            this.newAppr.negative = evt?.data ? '1' : '0';
-            break;
+        case 'negative':
+          this.newAppr.negative = evt?.data ? '1' : '0';
+          break;
         default:
           this.newAppr[evt?.field] = evt?.data;
           break;
@@ -425,59 +450,101 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     this.newAppr.stepType = 'A2';
     this.newAppr.idCardType = '1';
     this.newAppr.confirmControl = this.confirmControl ?? '0';
-    this.newAppr.negative= this.negative ?? '0';
+    this.newAppr.negative = '0';
     this.newAppr.allowEditAreas = this.allowEditAreas ?? true;
-    this.newAppr.createdBy= this.user?.userID;
-    this.indexAppr=-1;
+    this.newAppr.createdBy = this.user?.userID;
+    this.indexAppr = -1;
     this.cr.detectChanges();
     let dialog = this.callfc.openForm(this.addApproverTmp, '', 400, 450);
   }
-  clickMFApprover(evt:any){
-    if(evt){
-      switch (evt?.functionID){
-        case "SYS02":
+  clickMFApprover(evt: any) {
+    if (evt) {
+      switch (evt?.functionID) {
+        case 'SYS02':
           this.newAppr = new Approvers();
           this.newAppr.signatureType = '2';
           this.newAppr.stepType = 'A2';
           this.newAppr.idCardType = '1';
           this.newAppr.confirmControl = this.confirmControl ?? '0';
-          this.newAppr.negative = this.negative ?? '0';
+          this.newAppr.negative = '0';
           this.newAppr.allowEditAreas = this.allowEditAreas ?? true;
-          this.newAppr.createdBy= this.user?.userID;
+          this.newAppr.createdBy = this.user?.userID;
           this.cr.detectChanges();
           break;
       }
     }
   }
-  saveApprover(dialog:any, index :number) {
-    if(this.newAppr?.roleType!=null){
-      if(this.lstApprover?.length == 0) this.lstApprover=[];
-      if(index >=0){
-        this.lstApprover[index]=this.newAppr;
-      }
-      else{
-        if(this.newAppr?.approver!=null && this.newAppr?.approver!=this.newAppr?.roleType){
-          this.lstApprover = this.lstApprover.filter(x=>x?.approver != this.newAppr?.approver);
+  saveApprover(dialog: any, index: number) {
+    if (this.newAppr?.roleType != null) {
+      if (this.lstApprover?.length == 0) this.lstApprover = [];
+      if (index >= 0) {
+        if (
+          (this.newAppr.negative == '1' || this.newAppr.negative == true) &&
+          this.currentApproveMode != '2'
+        ) {
+          this.notifySvr.alertCode('ES037').subscribe((x) => {
+            if (x.event?.status == 'Y') {
+              this.dialogApprovalStep?.patchValue({ approveMode: '2' });
+              this.data.approveMode = '2';
+              this.currentApproveMode = '2';
+              this.cr.detectChanges();
+              this.lstApprover[index] = this.newAppr;
+            } else {
+              this.newAppr.negative = '0';              
+              this.lstApprover[index] = this.newAppr;
+              this.cr.detectChanges();
+            }
+          });
+        } else {
+          this.lstApprover[index] = this.newAppr;
         }
-        else{
-          this.lstApprover = this.lstApprover.filter(x=>x?.roleType != this.newAppr.roleType);
-        } 
-        this.lstApprover.push(this.newAppr);
+      } else {
+        if (
+          this.newAppr?.approver != null &&
+          this.newAppr?.approver != this.newAppr?.roleType
+        ) {
+          this.lstApprover = this.lstApprover.filter(
+            (x) => x?.approver != this.newAppr?.approver
+          );
+        } else {
+          this.lstApprover = this.lstApprover.filter(
+            (x) => x?.roleType != this.newAppr.roleType
+          );
+        }
+        if (
+          (this.newAppr.negative == '1' || this.newAppr.negative == true) &&
+          this.currentApproveMode != '2'
+        ) {
+          this.notifySvr.alertCode('ES037').subscribe((x) => {
+            if (x.event?.status == 'Y') {
+              this.dialogApprovalStep?.patchValue({ approveMode: '2' });
+              this.data.approveMode = '2';
+              this.currentApproveMode = '2';
+              this.cr.detectChanges();
+              this.lstApprover.push(this.newAppr);
+            } else {
+              this.newAppr.negative = '0';
+              this.cr.detectChanges();
+            }
+          });
+        } else {
+          this.lstApprover.push(this.newAppr);
+        }
       }
       this.cr.detectChanges();
       dialog && dialog?.close();
     }
   }
-  editApprover(index:number){
-    this.newAppr = {...this.lstApprover[index]};
-    this.newAppr.signatureType = this.newAppr?.signatureType ??'2';
+  editApprover(index: number) {
+    this.newAppr = { ...this.lstApprover[index] };
+    this.newAppr.signatureType = this.newAppr?.signatureType ?? '2';
     this.newAppr.stepType = this.newAppr?.stepType ?? 'A2';
     this.cr.detectChanges();
-    this.indexAppr=index;
-    let dialog = this.callfc.openForm(this.addApproverTmp, '', 400, 450);    
+    this.indexAppr = index;
+    let dialog = this.callfc.openForm(this.addApproverTmp, '', 400, 450);
   }
-  deleteApprover(index:number){
-    this.lstApprover.splice(index,1);
+  deleteApprover(index: number) {
+    this.lstApprover.splice(index, 1);
     this.cr.detectChanges();
   }
 
@@ -486,7 +553,8 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       event?.data?.forEach((element) => {
         //let appr = new Approvers();
         this.newAppr.name = element?.text;
-        this.newAppr.roleType = element?.objectType =="SYS061" ? element?.id : element?.objectType;
+        this.newAppr.roleType =
+          element?.objectType == 'SYS061' ? element?.id : element?.objectType;
         this.newAppr.icon = element?.icon;
         switch (element?.objectType) {
           //----------------------------------------------------------------------------------//
@@ -509,8 +577,8 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
             break;
           //----------------------------------------------------------------------------------//
           case ShareType.Partner: //	Đối tác
-          this.newAppr.write = true;
-          this.newAppr.roleType = element.objectType;
+            this.newAppr.write = true;
+            this.newAppr.roleType = element.objectType;
             let popupApprover = this.callfc.openForm(
               PopupAddApproverComponent,
               '',
@@ -527,19 +595,18 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
               if (res.event) {
                 this.newAppr = res?.event;
                 //this.lstApprover.push(res.event);
-              }
-              else{
-                this.newAppr.roleType=null;
+              } else {
+                this.newAppr.roleType = null;
               }
             });
             break;
 
           //----------------------------------------------------------------------------------//
           case ShareType.Personal: //	Đối tác
-          this.newAppr.write = true;
-          this.newAppr.roleType = element.objectType;
-          this.newAppr.position = element.objectName;
-            // let popupApproverPE = this.callfc.openForm(              
+            this.newAppr.write = true;
+            this.newAppr.roleType = element.objectType;
+            this.newAppr.position = element.objectName;
+            // let popupApproverPE = this.callfc.openForm(
             //   PopupAddPersonSignerComponent,
             //   '',
             //   550,
@@ -570,7 +637,8 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
               .getCompanyApprover(this.userOrg?.companyID, element?.objectType)
               .subscribe((companyAppr) => {
                 if (companyAppr) {
-                  this.newAppr.position = companyAppr?.position ?? element?.objectName;
+                  this.newAppr.position =
+                    companyAppr?.position ?? element?.objectName;
                   this.newAppr.userID = companyAppr?.userID;
                   this.newAppr.userName = companyAppr?.userName;
                   this.newAppr.orgUnitName = companyAppr?.orgUnitName;
@@ -604,12 +672,17 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
                           this.newAppr.approver = element?.id;
                           this.newAppr.roleType = element?.objectType;
                           this.newAppr.name = element?.text;
-                          this.newAppr.position = element?.dataSelected?.PositionName;
-                          this.newAppr.userIDs = lstUserInfo?.map(x=>x?.userID)?.join(';');
-                          this.dialogApprovalStep?.patchValue({ approveMode:"3" }); 
-                          this.data.approveMode="3";
-                          this.currentApproveMode="3";
-                          this.cr.detectChanges();           
+                          this.newAppr.position =
+                            element?.dataSelected?.PositionName;
+                          this.newAppr.userIDs = lstUserInfo
+                            ?.map((x) => x?.userID)
+                            ?.join(';');
+                          this.dialogApprovalStep?.patchValue({
+                            approveMode: '3',
+                          });
+                          this.data.approveMode = '3';
+                          this.currentApproveMode = '3';
+                          this.cr.detectChanges();
                         } else {
                           return;
                         }
@@ -618,7 +691,8 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
                       this.newAppr.approver = element?.id;
                       this.newAppr.roleType = element?.objectType;
                       this.newAppr.name = element?.text;
-                      this.newAppr.position = element?.dataSelected?.PositionName;
+                      this.newAppr.position =
+                        element?.dataSelected?.PositionName;
                       this.newAppr.userID = lstUserInfo[0]?.userID;
                       this.newAppr.userName = lstUserInfo[0]?.userName;
                       this.newAppr.orgUnitName = lstUserInfo[0]?.orgUnitName;
@@ -702,31 +776,29 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       return;
     }
     if (this.lstApprover.length == 0) {
-      if(this.stepGrv == null){      
+      if (this.stepGrv == null) {
         this.cache
-        .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
-        .subscribe((res) => {
-          if (res) {
-            this.notifySvr.notifyCode(
-              'SYS009',
-              0,
-              '"' + res['Approvers'].headerText + '"'
-            );
-          }
-        });
-      }
-      else{
+          .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+          .subscribe((res) => {
+            if (res) {
+              this.notifySvr.notifyCode(
+                'SYS009',
+                0,
+                '"' + res['Approvers'].headerText + '"'
+              );
+            }
+          });
+      } else {
         this.notifySvr.notifyCode(
           'SYS009',
           0,
           '"' + this.stepGrv?.Approvers?.headerText + '"'
         );
       }
-      
+
       return;
     }
     this.lstApprover.forEach((appr) => {
-      appr.negative = appr?.negative ?? this.negative;
       appr.confirmControl = appr?.confirmControl ?? this.confirmControl;
       appr.allowEditAreas = appr?.allowEditAreas ?? this.allowEditAreas;
       appr.stepType = appr?.stepType ?? this.data?.stepType;
@@ -734,8 +806,8 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       // appr.confirmControl = this.confirmControl;
       // appr.allowEditAreas = this.allowEditAreas;
     });
-    if(this.lstApprover?.length==1){
-      this.currentApproveMode ='1';
+    if (this.lstApprover?.length == 1) {
+      this.currentApproveMode = '1';
     }
     this.dialogApprovalStep?.patchValue({
       approveMode: this.currentApproveMode,
@@ -822,7 +894,6 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       });
     }
   }
-
 
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.lstApprover, event.previousIndex, event.currentIndex);
