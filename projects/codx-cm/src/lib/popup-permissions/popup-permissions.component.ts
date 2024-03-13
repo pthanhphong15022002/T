@@ -1,3 +1,4 @@
+import { CM_Deals, CM_Cases } from './../models/cm_model';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component, OnInit, Optional } from '@angular/core';
 import {
@@ -11,6 +12,7 @@ import {
   Util,
 } from 'codx-core';
 import { CM_Permissions } from '../models/cm_model';
+import { CodxCmService } from '../codx-cm.service';
 
 @Component({
   selector: 'lib-popup-permissions',
@@ -45,12 +47,21 @@ export class PopupPermissionsComponent implements OnInit {
   objectIDSelect: any;
   user: any;
   isAdmin: boolean = false;
+  tabDefault = {
+    CM_Contracts: "1,5,7,8,9",
+    CM_Customers: "1,2,3,4,5",
+    CM_Deals: "1,2,5,6,7",
+    CM_Cases: "1,4,6"
+  }
+  listDataTabView;
+
   constructor(
     private cache: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private api: ApiHttpService,
     private auth: AuthStore,
+    private cmService: CodxCmService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -64,7 +75,7 @@ export class PopupPermissionsComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.checkAdminUpdate();
     this.checkAddUser();
     this.cache.valueList('CRM051').subscribe((res) => {
@@ -81,6 +92,15 @@ export class PopupPermissionsComponent implements OnInit {
       );
       this.changePermissions(this.currentPemission);
     }
+    let tabEntity = this.tabDefault[this.entityName];
+    let vllData = await this.cmService.getValueList("CRM086");
+    if(vllData){
+      let listDataTabView = vllData.filter(x => tabEntity.includes(x?.value));
+      if(listDataTabView){
+        this.listDataTabView = listDataTabView.map((x) => {return {...x, isCheck: false}});
+      }
+    }
+
   }
 
   ngAfterViewInit(): void {
@@ -305,10 +325,20 @@ export class PopupPermissionsComponent implements OnInit {
   }
   //#endregion
 
-  valueChangeCbx(event) {
+  valueChangeTab(event,tab) {
     if(event?.data){
-      this.config = event?.data;
+      tab.isCheck = event?.data;
     }
+  }
+
+  getConfig(){
+    let tabCheck = this.listDataTabView?.filter(x => x.checked)?.map(x => x.value);
+    this.config = tabCheck.join(";");
+  }
+  setConfig(config){
+    this.listDataTabView?.forEach(element => {
+      
+    });
   }
 
   //#region  check Permission

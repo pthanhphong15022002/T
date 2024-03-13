@@ -37,7 +37,7 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
       if(this.listTaskConvert?.length > 0){
         this.listTaskConvert[0].isActive = true;
         this.tabOld = this.listTaskConvert[0];
-        this.tab.emit(this.listTaskConvert[0].name); 
+        this.tab.emit(this.listTaskConvert[0].value); 
       }
      
     }
@@ -50,11 +50,11 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
         if(this.listTaskConvert?.length > 0){
           this.listTaskConvert[0].isActive = true;
           this.tabOld = this.listTaskConvert[0];
-          this.tab.emit(this.listTaskConvert[0].name);
+          this.tab.emit(this.listTaskConvert[0].value);
         }
       }else{
         if(this.tabOld){
-          this.tab.emit(this.tabOld.name);
+          this.tab.emit(this.tabOld.value);
         }else{
           this.listTaskConvert = this.listTab.map((item) => {
             return {...item, isActive: false}
@@ -62,18 +62,18 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
           if(this.listTaskConvert?.length > 0){
             this.listTaskConvert[0].isActive = true;
             this.tabOld = this.listTaskConvert[0];
-            this.tab.emit(this.listTaskConvert[0].name);
+            this.tab.emit(this.listTaskConvert[0].value);
           }
         }
       }
     }
   }
   clickMenu(item) {
-    if(item.name != this.tabOld?.name){
+    if(item.value != this.tabOld?.value){
       item.isActive = true;
       this.tabOld.isActive = false;
       this.tabOld = item;
-      this.tab.emit(item.name);
+      this.tab.emit(item.value);
     }
   }
   clickShowTab(){
