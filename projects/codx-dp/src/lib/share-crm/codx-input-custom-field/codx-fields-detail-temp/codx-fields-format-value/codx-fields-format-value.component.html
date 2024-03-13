@@ -200,10 +200,18 @@
       ></span>
     </ng-container>
 
-    <ng-container *ngIf="data.dataFormat == 'V' || this.data.dataFormat == 'S'">
+    <ng-container *ngIf="data.dataFormat == 'V' || data.dataFormat == 'S'">
       <div class="flex flex-column">
+        <div
+          *ngIf="data.dataFormat == 'S' && noteVll"
+          class=""
+          style="font-style: italic"
+        >
+          <span>{{ noteVll }}</span>
+        </div>
         <div *ngFor="let item of dataValueTypeV">
-          <span>{{ item }}</span>
+          <span class="me-5 icon-check icon-12"></span>
+          <span class="">{{ item }}</span>
         </div>
       </div>
     </ng-container>
