@@ -28,7 +28,7 @@ import { CodxCmService } from '../../../codx-cm.service';
 export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('cbxProjectID') cbxProjectID: CodxInputComponent;
-  @ViewChild('cbxAssetAcctID') cbxAssetAcctID: CodxInputComponent;
+  @ViewChild('cbxRefID') cbxRefID: CodxInputComponent;
   @ViewChild('cbxSiteID') cbxSiteID: CodxInputComponent;
 
   dialog: any;
@@ -110,7 +110,7 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
     switch (e.field) {
       case 'projectID':
         this.data.siteID = null;
-        this.data.assetAcctID = null;
+        this.data.refID = null;
 
         if (!e.data) {
           (
@@ -121,9 +121,9 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
           this.form.formGroup.patchValue({ siteID: this.data['siteID'] });
 
           (
-            this.cbxAssetAcctID.ComponentCurrent as CodxComboboxComponent
+            this.cbxRefID.ComponentCurrent as CodxComboboxComponent
           ).dataService.data = [];
-          this.cbxAssetAcctID.crrValue = null;
+          this.cbxRefID.crrValue = null;
 
           this.changeCbxCustomer();
         } else if (this.data.projectID != this.parentID) {
@@ -138,9 +138,9 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
           this.form.formGroup.patchValue({ siteID: this.data['siteID'] });
 
           (
-            this.cbxAssetAcctID.ComponentCurrent as CodxComboboxComponent
+            this.cbxRefID.ComponentCurrent as CodxComboboxComponent
           ).dataService.data = [];
-          this.cbxAssetAcctID.crrValue = null;
+          this.cbxRefID.crrValue = null;
 
           this.changeCbxCustomer();
         }
@@ -157,16 +157,16 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
           // this.cbxprojectID.model = null;
           // this.form.formGroup.patchValue({ projectID: this.data['projectID'] });
           // (
-          //   this.cbxAssetAcctID.ComponentCurrent as CodxComboboxComponent
+          //   this.cbxRefID.ComponentCurrent as CodxComboboxComponent
           // ).dataService.data = [];
-          // this.cbxAssetAcctID.crrValue = null;
+          // this.cbxRefID.crrValue = null;
 
           this.changeCbxCustomer();
         } else if (
           e?.component?.itemsSelected[0]?.ParentID != this.data.projectID
         ) {
           this.data.projectID = e?.component?.itemsSelected[0]?.ParentID;
-          this.data.assetAcctID = null;
+          this.data.refID = null;
           this.parentID = this.data.projectID;
           (
             this.cbxProjectID.ComponentCurrent as CodxComboboxComponent
@@ -182,14 +182,14 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
         if (this.siteIDOldData != this.data.siteID) {
           this.siteIDOldData = this.data.siteID;
           (
-            this.cbxAssetAcctID.ComponentCurrent as CodxComboboxComponent
+            this.cbxRefID.ComponentCurrent as CodxComboboxComponent
           ).dataService.data = [];
-          this.cbxAssetAcctID.crrValue = null;
+          this.cbxRefID.crrValue = null;
 
           this.changeCbxCustomer();
         }
         break;
-      case 'assetAcctID':
+      case 'refID':
         break;
     }
 
@@ -301,10 +301,10 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
           dataValue = dataValue.substring(0, dataValue.length - 1);
 
           (
-            this.cbxAssetAcctID.ComponentCurrent as CodxComboboxComponent
+            this.cbxRefID.ComponentCurrent as CodxComboboxComponent
           ).dataService.predicates = predicate;
           (
-            this.cbxAssetAcctID.ComponentCurrent as CodxComboboxComponent
+            this.cbxRefID.ComponentCurrent as CodxComboboxComponent
           ).dataService.dataValues = dataValue;
           // this.form.formGroup.patchValue(this.data);
         } else {
@@ -312,12 +312,12 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
             'Không tìm thấy khách hàng ! Vui lòng kiểm tra lại thông tin tòa nhà !',
             '2'
           );
-          this.cbxAssetAcctID.ComponentCurrent.dataService.data = [];
-          this.cbxAssetAcctID.crrValue = null;
-          this.data.assetAcctID = null;
+          this.cbxRefID.ComponentCurrent.dataService.data = [];
+          this.cbxRefID.crrValue = null;
+          this.data.refID = null;
         }
         this.form.formGroup.patchValue({
-          assetAcctID: this.data['assetAcctID'],
+          refID: this.data['refID'],
         });
       });
   }

@@ -687,20 +687,24 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       return false;
     }
 
+    // if (
+    //   this.column.dataType == 'L' &&
+    //   this.column.dataFormat != 'B' &&
+    //   !this.column.refType
+    // ) {
+    //   this.notiService.notifyCode(
+    //     'SYS009',
+    //     0,
+    //     '"' + this.grvSetup['RefType']?.headerText + '"'
+    //   );
+    //   return false;
+    // }
+
     if (
       this.column.dataType == 'L' &&
       this.column.dataFormat != 'B' &&
-      !this.column.refType
+      !this.column.refValue
     ) {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.grvSetup['RefType']?.headerText + '"'
-      );
-      return false;
-    }
-
-    if (this.column.dataType == 'L' && !this.column.refValue) {
       this.notiService.notifyCode(
         'SYS009',
         0,
