@@ -255,8 +255,9 @@
             <div class="footer-message">
 
                 <div class="footer-message-text">
-                    <input type="textarea" class="input" (keyup.enter)="sendMessage()" [(ngModel)]="message">
+                    <input id="inputChat" type="textarea" class="input" (keyup.enter)="sendMessage()" [(ngModel)]="message">
                 </div>
+                <codx-mention [targetId]="'#inputChat'"></codx-mention>
             </div>
             <button type="button" class="footer-button btn btn-icon btn-light-primary" (click)="sendMessage()">
                 <span class="icon-send icon-16"></span>

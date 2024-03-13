@@ -81,7 +81,6 @@ export class TreeviewCommentComponent implements OnInit {
   }
   // get comment
   getCommentsAsync(data: any) {
-    debugger
     if (!data.listComment) data.listComment = [];
     if (!data.pageIndex) data.pageIndex = 0;
     if (!data.totalPage) data.totalPage = 0;

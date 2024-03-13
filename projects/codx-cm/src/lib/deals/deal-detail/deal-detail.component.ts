@@ -17,6 +17,7 @@ import {
   CodxService,
   FormModel,
   NotificationsService,
+  TenantStore,
 } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contracts } from '../../models/cm_model';
@@ -24,6 +25,7 @@ import { firstValueFrom } from 'rxjs';
 import { DealsComponent } from '../deals.component';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'codx-deal-detail',
@@ -134,6 +136,8 @@ export class DealDetailComponent implements OnInit {
     private cache: CacheService,
     private notificationsService: NotificationsService,
     private dealComponent: DealsComponent,
+    private location: Location,
+    private tenantStore: TenantStore,
     codxService: CodxService
   ) {
     this.asideMode = codxService.asideMode;
@@ -882,4 +886,32 @@ export class DealDetailComponent implements OnInit {
     this.moveStage.emit(event);
   }
   //#endregion
+  linkData(type:string, recID:string){
+    if (type && recID) {
+      const url1 = this.location.prepareExternalUrl(this.location.path());
+      const parser = document.createElement('a');
+      parser.href = url1;
+      const domain = parser.origin;
+
+      let tenant = this.tenantStore.get().tenant;
+      let url = ``
+      switch(type){
+        case "contract":
+          url = `${domain}/${tenant}/cm/contracts/CM0206?predicate=RecID=@0&dataValue=${recID}`;
+          break;
+        case "deal":
+          url = `${domain}/${tenant}/cm/deals/CM0201?predicate=RecID=@0&dataValue=${recID}`;
+          break;
+        case "quotation":
+          url = `${domain}/${tenant}/cm/quotations/CM0202?predicate=RecID=@0&dataValue=${recID}`;
+          break;
+      }
+      if(url){
+        window.open(url, '_blank');
+      }
+      return;
+    } else {
+      this.notificationsService.notify('Không tìm thấy dữ liệu', '3');
+    }
+  }
 }
