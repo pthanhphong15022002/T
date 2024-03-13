@@ -210,8 +210,8 @@ export class BP_Processes_Time{
   email: string;
 }
 
-export class BP_Processes_Steps_EventControl{
-  startControl: string;
+export class BP_Processes_EventControl{
+  startEmail: string;
   isRequire: string;
   alertFail: string;
   alertFailTemplate: string;
