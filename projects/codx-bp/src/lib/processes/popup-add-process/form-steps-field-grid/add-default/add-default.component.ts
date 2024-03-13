@@ -72,13 +72,17 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
   }
   close()
   {
-    if(!this.data.permissions || this.data.permissions.length == 0)
+    if(this.data.activityType != "Conditions")
     {
-      //Nhớ nhắc thêm mã noti
-      this.notifySvr.notify("Người thực hiện không được bỏ trống.");
+      if(!this.data.permissions || this.data.permissions.length == 0)
+      {
+        //Nhớ nhắc thêm mã noti
+        this.notifySvr.notify("Người thực hiện không được bỏ trống.");
+      }
+      else if(this.data?.duration == 0)  this.notifySvr.notify("Thời gian thực hiện phải lớn hơn 0."); 
+      else this.dialog.close({data: this.data , process: this.process});
     }
-    else if(this.data?.duration == 0)  this.notifySvr.notify("Thời gian thực hiện phải lớn hơn 0."); 
-    else  this.dialog.close({data: this.data , process: this.process});
+    else this.dialog.close({data: this.data , process: this.process});
     //this.data.settings = JSON.stringify(this.data.settings);
   }
 

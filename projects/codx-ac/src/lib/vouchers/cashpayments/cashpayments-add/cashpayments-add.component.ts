@@ -1469,7 +1469,7 @@ export class CashPaymentAddComponent extends UIComponent {
             setTimeout(() => {
               if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
                 e.target.focus();
-                e.target.select();
+                // e.target.select();
               }
             }, 100);
           }
@@ -1482,7 +1482,7 @@ export class CashPaymentAddComponent extends UIComponent {
             setTimeout(() => {
               if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
                 e.target.focus();
-                e.target.select();
+                //e.target.select();
               }
             }, 100);
           }
@@ -1495,7 +1495,7 @@ export class CashPaymentAddComponent extends UIComponent {
             setTimeout(() => {
               if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
                 e.target.focus();
-                e.target.select();
+                //e.target.select();
               }
             }, 100);
           }

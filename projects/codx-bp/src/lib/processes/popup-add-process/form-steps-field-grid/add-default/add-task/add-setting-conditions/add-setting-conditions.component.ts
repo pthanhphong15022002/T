@@ -209,7 +209,10 @@ export class AddSettingConditionsComponent {
   saveForm() {
     let fields = [];
     this.listSteps.forEach(x=>{
-      fields = fields.concat(x.extendInfo);
+      if(x?.extendInfo)
+      {
+        fields = fields.concat(x.extendInfo);
+      }
     })
     this.advFilters.filters = this.filters.filters;
     this.filters.filters?.forEach((filter: FilterModel, index: number) => {
