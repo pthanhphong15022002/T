@@ -282,8 +282,8 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
   changeCbxCustomer() {
     this.api
       .exec<any>('CM', 'ContractsBusiness', 'GetCbxCustomerContractAsync', [
-        this.data.projectID,
-        this.data.siteID,
+        this.data.siteID, //CMoffices
+        this.data.projectID, //CMBuilding
       ])
       .subscribe((res) => {
         if (res) {
