@@ -254,7 +254,7 @@ export class FormStepsFieldGridComponent
             let deleteDt = res?.event?.delete;
             if(deleteDt)
             {
-              debugger
+              //debugger
               // if(indexDelete>=0)
               // {
               //   if(deleteDt?.child && deleteDt.child.length>0)
