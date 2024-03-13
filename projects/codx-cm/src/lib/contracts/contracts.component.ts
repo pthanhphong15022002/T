@@ -1,3 +1,4 @@
+import { Valuelist } from './../../../../codx-fd/src/lib/models/model';
 import {
   Input,
   Injector,
@@ -143,6 +144,8 @@ export class ContractsComponent extends UIComponent {
   arrFieldIsVisible = [];
   liquidation: CM_Contracts;
   processID = '';
+  valueListTab;
+  tabDefaut;
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
@@ -183,6 +186,14 @@ export class ContractsComponent extends UIComponent {
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     this.getAccount();
     this.getColumsGrid(this.grvSetup);
+    const [valueListTab, tabDefaut] = await Promise.all([
+      this.cmService.getValueList("CRM086"),
+      this.cmService.getSettingContract()
+    ]);
+    this.valueListTab = valueListTab;
+    if(tabDefaut){
+      this.tabDefaut = tabDefaut?.ActiveTabContracts;
+    }
   }
 
   async ngOnChanges(changes: SimpleChanges) {}
@@ -248,8 +259,8 @@ export class ContractsComponent extends UIComponent {
             res.disabled = true;
             break;
           case 'SYS02':
-            if(this.user?.userID == "thuykt"){
-
+            if(!["1","15"].includes(data?.status)){
+              res.disabled = true;
             }else{
               res.disabled = data?.delete
               ? data.closed ||
@@ -257,12 +268,14 @@ export class ContractsComponent extends UIComponent {
                 (!data.applyProcess && ['3', '5'].includes(data.status))
               : true;
             }
+            
             break;
           case 'SYS03':
             res.disabled = data?.write
               ? data?.closed ||
                 this.checkMoreReason(data) ||
-                (!data.applyProcess && ['3', '5'].includes(data.status))
+                (!data.applyProcess && ['3', '5'].includes(data.status)) ||
+                data?.approveStatus == '3'
               : true;
             break;
           case 'SYS04':

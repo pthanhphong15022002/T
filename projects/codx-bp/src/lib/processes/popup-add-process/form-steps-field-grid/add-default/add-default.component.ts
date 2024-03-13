@@ -16,6 +16,7 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
   vllBP001:any;
   vllDefault:any;
   isAttach = false;
+  hideDelete = false;
   constructor(
     public inject: Injector,
     @Optional() dt?: DialogData,
@@ -32,6 +33,7 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
     if(dt?.data?.parent) this.parent = dt.data.parent;
     if(dt?.data?.activityType) this.activityType = dt.data.activityType;
     if(dt?.data?.listStage) this.listStage = dt.data.listStage;
+    if(dt?.data?.hideDelete) this.hideDelete = dt?.data?.hideDelete
   }
   ngOnInit(): void {
     this.getVll();
@@ -70,8 +72,18 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
   }
   close()
   {
+    if(this.data.activityType != "Conditions")
+    {
+      if(!this.data.permissions || this.data.permissions.length == 0)
+      {
+        //Nhớ nhắc thêm mã noti
+        this.notifySvr.notify("Người thực hiện không được bỏ trống.");
+      }
+      else if(this.data?.duration == 0)  this.notifySvr.notify("Thời gian thực hiện phải lớn hơn 0."); 
+      else this.dialog.close({data: this.data , process: this.process});
+    }
+    else this.dialog.close({data: this.data , process: this.process});
     //this.data.settings = JSON.stringify(this.data.settings);
-    this.dialog.close({data: this.data , process: this.process});
   }
 
   changeActivity(e:any)
@@ -95,8 +107,9 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
     option.zIndex = 1010;
     option.FormModel = this.formModel;
     var obj = {
-      dataReminder: this.data?.reminder,
-      dataEventControl: this.data?.eventControl
+      data: this.data,
+      dataReminder: typeof this.data?.reminder == 'string' ? JSON.parse(this.data.reminder) : this.data.reminder,
+      dataEventControl: typeof this.data?.reminder == 'string' ? JSON.parse(this.data?.eventControl) : this.data?.eventControl,
     };
     let popupDialog = this.callFuc.openForm(
       FormSettingAdvancedTasksComponent,
@@ -110,8 +123,12 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
     );
     popupDialog.closed.subscribe((e) => {
       if (e?.event && e?.event.length > 0) {
-        this.data.reminder = e.event[0];
-        this.data.eventControl = e.event[1];
+        let reminder = e.event[0];
+        let eventControl = e.event[1];
+
+
+        this.data.reminder = typeof reminder != 'string' ? JSON.stringify(reminder) : reminder;
+        this.data.eventControl = typeof eventControl != 'string' ? JSON.stringify(eventControl) : eventControl;
         // this.changeDetectorRef.detectChanges();
       }
     });

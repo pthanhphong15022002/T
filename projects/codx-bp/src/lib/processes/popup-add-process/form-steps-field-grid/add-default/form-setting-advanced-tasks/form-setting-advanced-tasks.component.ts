@@ -8,14 +8,16 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
+  ApiHttpService,
   CodxInputComponent,
   DialogData,
   DialogRef,
   FormModel,
   NotificationsService,
+  Util,
 } from 'codx-core';
 import {
-  BP_Processes_Steps_EventControl,
+  BP_Processes_EventControl,
   BP_Processes_Steps_Reminder,
 } from 'projects/codx-bp/src/lib/models/BP_Processes.model';
 import { ContentEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/content-email/content-email.component';
@@ -28,6 +30,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 })
 export class FormSettingAdvancedTasksComponent implements OnInit {
   @ViewChild('mailControl') mailControl: ContentEmailComponent;
+  @ViewChild('mailReminder') mailReminder: ContentEmailComponent;
   dialog: any;
   title = 'Thiết lập nâng cao';
   tabInfos: any[] = [
@@ -45,28 +48,38 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
   isAlert: boolean = false;
   isSendMail: boolean = false;
   dataReminder = new BP_Processes_Steps_Reminder();
-  dataEventControl = new BP_Processes_Steps_EventControl();
+  dataEventControl = new BP_Processes_EventControl();
   vllDurations = [];
   countTime = 1;
   checkValidate: boolean = false;
-  templateID = '';
+  templateID = 'BP001';
+  templateIDReminder = 'BP001';
   dataMail: any = {};
   dialogETemplate: FormGroup;
   lstTo = [];
+  lstReminderTo = [];
   lstFrom = [];
   lstCc = [];
   lstBcc = [];
   controlCurrent = '0';
   formModelMail: FormModel;
   loaded: boolean;
+  dataEmail: any;
+  dataEmailReminder: any;
+  data: any;
+  isAddControl: boolean = true;
+  loadMail: boolean = false;
+  isAddReminder: boolean = true;
   constructor(
     private detectorRef: ChangeDetectorRef,
     private notiSv: NotificationsService,
     private codxService: CodxShareService,
+    private api: ApiHttpService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
+    this.data = JSON.parse(JSON.stringify(dt?.data?.data));
     if (dt?.data?.dataReminder)
       this.dataReminder = JSON.parse(JSON.stringify(dt?.data?.dataReminder));
     if (dt?.data?.dataEventControl)
@@ -88,15 +101,78 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
       this.dataReminder?.times?.trim() != ''
     ) {
       this.vllDurations = JSON.parse(this.dataReminder.times);
+      if(this.vllDurations?.length > 0){
+        let mailID = this.vllDurations.filter(x => x.email != null && x.email?.trim() != '');
+        if(mailID?.length > 0){
+          this.templateIDReminder = mailID[0]?.email;
+          this.isAddReminder = false;
+        }
+      }
     }
 
-    if (this.dataEventControl && this.dataEventControl?.startControl) {
-      let startControl = JSON.parse(this.dataEventControl?.startControl);
-      let alertType = startControl['alertType'];
+    if (this.dataEventControl && this.dataEventControl?.startEmail) {
+      let startEmail = JSON.parse(this.dataEventControl?.startEmail);
+      let alertType = startEmail['alertType'];
       this.isAlert = alertType?.split(';')?.some((x) => x == '1') ?? false;
       this.isSendMail = alertType?.split(';')?.some((x) => x == '2') ?? false;
-      this.templateID = startControl?.email;
+      this.templateID = startEmail?.email;
+      this.isAddControl =
+        this.templateID != null && this.templateID?.trim() != '' ? false : true;
     }
+
+    let id = this.templateID.concat(';', this.templateIDReminder);
+    if (this.isAddControl) {
+      this.dataEmail = {
+        recID: Util.uid(),
+        category: '2',
+        templateName: this.data?.stepName,
+        message: ''
+      };
+    }
+    if (this.isAddReminder) {
+      this.dataEmailReminder = {
+        recID: Util.uid(),
+        category: '2',
+        templateName: this.data?.stepName,
+        message: ''
+      };
+    }
+    this.loadMail = false;
+    this.api
+      .execSv<any[]>(
+        'BG',
+        'BG',
+        'EmailsBusiness',
+        'GetListItemByRecIDLogicAsync',
+        id
+      )
+      .subscribe((item) => {
+        if (item?.length > 0) {
+          this.dataEmail = item.find((x) => x.recID == this.templateID) ? item.find((x) => x.recID == this.templateID) : this.dataEmail;
+          this.dataEmailReminder = item.find(
+            (x) => x.recID == this.templateIDReminder
+          ) ? item.find(
+            (x) => x.recID == this.templateIDReminder
+          ) : this.dataEmailReminder;
+
+          if (this.dataEmail.sendTo && this.dataEmail.sendTo.length > 0) {
+            this.lstTo = this.dataEmail?.sendTo || [];
+          }
+          if (
+            this.dataEmailReminder?.sendTo &&
+            this.dataEmailReminder.sendTo.length > 0
+          ) {
+            this.lstReminderTo = this.dataEmailReminder?.sendTo || [];
+          }
+          if (this.isAddReminder) {
+            this.dataEmailReminder.recID = Util.uid();
+          }
+          if (this.isAddControl) {
+            this.dataEmail.recID = Util.uid();
+          }
+        }
+        this.loadMail = true;
+      });
   }
 
   changeRadio(e) {
@@ -254,13 +330,53 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
   }
 
   async onSave() {
+    if (this.mailControl) {
+      this.dataEmail = this.mailControl.data;
+      let lstSendTo = [
+        ...this.mailControl.lstTo,
+        ...this.mailControl.lstCc,
+        ...this.lstBcc,
+      ];
+      this.dataEmail.sendTo = lstSendTo;
+
+      if (this.isAddControl) {
+        this.addMail(this.dataEmail);
+      } else {
+        this.updateMail(this.dataEmail);
+      }
+    }
+
     if (this.dataReminder?.control == '0') {
       this.dataReminder.times = '';
       this.dataReminder.autoComplete = '';
     }
     if (this.dataReminder?.control == '1') {
-      this.dataReminder.times =
-        this.vllDurations?.length > 0 ? JSON.stringify(this.vllDurations) : '';
+      if (this.mailReminder) {
+        this.dataEmailReminder = this.mailReminder.data;
+        let lstSend = [
+          ...this.mailReminder.lstTo,
+          ...this.mailReminder.lstCc,
+          ...this.lstBcc,
+        ];
+        this.dataEmailReminder.sendTo = lstSend;
+      }
+      if (this.vllDurations?.length > 0) {
+        if (this.isAddReminder) {
+          this.addMail(this.dataEmailReminder);
+        } else {
+          this.updateMail(this.dataEmailReminder);
+        }
+
+        this.vllDurations.forEach((ele) => {
+          ele.email = this.dataEmailReminder?.recID;
+        });
+
+        this.dataReminder.times =
+          this.vllDurations?.length > 0
+            ? JSON.stringify(this.vllDurations)
+            : '';
+      }
+
       this.dataReminder.autoComplete = '';
     }
 
@@ -282,14 +398,17 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
 
     let objControl = {
       alertType: alertType,
-      email: '',
+      email: this.dataEmail?.recID,
     };
-    if (this.mailControl){
-      this.mailControl.onSaveForm(null);
-      objControl.email = this.mailControl.data?.recID;
-    }
-
-    this.dataEventControl.startControl = JSON.stringify(objControl);
+    this.dataEventControl.startEmail = JSON.stringify(objControl);
     this.dialog.close([this.dataReminder, this.dataEventControl]);
+  }
+
+  addMail(data) {
+    this.api.execSv('BG', 'BG', 'EmailsBusiness', 'SaveAsync', data).subscribe();
+  }
+
+  updateMail(data) {
+    this.api.execSv('BG', 'BG', 'EmailsBusiness', 'UpdateAsync', data).subscribe();
   }
 }

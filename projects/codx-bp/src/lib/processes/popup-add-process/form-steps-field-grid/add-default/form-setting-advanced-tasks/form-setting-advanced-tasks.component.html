@@ -7,7 +7,7 @@
   [tabContent]="[tabNotifiTask, tabReminderOver]"
 ></codx-layout-add>
 <ng-template #tabNotifiTask>
-  <div class="form-group mt-3" style="width: 100% !important;">
+  <div class="form-group mt-3" style="width: 100% !important">
     <div class="d-flex">
       <div class="d-flex align-items-top me-5">
         <span class="me-2">
@@ -52,7 +52,7 @@
         </span>
       </div>
     </div>
-    <div class="mt-5">
+    <div class="mt-5" *ngIf="loadMail">
       <lib-content-email
         #mailControl
         [showFrom]="true"
@@ -60,15 +60,18 @@
         [showBCC]="false"
         [showFooter]="false"
         [showAttachment]="false"
+        [lstTo]="lstTo"
+        [data]="dataEmail"
         [vllShare]="'ES014'"
-        [templateID]="templateID"
-        [isAddNew]="templateID != '' && templateID != null ? false : true"
       ></lib-content-email>
     </div>
   </div>
 </ng-template>
 <ng-template #tabReminderOver>
-  <div class="border-setting cursor-pointer" (click)="valueChange({field: 'reminder0', component: {checked: true}})">
+  <div
+    class="border-setting cursor-pointer"
+    (click)="valueChange({ field: 'reminder0', component: { checked: true } })"
+  >
     <div class="d-flex justify-content-between w-100">
       <div class="d-flex flex-column">
         <codx-label
@@ -91,7 +94,10 @@
       ></codx-input>
     </div>
   </div>
-  <div class="border-setting flex-column cursor-pointer mt-2" (click)="valueChange({field: 'reminder1', component: {checked: true}})">
+  <div
+    class="border-setting flex-column cursor-pointer mt-2"
+    (click)="valueChange({ field: 'reminder1', component: { checked: true } })"
+  >
     <div class="d-flex justify-content-between w-100">
       <div class="d-flex flex-column">
         <codx-label
@@ -245,33 +251,25 @@
           </tr>
         </tbody>
       </table>
-      <div class="mt-3 w-100">
+      <div class="mt-3 w-100" *ngIf="loadMail">
         <lib-content-email
+          #mailReminder
           [showFrom]="true"
           [showCC]="false"
           [showBCC]="false"
-          [lstTo]="lstTo"
-          [lstFrom]="lstFrom"
-          [lstCc]="lstCc"
-          [lstBcc]="lstBcc"
-          [vllShare]="'ES014'"
-          [data]="dataMail"
-          [showAI]="false"
-          [isLoadingAI]="false"
-          [isInside]="false"
-          [formModel]="formModelMail"
-          [dialogETemplate]="dialogETemplate"
-          [saveIsTemplate]="false"
-          [isAddNew]="true"
-          [templateID]="templateID"
-          [dialog]="dialog"
-          [showAttachment]="false"
           [showFooter]="false"
+          [showAttachment]="false"
+          [lstTo]="lstReminderTo"
+          [data]="dataEmailReminder"
+          [vllShare]="'ES014'"
         ></lib-content-email>
       </div>
     </ng-container>
   </div>
-  <div class="border-setting flex-column cursor-pointer mt-2" (click)="valueChange({field: 'reminder2', component: {checked: true}})">
+  <div
+    class="border-setting flex-column cursor-pointer mt-2"
+    (click)="valueChange({ field: 'reminder2', component: { checked: true } })"
+  >
     <div class="d-flex justify-content-between w-100">
       <div class="d-flex flex-column">
         <codx-label

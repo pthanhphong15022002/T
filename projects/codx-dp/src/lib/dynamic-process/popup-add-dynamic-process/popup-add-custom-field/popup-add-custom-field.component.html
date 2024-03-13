@@ -268,9 +268,15 @@
             </div>
             <div
               class="d-flex justify-content-end"
-              *ngIf="field.dataFormat == 'V' || field.dataType == 'PA'"
+              *ngIf="
+                field.dataFormat == 'V' ||
+                field.dataFormat == 'S' ||
+                field.dataType == 'PA'
+              "
             >
-              <ng-container *ngIf="field.dataFormat == 'V'">
+              <ng-container
+                *ngIf="field.dataFormat == 'V' || field.dataFormat == 'S'"
+              >
                 <button
                   *ngIf="field.refValue"
                   type="button"
@@ -315,7 +321,9 @@
             [disabled]="action == 'edit' || this.isDuplicateField || viewOnly"
           ></codx-input>
 
-          <ng-container *ngIf="field.dataFormat == 'V'">
+          <ng-container
+            *ngIf="field.dataFormat == 'V' || field.dataFormat == 'S'"
+          >
             <ejs-combobox
               #datasVllCbx
               [dataSource]="listVll"
@@ -374,6 +382,28 @@
                 [showDropDownIcon]="true"
                 [placeholder]="this.crrVll?.note"
               ></ejs-multiselect>
+            </ng-container>
+          </ng-container>
+
+          <ng-container *ngIf="field.dataFormat == 'S'">
+            <div class="d-flex align-items-center">
+              <div class="me-5" style="font-style: italic">
+                {{ this.crrVll?.note }}
+              </div>
+            </div>
+            <ng-container *ngFor="let val of datasVllCrr; let idx = index">
+              <div class="d-flex align-items-center">
+                <div class="me-5">
+                  <codx-input
+                    type="checkbox"
+                    [checked]="val?.check"
+                    [field]="val.value"
+                    [label]="val.textValue"
+                    (valueChange)="valueChangeCheckBox($event, idx)"
+                  >
+                  </codx-input>
+                </div>
+              </div>
             </ng-container>
           </ng-container>
         </div>

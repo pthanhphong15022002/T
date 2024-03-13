@@ -42,6 +42,8 @@ export class ContractsViewDetailComponent
   @Input() contract: CM_Contracts;
   @Input() contractAppendix: CM_Contracts;
   @Input() processID: string;
+  @Input() tabDefaut: "";
+  @Input() valueListTab;
 
   // @Input() dataSelected: any;
   @Output() changeMF = new EventEmitter<any>();
@@ -177,7 +179,10 @@ export class ContractsViewDetailComponent
     if (changes?.taskAdd) {
       console.log(changes?.taskAdd);
     }
-    this.listTypeContract = this.contractService.listTypeContractTask;
+    // this.listTypeContract = this.contractService.listTypeContractTask;
+    this.listTypeContract = this.valueListTab.filter(x => this.tabDefaut?.includes(x?.value));
+    this.listTypeContract[0].isActive = true;
+    this.tabClicked = this.listTypeContract[0]?.value;
   }
 
   async onInit() {

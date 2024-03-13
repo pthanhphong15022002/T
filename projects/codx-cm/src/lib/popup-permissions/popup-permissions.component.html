@@ -437,6 +437,36 @@
                   </codx-input>
                 </td>
               </tr>
+
+              <tr *ngFor="let data of listDataTabView; let i = index">
+                <td class="font-size-lg text-dark d-flex align-items-center">
+                  <codx-label
+                    *ngIf="i==0"
+                    [default]="'Xem các nhóm thông tin'"
+                    [formModel]="dialog.formModel"
+                    [fiedName]="'viewTab'"
+                  ></codx-label>
+                </td>
+                <td>
+                  <codx-label
+                    [default]="data?.default"
+                    [formModel]="dialog.formModel"
+                    [fiedName]="data?.value"
+                  ></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input
+                    class="test-check"
+                    type="switch"
+                    style="width: 100%"
+                    [crrValue]="data?.isCheck"
+                    [field]="data?.value"
+                    (valueChange)="valueChangeTab($event, data)"
+                    [disabled]="checkAdminUpdate()"
+                  >
+                  </codx-input>
+                </td>              
+              </tr>
             </tbody>
           </table>
         </div>

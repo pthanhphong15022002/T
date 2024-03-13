@@ -36,6 +36,7 @@ export class CodxFieldsFormatValueComponent implements OnInit {
   dataValueTypeC: any = [];
   dataValueTypeV: any = [];
   dataValueTypePA: any = [];
+  noteVll = '';
 
   constructor(
     private cache: CacheService,
@@ -56,8 +57,20 @@ export class CodxFieldsFormatValueComponent implements OnInit {
         this.dataValueTypeC = this.parseValue(this.data.dataValue);
         break;
       case 'L':
-        if (this.data.dataFormat == 'V')
+        if (this.data.dataFormat == 'V' || this.data.dataFormat == 'S') {
           this.dataValueTypeV = this.listValue(this.data.dataValue);
+          if (this.data.dataFormat == 'S') {
+            this.api
+              .execSv<any>('SYS', 'SYS', 'ValueListBusiness', 'GetAsync', [
+                this.data.refValue,
+              ])
+              .subscribe((vl) => {
+                if (vl) {
+                  this.noteVll = vl.note;
+                }
+              });
+          }
+        }
         break;
       case 'PA':
         this.parseValuePA(this.data.dataValue);
