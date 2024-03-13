@@ -60,6 +60,7 @@ export class CodxBookingViewDetailComponent
   //MFunction Booking
   @Output('reloadData') reloadData: EventEmitter<any> = new EventEmitter();
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();
+  @Output('viewDetail') viewDetail: EventEmitter<any> = new EventEmitter();
   @Output('copy') copy: EventEmitter<any> = new EventEmitter();
   @Output('release') release: EventEmitter<any> = new EventEmitter();
   @Output('delete') delete: EventEmitter<any> = new EventEmitter();
@@ -202,7 +203,7 @@ export class CodxBookingViewDetailComponent
 
         case EPCONST.MFUNCID.Copy:
           this.setPopupTitle.emit(event?.text);
-          this.copy.emit(data);
+          this.viewDetail.emit(data);
           break;
 
         // Aproval Trans
@@ -307,6 +308,7 @@ export class CodxBookingViewDetailComponent
             if (
               // Hiện: sửa - xóa - chép - gửi duyệt -
               func.functionID == EPCONST.MFUNCID.Delete ||
+              func.functionID == EPCONST.MFUNCID.View ||
               func.functionID == EPCONST.MFUNCID.Edit ||
               func.functionID == EPCONST.MFUNCID.Copy ||
               func.functionID == EPCONST.MFUNCID.R_Release ||
@@ -332,6 +334,7 @@ export class CodxBookingViewDetailComponent
             if (
               //Hiện: dời - mời - chép - hủy
               func.functionID == EPCONST.MFUNCID.Copy ||
+              func.functionID == EPCONST.MFUNCID.View ||
               func.functionID == EPCONST.MFUNCID.R_Cancel ||
               func.functionID == EPCONST.MFUNCID.C_Cancel ||
               func.functionID == EPCONST.MFUNCID.S_Cancel ||
@@ -357,6 +360,7 @@ export class CodxBookingViewDetailComponent
           event.forEach((func) => {
             if (
               //Hiện: chép
+              func.functionID == EPCONST.MFUNCID.View ||
               func.functionID == EPCONST.MFUNCID.Copy
             ) {
               func.disabled = false;
@@ -383,6 +387,7 @@ export class CodxBookingViewDetailComponent
             if (
               // Hiện: Mời - dời - Chép
               func.functionID == EPCONST.MFUNCID.Copy ||
+              func.functionID == EPCONST.MFUNCID.View ||
               func.functionID == EPCONST.MFUNCID.R_Invite ||
               func.functionID == EPCONST.MFUNCID.R_Reschedule ||
               func.functionID == EPCONST.MFUNCID.R_Cancel ||
@@ -408,6 +413,7 @@ export class CodxBookingViewDetailComponent
               //Hiện: chép
               func.functionID == EPCONST.MFUNCID.Copy ||
               func.functionID == EPCONST.MFUNCID.Delete ||
+              func.functionID == EPCONST.MFUNCID.View ||
               func.functionID == EPCONST.MFUNCID.Edit ||
               func.functionID == EPCONST.MFUNCID.R_Release ||
               func.functionID == EPCONST.MFUNCID.C_Release ||
@@ -444,6 +450,7 @@ export class CodxBookingViewDetailComponent
             data?.issueStatus == '1' &&
             data?.approveStatus == '5' &&
             (func.functionID == EPCONST.MFUNCID.S_Allocate ||
+              func.functionID == EPCONST.MFUNCID.View ||
               func.functionID == EPCONST.MFUNCID.S_UnAllocate)
           ) {
             func.disabled = false;

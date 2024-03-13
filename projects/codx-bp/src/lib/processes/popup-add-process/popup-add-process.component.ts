@@ -19,23 +19,11 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
-  RequestOption,
-  SidebarModel,
   Util,
 } from 'codx-core';
-import { FormPropertiesFieldsComponent } from './form-properties-fields/form-properties-fields.component';
 import {
   Diagram,
   ConnectorEditing,
-  DiagramComponent,
-  SymbolPaletteComponent,
-  SnapSettingsModel,
-  SnapConstraints,
-  NodeModel,
-  PaletteModel,
-  PortVisibility,
-  PortConstraints,
-  BpmnShapeModel,
   BpmnDiagramsService,
   ComplexHierarchicalTreeService,
   ConnectorBridgingService,
@@ -50,38 +38,18 @@ import {
   SnappingService,
   SymmetricLayoutService,
   UndoRedoService,
-  ConnectorModel,
-  HeaderModel,
-  DiagramTools,
-  ContextMenuSettingsModel,
-  DiagramBeforeMenuOpenEventArgs,
-  LaneModel,
-  ShapeStyleModel,
-  SwimLaneModel,
-  cloneObject,
-  randomId,
-  RulerSettingsModel,
-  SwimLane,
-  UndoRedo,
-  UserHandleModel,
-  SelectorModel,
-  SelectorConstraints,
 } from '@syncfusion/ej2-angular-diagrams';
-import { ExpandMode, MenuEventArgs } from '@syncfusion/ej2-angular-navigations';
-import { log } from 'console';
 import { environment } from 'src/environments/environment';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
 import { FormAdvancedSettingsComponent } from './form-advanced-settings/form-advanced-settings.component';
-import { FormEditConnectorComponent } from '../../../../../codx-share/src/lib/components/codx-diagram/form-edit-connector/form-edit-connector.component';
 import {
   BP_Processes,
   BP_Processes_Permissions,
   BP_Processes_Steps,
 } from '../../models/BP_Processes.model';
-import { Subject, firstValueFrom, isObservable, takeUntil } from 'rxjs';
+import { Subject, isObservable, takeUntil } from 'rxjs';
 import { ModeviewComponent } from '../../modeview/modeview.component';
-import { DynamicSettingControlComponent } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component';
 import { PopupPermissionsProcessesComponent } from './popup-permissions-processes/popup-permissions-processes.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 Diagram.Inject(ConnectorEditing);
@@ -333,6 +301,7 @@ export class PopupAddProcessComponent {
         (x) => x.fieldName == 'CompleteControl'
       )[0];
     }
+    form.recID = Util.uid();
 
     stage.settings = JSON.stringify({
       icon: 'icon-i-bar-chart-steps',
@@ -341,12 +310,12 @@ export class PopupAddProcessComponent {
       allowDrag: processallowDrag?.fieldValue || null,
       defaultProcess: processDefaultProcess?.defaultProcess || null,
       completeControl: processCompleteControl?.completeControl || null,
-      nextSteps: null,
+      nextSteps: [{nextStepID:form.recID}],
       sortBy: null,
       totalControl: null,
     });
 
-    form.recID = Util.uid();
+ 
     form.stepNo = 1;
     form.stepName = vllForm.text + ' 1';
     form.activityType = 'Form';
@@ -987,18 +956,29 @@ export class PopupAddProcessComponent {
    
     if(result2.length>0)
     {
-      result2.forEach(elm=>{
-        if(elm.activityType == "Form") 
+      for(var x = 0 ; x < result2.length ; x++)
+      {
+        if(result2[x].activityType == "Form") 
         {
-          if(elm.extendInfo && elm.extendInfo.length>0)
+          if(result2[x].extendInfo && result2[x].extendInfo.length>0)
           {
-            elm.extendInfo.forEach(element => {
+            result2[x].extendInfo.forEach(element => {
               if(typeof element.documentControl == 'object') element.documentControl = JSON.stringify(element.documentControl);
             });
           }
-         
         }
-      })
+        
+        result2[x].settings = JSON.parse(result2[x].settings);
+        if(result2[x + 1]?.recID && result2[x].activityType != 'Conditions')
+        {
+          result2[x].settings.nextSteps = [{nextStepID: result2[x + 1]?.recID}] 
+        }
+        else if(result2[x].activityType != 'Conditions') result2[x].settings.nextSteps = null;
+        
+        result2[x].settings = JSON.stringify(result2[x].settings);
+
+        if(typeof result2[x].reminder != "string" && result2[x].reminder) result2[x].reminder = JSON.stringify(result2[x].reminder);
+      }
     }
     result.steps = result2;
     op.data = result;

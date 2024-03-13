@@ -34,7 +34,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
   @ViewChild('pdfView') pdfView: PdfComponent;
   @ViewChild('popupOTPPin', { static: false }) popupOTPPin: TemplateRef<any>;
   @ViewChild('viettelCers', { static: false }) viettelCers: TemplateRef<any>;
-  @ViewChild('viettelESignWait', { static: false }) viettelESignWait: TemplateRef<any>;
+  @ViewChild('viettelESignWait', { static: false })
+  viettelESignWait: TemplateRef<any>;
 
   isAfterRender: boolean = false;
   isConfirm = true;
@@ -45,10 +46,10 @@ export class PopupSignForApprovalComponent extends UIComponent {
   data;
   user;
   signerInfo: any = {};
-  lstCert=[];
+  lstCert = [];
   formModel: FormModel;
   dialogSignFile: FormGroup;
-  modeView="1";
+  modeView = '1';
   confirmValue: string = '';
 
   sfRecID = '';
@@ -80,9 +81,9 @@ export class PopupSignForApprovalComponent extends UIComponent {
     super(inject);
     this.dialog = dialog;
     this.data = dt?.data;
-    this.lstMF = dt?.data?.lstMF;    
-    this.modeView = dt?.data?.modeView ?? "1";
-    this.isApproved = dt?.data?.status =='5' ? true : false;
+    this.lstMF = dt?.data?.lstMF;
+    this.modeView = dt?.data?.modeView ?? '1';
+    this.isApproved = dt?.data?.status == '5' ? true : false;
     this.oApprovalTrans = dt?.data?.oTrans;
     if (this.oApprovalTrans?.confirmControl == '1') {
       this.isConfirm = false;
@@ -99,14 +100,16 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
     this.sfRecID = this.data.sfRecID;
     this.transRecID = this.data.transRecID;
-    this.esService.getByRecID(this.data?.oTrans?.transID).subscribe((res:any) => {
-      if (res) {
-        let sf = res;
-        if (sf && sf?.files) {
-          this.isEdited = sf?.files[0]?.isEdited;
+    this.esService
+      .getByRecID(this.data?.oTrans?.transID)
+      .subscribe((res: any) => {
+        if (res) {
+          let sf = res;
+          if (sf && sf?.files) {
+            this.isEdited = sf?.files[0]?.isEdited;
+          }
         }
-      }
-    });
+      });
     this.cache.functionList(this.funcID).subscribe((res) => {
       this.formModel = res;
       this.esService
@@ -144,7 +147,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
           .confirmOTPPin(this.oApprovalTrans.recID, this.confirmValue)
           .subscribe((res) => {
             if (res) {
-              this.dialogOtpPin?.close(); 
+              this.dialogOtpPin?.close();
               this.beforeApprove(this.mode, this.title, this.subTitle);
             }
           });
@@ -361,8 +364,23 @@ export class PopupSignForApprovalComponent extends UIComponent {
     }
   }
 
+  approvePDF(mode, title: string, subTitle: string, comment: any) {
+    comment =
+      comment?.length > 0 ? comment : this.dialogSignFile?.value?.comment;
+    this.pdfView.codxSignPDF(mode, comment, (res: ResponseModel) => {
+      if (res?.msgCodeError == null && res?.rowCount) {        
+        this.notify.notifyCode("SYS034");
+        this.dialog && this.dialog.close();
+      } else {
+        this.notify.notifyCode(res?.msgCodeError);
+      }
+
+    });
+  }
+
   approve(mode, title: string, subTitle: string, comment: any) {
-    comment = comment?.length>0 ? comment : this.dialogSignFile?.value?.comment;
+    comment =
+      comment?.length > 0 ? comment : this.dialogSignFile?.value?.comment;
     switch (this.pdfView.signerInfo.signType) {
       case '2': {
         // this.codxCommonService
@@ -377,24 +395,23 @@ export class PopupSignForApprovalComponent extends UIComponent {
         //       this.dialog && this.dialog.close(resModel);
         //     });
         //if (!this.pdfView.isAwait) {
-          this.pdfView
-            .signPDF(mode, comment,null,"1")
-            .then((resModel: ResponseModel) => {
-              if(this.modeView=="1"){
-                if (resModel?.msgCodeError == null && resModel?.rowCount > 0) {
-                  this.notify.notifyCode('SYS034');
-                  this.canOpenSubPopup = false;
-                } else {
-                  this.canOpenSubPopup = false;
-                  this.notify.notifyCode('SYS021');
-                }
-              }
-              else{
+        this.pdfView
+          .signPDF(mode, comment, null, '1')
+          .then((resModel: ResponseModel) => {
+            if (this.modeView == '1') {
+              if (resModel?.msgCodeError == null && resModel?.rowCount > 0) {
                 this.notify.notifyCode('SYS034');
+                this.canOpenSubPopup = false;
+              } else {
+                this.canOpenSubPopup = false;
+                this.notify.notifyCode('SYS021');
               }
-              
-              this.dialog && this.dialog.close(resModel);
-            });
+            } else {
+              this.notify.notifyCode('SYS034');
+            }
+
+            this.dialog && this.dialog.close(resModel);
+          });
         // } else {
         //   this.esService
         //     .updateTransAwaitingStatus(this.transRecID, false)
@@ -452,14 +469,23 @@ export class PopupSignForApprovalComponent extends UIComponent {
         break;
       }
       case '1': {
-        let supplierDialog = this.callfc.openForm(PopupSupplierComponent,'',500,250,'');
-        supplierDialog.closed.subscribe(res=>{
-          if(res?.event){
+        let supplierDialog = this.callfc.openForm(
+          PopupSupplierComponent,
+          '',
+          500,
+          250,
+          ''
+        );
+        supplierDialog.closed.subscribe((res) => {
+          if (res?.event) {
             switch (res?.event) {
               //usb
               case '5': {
-                let urlUpload = this.pdfView?.env.urlUpload+'/';
-                let shortFileURL = this.pdfView?.curFileUrl?.replace(urlUpload,'');
+                let urlUpload = this.pdfView?.env.urlUpload + '/';
+                let shortFileURL = this.pdfView?.curFileUrl?.replace(
+                  urlUpload,
+                  ''
+                );
                 this.esService
                   .getSignContracts(
                     this.sfRecID,
@@ -492,64 +518,77 @@ export class PopupSignForApprovalComponent extends UIComponent {
                   });
                 break;
               }
-              case '4'://Viettel
-              {
-                this.esService.getViettelCer(this.signerInfo.thirdPartyID).subscribe(cers=>{
-                  if(cers){
-                    this.lstCert = cers?.filter(x=>x?.error == null); 
-                    if(this.lstCert?.length ==1){
-                      this.viettelESign(mode,comment,this.lstCert[0]?.cert)
+              case '4': { //Viettel
+                this.esService
+                  .getViettelCer(this.signerInfo.thirdPartyID)
+                  .subscribe((cers) => {
+                    if (cers) {
+                      this.lstCert = cers?.filter((x) => x?.error == null);
+                      if (this.lstCert?.length == 1) {
+                        this.viettelESign(mode, comment, this.lstCert[0]?.cert);
+                      } else if (this.lstCert?.length > 1) {
+                        let dialogCers = this.callfc.openForm(
+                          this.viettelCers,
+                          '',
+                          450,
+                          300
+                        );
+                      }
+                    } else {
+                      this.notify.notify(
+                        'Không tìm thấy thông tin xác thực chữ ký số, vui lòng kiểm tra lại!',
+                        '2'
+                      );
                     }
-                    else if(this.lstCert?.length >1){
-                      let dialogCers = this.callfc.openForm(this.viettelCers,'',450,300);  
-                    }
-                  }
-                  else{
-                    this.notify.notify("Không tìm thấy thông tin xác thực chữ ký số, vui lòng kiểm tra lại!",'2')
-                  }
-                    
-                })
+                  });
                 break;
               }
-              //vnpt 
+              //vnpt
               default: {
-                this.pdfView.signPDF(mode, comment,null,"3").then((resModel: ResponseModel) => {
-                  if (resModel?.msgCodeError == null && resModel?.rowCount > 0) {
-                    this.notify.notifyCode('SYS034');
-                    this.canOpenSubPopup = false;
-                  } else {
-                    this.canOpenSubPopup = false;
-    
-                    this.notify.notifyCode('SYS021');
-                  }
-                  this.dialog && this.dialog.close(resModel);
-                });
+                this.pdfView
+                  .signPDF(mode, comment, null, '3')
+                  .then((resModel: ResponseModel) => {
+                    if (
+                      resModel?.msgCodeError == null &&
+                      resModel?.rowCount > 0
+                    ) {
+                      this.notify.notifyCode('SYS034');
+                      this.canOpenSubPopup = false;
+                    } else {
+                      this.canOpenSubPopup = false;
+
+                      this.notify.notifyCode('SYS021');
+                    }
+                    this.dialog && this.dialog.close(resModel);
+                  });
                 break;
               }
             }
           }
         });
-        
+
         break;
       }
     }
   }
-  viettelESign(data,comment,cert){
-    let dialogCers = this.callfc.openForm(this.viettelESignWait,'',450,250);  
-                    
-    this.pdfView.signPDF(data,comment,JSON.stringify(cert),'4').then((resModel: ResponseModel) => {
-      if (resModel?.msgCodeError == null && resModel?.rowCount > 0) {
-        this.notify.notifyCode('SYS034');
-        this.canOpenSubPopup = false;
-        dialogCers && dialogCers.close();
-      } else {
-        this.canOpenSubPopup = false;
+  viettelESign(data, comment, cert) {
+    let dialogCers = this.callfc.openForm(this.viettelESignWait, '', 450, 250);
 
-        this.notify.notifyCode('SYS021');
-        dialogCers && dialogCers.close();
-      }
-      this.dialog && this.dialog.close(resModel);
-    });
+    this.pdfView
+      .signPDF(data, comment, JSON.stringify(cert), '4')
+      .then((resModel: ResponseModel) => {
+        if (resModel?.msgCodeError == null && resModel?.rowCount > 0) {
+          this.notify.notifyCode('SYS034');
+          this.canOpenSubPopup = false;
+          dialogCers && dialogCers.close();
+        } else {
+          this.canOpenSubPopup = false;
+
+          this.notify.notifyCode('SYS021');
+          dialogCers && dialogCers.close();
+        }
+        this.dialog && this.dialog.close(resModel);
+      });
   }
   async signContractUSBToken(lstContract, idx: number, comment) {
     //chua ki xong
@@ -593,13 +632,17 @@ export class PopupSignForApprovalComponent extends UIComponent {
   saveDialog() {
     this.dialog.close();
   }
-  certChange(evt,cert) {    
+  certChange(evt, cert) {
     this.selectedCert = cert;
     this.detectorRef.detectChanges();
   }
   saveCert(dialog) {
-    if(this.selectedCert==null) this.selectedCert = this.lstCert[0].cert;
-    this.viettelESign("5",this.dialogSignFile?.value?.comment,this.selectedCert)
+    if (this.selectedCert == null) this.selectedCert = this.lstCert[0].cert;
+    this.viettelESign(
+      '5',
+      this.dialogSignFile?.value?.comment,
+      this.selectedCert
+    );
     dialog.close();
   }
 

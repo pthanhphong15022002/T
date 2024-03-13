@@ -384,7 +384,7 @@
     <div class="main-right w-100">
       <container-element [ngSwitch]="tabClicked">
         <some-element
-          *ngSwitchCase="'general'"
+          *ngSwitchCase="'1'"
           [ngTemplateOutlet]="generalTemplate"
         ></some-element>
         <some-element
@@ -404,19 +404,19 @@
           [ngTemplateOutlet]="extendTemplate"
         ></some-element>
         <some-element
-          *ngSwitchCase="'task'"
+          *ngSwitchCase="'5'"
           [ngTemplateOutlet]="task"
         ></some-element>
         <some-element
-          *ngSwitchCase="'memo'"
+          *ngSwitchCase="'8'"
           [ngTemplateOutlet]="memo"
         ></some-element>
         <some-element
-          *ngSwitchCase="'disposal'"
+          *ngSwitchCase="'9'"
           [ngTemplateOutlet]="disposal"
         ></some-element>
         <some-element
-          *ngSwitchCase="'appendix'"
+          *ngSwitchCase="'8'"
           [ngTemplateOutlet]="appendix"
         ></some-element>
         <some-element *ngSwitchDefault></some-element>
