@@ -77,6 +77,14 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
         ? this.isUpdateParent
         : dt?.data?.isUpdateParent;
     this.isActivitie = dt?.data?.isActivitie;
+    if(!this.formModel){
+      this.formModel= {
+      entityName: "DP_Instances_Steps_Tasks",
+      formName: "DPInstancesStepsTasks",
+      funcID: "DPT040102",
+      gridViewName: "grvDPInstancesStepsTasks",
+      }
+    }
   }
 
   async ngOnInit() {

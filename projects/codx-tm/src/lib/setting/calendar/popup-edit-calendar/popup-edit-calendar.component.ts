@@ -1,4 +1,4 @@
-import 'lodash';
+// import 'lodash';
 import {
   AfterViewInit,
   Component,
@@ -132,8 +132,8 @@ export class PopupEditCalendarComponent extends UIComponent {
     this.ndShift.data = [];
     this.vlls.forEach((e, i) => {
       let y = (i + 1).toString();
-      let stCheck = dayOff.stShift.data.some( { weekday: y });
-      let ndCheck = dayOff.ndShift.data.some( { weekday: y });
+      let stCheck = dayOff.stShift.data.some({ weekday: y });
+      let ndCheck = dayOff.ndShift.data.some({ weekday: y });
       // let stCheck = _.some(dayOff.stShift.data, { weekday: y });
       // let ndCheck = _.some(dayOff.ndShift.data, { weekday: y });
       this.stShift.data.push({
@@ -187,7 +187,7 @@ export class PopupEditCalendarComponent extends UIComponent {
       )
       .subscribe((res) => {
         if (res) {
-          this.dayOff = this.dayOff.filter(x=>x.recID != item.recID);
+          this.dayOff = this.dayOff.filter((x) => x.recID != item.recID);
           this.notiService.notifyCode('E0408');
         }
       });
@@ -229,7 +229,9 @@ export class PopupEditCalendarComponent extends UIComponent {
       )
       .subscribe((res) => {
         if (res) {
-          this.calendateDate = this.calendateDate.filter(x=>x.recID != item.recID);
+          this.calendateDate = this.calendateDate.filter(
+            (x) => x.recID != item.recID
+          );
           this.notiService.notifyCode('E0408');
         }
       });

@@ -266,6 +266,7 @@ export class CM_Permissions {
   autoCreate: string;
   allowUpdateStatus: string;
   memberType: string;
+  config: string;
 }
 
 export class CM_Customers {

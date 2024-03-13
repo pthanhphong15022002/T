@@ -324,7 +324,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   waitForInputContactRendered(time: number) {
-    if(time == 10000){
+    if(time == 5000){
       return;
     }else if (this.inputContact && this.inputContact.ComponentCurrent) {3
       this.changeCbbContact(this.contracts?.contactID);

@@ -37,6 +37,7 @@ export class PopupPermissionsComponent implements OnInit {
   delete: boolean;
   allowPermit: boolean;
   allowUpdateStatus: boolean;
+  config = "";
   //#endregion
   showInput = false;
   isAdd = true;
@@ -131,6 +132,7 @@ export class PopupPermissionsComponent implements OnInit {
         this.lstPermissions[oldIndex].allowUpdateStatus = this.allowUpdateStatus
           ? '1'
           : '0';
+        this.lstPermissions[oldIndex].config = this.config;
       }
     }
     if (this.lstPermissions[index] != null) {
@@ -145,6 +147,7 @@ export class PopupPermissionsComponent implements OnInit {
       this.allowUpdateStatus =
         this.lstPermissions[index].allowUpdateStatus == '1' ? true : false;
       this.currentPemission = index;
+      this.config = this.lstPermissions[index]?.config;
     } else {
       this.full = false;
       this.read = true;
@@ -301,6 +304,12 @@ export class PopupPermissionsComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
   //#endregion
+
+  valueChangeCbx(event) {
+    if(event?.data){
+      this.config = event?.data;
+    }
+  }
 
   //#region  check Permission
   checkAdminUpdate() {
