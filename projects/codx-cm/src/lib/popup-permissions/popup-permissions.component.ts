@@ -152,7 +152,7 @@ export class PopupPermissionsComponent implements OnInit {
         this.lstPermissions[oldIndex].allowUpdateStatus = this.allowUpdateStatus
           ? '1'
           : '0';
-        this.lstPermissions[oldIndex].config = this.config;
+        this.lstPermissions[oldIndex].config = this.getConfig();
       }
     }
     if (this.lstPermissions[index] != null) {
@@ -168,6 +168,7 @@ export class PopupPermissionsComponent implements OnInit {
         this.lstPermissions[index].allowUpdateStatus == '1' ? true : false;
       this.currentPemission = index;
       this.config = this.lstPermissions[index]?.config;
+      this.setConfig(this.config);
     } else {
       this.full = false;
       this.read = true;
@@ -178,6 +179,7 @@ export class PopupPermissionsComponent implements OnInit {
       this.download = false;
       this.allowPermit = false;
       this.allowUpdateStatus = false;
+      this.setConfig('');
       this.currentPemission = index;
     }
     this.changeDetectorRef.detectChanges();
@@ -294,6 +296,8 @@ export class PopupPermissionsComponent implements OnInit {
           this.download = data;
           this.allowPermit = data;
           this.allowUpdateStatus = data;
+          this.config = data ? this.tabDefault[this.entityName] : "";
+          this.setConfig(this.config);
         }
 
         break;
@@ -332,13 +336,22 @@ export class PopupPermissionsComponent implements OnInit {
   }
 
   getConfig(){
-    let tabCheck = this.listDataTabView?.filter(x => x.checked)?.map(x => x.value);
+    let tabCheck = this.listDataTabView?.filter(x => x.isCheck)?.map(x => x.value);
     this.config = tabCheck.join(";");
+    return this.config;
   }
-  setConfig(config){
-    this.listDataTabView?.forEach(element => {
-      
-    });
+  setConfig(config:string){
+    if(config){
+      this.listDataTabView?.forEach(element => {
+        if(config.includes(element?.value)){
+          element.isCheck = true;
+        }else{
+          element.isCheck = false;
+        }
+      });
+    }else{
+      this.listDataTabView = this.listDataTabView?.map(element => {return {...element, isCheck: false}});
+    }
   }
 
   //#region  check Permission
