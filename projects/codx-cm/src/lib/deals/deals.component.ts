@@ -204,6 +204,8 @@ export class DealsComponent
   listKeyFieldSum = [];
   objectSumValue = {};
   dealConfirm: string = '1';
+  tabDefaut = '';
+  valueListTab;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -249,13 +251,21 @@ export class DealsComponent
       });
   }
 
-  onInit() {
+  async onInit() {
     this.afterLoad();
     this.button = [
       {
         id: this.btnAdd,
       },
     ];
+    const [valueListTab, tabDefaut] = await Promise.all([
+      this.codxCmService.getValueList("CRM086"),
+      this.codxCmService.getSettingContract()
+    ]);
+    this.valueListTab = valueListTab;
+    if(tabDefaut){
+      this.tabDefaut = tabDefaut?.ActiveTabDeals;
+    }
   }
 
   ngAfterViewInit(): void {}

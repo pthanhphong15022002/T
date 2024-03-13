@@ -1,31 +1,29 @@
 import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
   Input,
   OnInit,
   Output,
-  SimpleChanges,
-  TemplateRef,
   ViewChild,
+  Component,
+  TemplateRef,
+  EventEmitter,
+  SimpleChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
-  AlertConfirmInputConfig,
-  ApiHttpService,
-  CRUDService,
-  CacheService,
-  CodxService,
   FormModel,
+  CodxService,
+  CacheService,
   NotificationsService,
-  TenantStore,
+  AlertConfirmInputConfig,
+  TenantStore
 } from 'codx-core';
-import { CodxCmService } from '../../codx-cm.service';
-import { CM_Contracts } from '../../models/cm_model';
 import { firstValueFrom } from 'rxjs';
-import { DealsComponent } from '../deals.component';
-import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
-import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { Location } from '@angular/common';
+import { DealsComponent } from '../deals.component';
+import { CM_Contracts } from '../../models/cm_model';
+import { CodxCmService } from '../../codx-cm.service';
+import { TabComponent } from '@syncfusion/ej2-angular-navigations';
+import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 
 @Component({
   selector: 'codx-deal-detail',
@@ -39,15 +37,17 @@ export class DealDetailComponent implements OnInit {
   @Input() listSteps: any;
   @Input() colorReasonSuccess: any;
   @Input() colorReasonFail: any;
-  // @Input() valueListStatusCode: any;
-  @Input() funcID = 'CM0201'; //
+  @Input() funcID = 'CM0201';
   @Input() checkMoreReason = true;
   @Input() isChangeOwner = false;
   @Input() taskAdd;
 
+  @Input() tabDefaut = "";
+  @Input() valueListTab;
+  @Input() user;
+
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
-  // @Output() saveAssign = new EventEmitter<any>(); ko can tra ve
   @Output() changeProgress = new EventEmitter<any>();
   @Output() changeDataCustomers = new EventEmitter<any>();
   @Output() moveStage = new EventEmitter<any>();
@@ -117,19 +117,12 @@ export class DealDetailComponent implements OnInit {
   listQuotations: any[] = [];
   isViewLink: boolean = false;
 
-  // grvSetupContract;
-  // vllStatusContract;
-
-  // grvSetupLead;
-  // vllStatusLead;
-  //  grvSetupQuotation;
-  // vllStatusQuotation;
-
   isShow: boolean = false;
   isCategoryCustomer: boolean = false;
   hasRunOnce: boolean = false;
   isHaveField: boolean = false;
   customerName;
+  idTabShow = "";
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
@@ -145,7 +138,6 @@ export class DealDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.listTab();
     this.tabControl = [
       {
         name: 'History',
@@ -153,12 +145,6 @@ export class DealDetailComponent implements OnInit {
         isActive: true,
         template: null,
       },
-      // {
-      //   name: 'Comment',
-      //   textDefault: 'Thảo luận',
-      //   isActive: false,
-      //   template: null,
-      // },
       {
         name: 'Attachment',
         textDefault: 'Đính kèm',
@@ -229,16 +215,13 @@ export class DealDetailComponent implements OnInit {
               this.customerName = res;
             });
       }
+      this.setTaskBar();
     }
   }
 
   promiseAllAsync() {
     this.isDataLoading = true;
       this.dataSelected.applyProcess && (this.getListInstanceStep());
-      // await this.getListContactByDealID(
-      //   this.dataSelected.recID,
-      //   this.dataSelected?.categoryCustomer
-      // );
       this.getTree(); //ve cay giao viec
       this.getLink();
       this.getContactByDeaID(this.dataSelected.recID);
@@ -296,57 +279,11 @@ export class DealDetailComponent implements OnInit {
     }
   }
 
-  listTab() {
-    this.tabDetail = [
-      {
-        name: 'Information',
-        text: 'Thông tin chung',
-        icon: 'icon-info',
-      },
-      {
-        name: 'Contact',
-        text: 'Liên hệ',
-        icon: 'icon-contact_phone',
-      },
-      {
-        name: 'Opponent',
-        text: 'Đối thủ',
-        icon: 'icon-people_alt',
-      },
-      {
-        name: 'Task',
-        text: 'Công việc',
-        icon: 'icon-more',
-      },
-      {
-        name: 'History',
-        text: 'Lịch sử cập nhật',
-        icon: 'icon-sticky_note_2',
-      },
-    ];
-  }
   async executeApiCalls() {
     try {
-      //    await this.getGridViewQuotation();
-      //   await this.getGridViewContract();
-      //     await this.getGridViewLead();
-      //  await this.getValueList();
       await this.getValueListRole();
-      //  await this.getListStatusCode();
-      //   await this.getGrvViewDetailDealAsync();
     } catch (error) {}
   }
-
-  // getGrvViewDetailDealAsync() {
-  //   this.codxCmService.getSettingViewDetailDealAsync().subscribe((res) => {
-  //     if (res) {
-  //       this.grvSetupQuotation = res[0];
-  //       this.grvSetupContract = res[1];
-  //       this.grvSetupLead = res[2];
-  //       this.listRoles = res[3]?.datas;
-  //     }
-  //   });
-  // }
 
   async getValueListRole() {
     this.cache.valueList('CRM040').subscribe((res) => {
@@ -355,32 +292,6 @@ export class DealDetailComponent implements OnInit {
       }
     });
   }
-  // async getValueList() {
-  //   this.cache.valueList('CRM010').subscribe((res) => {
-  //     if (res.datas) {
-  //       this.listCategory = res?.datas;
-  //     }
-  //   });
-  // }
-  // async getGridViewQuotation() {
-  //   this.grvSetupQuotation = await firstValueFrom(
-  //     this.cache.gridViewSetup('CMQuotations', 'grvCMQuotations')
-  //   );
-  //   this.vllStatusQuotation = this.grvSetupQuotation['Status'].referedValue;
-  // }
-  // async getGridViewContract() {
-  //   this.grvSetupContract = await firstValueFrom(
-  //     this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
-  //   );
-  //   this.vllStatusContract = this.grvSetupContract['Status'].referedValue;
-  // }
-  // async getGridViewLead() {
-  //   this.grvSetupLead = await firstValueFrom(
-  //     this.cache.gridViewSetup('CMLeads', 'grvCMLeads')
-  //   );
-  //   this.vllStatusLead = this.grvSetupLead['Status'].referedValue;
-  //   this.settingViewValue();
-  // }
 
   changeTab(e) {
     this.tabClicked = e;
@@ -418,26 +329,6 @@ export class DealDetailComponent implements OnInit {
       });
     }
   }
-  // async getViewDetailDeal() {
-  //   if (this.dataSelected?.recID) {
-  //     let data = [
-  //       this.dataSelected?.recID,
-  //       this.dataSelected?.customerCategory,
-  //     ];
-  //     this.codxCmService.getViewDetailDealAsync(data).subscribe((res) => {
-  //       if (res) {
-  //         if (res[0] && res[0].length > 0) {
-  //           let listContact = res[0];
-  //           let contactMain = listContact.filter((x) => x.isDefault)[0];
-  //           this.contactPerson = contactMain ? contactMain : null;
-  //         } else {
-  //           this.contactPerson = null;
-  //         }
-  //         this.mergedList = res[1];
-  //       }
-  //     });
-  //   }
-  // }
 
   loadContactEdit() {
     this.loadContactDeal && this.loadContactDeal?.getListContacts();
@@ -456,15 +347,6 @@ export class DealDetailComponent implements OnInit {
       this.contactPerson = null;
     }
   }
-  // async getListContactByDealID(objectID, categoryCustomer) {
-  //   if (categoryCustomer == '1') {
-  //     this.codxCmService.getListContactByObjectID(objectID).subscribe((res) => {
-
-  //     });
-  //   } else {
-  //     this.contactPerson = null;
-  //   }
-  // }
   //load giao việc
   async getTree() {
     let seesionID = this.dataSelected.recID; ///da doi lai lay theo recID của doi tuong
@@ -495,16 +377,6 @@ export class DealDetailComponent implements OnInit {
       this.dataSelected?.status,
       '1',
     ];
-    // this.codxCmService.getStepInstance(data).subscribe((res) => {
-    //   if (res) {
-    //     this.listSteps = res;
-    //     if (this.listSteps) {
-    //       this.lstStepsOld = JSON.parse(JSON.stringify(this.listSteps));
-    //     }
-    //     this.isDataLoading = false;
-    //     this.checkCompletedInstance(this.dataSelected?.status);
-    //   }
-    // });
 
     this.codxCmService.getViewDetailInstanceStep(data).subscribe((res) => {
       if (res) {
@@ -550,30 +422,6 @@ export class DealDetailComponent implements OnInit {
     return 1;
   }
 
-  // getSettingValue(type: string, fieldName: string): any {
-  //   const obj = this.viewSettings[type];
-  //   if (obj) {
-  //     switch (fieldName) {
-  //       case 'icon':
-  //         return obj.icon + ' icon-22 me-2 text-gray-700';
-  //       case 'name':
-  //         return obj.name;
-  //       case 'headerText':
-  //         return obj.headerText;
-  //       case 'deadValue':
-  //         return obj.deadValue;
-  //       case 'formModel':
-  //         return obj.formModel;
-  //       case 'status':
-  //         return obj.status;
-  //       case 'gridViewSetup':
-  //         return obj.gridViewSetup;
-  //       case 'createOn':
-  //         return obj.gridViewSetup['CreatedOn']?.headerText;
-  //     }
-  //   }
-  //   return '';
-  // }
   saveDataStep(e) {
     if (e) {
       if (e?.fields != null && e?.fields?.length > 0) {
@@ -868,16 +716,6 @@ export class DealDetailComponent implements OnInit {
     this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
     this.changeDetectorRef.detectChanges();
   }
-  // getStatusCode(status) {
-  //   if(status) {
-  //     let result = this.valueListStatusCode.filter(x=>x.value === status)[0];
-  //     if(result) {
-  //       return result?.text;
-  //     }
-  //   }
-  //   return '';
-  // }
-
   //#region edit customer
   editCustomer(data) {
     this.changeDataCustomers.emit({ data: data });
@@ -886,6 +724,19 @@ export class DealDetailComponent implements OnInit {
     this.moveStage.emit(event);
   }
   //#endregion
+  setTaskBar(){
+    if(this.dataSelected?.isAdminAll || this.dataSelected.owner == this.user?.userID){
+      this.idTabShow = "1,2,5,6,7";
+    }else{
+      let permission  = this.dataSelected?.permissions?.find(p => p.objectID == this.user?.userID);
+      this.idTabShow = this.tabDefaut;
+      if(permission?.config){
+        this.idTabShow = permission?.config;
+      }else{
+        this.idTabShow = this.tabDefaut;
+      }
+    }
+  }
   linkData(type:string, recID:string){
     if (type && recID) {
       const url1 = this.location.prepareExternalUrl(this.location.path());

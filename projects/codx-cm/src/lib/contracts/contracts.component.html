@@ -206,6 +206,7 @@
 <ng-template #templateDetail>
   <contracts-view-detail
     #detailViewContract
+    [user]="user"
     [listInsStepStart]="listInsStep"
     [contract]="dataSelected"
     [formModel]="view?.formModel"
