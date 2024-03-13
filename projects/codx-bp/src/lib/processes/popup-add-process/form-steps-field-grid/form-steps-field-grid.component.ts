@@ -254,7 +254,38 @@ export class FormStepsFieldGridComponent
             let deleteDt = res?.event?.delete;
             if(deleteDt)
             {
+              debugger
+              // if(indexDelete>=0)
+              // {
+              //   if(deleteDt?.child && deleteDt.child.length>0)
+              //   {
+              //     deleteDt.child.forEach(element => {
+              //       this.data.steps.splice(indexDelete,0,element)
+              //     });
+              //   }
+              // }
+
+              let indexParent2 = this.listStage.findIndex(x=>x.recID == deleteDt.parentID);
+              if(indexParent2>=0)
+              {
+                var indexC = this.listStage[indexParent2].child.findIndex(x=>x.recID == deleteDt.recID);
+                
+                deleteDt.child.forEach(element => {
+                  element.parentID = this.listStage[indexParent2].recID;
+                  this.listStage[indexParent2].child.splice(indexC,0,element);
+                });
+                
+                this.listStage[indexParent2].child = this.listStage[indexParent2].child.filter(x=>x.recID != deleteDt.recID);
+
+                let ind = 0;
+                this.listStage[indexParent2].child.forEach(element => {
+                  element.stepNo = ind;
+                  ind ++;
+                });
+              }
+
               let indexParent = this.data.steps.findIndex(x=>x.recID == deleteDt.parentID);
+              let indexDelete = this.data.steps.findIndex(x=>x.recID == deleteDt.recID);
               if(indexParent>=0)
               {
                 this.data.steps[indexParent].child = this.data.steps[indexParent].child.filter(x=>x.recID != deleteDt.recID);
@@ -262,11 +293,6 @@ export class FormStepsFieldGridComponent
 
               this.data.steps = this.data.steps.filter(x=>x.recID != deleteDt.recID);
 
-              let indexParent2 = this.listStage.findIndex(x=>x.recID == deleteDt.parentID);
-              if(indexParent2>=0)
-              {
-                this.listStage[indexParent2].child = this.listStage[indexParent2].child.filter(x=>x.recID != deleteDt.recID);
-              }
             }
             this.dataChange.emit(this.data);
           }
