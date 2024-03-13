@@ -86,6 +86,8 @@ import { DebounceDirective } from './directives/debounce-click.directive';
 import { AssetURLPipe } from './pipe/assetURL';
 import { AttachmentGridComponent } from './component/attachment-grid/attachment-grid.component';
 import { AttachmentGridFilesComponent } from './component/attachment-grid/attachment-grid-files/attachment-grid-files.component';
+import { CodxMentionComponent } from './component/codx-mention/codx-mention.component';
+import { MentionModule } from '@syncfusion/ej2-angular-dropdowns';
 //#endregion
 
 const T_Component: Type<any>[] = [
@@ -139,6 +141,8 @@ const T_Component: Type<any>[] = [
   //Ai Tool
   CodxAiComponent,
   PresentationComponent,
+  CodxMentionComponent,
+
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -184,6 +188,7 @@ const T_Directive: Type<any>[] = [DebounceDirective];
     SliderModule,
     UploaderModule,
     DialogModule,
+    MentionModule
   ],
   exports: [T_Component, T_Pipe, T_Directive],
 })
