@@ -21,12 +21,6 @@
         >: {{ dataSelected?.dealValue }}
       </div>
     </ng-template>
-    <!-- <ng-template #toolTipProbability>
-      <div class="text-end text-sm-start">
-        <strong>{{ gridViewSetup["Probability"]?.headerText }}</strong
-        >: {{ dataSelected?.probability }}
-      </div>
-    </ng-template> -->
     <ng-template #header let-data>
       <div class="d-flex align-items-center justify-content-between">
         <div
@@ -78,16 +72,18 @@
                 </codx-img>
               </div>
               <div class="d-flex flex-column">
-                <div class="text-gray-600 d-flex cursor-pointer has-action-menu-od" >
+                <div
+                  class="text-gray-600 d-flex cursor-pointer has-action-menu-od"
+                >
                   <span [ngbTooltip]="gridViewSetup?.CustomerName?.headerText">
                     {{ dataSelected.customerName }}
                   </span>
                   <div
-                      class="action-menu-od ms-1"
-                      (click)="editCustomer(dataSelected)"
-                    >
-                      <i class="icon-edit text-danger icon-16"></i>
-                    </div>
+                    class="action-menu-od ms-1"
+                    (click)="editCustomer(dataSelected)"
+                  >
+                    <i class="icon-edit text-danger icon-16"></i>
+                  </div>
                 </div>
                 <div
                   class="fw-bold text-dark fs-5-sm"
@@ -137,26 +133,6 @@
                 </div>
               </div>
               <div class="d-flex align-items-center justify-content-end mt-1">
-                <!-- <div
-                  class="d-flex align-items-center"
-                  [ngbTooltip]="gridViewSetup?.Probability?.headerText"
-                >
-                  <span
-                    class="icon-check_circle text-green icon-14 me-1"
-                  ></span>
-                  <span
-                    *ngIf="dataSelected?.probability; else defaultNull"
-                    class="line-clamp line-clamp-1"
-                    [ngbTooltip]="gridViewSetup?.Probability?.headerText"
-                    #probability
-                    [innerHTML]="
-                      dataSelected?.probability
-                        | formatvalue : formModel : 'probability' : probability
-                        | async
-                    "
-                  ></span
-                  >%
-                </div> -->
                 <span
                   [ngClass]="
                     dataSelected?.expectedClosed
@@ -209,21 +185,6 @@
                     [formModel]="formModel"
                     class="text-dark fw-bold me-2 text-nowrap"
                   ></codx-label>
-
-                  <!-- <span
-                    class="text-gray-600"
-                    #note
-                    [innerHTML]="
-                      dataSelected?.note
-                        | formatvalue
-                          : formModel
-                          : 'note'
-                          : note
-                          : 'CMDeals'
-                          : 'grvCMDeals'
-                        | async
-                    "
-                  ></span> -->
                   <codx-show-more-less
                     [formModel]="formModel"
                     [value]="dataSelected?.note"
@@ -336,28 +297,16 @@
                       *ngIf="dataSelected?.statusCodeID"
                       class="badge badge-sm d-flex align-items-center me-0 color-theme me-1"
                     >
-                      <!-- <span
-                    class="text-ellipsis-1"
-                    [ngbTooltip]="getStatusCode(dataSelected?.statusCodeID)"
-                    > {{getStatusCode(dataSelected?.statusCodeID)}}</span
-                  > -->
-                      <!-- <span
+                      <span
                         class="text-ellipsis-1"
-                        [ngbTooltip]="
-                          dataSelected?.statusCodeID
-                            | formatStatusCode : valueListStatusCode
-                        "
+                        #statusCodeID
                         [innerHTML]="
                           dataSelected?.statusCodeID
-                            | formatStatusCode : valueListStatusCode
+                            | formatvalue : formModel : 'statusCodeID'
+                            | async
                         "
-                      ></span> -->
-                      <span
-                      class="text-ellipsis-1"
-                      #statusCodeID
-                      [innerHTML]="dataSelected?.statusCodeID| formatvalue : formModel : 'statusCodeID'  | async "
-                    >
-                    </span>
+                      >
+                      </span>
                     </div>
 
                     <div
@@ -413,19 +362,22 @@
                         [ngbTooltip]="approve"
                         placement="top"
                       >
-                      <ng-template #approve>
-                        <codx-label
-                          fiedName="approvedDate"
-                          [formModel]="formModel"
-                          [setRequire]="false"
-                          default="Ngày duyệt"
-                          class="label-colon me-1"
-                        ></codx-label>
-                        <span  [innerHTML]="dataSelected?.approvedDate
-                          | formatvalue : formModel : 'approvedDate'
-                          | async"
-                        ></span>
-                      </ng-template>
+                        <ng-template #approve>
+                          <codx-label
+                            fiedName="approvedDate"
+                            [formModel]="formModel"
+                            [setRequire]="false"
+                            default="Ngày duyệt"
+                            class="label-colon me-1"
+                          ></codx-label>
+                          <span
+                            [innerHTML]="
+                              dataSelected?.approvedDate
+                                | formatvalue : formModel : 'approvedDate'
+                                | async
+                            "
+                          ></span>
+                        </ng-template>
                       </codx-vll>
                     </ng-container>
                   </div>
@@ -535,8 +487,10 @@
         </div>
       </div>
     </ng-template>
-  </codx-detail-tmp> </ng-container
-><ng-template #body let-data>
+  </codx-detail-tmp> 
+</ng-container>
+
+<ng-template #body let-data>
   <div class="cm-scroll" [ngClass]="isShow ? 'cm-full' : ''">
     <div
       class="btn btn-white btn-icon tab-action"
@@ -547,7 +501,7 @@
     <div class="instance-select">
       <ejs-tab #tabObj>
         <e-tabitems>
-          <e-tabitem>
+          <e-tabitem *ngIf="idTabShow.includes('1')">
             <ng-template #headerText>
               <div class="d-flex align-items-top">
                 <span class="icon-info icon-16 me-2"></span>
@@ -562,7 +516,11 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="mt-5 p-2" [ngClass]="isShow ? '': 'croll-m-5'" style="overflow-x: hidden !important;">
+              <div
+                class="mt-5 p-2"
+                [ngClass]="isShow ? '' : 'croll-m-5'"
+                style="overflow-x: hidden !important"
+              >
                 <div class="text-dark text-primary fw-bold fs-6 mb-3">
                   <codx-label default="Thông tin chung"></codx-label>
                 </div>
@@ -642,24 +600,6 @@
                         </div>
                       </div>
                     </div>
-                    <!-- <div class="col-6">
-                      <div class="mb-1 d-flex align-items-top">
-                        <div
-                          class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                        >
-                          <codx-label
-                            fiedName="Category"
-                            class="me-2 label-colon"
-                            [setRequire]="false"
-                            [formModel]="formModel"
-                            default="Loại cơ hội"
-                          ></codx-label>
-                        </div>
-                        <div class="text-dark fw-bold codx-textcontent">
-                          {{ getNameCategory(dataSelected?.category) }}
-                        </div>
-                      </div>
-                    </div> -->
                     <div class="col-6">
                       <div class="mb-1 d-flex align-items-top">
                         <div
@@ -751,37 +691,6 @@
                   </div>
 
                   <div class="row">
-                    <!-- <div class="col-6">
-                      <div class="mb-1 d-flex align-items-top">
-                        <div
-                          class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                        >
-                          <codx-label
-                            class="me-2 label-colon"
-                            [setRequire]="false"
-                            [formModel]="formModel"
-                            fiedName="Probability"
-                          ></codx-label>
-                        </div>
-                        <div
-                          class="text-dark fw-bold codx-textcontent d-flex justify-content-start"
-                        >
-                          <span
-                            #probability
-                            *ngIf="dataSelected?.probability; else defaultNull"
-                            [innerHTML]="
-                              dataSelected?.probability
-                                | formatvalue
-                                  : formModel
-                                  : 'probability'
-                                  : probability
-                                | async
-                            "
-                          ></span
-                          >%
-                        </div>
-                      </div>
-                    </div> -->
                     <div class="col-6">
                       <div class="mb-1 d-flex align-items-top">
                         <div
@@ -838,53 +747,8 @@
                     </div>
                   </div>
 
-                  <div class="row">
-                    <!-- <div class="col-6">
-                      <div class="mb-1 d-flex align-items-top">
-                        <div
-                          class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                        >
-                          <codx-label
-                            class="me-2 label-colon"
-                            [setRequire]="false"
-                            [formModel]="formModel"
-                            fiedName="ExpectedTo"
-                          ></codx-label>
-                        </div>
-                        <div class="text-dark fw-bold codx-textcontent">
-                          <span
-                            #expectedTo
-                            [innerHTML]="
-                              dataSelected?.expectedTo
-                                | formatvalue
-                                  : formModel
-                                  : 'expectedTo'
-                                  : expectedTo
-                                  : 'CMDeals'
-                                  : 'grvCMDeals'
-                                | async
-                            "
-                          ></span>
-                        </div>
-                      </div>
-                    </div> -->
-                  </div>
+                  <div class="row"></div>
                 </div>
-                <!-- <div class="mt-5">
-                  <div class="text-dark text-primary fw-bold fs-6 mb-3">
-                    <codx-label
-                      fiedName="Memo"
-                      [setRequire]="false"
-                      [formModel]="formModel"
-                    ></codx-label>
-                  </div>
-                  <codx-show-more-less
-                    [formModel]="formModel"
-                    [value]="dataSelected?.memo"
-                    [text]="'memo'"
-                  >
-                  </codx-show-more-less>
-                </div> -->
                 <div *ngIf="isHaveField">
                   <div class="d-flex flex-column mt-5">
                     <ng-container *ngFor="let item of listSteps">
@@ -907,34 +771,8 @@
               </div>
             </ng-template>
           </e-tabitem>
-          <!-- <e-tabitem *ngIf="dataSelected?.steps?.isHaveField">
-          <ng-template #headerText>
-            <div class="d-flex align-items-top">
-              <span class="icon-add_to_photos icon-16 me-1"></span>
-              <codx-label
-                class="fw-bold"
-                default="Trường tùy chỉnh"
-                [formModel]="formModel"
-                name="lblField"
-              ></codx-label>
-            </div>
-          </ng-template>
-          <ng-template #content>y
-            <div class="d-flex flex-column mt-4">
-              <ng-container *ngFor="let item of listSteps">
-                <codx-fields-detail-temp
-                  *ngIf="item?.fields?.length > 0"
-                  [dataStep]="item"
-                  [showColumnControl]="showColumnControl(item.stepID)"
-                  [isUpdate]=" ['1', '2'].includes(dataSelected.status) && dataSelected?.roles?.isOnwer"
-                  (saveDataStep)="saveDataStep($event)"
-                >
-                </codx-fields-detail-temp>
-              </ng-container>
-            </div>
-          </ng-template>
-          </e-tabitem> -->
-          <e-tabitem *ngIf="dataSelected.customerCategory == '1'">
+
+          <e-tabitem *ngIf="dataSelected.customerCategory == '1' && idTabShow.includes('2')">
             <ng-template #headerText>
               <div class="d-flex align-items-top">
                 <span class="icon-add_to_photos icon-16 me-1"></span>
@@ -947,7 +785,11 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="mt-5 p-2" [ngClass]="isShow ? '': 'croll-m-5'" style="overflow-x: hidden !important;">
+              <div
+                class="mt-5 p-2"
+                [ngClass]="isShow ? '' : 'croll-m-5'"
+                style="overflow-x: hidden !important"
+              >
                 <codx-list-contacts
                   #loadContactDeal
                   [selectAll]="false"
@@ -964,7 +806,8 @@
               </div>
             </ng-template>
           </e-tabitem>
-          <e-tabitem>
+
+          <e-tabitem *ngIf="idTabShow.includes('6')">
             <ng-template #headerText>
               <div class="d-flex align-items-top">
                 <span class="icon-add_to_photos icon-16 me-1"></span>
@@ -977,7 +820,11 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="mt-5 p-2" [ngClass]="isShow ? '': 'croll-m-5'" style="overflow-x: hidden !important;">
+              <div
+                class="mt-5 p-2"
+                [ngClass]="isShow ? '' : 'croll-m-5'"
+                style="overflow-x: hidden !important"
+              >
                 <codx-tab-dealcompetitors
                   [dealID]="dataSelected.recID"
                   [hidenMF]="!dataSelected?.write || dataSelected.closed"
@@ -985,7 +832,8 @@
               </div>
             </ng-template>
           </e-tabitem>
-          <e-tabitem>
+
+          <e-tabitem *ngIf="idTabShow.includes('5')">
             <ng-template #headerText>
               <div class="d-flex align-items-top">
                 <span class="icon-more icon-16 me-2"></span>
@@ -998,7 +846,11 @@
               </div>
             </ng-template>
             <ng-template #content let-data="value">
-              <div class="mt-5 p-2" [ngClass]="isShow ? '': 'croll-m-5'" style="overflow-x: hidden !important;">
+              <div
+                class="mt-5 p-2"
+                [ngClass]="isShow ? '' : 'croll-m-5'"
+                style="overflow-x: hidden !important"
+              >
                 <step-task
                   [entityName]="'CM_Deals'"
                   [isDataLoading]="isDataLoading"
@@ -1018,10 +870,10 @@
                   [isAdmin]="dataSelected?.isAdminAll"
                 ></step-task>
               </div>
-
             </ng-template>
           </e-tabitem>
-          <e-tabitem>
+
+          <e-tabitem *ngIf="idTabShow.includes('7')">
             <ng-template #headerText>
               <div class="d-flex align-items-top">
                 <span class="icon-i-chat-right icon-16 me-2"></span>
@@ -1034,7 +886,11 @@
               </div>
             </ng-template>
             <ng-template #content let-data>
-              <div class="tab-comt mt-5 p-2" [ngClass]="isShow ? '': 'croll-m-5'" style="overflow-x: hidden !important;">
+              <div
+                class="tab-comt mt-5 p-2"
+                [ngClass]="isShow ? '' : 'croll-m-5'"
+                style="overflow-x: hidden !important"
+              >
                 <div class="tab_container">
                   <codx-tree-comment
                     [objectID]="dataSelected.recID"
@@ -1049,11 +905,13 @@
               </div>
             </ng-template>
           </e-tabitem>
+
         </e-tabitems>
       </ejs-tab>
     </div>
   </div>
 </ng-template>
+
 <ng-template #tabs let-data>
   <codx-tabs
     [entityName]="formModel.entityName"
@@ -1064,7 +922,7 @@
     [dataTree]="treeTask"
     [transID]="dataSelected?.recID"
     [approveStatus]="dataSelected.approveStatus"
-    [data]="dataSelected" 
+    [data]="dataSelected"
     [keyField]="'recID'"
     (tabChange)="changeFooter($event)"
   ></codx-tabs>
@@ -1072,17 +930,18 @@
 
 <ng-template #referencesDeal>
   <div *ngIf="isViewLink; else noData">
-    <div *ngIf=" listContracts && listContracts.length > 0 ">
-      <div *ngFor="let item of listContracts" class="p-3" (dblclick)="linkData('contract', item?.recID)">
+    <div *ngIf="listContracts && listContracts.length > 0">
+      <div
+        *ngFor="let item of listContracts"
+        class="p-3"
+        (dblclick)="linkData('contract', item?.recID)"
+      >
         <div class="d-flex justify-content-start">
           <div>
             <i class="icon-sticky_note_2"></i>
           </div>
           <div class="d-flex align-items-stretch">
-            <codx-label
-              [default]="'Hợp đồng'"
-              class="pe-2"
-            ></codx-label>
+            <codx-label [default]="'Hợp đồng'" class="pe-2"></codx-label>
           </div>
           <div
             class="ms-auto line-clamp line-clamp-1 d-flex"
@@ -1092,7 +951,7 @@
               class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
             ></span>
             <span
-              class="text-gray-700  pe-2"
+              class="text-gray-700 pe-2"
               #contractAmt
               [innerHTML]="
                 item?.contractAmt
@@ -1101,13 +960,11 @@
               "
             ></span>
             <span
-              class="text-gray-700 "
+              class="text-gray-700"
               #currencyID
               [innerHTML]="
                 item?.currencyID
-                  | formatvalue
-                    : formModelContact
-                    : 'currencyID'
+                  | formatvalue : formModelContact : 'currencyID'
                   | async
               "
             ></span>
@@ -1129,7 +986,7 @@
               class="badge badge-light badge-sm me-0"
             >
             </codx-vll>
-          <div
+            <div
               class="d-flex align-items-center"
               [ngbTooltip]="grvSetupContract['ContractName']?.headerText"
             >
@@ -1139,9 +996,7 @@
                 #createdOn
                 [innerHTML]="
                   item?.createdOn
-                    | formatvalue
-                      : formModelContact
-                      : 'createdOn'
+                    | formatvalue : formModelContact : 'createdOn'
                     | async
                 "
               ></span>
@@ -1161,17 +1016,14 @@
       </div>
     </div>
 
-    <div *ngIf=" listLeads && listLeads.length > 0 ">
+    <div *ngIf="listLeads && listLeads.length > 0">
       <div *ngFor="let item of listLeads" class="p-3">
         <div class="d-flex justify-content-start">
           <div>
             <i class="icon-sticky_note_2"></i>
           </div>
           <div class="d-flex align-items-stretch">
-            <codx-label
-              [default]="'Tiềm năng'"
-              class="pe-2"
-            ></codx-label>
+            <codx-label [default]="'Tiềm năng'" class="pe-2"></codx-label>
           </div>
           <div
             class="ms-auto line-clamp line-clamp-1 d-flex"
@@ -1181,7 +1033,7 @@
               class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
             ></span>
             <span
-              class="text-gray-700  pe-2"
+              class="text-gray-700 pe-2"
               #dealValue
               [innerHTML]="
                 item?.dealValue
@@ -1190,13 +1042,11 @@
               "
             ></span>
             <span
-              class="text-gray-700 "
+              class="text-gray-700"
               #currencyID
               [innerHTML]="
                 item?.currencyID
-                  | formatvalue
-                    : formModelLead
-                    : 'currencyID'
+                  | formatvalue : formModelLead : 'currencyID'
                   | async
               "
             ></span>
@@ -1218,7 +1068,7 @@
               class="badge badge-light badge-sm me-0"
             >
             </codx-vll>
-          <div
+            <div
               class="d-flex align-items-center"
               [ngbTooltip]="grvSetupLead['LeadName']?.headerText"
             >
@@ -1228,9 +1078,7 @@
                 #createdOn
                 [innerHTML]="
                   item?.createdOn
-                    | formatvalue
-                      : formModelLead
-                      : 'createdOn'
+                    | formatvalue : formModelLead : 'createdOn'
                     | async
                 "
               ></span>
@@ -1250,17 +1098,14 @@
       </div>
     </div>
 
-    <div *ngIf=" listQuotations && listQuotations.length > 0 ">
+    <div *ngIf="listQuotations && listQuotations.length > 0">
       <div *ngFor="let item of listQuotations" class="p-3">
         <div class="d-flex justify-content-start">
           <div>
             <i class="icon-sticky_note_2"></i>
           </div>
           <div class="d-flex align-items-stretch">
-            <codx-label
-              [default]="'Báo giá'"
-              class="pe-2"
-            ></codx-label>
+            <codx-label [default]="'Báo giá'" class="pe-2"></codx-label>
           </div>
           <div
             class="ms-auto line-clamp line-clamp-1 d-flex"
@@ -1270,7 +1115,7 @@
               class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
             ></span>
             <span
-              class="text-gray-700  pe-2"
+              class="text-gray-700 pe-2"
               #totalAmt
               [innerHTML]="
                 item?.totalAmt
@@ -1279,13 +1124,11 @@
               "
             ></span>
             <span
-              class="text-gray-700 "
+              class="text-gray-700"
               #currencyID
               [innerHTML]="
                 item?.currencyID
-                  | formatvalue
-                    : formModelQuotations
-                    : 'currencyID'
+                  | formatvalue : formModelQuotations : 'currencyID'
                   | async
               "
             ></span>
@@ -1307,7 +1150,7 @@
               class="badge badge-light badge-sm me-0"
             >
             </codx-vll>
-          <div
+            <div
               class="d-flex align-items-center"
               [ngbTooltip]="grvSetupQuotation['QuotationName']?.headerText"
             >
@@ -1317,9 +1160,7 @@
                 #createdOn
                 [innerHTML]="
                   item?.createdOn
-                    | formatvalue
-                      : formModelQuotations
-                      : 'createdOn'
+                    | formatvalue : formModelQuotations : 'createdOn'
                     | async
                 "
               ></span>
@@ -1338,8 +1179,6 @@
         </div>
       </div>
     </div>
-
-
   </div>
   <ng-template #noData>
     <codx-no-data> </codx-no-data>

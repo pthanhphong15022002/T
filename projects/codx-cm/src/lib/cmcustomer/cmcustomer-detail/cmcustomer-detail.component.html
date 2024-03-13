@@ -410,7 +410,7 @@
               height="250px"
             >
               <e-tabitems>
-                <e-tabitem>
+                <e-tabitem *ngIf="idTabShow.includes('1')">
                   <ng-template #headerText>
                     <div class="d-flex align-items-top me-2">
                       <span
@@ -442,8 +442,8 @@
                 </e-tabitem>
                 <e-tabitem
                   *ngIf="
-                    (checkType == '1' && dataSelected?.category == '1') ||
-                    checkType == '3'
+                    ((checkType == '1' && dataSelected?.category == '1') ||
+                    checkType == '3') && idTabShow.includes('2')
                   "
                 >
                   <ng-template #headerText>
@@ -488,8 +488,8 @@
                 </e-tabitem>
                 <e-tabitem
                   *ngIf="
-                    (checkType == '1' && dataSelected?.category == '1') ||
-                    checkType == '2'
+                    ((checkType == '1' && dataSelected?.category == '1') ||
+                    checkType == '2') && idTabShow.includes('3')
                   "
                 >
                   <ng-template #headerText>
@@ -534,7 +534,7 @@
                     </div>
                   </ng-template>
                 </e-tabitem>
-                <e-tabitem *ngIf="checkType == '1' || checkType == '5'">
+                <e-tabitem *ngIf="(checkType == '1' || checkType == '5') && idTabShow.includes('4')">
                   <ng-template #headerText>
                     <div class="d-flex align-items-top me-2">
                       <span
@@ -610,7 +610,7 @@
                     </div>
                   </ng-template>
                 </e-tabitem> -->
-                <e-tabitem *ngIf="checkType == '1' || checkType == '5'">
+                <e-tabitem *ngIf="(checkType == '1' || checkType == '5')  && idTabShow.includes('5')">
                   <ng-template #headerText>
                     <div class="d-flex align-items-top me-2">
                       <span
@@ -634,7 +634,7 @@
                     </div>
                   </ng-template>
                 </e-tabitem>
-                <e-tabitem *ngIf="checkType == '4'">
+                <e-tabitem *ngIf="checkType == '4' ">
                   <ng-template #headerText>
                     <div class="d-flex align-items-top me-2">
                       <span

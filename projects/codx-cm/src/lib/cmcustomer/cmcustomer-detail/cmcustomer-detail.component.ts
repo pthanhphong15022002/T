@@ -52,6 +52,9 @@ export class CmCustomerDetailComponent implements OnInit {
   @Input() isAdmin: boolean = false;
   @Input() isDbClick: boolean = false;
   @Input() asideMode: string;
+
+  @Input() tabDefaut = "";
+  @Input() valueListTab;
   @Output() changeMoreMF = new EventEmitter<any>();
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() addressNameCMEmit = new EventEmitter<any>();
@@ -77,6 +80,7 @@ export class CmCustomerDetailComponent implements OnInit {
   category = '';
   user: any;
   isShow = false;
+  idTabShow = "";
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -110,6 +114,7 @@ export class CmCustomerDetailComponent implements OnInit {
         this.id = changes['dataSelected'].currentValue?.recID;
         this.getOneCustomerDetail(this.dataSelected);
         this.getTab();
+        this.setTaskBar();
       }
     }
   }
@@ -485,5 +490,19 @@ export class CmCustomerDetailComponent implements OnInit {
         )
         .subscribe((res) => {});
     };
+  }
+
+  setTaskBar(){
+    if(this.dataSelected?.isAdminAll || this.dataSelected.owner == this.user?.userID){
+      this.idTabShow = this.tabDefaut;
+    }else{
+      let permission  = this.dataSelected?.permissions?.find(p => p.objectID == this.user?.userID);
+      this.idTabShow = this.tabDefaut;
+      if(permission?.config){
+        this.idTabShow = permission?.config;
+      }else{
+        this.idTabShow = this.tabDefaut;
+      }
+    }
   }
 }
