@@ -277,10 +277,10 @@ export class CodxViewFilesComponent implements OnInit {
     }
     return of(true);
   }
-  addFiles(files: any[], objectID: string, permissisons:Permission[]): Observable<boolean> {
+  addFiles(files: any[], objectID: string, permissions:Permission[]): Observable<boolean> {
     if (files.length > 0) {
       this.codxATM.objectId = objectID;
-      files.forEach(x => x.permissisons = [...permissisons]);
+      files.forEach(x => x.permissions = [...permissions]);
       this.codxATM.fileUploadList = [...files];
       return this.codxATM.saveFilesMulObservable().pipe(
         map((res: any) => {
