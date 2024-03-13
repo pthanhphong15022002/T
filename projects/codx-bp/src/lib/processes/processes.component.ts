@@ -311,6 +311,9 @@ export class ProcessesComponent
           case 'BPT0106':
             res.disabled = data?.status == '5' ? false : true;
             break;
+          case 'SYS02':
+            res.disabled = data?.status == '5' || data?.status == '2' ? true : false;
+            break;
         }
       });
     }

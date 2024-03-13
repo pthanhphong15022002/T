@@ -188,6 +188,8 @@ import { FormEditConnectorComponent } from './components/codx-diagram/form-edit-
 import { CodxApproverStepComponent } from './components/codx-view-approval-step/codx-approver-step/codx-approver-step.component';
 import { ViewContentScheduleMeetingsComponent } from './components/codx-tmmeetings/view-content-schedule-meetings/view-content-schedule-meetings.component';
 import { ContentEmailComponent } from './components/codx-email/content-email/content-email.component';
+import { CodxMentionComponent } from '../../../codx-common/src/lib/component/codx-mention/codx-mention.component';
+import { MentionModule } from '@syncfusion/ej2-angular-dropdowns';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,

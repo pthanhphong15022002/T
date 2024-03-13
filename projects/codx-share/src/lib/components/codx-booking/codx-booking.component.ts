@@ -1,3 +1,4 @@
+import { CodxEpService } from './../../../../../codx-ep/src/lib/codx-ep.service';
 import { filter } from 'rxjs';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import {
@@ -635,6 +636,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           event.forEach((func) => {
             if (
               // Hiện: sửa - xóa - chép - gửi duyệt -
+              func.functionID == EPCONST.MFUNCID.View ||
               func.functionID == EPCONST.MFUNCID.Delete ||
               func.functionID == EPCONST.MFUNCID.Edit ||
               func.functionID == EPCONST.MFUNCID.Copy ||
@@ -660,6 +662,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           event.forEach((func) => {
             if (
               //Hiện: dời - mời - chép - hủy
+              func.functionID == EPCONST.MFUNCID.View ||
               func.functionID == EPCONST.MFUNCID.Copy ||
               func.functionID == EPCONST.MFUNCID.R_Cancel ||
               func.functionID == EPCONST.MFUNCID.C_Cancel ||
@@ -686,6 +689,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           event.forEach((func) => {
             if (
               //Hiện: chép
+              func.functionID == EPCONST.MFUNCID.View ||
               func.functionID == EPCONST.MFUNCID.Copy
             ) {
               func.disabled = false;
@@ -711,6 +715,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           event.forEach((func) => {
             if (
               // Hiện: Mời - dời - Chép
+              func.functionID == EPCONST.MFUNCID.View ||
               func.functionID == EPCONST.MFUNCID.Copy ||
               func.functionID == EPCONST.MFUNCID.R_Invite ||
               func.functionID == EPCONST.MFUNCID.R_Reschedule ||
@@ -735,6 +740,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           event.forEach((func) => {
             if (
               //Hiện: chép
+              func.functionID == EPCONST.MFUNCID.View ||
               func.functionID == EPCONST.MFUNCID.Copy ||
               func.functionID == EPCONST.MFUNCID.Delete ||
               func.functionID == EPCONST.MFUNCID.Edit ||
@@ -782,6 +788,10 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
               func.functionID == EPCONST.MFUNCID.S_UnAllocate)
           ) {
             func.disabled = true;
+          }
+          if( func.functionID == EPCONST.MFUNCID.View ){
+            
+            func.disabled = false;
           }
         });
       }
@@ -1294,6 +1304,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   }
 
   viewDetail(data: any) {
+    this.codxBookingService.getBookingByID(data?.recID).subscribe((res) => {
+      data= res?? data;
     if (data.resourceType == EPCONST.VLL.ResourceType.Stationery) {
         let dModel = new DialogModel();
         dModel.IsFull = true;
@@ -1306,7 +1318,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           null,
           null,
           [
-            this.view.dataService.dataSelected,
+            data,
             EPCONST.MFUNCID.View,
             this.popupTitle,
           ],
@@ -1329,17 +1341,17 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
       option.FormModel = this.formModel;
       let inputParam = new EP_BookingInputParam();
       inputParam.data = data;
-      inputParam.funcType = EPCONST.MFUNCID.Edit;
+      inputParam.funcType = EPCONST.MFUNCID.View;
       inputParam.popupTitle = 'Xem chi tiết';
       inputParam.viewOnly = true;
       let dialogview = this.callfc.openSide(
         this.popupBookingComponent,
         //inputParam,
-        [data, EPCONST.MFUNCID.Edit, 'Xem chi tiết', null, true],
+        [data, EPCONST.MFUNCID.View, 'Xem chi tiết', null, true],
         option
       );
     }
-    
+  });
   }
 
   allocate(data: any) {

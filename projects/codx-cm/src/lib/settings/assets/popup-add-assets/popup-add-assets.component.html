@@ -29,24 +29,12 @@
       >
       </codx-input>
     </div>
-    <div class="form-group" *ngIf="fieldName == 'place'">
-      <codx-label [formModel]="form.formModel" fiedName="place"> </codx-label>
-      <codx-input
-        #cbxPlace
-        [field]="'place'"
-        [formModel]="form.formModel"
-        [Group]="form?.formGroup"
-        (valueChange)="valueChangeCbx($event)"
-        [disabled]="viewOnly"
-      >
-      </codx-input>
-    </div>
-    <div class="form-group" *ngIf="fieldName == 'objectID'">
-      <codx-label [formModel]="form.formModel" fiedName="objectID">
+    <div class="form-group" *ngIf="fieldName == 'projectID'">
+      <codx-label [formModel]="form.formModel" fiedName="projectID">
       </codx-label>
       <codx-input
-        #cbxObjectID
-        [field]="'objectID'"
+        #cbxProjectID
+        [field]="'projectID'"
         [formModel]="form.formModel"
         [Group]="form?.formGroup"
         (valueChange)="valueChangeCbx($event)"
@@ -54,11 +42,23 @@
       >
       </codx-input>
     </div>
-    <div class="form-group" *ngIf="fieldName == 'zone'">
-      <codx-label [formModel]="form.formModel" fiedName="zone"> </codx-label>
+    <div class="form-group" *ngIf="fieldName == 'refID'">
+      <codx-label [formModel]="form.formModel" fiedName="refID"> </codx-label>
       <codx-input
-        #cbxZone
-        [field]="'zone'"
+        #cbxRefID
+        [field]="'refID'"
+        [formModel]="form.formModel"
+        [Group]="form?.formGroup"
+        (valueChange)="valueChangeCbx($event)"
+        [disabled]="viewOnly"
+      >
+      </codx-input>
+    </div>
+    <div class="form-group" *ngIf="fieldName == 'siteID'">
+      <codx-label [formModel]="form.formModel" fiedName="siteID"> </codx-label>
+      <codx-input
+        #cbxSiteID
+        [field]="'siteID'"
         [formModel]="form.formModel"
         [Group]="form?.formGroup"
         (valueChange)="valueChangeCbx($event)"
@@ -68,9 +68,9 @@
     </div>
     <ng-container
       *ngIf="
-        fieldName != 'zone' &&
-        fieldName != 'place' &&
-        fieldName != 'objectID' &&
+        fieldName != 'siteID' &&
+        fieldName != 'projectID' &&
+        fieldName != 'refID' &&
         fieldName != 'assetID'
       "
     >

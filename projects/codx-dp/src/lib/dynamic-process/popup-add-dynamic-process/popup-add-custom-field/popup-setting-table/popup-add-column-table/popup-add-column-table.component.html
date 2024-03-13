@@ -85,7 +85,8 @@
           column.dataType &&
           column.dataType != 'A' &&
           column.dataType != 'R' &&
-          column.dataType != 'C'
+          column.dataType != 'C' &&
+          column.dataType != 'PA'
         "
       >
         <div class="d-flex justify-content-between">
@@ -200,7 +201,12 @@
         >
         </codx-input>
       </div>
-      <ng-container *ngIf="column.dataType == 'L'">
+      <ng-container
+        *ngIf="
+          (column.dataType == 'L' && column.dataFormat != 'B') ||
+          column.dataType == 'PA'
+        "
+      >
         <div class="form-group">
           <div class="d-flex justify-content-between">
             <div class="'justify-content-start">
@@ -214,32 +220,50 @@
             </div>
             <div
               class="d-flex justify-content-end"
-              *ngIf="column.dataFormat == 'V'"
+              *ngIf="
+                column.dataFormat == 'V' ||
+                column.dataFormat == 'S' ||
+                column.dataType == 'PA'
+              "
             >
-              <button
-                *ngIf="column.refValue"
-                type="button"
-                class="btn btn-icon btn-sm btn-light-primary me-2"
-                (click)="clickDeletedVll()"
+              <ng-container
+                *ngIf="column.dataFormat == 'V' || column.dataFormat == 'S'"
               >
-                <i class="icon-close icon-16 text-danger"></i>
-              </button>
+                <button
+                  *ngIf="column.refValue"
+                  type="button"
+                  class="btn btn-icon btn-sm btn-light-primary me-2"
+                  (click)="clickDeletedVll()"
+                >
+                  <i class="icon-close icon-16 text-danger"></i>
+                </button>
 
-              <button
-                type="button"
-                class="btn btn-icon btn-sm btn-light-primary me-2"
-                (click)="clickAddVll()"
-              >
-                <i
-                  class=" {{
-                    !column.refValue ? 'icon-add_box' : 'icon-edit'
-                  }} icon-16"
-                ></i>
-              </button>
+                <button
+                  type="button"
+                  class="btn btn-icon btn-sm btn-light-primary me-2"
+                  (click)="clickAddVll()"
+                >
+                  <i
+                    class=" {{
+                      !column.refValue ? 'icon-add_box' : 'icon-edit'
+                    }} icon-16"
+                  ></i></button
+              ></ng-container>
+
+              <ng-container *ngIf="column.dataType == 'PA'">
+                <button
+                  type="button"
+                  class="btn btn-icon btn-sm btn-light-primary me-2"
+                  (click)="clickSettingReference()"
+                  [disabled]="viewOnly"
+                >
+                  <i class="icon-settings icon-16"></i>
+                </button>
+              </ng-container>
             </div>
           </div>
           <codx-input
-            *ngIf="column.dataFormat == 'C'"
+            *ngIf="column.dataFormat == 'C' || column.dataType == 'PA'"
             type="combobox"
             field="refValue"
             [crrValue]="column.refValue"
@@ -248,7 +272,9 @@
             [disabled]="disable && action == 'edit'"
           ></codx-input>
 
-          <ng-container *ngIf="column.dataFormat == 'V'">
+          <ng-container
+            *ngIf="column.dataFormat == 'V' || column.dataFormat == 'S'"
+          >
             <ejs-combobox
               #datasVllCbx
               [dataSource]="listVll"
@@ -261,7 +287,10 @@
             ></ejs-combobox
           ></ng-container>
         </div>
-        <div class="form-group" *ngIf="column.dataType == 'L'">
+        <div
+          class="form-group"
+          *ngIf="column.dataType == 'L' || column.dataType == 'PA'"
+        >
           <codx-label
             class="label-colon"
             name="demoVll"
@@ -270,9 +299,10 @@
             class="me-4"
           >
           </codx-label>
-          <ng-container *ngIf="column.dataFormat == 'C'">
+          <ng-container
+            *ngIf="column.dataFormat == 'C' || column.dataType == 'PA'"
+          >
             <codx-input
-              *ngIf="column.dataFormat == 'C'"
               type="combobox"
               [refType]="column.refType"
               [refValue]="column.refValue"
@@ -302,9 +332,50 @@
               ></ejs-multiselect>
             </ng-container>
           </ng-container>
+
+          <ng-container *ngIf="column.dataFormat == 'S'">
+            <div class="d-flex align-items-center">
+              <div class="me-5" style="font-style: italic">
+                {{ this.crrVll?.note }}
+              </div>
+            </div>
+            <ng-container *ngFor="let val of datasVllCrr; let idx = index">
+              <div class="d-flex align-items-center">
+                <div class="me-5">
+                  <codx-input
+                    type="checkbox"
+                    [checked]="val?.check"
+                    [field]="val.value"
+                    [label]="val.textValue"
+                    (valueChange)="valueChangeCheckBox($event, idx)"
+                  >
+                  </codx-input>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
         </div>
       </ng-container>
 
+      <div class="form-group" *ngIf="fieldCus">
+        <codx-input-custom-field
+          #tempInput
+          [customField]="fieldCus"
+          [showTitle]="false"
+          [checkValid]="false"
+          [isDropRef]="column.dataType == 'PA'"
+          (dropDataFormatPA)="dropDataFormatPA($event)"
+          (valueChangeCustom)="valueChangeCustom($event)"
+          [disable]="viewOnly"
+        >
+        </codx-input-custom-field>
+        <ng-container *ngIf="column.defaultValue && column.dataType == 'PA'">
+          <codx-fields-format-value
+            #tempView
+            [data]="fieldCus"
+          ></codx-fields-format-value>
+        </ng-container>
+      </div>
       <div class="form-group" *ngIf="column.dataType == 'A'">
         <codx-input
           type="checkbox"

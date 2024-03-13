@@ -1,3 +1,4 @@
+import { CM_Deals, CM_Cases } from './../models/cm_model';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component, OnInit, Optional } from '@angular/core';
 import {
@@ -11,6 +12,7 @@ import {
   Util,
 } from 'codx-core';
 import { CM_Permissions } from '../models/cm_model';
+import { CodxCmService } from '../codx-cm.service';
 
 @Component({
   selector: 'lib-popup-permissions',
@@ -45,12 +47,21 @@ export class PopupPermissionsComponent implements OnInit {
   objectIDSelect: any;
   user: any;
   isAdmin: boolean = false;
+  tabDefault = {
+    CM_Contracts: "1,5,7,8,9",
+    CM_Customers: "1,2,3,4,5",
+    CM_Deals: "1,2,5,6,7",
+    CM_Cases: "1,4,6"
+  }
+  listDataTabView;
+
   constructor(
     private cache: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private api: ApiHttpService,
     private auth: AuthStore,
+    private cmService: CodxCmService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -64,7 +75,7 @@ export class PopupPermissionsComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.checkAdminUpdate();
     this.checkAddUser();
     this.cache.valueList('CRM051').subscribe((res) => {
@@ -81,6 +92,15 @@ export class PopupPermissionsComponent implements OnInit {
       );
       this.changePermissions(this.currentPemission);
     }
+    let tabEntity = this.tabDefault[this.entityName];
+    let vllData = await this.cmService.getValueList("CRM086");
+    if(vllData){
+      let listDataTabView = vllData.filter(x => tabEntity.includes(x?.value));
+      if(listDataTabView){
+        this.listDataTabView = listDataTabView.map((x) => {return {...x, isCheck: false}});
+      }
+    }
+
   }
 
   ngAfterViewInit(): void {
@@ -132,7 +152,7 @@ export class PopupPermissionsComponent implements OnInit {
         this.lstPermissions[oldIndex].allowUpdateStatus = this.allowUpdateStatus
           ? '1'
           : '0';
-        this.lstPermissions[oldIndex].config = this.config;
+        this.lstPermissions[oldIndex].config = this.getConfig();
       }
     }
     if (this.lstPermissions[index] != null) {
@@ -148,6 +168,7 @@ export class PopupPermissionsComponent implements OnInit {
         this.lstPermissions[index].allowUpdateStatus == '1' ? true : false;
       this.currentPemission = index;
       this.config = this.lstPermissions[index]?.config;
+      this.setConfig(this.config);
     } else {
       this.full = false;
       this.read = true;
@@ -158,6 +179,7 @@ export class PopupPermissionsComponent implements OnInit {
       this.download = false;
       this.allowPermit = false;
       this.allowUpdateStatus = false;
+      this.setConfig('');
       this.currentPemission = index;
     }
     this.changeDetectorRef.detectChanges();
@@ -274,6 +296,8 @@ export class PopupPermissionsComponent implements OnInit {
           this.download = data;
           this.allowPermit = data;
           this.allowUpdateStatus = data;
+          this.config = data ? this.tabDefault[this.entityName] : "";
+          this.setConfig(this.config);
         }
 
         break;
@@ -305,9 +329,28 @@ export class PopupPermissionsComponent implements OnInit {
   }
   //#endregion
 
-  valueChangeCbx(event) {
+  valueChangeTab(event,tab) {
     if(event?.data){
-      this.config = event?.data;
+      tab.isCheck = event?.data;
+    }
+  }
+
+  getConfig(){
+    let tabCheck = this.listDataTabView?.filter(x => x.isCheck)?.map(x => x.value);
+    this.config = tabCheck.join(";");
+    return this.config;
+  }
+  setConfig(config:string){
+    if(config){
+      this.listDataTabView?.forEach(element => {
+        if(config.includes(element?.value)){
+          element.isCheck = true;
+        }else{
+          element.isCheck = false;
+        }
+      });
+    }else{
+      this.listDataTabView = this.listDataTabView?.map(element => {return {...element, isCheck: false}});
     }
   }
 

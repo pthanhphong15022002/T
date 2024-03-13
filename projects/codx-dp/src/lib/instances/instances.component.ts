@@ -562,6 +562,26 @@ export class InstancesComponent
                         'add',
                         this.listSteps
                       );
+                    } else {
+                      //truong hop bị xóa mất bảng autoNum
+                      this.codxDpService
+                        .genAutoNumber(
+                          this.funcID,
+                          'DP_Instances',
+                          'InstanceNo'
+                        )
+                        .subscribe((res) => {
+                          if (res) {
+                            this.view.dataService.dataSelected.instanceNo = res;
+                            this.openPopUpAdd(
+                              applyFor,
+                              formMD,
+                              option,
+                              'add',
+                              this.listSteps
+                            );
+                          }
+                        });
                     }
                   });
               }
@@ -582,6 +602,7 @@ export class InstancesComponent
       });
     });
   }
+
   copy(data, titleAction) {
     if (data) {
       this.oldIdInstance = data.recID;

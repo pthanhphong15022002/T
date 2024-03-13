@@ -1,0 +1,17 @@
+<ejs-mention
+  #ej2Mention
+  [dataSource]="dataSource"
+  [fields]="{text:'UserName'}"
+  [target]="targetId"
+  [ignoreCase]="false"
+  [showMentionChar]="true"
+  [highlight]="true"
+  [itemTemplate]="itemTemplate"
+  (opened)="open()"
+  (select)="select($event)"
+></ejs-mention>
+<ng-template #itemTemplate let-data>
+  <div class="py-2">
+    <codx-temp-full [dataItem]="data" [title]="data.UserName" [imageId]="data.UserID" [imageObjType]="'AD_Users'" [imageWidth]="30"></codx-temp-full>
+  </div>
+</ng-template>
