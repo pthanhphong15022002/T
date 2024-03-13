@@ -86,6 +86,7 @@ import { DebounceDirective } from './directives/debounce-click.directive';
 import { AssetURLPipe } from './pipe/assetURL';
 import { AttachmentGridComponent } from './component/attachment-grid/attachment-grid.component';
 import { AttachmentGridFilesComponent } from './component/attachment-grid/attachment-grid-files/attachment-grid-files.component';
+import { SelectViettelCertificateComponent } from './component/pdf/public-esign/select-viettel-certificate/select-viettel-certificate.component';
 //#endregion
 
 const T_Component: Type<any>[] = [
@@ -135,6 +136,7 @@ const T_Component: Type<any>[] = [
   CoDxAddApproversComponent,
   CoDxViewReleaseSignFileComponent,
   CoDxGetTemplateSignFileComponent,
+  SelectViettelCertificateComponent,
 
   //Ai Tool
   CodxAiComponent,
