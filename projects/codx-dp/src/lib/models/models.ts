@@ -60,6 +60,7 @@ export class DP_Processes {
   assign: boolean = true;
   delete: boolean = true;
   deleted: boolean = false;
+  closeInstanceOverdue: boolean = false;
   stepsColorMode: boolean;
   instanceProgressControl: boolean;
   startInstanceControl: boolean = false;

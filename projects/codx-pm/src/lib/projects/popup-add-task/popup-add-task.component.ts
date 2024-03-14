@@ -152,36 +152,34 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     let dialog = this.callfc.openForm(PopupSelectUserComponent,'',500,600,'',{projectData:this.projectData,projectMemberType:this.projectMemberType, roleType: this.selectedRole ? this.selectedRole : 'A',listRoles:this.listRoles},'',option);
     dialog.closed.subscribe((res:any)=>{
       if(res.event){
-        if(this.projectMemberType == '1'){
-          for(let i=0;i<res.event.length;i++){
-            let member:any={};
-           let item =  this.projectData.permissions.find((x:any)=>x.objectID==res.event[i])
-           if(item){
-            let roleType = 'A';
-            member.resourceID=item.objectID;
-            member.resourceName=item.objectName;
-            if(this.selectedRole){
-             roleType = this.selectedRole;
+        for(let i=0;i<res.event.length;i++){
+          let member:any={};
+         let item =  this.projectData.permissions.find((x:any)=>x.objectID==res.event[i])
+         if(item){
+          let roleType = 'A';
+          member.resourceID=item.objectID;
+          member.resourceName=item.objectName;
+          if(this.selectedRole){
+           roleType = this.selectedRole;
 
-            }
-            member.roleType = roleType;
-            member.icon = this.listRoles.find((x:any)=>x.value==roleType)?.icon;
-            let idx=this.members.findIndex((x:any)=>x.resourceID==member.resourceID);
-            if(idx==-1){
-              this.members.push(member);
-              this.data.assignTo= this.members.map((x:any)=> x.resourceID).join(';')
-            }
-            else{
-              if(this.members[idx].roleType != member.roleType){
-                this.members[idx]=member
-              }
-            }
-
-           }
           }
-          this.getListUser(this.members.map((x:any)=>x.resourceID).join(';'));
-          this.changeDetectorRef.detectChanges();
+          member.roleType = roleType;
+          member.icon = this.listRoles.find((x:any)=>x.value==roleType)?.icon;
+          let idx=this.members.findIndex((x:any)=>x.resourceID==member.resourceID);
+          if(idx==-1){
+            this.members.push(member);
+            this.data.assignTo= this.members.map((x:any)=> x.resourceID).join(';')
+          }
+          else{
+            if(this.members[idx].roleType != member.roleType){
+              this.members[idx]=member
+            }
+          }
+
+         }
         }
+        this.getListUser(this.members.map((x:any)=>x.resourceID).join(';'));
+        this.changeDetectorRef.detectChanges();
       }
     })
   }
@@ -528,7 +526,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     if(this.action=='add' || this.action=='copy'){
 
       this.api
-      .exec('TM', 'TaskBusiness', 'AddTaskAsync', [
+      .exec('TM', 'TasksBusiness', 'AddTaskAsync', [
         this.data,
         this.funcID,
         this.members,
@@ -539,15 +537,17 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
         this.attachment?.clearData();
 
         if (res) {
-          if(res.length){
-            let item= res.find((x:any)=>x.category=='3');
-            if(item){
-
-              this.dialog.dataService.add(item, 0, false).subscribe();
-              this.dialog.close(item);
-            }
-          }
           this.notificationsService.notifyCode('SYS006');
+          this.dialog.close(res);
+          // if(res.length){
+          //   let item= res.find((x:any)=>x.category=='3');
+          //   if(item){
+
+          //     this.dialog.dataService.add(item, 0, false).subscribe();
+          //     this.dialog.close(item);
+          //   }
+          // }
+
         } else this.notificationsService.notifyCode('SYS023');
       });
     }
