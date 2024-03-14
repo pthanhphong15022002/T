@@ -590,6 +590,7 @@ export class AddTaskComponent
         formModel: this.formModel,
         data: data,
         groupField: this.getFieldExport(),
+        isFristVer:true
       },
       '',
       option
