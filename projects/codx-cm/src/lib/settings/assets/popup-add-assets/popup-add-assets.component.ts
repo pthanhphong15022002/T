@@ -97,6 +97,7 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
       });
   }
   ngAfterViewInit(): void {
+    // if (this.action != 'view')
     this.changeCbxCustomer();
   }
   ngOnInit(): void {}
@@ -109,91 +110,77 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
     this.data[e.field] = e.data;
     switch (e.field) {
       case 'projectID':
+        if (this.parentID == e.data) return;
         this.data.siteID = null;
         this.data.refID = null;
+        (
+          this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.data = [];
+        this.cbxSiteID.crrValue = null;
+        (
+          this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.predicates = e.data ? 'ParentID=@0' : '';
+        (
+          this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.dataValues = e.data ? `${this.data.projectID}` : '';
 
-        if (!e.data) {
-          (
-            this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.cbxSiteID.crrValue = null;
-          this.cbxSiteID.model = null;
-          this.form.formGroup.patchValue({ siteID: this.data['siteID'] });
+        this.form.formGroup.patchValue({ siteID: this.data['siteID'] });
+        //ref
+        (
+          this.cbxRefID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.data = [];
+        this.cbxRefID.crrValue = null;
+        this.form.formGroup.patchValue({
+          refID: this.data['refID'],
+        });
+        this.changeCbxCustomer();
 
-          (
-            this.cbxRefID.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.cbxRefID.crrValue = null;
-
-          this.changeCbxCustomer();
-        } else if (this.data.projectID != this.parentID) {
-          (
-            this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.cbxSiteID.crrValue = null;
-          this.cbxSiteID.model = {
-            ParentID: this.data.projectID,
-          };
-
-          this.form.formGroup.patchValue({ siteID: this.data['siteID'] });
-
-          (
-            this.cbxRefID.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.cbxRefID.crrValue = null;
-
-          this.changeCbxCustomer();
-        }
         this.parentID = this.data.projectID;
         break;
       case 'siteID':
-        if (!e.data) {
-          // this.parentID = null;
-          // (
-          //   this.cbxprojectID.ComponentCurrent as CodxComboboxComponent
-          // ).dataService.data = [];
-          // this.cbxprojectID.crrValue = this.parentID;
+        if (
+          e?.component?.itemsSelected[0]?.ParentID == this.data.projectID ||
+          this.siteIDOldData == this.data.siteID
+        )
+          return;
 
-          // this.cbxprojectID.model = null;
-          // this.form.formGroup.patchValue({ projectID: this.data['projectID'] });
-          // (
-          //   this.cbxRefID.ComponentCurrent as CodxComboboxComponent
-          // ).dataService.data = [];
-          // this.cbxRefID.crrValue = null;
+        this.parentID = this.data.projectID =
+          e?.component?.itemsSelected[0]?.ParentID;
+        this.data.refID = null;
 
-          this.changeCbxCustomer();
-        } else if (
-          e?.component?.itemsSelected[0]?.ParentID != this.data.projectID
-        ) {
-          this.data.projectID = e?.component?.itemsSelected[0]?.ParentID;
-          this.data.refID = null;
-          this.parentID = this.data.projectID;
-          (
-            this.cbxProjectID.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.cbxProjectID.crrValue = this.parentID;
+        (
+          this.cbxProjectID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.data = [];
+        this.cbxProjectID.crrValue = this.parentID;
 
-          this.cbxProjectID.model = {
-            AssetID: this.data.projectID,
-          };
-          this.form.formGroup.patchValue({ projectID: this.data['projectID'] });
-        }
+        (
+          this.cbxProjectID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.predicates = e.data ? 'AssetID=@0' : '';
+        (
+          this.cbxProjectID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.dataValues = e.data ? `${this.data.projectID}` : '';
+        this.form.formGroup.patchValue({ projectID: this.data['projectID'] });
 
-        if (this.siteIDOldData != this.data.siteID) {
-          this.siteIDOldData = this.data.siteID;
-          (
-            this.cbxRefID.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.cbxRefID.crrValue = null;
+        this.siteIDOldData = this.data.siteID;
+        (
+          this.cbxRefID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.data = [];
+        this.cbxRefID.crrValue = null;
+        //ref
+        (
+          this.cbxRefID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.data = [];
+        this.cbxRefID.crrValue = null;
 
-          this.changeCbxCustomer();
-        }
+        this.changeCbxCustomer();
         break;
       case 'refID':
+        if (!e.data) {
+          return;
+        }
+        this.getListLocation();
         break;
     }
-
-    // this.form.formGroup.patchValue(this.data);
   }
 
   beforeSave(op: RequestOption) {
@@ -282,8 +269,8 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
   changeCbxCustomer() {
     this.api
       .exec<any>('CM', 'ContractsBusiness', 'GetCbxCustomerContractAsync', [
-        this.data.projectID,
-        this.data.siteID,
+        this.data.siteID, //CMoffices
+        this.data.projectID, //CMBuilding
       ])
       .subscribe((res) => {
         if (res) {
@@ -308,16 +295,65 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
           ).dataService.dataValues = dataValue;
           // this.form.formGroup.patchValue(this.data);
         } else {
-          this.notiService.notify(
-            'Không tìm thấy khách hàng ! Vui lòng kiểm tra lại thông tin tòa nhà !',
-            '2'
+          this.notiService.notifyCode(
+            'CM064',
+            0,
+            '"' + this.gridViewSetup['RefID'].headerText + '"'
           );
           this.cbxRefID.ComponentCurrent.dataService.data = [];
           this.cbxRefID.crrValue = null;
           this.data.refID = null;
+          (
+            this.cbxRefID.ComponentCurrent as CodxComboboxComponent
+          ).dataService.predicates = 'RecID=@0';
+          (
+            this.cbxRefID.ComponentCurrent as CodxComboboxComponent
+          ).dataService.dataValues = '00000000-0000-0000-0000-000000000000'; // dữ liệu ko có
         }
         this.form.formGroup.patchValue({
           refID: this.data['refID'],
+        });
+      });
+  }
+  //=== Select nguoi===//
+  getListLocation() {
+    this.api
+      .exec<any>('CM', 'ContractsBusiness', 'GetListAssetByCustomerIDAsync', [
+        this.data.refID, //CMCustomer
+      ])
+      .subscribe((res) => {
+        if (res) {
+          let predicate = '';
+          let dataValue = '';
+
+          res.forEach((x, i) => {
+            predicate += 'AssetID=@' + i + ' or ';
+            dataValue += x + ';';
+          });
+          predicate = predicate.substring(0, predicate.length - 4); //'' or ''
+          dataValue = dataValue.substring(0, dataValue.length - 1);
+
+          (
+            this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
+          ).dataService.predicates = predicate;
+          (
+            this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
+          ).dataService.dataValues = dataValue;
+        } else {
+          this.notiService.notifyCode(
+            'CM064',
+            0,
+            '"' + this.gridViewSetup['siteID'].headerText + '"'
+          );
+        }
+
+        (
+          this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.data = [];
+        this.cbxSiteID.crrValue = null;
+
+        this.form.formGroup.patchValue({
+          siteID: this.data['siteID'],
         });
       });
   }

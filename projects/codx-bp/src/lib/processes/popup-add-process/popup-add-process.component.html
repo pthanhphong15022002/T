@@ -147,7 +147,7 @@
       </div>
     </div>
     <div class="stepper-body pt-4 px-4">
-      <div class="card shadow-none rounded-0 border-0 mx-auto w-100 h-100">
+      <div class="card shadow-none rounded-0 border-0 mx-auto h-100" [style]="{'width':'1100px'}">
         <div
           class="scroll-y"
           class="dp-step step-content"
@@ -217,14 +217,9 @@
               </codx-label>
             </div>
             <div
-              class="right d-flex align-items-center"
-              [ngClass]="
-                currentTab == 0
-                  ? 'justify-content-between'
-                  : 'justify-content-end'
-              "
+              class="right d-flex align-items-center justify-content-end"
             >
-              <div
+              <!-- <div
                 *ngIf="currentTab == 0"
                 class="d-flex justify-content-start cursor-pointer text-primary"
                 (click)="formPropertieFields()"
@@ -236,7 +231,7 @@
                   default="Chỉnh sửa form"
                 >
                 </codx-label>
-              </div>
+              </div> -->
               <div class="d-flex justify-content-end">
                 <div class="d-flex" *ngIf="currentTab != 2">
                   <button
@@ -287,7 +282,7 @@
 
 <ng-template #tmpInfomation>
   <div class="container-infomation">
-    <div class="info-left">
+    <div class="w-100 h-100 p-8">
       <div class="form-group">
         <codx-tag
           field="tags"
@@ -407,7 +402,7 @@
         <ng-container [ngTemplateOutlet]="avatarProcess"></ng-container>
       </div>
     </div>
-    <div class="info-right d-flex flex-column align-items-center">
+    <!-- <div class="info-right d-flex flex-column align-items-center">
       <div
         class="d-flex flex-column w-700px"
         *ngFor="let item of lstShowExtends; let i = index"
@@ -437,12 +432,12 @@
           </ng-container>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </ng-template>
 <ng-template #avatarProcess>
   <div
-    class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column"
+    class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column h-200px"
     (click)="addAvatar()"
   >
     <div class="dropzone-msg dz-message needsclick">

@@ -684,11 +684,17 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
         index++;
       });
       this.crrMembers = event.id;
-      this.signalR.sendData(
-        CHAT.BE_FUNC.AddMember,
-        this.groupID,
-        JSON.stringify(members)
-      );
+      // this.signalR.sendData(
+      //   CHAT.BE_FUNC.AddMember,
+      //   this.groupID,
+      //   JSON.stringify(members)
+      // );
+
+       this.signalR.sendData(
+          "EditMemberAsync",
+          this.groupID,
+          JSON.stringify(members)
+        );
     }
     this.showCBB = false;
   }

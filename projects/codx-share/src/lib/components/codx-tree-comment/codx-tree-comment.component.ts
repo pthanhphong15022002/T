@@ -30,6 +30,7 @@ export class CodxTreeCommentComponent implements OnInit, OnChanges {
   @Input() viewIcon: boolean = false;
   @Input() viewVote: boolean = false;
   @Input() allowEdit: boolean = false;
+  @Input() alertNoti: boolean = true;
   @Input() showCommentTree: boolean = true;
   @Input() totalComment: number = 0;
   @Output() totalCommentChange = new EventEmitter<number>();

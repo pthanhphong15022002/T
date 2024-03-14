@@ -1075,7 +1075,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
           'SYS',
           'GridViewSetupBusiness',
           'GetGrvNameAndFormNameByEntityNameAsync',
-          this.entityNamePA
+          [this.entityNamePA, this.column.refValue]
         )
         .subscribe((res) => {
           if (res) {

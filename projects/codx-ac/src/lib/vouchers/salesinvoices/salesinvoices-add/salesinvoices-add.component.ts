@@ -816,26 +816,6 @@ export class SalesinvoicesAddComponent extends UIComponent {
   }
 
   /**
-   * *Hàm check validate trước khi save line
-   * @param data 
-   * @returns 
-   */
-  beforeSaveRowSaleInvoice(event: any) {
-    if (event.rowData) {
-      if (event.rowData.quantity == 0 || event.rowData.quantity < 0) {
-        this.eleGridSalesInvoice.showErrorField('quantity', 'E0341');
-        event.cancel = true;
-        return;
-      }
-      // if (event.rowData.purcPrice == 0 || event.rowData.purcPrice < 0) {
-      //   this.eleGridPurchaseInvoice.showErrorField('purcPrice','E0341');
-      //   event.cancel = true;
-      //   return;
-      // }
-    }
-  }
-
-  /**
    * *Hàm ẩn các morefunction trong lưới
    * @param event
    */

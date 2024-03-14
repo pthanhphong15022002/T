@@ -755,6 +755,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   //--------------format table---------------//
   getColumnTable(data) {
+    this.modelJSON = ''; //để fix edit
     if (!data.dataFormat) {
       this.columns = [];
       return;

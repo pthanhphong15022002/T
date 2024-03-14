@@ -77,8 +77,8 @@
             <div class="col-4"><span>{{data?.memo}}</span></div>
             <div class="col-2"><span>{{data?.duration}}</span><span class="mx-1">{{data?.interval | vll : 'VL004' : 'text' | async}}</span></div>
             <div class="col-1">
-                <ng-container *ngIf="data.permissions && data.permissions.length>0">
-                    <div class="d-flex rounded-circle align-items-center justify-content-center w-30px h-30px bp-cricle-user"><i class="icon-i-person-check"></i></div>
+                <ng-container *ngIf="data?.permissions && data?.permissions.length>0">
+                    <codx-imgs [objectId]="data.pers" [objectType]="'AD_Users'" [numberImages]="3" width="30" [referType]="'avt'"></codx-imgs>
                 </ng-container>
             </div>
             <div class="col-1 d-flex justify-content-end">

@@ -42,8 +42,9 @@ export class ContractsViewDetailComponent
   @Input() contract: CM_Contracts;
   @Input() contractAppendix: CM_Contracts;
   @Input() processID: string;
-  @Input() tabDefaut: "";
+  @Input() tabDefaut = "";
   @Input() valueListTab;
+  @Input() user;
 
   // @Input() dataSelected: any;
   @Output() changeMF = new EventEmitter<any>();
@@ -81,7 +82,7 @@ export class ContractsViewDetailComponent
   isLoadingContract = false;
   notificationPopup;
   userOwner;
-
+  idTabShow = "";
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
@@ -133,6 +134,7 @@ export class ContractsViewDetailComponent
     entityName: 'CM_Contacts',
     gridViewName: 'grvCMContacts',
   };
+  
   lstContacts: any;
 
   constructor(
@@ -176,13 +178,7 @@ export class ContractsViewDetailComponent
     if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
       this.listInsStep = this.listInsStepStart;
     }
-    if (changes?.taskAdd) {
-      console.log(changes?.taskAdd);
-    }
-    // this.listTypeContract = this.contractService.listTypeContractTask;
-    this.listTypeContract = this.valueListTab.filter(x => this.tabDefaut?.includes(x?.value));
-    this.listTypeContract[0].isActive = true;
-    this.tabClicked = this.listTypeContract[0]?.value;
+    this.setTaskBar();
   }
 
   async onInit() {
@@ -205,6 +201,14 @@ export class ContractsViewDetailComponent
       icon: 'icon-i-link',
     };
     this.tabControl.push(contractLink);
+  }
+
+  setTaskBar(){
+    if(this.contract?.isAdminAll || this.contract.owner == this.user?.userID){
+      this.idTabShow = this.tabDefaut;
+    }else{
+      this.idTabShow = this.contract?.config;
+    }
   }
 
   getUserContract(){
@@ -350,42 +354,10 @@ export class ContractsViewDetailComponent
           }
         }
         this.lstStepsOld = this.listInsStep;
-        // if (this.loadContactDeal) {
-        //   this.loadContactDeal.loadListContact(this.lstContacts);
-        // }
       }
       this.changeDetectorRef.detectChanges();
     }
-
-    // this.listSteps = e;
-    // this.outDataStep.emit(this.dataStep);
   }
-
-  // getListInstanceStep() {
-  //   var data = [
-  //     this.dataSelected?.refID,
-  //     this.dataSelected?.processID,
-  //     this.dataSelected?.status,
-  //     '1',
-  //   ];
-
-  //   this.codxCmService.getViewDetailInstanceStep(data).subscribe((res) => {
-  //     if (res) {
-  //       this.listSteps = res[0];
-  //       this.isHaveField = res[1];
-  //       if (this.listSteps) {
-  //         this.lstStepsOld = JSON.parse(JSON.stringify(this.listSteps));
-  //         this.getStepCurrent(this.dataSelected);
-  //       }
-  //       this.isDataLoading = false;
-  //       this.checkCompletedInstance(this.dataSelected?.status);
-  //     } else {
-  //       this.listSteps = [];
-  //       this.stepCurrent = null;
-  //       this.isHaveField = false;
-  //     }
-  //   });
-  // }
 
   changeDataMF(event, data: CM_Contracts) {
     this.changeMF.emit({ e: event, data: data });

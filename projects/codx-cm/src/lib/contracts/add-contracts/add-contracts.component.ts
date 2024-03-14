@@ -249,6 +249,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   refInstance = ''; //Biến tham chiếu data từ cơ hội
   dataSourceRef: any;
   tenant = '';
+  isShowMore: boolean;
+  widthDefault: string | number;
   //#endregion
 
   constructor(
@@ -289,6 +291,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     const currentUrl = this.router.url;
     // this.tenant = currentUrl.includes("qtsc") ? "qtsc" : "";
     this.tenant = 'qtsc';
+    //lấy độ rộng popup
+    this.widthDefault = this.dialog.dialog.width
+      ? this.dialog.dialog.width.toString()
+      : '800';
   }
 
   async ngOnInit() {
@@ -324,9 +330,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   waitForInputContactRendered(time: number) {
-    if(time == 5000){
+    if (time == 5000) {
       return;
-    }else if (this.inputContact && this.inputContact.ComponentCurrent) {3
+    } else if (this.inputContact && this.inputContact.ComponentCurrent) {
+      3;
       this.changeCbbContact(this.contracts?.contactID);
     } else {
       setTimeout(() => {
@@ -645,7 +652,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   async getAutoNumberSetting() {
     this.cmService
       .genAutoNumberDefault(
-        "CM0204",
+        'CM0204',
         this.dialog.formModel.entityName,
         'ContractID'
       )
@@ -843,7 +850,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       });
   }
 
-  changeCbbContact(contactID){
+  changeCbbContact(contactID) {
     if (contactID) {
       if (this.inputContact && this.inputContact?.ComponentCurrent) {
         this.contracts.contactID = contactID;
@@ -2034,4 +2041,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     });
   }
   //#endregion
+
+  //openpopup
+  rezisePopup(width = '1000') {
+    this.isShowMore = !this.isShowMore;
+    width = Util.getViewPort().width.toString();
+    this.dialog.setWidth(this.isShowMore ? width : this.widthDefault);
+    this.changeDetectorRef.detectChanges();
+  }
 }

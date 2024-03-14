@@ -134,7 +134,7 @@
       [placeholder]="gridViewSetup?.Owner?.description"
       [allowFiltering]="true"
       [value]="owner"
-      [enabled]="!['3', '4', '5','6'].includes(instance?.status)"
+      [enabled]="!['3', '4', '5', '6'].includes(instance?.status)"
     ></ejs-combobox>
     <!-- <codx-popup-participants
       [lstParticipants]="lstParticipants"
@@ -322,26 +322,25 @@
 </ng-template>
 
 <ng-template #tabInputInfoDetail>
-  <ng-container *ngIf="listFields &&listFields?.length > 0">
+  <ng-container *ngIf="listFields && listFields?.length > 0">
     <ng-container *ngFor="let item of listFields">
       <div class="form-group">
         <codx-input-custom-field
-        [customField]="item"
-        [isAdd]="action != 'edit'"
-        [checkValid]="false"
-        [objectId]="item.recID"
-        [objectType]="'DP_Instances_Steps_Fields'"
-        [formModel]="dialog.formModel"
-        (valueChangeCustom)="valueChangeCustom($event)"
-      >
-      </codx-input-custom-field>
+          [customField]="item"
+          [isAdd]="action != 'edit'"
+          [checkValid]="false"
+          [objectId]="item.recID"
+          [objectType]="'DP_Instances_Steps_Fields'"
+          [formModel]="dialog.formModel"
+          (valueChangeCustom)="valueChangeCustom($event)"
+          [isRezisePopup]="true"
+          (rezisePopup)="rezisePopup($event)"
+        >
+        </codx-input-custom-field>
       </div>
     </ng-container>
   </ng-container>
 </ng-template>
-
-
-
 
 <ng-template #popupParticipants let-dialog>
   <codx-popup-participants
