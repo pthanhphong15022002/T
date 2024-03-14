@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import {
-  AlertConfirmInputConfig,
   ApiHttpService,
   AuthStore,
   CacheService,
@@ -30,6 +29,9 @@ import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { PopupAddVllCustomComponent } from '../../popup-add-vll-custom/popup-add-vll-custom.component';
 import { CodxDpService } from 'projects/codx-dp/src/lib/codx-dp.service';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
+import { PopupSettingReferenceComponent } from '../../popup-setting-reference/popup-setting-reference.component';
+import { CodxInputCustomFieldComponent } from 'projects/codx-dp/src/lib/share-crm/codx-input-custom-field/codx-input-custom-field.component';
+import { CodxFieldsFormatValueComponent } from 'projects/codx-dp/src/lib/share-crm/codx-input-custom-field/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
 
 @Component({
   selector: 'lib-popup-add-column-table',
@@ -42,6 +44,8 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   @ViewChild('comboxView') comboxView: ComboBoxComponent; ///cobx xem truoc ViewForm Field
   @ViewChild('valueListType') valueListType: CodxInputComponent;
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('tempInput') tempInput: CodxInputCustomFieldComponent;
+  @ViewChild('tempView') tempView: CodxFieldsFormatValueComponent;
 
   column: ColumnTable;
   dialog: DialogRef;
@@ -123,6 +127,12 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   caculateField = '';
   arrFieldNum = [];
   showCaculate = true;
+  viewOnly = false;
+  entityNamePA: any;
+  funcCBX: any;
+  titleField: any;
+  fieldCus: any;
+  servicePA: any;
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -166,11 +176,16 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       this.isChecked = false;
       return;
     }
+    if (e.field == 'dataType') {
+      this.titleField = e?.component?.selectedItems[0]?.text;
+    }
+
     if (e.field == 'dataType' && e.data != this.column.dataType) {
       this.column.refType = null;
       this.column.refValue = null;
       this.column.dataFormat = null;
       this.column.multiselect = false;
+      this.fieldCus = null;
     }
 
     if (e && e.field) {
@@ -182,8 +197,11 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if (e.field == 'dataFormat' && (e.data == 'V' || e.data == 'C')) {
-      if (e.data == 'V') this.loadDataVll();
+    if (
+      e.field == 'dataFormat' &&
+      (e.data == 'V' || e.data == 'C' || e.data == 'S')
+    ) {
+      if (e.data == 'V' || e.data == 'S') this.loadDataVll();
       this.column.refType = e.data == 'C' ? '3' : '2';
       if (this.action != 'edit' && !this.column.refValue) {
       } else {
@@ -193,8 +211,46 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
         // this.changeFormVll();
       }
     }
+    if (e.field == 'refValue' && this.column.dataType == 'PA' && e.data) {
+      this.column.refType = '3';
+      this.cache.combobox(e.data).subscribe((cb) => {
+        if (cb) {
+          this.servicePA = cb?.service;
+          this.entityNamePA = cb?.tableName;
+          this.funcCBX = cb?.linkFunction;
+        } else {
+          this.servicePA = '';
+          this.entityNamePA = '';
+          this.funcCBX = '';
+        }
+      });
+    }
+    if (e.field == 'dataFormat' || e.field == 'refValue')
+      this.creatFieldCustom();
     if (e.field == 'dataType' && e.data == 'CF') this.selectFieldNum();
     this.changdef.detectChanges();
+  }
+
+  creatFieldCustom() {
+    if (
+      (this.column.dataFormat &&
+        (this.column.dataType == 'N' ||
+          this.column.dataType == 'P' ||
+          this.column.dataType == 'T')) ||
+      ((this.column.dataType == 'L' || this.column.dataType == 'PA') &&
+        this.column.refValue) ||
+      (this.column.dataType == 'L' && this.column.dataFormat == 'B')
+    ) {
+      this.fieldCus = JSON.parse(
+        JSON.stringify(
+          Object.assign(this.column, {
+            dataValue: this.column.defaultValue,
+          })
+        )
+      );
+    } else {
+      this.fieldCus = null;
+    }
   }
 
   changeRequired(e) {
@@ -271,6 +327,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       data: this.crrVll,
       datasVll: this.datasVll,
       action: action,
+      isCheckBox: this.column.dataFormat == 'S',
     };
     let dialogVll = this.callfc.openForm(
       PopupAddVllCustomComponent,
@@ -630,16 +687,24 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       return false;
     }
 
-    if (this.column.dataType == 'L' && !this.column.refType) {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.grvSetup['RefType']?.headerText + '"'
-      );
-      return false;
-    }
+    // if (
+    //   this.column.dataType == 'L' &&
+    //   this.column.dataFormat != 'B' &&
+    //   !this.column.refType
+    // ) {
+    //   this.notiService.notifyCode(
+    //     'SYS009',
+    //     0,
+    //     '"' + this.grvSetup['RefType']?.headerText + '"'
+    //   );
+    //   return false;
+    // }
 
-    if (this.column.dataType == 'L' && !this.column.refValue) {
+    if (
+      this.column.dataType == 'L' &&
+      this.column.dataFormat != 'B' &&
+      !this.column.refValue
+    ) {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -980,4 +1045,130 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     this.showCaculate = !this.showCaculate;
   }
   //-----------------end CACULATE FIELD------------------//
+
+  //-----L-S- Checkbox---//
+  valueChangeCheckBox(e, idx) {}
+  //-----L-S- Checkbox---//
+
+  //----------------Data Referent - PA-------------------------//
+
+  clickSettingReference() {
+    if (!this.column.refValue || !this.entityNamePA) {
+      this.notiService.notify(
+        'Hãy chọn đối tượng liên kết trước khi thiết lập',
+        '3'
+      );
+      return;
+    }
+    if (this.funcCBX) {
+      this.cache.functionList(this.funcCBX).subscribe((f) => {
+        if (f) this.loadDataTypeRef(f?.formName, f?.gridViewName);
+        else
+          this.notiService.notify(
+            'Grid View Setup chưa được thiết lập, hãy chọn đối tượng khác !',
+            '3'
+          );
+      });
+    } else {
+      this.api
+        .exec<any>(
+          'SYS',
+          'GridViewSetupBusiness',
+          'GetGrvNameAndFormNameByEntityNameAsync',
+          [this.entityNamePA, this.column.refValue]
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.loadDataTypeRef(res?.formName, res?.gridViewName);
+          } else
+            this.notiService.notify(
+              'Grid View Setup chưa được thiết lập, hãy chọn đối tượng khác !',
+              '3'
+            );
+        });
+    }
+  }
+
+  loadDataTypeRef(formName, gridViewName) {
+    this.cache.gridViewSetup(formName, gridViewName).subscribe((grv) => {
+      if (grv) {
+        let option = new DialogModel();
+        console.log(grv);
+        option.zIndex = 1050;
+        let obj = {
+          datas: grv,
+          entityName: this.entityNamePA,
+          action: this.action,
+          titleAction: this.titleField, //test
+          dataRef: JSON.parse(this.column.dataFormat),
+        };
+        let dialogColumn = this.callfc.openForm(
+          PopupSettingReferenceComponent,
+          '',
+          550,
+          Util.getViewPort().height - 100,
+          '',
+          obj,
+          '',
+          option
+        );
+        dialogColumn.closed.subscribe((res) => {
+          if (res && res.event && res.event[1]) {
+            this.column.refType = '3';
+            this.fieldCus.referType = '3';
+            if (res.event && res.event[0]) {
+              this.column.dataFormat = JSON.stringify(res.event[0]);
+              this.fieldCus.dataFormat = JSON.stringify(res.event[0]);
+            } else {
+              this.column.dataFormat = '';
+              this.fieldCus.dataFormat = '';
+            }
+            if (this.tempInput) this.tempInput.viewFieldRef();
+            if (this.tempView)
+              this.tempView.parseValuePA(this.fieldCus.dataValue);
+          }
+        });
+      } else
+        this.notiService.notify(
+          'Grid View Setup chưa được thiết lập, hãy chọn đối tượng khác !',
+          '3'
+        );
+    });
+  }
+
+  dropDataFormatPA(e) {
+    this.column.dataFormat = JSON.stringify(e);
+    this.fieldCus = JSON.parse(
+      JSON.stringify(
+        Object.assign(this.column, {
+          dataValue: this.column.defaultValue,
+        })
+      )
+    );
+    if (this.tempView) this.tempView.parseValuePA(this.fieldCus.dataValue);
+  }
+
+  //-----------------------------------------------------------//
+
+  //lưu giá trị mặc định
+  valueChangeCustom(event) {
+    if (event && event.data) {
+      var result = event.e;
+      var field = event.data;
+
+      // var result = event.e?.data;
+      // var field = event.data;
+      // switch (field.dataType) {
+      //   case 'P':
+      //   case 'L':
+      //   case 'PA':
+      //     result = event.e;
+      //     break;
+      // }
+      this.column.defaultValue = result;
+      if (this.fieldCus) {
+        this.fieldCus.defaultValue = this.fieldCus.dataValue = result;
+      }
+    }
+  }
 }

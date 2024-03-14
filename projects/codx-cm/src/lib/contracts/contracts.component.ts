@@ -259,8 +259,8 @@ export class ContractsComponent extends UIComponent {
             res.disabled = true;
             break;
           case 'SYS02':
-            if(this.user?.userID == "thuykt"){
-
+            if(!["1","15"].includes(data?.status)){
+              res.disabled = true;
             }else{
               res.disabled = data?.delete
               ? data.closed ||
@@ -268,12 +268,14 @@ export class ContractsComponent extends UIComponent {
                 (!data.applyProcess && ['3', '5'].includes(data.status))
               : true;
             }
+            
             break;
           case 'SYS03':
             res.disabled = data?.write
               ? data?.closed ||
                 this.checkMoreReason(data) ||
-                (!data.applyProcess && ['3', '5'].includes(data.status))
+                (!data.applyProcess && ['3', '5'].includes(data.status)) ||
+                data?.approveStatus == '3'
               : true;
             break;
           case 'SYS04':

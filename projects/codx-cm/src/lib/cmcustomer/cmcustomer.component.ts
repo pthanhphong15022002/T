@@ -104,6 +104,8 @@ export class CmCustomerComponent
   // const set value
   asideMode: string;
   readonly btnAdd: string = 'btnAdd';
+  tabDefaut = '';
+  valueListTab;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -162,6 +164,15 @@ export class CmCustomerComponent
       lever = paramDefault['ControlInputAddress'] ?? 0;
     }
     this.leverSetting = lever;
+    //nvthuan taskbar
+    const [valueListTab, tabDefaut] = await Promise.all([
+      this.cmSv.getValueList("CRM086"),
+      this.cmSv.getSettingContract()
+    ]);
+    this.valueListTab = valueListTab;
+    if(tabDefaut){
+      this.tabDefaut = tabDefaut?.ActiveTabCustomers;
+    }
   }
   ngAfterViewInit(): void {
     this.views = [

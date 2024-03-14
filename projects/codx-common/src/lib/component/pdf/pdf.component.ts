@@ -1,5 +1,5 @@
-import { filter } from 'rxjs';
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
+import { filter } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import {
   AfterViewInit,
@@ -58,6 +58,8 @@ import {
   tempSignPDFInput,
 } from '../../models/ApproveProcess.model';
 import { HttpClient } from '@angular/common/http';
+import { PopupSupplierComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-supplier/popup-supplier.component';
+import { SelectViettelCertificateComponent } from './public-esign/select-viettel-certificate/select-viettel-certificate.component';
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -74,6 +76,9 @@ export class PdfComponent
   publicSignStatus: any;
   isSigned = false;
   supplier = '3';
+  lstCert=[];
+  selectedCert: any;
+  dialogVTCers: import("codx-core").DialogRef;
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
@@ -134,7 +139,9 @@ export class PdfComponent
   @ViewChild('ngxPdfView') ngxPdfView: NgxExtendedPdfViewerComponent;
   @ViewChild('rightToolbar') rightToolbar: TabComponent;
   @ViewChild('publicSignInfo') publicSignInfo: TemplateRef<any>;
-
+  @ViewChild('viettelCers', { static: false }) viettelCers: TemplateRef<any>;
+  @ViewChild('viettelESignWait', { static: false })
+  viettelESignWait: TemplateRef<any>;
   //core
   dialog: import('codx-core').DialogRef;
   user: any = {};
@@ -152,7 +159,7 @@ export class PdfComponent
   vcLeft = 0;
   rotate = 0;
   rotateEnable = false;
-
+  applySignViettel=false;
   contextMenu: any;
   needAddKonva = null;
   tr: Konva.Transformer;
@@ -667,6 +674,8 @@ export class PdfComponent
         this.paSignature.email = event?.data;
       } else if (event?.field == 'passwordPublicSign') {
         this.paSignature.password = event?.data;
+      }else if (event?.field == 'thirdPatyID') {
+        this.paSignature.thirdPartyID = event?.data;
       }
       this.detectorRef.detectChanges();
     }
@@ -2528,32 +2537,148 @@ export class PdfComponent
       }
     }
   }
-  publicESign(dialog) {
-    this.esService.editSignature(this.paSignature).subscribe((res) => {
-      if (res && this.transRecID) {
-        this.codxCommonService
-          .codxApprove(
-            this.transRecID,
-            this.publicSignStatus,
-            null,
-            null,
-            null,
-            null,
-            '3'
-          )
-          .subscribe((res: ResponseModel) => {
-            if (res?.msgCodeError == null && res?.rowCount > 0) {
-              this.notificationsService.notifyCode('SYS034');
-              //this.canOpenSubPopup = false;
-              dialog && dialog?.close();
-              this.isSigned = true;
-              this.detectorRef.detectChanges();
-              this.changeConfirmState(res);
-            }
-          });
-      }
+  
+
+  certChange(evt, cert) {
+    this.selectedCert = cert;
+    this.detectorRef.detectChanges();
+  }
+  async signContractUSBToken(lstContract, idx: number, comment) {
+    //chua ki xong
+    return new Promise<any>((resolve, rejects) => {
+      this.http
+        .post('http://localhost:6543/DigitalSignature/Sign', lstContract[idx])
+        .subscribe((res: any) => {
+          idx += 1;
+          //ky xong
+          if (idx == lstContract.length) {
+            this.esService
+              .saveUSBSignedPDF(
+                this.transRecID,
+                this.recID,
+                this.curFileID,
+                res.fileBase64ContentSigned,
+                comment
+              )
+              .subscribe((saveEvent) => {
+                console.log('save', saveEvent);
+                resolve(saveEvent);
+                return saveEvent;
+              });
+          } else {
+            lstContract[idx - 1] = res;
+            lstContract[idx].fileBase64Content = res.fileBase64ContentSigned;
+            lstContract = this.signContractUSBToken(lstContract, idx, comment);
+          }
+        });
     });
   }
+
+  codxSignPDF(status, comment,signCallback: (response: ResponseModel) => void, ): any {
+    if(!this.isEditable) return;
+    switch (this.signerInfo.signType) {
+      case '2': {
+        this.codxCommonService.codxApprove( this.transRecID, this.publicSignStatus, null, null, null, null, '1' ).subscribe((res: ResponseModel) => {
+          signCallback && signCallback(res);
+        });
+        break;
+      }
+      case '1': {
+        let supplierDialog = this.callfc.openForm(PopupSupplierComponent,'',500,250,'');
+        supplierDialog.closed.subscribe(res=>{
+          if(res?.event){
+            switch (res?.event) {
+              //usb
+              case '5': {
+                let urlUpload = this.env.urlUpload+'/';
+                let shortFileURL = this.curFileUrl?.replace(urlUpload,'');
+                this.esService
+                  .getSignContracts(
+                    this.recID,
+                    this.curFileID,
+                    shortFileURL,
+                    this.stepNo
+                  )
+                  .subscribe(async (lstContract) => {
+                    if (lstContract) {
+                      let finalContract = await this.signContractUSBToken(
+                        lstContract,
+                        0,
+                        comment
+                      );
+                      if (finalContract) {
+                        let resModel = new ResponseModel();
+                        resModel.rowCount = 1;
+                        resModel.returnStatus = '5';   
+
+                      } else {
+                        let resModel = new ResponseModel();
+                        resModel.rowCount = 0;
+                        resModel.msgCodeError ='SYS021';
+                      }
+                      signCallback && signCallback(res);
+                    }
+                  });
+                break;
+              }
+              case '4'://Viettel
+              {
+                this.esService.getViettelCer(this.signerInfo.thirdPartyID).subscribe(cers=>{
+                  if(cers){
+                    this.lstCert = cers?.filter(x=>x?.error == null); 
+                    //this.lstCert.push(this.lstCert[0]); 
+                    if(this.lstCert?.length ==1){
+                      let dialogCersWait1 = this.callfc.openForm(this.viettelESignWait, '', 450, 250);
+                      this.codxCommonService.codxApprove( this.transRecID , status, null, null, null, this.lstCert[0]?.cert, '4' ).subscribe((res: ResponseModel) => {
+                        dialogCersWait1 && dialogCersWait1.close();  
+                        signCallback && signCallback(res);
+                        });
+                    }
+                    else if(this.lstCert?.length >1){
+                      this.applySignViettel=false;
+                      let dialogVTCers = this.callfc.openForm(SelectViettelCertificateComponent,'',450,300,"",{lstCert:this.lstCert});  
+                      dialogVTCers.closed.subscribe(vtCersRes=>{
+                        if(vtCersRes?.event){
+                          if (this.selectedCert == null) this.selectedCert = vtCersRes?.event ?? this.lstCert[0].cert;
+                          this.codxCommonService.codxApprove( this.transRecID, status, null, null, null, this.selectedCert, '4' ).subscribe((res: ResponseModel) => {
+                            signCallback && signCallback(res);
+                          });
+                        }
+                      })
+                    }
+                  }
+                  else{
+                    this.notificationsService.notify("Không tìm thấy thông tin xác thực chữ ký số, vui lòng kiểm tra lại!",'2')
+                  }                    
+                })
+                break;
+              }
+              //vnpt 
+              default: {
+                this.codxCommonService
+                .codxApprove(
+                  this.transRecID,
+                  this.publicSignStatus,
+                  null,
+                  null,
+                  null,
+                  null,
+                  '3'
+                )
+                .subscribe((res: ResponseModel) => {
+                  signCallback && signCallback(res);
+                });
+                break;
+              }
+            }
+          }
+        });
+        
+        break;
+      }
+    }
+  }
+
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Func-----------------------------------//
   //---------------------------------------------------------------------------------//
@@ -3315,7 +3440,167 @@ export class PdfComponent
       this.detectorRef.detectChanges();
     }
   }
+  popupPublicESign2(status) {
+    if (this.oApprovalTrans?.signatureType == '2') {
+      this.codxCommonService
+        .codxApprove(this.transRecID, status, null, null, null, null, '3')
+        .subscribe((res: ResponseModel) => {
+          if (res?.msgCodeError == null && res?.rowCount > 0) {
+            this.notificationsService.notifyCode('SYS034');
+            this.isSigned = true;
+            this.detectorRef.detectChanges();
+            this.changeConfirmState(res);
+          }
+        });
+    } 
+    else {
+      
+      this.publicSignStatus = status;
+      let supplierDialog = this.callfc.openForm(
+        PopupSupplierComponent,
+        '',
+        500,
+        250,
+        ''
+      );
+      supplierDialog.closed.subscribe((res) => {
+        if (res?.event) {
+          this.supplier=res?.event;
+          switch (this.supplier) {
+            //usb
+            // case '5': {
+            //   let urlUpload = this.pdfView?.env.urlUpload + '/';
+            //   let shortFileURL = this.pdfView?.curFileUrl?.replace(
+            //     urlUpload,
+            //     ''
+            //   );
+            //   this.esService
+            //     .getSignContracts(
+            //       this.sfRecID,
+            //       this.pdfView.curFileID,
+            //       shortFileURL,
+            //       this.stepNo
+            //     )
+            //     .subscribe(async (lstContract) => {
+            //       if (lstContract) {
+            //         let finalContract = await this.signContractUSBToken(
+            //           lstContract,
+            //           0,
+            //           comment
+            //         );
+            //         if (finalContract) {
+            //           let resModel = new ResponseModel();
+            //           resModel.rowCount = 1;
+            //           resModel.returnStatus = '5';
+            //           this.notify.notifyCode('SYS034');
+            //           this.canOpenSubPopup = false;
+            //           this.dialog && this.dialog.close(resModel);
+            //         } else {
+            //           this.canOpenSubPopup = false;
+            //           let resModel = new ResponseModel();
+            //           resModel.rowCount = 0;
+            //           this.notify.notifyCode('SYS021');
+            //           this.dialog && this.dialog.close(resModel);
+            //         }
+            //       }
+            //     });
+            //   break;
+            // }
+            case '4':
+            case '3':  //Viettel
+              var dialogVT_VNPT = this.callfc.openForm(this.publicSignInfo, '', 450, 270);
+              this.detectorRef.detectChanges();              
+              break;
+            
+          }
+        }
+      });
 
+      
+    }
+  }
+  publicESign(dialog) {
+    switch (this.supplier){
+      case '3':{
+        this.esService.editSignature(this.paSignature).subscribe((res) => {
+          if (res && this.transRecID) {
+            this.codxCommonService
+              .codxApprove(
+                this.transRecID,
+                this.publicSignStatus,
+                null,
+                null,
+                null,
+                null,
+                '3'
+              )
+              .subscribe((res: ResponseModel) => {
+                if (res?.msgCodeError == null && res?.rowCount > 0) {
+                  this.notificationsService.notifyCode('SYS034');
+                  //this.canOpenSubPopup = false;
+                  dialog && dialog?.close();
+                  this.isSigned = true;
+                  this.detectorRef.detectChanges();
+                  this.changeConfirmState(res);
+                }
+              });
+          }
+        }); 
+        break;
+      }
+      case '4':{
+        this.esService
+        .getViettelCer(this.signerInfo.thirdPartyID)
+        .subscribe((cers) => {
+          if (cers) {
+            this.lstCert = cers?.filter((x) => x?.error == null);
+            if (this.lstCert?.length == 1) {
+              this.viettelESign(this.lstCert[0]?.cert);
+            } else if (this.lstCert?.length > 1) {
+              let dialogCers = this.callfc.openForm(
+                this.viettelCers,
+                '',
+                450,
+                300
+              );
+            }
+          } else {
+            this.notificationsService.notify(
+              'Không tìm thấy thông tin xác thực chữ ký số, vui lòng kiểm tra lại!',
+              '2'
+            );
+          }
+        });
+        
+      }
+      
+    }
+    
+  }
+  viettelESign(cert:any,dialogCertSelect:any =null){
+    if(dialogCertSelect) dialogCertSelect && dialogCertSelect.close();
+    if(cert == null) cert = this.selectedCert ?? this.lstCert[0];
+    let dialogCers = this.callfc.openForm(this.viettelESignWait, '', 450, 250);
+    this.codxCommonService
+    .codxApprove(
+      this.transRecID,
+      this.publicSignStatus,
+      null,
+      null,
+      null,
+      cert,
+      '4'
+    )
+    .subscribe((res: ResponseModel) => {
+      if (res?.msgCodeError == null && res?.rowCount > 0) {
+        this.notificationsService.notifyCode('SYS034');
+        this.isSigned = true;
+        this.detectorRef.detectChanges();
+        this.changeConfirmState(res);
+        dialogCers && dialogCers.close();
+      }
+    });
+  }
   addSignature(setupShowForm, area = null) {
     let model = {
       userID: this.signerInfo?.authorID,

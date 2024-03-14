@@ -198,6 +198,10 @@ export class CodxInputCustomFieldComponent implements OnInit {
       } else if (this.customField.dataType == 'D') {
         this.customField.dataValue = moment(new Date()).toDate();
       }
+      this.valueChangeCustom.emit({
+        e: this.customField.dataValue,
+        data: this.customField,
+      });
     }
 
     //danh sach data chuyen qua
@@ -751,6 +755,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   //--------------format table---------------//
   getColumnTable(data) {
+    this.modelJSON = ''; //để fix edit
     if (!data.dataFormat) {
       this.columns = [];
       return;
