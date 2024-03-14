@@ -80,12 +80,50 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
         this.notifySvr.notify("Người thực hiện không được bỏ trống.");
       }
       else if(this.data?.duration == 0)  this.notifySvr.notify("Thời gian thực hiện phải lớn hơn 0."); 
-      else this.dialog.close({data: this.data , process: this.process});
+      else 
+      {
+        let idFiles = [];
+        this.data.permissions.forEach(elm=>{
+          this.process.documentControl.forEach(elm2=>{
+            if(!elm2.permissions.some(x=>x.objectID == elm.objectID))
+            {
+              elm2.permissions.push(
+                {
+                  objectID: elm.objectID,
+                  objectType: elm.objectType,
+                  download:true,
+                  read: true,
+                  update: true,
+                  delete: true
+                }
+              )
+            }
+            if(elm2.files)
+            {
+              elm2.files.forEach(xs=>{
+                idFiles.push(xs.fileID);
+              })
+            }
+          })
+        });
+
+        this.updatePermiss(idFiles,this.data.permissions);
+
+        this.dialog.close({data: this.data , process: this.process});
+      }
+
+      debugger
     }
     else this.dialog.close({data: this.data , process: this.process});
     //this.data.settings = JSON.stringify(this.data.settings);
   }
 
+  updatePermiss(idFiles:any,lisPer:any)
+  {
+    this.api.execSv("DM","DM","FileBussiness","UpdatePermissionByListRecIDFileAsync",[idFiles,lisPer]).subscribe(item=>{
+
+    })
+  }
   changeActivity(e:any)
   {
     this.vllDefault = e;
