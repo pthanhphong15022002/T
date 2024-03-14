@@ -121,7 +121,12 @@ export class CodxBpService {
     );
   }
 
-  getEndDate(startDate: Date, interval: String, duration: any, calendarID: String){
+  getEndDate(
+    startDate: Date,
+    interval: String,
+    duration: any,
+    calendarID: String
+  ) {
     return this.api.execSv<any>(
       APICONSTANT.SERVICES.BP,
       APICONSTANT.ASSEMBLY.BP,
@@ -131,13 +136,23 @@ export class CodxBpService {
     );
   }
 
-  authorityTask(recID, approvers=[]) {
+  authorityTask(recID, approvers = []) {
     return this.api.execSv<any>(
       APICONSTANT.SERVICES.BP,
       APICONSTANT.ASSEMBLY.BP,
       'UsersBusiness',
       'GetUserByIDAsync',
       [recID, approvers]
+    );
+  }
+
+  getFilesByListIDs(lstIDs) {
+    return this.api.execSv<any>(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetFilesByListIDsAsync',
+      [lstIDs]
     );
   }
 }
