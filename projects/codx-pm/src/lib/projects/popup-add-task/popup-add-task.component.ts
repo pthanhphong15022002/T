@@ -154,29 +154,51 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
       if(res.event){
         for(let i=0;i<res.event.length;i++){
           let member:any={};
-         let item =  this.projectData.permissions.find((x:any)=>x.objectID==res.event[i])
-         if(item){
+         if(this.projectData.settings.memberType == "1"){
+          let item =  this.projectData.permissions.find((x:any)=>x.objectID==res.event[i])
+          if(item){
+           let roleType = 'A';
+           member.resourceID=item.objectID;
+           member.resourceName=item.objectName;
+           if(this.selectedRole){
+            roleType = this.selectedRole;
+
+           }
+           member.roleType = roleType;
+           member.icon = this.listRoles.find((x:any)=>x.value==roleType)?.icon;
+           let idx=this.members.findIndex((x:any)=>x.resourceID==member.resourceID);
+           if(idx==-1){
+             this.members.push(member);
+             this.data.assignTo= this.members.map((x:any)=> x.resourceID).join(';')
+           }
+           else{
+             if(this.members[idx].roleType != member.roleType){
+               this.members[idx]=member
+             }
+           }
+
+          }
+         }
+         else{
           let roleType = 'A';
-          member.resourceID=item.objectID;
-          member.resourceName=item.objectName;
+          member.resourceID= res.event[i];
           if(this.selectedRole){
            roleType = this.selectedRole;
-
           }
           member.roleType = roleType;
           member.icon = this.listRoles.find((x:any)=>x.value==roleType)?.icon;
           let idx=this.members.findIndex((x:any)=>x.resourceID==member.resourceID);
-          if(idx==-1){
-            this.members.push(member);
-            this.data.assignTo= this.members.map((x:any)=> x.resourceID).join(';')
-          }
-          else{
-            if(this.members[idx].roleType != member.roleType){
-              this.members[idx]=member
-            }
-          }
-
+           if(idx==-1){
+             this.members.push(member);
+             this.data.assignTo= this.members.map((x:any)=> x.resourceID).join(';')
+           }
+           else{
+             if(this.members[idx].roleType != member.roleType){
+               this.members[idx]=member
+             }
+           }
          }
+
         }
         this.getListUser(this.members.map((x:any)=>x.resourceID).join(';'));
         this.changeDetectorRef.detectChanges();
@@ -283,7 +305,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     if(!this.enableEdit) return;
     if(this.action == 'add' || this.action=='copy'){
       this.data.status='10';
-      this.data.category='3';
+      this.data.category='4';
       if(!this.data.projectID )this.data.projectID=this.projectData.projectID;
     }
     if(this.projectData.settings){
@@ -412,6 +434,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   commentTyped(e: any, key: string) {
     if(this.history) this.history.refresh();
     if(e.comment){
+      if(!this.checkEditPermission()) return;
       let status="00";
       let hours="8";
       if(this.isInProgress) status="20";
@@ -467,6 +490,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
               let usr = this.listUserDetail.find((x:any)=>x.userID==item.resourceID);
               if(usr){
                 item.positionName = usr.positionName;
+                item.resourceName = usr.userName;
               }
             })
           }
