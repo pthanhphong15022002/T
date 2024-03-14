@@ -112,56 +112,76 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
         this.data.siteID = null;
         this.data.refID = null;
 
-        if (!e.data) {
-          (
-            this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.cbxSiteID.crrValue = null;
-          this.cbxSiteID.model = null;
-          this.form.formGroup.patchValue({ siteID: this.data['siteID'] });
+        (
+          this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.data = [];
+        this.cbxSiteID.crrValue = null;
+        (
+          this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.predicates = e.data ? 'ParentID=@0' : '';
+        (
+          this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.dataValues = e.data ? `${this.data.projectID}` : '';
 
-          (
-            this.cbxRefID.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.cbxRefID.crrValue = null;
+        this.form.formGroup.patchValue({ siteID: this.data['siteID'] });
 
-          this.changeCbxCustomer();
-        } else if (this.data.projectID != this.parentID) {
-          (
-            this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.cbxSiteID.crrValue = null;
-          this.cbxSiteID.model = {
-            ParentID: this.data.projectID,
-          };
+        (
+          this.cbxRefID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.data = [];
+        this.cbxRefID.crrValue = null;
 
-          this.form.formGroup.patchValue({ siteID: this.data['siteID'] });
+        // if (!e.data) {
+        //   (
+        //     this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
+        //   ).dataService.data = [];
+        //   this.cbxSiteID.crrValue = null;
+        //   this.cbxSiteID.model = null;
+        //   this.form.formGroup.patchValue({ siteID: this.data['siteID'] });
 
-          (
-            this.cbxRefID.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.cbxRefID.crrValue = null;
+        //   (
+        //     this.cbxRefID.ComponentCurrent as CodxComboboxComponent
+        //   ).dataService.data = [];
+        //   this.cbxRefID.crrValue = null;
 
-          this.changeCbxCustomer();
-        }
+        //   this.changeCbxCustomer();
+        // } else if (this.data.projectID != this.parentID) {
+        //   (
+        //     this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
+        //   ).dataService.data = [];
+        //   this.cbxSiteID.crrValue = null;
+        //   (
+        //     this.cbxRefID.ComponentCurrent as CodxComboboxComponent
+        //   ).dataService.predicates = 'ParentID=@';
+        //   (
+        //     this.cbxRefID.ComponentCurrent as CodxComboboxComponent
+        //   ).dataService.dataValues = `${this.data.projectID}`;
+
+        //   this.form.formGroup.patchValue({ siteID: this.data['siteID'] });
+
+        //   (
+        //     this.cbxRefID.ComponentCurrent as CodxComboboxComponent
+        //   ).dataService.data = [];
+        //   this.cbxRefID.crrValue = null;
+
+        //   this.changeCbxCustomer();
+        // }
         this.parentID = this.data.projectID;
         break;
       case 'siteID':
         if (!e.data) {
+          // if (this.siteIDOldData) this.changeCbxCustomer();
+          this.siteIDOldData = null;
           // this.parentID = null;
           // (
           //   this.cbxprojectID.ComponentCurrent as CodxComboboxComponent
           // ).dataService.data = [];
           // this.cbxprojectID.crrValue = this.parentID;
-
           // this.cbxprojectID.model = null;
           // this.form.formGroup.patchValue({ projectID: this.data['projectID'] });
           // (
           //   this.cbxRefID.ComponentCurrent as CodxComboboxComponent
           // ).dataService.data = [];
           // this.cbxRefID.crrValue = null;
-
-          this.changeCbxCustomer();
         } else if (
           e?.component?.itemsSelected[0]?.ParentID != this.data.projectID
         ) {
@@ -173,9 +193,12 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
           ).dataService.data = [];
           this.cbxProjectID.crrValue = this.parentID;
 
-          this.cbxProjectID.model = {
-            AssetID: this.data.projectID,
-          };
+          (
+            this.cbxProjectID.ComponentCurrent as CodxComboboxComponent
+          ).dataService.predicates = e.data ? 'AssetID=@0' : '';
+          (
+            this.cbxProjectID.ComponentCurrent as CodxComboboxComponent
+          ).dataService.dataValues = e.data ? `${this.data.projectID}` : '';
           this.form.formGroup.patchValue({ projectID: this.data['projectID'] });
         }
 
@@ -185,9 +208,8 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
             this.cbxRefID.ComponentCurrent as CodxComboboxComponent
           ).dataService.data = [];
           this.cbxRefID.crrValue = null;
-
-          this.changeCbxCustomer();
         }
+        this.changeCbxCustomer();
         break;
       case 'refID':
         if (!e.data) {
@@ -319,6 +341,12 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
           this.cbxRefID.ComponentCurrent.dataService.data = [];
           this.cbxRefID.crrValue = null;
           this.data.refID = null;
+          (
+            this.cbxRefID.ComponentCurrent as CodxComboboxComponent
+          ).dataService.predicates = 'RecID=@0';
+          (
+            this.cbxRefID.ComponentCurrent as CodxComboboxComponent
+          ).dataService.dataValues = '00000000-0000-0000-0000-000000000000'; // dữ liệu ko có
         }
         this.form.formGroup.patchValue({
           refID: this.data['refID'],
