@@ -677,6 +677,7 @@ export class CashPaymentAddComponent extends UIComponent {
         }
         break;
     }
+    this.setValidateForm();
   }
 
   selecting(event){
@@ -1423,7 +1424,7 @@ export class CashPaymentAddComponent extends UIComponent {
   setValidateForm() {
     let rObjectID = false;
     let lstRequire: any = [];
-    if (this.formCashPayment.data.subType != '1' && this.formCashPayment) {
+    if (this.elementTabDetail?.selectingID == '1') {
       rObjectID = true;
     }
     lstRequire.push({ field: 'ObjectID', isDisable: false, require: rObjectID });

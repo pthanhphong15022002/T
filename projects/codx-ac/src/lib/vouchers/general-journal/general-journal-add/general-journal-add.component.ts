@@ -1007,7 +1007,7 @@ export class GeneralJournalAddComponent extends UIComponent {
   setValidateForm(){
     let rObjectID = false;
     let lstRequire :any = [];
-    if (this.elementTabDetail && this.elementTabDetail?.selectingID == '1') {
+    if (this.elementTabDetail?.selectingID == '1') {
       rObjectID = true;
     }
     lstRequire.push({field : 'ObjectID',isDisable : false,require:rObjectID});

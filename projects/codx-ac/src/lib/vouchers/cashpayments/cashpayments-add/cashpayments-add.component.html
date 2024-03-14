@@ -175,7 +175,7 @@
         class="d-flex align-items-center cursor-pointer w-fit ac-refdoc mt-2">
         <img src="../assets/themes/ac/default/img/attachment.svg" class="w-20px h-20px me-2" />
         <codx-input *ngIf="!formCashPayment.data.isReadOnly"
-          [disabled]="formCashPayment.data?.isReadOnly ? true : false" tab-index="13" #cbxRefdoc style="width: 100%"
+          [disabled]="formCashPayment.data?.isReadOnly ? true : false" #cbxRefdoc style="width: 100%"
           class="fw-bold" [Group]="formCashPayment.formGroup" field="refDocs" [formModel]="dialog.formModel"
           (valueChange)="valueChangeMaster($event)">
         </codx-input>
@@ -213,7 +213,7 @@
           <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
         </div>
       </button>
-      <button [shortcut]="'alt+s'" [autoClick]="true" tab-index="16" id="btnsave" type="button"
+      <button [shortcut]="'alt+s'" [autoClick]="true" id="btnsave" type="button"
         class="btn btn-md btn-light-primary" style="border: 1px solid var(--primary-dark) !important"
         (keydown.enter)="onSaveVoucher('save'); $event.preventDefault()" (click)="onSaveVoucher('save')">
         <div class="d-flex align-items-center">
@@ -822,7 +822,7 @@
         <div #btnRef class="btn-addline">
           <div class="d-flex align-items-center">
             <div *ngIf="formCashPayment.data?.subType != '3' && formCashPayment.data?.subType != '4'">
-              <button style="border: 1px solid !important;" tab-index="11" id="btnAddCash"
+              <button style="border: 1px solid !important;" tab-index="15" id="btnAddCash"
                 class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="
                 onAddLine(); $event.preventDefault()
                 " (click)="onAddLine()">
@@ -831,7 +831,7 @@
               </button>
             </div>
             <div *ngIf="formCashPayment?.data?.subType == '3' || formCashPayment?.data?.subType == '4'" class="ms-2">
-              <button style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary"
+              <button style="border: 1px solid !important" class="btn btn-sm btn-light-primary"
                 (keydown.enter)="onAddLine(); $event.preventDefault()" (click)="onAddLine()">
                 <i class="icon-i-receipt icon-16"></i>
                 <codx-label *ngIf="formCashPayment.data.subType == '3'" [formModel]="dialog.formModel"
@@ -863,7 +863,7 @@
         <div class="btn-addline">
           <div class="d-flex align-items-center">
             <div>
-              <button style="border: 1px solid !important" tab-index="12" id="btnAddSet" tabindex="-1"
+              <button style="border: 1px solid !important" id="btnAddSet" tabindex="-1"
                 class="btn btn-sm btn-light-primary" (keydown.enter)="onAddLine();$event.preventDefault()"
                 (click)="onAddLine()">
                 <i class="icon-playlist_add icon-16"></i>
@@ -905,7 +905,7 @@
         <div #btnRef class="btn-addline">
           <div class="d-flex align-items-center">
             <div *ngIf="formCashPayment.data?.subType == '9'" class="ms-2">
-              <button tabindex="-1" style="border: 1px solid !important" tab-index="12"
+              <button tabindex="-1" style="border: 1px solid !important" 
                 class="btn btn-sm btn-light-primary" (keydown.enter)="onAddLine(); $event.preventDefault()"
                 (click)="onAddLine()" id="btnAddVAT">
                 <i class="icon-playlist_add icon-16"></i>

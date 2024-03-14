@@ -8,7 +8,6 @@ import {
   Util,
 } from 'codx-core';
 import { CustomFieldService } from '../../custom-field.service';
-import { Html } from '@syncfusion/ej2-angular-diagrams';
 
 @Component({
   selector: 'lib-popup-custom-field',
