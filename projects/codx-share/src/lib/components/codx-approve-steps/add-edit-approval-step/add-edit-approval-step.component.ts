@@ -394,7 +394,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
             this.lstApprover?.filter((x) => x.negative == '1')?.length > 0 &&
             event?.data != '2'
           ) {
-            this.notifySvr.alertCode('ES038').subscribe((x) => {
+            this.notifySvr.alertCode('ES038').subscribe((x) => {//Đổi mode duyệt xóa quyền phủ quyết
               if (x.event?.status == 'Y') {
                 this.lstApprover?.forEach((apr) => {
                   apr.negative = '0';
@@ -482,7 +482,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
           (this.newAppr.negative == '1' || this.newAppr.negative == true) &&
           this.currentApproveMode != '2'
         ) {
-          this.notifySvr.alertCode('ES037').subscribe((x) => {
+          this.notifySvr.alertCode('ES037').subscribe((x) => {//Bật quyền phủ quyết bật mode song song
             if (x.event?.status == 'Y') {
               this.dialogApprovalStep?.patchValue({ approveMode: '2' });
               this.data.approveMode = '2';
@@ -515,7 +515,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
           (this.newAppr.negative == '1' || this.newAppr.negative == true) &&
           this.currentApproveMode != '2'
         ) {
-          this.notifySvr.alertCode('ES037').subscribe((x) => {
+          this.notifySvr.alertCode('ES037').subscribe((x) => {//Bật quyền phủ quyết bật mode song song
             if (x.event?.status == 'Y') {
               this.dialogApprovalStep?.patchValue({ approveMode: '2' });
               this.data.approveMode = '2';

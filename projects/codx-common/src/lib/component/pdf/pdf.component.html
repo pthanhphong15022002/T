@@ -531,7 +531,7 @@
 
                   <ng-container class="form-group mt-6" *ngIf="isPublic ">
                     <div class="text-center " *ngIf="oApprovalTrans?.signatureType=='1' ">
-                      <ul class="flex-center nav nav-tabs nav-pills flex-row border-0 mb-6">
+                      <!-- <ul class="flex-center nav nav-tabs nav-pills flex-row border-0 mb-6">
                         <ng-container *ngFor="let spl of vllSupplier; let index = index">
                           <div class="nav-item m-0">
                             <button [disabled]="index != 0"
@@ -553,7 +553,7 @@
                             </button>
                           </div>
                         </ng-container>
-                      </ul>
+                      </ul> -->
                     </div>
 
                     <div class="d-flex justify-content-end mt-6" *ngIf="!isSigned">
@@ -751,7 +751,7 @@
       <div *ngIf="supplier =='4'">
         <div class="form-group">
           <codx-label name="lblThirdPatyID" default="Tài khoản ký số bên thứ ba" [formModel]=""></codx-label>
-          <codx-input type="text" field="thirdPartyID" [crrValue]="paSignature?.thirdPatyID ?? ''"
+          <codx-input type="text" field="thirdPartyID" [crrValue]="paSignature?.thirdPartyID ?? ''"
             (valueChange)="valueChange($event)">
           </codx-input>
         </div>

@@ -88,8 +88,9 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
         let idFiles = [];
         this.data.permissions.forEach(elm=>{
           this.process.documentControl.forEach(elm2=>{
-            if(!elm2.permissions.some(x=>x.objectID == elm.objectID))
+            if(!elm2.permissions?.some(x=>x?.objectID == elm?.objectID))
             {
+              if(elm2.permissions==null) elm2.permissions=[];
               elm2.permissions.push(
                 {
                   objectID: elm.objectID,
@@ -103,7 +104,7 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
             }
             if(elm2.files)
             {
-              elm2.files.forEach(xs=>{
+              elm2.files?.forEach(xs=>{
                 idFiles.push(xs.fileID);
               })
             }
@@ -112,7 +113,7 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
 
         this.updatePermiss(idFiles,this.data.permissions);
 
-        this.dialog.close({data: this.data , process: this.process});
+        this.dialog?.close({data: this.data , process: this.process});
       }
     }
     else this.dialog.close({data: this.data , process: this.process});
