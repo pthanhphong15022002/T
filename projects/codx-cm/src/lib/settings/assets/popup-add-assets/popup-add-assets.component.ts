@@ -97,7 +97,7 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
       });
   }
   ngAfterViewInit(): void {
-    if (this.action == 'add' || this.action == 'copy') this.changeCbxCustomer();
+    if (this.action != 'view') this.changeCbxCustomer();
   }
   ngOnInit(): void {}
 
