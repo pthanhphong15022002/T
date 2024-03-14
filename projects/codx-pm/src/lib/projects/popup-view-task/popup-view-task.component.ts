@@ -94,11 +94,11 @@ export class PopupViewTaskComponent implements OnInit, AfterViewInit{
     })
   }
   toggleCompleted(task:any){
-    if(task.status == '1'){
+    if(task.status == '10'){
       task.status='90';
     }
     else{
-      task.status='1'
+      task.status='10'
     }
     this.todoList = this.todoList.slice();
     this.changeDetectorRef.detectChanges();
@@ -175,12 +175,15 @@ export class PopupViewTaskComponent implements OnInit, AfterViewInit{
   }
 
   commentTyped(e: any, key: string) {
+    let isCheckChangeStatus=false;
+    if(this.isInProgress || this.isSendReport || this.isInProgress) isCheckChangeStatus = true;
     if(e.comment){
+      if(!this.checkEditPermission()) return;
       let status="00";
       let hours="8";
       if(this.isInProgress) status="20";
       if(this.isFinish) status ="90";
-      if(this.data){
+      if(this.data && this.data.status !="90"){
         if(this.todoList?.length){
 
           if(this.todoList.filter((x:any)=>x.status=='90').length == this.todoList.length){
@@ -193,11 +196,11 @@ export class PopupViewTaskComponent implements OnInit, AfterViewInit{
             })
           }
           else{
-            this.updateTaskStatus(this.data.recID,status,e.comment);
+            isCheckChangeStatus &&  this.updateTaskStatus(this.data.recID,status,e.comment);
           }
         }
         else{
-          this.updateTaskStatus(this.data.recID,status,e.comment);
+          isCheckChangeStatus && this.updateTaskStatus(this.data.recID,status,e.comment);
         }
 
       }
@@ -227,7 +230,17 @@ export class PopupViewTaskComponent implements OnInit, AfterViewInit{
       }
     })
   }
-
+  checkEditPermission(){
+    if(this.data){
+      if(this.crrUser.administrator || this.crrUser.functionAdmin || this.crrUser.systemAdmin) return true;
+      if(this.crrUser.userID == this.data.createdBy) return true;
+      if(this.members.find((x:any)=>x.roleType=='A' && x.resourceID==this.crrUser.userID)) return true;
+      return false;
+    }
+    else{
+      return false;
+    }
+  }
   closeForm(){
     if(this.dialog) this.dialog.close()
   }

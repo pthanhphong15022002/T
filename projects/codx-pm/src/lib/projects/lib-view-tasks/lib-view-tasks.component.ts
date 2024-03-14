@@ -330,16 +330,12 @@ export class ProjectTasksViewComponent
         this.api.execSv<any>(
           'TM',
           'TM',
-          'TaskBusiness',
+          'TasksBusiness',
           'DeleteTaskAsync',
-          data.taskID
+          data.recID
         ).subscribe((res:any)=>{
           if (res) {
-            var listTaskDelete = res[0];
-            var parent = res[1];
-            listTaskDelete.forEach((x) => {
-              this.view.dataService.remove(x).subscribe();
-            });
+            this.view.dataService.remove(data).subscribe();
             this.view.dataService.onAction.next({ type: 'delete', data: data });
             this.notificationSv.notifyCode('TM004');
             if (parent) {
@@ -359,7 +355,8 @@ export class ProjectTasksViewComponent
 
   dbClick(data:any){
     this.view.dataService.dataSelected=data;
-    this.viewTask();
+    if(data && data.category!="G")
+      this.viewTask();
   }
   viewTask(){
     if(this.view.dataService.dataSelected){

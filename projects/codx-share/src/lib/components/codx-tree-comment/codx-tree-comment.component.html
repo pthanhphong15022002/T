@@ -3,6 +3,7 @@
         <div class="tree-footer">
             <codx-comment-history
                 [dataBusiness]="data"
+                [alertNoti]="alertNoti"
                 [new]="true"
                 [dVll]="dVll"
                 [vllIcon]="vllIcon"
@@ -48,6 +49,7 @@
         </ng-container>
         <ng-container *ngIf="item.showReply">
             <codx-comment-history
+                [alertNoti]="alertNoti"
                 [dataBusiness]="data"
                 [new]="true"
                 [funcID]="funcID"
