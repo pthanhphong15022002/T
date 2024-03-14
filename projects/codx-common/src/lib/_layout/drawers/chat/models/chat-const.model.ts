@@ -3,7 +3,6 @@ export const CHAT = {
         OnConnected:"OnConnectedAsync",
         OnDisconnected:'OnDisconnectedAsync',
         LogOut:"LogOutAsync",
-
         LoadGroup:'LoadGroup',
         JoinGroup:"JoinGroup",
         AddMember:'AddMember',        
@@ -18,7 +17,7 @@ export const CHAT = {
         OnConnected:"OnConnected",
         OnDisconnected:'OnDisconnected',
         LogOuted:"LogOuted",
-
+        OpenBoxChat:'OpenBoxChat',
         LoadedGroup:'LoadedGroup',
         JoinedGroup:"JoinedGroup",
         AddedMember:'AddedMember',        
