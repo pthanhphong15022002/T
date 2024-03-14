@@ -153,10 +153,9 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
             : null;
         elm.countTask = 0;
         if (elm.child && elm.child.length > 0) {
-          debugger
           elm.countTask = elm.child.length;
           elm.countCompleted =
-            (elm.child.filter((x) => x.status == '3') || []).length || 0;
+            (elm.child.filter((x) => x.status == '5') || []).length || 0;
           elm.percentCompleted = (elm.countCompleted / elm.countTask) * 100;
         }
       });
