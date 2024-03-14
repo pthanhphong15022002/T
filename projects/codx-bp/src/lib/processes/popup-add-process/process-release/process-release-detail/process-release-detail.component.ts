@@ -41,6 +41,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   user: any;
   info: any;
   tempPermission = [];
+  listDocument = [];
   constructor(
     private shareService: CodxShareService,
     private cache: CacheService,
@@ -122,9 +123,56 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
         'GetItemsByInstanceIDAsync',
         this.data.recID
       )
-      .subscribe((item) => {
+      .subscribe((item:any) => {
         if (item) {
-          debugger
+          if(item?.documentControl && item.documentControl.length>0)
+          {
+            item.documentControl.forEach(element => {
+              if(element.files && element.files.length>0)
+              {
+                let check = element.files.some(x=>x.type == "1" || x.type== "3")
+                if(check)
+                {
+                  this.listDocument.push(element);
+                }
+              }
+            });
+
+            if(this.listDocument.length>0)
+            {
+              let ids = [];
+              this.listDocument.forEach((elm) => {
+                if (elm.files && elm.files.length > 0) 
+                {
+                  elm.files.forEach(element => {
+                    if(element.type == "1" || element.type == "3") ids.push(element.fileID || element?.recID);
+                  });
+                }
+              });
+          
+              if(ids.length>0)
+              {
+                var str = JSON.stringify(ids);
+                this.getFile(str)
+              }
+            }
+          }
+        }
+      });
+  }
+  getFile(recID: any) {
+    this.api
+      .execSv('DM', 'DM', 'FileBussiness', 'GetListFile', recID)
+      .subscribe((item:any) => {
+        if (item) {
+          item?.forEach(ix=>{
+            let index = this.listDocument.findIndex(x=>x.files.some(x=>x.fileID == ix.recID));
+            if(index>=0)
+            {
+              if(!this.listDocument[index]?.filess) this.listDocument[index].filess = [];
+              this.listDocument[index].filess.push(ix);
+            }
+          });
         }
       });
   }
@@ -334,4 +382,5 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       }
     });
   }
+  
 }
