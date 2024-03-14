@@ -47,7 +47,7 @@ export class AddTaskComponent
     datas: [
       {
         value: 1,
-        text: 'Đại diện ',
+        text: 'Tuần tự',
       },
       {
         value: 2,
@@ -55,7 +55,7 @@ export class AddTaskComponent
       },
       {
         value: 3,
-        text: 'Tuần tự',
+        text: 'Đại diện',
       },
     ],
   };
@@ -889,6 +889,9 @@ export class AddTaskComponent
   }
   esign(){
     let result = JSON.parse(JSON.stringify(this.process));
+    if(this.process?.steps?.find(x=>x?.recID == this.data?.recID)==null){
+      result.steps?.push(this.data);
+    }
     result.steps.forEach((elm: any) => {
       delete elm.child;
       if (typeof elm.settings === 'object')
@@ -896,12 +899,18 @@ export class AddTaskComponent
       if (typeof elm.documentControl != 'string')
         elm.documentControl = JSON.stringify(elm.documentControl);
     });
+    
 
     if(!this.data.permissions || this.data.permissions.length <=0) this.notifySvr.notify("Vui lòng chọn người thực hiện.");
     else 
     {
-      this.api.execSv("BP","BP","ProcessesBusiness","UpdateProcessAsync",result).subscribe(item=>{
-        this.esignB();
+      this.api.execSv("BP","BP","ProcessesBusiness","UpdateProcessAsync",result).subscribe((item:any)=>{
+      if(item?.steps){
+        let savedData =item?.steps?.find(x=>x?.recID == this.data?.recID);
+        if(savedData) this.data=savedData;
+          this.esignB();
+      }
+
       })
     }
   }
@@ -951,30 +960,35 @@ export class AddTaskComponent
 
         this.dataChangeAttach.emit(true);
         this.api.execSv("BP","BP","ProcessesBusiness","GetAsync",this.process.recID).subscribe((item:any)=>{
-          if(item?.documentControl)
-          {
-            var listF = item.documentControl.filter(x=>x.stepID == this.data?.recID);
-            if(listF && listF.length>0)
-            {
-              listF.forEach(element => {
-                let index = this.process.documentControl.findIndex(x=>x.recID == element.recID);
-                if(index >= 0)
-                {
-                  this.process.documentControl[index]= element;
-                  // if(element?.refID)
-                  // {
-                  //   var indexRef = item.documentControl.findIndex(x=>x.recID == element.refID);
-                  //   if(indexRef >= 0)
-                  //   {
-                  //     var indexP = this.process.documentControl.findIndex(x=>x.recID == item.documentControl[indexRef].recID)
-                  //     if(indexP >= 0) this.process.documentControl[indexP] = item.documentControl[indexRef];
-                  //   }
-                  // }
-                }
-              });
-              this.dataChangeProcess.emit(this.process);
-            }
+          if(item){
+            this.process.steps=item?.steps;            
+            this.process.documentControl=item?.documentControl;
+            this.dataChangeProcess.emit(this.process);
           }
+          //if(item?.documentControl)
+          //{
+            // var listF = item.documentControl.filter(x=>x.stepID == this.data?.recID);
+            // if(listF && listF.length>0)
+            // {
+            //   listF.forEach(element => {
+            //     let index = this.process.documentControl.findIndex(x=>x.recID == element.recID);
+            //     if(index >= 0)
+            //     {
+            //       this.process.documentControl[index]= element;
+            //       if(element?.refID)
+            //       {
+            //         var indexRef = item.documentControl.findIndex(x=>x.recID == element.refID);
+            //         if(indexRef >= 0)
+            //         {
+            //           var indexP = this.process.documentControl.findIndex(x=>x.recID == item.documentControl[indexRef].recID)
+            //           if(indexP >= 0) this.process.documentControl[indexP] = item.documentControl[indexRef];
+            //         }
+            //       }
+            //     }
+            //   });
+            //   this.dataChangeProcess.emit(this.process);
+            //}
+          //}
           this.dataChangeAttach.emit(false);
         })
       });
