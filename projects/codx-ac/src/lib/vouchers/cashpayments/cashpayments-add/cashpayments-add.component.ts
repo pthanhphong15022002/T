@@ -1433,26 +1433,6 @@ export class CashPaymentAddComponent extends UIComponent {
     this.formCashPayment.setRequire(lstRequire);
   }
 
-  /**
-   * *Hàm check validate trước khi save line (VATInvoice)
-   * @param data 
-   * @returns 
-   */
-  beforeSaveRowVATInvoice(event: any) {
-    if (event.rowData) {
-      if (event.rowData.quantity == 0 || event.rowData.quantity < 0) {
-        this.eleGridVatInvoices.showErrorField('quantity', 'E0341');
-        event.cancel = true;
-        return;
-      }
-      if (event.rowData.unitPrice == 0 || event.rowData.unitPrice < 0) {
-        this.eleGridVatInvoices.showErrorField('unitPrice', 'E0730');
-        event.cancel = true;
-        return;
-      }
-    }
-  }
-
   @HostListener('click', ['$event']) //? focus out grid
   onClick(e) {
     if (
@@ -1469,7 +1449,7 @@ export class CashPaymentAddComponent extends UIComponent {
             setTimeout(() => {
               if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
                 e.target.focus();
-                e.target.select();
+                // e.target.select();
               }
             }, 100);
           }
@@ -1482,7 +1462,7 @@ export class CashPaymentAddComponent extends UIComponent {
             setTimeout(() => {
               if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
                 e.target.focus();
-                e.target.select();
+                //e.target.select();
               }
             }, 100);
           }
@@ -1495,7 +1475,7 @@ export class CashPaymentAddComponent extends UIComponent {
             setTimeout(() => {
               if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
                 e.target.focus();
-                e.target.select();
+                //e.target.select();
               }
             }, 100);
           }

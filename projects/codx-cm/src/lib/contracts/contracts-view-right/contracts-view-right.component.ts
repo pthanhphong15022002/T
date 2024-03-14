@@ -1,3 +1,4 @@
+import { Permission } from './../../../../../../src/shared/models/file.model';
 import {
   Input,
   Output,
@@ -42,8 +43,9 @@ export class ContractsViewDetailComponent
   @Input() contract: CM_Contracts;
   @Input() contractAppendix: CM_Contracts;
   @Input() processID: string;
-  @Input() tabDefaut: "";
+  @Input() tabDefaut = "";
   @Input() valueListTab;
+  @Input() user;
 
   // @Input() dataSelected: any;
   @Output() changeMF = new EventEmitter<any>();
@@ -133,7 +135,9 @@ export class ContractsViewDetailComponent
     entityName: 'CM_Contacts',
     gridViewName: 'grvCMContacts',
   };
+  
   lstContacts: any;
+  contractsTab = "1,5,7,8,9";
 
   constructor(
     private inject: Injector,
@@ -176,13 +180,7 @@ export class ContractsViewDetailComponent
     if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
       this.listInsStep = this.listInsStepStart;
     }
-    if (changes?.taskAdd) {
-      console.log(changes?.taskAdd);
-    }
-    // this.listTypeContract = this.contractService.listTypeContractTask;
-    this.listTypeContract = this.valueListTab.filter(x => this.tabDefaut?.includes(x?.value));
-    this.listTypeContract[0].isActive = true;
-    this.tabClicked = this.listTypeContract[0]?.value;
+    this.setTaskBar();
   }
 
   async onInit() {
@@ -205,6 +203,25 @@ export class ContractsViewDetailComponent
       icon: 'icon-i-link',
     };
     this.tabControl.push(contractLink);
+  }
+
+  setTaskBar(){
+    let tabShow = "";
+    if(this.contract?.isAdminAll || this.contract.owner == this.user?.userID){
+      tabShow = this.contractsTab;
+    }else{
+      let permission  = this.contract?.permissions?.find(p => p.objectID == this.user?.userID);
+      tabShow = this.tabDefaut;
+      if(permission?.config){
+        tabShow = permission?.config;
+      }else{
+        tabShow = this.contractsTab;
+      }
+    }
+   
+    this.listTypeContract = this.valueListTab.filter(x => tabShow?.includes(x?.value));
+    this.listTypeContract[0].isActive = true;
+    this.tabClicked = this.listTypeContract[0]?.value;
   }
 
   getUserContract(){

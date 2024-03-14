@@ -923,26 +923,6 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
   }
 
   /**
-   * *Hàm check validate trước khi save line (cashpayment)
-   * @param data 
-   * @returns 
-   */
-  beforeSaveRowPurchase(event: any) {
-    if (event.rowData) {
-      if (event.rowData.quantity == 0 || event.rowData.quantity < 0) {
-        this.eleGridPurchaseInvoice.showErrorField('quantity', 'E0341');
-        event.cancel = true;
-        return;
-      }
-      // if (event.rowData.purcPrice == 0 || event.rowData.purcPrice < 0) {
-      //   this.eleGridPurchaseInvoice.showErrorField('purcPrice','E0341');
-      //   event.cancel = true;
-      //   return;
-      // }
-    }
-  }
-
-  /**
    * *Hàm check validate trước khi save line (VATInvoice)
    * @param data 
    * @returns 

@@ -28,6 +28,9 @@ export class SignalRService {
   loadedGroup = new EventEmitter<any>();//Lấy thông tin Group
   updateOnlineStatus = new EventEmitter<any>();//Lấy thông tin Group
 
+
+  openBoxChat = new EventEmitter<any>(); // open box chat
+
   constructor(private authStore: AuthStore) {
     this.createConnection();
   }
@@ -45,8 +48,10 @@ export class SignalRService {
     this.hubConnectionstart();
 
     this.hubConnection.on('ReceiveMessage', (res) => {
-      if (res) {
-        switch (res.event) {
+      if (res && res?.event) 
+      {
+        switch (res.event)
+        {
           case CHAT.UI_FUNC.OnConnected:
             this.updateOnlineStatus.emit(res);
             break;
@@ -56,8 +61,10 @@ export class SignalRService {
             this.updateOnlineStatus.emit(res);
             break;
           }
-
-          //load nhóm chat, thêm nhóm vào UI nếu chưa có (mở chatbox nếu cần)
+          case CHAT.UI_FUNC.OpenBoxChat: {
+            this.openBoxChat.emit(res.data);
+            break;
+          }
           case CHAT.UI_FUNC.LoadedGroup: {
             this.loadedGroup.emit(res);
             this.activeGroup.emit(res);
@@ -65,7 +72,7 @@ export class SignalRService {
           }
           //Thêm người còn lại vào nhóm, sau load
           case CHAT.BE_FUNC.JoinGroup: {
-            this.sendData(CHAT.BE_FUNC.JoinGroup, res?.groupID);
+            this.sendData(CHAT.BE_FUNC.JoinGroup, res.data);
             break;
           }
           //Sau khi thêm người vào nhóm, thêm nhóm vào UI nếu chưa có (mở chatbox nếu cần)
@@ -91,6 +98,8 @@ export class SignalRService {
             this.activeGroup.emit(res);
             break;
           }
+
+          
         }
       }
     });

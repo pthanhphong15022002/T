@@ -47,13 +47,14 @@ export class PopupPermissionsComponent implements OnInit {
   objectIDSelect: any;
   user: any;
   isAdmin: boolean = false;
-  tabDefault = {
+  allTabId = {
     CM_Contracts: "1,5,7,8,9",
     CM_Customers: "1,2,3,4,5",
     CM_Deals: "1,2,5,6,7",
     CM_Cases: "1,4,6"
   }
   listDataTabView;
+  vllData;
 
   constructor(
     private cache: CacheService,
@@ -70,6 +71,7 @@ export class PopupPermissionsComponent implements OnInit {
     this.title = dt?.data?.title;
     this.user = this.auth.get();
     this.entityName = dt?.data?.entityName;
+    this.vllData = dt?.data?.vllData;
     if (this.data?.permissions != null && this.data?.permissions?.length > 0) {
       this.lstPermissions = this.sortOrGroup(this.data?.permissions);
     }
@@ -83,6 +85,7 @@ export class PopupPermissionsComponent implements OnInit {
         this.listRoles = res.datas;
       }
     });
+    this.setTab();
     if (
       this.lstPermissions.filter((x) => x.memberType == '1') != null &&
       this.lstPermissions.filter((x) => x.memberType == '1').length > 0
@@ -92,15 +95,31 @@ export class PopupPermissionsComponent implements OnInit {
       );
       this.changePermissions(this.currentPemission);
     }
-    let tabEntity = this.tabDefault[this.entityName];
-    let vllData = await this.cmService.getValueList("CRM086");
-    if(vllData){
-      let listDataTabView = vllData.filter(x => tabEntity.includes(x?.value));
+  }
+
+  setTab(){
+    let tabEntity = this.allTabId[this.entityName];
+    if(!this.vllData){
+      this.cache.valueList("CRM086").subscribe(res => {
+        if(res?.datas){
+          this.vllData = res?.datas;
+          let listDataTabView = this.vllData.filter(x => tabEntity.includes(x?.value));
+          if(listDataTabView){
+            this.listDataTabView = listDataTabView.map((x) => {return {...x, isCheck: false}});
+            this.config = this.lstPermissions[this.currentPemission]?.config;
+            this.setConfig(this.config);
+            this.changeDetectorRef.markForCheck();
+          }
+        }
+      })
+    }
+    if(this.vllData){
+      let listDataTabView = this.vllData.filter(x => tabEntity.includes(x?.value));
       if(listDataTabView){
         this.listDataTabView = listDataTabView.map((x) => {return {...x, isCheck: false}});
+        this.changeDetectorRef.markForCheck();
       }
     }
-
   }
 
   ngAfterViewInit(): void {
@@ -296,7 +315,7 @@ export class PopupPermissionsComponent implements OnInit {
           this.download = data;
           this.allowPermit = data;
           this.allowUpdateStatus = data;
-          this.config = data ? this.tabDefault[this.entityName] : "";
+          this.config = data ? this.allTabId[this.entityName] : "";
           this.setConfig(this.config);
         }
 
@@ -474,6 +493,7 @@ export class PopupPermissionsComponent implements OnInit {
         .allowUpdateStatus
         ? '1'
         : '0';
+      this.lstPermissions[this.currentPemission].config = this.getConfig();
     }
     this.api
       .execSv<any>(
