@@ -136,8 +136,8 @@ export class FormStepsFieldGridComponent
   {
     this.data = JSON.parse(JSON.stringify(this.data))
     if(this.data && this.data.steps)
-    {
-    
+    {    
+
       this.count = this.data.steps.length;
       this.listStage = this.data.steps.filter((x) => !x.parentID);
       this.count -= this.listStage.length;
@@ -164,12 +164,15 @@ export class FormStepsFieldGridComponent
       });
     }
   }
-
+  distinctArray(arr) {
+    return [...new Map(arr.map((item) => [item['recID'], item])).values()];
+  }
   getListChild(elm:any)
   {
     if(this.count == 0) return;
     let j = 0;
     let list = this.data.steps.filter(x=>x.parentID == elm.recID);
+    list = this.distinctArray(list);
     this.count -= list.length;
     list.forEach((elm2) => {
       elm2.settings =
