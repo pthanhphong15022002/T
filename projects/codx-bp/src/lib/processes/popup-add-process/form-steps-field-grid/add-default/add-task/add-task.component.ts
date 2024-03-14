@@ -972,7 +972,7 @@ export class AddTaskComponent
             // {
             //   listF.forEach(element => {
             //     let index = this.process.documentControl.findIndex(x=>x.recID == element.recID);
-            //     if(index > 0)
+            //     if(index >= 0)
             //     {
             //       this.process.documentControl[index]= element;
             //       if(element?.refID)
