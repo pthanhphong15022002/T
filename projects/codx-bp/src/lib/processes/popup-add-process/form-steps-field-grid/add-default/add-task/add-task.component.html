@@ -241,21 +241,30 @@
                     <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentApproval'" [default]="'Tài liệu duyệt'" class="fw-bold" *ngIf="activityType == 'Approve'"></codx-label>
                     <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentCheck'" [default]="'Tài liệu kiểm tra'" class="fw-bold" *ngIf="activityType == 'Check'"></codx-label>
                     <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentSign'" [default]="'Tài liệu ký số'" class="fw-bold" *ngIf="activityType == 'Sign'"></codx-label>
-                    <button type="button" class="btn btn-outline-secondary" (click)="openFormFileProcess()"><i class="icon-attach_file"></i></button>
+                    <button type="button" class="btn btn-outline-secondary" (click)="openAttach2()"><i class="icon-attach_file"></i></button>
                 </div>
-                <div class="mt-6">
-                    
-                    <div class="d-flex flex-column px-4" *ngFor="let item of listDocument">
-                        <span>{{item.title}}</span>
-                        <codx-thumbnail
-                            [files]="item?.filess"
-                            displayThumb="simple"
-                            [hideDelete]="'1'"
-                            [hideMoreF]="'0'"
-                            [isClick]="false"
-                            
-                        >
-                        </codx-thumbnail>
+                <div class="mt-4">
+                    <div class="d-flex flex-column w-100" *ngFor="let item of listDocument">
+                        <div class="d-flex align-items-center w-100 justify-content-between">
+                            <div class="d-flex flex-column w-100">
+                                <ng-container *ngFor="let f of item?.filess , let i = index">
+                                    <codx-thumbnail
+                                        [files]="[f]"
+                                        displayThumb="simple"
+                                        [hideDelete]="'1'"
+                                        [hideMoreF]="'0'"
+                                        [isClick]="false"
+                                        [tmpRight]="this.activityType == 'Sign' ? tmpEsign: null"
+                                    >
+                                    </codx-thumbnail>
+                                    <ng-template #tmpEsign>
+                                        <i class="icon-gesture cursor-pointer" [id]="'esign'+f.recID" [ngClass]="item?.files[i]?.eSign == true ? 'text-primary' : ''" (click)="selectEsign(f.recID , item.recID)"></i>
+                                    </ng-template>
+                                </ng-container>
+                                <span class="text-gray-500">{{item.title}}</span>
+                            </div>
+                           
+                        </div>
                         <ng-template #tmpRightAttach let-file>
                             <div >
                               <codx-input type="checkbox" [checked]="true"
@@ -269,12 +278,12 @@
                         <codx-label name="lblUploadFile" default="Thiết lập vùng ký"></codx-label>
                     </button>
                 </div>
-                <!-- <div class="mt-6">
-                    <codx-attachment #attachment2 hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+                <div class="mt-6">
+                   <codx-attachment #attachment2 hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
                     hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel"
-                    [idField]="'RecID'" [isSaveSelected]="'1'" [objectId]="data?.recID" [objectType]="formModel?.entityName" (fileSave)="fileSave($event)" (fileDelete)="fileDelete($event)">
+                    [idField]="'RecID'" [hideImageThumb]="'1'" [isSaveSelected]="'1'" [objectId]="data?.recID" [objectType]="formModel?.entityName" (fileSave)="fileSave($event)" (fileDelete)="fileDelete($event)">
                     </codx-attachment>
-                </div> -->
+                </div> 
             </div>
         </ng-container>
         <ng-container *ngIf="activityType == 'Email'">

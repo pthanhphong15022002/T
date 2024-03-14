@@ -97,7 +97,7 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
       });
   }
   ngAfterViewInit(): void {
-    this.changeCbxCustomer();
+    if (this.action != 'view') this.changeCbxCustomer();
   }
   ngOnInit(): void {}
 
@@ -109,6 +109,7 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
     this.data[e.field] = e.data;
     switch (e.field) {
       case 'projectID':
+        if (this.parentID == e.data) return;
         this.data.siteID = null;
         this.data.refID = null;
         (
@@ -128,52 +129,48 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
           this.cbxRefID.ComponentCurrent as CodxComboboxComponent
         ).dataService.data = [];
         this.cbxRefID.crrValue = null;
+        this.form.formGroup.patchValue({
+          refID: this.data['refID'],
+        });
         this.changeCbxCustomer();
 
         this.parentID = this.data.projectID;
         break;
       case 'siteID':
-        if (!e.data) {
-          // if (this.siteIDOldData) this.changeCbxCustomer();
-          this.siteIDOldData = null;
-          // this.parentID = null;
-          // (
-          //   this.cbxprojectID.ComponentCurrent as CodxComboboxComponent
-          // ).dataService.data = [];
-          // this.cbxprojectID.crrValue = this.parentID;
-          // this.cbxprojectID.model = null;
-          // this.form.formGroup.patchValue({ projectID: this.data['projectID'] });
-          // (
-          //   this.cbxRefID.ComponentCurrent as CodxComboboxComponent
-          // ).dataService.data = [];
-          // this.cbxRefID.crrValue = null;
-        } else if (
-          e?.component?.itemsSelected[0]?.ParentID != this.data.projectID
-        ) {
-          this.data.projectID = e?.component?.itemsSelected[0]?.ParentID;
-          this.data.refID = null;
-          this.parentID = this.data.projectID;
-          (
-            this.cbxProjectID.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.cbxProjectID.crrValue = this.parentID;
+        if (
+          e?.component?.itemsSelected[0]?.ParentID == this.data.projectID ||
+          this.siteIDOldData == this.data.siteID
+        )
+          return;
 
-          (
-            this.cbxProjectID.ComponentCurrent as CodxComboboxComponent
-          ).dataService.predicates = e.data ? 'AssetID=@0' : '';
-          (
-            this.cbxProjectID.ComponentCurrent as CodxComboboxComponent
-          ).dataService.dataValues = e.data ? `${this.data.projectID}` : '';
-          this.form.formGroup.patchValue({ projectID: this.data['projectID'] });
-        }
+        this.parentID = this.data.projectID =
+          e?.component?.itemsSelected[0]?.ParentID;
+        this.data.refID = null;
 
-        if (this.siteIDOldData != this.data.siteID) {
-          this.siteIDOldData = this.data.siteID;
-          (
-            this.cbxRefID.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.cbxRefID.crrValue = null;
-        }
+        (
+          this.cbxProjectID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.data = [];
+        this.cbxProjectID.crrValue = this.parentID;
+
+        (
+          this.cbxProjectID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.predicates = e.data ? 'AssetID=@0' : '';
+        (
+          this.cbxProjectID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.dataValues = e.data ? `${this.data.projectID}` : '';
+        this.form.formGroup.patchValue({ projectID: this.data['projectID'] });
+
+        this.siteIDOldData = this.data.siteID;
+        (
+          this.cbxRefID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.data = [];
+        this.cbxRefID.crrValue = null;
+        //ref
+        (
+          this.cbxRefID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.data = [];
+        this.cbxRefID.crrValue = null;
+
         this.changeCbxCustomer();
         break;
       case 'refID':
@@ -183,8 +180,6 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
         this.getListLocation();
         break;
     }
-
-    // this.form.formGroup.patchValue(this.data);
   }
 
   beforeSave(op: RequestOption) {

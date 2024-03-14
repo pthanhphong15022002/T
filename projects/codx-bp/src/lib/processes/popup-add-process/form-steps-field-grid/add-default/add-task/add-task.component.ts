@@ -97,9 +97,9 @@ export class AddTaskComponent
   }
 
   formatDocument() {
-    var entityName = this.formModel.entityName;
     this.listDocument = JSON.parse(JSON.stringify(this.process.documentControl));
     let ids = [];
+    debugger
     this.listDocument.forEach((elm) => {
       if (elm.files && elm.files.length > 0) 
       {
@@ -143,8 +143,6 @@ export class AddTaskComponent
       .subscribe((item:any) => {
         if (item) {
           item?.forEach(ix=>{
-            ix.eSign = true;
-
             let index = this.listDocument.findIndex(x=>x.files.some(x=>x.fileID == ix.recID));
             if(index>=0)
             {
@@ -397,6 +395,7 @@ export class AddTaskComponent
         var f = {
           fileID: elm?.data?.recID,
           type: '1',
+          eSign: false
         };
         files.push(f);
       });
@@ -405,6 +404,7 @@ export class AddTaskComponent
       var f = {
         fileID: e?.recID,
         type: '1',
+        eSign: false
       };
       files.push(f);
       count = 1;
@@ -518,7 +518,84 @@ export class AddTaskComponent
           res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
 
         var index = this.process.steps.findIndex(x=>x.recID == this.data.recID);
-        if(index >=0) this.process.steps[index].extendInfo = this.data.extendInfo;
+        if(index >=0) 
+        {
+          this.process.steps[index].extendInfo = this.data.extendInfo;
+          if (this.data?.steps[index]?.extendInfo) {
+            this.data?.steps[index]?.extendInfo.forEach((element) => {
+              if (element.controlType == 'Attachment') {
+                if (!element?.documentControl || element?.documentControl.length == 0) {
+                  var obj = 
+                  {
+                    recID: Util.uid(),
+                    title: element.title,
+                    isRequired: false,
+                    count: 0,
+                    isList: '1',
+                    stepID: this.data?.steps[1].recID,
+                    stepNo: this.data?.steps[1].stepNo,
+                    fieldID: element.recID,
+                    memo: this.data?.steps[1].memo,
+                    permissions: 
+                    [
+                      {
+                        objectID: this.user?.userID,
+                        objectType: "U",
+                        read: true,
+                        update: true,
+                        delete: true
+                      }
+                    ]
+                  };
+                  this.data.documentControl = [obj];
+                } else if (
+                  element.documentControl &&
+                  element.documentControl.length > 0
+                ) {
+                  var doc = JSON.parse(JSON.stringify(this.data.documentControl));
+                  if (!doc) doc = [];
+                  element.documentControl.forEach((docu) => {
+                    docu.stepID = this.data?.steps[index].recID;
+                    docu.stepNo = this.data?.steps[index].stepNo;
+                    docu.fieldID = element.recID;
+                    docu.memo = this.data?.steps[index].memo;
+                    docu.permissions =
+                    [
+                      {
+                        objectID: this.user?.userID,
+                        objectType: "U",
+                        read: true,
+                        update: true,
+                        delete: true
+                      }
+                    ]
+                    var index = doc.findIndex((x) => x.recID == docu.recID);
+                    if (index >= 0) doc[index] = docu;
+                    else doc.push(docu);
+                  });
+                  this.data.documentControl = doc;
+                }
+              }
+  
+              if (typeof element.documentControl != 'string') {
+                element.documentControl =
+                  element.documentControl?.length > 0
+                    ? JSON.stringify(element.documentControl)
+                    : null;
+              }
+  
+              if (typeof element.dataFormat != 'string') {
+                element.dataFormat =
+                  element.dataFormat?.length > 0
+                    ? JSON.stringify(element.dataFormat)
+                    : null;
+              }
+              if (typeof element.tableFormat != 'string') {
+                element.tableFormat = JSON.stringify(element.tableFormat) 
+              }
+            });
+          }
+        }
         this.dataChange.emit(this.data);
         this.dataChangeProcess.emit(this.process);
       }
@@ -608,6 +685,7 @@ export class AddTaskComponent
           {
             fileID: res?.event[3].recID,
             type: '2',
+            eSign: false
           };
 
           var documentControl = {
@@ -815,20 +893,28 @@ export class AddTaskComponent
       delete elm.child;
       if (typeof elm.settings === 'object')
         elm.settings = JSON.stringify(elm.settings);
+      if (typeof elm.documentControl != 'string')
+        elm.documentControl = JSON.stringify(elm.documentControl);
     });
-    this.api.execSv("BP","BP","ProcessesBusiness","UpdateProcessAsync",result).subscribe(item=>{
-      this.esignB();
-    })
-   
+
+    if(!this.data.permissions || this.data.permissions.length <=0) this.notifySvr.notify("Vui lòng chọn người thực hiện.");
+    else 
+    {
+      this.api.execSv("BP","BP","ProcessesBusiness","UpdateProcessAsync",result).subscribe(item=>{
+        this.esignB();
+      })
+    }
   }
 
   esignB()
   {
     let fileIDs="";
     let dynamicApprovers=[];
+    
     this.listDocument.forEach(doc=>{
-      if(doc?.filess?.length>0){
-        fileIDs+= doc?.filess?.map(x=>x?.recID)?.join(";");        
+      if(doc?.files?.length>0){
+        var l = doc?.files?.filter(x=>x.eSign)
+        if(l && l.length>0) fileIDs+= ";" + l.map(x=>x?.fileID)?.join(";");        
       }
     });
 
@@ -872,18 +958,18 @@ export class AddTaskComponent
             {
               listF.forEach(element => {
                 let index = this.process.documentControl.findIndex(x=>x.recID == element.recID);
-                if(index > 0)
+                if(index >= 0)
                 {
                   this.process.documentControl[index]= element;
-                  if(element?.refID)
-                  {
-                    var indexRef = item.documentControl.findIndex(x=>x.recID == element.refID);
-                    if(indexRef >= 0)
-                    {
-                      var indexP = this.process.documentControl.findIndex(x=>x.recID == item.documentControl[indexRef].recID)
-                      if(indexP >= 0) this.process.documentControl[indexP] = item.documentControl[indexRef];
-                    }
-                  }
+                  // if(element?.refID)
+                  // {
+                  //   var indexRef = item.documentControl.findIndex(x=>x.recID == element.refID);
+                  //   if(indexRef >= 0)
+                  //   {
+                  //     var indexP = this.process.documentControl.findIndex(x=>x.recID == item.documentControl[indexRef].recID)
+                  //     if(indexP >= 0) this.process.documentControl[indexP] = item.documentControl[indexRef];
+                  //   }
+                  // }
                 }
               });
               this.dataChangeProcess.emit(this.process);
@@ -918,6 +1004,30 @@ export class AddTaskComponent
     {
       var id = this.process.documentControl[index].recID;
       this.process.documentControl = this.process.documentControl.filter(x=>x.refID != id);
+    }
+  }
+
+  selectEsign(id:any , recID:any)
+  {
+    var indexP = this.process.documentControl.findIndex(x=>x.recID == recID)
+    if(indexP >= 0)
+    {
+      if(this.process.documentControl[indexP]?.files && this.process.documentControl[indexP]?.files.length>0)
+      {
+        var index2 = this.process.documentControl[indexP].files.findIndex(x=>x.fileID == id);
+        if(index2>=0) 
+        {
+          this.process.documentControl[indexP].files[index2].eSign = !this.process.documentControl[indexP].files[index2].eSign;
+          this.listDocument[indexP].files[index2].eSign = !this.listDocument[indexP].files[index2].eSign;
+
+          var mySelected = document.getElementById("esign"+id);
+          if(mySelected)
+          {
+            if(this.listDocument[indexP].files[index2].eSign) mySelected.classList.add("text-primary");
+            else mySelected.classList.remove("text-primary");
+          }
+        }
+      }
     }
   }
 }

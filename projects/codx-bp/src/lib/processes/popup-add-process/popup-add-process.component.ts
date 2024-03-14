@@ -788,9 +788,17 @@ export class PopupAddProcessComponent {
                   stepNo: this.data?.steps[1].stepNo,
                   fieldID: element.recID,
                   memo: this.data?.steps[1].memo,
-                  refID: ''
+                  permissions: 
+                  [
+                    {
+                      objectID: this.user?.userID,
+                      objectType: "U",
+                      read: true,
+                      update: true,
+                      delete: true
+                    }
+                  ]
                 };
-                obj.refID = obj.recID;
                 this.data.documentControl = [obj];
               } else if (
                 element.documentControl &&
@@ -803,6 +811,16 @@ export class PopupAddProcessComponent {
                   docu.stepNo = this.data?.steps[1].stepNo;
                   docu.fieldID = element.recID;
                   docu.memo = this.data?.steps[1].memo;
+                  docu.permissions =
+                  [
+                    {
+                      objectID: this.user?.userID,
+                      objectType: "U",
+                      read: true,
+                      update: true,
+                      delete: true
+                    }
+                  ]
                   var index = doc.findIndex((x) => x.recID == docu.recID);
                   if (index >= 0) doc[index] = docu;
                   else doc.push(docu);
