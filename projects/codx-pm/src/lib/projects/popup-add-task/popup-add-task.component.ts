@@ -233,7 +233,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
       if(!this.isEditTodo){
         const newTask: any = {
           text: this.newTask,
-          status: '1',
+          status: '10',
           taskID:this.data.recID
         };
         this.todoList.push(newTask);
@@ -281,11 +281,11 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   enableCompleteTodo:boolean = true;
   toggleCompleted(task:any){
     if(!this.enableEdit && !this.enableCompleteTodo) return;
-    if(task.status == '1'){
+    if(task.status == '10'){
       task.status='90';
     }
     else{
-      task.status='1'
+      task.status='10'
     }
     this.todoList = this.todoList.slice();
     this.changeDetectorRef.detectChanges();

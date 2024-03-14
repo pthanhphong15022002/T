@@ -97,7 +97,8 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
       });
   }
   ngAfterViewInit(): void {
-    if (this.action != 'view') this.changeCbxCustomer();
+    // if (this.action != 'view')
+    this.changeCbxCustomer();
   }
   ngOnInit(): void {}
 
@@ -294,9 +295,10 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
           ).dataService.dataValues = dataValue;
           // this.form.formGroup.patchValue(this.data);
         } else {
-          this.notiService.notify(
-            'Không tìm thấy dữ liệu ! Vui lòng kiểm tra lại !',
-            '2'
+          this.notiService.notifyCode(
+            'CM064',
+            0,
+            '"' + this.gridViewSetup['RefID'].headerText + '"'
           );
           this.cbxRefID.ComponentCurrent.dataService.data = [];
           this.cbxRefID.crrValue = null;
@@ -338,9 +340,10 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
             this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
           ).dataService.dataValues = dataValue;
         } else {
-          this.notiService.notify(
-            'Không tìm thấy dữ liệu ! Vui lòng kiểm tra lại !',
-            '2'
+          this.notiService.notifyCode(
+            'CM064',
+            0,
+            '"' + this.gridViewSetup['siteID'].headerText + '"'
           );
         }
 

@@ -202,7 +202,10 @@ export class ProjectsComponent
     });
   }
 
-  selectedChange(e: any) {}
+  selectedChange(e: any) {
+    this.itemSelected = e?.data ? e?.data : e;
+    this.detectorRef.detectChanges();
+  }
 
   clickMF(e: any, data: any) {
     switch (e.functionID) {
@@ -220,6 +223,21 @@ export class ProjectsComponent
         break;
       default:
         break;
+    }
+  }
+
+  changeDataMF(e, data) {
+    if (data) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'PMT0102':
+            res.disabled = data.isPin;
+            break;
+          case 'PMT0103':
+            res.disabled = !data.isPin;
+            break;
+        }
+      });
     }
   }
 
@@ -264,7 +282,7 @@ export class ProjectsComponent
   }
 
   //#region pin project
-  pinProject(data){
+  pinProject(data) {
     this.api
       .execSv(
         'PM',
@@ -275,16 +293,34 @@ export class ProjectsComponent
       )
       .subscribe((item: any) => {
         if (item) {
-          this.view.dataService.update(item, true).subscribe();
+          this.itemSelected = item;
+          this.view.dataService.update(this.itemSelected, true).subscribe();
           this.codxService.reloadMenuAside();
-          this.notificationSv.notifyCode('SV001');
+          this.notificationSv.notifyCode('Ghim thành công');
         } else {
-          this.notificationSv.notifyCode('SV002');
+          this.notificationSv.notifyCode('Ghim thất bại');
         }
       });
   }
-  unPinProject(data){
-
+  unPinProject(data) {
+    this.api
+    .execSv(
+      'PM',
+      'PM',
+      'ProjectsBusiness',
+      'UnPinProjectAsync',
+      this.view.dataService.dataSelected?.recID
+    )
+    .subscribe((item: any) => {
+      if (item) {
+        this.itemSelected = item;
+        this.view.dataService.update(this.itemSelected, true).subscribe();
+        this.codxService.reloadMenuAside();
+        this.notificationSv.notifyCode('Bỏ ghim thành công');
+      } else {
+        this.notificationSv.notifyCode('Bỏ ghim thất bại');
+      }
+    });
   }
   //#endregion
 }
