@@ -825,10 +825,7 @@ export class PopupAddProcessComponent {
                   : null;
             }
             if (typeof element.tableFormat != 'string') {
-              element.tableFormat =
-                element.tableFormat?.length > 0
-                  ? JSON.stringify(element.tableFormat)
-                  : null;
+              element.tableFormat = JSON.stringify(element.tableFormat) 
             }
           });
 

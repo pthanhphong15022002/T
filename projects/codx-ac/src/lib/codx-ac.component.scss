@@ -532,6 +532,9 @@
 
 .ac-master .form-group{
     max-height: 54px;
+    .errorMessage{
+        white-space: nowrap;
+    }
 }
 
 .ac-animation-none {
