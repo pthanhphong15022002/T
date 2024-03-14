@@ -484,7 +484,7 @@
 
 <!-- Thông tin chung -->
 <ng-template #generalTemplate>
-  <div class="mt-2">
+  <div class="mt-3">
     <codx-label
       class="fs-5-sm fw-bold"
       name="lblGeneral"
@@ -826,7 +826,7 @@
 <!-- thanh lý -->
 <ng-template #disposal let-data="value">
   <div class="appendix">
-    <div *ngIf="contract?.disposalID" class="mt-2">
+    <div *ngIf="contract?.disposalID" class="mt-3">
       <div class="row mb-2">
         <div class="col-6 d-flex align-items-center">
           <div class="w-150px min-w-150px">
@@ -1079,7 +1079,7 @@
 <!-- phụ lục -->
 <ng-template #appendix>
   <div class="appendix">
-    <div *ngIf="listContractInParentID?.length > 0" class="mt-2">
+    <div *ngIf="listContractInParentID?.length > 0" class="mt-3">
       <div
         *ngFor="let contract of listContractInParentID"
         class="p-2 link-container"
