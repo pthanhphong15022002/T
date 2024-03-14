@@ -405,7 +405,7 @@
   </ng-container> -->
   <ng-container *ngIf="formSalesInvoice.formGroup">
     <div style="height: 200px;" class="mt-3 ac-master">
-      <div style="flex-wrap: nowrap;" class="row d-flex overflow-auto">
+      <div style="flex-wrap: nowrap;" class="row d-flex overflow-auto h-100">
         <div style="min-width: 850px;padding-right: 0;" class="col-9">
           <div class="row" style="max-width: 1300px;">
             <div class="col-2">
@@ -620,7 +620,7 @@
 
 <!-- Start: TmpTabInfoInvoice -->
 <ng-template #TmpTabInfoInvoice>
-  <ng-container *ngIf="formSalesInvoice.formGroup">
+  <!-- <ng-container *ngIf="formSalesInvoice.formGroup">
     <div style="height: 200px;" class="mt-3 ac-master">
       <div style="flex-wrap: nowrap;" class="row d-flex overflow-auto">
         <div class="col-8" style="min-width: 850px;">
@@ -768,13 +768,73 @@
         </div>
       </div>
     </div>
+  </ng-container> -->
+  <ng-container *ngIf="formSalesInvoice.formGroup">
+    <div style="height: 200px;" class="mt-3 ac-master">
+      <div style="flex-wrap: nowrap;" class="row d-flex overflow-auto h-100">
+        <div style="min-width: 850px;" class="col-12">
+          <div class="row" style="max-width: 1300px;">
+            <div class="col-3">
+              <div class="form-group">
+                <codx-label fiedName="InvoiceForm" [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="invoiceForm" [formModel]="dialog.formModel"
+                  >
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-2">
+              <div class="form-group">
+                <codx-label fiedName="InvoiceSeriNo" [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="invoiceSeriNo" [formModel]="dialog.formModel"
+                  >
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-2">
+              <div class="form-group">
+                <codx-label fiedName="InvoiceNo" [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="invoiceNo" [formModel]="dialog.formModel"
+                  >
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-2">
+              <div class="form-group">
+                <codx-label fiedName="InvoiceDate" [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="invoiceDate" [formModel]="dialog.formModel"
+                  >
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-2">
+              <div class="form-group">
+                <codx-label fiedName="InvoiceDueDate" [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="invoiceDueDate" [formModel]="dialog.formModel"
+                  >
+                </codx-input>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </ng-container>
 </ng-template>
 <!-- End: TmpTabInfoInvoice -->
 
 <!-- Start: TmpTabInfoOther -->
 <ng-template #TmpTabInfoOther>
-  <ng-container *ngIf="formSalesInvoice.formGroup">
+  <!-- <ng-container *ngIf="formSalesInvoice.formGroup">
     <div style="height: 200px;" class="mt-3 ac-master">
       <div style="flex-wrap: nowrap;" class="row d-flex">
         <div class="col-8" style="min-width: 850px;">
@@ -820,6 +880,56 @@
                 <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false" #eleCbxObjectID
                   [Group]="formSalesInvoice.formGroup" field="cancelRefDate" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container> -->
+  <ng-container *ngIf="formSalesInvoice.formGroup">
+    <div style="height: 200px;" class="mt-3 ac-master">
+      <div style="flex-wrap: nowrap;" class="row d-flex overflow-auto h-100">
+        <div style="min-width: 850px;" class="col-12">
+          <div class="row" style="max-width: 1300px;">
+            <div class="col-4">
+              <div class="form-group">
+                <codx-label fiedName="CancelReason" [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="cancelReason" [formModel]="dialog.formModel">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="max-width: 1300px;">
+            <div class="col-4">
+              <div class="form-group">
+                <codx-label fiedName="CancelNote" [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="cancelNote" [formModel]="dialog.formModel">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="max-width: 1300px;">
+            <div class="col-2">
+              <div class="form-group mb-0">
+                <codx-label fiedName="CancelRefNo" [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="cancelRefNo" [formModel]="dialog.formModel">
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-2">
+              <div class="form-group mb-0">
+                <codx-label fiedName="CancelRefDate" [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="cancelRefDate" [formModel]="dialog.formModel">
                 </codx-input>
               </div>
             </div>
