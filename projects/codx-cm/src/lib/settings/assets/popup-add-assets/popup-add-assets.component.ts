@@ -111,7 +111,6 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
       case 'projectID':
         this.data.siteID = null;
         this.data.refID = null;
-
         (
           this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
         ).dataService.data = [];
@@ -124,47 +123,13 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
         ).dataService.dataValues = e.data ? `${this.data.projectID}` : '';
 
         this.form.formGroup.patchValue({ siteID: this.data['siteID'] });
-
+        //ref
         (
           this.cbxRefID.ComponentCurrent as CodxComboboxComponent
         ).dataService.data = [];
         this.cbxRefID.crrValue = null;
+        this.changeCbxCustomer();
 
-        // if (!e.data) {
-        //   (
-        //     this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
-        //   ).dataService.data = [];
-        //   this.cbxSiteID.crrValue = null;
-        //   this.cbxSiteID.model = null;
-        //   this.form.formGroup.patchValue({ siteID: this.data['siteID'] });
-
-        //   (
-        //     this.cbxRefID.ComponentCurrent as CodxComboboxComponent
-        //   ).dataService.data = [];
-        //   this.cbxRefID.crrValue = null;
-
-        //   this.changeCbxCustomer();
-        // } else if (this.data.projectID != this.parentID) {
-        //   (
-        //     this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
-        //   ).dataService.data = [];
-        //   this.cbxSiteID.crrValue = null;
-        //   (
-        //     this.cbxRefID.ComponentCurrent as CodxComboboxComponent
-        //   ).dataService.predicates = 'ParentID=@';
-        //   (
-        //     this.cbxRefID.ComponentCurrent as CodxComboboxComponent
-        //   ).dataService.dataValues = `${this.data.projectID}`;
-
-        //   this.form.formGroup.patchValue({ siteID: this.data['siteID'] });
-
-        //   (
-        //     this.cbxRefID.ComponentCurrent as CodxComboboxComponent
-        //   ).dataService.data = [];
-        //   this.cbxRefID.crrValue = null;
-
-        //   this.changeCbxCustomer();
-        // }
         this.parentID = this.data.projectID;
         break;
       case 'siteID':
