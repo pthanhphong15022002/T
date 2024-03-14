@@ -430,6 +430,7 @@ export class AddTaskComponent
         {
           objectID: this.user?.userID,
           objectType: "U",
+          download:true,
           read: true,
           update: true,
           delete: true
@@ -444,6 +445,7 @@ export class AddTaskComponent
           {
             objectID: this.user?.userID,
             objectType: "U",
+            download:true,
             read: true,
             update: true,
             delete: true
@@ -588,6 +590,7 @@ export class AddTaskComponent
         formModel: this.formModel,
         data: data,
         groupField: this.getFieldExport(),
+        isFristVer:true
       },
       '',
       option

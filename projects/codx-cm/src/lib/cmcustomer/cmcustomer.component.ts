@@ -80,9 +80,9 @@ export class CmCustomerComponent
   dataSelected: any;
   //region Method
   service = 'CM';
-  assemblyName = 'ERM.Business.Core';
-  method = 'LoadDataAsync';
-  className = 'DataBusiness';
+  assemblyName = 'ERM.Business.CM';
+  method = 'GetListCustomersAsync';
+  className = 'CustomersBusiness';
   entityName = 'CM_Customers';
   idField = 'recID';
   //endregion
