@@ -270,10 +270,13 @@ export class FormStepsFieldGridComponent
               {
                 var indexC = this.listStage[indexParent2].child.findIndex(x=>x.recID == deleteDt.recID);
                 
-                deleteDt.child.forEach(element => {
-                  element.parentID = this.listStage[indexParent2].recID;
-                  this.listStage[indexParent2].child.splice(indexC,0,element);
-                });
+                if(deleteDt.child && deleteDt.child.length>0)
+                {
+                  deleteDt.child.forEach(element => {
+                    element.parentID = this.listStage[indexParent2].recID;
+                    this.listStage[indexParent2].child.splice(indexC,0,element);
+                  });
+                }
                 
                 this.listStage[indexParent2].child = this.listStage[indexParent2].child.filter(x=>x.recID != deleteDt.recID);
 

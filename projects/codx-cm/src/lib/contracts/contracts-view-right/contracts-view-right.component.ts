@@ -137,7 +137,6 @@ export class ContractsViewDetailComponent
   };
   
   lstContacts: any;
-  contractsTab = "1,5,7,8,9";
 
   constructor(
     private inject: Injector,
@@ -208,15 +207,9 @@ export class ContractsViewDetailComponent
   setTaskBar(){
     let tabShow = "";
     if(this.contract?.isAdminAll || this.contract.owner == this.user?.userID){
-      tabShow = this.contractsTab;
-    }else{
-      let permission  = this.contract?.permissions?.find(p => p.objectID == this.user?.userID);
       tabShow = this.tabDefaut;
-      if(permission?.config){
-        tabShow = permission?.config;
-      }else{
-        tabShow = this.contractsTab;
-      }
+    }else{
+      tabShow = this.contract?.config;
     }
    
     this.listTypeContract = this.valueListTab.filter(x => tabShow?.includes(x?.value));

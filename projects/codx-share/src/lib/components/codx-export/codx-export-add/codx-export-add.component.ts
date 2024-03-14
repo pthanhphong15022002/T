@@ -71,6 +71,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
   isHasFields = false;
   isGroup = false;
   dataGoupField = [];
+  isFristVer = false;
   constructor(
     private tenant: TenantStore,
     private readonly auth: AuthService,
@@ -88,6 +89,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     this.type = dt.data?.type;
     this.refID = dt.data?.refID; // Thảo thêm để thêm biến lưu cho temEx
     this.refType = dt.data?.refType || dt.data?.formModel?.entityName; // Thảo thêm để thêm biến lưu cho temEx
+    this.isFristVer = dt.data?.isFristVer || false;
     this.formModel = dt.data.formModel;
     if(dt.data?.groupField) {
       this.isHasFields = true;
@@ -263,7 +265,6 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
         this.gridViewSettup.push(obj2);
         this.dataGoupField[i].groupChild.push(obj);
       })
-      debugger
     }
   }
 
@@ -512,7 +513,14 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
 
     if (this.type == 'word' && this.action == 'edit') {
       this.nameFile = e[0].fileName;
-      this.loadContentWord(e[0].pathDisk);
+      let url = e[0].pathDisk;
+      if(this.isFristVer)
+      {
+        let index = e[0].history.findIndex(x=>x.fileName.includes("Ver 001"));
+
+        if(index >=0) url = e[0].history[index].pathDisk
+      }
+      this.loadContentWord(url);
     }
   }
   onSaveWord(): Observable<any[] | any> {
