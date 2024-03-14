@@ -677,6 +677,7 @@ export class CashPaymentAddComponent extends UIComponent {
         }
         break;
     }
+    this.setValidateForm();
   }
 
   selecting(event){
@@ -1423,7 +1424,7 @@ export class CashPaymentAddComponent extends UIComponent {
   setValidateForm() {
     let rObjectID = false;
     let lstRequire: any = [];
-    if (this.formCashPayment.data.subType != '1' && this.formCashPayment) {
+    if (this.elementTabDetail?.selectingID == '1') {
       rObjectID = true;
     }
     lstRequire.push({ field: 'ObjectID', isDisable: false, require: rObjectID });
@@ -1431,26 +1432,6 @@ export class CashPaymentAddComponent extends UIComponent {
       lstRequire.push({ field: 'VoucherNo', isDisable: false, require: false });
     }
     this.formCashPayment.setRequire(lstRequire);
-  }
-
-  /**
-   * *Hàm check validate trước khi save line (VATInvoice)
-   * @param data 
-   * @returns 
-   */
-  beforeSaveRowVATInvoice(event: any) {
-    if (event.rowData) {
-      if (event.rowData.quantity == 0 || event.rowData.quantity < 0) {
-        this.eleGridVatInvoices.showErrorField('quantity', 'E0341');
-        event.cancel = true;
-        return;
-      }
-      if (event.rowData.unitPrice == 0 || event.rowData.unitPrice < 0) {
-        this.eleGridVatInvoices.showErrorField('unitPrice', 'E0730');
-        event.cancel = true;
-        return;
-      }
-    }
   }
 
   @HostListener('click', ['$event']) //? focus out grid

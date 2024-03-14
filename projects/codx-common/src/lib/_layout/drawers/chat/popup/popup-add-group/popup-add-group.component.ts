@@ -148,38 +148,32 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
   isLoading: boolean = false;
   // insert group
   insertGroup() {
-    if (!this.group.members || this.group.members.length == 0)
+    if(this.group && this.group?.members?.length > 0)
     {
-      this.notifiSV.notify('Vui lòng chọn thành viên');
-      return;
-    }
-    this.isLoading = true;
-    this.group.createdBy = this.user.userID;
-    //this.signalRSV.sendData('CreateGroupChat', this.group);
-
-    this.api
-    .execSv(
-      'WP',
-      'ERM.Business.WP',
-      'GroupBusiness',
-      'InsertGroupAsync',
-      this.group)
-      .subscribe((result: any) => {
-      if (result) 
-      {
-        this.codxImg
-        .updateFileDirectReload(result?.groupID)
-        .subscribe((res: any) => 
-        {
-          this.signalRSV.sendData(CHAT.BE_FUNC.LoadGroup, result?.groupID);
-          this.notifiSV.notifyCode('CHAT004');
-          this.dialogRef.close(result);
-        });
-      } 
-      else this.notifiSV.notifyCode('CHAT005');
-      this.group = new GroupItem();
       this.isLoading = true;
-      this.dt.detectChanges();
-    });
+      this.api
+      .execSv(
+        'WP',
+        'ERM.Business.WP',
+        'GroupBusiness',
+        'SaveAsync',
+        this.group)
+        .subscribe((res1:any) => {
+        if (res1) 
+        {
+          this.codxImg
+          .updateFileDirectReload(res1.groupID)
+          .subscribe((res2: any) => 
+          {
+            // this.signalRSV.sendData(CHAT.BE_FUNC.LoadGroup, res1.groupID);
+            this.signalRSV.sendData("NewGroup", res1.groupID);
+            this.notifiSV.notifyCode('CHAT004');
+            this.dialogRef.close(res1);
+          });
+        } 
+        else this.notifiSV.notifyCode('CHAT005');
+      });
+    }
+    else this.notifiSV.notify('Vui lòng chọn thành viên');
   }
 }
