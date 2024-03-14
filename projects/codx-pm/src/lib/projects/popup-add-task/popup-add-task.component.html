@@ -21,7 +21,7 @@
         </codx-input>
       </div>
       <div class="form-group ps-0">
-        <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả công việc" [ngClass]="grvSetup['Memo']?.isRequire ? 'required' : ''">
+        <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả công việc" [ngClass]="grvSetup['Memo']?.isRequire ? 'required' : ''" *ngIf="enableEdit">
         </codx-label> <i class="icon-zoom_out_map icon-21 text-hover-primary d-flex float-end" (click)="extendMemo(data?.memo)"></i>
         <div class="w-100 d-flex">
           <div style="width:100%">
@@ -299,6 +299,7 @@
       <div class="pt-3 border-top h-auto">
         <div class="row h-75 w-100">
           <codx-tree-comment
+          [data]="data"
           [objectID]="data?.recID"
           [objectType]="entityName"
           [actionType]="'C'"
@@ -310,7 +311,7 @@
         </codx-tree-comment>
         </div>
         <div class="row h-25 w-100 d-flex justify-content-start flex-row ps-3 pt-5 ">
-          <div class="d-flex align-items-center justify-content-start pb-3 ps-1 w-auto" *ngIf="showInprogress">
+          <div class="d-flex align-items-center justify-content-start pb-3 ps-1 w-auto" *ngIf="showInprogress && data.status=='10'">
             <codx-input type="checkbox" [class]="'check-circle'" [crrValue]="isInProgress" field="inProgress" (valueChange)="checkStatusChange($event)" ></codx-input>
             <codx-label fiedName="lblInProcess" class="ps-2" [formModel]="form.formModel" default="Đang xử lý"  >
             </codx-label>
