@@ -61,6 +61,7 @@ export class PropertyTableComponent extends BasePropertyComponent implements OnI
 
   changeValueTable(e:any)
   {
+    if(!this.data?.tableFormat) this.data.tableFormat = {};
     this.data.tableFormat[e?.field] = e?.data;
     this.dataChange.emit(this.data);
   }

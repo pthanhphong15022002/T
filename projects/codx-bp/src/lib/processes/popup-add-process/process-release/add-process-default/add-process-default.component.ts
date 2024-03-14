@@ -502,6 +502,7 @@ export class AddProcessDefaultComponent implements OnInit{
         {
           if(controls[name].errors?.email) email.push(name);
           else if(controls[name].errors?.pattern) phone.push(name);
+          else invalid.push(name);
         }
         else if (controls[name].invalid) {
             invalid.push(name);
