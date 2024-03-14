@@ -323,7 +323,7 @@ export class PopupAddProcessComponent {
     form.parentID = stage.recID;
     form.extendInfo = this.extendInfos;
     form.memo = '';
-    form.duration = 0;
+    form.duration = 1;
     form.interval = '1';
     form.stepType = "1";
     form.settings = JSON.stringify({
