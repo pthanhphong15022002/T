@@ -239,12 +239,12 @@ export class AssetsComponent
     // this.detectorRef.detectChanges();
   }
 
-  beforeDel(opt: RequestOption) {
-    opt.service = 'AM';
-    opt.assemblyName = 'ERM.Business.Core';
-    opt.className = 'AssetsBusiness';
-    opt.methodName = 'DeleteAsync';
-    opt.data = [this.itemSelected];
-    return true;
-  }
+  // beforeDel(opt: RequestOption) {
+  //   opt.service = 'AM';
+  //   opt.assemblyName = 'ERM.Business.Core';
+  //   opt.className = 'AssetsBusiness';
+  //   opt.methodName = 'DeleteAsync';
+  //   opt.data = [this.itemSelected];
+  //   return true;
+  // }
 }
