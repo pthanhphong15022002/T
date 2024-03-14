@@ -493,16 +493,10 @@ export class CmCustomerDetailComponent implements OnInit {
   }
 
   setTaskBar(){
-    if(this.dataSelected?.isAdminAll || this.dataSelected.owner == this.user?.userID){
+    if(this.isAdmin || this.dataSelected.owner == this.user?.userID){
       this.idTabShow = this.tabDefaut;
     }else{
-      let permission  = this.dataSelected?.permissions?.find(p => p.objectID == this.user?.userID);
-      this.idTabShow = this.tabDefaut;
-      if(permission?.config){
-        this.idTabShow = permission?.config;
-      }else{
-        this.idTabShow = this.tabDefaut;
-      }
+      this.idTabShow = this.dataSelected?.config;
     }
   }
 }
