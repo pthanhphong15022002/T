@@ -306,103 +306,14 @@ export class GeneralJournalAddComponent extends UIComponent {
    */
   valueChangeLine(event: any) {
     let oLine = event.data;
-    let oAccount = this.acService.getCacheValue('account',oLine.accountID);
-    let oOffsetAccount = this.acService.getCacheValue('account',oLine.offsetAcctID);
-    switch (event.field.toLowerCase()) {
-      case 'accountid':
-        this.setLockAndRequireFields(oLine, oAccount, oOffsetAccount);
-        break;
-      case 'offsetacctid':
-        if (oOffsetAccount) {
-          oLine.isBrigdeAcct = false;
-        } else {
-          oLine.isBrigdeAcct =
-            (oOffsetAccount as any)?.accountType == '5' ? true : false;
-        }
-        this.setLockAndRequireFields(oLine, oAccount, oOffsetAccount);
-        break;
-      case 'dr':
-        this.eleGridGeneral.startProcess();
-        if (oLine.dr != 0 && oLine.cR2 != 0) {
-          oLine.cr = 0;
-          oLine.cR2 = 0;
-        }
-        setTimeout(() => {
-          oLine = this.calcAmt2(this.formGeneral.data, oLine, true);
-          if (this.journal.entryMode == '2') {
-            this.setLockAndRequireFields(oLine, oAccount, oOffsetAccount);
-          }
-          this.detectorRef.detectChanges();   
-          this.eleGridGeneral.endProcess();
-        }, 200);
-        break;
-      case 'cr':
-        this.eleGridGeneral.startProcess();
-        if ((oLine.cr! = 0 && oLine.dR2 != 0)) {
-          oLine.dr = 0;
-          oLine.dR2 = 0;
-        }
-        setTimeout(() => {
-          oLine = this.calcAmt2(this.formGeneral.data, oLine, false);
-          if (this.journal.entryMode == '2') {
-            this.setLockAndRequireFields(oLine, oAccount, oOffsetAccount);
-          }
-          this.detectorRef.detectChanges();
-          this.eleGridGeneral.endProcess();
-        }, 200);
-        break;
-      case 'dr2':
-        this.eleGridGeneral.startProcess();
-        if (oLine.dR2 != 0 && oLine.cR2 != 0) {
-          oLine.cr = 0;
-          oLine.cR2 = 0;
-        }
-        if (oLine.dr == 0 && (oOffsetAccount as any)?.multiCurrency) {
-          setTimeout(() => {
-            if (this.formGeneral.data.multi) {
-              oLine.dr = this.formGeneral.data.exchangeRate != 0 ? this.roundService.amount(oLine.cR2 / this.formGeneral.data.exchangeRate,this.formGeneral.data.currencyID) : oLine.cR2;
-            } else {
-              oLine.dr = this.roundService.amount(oLine.cR2 * this.formGeneral.data.exchangeRate,this.formGeneral.data.currencyID);
-            }
-            if(oLine.updateColumns && !oLine.updateColumns.includes('DR')) oLine.updateColumns += 'DR;';
-            if(oLine.updateColumns && !oLine.updateColumns.includes('CR')) oLine.updateColumns += 'CR;';
-            if(oLine.updateColumns && !oLine.updateColumns.includes('CR2')) oLine.updateColumns += 'CR2;';
-            this.eleGridGeneral.endProcess();
-          }, 200);
-        }
-        this.eleGridGeneral.endProcess();
-        break;
-      case 'cr2':
-        this.eleGridGeneral.startProcess();
-        if (oLine.cR2 != 0 && oLine.dR2 != 0) {
-          oLine.dr = 0;
-          oLine.dR2 = 0;
-        }
-        if (oLine.cr == 0 && (oOffsetAccount as any)?.multiCurrency) {
-          setTimeout(() => {
-            if (this.formGeneral.data.multi) {
-              oLine.cr = this.formGeneral.data.exchangeRate != 0 ? this.roundService.amount(oLine.cR2 / this.formGeneral.data.exchangeRate,this.formGeneral.data.currencyID) : oLine.cR2;
-            } else {
-              oLine.cr = this.roundService.amount(oLine.cR2 * this.formGeneral.data.exchangeRate,this.formGeneral.data.currencyID);
-            }
-            if(oLine.updateColumns && !oLine.updateColumns.includes('DR')) oLine.updateColumns += 'DR;';
-            if(oLine.updateColumns && !oLine.updateColumns.includes('DR2')) oLine.updateColumns += 'DR2;';
-            if(oLine.updateColumns && !oLine.updateColumns.includes('CR')) oLine.updateColumns += 'CR;';
-            this.eleGridGeneral.endProcess();
-          }, 200);
-        }
-        break;
-      case 'note':
-        oLine.reasonID = event?.itemData?.ReasonID;
-        if(oLine.updateColumns && !oLine.updateColumns.includes('AccountID')) oLine.updateColumns += 'AccountID;';
-        setTimeout(() => {
-          oLine.accountID = event?.itemData?.OffsetAcctID;
-          this.detectorRef.detectChanges();
-          oAccount = this.acService.getCacheValue('account',oLine.accountID);
-          this.setLockAndRequireFields(oLine,oAccount,oOffsetAccount);
-        }, 200);
-        break;
-    }
+    let field = event.field;
+    this.eleGridGeneral.startProcess();
+    this.api.exec('AC','GeneralJournalsLinesBusiness','ValueChangedAsync',[this.formGeneral.data,oLine,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      Object.assign(oLine, res);
+      oLine.updateColumns = '';
+      this.detectorRef.detectChanges();
+      this.eleGridGeneral.endProcess();
+    })
   }
 
   /**
@@ -792,56 +703,13 @@ export class GeneralJournalAddComponent extends UIComponent {
    * *Hàm thêm mới dòng cashpayments
    */
   addLine() {
-    let oLine = this.setDefaultLine();
-    this.eleGridGeneral.addRow(oLine,this.eleGridGeneral.dataSource.length);
-  }
-
-  /**
-   * *Hàm set data mặc định từ master khi thêm dòng mới
-   */
-  setDefaultLine() {
-    let oOffsetAcct = null;
-    let oAccount = null;
-    let model = new AC_GeneralJournalsLines();
-    let oLine = Util.camelizekeyObj(model);
-    oLine.transID = this.formGeneral.data.recID;
-    oLine.objectID = this.formGeneral.data.objectID;
-    oLine.objectType = this.formGeneral.data.objectType;
-    oLine.reasonID = this.formGeneral.data.reasonID;
-
-    let indexReason = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value);
-    if (indexReason > -1) {
-      oLine.accountID = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].OffsetAcctID;
-      oLine.note = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].ReasonName;
-    }
-
-    oLine = this.acService.getDataSettingFromJournal(oLine,this.journal);
-
-    if(this.journal?.entryMode != '1') oLine.offsetAcctID = null;
-
-    oAccount = this.acService.getCacheValue('account', oLine?.accountID);
-    oOffsetAcct = this.acService.getCacheValue('account',oLine?.offsetAcctID);
-    if (oLine?.offsetAcctID) {
-      if (oOffsetAcct && oOffsetAcct?.accountType == '5') {
-        oLine.isBrigdeAcct = true;
+    this.api.exec('AC','GeneralJournalsLinesBusiness','SetDefaultAsync',[this.formGeneral.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      if (res) {
+        this.eleGridGeneral.addRow(res, this.eleGridGeneral.dataSource.length);
       }
-    }
-    if (oLine?.accountID) {
-      if (oAccount) {
-        oLine.singleEntry = oAccount?.accountType == '0' ? true : false;
-        // let bSubLGControl = oAccount?.subLGControl;
-        // if (!bSubLGControl && !oLine?.offsetAcctID) {
-        //   bSubLGControl = oOffsetAcct?.subLGControl;
-        // }
-      }
-    }
-    // this.oLine.createdBy = this.userID;
-    let dRAmt = this.calcRemainAmt(this.formGeneral.data?.totalAmt);
-    if (dRAmt > 0) {
-      oLine.dr = dRAmt;
-      oLine = this.calcAmt2(this.formGeneral.data,oLine,true);
-    }
-    return oLine;
+    })
+    // let oLine = this.setDefaultLine();
+    // this.eleGridGeneral.addRow(oLine,this.eleGridGeneral.dataSource.length);
   }
 
   /**
@@ -860,69 +728,6 @@ export class GeneralJournalAddComponent extends UIComponent {
     oLine.lineID = this.eleGridGeneral?.rowDataSelected?.recID || Util.uid();
     oLine.journalNo = this.formGeneral.data.journalNo;
     this.eleGridVatInvoices.addRow(oLine,this.eleGridVatInvoices.dataSource.length);
-  }
-
-  /**
-   * *Hàm tính số tiền khi thêm dòng
-   * @param totalAmt
-   * @returns
-   */
-  calcRemainAmt(totalAmt) {
-    if (totalAmt == 0) {
-      return 0;
-    }
-    let dRemainAmt = totalAmt;
-    let dPayAmt = this.eleGridGeneral.dataSource.reduce((sum, data:any) => sum + data?.dr,0);
-    dRemainAmt = dRemainAmt - dPayAmt;
-    return dRemainAmt;
-  }
-
-  /**
-   * *Hàm tính tiền theo tỷ giá
-   * @param master
-   * @param line
-   * @param isdr
-   * @returns
-   */
-  calcAmt2(master, line, isdr) {
-    if (isdr) {
-      let dDR2 = 0;
-      if (master.multi) {
-        dDR2 = this.roundService.baseCurr(line.dr * master.exchangeRate);
-      } else {
-        dDR2 =
-          master.exchangeRate != 0
-            ? this.roundService.baseCurr(line.dr / master.exchangeRate)
-            : line.dr;
-      }
-      if (line.dR2 != dDR2) {
-        line.dR2 = dDR2;
-        if(line.updateColumns && !line.updateColumns.includes('DR2')) line.updateColumns += 'DR2;';
-      }
-      if (line.cR2 != 0) {
-        line.cR2 = 0;
-        if(line.updateColumns && !line.updateColumns.includes('CR2')) line.updateColumns += 'CR2;';
-      }
-    } else {
-      let dCR2 = 0;
-      if (master.multi) {
-        dCR2 = this.roundService.baseCurr(line.cr * master.exchangeRate);
-      } else {
-        dCR2 =
-          master.exchangeRate != 0
-            ? this.roundService.baseCurr(line.cr / master.exchangeRate)
-            : line.cr;
-      }
-      if (line.cR2 != dCR2) {
-        line.cR2 = dCR2;
-        if(line.updateColumns && !line.updateColumns.includes('CR2')) line.updateColumns += 'CR2;';
-      }
-      if (line.dR2 != 0) {
-        line.dR2 = 0;
-        if(line.updateColumns && !line.updateColumns.includes('DR2')) line.updateColumns += 'DR2;';
-      }
-    }
-    return line;
   }
 
   /**
@@ -1078,41 +883,6 @@ export class GeneralJournalAddComponent extends UIComponent {
         element.focus();
       }, 100);
         break;
-    }
-  }
-
-  /**
-   * *Hàm check validate trước khi save line (cashpayment)
-   * @param data 
-   * @returns 
-   */
-  beforeSaveRowGeneral(event:any){
-    if (event.rowData) {
-      if (event.rowData.dr == 0 && event.rowData.dR2 == 0) {
-        this.eleGridGeneral.showErrorField('dr','E0094');
-        event.cancel = true;
-        return;
-      }
-    }
-  }
-
-  /**
-   * *Hàm check validate trước khi save line (VATInvoice)
-   * @param data 
-   * @returns 
-   */
-  beforeSaveRowVATInvoice(event:any){
-    if (event.rowData) {
-      if (event.rowData.quantity == 0 || event.rowData.quantity < 0) {
-        this.eleGridVatInvoices.showErrorField('quantity','E0341');
-        event.cancel = true;
-        return;
-      }
-      if (event.rowData.unitPrice == 0 || event.rowData.unitPrice < 0) {
-        this.eleGridVatInvoices.showErrorField('unitPrice','E0730');
-        event.cancel = true;
-        return;
-      }
     }
   }
 

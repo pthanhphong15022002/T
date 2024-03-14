@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostListener, Injector, Optional, ViewChild } from '@angular/core';
 import { CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, NotificationsService, UIComponent, Util } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CodxAcService, fmIssueTransfersLines, fmReceiptTransfersLines } from '../../../codx-ac.service';
 import { RoundService } from '../../../round.service';
 import { IV_TransfersLines } from '../../../models/IV_TransfersLines.model';
@@ -39,6 +39,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
   baseCurr: any; //? đồng tiền hạch toán
   isPreventChange: any = false;
   nextTabIndex:any;
+  postDateControl: any;
   editSettings:EditSettingsModel = {
     allowAdding:false,
     allowEditing:false,
@@ -69,6 +70,17 @@ export class WarehouseTransfersAddComponent extends UIComponent {
   //#region Init
   onInit(): void {
     this.acService.setPopupSize(this.dialog, '100%', '100%');
+    this.cache
+      .viewSettingValues('ACParameters')
+      .pipe(
+        takeUntil(this.destroy$),
+        map((arr: any[]) => arr.find((a) => a.category === '1')),
+        map((data) => JSON.parse(data.dataValue))
+      ).subscribe((res: any) => {
+        if (res) {
+          this.postDateControl = res?.PostedDateControl;
+        }
+      })
   }
 
   ngAfterViewInit() {
