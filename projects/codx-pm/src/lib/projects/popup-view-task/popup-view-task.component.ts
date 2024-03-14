@@ -94,11 +94,11 @@ export class PopupViewTaskComponent implements OnInit, AfterViewInit{
     })
   }
   toggleCompleted(task:any){
-    if(task.status == '1'){
+    if(task.status == '10'){
       task.status='90';
     }
     else{
-      task.status='1'
+      task.status='10'
     }
     this.todoList = this.todoList.slice();
     this.changeDetectorRef.detectChanges();
