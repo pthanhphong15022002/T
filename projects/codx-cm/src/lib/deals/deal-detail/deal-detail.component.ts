@@ -728,13 +728,7 @@ export class DealDetailComponent implements OnInit {
     if(this.dataSelected?.isAdminAll || this.dataSelected.owner == this.user?.userID){
       this.idTabShow = "1,2,5,6,7";
     }else{
-      let permission  = this.dataSelected?.permissions?.find(p => p.objectID == this.user?.userID);
-      this.idTabShow = this.tabDefaut;
-      if(permission?.config){
-        this.idTabShow = permission?.config;
-      }else{
-        this.idTabShow = this.tabDefaut;
-      }
+      this.idTabShow = this.dataSelected?.config;
     }
   }
   linkData(type:string, recID:string){

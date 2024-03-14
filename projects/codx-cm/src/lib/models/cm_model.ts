@@ -898,6 +898,7 @@ export class CM_Contracts {
   orgUnitID: string;
   divisionID: string;
   departmentID: string;
+  config: string;
   objectLinked: string;
   disposalType: string; // loại thanh lý
   disposalID: string;
