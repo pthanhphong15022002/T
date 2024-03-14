@@ -71,6 +71,11 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.getData();
     this.getInfo();
+    this.getInStance();
+  }
+  onNavChange(e:any)
+  {
+    this.active = e;
   }
   getInfo() {
     let paras = [this.data.createdBy];
@@ -107,6 +112,22 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       });
   }
 
+  getInStance()
+  {
+    this.api
+      .execSv(
+        'BP',
+        'BP',
+        'ProcessInstancesBusiness',
+        'GetItemsByInstanceIDAsync',
+        this.data.recID
+      )
+      .subscribe((item) => {
+        if (item) {
+          debugger
+        }
+      });
+  }
   getPermission() {
     let approvers = [];
     this.process.steps?.forEach((step) => {
@@ -199,16 +220,16 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
                 ?.join(';') ?? null;
           }
           elm2.startDate = this.listTask[index].startDate
-            ? moment(this.listTask[index].startDate).format('dd/MM/yyyy')
+            ? moment(this.listTask[index].startDate).format('DD/MM/YYYY')
             : 'dd/MM/yyyy';
           elm2.endDate = this.listTask[index].endDate
-            ? moment(this.listTask[index].endDate).format('dd/MM/yyyy')
+            ? moment(this.listTask[index].endDate).format('DD/MM/YYYY')
             : 'dd/MM/yyyy';
           elm2.actualStart = this.listTask[index].actualStart
-            ? moment(this.listTask[index].actualStart).format('dd/MM/yyyy')
+            ? moment(this.listTask[index].actualStart).format('DD/MM/YYYY')
             : 'dd/MM/yyyy';
           elm2.actualEnd = this.listTask[index].actualEnd
-            ? moment(this.listTask[index].actualEnd).format('dd/MM/yyyy')
+            ? moment(this.listTask[index].actualEnd).format('DD/MM/YYYY')
             : 'dd/MM/yyyy';
           elm2.status = this.listTask[index].status;
           elm2.dataTask = this.listTask[index];
