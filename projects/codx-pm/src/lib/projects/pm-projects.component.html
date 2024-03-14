@@ -159,7 +159,7 @@
         <div class="d-flex w-100 align-items-center mt-2">
           <div class="fw-bold"> <codx-label fiedName="Actual" [formModel]="formModel" default="Thực tế">
           </codx-label>: </div>&nbsp; {{
-            data.actualFinishDate | fmDT
+            data.actualFinishDate | fmDT: "dmy" :false : 'chưa có dữ liệu'
           }}
         </div>
 

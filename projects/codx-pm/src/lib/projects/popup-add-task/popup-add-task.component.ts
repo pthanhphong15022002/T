@@ -70,7 +70,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
         this.title = 'Chỉnh sửa công việc'
         this.enableAttachment=true;
         this.enableChecklist=true;
-        this.getTaskUpdate(this.data.recID);
+        this.getTaskUpdate(this.data.recID,true);
       }
       if(this.action=="view"){
         this.getTaskUpdate(this.data.recID,true);
@@ -433,13 +433,15 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   oCountFooter:any;
   commentTyped(e: any, key: string) {
     if(this.history) this.history.refresh();
+    let isCheckChangeStatus:boolean=false;
+    if(this.isInProgress || this.isSendReport || this.isInProgress) isCheckChangeStatus = true;
     if(e.comment){
       if(!this.checkEditPermission()) return;
       let status="00";
       let hours="8";
       if(this.isInProgress) status="20";
       if(this.isFinish) status ="90";
-      if(this.data){
+      if(this.data && this.data.status !="90"){
         if(this.todoList?.length){
 
           if(this.todoList.filter((x:any)=>x.status=='90').length == this.todoList.length){
@@ -452,11 +454,11 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
             })
           }
           else{
-            this.updateTaskStatus(this.data.recID,status,e.comment);
+            isCheckChangeStatus && this.updateTaskStatus(this.data.recID,status,e.comment);
           }
         }
         else{
-          this.updateTaskStatus(this.data.recID,status,e.comment);
+          isCheckChangeStatus && this.updateTaskStatus(this.data.recID,status,e.comment);
         }
 
       }
@@ -587,6 +589,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
          abc.closed.subscribe((res:any)=>{
           if(res.event.status=='Y'){
             this.data.status = '90';
+            this.data.percentage=100;
           }
           //else this.data.status='20';
          this.api
@@ -608,6 +611,11 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
 
         }
         else{
+          let doneChecklist = this.todoList.filter((x:any)=>x.status=='90').length;
+          if(doneChecklist > 0){
+            this.data.status='20';
+            this.data.percentage = parseInt((doneChecklist/this.todoList.length) as any);
+          }
           //this.data.status='20';
           this.api
             .exec('TM', 'TasksBusiness', 'UpdateTaskAsync', [
@@ -652,8 +660,22 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
       let member = this.members.find((x:any)=>x.resourceID == this.memberID)
       if(member){
         if(value == 'A' && member.roleType !='A' && this.members.some((x:any)=>x.roleType=='A')){
-          this.notificationsService.notifyCode('TM078');
-          this.popover.close();
+          this.notificationsService.alertCode("PM001").subscribe((res:any)=>{
+            if(res.event && res.event.status=='Y'){
+              let oldItem = this.members.find((x:any)=>x.roleType=='A');
+              if(oldItem){
+                oldItem.roleType = member.roleType;
+                oldItem.icon=this.listRoles.find((x:any)=>x.value==oldItem.roleType)?.icon
+                member.roleType=value;
+                member.icon = this.listRoles.find((x:any)=>x.value==value)?.icon
+                this.members = this.members.slice();
+                this.popover.close();
+                this.changeDetectorRef.detectChanges();
+              }
+            }
+          })
+          // this.notificationsService.notifyCode('TM078');
+          // this.popover.close();
         return;
         }
         if(member.roleType == value) return;

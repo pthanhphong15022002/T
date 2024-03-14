@@ -47,6 +47,7 @@ export class CodxCommentHistoryComponent implements OnInit {
   @Input() viewIcon: boolean = true;
   @Input() allowVotes: boolean = true;
   @Input() allowEdit: boolean = true;
+  @Input() alertNoti: boolean = true;
   @Input() dVll: any = {};
   @Input() vllIcon: any = [];
   @Input() dataBusiness:any; // bổ sung 11/03/2024 - comment and default push noti to createdBy and Owner
@@ -166,7 +167,7 @@ export class CodxCommentHistoryComponent implements OnInit {
     data.objectType = this.objectType;
     data.functionID = this.funcID;
     data.reference = this.reference;
-    if (this.files) 
+    if (this.files)
     {
       data.attachments = 1;
       this.codxATM.objectId = data.recID;
@@ -176,11 +177,11 @@ export class CodxCommentHistoryComponent implements OnInit {
       this.codxATM.objectType = 'BG_Comments';
       this.codxATM.saveFilesMulObservable()
       .subscribe((res: any) => {
-        if (res) 
+        if (res)
         {
           this.save(data,this.dataBusiness.createdBy,this.dataBusiness.owner);
-        } 
-        else 
+        }
+        else
         {
           this.notifySV.notifyCode('SYS023');
         }
@@ -285,7 +286,7 @@ export class CodxCommentHistoryComponent implements OnInit {
 
   // send comment
   sendCommentPopup(dialog:DialogRef) {
-    if (this.content == "" || this.content == null) 
+    if (this.content == "" || this.content == null)
     {
       this.notifySV.notify('Nội dung không được phép bỏ trống',"2");
       return;
@@ -304,12 +305,12 @@ export class CodxCommentHistoryComponent implements OnInit {
       'InsertCommentAsync',
       [data]).subscribe((res: any[]) => {
       this.evtSend.emit(res[1]);
-      this.notifySV.notifyCode(res[0] != null ? 'WP034' : 'SYS023');
+      this.alertNoti && this.notifySV.notifyCode(res[0] != null ? 'WP034' : 'SYS023');
       this.content = "";
       dialog.close();
     });
   }
-  
+
 
   save(data:tmpHistory,createdBy:string,owner:string){
     if(data)
@@ -322,12 +323,12 @@ export class CodxCommentHistoryComponent implements OnInit {
           'InsertCommentAsync',
           [data,createdBy,owner]
         ).subscribe((res: any[]) => {
-          if(res && res[0]) 
+          if(res && res[0])
           {
             this.evtSend.emit(res[1]);
-            this.notifySV.notifyCode('WP034');
+            this.alertNoti && this.notifySV.notifyCode('WP034');
             this.clearData();
-          } 
+          }
           else this.notifySV.notifyCode('SYS023');
         });
     }
