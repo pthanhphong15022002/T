@@ -175,13 +175,15 @@ export class PopupViewTaskComponent implements OnInit, AfterViewInit{
   }
 
   commentTyped(e: any, key: string) {
+    let isCheckChangeStatus=false;
+    if(this.isInProgress || this.isSendReport || this.isInProgress) isCheckChangeStatus = true;
     if(e.comment){
       if(!this.checkEditPermission()) return;
       let status="00";
       let hours="8";
       if(this.isInProgress) status="20";
       if(this.isFinish) status ="90";
-      if(this.data){
+      if(this.data && this.data.status !="90"){
         if(this.todoList?.length){
 
           if(this.todoList.filter((x:any)=>x.status=='90').length == this.todoList.length){
@@ -194,11 +196,11 @@ export class PopupViewTaskComponent implements OnInit, AfterViewInit{
             })
           }
           else{
-            this.updateTaskStatus(this.data.recID,status,e.comment);
+            isCheckChangeStatus &&  this.updateTaskStatus(this.data.recID,status,e.comment);
           }
         }
         else{
-          this.updateTaskStatus(this.data.recID,status,e.comment);
+          isCheckChangeStatus && this.updateTaskStatus(this.data.recID,status,e.comment);
         }
 
       }
