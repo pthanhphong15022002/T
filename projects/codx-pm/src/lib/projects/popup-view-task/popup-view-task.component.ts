@@ -176,6 +176,7 @@ export class PopupViewTaskComponent implements OnInit, AfterViewInit{
 
   commentTyped(e: any, key: string) {
     if(e.comment){
+      if(!this.checkEditPermission()) return;
       let status="00";
       let hours="8";
       if(this.isInProgress) status="20";
@@ -227,7 +228,17 @@ export class PopupViewTaskComponent implements OnInit, AfterViewInit{
       }
     })
   }
-
+  checkEditPermission(){
+    if(this.data){
+      if(this.crrUser.administrator || this.crrUser.functionAdmin || this.crrUser.systemAdmin) return true;
+      if(this.crrUser.userID == this.data.createdBy) return true;
+      if(this.members.find((x:any)=>x.roleType=='A' && x.resourceID==this.crrUser.userID)) return true;
+      return false;
+    }
+    else{
+      return false;
+    }
+  }
   closeForm(){
     if(this.dialog) this.dialog.close()
   }
