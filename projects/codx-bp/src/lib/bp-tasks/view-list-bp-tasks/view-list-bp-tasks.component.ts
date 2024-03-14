@@ -1,8 +1,22 @@
-import { Component, EventEmitter, Input, Output, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ApiHttpService, AuthService, CallFuncService, DialogModel } from 'codx-core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  ApiHttpService,
+  AuthService,
+  CallFuncService,
+  DialogModel,
+} from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { Subject, isObservable } from 'rxjs';
+import { Subject, isObservable, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { CodxBpService } from '../../codx-bp.service';
 
 @Component({
   selector: 'lib-view-list-bp-tasks',
@@ -22,13 +36,18 @@ export class ViewListBpTasksComponent implements OnInit {
   lstFile = [];
   countData = 0;
   user: any;
-  constructor(private shareService: CodxShareService, private api: ApiHttpService, private auth: AuthService, private callFc: CallFuncService) {}
+  constructor(
+    private shareService: CodxShareService,
+    private api: ApiHttpService,
+    private auth: AuthService,
+    private callFc: CallFuncService,
+    private bpSv: CodxBpService
+  ) {}
   ngOnInit(): void {
     this.user = this.auth.userValue;
     this.getInfo();
     this.getProcessAndInstances();
     this.getTimeDurationdAndInterval();
-    this.getDataFileAsync(this.dataSelected.recID);
   }
   getInfo() {
     let paras = [this.dataSelected.createdBy];
@@ -48,22 +67,46 @@ export class ViewListBpTasksComponent implements OnInit {
     } else this.info = info;
   }
 
-  getProcessAndInstances(){
-    this.api.execSv<any>('BP','ERM.Business.BP','ProcessTasksBusiness','GetProcessAndInstanceAsync', this.dataSelected.instanceID).subscribe((res) => {
-      if(res){
-        this.instance = res[0];
-        this.process = res[1];
-      }
-    })
+  getProcessAndInstances() {
+    this.api
+      .execSv<any>(
+        'BP',
+        'ERM.Business.BP',
+        'ProcessTasksBusiness',
+        'GetProcessAndInstanceAsync',
+        this.dataSelected.instanceID
+      )
+      .subscribe((res) => {
+        if (res && res?.length > 0) {
+          this.instance = res[0];
+          console.log('intance: ', this.instance);
+          if (this.instance.documentControl?.length > 0) {
+            let documentControl = this.instance.documentControl;
+            let lstIDs = [];
+            documentControl.forEach((element) => {
+              if (element.files?.length > 0) {
+                let files = element.files.filter(
+                  (x) => x.type == '1' || x.type == '3'
+                );
+                this.countData += files?.length ?? 0;
+              }
+            });
+          }
+          this.process = res[1];
+        }
+      });
   }
 
-  getTimeDurationdAndInterval(){
+  getTimeDurationdAndInterval() {
     let sumDuration = 0;
-    if(this.dataSelected.duration == null){
+    if (this.dataSelected.duration == null) {
       this.dataSelected.duration = 0;
     }
 
-    if(this.dataSelected.interval == null || this.dataSelected.interval?.trim() == ''){
+    if (
+      this.dataSelected.interval == null ||
+      this.dataSelected.interval?.trim() == ''
+    ) {
       this.dataSelected.interval = '0';
     }
     this.sumDuration = sumDuration;
@@ -71,57 +114,75 @@ export class ViewListBpTasksComponent implements OnInit {
 
   openPopup() {
     if (this.tmpListItem) {
-      let option = new DialogModel();
-      option.zIndex = 100;
-      let popup = this.callFc.openForm(
-        this.tmpListItem,
-        '',
-        400,
-        500,
-        '',
-        null,
-        '',
-        option
-      );
-      popup.closed.subscribe((res: any) => {
-        if (res) {
-          // this.getDataFileAsync(this.dataSelected.recID);
+      // this.api.execSv<any>('BP','ERM.Business.BP','ProcessInstancesBusiness','GetItemsByInstanceIDAsync', this.dataSelected.instanceID).subscribe((res) => {
+      //   if(res){
+      if (this.instance.documentControl?.length > 0) {
+        let documentControl = this.instance.documentControl;
+        let lstIDs = [];
+        documentControl.forEach((element) => {
+          if (element.files?.length > 0) {
+            let files = element.files.filter(
+              (x) => x.type == '1' || x.type == '3'
+            );
+            if (files?.length > 0) {
+              let ids = files.map((x) => x.fileID);
+              lstIDs = [...lstIDs, ...ids];
+            }
+          }
+        });
+        if (lstIDs?.length > 0) {
+          this.bpSv.getFilesByListIDs(lstIDs).subscribe((files) => {
+            if (files && files?.length > 0) {
+              this.lstFile = files;
+              let option = new DialogModel();
+              option.zIndex = 100;
+              let popup = this.callFc.openForm(
+                this.tmpListItem,
+                '',
+                400,
+                500,
+                '',
+                null,
+                '',
+                option
+              );
+              popup.closed.subscribe((res: any) => {
+                if (res) {
+                  // this.getDataFileAsync(this.dataSelected.recID);
+                }
+              });
+            }
+          });
         }
-      });
+      }
     }
   }
 
-  getDataFileAsync(pObjectID: string) {
-    if (pObjectID) {
+  getDataFileAsync(pObjectIDs: any) {
+    if (pObjectIDs?.length > 0) {
       this.api
         .execSv(
           'DM',
           'ERM.Business.DM',
           'FileBussiness',
-          'GetFilesByIbjectIDAsync',
-          pObjectID
+          'GetFilesByListIDsAsync',
+          pObjectIDs
         )
         .subscribe((res: any) => {
           if (res.length > 0) {
-            let files = res;
-            files.map((e: any) => {
-              if (e && e.referType == 'video') {
-                e[
-                  'srcVideo'
-                ] = `${environment.apiUrl}/api/dm/filevideo/${e.recID}?access_token=${this.user.token}`;
-              }
-            });
             this.lstFile = res;
-            this.countData = res.length;
           }
         });
     }
   }
 
-  dbClick(data){
-    this.dbClickEvent.emit({data: data, process: this.process, dataIns: this.instance});
+  dbClick(data) {
+    this.dbClickEvent.emit({
+      data: data,
+      process: this.process,
+      dataIns: this.instance,
+    });
   }
-
 
   popoverDetail: any;
   popupOld: any;
