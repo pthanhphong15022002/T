@@ -174,24 +174,26 @@ export class AssetsComponent
 
   edit(data) {
     if (data) this.view.dataService.dataSelected = data;
-    this.view.dataService.edit(data).subscribe((res) => {
-      let option = new SidebarModel();
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        let option = new SidebarModel();
 
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.Width = '550px';
-      let obj = {
-        action: 'edit',
-        headerText: this.titleAction + ' ' + this.description,
-        gridViewSetup: this.grvSetup,
-      };
-      let dialog = this.callfc.openSide(
-        PopupAddAssetsComponent,
-        obj,
-        option,
-        this.view.funcID
-      );
-    });
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '550px';
+        let obj = {
+          action: 'edit',
+          headerText: this.titleAction + ' ' + this.description,
+          gridViewSetup: this.grvSetup,
+        };
+        let dialog = this.callfc.openSide(
+          PopupAddAssetsComponent,
+          obj,
+          option,
+          this.view.funcID
+        );
+      });
   }
   viewDetail(data) {
     let option = new SidebarModel();
@@ -215,26 +217,34 @@ export class AssetsComponent
   delete(data: any) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
-      .delete([this.view.dataService.dataSelected], true, (opt) =>
-        this.beforeDel(opt)
-      )
+      .delete([this.view.dataService.dataSelected])
       .subscribe((res) => {
-        if (res) {
-          this.view.dataService.onAction.next({
-            type: 'delete',
-            data: data,
-          });
-        }
+        this.view.dataService.onAction.next({
+          type: 'delete',
+          data: data,
+        });
       });
-    this.detectorRef.detectChanges();
+    // this.view.dataService
+    //   .delete([this.view.dataService.dataSelected], true, (opt) =>
+    //     this.beforeDel(opt)
+    //   )
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.view.dataService.onAction.next({
+    //         type: 'delete',
+    //         data: data,
+    //       });
+    //     }
+    //   });
+    // this.detectorRef.detectChanges();
   }
 
   beforeDel(opt: RequestOption) {
-    // opt.service = 'AM';
-    // opt.assemblyName = 'ERM.Business.AM';
-    // opt.className = 'AssetsBusiness';
-    // opt.methodName = 'DeleteAsync';
-    // opt.data = [this.itemSelected];
+    opt.service = 'AM';
+    opt.assemblyName = 'ERM.Business.Core';
+    opt.className = 'AssetsBusiness';
+    opt.methodName = 'DeleteAsync';
+    opt.data = [this.itemSelected];
     return true;
   }
 }
