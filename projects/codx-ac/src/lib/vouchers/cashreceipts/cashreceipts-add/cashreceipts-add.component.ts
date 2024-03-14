@@ -513,6 +513,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         }
         break;
     }
+    this.setValidateForm();
   }
 
   selecting(event){
@@ -1201,7 +1202,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   setValidateForm(){
     let rObjectID = false;
     let lstRequire :any = [];
-    if (this.formCashReceipt.data.subType != '11' && this.formCashReceipt) {
+    if (this.elementTabDetail?.selectingID == '1') {
       rObjectID = true;
     }
     lstRequire.push({field : 'ObjectID',isDisable : false,require:rObjectID});
