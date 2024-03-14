@@ -102,6 +102,8 @@ export class PopupAddInstanceComponent implements OnInit {
   autoNameTabFields: string;
   arrCaculateField = []; //cac field co tinh toán
   isLoadedCF = false; // da lay danh sach CF
+  isShowMore = false;
+  widthDefault: string;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -135,6 +137,10 @@ export class PopupAddInstanceComponent implements OnInit {
     if (this.action != 'add') {
       this.promiseAll();
     }
+    //lấy độ rộng popup
+    this.widthDefault = this.dialog.dialog.width
+      ? this.dialog.dialog.width.toString()
+      : '550';
 
     this.user = this.authStore.get();
     if (this.action === 'edit') {
@@ -718,4 +724,12 @@ export class PopupAddInstanceComponent implements OnInit {
     }
   }
   //------------------END_CACULATE--------------------//
+
+  //openpopup
+  rezisePopup(width = '1000') {
+    this.isShowMore = !this.isShowMore;
+    width = Util.getViewPort().width.toString();
+    this.dialog.setWidth(this.isShowMore ? width : this.widthDefault);
+    this.changeDetectorRef.detectChanges();
+  }
 }
