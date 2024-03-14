@@ -395,7 +395,7 @@
         </div>
       </ng-template>
       <ng-template #body let-data>
-        <div class="cm-scroll" [ngClass]="isShow ? 'cm-full' : ''">
+        <div class="cm-scroll" [ngClass]="isShow ? 'cm-full' : ''" *ngIf="this.idTabShow">
           <div
             class="btn btn-white btn-icon tab-action"
             (click)="clickShowTab(!isShow)"
