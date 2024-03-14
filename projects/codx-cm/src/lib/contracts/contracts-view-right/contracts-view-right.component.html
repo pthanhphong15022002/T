@@ -1,15 +1,15 @@
 <codx-detail-tmp
   [header]="headerTemp"
+  [body]="bodyTemp"
+  [footer]="footerTemp"
   [formModel]="formModel"
-  [body]="mainRightTemp"
-  [footer]="footerRightTemp"
   (clickMF)="clickMF($event, contract)"
   (changeDataMF)="changeDataMF($event, contract)"
   [hideMF]="true"
   [dataItem]="contract"
   class="overflow-hidden"
 ></codx-detail-tmp>
-
+<!-- -------------------------------------------------- Template chính ------------------------------------------------ -->
 <ng-template #headerTemp>
   <div *ngIf="isView" class="d-flex justify-content-end">
     <button
@@ -24,14 +24,15 @@
     <div class="d-flex align-items-center text-primary mb-2">
       <i class="icon-add_shopping_cart icon-18 me-2 text-primary"></i>
       <span
-        [ngbTooltip]="businessLine" container="body"
+        [ngbTooltip]="businessLine"
+        container="body"
         class="fw-bold fs-6"
         #BusinessLineID
         [innerHTML]="
           contract?.businessLineID
             | formatvalue
               : formModel
-              : 'Owner'
+              : 'BusinessLineID'
               : BusinessLineID
               : 'CMContracts'
               : 'grvCMContracts'
@@ -46,7 +47,7 @@
           [setRequire]="false"
           default="Dòng sản phẩm"
         ></codx-label>
-      </ng-template >
+      </ng-template>
     </div>
 
     <div class="row">
@@ -89,7 +90,7 @@
                   [setRequire]="false"
                   default="Khách hàng"
                 ></codx-label>
-              </ng-template >
+              </ng-template>
             </div>
             <div class="text-gray-700 fs-5-sm">
               {{ contract?.contractName }}
@@ -113,8 +114,8 @@
                   : 'grvCMContracts'
                 | async
             "
-             [ngbTooltip]="contractAmt"
-             container="body"
+            [ngbTooltip]="contractAmt"
+            container="body"
           ></span>
           <span
             class="fs-5 fw-bold ms-1"
@@ -138,7 +139,7 @@
               [setRequire]="false"
               default="Giá trị hợp đồng"
             ></codx-label>
-          </ng-template >
+          </ng-template>
         </div>
         <div class="d-flex justify-content-end align-items-center mb-2">
           <span class="icon-av_timer icon-16 text-gray-600 me-1"></span>
@@ -166,7 +167,7 @@
               [setRequire]="false"
               default="Ngày lập hợp đồng"
             ></codx-label>
-          </ng-template >
+          </ng-template>
         </div>
       </div>
     </div>
@@ -215,21 +216,27 @@
     <div class="row">
       <div class="col-6"></div>
       <div class="col-6">
-        <div *ngIf="contract?.approveStatus && contract?.approveStatus != '1'" class="d-flex justify-content-end">
-          <span  [innerHTML]="contract?.approvedDate
-            | formatvalue : formModel : 'approvedDate'
-            | async"
+        <div
+          *ngIf="contract?.approveStatus && contract?.approveStatus != '1'"
+          class="d-flex justify-content-end"
+        >
+          <span
+            [innerHTML]="
+              contract?.approvedDate
+                | formatvalue : formModel : 'approvedDate'
+                | async
+            "
             [ngbTooltip]="approvedDate"
             placement="top"
           >
-          <ng-template #approvedDate>
-            <codx-label
-              fiedName="approvedDate"
-              [formModel]="formModel"
-              [setRequire]="false"
-              default="Ngày duyệt"
-            ></codx-label>
-          </ng-template>
+            <ng-template #approvedDate>
+              <codx-label
+                fiedName="approvedDate"
+                [formModel]="formModel"
+                [setRequire]="false"
+                default="Ngày duyệt"
+              ></codx-label>
+            </ng-template>
           </span>
           <codx-vll
             [name]="'DP043'"
@@ -325,7 +332,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="col-6 d-flex flex-column align-items-end">
         <div>
           <codx-label
@@ -364,69 +371,120 @@
   </div>
 </ng-template>
 
-<ng-template #mainRightTemp>
-  <!-- [ngClass]="isShowFull ? 'cm-full' : ''" -->
+<ng-template #bodyTemp>
   <div
-    class="d-flex flex-column cm-scroll"
+    class="cm-scroll"
     [ngClass]="isShowFull ? 'cm-full' : ''"
+    *ngIf="this.idTabShow"
   >
-    <div>
-      <codx-taskbar
-        [change]="contract"
-        [listTab]="listTypeContract"
-        (tab)="changeTab($event)"
-        (isShowFull)="clickShowTab($event)"
-        size="18"
-        class="mt-5"
-      ></codx-taskbar>
-      <hr class="mt-0" />
+    <div
+      class="btn btn-white btn-icon tab-action"
+      (click)="clickShowTab(!isShowFull)"
+    >
+      <span class="icon-unfold_more icon-20"></span>
     </div>
-    <div class="main-right w-100">
-      <container-element [ngSwitch]="tabClicked">
-        <some-element
-          *ngSwitchCase="'1'"
-          [ngTemplateOutlet]="generalTemplate"
-        ></some-element>
-        <some-element
-          *ngSwitchCase="'quotations'"
-          [ngTemplateOutlet]="quotationsTemplate"
-        ></some-element>
-        <some-element
-          *ngSwitchCase="'pay'"
-          [ngTemplateOutlet]="payTemplate"
-        ></some-element>
-        <some-element
-          *ngSwitchCase="'ship'"
-          [ngTemplateOutlet]="shipTemplate"
-        ></some-element>
-        <some-element
-          *ngSwitchCase="'extend'"
-          [ngTemplateOutlet]="extendTemplate"
-        ></some-element>
-        <some-element
-          *ngSwitchCase="'5'"
-          [ngTemplateOutlet]="task"
-        ></some-element>
-        <some-element
-          *ngSwitchCase="'8'"
-          [ngTemplateOutlet]="memo"
-        ></some-element>
-        <some-element
-          *ngSwitchCase="'9'"
-          [ngTemplateOutlet]="disposal"
-        ></some-element>
-        <some-element
-          *ngSwitchCase="'8'"
-          [ngTemplateOutlet]="appendix"
-        ></some-element>
-        <some-element *ngSwitchDefault></some-element>
-      </container-element>
+    <div class="instance-select">
+      <ejs-tab>
+        <e-tabitems>
+
+          <e-tabitem *ngIf="idTabShow.includes('1')">
+            <ng-template #headerText>
+              <ng-container
+                [ngTemplateOutlet]="tabTemp"
+                [ngTemplateOutletContext]="{value: {icon: 'icon-info', default: 'Thông tin chung', name: 'lblInformation'}}"
+              ></ng-container>
+            </ng-template>
+            <ng-template #content>
+              <ng-container [ngTemplateOutlet]="generalTemplate">
+              </ng-container>
+            </ng-template>
+          </e-tabitem>
+
+          <e-tabitem *ngIf="idTabShow.includes('5')">
+            <ng-template #headerText>
+              <ng-container
+                [ngTemplateOutlet]="tabTemp"
+                [ngTemplateOutletContext]="{value: {icon: 'icon-add_task',default: 'Công việc',name: 'lblTask'}}"
+              ></ng-container>
+            </ng-template>
+            <ng-template #content>
+              <ng-container [ngTemplateOutlet]="task"> </ng-container>
+            </ng-template>
+          </e-tabitem>
+
+          <e-tabitem *ngIf="idTabShow.includes('7')">
+            <ng-template #headerText>
+              <ng-container
+                [ngTemplateOutlet]="tabTemp"
+                [ngTemplateOutletContext]="{value: {icon: 'icon-sticky_note_2',default: 'Ghi chú',name: 'lblMemo'}}"
+              ></ng-container>
+            </ng-template>
+            <ng-template #content>
+              <ng-container [ngTemplateOutlet]="memo"> </ng-container>
+            </ng-template>
+          </e-tabitem>
+
+          <e-tabitem *ngIf="idTabShow.includes('8')">
+            <ng-template #headerText>
+              <ng-container
+                [ngTemplateOutlet]="tabTemp"
+                [ngTemplateOutletContext]="{value: {icon: 'icon-appstore',default: 'Phụ lục',name: 'lblAppendix'}}"
+              ></ng-container>
+            </ng-template>
+            <ng-template #content>
+              <ng-container [ngTemplateOutlet]="appendix"> </ng-container>
+            </ng-template>
+          </e-tabitem>
+
+          <e-tabitem *ngIf="idTabShow.includes('9')">
+            <ng-template #headerText>
+              <ng-container
+              [ngTemplateOutlet]="tabTemp"
+              [ngTemplateOutletContext]="{value: {icon: 'icon-payments',default: 'Thanh lý',name: 'lblDisposal'}}"
+            ></ng-container>
+            </ng-template>
+            <ng-template #content>
+              <ng-container [ngTemplateOutlet]="disposal"> </ng-container>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
     </div>
   </div>
 </ng-template>
-<!-- main template -->
+
+<ng-template #footerTemp>
+  <codx-tabs
+    [entityName]="formModel?.entityName"
+    [formModel]="formModel"
+    [TabControl]="tabControl"
+    [objectID]="contract?.recID"
+    [funcID]="formModel?.funcID"
+    [transID]="contract?.recID"
+    [dataTree]="treeTask"
+    [approveStatus]="contract?.approveStatus"
+    [data]="contract"
+    [keyField]="'recID'"
+  ></codx-tabs>
+</ng-template>
+
+<!-- -------------------------------------------------- Template phụ ------------------------------------------------ -->
+
+<ng-template #tabTemp let-data="value">
+  <div class="d-flex align-items-center me-2">
+    <span class="text-hover-primary icon-16 me-1 fw-bold" [ngClass]="data?.icon"></span>
+    <codx-label
+      class="fw-bold text-hover-primary text-dark"
+      [default]="data?.default"
+      [formModel]="formModel"
+      [name]="data?.name"
+    ></codx-label>
+  </div>
+</ng-template>
+
+<!-- Thông tin chung -->
 <ng-template #generalTemplate>
-  <div>
+  <div class="mt-2">
     <codx-label
       class="fs-5-sm fw-bold"
       name="lblGeneral"
@@ -735,504 +793,7 @@
     </div>
   </div>
 </ng-template>
-
-<ng-template #quotationsTemplate>
-  <codx-quotations-lines
-    [listQuotationLines]="listQuotationsLine"
-    [isViewTemp]="true"
-  ></codx-quotations-lines>
-</ng-template>
-
-<ng-template #payTemplate>
-  <div>
-    <div class="fs-6 fw-bold text-primary mb-3">
-      <span>Tiến độ thanh toán</span>
-    </div>
-    <div class="row mb-2">
-      <div class="col-4">
-        <codx-label
-          class="label-colon text-gray-600"
-          fiedName="contractAmt"
-          [formModel]="formModel"
-          [setRequire]="false"
-        ></codx-label>
-        <span
-          class="me-3 text-dark fw-bold"
-          [innerHTML]="
-            contract?.contractAmt
-              | formatvalue : formModel : 'ContractAmt'
-              | async
-          "
-        ></span>
-        <!-- <span>Giá trị hợp đồng: </span> -->
-      </div>
-      <div class="col-4">
-        <codx-label
-          class="label-colon text-gray-600"
-          fiedName="paidAmt"
-          [formModel]="formModel"
-          [setRequire]="false"
-        ></codx-label>
-        <span
-          class="me-3 text-dark fw-bold"
-          [innerHTML]="
-            contract?.paidAmt | formatvalue : formModel : 'PaidAmt' | async
-          "
-        ></span>
-        <!-- <span>Số tiền thanh toán: </span> -->
-      </div>
-      <div class="col-4">
-        <codx-label
-          class="label-colon text-gray-600"
-          fiedName="remainAmt"
-          [formModel]="formModel"
-          [setRequire]="false"
-        ></codx-label>
-        <span
-          class="me-3 text-dark fw-bold"
-          [innerHTML]="
-            contract?.remainAmt | formatvalue : formModel : 'RemainAmt' | async
-          "
-        ></span>
-        <!-- <span>Số tiền còn lại: </span> -->
-      </div>
-    </div>
-    <div class="row mb-2">
-      <div class="col-4">
-        <codx-label
-          class="label-colon text-gray-600"
-          fiedName="pmtStatus"
-          [formModel]="formModel"
-          [setRequire]="false"
-        ></codx-label>
-        <span
-          class="me-3 text-dark fw-bold"
-          [innerHTML]="
-            contract?.pmtStatus | formatvalue : formModel : 'PmtStatus' | async
-          "
-        ></span>
-        <!-- Tình trạng thanh toán -->
-      </div>
-      <div class="col-8">
-        <codx-label
-          class="label-colon text-gray-600"
-          fiedName="pmtDeadline"
-          [formModel]="formModel"
-          [setRequire]="false"
-        ></codx-label>
-        <span
-          class="me-3 text-dark fw-bold"
-          [innerHTML]="
-            contract?.pmtDeadline
-              | formatvalue : formModel : 'PmtDeadline'
-              | async
-          "
-        ></span>
-        <!--Hạn thanh toán-->
-      </div>
-    </div>
-    <div class="row mb-2">
-      <div class="col-4">
-        <codx-label
-          class="label-colon text-gray-600"
-          fiedName="pmtTermID"
-          [formModel]="formModel"
-          [setRequire]="false"
-        ></codx-label>
-        <span
-          class="me-3 text-dark fw-bold"
-          [innerHTML]="
-            contract?.pmtTermID | formatvalue : formModel : 'PmtTermID' | async
-          "
-        ></span>
-        <!-- <span>Điều khoản thanh toán: </span> -->
-      </div>
-      <div class="col-8">
-        <codx-label
-          class="label-colon text-gray-600"
-          fiedName="pmtMethodID"
-          [formModel]="formModel"
-          [setRequire]="false"
-        ></codx-label>
-        <span
-          class="me-3 text-dark fw-bold"
-          [innerHTML]="
-            contract?.pmtMethodID
-              | formatvalue : formModel : 'PmtMethodID'
-              | async
-          "
-        ></span>
-        <!-- <span>Phương thức thanh toán: </span> -->
-      </div>
-    </div>
-  </div>
-
-  <div>
-    <div class="fs-6 fw-bold text-primary mb-3 mt-5">
-      <span>Lịch thanh toán</span>
-    </div>
-    <view-payment
-      class="view-pay-contract"
-      [isSave]="true"
-      [contracts]="contract"
-      [listPayment]="listPayment"
-      [listPaymentHistory]="listPaymentHistory"
-    ></view-payment>
-  </div>
-</ng-template>
-
-<ng-template #shipTemplate>
-  <div>
-    <div class="fs-6 fw-bold text-primary mb-3">
-      <span>Tiến độ giao hàng</span>
-    </div>
-    <div class="row mb-2">
-      <div class="col-4">
-        <codx-label
-          class="label-colon text-gray-600"
-          fiedName="delTermID"
-          [formModel]="formModel"
-          [setRequire]="false"
-        ></codx-label>
-        <span
-          class="me-3 text-dark fw-bold"
-          [innerHTML]="
-            contract?.delTermID | formatvalue : formModel : 'DelTermID' | async
-          "
-        ></span>
-        <!-- <span>Điều khoản giao hàng: </span> -->
-      </div>
-      <div class="col-4">
-        <codx-label
-          class="label-colon text-gray-600"
-          fiedName="delModeID"
-          [formModel]="formModel"
-          [setRequire]="false"
-        ></codx-label>
-        <span
-          class="me-3 text-dark fw-bold"
-          [innerHTML]="
-            contract?.delModeID | formatvalue : formModel : 'DelModeID' | async
-          "
-        ></span>
-        <!-- <span>Hình thức giao hàng: </span> -->
-      </div>
-      <div class="col-4">
-        <codx-label
-          class="label-colon text-gray-600"
-          fiedName="delPrice"
-          [formModel]="formModel"
-          [setRequire]="false"
-        ></codx-label>
-        <span
-          class="me-3 text-dark fw-bold"
-          [innerHTML]="
-            contract?.delPrice | formatvalue : formModel : 'DelPrice' | async
-          "
-        ></span>
-        <!-- <span>Phí vận chuyển: </span> -->
-      </div>
-    </div>
-    <div class="row mb-2">
-      <div class="col-4">
-        <codx-label
-          class="label-colon text-gray-600"
-          fiedName="delDeadline"
-          [formModel]="formModel"
-          [setRequire]="false"
-        ></codx-label>
-        <span
-          class="me-3 text-dark fw-bold"
-          [innerHTML]="
-            contract?.delDeadline
-              | formatvalue : formModel : 'DelDeadline'
-              | async
-          "
-        ></span>
-        <!-- <span>Hạn giao hàng: </span> -->
-      </div>
-      <div class="col-4">
-        <codx-label
-          class="label-colon text-gray-600"
-          fiedName="delStatus"
-          [formModel]="formModel"
-          [setRequire]="false"
-        ></codx-label>
-        <span
-          class="me-3 text-dark fw-bold"
-          [innerHTML]="
-            contract?.delStatus | formatvalue : formModel : 'DelStatus' | async
-          "
-        ></span>
-        <!-- <span>Tình trạng giao hàng: </span> -->
-      </div>
-      <div class="col-4">
-        <codx-label
-          class="label-colon text-gray-600"
-          fiedName="delActualDate"
-          [formModel]="formModel"
-          [setRequire]="false"
-        ></codx-label>
-        <span
-          class="me-3 text-dark fw-bold"
-          [innerHTML]="
-            contract?.delActualDate
-              | formatvalue : formModel : 'DelActualDate'
-              | async
-          "
-        ></span>
-        <!-- <span>Ngày giao hàng thành công: </span> -->
-      </div>
-    </div>
-    <div class="row mb-2">
-      <div class="col-4">
-        <codx-label
-          class="label-colon text-gray-600"
-          fiedName="delContactID"
-          [formModel]="formModel"
-          [setRequire]="false"
-        ></codx-label>
-        <span
-          class="me-3 text-dark fw-bold"
-          [innerHTML]="
-            contract?.delContactID
-              | formatvalue : formModel : 'DelContactID'
-              | async
-          "
-        ></span>
-        <!-- Liên hệ giao hàng-->
-      </div>
-      <div class="col-8">
-        <codx-label
-          class="label-colon text-gray-600"
-          fiedName="delPhone"
-          [formModel]="formModel"
-          [setRequire]="false"
-        ></codx-label>
-        <span
-          class="me-3 text-dark fw-bold"
-          [innerHTML]="
-            contract?.delPhone | formatvalue : formModel : 'DelPhone' | async
-          "
-        ></span>
-        <!-- <span>Số diện thoại: </span> -->
-      </div>
-    </div>
-    <div class="row mb-2">
-      <div class="col-12">
-        <codx-label
-          class="label-colon text-gray-600"
-          fiedName="delAddress"
-          [formModel]="formModel"
-          [setRequire]="false"
-        ></codx-label>
-        <span
-          class="me-3 text-dark fw-bold"
-          [innerHTML]="
-            contract?.delAddress
-              | formatvalue : formModel : 'DelAddress'
-              | async
-          "
-        ></span>
-        <!-- <span>Địa chỉ giao hàng: </span> -->
-      </div>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #extendTemplate> </ng-template>
-<!--end main template -->
-
-<ng-template #general let-data="data">
-  <div class="row mb-2">
-    <div class="col-6 d-flex align-items-center">
-      <div class="w-150px min-w-150px">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="companyName"
-          [formModel]="formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-      </div>
-      <span
-        class="text-dark fw-bold codx-textcontent"
-        *ngIf="data?.type == 'A'"
-        >{{ data?.value?.legalName }}</span
-      >
-      <span
-        *ngIf="data?.type == 'B'"
-        class="text-dark fw-bold codx-textcontent"
-        [innerHTML]="
-          data?.value?.customerID
-            | formatvalue : formModel : 'CustomerID'
-            | async
-        "
-      ></span>
-    </div>
-    <div class="col-6 d-flex align-items-center">
-      <div class="w-150px min-w-150px">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="taxCode"
-          [formModel]="formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-      </div>
-      <span
-        class="text-dark fw-bold codx-textcontent"
-        [innerHTML]="
-          data?.value?.taxCode | formatvalue : formModel : 'TaxCode' | async
-        "
-      ></span>
-    </div>
-  </div>
-  <div class="row mb-2">
-    <div class="col-12 d-flex align-items-center">
-      <div class="w-150px min-w-150px">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="address"
-          [formModel]="formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-      </div>
-      <span
-        class="text-dark fw-bold codx-textcontent"
-        [innerHTML]="
-          data?.type == 'A'
-            ? data?.value?.street
-            : (data?.value?.address
-              | formatvalue : formModel : 'Address'
-              | async)
-        "
-      ></span>
-    </div>
-  </div>
-  <div class="row mb-2">
-    <div class="col-12 d-flex align-items-center">
-      <div class="w-150px min-w-150px">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="phone"
-          [formModel]="formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-      </div>
-      <span
-        class="text-dark fw-bold codx-textcontent"
-        [innerHTML]="
-          data?.value?.phone | formatvalue : formModel : 'Phone' | async
-        "
-      ></span>
-    </div>
-  </div>
-  <div class="row mb-2">
-    <div class="col-6 d-flex align-items-center">
-      <div class="w-150px min-w-150px">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="representative"
-          [formModel]="formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-      </div>
-      <span
-        class="text-dark fw-bold codx-textcontent"
-        [innerHTML]="
-          data?.type == 'A'
-            ? data?.value?.contactName
-            : (data?.value?.representative
-              | formatvalue : formModel : 'Representative'
-              | async)
-        "
-      ></span>
-    </div>
-    <div class="col-6 d-flex align-items-center">
-      <div class="w-150px min-w-150px">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="jobTitle"
-          [formModel]="formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-      </div>
-      <span
-        class="text-dark fw-bold codx-textcontent"
-        [innerHTML]="
-          data?.type == 'A'
-            ? data?.value?.contactName
-            : (data?.value?.representative
-              | formatvalue : formModel : 'JobTitle'
-              | async)
-        "
-      ></span>
-    </div>
-  </div>
-  <div class="row mb-2">
-    <div class="col-6 d-flex align-items-center">
-      <div class="w-150px min-w-150px">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="bankAccount"
-          [formModel]="formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-      </div>
-      <span
-        class="text-dark fw-bold codx-textcontent"
-        [innerHTML]="
-          data?.value?.bankAccount
-            | formatvalue : formModel : 'BankAccount'
-            | async
-        "
-      ></span>
-    </div>
-    <div class="col-6 d-flex align-items-center">
-      <div class="w-150px min-w-150px">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="bankID"
-          [formModel]="formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-      </div>
-      <span
-        class="text-dark fw-bold codx-textcontent"
-        [innerHTML]="
-          data?.value?.bankID | formatvalue : formModel : 'BankID' | async
-        "
-      ></span>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #termsAndRelatedTemplate let-data="data">
-  <div [innerHTML]="contract?.note"></div>
-</ng-template>
-
-<ng-template #footerRightTemp>
-  <codx-tabs
-    [entityName]="formModel?.entityName"
-    [formModel]="formModel"
-    [TabControl]="tabControl"
-    [objectID]="contract?.recID"
-    [funcID]="formModel?.funcID"
-    [transID]="contract?.recID"
-    [dataTree]="treeTask"
-    [approveStatus]="contract?.approveStatus"
-    [data]="contract" 
-    [keyField]="'recID'"
-  ></codx-tabs>
-</ng-template>
-<!-- nvthuan công việc -->
+<!-- công việc -->
 <ng-template #task let-data="value">
   <step-task
     [entityName]="'CM_Contracts'"
@@ -1248,26 +809,9 @@
   ></step-task>
   <!-- [taskAdd]="dataTaskAdd" -->
 </ng-template>
-
-<!-- báo giá -->
-<ng-template #quotationsTab>
-  <div class *ngIf="contract.quotationID; else noData">
-    <codx-quotations-tab-view
-      [funcID]="'CM0202'"
-      [showButton]="false"
-      [typeModel]="'contracts'"
-      [recID]="contract?.quotationID"
-      [predicates]="'RecID==@0'"
-      [dataValues]="contract?.quotationID"
-    ></codx-quotations-tab-view>
-  </div>
-  <ng-template #noData>
-    <codx-no-data> </codx-no-data>
-  </ng-template>
-</ng-template>
-
+<!-- Ghi chú -->
 <ng-template #memo let-data="value">
-  <div>
+  <div class="mt-2">
     <codx-tree-comment
       [objectID]="contract.recID"
       [objectType]="formModel?.entityName"
@@ -1279,363 +823,371 @@
     </codx-tree-comment>
   </div>
 </ng-template>
-
 <!-- thanh lý -->
 <ng-template #disposal let-data="value">
-  <div *ngIf="contract?.disposalID">
-    <div class="row mb-2">
-      <div class="col-6 d-flex align-items-center">
-        <div class="w-150px min-w-150px">
-          <codx-label
-            class="label-colon text-gray-600 codx-textlabel"
-            fiedName="disposalID"
-            [formModel]="formModel"
-            [setRequire]="false"
-          >
-          </codx-label>
+  <div class="appendix">
+    <div *ngIf="contract?.disposalID" class="mt-2">
+      <div class="row mb-2">
+        <div class="col-6 d-flex align-items-center">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="disposalID"
+              [formModel]="formModel"
+              [setRequire]="false"
+            >
+            </codx-label>
+          </div>
+          <span
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              contract?.disposalID
+                | formatvalue : formModel : 'DisposalID'
+                | async
+            "
+          ></span>
         </div>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.disposalID
-              | formatvalue : formModel : 'DisposalID'
-              | async
-          "
-        ></span>
-      </div>
-      <div class="col-6 d-flex align-items-center">
-        <div class="w-150px min-w-150px">
-          <codx-label
-            class="label-colon text-gray-600 codx-textlabel"
-            fiedName="disposalOn"
-            [formModel]="formModel"
-            [setRequire]="false"
-          >
-          </codx-label>
+        <div class="col-6 d-flex align-items-center">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="disposalOn"
+              [formModel]="formModel"
+              [setRequire]="false"
+            >
+            </codx-label>
+          </div>
+          <span
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              contract?.disposalOn
+                | formatvalue : formModel : 'DisposalOn'
+                | async
+            "
+          ></span>
         </div>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.disposalOn
-              | formatvalue : formModel : 'DisposalOn'
-              | async
-          "
-        ></span>
       </div>
-    </div>
 
-    <div class="row mb-2">
-      <div class="col-6 d-flex align-items-center">
-        <div class="w-150px min-w-150px">
-          <codx-label
-            class="label-colon text-gray-600 codx-textlabel"
-            fiedName="effectiveTo"
-            [formModel]="formModel"
-            [setRequire]="false"
-          >
-          </codx-label>
+      <div class="row mb-2">
+        <div class="col-6 d-flex align-items-center">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="effectiveTo"
+              [formModel]="formModel"
+              [setRequire]="false"
+            >
+            </codx-label>
+          </div>
+          <span
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              contract?.effectiveTo
+                | formatvalue : formModel : 'EffectiveTo'
+                | async
+            "
+          ></span>
         </div>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.effectiveTo
-              | formatvalue : formModel : 'EffectiveTo'
-              | async
-          "
-        ></span>
-      </div>
-      <div class="col-6 d-flex align-items-center">
-        <div class="w-150px min-w-150px">
-          <codx-label
-            class="label-colon text-gray-600 codx-textlabel"
-            fiedName="debtClosingOn"
-            [formModel]="formModel"
-            [setRequire]="false"
-          >
-          </codx-label>
+        <div class="col-6 d-flex align-items-center">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="debtClosingOn"
+              [formModel]="formModel"
+              [setRequire]="false"
+            >
+            </codx-label>
+          </div>
+          <span
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              contract?.debtClosingOn
+                | formatvalue : formModel : 'DebtClosingOn'
+                | async
+            "
+          ></span>
         </div>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.debtClosingOn
-              | formatvalue : formModel : 'DebtClosingOn'
-              | async
-          "
-        ></span>
       </div>
-    </div>
 
-    <div class="row mb-2">
-      <div class="col-6 d-flex align-items-center">
-        <div class="w-150px min-w-150px">
-          <codx-label
-            class="label-colon text-gray-600 codx-textlabel"
-            fiedName="disposalType"
-            [formModel]="formModel"
-            [setRequire]="false"
-          >
-          </codx-label>
+      <div class="row mb-2">
+        <div class="col-6 d-flex align-items-center">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="disposalType"
+              [formModel]="formModel"
+              [setRequire]="false"
+            >
+            </codx-label>
+          </div>
+          <span
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              contract?.disposalType
+                | formatvalue : formModel : 'DisposalType'
+                | async
+            "
+          ></span>
         </div>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.disposalType
-              | formatvalue : formModel : 'DisposalType'
-              | async
-          "
-        ></span>
-      </div>
-      <div class="col-6 d-flex align-items-center">
-        <div class="w-150px min-w-150px">
-          <codx-label
-            class="label-colon text-gray-600 codx-textlabel"
-            fiedName="disposalReason"
-            [formModel]="formModel"
-            [setRequire]="false"
-          >
-          </codx-label>
+        <div class="col-6 d-flex align-items-center">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="disposalReason"
+              [formModel]="formModel"
+              [setRequire]="false"
+            >
+            </codx-label>
+          </div>
+          <span
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              contract?.disposalReason
+                | formatvalue : formModel : 'DisposalReason'
+                | async
+            "
+          ></span>
         </div>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.disposalReason
-              | formatvalue : formModel : 'DisposalReason'
-              | async
-          "
-        ></span>
       </div>
-    </div>
 
-    <div class="row mb-2">
-      <div class="d-flex col-6">
-        <div class="w-150px min-w-150px">
-          <codx-label
-            class="label-colon text-gray-600 codx-textlabel"
-            fiedName="pmtMethodID"
-            [formModel]="formModel"
-            [setRequire]="false"
-          >
-          </codx-label>
+      <div class="row mb-2">
+        <div class="d-flex col-6">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="pmtMethodID"
+              [formModel]="formModel"
+              [setRequire]="false"
+            >
+            </codx-label>
+          </div>
+          <span
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              contract?.pmtMethodID
+                | formatvalue : formModel : 'PmtMethodID'
+                | async
+            "
+          ></span>
         </div>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.pmtMethodID
-              | formatvalue : formModel : 'PmtMethodID'
-              | async
-          "
-        ></span>
-      </div>
-      <div class="d-flex col-6">
-        <div class="w-150px min-w-150px">
-          <codx-label
-            class="label-colon text-gray-600 codx-textlabel"
-            fiedName="disposalExpired"
-            [formModel]="formModel"
-            [setRequire]="false"
-          >
-          </codx-label>
+        <div class="d-flex col-6">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="disposalExpired"
+              [formModel]="formModel"
+              [setRequire]="false"
+            >
+            </codx-label>
+          </div>
+          <span
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              contract?.disposalExpired
+                | formatvalue : formModel : 'DisposalExpired'
+                | async
+            "
+          ></span>
         </div>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.disposalExpired
-              | formatvalue : formModel : 'DisposalExpired'
-              | async
-          "
-        ></span>
       </div>
-    </div>
 
-    <div class="row mb-2">
-      <div class="d-flex">
-        <div class="w-150px min-w-150px">
-          <codx-label
-            class="label-colon text-gray-600 codx-textlabel"
-            fiedName="disposalCmt"
-            [formModel]="formModel"
-            [setRequire]="false"
-          >
-          </codx-label>
+      <div class="row mb-2">
+        <div class="d-flex">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="disposalCmt"
+              [formModel]="formModel"
+              [setRequire]="false"
+            >
+            </codx-label>
+          </div>
+          <span
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              contract?.disposalCmt
+                | formatvalue : formModel : 'DisposalCmt'
+                | async
+            "
+          ></span>
         </div>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.disposalCmt
-              | formatvalue : formModel : 'DisposalCmt'
-              | async
-          "
-        ></span>
       </div>
-    </div>
 
-    <div class="row mb-2">
-      <div class="d-flex col-6">
-        <div class="w-150px min-w-150px">
-          <codx-label
-            class="label-colon text-gray-600 codx-textlabel"
-            fiedName="disposalNewAddress"
-            [formModel]="formModel"
-            [setRequire]="false"
-            default="Liên hệ/ địa chỉ mới"
-          >
-          </codx-label>
+      <div class="row mb-2">
+        <div class="d-flex col-6">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="disposalNewAddress"
+              [formModel]="formModel"
+              [setRequire]="false"
+              default="Liên hệ/ địa chỉ mới"
+            >
+            </codx-label>
+          </div>
+          <span> {{ contract?.disposalNewAddress }}</span>
         </div>
-        <span> {{contract?.disposalNewAddress}}</span>
-      </div>
-      <div class="d-flex col-6">
-        <div class="w-150px min-w-150px">
-          <codx-label
-            class="label-colon text-gray-600 codx-textlabel"
-            fiedName="disposalNewContac"
-            [formModel]="formModel"
-            [setRequire]="false"
-            default="Tên người liên hệ"
-          >
-          </codx-label>
+        <div class="d-flex col-6">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="disposalNewContac"
+              [formModel]="formModel"
+              [setRequire]="false"
+              default="Tên người liên hệ"
+            >
+            </codx-label>
+          </div>
+          <span> {{ contract?.disposalNewContact }}</span>
         </div>
-        <span> {{contract?.disposalNewContact}}</span>
       </div>
-    </div>
 
-    <div class="row mb-2">
-      <div class="d-flex col-6">
-        <div class="w-150px min-w-150px">
-          <codx-label
-            class="label-colon text-gray-600 codx-textlabel"
-            fiedName="disposalEmail"
-            [formModel]="formModel"
-            [setRequire]="false"
-            default="Email"
-          >
-          </codx-label>
+      <div class="row mb-2">
+        <div class="d-flex col-6">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="disposalEmail"
+              [formModel]="formModel"
+              [setRequire]="false"
+              default="Email"
+            >
+            </codx-label>
+          </div>
+          <span> {{ contract?.disposalEmail }}</span>
         </div>
-        <span> {{contract?.disposalEmail}}</span>
-      </div>
-      <div class="d-flex col-6">
-        <div class="w-150px min-w-150px">
-          <codx-label
-            class="label-colon text-gray-600 codx-textlabel"
-            fiedName="disposalPhone"
-            [formModel]="formModel"
-            [setRequire]="false"
-            default="Điện thoại"
-          >
-          </codx-label>
+        <div class="d-flex col-6">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
+              fiedName="disposalPhone"
+              [formModel]="formModel"
+              [setRequire]="false"
+              default="Điện thoại"
+            >
+            </codx-label>
+          </div>
+          <span> {{ contract?.disposalPhone }}</span>
         </div>
-        <span> {{contract?.disposalPhone}}</span>
       </div>
     </div>
-  </div>
-  <div *ngIf="!contract?.disposalID">
-    <codx-no-data></codx-no-data>
+    <div *ngIf="!contract?.disposalID" class="center">
+      <codx-no-data></codx-no-data>
+    </div>
   </div>
 </ng-template>
 <!-- phụ lục -->
 <ng-template #appendix>
-  <div *ngIf="listContractInParentID?.length > 0">
-    <div
-      *ngFor="let contract of listContractInParentID"
-      class="p-2 link-container"
-      (dblclick)="linkData('contract', contract?.recID)"
-    >
-      <div class="d-flex align-items-center">
-        <span class="me-2 icon-18 icon-sticky_note_2"></span>
-        <span
-          class="fw-bold fs-5-sm"
-          [innerHTML]="
-            contract?.useType | formatvalue : formModel : 'UseType' | async
-          "
-        ></span>
-      </div>
-      <div class="ms-5">
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="d-flex align-items-center">
-            <span [ngbTooltip]="contractNameTmp" class="fs-5-sm">{{
-              contract?.contractName
-            }}</span>
-            <span class="mx-2">-</span>
-            <span [ngbTooltip]="contractIDTmp">{{ contract?.contractID }}</span>
-            <ng-template #contractIDTmp>
-              <codx-label
-                class="text-gray-600"
-                fiedName="contractID"
-                [formModel]="formModel"
-                [setRequire]="false"
-              ></codx-label>
-            </ng-template>
-            <ng-template #contractNameTmp>
-              <codx-label
-                class="text-gray-600"
-                fiedName="contractName"
-                [formModel]="formModel"
-                [setRequire]="false"
-              ></codx-label>
-            </ng-template>
-          </div>
-
-          <div class="d-flex justify-content-end align-items-center mb-2">
-            <span class="icon-monetization_on icon-18 me-1 text-warning"></span>
-            <span
-              class="fs-5-sm"
-              [innerHTML]="
-                contract?.contractAmt
-                  | formatvalue : formModel : 'ContractAmt'
-                  | async
-              "
-            ></span>
-            <span
-              class="fs-5-sm ms-1"
-              [innerHTML]="
-                contract?.currencyID
-                  | formatvalue : formModel : 'CurrencyID'
-                  | async
-              "
-            ></span>
-          </div>
-        </div>
+  <div class="appendix">
+    <div *ngIf="listContractInParentID?.length > 0" class="mt-2">
+      <div
+        *ngFor="let contract of listContractInParentID"
+        class="p-2 link-container"
+        (dblclick)="linkData('contract', contract?.recID)"
+      >
         <div class="d-flex align-items-center">
-          <codx-vll
-            [name]="vllStatus"
-            [field]="'Status'"
-            [value]="contract?.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="me-0 badge badge-primary badge-sm"
-          >
-          </codx-vll>
-          <div class="d-flex align-items-center ms-2">
-            <span class="icon-16 icon-av_timer me-1 text-gray-700"></span>
-            <span
-              class="fs-6-sm"
-              [innerHTML]="
-                contract?.effectiveFrom
-                  | formatvalue : formModel : 'EffectiveFrom'
-                  | async
-              "
-            ></span>
-            <span class="mx-1">-</span>
-            <span
-              class="fs-6-sm"
-              [innerHTML]="
-                contract?.effectiveTo
-                  | formatvalue : formModel : 'EffectiveTo'
-                  | async
-              "
-            ></span>
+          <span class="me-2 icon-18 icon-sticky_note_2"></span>
+          <span
+            class="fw-bold fs-5-sm"
+            [innerHTML]="
+              contract?.useType | formatvalue : formModel : 'UseType' | async
+            "
+          ></span>
+        </div>
+        <div class="ms-5">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+              <span [ngbTooltip]="contractNameTmp" class="fs-5-sm">{{
+                contract?.contractName
+              }}</span>
+              <span class="mx-2">-</span>
+              <span [ngbTooltip]="contractIDTmp">{{
+                contract?.contractID
+              }}</span>
+              <ng-template #contractIDTmp>
+                <codx-label
+                  class="text-gray-600"
+                  fiedName="contractID"
+                  [formModel]="formModel"
+                  [setRequire]="false"
+                ></codx-label>
+              </ng-template>
+              <ng-template #contractNameTmp>
+                <codx-label
+                  class="text-gray-600"
+                  fiedName="contractName"
+                  [formModel]="formModel"
+                  [setRequire]="false"
+                ></codx-label>
+              </ng-template>
+            </div>
+
+            <div class="d-flex justify-content-end align-items-center mb-2">
+              <span
+                class="icon-monetization_on icon-18 me-1 text-warning"
+              ></span>
+              <span
+                class="fs-5-sm"
+                [innerHTML]="
+                  contract?.contractAmt
+                    | formatvalue : formModel : 'ContractAmt'
+                    | async
+                "
+              ></span>
+              <span
+                class="fs-5-sm ms-1"
+                [innerHTML]="
+                  contract?.currencyID
+                    | formatvalue : formModel : 'CurrencyID'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+          <div class="d-flex align-items-center">
+            <codx-vll
+              [name]="vllStatus"
+              [field]="'Status'"
+              [value]="contract?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="me-0 badge badge-primary badge-sm"
+            >
+            </codx-vll>
+            <div class="d-flex align-items-center ms-2">
+              <span class="icon-16 icon-av_timer me-1 text-gray-700"></span>
+              <span
+                class="fs-6-sm"
+                [innerHTML]="
+                  contract?.effectiveFrom
+                    | formatvalue : formModel : 'EffectiveFrom'
+                    | async
+                "
+              ></span>
+              <span class="mx-1">-</span>
+              <span
+                class="fs-6-sm"
+                [innerHTML]="
+                  contract?.effectiveTo
+                    | formatvalue : formModel : 'EffectiveTo'
+                    | async
+                "
+              ></span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div
-    *ngIf="!listContractInParentID || listContractInParentID?.length <= 0"
-    class="center"
-  >
-    <codx-no-data [mould]="2" [isLoading]="isLoadingContract"></codx-no-data>
+    <div
+      *ngIf="!listContractInParentID || listContractInParentID?.length <= 0"
+      class="center"
+    >
+      <codx-no-data [mould]="2" [isLoading]="isLoadingContract"></codx-no-data>
+    </div>
   </div>
 </ng-template>
 
+<!-- Liên kết -->
 <ng-template #contractLinkTem>
   <div>
     <div
@@ -2014,7 +1566,6 @@
     </div>
   </div>
 </ng-template>
-
 <ng-template #notificationTemp let-data>
   <div class="liquidation p-5">
     <div class="header-liquidation w-100">
@@ -2089,236 +1640,3 @@
     <div class="footer-liquidation w-100 d-flex justify-content-end"></div>
   </div>
 </ng-template>
-
-<!-- ----------------------😒------------------------------>
-<!-- <div class="container_detail mt-1">
-  <div class="d-flex justify-content-between">
-    <div class="flex-grow-1">
-      <div class="d-flex align-items-center justify-content-between mb-2">
-        <div class="d-flex">
-          <div class="me-4">
-            <codx-img
-              [objectId]="contract?.customerID"
-              [imgOn]="contract?.modifiedOn"
-              [objectType]="'CM_Customers'"
-              [referType]="'avt'"
-              [width]="40"
-            >
-            </codx-img>
-          </div>
-          <div class="d-flex flex-column">
-            <div class="fs-5-sm text-dark fw-bold">
-              {{ contract?.contractName }}
-            </div>
-            <div
-              class="text-gray-700 codx-textcontent"
-              [innerHTML]="
-                contract?.customerID
-                  | formatvalue : formModel : 'CustomerID'
-                  | async
-              "
-            ></div>
-          </div>
-        </div>
-      </div>
-      <div class="d-flex align-items-center mb-1">
-        <div class="d-flex align-items-center w-50">
-          <codx-label
-            class="label-colon fw-bold text-dark"
-            fiedName="contractID"
-            [formModel]="formModel"
-            [setRequire]="false"
-          ></codx-label>
-          <span
-            class="text-gray-600"
-            [innerHTML]="
-              contract?.contractID
-                | formatvalue : formModel : 'ContractID'
-                | async
-            "
-          ></span>
-        </div>
-        <div class="d-flex align-items-center w-50">
-          <codx-label
-            class="label-colon fw-bold text-dark"
-            fiedName="effectiveFrom"
-            [formModel]="formModel"
-            [setRequire]="false"
-          ></codx-label>
-          <span
-            class="text-gray-600"
-            [innerHTML]="
-              contract?.effectiveFrom
-                | formatvalue : formModel : 'EffectiveFrom'
-                | async
-            "
-          ></span>
-        </div>
-      </div>
-      <div class="d-flex align-items-center mb-1">
-        <div class="d-flex align-items-center w-50">
-          <codx-label
-            class="label-colon fw-bold text-dark"
-            fiedName="contractDate"
-            [formModel]="formModel"
-          ></codx-label>
-          <span
-            class="text-gray-600"
-            [innerHTML]="
-              contract?.contractDate
-                | formatvalue : formModel : 'ContractDate'
-                | async
-            "
-          ></span>
-        </div>
-        <div class="d-flex align-items-center w-50">
-          <codx-label
-            class="label-colon fw-bold text-dark"
-            fiedName="effectiveTo"
-            [formModel]="formModel"
-          ></codx-label>
-          <span
-            class="text-gray-600"
-            [innerHTML]="
-              contract?.effectiveTo
-                | formatvalue : formModel : 'EffectiveTo'
-                | async
-            "
-          ></span>
-        </div>
-      </div>
-      <div class="d-flex align-items-top mb-1">
-        <div class="w-50 d-flex align-items-center">
-          <codx-label
-            class="label-colon fw-bold text-dark"
-            fiedName="dealID"
-            [formModel]="formModel"
-            [setRequire]="false"
-          ></codx-label>
-          <span
-            class="text-primary"
-            [innerHTML]="
-              contract?.dealID | formatvalue : formModel : 'DealID' | async
-            "
-          ></span>
-        </div>
-        <div class="w-50 d-flex align-items-center">
-          <codx-label
-            class="label-colon fw-bold text-dark"
-            fiedName="useType"
-            [formModel]="formModel"
-            [setRequire]="false"
-          >
-          </codx-label>
-          <span
-            class="text-gray-700"
-            [innerHTML]="
-              contract?.useType | formatvalue : formModel : 'UseType' | async
-            "
-          >
-          </span>
-        </div>
-      </div>
-      <div class="d-flex align-items-top mb-1">
-        <div class="w-50 d-flex align-items-center">
-          <codx-label
-            class="label-colon fw-bold text-dark"
-            fiedName="quotationID"
-            [formModel]="formModel"
-            [setRequire]="false"
-          >
-          </codx-label>
-          <span
-            class="text-primary"
-            [innerHTML]="
-              contract?.quotationID
-                | formatvalue : formModel : 'QuotationID'
-                | async
-            "
-          >
-          </span>
-        </div>
-        <div class="w-50 d-flex align-items-center">
-          <codx-label
-            class="label-colon fw-bold text-dark"
-            fiedName="contractType"
-            [formModel]="formModel"
-            [setRequire]="false"
-          >
-          </codx-label>
-          <span
-            class="text-gray-700"
-            [innerHTML]="
-              contract?.contractType
-                | formatvalue : formModel : 'ContractType'
-                | async
-            "
-          ></span>
-        </div>
-      </div>
-    </div>
-    <div class="ms-5">
-      <div class="d-flex justify-content-end align-items-center mb-2">
-        <span class="icon-monetization_on icon-18 me-1 text-warning"></span>
-        <span
-          class="fs-5 fw-bold"
-          [innerHTML]="
-            contract?.contractAmt
-              | formatvalue : formModel : 'ContractAmt'
-              | async
-          "
-        ></span>
-      </div>
-      <div class="d-flex justify-content-end align-items-center mb-2">
-        <codx-vll
-          [name]="vllStatus"
-          [field]="'Status'"
-          [value]="contract?.status"
-          [showText]="true"
-          [showBgColor]="true"
-          class="me-0 badge badge-primary badge-sm"
-        >
-        </codx-vll>
-      </div>
-      <div class="d-flex justify-content-end align-items-center mb-2">
-        <span class="icon-av_timer icon-16 text-gray-600 me-1"></span>
-        <span
-          class="text-gray-600"
-          [innerHTML]="
-            contract?.createdOn
-              | formatvalue : formModel : 'CreatedOn'
-              | async
-          "
-        ></span>
-      </div>
-      <div class="d-flex justify-content-end align-items-center mb-2">
-        <div class="h-30px">
-          <codx-imgs
-            [width]="30"
-            [objectId]="contract?.createdBy"
-            ojectType="AD_Users"
-            [numberImages]="1"
-          >
-          </codx-imgs>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-<!-- <div class="A mb-5">
-    <div class="mb-3">
-      <span class="fs-6 fw-bold text-primary">Bên A</span>
-    </div>
-    <ng-container
-      [ngTemplateOutlet]="general"
-      [ngTemplateOutletContext]="{ data: { value: account, type: 'A' } }"
-    ></ng-container>
-  </div> -->
-
-<!-- <div class="B mb-5">
-    <div class="mb-3"><span class="fs-6 fw-bold text-primary">Bên B</span></div>
-    <ng-container
-      [ngTemplateOutlet]="general"
-      [ngTemplateOutletContext]="{ data: { value: contract, type: 'B' } }"
-    ></ng-container>
-  </div> -->
