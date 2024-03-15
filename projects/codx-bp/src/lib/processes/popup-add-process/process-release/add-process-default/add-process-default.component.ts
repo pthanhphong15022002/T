@@ -401,6 +401,7 @@ export class AddProcessDefaultComponent implements OnInit{
       (await this.attachment.saveFilesObservable()).subscribe(item2=>{
         if(item2)
         {
+          debugger
           let arr = [];
           if(!Array.isArray(item2))
           {

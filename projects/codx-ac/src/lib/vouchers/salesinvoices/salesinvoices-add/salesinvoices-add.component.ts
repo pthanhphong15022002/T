@@ -42,7 +42,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
   //#region Constructor
   @ViewChild('eleGridSalesInvoice') eleGridSalesInvoice: CodxGridviewV2Component;
   @ViewChild('eleGridVatInvoices') eleGridVatInvoices: CodxGridviewV2Component;
-  @ViewChild('formSalesInvoice') public formSalesInvoice: CodxFormComponent;
+  @ViewChild('master') public master: CodxFormComponent;
   @ViewChild('elementTabMaster') elementTabMaster: any;
   @ViewChild('eleCbxObjectID') eleCbxObjectID: any;
   @ViewChild('eleCbxCurrencyID') eleCbxCurrencyID: any;
@@ -113,7 +113,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void { 
-    if (this.formSalesInvoice?.data?.coppyForm) this.formSalesInvoice.data._isEdit = true; //? test copy để tạm
+    if (this.master?.data?.coppyForm) this.master.data._isEdit = true; //? test copy để tạm
   }
 
   onAfterInitForm(event) {
@@ -127,7 +127,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
    * @param eleTab
    */
   createTabMaster(event: any, eleTab: TabComponent) {
-    this.showHideTabMaster(this.formSalesInvoice?.data?.subType, this.elementTabMaster);
+    this.showHideTabMaster(this.master?.data?.subType, this.elementTabMaster);
   }
 
   selecting(event){
@@ -177,7 +177,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
       hideFields.push('SalesTaxAmt');
       hideFields.push('SalesTaxAmt2');
     } else {
-      if (this.formSalesInvoice?.data?.currencyID == this.baseCurr) hideFields.push('SalesTaxAmt2');
+      if (this.master?.data?.currencyID == this.baseCurr) hideFields.push('SalesTaxAmt2');
     }
 
 
@@ -186,7 +186,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
       hideFields.push('ExciseTaxAmt');
       hideFields.push('ExciseTaxAmt2');
     } else {
-      if (this.formSalesInvoice?.data?.currencyID == this.baseCurr) hideFields.push('ExciseTaxAmt2');
+      if (this.master?.data?.currencyID == this.baseCurr) hideFields.push('ExciseTaxAmt2');
     }
 
     if (this.journal.vatControl == '0') { //? không sử dụng thuế GTGT (ẩn)
@@ -197,13 +197,13 @@ export class SalesinvoicesAddComponent extends UIComponent {
       hideFields.push('VATBase2');
       hideFields.push('VATID');
     } else {
-      if (this.formSalesInvoice?.data?.currencyID == this.baseCurr) {
+      if (this.master?.data?.currencyID == this.baseCurr) {
         hideFields.push('VATAmt2');
         hideFields.push('VATBase2');
       }
     }
 
-    if (this.formSalesInvoice?.data?.currencyID == this.baseCurr) { //? nếu không sử dụng ngoại tệ
+    if (this.master?.data?.currencyID == this.baseCurr) { //? nếu không sử dụng ngoại tệ
       hideFields.push('PurcAmt2');
       hideFields.push('DiscAmt2');
       hideFields.push('NetAmt2');
@@ -273,16 +273,16 @@ export class SalesinvoicesAddComponent extends UIComponent {
    * @param event 
    */
   changeSubType(event?: any) {
-    this.formSalesInvoice.setValue('subType', event.data[0], { onlySelf: true, emitEvent: false, });
+    this.master.setValue('subType', event.data[0], { onlySelf: true, emitEvent: false, });
     this.showHideTabMaster(
-      this.formSalesInvoice?.data?.subType,
+      this.master?.data?.subType,
       this.elementTabMaster
     );
     this.detectorRef.detectChanges();
-    // this.formSalesInvoice.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
+    // this.master.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
     // this.detectorRef.detectChanges();
     // if (this.elementTabDetail) {
-    //   this.showHideTabDetail(this.formSalesInvoice?.data?.subType, this.elementTabDetail);
+    //   this.showHideTabDetail(this.master?.data?.subType, this.elementTabDetail);
     // }
   }
 
@@ -296,33 +296,33 @@ export class SalesinvoicesAddComponent extends UIComponent {
     }
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
-    this.formSalesInvoice.setValue('updateColumns', '', {});
+    this.master.setValue('updateColumns', '', {});
     switch (field.toLowerCase()) {
       case 'objectid':
         let indexob = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
         if (value == '' || value == null || indexob == -1) {
           this.isPreventChange = true;
           let memo = this.getMemoMaster();
-          this.formSalesInvoice.setValue(field, null, {});
-          this.formSalesInvoice.setValue('objectName', null, {});
-          this.formSalesInvoice.setValue('objectType', null, {});
-          this.formSalesInvoice.setValue('address', null, {});
-          this.formSalesInvoice.setValue('taxCode', null, {});
-          this.formSalesInvoice.setValue('warehouseID', null, {});
-          this.formSalesInvoice.setValue('pmtMethodID', null, {});
-          this.formSalesInvoice.setValue('pmtTermID', null, {});
-          this.formSalesInvoice.setValue('delModeID', null, {});
-          this.formSalesInvoice.setValue('memo', memo, {});
-          this.formSalesInvoice.data.pmtMethodName = null;
-          this.formSalesInvoice.data.pmtTermName = null;
+          this.master.setValue(field, null, {});
+          this.master.setValue('objectName', null, {});
+          this.master.setValue('objectType', null, {});
+          this.master.setValue('address', null, {});
+          this.master.setValue('taxCode', null, {});
+          this.master.setValue('warehouseID', null, {});
+          this.master.setValue('pmtMethodID', null, {});
+          this.master.setValue('pmtTermID', null, {});
+          this.master.setValue('delModeID', null, {});
+          this.master.setValue('memo', memo, {});
+          this.master.data.pmtMethodName = null;
+          this.master.data.pmtTermName = null;
           this.detectorRef.detectChanges();
           this.isPreventChange = false;
           return;
         }
         let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
-        this.formSalesInvoice.setValue('objectType', objectType, {});
+        this.master.setValue('objectType', objectType, {});
         let memo = this.getMemoMaster();
-        this.formSalesInvoice.setValue('memo', memo, {});
+        this.master.setValue('memo', memo, {});
         this.objectIDChange(field);
         break;
 
@@ -330,10 +330,10 @@ export class SalesinvoicesAddComponent extends UIComponent {
         let indexcr = this.eleCbxCurrencyID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CurrencyID == this.eleCbxCurrencyID?.ComponentCurrent?.value);
         if (value == '' || value == null || indexcr == -1) {
           this.isPreventChange = true;
-          this.formSalesInvoice.setValue(field, this.preData?.currencyID, {});
+          this.master.setValue(field, this.preData?.currencyID, {});
           if (this.preData?.currencyID != null) {
             var key = Util.camelize(field);
-            var $error = (this.formSalesInvoice as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
+            var $error = (this.master as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
             if ($error) $error.classList.add('d-none');
           }
           this.isPreventChange = false;
@@ -349,18 +349,18 @@ export class SalesinvoicesAddComponent extends UIComponent {
         if (value == null) {
           this.isPreventChange = true;
           setTimeout(() => {
-            this.formSalesInvoice.setValue(field, this.preData?.exchangeRate, {});
+            this.master.setValue(field, this.preData?.exchangeRate, {});
             this.isPreventChange = false;
             this.detectorRef.detectChanges();
           }, 50);
           if (this.preData?.exchangeRate != null) {
             var key = Util.camelize(field);
-            var $error = (this.formSalesInvoice as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
+            var $error = (this.master as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
             if ($error) $error.classList.add('d-none');
           }
           return;
         }
-        if (this.preData?.exchangeRate == this.formSalesInvoice?.data?.exchangeRate) return;
+        if (this.preData?.exchangeRate == this.master?.data?.exchangeRate) return;
         this.exchangeRateChange(field);
         break;
 
@@ -371,26 +371,26 @@ export class SalesinvoicesAddComponent extends UIComponent {
       case 'pmtmethodid':
         let indexpmtmethod = event?.component?.dataService?.data.findIndex((x) => x.PmtMethodID == event.data);
         if (value == '' || value == null || indexpmtmethod == -1) {
-          this.formSalesInvoice.data.pmtMethodName = null;
+          this.master.data.pmtMethodName = null;
           return;
         }
-        this.formSalesInvoice.data.pmtMethodName = event?.component?.dataService?.data[indexpmtmethod].PmtMethodName;
+        this.master.data.pmtMethodName = event?.component?.dataService?.data[indexpmtmethod].PmtMethodName;
         break;
       case 'pmttermid':
         let indexpmtterm = event?.component?.dataService?.data.findIndex((x) => x.PmtTermID == event.data);
         if (value == '' || value == null || indexpmtterm == -1) {
-          this.formSalesInvoice.data.pmtTermName = null;
+          this.master.data.pmtTermName = null;
           return;
         }
-        this.formSalesInvoice.data.pmtTermName = event?.component?.dataService?.data[indexpmtterm].PmtTermName;
+        this.master.data.pmtTermName = event?.component?.dataService?.data[indexpmtterm].PmtTermName;
         break;
       case 'salespersonid':
         let indexsalesperson = event?.component?.dataService?.data.findIndex((x) => x.SalespersonID == event.data);
         if (value == '' || value == null || indexsalesperson == -1) {
-          this.formSalesInvoice.data.salespersonName = null;
+          this.master.data.salespersonName = null;
           return;
         }
-        this.formSalesInvoice.data.salespersonName = event?.component?.dataService?.data[indexsalesperson].SalespersonName;
+        this.master.data.salespersonName = event?.component?.dataService?.data[indexsalesperson].SalespersonName;
         break;
     }
   }
@@ -408,7 +408,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
     this.eleGridSalesInvoice.startProcess();
     this.api.exec('AC', 'SalesInvoicesLinesBusiness', 'ValueChangeAsync', [
       event.field,
-      this.formSalesInvoice.data,
+      this.master.data,
       oLine,
     ]).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
       if (res) {
@@ -425,7 +425,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
    * @returns
    */
   onAddLine(typeBtn) {
-    this.formSalesInvoice.save(null, 0, '', '', false, { allowCompare: false })
+    this.master.save(null, 0, '', '', false, { allowCompare: false })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
@@ -453,12 +453,12 @@ export class SalesinvoicesAddComponent extends UIComponent {
    * *Hàm hủy chứng từ
    */
   onDiscardVoucher() {
-    if (this.formSalesInvoice && this.formSalesInvoice.data._isEdit) {
+    if (this.master && this.master.data._isEdit) {
       this.notification.alertCode('AC0010', null).subscribe((res) => {
         if (res.event.status === 'Y') {
           this.detectorRef.detectChanges();
           this.dialog.dataService
-            .delete([this.formSalesInvoice.data], false, null, '', '', null, null, false)
+            .delete([this.master.data], false, null, '', '', null, null, false)
             .pipe(takeUntil(this.destroy$))
             .subscribe((res) => {
               if (res.data != null) {
@@ -481,7 +481,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
    */
   onSaveVoucher(type) {
     this.ngxLoader.start();
-    this.formSalesInvoice.save(null, 0, '', '', false, { allowCompare: false })
+    this.master.save(null, 0, '', '', false, { allowCompare: false })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         let isError = false;
@@ -513,7 +513,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
   saveVoucher(type) {
     this.api
       .exec('AC', 'SalesInvoicesBusiness', 'UpdateVoucherAsync', [
-        this.formSalesInvoice.data,
+        this.master.data,
         this.journal,
       ])
       .pipe(takeUntil(this.destroy$))
@@ -532,7 +532,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
               .subscribe((res: any) => {
                 if (res) {
                   res.data.isAdd = true;
-                  this.formSalesInvoice.refreshData({ ...res.data });
+                  this.master.refreshData({ ...res.data });
                   setTimeout(() => {
                     this.refreshGrid();
                   }, 100);
@@ -540,7 +540,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
                 }
               });
           }
-          if (this.formSalesInvoice.data.isAdd || this.formSalesInvoice.data.isCopy)
+          if (this.master.data.isAdd || this.master.data.isCopy)
             this.notification.notifyCode('SYS006');
           else
             this.notification.notifyCode('SYS007');
@@ -580,9 +580,9 @@ export class SalesinvoicesAddComponent extends UIComponent {
   setDefaultLine() {
     let model = new AC_SalesInvoicesLines();
     let oLine = Util.camelizekeyObj(model);
-    oLine.transID = this.formSalesInvoice.data.recID;
-    oLine.idiM4 = this.formSalesInvoice.data.warehouseID;
-    oLine.note = this.formSalesInvoice.data.memo;
+    oLine.transID = this.master.data.recID;
+    oLine.idiM4 = this.master.data.warehouseID;
+    oLine.note = this.master.data.memo;
     oLine = this.genFixedDims(oLine);
     oLine = this.acService.getDataSettingFromJournal(oLine, this.journal);
     return oLine;
@@ -599,7 +599,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
         break;
       case 'add':
       case 'update':
-        this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();
+        this.dialog.dataService.update(this.master.data).subscribe();
         break;
       case 'closeEdit': //? khi thoát dòng
         if (this.eleGridSalesInvoice && this.eleGridSalesInvoice.rowDataSelected) {
@@ -621,31 +621,31 @@ export class SalesinvoicesAddComponent extends UIComponent {
   objectIDChange(field: any) {
     this.api.exec('AC', 'SalesInvoicesBusiness', 'ValueChangedAsync', [
       field,
-      this.formSalesInvoice.data,
+      this.master.data,
     ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
           this.isPreventChange = true;
-          this.formSalesInvoice.setValue('objectName', (res?.data?.objectName), {});
-          this.formSalesInvoice.setValue('objectType', (res?.data?.objectType), {});
-          this.formSalesInvoice.setValue('address', (res?.data?.address), {});
-          this.formSalesInvoice.setValue('taxCode', (res?.data?.taxCode), {});
-          this.formSalesInvoice.setValue('warehouseID', (res?.data?.warehouseID), {});
-          this.formSalesInvoice.setValue('pmtMethodID', (res?.data?.pmtMethodID), {});
-          this.formSalesInvoice.setValue('pmtTermID', (res?.data?.pmtTermID), {});
-          this.formSalesInvoice.setValue('delModeID', (res?.data?.delModeID), {});
-          this.formSalesInvoice.setValue('currencyID', (res?.data?.currencyID), {});
-          this.formSalesInvoice.setValue('exchangeRate', (res?.data?.exchangeRate), {});
-          this.formSalesInvoice.setValue('taxExchRate', (res?.data?.taxExchRate), {});
-          this.formSalesInvoice.setValue('consultantID', (res?.ConsultantID || ''), {});
-          this.formSalesInvoice.setValue('salespersonID', (res?.salespersonID || ''), {});
-          this.formSalesInvoice.setValue('multi', (res?.data?.multi), {});
-          this.formSalesInvoice.data.pmtMethodName = res?.data?.pmtMethodName;
-          this.formSalesInvoice.data.pmtTermName = res?.data?.pmtTermName;
+          this.master.setValue('objectName', (res?.data?.objectName), {});
+          this.master.setValue('objectType', (res?.data?.objectType), {});
+          this.master.setValue('address', (res?.data?.address), {});
+          this.master.setValue('taxCode', (res?.data?.taxCode), {});
+          this.master.setValue('warehouseID', (res?.data?.warehouseID), {});
+          this.master.setValue('pmtMethodID', (res?.data?.pmtMethodID), {});
+          this.master.setValue('pmtTermID', (res?.data?.pmtTermID), {});
+          this.master.setValue('delModeID', (res?.data?.delModeID), {});
+          this.master.setValue('currencyID', (res?.data?.currencyID), {});
+          this.master.setValue('exchangeRate', (res?.data?.exchangeRate), {});
+          this.master.setValue('taxExchRate', (res?.data?.taxExchRate), {});
+          this.master.setValue('consultantID', (res?.ConsultantID || ''), {});
+          this.master.setValue('salespersonID', (res?.salespersonID || ''), {});
+          this.master.setValue('multi', (res?.data?.multi), {});
+          this.master.data.pmtMethodName = res?.data?.pmtMethodName;
+          this.master.data.pmtTermName = res?.data?.pmtTermName;
           if (this.eleGridSalesInvoice.dataSource.length) {
-            this.formSalesInvoice.preData = { ...this.formSalesInvoice.data };
-            this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();
+            this.master.preData = { ...this.master.data };
+            this.dialog.dataService.update(this.master.data).subscribe();
           }
           if (res?.isRefreshGrid) {
             this.showHideColumn();
@@ -664,18 +664,18 @@ export class SalesinvoicesAddComponent extends UIComponent {
   currencyIDChange(field: any, obj: any) {
     this.api.exec('AC', 'SalesInvoicesBusiness', 'ValueChangedAsync', [
       field,
-      this.formSalesInvoice.data,
+      this.master.data,
       JSON.stringify(obj)
     ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
           this.isPreventChange = true;
-          this.formSalesInvoice.setValue('exchangeRate', res?.data?.exchangeRate, {});
-          this.preData = { ...this.formSalesInvoice?.data };
+          this.master.setValue('exchangeRate', res?.data?.exchangeRate, {});
+          this.preData = { ...this.master?.data };
           if (this.eleGridSalesInvoice.dataSource.length) {
-            this.formSalesInvoice.preData = { ...this.formSalesInvoice.data };
-            this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();
+            this.master.preData = { ...this.master.data };
+            this.dialog.dataService.update(this.master.data).subscribe();
           }
           if (res?.isRefreshGrid) {
             this.showHideColumn();
@@ -696,16 +696,16 @@ export class SalesinvoicesAddComponent extends UIComponent {
     this.api
       .exec('AC', 'SalesInvoicesBusiness', 'ValueChangedAsync', [
         field,
-        this.formSalesInvoice.data,
+        this.master.data,
         ''
       ])
       .subscribe((res: any) => {
         if (res) {
-          this.preData = { ...this.formSalesInvoice?.data };
+          this.preData = { ...this.master?.data };
           if (res?.isRefreshGrid) {
             this.eleGridSalesInvoice.refresh();
-            this.formSalesInvoice.preData = { ...this.formSalesInvoice.data };
-            this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();
+            this.master.preData = { ...this.master.data };
+            this.dialog.dataService.update(this.master.data).subscribe();
             this.detectorRef.detectChanges();
           }
         }
@@ -719,18 +719,18 @@ export class SalesinvoicesAddComponent extends UIComponent {
   voucherDateChange(field) {
     this.api.exec('AC', 'SalesInvoicesBusiness', 'ValueChangedAsync', [
       field,
-      this.formSalesInvoice.data,
+      this.master.data,
       ''
     ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
-          this.formSalesInvoice.setValue('exchangeRate', res?.data?.exchangeRate, {});
-          this.preData = { ...this.formSalesInvoice?.data };
+          this.master.setValue('exchangeRate', res?.data?.exchangeRate, {});
+          this.preData = { ...this.master?.data };
           if (res?.isRefreshGrid) {
             this.eleGridSalesInvoice.refresh();
-            this.formSalesInvoice.preData = { ...this.formSalesInvoice.data };
-            this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();
+            this.master.preData = { ...this.master.data };
+            this.dialog.dataService.update(this.master.data).subscribe();
             this.detectorRef.detectChanges();
           }
         }
@@ -751,24 +751,24 @@ export class SalesinvoicesAddComponent extends UIComponent {
       let hNetAmt2 = false;
       let hMiscAmt2 = false;
 
-      if (this.journal.useDutyTax && this.formSalesInvoice.data.currencyID != this.baseCurr) {
+      if (this.journal.useDutyTax && this.master.data.currencyID != this.baseCurr) {
         hSalesTaxAmt2 = true;
       }
       this.eleGridSalesInvoice.showHideColumns(['SalesTaxAmt2'], hSalesTaxAmt2);
 
-      if (this.journal.useExciseTax && this.formSalesInvoice.data.currencyID != this.baseCurr) {
+      if (this.journal.useExciseTax && this.master.data.currencyID != this.baseCurr) {
         hExciseTaxAmt2 = true;
       }
       this.eleGridSalesInvoice.showHideColumns(['ExciseTaxAmt2'], hExciseTaxAmt2);
 
-      if (this.journal.vatControl && this.formSalesInvoice.data.currencyID != this.baseCurr) {
+      if (this.journal.vatControl && this.master.data.currencyID != this.baseCurr) {
         hVATAmt2 = true;
         hVATBase2 = true;
       }
       this.eleGridSalesInvoice.showHideColumns(['VATAmt2'], hVATAmt2);
       this.eleGridSalesInvoice.showHideColumns(['VATBase2'], hVATBase2);
 
-      if (this.formSalesInvoice.data.currencyID != this.baseCurr) {
+      if (this.master.data.currencyID != this.baseCurr) {
         hPurcAmt2 = true;
         hDiscAmt2 = true;
         hNetAmt2 = true;
@@ -801,7 +801,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
     if (this.journal.assignRule == '2') {
       lstRequire.push({ field: 'VoucherNo', isDisable: false, require: false });
     }
-    this.formSalesInvoice.setRequire(lstRequire);
+    this.master.setRequire(lstRequire);
   }
 
   genFixedDims(line: any) {
@@ -883,7 +883,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
       this.eleGridVatInvoices.dataSource.reduce((pre, item) => {
         invoiceNo += item.invoiceNo + ',';
       }, {})
-      this.formSalesInvoice.data.invoiceNo = invoiceNo.substring(0, invoiceNo.lastIndexOf(',') + 0);
+      this.master.data.invoiceNo = invoiceNo.substring(0, invoiceNo.lastIndexOf(',') + 0);
     }
   }
 

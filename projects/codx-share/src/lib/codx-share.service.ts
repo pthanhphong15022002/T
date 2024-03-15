@@ -676,7 +676,7 @@ export class CodxShareService {
   }
 
   sendEmail(emailTemplate: any, sendToList: any, option: any = null) {
-    if (option) {
+    if (option && option.method && option.data) {
       return this.api.execSv<any>(
         option.service,
         option.assembly,
@@ -691,7 +691,7 @@ export class CodxShareService {
       'ERM.Business.AD',
       'EmailTemplatesBusiness',
       'SendAsync',
-      [emailTemplate, sendToList]
+      [emailTemplate, sendToList, option.idAlert]
     );
   }
 
@@ -1729,14 +1729,14 @@ export class CodxShareService {
       [JSON.stringify(lstID)]
     );
   }
-  
-  getApproverByRole(approvers=[],isSettingMode:boolean,trueUser:string){
+
+  getApproverByRole(approvers = [], isSettingMode: boolean, trueUser: string) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EmployeesBusiness',
       'GetStepApproverAsync',
-      [approvers,isSettingMode,trueUser]
+      [approvers, isSettingMode, trueUser]
     );
   }
 }

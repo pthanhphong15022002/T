@@ -405,6 +405,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
           )
           .subscribe((item) => {
             if (item && item.length > 1) {
+              debugger
               this.attachment1.objectId = item[1][0].recID;
               this.attachment1.objectType = 'AD_WordTemplates';
               this.attachment1.functionID = 'AD002';
@@ -514,7 +515,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     if (this.type == 'word' && this.action == 'edit') {
       this.nameFile = e[0].fileName;
       let url = e[0].pathDisk;
-      if(this.isFristVer)
+      if(this.isFristVer && e[0]?.history && e[0].history.length>0)
       {
         let index = e[0].history.findIndex(x=>x.fileName.includes("Ver 001"));
 
