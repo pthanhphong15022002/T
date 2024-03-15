@@ -6,11 +6,16 @@ export const CHAT = {
         LoadGroup:'LoadGroup',
         JoinGroup:"JoinGroup",
         AddMember:'AddMember',        
-        SearchGroup:'SearchGroup',
         AddGroup:"AddGroup",
         SendMessage:'SendMessage',        
         ReactMessage:'ReactMessage',
         DeleteMessage:"DeleteMessage",
+        // 13/03/2024 - uupdate
+        EditMemberAsync:"EditMemberAsync",
+        OpenBoxChatAsync:'OpenBoxChatAsync',
+        RemoveGroupAsync:'RemoveGroupAsync',
+        FindGroupAsync:'FindGroupAsync',
+
     },
 
     UI_FUNC :{
@@ -18,6 +23,7 @@ export const CHAT = {
         OnDisconnected:'OnDisconnected',
         LogOuted:"LogOuted",
         OpenBoxChat:'OpenBoxChat',
+        RemoveGroup:'RemoveGroup',
         LoadedGroup:'LoadedGroup',
         JoinedGroup:"JoinedGroup",
         AddedMember:'AddedMember',        

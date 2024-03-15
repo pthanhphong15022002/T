@@ -50,47 +50,35 @@ export class CodxChatContainerComponent implements OnInit, OnDestroy {
   windowNg: any = global;
   ngOnInit(): void {}
   ngAfterViewInit() {
-
     // open box chat
     this.signalRSV.openBoxChat
-    .subscribe((res: any) => {
-      if (res) 
+    .subscribe((group: any) => {
+      if (group) 
       {
-        this.handleBoxChat(res);
+        this.handleBoxChat(group);
       }
     });
-    
-    // open box chat
-    this.signalRSV.activeGroup.subscribe((res: any) => {
-      if (res?.event && res?.data) {
-        switch (res?.event){
-          case CHAT.UI_FUNC.DeletedMessage:
-            {
-              break;
-            }
-          default:{              
-            this.handleBoxChat(res?.data);
-            break;
-          }
+
+    // remove box chat
+    this.signalRSV.removeGroup
+    .subscribe((groupID:any) => {
+      if(groupID)
+      {
+        if(this.lstGroupActive.length > 0)
+        {
+          let idx = this.lstGroupActive.findIndex(x => x.groupID == groupID);
+          if(idx > -1)
+            this.lstGroupActive.splice(idx,1);
+        }
+
+        if(this.lstGroupCollapse.length > 0)
+        {
+          let idx = this.lstGroupCollapse.findIndex(x => x.groupID == groupID);
+          if(idx > -1)
+            this.lstGroupCollapse.splice(idx,1);
         }
       }
     });
-
-    // // loadedGroupChat
-    // this.signalRSV.loadedGroupChat.subscribe((res: any) => {
-    //   if(res)
-    //   {
-    //     this.handleBoxChat(res.data);
-    //   }
-    // });
-
-    // // recive message Popup khi có tin nhắn mới
-    // this.signalRSV.chatboxChange.subscribe((res: any) => {
-    //   if (res?.data) {
-    //     this.handleBoxChat(res.data);
-    //   }
-    // });
-
   }
   ngOnDestroy(): void {}
   // handle box chat

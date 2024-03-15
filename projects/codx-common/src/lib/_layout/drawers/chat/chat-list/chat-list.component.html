@@ -1,84 +1,65 @@
 <div class="w-100 h-100">
-    <codx-listview #codxListView [itemTemplate]="searched ? itemTemplateSearch : itemTemplateGroup" [funcId]="funcID"
-        service="WP" [fields]="{id:'groupID'}" assemblyName="ERM.Business.WP" className="GroupBusiness"
-        method="GetGroupAsync" [selectFirst]="false">
+    <codx-listview #codxListView 
+        [itemTemplate]="isSearching ? itemTemplateSearch : itemTemplateGroup" 
+        [formModel]="formModel"
+        service="WP" 
+        assemblyName="ERM.Business.WP" 
+        className="GroupBusiness"
+        method="GetListGroupAsync" 
+        [fields]="{id:'groupID'}"
+        [selectFirst]="false">
     </codx-listview>
 </div>
 <!-- template group chat -->
 <ng-template #itemTemplateGroup let-item>
     <div class="row position-relative">
         <div class="position-absolute end-0 top-0 pt-2 w-auto pe-2 d-flex flex-row justify-content-end align-items-center">
-            <span class="icon-16 cursor-pointer icon-i-star-fill text-warning"  (click)="clickMF('unFavorite', item)"
-                *ngIf="item?.isFavorite"></span>
-
-            <div id="chatdropdownMF" ngbDropdown class="dropdown">
-                <span ngbDropdownToggle class="px-0 py-0" type="button" id="dropdownMenuButtonMF"
-                    aria-haspopup="true" aria-expanded="false">
+            <span *ngIf="item?.isFavorite" class="icon-16 cursor-pointer icon-i-star-fill text-warning"  (click)="clickMF('favorite', item)"></span>
+            <div ngbDropdown class="dropdown" placement="bottom-end" container="body">
+                <span ngbDropdownToggle class="px-0 py-0" id="dropdownMenuButtonMF">
                     <span class="icon-more_vert icon-18"></span>
                 </span>
                 <div ngbDropdownMenu aria-labelledby="dropdownMenuButtonMF">
-                    <a *ngIf="!item?.isFavorite && item?.groupType=='1'" ngbDropdownItem class="dropdown-item" (click)="clickMF('favorite', item)">
+                    <a ngbDropdownItem class="dropdown-item" (click)="clickMF('favorite', item)">
                         <div class="d-flex align-items-center cursor-pointer">
                           <span class="icon-i-star-fill text-warning icon-16"></span>
-                          <span class="ms-2"><codx-label name="lblFavorite" default="Thêm vào ưa thích"></codx-label>
+                          <span class="ms-2"><codx-label [formModel]="formModel" name="lblFavorite" default="Thêm vào ưa thích"></codx-label>
                           </span>    
                         </div>
-                      </a>
-                    <a *ngIf="item?.isFavorite && item?.groupType=='1'" ngbDropdownItem class="dropdown-item" (click)="clickMF('unFavorite', item)">
-                    <div class="d-flex align-items-center cursor-pointer">
-                        <span class="icon-i-star icon-16"></span>
-                        <span class="ms-2"><codx-label name="lblUnFavorite" default="Bỏ khỏi ưa thích"></codx-label>
-                        </span>
-                    </div>
                     </a>
-                    <a *ngIf="item?.groupType=='2' && item?.createdBy == user?.userID "  ngbDropdownItem class="dropdown-item" (click)="clickMF('delete', item)">
+                    <!-- <a *ngIf="item?.groupType=='2' && item?.createdBy == user?.userID "  ngbDropdownItem class="dropdown-item" (click)="clickMF('delete', item)">
                         <div class="d-flex align-items-center cursor-pointer">
                             <span class="icon-delete text-danger icon-16"></span>
                             <span class="ms-2"><codx-label name="lblDelete" default="Xóa"></codx-label></span>
                         </div>
-                    </a>
+                    </a> -->
                 </div>
             </div>
-
-
         </div>
-
-
         <div class="row align-items-center p-2 rounded-1 border-bottom" (click)="selectItem(item)">
-            <!-- image -->
             <div class="col-2 position-relative">
-                <codx-img class=" ms-2" [objectId]="item?.groupType == '1'? item?.groupID2 : item?.groupID" [objectName]="item?.groupName"
-                    [objectType]="item?.groupType == '1'? 'AD_Users' : 'WP_Groups'" [width]="30">
+                <codx-img class=" ms-2" 
+                    [objectId]="item.groupType == '1' ? item.groupID2 : item.groupID" 
+                    [objectType]="item.groupType == '1' ? 'AD_Users' : 'WP_Groups'" 
+                    [width]="30">
                 </codx-img>
-                <div *ngIf="item?.isOnline" class="group-status">
+                <div *ngIf="item.isOnline" class="group-status">
                     <span class="ms-2 group-status-icon"></span>
                 </div>
             </div>
-            <!-- group name - created - seen -->
             <div class="col-10 pt-1">
                 <div class="d-flex justify-content-between align-items-center w-100">
-                    <span class="fw-bold">{{item?.groupType == '1'? item?.groupName2 :item?.groupName}}</span>
-                    <!-- <span *ngIf="item?.messageMissed > 0"
-                        class="topbar-badge badge badge-sm rounded-pill bg-danger px-2 ">{{item?.messageMissed}}</span> -->
-                    
-                    </div>
-                    <ng-container *ngIf="item?.message">
-                        <div class="d-flex justify-content-between align-items-top w-100">
-                            <span *ngIf="item?.message?.messageType =='2'" class="pe-2"
-                             [ngClass]="item?.message?.fileType  =='video'|| item?.message?.fileType  =='image' ? 'icon-photo_library' :'icon-i-tags'">
-                            </span>
-                            <span class="text-truncate w-50" [class.text-primary]="item?.message?.isRead === false">
-                                {{item?.message?.messageType =='2'? item?.message?.fileName : item?.message?.message }}
-                            </span>
-                            <ng-container *ngIf="item?.message?.createdOn">
-                                <span class="text-end w-50">{{item?.message?.createdOn | pTimeFrom}}</span>
-                            </ng-container>
-                        </div>
-                    </ng-container>
+                    <span class="fw-bold">{{item.groupType == '1' ? item.groupName2 : item.groupName}}</span>
                 </div>
+                <ng-container *ngIf="item.lastMssg && item.lastMssg?.messageType == '1'">
+                    <div class="d-flex justify-content-between align-items-top w-100">
+                        <span class="text-truncate w-50" [class.text-primary]="item.lastMssg.isRead === false">{{item.lastMssg.message}}</span>
+                        <span *ngIf="item.lastMssg.createdOn" class="text-end w-50">{{item.lastMssg.createdOn | pTimeFrom}}</span>
+                    </div>
+                </ng-container>
+            </div>
         </div>
     </div>
-    
 </ng-template>
 <!-- template search chat -->
 <ng-template #itemTemplateSearch let-item>
@@ -87,25 +68,9 @@
             <codx-label class="fw-bold" [formModel]="" formName="Groups" gridViewName="grvGroups" [name]="'lbl'+item?.name" [default]="item?.name"></codx-label>
         </ng-container>
         <ng-template #tmpItem>
-            <codx-temp-full [dataItem]="item" [title]="item?.name" [imageId]="item?.id" [imageObjName]="item?.groupName"
+            <codx-temp-full [dataItem]="item" [title]="item?.name" [imageId]="item?.id" [imageObjName]="item?.groupName" [subTitle]="item.description"
                 [imageObjType]="item?.type == 'U' ? 'AD_Users' : 'WP_Groups'">
             </codx-temp-full>
         </ng-template>
-    </div>
-</ng-template>
-
-<ng-template #itemTemplate let-item>
-    <div class="p-2" (click)="selectItemSeach(item)">
-        <codx-temp-full [dataItem]="item" [title]="item?.name" [imageId]="item?.id"
-            [imageObjType]="item?.type == 'U' ? 'AD_Users':'WP_Groups'" [imageObjName]="item?.name">
-        </codx-temp-full>
-    </div>
-</ng-template>
-
-<ng-template #favoriteTemplate let-item>
-    <div class="p-2" (click)="selectItemSeach(item)">
-        <codx-temp-full [dataItem]="item" [title]="item?.name" [imageId]="item?.id"
-            [imageObjType]="item?.type == 'U' ? 'AD_Users':'WP_Groups'" [imageObjName]="item?.name">
-        </codx-temp-full>
     </div>
 </ng-template>

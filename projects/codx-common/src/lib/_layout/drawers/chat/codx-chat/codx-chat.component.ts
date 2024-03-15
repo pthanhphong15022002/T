@@ -22,7 +22,7 @@ import {
   DialogModel,
   AuthService,
 } from 'codx-core';
-import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdown, NgbDropdownConfig } from '@ng-bootstrap/ng-bootstrap';
 import { CodxChatListComponent } from '../chat-list/chat-list.component';
 import { AddGroupChatComponent } from '../popup/popup-add-group/popup-add-group.component';
 import { SignalRService } from '../services/signalr.service';
@@ -33,6 +33,7 @@ declare var window: any;
   selector: 'codx-chat',
   templateUrl: './codx-chat.component.html',
   styleUrls: ['./codx-chat.component.scss'],
+  providers: [NgbDropdownConfig]
 })
 export class CodxChatComponent implements OnInit, AfterViewInit {
   @HostBinding('class') get class() {
@@ -41,23 +42,17 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
     );
   }
 
-  @Output('countTotalMessage') countTotalMessage: EventEmitter<any> = new EventEmitter();
   loaded = false;
   loadFavorite = false;
   count: number = 0;
-  formModel: FormModel = null;
-  user: any = null;
+  formModel: FormModel;
+  grdViewSetUp
+  user: any;
   funcID: string = 'WPT11';
   function: any = null;
-  grdViewSetUp: any = null;
-  moreFC: any = null;
-  autoClose: boolean = true;
   lstBoxChat: any[] = [];
-  hideChat: boolean = false;
-  isDropdownOpen: boolean = false;
-  @ViewChild('codxChatContainer', { static: true })
-  codxChatContainer: TemplateRef<any>;
-  @ViewChild('listChat') listChat: CodxChatListComponent;
+  @ViewChild('codxChatContainer') codxChatContainer: TemplateRef<any>;
+  @ViewChild('codxListChat') codxListChat: CodxChatListComponent;
   @ViewChild(NgbDropdown) ngbDropdown: NgbDropdown;
   constructor(
     private injector: Injector,
@@ -69,52 +64,63 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
     private callFCSV: CallFuncService,
     private cache: CacheService,
     private notifySV: NotificationsService,
-    private dt: ChangeDetectorRef
-  ) {
+    private dt: ChangeDetectorRef,
+    private dropdownConfig:NgbDropdownConfig
+  ) 
+  {
+    dropdownConfig.autoClose = "outside";
     this.user = this.auth.get();
-    this.formModel = new FormModel();
-  }
-
-  ngOnInit(): void {
-    // get function - gridViewsetup
-    if (this.funcID) {
-      this.cache.functionList(this.funcID).subscribe((func: any) => {
-        if (func) {
+    this.cache.functionList(this.funcID)
+      .subscribe((func:any) => {
+        if (func) 
+        {
+          this.formModel = new FormModel();
           this.function = JSON.parse(JSON.stringify(func));
           this.formModel.funcID = func.functionID;
           this.formModel.entityName = func.entityName;
           this.formModel.formName = func.formName;
           this.formModel.gridViewName = func.gridViewName;
-          // grid view set up
-          this.cache
-            .gridViewSetup(func.formName, func.gridViewName)
-            .subscribe((grd: any) => {
-              if (grd) {
-                this.grdViewSetUp = JSON.parse(JSON.stringify(grd));
-              }
-            });
-          // more function
-          this.cache
-            .moreFunction(func.formName, func.gridViewName)
-            .subscribe((mFC: any) => {
-              if (mFC) {
-                this.moreFC = JSON.parse(JSON.stringify(mFC));
-              }
-            });
+          this.cache.gridViewSetup(this.formModel.formName,this.formModel.gridViewName)
+          .subscribe((grd:any) => {
+            this.grdViewSetUp = grd;
+            this.dt.detectChanges();
+          })
         }
       });
-    }
+  }
+
+  ngOnInit(): void {
     this.getTotalMessage();
-    this.addContainerChat();
   }
 
   ngAfterViewInit(): void {
-    this.signalRSV.loadedGroup.subscribe((res: any) => {
-      this.getTotalMessage();
-      this.listChat?.addGroup(res?.data);
+    this.addContainerChat();
+    // message
+    this.signalRSV.chatboxChange
+    .subscribe((res: any) => {
+      if(res && this.user && res?.createdBy != this.user?.userID)
+      {
+        this.count++;
+        this.dt.detectChanges();
+      }
     });
-    this.signalRSV.chatboxChange.subscribe((res: any) => {
-      this.getTotalMessage();
+
+    // open box chat
+    this.signalRSV.openBoxChat
+    .subscribe((res: any) => {
+      if(res)
+      {
+        this.getTotalMessage();
+      }
+    });
+
+    // add group
+    this.signalRSV.addGroup
+    .subscribe((group:any) => {
+      if(group)
+      {
+        this.getTotalMessage();
+      }
     });
   }
   // get count message
@@ -145,7 +151,6 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   }
   //click  open popup
   clickOpenPopup() {
-    this.autoClose = false;
     let option = new DialogModel();
     option.FormModel = this.formModel;
     let data = {
@@ -163,67 +168,42 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
       option
     );
     popup.closed.subscribe((res: any) => {
-      if (res.event) {
-        this.listChat.addGroup(res.event);
-      }
-      this.autoClose = true;
+      if (res.event) 
+        this.codxListChat.addGroup(res.event);
     });
   }
   // check read all
   clickReadAll() {
     // chưa có mssgCode
-    this.autoClose = false;
     this.notifySV.alertCode('Đánh dấu xem tất cả?').subscribe((res: any) => {
       if (res.event.status === 'Y') {
-        this.listChat.readAllMessage();
+        this.codxListChat.readAllMessage();
         this.count = 0;
       }
-      this.autoClose = true;
     });
   }
-  clickFavorite(){
-    if (this.listChat) {
-      this.listChat.search(null,!this.loadFavorite);
-      this.loadFavorite=!this.loadFavorite;
+
+  // searrch
+  search(searchText:any, searchType = "") 
+  {
+    if(searchType == "searchFavorite")
+    {
+      this.loadFavorite =! this.loadFavorite;
+      if(!this.loadFavorite) searchType = "";
       this.dt.detectChanges();
     }
+    if(this.codxListChat) this.codxListChat.search(searchText,searchType);
   }
-  // searrch
-  search(event: any) {
-    if (this.listChat) {
-      this.listChat.search(event);
-    }
-  }
-  //select goup chat
-  // selectItem(group: any) {
-  //   group.isRead = true;
-  //   if (group.messageMissed > 0) {
-  //     group.messageMissed = 0;
-  //     this.count -= group.messageMissed;
-  //   }
-  //   this.signalRSV.sendData('OpenGroupAsync', group);
-  // }
-  // select item search
+
+
   selectItemSeach(item: any) {
     if (item.type != 'H') {
       this.signalRSV.sendData(
-        CHAT.BE_FUNC.SearchGroup,
+        CHAT.BE_FUNC.FindGroupAsync,
         item.id,
         item.type == 'U' ? '1' : '2'
       );
     }
   }
 
-  // close ngbDropdown
-  clickBtnDropdown() {
-    this.isDropdownOpen = !this.isDropdownOpen;
-  }
-
-  renderDropDown(e){
-    // let element = document.getElementById('chatbox-dropdownPopup');
-    if(this.ngbDropdown){
-      this.ngbDropdown.open();
-      this.dt.detectChanges();
-    }
-  }
 }

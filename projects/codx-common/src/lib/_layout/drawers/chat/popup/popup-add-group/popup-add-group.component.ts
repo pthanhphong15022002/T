@@ -151,6 +151,7 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
     if(this.group && this.group?.members?.length > 0)
     {
       this.isLoading = true;
+      this.group.groupID = Util.uid();
       this.api
       .execSv(
         'WP',
@@ -158,17 +159,17 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
         'GroupBusiness',
         'SaveAsync',
         this.group)
-        .subscribe((res1:any) => {
-        if (res1) 
+        .subscribe((res:any) => {
+        if (res) 
         {
           this.codxImg
-          .updateFileDirectReload(res1.groupID)
+          .updateFileDirectReload(res.groupID)
           .subscribe((res2: any) => 
           {
             // this.signalRSV.sendData(CHAT.BE_FUNC.LoadGroup, res1.groupID);
-            this.signalRSV.sendData("NewGroup", res1.groupID);
+            this.signalRSV.sendData("NewGroup", res.groupID);
             this.notifiSV.notifyCode('CHAT004');
-            this.dialogRef.close(res1);
+            this.dialogRef.close(res);
           });
         } 
         else this.notifiSV.notifyCode('CHAT005');
