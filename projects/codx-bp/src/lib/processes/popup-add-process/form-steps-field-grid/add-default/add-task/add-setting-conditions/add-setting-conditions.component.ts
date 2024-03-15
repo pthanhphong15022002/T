@@ -599,6 +599,8 @@ export class AddSettingConditionsComponent {
       case 'noempty': return data.field + "!=" + 'NULL';
       case 'gte' : case '>=' : return data.field + ">=" + "@" + number;
       case 'lte' : case '<=' : return   data.field + "<=" + "@" + number;
+      case '<' : return   data.field + "<" + "@" + number;
+      case '>' : return   data.field + ">" + "@" + number;
     }
     return "";
   }

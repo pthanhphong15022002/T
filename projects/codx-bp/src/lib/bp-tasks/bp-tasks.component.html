@@ -33,7 +33,7 @@
 
 <ng-template #headerTemplateList let-data>
   <div class="d-flex" style="background: #c1c8cc">
-    <div class="w-30px px-2 py-3">
+    <div class="w-20px px-2 py-3">
       <div></div>
     </div>
     <div class="w-200px text-dark fw-bold px-2 py-3 fw-500">
@@ -46,10 +46,10 @@
     </div>
     <div class="w-350px text-dark fw-bold px-2 py-3 fw-500">
       <codx-label
-        fiedName="list_Request"
+        fiedName="list_RequestProcess"
         [setRequire]="false"
         [formModel]="view.formModel"
-        [default]="'Yêu cầu'"
+        [default]="'Yêu cầu và Qui trình'"
       ></codx-label>
     </div>
     <div class="w-350px text-dark fw-bold px-2 py-3 fw-500">
@@ -60,14 +60,6 @@
         [default]="'Tên công việc'"
       ></codx-label>
     </div>
-    <div class="w-350px text-dark fw-bold px-2 py-3 fw-500">
-      <codx-label
-        fiedName="list_StartDate"
-        [setRequire]="false"
-        [formModel]="view.formModel"
-        [default]="'Thời gian thực hiện'"
-      ></codx-label>
-    </div>
     <div class="w-200px text-dark fw-bold px-2 py-3 fw-500">
       <codx-label
         fiedName="list_Status"
@@ -76,7 +68,16 @@
         [default]="'Trình trạng'"
       ></codx-label>
     </div>
-    <div class="w-250px text-dark fw-bold px-2 py-3 fw-500">
+    <div class="w-350px text-dark fw-bold px-2 py-3 fw-500">
+      <codx-label
+        fiedName="list_StartDate"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Thời gian thực hiện'"
+      ></codx-label>
+    </div>
+
+    <div class="w-260px text-dark fw-bold px-2 py-3 fw-500">
       <codx-label
         fiedName="list_CreatedBy"
         [setRequire]="false"
