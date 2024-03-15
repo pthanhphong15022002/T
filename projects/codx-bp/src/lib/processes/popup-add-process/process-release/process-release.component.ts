@@ -313,9 +313,9 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
   }
 
   addItem() {
-    if(this.process.status == '5')
+    if(this.process?.status == '5')
     {
-      this.view.dataService.addNew().subscribe((item) => {
+      this.view?.dataService?.addNew().subscribe((item) => {
         this.popUpAddEdit(item, 'add');
       });
     }

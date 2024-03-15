@@ -84,12 +84,12 @@ export class ContractsService {
       ID
     );
   }
-  getAutonumber(ID) {
+  getAutoCodeByFunctionId(funtionID, entityName) {
     return this.api.exec<any>(
       'DP',
       'ProcessesBusiness',
-      'GetCodeAutoByDisposalNoSettingAsync',
-      ID
+      'GetAutoCodeByFunctionIdAsync',
+      [funtionID, entityName]
     );
   }
 

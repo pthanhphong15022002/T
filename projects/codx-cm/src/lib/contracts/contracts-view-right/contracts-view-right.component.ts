@@ -1,4 +1,3 @@
-import { Permission } from './../../../../../../src/shared/models/file.model';
 import {
   Input,
   Output,
@@ -83,7 +82,7 @@ export class ContractsViewDetailComponent
   isLoadingContract = false;
   notificationPopup;
   userOwner;
-
+  idTabShow = "";
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
@@ -137,7 +136,6 @@ export class ContractsViewDetailComponent
   };
   
   lstContacts: any;
-  contractsTab = "1,5,7,8,9";
 
   constructor(
     private inject: Injector,
@@ -206,22 +204,11 @@ export class ContractsViewDetailComponent
   }
 
   setTaskBar(){
-    let tabShow = "";
     if(this.contract?.isAdminAll || this.contract.owner == this.user?.userID){
-      tabShow = this.contractsTab;
+      this.idTabShow = this.tabDefaut;
     }else{
-      let permission  = this.contract?.permissions?.find(p => p.objectID == this.user?.userID);
-      tabShow = this.tabDefaut;
-      if(permission?.config){
-        tabShow = permission?.config;
-      }else{
-        tabShow = this.contractsTab;
-      }
+      this.idTabShow = this.contract?.config;
     }
-   
-    this.listTypeContract = this.valueListTab.filter(x => tabShow?.includes(x?.value));
-    this.listTypeContract[0].isActive = true;
-    this.tabClicked = this.listTypeContract[0]?.value;
   }
 
   getUserContract(){
@@ -367,42 +354,10 @@ export class ContractsViewDetailComponent
           }
         }
         this.lstStepsOld = this.listInsStep;
-        // if (this.loadContactDeal) {
-        //   this.loadContactDeal.loadListContact(this.lstContacts);
-        // }
       }
       this.changeDetectorRef.detectChanges();
     }
-
-    // this.listSteps = e;
-    // this.outDataStep.emit(this.dataStep);
   }
-
-  // getListInstanceStep() {
-  //   var data = [
-  //     this.dataSelected?.refID,
-  //     this.dataSelected?.processID,
-  //     this.dataSelected?.status,
-  //     '1',
-  //   ];
-
-  //   this.codxCmService.getViewDetailInstanceStep(data).subscribe((res) => {
-  //     if (res) {
-  //       this.listSteps = res[0];
-  //       this.isHaveField = res[1];
-  //       if (this.listSteps) {
-  //         this.lstStepsOld = JSON.parse(JSON.stringify(this.listSteps));
-  //         this.getStepCurrent(this.dataSelected);
-  //       }
-  //       this.isDataLoading = false;
-  //       this.checkCompletedInstance(this.dataSelected?.status);
-  //     } else {
-  //       this.listSteps = [];
-  //       this.stepCurrent = null;
-  //       this.isHaveField = false;
-  //     }
-  //   });
-  // }
 
   changeDataMF(event, data: CM_Contracts) {
     this.changeMF.emit({ e: event, data: data });
