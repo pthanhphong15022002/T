@@ -424,10 +424,8 @@ export class CashPaymentAddComponent extends UIComponent {
           this.detectorRef.detectChanges();
           return;
         }
-        let valueCurrency = {
-          PreCurrency: event?.component?.dataService?.currentComponent?.previousItemData?.CurrencyID || ''
-        };
-        this.currencyIDChange(field, valueCurrency);
+        preValue = event?.component?.dataService?.currentComponent?.previousItemData?.CurrencyID  || '',
+        this.currencyIDChange(field, preValue);
         break;
 
       //* Ty gia
@@ -947,11 +945,11 @@ export class CashPaymentAddComponent extends UIComponent {
    * *Hàm thay đổi tiền tệ
    * @param field 
    */
-  currencyIDChange(field: any, obj: any) {
+  currencyIDChange(field: any, preValue: any) {
     this.api.exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
       field,
       this.master.data,
-      JSON.stringify(obj)
+      preValue
     ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
