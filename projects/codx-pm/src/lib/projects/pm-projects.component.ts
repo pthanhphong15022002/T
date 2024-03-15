@@ -147,6 +147,51 @@ export class ProjectsComponent
     });
   }
 
+  copy(){
+
+    if(this.view.dataService.dataSelected){
+      this.view.dataService.copy().subscribe((res:any)=>{
+        let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.formModel;
+      option.Width = '800px';
+      let dialogAdd = this.callfc.openSide(
+        PopupAddProjectComponent,
+        [res, 'add', this.grvSetup],
+        option
+      );
+      dialogAdd.closed.subscribe((returnData) => {
+        if (returnData?.event) {
+          //this.view?.dataService?.update(returnData?.event);
+        } else {
+          this.view.dataService.clear();
+        }
+      });
+      })
+    }
+  }
+
+  viewProject(){
+    if(this.view.dataService.dataSelected){
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.formModel;
+      option.Width = '800px';
+      let dialog = this.callfc.openSide(
+        PopupAddProjectComponent,
+        [this.view?.dataService.dataSelected, 'edit', this.grvSetup,true],
+        option
+      );
+      dialog.closed.subscribe((returnData) => {
+        if (returnData?.event) {
+          //this.view?.dataService?.update(returnData?.event);
+        } else {
+          this.view.dataService.clear();
+        }
+      });
+    }
+  }
+
   edit() {
     this.view.dataService
       .edit(this.view?.dataService.dataSelected)
@@ -221,8 +266,12 @@ export class ProjectsComponent
       case 'PMT0103':
         this.unPinProject(data);
         break;
-      default:
+      case 'SYS04':
+        this.copy();
         break;
+        case "SYS05":
+          this.viewProject()
+          break;
     }
   }
 
