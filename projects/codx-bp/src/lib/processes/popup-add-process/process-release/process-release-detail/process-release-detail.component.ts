@@ -142,14 +142,14 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
             {
               let ids = [];
               this.listDocument.forEach((elm) => {
-                if (elm.files && elm.files.length > 0) 
+                if (elm.files && elm.files.length > 0)
                 {
                   elm.files.forEach(element => {
                     if(element.type == "1" || element.type == "3") ids.push(element.fileID || element?.recID);
                   });
                 }
               });
-          
+
               if(ids.length>0)
               {
                 var str = JSON.stringify(ids);
@@ -178,6 +178,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   }
   getPermission() {
     let approvers = [];
+    if(!this.process) return;
     this.process.steps?.forEach((step) => {
       if (step?.permissions?.length > 0) {
         step?.permissions.forEach((per) => {
@@ -382,5 +383,5 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       }
     });
   }
-  
+
 }
