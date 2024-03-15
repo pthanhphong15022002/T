@@ -23,16 +23,17 @@
  .link-container:hover{
 	background-color: rgb(240, 240, 240);
  }
-//  .button-close :hover{
-// 	box-shadow: 0 0px 5px 1px #a1a1a1;
-// 	border-radius: 3px;
-//   }
-.center{
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
-	width: 100%;
+
+.appendix{
+	height: calc(100vh - 450px);
+	.center{
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 100%;
+	}
 }
+
 .icon-email{
 	color: var(--primary);
  }

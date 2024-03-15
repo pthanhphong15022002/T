@@ -76,9 +76,9 @@ export class PdfComponent
   publicSignStatus: any;
   isSigned = false;
   supplier = '3';
-  lstCert=[];
+  lstCert = [];
   selectedCert: any;
-  dialogVTCers: import("codx-core").DialogRef;
+  dialogVTCers: import('codx-core').DialogRef;
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
@@ -120,7 +120,7 @@ export class PdfComponent
   @Input() hideActions = false;
   @Input() isSignMode = false;
   @Input() dynamicApprovers = [];
-  @Input() hideThumbnail: boolean = false; //thumbnail  
+  @Input() hideThumbnail: boolean = false; //thumbnail
   @Input() fileIDs = '';
   @Output() changeSignerInfo = new EventEmitter();
   @Output() eventHighlightText = new EventEmitter();
@@ -159,7 +159,7 @@ export class PdfComponent
   vcLeft = 0;
   rotate = 0;
   rotateEnable = false;
-  applySignViettel=false;
+  applySignViettel = false;
   contextMenu: any;
   needAddKonva = null;
   tr: Konva.Transformer;
@@ -480,7 +480,7 @@ export class PdfComponent
       this.signPerRow = res?.SignPerRow;
       this.align = res?.Align;
       this.direction = res?.Direction;
-      this.areaControl = false;//lay tu category
+      this.areaControl = false; //lay tu category
       this.isAwait = res?.Await == '1';
       this.labels = res?.Label?.filter((label) => {
         return label.Language == this.user.language;
@@ -603,8 +603,8 @@ export class PdfComponent
     let request = new tempLoadPDF();
     request.recID = this.recID;
     request.dynamicApprovers = this.dynamicApprovers;
-    request.isSettingMode=this.isSettingMode;
-    request.fileIDs=this.fileIDs;
+    request.isSettingMode = this.isSettingMode;
+    request.fileIDs = this.fileIDs;
     this.api
       .execSv('BP', 'BP', 'ProcessesBusiness', 'GetPDFFormAsync', [request])
       .subscribe((res: any) => {
@@ -672,9 +672,11 @@ export class PdfComponent
     if (event?.field) {
       if (event?.field == 'emailPublicSign') {
         this.paSignature.email = event?.data;
-      } else if (event?.field == 'passwordPublicSign') {
+      } 
+      if (event?.field == 'passwordPublicSign') {
         this.paSignature.password = event?.data;
-      }else if (event?.field == 'thirdPatyID') {
+      } 
+      if (event?.field == 'thirdPartyID') {
         this.paSignature.thirdPartyID = event?.data;
       }
       this.detectorRef.detectChanges();
@@ -955,7 +957,7 @@ export class PdfComponent
         this.user.userID,
         this.stepNo,
         this.modeView,
-        this.isSettingMode,
+        this.isSettingMode
       )
       .subscribe((res) => {
         if (res) {
@@ -1080,7 +1082,7 @@ export class PdfComponent
         this.fileInfo.fileID,
         this.curSelectedArea.id(),
         this.modeView,
-        this.isSettingMode,
+        this.isSettingMode
       )
       .subscribe((res) => {
         if (res) {
@@ -1092,7 +1094,7 @@ export class PdfComponent
               this.user.userID,
               this.stepNo,
               this.modeView,
-              this.isSettingMode,
+              this.isSettingMode
             )
             .subscribe((res) => {
               if (res) {
@@ -1115,7 +1117,7 @@ export class PdfComponent
   imgSignature2: ImageViewerComponent;
   @ViewChild('imgStamp', { static: false }) imgStamp: ImageViewerComponent;
 
-  changeTab(currTab,supplier:any) {
+  changeTab(currTab, supplier: any) {
     this.currentTab = currTab;
     this.supplier = supplier?.value;
   }
@@ -1962,7 +1964,7 @@ export class PdfComponent
                   area,
                   area.recID,
                   this.modeView,
-                  this.isSettingMode,
+                  this.isSettingMode
                 )
                 .subscribe((res) => {});
             } else {
@@ -2421,7 +2423,7 @@ export class PdfComponent
         tmpArea,
         tmpArea.recID,
         this.modeView,
-        this.isSettingMode,
+        this.isSettingMode
       )
       .subscribe((res) => {
         this.esService
@@ -2432,7 +2434,7 @@ export class PdfComponent
             this.user.userID,
             this.stepNo,
             this.modeView,
-            this.isSettingMode,
+            this.isSettingMode
           )
           .subscribe((res) => {
             if (res) {
@@ -2526,18 +2528,17 @@ export class PdfComponent
             )
             .subscribe((res) => {
               if (res) {
-                let resp = new ResponseModel();
-                resp.msgCodeError = null;
-                resp.rowCount = 1;
-                resp.returnStatus = '5';
-                resolve(resp);
+                // let resp = new ResponseModel();
+                // resp.msgCodeError = null;
+                // resp.rowCount = 1;
+                // resp.returnStatus = '5';
+                resolve(res);
               }
             });
         });
       }
     }
   }
-  
 
   certChange(evt, cert) {
     this.selectedCert = cert;
@@ -2574,24 +2575,44 @@ export class PdfComponent
     });
   }
 
-  codxSignPDF(status, comment,signCallback: (response: ResponseModel) => void, ): any {
-    if(!this.isEditable) return;
+  codxSignPDF(
+    status,
+    comment,
+    signCallback: (response: ResponseModel) => void
+  ): any {
+    if (!this.isEditable) return;
     switch (this.signerInfo.signType) {
       case '2': {
-        this.codxCommonService.codxApprove( this.transRecID, this.publicSignStatus, null, null, null, null, '1' ).subscribe((res: ResponseModel) => {
-          signCallback && signCallback(res);
-        });
+        this.codxCommonService
+          .codxApprove(
+            this.transRecID,
+            this.publicSignStatus,
+            null,
+            null,
+            null,
+            null,
+            '1'
+          )
+          .subscribe((res: ResponseModel) => {
+            signCallback && signCallback(res);
+          });
         break;
       }
       case '1': {
-        let supplierDialog = this.callfc.openForm(PopupSupplierComponent,'',500,250,'');
-        supplierDialog.closed.subscribe(res=>{
-          if(res?.event){
+        let supplierDialog = this.callfc.openForm(
+          PopupSupplierComponent,
+          '',
+          500,
+          250,
+          ''
+        );
+        supplierDialog.closed.subscribe((res) => {
+          if (res?.event) {
             switch (res?.event) {
               //usb
               case '5': {
-                let urlUpload = this.env.urlUpload+'/';
-                let shortFileURL = this.curFileUrl?.replace(urlUpload,'');
+                let urlUpload = this.env.urlUpload + '/';
+                let shortFileURL = this.curFileUrl?.replace(urlUpload, '');
                 this.esService
                   .getSignContracts(
                     this.recID,
@@ -2609,71 +2630,106 @@ export class PdfComponent
                       if (finalContract) {
                         let resModel = new ResponseModel();
                         resModel.rowCount = 1;
-                        resModel.returnStatus = '5';   
-
+                        resModel.returnStatus = '5';
                       } else {
                         let resModel = new ResponseModel();
                         resModel.rowCount = 0;
-                        resModel.msgCodeError ='SYS021';
+                        resModel.msgCodeError = 'SYS021';
                       }
                       signCallback && signCallback(res);
                     }
                   });
                 break;
               }
-              case '4'://Viettel
-              {
-                this.esService.getViettelCer(this.signerInfo.thirdPartyID).subscribe(cers=>{
-                  if(cers){
-                    this.lstCert = cers?.filter(x=>x?.error == null); 
-                    //this.lstCert.push(this.lstCert[0]); 
-                    if(this.lstCert?.length ==1){
-                      let dialogCersWait1 = this.callfc.openForm(this.viettelESignWait, '', 450, 250);
-                      this.codxCommonService.codxApprove( this.transRecID , status, null, null, null, this.lstCert[0]?.cert, '4' ).subscribe((res: ResponseModel) => {
-                        dialogCersWait1 && dialogCersWait1.close();  
-                        signCallback && signCallback(res);
-                        });
-                    }
-                    else if(this.lstCert?.length >1){
-                      this.applySignViettel=false;
-                      let dialogVTCers = this.callfc.openForm(SelectViettelCertificateComponent,'',450,300,"",{lstCert:this.lstCert});  
-                      dialogVTCers.closed.subscribe(vtCersRes=>{
-                        if(vtCersRes?.event){
-                          if (this.selectedCert == null) this.selectedCert = vtCersRes?.event ?? this.lstCert[0].cert;
-                          this.codxCommonService.codxApprove( this.transRecID, status, null, null, null, this.selectedCert, '4' ).subscribe((res: ResponseModel) => {
+              case '4': { //Viettel
+                this.esService
+                  .getViettelCer(this.signerInfo.thirdPartyID)
+                  .subscribe((cers) => {
+                    if (cers) {
+                      this.lstCert = cers?.filter((x) => x?.error == null);
+                      //this.lstCert.push(this.lstCert[0]);
+                      if (this.lstCert?.length == 1) {
+                        let dialogCersWait1 = this.callfc.openForm(
+                          this.viettelESignWait,
+                          '',
+                          450,
+                          250
+                        );
+                        this.codxCommonService
+                          .codxApprove(
+                            this.transRecID,
+                            status,
+                            null,
+                            null,
+                            null,
+                            this.lstCert[0]?.cert,
+                            '4'
+                          )
+                          .subscribe((res: ResponseModel) => {
+                            dialogCersWait1 && dialogCersWait1.close();
                             signCallback && signCallback(res);
                           });
-                        }
-                      })
+                      } else if (this.lstCert?.length > 1) {
+                        this.applySignViettel = false;
+                        let dialogVTCers = this.callfc.openForm(
+                          SelectViettelCertificateComponent,
+                          '',
+                          450,
+                          300,
+                          '',
+                          { lstCert: this.lstCert }
+                        );
+                        dialogVTCers.closed.subscribe((vtCersRes) => {
+                          if (vtCersRes?.event) {
+                            if (this.selectedCert == null)
+                              this.selectedCert =
+                                vtCersRes?.event ?? this.lstCert[0].cert;
+                            this.codxCommonService
+                              .codxApprove(
+                                this.transRecID,
+                                status,
+                                null,
+                                null,
+                                null,
+                                this.selectedCert,
+                                '4'
+                              )
+                              .subscribe((res: ResponseModel) => {
+                                signCallback && signCallback(res);
+                              });
+                          }
+                        });
+                      }
+                    } else {
+                      this.notificationsService.notify(
+                        'Không tìm thấy thông tin xác thực chữ ký số, vui lòng kiểm tra lại!',
+                        '2'
+                      );
                     }
-                  }
-                  else{
-                    this.notificationsService.notify("Không tìm thấy thông tin xác thực chữ ký số, vui lòng kiểm tra lại!",'2')
-                  }                    
-                })
+                  });
                 break;
               }
-              //vnpt 
+              //vnpt
               default: {
                 this.codxCommonService
-                .codxApprove(
-                  this.transRecID,
-                  this.publicSignStatus,
-                  null,
-                  null,
-                  null,
-                  null,
-                  '3'
-                )
-                .subscribe((res: ResponseModel) => {
-                  signCallback && signCallback(res);
-                });
+                  .codxApprove(
+                    this.transRecID,
+                    this.publicSignStatus,
+                    null,
+                    null,
+                    null,
+                    null,
+                    '3'
+                  )
+                  .subscribe((res: ResponseModel) => {
+                    signCallback && signCallback(res);
+                  });
                 break;
               }
             }
           }
         });
-        
+
         break;
       }
     }
@@ -2836,7 +2892,7 @@ export class PdfComponent
               tmpArea,
               recID,
               this.modeView,
-              this.isSettingMode,
+              this.isSettingMode
             )
             .subscribe((res) => {
               if (res) {
@@ -2867,7 +2923,7 @@ export class PdfComponent
                       this.user.userID,
                       this.stepNo,
                       this.modeView,
-                      this.isSettingMode,
+                      this.isSettingMode
                     )
                     .subscribe((res) => {
                       if (res) {
@@ -2965,7 +3021,7 @@ export class PdfComponent
                 tmpArea,
                 recID,
                 this.modeView,
-                this.isSettingMode,
+                this.isSettingMode
               )
               .subscribe((res) => {
                 if (res) {
@@ -2995,7 +3051,7 @@ export class PdfComponent
                         this.user.userID,
                         this.stepNo,
                         this.modeView,
-                        this.isSettingMode,
+                        this.isSettingMode
                       )
                       .subscribe((res) => {
                         if (res) {
@@ -3043,7 +3099,7 @@ export class PdfComponent
         tmpArea,
         tmpArea.recID,
         this.modeView,
-        this.isSettingMode,
+        this.isSettingMode
       )
       .subscribe((res) => {
         if (res) {
@@ -3055,7 +3111,7 @@ export class PdfComponent
               this.user.userID,
               this.stepNo,
               this.modeView,
-              this.isSettingMode,
+              this.isSettingMode
             )
             .subscribe((res) => {
               if (res) {
@@ -3128,7 +3184,7 @@ export class PdfComponent
           tmpArea,
           recID,
           this.modeView,
-          this.isSettingMode,
+          this.isSettingMode
         )
         .subscribe((res) => {
           if (res) {
@@ -3156,7 +3212,7 @@ export class PdfComponent
                 this.user.userID,
                 this.stepNo,
                 this.modeView,
-                this.isSettingMode,
+                this.isSettingMode
               )
               .subscribe((res) => {
                 if (res) {
@@ -3421,6 +3477,24 @@ export class PdfComponent
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//
 
+  popupPublicESign1(status) {
+    if (this.oApprovalTrans?.signatureType == '2') {
+      this.codxCommonService
+        .codxApprove(this.transRecID, status, null, null, null, null, '3')
+        .subscribe((res: ResponseModel) => {
+          if (res?.msgCodeError == null && res?.rowCount > 0) {
+            this.notificationsService.notifyCode('SYS034');
+            this.isSigned = true;
+            this.detectorRef.detectChanges();
+            this.changeConfirmState(res);
+          }
+        });
+    } else {
+      this.publicSignStatus = status;
+      var dialog = this.callfc.openForm(this.publicSignInfo, '', 450, 270);
+      this.detectorRef.detectChanges();
+    }
+  }
   popupPublicESign(status) {
     if (this.oApprovalTrans?.signatureType == '2') {
       this.codxCommonService
@@ -3433,28 +3507,7 @@ export class PdfComponent
             this.changeConfirmState(res);
           }
         });
-    } 
-    else {
-      this.publicSignStatus = status;
-      var dialog = this.callfc.openForm(this.publicSignInfo, '', 450, 270);
-      this.detectorRef.detectChanges();
-    }
-  }
-  popupPublicESign2(status) {
-    if (this.oApprovalTrans?.signatureType == '2') {
-      this.codxCommonService
-        .codxApprove(this.transRecID, status, null, null, null, null, '3')
-        .subscribe((res: ResponseModel) => {
-          if (res?.msgCodeError == null && res?.rowCount > 0) {
-            this.notificationsService.notifyCode('SYS034');
-            this.isSigned = true;
-            this.detectorRef.detectChanges();
-            this.changeConfirmState(res);
-          }
-        });
-    } 
-    else {
-      
+    } else {
       this.publicSignStatus = status;
       let supplierDialog = this.callfc.openForm(
         PopupSupplierComponent,
@@ -3465,7 +3518,7 @@ export class PdfComponent
       );
       supplierDialog.closed.subscribe((res) => {
         if (res?.event) {
-          this.supplier=res?.event;
+          this.supplier = res?.event;
           switch (this.supplier) {
             //usb
             // case '5': {
@@ -3507,23 +3560,25 @@ export class PdfComponent
             //   break;
             // }
             case '4':
-            case '3':  //Viettel
-              var dialogVT_VNPT = this.callfc.openForm(this.publicSignInfo, '', 450, 270);
-              this.detectorRef.detectChanges();              
+            case '3': //Viettel
+              var dialogVT_VNPT = this.callfc.openForm(
+                this.publicSignInfo,
+                '',
+                450,
+                270
+              );
+              this.detectorRef.detectChanges();
               break;
-            
           }
         }
       });
-
-      
     }
   }
   publicESign(dialog) {
-    switch (this.supplier){
-      case '3':{
-        this.esService.editSignature(this.paSignature).subscribe((res) => {
-          if (res && this.transRecID) {
+    this.esService.editSignature(this.paSignature).subscribe((res) => {
+      if (res && this.transRecID) {
+        switch (this.supplier) {
+          case '3': {
             this.codxCommonService
               .codxApprove(
                 this.transRecID,
@@ -3544,62 +3599,59 @@ export class PdfComponent
                   this.changeConfirmState(res);
                 }
               });
+            break;
           }
-        }); 
-        break;
-      }
-      case '4':{
-        this.esService
-        .getViettelCer(this.signerInfo.thirdPartyID)
-        .subscribe((cers) => {
-          if (cers) {
-            this.lstCert = cers?.filter((x) => x?.error == null);
-            if (this.lstCert?.length == 1) {
-              this.viettelESign(this.lstCert[0]?.cert);
-            } else if (this.lstCert?.length > 1) {
-              let dialogCers = this.callfc.openForm(
-                this.viettelCers,
-                '',
-                450,
-                300
-              );
-            }
-          } else {
-            this.notificationsService.notify(
-              'Không tìm thấy thông tin xác thực chữ ký số, vui lòng kiểm tra lại!',
-              '2'
-            );
+          case '4': {
+            this.esService
+              .getViettelCer(this.paSignature?.thirdPartyID)
+              .subscribe((cers) => {
+                if (cers) {
+                  this.lstCert = cers?.filter((x) => x?.error == null);
+                  if (this.lstCert?.length == 1) {
+                    this.viettelESign(this.lstCert[0]?.cert);
+                  } else if (this.lstCert?.length > 1) {
+                    let dialogCers = this.callfc.openForm(
+                      this.viettelCers,
+                      '',
+                      450,
+                      300
+                    );
+                  }
+                } else {
+                  this.notificationsService.notify(
+                    'Không tìm thấy thông tin xác thực chữ ký số, vui lòng kiểm tra lại!',
+                    '2'
+                  );
+                }
+              });
           }
-        });
-        
-      }
-      
-    }
-    
-  }
-  viettelESign(cert:any,dialogCertSelect:any =null){
-    if(dialogCertSelect) dialogCertSelect && dialogCertSelect.close();
-    if(cert == null) cert = this.selectedCert ?? this.lstCert[0];
-    let dialogCers = this.callfc.openForm(this.viettelESignWait, '', 450, 250);
-    this.codxCommonService
-    .codxApprove(
-      this.transRecID,
-      this.publicSignStatus,
-      null,
-      null,
-      null,
-      cert,
-      '4'
-    )
-    .subscribe((res: ResponseModel) => {
-      if (res?.msgCodeError == null && res?.rowCount > 0) {
-        this.notificationsService.notifyCode('SYS034');
-        this.isSigned = true;
-        this.detectorRef.detectChanges();
-        this.changeConfirmState(res);
-        dialogCers && dialogCers.close();
+        }
       }
     });
+  }
+  viettelESign(cert: any, dialogCertSelect: any = null) {
+    dialogCertSelect && dialogCertSelect?.close();
+    if (cert == null) cert = this.selectedCert ?? this.lstCert[0].cert;
+    let dialogCers = this.callfc.openForm(this.viettelESignWait, '', 450, 250);
+    this.codxCommonService
+      .codxApprove(
+        this.transRecID,
+        this.publicSignStatus,
+        null,
+        null,
+        null,
+        JSON.stringify(cert),
+        '4'
+      )
+      .subscribe((res: ResponseModel) => {
+        if (res?.msgCodeError == null && res?.rowCount > 0) {
+          this.notificationsService.notifyCode('SYS034');
+          this.isSigned = true;
+          this.detectorRef.detectChanges();
+          this.changeConfirmState(res);
+        }        
+        dialogCers && dialogCers.close();
+      });
   }
   addSignature(setupShowForm, area = null) {
     let model = {

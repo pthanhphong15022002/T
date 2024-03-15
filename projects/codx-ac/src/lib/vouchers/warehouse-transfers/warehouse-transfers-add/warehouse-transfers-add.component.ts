@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostListener, Injector, Optional, ViewChild } from '@angular/core';
 import { CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, NotificationsService, UIComponent, Util } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CodxAcService, fmIssueTransfersLines, fmReceiptTransfersLines } from '../../../codx-ac.service';
 import { RoundService } from '../../../round.service';
 import { IV_TransfersLines } from '../../../models/IV_TransfersLines.model';
@@ -18,7 +18,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
   //#region Contrucstor
   @ViewChild('eleGridIssue') eleGridIssue: CodxGridviewV2Component;
   @ViewChild('eleGridReceipt') eleGridReceipt: CodxGridviewV2Component;
-  @ViewChild('formWareHouse') public formWareHouse: CodxFormComponent;
+  @ViewChild('master') public master: CodxFormComponent;
   @ViewChild('eleCbxReasonID') eleCbxReasonID: any;
   @ViewChild('eleCbxFromWHID') eleCbxFromWHID: any;
   @ViewChild('eleCbxToWHID') eleCbxToWHID: any;
@@ -39,6 +39,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
   baseCurr: any; //? đồng tiền hạch toán
   isPreventChange: any = false;
   nextTabIndex:any;
+  postDateControl: any;
   editSettings:EditSettingsModel = {
     allowAdding:false,
     allowEditing:false,
@@ -69,10 +70,21 @@ export class WarehouseTransfersAddComponent extends UIComponent {
   //#region Init
   onInit(): void {
     this.acService.setPopupSize(this.dialog, '100%', '100%');
+    this.cache
+      .viewSettingValues('ACParameters')
+      .pipe(
+        takeUntil(this.destroy$),
+        map((arr: any[]) => arr.find((a) => a.category === '1')),
+        map((data) => JSON.parse(data.dataValue))
+      ).subscribe((res: any) => {
+        if (res) {
+          this.postDateControl = res?.PostedDateControl;
+        }
+      })
   }
 
   ngAfterViewInit() {
-    if (this.formWareHouse?.data?.coppyForm) this.formWareHouse.data._isEdit = true; //? test copy để tạm
+    if (this.master?.data?.coppyForm) this.master.data._isEdit = true; //? test copy để tạm
   }
 
   ngOnDestroy() {
@@ -134,7 +146,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
    * @param event 
    */
   changeSubType(event?: any) {
-    this.formWareHouse.setValue('subType', event.data[0], { onlySelf: true, emitEvent: false, });
+    this.master.setValue('subType', event.data[0], { onlySelf: true, emitEvent: false, });
   }
 
   valueChangeMaster(event: any) {
@@ -146,50 +158,50 @@ export class WarehouseTransfersAddComponent extends UIComponent {
         let memo = '';
         if (value == '' || value == null || indexrs == -1) {
           this.isPreventChange = true;
-          this.formWareHouse.setValue(field, null, {});
-          this.formWareHouse.data.reasonName = null;
+          this.master.setValue(field, null, {});
+          this.master.data.reasonName = null;
           this.isPreventChange = false;
           return;
         } 
-        this.formWareHouse.data.reasonName = event?.component?.itemsSelected[0]?.ReasonName;
+        this.master.data.reasonName = event?.component?.itemsSelected[0]?.ReasonName;
         memo = this.getMemoMaster();
-        this.formWareHouse.setValue('memo',memo,{});
+        this.master.setValue('memo',memo,{});
         break;
       case 'fromwhid':
         let indexfromwhid = event?.component?.dataService?.data.findIndex((x) => x.WarehouseID == event.data);
         let memo2 = '';
         if (value == '' || value == null || indexfromwhid == -1) {
           this.isPreventChange = true;
-          this.formWareHouse.setValue(field, null, {});
-          this.formWareHouse.data.fromWHIDName = null;
+          this.master.setValue(field, null, {});
+          this.master.data.fromWHIDName = null;
           this.isPreventChange = false;
           return;
         }
-        this.formWareHouse.data.fromWHIDName = event?.component?.dataService?.data[indexfromwhid].WarehouseName;
+        this.master.data.fromWHIDName = event?.component?.dataService?.data[indexfromwhid].WarehouseName;
         memo2 = this.getMemoMaster();
-        this.formWareHouse.setValue('memo', memo2, {});
+        this.master.setValue('memo', memo2, {});
         break;
       case 'towhid':
         let indextowhid = event?.component?.dataService?.data.findIndex((x) => x.WarehouseID == event.data);
         let memo3 = '';
         if (value == '' || value == null || indextowhid == -1) {
           this.isPreventChange = true;
-          this.formWareHouse.setValue(field, null, {});
-          this.formWareHouse.data.toWHIDName = null;
+          this.master.setValue(field, null, {});
+          this.master.data.toWHIDName = null;
           this.isPreventChange = false;
           return;
         }
-        this.formWareHouse.data.toWHIDName = event?.component?.dataService?.data[indextowhid].WarehouseName;
+        this.master.data.toWHIDName = event?.component?.dataService?.data[indextowhid].WarehouseName;
         memo3 = this.getMemoMaster();
-        this.formWareHouse.setValue('memo', memo3, {});
+        this.master.setValue('memo', memo3, {});
         break;
       case 'requester':
         let indexrq = event?.component?.dataService?.data.findIndex((x) => x.ObjectID == event.data);
         if(value == '' || value == null || indexrq == -1){
-          this.formWareHouse.data.requesterName = null;
+          this.master.data.requesterName = null;
           return;
         }
-        this.formWareHouse.data.requesterName = event?.component?.itemsSelected[0]?.ObjectName;
+        this.master.data.requesterName = event?.component?.itemsSelected[0]?.ObjectName;
         break;
     }
   }
@@ -205,7 +217,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
     
     this.api.exec('IV', 'TransfersLinesBusiness', 'ValueChangedAsync', [
       event.field,
-      this.formWareHouse.data,
+      this.master.data,
       oLine,
       type
     ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
@@ -249,12 +261,12 @@ export class WarehouseTransfersAddComponent extends UIComponent {
 
   //#region Method
   onDiscardVoucher() {
-    if (this.formWareHouse && this.formWareHouse.data._isEdit) {
+    if (this.master && this.master.data._isEdit) {
       this.notification.alertCode('AC0010', null).subscribe((res) => {
         if (res.event.status === 'Y') {
           this.detectorRef.detectChanges();
           this.dialog.dataService
-            .delete([this.formWareHouse.data], false, null, '', '', null, null, false)
+            .delete([this.master.data], false, null, '', '', null, null, false)
             .pipe(takeUntil(this.destroy$))
             .subscribe((res) => {
               if (res.data != null) {
@@ -277,7 +289,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
    */
   onSaveVoucher(type) {
     this.ngxLoader.start();
-    this.formWareHouse.save(null, 0, '', '', false, { allowCompare: false })
+    this.master.save(null, 0, '', '', false, { allowCompare: false })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         let isError = false;
@@ -317,7 +329,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
   saveVoucher(type) {
     this.api
       .exec('IV', 'TransfersBusiness', 'UpdateVoucherAsync', [
-        this.formWareHouse.data,
+        this.master.data,
         this.journal,
       ])
       .pipe(takeUntil(this.destroy$))
@@ -336,7 +348,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
             .subscribe((res: any) => {
               if (res) {
                 res.data.isAdd = true;
-                this.formWareHouse.refreshData({...res.data});
+                this.master.refreshData({...res.data});
                 setTimeout(() => {
                   this.eleGridIssue.dataSource = [];
                   this.eleGridIssue.refresh();
@@ -347,7 +359,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
               }
             });
           }
-          if (this.formWareHouse.data.isAdd || this.formWareHouse.data.isCopy)
+          if (this.master.data.isAdd || this.master.data.isCopy)
             this.notification.notifyCode('SYS006');
           else 
             this.notification.notifyCode('SYS007');
@@ -363,7 +375,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
   //#region Function
 
   onAddLine(type) {
-    this.formWareHouse.save(null, 0, '', '', false,{allowCompare:false})
+    this.master.save(null, 0, '', '', false,{allowCompare:false})
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
@@ -403,10 +415,10 @@ export class WarehouseTransfersAddComponent extends UIComponent {
   setDefaultLine() {
     let model : any = new IV_TransfersLines();
     let oLine = Util.camelizekeyObj(model);
-    oLine.transID = this.formWareHouse.data.recID;
-    oLine.idiM4 = this.formWareHouse.data.fromWHID;
-    oLine.idiM42 = this.formWareHouse.data.toWHID;
-    oLine.reasonID = this.formWareHouse.data.reasonID;
+    oLine.transID = this.master.data.recID;
+    oLine.idiM4 = this.master.data.fromWHID;
+    oLine.idiM42 = this.master.data.toWHID;
+    oLine.reasonID = this.master.data.reasonID;
     let indexReason = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value);
     if (indexReason > -1) {
       oLine.note = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].ReasonName;
@@ -423,7 +435,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
         break;
       case 'add':
       case 'update':
-        this.dialog.dataService.update(this.formWareHouse.data).subscribe();
+        this.dialog.dataService.update(this.master.data).subscribe();
         break;
       case 'closeEdit': //? khi thoát dòng
       if (this.eleGridIssue && this.eleGridIssue.rowDataSelected) {

@@ -3,7 +3,7 @@
   *ngIf="dataSelected"
   (dblclick)="dbClick(dataSelected)"
 >
-  <div class="w-30px p-2 d-flex align-items-center">
+  <div class="w-20px p-2 d-flex align-items-center">
     <div
       *ngIf="
         dataSelected.endDate &&
@@ -20,7 +20,7 @@
       ></codx-label>
     </ng-template>
   </div>
-  <div class="w-200px p-2 d-flex align-items-center">
+  <div class="w-150px p-2 d-flex align-items-center">
     <span
       class="icon-16 me-1"
       [class]="dataSelected?.activityType | vll : 'BP001' : 'icon' | async"
@@ -76,7 +76,7 @@
       placement="right bottom  top"
       [popoverClass]="process?.recID"
     >
-      <span>
+      <span class="text-gray-600">
         {{ process?.processName }}
       </span>
     </div>
@@ -134,7 +134,16 @@
       ></span>
     </div>
   </div>
-
+  <div class="w-250px p-2 d-flex">
+    <codx-vll
+      [name]="'BP014'"
+      [value]="dataSelected?.status"
+      [showText]="true"
+      [showBgColor]="true"
+      class="badge badge-md"
+    >
+    </codx-vll>
+  </div>
   <div class="w-350px p-2 d-flex flex-column">
     <div class="d-flex mb-1">
       <codx-label
@@ -195,17 +204,8 @@
       </div>
     </div>
   </div>
-  <div class="w-200px p-2 d-flex">
-    <codx-vll
-      [name]="'BP014'"
-      [value]="dataSelected?.status"
-      [showText]="true"
-      [showBgColor]="true"
-      class="badge badge-md"
-    >
-    </codx-vll>
-  </div>
-  <div class="w-250px p-2 d-flex flex-column">
+
+  <div class="w-260px p-2 d-flex flex-column">
     <div
       class="d-flex justify-content-start align-items-center"
       *ngIf="dataSelected.createdBy"

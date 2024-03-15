@@ -183,7 +183,9 @@ export class ContractsComponent extends UIComponent {
     this.vllStatus = this.grvSetup['Status'].referedValue;
     this.vllApprove = this.grvSetup['ApproveStatus'].referedValue;
     this.tabControl = this.contractService?.footerTab;
-    this.processID = this.activedRouter.snapshot?.queryParams['processID'];
+    this.activedRouter.queryParams.subscribe(params => {
+      this.processID = params['processID'] || null;
+    });
     this.getAccount();
     this.getColumsGrid(this.grvSetup);
     const [valueListTab, tabDefaut] = await Promise.all([
@@ -1564,16 +1566,18 @@ export class ContractsComponent extends UIComponent {
   liquidationContract(data) {
     this.liquidation = JSON.parse(JSON.stringify(data));
     this.contractService
-      .getAutonumber(this.liquidation?.processID)
+      .getAutoCodeByFunctionId("CM0207", "CM_Contracts")
       .subscribe((res) => {
         if (res) {
           this.liquidation.disposalID = res;
+          this.changeDetectorRef.markForCheck();
+        }else{
+          this.notiService.notify("Số tự động thanh lý hợp đồng chưa được thiết lâp","3");
         }
       });
     this.liquidation.status = '17';
     this.liquidation.disposalOn = new Date();
     this.liquidation.debtClosingOn = new Date();
-    this.liquidation.disposalID = this.liquidation?.contractID;
     this.liquidation.pmtMethodID = 'CK';
     try {
       let datas = data?.datas;

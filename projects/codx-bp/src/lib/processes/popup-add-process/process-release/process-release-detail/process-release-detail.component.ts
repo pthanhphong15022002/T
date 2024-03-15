@@ -41,6 +41,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   user: any;
   info: any;
   tempPermission = [];
+  listDocument = [];
   constructor(
     private shareService: CodxShareService,
     private cache: CacheService,
@@ -71,6 +72,11 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.getData();
     this.getInfo();
+    this.getInStance();
+  }
+  onNavChange(e:any)
+  {
+    this.active = e;
   }
   getInfo() {
     let paras = [this.data.createdBy];
@@ -107,8 +113,72 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       });
   }
 
+  getInStance()
+  {
+    this.api
+      .execSv(
+        'BP',
+        'BP',
+        'ProcessInstancesBusiness',
+        'GetItemsByInstanceIDAsync',
+        this.data.recID
+      )
+      .subscribe((item:any) => {
+        if (item) {
+          if(item?.documentControl && item.documentControl.length>0)
+          {
+            item.documentControl.forEach(element => {
+              if(element.files && element.files.length>0)
+              {
+                let check = element.files.some(x=>x.type == "1" || x.type== "3")
+                if(check)
+                {
+                  this.listDocument.push(element);
+                }
+              }
+            });
+
+            if(this.listDocument.length>0)
+            {
+              let ids = [];
+              this.listDocument.forEach((elm) => {
+                if (elm.files && elm.files.length > 0)
+                {
+                  elm.files.forEach(element => {
+                    if(element.type == "1" || element.type == "3") ids.push(element.fileID || element?.recID);
+                  });
+                }
+              });
+
+              if(ids.length>0)
+              {
+                var str = JSON.stringify(ids);
+                this.getFile(str)
+              }
+            }
+          }
+        }
+      });
+  }
+  getFile(recID: any) {
+    this.api
+      .execSv('DM', 'DM', 'FileBussiness', 'GetListFile', recID)
+      .subscribe((item:any) => {
+        if (item) {
+          item?.forEach(ix=>{
+            let index = this.listDocument.findIndex(x=>x.files.some(x=>x.fileID == ix.recID));
+            if(index>=0)
+            {
+              if(!this.listDocument[index]?.filess) this.listDocument[index].filess = [];
+              this.listDocument[index].filess.push(ix);
+            }
+          });
+        }
+      });
+  }
   getPermission() {
     let approvers = [];
+    if(!this.process) return;
     this.process.steps?.forEach((step) => {
       if (step?.permissions?.length > 0) {
         step?.permissions.forEach((per) => {
@@ -154,10 +224,28 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
         elm.countTask = 0;
         if (elm.child && elm.child.length > 0) {
           elm.countTask = elm.child.length;
-          elm.countCompleted =
-            (elm.child.filter((x) => x.status == '3') || []).length || 0;
+          elm.countCompleted = 0;
+          debugger
+          elm.child.forEach(element => {
+            if(element.activityType != "Conditions" && element.status == "5") elm.countCompleted ++;
+            else if(element.activityType == "Conditions")
+            {
+              if(element.child && element.child.length>0)
+              {
+                if(element.child.some(x=>x.status == "5")) elm.countCompleted ++;
+              }
+            }
+          });
+          
           elm.percentCompleted = (elm.countCompleted / elm.countTask) * 100;
+
+          elm.percentCompleted = elm.percentCompleted.toFixed(2);
+          elm.duration = elm.child.reduce(
+            (n, { duration }) => n + duration,
+            0
+          );
         }
+        
       });
       this.data.countTask = this.listStage.reduce(
         (n, { countTask }) => n + countTask,
@@ -199,16 +287,16 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
                 ?.join(';') ?? null;
           }
           elm2.startDate = this.listTask[index].startDate
-            ? moment(this.listTask[index].startDate).format('dd/MM/yyyy')
+            ? moment(this.listTask[index].startDate).format('DD/MM/YYYY')
             : 'dd/MM/yyyy';
           elm2.endDate = this.listTask[index].endDate
-            ? moment(this.listTask[index].endDate).format('dd/MM/yyyy')
+            ? moment(this.listTask[index].endDate).format('DD/MM/YYYY')
             : 'dd/MM/yyyy';
           elm2.actualStart = this.listTask[index].actualStart
-            ? moment(this.listTask[index].actualStart).format('dd/MM/yyyy')
+            ? moment(this.listTask[index].actualStart).format('DD/MM/YYYY')
             : 'dd/MM/yyyy';
           elm2.actualEnd = this.listTask[index].actualEnd
-            ? moment(this.listTask[index].actualEnd).format('dd/MM/yyyy')
+            ? moment(this.listTask[index].actualEnd).format('DD/MM/YYYY')
             : 'dd/MM/yyyy';
           elm2.status = this.listTask[index].status;
           elm2.dataTask = this.listTask[index];
@@ -313,4 +401,5 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       }
     });
   }
+
 }

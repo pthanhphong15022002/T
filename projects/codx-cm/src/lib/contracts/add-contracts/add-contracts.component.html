@@ -705,6 +705,8 @@
             (valueChangeCustom)="valueChangeCustom($event)"
             (addFileCompleted)="addFileCompleted($event)"
             [disable]="action == 'view'"
+            [isRezisePopup]="true"
+            (rezisePopup)="rezisePopup($event)"
           >
           </codx-input-custom-field>
         </div>
@@ -802,6 +804,8 @@
           (valueChangeCustom)="valueChangeCustom($event)"
           (addFileCompleted)="addFileCompleted($event)"
           [disable]="action == 'view'"
+          [isRezisePopup]="true"
+          (rezisePopup)="rezisePopup($event)"
         >
         </codx-input-custom-field>
       </div>

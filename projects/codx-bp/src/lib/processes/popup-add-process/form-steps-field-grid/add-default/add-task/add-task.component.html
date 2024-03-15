@@ -52,7 +52,7 @@
             <button type="button" class="btn btn-light w-100 mt-4 cursor-pointer" (click)="settingEmail()"><i class="icon-i-plus"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSettingsEditEmail" default="Thêm mới hoặc chọn mẫu biên bản"></codx-label></button>
         </div>
         <div class="d-flex flex-column mt-4">
-            <codx-label formName="fmBPFieldGrid" fiedName="lblTaskDuration" default="Thời gian thực hiện" class="fw-bold"></codx-label>
+            <div class="d-flex align-items-center"><codx-label formName="fmBPFieldGrid" fiedName="lblTaskDuration" default="Thời gian thực hiện" class="fw-bold"></codx-label> <span class="text-danger ms-2">(*)</span></div>
             <div class="d-flex align-items-center">
                 <codx-input type="number"  field="duration" [crrValue]="data?.duration" (valueChange)="valueChange($event)" [ngClass]="'w-80px'"></codx-input>
                 <codx-input type="valuelist" [refValue]="'BP019'" [crrValue]="data?.interval"  field="interval" (valueChange)="valueChange($event)" [ngClass]="'mx-2 w-80px'"></codx-input>
@@ -64,7 +64,7 @@
         </div>
         <div class="d-flex flex-column border-top mt-4 pt-4" *ngIf="activityType != 'Form'">
             <div class="d-flex align-items-center justify-content-between">
-                <codx-label formName="fmBPFieldGrid" fiedName="lblTaskOwners" default="Người thực hiện" class="fw-bold"></codx-label>
+                <div class="d-flex align-items-center"><codx-label formName="fmBPFieldGrid" fiedName="lblTaskOwners" default="Người thực hiện" class="fw-bold"></codx-label> <span class="text-danger ms-2">(*)</span></div>
                 <button
                     type="button"
                     class="btn btn-icon btn-sm btn-light-primary me-2"
@@ -193,14 +193,16 @@
         </ng-container>
         <ng-container *ngIf="activityType == 'Task' || activityType == 'Event' || activityType == 'Stamp'">
             <div class="d-flex flex-column border-top mt-4 pt-4">
-                <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment" default="Tài liệu đính kèm" class="fw-bold"></codx-label>
-                <div class="d-flex align-items-center justify-content-between px-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment" default="Tài liệu đính kèm" class="fw-bold"></codx-label>
+                    <button type="button" class="btn btn-outline-secondary" (click)="openAttach1()"><i class="icon-attach_file"></i></button>
+                </div>
+                <!-- <div class="d-flex align-items-center justify-content-between px-4">
                     <button type="button" class="btn btn-light w-100 mt-4 me-1" (click)="openFormFileProcess()"><i class="icon-i-file-earmark-text"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment1" default="Chọn từ quy trình"></codx-label></button>
                     <button type="button" class="btn btn-light w-100 mt-4 ms-1" (click)="openAttach1()"><i class="icon-attach_file"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment2" default="Đính kèm mới"></codx-label></button>
-                </div>
-                <div class="mt-6">
-                    <div class="d-flex flex-column px-4 py-2" [class.border-top]="(listDocument && listDocument.length>1 && i>0)" *ngFor="let item of listDocument , let i = index">
-                        <span class="fw-bold">{{item.title}}</span>
+                </div> -->
+                <div class="mt-2">
+                    <div class="d-flex flex-column py-2" *ngFor="let item of listDocument , let i = index">
                         <codx-thumbnail
                             [files]="item?.filess"
                             displayThumb="simple"
@@ -209,6 +211,7 @@
                             [isClick]="false"
                         >
                         </codx-thumbnail>
+                        <span class="text-gray-500">{{item.title}}</span>
                     </div>
                 </div>
                 <div class="mt-6">
@@ -238,21 +241,30 @@
                     <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentApproval'" [default]="'Tài liệu duyệt'" class="fw-bold" *ngIf="activityType == 'Approve'"></codx-label>
                     <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentCheck'" [default]="'Tài liệu kiểm tra'" class="fw-bold" *ngIf="activityType == 'Check'"></codx-label>
                     <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentSign'" [default]="'Tài liệu ký số'" class="fw-bold" *ngIf="activityType == 'Sign'"></codx-label>
-                    <button type="button" class="btn btn-outline-secondary" (click)="openFormFileProcess()"><i class="icon-attach_file"></i></button>
+                    <button type="button" class="btn btn-outline-secondary" (click)="openAttach2()"><i class="icon-attach_file"></i></button>
                 </div>
-                <div class="mt-6">
-                    
-                    <div class="d-flex flex-column px-4" *ngFor="let item of listDocument">
-                        <span>{{item.title}}</span>
-                        <codx-thumbnail
-                            [files]="item?.filess"
-                            displayThumb="simple"
-                            [hideDelete]="'1'"
-                            [hideMoreF]="'0'"
-                            [isClick]="false"
-                            
-                        >
-                        </codx-thumbnail>
+                <div class="mt-4">
+                    <div class="d-flex flex-column w-100" *ngFor="let item of listDocument">
+                        <div class="d-flex align-items-center w-100 justify-content-between">
+                            <div class="d-flex flex-column w-100">
+                                <ng-container *ngFor="let f of item?.filess , let i = index">
+                                    <codx-thumbnail
+                                        [files]="[f]"
+                                        displayThumb="simple"
+                                        [hideDelete]="'1'"
+                                        [hideMoreF]="'0'"
+                                        [isClick]="false"
+                                        [tmpRight]="this.activityType == 'Sign' ? tmpEsign: null"
+                                    >
+                                    </codx-thumbnail>
+                                    <ng-template #tmpEsign>
+                                        <i class="icon-gesture cursor-pointer" [id]="'esign'+f.recID" [ngClass]="item?.files[i]?.eSign == true ? 'text-primary' : ''" (click)="selectEsign(f.recID , item.recID)"></i>
+                                    </ng-template>
+                                </ng-container>
+                                <span class="text-gray-500">{{item.title}}</span>
+                            </div>
+                           
+                        </div>
                         <ng-template #tmpRightAttach let-file>
                             <div >
                               <codx-input type="checkbox" [checked]="true"
@@ -261,17 +273,17 @@
                           </ng-template>
                     </div>
                     <button *ngIf="this.activityType=='Sign'" (click)="esign()" 
-                        class="pt-3 btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
+                        class="pt-3 mt-4 btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
                         <span class="icon-design_services btn-text-primary me-2"></span>
                         <codx-label name="lblUploadFile" default="Thiết lập vùng ký"></codx-label>
                     </button>
                 </div>
-                <!-- <div class="mt-6">
-                    <codx-attachment #attachment2 hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+                <div class="mt-6">
+                   <codx-attachment #attachment2 hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
                     hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel"
-                    [idField]="'RecID'" [isSaveSelected]="'1'" [objectId]="data?.recID" [objectType]="formModel?.entityName" (fileSave)="fileSave($event)" (fileDelete)="fileDelete($event)">
+                    [idField]="'RecID'" [hideImageThumb]="'1'" [isSaveSelected]="'1'" [objectId]="data?.recID" [objectType]="formModel?.entityName" (fileSave)="fileSave($event)" (fileDelete)="fileDelete($event)">
                     </codx-attachment>
-                </div> -->
+                </div> 
             </div>
         </ng-container>
         <ng-container *ngIf="activityType == 'Email'">

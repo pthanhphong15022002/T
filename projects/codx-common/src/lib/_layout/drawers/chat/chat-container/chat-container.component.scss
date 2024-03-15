@@ -6,13 +6,15 @@
     position: relative;
 }
 .chat-container-boxchat{
-    width: 100%;
+    width: 0;
     height: 0;
     display: flex;
     justify-content: end;
     flex-direction: row-reverse;
     position: absolute;
-    top: -580px;
+    height: 580px;
+    max-height: calc(100vh - 65px);
+    bottom: 0;
     right: 50px;
 }
 .chat-container-boxchat-more{

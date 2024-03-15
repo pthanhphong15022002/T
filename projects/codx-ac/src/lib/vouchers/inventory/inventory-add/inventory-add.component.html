@@ -1,51 +1,51 @@
-<codx-form class="ac-dialog ac-form" #formVouchers [body]="TmpBody" [footer]="TmpFooter" [formModel]="dialog.formModel"
+<codx-form class="ac-dialog ac-form" #master [body]="TmpBody" [footer]="TmpFooter" [formModel]="dialog.formModel"
   [dialog]="dialog" [customToolbar]="TmpSubToolbar" [data]="dataDefault" [openMore]="false"
   (onAfterInit)="onAfterInitForm($event)">
 </codx-form>
 
 <!-- Start: Sub toolbar -->
 <ng-template #TmpSubToolbar>
-  <div *ngIf="formVouchers" class="w-100">
+  <div *ngIf="master" class="w-100">
     <div class="d-flex align-items-center justify-content-between pt-3 ac-popupfull">
       <div class="d-flex align-items-center me-2">
         <div style="background-color: var(--primary-dark)"
           class="w-25px symbol h-25px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
-          <i *ngIf="formVouchers.data?.isAdd" class="text-white icon-i-file-earmark-plus icon-16"></i>
-          <i *ngIf="formVouchers.data?.isEdit" class="text-white icon-edit-one icon-16"></i>
-          <i *ngIf="formVouchers.data?.isCopy" class="text-white icon-content_copy icon-16"></i>
-          <i *ngIf="formVouchers.data?.isReadOnly" class="text-white bi bi-eye icon-16"></i>
+          <i *ngIf="master.data?.isAdd" class="text-white icon-i-file-earmark-plus icon-16"></i>
+          <i *ngIf="master.data?.isEdit" class="text-white icon-edit-one icon-16"></i>
+          <i *ngIf="master.data?.isCopy" class="text-white icon-content_copy icon-16"></i>
+          <i *ngIf="master.data?.isReadOnly" class="text-white bi bi-eye icon-16"></i>
         </div>
         <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
           {{ headerText }}
         </div>
         <ng-container>
-          <ng-container *ngIf="!formVouchers.data.isReadOnly">
-            <div *ngIf="formVouchers && !formVouchers?.data?.validated" class="d-flex align-items-center">
+          <ng-container *ngIf="!master.data.isReadOnly">
+            <div *ngIf="master && !master?.data?.validated" class="d-flex align-items-center">
               <i class="icon-arrow_drop_down_circle icon-16 mt-1"></i>
               <div style="margin-left: -5px;" class="input-circle h-20px input-border-0 w-400px mb-1">
                 <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
                   [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist"
-                  field="subType" [refValue]="formVouchers?.gridviewSetup['SubType']?.referedValue"
-                  [value]="formVouchers?.data?.subType" emptyText="Loại phiếu"
+                  field="subType" [refValue]="master?.gridviewSetup['SubType']?.referedValue"
+                  [value]="master?.data?.subType" emptyText="Loại phiếu"
                   (valueChange)="changeSubType($event)"></codx-dropdown-select>
               </div>
             </div>
           </ng-container>
-          <span *ngIf="(formVouchers.data?.validated) || (formVouchers.data?.isReadOnly)">
-            <codx-vll [name]="formVouchers?.gridviewSetup['SubType'].referedValue" [formModel]="dialog.formModel"
-              [field]="'SubType'" [value]="formVouchers.data?.subType" [showText]="true" [showBgColor]="true"
+          <span *ngIf="(master.data?.validated) || (master.data?.isReadOnly)">
+            <codx-vll [name]="master?.gridviewSetup['SubType'].referedValue" [formModel]="dialog.formModel"
+              [field]="'SubType'" [value]="master.data?.subType" [showText]="true" [showBgColor]="true"
               class="badge badge-light-primary badge-sm mt-1">
             </codx-vll>
           </span>
         </ng-container>
-        <!-- <div class="input-circle input-sm" *ngIf="formVouchers?.formGroup">
+        <!-- <div class="input-circle input-sm" *ngIf="master?.formGroup">
           <span class="me-2">
-            <codx-vll *ngIf="formVouchers.data?.status == '1'" [formModel]="dialog.formModel" [field]="'Status'"
-              [value]="formVouchers.data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
+            <codx-vll *ngIf="master.data?.status == '1'" [formModel]="dialog.formModel" [field]="'Status'"
+              [value]="master.data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
               class="badge badge-light badge-sm">
             </codx-vll>
-            <codx-vll *ngIf="formVouchers.data?.status != '1'" [formModel]="dialog.formModel" [field]="'Status'"
-              [value]="formVouchers.data?.status" [showText]="true" [showBgColor]="true"
+            <codx-vll *ngIf="master.data?.status != '1'" [formModel]="dialog.formModel" [field]="'Status'"
+              [value]="master.data?.status" [showText]="true" [showBgColor]="true"
               class="badge badge-light badge-sm">
             </codx-vll>
           </span>
@@ -109,9 +109,9 @@
 <!-- Start: Footer -->
 <ng-template #TmpFooter>
   <div style="display: grid !important" ngClass="collape"
-    class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="formVouchers.data">
-    <div *ngIf="!formVouchers.data.isReadOnly" class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
-      <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true" *ngIf="!formVouchers.data?.validated" type="button"
+    class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="master.data">
+    <div *ngIf="!master.data.isReadOnly" class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
+      <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true" *ngIf="!master.data?.validated" type="button"
         class="btn btn-md btn-danger me-2" (keydown.enter)="onDiscardVoucher(); $event.preventDefault()"
         (click)="onDiscardVoucher()">
         <div class="d-flex align-items-center">
@@ -137,14 +137,14 @@
       </button>
     </div>
     <codx-tabs [entityName]="dialog.formModel.entityName" [formModel]="dialog.formModel"
-      [objectID]="formVouchers.data?.recID" [funcID]="dialog.formModel.funcID" [TabControl]="tabInfo" [data]="formVouchers.data" [keyField]="'recID'"></codx-tabs>
+      [objectID]="master.data?.recID" [funcID]="dialog.formModel.funcID" [TabControl]="tabInfo" [data]="master.data" [keyField]="'recID'"></codx-tabs>
   </div>
 </ng-template>
 <!-- End: Footer -->
 
 <!-- Start: TmpTabGeneral -->
 <ng-template #TmpTabGeneral>
-  <ng-container *ngIf="formVouchers?.formGroup">
+  <!-- <ng-container *ngIf="master?.formGroup">
     <div class="mt-3 ac-master">
       <div style="flex-wrap: nowrap;" class="row d-flex overflow-auto">
         <div style="min-width: 850px;" class="col-8">
@@ -154,7 +154,7 @@
                 <codx-label style="white-space: nowrap !important" fiedName="WarehouseID"
                   [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" [Group]="formVouchers.formGroup"
+                <codx-input [disabled]="master.data?.isReadOnly ? true : false" [Group]="master.formGroup"
                   field="warehouseID" [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)">
                 </codx-input>
               </div>
@@ -163,21 +163,21 @@
               <div class="form-group">
                 <codx-label style="white-space: nowrap !important" fiedName="ReasonID" [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" #eleCbxReasonID
-                  [Group]="formVouchers.formGroup" field="reasonID" [formModel]="dialog.formModel"
+                <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxReasonID
+                  [Group]="master.formGroup" field="reasonID" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input>
               </div>
             </div>
           </div>
           <div class="row"
-            [ngStyle]="formVouchers.data.subType == (journal.journalType + '1') ? '' : {display:'none'}">
+            [ngStyle]="master.data.subType == (journal.journalType + '1') ? '' : {display:'none'}">
             <div class="col-3" style="width: 360px;">
               <div class="form-group">
                 <codx-label style="white-space: nowrap !important" fiedName="DIM1" [formModel]="dialog.formModel">
                 </codx-label>
-                <ng-container *ngIf="formVouchers.data.subType == (journal.journalType + '1')">
-                  <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" [Group]="formVouchers.formGroup"
+                <ng-container *ngIf="master.data.subType == (journal.journalType + '1')">
+                  <codx-input [disabled]="master.data?.isReadOnly ? true : false" [Group]="master.formGroup"
                     field="diM1" [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)">
                   </codx-input>
                 </ng-container>
@@ -187,8 +187,8 @@
               <div class="form-group">
                 <codx-label style="white-space: nowrap !important" fiedName="DIM2" [formModel]="dialog.formModel">
                 </codx-label>
-                <ng-container *ngIf="formVouchers.data.subType == (journal.journalType + '1')">
-                  <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" [Group]="formVouchers.formGroup"
+                <ng-container *ngIf="master.data.subType == (journal.journalType + '1')">
+                  <codx-input [disabled]="master.data?.isReadOnly ? true : false" [Group]="master.formGroup"
                     field="diM2" [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)">
                   </codx-input>
                 </ng-container>
@@ -196,14 +196,14 @@
             </div>
           </div>
           <div class="row"
-            [ngClass]="formVouchers?.data?.subType == (journal.journalType + '2') ? '' : 'd-none'">
+            [ngClass]="master?.data?.subType == (journal.journalType + '2') ? '' : 'd-none'">
             <div class="col-3" style="width: 360px;">
               <div class="form-group">
                 <codx-label style="white-space: nowrap !important" fiedName="ObjectID" [formModel]="dialog.formModel">
                 </codx-label>
-                <ng-container *ngIf="formVouchers?.data?.subType == (journal.journalType + '2')">
-                  <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" #eleCbxObjectID
-                    [Group]="formVouchers?.formGroup" field="objectID" [formModel]="dialog.formModel"
+                <ng-container *ngIf="master?.data?.subType == (journal.journalType + '2')">
+                  <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxObjectID
+                    [Group]="master?.formGroup" field="objectID" [formModel]="dialog.formModel"
                     (valueChange)="valueChangeMaster($event)">
                   </codx-input>
                 </ng-container>
@@ -213,9 +213,9 @@
               <div class="form-group">
                 <codx-label style="white-space: nowrap !important" fiedName="Requester" [formModel]="dialog.formModel">
                 </codx-label>
-                <ng-container *ngIf="formVouchers?.data?.subType == '0302' || formVouchers?.data?.subType == '0312'">
-                  <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" #eleCbxRequester
-                    [Group]="formVouchers.formGroup" field="requester" [formModel]="dialog.formModel"
+                <ng-container *ngIf="master?.data?.subType == '0302' || master?.data?.subType == '0312'">
+                  <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxRequester
+                    [Group]="master.formGroup" field="requester" [formModel]="dialog.formModel"
                     (valueChange)="valueChangeMaster($event)">
                   </codx-input>
                 </ng-container>
@@ -226,8 +226,8 @@
                 <codx-label style="white-space: nowrap !important" fiedName="RequestDate"
                   [formModel]="dialog.formModel">
                 </codx-label>
-                <ng-container *ngIf="formVouchers?.data?.subType == (journal.journalType + '2')">
-                  <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" [Group]="formVouchers.formGroup"
+                <ng-container *ngIf="master?.data?.subType == (journal.journalType + '2')">
+                  <codx-input [disabled]="master.data?.isReadOnly ? true : false" [Group]="master.formGroup"
                     field="requestDate" [formModel]="dialog.formModel">
                   </codx-input>
                 </ng-container>
@@ -239,7 +239,7 @@
               <div class="form-group">
                 <codx-label style="white-space: nowrap !important" fiedName="Memo" [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" [Group]="formVouchers.formGroup"
+                <codx-input [disabled]="master.data?.isReadOnly ? true : false" [Group]="master.formGroup"
                   field="memo" [formModel]="dialog.formModel">
                 </codx-input>
               </div>
@@ -253,8 +253,8 @@
                 <codx-label style="white-space: nowrap !important" fiedName="VoucherDate"
                   [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" #tVoucherDate
-                  [Group]="formVouchers.formGroup" [formModel]="dialog.formModel" field="voucherDate"
+                <codx-input [disabled]="master.data?.isReadOnly ? true : false" #tVoucherDate
+                  [Group]="master.formGroup" [formModel]="dialog.formModel" field="voucherDate"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input>
               </div>
@@ -263,45 +263,23 @@
               <div class="form-group">
                 <codx-label style="white-space: nowrap !important" fiedName="VoucherNo" [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [Group]="formVouchers.formGroup" field="voucherNo" [formModel]="dialog.formModel"
+                <codx-input [Group]="master.formGroup" field="voucherNo" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)"
-                  [disabled]="(journal?.assignRule != '0' || formVouchers.data?.isReadOnly)">
+                  [disabled]="(journal?.assignRule != '0' || master.data?.isReadOnly)">
                 </codx-input>
               </div>
             </div>
           </div>
           <div class="row justify-content-end">
-            <!-- <div class="col-3" style="width: 160px;">
-              <div class="form-group mb-0">
-                <codx-label style="white-space: nowrap !important" fiedName="PostedDate"
-                  [formModel]="dialog.formModel">
-                </codx-label>
-                <codx-input [disabled]="(formVouchers.data?.isReadOnly || postDateControl != '1') ? true : false"
-                  [Group]="formVouchers.formGroup" field="postedDate" [formModel]="dialog.formModel"
-                  (valueChange)="valueChangeMaster($event)">
-                </codx-input>
-              </div>
-            </div> -->
             <div class="col-3" style="width: 160px;">
               <div class="form-group mb-0 d-flex" style="flex-direction: column;">
                 <codx-label style="white-space: nowrap !important" fiedName="Status" [formModel]="dialog.formModel">
                 </codx-label>
-                <!-- <codx-input [disabled]="(formVouchers.data?.isReadOnly || postDateControl != '1') ? true : false"
-                  [Group]="formVouchers.formGroup" field="postedDate" [formModel]="dialog.formModel"
-                  (valueChange)="valueChangeMaster($event)">
-                </codx-input> -->
-                <!-- <codx-vll *ngIf="formVouchers.data?.status == '1'" [formModel]="dialog.formModel" [field]="'Status'"
-                  [value]="formVouchers.data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
-                  class="badge badge-light badge-sm">
-                </codx-vll>
-                <codx-vll *ngIf="formVouchers.data?.status != '1'" [formModel]="dialog.formModel" [field]="'Status'"
-                  [value]="formVouchers.data?.status" [showText]="true" [showBgColor]="true" class="badge badge-light badge-lg">
-                </codx-vll> -->
-                <codx-input *ngIf="formVouchers.data?.status == '1'" [disabled]="true" field="status"
-                  [formModel]="dialog.formModel" [crrValue]="formVouchers.data?.validated ? '1' : '7'">
+                <codx-input *ngIf="master.data?.status == '1'" [disabled]="true" field="status"
+                  [formModel]="dialog.formModel" [crrValue]="master.data?.validated ? '1' : '7'">
                 </codx-input>
-                <codx-input *ngIf="formVouchers.data?.status != '1'" [disabled]="true" field="status"
-                  [formModel]="dialog.formModel" [crrValue]="formVouchers.data?.status">
+                <codx-input *ngIf="master.data?.status != '1'" [disabled]="true" field="status"
+                  [formModel]="dialog.formModel" [crrValue]="master.data?.status">
                 </codx-input>
               </div>
             </div>
@@ -309,139 +287,162 @@
         </div>
       </div>
     </div>
-    <!-- <div class="mt-3">
-      <div class="row">
-        <div class="col-xxl-8 col-xl-8 col-lg-8">
-          <div class="container mx-0 px-0">
-            <div class="row">
-              <div class="col-xxl-2 col-xl-3 col-lg-3">
-                <div class="form-group">
-                  <codx-label style="white-space: nowrap !important" fiedName="WarehouseID"
-                    [formModel]="dialog.formModel">
-                  </codx-label>
-                  <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" [Group]="formVouchers.formGroup"
-                    field="warehouseID" [formModel]="dialog.formModel">
-                  </codx-input>
-                </div>
+  </ng-container> -->
+  <ng-container *ngIf="master?.formGroup">
+    <div style="height: 200px;" class="mt-3 ac-master">
+      <div style="flex-wrap: nowrap;" class="row d-flex overflow-auto h-100">
+        <div style="min-width: 800px;padding-right: 0;" class="col-8">
+          <div class="row" style="max-width: 1000px;">
+            <div class="col-2">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="WarehouseID"
+                  [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [disabled]="master.data?.isReadOnly ? true : false" [Group]="master.formGroup"
+                  field="warehouseID" [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)">
+                </codx-input>
               </div>
-              <div class="col-xxl-4 col-xl-5 col-lg-3">
-                <div class="form-group">
-                  <codx-label style="white-space: nowrap !important" fiedName="ReasonID" [formModel]="dialog.formModel">
-                  </codx-label>
-                  <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" #eleCbxReasonID
-                    [Group]="formVouchers.formGroup" field="reasonID" [formModel]="dialog.formModel"
+            </div>
+            <div class="col-5">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="ReasonID" [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxReasonID
+                  [Group]="master.formGroup" field="reasonID" [formModel]="dialog.formModel"
+                  (valueChange)="valueChangeMaster($event)">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="max-width: 1000px;"
+          [ngClass]="master?.data?.subType == (journal.journalType + '1') ? '' : 'd-none'">
+            <div class="col-4">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="DIM1" [formModel]="dialog.formModel">
+                </codx-label>
+                <ng-container *ngIf="master.data.subType == (journal.journalType + '1')">
+                  <codx-input [disabled]="master.data?.isReadOnly ? true : false" [Group]="master.formGroup"
+                    field="diM1" [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)">
+                  </codx-input>
+                </ng-container>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="DIM2" [formModel]="dialog.formModel">
+                </codx-label>
+                <ng-container *ngIf="master.data.subType == (journal.journalType + '1')">
+                  <codx-input [disabled]="master.data?.isReadOnly ? true : false" [Group]="master.formGroup"
+                    field="diM2" [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)">
+                  </codx-input>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="max-width: 1000px;"
+            [ngClass]="master?.data?.subType == (journal.journalType + '2') ? '' : 'd-none'">
+            <div class="col-4">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="ObjectID" [formModel]="dialog.formModel">
+                </codx-label>
+                <ng-container *ngIf="master?.data?.subType == (journal.journalType + '2')">
+                  <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxObjectID
+                    [Group]="master?.formGroup" field="objectID" [formModel]="dialog.formModel"
                     (valueChange)="valueChangeMaster($event)">
                   </codx-input>
-                </div>
+                </ng-container>
               </div>
             </div>
-            <div class="row"
-              [ngStyle]="formVouchers?.data?.subType == '0301' || formVouchers?.data?.subType == '0311' ? '' : {display:'none'}">
-              <div class="col-xxl-3 col-xl-4 col-lg-5">
-                <div class="form-group">
-                  <codx-label style="white-space: nowrap !important" fiedName="DIM1" [formModel]="dialog.formModel">
-                  </codx-label>
-                  <ng-container *ngIf="formVouchers?.data?.subType == '0301' || formVouchers?.data?.subType == '0311'">
-                    <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false"
-                      [Group]="formVouchers.formGroup" field="diM1" [formModel]="dialog.formModel">
-                    </codx-input>
-                  </ng-container>
-                </div>
-              </div>
-              <div class="col-xxl-3 col-xl-4 col-lg-4">
-                <div class="form-group">
-                  <codx-label style="white-space: nowrap !important" fiedName="DIM2" [formModel]="dialog.formModel">
-                  </codx-label>
-                  <ng-container *ngIf="formVouchers?.data?.subType == '0301' || formVouchers?.data?.subType == '0311'">
-                    <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false"
-                      [Group]="formVouchers.formGroup" field="diM2" [formModel]="dialog.formModel">
-                    </codx-input>
-                  </ng-container>
-                </div>
-              </div>
-            </div>
-            <div class="row"
-              [ngStyle]="formVouchers?.data?.subType == '0302' || formVouchers?.data?.subType == '0312' ? '' : {display:'none'}">
-              <div class="col-xxl-4 col-xl-5 col-lg-6">
-                <div class="form-group">
-                  <codx-label style="white-space: nowrap !important" fiedName="ObjectID" [formModel]="dialog.formModel">
-                  </codx-label>
-                  <ng-container *ngIf="formVouchers?.data?.subType == '0302' || formVouchers?.data?.subType == '0312'">
-                    <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" #eleCbxObjectID
-                      [Group]="formVouchers?.formGroup" field="objectID" [formModel]="dialog.formModel"
-                      (valueChange)="valueChangeMaster($event)">
-                    </codx-input>
-                  </ng-container>
-                </div>
-              </div>
-              <div class="col-xxl-2 col-xl-3 col-lg-3">
-                <div class="form-group">
-                  <codx-label style="white-space: nowrap !important" fiedName="Requester"
-                    [formModel]="dialog.formModel">
-                  </codx-label>
-                  <ng-container *ngIf="formVouchers?.data?.subType == '0302' || formVouchers?.data?.subType == '0312'">
-                    <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" #eleCbxRequester
-                      [Group]="formVouchers.formGroup" field="requester" [formModel]="dialog.formModel"
-                      (valueChange)="valueChangeMaster($event)">
-                    </codx-input>
-                  </ng-container>
-                </div>
-              </div>
-              <div class="col-xxl-2 col-xl-3 col-lg-3">
-                <div class="form-group">
-                  <codx-label style="white-space: nowrap !important" fiedName="RequestDate"
-                    [formModel]="dialog.formModel">
-                  </codx-label>
-                  <ng-container *ngIf="formVouchers?.data?.subType == '0302' || formVouchers?.data?.subType == '0312'">
-                    <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false"
-                      [Group]="formVouchers.formGroup" field="requestDate" [formModel]="dialog.formModel">
-                    </codx-input>
-                  </ng-container>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div
-                [ngClass]="(formVouchers?.data?.subType == '0301' || formVouchers?.data?.subType == '0311') ? 'col-xxl-6 col-xl-8 col-lg-9' : 'col-xxl-8 col-xl-11 col-lg-12'">
-                <div class="form-group">
-                  <codx-label style="white-space: nowrap !important" fiedName="Memo" [formModel]="dialog.formModel">
-                  </codx-label>
-                  <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" [Group]="formVouchers.formGroup"
-                    field="memo" [formModel]="dialog.formModel">
+            <div class="col-3">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="Requester" [formModel]="dialog.formModel">
+                </codx-label>
+                <ng-container *ngIf="master?.data?.subType == (journal.journalType + '2')">
+                  <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxRequester
+                    [Group]="master.formGroup" field="requester" [formModel]="dialog.formModel"
+                    (valueChange)="valueChangeMaster($event)">
                   </codx-input>
-                </div>
+                </ng-container>
+              </div>
+            </div>
+            <div class="col-2">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="RequestDate"
+                  [formModel]="dialog.formModel">
+                </codx-label>
+                <ng-container *ngIf="master?.data?.subType == (journal.journalType + '2')">
+                  <codx-input [disabled]="master.data?.isReadOnly ? true : false" [Group]="master.formGroup"
+                    field="requestDate" [formModel]="dialog.formModel">
+                  </codx-input>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="max-width: 1000px;">
+            <div class="col-9">
+              <div class="form-group mb-0">
+                <codx-label style="white-space: nowrap !important" fiedName="Memo" [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [disabled]="master.data?.isReadOnly ? true : false" [Group]="master.formGroup"
+                  field="memo" [formModel]="dialog.formModel">
+                </codx-input>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-xxl-4 col-xl-4 col-lg-4 justify-content-end">
-          <div class="container mx-0 px-0">
-            <div class="row justify-content-end">
-              <div class="col-xxl-3 col-xl-4 col-lg-6">
-                <div class="form-group">
-                  <codx-label style="white-space: nowrap !important" fiedName="VoucherDate"
-                    [formModel]="dialog.formModel">
-                  </codx-label>
-                  <codx-input [disabled]="formVouchers.data?.isReadOnly ? true : false" [Group]="formVouchers.formGroup"
-                    [formModel]="dialog.formModel" field="voucherDate">
-                  </codx-input>
-                </div>
+        <div style="min-width: 400px;padding-left: 0;" class="col-4">
+          <div>
+          <div style="width: 450px;float: right;" class="row justify-content-end">
+            <div class="col-4">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="VoucherDate"
+                  [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [disabled]="master.data?.isReadOnly ? true : false" #tVoucherDate
+                  [Group]="master.formGroup" [formModel]="dialog.formModel" field="voucherDate"
+                  (valueChange)="valueChangeMaster($event)">
+                </codx-input>
               </div>
-              <div class="col-xxl-3 col-xl-4 col-lg-6">
-                <div class="form-group">
-                  <codx-label style="white-space: nowrap !important" fiedName="VoucherNo"
-                    [formModel]="dialog.formModel">
-                  </codx-label>
-                  <codx-input [Group]="formVouchers.formGroup" field="voucherNo" [formModel]="dialog.formModel"
-                    [disabled]="(journal?.assignRule != '0' || formVouchers.data?.isReadOnly)">
-                  </codx-input>
-                </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="VoucherNo" [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [Group]="master.formGroup" field="voucherNo" [formModel]="dialog.formModel"
+                  (valueChange)="valueChangeMaster($event)"
+                  [disabled]="(journal?.assignRule != '0' || master.data?.isReadOnly)">
+                </codx-input>
               </div>
             </div>
           </div>
+          <div style="width: 450px;float: right;" class="row justify-content-end">
+            <div class="col-4">
+              <div class="form-group mb-0">
+                <codx-label style="white-space: nowrap !important" fiedName="PostedDate" [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input [disabled]="(master.data?.isReadOnly || postDateControl != '1') ? true : false"
+                  [Group]="master.formGroup" field="postedDate" [formModel]="dialog.formModel"
+                  (valueChange)="valueChangeMaster($event)">
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group mb-0 d-flex" style="flex-direction: column;">
+                <codx-label style="white-space: nowrap !important" fiedName="Status" [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input *ngIf="master.data?.status == '1'" [disabled]="true" field="status"
+                  [formModel]="dialog.formModel" [crrValue]="master.data?.validated ? '1' : '7'">
+                </codx-input>
+                <codx-input *ngIf="master.data?.status != '1'" [disabled]="true" field="status"
+                  [formModel]="dialog.formModel" [crrValue]="master.data?.status">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+        </div>
         </div>
       </div>
-    </div> -->
+    </div>
   </ng-container>
 </ng-template>
 <!-- End: TmpTabGeneral -->
@@ -451,13 +452,13 @@
   <div class="tablinevoucher-content header-table-ac position-relative">
     <codx-gridview-v2 #eleGridVouchers [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="true"
       [formName]="fmVouchersLines.formName" [gridViewName]="fmVouchersLines.gridViewName" [templateMore]="templateMore"
-      [entityName]="fmVouchersLines.entityName" predicates="TransID=@0" [dataValues]="formVouchers?.data?.recID"
-      [hideMoreFunc]="formVouchers.data?.isReadOnly ? true : false" service="IV"
-      [editOnClick]="formVouchers.data?.isReadOnly ? false : true" rowNoField="rowNo"
+      [entityName]="fmVouchersLines.entityName" predicates="TransID=@0" [dataValues]="master?.data?.recID"
+      [hideMoreFunc]="master.data?.isReadOnly ? true : false" service="IV"
+      [editOnClick]="master.data?.isReadOnly ? false : true" rowNoField="rowNo"
       (gridInit)="beforeInitGrid($event)" (eventAction)="onActionGrid($event)" (actionCompleted)="onActionGrid($event)"
-      [editSettings]="formVouchers.data?.isReadOnly ? editSettings : {}"
+      [editSettings]="master.data?.isReadOnly ? editSettings : {}"
       (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
-    <ng-container *ngIf="!formVouchers.data?.isReadOnly">
+    <ng-container *ngIf="!master.data?.isReadOnly">
       <div class="btn-addline">
         <div class="d-flex align-items-center">
           <div>

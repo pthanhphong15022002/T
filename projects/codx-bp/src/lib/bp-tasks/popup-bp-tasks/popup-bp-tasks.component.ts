@@ -3,6 +3,7 @@ import {
   Component,
   OnInit,
   Optional,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
@@ -21,6 +22,7 @@ import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-fil
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
+import { CodxBpService } from '../../codx-bp.service';
 
 @Component({
   selector: 'lib-popup-bp-tasks',
@@ -29,6 +31,8 @@ import { isObservable } from 'rxjs';
 })
 export class PopupBpTasksComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
+
   dialog: any;
   formModel: any;
   data: any;
@@ -46,6 +50,7 @@ export class PopupBpTasksComponent implements OnInit {
   process: any;
   privileged = true;
   countCheck = 0;
+  lstFile = [];
   constructor(
     private authstore: AuthStore,
     private callfc: CallFuncService,
@@ -54,6 +59,7 @@ export class PopupBpTasksComponent implements OnInit {
     private cache: CacheService,
     private api: ApiHttpService,
     private notiService: NotificationsService,
+    private bpSv: CodxBpService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -106,48 +112,45 @@ export class PopupBpTasksComponent implements OnInit {
     if (this.dataIns != null) {
       this.fileIDs = [];
       if (this.dataIns?.documentControl?.length > 0) {
-        //let curStepDmc= this.dataIns?.documentControl;
-        let curStepDmc = this.dataIns?.documentControl.filter(
-          (x) => x?.stepID == this.data?.stepID
-        );
-        if (curStepDmc?.length > 0) {
-          curStepDmc?.forEach((dmc) => {
-            if (dmc?.files?.length > 0) {
-              dmc?.files?.forEach((file) => {
-                if (file?.type == '1' || file?.type == '3') {
-                  this.fileIDs.push(file?.fileID);
-                }
-              });
-            }
+        this.dataIns?.documentControl.forEach((doc) => {
+          if (doc?.files?.length > 0) {
+            doc?.files?.forEach((file) => {
+              if (file?.type == '1' || file?.type == '3') {
+                this.fileIDs.push(file?.fileID);
+              }
+            });
+          }
+        });
 
-            let curRefStepDmc = this.dataIns?.documentControl.filter(
-              (x) => x?.recID == dmc?.refID
-            );
-            if (curRefStepDmc?.length > 0) {
-              curRefStepDmc?.forEach((refDmc) => {
-                if (refDmc?.files?.length > 0) {
-                  refDmc?.files?.forEach((refFile) => {
-                    if (refFile?.type == '1' || refFile?.type == '3') {
-                      this.fileIDs.push(refFile?.fileID);
-                    }
-                  });
-                }
-              });
-            }
-            // let curRefStepDmc= this.dataIns?.documentControl.filter(x=>x?.stepID == dmc.refStepID );
-            // if(curRefStepDmc?.length>0){
-            //   curRefStepDmc?.forEach(refDmc=>{
-            //     if(refDmc?.files?.length>0){
-            //       refDmc?.files?.forEach(refFile=>{
-            //         if(refFile?.type=="1" || refFile?.type=="3"){
-            //           this.fileIDs.push(refFile?.fileID);
-            //         }
-            //       })
-            //     }
-            //   })
-            // }
-          });
-        }
+        // let curStepDmc = this.dataIns?.documentControl.filter(
+        //   (x) => x?.stepID == this.data?.stepID
+        // );
+        // if (curStepDmc?.length > 0) {
+        //   curStepDmc?.forEach((dmc) => {
+        //     if (dmc?.files?.length > 0) {
+        //       dmc?.files?.forEach((file) => {
+        //         if (file?.type == '1' || file?.type == '3') {
+        //           this.fileIDs.push(file?.fileID);
+        //         }
+        //       });
+        //     }
+
+        //     let curRefStepDmc = this.dataIns?.documentControl.filter(
+        //       (x) => x?.recID == dmc?.refID
+        //     );
+        //     if (curRefStepDmc?.length > 0) {
+        //       curRefStepDmc?.forEach((refDmc) => {
+        //         if (refDmc?.files?.length > 0) {
+        //           refDmc?.files?.forEach((refFile) => {
+        //             if (refFile?.type == '1' || refFile?.type == '3') {
+        //               this.fileIDs.push(refFile?.fileID);
+        //             }
+        //           });
+        //         }
+        //       });
+        //     }
+        //   });
+        // }
         if (this.fileIDs?.length > 0) {
           this.files = [];
           this.shareService.getLstFileByID(this.fileIDs).subscribe((res) => {
@@ -212,7 +215,8 @@ export class PopupBpTasksComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
-          this.notiService.notifyCode('SYS034');
+          if (this.data.activityType != 'Sign')
+            this.notiService.notifyCode('SYS034');
           this.dialog && this.dialog.close(res);
         }
       });
@@ -228,7 +232,8 @@ export class PopupBpTasksComponent implements OnInit {
       showSendLater: true,
       files: null,
       isAddNew: false,
-      notSendMail: true,
+      notSendMail: false,
+      saveIsTemplate: false,
     };
     let opt = new DialogModel();
     opt.zIndex = 20000;
@@ -324,9 +329,36 @@ export class PopupBpTasksComponent implements OnInit {
       );
       dialogApprove.closed.subscribe((res) => {
         if (res?.event?.msgCodeError == null && res?.event?.rowCount > 0) {
-          this.onSave();
+          if (res?.event.returnStatus == '5') {
+            this.onSave('5');
+          } else if (res?.event.returnStatus == '3') {
+            this.dialog && this.dialog?.close();
+          }
         }
       });
+    }
+  }
+
+  openFiles() {
+    if (this.tmpListItem) {
+      let option = new DialogModel();
+      option.zIndex = 2001;
+      let popup = this.callfc.openForm(
+        this.tmpListItem,
+        '',
+        400,
+        500,
+        '',
+        null,
+        '',
+        option
+      );
+      popup.closed.subscribe((res: any) => {
+        if (res) {
+          // this.getDataFileAsync(this.dataSelected.recID);
+        }
+      });
+
     }
   }
 }

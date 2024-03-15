@@ -42,6 +42,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   enableEdit:boolean=true;
   viewTree:any;
   approveControl:any;
+  showParent:boolean=false;
 
   constructor(
     injector: Injector,
@@ -66,11 +67,12 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     this.crrUser = this.authStore.get();
     if(dialogData.data[1]){
       this.action = dialogData.data[1];
+      if(this.action=='add' && !this.data.parentID) this.showParent = true;
       if(this.action=='edit'){
         this.title = 'Chỉnh sửa công việc'
         this.enableAttachment=true;
         this.enableChecklist=true;
-        this.getTaskUpdate(this.data.recID);
+        this.getTaskUpdate(this.data.recID,true);
       }
       if(this.action=="view"){
         this.getTaskUpdate(this.data.recID,true);
@@ -152,36 +154,56 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     let dialog = this.callfc.openForm(PopupSelectUserComponent,'',500,600,'',{projectData:this.projectData,projectMemberType:this.projectMemberType, roleType: this.selectedRole ? this.selectedRole : 'A',listRoles:this.listRoles},'',option);
     dialog.closed.subscribe((res:any)=>{
       if(res.event){
-        if(this.projectMemberType == '1'){
-          for(let i=0;i<res.event.length;i++){
-            let member:any={};
-           let item =  this.projectData.permissions.find((x:any)=>x.objectID==res.event[i])
-           if(item){
-            let roleType = 'A';
-            member.resourceID=item.objectID;
-            member.resourceName=item.objectName;
-            if(this.selectedRole){
-             roleType = this.selectedRole;
-
-            }
-            member.roleType = roleType;
-            member.icon = this.listRoles.find((x:any)=>x.value==roleType)?.icon;
-            let idx=this.members.findIndex((x:any)=>x.resourceID==member.resourceID);
-            if(idx==-1){
-              this.members.push(member);
-              this.data.assignTo= this.members.map((x:any)=> x.resourceID).join(';')
-            }
-            else{
-              if(this.members[idx].roleType != member.roleType){
-                this.members[idx]=member
-              }
-            }
+        for(let i=0;i<res.event.length;i++){
+          let member:any={};
+         if(this.projectData.settings.memberType == "1"){
+          let item =  this.projectData.permissions.find((x:any)=>x.objectID==res.event[i])
+          if(item){
+           let roleType = 'A';
+           member.resourceID=item.objectID;
+           member.resourceName=item.objectName;
+           if(this.selectedRole){
+            roleType = this.selectedRole;
 
            }
+           member.roleType = roleType;
+           member.icon = this.listRoles.find((x:any)=>x.value==roleType)?.icon;
+           let idx=this.members.findIndex((x:any)=>x.resourceID==member.resourceID);
+           if(idx==-1){
+             this.members.push(member);
+             this.data.assignTo= this.members.map((x:any)=> x.resourceID).join(';')
+           }
+           else{
+             if(this.members[idx].roleType != member.roleType){
+               this.members[idx]=member
+             }
+           }
+
           }
-          this.getListUser(this.members.map((x:any)=>x.resourceID).join(';'));
-          this.changeDetectorRef.detectChanges();
+         }
+         else{
+          let roleType = 'A';
+          member.resourceID= res.event[i];
+          if(this.selectedRole){
+           roleType = this.selectedRole;
+          }
+          member.roleType = roleType;
+          member.icon = this.listRoles.find((x:any)=>x.value==roleType)?.icon;
+          let idx=this.members.findIndex((x:any)=>x.resourceID==member.resourceID);
+           if(idx==-1){
+             this.members.push(member);
+             this.data.assignTo= this.members.map((x:any)=> x.resourceID).join(';')
+           }
+           else{
+             if(this.members[idx].roleType != member.roleType){
+               this.members[idx]=member
+             }
+           }
+         }
+
         }
+        this.getListUser(this.members.map((x:any)=>x.resourceID).join(';'));
+        this.changeDetectorRef.detectChanges();
       }
     })
   }
@@ -213,7 +235,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
       if(!this.isEditTodo){
         const newTask: any = {
           text: this.newTask,
-          status: '1',
+          status: '10',
           taskID:this.data.recID
         };
         this.todoList.push(newTask);
@@ -261,11 +283,11 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   enableCompleteTodo:boolean = true;
   toggleCompleted(task:any){
     if(!this.enableEdit && !this.enableCompleteTodo) return;
-    if(task.status == '1'){
+    if(task.status == '10'){
       task.status='90';
     }
     else{
-      task.status='1'
+      task.status='10'
     }
     this.todoList = this.todoList.slice();
     this.changeDetectorRef.detectChanges();
@@ -285,7 +307,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     if(!this.enableEdit) return;
     if(this.action == 'add' || this.action=='copy'){
       this.data.status='10';
-      this.data.category='3';
+      this.data.category='4';
       if(!this.data.projectID )this.data.projectID=this.projectData.projectID;
     }
     if(this.projectData.settings){
@@ -413,12 +435,15 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   oCountFooter:any;
   commentTyped(e: any, key: string) {
     if(this.history) this.history.refresh();
+    let isCheckChangeStatus:boolean=false;
+    if(this.isInProgress || this.isSendReport || this.isFinish) isCheckChangeStatus = true;
     if(e.comment){
+      if(!this.checkEditPermission()) return;
       let status="00";
       let hours="8";
       if(this.isInProgress) status="20";
       if(this.isFinish) status ="90";
-      if(this.data){
+      if(this.data && this.data.status !="90"){
         if(this.todoList?.length){
 
           if(this.todoList.filter((x:any)=>x.status=='90').length == this.todoList.length){
@@ -431,11 +456,11 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
             })
           }
           else{
-            this.updateTaskStatus(this.data.recID,status,e.comment);
+            isCheckChangeStatus && this.updateTaskStatus(this.data.recID,status,e.comment);
           }
         }
         else{
-          this.updateTaskStatus(this.data.recID,status,e.comment);
+          isCheckChangeStatus && this.updateTaskStatus(this.data.recID,status,e.comment);
         }
 
       }
@@ -469,6 +494,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
               let usr = this.listUserDetail.find((x:any)=>x.userID==item.resourceID);
               if(usr){
                 item.positionName = usr.positionName;
+                item.resourceName = usr.userName;
               }
             })
           }
@@ -528,7 +554,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     if(this.action=='add' || this.action=='copy'){
 
       this.api
-      .exec('TM', 'TaskBusiness', 'AddTaskAsync', [
+      .exec('TM', 'TasksBusiness', 'AddTaskAsync', [
         this.data,
         this.funcID,
         this.members,
@@ -539,15 +565,17 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
         this.attachment?.clearData();
 
         if (res) {
-          if(res.length){
-            let item= res.find((x:any)=>x.category=='3');
-            if(item){
-
-              this.dialog.dataService.add(item, 0, false).subscribe();
-              this.dialog.close(item);
-            }
-          }
           this.notificationsService.notifyCode('SYS006');
+          this.dialog.close(res);
+          // if(res.length){
+          //   let item= res.find((x:any)=>x.category=='3');
+          //   if(item){
+
+          //     this.dialog.dataService.add(item, 0, false).subscribe();
+          //     this.dialog.close(item);
+          //   }
+          // }
+
         } else this.notificationsService.notifyCode('SYS023');
       });
     }
@@ -563,6 +591,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
          abc.closed.subscribe((res:any)=>{
           if(res.event.status=='Y'){
             this.data.status = '90';
+            this.data.percentage=100;
           }
           //else this.data.status='20';
          this.api
@@ -584,6 +613,11 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
 
         }
         else{
+          let doneChecklist = this.todoList.filter((x:any)=>x.status=='90').length;
+          if(doneChecklist > 0){
+            this.data.status='20';
+            this.data.percentage = parseInt((doneChecklist/this.todoList.length) as any);
+          }
           //this.data.status='20';
           this.api
             .exec('TM', 'TasksBusiness', 'UpdateTaskAsync', [
@@ -628,8 +662,22 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
       let member = this.members.find((x:any)=>x.resourceID == this.memberID)
       if(member){
         if(value == 'A' && member.roleType !='A' && this.members.some((x:any)=>x.roleType=='A')){
-          this.notificationsService.notifyCode('TM078');
-          this.popover.close();
+          this.notificationsService.alertCode("PM001").subscribe((res:any)=>{
+            if(res.event && res.event.status=='Y'){
+              let oldItem = this.members.find((x:any)=>x.roleType=='A');
+              if(oldItem){
+                oldItem.roleType = member.roleType;
+                oldItem.icon=this.listRoles.find((x:any)=>x.value==oldItem.roleType)?.icon
+                member.roleType=value;
+                member.icon = this.listRoles.find((x:any)=>x.value==value)?.icon
+                this.members = this.members.slice();
+                this.popover.close();
+                this.changeDetectorRef.detectChanges();
+              }
+            }
+          })
+          // this.notificationsService.notifyCode('TM078');
+          // this.popover.close();
         return;
         }
         if(member.roleType == value) return;

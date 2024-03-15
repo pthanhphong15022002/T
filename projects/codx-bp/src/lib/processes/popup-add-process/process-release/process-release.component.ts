@@ -78,7 +78,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     this.codxService = this.codxSv;
     this.router.params.subscribe((param) => {
       if (!this.funcID) this.funcID = param['funcID'];
-      if (param['id']) 
+      if (param['id'])
       {
         this.recID = param['id'];
         if(this.view)
@@ -162,11 +162,11 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
 
     this.getFunc();
   }
-  
+
   getFunc()
   {
     this.cache.functionList(this.funcID).subscribe(item=>{
-      if(item) 
+      if(item)
       {
         this.cache.functionList(item.parentID).subscribe(item2=>{
            if(item2) {
@@ -313,9 +313,9 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
   }
 
   addItem() {
-    if(this.process.status == '5')
+    if(this.process?.status == '5')
     {
-      this.view.dataService.addNew().subscribe((item) => {
+      this.view?.dataService?.addNew().subscribe((item) => {
         this.popUpAddEdit(item, 'add');
       });
     }
@@ -352,7 +352,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
           });
         }
       });
-   
+
   }
   popUpAddEdit(item: any, type: any) {
     var option = new SidebarModel();
@@ -367,7 +367,10 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     popup.closed.subscribe((res) => {
       if (res?.event) {
         if (type == 'add')
+        {
           (this.view.currentView as any).kanban.addCard(res?.event);
+          (this.view.currentView as any).kanban.refresh();
+        }
         else {
           (this.view.currentView as any).kanban.updateCard(res?.event);
           this.view.dataService.update(res?.event).subscribe();

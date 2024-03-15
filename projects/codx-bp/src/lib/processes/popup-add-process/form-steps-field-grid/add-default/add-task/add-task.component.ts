@@ -47,7 +47,7 @@ export class AddTaskComponent
     datas: [
       {
         value: 1,
-        text: 'Đại diện ',
+        text: 'Tuần tự',
       },
       {
         value: 2,
@@ -55,7 +55,7 @@ export class AddTaskComponent
       },
       {
         value: 3,
-        text: 'Tuần tự',
+        text: 'Đại diện',
       },
     ],
   };
@@ -82,6 +82,9 @@ export class AddTaskComponent
           : this.data.settings;
       this.defaultValue();
     }
+
+    if(!this.process?.documentControl) this.process.documentControl = [];
+    this.formatDocument();
   }
   defaultValue() {
     if (this.data) {
@@ -90,71 +93,26 @@ export class AddTaskComponent
       )[0];
       this.listUses = this.data.permissions || [];
       this.listUses2 = this.data.settings?.objects || [];
-      if (
-        this.process.documentControl &&
-        this.process.documentControl.length > 0
-      ) {
-        this.formatDocument();
-      } else this.process.documentControl = [];
     }
   }
 
   formatDocument() {
-    var entityName = this.formModel.entityName;
-    this.listDocument = this.process.documentControl.filter(
-      (x) => x.stepID == this.data.recID
-    );
-    let i = 0;
+    this.listDocument = JSON.parse(JSON.stringify(this.process.documentControl));
+    let ids = [];
     this.listDocument.forEach((elm) => {
-      var fieldID = elm.fieldID;
-      if (elm.files && elm.files.length > 0) {
-        var recIDs = elm.files.map(function (item) {
-          return item?.fileID || item?.recID;
+      if (elm.files && elm.files.length > 0) 
+      {
+        elm.files.forEach(element => {
+          ids.push(element.fileID || element?.recID);
         });
-        recIDs = JSON.stringify(recIDs);
-        this.getFile2(recIDs, i);
-      } else {
-        if (elm?.templateID != undefined) {
-          fieldID = elm?.templateID;
-          entityName = 'AD_ExcelTemplates';
-          if (elm.templateType == 'word') {
-            entityName = 'AD_WordTemplates';
-          }
-          this.getFile(fieldID, entityName, i);
-        } else if (elm.refStepID) {
-          //var index = this.getDocRef(elm.refStepID);
-          var index = this.process.documentControl.findIndex(
-            (x) => x.recID == elm.refID
-          );
-          if (index >= 0) {
-            if (
-              this.process.documentControl[index].files &&
-              this.process.documentControl[index].files.length > 0
-            ) {
-              var recIDs = this.process.documentControl[index].files.map(
-                function (item) {
-                  return item?.fileID || item?.recID;
-                }
-              );
-              recIDs = JSON.stringify(recIDs);
-              this.getFile2(recIDs, i);
-            } else {
-              if (this.process.documentControl[index].templateID) {
-                fieldID = this.process.documentControl[index].templateID;
-                entityName = 'AD_ExcelTemplates';
-                if (this.process.documentControl[index].templateType == 'word')
-                  entityName = 'AD_WordTemplates';
-              } else fieldID = this.process.documentControl[index].fieldID;
-
-              this.getFile(fieldID, entityName, i);
-            }
-          }
-        } else {
-          var ssss = '';
-        }
       }
-      i++;
     });
+
+    if(ids.length>0)
+    {
+      var str = JSON.stringify(ids);
+      this.getFile(str)
+    }
   }
 
   getDocRef(refStepID: any) {
@@ -178,35 +136,25 @@ export class AddTaskComponent
     return index;
   }
 
-  getFile(recID: any, entityName: any, index: any) {
-    let i = index;
-    this.api
-      .execSv('DM', 'DM', 'FileBussiness', 'GetFileByObjectIDAsync', [
-        recID + ';',
-        entityName,
-      ])
-      .subscribe((item:any) => {
-        if (item) {
-          item?.forEach(x=>{
-            x.eSign = true;
-          });
-          this.listDocument[i].filess = item;
-        }
-      });
-  }
-  getFile2(recID: any, index: any) {
-    let i = index;
+  getFile(recID: any) {
     this.api
       .execSv('DM', 'DM', 'FileBussiness', 'GetListFile', recID)
       .subscribe((item:any) => {
         if (item) {
-          item?.forEach(x=>{
-            x.eSign = true;
+          item?.forEach(ix=>{
+            let index = this.listDocument.findIndex(x=>x.files.some(x=>x.fileID == ix.recID));
+            if(index>=0)
+            {
+              if(!this.listDocument[index]?.filess) this.listDocument[index].filess = [];
+              this.listDocument[index].filess.push(ix);
+            }
           });
-          this.listDocument[i].filess = item;
+          
+          //this.listDocument[i].filess = item;
         }
       });
   }
+
   default() {
     var vllStage = this.vll.datas.filter((x) => x.value == 'Task')[0];
     this.data = new BP_Processes_Steps();
@@ -446,6 +394,7 @@ export class AddTaskComponent
         var f = {
           fileID: elm?.data?.recID,
           type: '1',
+          eSign: false
         };
         files.push(f);
       });
@@ -454,6 +403,7 @@ export class AddTaskComponent
       var f = {
         fileID: e?.recID,
         type: '1',
+        eSign: false
       };
       files.push(f);
       count = 1;
@@ -474,8 +424,35 @@ export class AddTaskComponent
       memo: this.data?.memo,
       refID: '',
       files: files,
+      permissions: 
+      [
+        {
+          objectID: this.user?.userID,
+          objectType: "U",
+          download:true,
+          read: true,
+          update: true,
+          delete: true
+        }
+      ]
     };
-    documentControl.refID = documentControl.recID;
+    let i = 0;
+    this.listDocument.forEach((elm) => {
+      if(!elm.permissions.some(x=>x.objectID == this.user.userID))
+      {
+        this.process.documentControl[i].permissions.push(
+          {
+            objectID: this.user?.userID,
+            objectType: "U",
+            download:true,
+            read: true,
+            update: true,
+            delete: true
+          }
+        )
+      }
+      i++;
+    });
     this.process.documentControl.push(documentControl);
     this.listDocument.push(documentControl);
     this.dataChangeProcess.emit(this.process);
@@ -487,13 +464,18 @@ export class AddTaskComponent
     this.data.attachments--;
     this.dataChange.emit(this.data);
   }
-
+  distinctArray(arr) {
+    return [...new Map(arr.map((item) => [item['recID'], item])).values()];
+  }
   openFormSetting(val: any = null, index = null) {
+    this.process.steps = this.distinctArray(this.process.steps);
+
     let option = new DialogModel();
     option.FormModel = this.formModel;
     let listForm = this.process.steps.filter(
       (x) => x.stepNo < this.data.stepNo && x.activityType == 'Form'
     );
+
     let dataSteps = this.process.steps.filter(
       (x) =>
         x.activityType != 'Stage' &&
@@ -540,7 +522,84 @@ export class AddTaskComponent
           res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
 
         var index = this.process.steps.findIndex(x=>x.recID == this.data.recID);
-        if(index >=0) this.process.steps[index].extendInfo = this.data.extendInfo;
+        if(index >=0) 
+        {
+          this.process.steps[index].extendInfo = this.data.extendInfo;
+          if (this.data?.steps[index]?.extendInfo) {
+            this.data?.steps[index]?.extendInfo.forEach((element) => {
+              if (element.controlType == 'Attachment') {
+                if (!element?.documentControl || element?.documentControl.length == 0) {
+                  var obj = 
+                  {
+                    recID: Util.uid(),
+                    title: element.title,
+                    isRequired: false,
+                    count: 0,
+                    isList: '1',
+                    stepID: this.data?.steps[1].recID,
+                    stepNo: this.data?.steps[1].stepNo,
+                    fieldID: element.recID,
+                    memo: this.data?.steps[1].memo,
+                    permissions: 
+                    [
+                      {
+                        objectID: this.user?.userID,
+                        objectType: "U",
+                        read: true,
+                        update: true,
+                        delete: true
+                      }
+                    ]
+                  };
+                  this.data.documentControl = [obj];
+                } else if (
+                  element.documentControl &&
+                  element.documentControl.length > 0
+                ) {
+                  var doc = JSON.parse(JSON.stringify(this.data.documentControl));
+                  if (!doc) doc = [];
+                  element.documentControl.forEach((docu) => {
+                    docu.stepID = this.data?.steps[index].recID;
+                    docu.stepNo = this.data?.steps[index].stepNo;
+                    docu.fieldID = element.recID;
+                    docu.memo = this.data?.steps[index].memo;
+                    docu.permissions =
+                    [
+                      {
+                        objectID: this.user?.userID,
+                        objectType: "U",
+                        read: true,
+                        update: true,
+                        delete: true
+                      }
+                    ]
+                    var index = doc.findIndex((x) => x.recID == docu.recID);
+                    if (index >= 0) doc[index] = docu;
+                    else doc.push(docu);
+                  });
+                  this.data.documentControl = doc;
+                }
+              }
+  
+              if (typeof element.documentControl != 'string') {
+                element.documentControl =
+                  element.documentControl?.length > 0
+                    ? JSON.stringify(element.documentControl)
+                    : null;
+              }
+  
+              if (typeof element.dataFormat != 'string') {
+                element.dataFormat =
+                  element.dataFormat?.length > 0
+                    ? JSON.stringify(element.dataFormat)
+                    : null;
+              }
+              if (typeof element.tableFormat != 'string') {
+                element.tableFormat = JSON.stringify(element.tableFormat) 
+              }
+            });
+          }
+        }
         this.dataChange.emit(this.data);
         this.dataChangeProcess.emit(this.process);
       }
@@ -612,6 +671,7 @@ export class AddTaskComponent
         formModel: this.formModel,
         data: data,
         groupField: this.getFieldExport(),
+        isFristVer:true
       },
       '',
       option
@@ -629,6 +689,7 @@ export class AddTaskComponent
           {
             fileID: res?.event[3].recID,
             type: '2',
+            eSign: false
           };
 
           var documentControl = {
@@ -644,9 +705,18 @@ export class AddTaskComponent
             templateID: res?.event[0].recID,
             templateType: type,
             refID: '',
-            files: [files]
+            files: [files],
+            permissions: 
+            [
+              {
+                objectID: this.user?.userID,
+                objectType: "U",
+                read: true,
+                update: true,
+                delete: true
+              }
+            ]
           };
-          documentControl.refID = documentControl.recID;
           this.process.documentControl.push(documentControl);
         }
 
@@ -823,24 +893,41 @@ export class AddTaskComponent
   }
   esign(){
     let result = JSON.parse(JSON.stringify(this.process));
+    if(this.process?.steps?.find(x=>x?.recID == this.data?.recID)==null){
+      result.steps?.push(this.data);
+    }
     result.steps.forEach((elm: any) => {
       delete elm.child;
       if (typeof elm.settings === 'object')
         elm.settings = JSON.stringify(elm.settings);
+      if (typeof elm.documentControl != 'string')
+        elm.documentControl = JSON.stringify(elm.documentControl);
     });
-    this.api.execSv("BP","BP","ProcessesBusiness","UpdateProcessAsync",result).subscribe(item=>{
-      this.esignB();
-    })
-   
+    
+
+    if(!this.data.permissions || this.data.permissions.length <=0) this.notifySvr.notify("Vui lòng chọn người thực hiện.");
+    else 
+    {
+      this.api.execSv("BP","BP","ProcessesBusiness","UpdateProcessAsync",result).subscribe((item:any)=>{
+      if(item?.steps){
+        let savedData =item?.steps?.find(x=>x?.recID == this.data?.recID);
+        if(savedData) this.data=savedData;
+          this.esignB();
+      }
+
+      })
+    }
   }
 
   esignB()
   {
     let fileIDs="";
     let dynamicApprovers=[];
+    
     this.listDocument.forEach(doc=>{
-      if(doc?.filess?.length>0){
-        fileIDs+= doc?.filess?.map(x=>x?.recID)?.join(";");        
+      if(doc?.files?.length>0){
+        var l = doc?.files?.filter(x=>x.eSign)
+        if(l && l.length>0) fileIDs+= ";" + l.map(x=>x?.fileID)?.join(";");        
       }
     });
 
@@ -877,30 +964,35 @@ export class AddTaskComponent
 
         this.dataChangeAttach.emit(true);
         this.api.execSv("BP","BP","ProcessesBusiness","GetAsync",this.process.recID).subscribe((item:any)=>{
-          if(item?.documentControl)
-          {
-            var listF = item.documentControl.filter(x=>x.stepID == this.data?.recID);
-            if(listF && listF.length>0)
-            {
-              listF.forEach(element => {
-                let index = this.process.documentControl.findIndex(x=>x.recID == element.recID);
-                if(index > 0)
-                {
-                  this.process.documentControl[index]= element;
-                  if(element?.refID)
-                  {
-                    var indexRef = item.documentControl.findIndex(x=>x.recID == element.refID);
-                    if(indexRef >= 0)
-                    {
-                      var indexP = this.process.documentControl.findIndex(x=>x.recID == item.documentControl[indexRef].recID)
-                      if(indexP >= 0) this.process.documentControl[indexP] = item.documentControl[indexRef];
-                    }
-                  }
-                }
-              });
-              this.dataChangeProcess.emit(this.process);
-            }
+          if(item){
+            this.process.steps=item?.steps;            
+            this.process.documentControl=item?.documentControl;
+            this.dataChangeProcess.emit(this.process);
           }
+          //if(item?.documentControl)
+          //{
+            // var listF = item.documentControl.filter(x=>x.stepID == this.data?.recID);
+            // if(listF && listF.length>0)
+            // {
+            //   listF.forEach(element => {
+            //     let index = this.process.documentControl.findIndex(x=>x.recID == element.recID);
+            //     if(index >= 0)
+            //     {
+            //       this.process.documentControl[index]= element;
+            //       if(element?.refID)
+            //       {
+            //         var indexRef = item.documentControl.findIndex(x=>x.recID == element.refID);
+            //         if(indexRef >= 0)
+            //         {
+            //           var indexP = this.process.documentControl.findIndex(x=>x.recID == item.documentControl[indexRef].recID)
+            //           if(indexP >= 0) this.process.documentControl[indexP] = item.documentControl[indexRef];
+            //         }
+            //       }
+            //     }
+            //   });
+            //   this.dataChangeProcess.emit(this.process);
+            //}
+          //}
           this.dataChangeAttach.emit(false);
         })
       });
@@ -930,6 +1022,30 @@ export class AddTaskComponent
     {
       var id = this.process.documentControl[index].recID;
       this.process.documentControl = this.process.documentControl.filter(x=>x.refID != id);
+    }
+  }
+
+  selectEsign(id:any , recID:any)
+  {
+    var indexP = this.process.documentControl.findIndex(x=>x.recID == recID)
+    if(indexP >= 0)
+    {
+      if(this.process.documentControl[indexP]?.files && this.process.documentControl[indexP]?.files.length>0)
+      {
+        var index2 = this.process.documentControl[indexP].files.findIndex(x=>x.fileID == id);
+        if(index2>=0) 
+        {
+          this.process.documentControl[indexP].files[index2].eSign = !this.process.documentControl[indexP].files[index2].eSign;
+          this.listDocument[indexP].files[index2].eSign = !this.listDocument[indexP].files[index2].eSign;
+
+          var mySelected = document.getElementById("esign"+id);
+          if(mySelected)
+          {
+            if(this.listDocument[indexP].files[index2].eSign) mySelected.classList.add("text-primary");
+            else mySelected.classList.remove("text-primary");
+          }
+        }
+      }
     }
   }
 }

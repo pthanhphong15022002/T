@@ -1,39 +1,40 @@
-<codx-form #formWareHouse [body]="TmpBody" [footer]="TmpFooter" [formModel]="dialog.formModel" [dialog]="dialog"
+<codx-form #master [body]="TmpBody" [footer]="TmpFooter" [formModel]="dialog.formModel" [dialog]="dialog"
     [customToolbar]="TmpSubToolbar" [data]="dataDefault" [openMore]="false" (onAfterInit)="onAfterInitForm($event)"
     class="ac-dialog ac-form">
 </codx-form>
 <ng-template #TmpSubToolbar>
-    <div *ngIf="formWareHouse" class="w-100">
+    <div *ngIf="master" class="w-100">
         <div class="d-flex align-items-center justify-content-between pt-3 ac-popupfull">
             <div class="d-flex align-items-center me-2">
                 <div style="background-color: var(--primary-dark)"
                     class="w-25px symbol h-25px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
-                    <i *ngIf="formWareHouse.data?.isAdd" class="text-white icon-i-file-earmark-plus icon-16"></i>
-                    <i *ngIf="formWareHouse.data?.isEdit" class="text-white icon-edit-one icon-16"></i>
-                    <i *ngIf="formWareHouse.data?.isCopy" class="text-white icon-content_copy icon-16"></i>
-                    <i *ngIf="formWareHouse.data?.isReadOnly" class="text-white bi bi-eye icon-16"></i>
+                    <i *ngIf="master.data?.isAdd" class="text-white icon-i-file-earmark-plus icon-16"></i>
+                    <i *ngIf="master.data?.isEdit" class="text-white icon-edit-one icon-16"></i>
+                    <i *ngIf="master.data?.isCopy" class="text-white icon-content_copy icon-16"></i>
+                    <i *ngIf="master.data?.isReadOnly" class="text-white bi bi-eye icon-16"></i>
                 </div>
                 <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
                     {{ headerText }}
                 </div>
                 <ng-container>
-                    <ng-container *ngIf="!formWareHouse.data.isReadOnly">
-                        <div *ngIf="formWareHouse && !formWareHouse?.data?.validated"
-                            class="d-flex align-items-center">
+                    <ng-container *ngIf="!master.data.isReadOnly">
+                        <div *ngIf="master && !master?.data?.validated" class="d-flex align-items-center">
                             <i class="icon-arrow_drop_down_circle icon-16 mt-1"></i>
                             <div style="margin-left: -5px" class="input-circle h-20px input-border-0 w-400px mb-1">
                                 <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
                                     [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-550px" [isMulti]="false"
-                                    type="valuelist" field="subType"
-                                    [refValue]="formWareHouse?.gridviewSetup['SubType']?.referedValue"
-                                    [value]="formWareHouse?.data?.subType" emptyText="Loại phiếu"
+                                    type="valuelist" field="subType" [refValue]="
+                    master?.gridviewSetup['SubType']?.referedValue
+                  " [value]="master?.data?.subType" emptyText="Loại phiếu"
                                     (valueChange)="changeSubType($event)"></codx-dropdown-select>
                             </div>
                         </div>
                     </ng-container>
-                    <span *ngIf="formWareHouse.data?.validated || formWareHouse.data?.isReadOnly">
-                        <codx-vll [name]="formWareHouse?.gridviewSetup['SubType'].referedValue"
-                            [formModel]="dialog.formModel" [field]="'SubType'" [value]="formWareHouse.data?.subType"
+                    <span *ngIf="
+              master.data?.validated || master.data?.isReadOnly
+            ">
+                        <codx-vll [name]="master?.gridviewSetup['SubType'].referedValue"
+                            [formModel]="dialog.formModel" [field]="'SubType'" [value]="master.data?.subType"
                             [showText]="true" [showBgColor]="true" class="badge badge-light-primary badge-sm mt-1">
                         </codx-vll>
                     </span>
@@ -105,10 +106,10 @@
 
 <ng-template #TmpFooter>
     <div style="display: grid !important" ngClass="collape"
-        class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="formWareHouse.data">
-        <div *ngIf="!formWareHouse.data.isReadOnly"
+        class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="master.data">
+        <div *ngIf="!master.data.isReadOnly"
             class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
-            <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true" *ngIf="!formWareHouse.data?.validated"
+            <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true" *ngIf="!master.data?.validated"
                 type="button" class="btn btn-md btn-danger me-2"
                 (keydown.enter)="onDiscardVoucher(); $event.preventDefault()" (click)="onDiscardVoucher()">
                 <div class="d-flex align-items-center">
@@ -134,14 +135,14 @@
             </button>
         </div>
         <codx-tabs [entityName]="dialog.formModel.entityName" [formModel]="dialog.formModel"
-            [objectID]="formWareHouse.data?.recID" [funcID]="dialog.formModel.funcID"
-            [TabControl]="tabInfo" [data]="formWareHouse.data" [keyField]="'recID'"></codx-tabs>
+            [objectID]="master.data?.recID" [funcID]="dialog.formModel.funcID" [TabControl]="tabInfo"
+            [data]="master.data" [keyField]="'recID'"></codx-tabs>
     </div>
 </ng-template>
 
 <!-- Start: TmpTabGeneral -->
 <ng-template #TmpTabGeneral>
-    <ng-container *ngIf="formWareHouse?.formGroup">
+    <!-- <ng-container *ngIf="master?.formGroup">
         <div class="mt-3 ac-master">
             <div style="flex-wrap: nowrap;" class="row d-flex overflow-auto">
                 <div style="min-width: 850px;" class="col-8">
@@ -151,8 +152,8 @@
                                 <codx-label style="white-space: nowrap !important" fiedName="FromWHID"
                                     [formModel]="dialog.formModel">
                                 </codx-label>
-                                <codx-input [disabled]="formWareHouse.data?.isReadOnly ? true : false" #eleCbxFromWHID
-                                    [Group]="formWareHouse.formGroup" field="fromWHID"
+                                <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxFromWHID
+                                    [Group]="master.formGroup" field="fromWHID"
                                     (valueChange)="valueChangeMaster($event)" [formModel]="dialog.formModel">
                                 </codx-input>
                             </div>
@@ -162,8 +163,8 @@
                                 <codx-label style="white-space: nowrap !important" fiedName="ReasonID"
                                     [formModel]="dialog.formModel">
                                 </codx-label>
-                                <codx-input [disabled]="formWareHouse.data?.isReadOnly ? true : false" #eleCbxReasonID
-                                    [Group]="formWareHouse.formGroup" field="reasonID" [formModel]="dialog.formModel"
+                                <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxReasonID
+                                    [Group]="master.formGroup" field="reasonID" [formModel]="dialog.formModel"
                                     (valueChange)="valueChangeMaster($event)">
                                 </codx-input>
                             </div>
@@ -175,8 +176,8 @@
                                 <codx-label style="white-space: nowrap !important" fiedName="ToWHID"
                                     [formModel]="dialog.formModel">
                                 </codx-label>
-                                <codx-input [disabled]="formWareHouse.data?.isReadOnly ? true : false" #eleCbxToWHID
-                                    [Group]="formWareHouse.formGroup" field="toWHID"
+                                <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxToWHID
+                                    [Group]="master.formGroup" field="toWHID"
                                     (valueChange)="valueChangeMaster($event)" [formModel]="dialog.formModel">
                                 </codx-input>
                             </div>
@@ -186,8 +187,8 @@
                                 <codx-label style="white-space: nowrap !important" fiedName="Requester"
                                     [formModel]="dialog.formModel">
                                 </codx-label>
-                                <codx-input [disabled]="formWareHouse.data?.isReadOnly ? true : false" #eleCbxReasonID
-                                    [Group]="formWareHouse.formGroup" field="requester" [formModel]="dialog.formModel">
+                                <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxReasonID
+                                    [Group]="master.formGroup" field="requester" [formModel]="dialog.formModel">
                                 </codx-input>
                             </div>
                         </div>
@@ -196,8 +197,8 @@
                                 <codx-label style="white-space: nowrap !important" fiedName="RequestedDate"
                                     [formModel]="dialog.formModel">
                                 </codx-label>
-                                <codx-input [disabled]="formWareHouse.data?.isReadOnly ? true : false" #eleCbxReasonID
-                                    [Group]="formWareHouse.formGroup" field="requestedDate"
+                                <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxReasonID
+                                    [Group]="master.formGroup" field="requestedDate"
                                     [formModel]="dialog.formModel">
                                 </codx-input>
                             </div>
@@ -209,8 +210,8 @@
                                 <codx-label style="white-space: nowrap !important" fiedName="Memo"
                                     [formModel]="dialog.formModel">
                                 </codx-label>
-                                <codx-input [disabled]="formWareHouse.data?.isReadOnly ? true : false"
-                                    [Group]="formWareHouse.formGroup" field="memo" [formModel]="dialog.formModel">
+                                <codx-input [disabled]="master.data?.isReadOnly ? true : false"
+                                    [Group]="master.formGroup" field="memo" [formModel]="dialog.formModel">
                                 </codx-input>
                             </div>
                         </div>
@@ -223,8 +224,8 @@
                                 <codx-label style="white-space: nowrap !important" fiedName="VoucherDate"
                                     [formModel]="dialog.formModel">
                                 </codx-label>
-                                <codx-input [disabled]="formWareHouse.data?.isReadOnly ? true : false" #tVoucherDate
-                                    [Group]="formWareHouse.formGroup" [formModel]="dialog.formModel" field="voucherDate"
+                                <codx-input [disabled]="master.data?.isReadOnly ? true : false" #tVoucherDate
+                                    [Group]="master.formGroup" [formModel]="dialog.formModel" field="voucherDate"
                                     (valueChange)="valueChangeMaster($event)">
                                 </codx-input>
                             </div>
@@ -234,9 +235,9 @@
                                 <codx-label style="white-space: nowrap !important" fiedName="VoucherNo"
                                     [formModel]="dialog.formModel">
                                 </codx-label>
-                                <codx-input [Group]="formWareHouse.formGroup" field="voucherNo"
+                                <codx-input [Group]="master.formGroup" field="voucherNo"
                                     [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)"
-                                    [disabled]="(journal?.assignRule != '0' || formWareHouse.data?.isReadOnly)">
+                                    [disabled]="(journal?.assignRule != '0' || master.data?.isReadOnly)">
                                 </codx-input>
                             </div>
                         </div>
@@ -247,138 +248,148 @@
                                 <codx-label style="white-space: nowrap !important" fiedName="Status"
                                     [formModel]="dialog.formModel">
                                 </codx-label>
-                                <!-- <codx-input [disabled]="(formWareHouse.data?.isReadOnly || postDateControl != '1') ? true : false"
-                        [Group]="formWareHouse.formGroup" field="postedDate" [formModel]="dialog.formModel"
-                        (valueChange)="valueChangeMaster($event)">
-                      </codx-input> -->
-                                <!-- <codx-vll *ngIf="formWareHouse.data?.status == '1'" [formModel]="dialog.formModel"
-                                    [field]="'Status'" [value]="formWareHouse.data?.validated ? '1' : '7'"
-                                    [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
-                                </codx-vll>
-                                <codx-vll *ngIf="formWareHouse.data?.status != '1'" [formModel]="dialog.formModel"
-                                    [field]="'Status'" [value]="formWareHouse.data?.status" [showText]="true"
-                                    [showBgColor]="true" class="badge badge-light badge-lg">
-                                </codx-vll> -->
-                                <codx-input *ngIf="formWareHouse.data?.status == '1'" [disabled]="true" field="status"
+                                <codx-input *ngIf="master.data?.status == '1'" [disabled]="true" field="status"
                                     [formModel]="dialog.formModel"
-                                    [crrValue]="formWareHouse.data?.validated ? '1' : '7'">
+                                    [crrValue]="master.data?.validated ? '1' : '7'">
                                 </codx-input>
-                                <codx-input *ngIf="formWareHouse.data?.status != '1'" [disabled]="true" field="status"
-                                    [formModel]="dialog.formModel" [crrValue]="formWareHouse.data?.status">
+                                <codx-input *ngIf="master.data?.status != '1'" [disabled]="true" field="status"
+                                    [formModel]="dialog.formModel" [crrValue]="master.data?.status">
                                 </codx-input>
                             </div>
                         </div>
-                    </div>
+                  </div>
                 </div>
             </div>
         </div>
-        <!-- <div class="mt-3">
-            <div class="row">
-                <div class="col-xxl-8 col-xl-8 col-lg-8">
-                    <div class="container mx-0 px-0">
-                        <div class="row">
-                            <div class="col-xxl-2 col-xl-3 col-lg-4">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="FromWHID"
-                                        [formModel]="dialog.formModel">
-                                    </codx-label>
-                                    <codx-input [disabled]="formWareHouse.data?.isReadOnly ? true : false"
-                                        #eleCbxFromWHID [Group]="formWareHouse.formGroup" field="fromWHID"
-                                        (valueChange)="valueChangeMaster($event)" [formModel]="dialog.formModel">
-                                    </codx-input>
-                                </div>
-                            </div>
-                            <div class="col-xxl-2 col-xl-3 col-lg-4">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="ReasonID"
-                                        [formModel]="dialog.formModel">
-                                    </codx-label>
-                                    <codx-input [disabled]="formWareHouse.data?.isReadOnly ? true : false"
-                                        #eleCbxReasonID [Group]="formWareHouse.formGroup" field="reasonID"
-                                        [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)">
-                                    </codx-input>
-                                </div>
+    </ng-container> -->
+    <ng-container *ngIf="master?.formGroup"> 
+        <div style="height: 200px;" class="mt-3 ac-master">
+            <div style="flex-wrap: nowrap;" class="row d-flex overflow-auto h-100">
+                <div style="min-width: 800px;padding-right: 0;" class="col-8">
+                    <div class="row" style="max-width: 1000px;">
+                        <div class="col-2">
+                            <div class="form-group">
+                                <codx-label style="white-space: nowrap !important" fiedName="FromWHID"
+                                    [formModel]="dialog.formModel">
+                                </codx-label>
+                                <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxFromWHID
+                                    [Group]="master.formGroup" field="fromWHID"
+                                    (valueChange)="valueChangeMaster($event)" [formModel]="dialog.formModel">
+                                </codx-input>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-xxl-2 col-xl-3 col-lg-4">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="ToWHID"
-                                        [formModel]="dialog.formModel">
-                                    </codx-label>
-                                    <codx-input [disabled]="formWareHouse.data?.isReadOnly ? true : false" #eleCbxToWHID
-                                        [Group]="formWareHouse.formGroup" field="toWHID"
-                                        (valueChange)="valueChangeMaster($event)" [formModel]="dialog.formModel">
-                                    </codx-input>
-                                </div>
-                            </div>
-                            <div class="col-xxl-2 col-xl-3 col-lg-4">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="Requester"
-                                        [formModel]="dialog.formModel">
-                                    </codx-label>
-                                    <codx-input [disabled]="formWareHouse.data?.isReadOnly ? true : false"
-                                        #eleCbxReasonID [Group]="formWareHouse.formGroup" field="requester"
-                                        [formModel]="dialog.formModel">
-                                    </codx-input>
-                                </div>
-                            </div>
-                            <div class="col-xxl-2 col-xl-3 col-lg-4">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="RequestedDate"
-                                        [formModel]="dialog.formModel">
-                                    </codx-label>
-                                    <codx-input [disabled]="formWareHouse.data?.isReadOnly ? true : false"
-                                        #eleCbxReasonID [Group]="formWareHouse.formGroup" field="requestedDate"
-                                        [formModel]="dialog.formModel">
-                                    </codx-input>
-                                </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <codx-label style="white-space: nowrap !important" fiedName="ReasonID"
+                                    [formModel]="dialog.formModel">
+                                </codx-label>
+                                <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxReasonID
+                                    [Group]="master.formGroup" field="reasonID" [formModel]="dialog.formModel"
+                                    (valueChange)="valueChangeMaster($event)">
+                                </codx-input>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-xxl-6 col-xl-9 col-lg-12">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="Memo"
-                                        [formModel]="dialog.formModel">
-                                    </codx-label>
-                                    <codx-input [disabled]="formWareHouse.data?.isReadOnly ? true : false"
-                                        [Group]="formWareHouse.formGroup" field="memo" [formModel]="dialog.formModel">
-                                    </codx-input>
-                                </div>
+                    </div>
+                    <div class="row" style="max-width: 1000px;">
+                        <div class="col-2">
+                            <div class="form-group">
+                                <codx-label style="white-space: nowrap !important" fiedName="ToWHID"
+                                    [formModel]="dialog.formModel">
+                                </codx-label>
+                                <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxToWHID
+                                    [Group]="master.formGroup" field="toWHID"
+                                    (valueChange)="valueChangeMaster($event)" [formModel]="dialog.formModel">
+                                </codx-input>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <codx-label style="white-space: nowrap !important" fiedName="Requester"
+                                    [formModel]="dialog.formModel">
+                                </codx-label>
+                                <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxReasonID
+                                    [Group]="master.formGroup" field="requester" [formModel]="dialog.formModel">
+                                </codx-input>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-group">
+                                <codx-label style="white-space: nowrap !important" fiedName="RequestedDate"
+                                    [formModel]="dialog.formModel">
+                                </codx-label>
+                                <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxReasonID
+                                    [Group]="master.formGroup" field="requestedDate"
+                                    [formModel]="dialog.formModel">
+                                </codx-input>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="max-width: 1000px;">
+                        <div class="col-7">
+                            <div class="form-group mb-0">
+                                <codx-label style="white-space: nowrap !important" fiedName="Memo"
+                                    [formModel]="dialog.formModel">
+                                </codx-label>
+                                <codx-input [disabled]="master.data?.isReadOnly ? true : false"
+                                    [Group]="master.formGroup" field="memo" [formModel]="dialog.formModel">
+                                </codx-input>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xxl-4 col-xl-4 col-lg-4 justify-content-end">
-                    <div class="container mx-0 px-0">
-                        <div class="row justify-content-end">
-                            <div class="col-xxl-3 col-xl-5 col-lg-6">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="VoucherDate"
-                                        [formModel]="dialog.formModel">
-                                    </codx-label>
-                                    <codx-input [disabled]="formWareHouse.data?.isReadOnly ? true : false"
-                                        [Group]="formWareHouse.formGroup" [formModel]="dialog.formModel"
-                                        field="voucherDate">
-                                    </codx-input>
-                                </div>
-                            </div>
-                            <div class="col-xxl-3 col-xl-5 col-lg-6">
-                                <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="VoucherNo"
-                                        [formModel]="dialog.formModel">
-                                    </codx-label>
-                                    <codx-input [Group]="formWareHouse.formGroup" field="voucherNo"
-                                        [formModel]="dialog.formModel"
-                                        [disabled]="(journal?.assignRule != '0' || formWareHouse.data?.isReadOnly)">
-                                    </codx-input>
-                                </div>
-                            </div>
+                <div style="min-width: 400px;padding-left: 0;" class="col-4">
+                    <div>
+                    <div style="width: 450px;float: right;" class="row justify-content-end">
+                      <div class="col-4">
+                        <div class="form-group">
+                          <codx-label style="white-space: nowrap !important" fiedName="VoucherDate"
+                            [formModel]="dialog.formModel">
+                          </codx-label>
+                          <codx-input [disabled]="master.data?.isReadOnly ? true : false" #tVoucherDate
+                            [Group]="master.formGroup" [formModel]="dialog.formModel" field="voucherDate"
+                            (valueChange)="valueChangeMaster($event)">
+                          </codx-input>
                         </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="form-group">
+                          <codx-label style="white-space: nowrap !important" fiedName="VoucherNo" [formModel]="dialog.formModel">
+                          </codx-label>
+                          <codx-input [Group]="master.formGroup" field="voucherNo" [formModel]="dialog.formModel"
+                            (valueChange)="valueChangeMaster($event)"
+                            [disabled]="(journal?.assignRule != '0' || master.data?.isReadOnly)">
+                          </codx-input>
+                        </div>
+                      </div>
                     </div>
-                </div>
+                    <div style="width: 450px;float: right;" class="row justify-content-end">
+                      <div class="col-4">
+                        <div class="form-group mb-0">
+                          <codx-label style="white-space: nowrap !important" fiedName="PostedDate" [formModel]="dialog.formModel">
+                          </codx-label>
+                          <codx-input [disabled]="(master.data?.isReadOnly || postDateControl != '1') ? true : false"
+                            [Group]="master.formGroup" field="postedDate" [formModel]="dialog.formModel"
+                            (valueChange)="valueChangeMaster($event)">
+                          </codx-input>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="form-group mb-0 d-flex" style="flex-direction: column;">
+                          <codx-label style="white-space: nowrap !important" fiedName="Status" [formModel]="dialog.formModel">
+                          </codx-label>
+                          <codx-input *ngIf="master.data?.status == '1'" [disabled]="true" field="status"
+                            [formModel]="dialog.formModel" [crrValue]="master.data?.validated ? '1' : '7'">
+                          </codx-input>
+                          <codx-input *ngIf="master.data?.status != '1'" [disabled]="true" field="status"
+                            [formModel]="dialog.formModel" [crrValue]="master.data?.status">
+                          </codx-input>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
             </div>
-    </div> -->
+        </div>
     </ng-container>
 </ng-template>
 <!-- End: TmpTabGeneral -->
@@ -388,14 +399,14 @@
     <div class="tablinetranfer-content header-table-ac position-relative">
         <codx-gridview-v2 #eleGridIssue [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="true"
             [formName]="fmIssueTransfersLines.formName" [gridViewName]="fmIssueTransfersLines.gridViewName"
-            [hideMoreFunc]="formWareHouse.data?.isReadOnly ? true : false"
-            [editSettings]="formWareHouse.data?.isReadOnly ? editSettings : {}" [templateMore]="templateMore"
+            [hideMoreFunc]="master.data?.isReadOnly ? true : false"
+            [editSettings]="master.data?.isReadOnly ? editSettings : {}" [templateMore]="templateMore"
             [entityName]="fmIssueTransfersLines.entityName" predicates="TransID=@0"
-            [dataValues]="formWareHouse?.data?.recID" service="IV"
-            [editOnClick]="formWareHouse.data?.isReadOnly ? false : true" rowNoField="rowNo"
+            [dataValues]="master?.data?.recID" service="IV"
+            [editOnClick]="master.data?.isReadOnly ? false : true" rowNoField="rowNo"
             (eventAction)="onActionGrid($event, 'issue')" (actionCompleted)="onActionGrid($event, 'issue')"
             (gridInit)="beforeInitGrid($event)" (cellChanged)="valueChangeLine($event, 'issue')"></codx-gridview-v2>
-        <ng-container *ngIf="!formWareHouse.data?.isReadOnly">
+        <ng-container *ngIf="!master.data?.isReadOnly">
             <div class="btn-addline">
                 <div class="d-flex align-items-center">
                     <div>
@@ -415,12 +426,12 @@
 <ng-template #TmpTabLine2>
     <div class="tablinetranfer-content header-table-ac position-relative">
         <codx-gridview-v2 #eleGridReceipt [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="true"
-            [hideMoreFunc]="formWareHouse.data?.isReadOnly ? true : false"
-            [editSettings]="formWareHouse.data?.isReadOnly ? editSettings : {}"
+            [hideMoreFunc]="master.data?.isReadOnly ? true : false"
+            [editSettings]="master.data?.isReadOnly ? editSettings : {}"
             [formName]="fmReceiptTransfersLines.formName" [gridViewName]="fmReceiptTransfersLines.gridViewName"
             [templateMore]="templateMore" [entityName]="fmReceiptTransfersLines.entityName" predicates="TransID=@0"
-            [dataValues]="formWareHouse?.data?.recID" service="IV"
-            [editOnClick]="formWareHouse.data?.isReadOnly ? false : true" rowNoField="rowNo"
+            [dataValues]="master?.data?.recID" service="IV"
+            [editOnClick]="master.data?.isReadOnly ? false : true" rowNoField="rowNo"
             (eventAction)="onActionGrid($event, 'receipt')" (gridInit)="beforeInitGrid($event)"
             (actionCompleted)="onActionGrid($event, 'receipt')"
             (cellChanged)="valueChangeLine($event, 'receipt')"></codx-gridview-v2>
@@ -441,6 +452,6 @@
 <!-- End: Grid Tranfer -->
 
 <ng-template #templateMore let-data>
-    <codx-mfunc [formModel]="dialog.formModel" [dataItem]="data" (changeDataMF)="changeMF($event)" (clickMF)="clickMF($event, data)"
-        type="view"></codx-mfunc>
+    <codx-mfunc [formModel]="dialog.formModel" [dataItem]="data" (changeDataMF)="changeMF($event)"
+        (clickMF)="clickMF($event, data)" type="view"></codx-mfunc>
 </ng-template>

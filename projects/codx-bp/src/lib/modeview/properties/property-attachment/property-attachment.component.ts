@@ -63,7 +63,8 @@ export class PropertyAttachmentComponent extends BasePropertyComponent{
         var obj = 
         {
           fileID : elm.data.recID,
-          type: '1'
+          type: '1',
+          eSign: false
         }
         this.data.documentControl[this.selectedIndex].files.push(obj);
       })
@@ -74,7 +75,8 @@ export class PropertyAttachmentComponent extends BasePropertyComponent{
       var obj = 
       {
         fileID : e.recID,
-        type: '1'
+        type: '1',
+        eSign: false
       }
       this.data.documentControl[this.selectedIndex].files.push(obj);
     }

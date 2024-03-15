@@ -85,7 +85,10 @@ export class PopupAddProjectComponent extends UIComponent {
     this.funcID = this.formModel?.funcID;
     this.data = dialogData.data[0];
     this.funcType = dialogData.data[1];
-    this.grvSetup = dialogData.data[2]
+    this.grvSetup = dialogData.data[2];
+    if(dialogData.data[3]){
+      this.viewOnly=true;
+    }
     this.user=this.authStore.get();
 
     if(this.data.settings && this.data.settings.length){
@@ -441,9 +444,10 @@ export class PopupAddProjectComponent extends UIComponent {
           returnData = res?.save;
         }
         if (!returnData?.error) {
+          returnData.data.taskStatus = this.data.taskStatus;
+          returnData.data.taskPriority=this.data.taskPriority;
           if (this.imageUpload?.imageUpload?.item) {
-            returnData.taskStatus = this.data.taskStatus;
-            returnData.taskPriority=this.data.taskPriority;
+
             this.imageUpload
               .updateFileDirectReload(returnData.data.recID)
               .subscribe((result) => {

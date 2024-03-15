@@ -21,8 +21,8 @@
         </codx-input>
       </div>
       <div class="form-group ps-0">
-        <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả công việc" [ngClass]="grvSetup['Memo']?.isRequire ? 'required' : ''">
-        </codx-label> <i class="icon-zoom_out_map icon-21 text-hover-primary d-flex float-end" (click)="extendMemo(data?.memo)"></i>
+        <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả công việc" [ngClass]="grvSetup['Memo']?.isRequire ? 'required' : ''" >
+        </codx-label> <i class="icon-zoom_out_map icon-21 text-hover-primary d-flex float-end" (click)="extendMemo(data?.memo)" *ngIf="enableEdit"></i>
         <div class="w-100 d-flex">
           <div style="width:100%">
             <codx-input field="memo" [crrValue]="data?.memo" type="textarea" [height]="'100%'"  format="ed2" [rows]="1"
@@ -39,7 +39,7 @@
         </div>
 
       </div>
-      <div class="form-group ps-0" *ngIf="!data.parentID">
+      <div class="form-group ps-0" *ngIf="showParent">
         <codx-label fiedName="ParentID" [formModel]="form.formModel" default="Giai đoạn công việc cha" [ngClass]="grvSetup['ParentID']?.isRequire ? 'required' : ''">
         </codx-label>
         <codx-input field="parentID" [crrValue]="data?.parentID" [model]="data" type="combobox" refType="3" [formModel]="formModel" [refValue]="grvSetup['ParentID']?.referedValue"
@@ -82,6 +82,7 @@
                     <button
                     type="button"
                     class="btn btn-sm ms-2 btn-light-primary"
+                    [disabled]="!enableEdit"
                     (click)="enableEdit ?openControlShare(item.value):''"
                   >
                     <i class="me-1"
@@ -254,9 +255,9 @@
             <ul class="list-group list-group-flush">
               <li class="list-group-item border-0 " *ngFor="let task of todoList" >
                 <div class="w-100 d-flex align-items-center memo-area">
-                  <div class="w-75 row" [ngClass]="task.status!='1' ? 'text-decoration-line-through' : ''">
+                  <div class="w-75 row" [ngClass]="task.status!='10' ? 'text-decoration-line-through' : ''">
                     <div class="col-1">
-                      <ejs-checkbox #checkbox [cssClass]="'check-circle'" [disabled]="!enableEdit && !enableCompleteTodo" [checked]="task.status!='1'" (change)="toggleCompleted(task)"></ejs-checkbox>
+                      <ejs-checkbox #checkbox [cssClass]="'check-circle'" [disabled]="!enableEdit && !enableCompleteTodo" [checked]="task.status!='10'" (change)="toggleCompleted(task)"></ejs-checkbox>
                       <!-- <codx-input type="checkbox" [class]="'check-circle'" [crrValue]="task.status!='1'" (valueChange)="toggleCompleted(task)"></codx-input> -->
                     </div>
                     <div class="col-11" (click)="editTodo(task,input)">
@@ -282,7 +283,9 @@
         [field]="'tags'"
         [entityName]="entityName"
         [value]="data.tags"
+        [isEdit]="true"
         (valueChange)="valueChange($event)"
+        [disabled]="!enableEdit"
       ></codx-tag>
       </div>
     </div>
@@ -299,6 +302,8 @@
       <div class="pt-3 border-top h-auto">
         <div class="row h-75 w-100">
           <codx-tree-comment
+          [data]="data"
+          [alertNoti]="false"
           [objectID]="data?.recID"
           [objectType]="entityName"
           [actionType]="'C'"
@@ -311,7 +316,7 @@
         </codx-tree-comment>
         </div>
         <div class="row h-25 w-100 d-flex justify-content-start flex-row ps-3 pt-5 ">
-          <div class="d-flex align-items-center justify-content-start pb-3 ps-1 w-auto" *ngIf="showInprogress">
+          <div class="d-flex align-items-center justify-content-start pb-3 ps-1 w-auto" *ngIf="showInprogress && data.status=='10'">
             <codx-input type="checkbox" [class]="'check-circle'" [crrValue]="isInProgress" field="inProgress" (valueChange)="checkStatusChange($event)" ></codx-input>
             <codx-label fiedName="lblInProcess" class="ps-2" [formModel]="form.formModel" default="Đang xử lý"  >
             </codx-label>
