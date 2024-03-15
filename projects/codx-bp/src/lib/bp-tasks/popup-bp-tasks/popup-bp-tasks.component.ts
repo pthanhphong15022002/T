@@ -106,7 +106,7 @@ export class PopupBpTasksComponent implements OnInit {
     if (this.dataIns != null) {
       this.fileIDs = [];
       if (this.dataIns?.documentControl?.length > 0) {
-        this.dataIns?.documentControl.forEach(doc=>{
+        this.dataIns?.documentControl.forEach((doc) => {
           if (doc?.files?.length > 0) {
             doc?.files?.forEach((file) => {
               if (file?.type == '1' || file?.type == '3') {
@@ -209,7 +209,8 @@ export class PopupBpTasksComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
-          if(this.data.activityType !="Sign") this.notiService.notifyCode('SYS034');
+          if (this.data.activityType != 'Sign')
+            this.notiService.notifyCode('SYS034');
           this.dialog && this.dialog.close(res);
         }
       });
@@ -225,7 +226,8 @@ export class PopupBpTasksComponent implements OnInit {
       showSendLater: true,
       files: null,
       isAddNew: false,
-      notSendMail: true,
+      notSendMail: false,
+      saveIsTemplate: false,
     };
     let opt = new DialogModel();
     opt.zIndex = 20000;
@@ -321,11 +323,10 @@ export class PopupBpTasksComponent implements OnInit {
       );
       dialogApprove.closed.subscribe((res) => {
         if (res?.event?.msgCodeError == null && res?.event?.rowCount > 0) {
-          if(res?.event.returnStatus =='5'){
-            this.onSave("5");
-          }
-          else if(res?.event.returnStatus =='3'){
-            this.dialog && this.dialog?.close()
+          if (res?.event.returnStatus == '5') {
+            this.onSave('5');
+          } else if (res?.event.returnStatus == '3') {
+            this.dialog && this.dialog?.close();
           }
         }
       });
