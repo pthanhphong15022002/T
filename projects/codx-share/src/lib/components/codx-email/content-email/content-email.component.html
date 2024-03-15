@@ -454,16 +454,18 @@
     <div>
       <codx-attachment
         #attachment
-        [objectType]="formModel?.entityName"
+        [objectType]="'BG_Alerts'"
+        referType="Alert"
         hideBtnSave="1"
         hideFolder="1"
         hideUploadBtn="1"
         hideDes="1"
-        [functionID]="'EST04'"
+        [functionID]=""
         (fileAdded)="fileAdded($event)"
         (fileCount)="getfileCount($event)"
-        [objectId]="dialogETemplate.value.recID"
+        [objectId]="idAlert"
         [allowMultiFile]="1"
+        isSaveSelected="0"
         [idBrowse]="'add'"
       >
       </codx-attachment>

@@ -145,7 +145,7 @@ export class SuggestionAdd  extends UIComponent implements OnInit {
 
   //#region Method
   onApply() {
-    let className = this.oData.journalType === 'CP' ? 'CashPaymentsBusiness' : 'CashReceiptsBusiness';
+    let className = (this.oData.journalType === 'CP' || this.oData.journalType === 'BP') ? 'CashPaymentsBusiness' : 'CashReceiptsBusiness';
     let method = this.type === '1' ? 'SaveAdvancePaymentAsync' : 'SaveOrderPaymentAsync'
     if (this.grid.arrSelectedRows.length > 0) {
       this.api
