@@ -128,7 +128,7 @@ export class PopupViewTaskComponent implements OnInit, AfterViewInit{
         case 'R':
           this.showInprogress=false;
           this.showReport=false;
-          this.showFinish=true;
+          this.showFinish=false;
         break;
         case 'I':
           this.showInprogress=false;
@@ -176,7 +176,7 @@ export class PopupViewTaskComponent implements OnInit, AfterViewInit{
 
   commentTyped(e: any, key: string) {
     let isCheckChangeStatus=false;
-    if(this.isInProgress || this.isSendReport || this.isInProgress) isCheckChangeStatus = true;
+    if(this.isInProgress || this.isSendReport || this.isFinish) isCheckChangeStatus = true;
     if(e.comment){
       if(!this.checkEditPermission()) return;
       let status="00";

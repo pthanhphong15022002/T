@@ -3,6 +3,7 @@ import {
   Component,
   OnInit,
   Optional,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
@@ -21,6 +22,7 @@ import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-fil
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
+import { CodxBpService } from '../../codx-bp.service';
 
 @Component({
   selector: 'lib-popup-bp-tasks',
@@ -29,6 +31,8 @@ import { isObservable } from 'rxjs';
 })
 export class PopupBpTasksComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
+
   dialog: any;
   formModel: any;
   data: any;
@@ -46,6 +50,7 @@ export class PopupBpTasksComponent implements OnInit {
   process: any;
   privileged = true;
   countCheck = 0;
+  lstFile = [];
   constructor(
     private authstore: AuthStore,
     private callfc: CallFuncService,
@@ -54,6 +59,7 @@ export class PopupBpTasksComponent implements OnInit {
     private cache: CacheService,
     private api: ApiHttpService,
     private notiService: NotificationsService,
+    private bpSv: CodxBpService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -330,6 +336,29 @@ export class PopupBpTasksComponent implements OnInit {
           }
         }
       });
+    }
+  }
+
+  openFiles() {
+    if (this.tmpListItem) {
+      let option = new DialogModel();
+      option.zIndex = 2001;
+      let popup = this.callfc.openForm(
+        this.tmpListItem,
+        '',
+        400,
+        500,
+        '',
+        null,
+        '',
+        option
+      );
+      popup.closed.subscribe((res: any) => {
+        if (res) {
+          // this.getDataFileAsync(this.dataSelected.recID);
+        }
+      });
+
     }
   }
 }

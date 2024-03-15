@@ -125,14 +125,15 @@ export class CodxBpService {
     startDate: Date,
     interval: String,
     duration: any,
-    calendarID: String
+    lstDayShift,
+    lstCalendarDates
   ) {
     return this.api.execSv<any>(
       APICONSTANT.SERVICES.BP,
       APICONSTANT.ASSEMBLY.BP,
       'ProcessesBusiness',
       'SettingEndDateAsync',
-      [startDate, interval, duration, calendarID]
+      [startDate, interval, duration, lstDayShift, lstCalendarDates]
     );
   }
 
