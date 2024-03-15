@@ -232,7 +232,8 @@ export class PopupBpTasksComponent implements OnInit {
       showSendLater: true,
       files: null,
       isAddNew: false,
-      notSendMail: true,
+      notSendMail: false,
+      saveIsTemplate: false,
     };
     let opt = new DialogModel();
     opt.zIndex = 20000;
