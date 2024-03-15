@@ -183,7 +183,13 @@ export class ContractsComponent extends UIComponent {
     this.vllStatus = this.grvSetup['Status'].referedValue;
     this.vllApprove = this.grvSetup['ApproveStatus'].referedValue;
     this.tabControl = this.contractService?.footerTab;
-    this.processID = this.activedRouter.snapshot?.queryParams['processID'];
+    // this.processID = this.activedRouter.snapshot?.queryParams['processID'];
+    this.activedRouter.queryParams.subscribe(params => {
+      this.processID = params['processID'] || null;
+    });
+    // this.activedRouter.paramMap.subscribe(params => {
+    //   this.processID = params.get('processID');
+    // });
     this.getAccount();
     this.getColumsGrid(this.grvSetup);
     const [valueListTab, tabDefaut] = await Promise.all([

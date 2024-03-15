@@ -628,7 +628,11 @@
     </div>
     <div class="card-footer border-0">
       <div class="d-flex justify-content-end">
-        <a class="btn btn-primary fw-bold" (click)="onSaveForm(dialog1)">
+        <a
+          class="btn btn-primary fw-bold"
+          (click)="onSaveForm(dialog1)"
+          *ngIf="saveIsTemplate"
+        >
           <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
           </codx-label>
         </a>
