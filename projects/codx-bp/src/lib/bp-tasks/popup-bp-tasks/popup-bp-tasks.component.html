@@ -24,7 +24,7 @@
             <codx-label
               class="fw-bold fs-3 mt-1"
               [formModel]="form.formModel"
-              [fiedName]="form.formModel.formName + data.activityType"
+              [fiedName]="form.formModel.formName + data?.activityType"
               [default]="title"
             >
             </codx-label>
@@ -55,7 +55,10 @@
           <div class="">
             {{ data?.taskName }}
           </div>
-          <div class="d-flex justify-content-end" *ngIf="data?.activityType == 'Task'">
+          <div
+            class="d-flex justify-content-end"
+            *ngIf="data?.activityType == 'Task'"
+          >
             <codx-progressbar
               [progress]="data?.progress ?? 0"
               [stype]="2"
@@ -85,16 +88,16 @@
           <span>
             {{
               data?.startDate
-                ? (data?.startDate | date : "dd/MM/yyyy hh:mm")
-                : "dd/MM/yyyy hh:mm"
+                ? (data?.startDate | date : "dd/MM/yyyy HH:mm")
+                : "dd/MM/yyyy HH:mm"
             }}</span
           >
           <span class="ms-1 me-1">-</span>
           <span>
             {{
               data?.endDate
-                ? (data?.endDate | date : "dd/MM/yyyy hh:mm")
-                : "dd/MM/yyyy hh:mm"
+                ? (data?.endDate | date : "dd/MM/yyyy HH:mm")
+                : "dd/MM/yyyy HH:mm"
             }}</span
           >
         </div>
@@ -577,7 +580,12 @@
         <ng-template #buttonEmail>
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-start">
-              <button type="button" class="btn btn-light-primary">
+              <button
+                type="button"
+                class="btn btn-light-primary"
+                [disabled]="files == null || files?.length == 0"
+                (click)="openFiles()"
+              >
                 <codx-label
                   [name]="'lblbt1' + data?.activityType"
                   [formName]="dialog?.formModel?.formName"
@@ -620,3 +628,21 @@
     (dataChange)="dataChange($event)"
   ></lib-add-process-default>
 </ng-container>
+
+<ng-template #tmpListItem let-dialogFile>
+  <codx-form
+    [body]="bodyFile"
+    [dialog]="dialogFile"
+    headerText="Danh sách file đính kèm"
+  >
+  </codx-form>
+  <ng-template #bodyFile>
+    <codx-thumbnail
+      class="popup-attachment"
+      [files]="files"
+      [formModel]="dialog.formModel"
+      [hideDelete]="true"
+      [hideMoreF]="true"
+    ></codx-thumbnail>
+  </ng-template>
+</ng-template>
