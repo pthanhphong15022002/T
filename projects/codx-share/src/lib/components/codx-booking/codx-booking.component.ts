@@ -992,7 +992,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
 
   cancel(data: any) {
     if (
-      this.curUser?.userID == data?.createdBy ||
+      this.curUser?.userID == data?.createdBy ||this.curUser?.userID == data?.owner ||
       this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
     ) {
       this.codxCommonService
