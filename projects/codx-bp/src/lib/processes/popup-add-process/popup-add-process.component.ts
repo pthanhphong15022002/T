@@ -949,6 +949,7 @@ export class PopupAddProcessComponent {
           if (typeof elm2.settings === 'string') elm2.settings = JSON.parse(elm2.settings);
           elm2.stepNo = i;
           result2.push(elm2);
+          i++;
           if(elm2.activityType == "Conditions")
           {
             if(elm2.child && elm2.child.length>0)
@@ -956,6 +957,7 @@ export class PopupAddProcessComponent {
               elm2.child.forEach(elm3=>{
                 if(elm.child[stt+1])
                 {
+                  elm3.stepNo = i;
                   elm3.settings.nextSteps =  [{nextStepID: elm.child[stt+1].recID}] 
                   if(typeof elm3.settings === 'object') elm3.settings = JSON.stringify(elm3.settings);
                   result2.push(elm3);
@@ -963,9 +965,7 @@ export class PopupAddProcessComponent {
                 }
               })
             }
-            else i++;
           }
-          else i++;
           stt++;
           result.steps = result.steps.filter(x=>x.recID != elm2.recID);
         });

@@ -223,9 +223,22 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
         elm.countTask = 0;
         if (elm.child && elm.child.length > 0) {
           elm.countTask = elm.child.length;
-          elm.countCompleted =
-            (elm.child.filter((x) => x.status == '5') || []).length || 0;
+          elm.countCompleted = 0;
+          debugger
+          elm.child.forEach(element => {
+            if(element.activityType != "Conditions" && element.status == "5") elm.countCompleted ++;
+            else if(element.activityType == "Conditions")
+            {
+              if(element.child && element.child.length>0)
+              {
+                if(element.child.some(x=>x.status == "5")) elm.countCompleted ++;
+              }
+            }
+          });
+          
           elm.percentCompleted = (elm.countCompleted / elm.countTask) * 100;
+
+          elm.percentCompleted = elm.percentCompleted.toFixed(2);
           elm.duration = elm.child.reduce(
             (n, { duration }) => n + duration,
             0
