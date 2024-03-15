@@ -56,6 +56,8 @@ export class CodxEmailComponent implements OnInit {
 
   @ViewChild('textbox', { static: false }) textboxEle: any;
 
+  @ViewChild('ContentEmail', { static: false }) ContentEmail: any;
+
   headerText: string = 'Email';
   subHeaderText: string = '';
   dialog: DialogRef;
@@ -112,6 +114,7 @@ export class CodxEmailComponent implements OnInit {
   vllShareData: any;
   showAI = false;
   isLoadingAI = false;
+  idAlert: any = null;
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -128,7 +131,7 @@ export class CodxEmailComponent implements OnInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
-
+    this.idAlert = Util.uid();
     if (data?.data) {
       this.templateID = data.data.templateID;
       if (data.data.type) this.type = data.data.type;
@@ -386,13 +389,19 @@ export class CodxEmailComponent implements OnInit {
   }
 
   sendEmail() {
+    if (this.ContentEmail.attachment.fileUploadList.length > 0) {
+      //this.ContentEmail.attachment.objectId = res.recID;
+      console.log(this.dmSV.fileUploadList);
+      this.ContentEmail.attachment.saveFiles();
+    }
     let lstSento = [
       ...this.lstFrom,
       ...this.lstTo,
       ...this.lstCc,
       ...this.lstBcc,
     ];
-
+    if (!this.option) this.option = new option();
+    this.option.idAlert = this.idAlert;
     this.codxService
       .sendEmail(this.data, lstSento, this.option)
       .subscribe((res) => {
@@ -445,10 +454,10 @@ export class CodxEmailComponent implements OnInit {
           console.log(res);
           if (res) {
             console.log(res);
-            if (this.attachment.fileUploadList.length > 0) {
-              this.attachment.objectId = res.recID;
+            if (this.ContentEmail.attachment.fileUploadList.length > 0) {
+              //this.ContentEmail.attachment.objectId = res.recID;
               console.log(this.dmSV.fileUploadList);
-              this.attachment.saveFiles();
+              this.ContentEmail.attachment.saveFiles();
             }
             dialog1 && dialog1.close();
             this.dialog && this.dialog.close(res);
@@ -469,9 +478,9 @@ export class CodxEmailComponent implements OnInit {
         .addEmailTemplate(this.data, lstSento)
         .subscribe((res) => {
           if (res) {
-            if (this.attachment.fileUploadList.length > 0) {
-              this.attachment.objectId = res.recID;
-              this.attachment.saveFiles();
+            if (this.ContentEmail.attachment.fileUploadList.length > 0) {
+              //this.ContentEmail.attachment.objectId = res.recID;
+              this.ContentEmail.attachment.saveFiles();
             }
             this.data.recID = res.recID;
             this.dialog && this.dialog.close(res);
@@ -771,7 +780,7 @@ export class CodxEmailComponent implements OnInit {
   fileAdded(event) {}
 
   openFormUploadFile() {
-    this.attachment.uploadFile();
+    this.ContentEmail.attachment.uploadFile();
   }
 
   getfileCount(e: any) {}
@@ -908,4 +917,5 @@ class option {
   className?: string;
   method?: string;
   data?: string;
+  idAlert?: string;
 }
