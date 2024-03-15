@@ -99,7 +99,6 @@ export class AddTaskComponent
   formatDocument() {
     this.listDocument = JSON.parse(JSON.stringify(this.process.documentControl));
     let ids = [];
-    debugger
     this.listDocument.forEach((elm) => {
       if (elm.files && elm.files.length > 0) 
       {

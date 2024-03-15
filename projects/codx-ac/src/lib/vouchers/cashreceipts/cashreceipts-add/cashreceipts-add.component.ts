@@ -22,7 +22,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   //#region Contructor
   @ViewChild('eleGridCashReceipt') eleGridCashReceipt: CodxGridviewV2Component;
   @ViewChild('eleGridSettledInvoices') eleGridSettledInvoices: CodxGridviewV2Component;
-  @ViewChild('formCashReceipt') public formCashReceipt: CodxFormComponent;
+  @ViewChild('master') public master: CodxFormComponent;
   @ViewChild('elementTabDetail') elementTabDetail: any;
   @ViewChild('eleCbxReasonID') eleCbxReasonID: any;
   @ViewChild('eleCbxObjectID') eleCbxObjectID: any;
@@ -99,7 +99,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    if (this.formCashReceipt?.data?.coppyForm) this.formCashReceipt.data._isEdit = true; //? test copy để tạm
+    if (this.master?.data?.coppyForm) this.master.data._isEdit = true; //? test copy để tạm
   }
 
   /**
@@ -116,7 +116,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @param eleTab
    */
   createTabDetail(event: any, eleTab: TabComponent) {
-    this.showHideTabDetail(this.formCashReceipt.data.subType, this.elementTabDetail);
+    this.showHideTabDetail(this.master.data.subType, this.elementTabDetail);
   }
 
   // /**
@@ -134,17 +134,17 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
       hideFields = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
     }
-    if (!hideFields.includes('Settlement') && this.formCashReceipt?.data?.subType == '11') { //? nếu chứng từ loại chi thanh toán nhà cung cấp(ko theo hóa đơn)
+    if (!hideFields.includes('Settlement') && this.master?.data?.subType == '11') { //? nếu chứng từ loại chi thanh toán nhà cung cấp(ko theo hóa đơn)
       hideFields.push('Settlement'); //? => ẩn field phương pháp cấn trừ
     }
 
     //* Thiết lập các field ẩn cho 2 mode tài khoản
     if (this.journal.entryMode == '1') {
-      if (this.formCashReceipt?.data?.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
+      if (this.master?.data?.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
         hideFields.push('DR2'); //? => ẩn field tiền Nợ,HT
       }
     } else { //? nếu loại mode 1 tài khoản trên nhiều dòng
-      if (this.formCashReceipt?.data?.currencyID == this.baseCurr) {
+      if (this.master?.data?.currencyID == this.baseCurr) {
         //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
         hideFields.push('DR2'); //? => ẩn field tiền Có,HT
         hideFields.push('CR2'); //? => ẩn field tiền Nợ,HT
@@ -161,7 +161,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     this.settingFormatGridSettledInvoices(eleGrid);
     //* Thiết lập các field ẩn theo đồng tiền hạch toán
     let hideFields = [];
-    if (this.formCashReceipt?.data?.currencyID == this.baseCurr) {
+    if (this.master?.data?.currencyID == this.baseCurr) {
       hideFields.push('BalAmt2');
       hideFields.push('SettledAmt2');
       hideFields.push('CashDisc2');
@@ -214,30 +214,30 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
           }
           this.api.exec('AC', 'CashReceiptsBusiness', 'ValueChangedAsync', [
             'subType',
-            this.formCashReceipt.data,
+            this.master.data,
             JSON.stringify(obj)
           ])
           .pipe(takeUntil(this.destroy$))
           .subscribe((res: any) => {
-            this.formCashReceipt.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
-            this.dialog.dataService.update(this.formCashReceipt.data).subscribe();
+            this.master.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
+            this.dialog.dataService.update(this.master.data).subscribe();
             if(this.eleGridCashReceipt) this.eleGridCashReceipt.dataSource = [];
             if(this.eleGridSettledInvoices) this.eleGridSettledInvoices.dataSource = [];
             this.showHideTabDetail(
-              this.formCashReceipt?.data?.subType,
+              this.master?.data?.subType,
               this.elementTabDetail
             );
           });
         } else {
           this.isPreventChange = true;
-          this.eleCbxSubType.setValue(this.formCashReceipt.data.subType);
+          this.eleCbxSubType.setValue(this.master.data.subType);
         }
       });
     } else {
-      this.formCashReceipt.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
+      this.master.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
       this.detectorRef.detectChanges();
       if (this.elementTabDetail) {
-        this.showHideTabDetail(this.formCashReceipt?.data?.subType, this.elementTabDetail);
+        this.showHideTabDetail(this.master?.data?.subType, this.elementTabDetail);
       }
     }
     this.setValidateForm()
@@ -253,19 +253,19 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     }
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
-    this.formCashReceipt.setValue('updateColumns','',{});
+    this.master.setValue('updateColumns','',{});
     switch (field.toLowerCase()) {
       //* So quy
       case 'cashbookid':
         let indexcb = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CashBookID == this.eleCbxCashBook?.ComponentCurrent?.value);
         if(value == '' || value == null || indexcb == -1){
           this.isPreventChange = true;
-          this.formCashReceipt.setValue(field,null,{});
-          this.formCashReceipt.data.cashBookName = null;
+          this.master.setValue(field,null,{});
+          this.master.data.cashBookName = null;
           this.isPreventChange = false;
           return;
         } 
-        this.formCashReceipt.data.cashBookName = event?.component?.itemsSelected[0]?.CashBookName;
+        this.master.data.cashBookName = event?.component?.itemsSelected[0]?.CashBookName;
         let valueCashbook = {
           PreOffsetAcctID : event?.component?.dataService?.currentComponent?.previousItemData?.CashAcctID || '',
           CurOffsetAcctID : event?.component?.itemsSelected[0]?.CashAcctID || ''
@@ -279,13 +279,13 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         if(value == '' || value == null || indexrs == -1){
           this.isPreventChange = true;
           let memo = this.getMemoMaster();
-          this.formCashReceipt.setValue(field,null,{});
-          this.formCashReceipt.setValue('memo',memo,{});
-          this.formCashReceipt.data.reasonName = null;
+          this.master.setValue(field,null,{});
+          this.master.setValue('memo',memo,{});
+          this.master.data.reasonName = null;
           this.isPreventChange = false;
           return;
         } 
-        this.formCashReceipt.data.reasonName = event?.component?.itemsSelected[0]?.ReasonName;
+        this.master.data.reasonName = event?.component?.itemsSelected[0]?.ReasonName;
         let valueReason = {
           PreReasonID:  event?.component?.dataService?.currentComponent?.previousItemData?.ReasonID || '',
           Note: event?.component?.itemsSelected[0]?.ReasonName || '',
@@ -299,12 +299,12 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         if(value == null){
           this.isPreventChange = true;
           setTimeout(() => {
-            this.formCashReceipt.setValue(field,this.preData?.totalAmt,{});
+            this.master.setValue(field,this.preData?.totalAmt,{});
             this.isPreventChange = false;
           }, 50);
           return;
         }
-        this.preData = {...this.formCashReceipt?.data};
+        this.preData = {...this.master?.data};
         break;
 
       //* Doi tuong
@@ -313,22 +313,22 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         if(value == '' || value == null || indexob == -1){
           this.isPreventChange = true;
           let memo = this.getMemoMaster();
-          this.formCashReceipt.setValue(field,null,{});
-          this.formCashReceipt.setValue('objectType',null,{});
-          this.formCashReceipt.setValue('memo',memo,{});
-          this.formCashReceipt.data.objectName = null;
+          this.master.setValue(field,null,{});
+          this.master.setValue('objectType',null,{});
+          this.master.setValue('memo',memo,{});
+          this.master.data.objectName = null;
           this.isPreventChange = false;
           return;
         } 
         let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
-        this.formCashReceipt.setValue('objectType',objectType,{});
-        this.formCashReceipt.data.objectName = event?.component?.itemsSelected[0]?.ObjectName;
+        this.master.setValue('objectType',objectType,{});
+        this.master.data.objectName = event?.component?.itemsSelected[0]?.ObjectName;
         this.objectIDChange();
         break;
 
       //* Ten nguoi gui
       case 'payor':
-        this.formCashReceipt.setValue('payorID',event?.component?.itemsSelected[0]?.ContactID || '',{});
+        this.master.setValue('payorID',event?.component?.itemsSelected[0]?.ContactID || '',{});
         this.payorChange();
         break;
 
@@ -336,10 +336,10 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
       case 'currencyid':
         if(value == '' || value == null){
           this.isPreventChange = true;
-          this.formCashReceipt.setValue(field, this.preData?.currencyID, {});
+          this.master.setValue(field, this.preData?.currencyID, {});
           if (this.preData?.currencyID != null) {
             var key = Util.camelize(field);
-            var $error = (this.formCashReceipt as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
+            var $error = (this.master as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
             if ($error) $error.classList.add('d-none');
           }
           this.isPreventChange = false;
@@ -357,16 +357,16 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         if(value == null){
           this.isPreventChange = true;
           setTimeout(() => {
-            this.formCashReceipt.setValue(field,this.preData?.exchangeRate,{});
+            this.master.setValue(field,this.preData?.exchangeRate,{});
             this.isPreventChange = false;
             this.detectorRef.detectChanges();
           }, 50);
           if (this.preData?.exchangeRate != null) {
             var key = Util.camelize(field);
-            var $error = (this.formCashReceipt as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
+            var $error = (this.master as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
             if ($error) $error.classList.add('d-none');
           }
-          if(this.preData?.exchangeRate == this.formCashReceipt?.data?.exchangeRate) return;
+          if(this.preData?.exchangeRate == this.master?.data?.exchangeRate) return;
           return;
         }
         this.exchangeRateChange(field);
@@ -388,7 +388,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     let oLine = event.data;
     let field = event.field;
     this.eleGridCashReceipt.startProcess();
-    this.api.exec('AC','CashReceiptsLinesBusiness','ValueChangedAsync',[this.formCashReceipt.data,oLine,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+    this.api.exec('AC','CashReceiptsLinesBusiness','ValueChangedAsync',[this.master.data,oLine,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       Object.assign(oLine, res);
       oLine.updateColumns = '';
       this.detectorRef.detectChanges();
@@ -425,7 +425,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @returns
    */
   onAddLine() {
-    this.formCashReceipt.save(null, 0, '', '', false,{allowCompare:false})
+    this.master.save(null, 0, '', '', false,{allowCompare:false})
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
@@ -530,7 +530,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    */
   onSaveVoucher(type) {
     this.ngxLoader.start();
-    this.formCashReceipt.save(null, 0, '', '', false, { allowCompare: false })
+    this.master.save(null, 0, '', '', false, { allowCompare: false })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         let isError = false;
@@ -570,7 +570,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   saveVoucher(type){
     this.api
       .exec('AC', 'CashReceiptsBusiness', 'UpdateVoucherAsync', [
-        this.formCashReceipt.data,
+        this.master.data,
         this.journal,
       ])
       .pipe(takeUntil(this.destroy$))
@@ -589,7 +589,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
             .subscribe((res: any) => {
               if (res) {
                 res.data.isAdd = true;
-                this.formCashReceipt.refreshData({...res.data});
+                this.master.refreshData({...res.data});
                 setTimeout(() => {
                   this.refreshGrid();
                 }, 100);
@@ -597,7 +597,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
               }
             });
           }
-          if (this.formCashReceipt.data.isAdd || this.formCashReceipt.data.isCopy)
+          if (this.master.data.isAdd || this.master.data.isCopy)
             this.notification.notifyCode('SYS006');
           else 
             this.notification.notifyCode('SYS007');
@@ -613,12 +613,12 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * *Hàm hủy bỏ chứng từ
    */
   onDiscardVoucher() {
-    if (this.formCashReceipt && this.formCashReceipt.data._isEdit) {
+    if (this.master && this.master.data._isEdit) {
       this.notification.alertCode('AC0010', null).subscribe((res) => {
         if (res.event.status === 'Y') {
           this.detectorRef.detectChanges();
           this.dialog.dataService
-            .delete([this.formCashReceipt.data], false, null, '', '', null, null, false)
+            .delete([this.master.data], false, null, '', '', null, null, false)
             .pipe(takeUntil(this.destroy$))
             .subscribe((res) => {
               if (res.data != null) {
@@ -654,28 +654,28 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   cashBookIDChange(field:any,obj:any){
     this.api.exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
       field,
-      this.formCashReceipt.data,
+      this.master.data,
       JSON.stringify(obj)
     ])
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (res) {
         this.isPreventChange = true;
-        this.formCashReceipt.setValue('currencyID',res?.data?.currencyID,{});
-        this.formCashReceipt.setValue('exchangeRate',(res?.data?.exchangeRate),{});
+        this.master.setValue('currencyID',res?.data?.currencyID,{});
+        this.master.setValue('exchangeRate',(res?.data?.exchangeRate),{});
         this.isPreventChange = false;
-        this.preData = {...this.formCashReceipt?.data};
+        this.preData = {...this.master?.data};
         if(res?.isRefreshGrid){
           this.showHideColumn();
           if (this.eleGridCashReceipt.dataSource.length) {
-            this.formCashReceipt.preData = { ...this.formCashReceipt.data };
-            this.dialog.dataService.update(this.formCashReceipt.data).subscribe();
+            this.master.preData = { ...this.master.data };
+            this.dialog.dataService.update(this.master.data).subscribe();
           }
           setTimeout(() => {
             this.eleGridCashReceipt.refresh();
           }, 50);
         }
-        // if (this.formCashReceipt.data.journalType.toLowerCase() == 'bp') {
+        // if (this.master.data.journalType.toLowerCase() == 'bp') {
         //   this.bankNamePay = res?.data?.bankPayname;
         //   this.detectorRef.detectChanges();
         // }
@@ -690,19 +690,19 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    */
   reasonIDChange(field:any,obj:any){
     let memo = this.getMemoMaster();
-    this.formCashReceipt.setValue('memo',memo,{});
+    this.master.setValue('memo',memo,{});
     this.api.exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
       field,
-      this.formCashReceipt.data,
+      this.master.data,
       JSON.stringify(obj)
     ])
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (res) {
-        this.preData = {...this.formCashReceipt?.data};
+        this.preData = {...this.master?.data};
         if (res?.isRefreshGrid) {
-          this.formCashReceipt.preData = { ...this.formCashReceipt.data };
-          this.dialog.dataService.update(this.formCashReceipt.data).subscribe();
+          this.master.preData = { ...this.master.data };
+          this.dialog.dataService.update(this.master.data).subscribe();
           this.eleGridCashReceipt.refresh();
         }
       }
@@ -714,8 +714,8 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    */
   objectIDChange(){
     let memo = this.getMemoMaster();
-    this.formCashReceipt.setValue('memo',memo,{});
-    this.preData = {...this.formCashReceipt?.data};
+    this.master.setValue('memo',memo,{});
+    this.preData = {...this.master?.data};
   }
 
   /**
@@ -723,8 +723,8 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    */
   payorChange(){
     let memo = this.getMemoMaster();
-    this.formCashReceipt.setValue('memo',memo,{});
-    this.preData = {...this.formCashReceipt?.data};
+    this.master.setValue('memo',memo,{});
+    this.preData = {...this.master?.data};
   }
 
   /**
@@ -734,18 +734,18 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   currencyIDChange(field:any,obj:any){
     this.api.exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
       field,
-      this.formCashReceipt.data,
+      this.master.data,
       JSON.stringify(obj)
     ])
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (res) {
         this.isPreventChange = true;
-        this.formCashReceipt.setValue('exchangeRate',res?.data?.exchangeRate,{});
-        this.preData = {...this.formCashReceipt?.data};
+        this.master.setValue('exchangeRate',res?.data?.exchangeRate,{});
+        this.preData = {...this.master?.data};
         if (this.eleGridCashReceipt.dataSource.length) {
-          this.formCashReceipt.preData = {...this.formCashReceipt.data};
-          this.dialog.dataService.update(this.formCashReceipt.data).subscribe();
+          this.master.preData = {...this.master.data};
+          this.dialog.dataService.update(this.master.data).subscribe();
         }
         if (res?.isRefreshGrid) {
           this.showHideColumn();
@@ -766,16 +766,16 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     this.api
         .exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
           field,
-          this.formCashReceipt.data,
+          this.master.data,
           ''
         ])
         .subscribe((res:any) => {
           if (res) {
-            this.preData = {...this.formCashReceipt?.data};
+            this.preData = {...this.master?.data};
             if (res?.isRefreshGrid) {
               this.eleGridCashReceipt.refresh();
-              this.formCashReceipt.preData = { ...this.formCashReceipt.data };
-              this.dialog.dataService.update(this.formCashReceipt.data).subscribe();
+              this.master.preData = { ...this.master.data };
+              this.dialog.dataService.update(this.master.data).subscribe();
               this.detectorRef.detectChanges();
             }
           }
@@ -789,18 +789,18 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   voucherDateChange(field:any){
     this.api.exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
       field,
-      this.formCashReceipt.data,
+      this.master.data,
       ''
     ])
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (res) {
-        this.formCashReceipt.setValue('exchangeRate',res?.data?.exchangeRate,{});
-        this.preData = {...this.formCashReceipt?.data};
+        this.master.setValue('exchangeRate',res?.data?.exchangeRate,{});
+        this.preData = {...this.master?.data};
         if (res?.isRefreshGrid) {
           this.eleGridCashReceipt.refresh();
-          this.formCashReceipt.preData = { ...this.formCashReceipt.data };
-          this.dialog.dataService.update(this.formCashReceipt.data).subscribe();
+          this.master.preData = { ...this.master.data };
+          this.dialog.dataService.update(this.master.data).subscribe();
           this.detectorRef.detectChanges();
         }
       }
@@ -811,7 +811,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * *Hàm thêm dòng theo loại nút
    */
   addRowDetail() {
-    switch (this.formCashReceipt?.data?.subType) {
+    switch (this.master?.data?.subType) {
       case '11':
         this.addLine();
         break;
@@ -839,7 +839,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * *Hàm thêm mới dòng cashpayments
    */
   addLine() {
-    this.api.exec('AC','CashReceiptsLinesBusiness','SetDefaultAsync',[this.formCashReceipt.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+    this.api.exec('AC','CashReceiptsLinesBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if (res) {
         this.eleGridCashReceipt.addRow(res, this.eleGridCashReceipt.dataSource.length);
       }
@@ -913,7 +913,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     let objectName = '';
     let indexObject =
       this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex(
-        (x) => x.ObjectID == this.formCashReceipt.data.objectID
+        (x) => x.ObjectID == this.master.data.objectID
       );
     if (indexObject > -1) {
       objectName =
@@ -921,7 +921,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
           .ObjectName;
     }
     let obj = {
-      cashpayment: this.formCashReceipt.data,
+      cashpayment: this.master.data,
       objectName: objectName,
     };
     let opt = new DialogModel();
@@ -940,7 +940,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     dialog.closed.subscribe((res) => {
       if (res && res.event) {
         this.eleGridSettledInvoices.refresh();
-        this.dialog.dataService.update(this.formCashReceipt.data).subscribe();
+        this.dialog.dataService.update(this.master.data).subscribe();
         this.detectorRef.detectChanges();
       }
     });
@@ -951,11 +951,11 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    */
   addSuggestion(type) {
     let objectName = '';
-    let indexObject = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.formCashReceipt.data.objectID);
+    let indexObject = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.master.data.objectID);
     if (indexObject > -1) {
       objectName = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName;}
     let obj = {
-      oData: this.formCashReceipt.data,
+      oData: this.master.data,
       objectName: objectName,
       type,
       headerText : type === '1' ? 'Chọn đề nghị hoàn ứng' : ''
@@ -1027,7 +1027,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
       //* Thiết lập hiện cột tiền HT cho lưới nếu chứng từ có ngoại tệ
     let hDR2 = false;
     let hCR2 = false;
-    if (this.formCashReceipt.data.currencyID != this.baseCurr) { //? nếu tiền tệ chứng từ là ngoại tệ
+    if (this.master.data.currencyID != this.baseCurr) { //? nếu tiền tệ chứng từ là ngoại tệ
       if (this.journal.entryMode == '1') {
         hDR2 = true; //? => mode 2 tài khoản => hiện cột số tiền,HT
       } else {
@@ -1044,7 +1044,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
       let hBalAmt2 = false;
       let hSettledAmt2 = false;
       let hSettledDisc2 = false;
-      if (this.formCashReceipt.data.currencyID != this.baseCurr) { //? nếu tiền tệ chứng từ là ngoại tệ
+      if (this.master.data.currencyID != this.baseCurr) { //? nếu tiền tệ chứng từ là ngoại tệ
         hBalAmt2 = true;
         hSettledAmt2 = true;
         hSettledDisc2 = true;
@@ -1079,7 +1079,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
       objectName = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName + ' - ';
     }
 
-    if(this.formCashReceipt?.data?.payor) payName = this.formCashReceipt?.data?.payor  + ' - ';
+    if(this.master?.data?.payor) payName = this.master?.data?.payor  + ' - ';
     
     newMemo = reasonName + objectName + payName;
     return newMemo.substring(0, newMemo.lastIndexOf(' - ') + 1);
@@ -1097,9 +1097,9 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
       case 'add':
       case 'update':
       case 'delete':
-        if(this.formCashReceipt.data.totalAmt != 0){
+        if(this.master.data.totalAmt != 0){
           let total = this?.eleGridCashReceipt.dataSource.reduce((sum, data:any) => sum + data?.dr,0);
-          if(total > this.formCashReceipt.data.totalAmt) this.notification.notifyCode('AC0012');
+          if(total > this.master.data.totalAmt) this.notification.notifyCode('AC0012');
         }
         break;
       case 'closeEdit': //? khi thoát dòng
@@ -1168,7 +1168,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    */
   settingFormatGridCashReceipt(eleGrid){
     let setting = eleGrid.systemSetting;
-    if (this.formCashReceipt.data.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
+    if (this.master.data.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
       eleGrid.setFormatField('dr','n'+(setting.dBaseCurr || 0));
       eleGrid.setFormatField('cr','n'+(setting.dBaseCurr || 0));
       eleGrid.setFormatField('dr2','n'+(setting.dBaseCurr || 0));
@@ -1183,7 +1183,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
 
   settingFormatGridSettledInvoices(eleGrid){
     let setting = eleGrid.systemSetting;
-    if (this.formCashReceipt.data.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
+    if (this.master.data.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
       eleGrid.setFormatField('balAmt','n'+(setting.dBaseCurr || 0));
       eleGrid.setFormatField('balAmt2','n'+(setting.dBaseCurr || 0));
       eleGrid.setFormatField('settledAmt','n'+(setting.dBaseCurr || 0));
@@ -1209,7 +1209,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     if (this.journal.assignRule == '2') {
       lstRequire.push({field : 'VoucherNo',isDisable : false,require:false});
     }
-    this.formCashReceipt.setRequire(lstRequire);
+    this.master.setRequire(lstRequire);
   }
 
   @HostListener('click', ['$event']) //? focus out grid

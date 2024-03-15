@@ -61,6 +61,7 @@
                         <codx-label default="công việc" class="text-gray-600 fs-5-sm"></codx-label>
                     </div>
                 </div>
+                
             </div>
         </div>
         <div class="w-100 prd-nav" [ngClass]="!right ? 'ps-4 pt-4': ''">
@@ -139,7 +140,18 @@
                     <div ngbNavLink (click)="onNavChange(2)"><codx-label default="Kết quả đầu ra"></codx-label></div>
                     <ng-template ngbNavContent>
                         <div class="w-100 h-100">
-                            <span></span>
+                            <div class="align-items-center justify-content-between pt-2 px-2" *ngFor="let item of listDocument">
+                                <span>{{item?.title}}</span>
+
+                                <codx-thumbnail
+                                    [files]="item.filess"
+                                    displayThumb="simple"
+                                    [hideDelete]="'1'"
+                                    [hideMoreF]="'0'"
+                                    [isClick]="false"
+                                >
+                                </codx-thumbnail>
+                            </div>
                         </div>
                     </ng-template>
                 </li>
