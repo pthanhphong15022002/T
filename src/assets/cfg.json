@@ -1,0 +1,936 @@
+{
+  "Routes": [
+    //auth config
+    {
+      "DownstreamPathTemplate": "/api/auth/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8003,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"bg
+      //}
+    },
+    //sys config
+    {
+      "DownstreamPathTemplate": "/api/sys/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8003,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/sys/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //tenant config
+    {
+      "DownstreamPathTemplate": "/api/tenant/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          // "Host": "localhost",
+          "Port": 8004,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/tenant/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //dm config
+    {
+      "DownstreamPathTemplate": "/api/dm/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8006,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/dm/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //bs config
+    {
+      "DownstreamPathTemplate": "/api/bs/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8005,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/bs/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //dm config
+    {
+      "DownstreamPathTemplate": "/api/documenteditor/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8006,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/documenteditor/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+
+    //tm config
+    {
+      "DownstreamPathTemplate": "/api/tm/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8008,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/tm/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //report config
+    {
+      "DownstreamPathTemplate": "/api/report/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8009,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/report/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    ////Tracking config
+    //{
+    //  "DownstreamPathTemplate": "/api/tracking/{everything}",
+    //  "DownstreamScheme": "http",
+    //  "DownstreamHostAndPorts": [
+    //    {
+    //      "Host": "172.16.7.34",
+    //      // //"Host": "localhost",
+    //      "Port": 8030,
+    //      "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+    //      "Server": "Cloud"
+    //    }
+    //  ],
+    //  "UpstreamPathTemplate": "/api/tracking/{everything}",
+    //  "UpstreamHttpMethod": [ "GET", "POST" ],
+    //  "UpstreamHeaderTransform": {
+    //    "X-Forwarded-For": "{RemoteIpAddress}"
+    //  }
+    //  //"FileCacheOptions": {
+    //  //  "TtlSeconds": 15,
+    //  //  "Region": "adcaching"
+    //  //}
+    //},
+    ////Tracking config
+    //{
+    //  "DownstreamPathTemplate": "/api/background/{everything}",
+    //  "DownstreamScheme": "http",
+    //  "DownstreamHostAndPorts": [
+    //    {
+    //      "Host": "172.16.7.34",
+    //      // //"Host": "localhost",
+    //      "Port": 8010,
+    //      "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+    //      "Server": "Cloud"
+    //    }
+    //  ],
+    //  "UpstreamPathTemplate": "/api/background/{everything}",
+    //  "UpstreamHttpMethod": [ "GET", "POST" ],
+    //  "UpstreamHeaderTransform": {
+    //    "X-Forwarded-For": "{RemoteIpAddress}"
+    //  }
+    //  //"FileCacheOptions": {
+    //  //  "TtlSeconds": 15,
+    //  //  "Region": "adcaching"
+    //  //}
+    //},
+    //BP config
+    {
+      "DownstreamPathTemplate": "/api/bp/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8012,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/bp/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //EP config
+    {
+      "DownstreamPathTemplate": "/api/ep/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8013,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/ep/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //OD config
+    {
+      "DownstreamPathTemplate": "/api/od/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8014,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/od/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //ES config
+    {
+      "DownstreamPathTemplate": "/api/es/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8015,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/es/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+
+    //FD config
+    {
+      "DownstreamPathTemplate": "/api/fd/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          //"Host": "172.16.7.34",
+          "Host": "localhost",
+          "Port": 8016,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/fd/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+
+    //AR config
+    //{
+    //  "DownstreamPathTemplate": "/api/ar/{everything}",
+    //  "DownstreamScheme": "http",
+    //  "DownstreamHostAndPorts": [
+    //    {
+    //      "Host": "172.16.7.34",
+    //      // //"Host": "localhost",
+    //      "Port": 8017,
+    //      "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+    //      "Server": "Cloud"
+    //    }
+    //  ],
+    //  "UpstreamPathTemplate": "/api/ar/{everything}",
+    //  "UpstreamHttpMethod": [ "GET", "POST" ],
+    //  "UpstreamHeaderTransform": {
+    //    "X-Forwarded-For": "{RemoteIpAddress}"
+    //  }
+    //  //"FileCacheOptions": {
+    //  //  "TtlSeconds": 15,
+    //  //  "Region": "adcaching"
+    //  //}
+    //},
+    //BI config
+    {
+      "DownstreamPathTemplate": "/api/bi/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8018,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/bi/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+
+    //CO config
+    {
+      "DownstreamPathTemplate": "/api/co/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          // "Host": "localhost",
+          "Port": 8019,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/co/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //PM config
+    {
+      "DownstreamPathTemplate": "/api/pm/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8020,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/pm/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //BG config
+    {
+      "DownstreamPathTemplate": "/api/bg/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8021,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/bg/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //SV config
+    {
+      "DownstreamPathTemplate": "/api/sv/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8022,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/sv/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //OM config
+    {
+      "DownstreamPathTemplate": "/api/om/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8023,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/om/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //CM config
+    {
+      "DownstreamPathTemplate": "/api/cm/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8026,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/cm/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //EI config
+    {
+      "DownstreamPathTemplate": "/api/ei/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8024,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/ei/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //AC config
+    {
+      "DownstreamPathTemplate": "/api/ac/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          //"Host": "172.16.7.34",
+          "Host": "localhost",
+          "Port": 8025,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/ac/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //DP config
+    {
+      "DownstreamPathTemplate": "/api/dp/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8027,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/dp/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //SM config
+    {
+      "DownstreamPathTemplate": "/api/sm/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8028,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/sm/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //AM config
+    {
+      "DownstreamPathTemplate": "/api/am/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          // "Host": "localhost",
+          "Port": 8029,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/am/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //wp config
+    {
+      "DownstreamPathTemplate": "/api/wp/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          //"Host": "172.16.7.34",
+          "Host": "localhost",
+          "Port": 8031,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/wp/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    {
+      "DownstreamPathTemplate": "/hubwp/chat",
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          //"Host": "172.16.7.34",
+          "Host": "localhost",
+          "Port": 8031,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/hubwp/chat",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    {
+      "DownstreamPathTemplate": "/hubwp/chat/negotiate",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          //"Host": "172.16.7.34",
+          "Host": "localhost",
+          "Port": 8031,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/hubwp/chat/negotiate",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+    },
+    //HR config
+    {
+      "DownstreamPathTemplate": "/api/hr/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          //"Host": "172.16.7.34",
+          "Host": "localhost",
+          "Port": 8032,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/hr/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //IV config
+    {
+      "DownstreamPathTemplate": "/api/iv/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8033,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/iv/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //PS config
+    {
+      "DownstreamPathTemplate": "/api/ps/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 8034,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/ps/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    //report sys config
+    {
+      "DownstreamPathTemplate": "/api/reportviewer/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 9002,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/reportviewer/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    {
+      "DownstreamPathTemplate": "/api/reportwriter/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 9002,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/reportwriter/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+      //"FileCacheOptions": {
+      //  "TtlSeconds": 15,
+      //  "Region": "adcaching"
+      //}
+    },
+    {
+      "DownstreamPathTemplate": "/api/reportdesigner/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 9002,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/reportdesigner/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/rpttm/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 9006,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/rpttm/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/rptsys/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 9007,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/rptsys/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/rptep/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.34",
+          //"Host": "localhost",
+          "Port": 9004,
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/rptep/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/lvfile/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.7.91",
+          "Port": "80",
+          "Location": "{DownstreamBaseUrl}, {BaseUrl}",
+          "Server": "Cloud"
+        }
+      ],
+      "UpstreamPathTemplate": "/lvfile/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHeaderTransform": {
+        "X-Forwarded-For": "{RemoteIpAddress}"
+      }
+    }
+  ],
+  "GlobalConfiguration": {
+    "RequestIdKey": "ERM-Request-Id",
+    "DelegatingHandlers": [
+      "HeaderDelegatingHandler"
+    ],
+    "RateLimitOptions": {
+      "ClientWhitelist": [],
+      "ClientIdHeader": "ClientId",
+      "EnableRateLimiting": false,
+      "QuotaExceededMessage": "Customized Gateway Rate Limiting Issue!",
+      "RateLimitCounterPrefix": "efocelot",
+      "DisableRateLimitHeaders": false,
+      "HttpStatusCode": 368,
+      "Period": "1s",
+      "PeriodTimespan": 1,
+      "Limit": 900000
+    }
+  }
+}

@@ -5,6 +5,7 @@
   "urlUpload": "http://172.16.7.34:8011/lvfile",
   "office365": "",
   "saas": 1,
+  "asideMode": "all",
   "layoutCZ": "lacviet",
   "themeMode": "body",
   "hideFavCount":false,
@@ -14,14 +15,10 @@
   "captchaEnable": 0,
   "loginHCS":"https://surehcs.lacviet.vn/UI2017",
   "layout": {
-    "id": "lacviet",
     "title": "",
     "icon": "",
-    "logo": "",
-    "appleStore":"https://apps.apple.com/us/app/codx/id6459408551",
-    "playStore":"https://play.google.com/store/apps/details?id=com.lacviet.codxaws"
+    "logo": ""
   },
-  "asideMode": "all",
   "externalLogin": {
     "amazonId": "amzn1.application-oa2-client.f074ae67c0a146b6902cc0c4a3297935",
     "facebookId": "553419903425493",
@@ -46,20 +43,6 @@
     "messagingSenderId": "319703529330",
     "appId": "1:319703529330:web:d0569f86d85524c1ca0feb",
     "measurementId": "G-HH40VHYRF0"
-  },
-  "serviceMapping": {
-    "RP": {
-      "service": "rptrp",
-      "assemblyName": "Codx.RptBusiness.RP"
-    },
-    "LS": {
-      "service": "HR"
-    },
-    "TS": {
-      "service": "HR"
-    },
-    "PR": {
-      "service": "HR"
-    }
   }
+ 
 }
