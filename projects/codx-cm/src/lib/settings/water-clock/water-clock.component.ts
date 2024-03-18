@@ -248,6 +248,7 @@ export class WaterClockComponent
   onLoading(e) {}
 
   getColumsGrid(grvSetup) {
+    this.columnGrids = [];
     if (this.arrFieldIsVisible?.length > 0) {
       this.arrFieldIsVisible.forEach((key) => {
         let field = Util.camelize(key);
