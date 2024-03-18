@@ -832,21 +832,21 @@ export class HomeComponent extends UIComponent implements OnDestroy {
     this.folderService.getBreadCumb(id,type).subscribe(item=>{
       if(item)
       {
-          if(type == "folder") this.dmSV.folderID = id;
-          var breadcumb = [this.dmSV.menuActive.getValue()];
-          var breadcumbLink = [""];
-          breadcumb = breadcumb.concat(item[0]);
-          breadcumbLink = breadcumbLink.concat(item[1]);
-          this.dmSV.breadcumbLink = breadcumbLink;
-          this.dmSV.breadcumb.next(breadcumb);
-          this.folderService.getFolder(breadcumbLink[breadcumbLink.length - 1]).subscribe(item=>{
-            if(item)
-            {
-              this.view.dataService.dataSelected = item;
-              this.dmSV.getRight(item);
-              this.getDataFolder(item.recID);
-            }
-          })
+        if(type == "folder") this.dmSV.folderID = id;
+        var breadcumb = [this.dmSV.menuActive.getValue()];
+        var breadcumbLink = [""];
+        breadcumb = breadcumb.concat(item[0]);
+        breadcumbLink = breadcumbLink.concat(item[1]);
+        this.dmSV.breadcumbLink = breadcumbLink;
+        this.dmSV.breadcumb.next(breadcumb);
+        this.folderService.getFolder(breadcumbLink[breadcumbLink.length - 1]).subscribe(item=>{
+          if(item)
+          {
+            this.view.dataService.dataSelected = item;
+            this.dmSV.getRight(item);
+            this.getDataFolder(item.recID);
+          }
+        })
       }
       else {
         this.isRead = false;
