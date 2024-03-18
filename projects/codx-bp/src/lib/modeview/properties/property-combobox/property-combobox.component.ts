@@ -36,7 +36,7 @@ export class PropertyComboboxComponent extends BasePropertyComponent implements 
 
  openSettingCbx() {
   let option = new DialogModel();
-  option.zIndex = 1010;
+  option.zIndex = 1200;
   option.FormModel = {
     formName: 'DPStepsFields',
     gridViewName: 'grvDPStepsFields',

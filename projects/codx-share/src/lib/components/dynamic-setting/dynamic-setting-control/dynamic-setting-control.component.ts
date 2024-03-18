@@ -18,6 +18,7 @@ export class DynamicSettingControlComponent extends UIComponent implements OnCha
   @Input() showHeaderText: any = true;
   @Input() lineType:string = '1';
   @Input() isDialog: boolean = true;
+  @Input() disabled: boolean = false;
   @Output() valueChanges: EventEmitter<any> = new EventEmitter();
   @Output() changeAutoSchedules: EventEmitter<any> = new EventEmitter();
   oldDataValue: any = {};

@@ -7,7 +7,8 @@
     box-shadow: rgba(50, 50, 93, 0.35) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
     border-radius: 6px 6px 0 0;
     position: relative;
- }
+    margin-left: 10px; 
+}
 
 .chat-box-header{
     width: 100%;
@@ -58,7 +59,7 @@
 .chat-box-body{
     width: 99%;
     //height: 476px;
-    height: calc(100vh - 170px);
+    height: calc(100% - 100px); 
     overflow: auto;
     padding: 6px 10px;
 }
@@ -245,9 +246,8 @@ codx-chat-box.active{
     padding: 4px;
 }
 .message-system{
-    margin: 10px;
-    padding: 4px 10px;
-    background: var(--primary-light);
+    margin: 10px 0px;
+    // background: var(--primary-light); 
     text-align: center;
     font-style: italic;
     font-weight: 400;

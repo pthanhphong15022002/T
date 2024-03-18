@@ -944,11 +944,29 @@ export class PopupAddProcessComponent {
       result2.push(elm);
       if(elm.child && elm.child.length>0)
       {
+        let stt = 0;
         elm.child.forEach(elm2 => {
+          if (typeof elm2.settings === 'string') elm2.settings = JSON.parse(elm2.settings);
           elm2.stepNo = i;
-          if (typeof elm2.settings === 'object') elm2.settings = JSON.stringify(elm2.settings);
-          i++;
           result2.push(elm2);
+          i++;
+          if(elm2.activityType == "Conditions")
+          {
+            if(elm2.child && elm2.child.length>0)
+            {
+              elm2.child.forEach(elm3=>{
+                if(elm.child[stt+1])
+                {
+                  elm3.stepNo = i;
+                  elm3.settings.nextSteps =  [{nextStepID: elm.child[stt+1].recID}] 
+                  if(typeof elm3.settings === 'object') elm3.settings = JSON.stringify(elm3.settings);
+                  result2.push(elm3);
+                  i++;
+                }
+              })
+            }
+          }
+          stt++;
           result.steps = result.steps.filter(x=>x.recID != elm2.recID);
         });
       }
@@ -983,10 +1001,10 @@ export class PopupAddProcessComponent {
           }
         }
         
-        result2[x].settings = JSON.parse(result2[x].settings);
+        if(typeof result2[x].settings == 'string') result2[x].settings = JSON.parse(result2[x].settings);
         if(result2[x + 1]?.recID && result2[x].activityType != 'Conditions')
         {
-          result2[x].settings.nextSteps = [{nextStepID: result2[x + 1]?.recID}] 
+          if(!result2[x]?.settings?.nextSteps) result2[x].settings.nextSteps = [{nextStepID: result2[x + 1]?.recID}] 
         }
         else if(result2[x].activityType != 'Conditions') result2[x].settings.nextSteps = null;
         

@@ -42,6 +42,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   enableEdit:boolean=true;
   viewTree:any;
   approveControl:any;
+  showParent:boolean=false;
 
   constructor(
     injector: Injector,
@@ -66,6 +67,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
     this.crrUser = this.authStore.get();
     if(dialogData.data[1]){
       this.action = dialogData.data[1];
+      if(this.action=='add' && !this.data.parentID) this.showParent = true;
       if(this.action=='edit'){
         this.title = 'Chỉnh sửa công việc'
         this.enableAttachment=true;
@@ -434,7 +436,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   commentTyped(e: any, key: string) {
     if(this.history) this.history.refresh();
     let isCheckChangeStatus:boolean=false;
-    if(this.isInProgress || this.isSendReport || this.isInProgress) isCheckChangeStatus = true;
+    if(this.isInProgress || this.isSendReport || this.isFinish) isCheckChangeStatus = true;
     if(e.comment){
       if(!this.checkEditPermission()) return;
       let status="00";

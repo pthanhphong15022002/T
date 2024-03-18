@@ -56,6 +56,7 @@ export class ContentEmailComponent {
   @Input() showFooter = true;
   @Input() showAttachment = true;
   @Input() email?: email;
+  @Input() idAlert: any = null;
 
   @ViewChild('addTemplateName') addTemplateName: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -84,6 +85,7 @@ export class ContentEmailComponent {
       this.vllShareData = res;
       console.log('vll', res);
     });
+    if (!this.idAlert) this.idAlert = Util.uid();
   }
 
   ngOnInit(): void {

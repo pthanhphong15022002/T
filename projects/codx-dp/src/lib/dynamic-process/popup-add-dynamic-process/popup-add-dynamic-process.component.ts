@@ -1868,11 +1868,17 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       } else if ($event.field === 'no' && $event.component.checked === true) {
         this.process.allowReturnInstanceControl = false;
       }
-    } else if ('CreateTask') {
+    } else if (view === 'CreateTask') {
       if ($event.field === 'yes' && $event.component.checked === true) {
         this.process.createTask = true;
       } else if ($event.field === 'no' && $event.component.checked === true) {
         this.process.createTask = false;
+      }
+    }else if(view == "closeInstanceOverdue"){
+      if ($event.field === 'yes' && $event.component.checked === true) {
+        this.process.closeInstanceOverdue = true;
+      } else if ($event.field === 'no' && $event.component.checked === true) {
+        this.process.closeInstanceOverdue = false;
       }
     }
 

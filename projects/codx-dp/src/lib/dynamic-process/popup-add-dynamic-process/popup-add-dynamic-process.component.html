@@ -1325,7 +1325,7 @@
                     [label]="titleRadioYes"
                     [checked]="process?.allowCopy ?? false"
                     [crrValue]="process?.allowCopy"
-                    (valueChange)="valueRadioInfo($event, 'AllowCopyView')"
+                    (valueChange)="valueRadioInfo($event, 'closeInstanceOverdue')"
                     [disabled]="viewOnly"
                   >
                   </codx-input>
@@ -1339,7 +1339,7 @@
                     [label]="titleRadioNo"
                     [checked]="!process?.closeInstanceOverdue ?? false"
                     [crrValue]="process?.closeInstanceOverdue"
-                    (valueChange)="valueRadioInfo($event, 'AllowCopyView')"
+                    (valueChange)="valueRadioInfo($event, 'closeInstanceOverdue')"
                     [disabled]="viewOnly"
                     readonly
                   >

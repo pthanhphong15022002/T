@@ -24,7 +24,7 @@
     [dataTree]="data?.tasks ? data?.tasks : []"
     [approveStatus]="data?.approveStatus"
     [addPermissions]="listFilePermission"
-    [isEdit]="true"
+    [isEdit]="!viewOnly"
     [data]="data"
     [keyField]="'recID'"
   ></codx-tabs>
@@ -164,11 +164,11 @@
       <div class="col-6 form-group">
         <codx-tag
           [entityName]="formModel.entityName"
-          [objectID]="data.recID"
           [isEdit]="true"
           field="tags"
           [value]="data.tags"
           (valueChange)="valueChange($event)"
+          [disabled]="viewOnly"
         ></codx-tag>
       </div>
       <!-- <div class="col-6 form-group" >
@@ -261,7 +261,7 @@
           [ngbPopover]="popoverSelectRoles"
           placement="right"
           #p="ngbPopover"
-          (mouseenter)="enableEdit ? showPopover(p, item) : ''"
+          (mouseenter)="(enableEdit && !viewOnly) ? showPopover(p, item) : ''"
           autoClose="outside"
         >
           <codx-img
@@ -316,7 +316,7 @@
         <div
           class="d-flex flex-column justify-content-center align-items-center me-5"
         >
-          <i class="icon-clear icon-16" (click)="removeMember(item)"></i>
+          <i class="icon-clear icon-16" (click)="removeMember(item)" *ngIf="!viewOnly"></i>
         </div>
       </div>
     </div>
@@ -365,6 +365,7 @@
     [settingFull]="{ paras: newSetting, paraValues: paravalues }"
     [isDialog]="false"
     [lineType]="'1'"
+    [disabled]="viewOnly"
   ></dynamic-setting-control>
 </ng-template>
 
@@ -380,10 +381,17 @@
         <!-- <button class="btn btn-outline-primary me-2">
           <codx-label name="lblApprove" default="Gửi duyệt" [formModel]="formModel"></codx-label>
         </button> -->
-        <button class="btn btn-primary" (click)="saveForm()">
+        <button class="btn btn-primary" (click)="saveForm()" *ngIf="!viewOnly">
           <codx-label
             name="lblSave"
             default="Lưu"
+            [formModel]="formModel"
+          ></codx-label>
+        </button>
+        <button class="btn btn-danger" (click)="dialogRef.close()" *ngIf="viewOnly">
+          <codx-label
+            name="lblClose"
+            default="Đóng"
             [formModel]="formModel"
           ></codx-label>
         </button>
@@ -398,7 +406,7 @@
       <ng-container *ngFor="let item of listRoles">
         <div
           class="d-flex align-items-center btn btn-sm btn-white cursor-pointer"
-          (click)="changeRole(item)"
+          (click)="viewOnly ? '': changeRole(item)"
         >
           <span
             [inlineSVG]="'./assets/themes/pm/default/img/' + item?.icon"
