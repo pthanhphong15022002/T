@@ -17,19 +17,20 @@ import { CHAT } from '../models/chat-const.model';
   providedIn: 'root',
 })
 export class SignalRService {
+
+
   public hubConnection: signalR.HubConnection;
   connectionId: string;
   logOut: boolean = false;
-  userConnect = new EventEmitter<any>();
-  disConnected = new EventEmitter<any>();
-  activeGroup = new EventEmitter<any>();//Bật chat box
-  chatboxChange = new EventEmitter<any>();//Gửi tin
-  votedMessage = new EventEmitter<any>();//Thả emoji
-  loadedGroup = new EventEmitter<any>();//Lấy thông tin Group
-  updateOnlineStatus = new EventEmitter<any>();//Lấy thông tin Group
 
-
+  // 13/03/2024 - update
+  addGroup = new EventEmitter<any>(); // add new group
   openBoxChat = new EventEmitter<any>(); // open box chat
+  removeGroup = new EventEmitter<any>(); // remove group
+  favoriteGroup = new EventEmitter<any>(); // favorite group
+  reciveMesage = new EventEmitter<any>(); // recive message
+  messageChange = new EventEmitter<any>();  // message change
+  groupChange = new EventEmitter<any>(); // group change
 
   constructor(private authStore: AuthStore) {
     this.createConnection();
@@ -48,61 +49,66 @@ export class SignalRService {
     this.hubConnectionstart();
 
     this.hubConnection.on('ReceiveMessage', (res) => {
-      if (res && res?.event) 
+      if (res) 
       {
         switch (res.event)
         {
+          // onconnection
           case CHAT.UI_FUNC.OnConnected:
-            this.updateOnlineStatus.emit(res);
             break;
           
-          case CHAT.UI_FUNC.OnDisconnected:{
-            this.disConnected.emit(res);
-            this.updateOnlineStatus.emit(res);
+          // disconnection
+          case CHAT.UI_FUNC.OnDisconnected:
             break;
-          }
-          case CHAT.UI_FUNC.OpenBoxChat: {
+
+            // add new group
+          case CHAT.UI_FUNC.AddGroup:
+            this.sendData(CHAT.BE_FUNC.JoinGroupAsync,res.data);
+            this.addGroup.emit(res.data);
+            break;
+          
+            // open box chat
+          case CHAT.UI_FUNC.OpenBoxChat: 
             this.openBoxChat.emit(res.data);
             break;
-          }
-          case CHAT.UI_FUNC.LoadedGroup: {
-            this.loadedGroup.emit(res);
-            this.activeGroup.emit(res);
+
+          // Join Group / Add connection to hub
+          case CHAT.UI_FUNC.JoinGroup: 
+            this.sendData(CHAT.BE_FUNC.JoinGroupAsync,res.data);
             break;
-          }
-          //Thêm người còn lại vào nhóm, sau load
-          case CHAT.BE_FUNC.JoinGroup: {
-            this.sendData(CHAT.BE_FUNC.JoinGroup, res.data);
+          
+          // remove group
+          case CHAT.UI_FUNC.RemoveGroup: 
+            this.removeGroup.emit(res.data);
             break;
-          }
-          //Sau khi thêm người vào nhóm, thêm nhóm vào UI nếu chưa có (mở chatbox nếu cần)
-          case CHAT.UI_FUNC.JoinedGroup: {
-            this.loadedGroup.emit(res);
+          
+          // favirote group
+          case CHAT.UI_FUNC.FavoriteGroup: 
+            this.groupChange.emit(res.data);
             break;
-          }
+          
           //Gửi tin nhắn
           case CHAT.UI_FUNC.SendedMessage:
-            this.chatboxChange.emit(res);
+            this.reciveMesage.emit(res.data);
             break;
+          
           //Xóa tin nhắn
           case CHAT.UI_FUNC.DeletedMessage:
-            this.chatboxChange.emit(res);
+            this.messageChange.emit(res);
             break;
+          
           //phản hồi tin nhắn
           case CHAT.UI_FUNC.ReactedMessage:
-            this.chatboxChange.emit(res);
+            this.reciveMesage.emit(res);
             break;
-          //Gửi chat của hệ thống và mở chat box
-          case CHAT.UI_FUNC.SendedMessageSystem:{
-            this.chatboxChange.emit(res);
-            this.activeGroup.emit(res);
-            break;
-          }
-
           
-        }
+          //Gửi chat của hệ thống và mở chat box
+          case CHAT.UI_FUNC.SendedMessageSystem:
+            this.reciveMesage.emit(res.data);
+            break;
       }
-    });
+    }
+  });
 
     this.hubConnection.onclose(() => {
       this.hubConnectionstart();
@@ -111,18 +117,18 @@ export class SignalRService {
 
   hubConnectionstart() {
     var t = this;
-    this.hubConnection.start().catch(function () {
+    this.hubConnection.start()
+    .catch(function () {
       setTimeout(function () {
         t.hubConnectionstart();
       }, 5000);
     });
   }
-  // send to server
+
   sendData(methodName: string, ...args: any[]) {
     return this.hubConnection.send(methodName, ...args);
   }
 
-  // disconnect
   disconnect(user: any) {
     let codxChatContainer = document.getElementsByTagName(
       'codx-chat-container'

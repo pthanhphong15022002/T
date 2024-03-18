@@ -225,7 +225,6 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
         if (elm.child && elm.child.length > 0) {
           elm.countTask = elm.child.length;
           elm.countCompleted = 0;
-          debugger
           elm.child.forEach(element => {
             if(element.activityType != "Conditions" && element.status == "5") elm.countCompleted ++;
             else if(element.activityType == "Conditions")

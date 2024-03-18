@@ -76,7 +76,7 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
   searchEvent(textSearch: any) {
     this.codxListView1.dataService.search(textSearch);
   }
-  // value change
+
   valueChange(event) {
     if (event) {
       this.group.groupName = event.data;
@@ -84,7 +84,6 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // select member
   selectedChange(event) {
     if (event?.data) {
       let itemSelected = event.data;
@@ -118,14 +117,14 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // select remove
+  
   selectedRemoveChange(event: any) {
     if (event) {
       let itemSelected = event.data;
       this.removeMember(itemSelected);
     }
   }
-  //remove member
+  
   removeMember(data: any) {
     if (data) {
       this.group.members = this.group.members.filter((x) => x != data.UserID);
@@ -146,11 +145,11 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
   }
 
   isLoading: boolean = false;
-  // insert group
   insertGroup() {
     if(this.group && this.group?.members?.length > 0)
     {
       this.isLoading = true;
+      this.group.groupID = Util.uid();
       this.api
       .execSv(
         'WP',
@@ -158,17 +157,16 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
         'GroupBusiness',
         'SaveAsync',
         this.group)
-        .subscribe((res1:any) => {
-        if (res1) 
+        .subscribe((res:any) => {
+        if (res) 
         {
           this.codxImg
-          .updateFileDirectReload(res1.groupID)
+          .updateFileDirectReload(res.groupID)
           .subscribe((res2: any) => 
           {
-            // this.signalRSV.sendData(CHAT.BE_FUNC.LoadGroup, res1.groupID);
-            this.signalRSV.sendData("NewGroup", res1.groupID);
+            this.signalRSV.sendData(CHAT.BE_FUNC.AddGroupAsync, res.groupID);
             this.notifiSV.notifyCode('CHAT004');
-            this.dialogRef.close(res1);
+            this.dialogRef.close(res);
           });
         } 
         else this.notifiSV.notifyCode('CHAT005');

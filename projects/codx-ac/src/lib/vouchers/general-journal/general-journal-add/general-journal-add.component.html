@@ -293,19 +293,6 @@
           <div class="row" style="max-width: 1000px;">
             <div class="col-5">
               <div class="form-group">
-                <codx-label #elelblObjectID style="white-space: nowrap !important" fiedName="ObjectID"
-                  [formModel]="master.formModel" default="Đối tượng">
-                </codx-label>
-                <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxObjectID
-                  [Group]="master.formGroup" [formModel]="dialog.formModel" field="objectID"
-                  (valueChange)="valueChangeMaster($event)">
-                </codx-input>
-              </div>
-            </div>
-          </div>
-          <div class="row" style="max-width: 1000px;">
-            <div class="col-5">
-              <div class="form-group">
                 <codx-label style="white-space: nowrap !important" fiedName="ReasonID"
                   [formModel]="master.formModel">
                 </codx-label>
@@ -322,6 +309,19 @@
               <codx-label class="fw-bold" style="white-space: nowrap !important" fiedName="MixedPayment"
                 [formModel]="master.formModel">
               </codx-label>
+            </div>
+          </div>
+          <div class="row" style="max-width: 1000px;margin-bottom: 15px;">
+            <div class="col-8">
+              <div class="form-group">
+                <codx-label #elelblObjectID style="white-space: nowrap !important" fiedName="ObjectID"
+                  [formModel]="dialog.formModel" default="Đối tượng">
+                </codx-label>
+                <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxObjectID
+                  [Group]="master.formGroup" [formModel]="dialog.formModel" field="objectID"
+                  (valueChange)="valueChangeMaster($event)">
+                </codx-input>
+              </div>
             </div>
           </div>
           <div class="row" style="max-width: 1000px;">

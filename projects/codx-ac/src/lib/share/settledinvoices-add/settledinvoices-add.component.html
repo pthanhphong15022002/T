@@ -155,9 +155,7 @@
         <div style="margin-bottom: unset !important;" class="form-group">
           <codx-label style="white-space: nowrap !important;" fiedName="currencyID" [formModel]="dialog.formModel" default="Tiền tệ">
           </codx-label>
-          <div class="ac-input">
-            <codx-input field="currencyID" [disabled]="true" type="text" [crrValue]="cashpayment.currencyID"></codx-input>
-          </div>
+          <codx-input field="currencyID" [disabled]="true" type="text" [crrValue]="cashpayment.currencyID"></codx-input>
         </div>
       </div>
       <div class="col-xl-2">
@@ -184,7 +182,7 @@
 <ng-template #tabVoucher>
   <div class="tabset-content position-relative">
     <codx-gridview-v2 #grid [checkboxSelect]="true" idField="recID" [showEmptyRecord]="false" [editOnClick]="true"
-      [selectionOptions]="selectionOptions" [formName]="fmSettledInvoices.formName"
+      [selectionOptions]="selectionOptions" [formName]="fmSettledInvoices.formName" (onEdit)="onEdit($event)"
       [gridViewName]="fmSettledInvoices.gridViewName" (onCheckBoxChange)="onCheckAll($event)" (gridInit)="beforeInitGrid($event)"
       [entityName]="fmSettledInvoices.entityName" [dataSource]="subInvoices" (onDeselected)="onDeselected($event)"
       service="AC" (onSelected)="onSelected($event)" hideMoreFunc="true" [autoFitColumns]="false"
