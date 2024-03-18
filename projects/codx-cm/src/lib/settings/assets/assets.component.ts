@@ -112,7 +112,7 @@ export class AssetsComponent
         this.edit(data);
         break;
       case 'SYS04':
-        this.copy();
+        this.copy(data);
         break;
       case 'SYS05':
         this.viewDetail(data);
@@ -151,7 +151,7 @@ export class AssetsComponent
     });
   }
 
-  copy() {
+  copy(data) {
     this.view.dataService.copy().subscribe((res) => {
       let option = new SidebarModel();
 

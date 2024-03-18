@@ -437,9 +437,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
         }
         if (this.eleGridSalesInvoice) {
           this.eleGridSalesInvoice.saveRow((res: any) => { //? save lưới trước
-            if (res) {
-              this.addRowDetailByType(typeBtn);
-            }
+            if (res && res.type != 'error') this.addRowDetailByType(typeBtn);
           })
           return;
         }
@@ -498,8 +496,10 @@ export class SalesinvoicesAddComponent extends UIComponent {
         }
         if ((this.eleGridSalesInvoice || this.eleGridSalesInvoice?.isEdit)) {
           this.eleGridSalesInvoice.saveRow((res: any) => { //? save lưới trước
-            if (res) {
+            if (res && res.type != 'error') {
               this.saveVoucher(type);
+            }else{
+              this.ngxLoader.stop();
             }
           })
           return;

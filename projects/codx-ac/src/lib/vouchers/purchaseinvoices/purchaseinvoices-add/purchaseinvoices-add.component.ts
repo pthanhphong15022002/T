@@ -394,17 +394,13 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         }
         if (this.eleGridPurchaseInvoice && this.elementTabDetail?.selectingID == '0') {
           this.eleGridPurchaseInvoice.saveRow((res: any) => { //? save lưới trước
-            if (res) {
-              this.addRowDetailByType(typeBtn);
-            }
+            if (res && res.type != 'error') this.addRowDetailByType(typeBtn);
           })
           return;
         }
         if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '1') {
           this.eleGridVatInvoices.saveRow((res: any) => { //? save lưới trước
-            if (res) {
-              this.addRowDetailByType(typeBtn);
-            }
+            if (res && res.type != 'error') this.addRowDetailByType(typeBtn);
           })
           return;
         }
@@ -492,16 +488,20 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         }
         if ((this.eleGridPurchaseInvoice || this.eleGridPurchaseInvoice?.isEdit) && this.elementTabDetail?.selectingID == '0') {
           this.eleGridPurchaseInvoice.saveRow((res: any) => { //? save lưới trước
-            if (res) {
+            if (res && res.type != 'error') {
               this.saveVoucher(type);
+            }else{
+              this.ngxLoader.stop();
             }
           })
           return;
         }
         if ((this.eleGridVatInvoices || this.eleGridVatInvoices?.isEdit) && this.elementTabDetail?.selectingID == '1') {
           this.eleGridVatInvoices.saveRow((res: any) => { //? save lưới trước
-            if (res) {
+            if (res && res.type != 'error') {
               this.saveVoucher(type);
+            }else{
+              this.ngxLoader.stop();
             }
           })
           return;
@@ -597,12 +597,17 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * *Hàm thêm dòng hóa đơn GTGT
    */
   addLineVatInvoices() {
-    let model = new AC_VATInvoices();
-    let oLine = Util.camelizekeyObj(model);
-    oLine.transID = this.master.data.recID;
-    oLine.objectID = this.master.data.objectID;
-    oLine.objectName = this.master.data.objectName;
-    this.eleGridVatInvoices.addRow(oLine, this.eleGridVatInvoices.dataSource.length);
+    this.api.exec('AC','VATInvoicesBusiness','SetDefaultAsync',[
+      'AC',
+      'AC_PurchaseInvoices',
+      'AC_PurchaseInvoicesLines',
+      this.master.data,
+      null,
+    ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      if (res) {
+        this.eleGridVatInvoices.addRow(res, this.eleGridVatInvoices.dataSource.length);
+      }
+    })
   }
 
   /**
