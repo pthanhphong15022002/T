@@ -920,4 +920,5 @@ export class CM_Contracts {
   disposalNewContact: string; 
   disposalEmail: string; 
   disposalPhone: string;
+  approveRule: string;
 }
