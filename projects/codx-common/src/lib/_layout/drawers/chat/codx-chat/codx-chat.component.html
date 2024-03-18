@@ -1,4 +1,4 @@
-<div ngbDropdown [ngbTooltip]="codxService.asideMode != '2' ? function?.defaultName : ''" 
+<div *ngIf="showChat"  ngbDropdown [ngbTooltip]="codxService.asideMode != '2' ? function?.defaultName : ''" 
   class="d-inline-block w-100 cursor-pointer" autoClose="'outside'">
   <button ngbDropdownToggle type="button" class="btn btn-sm btn-icon" id="codxChat">
     <div class="d-flex align-items-center">

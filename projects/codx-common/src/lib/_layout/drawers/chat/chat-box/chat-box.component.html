@@ -26,7 +26,7 @@
                     <span class="icon-16" [ngClass]="group.isFavorite ? 'icon-i-star-fill text-warning' : 'icon-i-star'"></span>
                 </button>
 
-                <ng-container *ngIf="group.groupType == '2'">
+                <ng-container *ngIf="group.groupType == '2' && group.write">
                     <button type="button" class="btn btn-icon btn-sm btn-light" (click)="clickAddMemeber()">
                         <span class="icon-group_add icon-16"></span>
                     </button>

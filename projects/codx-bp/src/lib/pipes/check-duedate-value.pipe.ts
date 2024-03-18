@@ -12,7 +12,7 @@ export class CheckDuedateValuePipe implements PipeTransform {
     let date = '';
     if (endDate) {
       //task quá hạn
-      if (actualEnDate) {
+      if (actualEnDate != null && actualEnDate != '') {
         if (new Date(endDate) < new Date(actualEnDate)) {
           isDueDate = true;
           date = this.formatDate(new Date(endDate), new Date(actualEnDate));

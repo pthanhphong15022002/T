@@ -13,6 +13,7 @@ export const CHAT = {
         EditMemberAsync:"EditMemberAsync",
         OpenBoxChatAsync:'OpenBoxChatAsync',
         RemoveGroupAsync:'RemoveGroupAsync',
+        RemoveConnectionAsync:'RemoveConnectionAsync',
         FindGroupAsync:'FindGroupAsync',
         JoinGroupAsync:"JoinGroupAsync",
         FavoriteGroupAsync:"FavoriteGroupAsync"
@@ -30,7 +31,7 @@ export const CHAT = {
         JoinGroup:"JoinGroup",
         AddedMember:'AddedMember',        
         SearchedGroup:'SearchedGroup',
-        SendedMessage:'SendedMessage',        
+        IncomingMessage:'IncomingMessage',        
         ReactedMessage:'ReactedMessage',
         DeletedMessage:"DeletedMessage",
         SendedMessageSystem:"SendedMessageSystem",
