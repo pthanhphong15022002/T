@@ -781,9 +781,7 @@
           *ngIf="item?.fields?.length > 0"
           [dataStep]="item"
           [showColumnControl]="showColumnControl(item.stepID)"
-          [isUpdate]="
-            ['1', '2', '15', '17'].includes(contract.status) && !contract.closed
-          "
+          [isUpdate]="['1', '2', '15',].includes(contract.status) && !contract.closed && contract?.approveStatus != '3'"
           [objectIdParent]="contract.recID"
           [customerID]="contract.customerID"
           (saveDataStep)="saveDataStep($event)"
@@ -806,6 +804,7 @@
     [taskAdd]="taskAdd"
     (moveStage)="handelMoveStage($event)"
     [isAdmin]="contract?.isAdminAll"
+    [isViewStep]="!(['1', '2', '15',].includes(contract.status) && !contract.closed && contract?.approveStatus != '3')"
   ></step-task>
   <!-- [taskAdd]="dataTaskAdd" -->
 </ng-template>

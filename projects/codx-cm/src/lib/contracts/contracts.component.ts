@@ -284,7 +284,7 @@ export class ContractsComponent extends UIComponent {
               break;
 
             case 'CM0204_1': //Gửi duyệt
-              res.disabled = !data?.alloweStatus && data?.approveRule == '3';
+              res.disabled = !data?.alloweStatus && data?.approveStatus == '3';
               break;
             case 'CM0204_2': //Hủy yêu cầu duyệt
               res.disabled = data?.approveStatus != '3';
