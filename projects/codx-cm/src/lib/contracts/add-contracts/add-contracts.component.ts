@@ -925,24 +925,11 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       ? new Date(this.contracts?.effectiveTo)
       : null;
 
-    if (this.contracts?.interval) {
-      if (event?.field == 'effectiveFrom') {
-        let interval = parseInt(this.contracts?.interval) || 0;
-        this.contracts.effectiveTo = new Date(
-          startDate.setFullYear(startDate.getFullYear() + interval)
-        );
-      }
-      if (event?.field == 'effectiveTo') {
-        let interval = parseInt(this.contracts?.interval) || 0;
-        this.contracts.effectiveFrom = new Date(
-          endDate.setFullYear(endDate.getFullYear() - interval)
-        );
-      }
-    } else {
       if (
         (event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') &&
         startDate &&
-        endDate
+        endDate && 
+        !this.contracts?.interval 
       ) {
         let startYear = startDate.getFullYear();
         let endYear = endDate.getFullYear();
@@ -951,7 +938,33 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         let interval = (endYear - startYear) * 12 + (endMonth - startMonth);
         this.contracts.interval = (interval / 12).toFixed(1);
       }
-    }
+    // if (this.contracts?.interval) {
+    //   if (event?.field == 'effectiveFrom') {
+    //     let interval = parseInt(this.contracts?.interval) || 0;
+    //     this.contracts.effectiveTo = new Date(
+    //       startDate.setFullYear(startDate.getFullYear() + interval)
+    //     );
+    //   }
+    //   if (event?.field == 'effectiveTo') {
+    //     let interval = parseInt(this.contracts?.interval) || 0;
+    //     this.contracts.effectiveFrom = new Date(
+    //       endDate.setFullYear(endDate.getFullYear() - interval)
+    //     );
+    //   }
+    // } else {
+    //   if (
+    //     (event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') &&
+    //     startDate &&
+    //     endDate
+    //   ) {
+    //     let startYear = startDate.getFullYear();
+    //     let endYear = endDate.getFullYear();
+    //     let startMonth = startDate.getMonth();
+    //     let endMonth = endDate.getMonth();
+    //     let interval = (endYear - startYear) * 12 + (endMonth - startMonth);
+    //     this.contracts.interval = (interval / 12).toFixed(1);
+    //   }
+    // }
     // if (event?.field == 'effectiveTo' && this.isLoadDate) {
     //   if (endDate && startDate > endDate) {
     //     // this.isSaveTimeTask = false;

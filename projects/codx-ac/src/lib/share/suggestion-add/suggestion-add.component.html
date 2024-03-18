@@ -93,7 +93,7 @@
             </div>
             <div class="col-xl-2 d-flex align-items-center mt-5">
                 <div class="form-group">
-                    <button type="button" class="btn btn-md btn-light-primary rounded-15"
+                    <button type="button" class="btn btn-md btn-light-primary "
                     style="border: 1px solid var(--primary-dark) !important;" (click)="loadData()">
                     <codx-label class="fs-6 fw-normal" fiedName="lblSave" default="Lấy dữ liệu"></codx-label>
                 </button>
@@ -116,7 +116,7 @@
           <span class="fw-bold fs-5">{{'Đã chọn: '+grid.arrSelectedRows.length+'/'+grid.dataSource.length+' bản ghi'}}</span>
         </div>
         <div *ngIf="grid" class="ms-2 d-flex justify-content-end">
-          <button [disabled]="grid.arrSelectedRows.length > 0 ? false : true" type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;" (click)="onApply()">
+          <button [disabled]="grid.arrSelectedRows.length > 0 ? false : true" type="button" class="btn btn-md btn-light-primary " style="border: 1px solid var(--primary-dark) !important;" (click)="onApply()">
             <div class="d-flex align-items-center">
               <i class="icon-i-check2 icon-16 me-1"></i>
               <codx-label class="fw-normal" fiedName="lblSave"
