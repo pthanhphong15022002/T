@@ -124,9 +124,9 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.signalR.reciveMesage
+    this.signalR.incomingMessage
     .subscribe((mssg:any) => {
-      if(mssg) 
+      if(mssg && mssg.groupID == this.group.groupID) 
       {
         this.arrMessages.push(mssg);
         this.dt.detectChanges();
@@ -223,9 +223,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
                   this.chatboxTitle = tempUser[0].userName;
                 }
               }
-              debugger
               this.crrMembers = Array.from<any>(res.members)
-                .filter(x => x.menberType == "2")
                 .map((x) => x.userID)
                 .join(';');
             }

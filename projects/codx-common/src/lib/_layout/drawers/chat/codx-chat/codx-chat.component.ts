@@ -22,6 +22,7 @@ import {
   DialogModel,
   AuthService,
   CRUDService,
+  UserModel,
 } from 'codx-core';
 import { NgbDropdown, NgbDropdownConfig } from '@ng-bootstrap/ng-bootstrap';
 import { CodxChatListComponent } from '../chat-list/chat-list.component';
@@ -34,7 +35,6 @@ declare var window: any;
   selector: 'codx-chat',
   templateUrl: './codx-chat.component.html',
   styleUrls: ['./codx-chat.component.scss'],
-  providers: [NgbDropdownConfig]
 })
 export class CodxChatComponent implements OnInit, AfterViewInit {
   @HostBinding('class') get class() {
@@ -48,13 +48,12 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   count: number = 0;
   formModel: FormModel;
   grdViewSetUp
-  user: any;
+  user: UserModel;
   funcID: string = 'WPT11';
   function: any = null;
   lstBoxChat: any[] = [];
   @ViewChild('codxChatContainer') codxChatContainer: TemplateRef<any>;
   @ViewChild('codxListChat') codxListChat: CodxChatListComponent;
-  @ViewChild(NgbDropdown) ngbDropdown: NgbDropdown;
   constructor(
     private injector: Injector,
     private auth: AuthStore,
@@ -88,13 +87,15 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
       });
   }
 
+  showChat:boolean = true;
   ngOnInit(): void {
+    this.showChat = this.user.tenant ? true : false;
     this.getTotalMessage();
   }
 
   ngAfterViewInit(): void {
     this.addContainerChat();
-    this.signalRSV.reciveMesage
+    this.signalRSV.incomingMessage
     .subscribe((res: any) => {
       if(res && this.user && res?.createdBy != this.user?.userID)
       {
@@ -187,10 +188,7 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
         ).subscribe((res:boolean) => {
           if(res)
           {
-            this.codxListChat.codxListView.dataService.data.map((item:any) => {
-              item.isRead = true;
-              item.messageMissed = 0;
-            });
+            this.codxListChat.codxListView.dataService.data.map((item:any) => { item.lastMssg.isRead = true });
           }
         });
       }

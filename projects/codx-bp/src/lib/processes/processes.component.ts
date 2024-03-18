@@ -396,6 +396,7 @@ export class ProcessesComponent
               dialog.closed.subscribe((e) => {
                 if (!e?.event) this.view.dataService.clear();
                 if (e && e.event != null) {
+                  this.itemSelected = JSON.parse(JSON.stringify(e.event));
                   this.view.dataService.update(e.event, true).subscribe();
                   this.detectorRef.detectChanges();
                   // this.detectorRef.markForCheck();

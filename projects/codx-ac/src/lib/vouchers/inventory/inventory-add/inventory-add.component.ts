@@ -270,9 +270,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
         if (res || !res.save.error || !res.update.error) {
           if (this.eleGridVouchers) {
             this.eleGridVouchers.saveRow((res:any)=>{ //? save lưới trước
-              if(res){
-                this.addLine();
-              }
+              if (res && res.type != 'error') this.addLine();
             })
             return;
           }
@@ -329,8 +327,10 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
         }
         if ((this.eleGridVouchers || this.eleGridVouchers?.isEdit)) { //?
           this.eleGridVouchers.saveRow((res: any) => { //? save lưới trước
-            if (res) {
+            if (res && res.type != 'error') {
               this.saveVoucher(type);
+            }else{
+              this.ngxLoader.stop();
             }
           })
           return;

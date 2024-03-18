@@ -10,7 +10,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { AuthService } from 'codx-core';
+import { ApiHttpService, AuthService } from 'codx-core';
 import { ɵglobal as global } from '@angular/core';
 import { CodxChatBoxComponent } from '../chat-box/chat-box.component';
 import { SignalRService } from '../services/signalr.service';
@@ -37,7 +37,9 @@ export class CodxChatContainerComponent implements OnInit, OnDestroy {
   }
   lstGroupActive: Array<any> = [];
   lstGroupCollapse: Array<any> = [];
-  constructor(
+  constructor
+  (
+    private api:ApiHttpService,
     private signalRSV: SignalRService,
     private sanitizer: DomSanitizer,
     private authSV: AuthService,
@@ -57,6 +59,27 @@ export class CodxChatContainerComponent implements OnInit, OnDestroy {
       if (group) 
       {
         this.handleBoxChat(group);
+      }
+    });
+
+    this.signalRSV.addGroup
+    .subscribe((groupID:any) => {
+      if(groupID)
+      {
+        this.api.execSv(
+          'WP',
+          'ERM.Business.WP',
+          'GroupBusiness',
+          'GetGroupByIDAsync',
+          [groupID]
+        ).subscribe((res:any) => 
+        {
+          if(res) 
+          {
+            this.lstGroupActive.push(res);
+            this.dt.detectChanges();
+          }
+        });
       }
     });
 
