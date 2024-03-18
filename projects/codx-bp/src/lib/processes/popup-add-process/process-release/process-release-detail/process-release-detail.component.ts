@@ -61,10 +61,10 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (
-      changes['process'].currentValue &&
-      changes['process'].currentValue != changes['process'].previousValue
+      changes['process']?.currentValue &&
+      changes['process']?.currentValue != changes['process']?.previousValue
     ) {
-      this.process = changes['process'].currentValue;
+      this.process = changes['process']?.currentValue;
       this.getData();
       this.getInfo();
     }
@@ -235,7 +235,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
               }
             }
           });
-          
+
           elm.percentCompleted = (elm.countCompleted / elm.countTask) * 100;
 
           elm.percentCompleted = elm.percentCompleted.toFixed(2);
@@ -244,7 +244,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
             0
           );
         }
-        
+
       });
       this.data.countTask = this.listStage.reduce(
         (n, { countTask }) => n + countTask,
