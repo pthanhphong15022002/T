@@ -13,7 +13,7 @@
   "asideMinimize":"icon-title",
   "captchaKey": "6LctVdwkAAAAAF_yJPT2NGF2SvEpCKyLS4t68Ps1",
   "captchaEnable": 0,
-  "loginHCS":"https://surehcs.lacviet.vn/UI2017",
+  "loginHCS":"https://surehcs.lacviet.vn/UI2017", 
   "layout": {
     "title": "",
     "icon": "",

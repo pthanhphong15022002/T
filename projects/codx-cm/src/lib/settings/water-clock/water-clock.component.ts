@@ -17,6 +17,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { PopupAddAssetsComponent } from '../assets/popup-add-assets/popup-add-assets.component';
 
 @Component({
   selector: 'lib-water-clock',
@@ -72,7 +73,7 @@ export class WaterClockComponent
                 .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
                 .map((x: any) => x.fieldName);
             }
-            this.getColumsGrid(this.grvSetup);
+            // this.getColumsGrid(this.grvSetup);
           });
         var description = f?.defaultName ?? f?.customName;
         this.description =
@@ -84,18 +85,18 @@ export class WaterClockComponent
   onInit(): void {}
 
   ngAfterViewInit(): void {
-    // this.views = [
-    //   {
-    //     type: ViewType.grid,
-    //     sameData: true,
-    //     active: true,
-    //     model: {
-    //       //resources: this.columnsGrid,
-    //       template2: this.morefunction,
-    //       //frozenColumns: 1,
-    //     },
-    //   },
-    //  ];
+    this.views = [
+      {
+        type: ViewType.grid,
+        sameData: true,
+        active: true,
+        model: {
+          //resources: this.columnsGrid,
+          template2: this.morefunction,
+          //frozenColumns: 1,
+        },
+      },
+    ];
 
     this.detectorRef.detectChanges();
   }
@@ -103,7 +104,9 @@ export class WaterClockComponent
   selectedChange(data) {
     if (data || data?.data) this.itemSelected = data?.data ? data?.data : data;
   }
+  changeDataMF(e: any, data: any) {}
 
+  //CRUD-CORE
   click(evt) {
     this.titleAction = evt.text;
     switch (evt.id) {
@@ -112,8 +115,6 @@ export class WaterClockComponent
         break;
     }
   }
-
-  changeDataMF(e: any, data: any) {}
 
   clickMF(e, data) {
     if (!data) return;
@@ -233,6 +234,131 @@ export class WaterClockComponent
     });
   }
 
+  // //CRUD custorm
+  // click(evt) {
+  //   this.titleAction = evt.text;
+  //   switch (evt.id) {
+  //     case 'btnAdd':
+  //       this.add();
+  //       break;
+  //   }
+  // }
+
+  // clickMF(e, data) {
+  //   if (!data) return;
+  //   this.titleAction = e.text;
+  //   this.itemSelected = data;
+  //   switch (e.functionID) {
+  //     case 'SYS02':
+  //       this.delete(data);
+  //       break;
+  //     case 'SYS03':
+  //       this.edit(data);
+  //       break;
+  //     case 'SYS04':
+  //       this.copy(data);
+  //       break;
+  //     case 'SYS05':
+  //       this.viewDetail(data);
+  //       break;
+  //     default:
+  //       this.shareService.defaultMoreFunc(
+  //         e,
+  //         data,
+  //         null,
+  //         this.view.formModel,
+  //         this.view.dataService,
+  //         this
+  //       );
+  //       break;
+  //   }
+  // }
+
+  // add() {
+  //   this.view.dataService.addNew().subscribe((res) => {
+  //     let option = new SidebarModel();
+
+  //     option.DataService = this.view.dataService;
+  //     option.FormModel = this.view.formModel;
+  //     option.Width = '550px';
+  //     let obj = {
+  //       action: 'add',
+  //       headerText: this.titleAction + ' ' + this.description,
+  //       gridViewSetup: this.grvSetup,
+  //     };
+  //     let dialog = this.callfc.openSide(
+  //       PopupAddAssetsComponent,
+  //       obj,
+  //       option,
+  //       this.view.funcID
+  //     );
+  //   });
+  // }
+
+  // copy(data) {
+  //   this.view.dataService.copy().subscribe((res) => {
+  //     let option = new SidebarModel();
+
+  //     option.DataService = this.view.dataService;
+  //     option.FormModel = this.view.formModel;
+  //     option.Width = '550px';
+  //     let obj = {
+  //       action: 'copy',
+  //       headerText: this.titleAction + ' ' + this.description,
+  //       gridViewSetup: this.grvSetup,
+  //     };
+  //     let dialog = this.callfc.openSide(
+  //       PopupAddAssetsComponent,
+  //       obj,
+  //       option,
+  //       this.view.funcID
+  //     );
+  //   });
+  // }
+
+  // edit(data) {
+  //   if (data) this.view.dataService.dataSelected = data;
+  //   this.view.dataService
+  //     .edit(this.view.dataService.dataSelected)
+  //     .subscribe((res) => {
+  //       let option = new SidebarModel();
+
+  //       option.DataService = this.view.dataService;
+  //       option.FormModel = this.view.formModel;
+  //       option.Width = '550px';
+  //       let obj = {
+  //         action: 'edit',
+  //         headerText: this.titleAction + ' ' + this.description,
+  //         gridViewSetup: this.grvSetup,
+  //       };
+  //       let dialog = this.callfc.openSide(
+  //         PopupAddAssetsComponent,
+  //         obj,
+  //         option,
+  //         this.view.funcID
+  //       );
+  //     });
+  // }
+
+  // viewDetail(data) {
+  //   let option = new SidebarModel();
+
+  //   option.DataService = this.view.dataService;
+  //   option.FormModel = this.view.formModel;
+  //   option.Width = '550px';
+  //   let obj = {
+  //     action: 'view',
+  //     headerText: this.titleAction + ' ' + this.description,
+  //     gridViewSetup: this.grvSetup,
+  //   };
+  //   let dialog = this.callfc.openSide(
+  //     PopupAddAssetsComponent,
+  //     obj,
+  //     option,
+  //     this.view.funcID
+  //   );
+  // }
+
   delete(data: any) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
@@ -248,6 +374,7 @@ export class WaterClockComponent
   onLoading(e) {}
 
   getColumsGrid(grvSetup) {
+    this.columnGrids = [];
     if (this.arrFieldIsVisible?.length > 0) {
       this.arrFieldIsVisible.forEach((key) => {
         let field = Util.camelize(key);
