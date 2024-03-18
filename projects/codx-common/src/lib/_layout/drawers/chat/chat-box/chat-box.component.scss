@@ -59,7 +59,7 @@
 .chat-box-body{
     width: 99%;
     //height: 476px;
-    height: calc(100vh - 170px);
+    height: calc(100% - 100px); 
     overflow: auto;
     padding: 6px 10px;
 }

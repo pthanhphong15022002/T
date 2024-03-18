@@ -21,6 +21,7 @@ import {
   NotificationsService,
   DialogModel,
   AuthService,
+  CRUDService,
 } from 'codx-core';
 import { NgbDropdown, NgbDropdownConfig } from '@ng-bootstrap/ng-bootstrap';
 import { CodxChatListComponent } from '../chat-list/chat-list.component';
@@ -65,10 +66,8 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
     private cache: CacheService,
     private notifySV: NotificationsService,
     private dt: ChangeDetectorRef,
-    private dropdownConfig:NgbDropdownConfig
   ) 
   {
-    dropdownConfig.autoClose = "outside";
     this.user = this.auth.get();
     this.cache.functionList(this.funcID)
       .subscribe((func:any) => {
@@ -95,8 +94,7 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.addContainerChat();
-    // message
-    this.signalRSV.chatboxChange
+    this.signalRSV.reciveMesage
     .subscribe((res: any) => {
       if(res && this.user && res?.createdBy != this.user?.userID)
       {
@@ -105,7 +103,6 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
       }
     });
 
-    // open box chat
     this.signalRSV.openBoxChat
     .subscribe((res: any) => {
       if(res)
@@ -113,17 +110,16 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
         this.getTotalMessage();
       }
     });
-
-    // add group
-    this.signalRSV.addGroup
-    .subscribe((group:any) => {
-      if(group)
+    
+    this.signalRSV.removeGroup
+    .subscribe((res: any) => {
+      if(res)
       {
         this.getTotalMessage();
       }
     });
   }
-  // get count message
+
   getTotalMessage() {
     this.api
       .execSv('WP', 'ERM.Business.WP', 'ChatBusiness', 'GetTotalMessageAsync')
@@ -131,14 +127,13 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
         this.count = res;
       });
   }
-  // open chat box
+
   openChatList() {
     if (!this.loaded) {
       this.loaded = true;
     }
   }
 
-  // add codx chat container
   addContainerChat() {
     let viewRef = this.codxChatContainer.createEmbeddedView(null);
     if (viewRef) {
@@ -149,7 +144,7 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
       this.codxChatContainer.elementRef.nativeElement.remove();
     }
   }
-  //click  open popup
+
   clickOpenPopup() {
     let option = new DialogModel();
     option.FormModel = this.formModel;
@@ -169,21 +164,39 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
     );
     popup.closed.subscribe((res: any) => {
       if (res.event) 
-        this.codxListChat.addGroup(res.event);
+      {
+        (this.codxListChat.codxListView.dataService as CRUDService).add(res.event).subscribe();
+      }
     });
   }
-  // check read all
+  
   clickReadAll() {
     // chưa có mssgCode
-    this.notifySV.alertCode('Đánh dấu xem tất cả?').subscribe((res: any) => {
-      if (res.event.status === 'Y') {
-        this.codxListChat.readAllMessage();
+    this.notifySV.alertCode('Đánh dấu đã xem tất cả ?')
+    .subscribe((res: any) => {
+      if (res?.event?.status === "Y") 
+      {
         this.count = 0;
+        this.dt.detectChanges();
+        this.api
+        .execSv(
+          'WP',
+          'ERM.Business.WP',
+          'ChatBusiness',
+          'SeenAllAsync'
+        ).subscribe((res:boolean) => {
+          if(res)
+          {
+            this.codxListChat.codxListView.dataService.data.map((item:any) => {
+              item.isRead = true;
+              item.messageMissed = 0;
+            });
+          }
+        });
       }
     });
   }
 
-  // searrch
   search(searchText:any, searchType = "") 
   {
     if(searchType == "searchFavorite")
