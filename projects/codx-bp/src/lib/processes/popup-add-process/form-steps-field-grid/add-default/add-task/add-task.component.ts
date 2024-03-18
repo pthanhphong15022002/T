@@ -468,6 +468,7 @@ export class AddTaskComponent
     return [...new Map(arr.map((item) => [item['recID'], item])).values()];
   }
   openFormSetting(val: any = null, index = null) {
+    
     this.process.steps = this.distinctArray(this.process.steps);
 
     let option = new DialogModel();

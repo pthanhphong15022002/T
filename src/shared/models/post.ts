@@ -77,6 +77,7 @@ export class Post {
   constructor(){
     this.recID = Util.uid();
     this.shareControl = "9";
+    this.shareName = "";
     this.permissions = [];
     this.listComment = [];
     this.medias = 0;
