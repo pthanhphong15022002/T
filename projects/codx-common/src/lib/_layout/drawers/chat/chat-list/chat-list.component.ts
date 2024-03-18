@@ -56,7 +56,7 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.signalRSV.reciveMesage
+    this.signalRSV.incomingMessage
     .subscribe((mssg: any) => {
       if (mssg) 
       {
@@ -65,6 +65,19 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
         {
           this.codxListView.dataService.data[idx].lastMssg = mssg;
           (this.codxListView.dataService as CRUDService).update(this.codxListView.dataService.data[idx]).subscribe();
+        }
+        else
+        {
+          this.api.execSv(
+            'WP',
+            'ERM.Business.WP',
+            'GroupBusiness',
+            'GetGroupByIDAsync',
+            [mssg.groupID]
+          ).subscribe((res:any) => 
+          {
+            if(res) this.addGroup(res);
+          });
         }
       }
     });
@@ -94,15 +107,19 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
           if(res) this.addGroup(res);
         });
       }
-    })
+    });
 
     this.signalRSV.removeGroup
     .subscribe((groupID:any) => {
-      if(groupID && this.codxListView.dataService.data.length > 0)
+      if(groupID)
       {
         let idx = this.codxListView.dataService.data.findIndex(x => x.groupID == groupID);
         if(idx > -1)
-          (this.codxListView.dataService as CRUDService).removeIndex(idx).subscribe();
+        {
+          (this.codxListView.dataService as CRUDService)
+          .remove(this.codxListView.dataService.data[idx])
+          .subscribe();
+        }
       }
     });
 
@@ -218,5 +235,19 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
     }
   }
 
+
+  seenAllMessage(){
+    if(!this.isSearching && this.codxListView.dataService.data.length > 0)
+    {
+      (this.codxListView.dataService as CRUDService).data.map(x => {
+        if(x.lastMssg)
+        {
+          x.lastMssg.isRead = true;
+          x.lastMssg.createdOn = new Date();
+        }
+      }) ;
+      this.dt.detectChanges();
+    }
+  }
 
 }

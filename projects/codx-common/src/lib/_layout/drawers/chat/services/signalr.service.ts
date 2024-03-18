@@ -28,7 +28,7 @@ export class SignalRService {
   openBoxChat = new EventEmitter<any>(); // open box chat
   removeGroup = new EventEmitter<any>(); // remove group
   favoriteGroup = new EventEmitter<any>(); // favorite group
-  reciveMesage = new EventEmitter<any>(); // recive message
+  incomingMessage = new EventEmitter<any>(); // recive message
   messageChange = new EventEmitter<any>();  // message change
   groupChange = new EventEmitter<any>(); // group change
 
@@ -87,9 +87,10 @@ export class SignalRService {
             this.groupChange.emit(res.data);
             break;
           
-          //Gửi tin nhắn
-          case CHAT.UI_FUNC.SendedMessage:
-            this.reciveMesage.emit(res.data);
+          // Tin nhắn mới
+          case CHAT.UI_FUNC.IncomingMessage:
+            this.incomingMessage.emit(res.data);
+            this.sendData("RemoveConnectionAsync",res.data)
             break;
           
           //Xóa tin nhắn
@@ -99,12 +100,12 @@ export class SignalRService {
           
           //phản hồi tin nhắn
           case CHAT.UI_FUNC.ReactedMessage:
-            this.reciveMesage.emit(res);
+            this.incomingMessage.emit(res);
             break;
           
           //Gửi chat của hệ thống và mở chat box
           case CHAT.UI_FUNC.SendedMessageSystem:
-            this.reciveMesage.emit(res.data);
+            this.incomingMessage.emit(res.data);
             break;
       }
     }
