@@ -85,7 +85,10 @@ export class PopupAddProjectComponent extends UIComponent {
     this.funcID = this.formModel?.funcID;
     this.data = dialogData.data[0];
     this.funcType = dialogData.data[1];
-    this.grvSetup = dialogData.data[2]
+    this.grvSetup = dialogData.data[2];
+    if(dialogData.data[3]){
+      this.viewOnly=true;
+    }
     this.user=this.authStore.get();
 
     if(this.data.settings && this.data.settings.length){

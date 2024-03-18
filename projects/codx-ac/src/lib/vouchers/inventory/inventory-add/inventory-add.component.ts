@@ -24,7 +24,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 export class InventoryAddComponent extends UIComponent implements OnInit {
   //#region Constructor
   @ViewChild('eleGridVouchers') eleGridVouchers: CodxGridviewV2Component;
-  @ViewChild('formVouchers') public formVouchers: CodxFormComponent;
+  @ViewChild('master') public master: CodxFormComponent;
   @ViewChild('eleCbxReasonID') eleCbxReasonID: any;
   @ViewChild('eleCbxObjectID') eleCbxObjectID: any;
   @ViewChild('eleCbxRequester') eleCbxRequester: any;
@@ -90,7 +90,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    if (this.formVouchers?.data?.coppyForm) this.formVouchers.data._isEdit = true; //? test copy để tạm
+    if (this.master?.data?.coppyForm) this.master.data._isEdit = true; //? test copy để tạm
   }
 
   onAfterInitForm(event) {
@@ -149,7 +149,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
    * @param event 
    */
   changeSubType(event?: any) {
-    this.formVouchers.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
+    this.master.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
   }
 
   valueChangeMaster(event: any) {
@@ -164,33 +164,33 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
         if(value == '' || value == null || indexrs == -1){
           this.isPreventChange = true;
           let memo = this.getMemoMaster();
-          this.formVouchers.setValue(field,null,{});
-          this.formVouchers.setValue('memo',memo,{});
-          this.formVouchers.data.reasonName = null;
+          this.master.setValue(field,null,{});
+          this.master.setValue('memo',memo,{});
+          this.master.data.reasonName = null;
           this.isPreventChange = false;
           return;
         } 
-        this.formVouchers.data.reasonName = event?.component?.itemsSelected[0]?.ReasonName;
+        this.master.data.reasonName = event?.component?.itemsSelected[0]?.ReasonName;
         let memo = this.getMemoMaster();
-        this.formVouchers.setValue('memo',memo,{});
+        this.master.setValue('memo',memo,{});
         break;
       case 'objectid':
         let indexob = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
         if(value == '' || value == null || indexob == -1){
           this.isPreventChange = true;
           let memo = this.getMemoMaster();
-          this.formVouchers.setValue(field,null,{});
-          this.formVouchers.setValue('objectType',null,{});
-          this.formVouchers.setValue('memo',memo,{});
-          this.formVouchers.data.objectName = null;
+          this.master.setValue(field,null,{});
+          this.master.setValue('objectType',null,{});
+          this.master.setValue('memo',memo,{});
+          this.master.data.objectName = null;
           this.isPreventChange = false;
           return;
         } 
-        this.formVouchers.data.objectName = event?.component?.itemsSelected[0]?.ObjectName;
+        this.master.data.objectName = event?.component?.itemsSelected[0]?.ObjectName;
         let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
-        this.formVouchers.setValue('objectType',objectType,{});
+        this.master.setValue('objectType',objectType,{});
         let memo2 = this.getMemoMaster();
-        this.formVouchers.setValue('memo',memo2,{});
+        this.master.setValue('memo',memo2,{});
         break;
       
       case 'requester':
@@ -198,39 +198,39 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
         if(value == '' || value == null || indexrq == -1){
           this.isPreventChange = true;
           let memo = this.getMemoMaster();
-          this.formVouchers.setValue(field,null,{});
-          this.formVouchers.setValue('memo',memo,{});
-          this.formVouchers.data.requesterName = null;
+          this.master.setValue(field,null,{});
+          this.master.setValue('memo',memo,{});
+          this.master.data.requesterName = null;
           this.isPreventChange = false;
           return;
         }
-        this.formVouchers.data.requesterName = event?.component?.itemsSelected[0]?.ObjectName;
+        this.master.data.requesterName = event?.component?.itemsSelected[0]?.ObjectName;
         let memo3 = this.getMemoMaster();
-        this.formVouchers.setValue('memo',memo3,{});
+        this.master.setValue('memo',memo3,{});
         break;
       case 'warehouseid':
         let indexwarehouse = event?.component?.dataService?.data.findIndex((x) => x.WarehouseID == event.data);
         if (value == '' || value == null || indexwarehouse == -1) {
-          this.formVouchers.data.warehouseName = null;
+          this.master.data.warehouseName = null;
           return;
         }
-        this.formVouchers.data.warehouseName = event?.component?.dataService?.data[indexwarehouse].WarehouseName;
+        this.master.data.warehouseName = event?.component?.dataService?.data[indexwarehouse].WarehouseName;
         break;
       case 'dim1':
         let indexdim1 = event?.component?.dataService?.data.findIndex((x) => x.ProfitCenterID == event.data);
         if (value == '' || value == null || indexdim1 == -1) {
-          this.formVouchers.data.diM1Name = null;
+          this.master.data.diM1Name = null;
           return;
         }
-        this.formVouchers.data.diM1Name = event?.component?.dataService?.data[indexdim1].ProfitCenterName;
+        this.master.data.diM1Name = event?.component?.dataService?.data[indexdim1].ProfitCenterName;
         break;
       case 'dim2':
         let indexdim2 = event?.component?.dataService?.data.findIndex((x) => x.CostCenterID == event.data);
         if (value == '' || value == null || indexdim2 == -1) {
-          this.formVouchers.data.diM2Name = null;
+          this.master.data.diM2Name = null;
           return;
         }
-        this.formVouchers.data.diM2Name = event?.component?.dataService?.data[indexdim2].CostCenterName;
+        this.master.data.diM2Name = event?.component?.dataService?.data[indexdim2].CostCenterName;
         break;
     }
   }
@@ -244,7 +244,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
     this.eleGridVouchers.startProcess();
     this.api.exec('IV', 'VouchersLinesBusiness', 'ValueChangedAsync', [
       event.field,
-      this.formVouchers.data,
+      this.master.data,
       oLine,
     ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if (res) {
@@ -257,7 +257,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
   }
 
   onAddLine() {
-    this.formVouchers.save(null, 0, '', '', false,{allowCompare:false})
+    this.master.save(null, 0, '', '', false,{allowCompare:false})
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
@@ -284,12 +284,12 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
 
   //#region Method
   onDiscardVoucher(){
-    if (this.formVouchers && this.formVouchers.data._isEdit) {
+    if (this.master && this.master.data._isEdit) {
       this.notification.alertCode('AC0010', null).subscribe((res) => {
         if (res.event.status === 'Y') {
           this.detectorRef.detectChanges();
           this.dialog.dataService
-            .delete([this.formVouchers.data], false, null, '', '', null, null, false)
+            .delete([this.master.data], false, null, '', '', null, null, false)
             .pipe(takeUntil(this.destroy$))
             .subscribe((res) => {
               if (res.data != null) {
@@ -312,7 +312,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
    */
   onSaveVoucher(type) {
     this.ngxLoader.start();
-    this.formVouchers.save(null, 0, '', '', false, { allowCompare: false })
+    this.master.save(null, 0, '', '', false, { allowCompare: false })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         let isError = false;
@@ -344,7 +344,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
   saveVoucher(type){
     this.api
       .exec('IV', 'VouchersBusiness', 'UpdateVoucherAsync', [
-        this.formVouchers.data,
+        this.master.data,
         this.journal,
       ])
       .pipe(takeUntil(this.destroy$))
@@ -363,7 +363,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
             .subscribe((res: any) => {
               if (res) {
                 res.data.isAdd = true;
-                this.formVouchers.refreshData({...res.data});
+                this.master.refreshData({...res.data});
                 setTimeout(() => {
                   this.eleGridVouchers.dataSource = [];
                   this.eleGridVouchers.refresh();
@@ -372,7 +372,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
               }
             });
           }
-          if (this.formVouchers.data.isAdd || this.formVouchers.data.isCopy)
+          if (this.master.data.isAdd || this.master.data.isCopy)
             this.notification.notifyCode('SYS006');
           else 
             this.notification.notifyCode('SYS007');
@@ -398,10 +398,10 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
   setDefaultLine() {
     let model : any = new IV_VouchersLines();
     let oLine = Util.camelizekeyObj(model);
-    oLine.transID = this.formVouchers.data.recID;
-    oLine.idiM4 = this.formVouchers.data.warehouseID;
-    oLine.note = this.formVouchers.data.memo;
-    oLine.reasonID = this.formVouchers.data.reasonID;
+    oLine.transID = this.master.data.recID;
+    oLine.idiM4 = this.master.data.warehouseID;
+    oLine.note = this.master.data.memo;
+    oLine.reasonID = this.master.data.reasonID;
     oLine = this.genFixedDims(oLine);
     oLine = this.acService.getDataSettingFromJournal(oLine,this.journal);
     return oLine;
@@ -414,7 +414,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
         break;
       case 'add':
       case 'update':
-        this.dialog.dataService.update(this.formVouchers.data).subscribe();
+        this.dialog.dataService.update(this.master.data).subscribe();
         break;
       case 'closeEdit': //? khi thoát dòng
       if (this.eleGridVouchers && this.eleGridVouchers.rowDataSelected) {
@@ -476,7 +476,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
     if (this.journal.assignRule == '2') {
       lstRequire.push({field : 'VoucherNo',isDisable : false,require:false});
     }
-    this.formVouchers.setRequire(lstRequire);
+    this.master.setRequire(lstRequire);
   }
 
   /**

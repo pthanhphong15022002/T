@@ -4,6 +4,7 @@
             <codx-chat-box #codxChatBox 
                 [id]="item?.groupID" 
                 [groupID]="item?.groupID" 
+                [group]="item"
                 (close)="closeBoxChat(item)"
                 (collapse)="collapseBoxChat(item)">
             </codx-chat-box>
@@ -18,24 +19,24 @@
                             <span>+{{lstGroupCollapse.length - 3}}</span>
                         </div>
                     </ng-container>
-                    <div class="" (click)="expanseBoxChat(item)" placement="start" [ngbTooltip]="tooltipMssage">
+                    <div class="" (click)="handleBoxChat(item)" placement="start" [ngbTooltip]="tooltipMssage" [autoClose]="false">
                         <codx-img 
-                            [objectId]="item?.groupType == '1'? item?.groupID2:item?.groupID" 
-                            [objectName]="item?.groupType == '1'? item?.groupName2:item?.groupName" 
-                            [objectType]="item?.groupType == '1'? 'AD_Users':'WP_Groups'"
-                            [width]="50">
+                            [objectId]="item.groupType == '1'? item.groupID2 : item.groupID" 
+                            [objectName]="item.groupType == '1'? item.groupName2 : item.groupName" 
+                            [objectType]="item.groupType == '1'? 'AD_Users':'WP_Groups'"
+                            [width]="40">
                         </codx-img>
                         <ng-template #tooltipMssage>
-                            <div class="d-flex align-items-center p-2 text-start overflow-hidden w-200px">
-                                <codx-img 
-                                    [objectId]="item?.groupType == '1' ? item?.groupID2:item?.groupID" 
-                                    [objectName]="item?.groupType == '1' ? item?.groupName2:item?.groupName" 
-                                    [objectType]="item?.groupType == '1' ? 'AD_Users':'WP_Groups'"
-                                    [width]="50">
-                                </codx-img>
-                                <ng-container *ngIf="item?.message?.messageType != '3' && item?.message?.messageType != '5'">
-                                    <div class="ms-2 line-clamp line-clamp-2">{{item?.message?.message}}</div>
-                                </ng-container>
+                            <div class="w-200px">
+                                <codx-temp-full 
+                                    [dataItem]="item"
+                                    [title]="item.groupType == '1' ? item.groupName2 : item.groupName"
+                                    titleLine="1"
+                                    [imageId]="item.groupType == '1' ? item.groupID2 : item.groupID"
+                                    [imageType]="item.groupType == '1' ? 'AD_Users':'WP_Groups'"
+                                    [imageWidth]="30"
+                                    [hideMF]="true"
+                                ></codx-temp-full>
                             </div>
                         </ng-template>
                     </div>

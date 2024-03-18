@@ -21,7 +21,7 @@ export class GeneralJournalAddComponent extends UIComponent {
   @ViewChild('eleGridGeneral') eleGridGeneral: CodxGridviewV2Component; //? element codx-grv2 lưới
   @ViewChild('eleGridSettledInvoices') eleGridSettledInvoices: CodxGridviewV2Component; //? element codx-grv2 lưới SettledInvoices
   @ViewChild('eleGridVatInvoices') eleGridVatInvoices: CodxGridviewV2Component; //? element codx-grv2 lưới VatInvoices
-  @ViewChild('formGeneral') public formGeneral: CodxFormComponent; //? element codx-form
+  @ViewChild('master') public master: CodxFormComponent; //? element codx-form
   @ViewChild('elementTabDetail') elementTabDetail: any; //? element object các tab detail(chi tiết,hóa đơn công nợ,hóa đơn GTGT)
   @ViewChild('eleCbxReasonID') eleCbxReasonID: any; //? element codx-input cbx của lý do chi
   @ViewChild('eleCbxObjectID') eleCbxObjectID: any; //? element codx-input cbx của đối tượng
@@ -105,7 +105,7 @@ export class GeneralJournalAddComponent extends UIComponent {
   }
 
   ngAfterViewInit() {
-    if(this.formGeneral?.data?.coppyForm) this.formGeneral.data._isEdit = true; //? test copy để tạm
+    if(this.master?.data?.coppyForm) this.master.data._isEdit = true; //? test copy để tạm
   }
 
   /**
@@ -128,17 +128,17 @@ export class GeneralJournalAddComponent extends UIComponent {
     if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
       hideFields = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
     }
-    if (!hideFields.includes('Settlement') && this.formGeneral?.data?.subType == '1') { //? nếu chứng từ loại chi thanh toán nhà cung cấp(ko theo hóa đơn)
+    if (!hideFields.includes('Settlement') && this.master?.data?.subType == '1') { //? nếu chứng từ loại chi thanh toán nhà cung cấp(ko theo hóa đơn)
       hideFields.push('Settlement'); //? => ẩn field phương pháp cấn trừ
     }
 
     //* Thiết lập các field ẩn cho 2 mode tài khoản
     if (this.journal.entryMode == '1') {
-      if (this.formGeneral?.data?.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
+      if (this.master?.data?.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
         hideFields.push('DR2'); //? => ẩn field tiền Nợ,HT
       }
     } else { //? nếu loại mode 1 tài khoản trên nhiều dòng
-      if (this.formGeneral?.data?.currencyID == this.baseCurr) {
+      if (this.master?.data?.currencyID == this.baseCurr) {
         //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
         hideFields.push('DR2'); //? => ẩn field tiền Có,HT
         hideFields.push('CR2'); //? => ẩn field tiền Nợ,HT
@@ -155,7 +155,7 @@ export class GeneralJournalAddComponent extends UIComponent {
     this.settingFormatGridSettledInvoices(eleGrid);
     //* Thiết lập các field ẩn theo đồng tiền hạch toán
     let hideFields = [];
-    if (this.formGeneral?.data?.currencyID == this.baseCurr) {
+    if (this.master?.data?.currencyID == this.baseCurr) {
       hideFields.push('BalAmt2');
       hideFields.push('SettledAmt2');
       hideFields.push('CashDisc2');
@@ -208,7 +208,7 @@ export class GeneralJournalAddComponent extends UIComponent {
     }
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
-    this.formGeneral.setValue('updateColumns','',{});
+    this.master.setValue('updateColumns','',{});
     switch (field.toLowerCase()) {
       //* Li do chi
       case 'reasonid':
@@ -216,13 +216,13 @@ export class GeneralJournalAddComponent extends UIComponent {
         if(value == '' || value == null || indexrs == -1){
           this.isPreventChange = true;
           let memo = this.getMemoMaster();
-          this.formGeneral.setValue(field,null,{});
-          this.formGeneral.setValue('memo',memo,{});
-          this.formGeneral.data.reasonName = null;
+          this.master.setValue(field,null,{});
+          this.master.setValue('memo',memo,{});
+          this.master.data.reasonName = null;
           this.isPreventChange = false;
           return;
         } 
-        this.formGeneral.data.reasonName = event?.component?.itemsSelected[0]?.ReasonName;
+        this.master.data.reasonName = event?.component?.itemsSelected[0]?.ReasonName;
         let valueReason = {
           PreReasonID:  event?.component?.dataService?.currentComponent?.previousItemData?.ReasonID || '',
           Note: event?.component?.itemsSelected[0]?.ReasonName || '',
@@ -237,18 +237,18 @@ export class GeneralJournalAddComponent extends UIComponent {
         if(value == '' || value == null || indexob == -1){
           this.isPreventChange = true;
           let memo = this.getMemoMaster();
-          this.formGeneral.setValue(field,null,{});
-          this.formGeneral.setValue('objectType',null,{});
-          this.formGeneral.setValue('memo',memo,{});
-          this.formGeneral.setValue('bankAcctID',null,{});
-          this.formGeneral.data.objectName = null;
+          this.master.setValue(field,null,{});
+          this.master.setValue('objectType',null,{});
+          this.master.setValue('memo',memo,{});
+          this.master.setValue('bankAcctID',null,{});
+          this.master.data.objectName = null;
           this.isPreventChange = false;
           return;
         } 
         let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
-        this.formGeneral.setValue('objectType',objectType,{});
-        this.formGeneral.setValue('bankAcctID',null,{});
-        this.formGeneral.data.objectName = event?.component?.itemsSelected[0]?.ObjectName;
+        this.master.setValue('objectType',objectType,{});
+        this.master.setValue('bankAcctID',null,{});
+        this.master.data.objectName = event?.component?.itemsSelected[0]?.ObjectName;
         this.objectIDChange();
         break;
 
@@ -256,10 +256,10 @@ export class GeneralJournalAddComponent extends UIComponent {
       case 'currencyid':
         if(value == '' || value == null){
           this.isPreventChange = true;
-          this.formGeneral.setValue(field, this.preData?.currencyID, {});
+          this.master.setValue(field, this.preData?.currencyID, {});
           if (this.preData?.currencyID != null) {
             var key = Util.camelize(field);
-            var $error = (this.formGeneral as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
+            var $error = (this.master as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
             if ($error) $error.classList.add('d-none');
           }
           this.isPreventChange = false;
@@ -277,16 +277,16 @@ export class GeneralJournalAddComponent extends UIComponent {
         if(value == null){
           this.isPreventChange = true;
           setTimeout(() => {
-            this.formGeneral.setValue(field,this.preData?.exchangeRate,{});
+            this.master.setValue(field,this.preData?.exchangeRate,{});
             this.isPreventChange = false;
             this.detectorRef.detectChanges();
           }, 50);
           if (this.preData?.exchangeRate != null) {
             var key = Util.camelize(field);
-            var $error = (this.formGeneral as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
+            var $error = (this.master as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
             if ($error) $error.classList.add('d-none');
           }
-          if(this.preData?.exchangeRate == this.formGeneral?.data?.exchangeRate) return;
+          if(this.preData?.exchangeRate == this.master?.data?.exchangeRate) return;
           return;
         }
         this.exchangeRateChange(field);
@@ -308,7 +308,7 @@ export class GeneralJournalAddComponent extends UIComponent {
     let oLine = event.data;
     let field = event.field;
     this.eleGridGeneral.startProcess();
-    this.api.exec('AC','GeneralJournalsLinesBusiness','ValueChangedAsync',[this.formGeneral.data,oLine,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+    this.api.exec('AC','GeneralJournalsLinesBusiness','ValueChangedAsync',[this.master.data,oLine,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       Object.assign(oLine, res);
       oLine.updateColumns = '';
       this.detectorRef.detectChanges();
@@ -347,14 +347,14 @@ export class GeneralJournalAddComponent extends UIComponent {
   valueChangeLineVATInvoices(event: any) {
     let oLine = event.data;
     if (event.field.toLowerCase() === 'goods') {
-      this.formGeneral.data.unbounds = {
+      this.master.data.unbounds = {
         itemID: event?.itemData?.ItemID,
       };
     }
     this.eleGridVatInvoices.startProcess();
     this.api.exec('AC', 'VATInvoicesBusiness', 'ValueChangeAsync', [
       'AC_CashPayments',
-      this.formGeneral.data,
+      this.master.data,
       oLine,
       event.field
     ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
@@ -372,7 +372,7 @@ export class GeneralJournalAddComponent extends UIComponent {
    * @returns
    */
   onAddLine() {
-    this.formGeneral.save(null, 0, '', '', false,{allowCompare:false})
+    this.master.save(null, 0, '', '', false,{allowCompare:false})
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
@@ -450,12 +450,12 @@ export class GeneralJournalAddComponent extends UIComponent {
    * *Hàm hủy bỏ chứng từ
    */
   onDiscardVoucher() {
-    if (this.formGeneral && this.formGeneral.data._isEdit) {
+    if (this.master && this.master.data._isEdit) {
       this.notification.alertCode('AC0010', null).subscribe((res) => {
         if (res.event.status === 'Y') {
           this.detectorRef.detectChanges();
           this.dialog.dataService
-            .delete([this.formGeneral.data], false, null, '', '', null, null, false)
+            .delete([this.master.data], false, null, '', '', null, null, false)
             .pipe(takeUntil(this.destroy$))
             .subscribe((res) => {
               if (res.data != null) {
@@ -478,7 +478,7 @@ export class GeneralJournalAddComponent extends UIComponent {
    */
   onSaveVoucher(type) {
     this.ngxLoader.start();
-    this.formGeneral.save(null, 0, '', '', false, { allowCompare: false })
+    this.master.save(null, 0, '', '', false, { allowCompare: false })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         let isError = false;
@@ -526,7 +526,7 @@ export class GeneralJournalAddComponent extends UIComponent {
   saveVoucher(type){
     this.api
       .exec('AC', 'GeneralJournalsBusiness', 'UpdateVoucherAsync', [
-        this.formGeneral.data,
+        this.master.data,
         this.journal,
       ])
       .pipe(takeUntil(this.destroy$))
@@ -545,7 +545,7 @@ export class GeneralJournalAddComponent extends UIComponent {
             .subscribe((res: any) => {
               if (res) {
                 res.data.isAdd = true;
-                this.formGeneral.refreshData({...res.data});
+                this.master.refreshData({...res.data});
                 setTimeout(() => {
                   this.refreshGrid();
                 }, 100);
@@ -553,7 +553,7 @@ export class GeneralJournalAddComponent extends UIComponent {
               }
             });
           }
-          if (this.formGeneral.data.isAdd || this.formGeneral.data.isCopy)
+          if (this.master.data.isAdd || this.master.data.isCopy)
             this.notification.notifyCode('SYS006');
           else 
             this.notification.notifyCode('SYS007');
@@ -576,19 +576,19 @@ export class GeneralJournalAddComponent extends UIComponent {
    */
   reasonIDChange(field:any,obj:any){
     let memo = this.getMemoMaster();
-    this.formGeneral.setValue('memo',memo,{});
+    this.master.setValue('memo',memo,{});
     this.api.exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
       field,
-      this.formGeneral.data,
+      this.master.data,
       JSON.stringify(obj)
     ])
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (res) {
-        this.preData = {...this.formGeneral?.data};
+        this.preData = {...this.master?.data};
         if (res?.isRefreshGrid) {
-          this.formGeneral.preData = { ...this.formGeneral.data };
-          this.dialog.dataService.update(this.formGeneral.data).subscribe();
+          this.master.preData = { ...this.master.data };
+          this.dialog.dataService.update(this.master.data).subscribe();
           this.eleGridGeneral.refresh();
         }
       }
@@ -600,8 +600,8 @@ export class GeneralJournalAddComponent extends UIComponent {
    */
   objectIDChange(){
     let memo = this.getMemoMaster();
-    this.formGeneral.setValue('memo',memo,{});
-    this.preData = {...this.formGeneral?.data};
+    this.master.setValue('memo',memo,{});
+    this.preData = {...this.master?.data};
   }
 
   /**
@@ -611,18 +611,18 @@ export class GeneralJournalAddComponent extends UIComponent {
   currencyIDChange(field:any,obj:any){
     this.api.exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
       field,
-      this.formGeneral.data,
+      this.master.data,
       JSON.stringify(obj)
     ])
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (res) {
         this.isPreventChange = true;
-        this.formGeneral.setValue('exchangeRate',res?.data?.exchangeRate,{});
-        this.preData = {...this.formGeneral?.data};
+        this.master.setValue('exchangeRate',res?.data?.exchangeRate,{});
+        this.preData = {...this.master?.data};
         if (this.eleGridGeneral.dataSource.length) {
-          this.formGeneral.preData = {...this.formGeneral.data};
-          this.dialog.dataService.update(this.formGeneral.data).subscribe();
+          this.master.preData = {...this.master.data};
+          this.dialog.dataService.update(this.master.data).subscribe();
         }
         if (res?.isRefreshGrid) {
           this.showHideColumn();
@@ -643,16 +643,16 @@ export class GeneralJournalAddComponent extends UIComponent {
     this.api
         .exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
           field,
-          this.formGeneral.data,
+          this.master.data,
           ''
         ])
         .subscribe((res:any) => {
           if (res) {
-            this.preData = {...this.formGeneral?.data};
+            this.preData = {...this.master?.data};
             if (res?.isRefreshGrid) {
               this.eleGridGeneral.refresh();
-              this.formGeneral.preData = { ...this.formGeneral.data };
-              this.dialog.dataService.update(this.formGeneral.data).subscribe();
+              this.master.preData = { ...this.master.data };
+              this.dialog.dataService.update(this.master.data).subscribe();
               this.detectorRef.detectChanges();
             }
           }
@@ -666,18 +666,18 @@ export class GeneralJournalAddComponent extends UIComponent {
   voucherDateChange(field:any){
     this.api.exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
       field,
-      this.formGeneral.data,
+      this.master.data,
       ''
     ])
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (res) {
-        this.formGeneral.setValue('exchangeRate',res?.data?.exchangeRate,{});
-        this.preData = {...this.formGeneral?.data};
+        this.master.setValue('exchangeRate',res?.data?.exchangeRate,{});
+        this.preData = {...this.master?.data};
         if (res?.isRefreshGrid) {
           this.eleGridGeneral.refresh();
-          this.formGeneral.preData = { ...this.formGeneral.data };
-          this.dialog.dataService.update(this.formGeneral.data).subscribe();
+          this.master.preData = { ...this.master.data };
+          this.dialog.dataService.update(this.master.data).subscribe();
           this.detectorRef.detectChanges();
         }
       }
@@ -703,7 +703,7 @@ export class GeneralJournalAddComponent extends UIComponent {
    * *Hàm thêm mới dòng cashpayments
    */
   addLine() {
-    this.api.exec('AC','GeneralJournalsLinesBusiness','SetDefaultAsync',[this.formGeneral.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+    this.api.exec('AC','GeneralJournalsLinesBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if (res) {
         this.eleGridGeneral.addRow(res, this.eleGridGeneral.dataSource.length);
       }
@@ -718,15 +718,15 @@ export class GeneralJournalAddComponent extends UIComponent {
   addLineVatInvoices() {
     let model = new AC_VATInvoices();
     let oLine = Util.camelizekeyObj(model);
-    oLine.transID = this.formGeneral.data.recID;
-    oLine.objectID = this.formGeneral.data.objectID;
-    oLine.objectType = this.formGeneral.data.objectType;
+    oLine.transID = this.master.data.recID;
+    oLine.objectID = this.master.data.objectID;
+    oLine.objectType = this.master.data.objectType;
     let indexObject = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
     if (indexObject > -1) {
       oLine.objectName = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName + ' - ';
     }
     oLine.lineID = this.eleGridGeneral?.rowDataSelected?.recID || Util.uid();
-    oLine.journalNo = this.formGeneral.data.journalNo;
+    oLine.journalNo = this.master.data.journalNo;
     this.eleGridVatInvoices.addRow(oLine,this.eleGridVatInvoices.dataSource.length);
   }
 
@@ -797,7 +797,7 @@ export class GeneralJournalAddComponent extends UIComponent {
     let objectName = '';
     let indexObject =
       this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex(
-        (x) => x.ObjectID == this.formGeneral.data.objectID
+        (x) => x.ObjectID == this.master.data.objectID
       );
     if (indexObject > -1) {
       objectName =
@@ -805,7 +805,7 @@ export class GeneralJournalAddComponent extends UIComponent {
           .ObjectName;
     }
     let obj = {
-      cashpayment: this.formGeneral.data,
+      cashpayment: this.master.data,
       objectName: objectName,
     };
     let opt = new DialogModel();
@@ -824,7 +824,7 @@ export class GeneralJournalAddComponent extends UIComponent {
     dialog.closed.subscribe((res) => {
       if (res && res.event) {
         this.eleGridSettledInvoices.refresh();
-        this.dialog.dataService.update(this.formGeneral.data).subscribe();
+        this.dialog.dataService.update(this.master.data).subscribe();
         this.detectorRef.detectChanges();
       }
     });
@@ -892,7 +892,7 @@ export class GeneralJournalAddComponent extends UIComponent {
    */
   settingFormatGridGeneral(eleGrid){
     let setting = eleGrid.systemSetting;
-    if (this.formGeneral.data.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
+    if (this.master.data.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
       eleGrid.setFormatField('dr','n'+(setting.dBaseCurr || 0));
       eleGrid.setFormatField('cr','n'+(setting.dBaseCurr || 0));
       eleGrid.setFormatField('dr2','n'+(setting.dBaseCurr || 0));
@@ -907,7 +907,7 @@ export class GeneralJournalAddComponent extends UIComponent {
 
   settingFormatGridSettledInvoices(eleGrid){
     let setting = eleGrid.systemSetting;
-    if (this.formGeneral.data.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
+    if (this.master.data.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
       eleGrid.setFormatField('balAmt','n'+(setting.dBaseCurr || 0));
       eleGrid.setFormatField('balAmt2','n'+(setting.dBaseCurr || 0));
       eleGrid.setFormatField('settledAmt','n'+(setting.dBaseCurr || 0));
@@ -1014,7 +1014,7 @@ export class GeneralJournalAddComponent extends UIComponent {
     if (this.journal.assignRule == '2') {
       lstRequire.push({field : 'VoucherNo',isDisable : false,require:false});
     }
-    this.formGeneral.setRequire(lstRequire);
+    this.master.setRequire(lstRequire);
   }
 
   /**
@@ -1072,7 +1072,7 @@ export class GeneralJournalAddComponent extends UIComponent {
       //* Thiết lập hiện cột tiền HT cho lưới nếu chứng từ có ngoại tệ
     let hDR2 = false;
     let hCR2 = false;
-    if (this.formGeneral.data.currencyID != this.baseCurr) { //? nếu tiền tệ chứng từ là ngoại tệ
+    if (this.master.data.currencyID != this.baseCurr) { //? nếu tiền tệ chứng từ là ngoại tệ
       if (this.journal.entryMode == '1') {
         hDR2 = true; //? => mode 2 tài khoản => hiện cột số tiền,HT
       } else {
@@ -1089,7 +1089,7 @@ export class GeneralJournalAddComponent extends UIComponent {
       let hBalAmt2 = false;
       let hSettledAmt2 = false;
       let hSettledDisc2 = false;
-      if (this.formGeneral.data.currencyID != this.baseCurr) { //? nếu tiền tệ chứng từ là ngoại tệ
+      if (this.master.data.currencyID != this.baseCurr) { //? nếu tiền tệ chứng từ là ngoại tệ
         hBalAmt2 = true;
         hSettledAmt2 = true;
         hSettledDisc2 = true;

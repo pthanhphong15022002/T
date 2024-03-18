@@ -16,34 +16,32 @@ export class MessageSystemPipe implements PipeTransform {
     private cache: CacheService,
     private applicationRef: ApplicationRef
   ) {}
-  transform(data: any, template: TemplateRef<any>): Observable<any> {
-    return this.cache.message(data.jsMessage.mssgCode).pipe(
-      map((mssg: any) => {
-        if (mssg.defaultName) {
-          switch (data.jsMessage.mssgCode) {
-            case 'WP038': // add member
-              let members = Array.from<any>(
-                JSON.parse(data.jsMessage.value[0].fieldValue)
-              );
-              let param = {
-                memberIDs: members.map((x: any) => x.UserID).join(';'),
-                members: members,
-                user: JSON.parse(data.jsMessage.value[1].fieldValue),
-              };
-              let viewRef = this.dynamicTemplate(
-                template,
-                param.memberIDs,
-                param.members,
-                param.user
-              );
-              let container = document.getElementById(data.recID);
-              if (container && viewRef) container.append(viewRef);
+
+  transform(value: any): Observable<any> {
+    if(value)
+    {
+      return this.cache.message(value.message)
+      .pipe(map((mssg:any) => {
+        if(mssg)
+        {
+          let strMessage = "";
+          switch(mssg.mssgCode)
+          {
+            case "CHAT006":
+            case "CHAT007":
+            case "CHAT008":
+            case "CHAT009":
+              strMessage = Util.stringFormat(mssg.customName,...value.messageValue.sort((a,b) => a.fieldName - b.fieldName).map(x => x.fieldValue));
               break;
           }
+          return strMessage;
         }
-      })
-    );
+        else return of("");
+      }));
+    }
+    else return of("");
   }
+
 
   // dynamic template
   dynamicTemplate(template: TemplateRef<any>, ...arg: any[]) {
@@ -57,5 +55,9 @@ export class MessageSystemPipe implements PipeTransform {
     let container = document.createElement('div');
     viewRef.rootNodes.forEach((x) => container.append(x));
     return container;
+  }
+
+  sort(a,b){
+    return a.fieldName > b.fieldName;
   }
 }

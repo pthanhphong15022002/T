@@ -112,7 +112,6 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
   }
   
   ngAfterViewInit() {
-    console.clear();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

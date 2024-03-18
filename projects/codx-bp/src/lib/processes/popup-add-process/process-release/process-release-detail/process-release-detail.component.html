@@ -81,8 +81,8 @@
                                             </div>
                                             <div class="d-flex align-items-center mt-2 ms-10">
                                                 <codx-label [formName]="formModel?.formName" fiedName="lblProcessReDetailTimeStart" default="Kế hoạch:" class="text-gray-500"></codx-label>
-                                                <span class="fw-bold me-1 ms-2">{{data?.duration}}</span>
-                                                <span class="mx-1 ms-6">{{data?.interval | vll : 'VL004' : 'text' | async}}</span>
+                                                <span class="fw-bold me-1 mx-1">{{item?.duration}}</span>
+                                                <span class="">{{data?.interval | vll : 'VL004' : 'text' | async}}</span>
                                                 <codx-label [formName]="formModel?.formName" fiedName="lblProcessReDetailTimeActual" default="Thực tế:" class="text-gray-500 ms-2"></codx-label>
 
                                             </div>

@@ -47,6 +47,7 @@
             (valueChange)="changeAutoSchedule($event)"
             type="switch"
             class="me-3 mt-1"
+            [disabled]="disabled"
           >
           </codx-input>
           <button
@@ -188,6 +189,7 @@
                   : ''
               "
               (valueChange)="valueChange($event, data)"
+              [disabled]="disabled"
             >
             </codx-input>
           </ng-container>
@@ -239,10 +241,10 @@
                 [listCombobox]="data.reference"
                 [multiple]="data.displayMode === '5'"
                 [disabled]="
-                  dataValue[data.transType]
+                  (dataValue[data.transType]
                     ? !dataValue[data.transType][data.fieldName] ||
                       dataValue[data.transType][data.fieldName] == '0'
-                    : false
+                    : false) || disabled
                 "
                 (valueChange)="valueChange($event, data, null)"
               >
