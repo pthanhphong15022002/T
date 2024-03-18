@@ -12,6 +12,7 @@ import {
   CodxFormDynamicComponent,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -27,11 +28,13 @@ export class WaterClockComponent
   implements OnInit, AfterViewInit
 {
   @ViewChild('morefunction') morefunction: TemplateRef<any>;
+  @ViewChild('templetOldMonthHeader') templetOldMonthHeader: TemplateRef<any>;
+
   // config BE
   service = 'AM';
   assemblyName = 'ERM.Business.AM';
   className = 'AssetsBusiness';
-  method = 'LoadDataAsync';
+  method = 'LoadDataWaterClockAsync';
   entityName = 'AM_Assets';
 
   idField = 'AssetID';
@@ -47,6 +50,8 @@ export class WaterClockComponent
   titleAction: any;
 
   description: string;
+  arrFieldIsVisible: any[];
+  columnGrids: any[];
 
   constructor(inject: Injector, private shareService: CodxShareService) {
     super(inject);
@@ -57,6 +62,17 @@ export class WaterClockComponent
           .gridViewSetup(f.formName, f.gridViewName)
           .subscribe((grv) => {
             this.grvSetup = grv;
+            // lay grid view - view gird he thong
+            let arrField = Object.values(this.grvSetup).filter(
+              (x: any) => x.isVisible
+            );
+
+            if (Array.isArray(arrField)) {
+              this.arrFieldIsVisible = arrField
+                .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+                .map((x: any) => x.fieldName);
+            }
+            this.getColumsGrid(this.grvSetup);
           });
         var description = f?.defaultName ?? f?.customName;
         this.description =
@@ -68,18 +84,18 @@ export class WaterClockComponent
   onInit(): void {}
 
   ngAfterViewInit(): void {
-    this.views = [
-      {
-        type: ViewType.grid,
-        sameData: true,
-        active: true,
-        model: {
-          //resources: this.columnsGrid,
-          template2: this.morefunction,
-          //frozenColumns: 1,
-        },
-      },
-    ];
+    // this.views = [
+    //   {
+    //     type: ViewType.grid,
+    //     sameData: true,
+    //     active: true,
+    //     model: {
+    //       //resources: this.columnsGrid,
+    //       template2: this.morefunction,
+    //       //frozenColumns: 1,
+    //     },
+    //   },
+    //  ];
 
     this.detectorRef.detectChanges();
   }
@@ -227,5 +243,54 @@ export class WaterClockComponent
           data: data,
         });
       });
+  }
+
+  onLoading(e) {}
+
+  getColumsGrid(grvSetup) {
+    if (this.arrFieldIsVisible?.length > 0) {
+      this.arrFieldIsVisible.forEach((key) => {
+        let field = Util.camelize(key);
+        let template: any;
+        let templateHeader: any;
+        let colums: any;
+        if (grvSetup[key].isTemplate != '0') {
+          switch (key) {
+            case 'IndexLastMonth':
+              templateHeader = this.templetOldMonthHeader;
+              break;
+          }
+        }
+
+        if (template || templateHeader) {
+          colums = {
+            headerTemplate: templateHeader,
+            field: field,
+            headerText: grvSetup[key].headerText,
+            width: grvSetup[key].width,
+            template: template,
+          };
+        } else {
+          colums = {
+            field: field,
+            headerText: grvSetup[key].headerText,
+            width: grvSetup[key].width,
+          };
+        }
+        this.columnGrids.push(colums);
+      });
+    }
+
+    this.views = [
+      {
+        type: ViewType.grid,
+        sameData: true,
+        active: false,
+        model: {
+          resources: this.columnGrids,
+          template2: this.morefunction,
+        },
+      },
+    ];
   }
 }
