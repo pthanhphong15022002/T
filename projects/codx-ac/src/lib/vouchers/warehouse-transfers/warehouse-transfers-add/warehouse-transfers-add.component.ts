@@ -306,16 +306,20 @@ export class WarehouseTransfersAddComponent extends UIComponent {
         }
         if ((this.eleGridIssue || this.eleGridIssue?.isEdit) && this.elementTabDetail?.selectingID == '0') {
           this.eleGridIssue.saveRow((res: any) => {
-            if (res) {
+            if (res && res.type != 'error') {
               this.saveVoucher(type);
+            }else{
+              this.ngxLoader.stop();
             }
           })
           return;
         }
         if ((this.eleGridReceipt || this.eleGridReceipt?.isEdit) && this.elementTabDetail?.selectingID == '1') {
           this.eleGridReceipt.saveRow((res: any) => {
-            if (res) {
+            if (res && res.type != 'error') {
               this.saveVoucher(type);
+            }else{
+              this.ngxLoader.stop();
             }
           })
           return;
@@ -387,17 +391,13 @@ export class WarehouseTransfersAddComponent extends UIComponent {
         }
         if (this.eleGridIssue && this.elementTabDetail?.selectingID == '0') {
           this.eleGridIssue.saveRow((res: any) => {
-            if (res) {
-              this.addLine(type);
-            }
+            if (res && res.type != 'error') this.addLine(type);
           })
           return;
         }
         if (this.eleGridIssue && this.elementTabDetail?.selectingID == '1') {
           this.eleGridReceipt.saveRow((res: any) => {
-            if (res) {
-              this.addLine(type);
-            }
+            if (res && res.type != 'error') this.addLine(type);
           })
           return;
         }
