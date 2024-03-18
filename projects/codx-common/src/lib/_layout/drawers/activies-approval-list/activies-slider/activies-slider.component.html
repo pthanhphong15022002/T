@@ -46,28 +46,31 @@
                             </codx-img>
                         </div>
                         <div class="d-flex align-items-center justify-content-between mt-1">
-                            <div class="">
-                                <ng-container *ngIf="item?.actionType == 'ES';else elseTemplate">
-                                    <button [disabled]="item?.blocked" type="button"
-                                        class="btn btn-sm btn-outline-danger" (click)="viewSignature(item)">
-                                        <codx-label class="text-danger" [formModel]="dialog?.formModel"  [gridViewName]="funcList?.gridViewName" [formName]="funcList?.formName"
-                                            name="lblSignature" default="Xem trình ký"></codx-label>
-                                    </button>
-                                </ng-container>
-                                <ng-template #elseTemplate>
-                                    <button [disabled]="item?.blocked" type="button"
-                                        class="btn btn-sm btn-outline-success me-3"
-                                        (click)="approvalAsync(item,'5',index)">
-                                        <codx-label [formModel]="dialog?.formModel" name="lblAppro"  [gridViewName]="funcList?.gridViewName" [formName]="funcList?.formName"
-                                            default="Duyệt"></codx-label>
-                                    </button>
-                                    <button [disabled]="item?.blocked" type="button"
-                                        class="btn btn-sm btn-outline-danger" (click)="approvalAsync(item,'4',index)">
-                                        <codx-label class="text-danger" [formModel]="dialog?.formModel" name="lblCancle"  [gridViewName]="funcList?.gridViewName" [formName]="funcList?.formName"
-                                            default="Từ chối"></codx-label>
-                                    </button>
-                                </ng-template>
+                            <div>
+                                <div class="" *ngIf="item?.approveControl == '0' ||item?.approveControl == null">
+                                    <ng-container *ngIf="item?.actionType == 'ES';else elseTemplate">
+                                        <button [disabled]="item?.blocked" type="button"
+                                            class="btn btn-sm btn-outline-danger" (click)="viewSignature(item)">
+                                            <codx-label class="text-danger" [formModel]="dialog?.formModel"  [gridViewName]="funcList?.gridViewName" [formName]="funcList?.formName"
+                                                name="lblSignature" default="Xem trình ký"></codx-label>
+                                        </button>
+                                    </ng-container>
+                                    <ng-template #elseTemplate>
+                                        <button [disabled]="item?.blocked" type="button"
+                                            class="btn btn-sm btn-outline-success me-3"
+                                            (click)="approvalAsync(item,'5',index)">
+                                            <codx-label [formModel]="dialog?.formModel" name="lblAppro"  [gridViewName]="funcList?.gridViewName" [formName]="funcList?.formName"
+                                                default="Duyệt"></codx-label>
+                                        </button>
+                                        <button [disabled]="item?.blocked" type="button"
+                                            class="btn btn-sm btn-outline-danger" (click)="approvalAsync(item,'4',index)">
+                                            <codx-label class="text-danger" [formModel]="dialog?.formModel" name="lblCancle"  [gridViewName]="funcList?.gridViewName" [formName]="funcList?.formName"
+                                                default="Từ chối"></codx-label>
+                                        </button>
+                                    </ng-template>
+                                </div>
                             </div>
+                            
                             <div class="cursor-pointer" (click)="clickViewDetail(item)">
                                 <codx-label [classList]="'fst-italic text-gray-500'" [formModel]="dialog?.formModel"  [gridViewName]="funcList?.gridViewName" [formName]="funcList?.formName"
                                     name="lblDetail" default="Xem chi tiết"></codx-label>

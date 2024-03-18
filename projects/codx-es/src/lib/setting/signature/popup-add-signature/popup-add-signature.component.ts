@@ -307,44 +307,24 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
 
   dataImageChanged(event: any, type: string) {
     console.log(event);
-
-    switch (type) {
-      case 'S1': {
-        if (event?.status) {
-          this.notification.notify(event?.message);
-        } else {
-          if (event && this.data.signature1 == null) {
+    if(event?.length>0 && event[0]?.recID){
+      switch (type) {
+        case 'S1': {         
             this.data.signature1 = (event[0] as any)?.recID;
           }
-          this.data.signature1 = (event[0] as any)?.recID;
-        }
-        break;
-      }
-      case 'S2': {
-        if (event?.status) {
-          this.notification.notify(event?.message);
-        } else {
-          if (event && this.data.signature2 == null) {
+          break;
+        
+        case 'S2': {
             this.data.signature2 = (event[0] as any)?.recID;
-          }
-          this.data.signature2 = (event[0] as any)?.recID;
-          break;
+            break;
         }
-        break;
-      }
-      case 'S3': {
-        if (event?.status) {
-          this.notification.notify(event?.message);
-        } else {
-          if (event && this.data.stamp == null) {
+        case 'S3': {
             this.data.stamp = (event[0] as any)?.recID;
-          }
-          this.data.stamp = (event[0] as any)?.recID;
-          break;
+            break;
         }
-        break;
       }
     }
+    
   }
 
   openPopup(content) {
