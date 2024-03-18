@@ -464,13 +464,18 @@ export class AddTaskComponent
     this.data.attachments--;
     this.dataChange.emit(this.data);
   }
-
+  distinctArray(arr) {
+    return [...new Map(arr.map((item) => [item['recID'], item])).values()];
+  }
   openFormSetting(val: any = null, index = null) {
+    this.process.steps = this.distinctArray(this.process.steps);
+
     let option = new DialogModel();
     option.FormModel = this.formModel;
     let listForm = this.process.steps.filter(
       (x) => x.stepNo < this.data.stepNo && x.activityType == 'Form'
     );
+
     let dataSteps = this.process.steps.filter(
       (x) =>
         x.activityType != 'Stage' &&

@@ -142,14 +142,14 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
             {
               let ids = [];
               this.listDocument.forEach((elm) => {
-                if (elm.files && elm.files.length > 0) 
+                if (elm.files && elm.files.length > 0)
                 {
                   elm.files.forEach(element => {
                     if(element.type == "1" || element.type == "3") ids.push(element.fileID || element?.recID);
                   });
                 }
               });
-          
+
               if(ids.length>0)
               {
                 var str = JSON.stringify(ids);
@@ -178,6 +178,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   }
   getPermission() {
     let approvers = [];
+    if(!this.process) return;
     this.process.steps?.forEach((step) => {
       if (step?.permissions?.length > 0) {
         step?.permissions.forEach((per) => {
@@ -223,9 +224,21 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
         elm.countTask = 0;
         if (elm.child && elm.child.length > 0) {
           elm.countTask = elm.child.length;
-          elm.countCompleted =
-            (elm.child.filter((x) => x.status == '5') || []).length || 0;
+          elm.countCompleted = 0;
+          elm.child.forEach(element => {
+            if(element.activityType != "Conditions" && element.status == "5") elm.countCompleted ++;
+            else if(element.activityType == "Conditions")
+            {
+              if(element.child && element.child.length>0)
+              {
+                if(element.child.some(x=>x.status == "5")) elm.countCompleted ++;
+              }
+            }
+          });
+          
           elm.percentCompleted = (elm.countCompleted / elm.countTask) * 100;
+
+          elm.percentCompleted = elm.percentCompleted.toFixed(2);
           elm.duration = elm.child.reduce(
             (n, { duration }) => n + duration,
             0
@@ -387,5 +400,5 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       }
     });
   }
-  
+
 }

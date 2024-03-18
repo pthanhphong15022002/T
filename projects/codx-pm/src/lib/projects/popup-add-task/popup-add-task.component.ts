@@ -436,7 +436,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit{
   commentTyped(e: any, key: string) {
     if(this.history) this.history.refresh();
     let isCheckChangeStatus:boolean=false;
-    if(this.isInProgress || this.isSendReport || this.isInProgress) isCheckChangeStatus = true;
+    if(this.isInProgress || this.isSendReport || this.isFinish) isCheckChangeStatus = true;
     if(e.comment){
       if(!this.checkEditPermission()) return;
       let status="00";
