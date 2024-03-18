@@ -1,0 +1,31 @@
+<codx-views
+  #view
+  [views]="views"
+  [service]="service"
+  [entityName]="entityName"
+  [idField]="idField"
+  [method]="method"
+  [button]="button"
+  (buttonClick)="click($event)"
+  (selectedChange)="selectedChange($event)"
+  (clickMF)="clickMF($event, itemSelected)"
+  (changeDataMF)="changeDataMF($event, itemSelected)"
+  (onLoading)="onLoading($event)"
+>
+</codx-views>
+<ng-template #morefunction let-data>
+  <div class="d-flex float-end" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
+      type="grid"
+    >
+    </codx-mfunc>
+  </div>
+</ng-template>
+
+<ng-template #templetOldMonthHeader let-data>
+  <div>Chỉ số tháng trước</div>
+</ng-template>

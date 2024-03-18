@@ -16,7 +16,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 })
 export class CashtransfersAddComponent extends UIComponent {
   //#region Constructor
-  @ViewChild('formCashTranfer') public formCashTranfer: CodxFormComponent;
+  @ViewChild('master') public master: CodxFormComponent;
   @ViewChild('eleCbxCashBook') eleCbxCashBook: CodxInputComponent;
   @ViewChild('eleCbxCashBook2') eleCbxCashBook2: CodxInputComponent;
   @ViewChild('elementTabDetail') elementTabDetail: any;
@@ -85,13 +85,13 @@ export class CashtransfersAddComponent extends UIComponent {
   }
 
   ngAfterViewInit() {
-    if(this.formCashTranfer?.data?.coppyForm) this.formCashTranfer.data._isEdit = true; //? test copy để tạm
-    if (this.formCashTranfer?.data?.isEdit) {
+    if(this.master?.data?.coppyForm) this.master.data._isEdit = true; //? test copy để tạm
+    if (this.master?.data?.isEdit) {
       let option = new DataRequest();
       option.entityName = 'AC_VATInvoices';
       option.predicate = 'TransID=@0';
       option.pageLoading = false;
-      option.dataValue = this.formCashTranfer?.data?.recID;
+      option.dataValue = this.master?.data?.recID;
       this.api
         .execSv(
           'AC',
@@ -140,7 +140,7 @@ export class CashtransfersAddComponent extends UIComponent {
 
   createTabDetail(event: any, eleTab: TabComponent) {
     if (eleTab) {
-      if (this.formCashTranfer.data.vatControl) {
+      if (this.master.data.vatControl) {
         eleTab.hideTab(0,false);
       }else{
         eleTab.hideTab(0,true);
@@ -168,16 +168,16 @@ export class CashtransfersAddComponent extends UIComponent {
     }
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
-    this.formCashTranfer.setValue('updateColumns','',{});
+    this.master.setValue('updateColumns','',{});
     switch (field.toLowerCase()) {
       case 'cashbookid':
         let indexcb = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CashBookID == this.eleCbxCashBook?.ComponentCurrent?.value);
         if(value == '' || value == null || indexcb == -1){
           this.isPreventChange = true;
-          this.formCashTranfer.setValue(field,null,{});
+          this.master.setValue(field,null,{});
           this.cashbookname1 = '';
           let memo = this.getMemoMaster();
-          this.formCashTranfer.setValue('memo',memo,{});
+          this.master.setValue('memo',memo,{});
           this.isPreventChange = false;
           this.detectorRef.detectChanges();
           return;
@@ -190,10 +190,10 @@ export class CashtransfersAddComponent extends UIComponent {
         let indexcb2 = this.eleCbxCashBook2?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CashBookID == this.eleCbxCashBook2?.ComponentCurrent?.value);
         if(value == '' || value == null || indexcb2 == -1){
           this.isPreventChange = true;
-          this.formCashTranfer.setValue(field,null,{});
+          this.master.setValue(field,null,{});
           this.cashbookname2 = '';
           let memo = this.getMemoMaster();
-          this.formCashTranfer.setValue('memo',memo,{});
+          this.master.setValue('memo',memo,{});
           this.isPreventChange = false;
           this.detectorRef.detectChanges();
           return;
@@ -205,10 +205,10 @@ export class CashtransfersAddComponent extends UIComponent {
       case 'currencyid':
         if(value == '' || value == null){
           this.isPreventChange = true;
-          this.formCashTranfer.setValue(field, this.preData?.currencyID, {});
+          this.master.setValue(field, this.preData?.currencyID, {});
           if (this.preData?.currencyID != null) {
             var key = Util.camelize(field);
-            var $error = (this.formCashTranfer as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
+            var $error = (this.master as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
             if ($error) $error.classList.add('d-none');
           }
           this.isPreventChange = false;
@@ -237,7 +237,7 @@ export class CashtransfersAddComponent extends UIComponent {
         }
         break;
       case 'fees':
-        if (this.formCashTranfer.data.vatControl){
+        if (this.master.data.vatControl){
           this.VATChange();
         }
         break;
@@ -266,12 +266,12 @@ export class CashtransfersAddComponent extends UIComponent {
    * *Hàm hủy bỏ chứng từ
    */
   onDiscardVoucher() {
-    if (this.formCashTranfer && this.formCashTranfer.data._isEdit) {
+    if (this.master && this.master.data._isEdit) {
       this.notification.alertCode('AC0010', null).subscribe((res) => {
         if (res.event.status === 'Y') {
           this.detectorRef.detectChanges();
           this.dialog.dataService
-            .delete([this.formCashTranfer.data], false, null, '', '', null, null, false)
+            .delete([this.master.data], false, null, '', '', null, null, false)
             .pipe(takeUntil(this.destroy$))
             .subscribe((res) => {
               if (res.data != null) {
@@ -294,7 +294,7 @@ export class CashtransfersAddComponent extends UIComponent {
    */
   onSaveVoucher(type) {
     this.ngxLoader.start();
-    this.formCashTranfer
+    this.master
       .save(null, 0, '', '', false, { allowCompare: false })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
@@ -317,8 +317,8 @@ export class CashtransfersAddComponent extends UIComponent {
   saveVoucher(type){
     this.api
       .exec('AC', 'CashTranfersBusiness', 'UpdateVoucherAsync', [
-        this.formCashTranfer.data,
-        this.formCashTranfer.data.vatControl ? this.fmVATInvoice.currentData : null,
+        this.master.data,
+        this.master.data.vatControl ? this.fmVATInvoice.currentData : null,
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
@@ -336,12 +336,12 @@ export class CashtransfersAddComponent extends UIComponent {
             //   .subscribe((res: any) => {
             //     if (res) {
             //       res.data.isAdd = true;
-            //       this.formCashTranfer.refreshData({ ...res.data });             
+            //       this.master.refreshData({ ...res.data });             
             //       this.detectorRef.detectChanges();
             //     }
             //   });
           }
-          if (this.formCashTranfer.data.isAdd || this.formCashTranfer.data.isCopy)
+          if (this.master.data.isAdd || this.master.data.isCopy)
             this.notification.notifyCode('SYS006');
           else 
             this.notification.notifyCode('SYS007');
@@ -354,22 +354,22 @@ export class CashtransfersAddComponent extends UIComponent {
   //#region Function
   cashBookIDChange(field:any){
     let memo = this.getMemoMaster();
-    this.formCashTranfer.setValue('memo',memo,{});
+    this.master.setValue('memo',memo,{});
     this.api.exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
       field,
-      this.formCashTranfer.data,
+      this.master.data,
     ])
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (res) {
         this.isPreventChange = true;
-        this.formCashTranfer.setValue('accountID',(res?.data?.accountID),{});
-        this.formCashTranfer.setValue('currencyID',(res?.data?.currencyID),{});
-        this.formCashTranfer.setValue('exchangeRate',(res?.data?.exchangeRate),{});
-        this.formCashTranfer.setValue('multi',(res?.data?.multi),{});
-        this.formCashTranfer.setValue('transferAmt2',(res?.data?.transferAmt2),{});
+        this.master.setValue('accountID',(res?.data?.accountID),{});
+        this.master.setValue('currencyID',(res?.data?.currencyID),{});
+        this.master.setValue('exchangeRate',(res?.data?.exchangeRate),{});
+        this.master.setValue('multi',(res?.data?.multi),{});
+        this.master.setValue('transferAmt2',(res?.data?.transferAmt2),{});
         this.isPreventChange = false;
-        this.preData = {...this.formCashTranfer?.data};
+        this.preData = {...this.master?.data};
         this.detectorRef.detectChanges();
       }
     });
@@ -377,22 +377,22 @@ export class CashtransfersAddComponent extends UIComponent {
 
   cashBookID2Change(field:any){
     let memo = this.getMemoMaster();
-    this.formCashTranfer.setValue('memo',memo,{});
+    this.master.setValue('memo',memo,{});
     this.api.exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
       field,
-      this.formCashTranfer.data,
+      this.master.data,
     ])
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (res) {
         this.isPreventChange = true;
-        this.formCashTranfer.setValue('offsetAcctID',(res?.data?.offsetAcctID),{});
-        this.formCashTranfer.setValue('currencyID',(res?.data?.currencyID),{});
-        this.formCashTranfer.setValue('exchangeRate',(res?.data?.exchangeRate),{});
-        this.formCashTranfer.setValue('multi',(res?.data?.multi),{});
-        this.formCashTranfer.setValue('transferAmt2',(res?.data?.transferAmt2),{});
+        this.master.setValue('offsetAcctID',(res?.data?.offsetAcctID),{});
+        this.master.setValue('currencyID',(res?.data?.currencyID),{});
+        this.master.setValue('exchangeRate',(res?.data?.exchangeRate),{});
+        this.master.setValue('multi',(res?.data?.multi),{});
+        this.master.setValue('transferAmt2',(res?.data?.transferAmt2),{});
         this.isPreventChange = false;
-        this.preData = {...this.formCashTranfer?.data};
+        this.preData = {...this.master?.data};
         this.detectorRef.detectChanges();
       }
     });
@@ -405,14 +405,14 @@ export class CashtransfersAddComponent extends UIComponent {
   currencyIDChange(field:any){
     this.api.exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
       field,
-      this.formCashTranfer.data,
+      this.master.data,
     ])
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (res) {
         this.isPreventChange = true;
-        this.formCashTranfer.setValue('exchangeRate',res?.data?.exchangeRate,{});
-        this.preData = {...this.formCashTranfer?.data};
+        this.master.setValue('exchangeRate',res?.data?.exchangeRate,{});
+        this.preData = {...this.master?.data};
         this.isPreventChange = false;
       }
     });
@@ -441,7 +441,7 @@ export class CashtransfersAddComponent extends UIComponent {
   }
 
   VATChange(){
-    this.api.exec('AC','CashTranfersBusiness','VATChangedAsync',[this.fmVATInvoice.currentData,this.formCashTranfer.data]).subscribe((res: any) => {
+    this.api.exec('AC','CashTranfersBusiness','VATChangedAsync',[this.fmVATInvoice.currentData,this.master.data]).subscribe((res: any) => {
       if (res) {
         this.fmVATInvoice.currentData = {...res};
         this.isPreventChange = true;

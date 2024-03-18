@@ -53,7 +53,6 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   objectName:any;
   isDblCLick: boolean = false;
   dataFilter:any = {};
-  dataSourceBefore:any;
   selectRow:any=[];
   typePay:any;
   baseCurr:any;
@@ -170,6 +169,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     if(!event.target) return;
     if(event && !event?.data.length){
       let data = event?.data;
+      if(data.isEdit) return;
       this.grid.gridRef.setCellValue(data?.recID, 'settledAmt', 0);
       this.grid.gridRef.setCellValue(data?.recID, 'settledAmt2', 0);
       this.grid.gridRef.setCellValue(data?.recID, 'cashDisc', 0);
@@ -178,10 +178,12 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     } 
     arrdata = event?.data;
     arrdata.reduce((pre, data) => { 
-      this.grid.gridRef.setCellValue(data.recID,'settledAmt',0);
-      this.grid.gridRef.setCellValue(data.recID,'settledAmt2',0);
-      this.grid.gridRef.setCellValue(data.recID,'cashDisc',0);
-      this.grid.gridRef.setCellValue(data.recID,'cashDisc2',0);
+      if (!data.isEdit) {
+        this.grid.gridRef.setCellValue(data.recID, 'settledAmt', 0);
+        this.grid.gridRef.setCellValue(data.recID, 'settledAmt2', 0);
+        this.grid.gridRef.setCellValue(data.recID, 'cashDisc', 0);
+        this.grid.gridRef.setCellValue(data.recID, 'cashDisc2', 0);
+      }
     }, this.subInvoices);
     this.grid.arrSelectedRows = [];
     this.detectorRef.detectChanges();
@@ -202,14 +204,31 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
         ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
           if (res.length) {
             res.reduce((pre, data) => { 
-              this.grid.gridRef.setCellValue(data.recID,'settledAmt',data.settledAmt);
-              this.grid.gridRef.setCellValue(data.recID,'settledAmt2',data.settledAmt2);
-              this.grid.gridRef.setCellValue(data.recID,'cashDisc',data.cashDisc);
-              this.grid.gridRef.setCellValue(data.recID,'cashDisc2',data.cashDisc2);
+              let index = this.subInvoices.findIndex(x => x.recID == data.recID);
+              if (index > -1) {
+                if (!this.subInvoices[index].isEdit) {
+                  this.grid.gridRef.setCellValue(data.recID, 'settledAmt', data.settledAmt);
+                  this.grid.gridRef.setCellValue(data.recID, 'settledAmt2', data.settledAmt2);
+                  this.grid.gridRef.setCellValue(data.recID, 'cashDisc', data.cashDisc);
+                  this.grid.gridRef.setCellValue(data.recID, 'cashDisc2', data.cashDisc2);
+                }
+              }
             }, {});
           }
         }) 
       }
+    }
+  }
+
+  onEdit(event:any){
+    let index = this.subInvoices.findIndex(x => x.recID == event.recID);
+    if(index > -1){
+      if(event.settledAmt != 0) 
+        event.isEdit = true;
+      else
+        delete event.isEdit;
+      this.subInvoices[index] = event;
+      this.detectorRef.detectChanges();
     }
   }
 
@@ -378,7 +397,6 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
         if (res[0].length > 0) {
           this.subInvoices = res[0];
           this.selectRow = res[2];
-          this.dataSourceBefore = JSON.stringify(this.subInvoices);
           this.isPreventLoad = true;
           this.detectorRef.detectChanges();
         }else{
@@ -397,10 +415,6 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
         if(this.isPreventLoad){
           this.isPreventLoad = false;
           return;
-        }
-        if (this.dataSourceBefore) {
-          this.isPreventLoad = true;
-          this.subInvoices = JSON.parse(this.dataSourceBefore);
         }
         break;
     }

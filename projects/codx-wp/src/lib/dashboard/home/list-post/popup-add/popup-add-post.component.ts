@@ -355,7 +355,7 @@ export class PopupAddPostComponent implements OnInit {
     {
       let per = new Permission();
       per.objectID = "";
-      per.objectName = "";
+      per.objectName = this.data.shareControl == "9" ? "Mọi người" : "";
       per.objectType = this.data.shareControl;
       per.read = true;
       per.share = true;
@@ -372,6 +372,7 @@ export class PopupAddPostComponent implements OnInit {
     if (arrPermisison?.length > 0) {
       let fisrtPermission = arrPermisison[0];
       let shareControl = arrPermisison[0].objectType;
+      let shareName = arrPermisison[0].objectName;
       this.data.shareControl = shareControl;
       if (!this.data.permissions) this.data.permissions = [];
       else
@@ -390,11 +391,11 @@ export class PopupAddPostComponent implements OnInit {
           let permission = {
             memberType: this.MEMBERTYPE.SHARE,
             objectID: '',
-            objectName: '',
+            objectName: shareName,
             objectType: shareControl,
           };
           this.data.permissions.push(permission);
-          this.data.shareName = '';
+          this.data.shareName = shareName;
           break;
         case this.SHARECONTROLS.OGRHIERACHY:
         case this.SHARECONTROLS.DEPARMENTS:
