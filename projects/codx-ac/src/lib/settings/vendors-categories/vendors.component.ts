@@ -33,16 +33,17 @@ import { CodxAcService } from '../../codx-ac.service';
 export class VendorsComponent extends UIComponent {
   //#region Contructor
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
-  views: Array<ViewModel> = []; //? model view
+  views: Array<ViewModel> = [];
   button: ButtonModel[] = [
     {
       id: 'btnAdd',
       icon: 'icon-business',
     },
   ];
-  funcName = ''; //? tên truyền vào headertext
+  funcName = '';
   headerText: any;
-  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
+  itemSelected: any;
+  private destroy$ = new Subject<void>();
   isSubView: boolean;
 
   constructor(
@@ -197,6 +198,15 @@ export class VendorsComponent extends UIComponent {
       .delete([dataDelete], true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {});
+  }
+
+  changeDataMF(event, type: any = '') {
+    this.acService.changeMFCategories(event,type);
+  }
+
+  onSelectedItem(event) {
+    this.itemSelected = event;
+    this.detectorRef.detectChanges();
   }
   //#endregion Function
 }

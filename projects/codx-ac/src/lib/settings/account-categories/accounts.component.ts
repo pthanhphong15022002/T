@@ -219,11 +219,7 @@ export class AccountsComponent extends UIComponent {
   }
 
   changeDataMF(event, type: any = '') {
-    event.reduce((pre, element) => {
-      if (type === 'views') element.isbookmark = true;
-      if (!['SYS03', 'SYS02', 'SYS04', 'SYS002'].includes(element.functionID))
-        element.disabled = true;
-    }, {});
+    this.acService.changeMFCategories(event,type);
   }
 
   onSelectedItem(event) {
