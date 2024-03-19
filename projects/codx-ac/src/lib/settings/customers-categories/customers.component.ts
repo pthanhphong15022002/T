@@ -43,6 +43,7 @@ export class CustomersComponent extends UIComponent {
   ];
   funcName = '';
   headerText: any;
+  itemSelected: any;
   private destroy$ = new Subject<void>();
   isSubView: boolean;
   constructor(
@@ -51,9 +52,9 @@ export class CustomersComponent extends UIComponent {
     private acService: CodxAcService
   ) {
     super(inject);
-    this.router.data.subscribe((res) => {
-      if (res && res['isSubView']) this.isSubView = res.isSubView;
-    });
+    // this.router.data.subscribe((res) => {
+    //   if (res && res['isSubView']) this.isSubView = res.isSubView;
+    // });
   }
   //#endregion Contructor
 
@@ -70,7 +71,7 @@ export class CustomersComponent extends UIComponent {
       {
         type: ViewType.grid,
         active: true,
-        sameData: false,
+        sameData: true,
         model: {
           template2: this.templateGrid,
         },
@@ -197,6 +198,15 @@ export class CustomersComponent extends UIComponent {
       .delete([dataDelete], true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {});
+  }
+
+  changeDataMF(event, type: any = '') {
+    this.acService.changeMFCategories(event,type);
+  }
+
+  onSelectedItem(event) {
+    this.itemSelected = event;
+    this.detectorRef.detectChanges();
   }
   //#endregion Function
 }

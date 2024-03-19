@@ -12,6 +12,7 @@ import {
   CacheService,
   CallFuncService,
   CodxFormComponent,
+  DataRequest,
   DialogData,
   DialogRef,
   FormModel,
@@ -19,7 +20,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { CodxAcService } from '../../../codx-ac.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 @Component({
   selector: 'lib-pop-add-bank',
   templateUrl: './bank-add.component.html',
@@ -33,8 +34,7 @@ export class BankAddComponent extends UIComponent implements OnInit {
   dialogData: DialogData;
   headerText: string;
   dataDefault:any;
-  objectID:any;
-  objectType : any;
+  lstBank:any = [];
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
@@ -48,8 +48,7 @@ export class BankAddComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
     this.dataDefault = dialogData.data?.dataDefault;
-    this.objectID = dialogData.data?.objectID;
-    this.objectType = dialogData.data?.objectType;
+    this.lstBank = dialogData.data?.lstBank;
   }
   //#endregion
 
@@ -78,19 +77,37 @@ export class BankAddComponent extends UIComponent implements OnInit {
 
   //#region CRUD
   onSave() {
-    this.form.setValue('objectID',this.objectID,{});
-    this.form.setValue('objectType',this.objectType,{});
-    this.form.save(null, 0, '', '', false).pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if(!res) return;
-      if(res.hasOwnProperty('save')){
-        if(res.save.hasOwnProperty('data') && !res.save.data) return;
-      }
-      if(res.hasOwnProperty('update')){
-        if(res.update.hasOwnProperty('data') && !res.update.data) return;
-      }
-      this.dialog.close({bank:{...this.form.data}});
-    })
+    let validate = this.form.validation();
+    if (validate) return;
+    let index = this.lstBank.findIndex(x => x.bankAcctID == this.form.data.bankAcctID);
+    if(index > -1){
+      this.notification.notifyCode(
+        'SYS031',
+        0,
+        '"' + this.form.gridviewSetup["BankAcctID"].headerText + '"'
+      );
+      return;
+    }else{
+      let options = new DataRequest();
+      options.entityName = 'BS_BankAccounts';
+      options.pageLoading = false;
+      options.predicates = 'BankAcctID=@0 and RecID !=@1';
+      options.dataValues = `${this.form.data.bankAcctID};${this.form.data.recID}`;
+      this.api
+        .execSv('BS', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+        .pipe(map((r) => r?.[0] ?? [])).subscribe((res: any) => {
+          if (res && res.length) {
+            this.notification.notifyCode(
+              'SYS031',
+              0,
+              '"' + this.form.data.bankAcctID + '"'
+            );
+            return;
+          }else{
+            this.dialog.close({...this.form.data});
+          }
+        })
+    }
   }
   //#endregion
 }

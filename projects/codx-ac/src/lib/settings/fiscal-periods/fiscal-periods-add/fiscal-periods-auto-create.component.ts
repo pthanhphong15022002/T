@@ -5,11 +5,11 @@ import { FiscalPeriodsAutoCreate } from './model/FiscalPeriodsAutoCreate.model';
 
 @Component({
   selector: 'lib-fiscal-periods-auto-create',
-  templateUrl:'./fiscal-periods-auto-create.component.html',
+  templateUrl: './fiscal-periods-auto-create.component.html',
   styleUrls: ['./fiscal-periods-auto-create.component.css'],
 })
-export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnInit{
-  
+export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnInit {
+
   //#region Constructor
   @ViewChild('form') public form: CodxFormComponent;
   listReport: Array<any> = [];
@@ -19,7 +19,7 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
   listFiscalYear: any;
   fiscalPeriodsAutoCreate: FiscalPeriodsAutoCreate = new FiscalPeriodsAutoCreate;
   isAddNew: any;
-  
+
 
   constructor(
     inject: Injector,
@@ -52,51 +52,48 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
   }
 
   ngAfterViewInit() {
-    this.form.formGroup.patchValue(this.fiscalPeriodsAutoCreate); 
+    this.form.formGroup.patchValue(this.fiscalPeriodsAutoCreate);
   }
   //#endregion
 
   //#region Event
-  valueChange(e: any)
-  {
-    switch(e.field)
-    {
+  valueChange(e: any) {
+    switch (e.field) {
       case 'fiscalYear':
         this.fiscalPeriodsAutoCreate.fiscalYear = e.crrValue;
-        if(e.crrValue)
+        if (e.crrValue)
           this.setDatebyFiscalYear();
         break;
       case 'periodControl':
         {
           this.fiscalPeriodsAutoCreate.periodControl = e.data;
-          if(e.data == true)
+          if (e.data == true)
             this.fiscalPeriodsAutoCreate.moduleControl = false;
           else
             this.fiscalPeriodsAutoCreate.moduleControl = true;
-          this.form.formGroup.patchValue({moduleControl: this.fiscalPeriodsAutoCreate.moduleControl,});
+          this.form.formGroup.patchValue({ moduleControl: this.fiscalPeriodsAutoCreate.moduleControl, });
         }
         break;
       case 'moduleControl':
         {
           this.fiscalPeriodsAutoCreate.moduleControl = e.data;
-          if(e.data == true)
+          if (e.data == true)
             this.fiscalPeriodsAutoCreate.periodControl = false;
           else
             this.fiscalPeriodsAutoCreate.periodControl = true;
-          this.form.formGroup.patchValue({periodControl: this.fiscalPeriodsAutoCreate.periodControl,});
+          this.form.formGroup.patchValue({ periodControl: this.fiscalPeriodsAutoCreate.periodControl, });
         }
         break;
       case 'fiscalPeriodControl':
         this.fiscalPeriodsAutoCreate.fiscalPeriodControl = e.data;
-        if(this.fiscalPeriodsAutoCreate.fiscalPeriodControl == true &&
-            !this.fiscalPeriodsAutoCreate.fiscalYear
-          )
-          {
-            this.fiscalPeriodsAutoCreate.startDate = new Date(new Date().getFullYear(), 0, 1);
-            this.fiscalPeriodsAutoCreate.endDate = new Date(new Date().getFullYear(), 11, 31);
-            this.form.formGroup.patchValue({startDate: this.fiscalPeriodsAutoCreate.startDate});
-            this.form.formGroup.patchValue({endDate: this.fiscalPeriodsAutoCreate.endDate});
-          }
+        if (this.fiscalPeriodsAutoCreate.fiscalPeriodControl == true &&
+          !this.fiscalPeriodsAutoCreate.fiscalYear
+        ) {
+          this.fiscalPeriodsAutoCreate.startDate = new Date(new Date().getFullYear(), 0, 1);
+          this.fiscalPeriodsAutoCreate.endDate = new Date(new Date().getFullYear(), 11, 31);
+          this.form.formGroup.patchValue({ startDate: this.fiscalPeriodsAutoCreate.startDate });
+          this.form.formGroup.patchValue({ endDate: this.fiscalPeriodsAutoCreate.endDate });
+        }
         break;
       case 'startDate':
         this.fiscalPeriodsAutoCreate.startDate = e.data;
@@ -117,8 +114,7 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
     }
   }
 
-  onSelectCbx(e: any)
-  {
+  onSelectCbx(e: any) {
     this.fiscalPeriodsAutoCreate.oldFiscalYear = e.itemData.value;
   }
 
@@ -128,47 +124,46 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
   //#endregion
 
   //#region Method
-  onSave()
-  {
-    if(!this.validateDate())
+  onSave() {
+    if (!this.validateDate())
       return;
 
-    if(!this.validateStartYear())
+    if (!this.validateStartYear())
       return;
 
-    if(!this.validateEndYear())
+    if (!this.validateEndYear())
       return;
 
-    if(this.form.formGroup?.invalid)
+    if (this.form.formGroup?.invalid)
       return;
 
-    if(this.fiscalPeriodsAutoCreate.moduleControl)
+    if (this.fiscalPeriodsAutoCreate.moduleControl)
       this.isAddNew = true;
     else
       this.isAddNew = false;
-    
+
     this.convertToLocalDate();
 
     //Custom data add trong dataservice
-    this.dialog.dataService.addDatas.set(this.fiscalPeriodsAutoCreate.fiscalYear,true);
-    this.dialog.dataService .save((o)=>this.beforeSave(o), 0, '', 'SYS006', true)
-    .subscribe(res=>{
-      this.dialog.close();
-      this.dt.detectChanges();
-    });
+    this.dialog.dataService.addDatas.set(this.fiscalPeriodsAutoCreate.fiscalYear, true);
+    this.dialog.dataService.save((o) => this.beforeSave(o), 0, '', 'SYS006', true)
+      .subscribe(res => {
+        this.dialog.close();
+        this.dt.detectChanges();
+      });
   }
   //#endregion
 
   //#region Function
 
   //Hàm gọi tự động tạo năm tài chính
-  beforeSave(o:any){
-      const t = this;
-      o.service = "AC",
+  beforeSave(o: any) {
+    const t = this;
+    o.service = "AC",
       o.assemblyName = "AC",
       o.className = "FiscalPeriodsBusiness",
       o.methodName = "CreateFiscalYearAsync",
-      o.data =  [
+      o.data = [
         t.isAddNew,
         t.fiscalPeriodsAutoCreate.startDate,
         t.fiscalPeriodsAutoCreate.endDate,
@@ -177,12 +172,11 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
         t.fiscalPeriodsAutoCreate.period,
         t.fiscalPeriodsAutoCreate.periodUoM,
       ];
-      return true;
+    return true;
   }
 
   //Thiết lập mặc định cho form tự động tạo kỳ tài chính
-  setDefault()
-  {
+  setDefault() {
     this.fiscalPeriodsAutoCreate.moduleControl = false;
     this.fiscalPeriodsAutoCreate.periodControl = true;
     this.fiscalPeriodsAutoCreate.fiscalPeriodControl = true;
@@ -192,8 +186,7 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
   }
 
   //Thay đổi năm của ngày bắt đầu và ngày kết thúc theo năm tài chính
-  setDatebyFiscalYear()
-  {
+  setDatebyFiscalYear() {
     //Set Fiscal Year cho ngày bắt đầu
     var startDate = new Date(this.fiscalPeriodsAutoCreate.startDate);
     startDate.setFullYear(this.fiscalPeriodsAutoCreate.fiscalYear);
@@ -204,35 +197,30 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
     endDate.setFullYear(this.fiscalPeriodsAutoCreate.fiscalYear);
     this.fiscalPeriodsAutoCreate.endDate = endDate;
 
-    this.form.formGroup.patchValue({startDate: this.fiscalPeriodsAutoCreate.startDate});
-    this.form.formGroup.patchValue({endDate: this.fiscalPeriodsAutoCreate.endDate});
+    this.form.formGroup.patchValue({ startDate: this.fiscalPeriodsAutoCreate.startDate });
+    this.form.formGroup.patchValue({ endDate: this.fiscalPeriodsAutoCreate.endDate });
   }
 
   //Lấy danh sách năm tài chính có trong DB
-  getListFiscalYear()
-  {
+  getListFiscalYear() {
     this.acService
       .loadComboboxData$('FiscalPeriods', 'AC')
       .subscribe((periods) => {
         this.listFiscalYear = [
           ...new Set(periods.map((p) => Number(p.FiscalYear))),
         ];
-        if(this.listFiscalYear.length > 0)
-        {
+        if (this.listFiscalYear.length > 0) {
           this.fiscalPeriodsAutoCreate.oldFiscalYear = this.listFiscalYear.at(0);
         }
       });
   }
 
   //Kiểm tra ngày bắt đầu không lớn hơn ngày kết thúc
-  validateDate()
-  {
-    if(this.fiscalPeriodsAutoCreate.startDate && this.fiscalPeriodsAutoCreate.endDate)
-    {
+  validateDate() {
+    if (this.fiscalPeriodsAutoCreate.startDate && this.fiscalPeriodsAutoCreate.endDate) {
       var startDate = new Date(this.fiscalPeriodsAutoCreate.startDate);
       var endDate = new Date(this.fiscalPeriodsAutoCreate.endDate);
-      if(startDate.getTime() >  endDate.getTime())
-      {
+      if (startDate.getTime() > endDate.getTime()) {
         this.notification.notifyCode(
           'AC0024',
           0,
@@ -246,13 +234,10 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
   }
 
   //Kiểm tra ngày bắt đầu và ngày kết thúc phải nằm trong năm tài chính
-  validateStartYear()
-  {
-    if(this.fiscalPeriodsAutoCreate.startDate && this.fiscalPeriodsAutoCreate.fiscalYear)
-    {
+  validateStartYear() {
+    if (this.fiscalPeriodsAutoCreate.startDate && this.fiscalPeriodsAutoCreate.fiscalYear) {
       var startDate = new Date(this.fiscalPeriodsAutoCreate.startDate);
-      if(startDate.getFullYear() != this.fiscalPeriodsAutoCreate.fiscalYear)
-      {
+      if (startDate.getFullYear() != this.fiscalPeriodsAutoCreate.fiscalYear) {
         this.notification.notifyCode(
           'AC0023',
           0,
@@ -265,13 +250,10 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
     return false
   }
 
-  validateEndYear()
-  {
-    if(this.fiscalPeriodsAutoCreate.fiscalYear && this.fiscalPeriodsAutoCreate.endDate)
-    {
+  validateEndYear() {
+    if (this.fiscalPeriodsAutoCreate.fiscalYear && this.fiscalPeriodsAutoCreate.endDate) {
       var endDate = new Date(this.fiscalPeriodsAutoCreate.endDate);
-      if(endDate.getFullYear() != this.fiscalPeriodsAutoCreate.fiscalYear)
-      {
+      if (endDate.getFullYear() != this.fiscalPeriodsAutoCreate.fiscalYear) {
         this.notification.notifyCode(
           'AC0023',
           0,
@@ -284,8 +266,7 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
     return false
   }
 
-  convertToLocalDate()
-  {
+  convertToLocalDate() {
     var startDate = new Date(this.fiscalPeriodsAutoCreate.startDate);
     this.fiscalPeriodsAutoCreate.startDate = startDate.toLocaleString();
 
