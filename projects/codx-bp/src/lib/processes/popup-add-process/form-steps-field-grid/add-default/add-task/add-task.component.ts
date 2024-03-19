@@ -65,20 +65,20 @@ export class AddTaskComponent
   showEmail = false;
   listRequester = [
     {
-      fieldName: "userName",
+      fieldName: "username",
       title: 'Người yêu cầu',
       controlType: "Text",
       dataType: "String"
     },
     {
-      fieldName: "createdOn",
+      fieldName: "createdon",
       title: "Ngày tạo",
       controlType : "MaskBox",
       dataFormat : "d",
       dataType : "DateTime"
     },
     {
-      fieldName: "orgUnit",
+      fieldName: "orgunit",
       title: "Bộ phận",
       controlType : "ComboBox",
       refType : "3",
@@ -529,7 +529,7 @@ export class AddTaskComponent
     listForm.forEach(elm=>{
       let data = JSON.parse(JSON.stringify(this.listRequester));
       data.forEach(elm2=>{
-        elm2.fieldName = "Form" + elm.stepNo + "_" + elm2.fieldName;
+        elm2.fieldName = "form" + elm.stepNo + "_" + elm2.fieldName;
       })
       elm.extendInfo = elm.extendInfo.concat(data)
     });

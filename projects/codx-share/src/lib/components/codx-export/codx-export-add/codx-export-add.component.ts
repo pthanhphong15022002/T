@@ -74,15 +74,15 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
   isFristVer = false;
   listRequester = [
     {
-      key: "userName",
+      key: "username",
       text: "Người yêu cầu"
     },
     {
-      key: "createdOn",
+      key: "createdon",
       text: "Ngày tạo"
     },
     {
-      key: "orgUnit",
+      key: "orgunit",
       text: "Bộ phận"
     },
     {
@@ -297,12 +297,12 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
         var obj3 = 
         {
           text: x.text,
-          key: "Form" +  this.dataGoupField[i].stepNo + "_" + x.key,
+          key: "form" +  this.dataGoupField[i].stepNo + "_" + x.key,
           category: 'Drag or click the field to insert.',
           htmlAttributes: { draggable: true },
         }
         var obj4 = {
-          key: "Form" +  this.dataGoupField[i].stepNo + "_" + x.key,
+          key: "form" +  this.dataGoupField[i].stepNo + "_" + x.key,
           headerText: x.text,
         };
         this.gridViewSettup.push(obj4);
