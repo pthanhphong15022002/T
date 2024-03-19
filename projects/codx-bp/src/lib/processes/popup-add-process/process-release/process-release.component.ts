@@ -12,6 +12,7 @@ import {
   AlertConfirmInputConfig,
   ApiHttpService,
   ButtonModel,
+  CRUDService,
   CacheService,
   CallFuncService,
   CodxService,
@@ -368,11 +369,13 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
       if (res?.event) {
         if (type == 'add')
         {
-          (this.view.currentView as any).kanban.addCard(res?.event);
+          (this.view.dataService as CRUDService).add(res.event).subscribe();
+          // (this.view.currentView as any).kanban.addCard(res?.event);
           (this.view.currentView as any).kanban.refresh();
         }
         else {
           (this.view.currentView as any).kanban.updateCard(res?.event);
+          (this.view.dataService as CRUDService).update(res.event).subscribe();
           this.view.dataService.update(res?.event).subscribe();
           this.view.dataService.dataSelected = res?.event;
           var index = (this.view.currentView as any).kanban.dataSource.findIndex(x=>x.recID == res?.event?.recID);

@@ -36,6 +36,7 @@ export class PopupCustomFieldComponent implements OnInit {
   isShowMore = false; //mở rộng popup
   widthDefault = '550';
   fieldOther = []; //Là form công việc
+  isView = false; // nvthuan them để chỉ được xem
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -53,6 +54,7 @@ export class PopupCustomFieldComponent implements OnInit {
     this.customerID = dt?.data?.customerID;
     this.taskID = dt?.data?.taskID;
     this.fieldOther = dt?.data?.fieldOther ?? [];
+    this.isView = dt?.data?.isView ?? false;
 
     this.isAdd = dt?.data?.isAdd ?? false;
     this.arrCaculateField = this.fields.filter((x) => x.dataType == 'CF');

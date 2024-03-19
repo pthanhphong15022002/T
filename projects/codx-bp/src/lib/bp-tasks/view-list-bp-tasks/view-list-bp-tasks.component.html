@@ -3,13 +3,13 @@
   *ngIf="dataSelected"
   (dblclick)="dbClick(dataSelected)"
 >
-  <div class="w-20px p-2 d-flex align-items-center">
+  <div class="w-50px p-2 text-center">
     <div
       *ngIf="
         dataSelected.endDate &&
         (dataSelected?.actualEnd | checkDuedateValue : dataSelected?.endDate)
       "
-      class="icon-notifications icon-18 text-danger d-flex align-items-center"
+      class="icon-notifications icon-18 text-danger"
       [ngbTooltip]="tempDueDate"
     ></div>
     <ng-template #tempDueDate>
@@ -33,7 +33,7 @@
       [innerHTML]="dataSelected?.activityType | vll : 'BP001' : 'text' | async"
     ></span>
   </div>
-  <div class="w-350px p-2 d-flex flex-column">
+  <div class="w-250px p-2 d-flex flex-column">
     <div
       (mouseenter)="closePopover()"
       class="mb-1"
@@ -82,7 +82,7 @@
     </div>
   </div>
 
-  <div class="w-350px p-2 d-flex flex-column">
+  <div class="w-250px p-2 d-flex flex-column">
     <div
       (mouseenter)="closePopover()"
       class="mb-1 fw-bold"
@@ -134,7 +134,7 @@
       ></span>
     </div>
   </div>
-  <div class="w-250px p-2 d-flex">
+  <div class="w-150px p-2 d-flex">
     <codx-vll
       [name]="'BP014'"
       [value]="dataSelected?.status"
@@ -144,7 +144,7 @@
     >
     </codx-vll>
   </div>
-  <div class="w-350px p-2 d-flex flex-column">
+  <div class="w-300px p-2 d-flex flex-column">
     <div class="d-flex mb-1">
       <codx-label
         class="label-colon text-dark fw-bold"
@@ -205,7 +205,7 @@
     </div>
   </div>
 
-  <div class="w-260px p-2 d-flex flex-column">
+  <div class="w-250px p-2 d-flex flex-column">
     <div
       class="d-flex justify-content-start align-items-center"
       *ngIf="dataSelected.createdBy"

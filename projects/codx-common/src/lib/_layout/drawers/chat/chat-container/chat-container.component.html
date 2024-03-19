@@ -14,12 +14,18 @@
         <ng-container *ngFor="let item of lstGroupCollapse;index as i">
             <ng-container *ngIf="i < 3">
                 <div class="symbol symbol-40px symbol-cir cursor-pointer mt-2">
-                    <ng-container *ngIf="i==0 && lstGroupCollapse.length > 3">
+                    <ng-container *ngIf="i == 0 && lstGroupCollapse.length > 3">
                         <div class="more-box-chat">
                             <span>+{{lstGroupCollapse.length - 3}}</span>
                         </div>
                     </ng-container>
-                    <div class="" (click)="handleBoxChat(item)" placement="start" [ngbTooltip]="tooltipMssage" [autoClose]="false">
+                    <div class=""   
+                        [ngbTooltip]="tooltipMssage" 
+                        autoClose="outside" 
+                        placement="start"
+                        [openDelay]="300"
+                        [closeDelay]="500"
+                        (click)="handleBoxChat(item)">
                         <codx-img 
                             [objectId]="item.groupType == '1'? item.groupID2 : item.groupID" 
                             [objectName]="item.groupType == '1'? item.groupName2 : item.groupName" 
@@ -34,8 +40,9 @@
                                     titleLine="1"
                                     [imageId]="item.groupType == '1' ? item.groupID2 : item.groupID"
                                     [imageType]="item.groupType == '1' ? 'AD_Users':'WP_Groups'"
-                                    [imageWidth]="30"
+                                    [imageWidth]="35"
                                     [hideMF]="true"
+                                    [imgCss]="'symbol symbol-circle me-2'"
                                 ></codx-temp-full>
                             </div>
                         </ng-template>
