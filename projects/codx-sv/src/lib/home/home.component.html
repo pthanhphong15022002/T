@@ -32,7 +32,7 @@
           </div>
         </div>
         <ng-container *ngIf="dataSurveysSystem && dataSurveysSystem.length>0">
-          <div class="card-survey rounded-2" *ngFor="let item of dataSurveysSystem" (click)="update(item)">
+          <div class="card-survey rounded-2" *ngFor="let item of dataSurveysSystem" (click)="clone(item)">
             <img [src]="getImgSrc(item , 'card')" class="rounded-2"/>
             <div class="py-2 fw-bold">
               <span>{{item?.title}}</span>

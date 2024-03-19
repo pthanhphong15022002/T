@@ -63,6 +63,54 @@ export class AddTaskComponent
   listDocument = [];
   dataEmail: any;
   showEmail = false;
+  listRequester = [
+    {
+      fieldName: "username",
+      title: 'Người lập phiếu',
+      controlType: "Text",
+      dataType: "String"
+    },
+    {
+      fieldName: "createdon",
+      title: "Ngày tạo",
+      controlType : "MaskBox",
+      dataFormat : "d",
+      dataType : "DateTime"
+    },
+    {
+      fieldName: "orgunit",
+      title: "Người lập phiếu_Bộ phận",
+      controlType : "ComboBox",
+      refType : "3",
+      refValue : "OrganizationUnits",
+      dataType : "String"
+    },
+    {
+      fieldName: "position",
+      title: "Người lập phiếu_Chức danh",
+      controlType : "ComboBox",
+      refType : "3",
+      refValue : "Positions",
+      dataType : "String"
+    },
+    {
+      fieldName: "department",
+      title: "Người lập phiếu_Phòng ban",
+      controlType : "ComboBox",
+      refType : "3",
+      refValue : "OrganizationUnits",
+      dataType : "String"
+    },
+    {
+      fieldName: "company",
+      title: "Người lập phiếu_Công ty",
+      controlType : "ComboBox",
+      refType : "3",
+      refValue : "OrganizationUnits",
+      dataType : "String"
+    },
+  ];
+
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes?.activityType &&
@@ -473,9 +521,19 @@ export class AddTaskComponent
 
     let option = new DialogModel();
     option.FormModel = this.formModel;
-    let listForm = this.process.steps.filter(
+
+    let listSteps = JSON.parse(JSON.stringify(this.process.steps));
+    let listForm = listSteps.filter(
       (x) => x.stepNo < this.data.stepNo && x.activityType == 'Form'
     );
+
+    listForm.forEach(elm=>{
+      let data = JSON.parse(JSON.stringify(this.listRequester));
+      data.forEach(elm2=>{
+        elm2.fieldName = "form" + elm.stepNo + "_" + elm2.fieldName;
+      })
+      elm.extendInfo = elm.extendInfo.concat(data)
+    });
 
     let dataSteps = this.process.steps.filter(
       (x) =>
@@ -483,6 +541,7 @@ export class AddTaskComponent
         x.activityType != 'Conditions' &&
         x.activityType != 'StartEnd'
     );
+    
     let popupDialog = this.callFuc.openForm(
       AddSettingConditionsComponent,
       '',
@@ -672,7 +731,8 @@ export class AddTaskComponent
         formModel: this.formModel,
         data: data,
         groupField: this.getFieldExport(),
-        isFristVer:true
+        isFristVer:true,
+        isSign: this.data?.settings?.esign
       },
       '',
       option
