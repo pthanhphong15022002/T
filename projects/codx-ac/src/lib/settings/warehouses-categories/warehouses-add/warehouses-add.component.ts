@@ -125,61 +125,12 @@ export class WarehousesAddComponent extends UIComponent implements OnInit {
 
   //#region Event
   openFormContact() {
-    this.form.form.save(null, 0, '', '', false).pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if(!res) return;
-      if(res.hasOwnProperty('save')){
-        if(res.save.hasOwnProperty('data') && !res.save.data) return;
-      }
-      if(res.hasOwnProperty('update')){
-        if(res.update.hasOwnProperty('data') && !res.update.data) return;
-      }
-      this.contactService.addNew().subscribe((res: any) => {
-        if (res) {
-          let data = {
-            headerText: (this.lblAdd + ' ' + 'người liên hệ').toUpperCase(),
-            lstContact: [...this.lstContact],
-            dataDefault: { ...res },
-            objectID : this.form.form.data.warehouseID,
-            objectName : this.form.form.data.warehouseName,
-            objectType : '6',
-          };
-          this.cache.gridViewSetup(this.fmContact.formName,this.fmContact.gridViewName).subscribe((o)=>{
-            let option = new DialogModel();
-            option.FormModel = this.fmContact;
-            option.DataService = this.contactService;
-            let dialog = this.callfc.openForm(
-              ContactAddComponent,
-              '',
-              650,
-              600,
-              '',
-              data,
-              '',
-              option
-            );
-            dialog.closed.subscribe((res) => {
-              if (res && res?.event) {
-                this.lstContact.push({...res?.event?.contact});
-                this.detectorRef.detectChanges();
-              }
-            })
-          })
-        }
-      })
-    })
-  }
-
-  editContact(dataEdit: any){
-    this.contactService.edit(dataEdit).subscribe((res:any)=>{
+    this.contactService.addNew().subscribe((res: any) => {
       if (res) {
         let data = {
           headerText: (this.lblAdd + ' ' + 'người liên hệ').toUpperCase(),
           lstContact: [...this.lstContact],
           dataDefault: { ...res },
-          objectID : this.form.form.data.warehouseID,
-          objectName : this.form.form.data.warehouseName,
-          objectType : '6',
         };
         this.cache.gridViewSetup(this.fmContact.formName,this.fmContact.gridViewName).subscribe((o)=>{
           let option = new DialogModel();
@@ -197,7 +148,43 @@ export class WarehousesAddComponent extends UIComponent implements OnInit {
           );
           dialog.closed.subscribe((res) => {
             if (res && res?.event) {
-              let data = res?.event?.contact;
+              this.lstContact.push({...res?.event});
+              this.detectorRef.detectChanges();
+            }
+          })
+        })
+      }
+    })
+  }
+
+  editContact(dataEdit: any){
+    this.contactService.edit(dataEdit).subscribe((res:any)=>{
+      if (res) {
+        let data = {
+          headerText: (this.lblAdd + ' ' + 'người liên hệ').toUpperCase(),
+          lstContact: [...this.lstContact],
+          dataDefault: { ...res },
+          objectID : this.form.form.data.customerID,
+          objectName : this.form.form.data.customerName,
+          objectType : '1',
+        };
+        this.cache.gridViewSetup(this.fmContact.formName,this.fmContact.gridViewName).subscribe((o)=>{
+          let option = new DialogModel();
+          option.FormModel = this.fmContact;
+          option.DataService = this.contactService;
+          let dialog = this.callfc.openForm(
+            ContactAddComponent,
+            '',
+            650,
+            600,
+            '',
+            data,
+            '',
+            option
+          );
+          dialog.closed.subscribe((res) => {
+            if (res && res?.event) {
+              let data = res?.event;
               let index = this.lstContact.findIndex((x) => x.recID == data.recID);
               if (index > -1) {
                 this.lstContact[index] = data;
@@ -258,20 +245,26 @@ export class WarehousesAddComponent extends UIComponent implements OnInit {
 
   //#region CRUD
   onSave() {
-    this.form.form.save(null, 0, '', '', false).pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if(!res) return;
-      if(res.hasOwnProperty('save')){
-        if(res.save.hasOwnProperty('data') && !res.save.data) return;
+    this.form.form.save((opt: RequestOption) => {
+      opt.methodName = (this.form.data.isAdd || this.form.data.isCopy) ? 'SaveAsync' : 'UpdateAsync';
+      opt.className = 'WarehousesBusiness';
+      opt.assemblyName = 'IV';
+      opt.service = 'IV';
+      opt.data = [this.form.form.data,[],this.lstContact,[]];
+      return true;
+    }, 0, '', '', false).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+      if (!res) return;
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data') && !res.save.data) return;
       }
-      if(res.hasOwnProperty('update')){
-        if(res.update.hasOwnProperty('data') && !res.update.data) return;
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data') && !res.update.data) return;
       }
-      this.dialog.close();
-      if (this.form.data.isAdd || this.form.data.isCopy)
+      if (this.form.form.data.isAdd || this.form.form.data.isCopy)
         this.notification.notifyCode('SYS006');
       else
         this.notification.notifyCode('SYS007');
+      this.dialog.close();
     })
   }
   //#endregion

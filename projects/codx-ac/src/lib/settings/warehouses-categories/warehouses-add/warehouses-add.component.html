@@ -42,9 +42,13 @@
         </div>
       </div>
     </div>
-    <div class="line-around-flex pb-3">
+    <!-- <div class="line-around-flex pb-3">
       <codx-label style="font-size: 15px !important;" default="Kích thước kho"
         class="fw-bold text-primary"></codx-label>
+    </div> -->
+    <div class="mb-3">
+      <codx-label style="font-size: 15px !important;" default="Kích thước kho"
+      class="fw-bold text-primary"></codx-label>
     </div>
     <div class="row">
       <div class="col-3">
@@ -80,9 +84,9 @@
         </div>
       </div>
     </div>
-    <div class="line-around-flex pb-3">
+    <div class="mb-3">
       <codx-label style="font-size: 15px !important;" default="Địa chỉ kho"
-        class="fw-bold text-primary"></codx-label>
+      class="fw-bold text-primary"></codx-label>
     </div>
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="Address"></codx-label>
@@ -144,8 +148,9 @@
 </ng-template>
 <ng-template #tabestablish>
   <ng-container *ngIf="form?.formGroup">
-    <div class="text-primary fw-bold fs-6 mb-3">
-      <codx-label [formModel]="form.formModel" default="Thiết lập vị trí kho"></codx-label>
+    <div class="mb-3">
+      <codx-label style="font-size: 15px !important;" default="Thiết lập vị trí kho"
+      class="fw-bold text-primary"></codx-label>
     </div>
     <div class="row">
       <div class="col-6">
@@ -283,12 +288,12 @@
   </ng-container>
 </ng-template>
 <ng-template #tabContact>
-  <div class="line-around-flex pb-3">
+  <div class="d-flex align-items-center justify-content-between mb-5">
     <codx-label style="font-size: 15px !important;" default="Danh sách người liên hệ"
-      class="fw-bold text-primary me-2"></codx-label>
-    <button class="btn btn-icon btn-light-primary" (click)="openFormContact()">
-      <i class="icon-group_add icon-18"></i>
-    </button>
+    class="fw-bold text-primary me-2"></codx-label>
+  <button class="btn btn-icon btn-light-primary" (click)="openFormContact()">
+    <i class="icon-group_add icon-18"></i>
+  </button>
   </div>
   <div class="d-flex align-items-top justify-content-between py-2 border-bottom" *ngFor="let item of lstContact">
     <div class="d-flex align-items-top w-100">
