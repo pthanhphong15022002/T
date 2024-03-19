@@ -43,6 +43,7 @@ export class CustomersComponent extends UIComponent {
   ];
   funcName = '';
   headerText: any;
+  itemSelected: any;
   private destroy$ = new Subject<void>();
   isSubView: boolean;
   constructor(
@@ -197,6 +198,15 @@ export class CustomersComponent extends UIComponent {
       .delete([dataDelete], true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {});
+  }
+
+  changeDataMF(event, type: any = '') {
+    this.acService.changeMFCategories(event,type);
+  }
+
+  onSelectedItem(event) {
+    this.itemSelected = event;
+    this.detectorRef.detectChanges();
   }
   //#endregion Function
 }

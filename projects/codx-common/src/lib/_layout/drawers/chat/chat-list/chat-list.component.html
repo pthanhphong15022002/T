@@ -12,51 +12,72 @@
 </div>
 <!-- template group chat -->
 <ng-template #itemTemplateGroup let-item>
-    <div class="row position-relative">
-        <div class="position-absolute end-0 top-0 pt-2 w-auto pe-2 d-flex flex-row justify-content-end align-items-center">
-            <span *ngIf="item?.isFavorite" class="icon-16 cursor-pointer icon-i-star-fill text-warning"  (click)="clickMF('favorite', item)"></span>
-            <div ngbDropdown class="dropdown" placement="bottom-end" container="body">
-                <span ngbDropdownToggle class="px-0 py-0" id="dropdownMenuButtonMF">
-                    <span class="icon-more_vert icon-18"></span>
-                </span>
-                <div ngbDropdownMenu aria-labelledby="dropdownMenuButtonMF">
-                    <a ngbDropdownItem class="dropdown-item" (click)="clickMF('favorite', item)">
-                        <div class="d-flex align-items-center cursor-pointer">
-                          <span class="icon-i-star-fill text-warning icon-16"></span>
-                          <span class="ms-2"><codx-label [formModel]="formModel" name="lblFavorite" default="Thêm vào ưa thích"></codx-label>
-                          </span>    
+    <div class="row">
+        <div class="row align-items-center p-2 rounded-1 border-bottom" >
+            <div class="col-11" (click)="selectItem(item)">
+                <div class="row">
+                    <div class="col-2 d-flex justify-content-center position-relative">
+                        <codx-img 
+                            [objectId]="item.groupType == '1' ? item.groupID2 : item.groupID" 
+                            [objectType]="item.groupType == '1' ? 'AD_Users' : 'WP_Groups'" 
+                            [width]="30">
+                        </codx-img>
+                        <div *ngIf="item.isOnline" class="group-status position-absolute">
+                            <span class="ms-2 group-status-icon"></span>
                         </div>
-                    </a>
-                    <!-- <a *ngIf="item?.groupType=='2' && item?.createdBy == user?.userID "  ngbDropdownItem class="dropdown-item" (click)="clickMF('delete', item)">
-                        <div class="d-flex align-items-center cursor-pointer">
-                            <span class="icon-delete text-danger icon-16"></span>
-                            <span class="ms-2"><codx-label name="lblDelete" default="Xóa"></codx-label></span>
-                        </div>
-                    </a> -->
-                </div>
-            </div>
-        </div>
-        <div class="row align-items-center p-2 rounded-1 border-bottom" (click)="selectItem(item)">
-            <div class="col-2 position-relative">
-                <codx-img class=" ms-2" 
-                    [objectId]="item.groupType == '1' ? item.groupID2 : item.groupID" 
-                    [objectType]="item.groupType == '1' ? 'AD_Users' : 'WP_Groups'" 
-                    [width]="30">
-                </codx-img>
-                <div *ngIf="item.isOnline" class="group-status">
-                    <span class="ms-2 group-status-icon"></span>
-                </div>
-            </div>
-            <div class="col-10 pt-1">
-                <div class="d-flex justify-content-between align-items-center w-100">
-                    <span class="fw-bold">{{item.groupType == '1' ? item.groupName2 : item.groupName}}</span>
-                </div>
-                <ng-container *ngIf="item.lastMssg && item.lastMssg?.messageType == '1'">
-                    <div class="d-flex justify-content-between align-items-top w-100">
-                        <span class="text-truncate w-50" [class.text-primary]="item.lastMssg.isRead === false">{{item.lastMssg.message}}</span>
-                        <span *ngIf="item.lastMssg.createdOn" class="text-end w-50">{{item.lastMssg.createdOn | pTimeFrom}}</span>
                     </div>
-                </ng-container>
+                    <div class="col-10">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <span class="fw-bold">{{item.groupType == '1' ? item.groupName2 : item.groupName}}</span>
+                        </div>
+                        <ng-container *ngIf="item.lastMssg">
+                            <div class="d-flex justify-content-between align-items-top w-100">
+                                <ng-container *ngIf="item.lastMssg.messageType == '1'">
+                                    <span class="text-truncate w-50" [class.text-primary]="item.lastMssg.isRead == false">{{item.lastMssg.message}}</span>
+                                </ng-container>
+                                <ng-container *ngIf="item.lastMssg.messageType == '3'">
+                                    <span class="text-truncate w-50" [class.text-primary]="item.lastMssg.isRead == false" [innerHTML]="item.lastMssg | mssgSYS | async"></span>
+                                </ng-container>
+                                <span *ngIf="item.lastMssg.createdOn" class="text-end w-50">{{item.lastMssg.createdOn | pTimeFrom}}</span>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1 position-relative h-100">
+                <div class="d-flex flex-row align-items-center justify-content-end position-absolute end-0 top-0">
+                    <span *ngIf="item?.isFavorite" class="icon-16 cursor-pointer icon-i-star-fill text-warning"  (click)="clickMF('favorite', item)"></span>
+                    <div ngbDropdown id="groupItemMF" container="body" class="dropdown" placement="bottom-end" >
+                        <span ngbDropdownToggle aria-labelledby="groupItemMF" class="px-0 py-0" >
+                            <span class="icon-more_vert icon-18"></span>
+                        </span>
+                        <div ngbDropdownMenu aria-labelledby="groupItemMF">
+                            <!-- <a ngbDropdownItem class="dropdown-item" (click)="clickMF('update', item)">
+                                <div class="d-flex align-items-center cursor-pointer">
+                                    <span class="icon-create text-primary icon-16"></span>
+                                    <span class="ms-2">
+                                        <codx-label [formModel]="formModel" name="lblUpdate" default="Sửa"></codx-label>
+                                    </span>
+                                </div>
+                            </a>
+                            <a ngbDropdownItem class="dropdown-item" (click)="clickMF('delete', item)">
+                                <div class="d-flex align-items-center cursor-pointer">
+                                    <span class="icon-delete text-danger icon-16"></span>
+                                    <span class="ms-2">
+                                        <codx-label [formModel]="formModel" name="lblDelete" default="Xóa"></codx-label>
+                                    </span>
+                                </div>
+                            </a> -->
+                            <a ngbDropdownItem aria-labelledby="groupItemMF" class="dropdown-item" (click)="clickMF('favorite', item)">
+                                <div class="d-flex align-items-center cursor-pointer">
+                                  <span class="icon-i-star-fill text-warning icon-16"></span>
+                                  <span class="ms-2"><codx-label [formModel]="formModel" name="lblFavorite" default="Thêm vào ưa thích"></codx-label>
+                                  </span>    
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

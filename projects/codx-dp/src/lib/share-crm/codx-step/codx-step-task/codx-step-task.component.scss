@@ -287,11 +287,17 @@ li {
   cursor: not-allowed;
 }
 .show-step{
-  box-shadow: 0 0px 5px 1px #a2ecff3b;
   padding: 2px;
   border-radius: 2px;
+  cursor: pointer;
+  i{
+    font-weight: 700;
+  }
 }
-
+.show-step:hover{
+  box-shadow: 0 0px 6px 1px var(--primary-light) inset;
+  border-radius: 4px;
+}
 .group-task:hover > .steplist-hearder > .group-name{
   color: var(--primary-dark)!important;
   
@@ -362,4 +368,17 @@ li {
 }
 .icon-i-pen:hover{
   color: #2392ef;
+}
+.button-custom{
+  border-radius: 15px !important;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+}
+.button-custom:hover{
+  border-radius: 15px !important;
+  border: none;
+  background-color: var(--primary) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  cursor: pointer;
 }

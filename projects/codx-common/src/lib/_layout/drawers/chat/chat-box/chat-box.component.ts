@@ -45,6 +45,8 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
     this.checkActive(this.groupID);
   }
   @Input() groupID: any;
+  @Input() group: any;
+
   @Output() close = new EventEmitter<any>();
   @Output() collapse = new EventEmitter<any>();
   funcID: string = 'WPT11';
@@ -58,7 +60,6 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   page: number = 0;
   pageSize: number = 20;
   isFull: boolean = false;
-  group: any = null;
   blocked: boolean = false;
   isLoading: boolean = false;
   messageSystemPipe: MessageSystemPipe = null;
@@ -123,13 +124,29 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.signalR.chatboxChange
+    this.signalR.incomingMessage
     .subscribe((mssg:any) => {
-      if(mssg) 
+      if(mssg && mssg.groupID == this.group.groupID) 
       {
         this.arrMessages.push(mssg);
         this.dt.detectChanges();
       }
+    });
+
+    this.signalR.groupChange
+    .subscribe((group:any) => {
+      if(group && this.group.groupID == group.groupID)
+      {
+        this.group.groupName = group.groupName;
+        this.group.groupName2 = group.groupName2;
+        this.group.isFavorite = group.isFavorite;
+        if(group.members)
+        {
+          this.group.members = [...group.members];
+          this.crrMembers = group.members.map(x => x.userID).join(";");
+        }
+        this.dt.detectChanges();
+      } 
     });
   }
 
@@ -668,14 +685,18 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
     if(this.group)
     {
       this.group.isFavorite = !this.group.isFavorite; 
+      this.dt.detectChanges();
       this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
         'ContactFavoriteBusiness',
         'AddAndUpdateFavoriteAsync',
-        [this.group?.groupID2, this.group.groupType, this.group.isFavorite]
-      ).subscribe()    
+        [this.group.groupID, this.group.groupType, this.group.isFavorite]
+      ).subscribe((res:any) => 
+      {
+        if(res) this.signalR.sendData(CHAT.BE_FUNC.FavoriteGroupAsync,this.group.groupID);
+      })    
     }
   }
 

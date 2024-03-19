@@ -10,7 +10,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { AuthService } from 'codx-core';
+import { ApiHttpService, AuthService } from 'codx-core';
 import { ɵglobal as global } from '@angular/core';
 import { CodxChatBoxComponent } from '../chat-box/chat-box.component';
 import { SignalRService } from '../services/signalr.service';
@@ -37,7 +37,9 @@ export class CodxChatContainerComponent implements OnInit, OnDestroy {
   }
   lstGroupActive: Array<any> = [];
   lstGroupCollapse: Array<any> = [];
-  constructor(
+  constructor
+  (
+    private api:ApiHttpService,
     private signalRSV: SignalRService,
     private sanitizer: DomSanitizer,
     private authSV: AuthService,
@@ -48,9 +50,10 @@ export class CodxChatContainerComponent implements OnInit, OnDestroy {
   @ViewChild('boxChatItem', { static: true }) boxChatItem: TemplateRef<any>;
   @ViewChildren('codxChatBox') codxChatBoxes: QueryList<CodxChatBoxComponent>;
   windowNg: any = global;
+
   ngOnInit(): void {}
+
   ngAfterViewInit() {
-    // open box chat
     this.signalRSV.openBoxChat
     .subscribe((group: any) => {
       if (group) 
@@ -59,7 +62,27 @@ export class CodxChatContainerComponent implements OnInit, OnDestroy {
       }
     });
 
-    // remove box chat
+    this.signalRSV.addGroup
+    .subscribe((groupID:any) => {
+      if(groupID)
+      {
+        this.api.execSv(
+          'WP',
+          'ERM.Business.WP',
+          'GroupBusiness',
+          'GetGroupByIDAsync',
+          [groupID]
+        ).subscribe((res:any) => 
+        {
+          if(res) 
+          {
+            this.lstGroupActive.push(res);
+            this.dt.detectChanges();
+          }
+        });
+      }
+    });
+
     this.signalRSV.removeGroup
     .subscribe((groupID:any) => {
       if(groupID)
@@ -77,20 +100,23 @@ export class CodxChatContainerComponent implements OnInit, OnDestroy {
           if(idx > -1)
             this.lstGroupCollapse.splice(idx,1);
         }
+        this.dt.detectChanges();
       }
     });
   }
   ngOnDestroy(): void {}
-  // handle box chat
+
   handleBoxChat(data: any) {
     if(!data) return;
+    
     let isOpen = this.lstGroupActive.some((x) => x.groupID == data.groupID);
     if (isOpen) return;
-    // check collaspe
+
     let index = this.lstGroupCollapse.findIndex(
       (x) => x.groupID === data.groupID
     );
     if (index > -1) this.lstGroupCollapse.splice(index, 1);
+    
     if (this.lstGroupActive.length == 2) {
       let group = this.lstGroupActive.shift();
       let codxBoxChat = Array.from(this.codxChatBoxes).find(
@@ -101,7 +127,7 @@ export class CodxChatContainerComponent implements OnInit, OnDestroy {
     this.lstGroupActive.push(data);
     this.dt.detectChanges();
   }
-  //close box chat
+  
   closeBoxChat(data: any) {
     let index = this.lstGroupActive.findIndex((x) => x.groupID == data.groupID);
     if (index > -1) {
@@ -110,13 +136,13 @@ export class CodxChatContainerComponent implements OnInit, OnDestroy {
         let group = this.lstGroupCollapse.pop();
         this.lstGroupActive.push(group);
       }
-      // lấy element hiện tại của component trên DOM
+      
       let ele = document.getElementById(data.groupID);
       if (ele) ele.remove();
       this.dt.detectChanges();
     }
   }
-  // collapse box chat
+  
   collapseBoxChat(data: any) {
     let index = this.lstGroupActive.findIndex((x) => x.groupID == data.groupID);
     if (index > -1) {
@@ -125,8 +151,5 @@ export class CodxChatContainerComponent implements OnInit, OnDestroy {
       this.dt.detectChanges();
     }
   }
-  // expanse box chat
-  expanseBoxChat(data: any) {
-    this.signalRSV.sendData(CHAT.BE_FUNC.LoadGroup, data?.groupID);
-  }
+  
 }

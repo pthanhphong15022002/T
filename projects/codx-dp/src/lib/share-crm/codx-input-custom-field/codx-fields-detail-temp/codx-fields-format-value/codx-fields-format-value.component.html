@@ -201,7 +201,7 @@
     </ng-container>
 
     <ng-container *ngIf="data.dataFormat == 'V' || data.dataFormat == 'S'">
-      <div class="flex flex-column">
+      <div class="flex flex-column" *ngIf="isCustomVll; else sysVll">
         <div
           *ngIf="data.dataFormat == 'S' && noteVll"
           class=""
@@ -214,6 +214,16 @@
           <span class="">{{ item }}</span>
         </div>
       </div>
+      <ng-template #sysVll>
+        <codx-vll
+          [name]="data.refValue"
+          [value]="data?.dataValue"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light-primary badge-sm mt-1"
+        >
+        </codx-vll>
+      </ng-template>
     </ng-container>
 
     <ng-container *ngIf="data.dataFormat == 'B'">

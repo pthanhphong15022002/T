@@ -17,6 +17,8 @@ import { BusinessLineComponent } from './business-line/business-line.component';
 import { PopupAddBusinessLineComponent } from './business-line/popup-add-business-line/popup-add-business-line.component';
 import { AssetsComponent } from './assets/assets.component';
 import { PopupAddAssetsComponent } from './assets/popup-add-assets/popup-add-assets.component';
+import { WaterClockComponent } from './water-clock/water-clock.component';
+import { PopupAddWaterClockComponent } from './water-clock/popup-add-water-clock/popup-add-water-clock.component';
 
 const routes: Routes = [
   {
@@ -52,6 +54,10 @@ const routes: Routes = [
         path: 'metermonitor/:funcID',
         component: AssetsComponent,
       },
+      {
+        path: 'waterclock/:funcID',
+        component: WaterClockComponent,
+      },
     ],
   },
 ];
@@ -66,6 +72,8 @@ const routes: Routes = [
     PopupAddBusinessLineComponent,
     AssetsComponent,
     PopupAddAssetsComponent,
+    WaterClockComponent,
+    PopupAddWaterClockComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

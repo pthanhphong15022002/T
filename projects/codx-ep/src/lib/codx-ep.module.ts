@@ -42,6 +42,7 @@ import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts.component';
+import { PopupAdjustedAllocationComponent } from './approval/popup-adjusted-allocation/popup-adjusted-allocation.component';
 
 export const routes: Routes = [
   {
@@ -209,6 +210,7 @@ export const routes: Routes = [
     PopupAddCardTransComponent,
     CardTransComponent,
     PopupDriverAssignComponent,
+    PopupAdjustedAllocationComponent,
     EPDashboardComponent,
   ],
   providers: [],

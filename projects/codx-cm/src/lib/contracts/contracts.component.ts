@@ -183,17 +183,17 @@ export class ContractsComponent extends UIComponent {
     this.vllStatus = this.grvSetup['Status'].referedValue;
     this.vllApprove = this.grvSetup['ApproveStatus'].referedValue;
     this.tabControl = this.contractService?.footerTab;
-    this.activedRouter.queryParams.subscribe(params => {
+    this.activedRouter.queryParams.subscribe((params) => {
       this.processID = params['processID'] || null;
     });
     this.getAccount();
     this.getColumsGrid(this.grvSetup);
     const [valueListTab, tabDefaut] = await Promise.all([
-      this.cmService.getValueList("CRM086"),
-      this.cmService.getSettingContract()
+      this.cmService.getValueList('CRM086'),
+      this.cmService.getSettingContract(),
     ]);
     this.valueListTab = valueListTab;
-    if(tabDefaut){
+    if (tabDefaut) {
       this.tabDefaut = tabDefaut?.ActiveTabContracts;
     }
   }
@@ -231,8 +231,8 @@ export class ContractsComponent extends UIComponent {
   selectedChange(val: any) {
     if (!val?.data) return;
     this.dataSelected = val?.data;
-    console.log("log kiểm tr data sẽ xóa sau",this.dataSelected);
-    
+    console.log('log kiểm tr data sẽ xóa sau', this.dataSelected);
+
     this.detectorRef.detectChanges();
   }
 
@@ -244,136 +244,117 @@ export class ContractsComponent extends UIComponent {
   changeDataMF(event, data, isDetail = false) {
     if (this.runMode == '1') {
       this.codxShareService.changeMFApproval(event, data?.unbounds);
-    } else if (event != null) {
+    } else if (event != null && data) {
       event.forEach((res) => {
-        res.isblur =
-          data?.approveStatus == '3' && res?.functionID != 'CM0204_2';
         if (isDetail) res.isbookmark = false;
-        switch (res.functionID) {
-          case 'CM0204_3':
-          case 'CM0204_17':
-          case 'CM0204_21':
-          case 'CM0204_22':
-            res.disabled = data?.closed;
-            break;
-          case 'CM0204_5': //Đã giao hàng
-          case 'CM0204_4':
-            res.disabled = true;
-            break;
-          case 'SYS02':
-            if(!["1","15"].includes(data?.status)){
-              res.disabled = true;
-            }else{
-              res.disabled = data?.delete
-              ? data.closed ||
-                this.checkMoreReason(data) ||
-                (!data.applyProcess && ['3', '5'].includes(data.status))
-              : true;
-            }
-            
-            break;
-          case 'SYS03':
-            res.disabled = data?.write
-              ? data?.closed ||
-                this.checkMoreReason(data) ||
-                (!data.applyProcess && ['3', '5'].includes(data.status)) ||
-                data?.approveStatus == '3'
-              : true;
-            break;
-          case 'SYS04':
-            res.disabled = data?.write
-              ? data.closed ||
-                (data.status != '13' && this.checkMoreReason(data, false)) ||
-                (!data.applyProcess && ['3', '5'].includes(data.status))
-              : true;
-            break;
-          case 'CM0204_1': //Gửi duyệt
-            res.disabled =
-              data?.closed ||
-              data?.status == '0' ||
-              (this.approveRule != '1' && !data?.applyApprover) ||
-              (data?.applyApprover && data?.approveRule != '1') ||
-              data?.approveStatus >= '3';
-            break;
-          case 'CM0204_2': //Hủy yêu cầu duyệt
-            res.disabled =
-              data?.closed || data?.status == '0' || data?.approveStatus != '3';
-            break;
-          case 'CM0204_6': //hoàn tất hợp đồng
-            res.disabled = data?.status == '1' || data?.closed;
-            break;
-          case 'CM0204_8': // chuyển giai đoạn
-            res.disabled =
-              !data?.applyProcess ||
-              data?.status == '1' ||
-              data?.closed ||
-              this.checkMoreReason(data);
-            break;
-          case 'CM0204_9': // bắt đầu
-            res.disabled =
-              !data?.applyProcess ||
-              data?.status !== '1' ||
-              data?.closed ||
-              this.checkMoreReason(data);
-            break;
-          case 'CM0204_10': // thành công
-            res.disabled =
-              !data?.applyProcess ||
-              data?.status !== '2' ||
-              data?.closed ||
-              this.checkMoreReason(data);
-            break;
-          case 'CM0204_11': // thất bại
-            res.disabled =
-              !data?.applyProcess ||
-              data?.status !== '2' ||
-              data?.closed ||
-              this.checkMoreReason(data);
-            break;
-          case 'CM0204_13': // thêm công việc
-            res.disabled = data?.closed;
-            break;
-          case 'CM0204_14': // phân công người phụ trách
-            res.disabled =
-              data?.alloweStatus == '1'
-                ? !['1', '2', '15'].includes(data.status) || data.closed
-                : true;
-            break;
-          case 'CM0204_15': // Đóng hợp đồng
-            res.disabled = data?.closed;
-            break;
-          case 'CM0204_16': // mở lại hợp đồng
-            res.disabled = !data?.closed;
-            break;
-          case 'CM0204_18': // thanh lý
-          if(this.user?.userID == "thuykt"){
+        if (
+          data?.approveStatus == '3' &&
+          res?.functionID != 'CM0204_2' &&
+          res?.functionID != 'SYS05' &&
+          res?.functionID != 'CM0204_17'
+        ) {
+          res.disabled = true;
+        } else if (
+          ['3', '4', '5', '6', '17'].includes(data?.status) &&
+          res?.functionID != 'SYS05' &&
+          res?.functionID != 'CM0204_16' && 
+          res?.functionID != 'CM0204_22' &&
+          res?.functionID != 'CM0204_17'
+        ) {
+          res.disabled = true;
+        } else if (
+          data?.closed &&
+          res?.functionID != 'CM0204_16' &&
+          res?.functionID != 'SYS05' &&
+          res?.functionID != 'CM0204_2' &&
+          res?.functionID != 'CM0204_22' &&
+          res?.functionID != 'CM0204_17'
+        ) {
+          res.disabled = true;
+        } else {
+          switch (res.functionID) {
+            case 'SYS04'://copy
+              res.disabled = !(data?.write || data?.alloweStatus);
+              break;
+            case 'SYS03': //sửa
+              res.disabled = !(data?.write || data?.alloweStatus);
+              break;
+            case 'SYS02': //xóa
+              res.disabled = !(data?.write || data?.alloweStatus);
+              break;
 
-          }else{
-            res.disabled = data?.status == '17' || data?.closed;
+            case 'CM0204_1': //Gửi duyệt
+              res.disabled = !data?.alloweStatus && data?.approveStatus == '3';
+              break;
+            case 'CM0204_2': //Hủy yêu cầu duyệt
+              res.disabled = data?.approveStatus != '3';
+              break;
+            case 'CM0204_17'://chia sẻ
+              res.disabled = !data?.alloweStatus;
+              break;
+            case 'CM0204_14': // phân công người phụ trách
+              res.disabled = !(data?.alloweStatus == '1')
+              break;
+
+            case 'CM0204_22': // đổi trạng thái
+              res.disabled = !(data?.alloweStatus && !data?.closed);
+              break;
+            case 'CM0204_9': // bắt đầu
+              res.disabled = !(data?.alloweStatus && data?.status == '1' && !data?.closed)
+              break;
+            case 'CM0204_10': // thành công
+              res.disabled = !(data?.alloweStatus && !data?.closed && data?.applyProcess && data?.status == '2');
+              break;
+            case 'CM0204_11': // thất bại
+              res.disabled = !(data?.alloweStatus && !data?.closed && data?.applyProcess && data?.status == '2');
+              break;
+            case 'CM0204_8': // chuyển giai đoạn
+              res.disabled = !(data?.applyProcess && data?.status == '2' && !data?.closed && data?.alloweStatus);
+              break;
+            case 'CM0204_13': // thêm công việc
+              res.disabled = data?.closed;
+              break;
+            case 'CM0204_19': // đưa vào quy trình xử lý
+              res.disabled = !(data?.alloweStatus == '1' && !data?.applyProcess)
+              break;
+            case 'CM0204_20': // không sử dụng quy trình
+              res.disabled = !(data?.alloweStatus == '1' && data?.applyProcess)
+              break;
+
+            case 'CM0204_15': // Đóng hợp đồng
+              res.disabled = !(!data?.closed && data?.alloweStatus && data?.approveStatus != '3');
+              break;
+            case 'CM0204_16': // mở lại hợp đồng
+              res.disabled = !(data?.closed && data?.alloweStatus);
+              break;
+            case 'CM0204_18': // thanh lý
+              res.disabled = !(data?.status != '17' &&  !data?.closed && data?.alloweStatus && data?.approveStatus != '3');
+              break;
+
+            case 'CM0204_5': //Đã giao hàng
+            case 'CM0204_4':
+              res.disabled = true;
+              break;
+            case 'CM0204_3'://gia hạn
+            case 'CM0204_21':// phụ lục
+              res.disabled = data?.closed;
+              break;
+            case 'CM0204_6': //hoàn tất hợp đồng
+              res.disabled = data?.status == '1' || data?.closed;
+              break; 
           }
-            break;
-          case 'CM0204_19': // đưa vào quy trình xử lý
-            res.disabled = data?.full
-              ? data?.closed ||
-                data?.applyProcess ||
-                this.checkMoreReason(data) ||
-                (!data?.applyProcess && ['3', '5'].includes(data?.status))
-              : true;
-            break;
-          case 'CM0204_20': // không sử dụng quy trình
-            res.disabled = data?.full
-              ? data?.closed ||
-                !data?.applyProcess ||
-                this.checkMoreReason(data)
-              : true;
-            break;
         }
       });
     }
   }
-  checkMoreReason(data, isShow: boolean = true) {
-    if (data?.isAdminAll && isShow) return false;
-    return data?.status != '1' && data?.status != '2' && data?.status != '15';
+  checkDisabledByStatus(data) {
+    if (
+      data?.approveStatus == '3' ||
+      ['3', '4', '5', '6', '17'].includes(data?.status)
+    ) {
+      return true;
+    }
+    return false;
   }
 
   clickMoreFunc(e) {
@@ -1566,13 +1547,16 @@ export class ContractsComponent extends UIComponent {
   liquidationContract(data) {
     this.liquidation = JSON.parse(JSON.stringify(data));
     this.contractService
-      .getAutoCodeByFunctionId("CM0207", "CM_Contracts")
+      .getAutoCodeByFunctionId('CM0207', 'CM_Contracts')
       .subscribe((res) => {
         if (res) {
           this.liquidation.disposalID = res;
           this.changeDetectorRef.markForCheck();
-        }else{
-          this.notiService.notify("Số tự động thanh lý hợp đồng chưa được thiết lâp","3");
+        } else {
+          this.notiService.notify(
+            'Số tự động thanh lý hợp đồng chưa được thiết lâp',
+            '3'
+          );
         }
       });
     this.liquidation.status = '17';

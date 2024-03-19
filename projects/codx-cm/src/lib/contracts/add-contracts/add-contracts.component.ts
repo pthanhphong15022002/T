@@ -74,7 +74,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     'pmtMethodID',
     'pmtMethodID',
     'contractName',
-    'contractType',
     'effectiveFrom',
     'businessLineID',
   ];
@@ -779,39 +778,39 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.disabledDelActualDate =
           event?.data == '0' || event?.data == '1' ? true : false;
         break;
-      case 'contractType':
-        if (event?.component?.itemsSelected[0]) {
-          if (event?.component?.itemsSelected[0]?.AutoNumberControl == '1') {
-            let autoNumberCode = event?.component?.itemsSelected[0]?.AutoNumber;
-            if (autoNumberCode) {
-              this.cmService
-                .getAutoNumberByAutoNoCode(autoNumberCode)
-                .subscribe((res) => {
-                  if (res) {
-                    this.contracts.contractID = res;
-                    this.disabledShowInput = true;
-                  } else {
-                    if (this.autoNumber) {
-                      this.contracts.contractID = this.autoNumber;
-                      this.disabledShowInput = true;
-                    } else {
-                      this.contracts.contractID = '';
-                      this.disabledShowInput = false;
-                    }
-                  }
-                });
-            }
-          } else {
-            if (this.autoNumber) {
-              this.contracts.contractID = this.autoNumber;
-              this.disabledShowInput = true;
-            } else {
-              this.contracts.contractID = '';
-              this.disabledShowInput = false;
-            }
-          }
-        }
-        break;
+      // case 'contractType':
+      //   if (event?.component?.itemsSelected[0]) {
+      //     if (event?.component?.itemsSelected[0]?.AutoNumberControl == '1') {
+      //       let autoNumberCode = event?.component?.itemsSelected[0]?.AutoNumber;
+      //       if (autoNumberCode) {
+      //         this.cmService
+      //           .getAutoNumberByAutoNoCode(autoNumberCode)
+      //           .subscribe((res) => {
+      //             if (res) {
+      //               this.contracts.contractID = res;
+      //               this.disabledShowInput = true;
+      //             } else {
+      //               if (this.autoNumber) {
+      //                 this.contracts.contractID = this.autoNumber;
+      //                 this.disabledShowInput = true;
+      //               } else {
+      //                 this.contracts.contractID = '';
+      //                 this.disabledShowInput = false;
+      //               }
+      //             }
+      //           });
+      //       }
+      //     } else {
+      //       if (this.autoNumber) {
+      //         this.contracts.contractID = this.autoNumber;
+      //         this.disabledShowInput = true;
+      //       } else {
+      //         this.contracts.contractID = '';
+      //         this.disabledShowInput = false;
+      //       }
+      //     }
+        // }
+        // break;
       case 'businessLineID':
         const itemsSelected = event?.component?.itemsSelected;
         if (event?.field === 'businessLineID' && itemsSelected?.length > 0) {
@@ -925,24 +924,11 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       ? new Date(this.contracts?.effectiveTo)
       : null;
 
-    if (this.contracts?.interval) {
-      if (event?.field == 'effectiveFrom') {
-        let interval = parseInt(this.contracts?.interval) || 0;
-        this.contracts.effectiveTo = new Date(
-          startDate.setFullYear(startDate.getFullYear() + interval)
-        );
-      }
-      if (event?.field == 'effectiveTo') {
-        let interval = parseInt(this.contracts?.interval) || 0;
-        this.contracts.effectiveFrom = new Date(
-          endDate.setFullYear(endDate.getFullYear() - interval)
-        );
-      }
-    } else {
       if (
         (event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') &&
         startDate &&
-        endDate
+        endDate && 
+        !this.contracts?.interval 
       ) {
         let startYear = startDate.getFullYear();
         let endYear = endDate.getFullYear();
@@ -951,7 +937,33 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         let interval = (endYear - startYear) * 12 + (endMonth - startMonth);
         this.contracts.interval = (interval / 12).toFixed(1);
       }
-    }
+    // if (this.contracts?.interval) {
+    //   if (event?.field == 'effectiveFrom') {
+    //     let interval = parseInt(this.contracts?.interval) || 0;
+    //     this.contracts.effectiveTo = new Date(
+    //       startDate.setFullYear(startDate.getFullYear() + interval)
+    //     );
+    //   }
+    //   if (event?.field == 'effectiveTo') {
+    //     let interval = parseInt(this.contracts?.interval) || 0;
+    //     this.contracts.effectiveFrom = new Date(
+    //       endDate.setFullYear(endDate.getFullYear() - interval)
+    //     );
+    //   }
+    // } else {
+    //   if (
+    //     (event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') &&
+    //     startDate &&
+    //     endDate
+    //   ) {
+    //     let startYear = startDate.getFullYear();
+    //     let endYear = endDate.getFullYear();
+    //     let startMonth = startDate.getMonth();
+    //     let endMonth = endDate.getMonth();
+    //     let interval = (endYear - startYear) * 12 + (endMonth - startMonth);
+    //     this.contracts.interval = (interval / 12).toFixed(1);
+    //   }
+    // }
     // if (event?.field == 'effectiveTo' && this.isLoadDate) {
     //   if (endDate && startDate > endDate) {
     //     // this.isSaveTimeTask = false;

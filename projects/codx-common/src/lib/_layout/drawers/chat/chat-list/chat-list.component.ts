@@ -56,74 +56,76 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // recive mesage
-    this.signalRSV.chatboxChange
+    this.signalRSV.incomingMessage
     .subscribe((mssg: any) => {
       if (mssg) 
       {
         let idx = this.codxListView.dataService.data.findIndex(x => x.groupID == mssg.groupID);
         if(idx > -1)
         {
-          this.codxListView.dataService.data[idx].message = mssg;
-          this.swapElements(this.codxListView.dataService.data,0,idx);
-          this.dt.detectChanges();
+          this.codxListView.dataService.data[idx].lastMssg = mssg;
+          (this.codxListView.dataService as CRUDService).update(this.codxListView.dataService.data[idx]).subscribe();
+        }
+        else
+        {
+          this.api.execSv(
+            'WP',
+            'ERM.Business.WP',
+            'GroupBusiness',
+            'GetGroupByIDAsync',
+            [mssg.groupID]
+          ).subscribe((res:any) => 
+          {
+            if(res) this.addGroup(res);
+          });
+        }
+      }
+    });
+
+    this.signalRSV.groupChange
+    .subscribe((group:any) => {
+      if(group)
+      {
+        let idx = this.codxListView.dataService.data.findIndex(x => x.groupID == group.groupID);
+        if(idx > -1)
+          (this.codxListView.dataService as CRUDService).update(group).subscribe();
+      } 
+    });
+
+    this.signalRSV.addGroup
+    .subscribe((groupID:any) => {
+      if(groupID)
+      {
+        this.api.execSv(
+          'WP',
+          'ERM.Business.WP',
+          'GroupBusiness',
+          'GetGroupByIDAsync',
+          [groupID]
+        ).subscribe((res:any) => 
+        {
+          if(res) this.addGroup(res);
+        });
+      }
+    });
+
+    this.signalRSV.removeGroup
+    .subscribe((groupID:any) => {
+      if(groupID)
+      {
+        let idx = this.codxListView.dataService.data.findIndex(x => x.groupID == groupID);
+        if(idx > -1)
+        {
+          (this.codxListView.dataService as CRUDService)
+          .remove(this.codxListView.dataService.data[idx])
+          .subscribe();
         }
       }
     });
 
     
-    // add group
-    this.signalRSV.addGroup
-    .subscribe((group:any) => {
-      if(group)
-      {
-        (this.codxListView.dataService as CRUDService).add(group)
-        .subscribe();
-      }
-    });
-
-    // remove group
-    this.signalRSV.removeGroup
-    .subscribe((groupID:any) => {
-      if(groupID && this.codxListView.dataService.data.length > 0)
-      {
-        let idx = this.codxListView.dataService.data.findIndex(x => x.groupID == groupID);
-        if(idx > -1)
-          (this.codxListView.dataService as CRUDService).removeIndex(idx).subscribe();
-      }
-    });
   }
 
-  swapElements = (array, index1, index2) => {
-    if(index1 != index2)
-    {
-      let temp = array[index1];
-        array[index1] = array[index2];
-        array[index2] = temp;
-    }
-  };
-
-  // check read all
-  readAllMessage() {
-    this.api
-      .execSv(
-        'WP',
-        'ERM.Business.WP',
-        'ChatBusiness',
-        'SeenAllMessageAsync',
-        []
-      )
-      .subscribe((res: boolean) => {
-        if (res) {
-          this.codxListView.dataService.data.map((e) => {
-            e.isRead = true;
-            e.messageMissed = 0;
-          });
-          this.dt.detectChanges();
-        }
-      });
-  }
-  // searrch
   search(searchText: any, searchType = "") {
     if (searchType === "searchFavorite") 
     {
@@ -131,8 +133,6 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
       this.codxListView.dataService.predicates = "IsFavorite = @0"
       this.codxListView.dataService.dataValues = "true";
       this.codxListView.dataService.method = "GetListGroupAsync";
-      this.dt.detectChanges();
-      this.codxListView.dataService.search(searchText);
     } 
     else
     {
@@ -148,17 +148,16 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
         this.isSearching = false;
         this.codxListView.dataService.method = "GetListGroupAsync";
       }
-      this.dt.detectChanges();
-      this.codxListView.dataService.search(searchText);
     }
+    this.dt.detectChanges();
+    this.codxListView.dataService.search(searchText);
   }
 
-  //select goup chat
   selectItem(data: any) {
     if(data)
     {
       this.signalRSV.sendData(CHAT.BE_FUNC.OpenBoxChatAsync, data.groupID);
-      if (data.message) data.message.isRead = true;
+      if (data.lastMssg) data.lastMssg.isRead = true;
       this.api
         .execSv(
           'WP',
@@ -170,7 +169,7 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
       this.dt.detectChanges();
     }
   }
-  // select item search
+
   selectItemSeach(item: any) {
     if (item.type != 'H') 
     {
@@ -182,18 +181,6 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // open popup add group chat
-  addGroup(group: any) {
-    if (group) {
-      let groups = (this.codxListView.dataService as CRUDService)?.data?.filter(
-        (x) => x?.groupID == group?.groupID
-      );
-      if (groups?.length > 0) {
-        return;
-      }
-      (this.codxListView.dataService as CRUDService).add(group).subscribe();
-    }
-  }
   clickMF(type, data) {
     if (type && data) 
     {
@@ -208,25 +195,29 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
           });
           break;
         case 'favorite':
-          data.isFavorite = !data.isFavorite;
-          this.updateFavorite(data.groupID,data.groupType, data.isFavorite);
+          this.updateFavorite(data);
           break;
       }
       this.dt.detectChanges();
     }
   }
 
-
-  updateFavorite(groupID:string,groupType:string, value:boolean) {
-    this.api.execSv(
-      'WP',
-      'ERM.Business.WP',
-      'ContactFavoriteBusiness',
-      'AddAndUpdateFavoriteAsync',
-      [groupID, groupType, value]
-    ).subscribe();
+  updateFavorite(group:any) {
+   if(group)
+   {
+      group.isFavorite = !group.isFavorite;
+      this.api.execSv(
+        'WP',
+        'ERM.Business.WP',
+        'ContactFavoriteBusiness',
+        'AddAndUpdateFavoriteAsync',
+        [group.groupID, group.groupType, group.isFavorite]
+      ).subscribe((res:any) => 
+      {
+        if(res) this.signalRSV.sendData(CHAT.BE_FUNC.FavoriteGroupAsync,group.groupID);
+      })
+   } 
   }
-
 
   beforeDelete(opt:RequestOption,groupID:string){
     opt.service = "WP";
@@ -236,4 +227,27 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
     opt.data = groupID;
     return true;
   }
+
+  addGroup(group: any) {
+    if (group) 
+    {
+      (this.codxListView.dataService as CRUDService).add(group).subscribe();
+    }
+  }
+
+
+  seenAllMessage(){
+    if(!this.isSearching && this.codxListView.dataService.data.length > 0)
+    {
+      (this.codxListView.dataService as CRUDService).data.map(x => {
+        if(x.lastMssg)
+        {
+          x.lastMssg.isRead = true;
+          x.lastMssg.createdOn = new Date();
+        }
+      }) ;
+      this.dt.detectChanges();
+    }
+  }
+
 }

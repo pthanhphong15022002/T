@@ -86,7 +86,7 @@
         </span>
       </div>
     </div>
-    <div style="height: calc(100vh - 490px)!important;overflow-y: scroll;overflow-x: hidden;width: 100% !important;">
+    <div *ngIf="lstExchangeRate" style="height: calc(100vh - 490px)!important;overflow-y: scroll;overflow-x: hidden;width: 100% !important;">
       <div *ngFor="let item of lstExchangeRate;trackBy: trackByFn" class="row border-bottom pt-3 pb-2">
         <div class="col-3 d-flex align-items-center">
           <span #toDate class="text-gray-600" [innerHTML]="item.toDate | formatvalue : fmExchangeRates : 'toDate' : toDate
@@ -122,11 +122,11 @@
 <!-- Start: TmpFooter -->
 <ng-template #footer>
   <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
-    <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index=""
+    <!-- <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index=""
       style="border: 1px solid var(--primary-dark) !important" type="button"
       (keydown.enter)="onSave('saveadd'); $event.preventDefault()" (click)="onSave('saveadd')" class="btn btn-md btn-light-primary me-2">
       <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
-    </button>
+    </button> -->
     <button [shortcut]="'alt+s'" [autoClick]="true"id="btnsave" type="button" tab-index=""
       class="btn btn-md btn-primary" style="border: 1px solid var(--primary-dark) !important"
       (keydown.enter)="onSave('save'); $event.preventDefault()" (click)="onSave('save')">

@@ -63,6 +63,53 @@ export class AddTaskComponent
   listDocument = [];
   dataEmail: any;
   showEmail = false;
+  listRequester = [
+    {
+      fieldName: "username",
+      title: 'Người yêu cầu',
+      controlType: "Text",
+      dataType: "String"
+    },
+    {
+      fieldName: "createdon",
+      title: "Ngày tạo",
+      controlType : "MaskBox",
+      dataFormat : "d",
+      dataType : "DateTime"
+    },
+    {
+      fieldName: "orgunit",
+      title: "Bộ phận",
+      controlType : "ComboBox",
+      refType : "3",
+      refValue : "Users",
+      dataType : "String"
+    },
+    {
+      fieldName: "position",
+      title: "Chức danh",
+      controlType : "ComboBox",
+      refType : "3",
+      refValue : "Users",
+      dataType : "String"
+    },
+    {
+      fieldName: "department",
+      title: "Phòng ban",
+      controlType : "ComboBox",
+      refType : "3",
+      refValue : "Users",
+      dataType : "String"
+    },
+    {
+      fieldName: "company",
+      title: "Công ty",
+      controlType : "ComboBox",
+      refType : "3",
+      refValue : "Users",
+      dataType : "String"
+    },
+  ];
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes?.activityType &&
@@ -468,13 +515,24 @@ export class AddTaskComponent
     return [...new Map(arr.map((item) => [item['recID'], item])).values()];
   }
   openFormSetting(val: any = null, index = null) {
+    
     this.process.steps = this.distinctArray(this.process.steps);
 
     let option = new DialogModel();
     option.FormModel = this.formModel;
-    let listForm = this.process.steps.filter(
+
+    let listSteps = JSON.parse(JSON.stringify(this.process.steps));
+    let listForm = listSteps.filter(
       (x) => x.stepNo < this.data.stepNo && x.activityType == 'Form'
     );
+
+    listForm.forEach(elm=>{
+      let data = JSON.parse(JSON.stringify(this.listRequester));
+      data.forEach(elm2=>{
+        elm2.fieldName = "form" + elm.stepNo + "_" + elm2.fieldName;
+      })
+      elm.extendInfo = elm.extendInfo.concat(data)
+    });
 
     let dataSteps = this.process.steps.filter(
       (x) =>

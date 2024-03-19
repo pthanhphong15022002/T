@@ -200,9 +200,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   approverDialog;
   titleLanguageAdd = '';
   titleLanguageEdit = '';
-  widthTask = 'auto';
+  widthTask = '';
   isFirstTime = true;
   transferControl = '0';
+  maxWidth = 0;
   //#endregion
   constructor(
     private cache: CacheService,
@@ -360,45 +361,40 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.carFM?.gridViewName
       );
     });
-    setTimeout(() => {
-      let elements = document.getElementsByClassName('step-task-right');
-      const listTask = Array.from(elements);
-      if (listTask?.length > 0) {
-        let maxWidth = 0;
-        for (const element of listTask) {
-          const computedWidth = window.getComputedStyle(element).width;
-          const width = parseFloat(computedWidth) + 10;
+    this.waitSetWidth(100, 100);
+  }
+
+  waitSetWidth(time: number, timeAwait: number) {
+    if (timeAwait >= 5000) return;
+    const elements = document.getElementsByClassName('step-task-right');
+    if (elements.length === 0) {
+      setTimeout(() => {
+        this.waitSetWidth(time, timeAwait + 100);
+      }, time);
+      return;
+    }
+    if( this.maxWidth == 0){
+      let maxWidth = 0;
+      for (const element of Array.from(elements)) {
+        if (element instanceof HTMLElement) {
+          const width = element.offsetWidth || 0;
           if (width > maxWidth) {
             maxWidth = width;
           }
         }
-        this.widthTask = maxWidth.toString() + 'px';
-        console.log(this.widthTask);
-        this.isFirstTime = false;
       }
-    }, 1000);
-  }
-
-  ngAfterViewChecked() {}
-  setWidth() {
-    this.widthTask = 'auto';
-    let elements = document.getElementsByClassName('step-task-right');
-    const listTask = Array.from(elements);
-    if (listTask?.length > 0) {
-      let maxWidth = 0;
-      for (const element of listTask) {
-        const computedWidth = window.getComputedStyle(element).width;
-        const width = parseFloat(computedWidth) + 10;
-
-        if (width > maxWidth) {
-          maxWidth = width;
-        }
-      }
-      this.widthTask = maxWidth.toString() + 'px';
-      console.log(this.widthTask);
-      this.isFirstTime = false;
+      this.maxWidth = maxWidth;
     }
+    
+    this.widthTask = this.maxWidth + 'px';
+    for (const element of Array.from(elements)) {
+      if (element instanceof HTMLElement) {
+        element.style.minWidth = this.widthTask;
+      }
+    }
+    this.changeDetectorRef.markForCheck();
   }
+
   async drop(event: CdkDragDrop<string[]>, data = null, isParent = false) {}
 
   //#region get Data
@@ -2131,6 +2127,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if (dataProgress?.progressTask == 100) {
           this.startTaskAuto(data);
         }
+        setTimeout(() => {
+          this.waitSetWidth(100, 100);
+        },50);
       }
       this.changeDetectorRef.detectChanges();
     }
@@ -2685,6 +2684,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   //#region Guide
   toggleElemen() {
     this.isShowElement = !this.isShowElement;
+    this.maxWidth = 0;
+    this.waitSetWidth(50, 1000);
   }
 
   showGuide() {
@@ -3051,7 +3052,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
       this.taskApproval.approveStatus = res?.returnStatus || '3';
-      this.setWidth();
+      this.waitSetWidth(100, 100);
       this.moreDefaut = JSON.parse(JSON.stringify(this.moreDefaut));
       this.changeDetectorRef.markForCheck();
     }
@@ -3126,6 +3127,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       isAdd: true, ///là add form để lấy giá trị mặc định gán vào
       taskID: task.recID,
       fieldOther: this.getFieldsOther(this.currentStep?.fields, task?.fieldID),
+      isView: this.isViewStep,
     };
     let formModel: FormModel = {
       entityName: 'DP_Instances_Steps_Fields',
@@ -3194,7 +3196,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if (this.isTaskFirst && !this.isStart && this.isRoleAll) {
           this.changeProgress.emit(true);
         }
-        this.changeDetectorRef.markForCheck();
+        this.changeDetectorRef.detectChanges();
       }
     });
   }

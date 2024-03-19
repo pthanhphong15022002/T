@@ -3,10 +3,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
-import { elementAt, firstValueFrom } from 'rxjs';
+import { elementAt, firstValueFrom, isObservable } from 'rxjs';
 import { AddTableRowComponent } from './add-table-row/add-table-row.component';
 import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 import { environment } from 'src/environments/environment';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-add-process-default',
@@ -44,8 +45,10 @@ export class AddProcessDefaultComponent implements OnInit{
   listFileUserInfo = {};
   indexUploadUserInfo = {};
   defaultFieldName = "";
+  infoUser:any;
   constructor(
     private notifySvr: NotificationsService,
+    private shareService: CodxShareService,
     private auth: AuthStore,
     private cache: CacheService,
     private api: ApiHttpService,
@@ -70,6 +73,7 @@ export class AddProcessDefaultComponent implements OnInit{
     }
     this.getData();
     this.getVll();
+    this.getInfoUser();
   }
   getVll()
   {
@@ -214,6 +218,20 @@ export class AddProcessDefaultComponent implements OnInit{
     this.table = list;
   }
 
+  getInfoUser()
+  {
+    let paras = [this.user.userID];
+    let keyRoot = 'UserInfo' + this.user.userID;
+    this.infoUser = this.shareService.loadDataCache(paras,keyRoot,"HR","HR","EmployeesBusiness","GetTmpEmployeeAsync");
+    if(isObservable(this.infoUser))
+    {
+      this.infoUser.subscribe(item=>{
+        this.infoUser = item;
+      })
+    }
+    debugger
+  }
+
   getField(key: string): string {
     if (!key) return '';
     key = key.toLowerCase();
@@ -272,7 +290,7 @@ export class AddProcessDefaultComponent implements OnInit{
       {
         this.dataIns.title= valueForm[this.subTitle];
         var instanceNoControl = "1";
-        var instanceNo = "aaaaaaa";
+        var instanceNo = "0";
         var index = this.process.settings.findIndex(x=>x.fieldName == "InstanceNoControl");
         if(index>=0) instanceNoControl = this.process.settings[index].fieldValue;
     
@@ -339,9 +357,16 @@ export class AddProcessDefaultComponent implements OnInit{
           permissions: this.data?.permissions,
           indexNo: 1
         }
-        
-      
-
+        let fieldName = "form" + this.data.stepNo 
+        valueForm[fieldName] = 
+        {
+          userName: this.infoUser?.userName,
+          createdOn: new Date(),
+          position: this.infoUser?.positionID,
+          orgUnit: this.infoUser?.orgUnitID,
+          department: this.infoUser?.departmentID,
+          company: this.infoUser?.companyID,
+        }
         this.dataIns.processID = this.process?.recID,
         this.dataIns.instanceNo = instanceNo,
         this.dataIns.instanceID = this.dataIns.recID,
@@ -360,6 +385,13 @@ export class AddProcessDefaultComponent implements OnInit{
         this.dataIns.createdBy = this.user?.userID,
         this.dataIns.duration = this.process?.duration,
         this.dataIns.datas = JSON.stringify(valueForm);
+        this.dataIns.employeeID = this.infoUser?.employeeID;
+        this.dataIns.positionID = this.infoUser?.positionID;
+        this.dataIns.orgUnitID = this.infoUser?.orgUnitID;
+        this.dataIns.departmentID = this.infoUser?.departmentID;
+        this.dataIns.divisionID = this.infoUser?.divisionID;
+        this.dataIns.buid = this.infoUser?.buid;
+        this.dataIns.companyID = this.infoUser?.companyID;
         // if(!this.dataIns?.documentControl) this.dataIns.documentControl = [];
         // this.dataIns.documentControl = this.data?.documentControl.concat(this.dataIns.documentControl);
         var listTask = JSON.stringify([stage,step]);

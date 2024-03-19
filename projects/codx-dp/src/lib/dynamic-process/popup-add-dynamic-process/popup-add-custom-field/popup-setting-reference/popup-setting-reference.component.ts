@@ -99,13 +99,12 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
     let format = 'S';
     let refType = data.referedType;
     let refValue = data.referedValue;
-
     switch (data.dataType.toLocaleLowerCase()) {
       case 'string':
       case 'guild':
         if (refType && refValue) {
           type = 'L';
-          format = data.refType == '2' ? 'V' : 'C';
+          format = refType == '3' ? 'C' : 'V';
         } else {
           let fiedname = data.fieldName.toLocaleLowerCase();
           let convert = this.defaultConvertData(fiedname, data.dataFormat);
