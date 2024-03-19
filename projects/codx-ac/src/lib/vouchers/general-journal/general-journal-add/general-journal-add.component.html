@@ -431,7 +431,7 @@
       [templateMore]="templateMore" service="AC" [editOnClick]="master.data?.isReadOnly ? false : true"
       (gridInit)="beforeInitGridGeneral($event)" rowNoField="rowNo"
       [editSettings]="master.data?.isReadOnly ? editSettings : {}" (eventAction)="onActionGridGeneral($event)"
-      (actionCompleted)="onActionGridGeneral($event)" (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
+      (actionCompleted)="onActionGridGeneral($event)" (cellChanged)="valueChangeLine($event)" [hideMoreFunc]="true" (clickMF)="clickMF($event.event, $event.data)"[moreFcModel]="dialog.formModel" [moreFcItems]="'SYS104;SYS102'"></codx-gridview-v2>
     <ng-container *ngIf="!master.data?.isReadOnly">
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
@@ -461,7 +461,7 @@
         rowNoField="rowNo" gridLines="Both" service="AC" predicates="TransID=@0" [dataValues]="master.data.recID"
         [autoFitColumns]="false" (gridInit)="beforeInitGridSettledInvoices($event)"
         [editSettings]="master.data?.isReadOnly ? editSettings : {}"
-        (cellChanged)="valueChangeLineSettledInvoices($event)">
+        (cellChanged)="valueChangeLineSettledInvoices($event)" (clickMF)="clickMF($event.event, $event.data)"[moreFcModel]="dialog.formModel">
       </codx-gridview-v2>
       <ng-container *ngIf="!master.data?.isReadOnly">
         <div class="btn-addline">
@@ -493,7 +493,7 @@
         (eventAction)="onActionGridVatInvoice($event)"
         [showEmptyRecord]="false" [editOnClick]="master.data?.isReadOnly ? false : true"
         [templateMore]="templateMore" (actionCompleted)="onActionGridVatInvoice($event)" predicates="TransID=@0"
-        gridLines="Both" [autoFitColumns]="false" [dataValues]="master?.data?.recID" service="AC">
+        gridLines="Both" [autoFitColumns]="false" [dataValues]="master?.data?.recID" service="AC" (clickMF)="clickMF($event.event, $event.data)" [moreFcModel]="dialog.formModel">
       </codx-gridview-v2>
       <ng-container *ngIf="!master.data?.isReadOnly">
         <div #btnRef class="btn-addline">
