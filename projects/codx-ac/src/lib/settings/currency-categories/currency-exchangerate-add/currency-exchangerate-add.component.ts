@@ -70,6 +70,8 @@ export class ExchangerateAddComponent extends UIComponent implements OnInit {
    * @returns 
    */
   onSave(type) {
+    let validate = this.form.validation();
+    if(validate) return;
     let index = this.dialogData.data?.lstExchangeRate.findIndex(x => x.toDate == this.form.data.toDate && x.sourceType == this.form.data.sourceType && x.recID != this.form.data.recID);
     if (index > -1) {
       this.notification.notifyCode('AC0031',0,'');

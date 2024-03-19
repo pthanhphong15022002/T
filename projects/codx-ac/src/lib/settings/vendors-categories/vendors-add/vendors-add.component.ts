@@ -497,7 +497,7 @@ export class VendorsAddComponent extends UIComponent implements OnInit {
   //#region CRUD
   onSave() {
     this.form.form.save((opt: RequestOption) => {
-      opt.methodName = (this.form.data.isAdd || this.form.data.isCopy) ? 'SaveAsync' : 'UpdateAsync';
+      opt.methodName = (this.form.form.data.isAdd || this.form.form.data.isCopy) ? 'SaveAsync' : 'UpdateAsync';
       opt.className = 'VendorsBusiness';
       opt.assemblyName = 'PS';
       opt.service = 'PS';

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopupAddFixedAssetComponent } from './popup-add-fixed-asset.component';
+import { FixedAssetAddComponent } from './fixed-asset-add.component';
 
 describe('PopupAddFixedAssetComponent', () => {
-  let component: PopupAddFixedAssetComponent;
-  let fixture: ComponentFixture<PopupAddFixedAssetComponent>;
+  let component: FixedAssetAddComponent;
+  let fixture: ComponentFixture<FixedAssetAddComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopupAddFixedAssetComponent ]
+      declarations: [ FixedAssetAddComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PopupAddFixedAssetComponent);
+    fixture = TestBed.createComponent(FixedAssetAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
