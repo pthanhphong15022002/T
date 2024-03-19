@@ -66,7 +66,7 @@ export class AddTaskComponent
   listRequester = [
     {
       fieldName: "username",
-      title: 'Người yêu cầu',
+      title: 'Người lập phiếu',
       controlType: "Text",
       dataType: "String"
     },
@@ -79,34 +79,34 @@ export class AddTaskComponent
     },
     {
       fieldName: "orgunit",
-      title: "Bộ phận",
+      title: "Người lập phiếu_Bộ phận",
       controlType : "ComboBox",
       refType : "3",
-      refValue : "Users",
+      refValue : "OrganizationUnits",
       dataType : "String"
     },
     {
       fieldName: "position",
-      title: "Chức danh",
+      title: "Người lập phiếu_Chức danh",
       controlType : "ComboBox",
       refType : "3",
-      refValue : "Users",
+      refValue : "Positions",
       dataType : "String"
     },
     {
       fieldName: "department",
-      title: "Phòng ban",
+      title: "Người lập phiếu_Phòng ban",
       controlType : "ComboBox",
       refType : "3",
-      refValue : "Users",
+      refValue : "OrganizationUnits",
       dataType : "String"
     },
     {
       fieldName: "company",
-      title: "Công ty",
+      title: "Người lập phiếu_Công ty",
       controlType : "ComboBox",
       refType : "3",
-      refValue : "Users",
+      refValue : "OrganizationUnits",
       dataType : "String"
     },
   ];
