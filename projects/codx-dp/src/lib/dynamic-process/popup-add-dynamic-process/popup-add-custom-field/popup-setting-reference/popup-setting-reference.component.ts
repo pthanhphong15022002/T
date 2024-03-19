@@ -99,7 +99,6 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
     let format = 'S';
     let refType = data.referedType;
     let refValue = data.referedValue;
-    if (refValue == 'CRM073') debugger;
     switch (data.dataType.toLocaleLowerCase()) {
       case 'string':
       case 'guild':
