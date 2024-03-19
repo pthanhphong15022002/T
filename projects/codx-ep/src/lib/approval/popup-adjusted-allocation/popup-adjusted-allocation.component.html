@@ -1,0 +1,54 @@
+<codx-form #form [headerText]="'Chỉnh sửa thông tin cấp phát'" [lblHeader]="'lblEditAllocate'" [body]="body" [footer]="footer" [dialog]="dialogRef">
+
+
+
+</codx-form>
+<ng-template #body>
+  <div class="d-flex flex-stack mb-4 form-group">
+    <div class="col-6"> 
+      <codx-label default="Văn phòng phẩm"></codx-label>
+    </div>
+    <div class="col-3 d-flex justify-content-end"> 
+      <codx-label default="Số lượng yêu cầu"></codx-label>
+    </div>
+    <div class="col-3 d-flex justify-content-end"> 
+      <codx-label default="Số lượng cấp phát"></codx-label>
+    </div>
+  </div>
+  <div class="d-flex flex-stack mb-4 form-group" *ngFor="let item of data?.items; let i = index">
+    <div class="d-flex align-items-center me-3 col-6">
+      <div class="pe-4">
+        <codx-img [objectId]="item?.objectID" imageType="circle" width="50" objectType="EP_Resources"
+          [objectName]="item?.itemName"></codx-img>
+      </div>
+      <div class="flex-grow-2">
+        <span class="text-gray-800 text-hover-primary fw-bolder lh-0">{{
+          item?.itemName
+          }}</span>
+        <span class="text-gray-400 d-block fs-6">
+          <codx-label name="lblUMID" default="Đơn vị tính"></codx-label>
+          :
+          <span [innerHTML]="item?.umName"></span>
+        </span>
+      </div>
+    </div>
+    <div class="col-3 d-flex justify-content-center">
+      <span class="fw-bold">{{item?.quantity}}</span>
+    </div>
+
+    <div class="col-3 d-flex justify-content-center">
+      <codx-input type="number" [cusButton]="true" [field]="item?.itemID"
+        [crrValue]="item?.issueQuantity" [min]="0" [max]="50" (valueChange)="valueQuantityChange($event)">
+      </codx-input>
+    </div>
+  </div>
+</ng-template>
+<ng-template #footer>
+  <div class=" pt-4 ">
+    <div class="form-group d-flex justify-content-end flex-row">
+      <button type="button" class="btn btn-primary" (click)="onSaveForm()">
+        <codx-label name="lblSave" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </div>
+</ng-template>

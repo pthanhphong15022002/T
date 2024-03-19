@@ -38,6 +38,7 @@ import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.serv
 import { GridColumn } from '@syncfusion/ej2-angular-grids';
 import { Approver, ResponseModel } from '../../models/ApproveProcess.model';
 import { EP_BookingInputParam } from './codx-booking.model';
+import { PopupAdjustedAllocationComponent } from 'projects/codx-ep/src/lib/approval/popup-adjusted-allocation/popup-adjusted-allocation.component';
 
 @Component({
   selector: 'codx-booking',
@@ -117,6 +118,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   stationeryAR = EPCONST.APPROVALRULE.Haved;
   autoApproveItem = EPCONST.APPROVALRULE.Haved;
   crrEntityName = EPCONST.ENTITY.R_Bookings;
+  adjustedAllocation="0";
   constructor(
     injector: Injector,
     private codxShareService: CodxShareService,
@@ -365,6 +367,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                   setting?.AutoApproveItem != null
                     ? setting?.AutoApproveItem
                     : EPCONST.APPROVALRULE.NotHaved; //KTra tự duyệt và cấp phát VPP khi đặt phòng
+                    this.adjustedAllocation =
+                  setting?.AdjustedAllocation== "1" ? "1" :'0'
               }
               let epSetting_4 = listSetting.filter(
                 (x) => x.category == '4' && x.tranType == null
@@ -1354,11 +1358,34 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   });
   }
 
+
   allocate(data: any) {
     if (data?.issueBy != this.curUser?.userID) {
       this.notificationsService.notifyCode('SYS032');
       return;
     }
+    if (
+      data.resourceType == '6' && this.adjustedAllocation == '1'
+    ) {
+      let dialogAllocate = this.callfc.openForm(
+        PopupAdjustedAllocationComponent,
+        '',
+        700,
+        600,
+        '',
+        { recID: data.recID }
+      );
+      dialogAllocate.closed.subscribe((res) => {
+        if (res?.event) {
+          this.startAllocate(data);
+        }
+      });
+    } else {
+      this.startAllocate(data);
+    }
+    
+  }
+  startAllocate(data){
     if (data?.approval == '1') {
       this.api
         .exec('ES', 'ApprovalTransBusiness', 'GetByTransIDAsync', [data?.recID])
