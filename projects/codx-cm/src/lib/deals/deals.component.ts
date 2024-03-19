@@ -508,13 +508,6 @@ export class DealsComponent
         data.status == '0' ||
         data?.approveStatus >= '3';
     };
-    // let isUpdateBANT = (eventItem, data) => {
-    //   eventItem.disabled = data.write
-    //     ? (data.closed && data.status != '1') ||
-    //       data.status == '0' ||
-    //       this.checkMoreReason(data)
-    //     : true;
-    // };
     let isRejectApprover = (eventItem, data) => {
       eventItem.disabled =
         (data.closed && data.status != '1') ||

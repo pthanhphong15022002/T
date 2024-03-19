@@ -328,7 +328,7 @@ export class ContractsComponent extends UIComponent {
               res.disabled = !(data?.closed && data?.alloweStatus);
               break;
             case 'CM0204_18': // thanh lý
-              res.disabled = (data?.status != '17' &&  !data?.closed && data?.alloweStatus && data?.approveStatus != '3');
+              res.disabled = !(data?.status != '17' &&  !data?.closed && data?.alloweStatus && data?.approveStatus != '3');
               break;
 
             case 'CM0204_5': //Đã giao hàng
