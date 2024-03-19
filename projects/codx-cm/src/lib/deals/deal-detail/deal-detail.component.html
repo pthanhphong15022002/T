@@ -799,7 +799,7 @@
                   [customerID]="dataSelected?.customerID"
                   [objectType]="'4'"
                   [type]="'formDetail'"
-                  [hidenMF]="!dataSelected?.write || dataSelected?.closed"
+                  [hidenMF]="!dataSelected?.write || !(['1', '2', '15',].includes(dataSelected?.status) && !dataSelected?.closed && dataSelected?.approveStatus != '3')"
                   (contactEvent)="contactChange($event)"
                   (lstContactEmit)="lstContactEmit($event)"
                 ></codx-list-contacts>
@@ -827,7 +827,7 @@
               >
                 <codx-tab-dealcompetitors
                   [dealID]="dataSelected.recID"
-                  [hidenMF]="!dataSelected?.write || dataSelected.closed"
+                  [hidenMF]="!dataSelected?.write || !(['1', '2', '15',].includes(dataSelected?.status) && !dataSelected?.closed && dataSelected?.approveStatus != '3')"
                 ></codx-tab-dealcompetitors>
               </div>
             </ng-template>
@@ -868,6 +868,7 @@
                   [taskAdd]="taskAdd"
                   (moveStage)="handelMoveStage($event)"
                   [isAdmin]="dataSelected?.isAdminAll"
+                  [isViewStep]="!(['1', '2', '15',].includes(dataSelected?.status) && !dataSelected?.closed && dataSelected?.approveStatus != '3')"
                 ></step-task>
               </div>
             </ng-template>

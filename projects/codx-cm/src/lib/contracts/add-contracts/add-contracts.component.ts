@@ -326,60 +326,32 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       this.tabContent.push(this.task);
     }
     this.waitForInputContactRendered(100);
+    this.getRefInstance(100,500);
   }
 
   waitForInputContactRendered(time: number) {
     if (time == 5000) {
       return;
     } else if (this.inputContact && this.inputContact.ComponentCurrent) {
-      3;
       this.changeCbbContact(this.contracts?.contactID);
     } else {
-      setTimeout(() => {
+      setTimeout((time: number) => {
         this.waitForInputContactRendered(time + 100);
       }, time);
     }
   }
 
-  // tra và sink mã tự động
-  ngAfterViewChecked() {
-    if (
-      this.action == 'copy' &&
-      this.contracts?.contractType &&
-      this.comboboxContractType &&
-      !this.autoCode
-    ) {
-      let data = this.comboboxContractType?.ComponentCurrent?.dataService?.data;
-      if (data?.length > 0) {
-        this.autoCode = data[0]?.AutoNumber;
-        if (data[0]?.AutoNumberControl == '1') {
-          this.cmService
-            .getAutoNumberByAutoNoCode(this.autoCode)
-            .subscribe((res) => {
-              if (res) {
-                this.contracts.contractID = res;
-                this.disabledShowInput = true;
-              } else {
-                if (this.autoNumber) {
-                  this.contracts.contractID = this.autoNumber;
-                  this.disabledShowInput = true;
-                } else {
-                  this.getAutoNumber();
-                }
-              }
-            });
-        } else {
-          this.getAutoNumber();
-        }
-      }
-    }
-    if (
-      this.inputDeal?.ComponentCurrent?.dataService.data?.length > 0 &&
-      !this.refInstance
-    ) {
+  getRefInstance(time: number, timEnd: number){
+    if (timEnd == 5000) {
+      return;
+    } else if (this.inputDeal && this.inputDeal?.ComponentCurrent?.dataService.data?.length > 0) {
       let data = this.inputDeal?.ComponentCurrent?.dataService.data;
-      this.refInstance = data[0]?.RefID;
-      this.loadSoureRef();
+        this.refInstance = data[0]?.RefID;
+        this.loadSoureRef();
+    } else {
+      setTimeout((time: number) => {
+        this.getRefInstance(time, time + 500);
+      }, time);
     }
   }
 
