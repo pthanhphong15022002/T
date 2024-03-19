@@ -105,10 +105,7 @@ export class ResourcesComponent extends UIComponent {
   onInit(): void {
     this.getCacheData();
     if (this.codxService.asideMode == '2') this.hideMF = true;
-    if (
-      this.funcID == EPCONST.FUNCID.S_Category ||
-      this.funcID == 'CMS0121_QTSC'
-    ) {
+    if (this.funcID == EPCONST.FUNCID.S_Category || this.funcID == 'CMS0121') {
       this.popupComponent = PopupAddStationeryComponent;
     } else {
       this.popupComponent = PopupAddResourcesComponent;
@@ -139,7 +136,7 @@ export class ResourcesComponent extends UIComponent {
             case EPCONST.FUNCID.CA_Category:
               this.cardCategory();
               break;
-            case 'CMS0121_QTSC': //CRM cần
+            case 'CMS0121': //CRM cần
             case EPCONST.FUNCID.S_Category:
               this.stationeryCategory();
               break;
@@ -583,8 +580,7 @@ export class ResourcesComponent extends UIComponent {
     this.view.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
       option.Width =
-        this.funcID == EPCONST.FUNCID.S_Category ||
-        this.funcID == 'CMS0121_QTSC'
+        this.funcID == EPCONST.FUNCID.S_Category || this.funcID == 'CMS0121'
           ? '800px'
           : '550px';
       option.DataService = this.view?.dataService;
@@ -618,8 +614,7 @@ export class ResourcesComponent extends UIComponent {
         .subscribe((res) => {
           let option = new SidebarModel();
           option.Width =
-            this.funcID == EPCONST.FUNCID.S_Category ||
-            this.funcID == 'CMS0121_QTSC'
+            this.funcID == EPCONST.FUNCID.S_Category || this.funcID == 'CMS0121'
               ? '800px'
               : '550px';
           option.DataService = this.view?.dataService;
@@ -652,8 +647,7 @@ export class ResourcesComponent extends UIComponent {
         .subscribe((res) => {
           let option = new SidebarModel();
           option.Width =
-            this.funcID == EPCONST.FUNCID.S_Category ||
-            this.funcID == 'CMS0121_QTSC'
+            this.funcID == EPCONST.FUNCID.S_Category || this.funcID == 'CMS0121'
               ? '800px'
               : '550px';
           option.DataService = this.view?.dataService;
@@ -686,8 +680,7 @@ export class ResourcesComponent extends UIComponent {
       this.view.dataService.copy().subscribe((res) => {
         let option = new SidebarModel();
         option.Width =
-          this.funcID == EPCONST.FUNCID.S_Category ||
-          this.funcID == 'CMS0121_QTSC'
+          this.funcID == EPCONST.FUNCID.S_Category || this.funcID == 'CMS0121'
             ? '800px'
             : '550px';
         option.DataService = this.view?.dataService;
