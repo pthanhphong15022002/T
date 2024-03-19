@@ -110,6 +110,7 @@ export class AddTaskComponent
       dataType : "String"
     },
   ];
+
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes?.activityType &&
@@ -540,6 +541,7 @@ export class AddTaskComponent
         x.activityType != 'Conditions' &&
         x.activityType != 'StartEnd'
     );
+    
     let popupDialog = this.callFuc.openForm(
       AddSettingConditionsComponent,
       '',
