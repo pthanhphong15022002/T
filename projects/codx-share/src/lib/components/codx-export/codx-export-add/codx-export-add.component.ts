@@ -72,6 +72,32 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
   isGroup = false;
   dataGoupField = [];
   isFristVer = false;
+  listRequester = [
+    {
+      key: "userName",
+      text: "Người yêu cầu"
+    },
+    {
+      key: "createdOn",
+      text: "Ngày tạo"
+    },
+    {
+      key: "orgUnit",
+      text: "Bộ phận"
+    },
+    {
+      key: "position",
+      text: "Chức danh"
+    },
+    {
+      key: "department",
+      text: "Phòng ban"
+    },
+    {
+      key: "company",
+      text: "Công ty"
+    },
+  ];
   constructor(
     private tenant: TenantStore,
     private readonly auth: AuthService,
@@ -247,6 +273,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     for(var i = 0 ; i < this.dataGoupField.length ; i ++)
     {
       this.dataGoupField[i].groupChild = [];
+      
       this.dataGoupField[i].extendInfo.forEach(element=>{
         var obj = {
           text: element?.title,
@@ -261,10 +288,27 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
           referedType: element.refType,
           referedValue: element.refValue,
         };
-  
+        
         this.gridViewSettup.push(obj2);
         this.dataGoupField[i].groupChild.push(obj);
       })
+
+      this.listRequester.forEach(x=>{
+        var obj3 = 
+        {
+          text: x.text,
+          key: "Form" +  this.dataGoupField[i].stepNo + "_" + x.key,
+          category: 'Drag or click the field to insert.',
+          htmlAttributes: { draggable: true },
+        }
+        var obj4 = {
+          key: "Form" +  this.dataGoupField[i].stepNo + "_" + x.key,
+          headerText: x.text,
+        };
+        this.gridViewSettup.push(obj4);
+        this.dataGoupField[i].groupChild.push(obj3);
+      })
+     
     }
   }
 
