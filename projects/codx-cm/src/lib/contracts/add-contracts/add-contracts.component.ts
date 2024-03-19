@@ -74,7 +74,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     'pmtMethodID',
     'pmtMethodID',
     'contractName',
-    'contractType',
     'effectiveFrom',
     'businessLineID',
   ];
@@ -779,39 +778,39 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.disabledDelActualDate =
           event?.data == '0' || event?.data == '1' ? true : false;
         break;
-      case 'contractType':
-        if (event?.component?.itemsSelected[0]) {
-          if (event?.component?.itemsSelected[0]?.AutoNumberControl == '1') {
-            let autoNumberCode = event?.component?.itemsSelected[0]?.AutoNumber;
-            if (autoNumberCode) {
-              this.cmService
-                .getAutoNumberByAutoNoCode(autoNumberCode)
-                .subscribe((res) => {
-                  if (res) {
-                    this.contracts.contractID = res;
-                    this.disabledShowInput = true;
-                  } else {
-                    if (this.autoNumber) {
-                      this.contracts.contractID = this.autoNumber;
-                      this.disabledShowInput = true;
-                    } else {
-                      this.contracts.contractID = '';
-                      this.disabledShowInput = false;
-                    }
-                  }
-                });
-            }
-          } else {
-            if (this.autoNumber) {
-              this.contracts.contractID = this.autoNumber;
-              this.disabledShowInput = true;
-            } else {
-              this.contracts.contractID = '';
-              this.disabledShowInput = false;
-            }
-          }
-        }
-        break;
+      // case 'contractType':
+      //   if (event?.component?.itemsSelected[0]) {
+      //     if (event?.component?.itemsSelected[0]?.AutoNumberControl == '1') {
+      //       let autoNumberCode = event?.component?.itemsSelected[0]?.AutoNumber;
+      //       if (autoNumberCode) {
+      //         this.cmService
+      //           .getAutoNumberByAutoNoCode(autoNumberCode)
+      //           .subscribe((res) => {
+      //             if (res) {
+      //               this.contracts.contractID = res;
+      //               this.disabledShowInput = true;
+      //             } else {
+      //               if (this.autoNumber) {
+      //                 this.contracts.contractID = this.autoNumber;
+      //                 this.disabledShowInput = true;
+      //               } else {
+      //                 this.contracts.contractID = '';
+      //                 this.disabledShowInput = false;
+      //               }
+      //             }
+      //           });
+      //       }
+      //     } else {
+      //       if (this.autoNumber) {
+      //         this.contracts.contractID = this.autoNumber;
+      //         this.disabledShowInput = true;
+      //       } else {
+      //         this.contracts.contractID = '';
+      //         this.disabledShowInput = false;
+      //       }
+      //     }
+        // }
+        // break;
       case 'businessLineID':
         const itemsSelected = event?.component?.itemsSelected;
         if (event?.field === 'businessLineID' && itemsSelected?.length > 0) {

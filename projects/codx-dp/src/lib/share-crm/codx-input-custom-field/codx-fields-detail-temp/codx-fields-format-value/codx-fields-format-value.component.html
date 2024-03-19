@@ -201,10 +201,8 @@
     </ng-container>
 
     <ng-container *ngIf="data.dataFormat == 'V' || data.dataFormat == 'S'">
-      <div
-        class="flex flex-column"
-        *ngIf="data.refValue.contains('DPF'); else sysVll"
-      >
+      <!-- *ngIf="data.refValue.contains('DPF'); else sysVll" -->
+      <div class="flex flex-column">
         <div
           *ngIf="data.dataFormat == 'S' && noteVll"
           class=""
