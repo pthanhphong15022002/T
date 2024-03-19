@@ -19,6 +19,7 @@ import {
 } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import { WarehousesAddComponent } from './warehouses-add/warehouses-add.component';
+import { CodxAcService } from '../../codx-ac.service';
 
 @Component({
   selector: 'lib-warehouses',
@@ -38,11 +39,12 @@ export class WarehousesComponent extends UIComponent {
   headerText: any;
   private destroy$ = new Subject<void>();
   isSubView: boolean;
-  constructor(private inject: Injector, private callfunc: CallFuncService) {
+  itemSelected: any;
+  constructor(
+    private inject: Injector, 
+    private callfunc: CallFuncService,
+    private acService: CodxAcService) {
     super(inject);
-    this.router.data.subscribe((res) => {
-      if (res && res['isSubView']) this.isSubView = res.isSubView;
-    });
   }
   //#endregion
 
@@ -170,6 +172,15 @@ export class WarehousesComponent extends UIComponent {
       .delete([dataDelete], true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {});
+  }
+
+  changeDataMF(event, type: any = '') {
+    this.acService.changeMFCategories(event,type);
+  }
+
+  onSelectedItem(event) {
+    this.itemSelected = event;
+    this.detectorRef.detectChanges();
   }
   //#endregion
 }

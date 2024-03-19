@@ -18,6 +18,7 @@ import { PopupAddBusinessLineComponent } from './business-line/popup-add-busines
 import { AssetsComponent } from './assets/assets.component';
 import { PopupAddAssetsComponent } from './assets/popup-add-assets/popup-add-assets.component';
 import { WaterClockComponent } from './water-clock/water-clock.component';
+import { PopupAddWaterClockComponent } from './water-clock/popup-add-water-clock/popup-add-water-clock.component';
 
 const routes: Routes = [
   {
@@ -72,6 +73,7 @@ const routes: Routes = [
     AssetsComponent,
     PopupAddAssetsComponent,
     WaterClockComponent,
+    PopupAddWaterClockComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

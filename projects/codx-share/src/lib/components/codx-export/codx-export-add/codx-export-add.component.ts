@@ -72,31 +72,48 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
   isGroup = false;
   dataGoupField = [];
   isFristVer = false;
+  isSign = false;
   listRequester = [
     {
-      key: "userName",
-      text: "Người yêu cầu"
+      key: "username",
+      text: "Người lập phiếu",
+      isSign: false
     },
     {
-      key: "createdOn",
-      text: "Ngày tạo"
+      key: "createdon",
+      text: "Ngày tạo",
+      isSign: false
     },
     {
-      key: "orgUnit",
-      text: "Bộ phận"
+      key: "orgunit",
+      text: "Người lập phiếu_Bộ phận",
+      isSign: false
     },
     {
       key: "position",
-      text: "Chức danh"
+      text: "Người lập phiếu_Chức danh",
+      isSign: false
     },
     {
       key: "department",
-      text: "Phòng ban"
+      text: "Người lập phiếu_Phòng ban",
+      isSign: false
     },
     {
       key: "company",
-      text: "Công ty"
+      text: "Người lập phiếu_Công ty",
+      isSign: false
     },
+    {
+      key: "signature1",
+      text: "Người lập phiếu_Chữ ký chính",
+      isSign: true
+    },
+    {
+      key: "signature2",
+      text: "Người lập phiếu_Chữ ký nháy",
+      isSign: true
+    }
   ];
   constructor(
     private tenant: TenantStore,
@@ -116,6 +133,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     this.refID = dt.data?.refID; // Thảo thêm để thêm biến lưu cho temEx
     this.refType = dt.data?.refType || dt.data?.formModel?.entityName; // Thảo thêm để thêm biến lưu cho temEx
     this.isFristVer = dt.data?.isFristVer || false;
+    this.isSign = dt.data?.isSign || false;
     this.formModel = dt.data.formModel;
     if(dt.data?.groupField) {
       this.isHasFields = true;
@@ -293,16 +311,21 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
         this.dataGoupField[i].groupChild.push(obj);
       })
 
+      if(!this.isSign)
+      {
+        this.listRequester = this.listRequester.filter(x=>!x.isSign)
+      }
+      
       this.listRequester.forEach(x=>{
         var obj3 = 
         {
           text: x.text,
-          key: "Form" +  this.dataGoupField[i].stepNo + "_" + x.key,
+          key: "form" +  this.dataGoupField[i].stepNo + "_" + x.key,
           category: 'Drag or click the field to insert.',
           htmlAttributes: { draggable: true },
         }
         var obj4 = {
-          key: "Form" +  this.dataGoupField[i].stepNo + "_" + x.key,
+          key: "form" +  this.dataGoupField[i].stepNo + "_" + x.key,
           headerText: x.text,
         };
         this.gridViewSettup.push(obj4);

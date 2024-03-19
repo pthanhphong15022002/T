@@ -1,0 +1,94 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [body]="body"
+  [showHeader]="dialog"
+  [dialog]="dialog!"
+  [footer]="footer"
+  [formModel]="dialog.formModel"
+  [autoFocus]="false"
+  [data]="data"
+>
+</codx-form>
+<ng-template #body>
+  <ng-container *ngFor="let fieldName of arrFieldForm">
+    <div class="form-group" *ngIf="fieldName == 'assetID'">
+      <codx-label [formModel]="form.formModel" fiedName="assetID"> </codx-label>
+      <codx-input
+        [field]="'assetID'"
+        [formModel]="form.formModel"
+        [Group]="form?.formGroup"
+        [placeholder]="
+              disabledShowInput
+                ? planceHolderAutoNumber
+                : gridViewSetup?.['AssetID']?.description
+            "
+        [disabled]="disabledShowInput || action == 'edit' || viewOnly"
+        [crrValue]="data?.businessLineID"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+    <div class="form-group" *ngIf="fieldName == 'refID'">
+      <codx-label [formModel]="form.formModel" fiedName="refID"> </codx-label>
+      <codx-input
+        #cbxRefID
+        [field]="'refID'"
+        [formModel]="form.formModel"
+        [Group]="form?.formGroup"
+        (valueChange)="valueChangeCbx($event)"
+        [disabled]="viewOnly"
+      >
+      </codx-input>
+    </div>
+    <div class="form-group" *ngIf="fieldName == 'siteID'">
+      <codx-label [formModel]="form.formModel" fiedName="siteID"> </codx-label>
+      <codx-input
+        #cbxSiteID
+        [field]="'siteID'"
+        [formModel]="form.formModel"
+        [Group]="form?.formGroup"
+        (valueChange)="valueChangeCbx($event)"
+        [disabled]="viewOnly"
+      >
+      </codx-input>
+    </div>
+    <ng-container
+      *ngIf="
+        fieldName != 'siteID' && fieldName != 'refID' && fieldName != 'assetID'
+      "
+    >
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" [fiedName]="fieldName">
+        </codx-label>
+        <div>
+          <codx-input
+            [field]="fieldName"
+            [formModel]="form.formModel"
+            [Group]="form?.formGroup"
+            (valueChange)="valueChange($event)"
+            [disabled]="
+              viewOnly || fieldName == 'costAmt' || fieldName == 'capacityPrice'
+            "
+          >
+          </codx-input>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-template>
+<ng-template #footer>
+  <div class="d-flex flex-stack justify-content-end" *ngIf="dialog">
+    <div class="right">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="onSave()"
+        [disabled]="viewOnly"
+      >
+        <codx-label name="lblSave" formName="Settings" default="Lưu">
+        </codx-label>
+      </button>
+    </div>
+  </div>
+</ng-template>

@@ -25,6 +25,7 @@ import { ResourceTrans } from '../models/resource.model';
 import { PopupAddCardTransComponent } from '../booking/cardTran/popup-add-cardTrans/popup-add-cardTrans.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { PopupAdjustedAllocationComponent } from './popup-adjusted-allocation/popup-adjusted-allocation.component';
 
 @Component({
   selector: 'ep-approval',
@@ -91,7 +92,8 @@ export class EPApprovalComponent extends UIComponent {
   approvalRule = '0';
   cbbDriver = [];
   listDriverAssign = [];
-  crrEntityName=EPCONST.ENTITY.R_Approval;
+  crrEntityName = EPCONST.ENTITY.R_Approval;
+  adjustedAllocation = '0';
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -101,7 +103,6 @@ export class EPApprovalComponent extends UIComponent {
     private notificationsService: NotificationsService
   ) {
     super(injector);
-    
   }
 
   //---------------------------------------------------------------------------------//
@@ -115,16 +116,15 @@ export class EPApprovalComponent extends UIComponent {
         this.formModel = res;
       }
     });
-    this.cache.functionList(this.funcID).subscribe(funcList=>{
-      if(funcList){
-        this.crrEntityName= funcList?.entityName;
+    this.cache.functionList(this.funcID).subscribe((funcList) => {
+      if (funcList) {
+        this.crrEntityName = funcList?.entityName;
       }
     });
     this.getBaseVariable();
     this.getCacheData();
   }
   ngAfterViewInit(): void {
-    
     this.getView();
     this.detectorRef.detectChanges();
   }
@@ -133,26 +133,25 @@ export class EPApprovalComponent extends UIComponent {
   //-----------------------------------Get Cache Data--------------------------------//
   //---------------------------------------------------------------------------------//
   getBaseVariable() {
-    
-      //this.funcID = this.activatedRoute.snapshot.params['funcID'];
-      this.cache.functionList(this.funcID).subscribe(funcList=>{
-        if(funcList){
-          this.crrEntityName= funcList?.entityName;
-          switch (this.crrEntityName) {
-            case EPCONST.ENTITY.R_Approval:
-              this.resourceType = EPCONST.VLL.ResourceType.Room;
-              break;
-            case EPCONST.ENTITY.C_Approval:
-              this.resourceType = EPCONST.VLL.ResourceType.Car;
-              break;
-            case EPCONST.ENTITY.S_Approval:
-              this.resourceType = EPCONST.VLL.ResourceType.Stationery;
-              break;
-          }
-          this.detectorRef.detectChanges();
+    //this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    this.cache.functionList(this.funcID).subscribe((funcList) => {
+      if (funcList) {
+        this.crrEntityName = funcList?.entityName;
+        switch (this.crrEntityName) {
+          case EPCONST.ENTITY.R_Approval:
+            this.resourceType = EPCONST.VLL.ResourceType.Room;
+            break;
+          case EPCONST.ENTITY.C_Approval:
+            this.resourceType = EPCONST.VLL.ResourceType.Car;
+            break;
+          case EPCONST.ENTITY.S_Approval:
+            this.resourceType = EPCONST.VLL.ResourceType.Stationery;
+            break;
         }
-      });
-    
+        this.detectorRef.detectChanges();
+      }
+    });
+
     if (this.queryParams == null) {
       this.queryParams = this.router.snapshot.queryParams;
     }
@@ -162,10 +161,22 @@ export class EPApprovalComponent extends UIComponent {
         this.formModel = res;
       }
     });
-
-    
   }
   getCacheData(): void {
+    this.codxEpService
+      .getDataValueOfSettingAsync(
+        EPCONST.PARAM.EPParameters,
+        EPCONST.PARAM.EPStationeryParameters,
+        '1'
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          let setting = JSON.parse(res);
+          if (setting?.AdjustedAllocation == '1') {
+            this.adjustedAllocation = '1';
+          }
+        }
+      });
     this.cache
       .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
       .subscribe((grv) => {
@@ -211,7 +222,7 @@ export class EPApprovalComponent extends UIComponent {
             statusColorRef: 'EP022',
           },
         },
-      ];      
+      ];
       this.navigateSchedule();
     } else if (this.crrEntityName == EPCONST.ENTITY.S_Approval) {
       this.views = [
@@ -289,7 +300,6 @@ export class EPApprovalComponent extends UIComponent {
     }
   }
   viewChanged(evt: any) {
-    
     this.getBaseVariable();
     this.getView();
   }
@@ -387,7 +397,7 @@ export class EPApprovalComponent extends UIComponent {
               ) {
                 func.disabled = true;
               } else {
-                func.disabled = false; 
+                func.disabled = false;
               }
             }
           }
@@ -419,7 +429,12 @@ export class EPApprovalComponent extends UIComponent {
             func.disabled = true;
           }
         });
-      } else if (data?.stepType == 'I' && (data?.approveStatus == '5' &&  data?.issueStatus != '1') || (data?.approveStatus == '4') ) {
+      } else if (
+        (data?.stepType == 'I' &&
+          data?.approveStatus == '5' &&
+          data?.issueStatus != '1') ||
+        data?.approveStatus == '4'
+      ) {
         //Đã cấp phát
         event.forEach((func) => {
           if (
@@ -475,24 +490,24 @@ export class EPApprovalComponent extends UIComponent {
           this.assignDriver(data);
         }
         break;
-        default:
-          //Biến động , tự custom
-          var customData = {
-            refID: '',
-            refType: this.formModel?.entityName,
-            dataSource: data,
-          };
+      default:
+        //Biến động , tự custom
+        var customData = {
+          refID: '',
+          refType: this.formModel?.entityName,
+          dataSource: data,
+        };
 
-          this.codxShareService.defaultMoreFunc(
-            evt,
-            data,
-            null,
-            this.view?.formModel,
-            this.view?.dataService,
-            this,
-            customData
-          );
-          break;
+        this.codxShareService.defaultMoreFunc(
+          evt,
+          data,
+          null,
+          this.view?.formModel,
+          this.view?.dataService,
+          this,
+          customData
+        );
+        break;
     }
   }
 
@@ -500,36 +515,61 @@ export class EPApprovalComponent extends UIComponent {
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   undo(data: any) {
-    this.codxCommonService.codxUndo(data?.approvalTransRecID,null).subscribe((res: any) => {
-      if (res != null) {
-        this.notificationsService.notifyCode('SYS034'); //đã thu hồi
-        data.approveStatus = '3';
-        this.view.dataService.update(data).subscribe();
-      } else {
-        this.notificationsService.notifyCode(res?.msgCodeError);
-      }
-    });
+    this.codxCommonService
+      .codxUndo(data?.approvalTransRecID, null)
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.notificationsService.notifyCode('SYS034'); //đã thu hồi
+          data.approveStatus = '3';
+          this.view.dataService.update(data).subscribe();
+        } else {
+          this.notificationsService.notifyCode(res?.msgCodeError);
+        }
+      });
   }
 
   approve(data: any) {
+    if (
+      data.resourceType == '6' &&
+      data?.stepType == 'I' &&
+      this.adjustedAllocation == '1'
+    ) {
+      let dialogAllocate = this.callfc.openForm(
+        PopupAdjustedAllocationComponent,
+        '',
+        700,
+        600,
+        '',
+        { recID: data.recID }
+      );
+      dialogAllocate.closed.subscribe((res) => {
+        if (res?.event) {
+          this.startApprove(data);
+        }
+      });
+    } else {
+      this.startApprove(data);
+    }
+  }
+  startApprove(data: any) {
     this.codxCommonService
       .codxApprove(
         data?.approvalTransRecID, //ApprovelTrans.RecID
         '5',
         null,
         null,
-        null,
+        null
       )
       .subscribe((res: any) => {
         if (res?.msgCodeError == null && res?.rowCount >= 0) {
-          this.notificationsService.notifyCode('SYS034'); //đã duyệt          
+          this.notificationsService.notifyCode('SYS034'); //đã duyệt
           //nếu bước duyệt VPP hiện tại là Cấp phát thì đổi IssueStatus
-            data.approveStatus = res?.returnStatus ?? '5';
+          data.approveStatus = res?.returnStatus ?? '5';
           // if (data?.stepType != 'I') {
           //   data.approveStatus = '5';
           // }
           // else{
-          //   data.issueStatus = '3';            
+          //   data.issueStatus = '3';
           // }
           this.view.dataService.update(data).subscribe();
         } else {
@@ -545,7 +585,7 @@ export class EPApprovalComponent extends UIComponent {
         '4',
         null,
         null,
-        null,
+        null
       )
       .subscribe((res: any) => {
         if (res?.msgCodeError == null && res?.rowCount >= 0) {
@@ -553,9 +593,8 @@ export class EPApprovalComponent extends UIComponent {
           //nếu bước duyệt VPP hiện tại là Cấp phát thì đổi IssueStatus
           if (data?.stepType != 'I') {
             data.approveStatus = '4';
-          }
-          else{
-            data.issueStatus = '4';            
+          } else {
+            data.issueStatus = '4';
           }
           this.view.dataService.update(data).subscribe();
         } else {
