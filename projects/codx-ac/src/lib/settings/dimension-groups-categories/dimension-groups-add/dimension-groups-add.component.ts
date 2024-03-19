@@ -232,7 +232,7 @@ export class DimensionGroupsAddComponent extends UIComponent implements OnInit
       opt.className = 'DimGroupsBusiness';
       opt.assemblyName = 'IV';
       opt.service = 'IV';
-      opt.data = (this.form.data.isAdd || this.form.data.isCopy) ? [this.form.data,this.lstDimensionSetup] : [this.form.data,this.form.preData,this.lstDimensionSetup];
+      opt.data = [this.form.data,this.lstDimensionSetup];
       return true;
     },0, '', '', false).subscribe((res) => {
       if (res && (res.save || res.update)) {

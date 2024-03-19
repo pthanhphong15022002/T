@@ -110,46 +110,37 @@ export class UnitsOfMearSureAdd extends UIComponent implements OnInit {
   }
 
   openFormConversion() {
-    this.form.form.save(null, 0, '', '', false)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (!res) return;
-      if (res.hasOwnProperty('save')) {
-        if (res.save.hasOwnProperty('data') && !res.save.data) return;
+    let validate = this.form.form.validation()
+    if(validate) return;
+    this.UMConversionSV.addNew().subscribe((res: any) => {
+      if (res) {
+        res.fromUMID = this.form.data.umid;
+        let data :any = {
+          headerText: (this.lblAdd + ' ' + 'đơn vị quy đổi').toUpperCase(),
+          dataDefault:{...res}
+        };
+        this.cache.gridViewSetup(this.fmUMConversion.formName,this.fmUMConversion.gridViewName).subscribe((o)=>{
+          let option = new DialogModel();
+          option.FormModel = this.fmUMConversion;
+          option.DataService = this.UMConversionSV;
+          let dialog = this.callfc.openForm(
+            ConversionAddComponent,
+            '',
+            500,
+            400,
+            '',
+            data,
+            '',
+            option
+          );
+          dialog.closed.subscribe((res) => {
+            if (res.event != null) {
+              this.lstUMConversion.push({...res?.event});
+              this.detectorRef.detectChanges();
+            }
+          });
+        })
       }
-      if (res.hasOwnProperty('update')) {
-        if (res.update.hasOwnProperty('data') && !res.update.data) return;
-      }
-      this.UMConversionSV.addNew().subscribe((res: any) => {
-        if (res) {
-          res.fromUMID = this.form.data.umid;
-          let data :any = {
-            headerText: (this.lblAdd + ' ' + 'đơn vị quy đổi').toUpperCase(),
-            dataDefault:{...res}
-          };
-          this.cache.gridViewSetup(this.fmUMConversion.formName,this.fmUMConversion.gridViewName).subscribe((o)=>{
-            let option = new DialogModel();
-            option.FormModel = this.fmUMConversion;
-            option.DataService = this.UMConversionSV;
-            let dialog = this.callfc.openForm(
-              ConversionAddComponent,
-              '',
-              500,
-              400,
-              '',
-              data,
-              '',
-              option
-            );
-            dialog.closed.subscribe((res) => {
-              if (res.event != null) {
-                this.lstUMConversion.push({...res?.event?.data});
-                this.detectorRef.detectChanges();
-              }
-            });
-          })
-        }
-      })
     })
   }
 
@@ -177,7 +168,7 @@ export class UnitsOfMearSureAdd extends UIComponent implements OnInit {
           );
           dialog.closed.subscribe((res) => {
             if (res && res?.event) {
-              let data = res?.event?.data;
+              let data = res?.event;
               let index = this.lstUMConversion.findIndex((x) => x.recID == data.recID);
               if (index > -1) {
                 this.lstUMConversion[index] = data;
@@ -229,18 +220,27 @@ export class UnitsOfMearSureAdd extends UIComponent implements OnInit {
 
   //#region Method
   onSave(type) {
-    this.form.form.save(null, 0, '', '', false)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (!res) return;
-        if (res.hasOwnProperty('save')) {
-          if (res.save.hasOwnProperty('data') && !res.save.data) return;
-        }
-        if (res.hasOwnProperty('update')) {
-          if (res.update.hasOwnProperty('data') && !res.update.data) return;
-        }
-        this.dialog.close();
-      })
+    this.form.form.save((opt: RequestOption) => {
+      opt.methodName = (this.form.form.data.isAdd || this.form.form.data.isCopy) ? 'SaveAsync' : 'UpdateAsync';
+      opt.className = 'UnitsOfMearsureBusiness';
+      opt.assemblyName = 'BS';
+      opt.service = 'BS';
+      opt.data = [this.form.form.data,this.lstUMConversion];
+      return true;
+    }, 0, '', '', false).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+      if (!res) return;
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data') && !res.save.data) return;
+      }
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      if (this.form.form.data.isAdd || this.form.form.data.isCopy)
+        this.notification.notifyCode('SYS006');
+      else
+        this.notification.notifyCode('SYS007');
+      this.dialog.close();
+    })
   }
   onSaveAdd() {
     // this.checkValidate();

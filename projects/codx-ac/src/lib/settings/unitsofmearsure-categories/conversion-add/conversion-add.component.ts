@@ -77,18 +77,9 @@ export class ConversionAddComponent extends UIComponent implements OnInit {
 
   //#region Method
   onSave() {
-    this.form.save(null, 0, '', '', false)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (!res) return;
-        if (res.hasOwnProperty('save')) {
-          if (res.save.hasOwnProperty('data') && !res.save.data) return;
-        }
-        if (res.hasOwnProperty('update')) {
-          if (res.update.hasOwnProperty('data') && !res.update.data) return;
-        }
-        this.dialog.close({ data: {...this.form?.data} });
-      })
+    let validate = this.form.validation();
+    if(validate) return;
+    this.dialog.close({...this.form.data});
   }
   //#endregion Method
 
