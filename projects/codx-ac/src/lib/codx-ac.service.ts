@@ -1324,6 +1324,14 @@ export class CodxAcService {
     }, {});
   }
 
+  changeMFCategories(event, type) {
+    event.reduce((pre, element) => {
+      if (type === 'views') element.isbookmark = true;
+      if (!['SYS03', 'SYS02', 'SYS04'].includes(element.functionID))
+        element.disabled = true;
+    }, {});
+  }
+
   getSettingFromJournal(
     eleGrid: CodxGridviewV2Component,
     journal: any,

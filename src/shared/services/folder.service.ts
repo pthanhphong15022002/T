@@ -256,12 +256,12 @@ export class FolderService implements OnDestroy {
     );
   }
 
-  getFolder(Id: string): Observable<any> {
+  getFolder(id: string): Observable<any> {
     return this.api.exec<FolderInfo>(
       'DM',
       'FolderBussiness',
       'GetFolderByIdAsync',
-      Id
+      id
     );
   }
 

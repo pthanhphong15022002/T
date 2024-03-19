@@ -1,7 +1,8 @@
 <codx-views #view [views]="views" [button]="button" [entityName]="view.entityName" [isSubView]="isSubView"
-  (buttonClick)="toolBarClick($event)">
+  [hideMoreFuncs]="!itemSelected" (buttonClick)="toolBarClick($event)" (changeDataMF)="changeDataMF($event,'views')"
+  (selectedChange)="onSelectedItem($event)" (clickMF)="clickMF($event, itemSelected)">
 </codx-views>
 <ng-template #templateGrid let-data>
   <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
-    type="view"></codx-mfunc>
+    type="view" (changeDataMF)="changeDataMF($event)"></codx-mfunc>
 </ng-template>

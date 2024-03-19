@@ -125,6 +125,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
     pageSize: 20,
     pageLoading: false,
   };
+  isChangeFirst = false;
   breakCumbArr = [
     {
       id: 'DMT06',
@@ -195,6 +196,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
     super(inject);
   }
   onInit(): void {
+    this.isChangeFirst = false;
     this.isRead = true;
     //View mặc định
     var check = document.getElementById('dm-home-mark-id');
@@ -708,7 +710,8 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         type = 'file';
         this.idQueryParams = this.route.snapshot.queryParams?._f;
       }
-      if (this.funcID) {
+      if (this.funcID) 
+      {
         this.refeshData();
         this.loaded = false;
         this.hideMF = false;
@@ -829,21 +832,21 @@ export class HomeComponent extends UIComponent implements OnDestroy {
     this.folderService.getBreadCumb(id,type).subscribe(item=>{
       if(item)
       {
-          if(type == "folder") this.dmSV.folderID = id;
-          var breadcumb = [this.dmSV.menuActive.getValue()];
-          var breadcumbLink = [""];
-          breadcumb = breadcumb.concat(item[0]);
-          breadcumbLink = breadcumbLink.concat(item[1]);
-          this.dmSV.breadcumbLink = breadcumbLink;
-          this.dmSV.breadcumb.next(breadcumb);
-          this.folderService.getFolder(breadcumbLink[breadcumbLink.length - 1]).subscribe(item=>{
-            if(item)
-            {
-              this.view.dataService.dataSelected = item;
-              this.dmSV.getRight(item);
-              this.getDataFolder(item.recID);
-            }
-          })
+        if(type == "folder") this.dmSV.folderID = id;
+        var breadcumb = [this.dmSV.menuActive.getValue()];
+        var breadcumbLink = [""];
+        breadcumb = breadcumb.concat(item[0]);
+        breadcumbLink = breadcumbLink.concat(item[1]);
+        this.dmSV.breadcumbLink = breadcumbLink;
+        this.dmSV.breadcumb.next(breadcumb);
+        this.folderService.getFolder(breadcumbLink[breadcumbLink.length - 1]).subscribe(item=>{
+          if(item)
+          {
+            this.view.dataService.dataSelected = item;
+            this.dmSV.getRight(item);
+            this.getDataFolder(item.recID);
+          }
+        })
       }
       else {
         this.isRead = false;
@@ -863,12 +866,18 @@ export class HomeComponent extends UIComponent implements OnDestroy {
     this.folderService.options.funcID = this.funcID;
     if(this.funcID.includes("DMT00"))
     {
-      debugger
       this.disableMark();
       this.folderService.getFolders('').subscribe((res) => {
         if (res && res[0]) {
           if (res[0][0].read) {
-            this.getDataFolder(res[0][0].recID,false);
+            var treeView = this.codxview?.currentView?.currentComponent?.treeView;
+            if(treeView)
+            {
+              treeView.data = res[0];
+              treeView.dataTree = res[0];
+              treeView.dicDatas = res[0];
+            }
+            this.getDataFolder(res[0][0].recID,true,true);
             var breadcumb = [];
             var breadcumbLink = [];
             breadcumb.push(this.dmSV.menuActive.getValue(), res[0][0].folderName);
@@ -879,16 +888,16 @@ export class HomeComponent extends UIComponent implements OnDestroy {
             this.dmSV.folderName = res[0][0].folderName;
             this.dmSV.parentFolderId = res[0][0].parentId;
             this.dmSV.parentFolder.next(res[0][0]);
-            this.dmSV.level = res[0][0].level;
+            this.dmSV.level = res[0][0]?.level;
             this.dmSV.folderID = res[0][0].recID;
             this.dmSV.folderId.next(res[0][0].recID);
           } else this.unableMark();
-          var treeView = this.codxview?.currentView?.currentComponent?.treeView;
-          if(treeView)
-          {
-            var list = treeView.getBreadCumb(res.recID);
-            if(list.length == 0) treeView.setNodeTree(res);
-          }
+          // var treeView = this.codxview?.currentView?.currentComponent?.treeView;
+          // if(treeView)
+          // {
+          //   var list = treeView.getBreadCumb(res.recID);
+          //   if(list && list.length == 0) treeView.setNodeTree(res);
+          // }
         }
       });
     }
@@ -1150,29 +1159,27 @@ export class HomeComponent extends UIComponent implements OnDestroy {
   //   .subscribe();
   // }
   onSelectionChanged($data, noTree = false) {
-    if(this.funcID.includes('DMT00') && this.view.dataService.dataSelected?.recID == $data.data.recID) return;
-    if ((this.funcID.includes('DMT00')) && $data.data.folderId == 'DM')
+    if(this.funcID.includes('DMT00') && (this.view.dataService.dataSelected?.recID == $data.data.recID)) return;
+    
+    if(this.funcID.includes('DMT00') && $data.data.folderId == 'DM')
     {
-      this.data = [];
-      this.dmSV.listFolder = [];
-      this.dmSV.listFiles = [];
-      this.isScrollFolder = true;
-      this.getDataFolder($data.data.recID,false,true);
-      var breadcumb = [];
-      var breadcumbLink = [];
-      breadcumb.push(this.dmSV.menuActive.getValue(), $data.data.folderName);
-      breadcumbLink.push('', $data.data.recID);
-      this.dmSV.breadcumbLink = breadcumbLink;
-      this.dmSV.breadcumb.next(breadcumb);
-      this.dmSV.getRight($data.data);
-      this.dmSV.folderName = $data.data.folderName;
-      this.dmSV.parentFolderId = $data.data.parentId;
-      this.dmSV.parentFolder.next($data.data);
-      this.dmSV.level = $data.data.level;
-      this.dmSV.folderID = $data.data.recID;
-      this.dmSV.folderId.next($data.data.recID);
+      var treeView = this.codxview?.currentView?.currentComponent?.treeView;
+      if (treeView && treeView?.dataTree && treeView.dataTree.length>0) {
+        if(treeView?.dataTree)
+        {
+          if(!treeView.dataTree[0]?.items || treeView.dataTree[0]?.items.length ==0)
+          {
+            this.folderService.options.page = 1;
+            this.folderService.options.pageLoading = true;
+            this.isScrollFolder = true;
+            this.getDataFolder(treeView.dataTree[0].recID,true,true);
+          }
+        }
+        
+      }
       return;
-    };
+    
+    }
     ScrollComponent.reinitialization();
     this.scrollTop();
     if (!$data || !$data?.data) return;
@@ -1624,10 +1631,26 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         if(isAddNode)
         {
           var treeView = this.codxview?.currentView?.currentComponent?.treeView;
-          if(treeView)
+          if(treeView && treeView.dataTree)
           {
-            treeView.getCurrentNode(id);
-            treeView.addChildNodes2ParentId(id,res[0]);
+            if(!treeView.dataTree[0].items || treeView.dataTree[0].items.length ==0)
+            {
+              treeView.getCurrentNode(id);
+              treeView.addChildNodes2ParentId(id,res[0]);
+              let index = treeView.dataTree.findIndex(x=>x.recID == id);
+              if(index>=0) treeView.dataTree[index].items = res[0];
+  
+              
+              var fields = document.getElementsByClassName('menu-sub');
+              for (var i = 0; i < fields.length; i ++) {
+                if(fields[i].getAttribute('data-id') == id)
+                {
+                  fields[i].classList.remove("hide");
+                  fields[i].classList.add("show");
+                }
+              }
+              this.detectorRef.detectChanges();
+            }
           }
         }
         this.dmSV.listFolder = this.dmSV.listFolder.concat(res[0]);
@@ -1702,6 +1725,8 @@ export class HomeComponent extends UIComponent implements OnDestroy {
       else if (e?.view?.type == ViewType.tree_list)
         this.currView = this.templateList;
       this.setHeight();
+
+     
     }
   }
   clickMoreFunction(e: any, data: any) {

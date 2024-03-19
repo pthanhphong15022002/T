@@ -7,11 +7,13 @@
     >
       <i
         *ngIf="isShowElement"
-        class="icon-20 icon-expand_less text-primary"
+        class="icon-22 icon-expand_less text-primary"
+        [ngbTooltip]="'Thu gọn'"
       ></i>
       <i
         *ngIf="!isShowElement"
-        class="icon-20 icon-expand_more text-primary"
+        class="icon-22 icon-expand_more text-primary"
+        [ngbTooltip]="'Mở rộng'"
       ></i>
     </div>
 
@@ -89,7 +91,7 @@
         >
         </codx-imgs>
         <div
-          class="disabled-inline me-2"
+          class="disabled-inline me-1"
           (click)="openPopupUpdateProgress(currentStep, 'P')"
           [ngClass]="
             checkRoleUpdateProgress(currentStep, 'P')
@@ -112,9 +114,8 @@
             placement="top bottom"
           ></codx-progressbar>
         </div>
-        <div class="model-func">
+        <div class="model-func"  *ngIf="!isMoveStage && !isViewStep">
           <codx-mfunc
-            *ngIf="!isMoveStage && !isViewStep"
             [formModel]="grvMoreFunction"
             [isBookMark]="true"
             [dataItem]="moreDefaut"
@@ -324,12 +325,12 @@
                               }
                             }"
                           ></ng-container>
-                          <div class="model-func">
+                          <div class="model-func"  
+                            *ngIf="
+                              (!isMoveStage && !isViewStep && !isClose) ||
+                              (isClose && !task?.isTaskDefault)"
+                          >
                             <codx-mfunc
-                              *ngIf="
-                                (!isMoveStage && !isViewStep && !isClose) ||
-                                (isClose && !task?.isTaskDefault)
-                              "
                               [formModel]="grvMoreFunction"
                               [isBookMark]="true"
                               [dataItem]="moreDefaut"
@@ -519,7 +520,7 @@
       <codx-imgs
         class="me-2 d-flex align-items-center"
         [width]="25"
-        ojectType="AD_Users"
+        ojectType="AD_Users"progressbarmain-body
         [numberImages]="1"
         [isToolTip]="true"
         [objectId]="data?.value?.owner"
@@ -796,14 +797,22 @@
     <button
       *ngIf="data?.task?.taskType == 'F'"
       type="button"
-      class="btn btn-outline-primary btn-sm"
+      class="btn btn-sm button-custom"
       (click)="openFormField(data?.task)"
     >
       <codx-label
+        *ngIf="!isViewStep"
         class="text-nowrap"
         name="Save"
         formName="Sprints"
-        default="Nhập form"
+        default="Nhập Form"
+      ></codx-label>
+      <codx-label
+        *ngIf="isViewStep"
+        class="text-nowrap"
+        name="Save"
+        formName="Sprints"
+        default="Xem Form"
       ></codx-label>
     </button>
     <button

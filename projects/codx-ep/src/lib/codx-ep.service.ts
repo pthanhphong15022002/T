@@ -448,6 +448,22 @@ export class CodxEpService {
       [orgID]
     );
   }
+  getBookingByID(recID: string) {
+    return this.api.exec<any>(
+      'EP',
+      'BookingsBusiness',
+      'GetByIDAsync',
+      recID
+    );
+  }
+  updateInfo(model: any) {
+    return this.api.exec<any>(
+      'EP',
+      'BookingsBusiness',
+      'UpdateInfoAsync',
+      [model]
+    );
+  }
 
   getBookingByRecID(recID: string) {
     return this.api.exec<any>(
@@ -799,7 +815,15 @@ export class CodxEpService {
       [calendarID]
     );
   }
-
+  getDataValueOfSettingAsync(formName:string,transType:string,category:string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetDataValueOfSettingAsync',
+      [formName,transType,category]
+    );
+  }
   getEPSetting() {
     return this.api.execSv(
       'SYS',
