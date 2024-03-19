@@ -330,6 +330,7 @@ export class DynamicProcessComponent
                 titleAction: this.titleAction,
                 gridViewSetup: this.gridViewSetup,
                 lstGroup: this.lstGroup,
+                totalInstance: this.totalInstance,
               };
               var dialog = this.callfc.openForm(
                 PopupAddDynamicProcessComponent,
@@ -346,6 +347,7 @@ export class DynamicProcessComponent
                 if (!e?.event) this.view.dataService.clear();
                 if (e && e.event != null) {
                   this.view.dataService.update(e.event).subscribe();
+                  this.itemSelected = e.event;
                   this.detectorRef.detectChanges();
                   // this.detectorRef.markForCheck();
                 }
@@ -462,6 +464,7 @@ export class DynamicProcessComponent
       if (!e?.event) this.view.dataService.clear();
       if (e && e.event != null) {
         e.event.totalInstance = 0;
+        this.view.dataService.update(e.event).subscribe();
         this.detectorRef.detectChanges();
         // this.detectorRef.markForCheck();
       }

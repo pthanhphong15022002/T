@@ -27,8 +27,7 @@ import { PopupAddWaterClockComponent } from './popup-add-water-clock/popup-add-w
 })
 export class WaterClockComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   @ViewChild('morefunction') morefunction: TemplateRef<any>;
   @ViewChild('templetOldMonthHeader') templetOldMonthHeader: TemplateRef<any>;
 
@@ -83,7 +82,7 @@ export class WaterClockComponent
     });
   }
 
-  onInit(): void {}
+  onInit(): void { }
 
   ngAfterViewInit(): void {
     this.views = [
@@ -105,7 +104,7 @@ export class WaterClockComponent
   selectedChange(data) {
     if (data || data?.data) this.itemSelected = data?.data ? data?.data : data;
   }
-  changeDataMF(e: any, data: any) {}
+  changeDataMF(e: any, data: any) { }
 
   //CRUD-CORE
   // click(evt) {
@@ -372,7 +371,7 @@ export class WaterClockComponent
       });
   }
 
-  onLoading(e) {}
+  onLoading(e) { }
 
   getColumsGrid(grvSetup) {
     this.columnGrids = [];
