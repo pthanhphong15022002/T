@@ -3,13 +3,13 @@
   *ngIf="dataSelected"
   (dblclick)="dbClick(dataSelected)"
 >
-  <div class="w-20px p-2 d-flex align-items-center">
+  <div class="w-50px p-2 text-center">
     <div
       *ngIf="
         dataSelected.endDate &&
         (dataSelected?.actualEnd | checkDuedateValue : dataSelected?.endDate)
       "
-      class="icon-notifications icon-18 text-danger d-flex align-items-center"
+      class="icon-notifications icon-18 text-danger"
       [ngbTooltip]="tempDueDate"
     ></div>
     <ng-template #tempDueDate>
@@ -229,7 +229,7 @@
     </div>
   </div>
 
-  <div class="w-75px p-2 d-flex justify-content-center">
+  <div class="w-100px p-2 d-flex justify-content-center">
     <div
       class="attachment-file d-flex align-items-center"
       (click)="countData > 0 ? openPopup() : ''"
