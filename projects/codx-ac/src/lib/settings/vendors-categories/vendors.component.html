@@ -5,7 +5,7 @@
 
 <!-- Start: TemplateGrid -->
 <ng-template #templateGrid let-data>
-  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
-    type="view"></codx-mfunc>
+  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeDataMF($event)" [isBookMark]="true" type="view"></codx-mfunc>
 </ng-template>
 <!-- End: TemplateGrid -->
