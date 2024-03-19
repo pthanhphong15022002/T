@@ -359,6 +359,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
   viewOnly = false; //chỉ xem
   category: any;
+  isUseSuccessOld = true;
+  isUseFailOld = true;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -384,7 +386,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     this.systemProcess = dt?.data?.systemProcess ?? '0';
     this.action = dt?.data?.action;
     this.viewOnly = this.action == 'view';
-
+    this.totalInstance = dt?.data?.totalInstance ?? 0;
     this.showID = dt?.data?.showID;
 
     this.userId = this.user?.userID;
@@ -799,25 +801,35 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
               .update(res.update)
               .subscribe();
             res.update.modifiedOn = new Date();
-
-            let isUseSuccess = this.stepSuccess.isUsed;
-            let isUseFail = this.stepFail.isUsed;
-            let dataCountInstance = [res.update.recID, isUseSuccess, isUseFail];
-
-            this.dpService
-              .countInstanceByProccessId(dataCountInstance)
-              .pipe(takeUntil(this.destroyFrom$))
-              .subscribe((totalInstance) => {
-                if (totalInstance) {
-                  res.update.totalInstance = totalInstance;
+            if (
+              this.isUseSuccessOld != this.stepSuccess.isUsed ||
+              this.isUseFailOld != this.stepFail.isUsed
+            ) {
+              //Update  đếm lại instance
+              let isUseSuccess = this.stepSuccess.isUsed;
+              let isUseFail = this.stepFail.isUsed;
+              let dataCountInstance = [
+                res.update.recID,
+                isUseSuccess,
+                isUseFail,
+              ];
+              this.dpService
+                .countInstanceByProccessId(dataCountInstance)
+                .pipe(takeUntil(this.destroyFrom$))
+                .subscribe((totalInstance) => {
+                  if (totalInstance) {
+                    res.update.totalInstance = totalInstance;
+                  } else {
+                    res.update.totalInstance = 0;
+                  }
                   this.dialog.close(res.update);
                   this.formClear();
-                } else {
-                  res.update.totalInstance = 0;
-                  this.dialog.close(res.update);
-                  this.formClear();
-                }
-              });
+                });
+            } else {
+              res.update['totalInstance'] = this.totalInstance;
+              this.dialog.close(res.update);
+              this.formClear();
+            }
           }
         });
     } else {
@@ -960,7 +972,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             this.dpService
               .deleteFileTask([this.listFileTask])
               .pipe(takeUntil(this.destroyFrom$))
-              .subscribe((rec) => {});
+              .subscribe((rec) => { });
           }
           // if (this.action == 'add' || this.action == 'copy') {
           //   //xoa Aprover hoi lai cach xu ly nay
@@ -1214,10 +1226,10 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     this.updateNodeStatus(oldNode, newNode);
     this.currentTab--;
   }
-  saveAndClose() {}
+  saveAndClose() { }
 
   // THÔNG TIN QUY TRÌNH - PHÚC LÀM
-  checkContinue() {}
+  checkContinue() { }
   //Avt
   addAvatar() {
     this.imageAvatar.referType = 'avt';
@@ -1696,7 +1708,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                   for (let j = 0; j < roles.length; j++) {
                     if (
                       roles[j].objectID ==
-                        this.process.permissions[index].objectID &&
+                      this.process.permissions[index].objectID &&
                       roles[j].roleType == 'S'
                     ) {
                       roles.splice(j, 1);
@@ -1874,7 +1886,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       } else if ($event.field === 'no' && $event.component.checked === true) {
         this.process.createTask = false;
       }
-    }else if(view == "closeInstanceOverdue"){
+    } else if (view == 'closeInstanceOverdue') {
       if ($event.field === 'yes' && $event.component.checked === true) {
         this.process.closeInstanceOverdue = true;
       } else if ($event.field === 'no' && $event.component.checked === true) {
@@ -2280,8 +2292,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
   // -----------------END----------------//
   //Bieu mau
-  clickViewTemp(temp) {}
-  onScroll(e: any) {}
+  clickViewTemp(temp) { }
+  onScroll(e: any) { }
 
   navChanged(e: any) {
     switch (e?.nextId) {
@@ -3191,6 +3203,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   // Step task nvthuan
   // step
   getStepByProcessID() {
+    this.stepList = [];
     let data = this.process?.steps;
     if (data) {
       this.editTest(data);
@@ -3577,7 +3590,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
           this.taskGroupList.splice(index, 1);
           this.sumTimeStep();
         }
-        for (let i = 0; i < this.taskList.length; ) {
+        for (let i = 0; i < this.taskList.length;) {
           if (this.taskList[i]['taskGroupID'] === data['recID']) {
             const task = JSON.parse(JSON.stringify(this.taskList[i]));
             this.taskList.splice(i, 1);
@@ -3738,8 +3751,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     let indexGroupOld =
       taskData?.taskGroupID != taskGroupIdOld
         ? this.taskGroupList?.findIndex(
-            (group) => group.recID == taskGroupIdOld
-          )
+          (group) => group.recID == taskGroupIdOld
+        )
         : -1;
     let indexTaskGroup = this.taskGroupList[indexGroup]['task']?.findIndex(
       (task) => task.recID == taskData.recID
@@ -3948,7 +3961,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     }
   }
 
-  afterSave(e) {}
+  afterSave(e) { }
 
   clickMFTaskGroup(e: any, data?: any) {
     switch (e.functionID) {
@@ -4810,6 +4823,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     } else if (this.action === 'edit') {
       this.stepSuccess = this.stepList.find((x) => x.isSuccessStep == true);
       this.stepFail = this.stepList.find((x) => x.isFailStep == true);
+      this.isUseSuccessOld = this.stepSuccess.isUsed;
+      this.isUseFailOld = this.stepFail.isUsed;
     }
   }
   editTest(data) {
@@ -4869,7 +4884,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       let inxIsExist = this.step.reasons.findIndex(
         (x) =>
           x.reasonName.trim().toLowerCase() ===
-            this.reasonName.trim().toLowerCase() && x.recID !== this.reasonId
+          this.reasonName.trim().toLowerCase() && x.recID !== this.reasonId
       );
       if (inxIsExist !== -1) {
         this.notiService.notifyCode(
@@ -4926,15 +4941,15 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     this.headerText =
       viewReason === this.viewStepReasonSuccess
         ? (clickMore?.customName ?? this.titleAdd) +
-          ' ' +
-          this.LowercaseFirstPipe(
-            this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
-          )
+        ' ' +
+        this.LowercaseFirstPipe(
+          this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
+        )
         : (clickMore?.customName ?? this.titleAdd) +
-          ' ' +
-          this.LowercaseFirstPipe(
-            this.joinTwoString(this.stepNameReason, this.stepNameFail)
-          );
+        ' ' +
+        this.LowercaseFirstPipe(
+          this.joinTwoString(this.stepNameReason, this.stepNameFail)
+        );
     if (
       clickMore?.functionID === 'SYS03' ||
       clickMore?.functionID === 'SYS04'
@@ -4991,7 +5006,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     });
   }
 
-  defaultCbxProccess() {}
+  defaultCbxProccess() { }
 
   cbxChange($event, view) {
     if (view === this.viewStepReasonSuccess) {
