@@ -63,6 +63,53 @@ export class AddTaskComponent
   listDocument = [];
   dataEmail: any;
   showEmail = false;
+  listRequester = [
+    {
+      fieldName: "userName",
+      title: 'Người yêu cầu',
+      controlType: "Text",
+      dataType: "String"
+    },
+    {
+      fieldName: "createdOn",
+      title: "Ngày tạo",
+      controlType : "MaskBox",
+      dataFormat : "d",
+      dataType : "DateTime"
+    },
+    {
+      fieldName: "orgUnit",
+      title: "Bộ phận",
+      controlType : "ComboBox",
+      refType : "3",
+      refValue : "Users",
+      dataType : "String"
+    },
+    {
+      fieldName: "position",
+      title: "Chức danh",
+      controlType : "ComboBox",
+      refType : "3",
+      refValue : "Users",
+      dataType : "String"
+    },
+    {
+      fieldName: "department",
+      title: "Phòng ban",
+      controlType : "ComboBox",
+      refType : "3",
+      refValue : "Users",
+      dataType : "String"
+    },
+    {
+      fieldName: "company",
+      title: "Công ty",
+      controlType : "ComboBox",
+      refType : "3",
+      refValue : "Users",
+      dataType : "String"
+    },
+  ];
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes?.activityType &&
@@ -473,9 +520,19 @@ export class AddTaskComponent
 
     let option = new DialogModel();
     option.FormModel = this.formModel;
-    let listForm = this.process.steps.filter(
+
+    let listSteps = JSON.parse(JSON.stringify(this.process.steps));
+    let listForm = listSteps.filter(
       (x) => x.stepNo < this.data.stepNo && x.activityType == 'Form'
     );
+
+    listForm.forEach(elm=>{
+      let data = JSON.parse(JSON.stringify(this.listRequester));
+      data.forEach(elm2=>{
+        elm2.fieldName = "Form" + elm.stepNo + "_" + elm2.fieldName;
+      })
+      elm.extendInfo = elm.extendInfo.concat(data)
+    });
 
     let dataSteps = this.process.steps.filter(
       (x) =>
