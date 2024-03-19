@@ -729,7 +729,8 @@ export class AddTaskComponent
         formModel: this.formModel,
         data: data,
         groupField: this.getFieldExport(),
-        isFristVer:true
+        isFristVer:true,
+        isSign: this.data?.settings?.esign
       },
       '',
       option

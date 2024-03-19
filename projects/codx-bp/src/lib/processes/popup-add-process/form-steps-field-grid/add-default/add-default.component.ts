@@ -74,7 +74,7 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
   }
   close()
   {
-    var list = ["Stage","Group","StartEnd","Timer","Conditions","SubProcess"];
+    var list = ["Stage","Group","StartEnd","Timer","Conditions","SubProcess","Form"];
     if(!list.includes(this.data.activityType))
     {
       if(!this.data.permissions || this.data.permissions.length == 0)
@@ -82,7 +82,7 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
         //Nhớ nhắc Thương thêm mã noti
         this.notifySvr.notify("Người thực hiện không được bỏ trống.");
       }
-      else if(this.data?.duration == 0)  this.notifySvr.notify("Thời gian thực hiện phải lớn hơn 0."); 
+      else if(this.data?.duration == 0) this.notifySvr.notify("Thời gian thực hiện phải lớn hơn 0."); 
       else 
       {
         let idFiles = [];
@@ -115,6 +115,11 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
 
         this.dialog?.close({data: this.data , process: this.process});
       }
+    }
+    else if(this.data.activityType == "Form" && this.data?.settings?.esign)
+    {
+      if(!this.data.settings?.template?.templateID) this.notifySvr.notify("Mẫu template không được bỏ trống.");
+      else this.dialog.close({data: this.data , process: this.process});
     }
     else this.dialog.close({data: this.data , process: this.process});
     //this.data.settings = JSON.stringify(this.data.settings);
