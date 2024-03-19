@@ -190,9 +190,11 @@ export class GeneralJournalAddComponent extends UIComponent {
   clickMF(event: any, data) {
     switch (event.functionID) {
       case 'SYS104':
+      case 'SYS04':
         this.copyRow(data);
         break;
       case 'SYS102':
+      case 'SYS02':
         this.deleteRow(data);
         break;
     }
@@ -398,7 +400,7 @@ export class GeneralJournalAddComponent extends UIComponent {
         }
         if(event?.selectingIndex == 0){
           if(this.eleGridGeneral) this.eleGridGeneral.refresh();
-        } 
+        }
         break;
     }
     this.setValidateForm();
@@ -522,9 +524,9 @@ export class GeneralJournalAddComponent extends UIComponent {
           }
           if (this.master.data.isAdd || this.master.data.isCopy)
             this.notification.notifyCode('SYS006');
-          else 
+          else
             this.notification.notifyCode('SYS007');
-          
+
         }
         if(this.eleGridGeneral && this.eleGridGeneral?.isSaveOnClick) this.eleGridGeneral.isSaveOnClick = false;
         if(this.eleGridSettledInvoices && this.eleGridSettledInvoices.isSaveOnClick) this.eleGridSettledInvoices.isSaveOnClick = false;
@@ -538,8 +540,8 @@ export class GeneralJournalAddComponent extends UIComponent {
 
   /**
    * *Hàm thay đổi lí do chi
-   * @param field 
-   * @param obj 
+   * @param field
+   * @param obj
    */
   reasonIDChange(field:any,preValue:any){
     this.api.exec('AC', 'GeneralJournalsBusiness', 'ValueChangedAsync', [
@@ -582,7 +584,7 @@ export class GeneralJournalAddComponent extends UIComponent {
 
   /**
    * *Hàm thay đổi tiền tệ
-   * @param field 
+   * @param field
    */
   currencyIDChange(field:any,preValue:any){
     this.api.exec('AC', 'GeneralJournalsBusiness', 'ValueChangedAsync', [
@@ -613,7 +615,7 @@ export class GeneralJournalAddComponent extends UIComponent {
 
   /**
    * *Hàm thay đổi tỷ giá
-   * @param field 
+   * @param field
    */
   exchangeRateChange(field:any){
     this.api
@@ -637,7 +639,7 @@ export class GeneralJournalAddComponent extends UIComponent {
 
   /**
    * *Hàm thay đổi ngày chứng từ
-   * @param field 
+   * @param field
    */
   voucherDateChange(field:any){
     this.api.exec('AC', 'GeneralJournalsBusiness', 'ValueChangedAsync', [
@@ -755,7 +757,7 @@ export class GeneralJournalAddComponent extends UIComponent {
         break;
       case 'add':
       case 'update': //? sau khi thêm dòng thành công
-        
+
         break;
       case 'closeEdit': //? khi thoát dòng
       if (this.eleGridGeneral && this.eleGridGeneral.rowDataSelected) {
@@ -785,7 +787,7 @@ export class GeneralJournalAddComponent extends UIComponent {
       if (this.eleGridVatInvoices && this.eleGridVatInvoices.rowDataSelected) {
         this.eleGridVatInvoices.rowDataSelected = null;
       }
-      if(this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false; 
+      if(this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false;
       setTimeout(() => {
         let element = document.getElementById('btnAddVAT');
         element.focus();
@@ -987,7 +989,7 @@ export class GeneralJournalAddComponent extends UIComponent {
     if (
       (e.target.closest('.e-grid') == null &&
       e.target.closest('.e-popup') == null &&
-      e.target.closest('.edit-value') == null) && 
+      e.target.closest('.edit-value') == null) &&
       e.target.closest('button') == null
     ) {
       if (this.eleGridGeneral && this.eleGridGeneral?.gridRef?.isEdit) {
@@ -1028,7 +1030,7 @@ export class GeneralJournalAddComponent extends UIComponent {
       }
     }
   }
-  
+
   //#endregion Function
 
 }
