@@ -20,6 +20,7 @@ import {
 } from 'codx-core';
 import { UnitsOfMearSureAdd } from './unitsofmearsure-add/unitsofmearsure-add.component';
 import { Subject, takeUntil } from 'rxjs';
+import { CodxAcService } from '../../codx-ac.service';
 
 @Component({
   selector: 'lib-unitsofmearsure',
@@ -44,7 +45,8 @@ export class UnitsofmearsureComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
-    private callfunc: CallFuncService
+    private callfunc: CallFuncService,
+    private acService: CodxAcService
   ) {
     super(inject);
     this.router.data.subscribe((res) => {
@@ -66,7 +68,7 @@ export class UnitsofmearsureComponent extends UIComponent {
       {
         type: ViewType.grid,
         active: true,
-        sameData: false,
+        sameData: true,
         model: {
           template2: this.templateGrid,
         },
@@ -216,11 +218,7 @@ export class UnitsofmearsureComponent extends UIComponent {
   }
 
   changeDataMF(event, type: any = '') {
-    event.reduce((pre, element) => {
-      if (type === 'views') element.isbookmark = true;
-      if (!['SYS03', 'SYS02', 'SYS04', 'SYS002'].includes(element.functionID))
-        element.disabled = true;
-    }, {});
+    this.acService.changeMFCategories(event,type);
   }
 
   onSelectedItem(event) {

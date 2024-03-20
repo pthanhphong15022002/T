@@ -100,7 +100,7 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
     // if (this.action != 'view')
     this.changeCbxCustomer();
   }
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   valueChange(e) {
     this.data[e.field] = e.data;
@@ -162,10 +162,6 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
         this.form.formGroup.patchValue({ projectID: this.data['projectID'] });
 
         this.siteIDOldData = this.data.siteID;
-        (
-          this.cbxRefID.ComponentCurrent as CodxComboboxComponent
-        ).dataService.data = [];
-        this.cbxRefID.crrValue = null;
         //ref
         (
           this.cbxRefID.ComponentCurrent as CodxComboboxComponent

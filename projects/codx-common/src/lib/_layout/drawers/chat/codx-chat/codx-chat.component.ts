@@ -65,12 +65,12 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
     private cache: CacheService,
     private notifySV: NotificationsService,
     private dt: ChangeDetectorRef,
-  ) 
+  )
   {
     this.user = this.auth.get();
     this.cache.functionList(this.funcID)
       .subscribe((func:any) => {
-        if (func) 
+        if (func)
         {
           this.formModel = new FormModel();
           this.function = JSON.parse(JSON.stringify(func));
@@ -111,7 +111,7 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
         this.getTotalMessage();
       }
     });
-    
+
     this.signalRSV.removeGroup
     .subscribe((res: any) => {
       if(res)
@@ -164,18 +164,18 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
       option
     );
     popup.closed.subscribe((res: any) => {
-      if (res.event) 
+      if (res.event)
       {
         (this.codxListChat.codxListView.dataService as CRUDService).add(res.event).subscribe();
       }
     });
   }
-  
+
   clickReadAll() {
     // chưa có mssgCode
     this.notifySV.alertCode('Đánh dấu đã xem tất cả ?')
     .subscribe((res: any) => {
-      if (res?.event?.status === "Y") 
+      if (res?.event?.status === "Y")
       {
         this.count = 0;
         this.dt.detectChanges();
@@ -195,7 +195,7 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
     });
   }
 
-  search(searchText:any, searchType = "") 
+  search(searchText:any, searchType = "")
   {
     if(searchType == "searchFavorite")
     {

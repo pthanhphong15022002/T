@@ -51,7 +51,7 @@
     </div>
 
     <div class="row">
-      <div class="col-6">
+      <div class="col-8">
         <div class="d-flex">
           <div class="me-4">
             <codx-img
@@ -98,7 +98,7 @@
           </div>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-4">
         <div class="d-flex justify-content-end align-items-center mb-2">
           <span class="icon-monetization_on icon-18 me-1 text-warning"></span>
           <span
@@ -781,9 +781,7 @@
           *ngIf="item?.fields?.length > 0"
           [dataStep]="item"
           [showColumnControl]="showColumnControl(item.stepID)"
-          [isUpdate]="
-            ['1', '2', '15', '17'].includes(contract.status) && !contract.closed
-          "
+          [isUpdate]="['1', '2', '15',].includes(contract.status) && !contract.closed && contract?.approveStatus != '3'"
           [objectIdParent]="contract.recID"
           [customerID]="contract.customerID"
           (saveDataStep)="saveDataStep($event)"
@@ -806,6 +804,7 @@
     [taskAdd]="taskAdd"
     (moveStage)="handelMoveStage($event)"
     [isAdmin]="contract?.isAdminAll"
+    [isViewStep]="!(['1', '2', '15',].includes(contract?.status) && !contract?.closed && contract?.approveStatus != '3')"
   ></step-task>
   <!-- [taskAdd]="dataTaskAdd" -->
 </ng-template>

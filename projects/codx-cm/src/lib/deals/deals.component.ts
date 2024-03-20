@@ -434,7 +434,16 @@ export class DealsComponent
           }
           const functionID = eventItem.functionID;
           const mappingFunction = this.getRoleMoreFunction(functionID);
-          mappingFunction && mappingFunction(eventItem, data);
+          if(mappingFunction){
+            mappingFunction(eventItem, data);
+          }else{
+            if(['SYS003','SYS004','SYS001','SYS002','SYS009','SYS008','',''].includes(functionID)){
+              eventItem.disabled = this.checkMoreReason(data);
+            }else{
+              console.table(eventItem);
+              
+            }
+          }
         } else {
           eventItem.disabled =
             eventItem?.functionID !== 'CM0201_17'
@@ -451,37 +460,35 @@ export class DealsComponent
     let isDisabled = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? (data.closed && data?.status != '1') ||
-            ['1', '0', '15'].includes(data?.status) ||
-            this.checkMoreReason(data) ||
+          ? this.checkMoreReason(data) ||
             !data.applyProcess
           : true;
     };
     let isDelete = (eventItem, data) => {
       eventItem.disabled = data.delete
-        ? data.closed || this.checkMoreReason(data) || data.status == '0'
+        ? this.checkMoreReason(data)
         : true;
     };
     let isCopy = (eventItem, data) => {
       eventItem.disabled = data.write
-        ? data.closed || this.checkMoreReason(data, false) || data.status == '0'
+        ? data.closed || data.status == '0' || data?.approveStatus == '3' || !data?.isAdminAll
         : true;
     };
     let isEdit = (eventItem, data) => {
       eventItem.disabled = data.write
-        ? data.closed || this.checkMoreReason(data) || data.status == '0'
+        ? this.checkMoreReason(data)
         : true;
     };
     let isClosed = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? data.closed || ['1', '0', '15'].includes(data.status)
+          ? this.checkMoreReason(data)
           : true;
     };
     let isOpened = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? !data.closed || ['1', '0'].includes(data.status)
+          ? !data.closed || data?.approveStatus == '3'
           : true;
     };
     let isStartDay = (eventItem, data) => {
@@ -492,8 +499,7 @@ export class DealsComponent
     };
     let isOwner = (eventItem, data) => {
       eventItem.disabled =
-        data?.alloweStatus == '1'
-          ? !['1', '2', '15'].includes(data.status) || data.closed
+        data?.alloweStatus == '1' ? this.checkMoreReason(data)
           : true;
     };
     let isConfirmOrRefuse = (eventItem, data) => {
@@ -503,18 +509,11 @@ export class DealsComponent
     };
     let isApprovalTrans = (eventItem, data) => {
       eventItem.disabled =
-        (data.closed && data.status != '1') ||
+        data.closed ||
         (this.applyApprover != '1' && !data.applyProcess) ||
-        data.status == '0' ||
+        ['0',"3","4","5","6"].includes(data.status) ||
         data?.approveStatus >= '3';
     };
-    // let isUpdateBANT = (eventItem, data) => {
-    //   eventItem.disabled = data.write
-    //     ? (data.closed && data.status != '1') ||
-    //       data.status == '0' ||
-    //       this.checkMoreReason(data)
-    //     : true;
-    // };
     let isRejectApprover = (eventItem, data) => {
       eventItem.disabled =
         (data.closed && data.status != '1') ||
@@ -531,8 +530,7 @@ export class DealsComponent
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
-      eventItem.disabled =
-        data?.alloweStatus == '1' || data?.status != '0' ? false : true;
+      eventItem.disabled = data?.alloweStatus == '1'? (data?.approveStatus == '3' || data.closed) : false;
     };
     let isMoveReason = (eventItem, data) => {
       eventItem.disabled =
@@ -557,23 +555,32 @@ export class DealsComponent
         : true;
     };
     let isAddTask = (eventItem, data) => {
-      eventItem.disabled =
-        !data?.isAdminAll || data.closed || data.status == '7';
+      eventItem.disabled = 
+        !data?.isAdminAll || this.checkMoreReason(data, false);
     };
 
     functionMappings = {
-      ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
-        (acc, code) => ({ ...acc, [code]: isDisabled }),
-        {}
-      ),
-      ...['CM0201_12', 'CM0201_13'].reduce(
-        (acc, code) => ({ ...acc, [code]: isConfirmOrRefuse }),
-        {}
-      ),
-      ...['SYS101', 'SYS103', 'SYS104', 'SYS102'].reduce(
-        (acc, code) => ({ ...acc, [code]: isDisable }),
-        {}
-      ),
+      // ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
+      //   (acc, code) => ({ ...acc, [code]: isDisabled }),
+      //   {}
+      // ),
+      // ...['CM0201_12', 'CM0201_13'].reduce(
+      //   (acc, code) => ({ ...acc, [code]: isConfirmOrRefuse }),
+      //   {}
+      // ),
+      // ...['SYS101', 'SYS103', 'SYS104', 'SYS102'].reduce(
+      //   (acc, code) => ({ ...acc, [code]: isDisable }),
+      //   {}
+      // ),
+      SYS102: isDisable,
+      SYS104: isDisable,
+      SYS103: isDisable,
+      SYS101: isDisable,
+      CM0201_13: isConfirmOrRefuse,
+      CM0201_12: isConfirmOrRefuse,
+      CM0201_5: isDisabled,
+      CM0201_1: isDisabled,
+
       CM0201_3: isMoveReason,
       CM0201_4: isMoveReason,
       CM0201_2: isStartDay, // bắt đầu
@@ -584,16 +591,63 @@ export class DealsComponent
       SYS03: isEdit,
       SYS04: isCopy,
       SYS02: isDelete,
-      // CM0201_14: isUpdateBANT,
       CM0201_16: isRejectApprover,
       CM0201_15: isPermission,
       CM0201_17: isChangeStatus,
-      CM0201_19: isUpdateProcess,
-      CM0201_20: isDeleteProcess,
+      CM0201_19: isDisable,
+      CM0201_20: isDisable,
+      // CM0201_19: isUpdateProcess,
+      // CM0201_20: isDeleteProcess,
       CM0201_18: isAddTask,
     };
 
     return functionMappings[type];
+  }
+  clickMF(e, data) {
+    if (!data) return;
+    this.dataSelected = data;
+    this.titleAction = e.text;
+    this.stepIdClick = '';
+    const functionMapping = {
+      SYS03: () => this.edit(data),
+      SYS04: () => this.copy(data),
+      SYS02: () => this.delete(data),
+      SYS05: () => this.viewInfo(data),//xem
+      CM0201_1: () => this.moveStage(data),//chuyen giai doan
+      CM0201_2: () => this.startNow(data), // bat dau ngay
+      CM0201_3: () => this.moveReason(data, true),//thanh cong
+      CM0201_4: () => this.moveReason(data, false),// that bai
+      CM0201_7: () => this.popupOwnerRoles(data),//phan con phu trach
+      CM0201_8: () => this.openOrCloseDeal(data, true),//dong
+      CM0201_9: () => this.openOrCloseDeal(data, false),//mo
+
+      CM0201_6: () => this.approvalTrans(data), //goi duyet
+      CM0201_12: () => this.confirmOrRefuse(true, data),
+      CM0201_13: () => this.confirmOrRefuse(false, data),
+      CM0201_14: () => this.openFormBANT(data),
+      CM0201_16: () => this.cancelApprover(data),//huy duyet
+      SYS002: () => this.exportTemplet(e, data),
+      CM0201_15: () => this.popupPermissions(data),//chia se
+      CM0201_17: () => this.changeStatus(data),//doi trang thai
+      CM0201_18: () => this.addTask(data),//them cong viec
+      CM0201_19: () => this.updateProcess(data, true), //Dua vao quy trinh
+      CM0201_20: () => this.updateProcess(data, false),//khong su dung quy trinh
+    };
+
+    const executeFunction = functionMapping[e.functionID];
+    if (executeFunction) {
+      executeFunction();
+    } else {
+      this.codxShareService.defaultMoreFunc(
+        e,
+        data,
+        this.afterSave.bind(this),
+        this.view.formModel,
+        this.view.dataService,
+        this
+      );
+      this.detectorRef.detectChanges();
+    }
   }
   //-------------- GET DEFAULT ------------------------//
   executeApiCallFunctionID(formName, gridViewName) {
@@ -655,56 +709,9 @@ export class DealsComponent
   //----------------- END ---------------------------//
 
   checkMoreReason(data, isShow: boolean = true) {
-    if (data?.isAdminAll && isShow) return false;
-    return data?.status != '1' && data?.status != '2' && data?.status != '15';
+    return (!['1','2','15'].includes(data?.status) || data?.approveStatus == '3' || data?.closed);
   }
 
-  clickMF(e, data) {
-    if (!data) return;
-    this.dataSelected = data;
-    this.titleAction = e.text;
-    this.stepIdClick = '';
-    const functionMapping = {
-      SYS03: () => this.edit(data),
-      SYS04: () => this.copy(data),
-      SYS02: () => this.delete(data),
-      SYS05: () => this.viewInfo(data),
-      CM0201_1: () => this.moveStage(data),
-      CM0201_2: () => this.startNow(data),
-      CM0201_3: () => this.moveReason(data, true),
-      CM0201_4: () => this.moveReason(data, false),
-      CM0201_8: () => this.openOrCloseDeal(data, true),
-      CM0201_7: () => this.popupOwnerRoles(data),
-      CM0201_9: () => this.openOrCloseDeal(data, false),
-
-      CM0201_6: () => this.approvalTrans(data),
-      CM0201_12: () => this.confirmOrRefuse(true, data),
-      CM0201_13: () => this.confirmOrRefuse(false, data),
-      CM0201_14: () => this.openFormBANT(data),
-      CM0201_16: () => this.cancelApprover(data),
-      SYS002: () => this.exportTemplet(e, data),
-      CM0201_15: () => this.popupPermissions(data),
-      CM0201_17: () => this.changeStatus(data),
-      CM0201_18: () => this.addTask(data),
-      CM0201_19: () => this.updateProcess(data, true),
-      CM0201_20: () => this.updateProcess(data, false),
-    };
-
-    const executeFunction = functionMapping[e.functionID];
-    if (executeFunction) {
-      executeFunction();
-    } else {
-      this.codxShareService.defaultMoreFunc(
-        e,
-        data,
-        this.afterSave.bind(this),
-        this.view.formModel,
-        this.view.dataService,
-        this
-      );
-      this.detectorRef.detectChanges();
-    }
-  }
   updateProcess(data, isCheck) {
     this.notificationsService
       .alertCode('DP033', null, [

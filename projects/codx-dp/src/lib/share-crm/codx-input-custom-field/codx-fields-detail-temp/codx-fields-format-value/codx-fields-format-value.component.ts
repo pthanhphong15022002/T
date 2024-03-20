@@ -37,6 +37,7 @@ export class CodxFieldsFormatValueComponent implements OnInit {
   dataValueTypeV: any = [];
   dataValueTypePA: any = [];
   noteVll = '';
+  isCustomVll = true; //laf vll tuwj theem
 
   constructor(
     private cache: CacheService,
@@ -58,17 +59,20 @@ export class CodxFieldsFormatValueComponent implements OnInit {
         break;
       case 'L':
         if (this.data.dataFormat == 'V' || this.data.dataFormat == 'S') {
-          this.dataValueTypeV = this.listValue(this.data.dataValue);
-          if (this.data.dataFormat == 'S') {
-            this.api
-              .execSv<any>('SYS', 'SYS', 'ValueListBusiness', 'GetAsync', [
-                this.data.refValue,
-              ])
-              .subscribe((vl) => {
-                if (vl) {
-                  this.noteVll = vl.note;
-                }
-              });
+          this.isCustomVll = this.data.refValue.includes('DPF');
+          if (this.isCustomVll) {
+            this.dataValueTypeV = this.listValue(this.data.dataValue);
+            if (this.data.dataFormat == 'S') {
+              this.api
+                .execSv<any>('SYS', 'SYS', 'ValueListBusiness', 'GetAsync', [
+                  this.data.refValue,
+                ])
+                .subscribe((vl) => {
+                  if (vl) {
+                    this.noteVll = vl.note;
+                  }
+                });
+            }
           }
         }
         break;

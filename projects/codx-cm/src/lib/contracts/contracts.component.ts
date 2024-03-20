@@ -259,7 +259,8 @@ export class ContractsComponent extends UIComponent {
           res?.functionID != 'SYS05' &&
           res?.functionID != 'CM0204_16' && 
           res?.functionID != 'CM0204_22' &&
-          res?.functionID != 'CM0204_17'
+          res?.functionID != 'CM0204_17' &&
+          res?.functionID != 'CM0204_3'
         ) {
           res.disabled = true;
         } else if (
@@ -284,7 +285,7 @@ export class ContractsComponent extends UIComponent {
               break;
 
             case 'CM0204_1': //Gửi duyệt
-              res.disabled = !data?.alloweStatus && data?.approveRule == '3';
+              res.disabled = !data?.alloweStatus && data?.approveStatus == '3';
               break;
             case 'CM0204_2': //Hủy yêu cầu duyệt
               res.disabled = data?.approveStatus != '3';
@@ -315,10 +316,12 @@ export class ContractsComponent extends UIComponent {
               res.disabled = data?.closed;
               break;
             case 'CM0204_19': // đưa vào quy trình xử lý
-              res.disabled = !(data?.alloweStatus == '1' && !data?.applyProcess)
+              // res.disabled = !(data?.alloweStatus == '1' && !data?.applyProcess)
+              res.disabled = true;
               break;
             case 'CM0204_20': // không sử dụng quy trình
-              res.disabled = !(data?.alloweStatus == '1' && data?.applyProcess)
+              // res.disabled = !(data?.alloweStatus == '1' && data?.applyProcess)
+              res.disabled = true;
               break;
 
             case 'CM0204_15': // Đóng hợp đồng
@@ -328,7 +331,7 @@ export class ContractsComponent extends UIComponent {
               res.disabled = !(data?.closed && data?.alloweStatus);
               break;
             case 'CM0204_18': // thanh lý
-              res.disabled = (data?.status != '17' &&  !data?.closed && data?.alloweStatus && data?.approveStatus != '3');
+              res.disabled = !(data?.status != '17' &&  !data?.closed && data?.alloweStatus && data?.approveStatus != '3');
               break;
 
             case 'CM0204_5': //Đã giao hàng
@@ -441,9 +444,9 @@ export class ContractsComponent extends UIComponent {
       case 'CM0204_20': // không sử dụng quy trình
         this.updateProcess(data, false);
         break;
-      case 'SYS004': // không sử dụng quy trình
-        this.sendMail(data);
-        break;
+      // case 'SYS004': //mail
+      //   this.sendMail(data);
+      //   break;
       default: {
         this.codxShareService.defaultMoreFunc(
           e,

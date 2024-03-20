@@ -52,9 +52,6 @@ export class AddressAddComponent extends UIComponent{
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
     this.dataDefault = dialogData.data?.dataDefault;
-    this.objectID = dialogData.data?.objectID;
-    this.objectName = dialogData.data?.objectName;
-    this.objectType = dialogData.data?.objectType;
   }
   //#endregion
 
@@ -103,38 +100,9 @@ export class AddressAddComponent extends UIComponent{
 
   //#region Method
   onSave() {
-    this.form.setValue('objectID',this.objectID,{});
-    this.form.setValue('objectName',this.objectName,{});
-    this.form.setValue('objectType',this.objectType,{});
-    this.form.save(null, 0, '', '', false).pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if(!res) return;
-      if(res.hasOwnProperty('save')){
-        if(res.save.hasOwnProperty('data') && !res.save.data) return;
-      }
-      if(res.hasOwnProperty('update')){
-        if(res.update.hasOwnProperty('data') && !res.update.data) return;
-      }
-      this.dialog.close({address:{...this.form.data}});
-    })
+    let validate = this.form.validation();
+    if(validate) return;
+    this.dialog.close({...this.form.data});
   }
-  // onSaveAdd() {
-  //   // this.checkValidate();
-  //   // if (this.validate > 0) {
-  //   //   this.validate = 0;
-  //   //   return;
-  //   // } else {
-  //   //   this.objectAddress.push({ ...this.address });
-  //   //   this.objectContactAddress.forEach((element) => {
-  //   //     this.objectContactAddressAfter.push({ ...element });
-  //   //   });
-  //   //   if (this.type == 'editaddress') {
-  //   //     this.notification.notifyCode('SYS007', 0, '');
-  //   //   } else {
-  //   //     this.notification.notifyCode('SYS006', 0, '');
-  //   //   }
-  //   //   this.clearAddress();
-  //   // }
-  // }
   //#endregion
 }

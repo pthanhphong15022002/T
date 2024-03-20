@@ -7,11 +7,13 @@
     >
       <i
         *ngIf="isShowElement"
-        class="icon-20 icon-expand_less text-primary"
+        class="icon-22 icon-expand_less text-primary"
+        [ngbTooltip]="'Thu gọn'"
       ></i>
       <i
         *ngIf="!isShowElement"
-        class="icon-20 icon-expand_more text-primary"
+        class="icon-22 icon-expand_more text-primary"
+        [ngbTooltip]="'Mở rộng'"
       ></i>
     </div>
 
@@ -89,7 +91,7 @@
         >
         </codx-imgs>
         <div
-          class="disabled-inline me-2"
+          class="disabled-inline me-1"
           (click)="openPopupUpdateProgress(currentStep, 'P')"
           [ngClass]="
             checkRoleUpdateProgress(currentStep, 'P')
@@ -112,9 +114,8 @@
             placement="top bottom"
           ></codx-progressbar>
         </div>
-        <div class="model-func">
+        <div class="model-func"  *ngIf="!isMoveStage && !isViewStep">
           <codx-mfunc
-            *ngIf="!isMoveStage && !isViewStep"
             [formModel]="grvMoreFunction"
             [isBookMark]="true"
             [dataItem]="moreDefaut"
@@ -324,12 +325,12 @@
                               }
                             }"
                           ></ng-container>
-                          <div class="model-func">
+                          <div class="model-func"  
+                            *ngIf="
+                              (!isMoveStage && !isViewStep && !isClose) ||
+                              (isClose && !task?.isTaskDefault)"
+                          >
                             <codx-mfunc
-                              *ngIf="
-                                (!isMoveStage && !isViewStep && !isClose) ||
-                                (isClose && !task?.isTaskDefault)
-                              "
                               [formModel]="grvMoreFunction"
                               [isBookMark]="true"
                               [dataItem]="moreDefaut"
@@ -519,7 +520,7 @@
       <codx-imgs
         class="me-2 d-flex align-items-center"
         [width]="25"
-        ojectType="AD_Users"
+        ojectType="AD_Users"progressbarmain-body
         [numberImages]="1"
         [isToolTip]="true"
         [objectId]="data?.value?.owner"
@@ -717,10 +718,11 @@
         (data?.task?.taskType == 'C' || data?.task?.taskType == 'T') &&
         data?.task?.status == '1' &&
         data?.task?.dependRule == '0' &&
-        (isOnlyView || isTaskFirst)
+        (isOnlyView || isTaskFirst) &&
+        !isViewStep
       "
       type="button"
-      class="btn btn-outline-primary btn-sm"
+      class="btn btn-sm button-custom"
       (click)="startTask(data?.task, data?.group)"
     >
       <codx-label
@@ -742,9 +744,9 @@
       ></codx-label>
     </button> -->
     <button
-      *ngIf="data?.task?.taskType == 'E' && data?.task?.status != '3'"
+      *ngIf="data?.task?.taskType == 'E' && data?.task?.status != '3' && !isViewStep"
       type="button"
-      class="btn btn-outline-primary btn-sm"
+      class="btn btn-sm button-custom"
       (click)="sendMail(data?.task, data?.group)"
     >
       <codx-label
@@ -755,9 +757,9 @@
       ></codx-label>
     </button>
     <button
-      *ngIf="data?.task?.taskType == 'CO' && !data?.task?.objectLinked"
+      *ngIf="data?.task?.taskType == 'CO' && !data?.task?.objectLinked  && !isViewStep"
       type="button"
-      class="btn btn-outline-primary btn-sm"
+      class="btn btn-sm button-custom"
       (click)="startTask(data?.task, data?.group)"
     >
       <codx-label
@@ -770,7 +772,7 @@
     <button
       *ngIf="data?.task?.taskType == 'CO' && data?.task?.objectLinked"
       type="button"
-      class="btn btn-outline-primary btn-sm"
+      class="btn btn-sm button-custom"
       (click)="viewTask(data?.task, data?.task?.taskType || 'T')"
     >
       <codx-label
@@ -781,9 +783,9 @@
       ></codx-label>
     </button>
     <button
-      *ngIf="data?.task?.taskType == 'M'"
+      *ngIf="data?.task?.taskType == 'M'  && !isViewStep"
       type="button"
-      class="btn btn-outline-primary btn-sm"
+      class="btn btn-sm button-custom"
       (click)="createMeeting(data?.task)"
     >
       <codx-label
@@ -796,20 +798,28 @@
     <button
       *ngIf="data?.task?.taskType == 'F'"
       type="button"
-      class="btn btn-outline-primary btn-sm"
+      class="btn btn-sm button-custom"
       (click)="openFormField(data?.task)"
     >
       <codx-label
+        *ngIf="!isViewStep"
         class="text-nowrap"
         name="Save"
         formName="Sprints"
-        default="Nhập form"
+        default="Nhập Form"
+      ></codx-label>
+      <codx-label
+        *ngIf="isViewStep"
+        class="text-nowrap"
+        name="Save"
+        formName="Sprints"
+        default="Xem Form"
       ></codx-label>
     </button>
     <button
-      *ngIf="data?.task?.taskType == 'S'"
+      *ngIf="data?.task?.taskType == 'S'  && !isViewStep"
       type="button"
-      class="btn btn-outline-primary btn-sm"
+      class="btn btn-sm button-custom"
     >
       <codx-label
         class="text-nowrap"
@@ -819,9 +829,9 @@
       ></codx-label>
     </button>
     <button
-      *ngIf="data?.task?.taskType == 'B'"
+      *ngIf="data?.task?.taskType == 'B'  && !isViewStep"
       type="button"
-      class="btn btn-outline-primary btn-sm"
+      class="btn btn-sm button-custom"
       (click)="addBookingCar(data?.task)"
     >
       <codx-label

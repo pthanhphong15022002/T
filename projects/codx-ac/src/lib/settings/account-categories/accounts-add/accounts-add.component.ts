@@ -40,7 +40,6 @@ export class AccountsAddComponent extends UIComponent {
   headerText: any;
   funcName: any;
   lblAdd:any;
-  formModel: FormModel;
   tabInfo: any[] = [ //? thiết lập tab hiển thị trên form
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     { icon: 'icon-rule', text: 'Thiết lập', name: 'Establish' },
@@ -48,8 +47,6 @@ export class AccountsAddComponent extends UIComponent {
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
-    override cache: CacheService,
-    override api: ApiHttpService,
     private acService: CodxAcService,
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
