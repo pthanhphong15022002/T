@@ -230,8 +230,9 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   setGuest() {
+    if(!this.user) this.user = {};
     this.user.userID = '';
-    this.user.email = this.dataSVRepondents.email;
+    this.user.email = this.dataSVRepondents?.email;
     this.setAuthNoLogin();
   }
 

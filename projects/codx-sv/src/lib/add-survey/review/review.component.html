@@ -962,7 +962,7 @@
     </div>
   </div>
   <ng-container *ngIf="typeRepondent == '1' , else elseTypeRepondent">
-    <div class="d-flex align-items-center justify-content-between mt-3 border-top py-3">
+    <div class="d-flex align-items-center justify-content-between mt-3 border-top py-3 px-2">
       <div *ngIf="survey?.status != '3', else elseStatus" class="me-6">
         <div class="d-flex align-items-center">
           <i class="icon-eye me-3"></i>
@@ -973,14 +973,14 @@
         </div>
       </div>
       <ng-template #elseStatus>
-        <div *ngIf="user?.userID , else elseTmpUser" class="d-flex align-items-center">
+        <div *ngIf="user?.userID , else elseTmpUser" class="d-flex align-items-center px-2">
           <codx-img
             [objectId]="user?.userID"
             [objectType]="'AD_Users'"
             [referType]="'avt'"
             imageType="circle"
             width="30"
-            ngClass="ms-6"
+            ngClass="ms-4"
           >
           </codx-img>
           <div class="d-flex flex-column ms-4">
@@ -1000,7 +1000,7 @@
   </ng-container>
   <ng-template #elseTypeRepondent>
     <ng-conatiner *ngIf="(user?.userID && isPublic != '1') || (survey?.status != '3')">
-      <div class="d-flex align-items-center justify-content-between mt-3 border-top py-3">
+      <div class="d-flex align-items-center justify-content-between mt-3 border-top py-3 px-2">
         <div *ngIf="user?.userID && isPublic != '1'" class="d-flex align-items-center">
           <codx-img
             [objectId]="user?.userID"
@@ -1009,7 +1009,7 @@
             [referType]="'avt'"
             imageType="circle"
             width="30"
-            ngClass="ms-6"
+            ngClass="ms-4"
           >
           </codx-img>
           <div class="d-flex flex-column ms-4">

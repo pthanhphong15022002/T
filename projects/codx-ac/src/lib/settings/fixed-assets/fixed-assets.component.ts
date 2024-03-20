@@ -1,181 +1,197 @@
-import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
+  CallFuncService,
   SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { map, tap } from 'rxjs/operators';
+import { map, takeUntil, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../codx-ac.service';
-import { PopupAddFixedAssetComponent } from './popup-add-fixed-asset/popup-add-fixed-asset.component';
+import { FixedAssetAddComponent } from './fixed-asset-add/fixed-asset-add.component';
 import { toCamelCase } from '../../utils';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'lib-fixed-assets',
   templateUrl: './fixed-assets.component.html',
   styleUrls: ['./fixed-assets.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+
 })
 export class FixedAssetsComponent extends UIComponent {
   //#region Constructor
-  @ViewChild('moreTemplate') moreTemplate?: TemplateRef<any>;
-  @ViewChild('rowTemplate') rowTemplate: TemplateRef<any>;
-  @ViewChild('header1', { static: true }) header1: TemplateRef<any>;
-  @ViewChild('header2', { static: true }) header2: TemplateRef<any>;
-  @ViewChild('header3', { static: true }) header3: TemplateRef<any>;
-
+  @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  btnAdd: ButtonModel[] = [{ id: 'btnAdd' }];
-  functionName: string;
-  isSubView: boolean;
-
-  constructor(injector: Injector) {
+  button: ButtonModel[] = [
+    {
+      id: 'btnAdd',
+    },
+  ];
+  funcName = '';
+  headerText: any;
+  itemSelected: any;
+  private destroy$ = new Subject<void>();
+  constructor(
+    injector: Injector, 
+    private acService: CodxAcService,
+    private callfunc: CallFuncService,
+    ) {
     super(injector);
-    this.router.data.subscribe((res) => {
-      if (res && res['isSubView']) this.isSubView = res.isSubView;
-    });
   }
   //#endregion
 
   //#region Init
-  onInit(): void {
+  onInit(): void {}
+
+  ngAfterViewInit() {
     this.cache
-      .functionList('ACT0811')
-      .pipe(
-        tap((t) => console.log(t)),
-        map((data) => toCamelCase(data.defaultName))
-      )
-      .subscribe((res) => (this.functionName = res));
+      .functionList(this.view.funcID)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) this.funcName = res.defaultName;
+      });
+      this.views = [
+        {
+          type: ViewType.grid,
+          active: true,
+          sameData: true,
+          model: {
+            template2: this.templateGrid,
+          },
+        },
+      ];
   }
 
-  ngAfterViewInit(): void {
-    this.views = [
-      {
-        type: ViewType.grid,
-        active: false,
-        sameData: true,
-        model: {
-          template2: this.moreTemplate,
-          frozenColumns: 1,
-        },
-      },
-      {
-        type: ViewType.grid,
-        text: 'Chi tiết',
-        active: true,
-        sameData: true,
-        model: {
-          resources: [
-            {
-              width: '40%',
-              headerTemplate: this.header1,
-              field: 'header1',
-            },
-            {
-              width: '40%',
-              headerTemplate: this.header2,
-              field: 'header2',
-            },
-            {
-              width: '18%',
-              headerTemplate: this.header3,
-              field: 'header3',
-            },
-            { width: '2%', field: 'threeDot', headerText: '' },
-          ],
-          template: this.rowTemplate,
-        },
-      },
-    ];
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
   }
   //#endregion
 
   //#region Event
-  onClickAdd(e) {
-    console.log({ e });
+  toolBarClick(e) {
+    switch (e.id) {
+      case 'btnAdd':
+        this.addNew(e); //? thêm mới tài khoản
+        break;
+    }
+  }
 
-    this.view.dataService.addNew().subscribe((newItem) => {
-      // debug
-      console.log({ newItem });
-
-      const options = new SidebarModel();
-      options.Width = '800px';
-      options.DataService = this.view.dataService;
-      options.FormModel = this.view.formModel;
-      this.callfc.openSide(
-        PopupAddFixedAssetComponent,
-        {
-          formType: 'add',
-          formTitle: `${e.text} ${this.functionName}`,
-        },
-        options,
-        this.view.funcID
-      );
+  /**
+   * *Hàm xử lí chỉnh sửa,copy,xóa tài khoản
+   * @param e
+   * @param data
+   */
+  clickMF(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.delete(data); //? xóa tài khoản
+        break;
+      case 'SYS03':
+        this.edit(e, data); //? chỉnh sửa tài khoản
+        break;
+      case 'SYS04':
+        this.copy(e, data); //? copy tài khoản
+        break;
+    }
+  }
+  addNew(e) {
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
+    this.view.dataService.addNew().subscribe((res: any) => {
+      if (res) {
+        res.isAdd = true;
+        let data = {
+          headerText: this.headerText,
+          dataDefault: { ...res },
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '800px';
+        let dialog = this.callfunc.openSide(
+          FixedAssetAddComponent,
+          data,
+          option,
+          this.view.funcID
+        );
+      }
     });
   }
 
-  onClickMoreFuncs(e, data) {
-    switch (e.functionID) {
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'SYS03':
-        this.edit(e, data);
-        break;
-      case 'SYS04':
-        this.copy(e, data);
-        break;
-    }
+  edit(e, dataEdit) {
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
+    if (dataEdit) this.view.dataService.dataSelected = dataEdit;
+    this.view.dataService.edit(dataEdit).subscribe((res: any) => {
+      if (res) {
+        res.isEdit = true;
+        let data = {
+          headerText: this.headerText,
+          dataDefault: { ...res },
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '800px';
+        let dialog = this.callfunc.openSide(
+          FixedAssetAddComponent,
+          data,
+          option,
+          this.view.funcID
+        );
+      }
+    });
+  }
+
+  copy(e, dataCopy) {
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
+    if (dataCopy) this.view.dataService.dataSelected = dataCopy;
+    this.view.dataService.copy().subscribe((res: any) => {
+      if (res) {
+        res.isCopy = true;
+        let data = {
+          headerText: this.headerText,
+          dataDefault: { ...res },
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '800px';
+        let dialog = this.callfunc.openSide(
+          FixedAssetAddComponent,
+          data,
+          option,
+          this.view.funcID
+        );
+      }
+    });
+  }
+
+  /**
+   * *Hàm xóa tài khoản
+   * @param dataDelete
+   */
+  delete(dataDelete) {
+    if (dataDelete) this.view.dataService.dataSelected = dataDelete;
+    this.view.dataService.delete([dataDelete], true).subscribe((res: any) => {
+      if (this.view.dataService.data.length == 0) {
+        this.itemSelected = undefined;
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
+  changeDataMF(event, type: any = '') {
+    this.acService.changeMFCategories(event, type);
+  }
+
+  onSelectedItem(event) {
+    this.itemSelected = event;
+    this.detectorRef.detectChanges();
   }
   //#endregion
 
   //#region Method
-  delete(data): void {
-    this.view.dataService
-      .delete([data], true)
-      .subscribe((res) => console.log(res));
-  }
-
-  edit(e, data): void {
-    const copiedData = { ...data };
-    this.view.dataService.dataSelected = copiedData;
-    this.view.dataService.edit(copiedData).subscribe(() => {
-      const options = new SidebarModel();
-      options.Width = '800px';
-      options.DataService = this.view.dataService;
-      options.FormModel = this.view.formModel;
-
-      this.callfc.openSide(
-        PopupAddFixedAssetComponent,
-        {
-          formType: 'edit',
-          formTitle: `${e.text} ${this.functionName}`,
-        },
-        options,
-        this.view.funcID
-      );
-    });
-  }
-
-  copy(e, data): void {
-    this.view.dataService.dataSelected = data;
-    this.view.dataService.copy().subscribe(() => {
-      const options = new SidebarModel();
-      options.Width = '800px';
-      options.DataService = this.view.dataService;
-      options.FormModel = this.view.formModel;
-
-      this.callfc.openSide(
-        PopupAddFixedAssetComponent,
-        {
-          formType: 'add',
-          formTitle: `${e.text} ${this.functionName}`,
-        },
-        options,
-        this.view.funcID
-      );
-    });
-  }
   //#endregion
 
   //#region Function

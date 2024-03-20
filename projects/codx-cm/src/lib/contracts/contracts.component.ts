@@ -441,9 +441,9 @@ export class ContractsComponent extends UIComponent {
       case 'CM0204_20': // không sử dụng quy trình
         this.updateProcess(data, false);
         break;
-      case 'SYS004': // không sử dụng quy trình
-        this.sendMail(data);
-        break;
+      // case 'SYS004': //mail
+      //   this.sendMail(data);
+      //   break;
       default: {
         this.codxShareService.defaultMoreFunc(
           e,

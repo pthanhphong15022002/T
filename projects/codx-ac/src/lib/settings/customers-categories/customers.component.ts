@@ -52,9 +52,9 @@ export class CustomersComponent extends UIComponent {
     private acService: CodxAcService
   ) {
     super(inject);
-    this.router.data.subscribe((res) => {
-      if (res && res['isSubView']) this.isSubView = res.isSubView;
-    });
+    // this.router.data.subscribe((res) => {
+    //   if (res && res['isSubView']) this.isSubView = res.isSubView;
+    // });
   }
   //#endregion Contructor
 
@@ -71,7 +71,7 @@ export class CustomersComponent extends UIComponent {
       {
         type: ViewType.grid,
         active: true,
-        sameData: false,
+        sameData: true,
         model: {
           template2: this.templateGrid,
         },

@@ -72,31 +72,48 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
   isGroup = false;
   dataGoupField = [];
   isFristVer = false;
+  isSign = false;
   listRequester = [
     {
       key: "username",
-      text: "Người yêu cầu"
+      text: "Người lập phiếu",
+      isSign: false
     },
     {
       key: "createdon",
-      text: "Ngày tạo"
+      text: "Ngày tạo",
+      isSign: false
     },
     {
       key: "orgunit",
-      text: "Bộ phận"
+      text: "Người lập phiếu_Bộ phận",
+      isSign: false
     },
     {
       key: "position",
-      text: "Chức danh"
+      text: "Người lập phiếu_Chức danh",
+      isSign: false
     },
     {
       key: "department",
-      text: "Phòng ban"
+      text: "Người lập phiếu_Phòng ban",
+      isSign: false
     },
     {
       key: "company",
-      text: "Công ty"
+      text: "Người lập phiếu_Công ty",
+      isSign: false
     },
+    {
+      key: "signature1",
+      text: "Người lập phiếu_Chữ ký chính",
+      isSign: true
+    },
+    {
+      key: "signature2",
+      text: "Người lập phiếu_Chữ ký nháy",
+      isSign: true
+    }
   ];
   constructor(
     private tenant: TenantStore,
@@ -116,6 +133,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     this.refID = dt.data?.refID; // Thảo thêm để thêm biến lưu cho temEx
     this.refType = dt.data?.refType || dt.data?.formModel?.entityName; // Thảo thêm để thêm biến lưu cho temEx
     this.isFristVer = dt.data?.isFristVer || false;
+    this.isSign = dt.data?.isSign || false;
     this.formModel = dt.data.formModel;
     if(dt.data?.groupField) {
       this.isHasFields = true;
@@ -293,6 +311,11 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
         this.dataGoupField[i].groupChild.push(obj);
       })
 
+      if(!this.isSign)
+      {
+        this.listRequester = this.listRequester.filter(x=>!x.isSign)
+      }
+      
       this.listRequester.forEach(x=>{
         var obj3 = 
         {

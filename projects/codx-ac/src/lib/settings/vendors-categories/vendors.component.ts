@@ -71,7 +71,7 @@ export class VendorsComponent extends UIComponent {
       {
         type: ViewType.grid,
         active: true,
-        sameData: false,
+        sameData: true,
         model: {
           template2: this.templateGrid,
         },

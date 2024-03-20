@@ -21,6 +21,7 @@ import {
 } from 'codx-core';
 import { ModelsAddComponent } from './models-add/models-add.component';
 import { Subject, takeUntil } from 'rxjs';
+import { CodxAcService } from '../../codx-ac.service';
 
 @Component({
   selector: 'lib-inventory',
@@ -45,12 +46,13 @@ export class ModelsComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
-    private callfunc: CallFuncService
+    private callfunc: CallFuncService,
+    private acService: CodxAcService
   ) {
     super(inject);
-    this.router.data.subscribe((res) => {
-      if (res && res['isSubView']) this.isSubView = res.isSubView;
-    });
+    // this.router.data.subscribe((res) => {
+    //   if (res && res['isSubView']) this.isSubView = res.isSubView;
+    // });
   }
   //#endregion
 
@@ -69,7 +71,6 @@ export class ModelsComponent extends UIComponent {
         active: true,
         sameData: true,
         model: {
-          hideMoreFunc: true,
           template2: this.templateGrid,
         },
       },
@@ -93,7 +94,7 @@ export class ModelsComponent extends UIComponent {
         break;
     }
   }
-  clickMoreFunction(e, data) {
+  clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -213,11 +214,7 @@ export class ModelsComponent extends UIComponent {
   }
 
   changeDataMF(event, type: any = '') {
-    event.reduce((pre, element) => {
-      if (type === 'views') element.isbookmark = true;
-      if (!['SYS03', 'SYS02', 'SYS04'].includes(element.functionID))
-        element.disabled = true;
-    }, {});
+    this.acService.changeMFCategories(event,type);
   }
 
   onSelectedItem(event) {

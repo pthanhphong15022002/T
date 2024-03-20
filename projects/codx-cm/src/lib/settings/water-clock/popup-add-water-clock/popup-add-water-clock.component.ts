@@ -48,6 +48,7 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
   parentID: any;
   oldAssetId: any;
   siteIDOldData: any;
+  loadedCus: boolean = false;
 
   constructor(
     private cache: CacheService,
@@ -68,6 +69,7 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
     );
     if (this.action === 'edit') {
       this.oldAssetId = this.data.assetID;
+      this.loadedCus = true
     }
     if (Array.isArray(arrField)) {
       this.arrFieldForm = arrField
@@ -100,7 +102,7 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
     // if (this.action != 'view')
     this.changeCbxCustomer();
   }
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   valueChange(e) {
     this.data[e.field] = e.data;
@@ -132,20 +134,8 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
     this.data[e.field] = e.data;
     switch (e.field) {
       case 'siteID':
-        if (
-          e?.component?.itemsSelected[0]?.ParentID == this.data.projectID ||
-          this.siteIDOldData == this.data.siteID
-        )
-          return;
-
-        this.parentID = this.data.projectID =
-          e?.component?.itemsSelected[0]?.ParentID;
+        if (this.loadedCus) return;
         this.data.refID = null;
-        this.siteIDOldData = this.data.siteID;
-        (
-          this.cbxRefID.ComponentCurrent as CodxComboboxComponent
-        ).dataService.data = [];
-        this.cbxRefID.crrValue = null;
         //ref
         (
           this.cbxRefID.ComponentCurrent as CodxComboboxComponent
@@ -302,7 +292,7 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
         if (res) {
           let predicate = '';
           let dataValue = '';
-
+          this.loadedCus = true
           res.forEach((x, i) => {
             predicate += 'AssetID=@' + i + ' or ';
             dataValue += x + ';';
@@ -322,6 +312,7 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
             0,
             '"' + this.gridViewSetup['siteID'].headerText + '"'
           );
+          this.loadedCus = false
         }
 
         (
