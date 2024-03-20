@@ -1307,7 +1307,7 @@
         <div class="row">
           <div class="col-6">
             <codx-label
-              fiedName="closeInstanceOverdue"
+              fiedName="CloseInstanceOverdue"
               [formName]="'DPProcesses'"
               [gridViewName]="'grvDPProcesses'"
             >
@@ -1323,8 +1323,8 @@
                     style="width: 100%"
                     field="yes"
                     [label]="titleRadioYes"
-                    [checked]="process?.allowCopy ?? false"
-                    [crrValue]="process?.allowCopy"
+                    [checked]="process?.closeInstanceOverdue ?? false"
+                    [crrValue]="process?.closeInstanceOverdue"
                     (valueChange)="valueRadioInfo($event, 'closeInstanceOverdue')"
                     [disabled]="viewOnly"
                   >
