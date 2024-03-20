@@ -718,10 +718,11 @@
         (data?.task?.taskType == 'C' || data?.task?.taskType == 'T') &&
         data?.task?.status == '1' &&
         data?.task?.dependRule == '0' &&
-        (isOnlyView || isTaskFirst)
+        (isOnlyView || isTaskFirst) &&
+        !isViewStep
       "
       type="button"
-      class="btn btn-outline-primary btn-sm"
+      class="btn btn-sm button-custom"
       (click)="startTask(data?.task, data?.group)"
     >
       <codx-label
@@ -743,9 +744,9 @@
       ></codx-label>
     </button> -->
     <button
-      *ngIf="data?.task?.taskType == 'E' && data?.task?.status != '3'"
+      *ngIf="data?.task?.taskType == 'E' && data?.task?.status != '3' && !isViewStep"
       type="button"
-      class="btn btn-outline-primary btn-sm"
+      class="btn btn-sm button-custom"
       (click)="sendMail(data?.task, data?.group)"
     >
       <codx-label
@@ -756,9 +757,9 @@
       ></codx-label>
     </button>
     <button
-      *ngIf="data?.task?.taskType == 'CO' && !data?.task?.objectLinked"
+      *ngIf="data?.task?.taskType == 'CO' && !data?.task?.objectLinked  && !isViewStep"
       type="button"
-      class="btn btn-outline-primary btn-sm"
+      class="btn btn-sm button-custom"
       (click)="startTask(data?.task, data?.group)"
     >
       <codx-label
@@ -771,7 +772,7 @@
     <button
       *ngIf="data?.task?.taskType == 'CO' && data?.task?.objectLinked"
       type="button"
-      class="btn btn-outline-primary btn-sm"
+      class="btn btn-sm button-custom"
       (click)="viewTask(data?.task, data?.task?.taskType || 'T')"
     >
       <codx-label
@@ -782,9 +783,9 @@
       ></codx-label>
     </button>
     <button
-      *ngIf="data?.task?.taskType == 'M'"
+      *ngIf="data?.task?.taskType == 'M'  && !isViewStep"
       type="button"
-      class="btn btn-outline-primary btn-sm"
+      class="btn btn-sm button-custom"
       (click)="createMeeting(data?.task)"
     >
       <codx-label
@@ -816,9 +817,9 @@
       ></codx-label>
     </button>
     <button
-      *ngIf="data?.task?.taskType == 'S'"
+      *ngIf="data?.task?.taskType == 'S'  && !isViewStep"
       type="button"
-      class="btn btn-outline-primary btn-sm"
+      class="btn btn-sm button-custom"
     >
       <codx-label
         class="text-nowrap"
@@ -828,9 +829,9 @@
       ></codx-label>
     </button>
     <button
-      *ngIf="data?.task?.taskType == 'B'"
+      *ngIf="data?.task?.taskType == 'B'  && !isViewStep"
       type="button"
-      class="btn btn-outline-primary btn-sm"
+      class="btn btn-sm button-custom"
       (click)="addBookingCar(data?.task)"
     >
       <codx-label

@@ -3616,7 +3616,8 @@ export class PdfComponent
                       450,
                       300
                     );
-                  }
+                  }                  
+                  dialog && dialog?.close();
                 } else {
                   this.notificationsService.notify(
                     'Không tìm thấy thông tin xác thực chữ ký số, vui lòng kiểm tra lại!',

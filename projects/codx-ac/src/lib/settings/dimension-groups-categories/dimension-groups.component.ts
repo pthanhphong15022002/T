@@ -20,6 +20,7 @@ import {
 } from 'codx-core';
 import { DimensionGroupsAddComponent } from './dimension-groups-add/dimension-groups-add.component';
 import { Subject, takeUntil } from 'rxjs';
+import { CodxAcService } from '../../codx-ac.service';
 
 @Component({
   selector: 'lib-dimension-groups',
@@ -44,7 +45,8 @@ export class DimensionGroupsComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
-    private callfunc: CallFuncService
+    private callfunc: CallFuncService,
+    private acService: CodxAcService
   ) {
     super(inject);
     this.router.data.subscribe((res) => {
@@ -68,7 +70,6 @@ export class DimensionGroupsComponent extends UIComponent {
         active: true,
         sameData: true,
         model: {
-          hideMoreFunc: true,
           template2: this.templateGrid,
         },
       },
@@ -107,7 +108,7 @@ export class DimensionGroupsComponent extends UIComponent {
   //   }
   // }
 
-  clickMoreFunction(e, data) {
+  clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -207,11 +208,7 @@ export class DimensionGroupsComponent extends UIComponent {
   }
 
   changeDataMF(event, type: any = '') {
-    event.reduce((pre, element) => {
-      if (type === 'views') element.isbookmark = true;
-      if (!['SYS03', 'SYS02', 'SYS04'].includes(element.functionID))
-        element.disabled = true;
-    }, {});
+    this.acService.changeMFCategories(event,type);
   }
 
   onSelectedItem(event) {

@@ -39,8 +39,7 @@ export class FiscalPeriodsComponent extends UIComponent {
   gridViewSetup: any;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   private destroy$ = new Subject<void>();
-  isSubView: boolean;
-
+  itemSelected: any;
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
@@ -49,9 +48,9 @@ export class FiscalPeriodsComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.router.data.subscribe((res) => {
-      if (res && res['isSubView']) this.isSubView = res.isSubView;
-    });
+    // this.router.data.subscribe((res) => {
+    //   if (res && res['isSubView']) this.isSubView = res.isSubView;
+    // });
   }
 
   //End Constructor
@@ -68,7 +67,6 @@ export class FiscalPeriodsComponent extends UIComponent {
         sameData: true,
         model: {
           template2: this.templateMore,
-          frozenColumns: 1,
         },
       },
     ];
@@ -215,22 +213,17 @@ export class FiscalPeriodsComponent extends UIComponent {
       });
   }
 
-  hideMoreFunction(e: any) {
-    var bm = e.filter(
-      (x: { functionID: string }) =>
-        x.functionID == 'SYS003' || x.functionID == 'SYS004'
-    );
-    bm.forEach((morefunction) => {
-      morefunction.disabled = true;
-    });
+  changeDataMF(event, type: any = '') {
+    event.reduce((pre, element) => {
+      if (type === 'views') element.isbookmark = true;
+      if (!['SYS03', 'SYS02', 'SYS04','ACS25301'].includes(element.functionID))
+        element.disabled = true;
+    }, {});
+  }
 
-    this.cache
-      .moreFunction('FiscalPeriods', 'grvFiscalPeriods')
-      .subscribe((res: any) => {
-        if (res) {
-          console.log(res);
-        }
-      });
+  onSelectedItem(event) {
+    this.itemSelected = event;
+    this.detectorRef.detectChanges();
   }
   //End Function
 }

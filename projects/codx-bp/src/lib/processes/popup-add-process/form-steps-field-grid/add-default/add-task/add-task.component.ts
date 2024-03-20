@@ -110,6 +110,7 @@ export class AddTaskComponent
       dataType : "String"
     },
   ];
+
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes?.activityType &&
@@ -204,6 +205,12 @@ export class AddTaskComponent
 
   default() {
     var vllStage = this.vll.datas.filter((x) => x.value == 'Task')[0];
+    let allowEdit = "0";
+    if (this.process.settings && this.process.settings.length > 0) {
+      allowEdit = this.process.settings.filter(
+        (x) => x.fieldName == 'AllowEdit'
+      )[0];
+    }
     this.data = new BP_Processes_Steps();
     this.data.recID = Util.uid();
     this.data.stepNo = this.process.steps.length;
@@ -223,6 +230,7 @@ export class AddTaskComponent
       backGround: vllStage.textColor,
       checkList: '',
       nextSteps: '',
+      allowEdit: allowEdit
     };
     if (!this.process.documentControl) this.process.documentControl = [];
     this.dataChange.emit(this.data);
@@ -540,6 +548,7 @@ export class AddTaskComponent
         x.activityType != 'Conditions' &&
         x.activityType != 'StartEnd'
     );
+    
     let popupDialog = this.callFuc.openForm(
       AddSettingConditionsComponent,
       '',
@@ -582,9 +591,8 @@ export class AddTaskComponent
         var index = this.process.steps.findIndex(x=>x.recID == this.data.recID);
         if(index >=0) 
         {
-          this.process.steps[index].extendInfo = this.data.extendInfo;
-          if (this.data?.steps[index]?.extendInfo) {
-            this.data?.steps[index]?.extendInfo.forEach((element) => {
+          if (this.data?.extendInfo) {
+            this.data.extendInfo.forEach((element) => {
               if (element.controlType == 'Attachment') {
                 if (!element?.documentControl || element?.documentControl.length == 0) {
                   var obj = 
@@ -657,6 +665,7 @@ export class AddTaskComponent
               }
             });
           }
+          this.process.steps[index].extendInfo = this.data.extendInfo;
         }
         this.dataChange.emit(this.data);
         this.dataChangeProcess.emit(this.process);

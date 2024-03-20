@@ -1,3 +1,7 @@
+:host ::ng-deep .codx-detail-main {
+	height: 100% !important;
+	overflow: hidden !important;
+ }
 .content-icon{
 	height: 29px;
 	width: 29px;
@@ -8,9 +12,9 @@
 	border-radius: 3px;
 	margin-right: 5px;
  }
- :host ::ng-deep codx-view-list-detail .codx-detail-main {
-	overflow: hidden;
- }
+//  :host ::ng-deep codx-view-list-detail .codx-detail-main {
+// 	overflow: hidden;
+//  }
  .main-right{
 	// flex: 1;
 	height: 49vh;

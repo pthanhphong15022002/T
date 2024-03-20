@@ -251,7 +251,8 @@ export class HomeComponent extends UIComponent implements OnInit {
     });
   }
 
-  update(item) {
+  clone(item)
+  {
     this.api.execSv("SV","SV","SurveysBusiness","CloneSurveyFromRecIDAsync",item.recID).subscribe((res:any)=>{
       if(res)
       {
@@ -269,6 +270,20 @@ export class HomeComponent extends UIComponent implements OnInit {
       }
       
     })
+  }
+  
+  update(item) {
+    var obj = 
+    {
+      funcID: this.funcID,
+      recID:  item.recID
+    }
+    var key = JSON.stringify(obj);
+    key = this.aesCrypto.encode(key);
+
+    this.codxService.navigate('', 'sv/add-survey', {
+      _k: key
+    });
   }
 
   updateRepond(item)
