@@ -594,8 +594,10 @@ export class DealsComponent
       CM0201_16: isRejectApprover,
       CM0201_15: isPermission,
       CM0201_17: isChangeStatus,
-      CM0201_19: isUpdateProcess,
-      CM0201_20: isDeleteProcess,
+      CM0201_19: isDisable,
+      CM0201_20: isDisable,
+      // CM0201_19: isUpdateProcess,
+      // CM0201_20: isDeleteProcess,
       CM0201_18: isAddTask,
     };
 
