@@ -184,6 +184,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
   }
   generateQR() {
     console.log('hubConnectionID: ', this.hubConnectionID)
+    if(!this.hubConnectionID) return;
     this.qrTimeout = 0;
     this.qrTimeoutMinutes = 0;
     clearInterval(this.interval);

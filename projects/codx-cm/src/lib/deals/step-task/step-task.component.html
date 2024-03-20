@@ -204,11 +204,13 @@
               >
                 <i
                   *ngIf="isShowSuccess"
-                  class="icon-20 icon-expand_less text-primary"
+                  class="icon-22 icon-expand_less text-primary"
+                  [ngbTooltip]="'Thu gọn'"
                 ></i>
                 <i
                   *ngIf="!isShowSuccess"
-                  class="icon-20 icon-expand_more text-primary"
+                  class="icon-22 icon-expand_more text-primary"
+                  [ngbTooltip]="'Mở rộng'"
                 ></i>
               </div>
               <span class="w-20px me-2">

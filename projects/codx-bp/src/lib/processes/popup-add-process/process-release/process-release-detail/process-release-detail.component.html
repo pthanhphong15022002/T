@@ -111,7 +111,7 @@
                                         <div ngbAccordionBody>
                                             <ng-template>
                                                 <div class="d-flex flex-column">
-                                                    <div class="d-flex flex-column ps-13 pb-4" *ngFor="let item2 of item.child" >
+                                                    <div class="d-flex flex-column pb-4" *ngFor="let item2 of item.child" >
                                                         <div class="d-flex flex-column">
                                                             <ng-container *ngTemplateOutlet="tmpRow; context: { $implicit: item2 }"></ng-container>
                                                             <ng-container *ngIf="item2.activityType == 'Conditions'" >
@@ -166,7 +166,7 @@
             <i *ngIf="isCon" class="icon-arrow_right_alt"></i><i [class]="data?.settings?.icon" [style.color]="data?.settings?.color"></i><span class="mx-2">{{data.activityType}}</span>
         </div>
         <div class="col-3 d-flex flex-column"><span class="fw-bold">{{data.stepName}}</span><span>{{data?.memo}}</span></div>
-        <div class="col-2 d-flex flex-column">
+        <div class="col-3 d-flex flex-column">
             <div class="d-flex align-items-center" *ngIf="data.activityType != 'Conditions'">
                 <codx-label default="Kế hoạch:" class="me-2 w-60px"></codx-label><span class="fw-bold">{{data?.duration}}</span><span class="mx-1 fw-bold">{{data?.interval | vll : 'VL004' : 'text' | async}}</span>
             </div>
@@ -191,7 +191,7 @@
                 <codx-imgs [objectId]="data?.pers" [objectType]="'AD_Users'" [width]="30" [numberImages]="4"></codx-imgs>
             </ng-container>
         </div>
-        <div class="col-2 d-flex justify-content-end">
+        <div class="col-1 d-flex justify-content-end">
             <ng-container *ngIf="data.attachments && data.attachments >0">
                 <div class="d-flex align-items-center justify-content-center position-relative border rounded w-30px p-2"><i class="icon-attach_file"></i><div class="d-flex align-items-center justify-content-center position-absolute bp-attach-number rounded-circle">{{data.attachments}}</div></div>
             </ng-container>
