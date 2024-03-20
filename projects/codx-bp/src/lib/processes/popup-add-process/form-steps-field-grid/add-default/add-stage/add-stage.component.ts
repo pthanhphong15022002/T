@@ -55,6 +55,12 @@ export class AddStageComponent extends BaseFieldComponent implements OnInit {
     this.data = new BP_Processes_Steps();
     var vllStage = this.vll.datas.filter(x=>x.value == "Stage")[0];
     let count = this.process.steps.filter(x=>x.activityType == "Stage").length;
+    let allowEdit = "0";
+    if (this.process.settings && this.process.settings.length > 0) {
+      allowEdit = this.process.settings.filter(
+        (x) => x.fieldName == 'AllowEdit'
+      )[0];
+    }
     this.data.recID = Util.uid();
     this.data.stepNo = this.process.steps.length;
     this.data.activityType = "Stage";
@@ -73,7 +79,8 @@ export class AddStageComponent extends BaseFieldComponent implements OnInit {
       completeControl: processSetting?.completeControl || null,
       nextSteps: null,
       sortBy: null,
-      totalControl: null
+      totalControl: null,
+      allowEdit: allowEdit
     };
     this.dataChange.emit(this.data);
   }
