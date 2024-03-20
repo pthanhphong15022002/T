@@ -81,7 +81,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     //   });
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+  }
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
   }

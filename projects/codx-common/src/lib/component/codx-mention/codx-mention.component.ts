@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { MentionComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { ApiHttpService, CacheService, DataRequest } from 'codx-core';
 
@@ -8,14 +8,20 @@ import { ApiHttpService, CacheService, DataRequest } from 'codx-core';
   styleUrls: ['./codx-mention.component.css']
 
 })
+
+
+
 export class CodxMentionComponent implements OnInit, AfterViewInit{
 
   @Input() targetId:string = "";
-  dataSource:any[] = [];
-  request:DataRequest = new DataRequest();
-  page:number = 0;
-  pageSize:number= 20;
+  @Input() predicates:string = "";
+  @Input() dataValues:string = "";
+  @Output() selectedChange = new EventEmitter();
 
+  dataSource:any[] = [];
+  request:DataRequest;
+
+  
   @ViewChild("ej2Mention") ej2Mention:MentionComponent;
   constructor
   (
@@ -27,8 +33,14 @@ export class CodxMentionComponent implements OnInit, AfterViewInit{
     
   }
   
+  
   ngOnInit(): void {
-    this.load();
+    this.request = new DataRequest();
+    this.request.comboboxName = "Users";
+    this.request.pageLoading = true;
+    this.request.page = 0;
+    this.request.pageSize = 20;
+    
   }
 
   ngAfterViewInit(): void {
@@ -36,28 +48,27 @@ export class CodxMentionComponent implements OnInit, AfterViewInit{
   }
   
   loaded:boolean = false;
+  totalPage:number = 0;
   load(){
-    this.request.comboboxName = "Users";
-    this.request.page = this.page + 1;
-    this.request.pageSize = this.pageSize;
-    this.request.pageLoading = true;
-    let t = this;
+    if(this.request.page > this.totalPage) return;
+    this.loaded = true;
+    this.request.page++;
     this.api.execSv("SYS","Core","DataBusiness","LoadDataCbxAsync",this.request)
     .subscribe((res:any) => {
       if(res)
       {
         let datas = JSON.parse(res[0]);
-        if(datas && datas.length > 0)
+        if(datas.length > 0)
         {
-          t.dataSource = t.dataSource.concat(datas);
+          this.dataSource = this.dataSource.concat(datas);
+          this.totalPage = Math.ceil(res[1]/this.request.pageSize);
+          this.loaded = false;
           datas.forEach(item => {
             this.ej2Mention.addItem(item);
           });
-          t.detectorRef.detectChanges();
+          this.detectorRef.detectChanges();
         }
       }
-      this.page = this.page + 1;
-      t.loaded = false;
     });
   }
 
@@ -73,12 +84,22 @@ export class CodxMentionComponent implements OnInit, AfterViewInit{
     if (!t.loaded && ((ele.srcElement.scrollHeight -  ele.srcElement.scrollTop) < 350)) 
     {
       t.load();
-      t.loaded = true;
-      t.detectorRef.detectChanges();
     }
   }
 
+  dataSelected:any[];
   select(event:any){
-    debugger
+    if(event)
+    {
+      this.dataSelected.push(event.itemData);
+      this.selectedChange.emit(this.dataSelected);
+    }
   }
+
+  filtering(event){
+    this.request.searchText = event.text;
+    this.load();
+  }
+
+
 }
