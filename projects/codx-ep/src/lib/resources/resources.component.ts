@@ -347,6 +347,7 @@ export class ResourcesComponent extends UIComponent {
         template: this.preparatorCol,
       },
     ];
+    this.columnGrids = this.columnGrids.slice();
     this.views = [
       {
         sameData: true,
@@ -411,6 +412,8 @@ export class ResourcesComponent extends UIComponent {
         template: this.ownerCol,
       },
     ];
+
+    this.columnGrids = this.columnGrids.slice();
     this.views = [
       {
         sameData: true,
@@ -463,6 +466,7 @@ export class ResourcesComponent extends UIComponent {
         template: this.noteCol,
       },
     ];
+    this.columnGrids = this.columnGrids.slice();
     this.views = [
       {
         sameData: true,
@@ -523,6 +527,7 @@ export class ResourcesComponent extends UIComponent {
         template: this.ownerCol,
       },
     ];
+    this.columnGrids = this.columnGrids.slice();
     this.views = [
       {
         sameData: true,
