@@ -119,7 +119,7 @@ export class CmCustomerDetailComponent implements OnInit {
     }
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   getOneCustomerDetail(dataSelected) {
     this.loaded = false;
@@ -255,7 +255,7 @@ export class CmCustomerDetailComponent implements OnInit {
                       $event?.action == 'edit' ? json : '',
                       $event?.action == 'delete' ? json : ''
                     )
-                    .subscribe((res) => {});
+                    .subscribe((res) => { });
                 });
             }
           }
@@ -488,14 +488,14 @@ export class CmCustomerDetailComponent implements OnInit {
           'ImportExcelAsync',
           [lstCustomers, lstContacts, lstAddress]
         )
-        .subscribe((res) => {});
+        .subscribe((res) => { });
     };
   }
 
-  setTaskBar(){
-    if(this.isAdmin || this.dataSelected.owner == this.user?.userID){
+  setTaskBar() {
+    if (this.isAdmin || this.dataSelected?.owner == this.user?.userID) {
       this.idTabShow = this.tabDefaut;
-    }else{
+    } else {
       this.idTabShow = this.dataSelected?.config;
     }
   }

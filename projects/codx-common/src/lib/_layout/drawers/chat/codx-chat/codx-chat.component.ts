@@ -156,7 +156,7 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
     let popup = this.callFCSV.openForm(
       AddGroupChatComponent,
       '',
-      0,
+      850,
       window.innerHeight - 100,
       this.function.funcID,
       data,

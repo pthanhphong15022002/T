@@ -62,4 +62,8 @@ export class CodxAiComponent {
   {
     this.callFunc.openForm(PresentationComponent,"",800,700)
   }
+
+  tets(){
+    window.open("https://console.trogiupluat.vn/Chatbox/Index?p=eyJ1c2VyQWdlbnREb2N1bWVudElkIjoiNjVlZTgzNDIxMzQzOWJhN2RmMTJjMjZhIiwibHZPcGVuQXBpS2V5SWQiOiI2NWJiM2EwMmNiMWQ4ZmZhYzdlZDcxOTYifQ==");
+  }
 }

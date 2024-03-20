@@ -40,6 +40,7 @@ export class FiscalPeriodsComponent extends UIComponent {
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   private destroy$ = new Subject<void>();
   itemSelected: any;
+  isSubView: boolean;
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
@@ -48,9 +49,9 @@ export class FiscalPeriodsComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
-    // this.router.data.subscribe((res) => {
-    //   if (res && res['isSubView']) this.isSubView = res.isSubView;
-    // });
+    this.router.data.subscribe((res) => {
+      if (res && res['isSubView']) this.isSubView = res.isSubView;
+    });
   }
 
   //End Constructor

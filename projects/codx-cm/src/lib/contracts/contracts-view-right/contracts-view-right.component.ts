@@ -31,8 +31,7 @@ import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-
 })
 export class ContractsViewDetailComponent
   extends UIComponent
-  implements OnChanges
-{
+  implements OnChanges {
   @ViewChild('quotationsTab') quotationsTab: TemplateRef<any>;
   @ViewChild('contractLinkTem') contractLinkTem: TemplateRef<any>;
   @ViewChild('notificationTemp') notificationTemp: TemplateRef<any>;
@@ -61,7 +60,7 @@ export class ContractsViewDetailComponent
   account: any;
   isView = true;
   grvSetup: any;
-  stepCurrent:any;
+  stepCurrent: any;
   contactPerson;
   treeTask = [];
   vllStatus = '';
@@ -73,7 +72,7 @@ export class ContractsViewDetailComponent
   listTypeContract = [];
   oCountFooter: any = {};
   isLoading: boolean = true;
-  contractLink:CM_Contracts;
+  contractLink: CM_Contracts;
   deal: CM_Deals;
   quotation: CM_Quotations;
   listContractInParentID: CM_Contracts[] = [];
@@ -134,7 +133,7 @@ export class ContractsViewDetailComponent
     entityName: 'CM_Contacts',
     gridViewName: 'grvCMContacts',
   };
-  
+
   lstContacts: any;
 
   constructor(
@@ -193,7 +192,7 @@ export class ContractsViewDetailComponent
     this.loadTabs();
   }
   ngAfterViewInit(): void {
-    let  contractLink = {
+    let contractLink = {
       name: 'contractLink',
       textDefault: 'Liên kết',
       isActive: false,
@@ -203,30 +202,30 @@ export class ContractsViewDetailComponent
     this.tabControl.push(contractLink);
   }
 
-  setTaskBar(){
-    if(this.contract?.isAdminAll || this.contract.owner == this.user?.userID){
+  setTaskBar() {
+    if (this.contract?.isAdminAll || this.contract?.owner == this.user?.userID) {
       this.idTabShow = this.tabDefaut;
-    }else{
+    } else {
       this.idTabShow = this.contract?.config;
     }
   }
 
-  getUserContract(){
-    if(this.contract?.contactID){
+  getUserContract() {
+    if (this.contract?.contactID) {
       this.contractService
-      .getContactByRecID(this.contract?.contactID)
-      .subscribe((res) => {
-        if (res) {
-          this.contactPerson = res;
-        }
-      });
+        .getContactByRecID(this.contract?.contactID)
+        .subscribe((res) => {
+          if (res) {
+            this.contactPerson = res;
+          }
+        });
     }
-    if(this.contract?.owner){
+    if (this.contract?.owner) {
       this.api
         .exec<any>('HR', 'EmployeesBusiness', 'GetListEmployeesByUserIDAsync', [this.contract?.owner])
         .subscribe((res) => {
-          if(res){
-            this.userOwner =  res[0];
+          if (res) {
+            this.userOwner = res[0];
           }
         });
     }
@@ -267,8 +266,8 @@ export class ContractsViewDetailComponent
           this.getStepCurrent(this.contract);
         }
         this.checkCompletedInstance(this.contract?.status);
-      } else{
-        this.listInsStep  = [];
+      } else {
+        this.listInsStep = [];
       }
     });
   }
@@ -367,29 +366,29 @@ export class ContractsViewDetailComponent
     this.clickMoreFunc.emit({ e: event, data: data });
   }
 
-  getContractLink(){
+  getContractLink() {
     this.contractLink = null;
-    if(this.contract?.parentID){
+    if (this.contract?.parentID) {
       this.contractService.getContractByRecID(this.contract?.parentID).subscribe((res) => {
-        if(res){
+        if (res) {
           this.contractLink = res || [];
-        }else{
+        } else {
           this.contractLink = null;
         }
       })
     }
   }
-  getDeal(){
+  getDeal() {
     this.deal = null;
-    if(this.contract?.dealID){
+    if (this.contract?.dealID) {
       this.codxCmService.getDealByRecID(this.contract?.dealID).subscribe((res) => {
         this.deal = res;
       })
     }
   }
-  getQuotation(){
+  getQuotation() {
     this.quotation = null;
-    if(this.contract?.quotationID){
+    if (this.contract?.quotationID) {
       this.contractService.getQuotationByQuotationID(this.contract?.quotationID).subscribe((res) => {
         this.quotation = res;
       })
@@ -505,7 +504,7 @@ export class ContractsViewDetailComponent
     this.changeDetectorRef.markForCheck();
   }
 
-  linkData(type:string, recID:string){
+  linkData(type: string, recID: string) {
     if (type && recID) {
       const url1 = this.location.prepareExternalUrl(this.location.path());
       const parser = document.createElement('a');
@@ -514,7 +513,7 @@ export class ContractsViewDetailComponent
 
       let tenant = this.tenantStore.get().tenant;
       let url = ``
-      switch(type){
+      switch (type) {
         case "contract":
           url = `${domain}/${tenant}/cm/contracts/CM0206?predicate=RecID=@0&dataValue=${recID}`;
           break;
@@ -525,7 +524,7 @@ export class ContractsViewDetailComponent
           url = `${domain}/${tenant}/cm/quotations/CM0202?predicate=RecID=@0&dataValue=${recID}`;
           break;
       }
-      if(url){
+      if (url) {
         window.open(url, '_blank');
       }
       return;
@@ -534,13 +533,13 @@ export class ContractsViewDetailComponent
     }
   }
 
-  getListCOntractByParentID(){
+  getListCOntractByParentID() {
     this.listContractInParentID = null;
     this.isLoadingContract = true;
-    this.contractService.getContractByParentID([this.contract?.recID, this.contract?.parentID, this.contract?.useType]).subscribe((res)=>{
-      if(res){
+    this.contractService.getContractByParentID([this.contract?.recID, this.contract?.parentID, this.contract?.useType]).subscribe((res) => {
+      if (res) {
         this.listContractInParentID = res || [];
-      }else{
+      } else {
         this.listContractInParentID = [];
       }
       this.isLoadingContract = false;
@@ -554,10 +553,10 @@ export class ContractsViewDetailComponent
     this.changeDetectorRef.detectChanges();
   }
   getStepCurrent(data) {
-    this.stepCurrent = this.listInsStep.filter(x=>x.stepID == data.stepID)[0];
+    this.stepCurrent = this.listInsStep.filter(x => x.stepID == data.stepID)[0];
   }
 
-  handelMoveStage(event){
+  handelMoveStage(event) {
     this.moveStage.emit(event);
   }
   handelMailContract() {

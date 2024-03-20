@@ -1,21 +1,22 @@
-import { Component, Inject, Injector, OnDestroy, OnInit } from '@angular/core';
-import { UIComponent } from 'codx-core';
+import { ChangeDetectionStrategy, Component, Inject, Injector, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxAcService } from '../codx-ac.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-categories',
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CategoriesComponent
-  extends UIComponent
-  implements OnInit, OnDestroy
-{
+export class CategoriesComponent extends UIComponent {
   //#region Constructor
-  viewID = '1';
+  viewID: any;
   datas: Array<any> = [];
-  lstGroup: Array<any> = [];
+  lstGroup: any;
   selectedToolBar: string = '';
+  title:any;
+  private destroy$ = new Subject<void>();
   imgDefault = 'assets/themes/ws/default/img/Report_Empty.svg';
   constructor(inject: Injector, private acService: CodxAcService) {
     super(inject);
@@ -24,12 +25,34 @@ export class CategoriesComponent
 
   //#region Init
   override onInit() {
-    this.acService.hideToolbar(true);
+    //this.acService.hideToolbar(true);
     this.loadDataSource();
   }
 
+  ngAfterViewInit() {
+    if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
+    this.cache
+      .functionList(this.funcID)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          this.title = res?.defaultName || res?.customName;
+        }
+      });
+  }
+
   ngOnDestroy() {
-    this.acService.hideToolbar(false);
+    this.onDestroy();
+    //this.acService.hideToolbar(false);
+  }
+
+  onDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
   }
 
   loadDataSource() {
@@ -40,6 +63,8 @@ export class CategoriesComponent
           this.lstGroup = res;
           this.datas = this.lstGroup[0].childs;
           this.selectedToolBar = this.lstGroup[0].functionID;
+        }else{
+          this.lstGroup = [];
         }
       });
   }
