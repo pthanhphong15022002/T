@@ -400,7 +400,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.contracts.customerID = this.customerID;
         this.loadExchangeRate(this.contracts.currencyID); //tiền tệ
         this.setContractByDataOutput();
-        this.getAutoNumber();
+        this.getAutoNumber(this.contracts?.useType);
         this.setDataParent();
         //thêm từ DP
         if (this.businessLineID) {
@@ -431,7 +431,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         } else if (this.recIDContract) {
           this.contracts = await this.getContractByRecID();
         }
-        this.getAutoNumber();
         delete this.contracts['id'];
         this.contracts.status = '1';
         this.contracts.contractID = '';
@@ -454,6 +453,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             break;
         }
         this.contracts.recID = Util.uid();
+        this.getAutoNumber(this.contracts?.useType);
         if (this.contracts?.applyProcess && this.contracts?.processID) {
           this.getListInstanceSteps(this.contracts.processID);
         }
@@ -600,9 +600,15 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     return null;
   }
   // kiểm tra có thiết lập tư động ko
-  getAutoNumber() {
+  getAutoNumber(useType: string) {
+    let listFuncID = {
+      "1": "CM0204",
+      "3": "CM0208",
+      "5": "CM0209",
+    }
+    let funcID = listFuncID[useType] || "CM0204";
     this.cmService
-      .getFieldAutoNoDefault('CM0204', this.dialog.formModel.entityName)
+      .getFieldAutoNoDefault(funcID, this.dialog.formModel.entityName)
       .subscribe((res) => {
         if (res && !res.stop) {
           this.cache.message('AD019').subscribe((mes) => {
@@ -610,7 +616,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
               this.planceHolderAutoNumber = mes?.customName || mes?.description;
             }
           });
-          this.getAutoNumberSetting();
+          this.getAutoNumberSetting(funcID);
         } else {
           this.planceHolderAutoNumber = '';
           this.contracts.contractID = null;
@@ -620,10 +626,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   // lấy mã tự động
-  async getAutoNumberSetting() {
+  async getAutoNumberSetting(funcID: string) {
     this.cmService
       .genAutoNumberDefault(
-        'CM0204',
+        funcID,
         this.dialog.formModel.entityName,
         'ContractID'
       )
@@ -750,39 +756,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.disabledDelActualDate =
           event?.data == '0' || event?.data == '1' ? true : false;
         break;
-      // case 'contractType':
-      //   if (event?.component?.itemsSelected[0]) {
-      //     if (event?.component?.itemsSelected[0]?.AutoNumberControl == '1') {
-      //       let autoNumberCode = event?.component?.itemsSelected[0]?.AutoNumber;
-      //       if (autoNumberCode) {
-      //         this.cmService
-      //           .getAutoNumberByAutoNoCode(autoNumberCode)
-      //           .subscribe((res) => {
-      //             if (res) {
-      //               this.contracts.contractID = res;
-      //               this.disabledShowInput = true;
-      //             } else {
-      //               if (this.autoNumber) {
-      //                 this.contracts.contractID = this.autoNumber;
-      //                 this.disabledShowInput = true;
-      //               } else {
-      //                 this.contracts.contractID = '';
-      //                 this.disabledShowInput = false;
-      //               }
-      //             }
-      //           });
-      //       }
-      //     } else {
-      //       if (this.autoNumber) {
-      //         this.contracts.contractID = this.autoNumber;
-      //         this.disabledShowInput = true;
-      //       } else {
-      //         this.contracts.contractID = '';
-      //         this.disabledShowInput = false;
-      //       }
-      //     }
-        // }
-        // break;
+      case 'useType':
+        this.getAutoNumber(this.contracts?.useType);
+        break;
       case 'businessLineID':
         const itemsSelected = event?.component?.itemsSelected;
         if (event?.field === 'businessLineID' && itemsSelected?.length > 0) {
