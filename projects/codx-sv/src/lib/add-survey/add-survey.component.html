@@ -37,7 +37,7 @@
       </ng-template> -->
       <div class="d-flex align-items-center ms-4 me-6 mt-1px">
         <!-- <codx-input type="checkbox" class="me-2" [crrValue]="dataSV?.isTemplate"  [field]="'isTemplate'" (valueChange)="valueChange($event)"></codx-input> -->
-        <input class="sv-input mx-1" type="checkbox" value="" id="flexCheckChecked" [checked]="dataSV?.isTemplate" (change)="valueChange($event,'isTemplate')" />
+        <codx-input type="checkbox" field="isTemplate" [checked]="dataSV?.isTemplate" (valueChange)="valueChange($event)"></codx-input>
         <codx-label default="Lưu thành mẫu"></codx-label>
       </div>
 
