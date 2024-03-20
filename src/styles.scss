@@ -4619,3 +4619,12 @@ codx-aside .menu-link .menu-icon span[class*="icon-"]::before{
 // .hover-scroll-overlay-y, .hover-scroll-overlay-y:hover {
 //   overflow-y: auto!important;
 // }
+
+contracts-detail .instance-select{
+  //border: 1px aqua solid!important;
+  .e-content{
+    max-height: calc(100vh - 432px) !important;
+    overflow: auto;
+    overflow-x: hidden;
+   }
+}
