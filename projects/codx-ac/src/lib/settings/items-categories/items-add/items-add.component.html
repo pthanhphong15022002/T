@@ -120,7 +120,7 @@
 </ng-template>
 
 <ng-template #tabSettings>
-  <ng-container *ngIf="oDimGroup?.Active0">
+  <ng-container>
     <div class="d-flex align-items-center justify-content-between mb-5">
       <codx-label style="font-size: 15px !important;" default="Quy cách đóng gói"
       class="fw-bold text-primary me-2"></codx-label>
@@ -142,7 +142,7 @@
       </ng-container>
     </div>
   </ng-container>
-  <ng-container *ngIf="oDimGroup?.Active1">
+  <ng-container>
     <div class="d-flex align-items-center justify-content-between mb-5">
       <codx-label style="font-size: 15px !important;" default="Thuộc tính"
       class="fw-bold text-primary me-2"></codx-label>
@@ -169,7 +169,7 @@
     </div>
   </ng-container>
 
-  <ng-container *ngIf="oDimGroup?.Active2">
+  <ng-container>
     <div class="d-flex align-items-center justify-content-between mb-5">
       <codx-label style="font-size: 15px !important;" default="Màu sắc"
       class="fw-bold text-primary me-2"></codx-label>
@@ -188,7 +188,7 @@
     </div>
   </ng-container>
   
-  <ng-container *ngIf="oDimGroup?.Active3">
+  <ng-container>
     <div class="d-flex align-items-center justify-content-between mb-5">
       <codx-label style="font-size: 15px !important;" default="Quy cách"
       class="fw-bold text-primary me-2"></codx-label>
@@ -678,7 +678,7 @@
       <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
     </button> -->
     <button [shortcut]="'alt+s'" [autoClick]="true"id="btnsave" type="button" tab-index=""
-      class="btn btn-md btn-light-primary" style="border: 1px solid var(--primary-dark) !important"
+      class="btn btn-md btn-primary" style="border: 1px solid var(--primary-dark) !important"
       (keydown.enter)="onSave('save'); $event.preventDefault()" (click)="onSave('save')">
       <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
     </button>

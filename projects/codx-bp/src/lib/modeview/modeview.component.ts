@@ -278,6 +278,7 @@ export class ModeviewComponent implements OnInit {
       case "Text":
       {
         this.count.text ++;
+        data.controlType = "TextBox";
         data.title += " " + this.count.text;
         break
       }

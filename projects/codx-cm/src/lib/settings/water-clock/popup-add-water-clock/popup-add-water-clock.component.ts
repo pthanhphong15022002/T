@@ -267,15 +267,19 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
             0,
             '"' + this.gridViewSetup['RefID'].headerText + '"'
           );
-          this.cbxRefID.ComponentCurrent.dataService.data = [];
-          this.cbxRefID.crrValue = null;
-          this.data.refID = null;
+          if (this.loadedCus) {
+            this.cbxRefID.ComponentCurrent.dataService.data = [];
+            this.cbxRefID.crrValue = null;
+            this.data.refID = null;
+          }
+
           (
             this.cbxRefID.ComponentCurrent as CodxComboboxComponent
           ).dataService.predicates = 'RecID=@0';
           (
             this.cbxRefID.ComponentCurrent as CodxComboboxComponent
           ).dataService.dataValues = '00000000-0000-0000-0000-000000000000'; // dữ liệu ko có
+          this.loadedCus = false;
         }
         this.form.formGroup.patchValue({
           refID: this.data['refID'],

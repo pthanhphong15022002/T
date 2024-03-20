@@ -35,6 +35,7 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
   autoNoSetting: any = {};
   functionID: string = '';
   function: any = {};
+  referenceAutoNumer = "";
   constructor(
     private cache: CacheService,
     private cr: ChangeDetectorRef,
@@ -80,6 +81,8 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
       ) {
         this.data.numberSettingID = this.autoNoSetting.numberSettingID;
       }
+
+      if(dt?.data?.referenceAutoNumer) this.referenceAutoNumer = dt?.data?.referenceAutoNumer
     }
   }
 
@@ -101,12 +104,14 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
 
     this.data[e.field] = e.data;
     if (e.field == 'atttributeName') {
+      debugger
       if (this.colums.length) {
         let col = this.colums.find((x: any) => x.fieldName == e.data);
         if (col) {
           this.attributeType = col.dataType;
         }
       }
+      else if(this.referenceAutoNumer) this.attributeType = 'string'
     }
     if(e.field == 'dataType'){
       if(e.data=='1'){
@@ -141,7 +146,7 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
         this.disableDataFormatSelect = false;
         if (this.attributeType?.toLowerCase() == 'datetime') {
           this.disableCharNum = true;
-          this.vllDataFormat = 'AD010';
+          this.vllDataFormat = 'AD011';
         }
         if (this.attributeType?.toLowerCase() == 'string') {
           this.vllDataFormat = 'AD012';

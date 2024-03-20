@@ -110,7 +110,7 @@ export class AddTaskComponent
       dataType : "String"
     },
   ];
-
+  isAllowEdit = "0"; 
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes?.activityType &&
@@ -122,6 +122,12 @@ export class AddTaskComponent
     }
   }
   ngOnInit(): void {
+    if (this.process.settings && this.process.settings.length > 0) 
+    {
+      this.isAllowEdit = this.process.settings.filter(
+        (x) => x.fieldName == 'AllowEdit'
+      )[0].fieldValue;
+    }
     if (this.type == 'add') this.default();
     else {
       this.data.settings =

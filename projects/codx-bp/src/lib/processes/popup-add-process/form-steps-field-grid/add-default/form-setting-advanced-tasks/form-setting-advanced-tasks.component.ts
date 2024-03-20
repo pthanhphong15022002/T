@@ -31,6 +31,10 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 export class FormSettingAdvancedTasksComponent implements OnInit {
   @ViewChild('mailControl') mailControl: ContentEmailComponent;
   @ViewChild('mailReminder') mailReminder: ContentEmailComponent;
+  @ViewChild('inputDuration') inputDuration: CodxInputComponent;
+  @ViewChild('inputNoti') inputNoti: CodxInputComponent;
+  @ViewChild('inputAlert') inputAlert: CodxInputComponent;
+
   dialog: any;
   title = 'Thiết lập nâng cao';
   tabInfos: any[] = [
@@ -100,9 +104,11 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
       this.dataReminder?.times?.trim() != ''
     ) {
       this.vllDurations = JSON.parse(this.dataReminder.times);
-      if(this.vllDurations?.length > 0){
-        let mailID = this.vllDurations.filter(x => x.email != null && x.email?.trim() != '');
-        if(mailID?.length > 0){
+      if (this.vllDurations?.length > 0) {
+        let mailID = this.vllDurations.filter(
+          (x) => x.email != null && x.email?.trim() != ''
+        );
+        if (mailID?.length > 0) {
           this.templateIDReminder = mailID[0]?.email;
           this.isAddReminder = false;
         }
@@ -126,7 +132,8 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
         recID: Util.uid(),
         category: '2',
         templateName: this.data?.stepName,
-        message: ''
+        subject: this.data?.stepName,
+        message: '',
       };
     }
     if (this.isAddReminder) {
@@ -134,7 +141,8 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
         recID: Util.uid(),
         category: '2',
         templateName: this.data?.stepName,
-        message: ''
+        subject: this.data?.stepName,
+        message: '',
       };
     }
     this.loadMail = false;
@@ -148,12 +156,14 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
       )
       .subscribe((item) => {
         if (item?.length > 0) {
-          this.dataEmail = item.find((x) => x.recID == this.templateID) ? item.find((x) => x.recID == this.templateID) : this.dataEmail;
+          this.dataEmail = item.find((x) => x.recID == this.templateID)
+            ? item.find((x) => x.recID == this.templateID)
+            : this.dataEmail;
           this.dataEmailReminder = item.find(
             (x) => x.recID == this.templateIDReminder
-          ) ? item.find(
-            (x) => x.recID == this.templateIDReminder
-          ) : this.dataEmailReminder;
+          )
+            ? item.find((x) => x.recID == this.templateIDReminder)
+            : this.dataEmailReminder;
 
           if (this.dataEmail.sendTo && this.dataEmail.sendTo.length > 0) {
             this.lstTo = this.dataEmail?.sendTo || [];
@@ -170,6 +180,23 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
           if (this.isAddControl) {
             this.dataEmail.recID = Util.uid();
           }
+        } else {
+          this.isAddReminder = true;
+          this.isAddControl = true;
+          this.dataEmail = {
+            recID: Util.uid(),
+            category: '2',
+            templateName: this.data?.stepName,
+            subject: this.data?.stepName,
+            message: '',
+          };
+          this.dataEmailReminder = {
+            recID: Util.uid(),
+            category: '2',
+            templateName: this.data?.stepName,
+            subject: this.data?.stepName,
+            message: '',
+          };
         }
         this.loadMail = true;
       });
@@ -273,6 +300,11 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
       this.vllDurations[index] = data;
       this.checkValidate = this.checkValidateTimes(false);
     } else {
+      if (
+        typeof e?.data === 'string' &&
+        (e?.data == null || e?.data?.trim() == '')
+      )
+        return;
       var obj = {};
       obj['time'] = this.countTime;
       let alertType = '';
@@ -293,8 +325,20 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
       obj['alertType'] = alertType;
       obj['email'] = '';
       this.vllDurations.push(obj);
-      this.checkValidate = this.checkValidateTimes(false);
       this.countTime++;
+      if (this.inputDuration) {
+        this.inputDuration.value = null;
+        this.inputDuration.crrValue = null;
+        this.inputDuration.ComponentCurrent?.setValue(null);
+      }
+      if (this.inputNoti) {
+        this.inputNoti.value = false;
+        this.inputNoti.checked = false;
+      }
+      if (this.inputAlert) {
+        this.inputAlert.value = false;
+        this.inputAlert.checked = false;
+      }
     }
     this.detectorRef.detectChanges();
   }
@@ -370,13 +414,9 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
         this.vllDurations.forEach((ele) => {
           ele.email = this.dataEmailReminder?.recID;
         });
-
-        this.dataReminder.times =
-          this.vllDurations?.length > 0
-            ? JSON.stringify(this.vllDurations)
-            : '';
       }
-
+      this.dataReminder.times =
+        this.vllDurations?.length > 0 ? JSON.stringify(this.vllDurations) : '';
       this.dataReminder.autoComplete = '';
     }
 
@@ -406,10 +446,14 @@ export class FormSettingAdvancedTasksComponent implements OnInit {
   }
 
   addMail(data) {
-    this.api.execSv('BG', 'BG', 'EmailsBusiness', 'SaveAsync', data).subscribe();
+    this.api
+      .execSv('BG', 'BG', 'EmailsBusiness', 'SaveAsync', data)
+      .subscribe();
   }
 
   updateMail(data) {
-    this.api.execSv('BG', 'BG', 'EmailsBusiness', 'UpdateMailSettingAsync', data).subscribe();
+    this.api
+      .execSv('BG', 'BG', 'EmailsBusiness', 'UpdateMailSettingAsync', data)
+      .subscribe();
   }
 }

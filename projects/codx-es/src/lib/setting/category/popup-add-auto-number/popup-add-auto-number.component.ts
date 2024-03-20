@@ -86,6 +86,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   autoNumberSettingPreview: string = '';
   funcItem!: any;
   disableAssignRule = false;
+  referenceAutoNumer: "";
   constructor(
     private cache: CacheService,
     private cr: ChangeDetectorRef,
@@ -120,6 +121,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     this.newAutoNoCode = data?.data?.newAutoNoCode;
     this.isSaveNew = data?.data?.isSaveNew ?? '0';
 
+    if(data?.data?.referenceAutoNumer) this.referenceAutoNumer = data?.data?.referenceAutoNumer
     // delete this.cbxName.
   }
 
@@ -672,6 +674,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
         columns: this.columsGrid,
         segment: null,
         functionID: this.functionID,
+        referenceAutoNumer: this.referenceAutoNumer
       },
       '',
       option

@@ -32,6 +32,7 @@ export class FixedAssetsComponent extends UIComponent {
   funcName = '';
   headerText: any;
   itemSelected: any;
+  isSubView:any;
   private destroy$ = new Subject<void>();
   constructor(
     injector: Injector, 
@@ -39,6 +40,9 @@ export class FixedAssetsComponent extends UIComponent {
     private callfunc: CallFuncService,
     ) {
     super(injector);
+    this.router.data.subscribe((res) => {
+      if (res && res['isSubView']) this.isSubView = res.isSubView;
+    });
   }
   //#endregion
 
