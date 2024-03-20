@@ -7,8 +7,8 @@
 >
 </codx-form>
 <ng-template #subHeader>
-  <div class="row w-100">
-    <div class="col-2">
+  <div class="d-flex align-items-center">
+    <div class="me-8">
       <codx-img
         #codxImg
         [objectId]="group?.groupID"
@@ -19,7 +19,7 @@
         [funcId]="dialogRef.formModel.funcID">
       </codx-img>
     </div>
-    <div class="col-10">
+    <div class="w-320px">
       <codx-input
         [type]="'text'"
         [field]="'groupName'"
@@ -28,40 +28,13 @@
       >
       </codx-input>
     </div>
-    
   </div>
 </ng-template>
 <ng-template #body>
-  <!-- <div class="row">
-    <div class="col-6">
-      <codx-label
-        class="fw-bold"
-        [className]="'fs-6'"
-        [formModel]="dialogRef.formModel"
-        name="lblListUser"
-        default="Danh sách người dùng"
-      ></codx-label>
-      <codx-searchbar
-          #codxSearch
-          [iconPos]="'left'"
-          (searchEvent)="searchEvent($event)"
-      ></codx-searchbar>
-    </div>
-    <div class="col-6">
-      <codx-label
-          class="fw-bold"
-          [className]="'fs-6'"
-          [formModel]="dialogRef.formModel"
-          name="lblListUser"
-          [default]="'Đã chọn'">
-        </codx-label>
-      <span class="fw-bold">{{'('+arrUsers.length+')'}}</span>
-    </div>
-  </div> -->
-  <div class="row mt-2">
-    <div class="col-6" style="height: 500px">
+  <div class="row w-100 h-100">
+    <div class="col-6 h-100">
       <codx-listview
-        #codxListView1
+        #codxListView
         (onSelectionChanged)="selectedChange($event)"
         [comboboxName]="'users'"
         [itemTemplate]="itemtemplate"
@@ -75,101 +48,37 @@
         [selectFirst]="false"
       >
       </codx-listview>
-      <ng-template #headerTemplate>
-        <div class="w-100 pb-2">
+    </div>
+    <div class="col-6 h-100">
+      <div class="d-flex align-items-end justify-content-between w-100 h-50px mb-2 border-bottom">
+        <div>
           <codx-label
             class="fw-bold"
             [className]="'fs-6'"
             [formModel]="dialogRef.formModel"
             name="lblListUser"
-            default="Danh sách người dùng"
-          ></codx-label>
-          <codx-searchbar
-              class="w-100"
-              #codxSearch
-              [iconPos]="'left'"
-              (searchEvent)="searchEvent($event)"
-          ></codx-searchbar>
+            [default]="'Đã chọn'">
+          </codx-label>
+          <span class="fw-bold">({{group?.members?.length}})</span>
         </div>
-      </ng-template>
-    </div>
-    <div class="col-6">
-      <codx-listview
-        #codxListView2
-        [itemTemplate]="selectedtemplate"
-        [headerTemplate]="headerTemplate2"
-        [funcId]="dialogRef.formModel.funcID"
-        [entityName]="'AD_Users'"
-        [comboboxName]="'users'"
-        [service]="'SYS'"
-        [assemblyName]="'ERM.Business.Core'"
-        [className]="'DataBusiness'"
-        [method]="'LoadSelectedDataCbxAsync'"
-        [currentValue]="strUserID"
-        [selectFirst]="false"
-      >
-      </codx-listview>
-      <ng-template #headerTemplate2>
-        <div class="">
-          <codx-label
-              class="fw-bold"
-              [className]="'fs-6'"
-              [formModel]="dialogRef.formModel"
-              name="lblListUser"
-              [default]="'Đã chọn'">
-            </codx-label>
-          <span class="fw-bold">{{'('+arrUsers.length+')'}}</span>
-        </div>
-      </ng-template>
+        <!-- <div class="d-flex align-items-end justify-content-end pe-2">
+          <button type="button" class="btn btn-primary">Bỏ chọn tất cả</button>
+        </div> -->
+      </div>
+      <ng-container *ngIf="group && group?.members">
+        <ng-container *ngFor="let item of group.members">
+          <div class="d-flex align-items-center justify-content-between p-2 has-action">
+            <codx-temp-full [dataItem]="item" [title]="item.userName" [desc]="item.positionName" [hideMF]="true" [imageId]="item.userID" [imageObjType]="'AD_Users'"></codx-temp-full>
+            <div class="has-action-item" (click)="removeMember(item.userID)">
+              <span class="icon-close text-danger"></span>
+            </div>
+          </div>
+        </ng-container>  
+      </ng-container>
+          
     </div>
   </div>
-  <ng-template #itemtemplate let-item>
-    <div class="d-flex align-items-center justify-content-between p-2">
-      <div class="d-flex align-items-center justify-content-between">
-        <codx-img
-          [width]="30"
-          [objectId]="item?.UserID"
-          [objectName]="item?.UserName"
-          objectType="AD_Users"
-          imageType="circle"
-        >
-        </codx-img>
-        <div class="text-left ms-2">
-          <p class="m-0 fw-bold" *ngIf="item?.UserName">{{ item?.UserName }}</p>
-        </div>
-      </div>
-      <div>
-        <codx-input
-          [disabled]="true"
-          [checked]="false"
-          [attr.data-id]="item?.UserID"
-          type="checkbox"
-          [class]="'check-circle'"
-        >
-        </codx-input>
-      </div>
-    </div>
-  </ng-template>
-  <ng-template #selectedtemplate let-item>
-    <div class="d-flex align-items-center justify-content-between p-2">
-      <div class="d-flex justify-content-between">
-        <codx-img
-          [width]="30"
-          [objectId]="item?.UserID"
-          [objectName]="item?.UserName"
-          objectType="AD_Users"
-          imageType="circle"
-        >
-        </codx-img>
-        <div class="text-left ms-2">
-          <p class="m-0 fw-bold" *ngIf="item?.UserName">{{ item?.UserName }}</p>
-        </div>
-      </div>
-      <div (click)="removeMember(item)">
-        <span class="icon-close text-danger"></span>
-      </div>
-    </div>
-  </ng-template>
+  
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">
@@ -179,5 +88,56 @@
     >
       Lưu
     </button>
+  </div>
+</ng-template>
+
+<ng-template #headerTemplate>
+  <div class="d-flex align-items-end justify-content-between w-100 h-50px mb-2">
+    <div class="w-250px">
+      <codx-label
+        [className]="'fw-bold fs-6'"
+        [formModel]="dialogRef.formModel"
+        name="lblListUser"
+        default="Danh sách người dùng"
+      ></codx-label>
+    <codx-searchbar
+        class="w-100"
+        #codxSearch
+        [iconPos]="'left'"
+        (searchEvent)="searchEvent($event)"></codx-searchbar>
+    </div>
+    <div class="d-flex align-items-end justify-content-end pe-4">
+      <codx-input type="checkbox" field="checkbox" [checked]="false" label="Chọn tất cả" labelPosition="after" (valueChange)="checkBoxChange($event)"></codx-input>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #itemtemplate let-item>
+  <div class="d-flex align-items-center justify-content-between p-2" (click)="selectedChange(item)">
+    <div class="d-flex align-items-center justify-content-between">
+      <codx-img
+        [width]="30"
+        [objectId]="item?.UserID"
+        [objectName]="item?.UserName"
+        objectType="AD_Users"
+        imageType="circle"
+      >
+      </codx-img>
+      <div class="text-left ms-2">
+        <p class="m-0 fw-bold" *ngIf="item?.UserName">{{ item?.UserName }}</p>
+        <p class="m-0" *ngIf="item?.PositionName">{{ item?.PositionName }}</p>
+      </div>
+    </div>
+    <div>
+      <codx-input
+        [disabled]="true"
+        [checked]="false"
+        [attr.data-id]="item?.UserID"
+        type="checkbox"
+        [class]="'check-circle'"
+      >
+      </codx-input>
+    </div>
   </div>
 </ng-template>
