@@ -456,7 +456,7 @@ export class CodxSvService {
   }
 
   getDataRepondent(recID:any) {
-    return this.api.execSv("SV",'ERM.Business.SV', 'RespondentsBusiness', 'GetItemByRecIDAsync', recID);
+    return this.api.execSv("SV",'ERM.Business.SV', 'RespondentsBusiness', 'GetByRecIDAsync', recID);
   }
   onSubmit(data) {
     return this.api.execSv(
