@@ -483,17 +483,21 @@ export class AddSurveyComponent extends UIComponent {
   {
     this.dataSV.setting = e;
   }
-  valueChange(e:any , field:any = null)
+  valueChange(e:any)
   {
     if(e?.field == "title") this.title = e?.data;
-    if(field == "isTemplate") {
-      this.dataSV[field] = e?.target?.checked;
+    if(e?.field == "isTemplate") {
+      this.dataSV[e?.field] = e?.data;
       this.isChangeTmp = true;
     }
     else this.dataSV[e?.field] = e?.data;
+    
     this.SvService.signalSave.next('saving');
     if(this.dataSV?.settings && typeof this.dataSV?.settings == "object") this.dataSV.settings = JSON.stringify(this.dataSV?.settings);
-    this.SvService.updateSV(this.recID,this.dataSV,this.isChangeTmp).subscribe(item=>{ if(item) this.SvService.signalSave.next('done');});
+    
+    this.SvService.updateSV(this.recID,this.dataSV,this.isChangeTmp).subscribe(item=> { 
+      if(item) this.SvService.signalSave.next('done');
+    });
   }
 
   updateSV()
