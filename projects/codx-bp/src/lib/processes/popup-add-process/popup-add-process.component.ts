@@ -290,7 +290,7 @@ export class PopupAddProcessComponent {
     var processallowDrag = null;
     var processDefaultProcess = null;
     var processCompleteControl = null;
-    var allowEdit = "0";
+    var allowEdit = null;
     if (this.data.settings && this.data.settings.length > 0) {
       processallowDrag = this.data.settings.filter(
         (x) => x.fieldName == 'AllowDrag'
@@ -317,7 +317,7 @@ export class PopupAddProcessComponent {
       nextSteps: [{nextStepID:form.recID}],
       sortBy: null,
       totalControl: null,
-      allowEdit: allowEdit
+      allowEdit: allowEdit?.fieldValue
     });
 
  
@@ -338,7 +338,7 @@ export class PopupAddProcessComponent {
       nextSteps: null,
       sortBy: null,
       totalControl: null,
-      allowEdit: allowEdit
+      allowEdit: allowEdit?.fieldValue
     });
     form.permissions = [{objectID: this.user?.userID, objectType: 'U'}]
     stage.child = [form]

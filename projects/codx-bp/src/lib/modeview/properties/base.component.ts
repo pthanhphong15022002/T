@@ -12,7 +12,7 @@ export abstract class BasePropertyComponent
     @Output() dataChange = new EventEmitter<any>();
     @Output() back = new EventEmitter<any>();
     constructor(
-      private authstore: AuthStore,
+      public authstore: AuthStore,
       public api: ApiHttpService,
       public shareService: CodxShareService,
       public ref: ChangeDetectorRef,

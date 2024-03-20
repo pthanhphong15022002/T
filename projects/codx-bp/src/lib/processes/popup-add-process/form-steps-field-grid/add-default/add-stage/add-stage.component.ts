@@ -46,7 +46,14 @@ export class AddStageComponent extends BaseFieldComponent implements OnInit {
       }
     ]
   }
+  isAllowEdit = "0"; 
   ngOnInit(): void {
+    if (this.process.settings && this.process.settings.length > 0) 
+    {
+      this.isAllowEdit = this.process.settings.filter(
+        (x) => x.fieldName == 'AllowEdit'
+      )[0].fieldValue;
+    }
     if(this.type == 'add') this.defaultStep();
     else this.data.settings = typeof this.data.settings === 'string' ?  JSON.parse(this.data.settings) : this.data.settings;
   }
@@ -55,12 +62,6 @@ export class AddStageComponent extends BaseFieldComponent implements OnInit {
     this.data = new BP_Processes_Steps();
     var vllStage = this.vll.datas.filter(x=>x.value == "Stage")[0];
     let count = this.process.steps.filter(x=>x.activityType == "Stage").length;
-    let allowEdit = "0";
-    if (this.process.settings && this.process.settings.length > 0) {
-      allowEdit = this.process.settings.filter(
-        (x) => x.fieldName == 'AllowEdit'
-      )[0];
-    }
     this.data.recID = Util.uid();
     this.data.stepNo = this.process.steps.length;
     this.data.activityType = "Stage";
@@ -80,7 +81,7 @@ export class AddStageComponent extends BaseFieldComponent implements OnInit {
       nextSteps: null,
       sortBy: null,
       totalControl: null,
-      allowEdit: allowEdit
+      allowEdit: this.isAllowEdit
     };
     this.dataChange.emit(this.data);
   }

@@ -44,17 +44,30 @@
           default="Trường nhập liệu"
           formName="sys"
         ></codx-label>
-        <codx-input
-          type="combobox"
-          refValue="FieldByAutoNumber"
-          field="atttributeName"
-          [model]="function"
-          [showButtons]="false"
-          [disabled]="diasbleAtt"
-          [crrValue]="data?.atttributeName"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
+        <ng-container *ngIf="!referenceAutoNumer">
+          <codx-input
+            type="combobox"
+            refValue="FieldByAutoNumber"
+            field="atttributeName"
+            [model]="function"
+            [showButtons]="false"
+            [disabled]="diasbleAtt"
+            [crrValue]="data?.atttributeName"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </ng-container>
+        <ng-container *ngIf="referenceAutoNumer">
+          <codx-input
+            type="valuelist"
+            field="atttributeName"
+            [refValue]="referenceAutoNumer"
+            [disabled]="diasbleAtt"
+            [crrValue]="data?.atttributeName"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </ng-container>
       </div>
       <div class="form-group">
         <codx-label
