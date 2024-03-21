@@ -52,7 +52,7 @@ export class AddStageComponent extends BaseFieldComponent implements OnInit {
     {
       this.isAllowEdit = this.process.settings.filter(
         (x) => x.fieldName == 'AllowEdit'
-      )[0].fieldValue;
+      )[0]?.fieldValue;
     }
     if(this.type == 'add') this.defaultStep();
     else this.data.settings = typeof this.data.settings === 'string' ?  JSON.parse(this.data.settings) : this.data.settings;
