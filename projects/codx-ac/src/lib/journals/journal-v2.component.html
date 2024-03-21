@@ -1,7 +1,7 @@
-<codx-views class="ac-animation-none" [toolbarDisplay]="true" #view [views]="views" service="AC"
-  [button]="mainFilterValue != '2' ? button : null" [entityName]="view.entityName" [autoLoad]="true"
-  (buttonClick)="toolbarClick($event)" (selectedChange)="onSelected($event)" (searchChange)="search($event)"
-  (clickMF)="clickMF($event, itemSelected)" (changeDataMF)="changeMF($event)" [hideMoreFuncs]="!itemSelected">
+<codx-views class="ac-animation-none" [toolbarDisplay]="true" #view [views]="views" [button]="button"
+  [entityName]="view.entityName" (buttonClick)="toolbarClick($event)" (selectedChange)="onSelected($event)"
+  (searchChange)="search($event)" (clickMF)="clickMF($event, itemSelected)" (changeDataMF)="changeMF($event)"
+  [hideMoreFuncs]="!itemSelected">
 </codx-views>
 
 <!-- <ng-template #contentTemplate>
