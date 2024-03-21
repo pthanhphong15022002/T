@@ -27,7 +27,8 @@ export class AppropvalNewsDetailComponent implements OnInit {
   hideMFC:boolean = false;
   imgOn:DateTime = new DateTime();
   user: import("codx-core").UserModel;
-  constructor(
+  constructor
+  (
     private auth: AuthStore,
     private api:ApiHttpService,
     private dt:ChangeDetectorRef,
@@ -35,10 +36,11 @@ export class AppropvalNewsDetailComponent implements OnInit {
     private cache:CacheService,
     private notifySvr: NotificationsService,
     private sanitizer: DomSanitizer) 
-    { }
+  { 
+    this.user = this.auth.get();
+  }
   ngOnInit(): void {
     this.getPostInfo(this.objectID);
-    this.user = this.auth.get();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -63,8 +65,16 @@ export class AppropvalNewsDetailComponent implements OnInit {
       "GetPostInfoApprovalAsync",
       [this.objectID,this.function.entityName])
       .subscribe((res:any) => {
-        this.data = JSON.parse(JSON.stringify(res));
-        //this.hideMFC = res?.approveStatus == "5";    
+        if(res)
+        {
+          this.data = JSON.parse(JSON.stringify(res));
+          this.hideMFC = res.approveStatus == "5";    
+        }
+        else
+        {
+          this.data = null;
+          this.hideMFC = true;
+        }
         this.imgOn = new DateTime();
         this.dt.detectChanges();
       });
@@ -128,7 +138,7 @@ export class AppropvalNewsDetailComponent implements OnInit {
       {
         this.data.approveStatus = approvalStatus;
         this.data.status = approvalStatus =='5' ? '2' : this.data.status;
-        //this.hideMFC = true;
+        this.hideMFC = true;
         this.notifySvr.notifyCode(mssg);
         this.evtApprovalPost.emit(this.data);
         this.dt.detectChanges();
