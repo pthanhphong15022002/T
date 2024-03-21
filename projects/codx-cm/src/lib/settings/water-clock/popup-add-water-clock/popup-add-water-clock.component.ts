@@ -50,6 +50,7 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
   siteIDOldData: any;
   loadedCus: boolean = false;
   oldRef = '';
+  siteIDOld = '';
 
   constructor(
     private cache: CacheService,
@@ -71,8 +72,10 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
     if (this.action === 'edit') {
       this.oldAssetId = this.data.assetID;
       this.loadedCus = true
-      this.oldRef = this.data.refID
     }
+    this.oldRef = this.data.refID
+    this.parentID = this.data.parentID
+    this.oldRef = this.data.refID
     if (Array.isArray(arrField)) {
       this.arrFieldForm = arrField
         .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
@@ -138,7 +141,7 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
     let dataValue = '';
     switch (e.field) {
       case 'parentID':
-        if (this.gridViewSetup['AssetID'].formName == 'CMWaterClockCustomer') return; //
+        if (this.gridViewSetup['AssetID'].formName == 'CMWaterClockCustomer' || this.parentID == e.data) return; //
         //danh cho chi so đông ho
         (
           this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
@@ -167,10 +170,12 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
           refID: this.data['refID'],
         });
         this.changeCbxCustomer();
-        this.parentID = this.data.parentID;
+
         break;
 
       case 'siteID':
+        if (this.siteIDOld == e.data) return;
+        this.siteIDOld = e.data
         this.data.parentID = null;
         this.cbxParentID.crrValue = null;
 
@@ -205,9 +210,11 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
         this.cbxRefID.crrValue = null;
 
         this.changeCbxCustomer();
+
         break;
 
       case 'refID':
+        if (this.oldRef == e.data) return;
         this.data.parentID = null;
         this.cbxParentID.crrValue = null;
         if (this.data.siteID) { predicate = 'SiteID=@0'; dataValue = `${this.data.siteID}` };
@@ -235,6 +242,9 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
         this.getListLocation();
         break;
     }
+    this.parentID = this.data.parentID;
+    this.oldRef = this.data.refID;
+    this.siteIDOld = this.data.siteID;
   }
 
   beforeSave(op: RequestOption) {
