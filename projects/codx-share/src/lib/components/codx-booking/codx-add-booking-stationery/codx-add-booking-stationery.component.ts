@@ -175,7 +175,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
 
     this.initForm();
 
-    if (!this.isAddNew) {
+    if (!this.isAddNew || this.funcType ==_copyMF) {
       this.data?.items?.forEach((item) => {
               let tmpSta = new BookingItems();
               (tmpSta.itemID = item?.itemID),

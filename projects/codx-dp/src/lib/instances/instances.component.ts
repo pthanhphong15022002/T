@@ -908,7 +908,13 @@ export class InstancesComponent
     if (e != null && data != null) {
       if (data?.approveStatus == '3') {
         e.forEach((res) => {
-          if (res.functionID != 'DP23' && res.functionID != 'DP16') {
+          if (!['SYS05','DP23'].includes(res.functionID)) {
+            res.disabled = true;
+          }
+        });
+      }else if (data.closed){
+        e.forEach((res) => {
+          if (!['SYS05','DP15'].includes(res.functionID)) {
             res.disabled = true;
           }
         });
@@ -916,6 +922,13 @@ export class InstancesComponent
         if (data.status != '1') {
           e.forEach((res) => {
             switch (res.functionID) {
+              case 'SYS001':
+              case 'SYS002':
+              case 'SYS003':
+              case 'SYS003':
+              case 'DP14':
+                res.disabled = ['3','4','5','6'].includes(data.status);
+                break;
               case 'SYS003':
                 if (
                   (data.status != '2' && !this.isEditInstance(data)) ||
