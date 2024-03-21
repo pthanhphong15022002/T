@@ -27,7 +27,7 @@ import { CodxCmService } from '../../../codx-cm.service';
 })
 export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
   @ViewChild('form') form: CodxFormComponent;
-
+  @ViewChild('cbxParentID') cbxParentID: CodxInputComponent;
   @ViewChild('cbxRefID') cbxRefID: CodxInputComponent;
   @ViewChild('cbxSiteID') cbxSiteID: CodxInputComponent;
 
@@ -133,7 +133,64 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
   valueChangeCbx(e) {
     this.data[e.field] = e.data;
     switch (e.field) {
+      case 'parentID':
+        if (this.gridViewSetup.formName == 'CMWaterClockCustomer') return; //
+        //danh cho chi so đông ho
+        (
+          this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.data = [];
+
+        if (!e.data) {
+          this.data.siteID = null;
+          this.data.refID = null;
+        } else {
+          if (this.parentID == e.data) return;
+          this.data.siteID = e?.component?.itemsSelected[0]?.SiteID;
+          this.data.refID = e?.component?.itemsSelected[0]?.RefID;
+
+          (
+            this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
+          ).dataService.predicates = e.data ? 'AssetID=@0' : '';
+          (
+            this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
+          ).dataService.dataValues = e.data ? `${this.data.siteID}` : '';
+        }
+        this.cbxSiteID.crrValue = this.data.siteID;
+        this.cbxRefID.crrValue = this.data.refID;
+
+        this.form.formGroup.patchValue({ siteID: this.data['siteID'] });
+        this.form.formGroup.patchValue({
+          refID: this.data['refID'],
+        });
+        this.changeCbxCustomer();
+        this.parentID = this.data.parentID;
+        break;
+
       case 'siteID':
+        this.data.parentID = null;
+        this.cbxParentID.crrValue = null;
+        let predicate = '';
+        let dataValue = '';
+        if (e.data) { predicate = 'SiteID=@0'; dataValue = `${this.data.siteID}` };
+
+        if (this.data.refID) {
+          if (predicate)
+            predicate += 'and RefID=@1'; dataValue += `${this.data.siteID}` + ";" + `${this.data.refID}`
+        } else {
+          predicate = 'RefID=@0'; dataValue = `${this.data.refID}`
+        };
+
+
+        (
+          this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.predicates = predicate;
+        (
+          this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.dataValues = dataValue;
+
+        this.form.formGroup.patchValue({ siteID: this.data['parentID'] });
+
+
         if (this.loadedCus) return;
         this.data.refID = null;
         //ref
@@ -144,6 +201,7 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
 
         this.changeCbxCustomer();
         break;
+
       case 'refID':
         if (!e.data) {
           return;
