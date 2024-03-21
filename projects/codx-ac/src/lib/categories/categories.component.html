@@ -58,7 +58,7 @@
             <ng-container *ngFor="let item of lstGroup ; let i = index">
                 <div class="me-4 cursor-pointer fw-bold" [class.active]="selectedToolBar == item?.functionID"
                     (click)="selectedChangeToolBar(item)">
-                    <span>{{item?.customName+'('+item.childs.length+')'}}</span>
+                    <span>{{item?.customName}}</span>
                 </div>
             </ng-container>
         </div>
