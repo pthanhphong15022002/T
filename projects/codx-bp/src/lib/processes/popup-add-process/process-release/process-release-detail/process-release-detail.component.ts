@@ -22,6 +22,8 @@ import { PopupBpTasksComponent } from 'projects/codx-bp/src/lib/bp-tasks/popup-b
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
+import { AddDefaultComponent } from '../../form-steps-field-grid/add-default/add-default.component';
+import { BPPopupChangePermissionComponent } from '../../form-steps-field-grid/bp-popup-change-permission/bp-popup-change-permission.component';
 
 @Component({
   selector: 'lib-process-release-detail',
@@ -384,6 +386,43 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       option
     );
     popup.closed.subscribe((res) => {
+      if (res && res?.event) {
+        this.data = res?.event;
+      }
+    });
+  }
+  addNewTask(oldTask){
+    var option = new SidebarModel();
+    option.FormModel = {
+      formName: 'BPTasks',
+      gridViewName: 'grvBPTasks',
+      entityName: 'BP_Tasks',
+    };
+    let popup = this.callFc.openSide(
+      AddDefaultComponent,
+      {
+        data: oldTask,
+        process: this.process,
+        dataIns: this.data,
+      },
+      option
+    );
+    popup.closed.subscribe((res) => {
+      if (res && res?.event) {
+        this.data = res?.event;
+      }
+    });
+  }
+  changePer(task){
+    var option = new SidebarModel();
+    let dialogAP = this.callFc.openForm(
+      BPPopupChangePermissionComponent,
+      '',
+      500,
+      250,
+      ''
+    );
+    dialogAP.closed.subscribe((res) => {
       if (res && res?.event) {
         this.data = res?.event;
       }

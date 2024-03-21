@@ -105,7 +105,6 @@ export class PopupAddPostComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    console.clear();
   }
 
   // set data default
@@ -125,6 +124,17 @@ export class PopupAddPostComponent implements OnInit {
           : 'WP_Comments';
         this.data.createdBy = this.user.userID;
         this.data.createdName = this.user.userName;
+      }
+      else
+      {
+        if(this.data.isShortContent)
+        {
+          this.api.execSv("WP","ERM.Business.WP","CommentsBusiness","GetContentAsync",[this.data.recID])
+          .subscribe((res:string) => {
+            this.data.contents = res;
+            this.dt.detectChanges();
+          });
+        }
       }
     }
     this.getSettingValue();

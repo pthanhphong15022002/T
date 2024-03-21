@@ -1,12 +1,12 @@
-<ng-container *ngIf="lstGroup">
+<!-- <ng-container *ngIf="lstGroup">
     <div class="h-100">
         <codx-view2 [dataSource]="datas" [tmpItem]="tmp" [tmpRightToolBar]="tmpRightToolBar"
             [showRightToolbar]="false" (selectedChange)="selectedChange($event)"
             (viewChange)="viewChange($event)" [toolbarMode]="'1'"></codx-view2>
     </div>
-</ng-container>
+</ng-container> -->
 
-<ng-template #tmp let-data>
+<!-- <ng-template #tmp let-data>
     <ng-container *ngIf="viewID == '1'">
         <div #divCard
             class="d-flex flex-column w-225px h-225px m-3 text-white position-relative cursor-pointer ws-report-card">
@@ -37,6 +37,51 @@
     </div>
 </ng-template>
 
+<ng-template #tmpFooter let-data>
+    <div class="d-flex align-items-top justify-content-between">
+        <div class="d-flex flex-column w-100">
+            <div class="text-dark line-clamp line-clamp-1 text-wrap">{{data.customName}}</div>
+        </div>
+    </div>
+</ng-template> -->
+<ng-container *ngIf="lstGroup">
+    <codx-view2 [dataSource]="datas" [isToolBar]="false" [titleToolBarTmp]="titleToolBarTmp" [showRightToolbar]="false" [toolbarMode]="'1'"
+    [tmpItem]="tmp" (selectedChange)="selectedChange($event)"
+    (viewChange)="viewChange($event)">
+    </codx-view2>
+</ng-container>
+<ng-template #titleToolBarTmp let-data>
+    <div class="d-flex align-items-center">
+        <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3 ms-3"><span class="text-dark text-hover-primary cursor-pointer">{{title}}</span></h1>
+        <span class="h-20px border-gray-200 border-start mx-4"></span>
+        <div class="d-flex align-items-center mt-1">
+            <ng-container *ngFor="let item of lstGroup ; let i = index">
+                <div class="me-4 cursor-pointer fw-bold" [class.active]="selectedToolBar == item?.functionID"
+                    (click)="selectedChangeToolBar(item)">
+                    <span>{{item?.customName+'('+item.childs.length+')'}}</span>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</ng-template>
+<ng-template #tmp let-data>
+    <ng-container *ngIf="viewID && viewID == '1'">
+        <div #divCard
+            class="d-flex flex-column w-225px h-225px m-3 text-white position-relative cursor-pointer ws-report-card">
+            <codx-card-img imgCss="h-150px rounded border-bottom" cardCss="border rounded h-100" [imageSrc]="imgDefault"
+                ngClass="h-100 card-share-report" [footer]="footer">
+            </codx-card-img>
+        </div>
+        <ng-template #footer>
+            <ng-container *ngTemplateOutlet="tmpFooter ; context: { $implicit: data}"></ng-container>
+        </ng-template>
+    </ng-container>
+    <ng-container *ngIf="viewID && viewID == '2'">
+        <div class="d-flex align-items-center border-bottom p-4 cursor-pointer">
+            <div class="w-100">{{data.customName}}</div>
+        </div>
+    </ng-container>
+</ng-template>
 <ng-template #tmpFooter let-data>
     <div class="d-flex align-items-top justify-content-between">
         <div class="d-flex flex-column w-100">
