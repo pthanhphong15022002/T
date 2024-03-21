@@ -472,7 +472,6 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
           )
           .subscribe((item) => {
             if (item && item.length > 1) {
-              debugger
               this.attachment1.objectId = item[1][0].recID;
               this.attachment1.objectType = 'AD_WordTemplates';
               this.attachment1.functionID = 'AD002';
@@ -596,10 +595,11 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     var fSaveAsBlob = from(saveAsBlob);
     return fSaveAsBlob.pipe(
       mergeMap((blob: Blob) => {
-        var file = new File([blob], this.nameFile || this.formModel.entityName);
+        if(!this.nameFile) this.nameFile = this.formModel.entityName + ".docx";
+        var file = new File([blob], this.nameFile);
         this.attachment1.isSaveSelected = '1';
         this.attachment1.fileUploadList = [];
-        if(!this.nameFile) this.nameFile = this.formModel.entityName + ".docx";
+        
         return this.attachment1.handleFileInputObservable([
           {
             name: this.nameFile,

@@ -305,7 +305,8 @@ export class ModeviewComponent implements OnInit {
         data.title += " " + this.count.datetime;
         data.controlType = "MaskBox";
         data.dataFormat = "d";
-        data.dataType = "DateTime"
+        data.dataType = "DateTime";
+        //data.defaultValue = new Date();
         break;
       }
       case "Attachment":
