@@ -81,6 +81,24 @@ export class CodxBpService {
       [funcID, entityName, key]
     );
   }
+  createTaskOnSaveInstance(recID) {
+    return this.api.execSv<any>(
+      "BP",
+      "ERM.Business.BP",
+      'ProcessTasksBusiness',
+      'CreateTaskOnSaveInstanceAsync',
+      [recID]
+    );
+  }
+  startInstance(recID) {
+    return this.api.execSv<any>(
+      "BP",
+      "ERM.Business.BP",
+      'ProcessesBusiness',
+      'StartInstanceAsync',
+      [recID]
+    );
+  }
 
   checkValidate(gridViewSetup, data, count = 0) {
     var countValidate = count;

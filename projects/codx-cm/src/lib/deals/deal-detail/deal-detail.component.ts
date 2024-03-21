@@ -173,7 +173,7 @@ export class DealDetailComponent implements OnInit {
     ];
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.isChangeViewDetails) return;
@@ -221,10 +221,10 @@ export class DealDetailComponent implements OnInit {
 
   promiseAllAsync() {
     this.isDataLoading = true;
-      this.dataSelected.applyProcess && (this.getListInstanceStep());
-      this.getTree(); //ve cay giao viec
-      this.getLink();
-      this.getContactByDeaID(this.dataSelected.recID);
+    this.dataSelected.applyProcess && (this.getListInstanceStep());
+    this.getTree(); //ve cay giao viec
+    this.getLink();
+    this.getContactByDeaID(this.dataSelected.recID);
   }
   reloadListStep(listSteps: any) {
     this.isDataLoading = true;
@@ -282,7 +282,7 @@ export class DealDetailComponent implements OnInit {
   async executeApiCalls() {
     try {
       await this.getValueListRole();
-    } catch (error) {}
+    } catch (error) { }
   }
 
   async getValueListRole() {
@@ -309,7 +309,7 @@ export class DealDetailComponent implements OnInit {
     });
   }
 
-  changeFooter(e) {}
+  changeFooter(e) { }
 
   async getHistoryByDeaID() {
     if (this.dataSelected?.recID) {
@@ -515,7 +515,7 @@ export class DealDetailComponent implements OnInit {
               $event?.action == 'edit' ? json : '',
               $event?.action == 'delete' ? json : ''
             )
-            .subscribe((res) => {});
+            .subscribe((res) => { });
           if (this.listSteps != null && this.listSteps?.length > 0) {
             for (var step of this.listSteps) {
               if (step?.fields != null && step?.fields?.length > 0) {
@@ -568,11 +568,11 @@ export class DealDetailComponent implements OnInit {
     try {
       await this.updateMoveStageInstance(listInstanceStep);
       await this.updateMoveStageDeal();
-    } catch (err) {}
+    } catch (err) { }
   }
   async updateMoveStageInstance(listInstanceStep) {
     var data = [listInstanceStep, this.dataSelected.processID];
-    this.codxCmService.autoMoveStageInInstance(data).subscribe((res) => {});
+    this.codxCmService.autoMoveStageInInstance(data).subscribe((res) => { });
   }
 
   async updateMoveStageDeal() {
@@ -720,18 +720,18 @@ export class DealDetailComponent implements OnInit {
   editCustomer(data) {
     this.changeDataCustomers.emit({ data: data });
   }
-  handelMoveStage(event){
+  handelMoveStage(event) {
     this.moveStage.emit(event);
   }
   //#endregion
-  setTaskBar(){
-    if(this.dataSelected?.isAdminAll || this.dataSelected.owner == this.user?.userID){
+  setTaskBar() {
+    if (this.dataSelected?.isAdminAll || this.dataSelected?.owner == this.user?.userID) {
       this.idTabShow = "1,2,5,6,7";
-    }else{
+    } else {
       this.idTabShow = this.dataSelected?.config;
     }
   }
-  linkData(type:string, recID:string){
+  linkData(type: string, recID: string) {
     if (type && recID) {
       const url1 = this.location.prepareExternalUrl(this.location.path());
       const parser = document.createElement('a');
@@ -740,7 +740,7 @@ export class DealDetailComponent implements OnInit {
 
       let tenant = this.tenantStore.get().tenant;
       let url = ``
-      switch(type){
+      switch (type) {
         case "contract":
           url = `${domain}/${tenant}/cm/contracts/CM0206?predicate=RecID=@0&dataValue=${recID}`;
           break;
@@ -751,7 +751,7 @@ export class DealDetailComponent implements OnInit {
           url = `${domain}/${tenant}/cm/quotations/CM0202?predicate=RecID=@0&dataValue=${recID}`;
           break;
       }
-      if(url){
+      if (url) {
         window.open(url, '_blank');
       }
       return;
