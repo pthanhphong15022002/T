@@ -345,7 +345,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       }
     }
 
-    if (this.funcType != _addMF) {
+    if (this.funcType != _addMF &&  this.data?.items?.length>0) {
       
       Array.from(this.data?.items).forEach((item: any) => {
         let tmpSta = new BookingItems();
