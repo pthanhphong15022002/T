@@ -1,18 +1,12 @@
 <codx-views #view 
-  *ngIf="function && loadedApprover"
   [views]="views" 
-  [funcID]="function.functionID"
-  [entityName]="function.entityName"
   idField="recID" 
   service="WP"
   assemblyName="ERM.Business.WP"
   className="NewsBusiness"
   method="GetDataApproAsync"
   [selectedFirst]="true" 
-  (selectedChange)="selectedChange($event)"  
-  [predicates]="predicates"
-  [dataValues]="dataValues"
-  
+  (selectedChange)="selectedChange($event)"
   >
 </codx-views>
 
@@ -29,7 +23,7 @@
   </ul>
 </ng-template>
 <ng-template #itemTemplate let-data>
-  <div>
+  <div class="p-2">
     <codx-temp-full 
       [formModel]="view.formModel"
       [dataItem]="data" 
@@ -40,31 +34,24 @@
       [showIcoText]="false"
       [title]="data.title"
       [desc]="data.descriptions"
-      [desc2Tmp]="desc2Temp"
       descLine="2" 
-      
+      [desc2Tmp]="desc2Tmp"
       [bookmark]="false"
       cardCss="card-template border-bottom p-4"
       typeMF="hover" 
       (changeDataMF)="changeDataMF($event,data)"
       (clickMF)="clickMF($event,data)">
-      <!-- [date]="data.modifiedOn || data.createdOn"
-      [status]="data.approveStatus" 
-      statusVll="CO003"  -->
     </codx-temp-full>
-    <ng-template #desc2Temp let-data>
-      <div>
-        <codx-vll *ngIf="data?.status !=null" [showText]="true" [showBgColor]="true" [name]="'WP008'" [value]="data?.status"
-        class="badge badge-light badge-md fs-7">
-      </codx-vll>
-      <codx-vll *ngIf="data?.approveStatus" [showText]="true" [showBgColor]="true" [name]="'WP007'" [value]="data?.approveStatus"
-      class="badge badge-light badge-md fs-7">
-      <span [innerHTML]="data?.modifiedOn ?? data?.createdOn | fmDT "></span>
-      </codx-vll>
-      </div>
-    </ng-template>
   </div>
 </ng-template>
+<ng-template #desc2Tmp let-data>
+  <div class="d-flex align-items-center justify-content-between w-100">
+    <codx-vll [name]="'CO003'" [value]="data.approveStatus" [showBgColor]="true" [showText]="true" [class]="'rounded-pill px-2'"></codx-vll>
+    <div [innerHTML]="data.modifiedOn ?? data.createdOn | formatvalue:view.formModel:'createdOn' | async"></div>
+  </div>
+</ng-template>
+
+
 <ng-template #panelRightRef>
   <wp-appropval-detail
     #tmpDetail

@@ -402,9 +402,9 @@ export class PopupSignForApprovalComponent extends UIComponent {
               if (resModel?.msgCodeError == null && resModel?.rowCount > 0) {
                 this.notify.notifyCode('SYS034');
                 this.canOpenSubPopup = false;
-              } else {
+              }
+              else{                
                 this.canOpenSubPopup = false;
-                this.notify.notifyCode('SYS021');
               }
             } else {
               this.notify.notifyCode('SYS034');
@@ -511,7 +511,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
                         this.canOpenSubPopup = false;
                         let resModel = new ResponseModel();
                         resModel.rowCount = 0;
-                        this.notify.notifyCode('SYS021');
                         this.dialog && this.dialog.close(resModel);
                       }
                     }
@@ -556,8 +555,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
                       this.canOpenSubPopup = false;
                     } else {
                       this.canOpenSubPopup = false;
-
-                      this.notify.notifyCode('SYS021');
                     }
                     this.dialog && this.dialog.close(resModel);
                   });

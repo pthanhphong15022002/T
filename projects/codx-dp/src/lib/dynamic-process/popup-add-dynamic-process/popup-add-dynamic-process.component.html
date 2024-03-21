@@ -1913,7 +1913,7 @@
             </div>
             <div
               id="{{ haveTitle ? item.recID : 'v-' + item.recID }}"
-              class="show-main"
+              class="show-main mh-400px" style="overflow-y: auto;"
               cdkDropList
               [cdkDropListData]="item?.fields || []"
               (cdkDropListDropped)="dropCustomFile($event, item.recID)"
@@ -1921,7 +1921,7 @@
             >
               <div
                 *ngIf="!item?.fields || item?.fields?.length == 0"
-                class="p-6"
+                class="p-6 m-0"
               >
                 <div
                   class="d-flex align-items-center justify-content-center w-100"
@@ -1948,7 +1948,7 @@
               </div>
 
               <div *ngIf="item?.fields?.length > 0">
-                <div class="class-field p-6 row">
+                <div class="class-field row p-3 m-0">
                   <ng-container *ngFor="let item1 of item?.fields">
                     <div
                       class="col-{{
