@@ -22,7 +22,6 @@ export class PropertyDatetimeComponent extends BasePropertyComponent implements 
     this.dependenceData = [];
     let dtTable = JSON.parse(JSON.stringify(this.dataTable));
     dtTable = dtTable.slice(0,(this.data.columnOrder + 1));
-debugger
     dtTable.forEach(element => {
       if(element.columnOrder <= this.data.columnOrder)
       {
