@@ -75,33 +75,11 @@ export class ItemsConversionAddComponent extends UIComponent {
         .updateFileDirectReload(this.form?.data?.recID)
         .subscribe((res) => {
           if (res) {
-            this.form.save(null, 0, '', '', false)
-              .pipe(takeUntil(this.destroy$))
-              .subscribe((res: any) => {
-                if (!res) return;
-                if (res.hasOwnProperty('save')) {
-                  if (res.save.hasOwnProperty('data') && !res.save.data) return;
-                }
-                if (res.hasOwnProperty('update')) {
-                  if (res.update.hasOwnProperty('data') && !res.update.data) return;
-                }
-                this.dialog.close({ data: this.form?.data });
-              })
+            this.dialog.close({...this.form?.data});
           }
         });
     } else {
-      this.form.save(null, 0, '', '', false)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res: any) => {
-          if (!res) return;
-          if (res.hasOwnProperty('save')) {
-            if (res.save.hasOwnProperty('data') && !res.save.data) return;
-          }
-          if (res.hasOwnProperty('update')) {
-            if (res.update.hasOwnProperty('data') && !res.update.data) return;
-          }
-          this.dialog.close({ data: this.form?.data });
-        })
+      this.dialog.close({...this.form?.data});
     }
   }
   //#endregion Method

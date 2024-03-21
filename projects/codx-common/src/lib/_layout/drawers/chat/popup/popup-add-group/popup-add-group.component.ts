@@ -39,8 +39,7 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
   strUserID: string = '';
   arrUsers: string[] = [];
   @ViewChild('codxImg') codxImg: ImageViewerComponent;
-  @ViewChild('codxListView1') codxListView1: CodxListviewComponent;
-  @ViewChild('codxListView2') codxListView2: CodxListviewComponent;
+  @ViewChild('codxListView') codxListView: CodxListviewComponent;
   constructor(
     private api: ApiHttpService,
     private notifiSV: NotificationsService,
@@ -61,9 +60,8 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
     this.setData();
   }
   ngAfterViewInit(): void {
-    // this.codxListView1.onResize();
-    // this.codxListView2.onResize();
   }
+
   // set data
   setData() {
     if (this.dialogData) {
@@ -74,72 +72,83 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
   }
 
   searchEvent(textSearch: any) {
-    this.codxListView1.dataService.search(textSearch);
+    this.codxListView.dataService.search(textSearch);
   }
 
   valueChange(event) {
-    if (event) {
+    if (event) 
+    {
       this.group.groupName = event.data;
       this.dt.detectChanges();
     }
   }
 
-  selectedChange(event) {
-    if (event?.data) {
-      let itemSelected = event.data;
-      let isExist = this.arrUsers.some((x) => x == itemSelected.UserID);
-      if (isExist) {
-        // đã tồn tại
-        this.removeMember(itemSelected);
-      } else {
+  selectedChange(data:any) {
+    if (data) 
+    {
+      let idx = this.group.members.findIndex(x => x.userID == data.UserID);
+      if(idx >- 1)
+      {
+        this.removeMember(data.UserID);
+      }
+      else 
+      {
         let member = {
-          userID: itemSelected.UserID,
-          userName: itemSelected.UserName,
+          userID: data.UserID,
+          userName: data.UserName,
           tags:"",
           createdBy:this.user.userID,
           createdOn:new Date()
         };
         this.group.members.push(member);
-        this.arrUsers.push(itemSelected.UserID);
-        this.strUserID += itemSelected.UserID + ';';
-        (this.codxListView2.dataService as CRUDService)
-          .add(itemSelected)
-          .subscribe((x) => {
-            this.dt.detectChanges();
-            var input = document.querySelector(
-              `codx-input[data-id="${itemSelected.UserID}"] ejs-checkbox span.e-icons`
-            );
-            if (input) {
-              input.classList.add('e-check');
-            }
-          });
+        var input = document.querySelector(`codx-input[data-id="${data.UserID}"] ejs-checkbox span.e-icons`);
+        if(input) 
+          input.classList.add('e-check');
+        this.dt.detectChanges();
       }
     }
   }
 
-  
-  selectedRemoveChange(event: any) {
-    if (event) {
-      let itemSelected = event.data;
-      this.removeMember(itemSelected);
+  selectAll:boolean = false;
+  checkBoxChange(event:any){
+    this.selectAll = event.data;
+    if(this.selectAll)
+    {
+      if(!this.group.members)
+        this.group.members = [];
+      this.codxListView
+      .dataService.data
+      .forEach(item => {
+        let exist = this.group.members.some(x => x.userID == item.UserID);
+        if(!exist)
+        {
+          let member = {
+            userID: item.UserID,
+            userName: item.UserName,
+            positionName : item.PositionName,
+            tags: "",
+            createdBy: this.user.userID,
+            createdOn: new Date()
+          };
+          this.group.members.push(member);
+        }
+      });
     }
+    else
+      this.group.members = [];
+    this.dt.detectChanges();
   }
+
   
-  removeMember(data: any) {
-    if (data) {
-      this.group.members = this.group.members.filter((x) => x != data.UserID);
-      this.arrUsers = this.arrUsers.filter((x) => x != data.UserID);
-      this.strUserID = this.arrUsers.join(";");
-      (this.codxListView2.dataService as CRUDService)
-        .remove(data)
-        .subscribe((x) => {
-          var input = document.querySelector(
-            `codx-input[data-id="${data.UserID}"] ejs-checkbox span.e-icons`
-          );
-          if (input && input.classList.contains('e-check')) {
-            input.classList.remove('e-check');
-          }
-        });
+  
+  removeMember(userID:string) {
+    let idx = this.group.members.findIndex(x => x.userID == userID);
+    if(idx > -1)
+    {
+      this.group.members.splice(idx,1);
+      var input = document.querySelector(`codx-input[data-id="${userID}"] ejs-checkbox span.e-icons`);
+      if(input && input.classList.contains('e-check')) 
+        input.classList.remove('e-check');
       this.dt.detectChanges();
     }
   }

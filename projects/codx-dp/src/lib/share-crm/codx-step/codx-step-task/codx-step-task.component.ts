@@ -384,15 +384,22 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
       }
       this.maxWidth = maxWidth;
-    }
-    
-    this.widthTask = this.maxWidth + 'px';
-    for (const element of Array.from(elements)) {
-      if (element instanceof HTMLElement) {
-        element.style.minWidth = this.widthTask;
+    }    
+    if(this.maxWidth > 0){
+      this.widthTask = this.maxWidth + 'px';
+      for (const element of Array.from(elements)) {
+        if (element instanceof HTMLElement) {
+          element.style.minWidth = this.widthTask;
+        }
       }
+      this.changeDetectorRef.markForCheck();
+    }else{
+      setTimeout(() => {
+        this.waitSetWidth(time, timeAwait + 100);
+      }, time);
+      return;
     }
-    this.changeDetectorRef.markForCheck();
+
   }
 
   async drop(event: CdkDragDrop<string[]>, data = null, isParent = false) {}
@@ -2138,7 +2145,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //#region view
   viewTask(data, type) {
-    if (data && !this.isViewStep && !this.isMoveStage) {
+    if (data && !this.isMoveStage) {
       if (data?.taskType == 'CO') {
         if (data?.objectLinked) {
           const url1 = this.location.prepareExternalUrl(this.location.path());

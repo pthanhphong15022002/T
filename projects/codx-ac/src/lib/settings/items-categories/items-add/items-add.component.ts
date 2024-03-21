@@ -243,11 +243,49 @@ export class ItemsAddComponent extends UIComponent {
   //#region Event
   valueChange(event:any){
     let field = event?.field;
+    let value = event?.data;
     switch(field.toLowerCase()){
       case 'purchase':
+        if (value) {
+          this.itemsPurchaseSV.addNew().subscribe((res: any) => {
+            if (res) {
+              this.fgItemsPurchase.patchValue(res);
+              this.fmItemsPurchase.currentData = res;
+              this.onDisableTab();
+              this.detectorRef.detectChanges();
+            }
+          })
+        }else{
+          this.onDisableTab();
+        }
+        break;
       case 'sales':
+        if (value) {
+          this.itemsSalesSV.addNew().subscribe((res: any) => {
+            if (res) {
+              this.fgItemsSales.patchValue(res);
+              this.fmItemsSales.currentData = res;
+              this.onDisableTab();
+              this.detectorRef.detectChanges();
+            }
+          })
+        }else{
+          this.onDisableTab();
+        }
+        break;
       case 'production':
-        this.onDisableTab();
+        if (value) {
+          this.itemsProductionSV.addNew().subscribe((res: any) => {
+            if (res) {
+              this.fgItemsProduction.patchValue(res);
+              this.fmItemsProduction.currentData = res;
+              this.onDisableTab();
+              this.detectorRef.detectChanges();
+            }
+          })
+        }else{
+          this.onDisableTab();
+        }
         break;
       case 'dimgroupid':
         let data = this.eleCbxDimGroupID?.ComponentCurrent?.dataService?.data.find((x) =>x.DimGroupID == this.eleCbxDimGroupID?.ComponentCurrent?.value);
@@ -262,46 +300,18 @@ export class ItemsAddComponent extends UIComponent {
    * *Ham luu hang hoa
    */
   onSave(type) {
-    let validate = this.form.form.validation();
-    if(validate) return;
-    this.dialog.dataService
-      .save(
-        (o: RequestOption) => {
-          o.service = 'IV';
-          o.assemblyName = 'IV';
-          o.className = 'ItemsBusiness';
-          o.methodName = (this.form.form?.data?.isAdd || this.form.form?.data?.isCopy) ? 'SaveAsync' : 'UpdateAsync';
-          o.data = [this.form.form.data,
-            this.form.form?.data?.purchase ? this.fmItemsPurchase?.currentData : null,
-            this.form.form?.data?.sales ? this.fmItemsSales?.currentData : null,
-            this.form.form?.data?.production ? this.fmItemsProduction?.currentData : null];
-          return true;
-        },
-        0,
-        '',
-        '',
-        false
-      )
-      .subscribe((res) => {
-        if(!res) return;
-        if (res || res.save || res.update) {
-          if (res || !res.save.error || !res.update.error) {
-            this.dialog.close(true);
-            if (this.form.form.data.isAdd || this.form.form.data.isCopy)
-              this.notification.notifyCode('SYS006');
-            else
-              this.notification.notifyCode('SYS007');
-          }
-        }
-      });
-  }
-  //#endregion Method
-
-  //#region Function
-  openFormItemSize(type){
-    this.form.form.save(null, 0, '', '', false)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
+    this.form.form.save((o: RequestOption) => {
+      o.service = 'IV';
+      o.assemblyName = 'IV';
+      o.className = 'ItemsBusiness';
+      o.methodName = (this.form.form?.data?.isAdd || this.form.form?.data?.isCopy) ? 'SaveAsync' : 'UpdateAsync';
+      o.data = [this.form.form.data,
+        this.form.form?.data?.purchase ? this.fmItemsPurchase?.currentData : null,
+        this.form.form?.data?.sales ? this.fmItemsSales?.currentData : null,
+        this.form.form?.data?.production ? this.fmItemsProduction?.currentData : null,
+        this.lstItemSize,this.lstItemStyle,this.lstItemColor,this.lstUMConversion];
+      return true;
+    }, 0, '', '', false,{skipHasChange:true}).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
       if (!res) return;
       if (res.hasOwnProperty('save')) {
         if (res.save.hasOwnProperty('data') && !res.save.data) return;
@@ -309,37 +319,47 @@ export class ItemsAddComponent extends UIComponent {
       if (res.hasOwnProperty('update')) {
         if (res.update.hasOwnProperty('data') && !res.update.data) return;
       }
-      this.itemSizeSV.addNew().subscribe((res: any) => {
-        if (res) {
-          res.itemID = this.form.form?.data?.itemID;
-          res.sizeType = type;
-          let data: any = {
-            headerText: (this.lblAdd + ' ' + (type === '1' ? 'quy cách đóng gói' : 'quy cách')).toUpperCase(),
-            dataDefault: { ...res }
-          };
-          this.cache.gridViewSetup(this.fmItemsSize.formName, this.fmItemsSize.gridViewName).subscribe((o) => {
-            let option = new DialogModel();
-            option.FormModel = this.fmItemsSize;
-            option.DataService = this.itemSizeSV;
-            let dialog = this.callfc.openForm(
-              ItemsSizeAddComponent,
-              '',
-              500,
-              480,
-              '',
-              data,
-              '',
-              option
-            );
-            dialog.closed.subscribe((res) => {
-              if (res.event != null) {
-                this.lstItemSize.push({ ...res?.event?.data });
-                this.detectorRef.detectChanges();
-              }
-            });
-          })
-        }
-      })
+      if (this.form.form.data.isAdd || this.form.form.data.isCopy)
+        this.notification.notifyCode('SYS006');
+      else
+        this.notification.notifyCode('SYS007');
+      this.dialog.close();
+    })
+  }
+  //#endregion Method
+
+  //#region Function
+  openFormItemSize(type){
+    this.itemSizeSV.addNew().subscribe((res: any) => {
+      if (res) {
+        res.itemID = this.form.form?.data?.itemID;
+        res.sizeType = type;
+        let data: any = {
+          headerText: (this.lblAdd + ' ' + (type === '1' ? 'quy cách đóng gói' : 'quy cách')).toUpperCase(),
+          dataDefault: { ...res }
+        };
+        this.cache.gridViewSetup(this.fmItemsSize.formName, this.fmItemsSize.gridViewName).subscribe((o) => {
+          let option = new DialogModel();
+          option.FormModel = this.fmItemsSize;
+          option.DataService = this.itemSizeSV;
+          let dialog = this.callfc.openForm(
+            ItemsSizeAddComponent,
+            '',
+            500,
+            480,
+            '',
+            data,
+            '',
+            option
+          );
+          dialog.closed.subscribe((res) => {
+            if (res && res.event) {
+              this.lstItemSize.push({ ...res?.event });
+              this.detectorRef.detectChanges();
+            }
+          });
+        })
+      }
     })
   }
 
@@ -368,11 +388,9 @@ export class ItemsAddComponent extends UIComponent {
           );
           dialog.closed.subscribe((res) => {
             if (res && res?.event) {
-              let data = res?.event?.data;
+              let data = res?.event;
               let index = this.lstItemSize.findIndex((x) => x.recID == data.recID);
-              if (index > -1) {
-                this.lstItemSize[index] = data;
-              }
+              if (index > -1) this.lstItemSize[index] = data;
               this.detectorRef.detectChanges();
             }
           })
@@ -394,48 +412,36 @@ export class ItemsAddComponent extends UIComponent {
   }
 
   openFormItemStyle(){
-    this.form.form.save(null, 0, '', '', false)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (!res) return;
-      if (res.hasOwnProperty('save')) {
-        if (res.save.hasOwnProperty('data') && !res.save.data) return;
+    this.itemStyleSV.addNew().subscribe((res: any) => {
+      if (res) {
+        res.itemID = this.form.form?.data?.itemID;
+        let data :any = {
+          headerText: (this.lblAdd + ' ' + 'thuộc tính').toUpperCase(),
+          dataDefault:{...res}
+        };
+        this.cache.gridViewSetup(this.fmItemsStyle.formName,this.fmItemsStyle.gridViewName).subscribe((o)=>{
+          let option = new DialogModel();
+          option.FormModel = this.fmItemsStyle;
+          option.DataService = this.itemStyleSV;
+          let dialog = this.callfc.openForm(
+            ItemsStyleAddComponent,
+            '',
+            500,
+            300,
+            '',
+            data,
+            '',
+            option
+          );
+          dialog.closed.subscribe((res) => {
+            if (res && res.event) {
+              this.lstItemStyle.push({...res?.event});
+              this.detectorRef.detectChanges();
+            }
+          });
+        })
       }
-      if (res.hasOwnProperty('update')) {
-        if (res.update.hasOwnProperty('data') && !res.update.data) return;
-      }
-      this.itemStyleSV.addNew().subscribe((res: any) => {
-        if (res) {
-          res.itemID = this.form.form?.data?.itemID;
-          let data :any = {
-            headerText: (this.lblAdd + ' ' + 'thuộc tính').toUpperCase(),
-            dataDefault:{...res}
-          };
-          this.cache.gridViewSetup(this.fmItemsStyle.formName,this.fmItemsStyle.gridViewName).subscribe((o)=>{
-            let option = new DialogModel();
-            option.FormModel = this.fmItemsStyle;
-            option.DataService = this.itemStyleSV;
-            let dialog = this.callfc.openForm(
-              ItemsStyleAddComponent,
-              '',
-              500,
-              300,
-              '',
-              data,
-              '',
-              option
-            );
-            dialog.closed.subscribe((res) => {
-              if (res.event != null) {
-                this.lstItemStyle.push({...res?.event?.data});
-                this.detectorRef.detectChanges();
-              }
-            });
-          })
-        }
-      })
     })
-    
   }
 
   editItemStyle(dataEdit){
@@ -462,7 +468,7 @@ export class ItemsAddComponent extends UIComponent {
             );
             dialog.closed.subscribe((res) => {
               if (res && res?.event) {
-                let data = res?.event?.data;
+                let data = res?.event;
                 let index = this.lstItemStyle.findIndex((x) => x.recID == data.recID);
                 if (index > -1) {
                   this.lstItemStyle[index] = data;
@@ -488,78 +494,36 @@ export class ItemsAddComponent extends UIComponent {
   }
 
   openFormItemColor(){
-    this.form.form.save(null, 0, '', '', false)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (!res) return;
-      if (res.hasOwnProperty('save')) {
-        if (res.save.hasOwnProperty('data') && !res.save.data) return;
+    this.itemColorSV.addNew().subscribe((res: any) => {
+      if (res) {
+        res.itemID = this.form.form?.data?.itemID;
+        let data :any = {
+          headerText: (this.lblAdd + ' ' + 'màu sắc').toUpperCase(),
+          dataDefault:{...res}
+        };
+        this.cache.gridViewSetup(this.fmItemsColor.formName,this.fmItemsColor.gridViewName).subscribe((o)=>{
+          let option = new DialogModel();
+          option.FormModel = this.fmItemsColor;
+          option.DataService = this.itemColorSV;
+          let dialog = this.callfc.openForm(
+            ItemsColorAddComponent,
+            '',
+            500,
+            300,
+            '',
+            data,
+            '',
+            option
+          );
+          dialog.closed.subscribe((res) => {
+            if (res && res.event) {
+              this.lstItemColor.push({...res?.event});
+              this.detectorRef.detectChanges();
+            }
+          });
+        })
       }
-      if (res.hasOwnProperty('update')) {
-        if (res.update.hasOwnProperty('data') && !res.update.data) return;
-      }
-      this.itemColorSV.addNew().subscribe((res: any) => {
-        if (res) {
-          res.itemID = this.form.form?.data?.itemID;
-          let data :any = {
-            headerText: (this.lblAdd + ' ' + 'màu sắc').toUpperCase(),
-            dataDefault:{...res}
-          };
-          this.cache.gridViewSetup(this.fmItemsColor.formName,this.fmItemsColor.gridViewName).subscribe((o)=>{
-            let option = new DialogModel();
-            option.FormModel = this.fmItemsColor;
-            option.DataService = this.itemColorSV;
-            let dialog = this.callfc.openForm(
-              ItemsColorAddComponent,
-              '',
-              500,
-              300,
-              '',
-              data,
-              '',
-              option
-            );
-            dialog.closed.subscribe((res) => {
-              if (res.event != null) {
-                this.lstItemColor.push({...res?.event?.data});
-                this.detectorRef.detectChanges();
-              }
-            });
-          })
-        }
-      })
     })
-    // if(!this.validateItemID()) return;
-    // let data :any = {
-    //   headerText: (this.lblAdd + ' ' + 'màu sắc').toUpperCase(),
-    // };
-    // let option = new DialogModel();
-    // option.FormModel = this.fmItemsColor;
-    // option.DataService = this.itemColorSV;
-    // this.itemStyleSV.addNew().subscribe((res: any) => {
-    //   if (res) {
-    //     res.itemID = this.form.form?.data?.itemID;
-    //     data.dataDefault = {...res};
-    //     this.cache.gridViewSetup(this.fmItemsColor.formName,this.fmItemsColor.gridViewName).subscribe((o)=>{
-    //       let dialog = this.callfc.openForm(
-    //         ItemsColorAddComponent,
-    //         '',
-    //         500,
-    //         300,
-    //         '',
-    //         data,
-    //         '',
-    //         option
-    //       );
-    //       dialog.closed.subscribe((res) => {
-    //         if (res.event != null) {
-    //           this.lstItemColor.push({...res?.event?.data});
-    //           this.detectorRef.detectChanges();
-    //         }
-    //       });
-    //     })
-    //   }
-    // })
   }
 
   deleteItemColor(dataDelete:any){
@@ -575,46 +539,35 @@ export class ItemsAddComponent extends UIComponent {
   }
 
   openFormConversion(){
-    this.form.form.save(null, 0, '', '', false)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (!res) return;
-      if (res.hasOwnProperty('save')) {
-        if (res.save.hasOwnProperty('data') && !res.save.data) return;
+    this.UMConversionSV.addNew().subscribe((res: any) => {
+      if (res) {
+        res.itemID = this.form.form?.data?.itemID;
+        let data :any = {
+          headerText: (this.lblAdd + ' ' + 'đơn vị quy đổi').toUpperCase(),
+          dataDefault:{...res}
+        };
+        this.cache.gridViewSetup(this.fmUMConversion.formName,this.fmUMConversion.gridViewName).subscribe((o)=>{
+          let option = new DialogModel();
+          option.FormModel = this.fmUMConversion;
+          option.DataService = this.UMConversionSV;
+          let dialog = this.callfc.openForm(
+            ItemsConversionAddComponent,
+            '',
+            500,
+            400,
+            '',
+            data,
+            '',
+            option
+          );
+          dialog.closed.subscribe((res) => {
+            if (res && res.event) {
+              this.lstUMConversion.push({...res?.event});
+              this.detectorRef.detectChanges();
+            }
+          });
+        })
       }
-      if (res.hasOwnProperty('update')) {
-        if (res.update.hasOwnProperty('data') && !res.update.data) return;
-      }
-      this.UMConversionSV.addNew().subscribe((res: any) => {
-        if (res) {
-          res.itemID = this.form.form?.data?.itemID;
-          let data :any = {
-            headerText: (this.lblAdd + ' ' + 'đơn vị quy đổi').toUpperCase(),
-            dataDefault:{...res}
-          };
-          this.cache.gridViewSetup(this.fmUMConversion.formName,this.fmUMConversion.gridViewName).subscribe((o)=>{
-            let option = new DialogModel();
-            option.FormModel = this.fmUMConversion;
-            option.DataService = this.UMConversionSV;
-            let dialog = this.callfc.openForm(
-              ItemsConversionAddComponent,
-              '',
-              500,
-              400,
-              '',
-              data,
-              '',
-              option
-            );
-            dialog.closed.subscribe((res) => {
-              if (res.event != null) {
-                this.lstUMConversion.push({...res?.event?.data});
-                this.detectorRef.detectChanges();
-              }
-            });
-          })
-        }
-      })
     })
   }
 
@@ -642,7 +595,7 @@ export class ItemsAddComponent extends UIComponent {
             );
             dialog.closed.subscribe((res) => {
               if (res && res?.event) {
-                let data = res?.event?.data;
+                let data = res?.event;
                 let index = this.lstUMConversion.findIndex((x) => x.recID == data.recID);
                 if (index > -1) {
                   this.lstUMConversion[index] = data;
@@ -691,28 +644,20 @@ export class ItemsAddComponent extends UIComponent {
         break;
       case 'purchase':
         if (this.form.form.data.isEdit) {
-          if (!this.fmItemsPurchase.currentData) {
-            let options = new DataRequest();
-            options.entityName = 'IV_ItemsPurchase';
-            options.pageLoading = false;
-            options.predicates = 'ItemID=@0';
-            options.dataValues = this.form.form.data.itemID;
-            this.api
-              .execSv('IV', 'Core', 'DataBusiness', 'LoadDataAsync', options)
-              .pipe(map((r) => r?.[0] ?? [])).subscribe((res: any) => {
+          let options = new DataRequest();
+          options.entityName = 'IV_ItemsPurchase';
+          options.pageLoading = false;
+          options.predicates = 'ItemID=@0';
+          options.dataValues = this.form.form.data.itemID;
+          this.api
+            .execSv('IV', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+            .pipe(map((r) => r?.[0] ?? [])).subscribe((res: any) => {
+              if (res.length) {
                 this.fgItemsPurchase.patchValue(res[0]);
                 this.fmItemsPurchase.currentData = res[0];
                 this.detectorRef.detectChanges();
-              })
-          }
-        }else{
-          this.itemsPurchaseSV.addNew().subscribe((res: any) => {
-            if (res) {
-              this.fgItemsPurchase.patchValue(res);
-              this.fmItemsPurchase.currentData = res;
-              this.detectorRef.detectChanges();
-            }
-          })
+              }
+            })
         }
         break;
       case 'sales':
@@ -726,21 +671,14 @@ export class ItemsAddComponent extends UIComponent {
             this.api
               .execSv('IV', 'Core', 'DataBusiness', 'LoadDataAsync', options)
               .pipe(map((r) => r?.[0] ?? [])).subscribe((res: any) => {
-                this.fgItemsSales.patchValue(res[0]);
-                this.fmItemsSales.currentData = res[0];
-                this.detectorRef.detectChanges();
+                if (res.length) {
+                  this.fgItemsSales.patchValue(res[0]);
+                  this.fmItemsSales.currentData = res[0];
+                  this.detectorRef.detectChanges();
+                }
               })
           }
-        }else{
-          this.itemsSalesSV.addNew().subscribe((res: any) => {
-            if (res) {
-              this.fgItemsSales.patchValue(res);
-              this.fmItemsSales.currentData = res;
-              this.detectorRef.detectChanges();
-            }
-          })
         }
-        
         break;
       case 'production':
         if (this.form.form.data.isEdit) {
@@ -753,19 +691,13 @@ export class ItemsAddComponent extends UIComponent {
             this.api
               .execSv('IV', 'Core', 'DataBusiness', 'LoadDataAsync', options)
               .pipe(map((r) => r?.[0] ?? [])).subscribe((res: any) => {
-                this.fgItemsProduction.patchValue(res[0]);
-                this.fmItemsProduction.currentData = res[0];
-                this.detectorRef.detectChanges();
+                if (res.length) {
+                  this.fgItemsProduction.patchValue(res[0]);
+                  this.fmItemsProduction.currentData = res[0];
+                  this.detectorRef.detectChanges();
+                }
               })
           }
-        }else{
-          this.itemsProductionSV.addNew().subscribe((res: any) => {
-            if (res) {
-              this.fgItemsProduction.patchValue(res);
-              this.fmItemsProduction.currentData = res;
-              this.detectorRef.detectChanges();
-            }
-          })
         }
         break;
     }

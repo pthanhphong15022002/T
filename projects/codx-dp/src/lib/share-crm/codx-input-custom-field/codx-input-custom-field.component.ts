@@ -204,13 +204,13 @@ export class CodxInputCustomFieldComponent implements OnInit {
       });
     }
 
-    //danh sach data chuyen qua
+    //danh sach data chuyen qua - loai PA ra khoi format
     if (this.isLoadDataRef && this.dataSourceRef?.length > 0) {
       let data = this.dataSourceRef.find(
         (x) =>
           x.fieldName == this.customField.fieldName &&
           x.dataType == this.customField.dataType &&
-          x.dataFormat == this.customField.dataFormat &&
+          (x.dataFormat == this.customField.dataFormat || this.customField.dataType == 'PA') &&
           x.refValue == this.customField.refValue &&
           x.refType == this.customField.refType
       );
@@ -471,8 +471,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
     this.addFileCompleted.emit(this.addSuccess);
     this.attachment.uploadFile();
   }
-  fileAdded(e) {}
-  getfileCount(e) {}
+  fileAdded(e) { }
+  getfileCount(e) { }
 
   fileSave(e) {
     let result = '';
@@ -490,7 +490,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
       data: this.customField,
     });
   }
-  controlBlur(e) {}
+  controlBlur(e) { }
 
   //Type Contact
   openContact() {

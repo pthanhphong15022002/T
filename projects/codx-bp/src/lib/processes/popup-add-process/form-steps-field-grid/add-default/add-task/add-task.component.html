@@ -100,7 +100,10 @@
                 </ng-container>
             </div>
         </div>
-
+        <div class="d-flex align-items-center justify-content-between mt-4 border-top py-4" *ngIf="isAllowEdit == '1'">
+            <codx-label formName="fmBPFieldGrid" fiedName="lblStageAllowEdit" default="Chỉnh sửa khi chạy quy trình" class="fw-bold"></codx-label>
+            <codx-input type="switch"  field="allowEdit" [crrValue]="data?.settings?.allowEdit"  (valueChange)="valueChangeSetting($event)"></codx-input>
+        </div>
         <div class="d-flex flex-column border-top mt-4 pt-4" *ngIf="activityType == 'Event'">
             <div class="d-flex align-items-center justify-content-between">
                 <codx-label formName="fmBPFieldGrid" fiedName="lblTaskOwners2" default="Người tham gia" class="fw-bold"></codx-label>
@@ -343,6 +346,7 @@
                 </div>
             </div>
         </ng-container>
+       
     </ng-container>
 </div>
 <ng-template #elsNextStep>

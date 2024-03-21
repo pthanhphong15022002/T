@@ -18,7 +18,7 @@ import { PopAddItemBatchsComponent } from './settings/item-batchs/pop-add-item-b
 import { ItemSeriesComponent } from './settings/item-series/item-series.component';
 import { ItemBatchsComponent } from './settings/item-batchs/item-batchs.component';
 import { PopAddFiscalPeriodsComponent } from './settings/fiscal-periods/pop-add-fiscal-periods/pop-add-fiscal-periods.component';
-import { PopupAddFixedAssetComponent } from './settings/fixed-assets/popup-add-fixed-asset/popup-add-fixed-asset.component';
+import { FixedAssetAddComponent } from './settings/fixed-assets/fixed-asset-add/fixed-asset-add.component';
 import { FixedAssetsComponent } from './settings/fixed-assets/fixed-assets.component';
 import { PopupAddFAPostingAccountComponent } from './settings/faposting-accounts/popup-add-faposting-account/popup-add-faposting-account.component';
 import { FAPostingAccountsComponent } from './settings/faposting-accounts/faposting-accounts.component';
@@ -99,7 +99,7 @@ const T_Comp: Type<any>[] = [
   FAPostingAccountsComponent,
   PopupAddFAPostingAccountComponent,
   FixedAssetsComponent,
-  PopupAddFixedAssetComponent,
+  FixedAssetAddComponent,
   FiscalPeriodsComponent,
   PopAddFiscalPeriodsComponent,
   ItemBatchsComponent,
