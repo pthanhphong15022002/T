@@ -178,7 +178,7 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
 
         if (this.data.refID) {
           if (predicate)
-            predicate += 'and RefID=@1'; dataValue += `${this.data.siteID}` + ";" + `${this.data.refID}`
+            predicate += 'and RefID=@1'; dataValue += ";" + `${this.data.refID}`
         } else {
           predicate = 'RefID=@0'; dataValue = `${this.data.refID}`
         };
@@ -206,15 +206,13 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
         break;
 
       case 'refID':
-
         this.data.parentID = null;
         this.cbxParentID.crrValue = null;
-
-        if (this.data.refID) { predicate = 'SiteID=@0'; dataValue = `${this.data.siteID}` };
+        if (this.data.siteID) { predicate = 'SiteID=@0'; dataValue = `${this.data.siteID}` };
 
         if (e.data) {
           if (predicate)
-            predicate += 'and RefID=@1'; dataValue += `${this.data.siteID}` + ";" + `${this.data.refID}`
+            predicate += 'and RefID=@1'; dataValue += ";" + `${this.data.refID}`
         } else {
           predicate = 'RefID=@0'; dataValue = `${this.data.refID}`
         };
