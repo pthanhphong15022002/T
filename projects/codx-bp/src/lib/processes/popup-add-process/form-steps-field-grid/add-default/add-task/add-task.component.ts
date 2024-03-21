@@ -126,7 +126,7 @@ export class AddTaskComponent
     {
       this.isAllowEdit = this.process.settings.filter(
         (x) => x.fieldName == 'AllowEdit'
-      )[0].fieldValue;
+      )[0]?.fieldValue;
     }
     if (this.type == 'add') this.default();
     else {
