@@ -49,6 +49,7 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
   oldAssetId: any;
   siteIDOldData: any;
   loadedCus: boolean = false;
+  oldRef = '';
 
   constructor(
     private cache: CacheService,
@@ -70,6 +71,7 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
     if (this.action === 'edit') {
       this.oldAssetId = this.data.assetID;
       this.loadedCus = true
+      this.oldRef = this.data.refID
     }
     if (Array.isArray(arrField)) {
       this.arrFieldForm = arrField
@@ -132,6 +134,8 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
 
   valueChangeCbx(e) {
     this.data[e.field] = e.data;
+    let predicate = '';
+    let dataValue = '';
     switch (e.field) {
       case 'parentID':
         if (this.gridViewSetup.formName == 'CMWaterClockCustomer') return; //
@@ -169,8 +173,7 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
       case 'siteID':
         this.data.parentID = null;
         this.cbxParentID.crrValue = null;
-        let predicate = '';
-        let dataValue = '';
+
         if (e.data) { predicate = 'SiteID=@0'; dataValue = `${this.data.siteID}` };
 
         if (this.data.refID) {
@@ -182,13 +185,13 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
 
 
         (
-          this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
+          this.cbxParentID.ComponentCurrent as CodxComboboxComponent
         ).dataService.predicates = predicate;
         (
-          this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
+          this.cbxParentID.ComponentCurrent as CodxComboboxComponent
         ).dataService.dataValues = dataValue;
 
-        this.form.formGroup.patchValue({ siteID: this.data['parentID'] });
+        this.form.formGroup.patchValue({ parentID: this.data['parentID'] });
 
 
         if (this.loadedCus) return;
@@ -203,9 +206,30 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
         break;
 
       case 'refID':
-        if (!e.data) {
+
+        this.data.parentID = null;
+        this.cbxParentID.crrValue = null;
+
+        if (this.data.refID) { predicate = 'SiteID=@0'; dataValue = `${this.data.siteID}` };
+
+        if (e.data) {
+          if (predicate)
+            predicate += 'and RefID=@1'; dataValue += `${this.data.siteID}` + ";" + `${this.data.refID}`
+        } else {
+          predicate = 'RefID=@0'; dataValue = `${this.data.refID}`
+        };
+        (
+          this.cbxParentID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.predicates = predicate;
+        (
+          this.cbxParentID.ComponentCurrent as CodxComboboxComponent
+        ).dataService.dataValues = dataValue;
+        this.form.formGroup.patchValue({ parentID: this.data['parentID'] });
+
+        if (!e.data || e.data == this.oldRef) {
           return;
         }
+        this.oldRef = e.data
         this.getListLocation();
         break;
     }
