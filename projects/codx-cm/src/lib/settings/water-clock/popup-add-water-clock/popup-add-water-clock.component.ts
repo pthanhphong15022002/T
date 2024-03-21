@@ -138,7 +138,7 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
     let dataValue = '';
     switch (e.field) {
       case 'parentID':
-        if (this.gridViewSetup.formName == 'CMWaterClockCustomer') return; //
+        if (this.gridViewSetup['AssetID'].formName == 'CMWaterClockCustomer') return; //
         //danh cho chi so đông ho
         (
           this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
@@ -177,11 +177,13 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
         if (e.data) { predicate = 'SiteID=@0'; dataValue = `${this.data.siteID}` };
 
         if (this.data.refID) {
-          if (predicate)
-            predicate += 'and RefID=@1'; dataValue += ";" + `${this.data.refID}`
-        } else {
-          predicate = 'RefID=@0'; dataValue = `${this.data.refID}`
+          if (predicate) {
+            predicate += ' and RefID=@1'; dataValue += ";" + `${this.data.refID}`;
+          } else {
+            predicate = 'RefID=@0'; dataValue = `${this.data.refID}`;
+          }
         };
+
 
 
         (
@@ -211,11 +213,13 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
         if (this.data.siteID) { predicate = 'SiteID=@0'; dataValue = `${this.data.siteID}` };
 
         if (e.data) {
-          if (predicate)
-            predicate += 'and RefID=@1'; dataValue += ";" + `${this.data.refID}`
-        } else {
-          predicate = 'RefID=@0'; dataValue = `${this.data.refID}`
+          if (predicate) {
+            predicate += ' and RefID=@1'; dataValue += ";" + `${this.data.refID}`;
+          } else {
+            predicate = 'RefID=@0'; dataValue = `${this.data.refID}`;
+          }
         };
+
         (
           this.cbxParentID.ComponentCurrent as CodxComboboxComponent
         ).dataService.predicates = predicate;
