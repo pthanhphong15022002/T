@@ -364,70 +364,65 @@
             {{ data?.actualEnd | fmDT : "dmy" : true }}
           </span>
         </div>
-        <div class="col-3 d-flex flex-column">
-          <span class="fw-bold">{{ data.stepName }}</span
-          ><span>{{ data?.memo }}</span>
-        </div>
-        <div class="col-3 d-flex flex-column">
-          <div
-            class="d-flex align-items-center"
-            *ngIf="data.activityType != 'Conditions'"
-          >
-            <codx-label default="Kế hoạch:" class="me-2 w-60px"></codx-label
-            ><span class="fw-bold">{{ data?.duration }}</span
-            ><span class="mx-1 fw-bold">{{
-              data?.interval | vll : "VL004" : "text" | async
-            }}</span>
-          </div>
-          <div
-            class="d-flex align-items-center"
-            *ngIf="data.activityType != 'Conditions'"
-          >
-            <codx-label default="Hoàn tất:" class="me-2 w-60px"></codx-label
-            ><span class="fw-bold">{{ data?.actualEnd }}</span>
-          </div>
-        </div>
-        <div class="col-2">
-          <ng-container *ngIf="data.activityType != 'Conditions'">
-            <codx-vll
-              [name]="'BP014'"
-              [value]="data?.status"
-              [showText]="true"
-              [showBgColor]="true"
-              class="badge badge-light badge-sm"
-            >
-            </codx-vll>
-          </ng-container>
-        </div>
-        <div class="col-1">
-          <ng-container *ngIf="data?.pers">
-            <codx-imgs
-              [objectId]="data?.pers"
-              [objectType]="'AD_Users'"
-              [width]="30"
-              [numberImages]="4"
-            ></codx-imgs>
-          </ng-container>
-        </div>
-        <div class="col-1 d-flex justify-content-end">
-          <ng-container *ngIf="data.attachments && data.attachments > 0">
-            <div
-              class="d-flex align-items-center justify-content-center position-relative border rounded w-30px p-2"
-            >
-              <i class="icon-attach_file"></i>
-              <div
-                class="d-flex align-items-center justify-content-center position-absolute bp-attach-number rounded-circle"
-              >
-                {{ data.attachments }}
-              </div>
-            </div>
-          </ng-container>
-        </div>
+      </div>
+      <div class="col-2 d-flex align-items-center">
+        <div
+          *ngIf="
+            data.endDate &&
+            (data?.actualEnd | checkDuedateValue : data?.endDate)
+          "
+          class="icon-notifications icon-18 text-danger"
+          [ngbTooltip]="tempDueDate"
+        ></div>
+        <ng-template #tempDueDate>
+          <codx-label
+            [formModel]="formModel"
+            default="Quá hạn"
+            name="lbltempDueDateIns"
+          ></codx-label>
+        </ng-template>
       </div>
     </div>
-    <div (click)="changePer(data)">
-      <span class="icon-add"></span>
-      <codx-label default="Thêm công việc"></codx-label>
+    <div class="col-2">
+      <ng-container *ngIf="data.activityType != 'Conditions'">
+        <codx-vll
+          [name]="'BP014'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm"
+        >
+        </codx-vll>
+      </ng-container>
+    </div>
+    <div class="col-1">
+      <ng-container *ngIf="data?.pers">
+        <codx-imgs
+          [objectId]="data?.pers"
+          [objectType]="'AD_Users'"
+          [width]="30"
+          [numberImages]="4"
+        ></codx-imgs>
+      </ng-container>
+    </div>
+    <div class="col-1 d-flex justify-content-end">
+      <div
+        class="col-6 d-flex align-items-center justify-content-center position-relative border rounded w-30px p-2"
+      >
+        <i class="icon-i-file-earmark-text"></i>
+      </div>
+      <ng-container *ngIf="data.attachments && data.attachments > 0">
+        <div
+          class="col-6 d-flex align-items-center justify-content-center position-relative border rounded w-30px p-2 ms-3"
+        >
+          <i class="icon-attach_file"></i>
+          <div
+            class="d-flex align-items-center justify-content-center position-absolute bp-attach-number rounded-circle"
+          >
+            {{ data.attachments }}
+          </div>
+        </div>
+      </ng-container>
     </div>
   </div>
 </ng-template>
