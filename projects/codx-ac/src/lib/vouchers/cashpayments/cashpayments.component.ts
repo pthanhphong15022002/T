@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Injector,
+  NgZone,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -83,40 +84,13 @@ export class CashPaymentsComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
-    private authStore: AuthStore,
     private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore,
+    private zone : NgZone
   ) {
     super(inject);
-    this.cache
-      .companySetting()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res.length > 0) {
-          this.legalName = res[0].legalName;
-        }
-      });
-
-    this.cache
-      .viewSettingValues('ACParameters')
-      .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
-      .subscribe((res) => {
-        let dataValue = JSON.parse(res.dataValue);
-        this.baseCurr = dataValue?.BaseCurr || '';
-      })
-      
-    this.router.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
-      this.journalNo = params?.journalNo;
-    });
-
-    this.router.data.subscribe((res: any) => {
-      if (res && res['runMode'] && res['runMode'] == '1') {
-        this.predicate = '';
-        this.runmode = res.runMode;
-      }
-    });
+    if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
     this.journalSV = this.acService.createCRUDService(
       inject,
       this.fmJournal,
@@ -127,7 +101,35 @@ export class CashPaymentsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
+    this.zone.runOutsideAngular(()=>{
+      this.cache
+      .companySetting()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res.length > 0) {
+          this.legalName = res[0].legalName;
+        }
+      });
+
+    this.cache
+      .viewSettingValues('ACParameters')
+      .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]), takeUntil(this.destroy$))
+      .subscribe((res) => {
+        let dataValue = JSON.parse(res.dataValue);
+        this.baseCurr = dataValue?.BaseCurr || '';
+      })
+
+    this.router.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      this.journalNo = params?.journalNo;
+    });
+
+    this.router.data.pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+      if (res && res['runMode'] && res['runMode'] == '1') {
+        this.predicate = '';
+        this.runmode = res.runMode;
+      }
+    });
+
     this.cache
       .functionList(this.funcID)
       .pipe(takeUntil(this.destroy$))
@@ -137,7 +139,9 @@ export class CashPaymentsComponent extends UIComponent {
           if (!this.runmode) this.runmode = res?.runMode;
         }
       });
+
     this.getJournal();
+    })
   }
 
   ngDoCheck() {

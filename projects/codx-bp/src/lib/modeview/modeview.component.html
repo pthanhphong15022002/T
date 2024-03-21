@@ -595,7 +595,7 @@
           <lib-property-valuelist [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-valuelist>
         </ng-container>
         <ng-container *ngSwitchCase="'DateTime'">
-          <lib-property-datetime [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-datetime>
+          <lib-property-datetime [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)"></lib-property-datetime>
         </ng-container>
         <ng-container *ngSwitchCase="'Number'">
           <lib-property-number [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-number>
