@@ -1,0 +1,26 @@
+<codx-form #form [headerText]="'Chọn người thực hiện'" [lblHeader]="'lblAddApprover'" [body]="body" [footer]="footer"
+  [dialog]="dialogRef">
+  <ng-template #body let-dialog>
+    <div>
+      <div class="form-group">       
+        <codx-label name="lblApprovers" default="Người thực hiện" [formName]="'ApproverProcess'"
+          [gridViewName]="'grvApproverProcess'"></codx-label>        
+          <codx-input [ngClass]="'w-100'" type="combobox" [refValue]="'Users'" refType="P" field="approvers"
+          [showInput]="true" [multiple]="true" (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+      
+    </div>
+  </ng-template>
+
+
+</codx-form>
+<ng-template #footer>
+  <div class="">
+    <div class="form-group d-flex justify-content-end flex-row">
+      <button type="button" class="btn btn-primary" (click)="onSaveForm()">
+        <codx-label name="lblSave" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </div>
+</ng-template>
