@@ -66,6 +66,7 @@ export class CategoriesComponent extends UIComponent {
         }else{
           this.lstGroup = [];
         }
+        this.detectorRef.detectChanges();
       });
   }
   //#endregion

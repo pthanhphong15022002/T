@@ -8,6 +8,7 @@
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'defaultValue'" default="Giá trị mặc định khi thêm mới biểu mẫu" class="fw-bold"></codx-label>
         <codx-input type="datetime" format="F" [crrValue]="data.defaultValue" field="defaultValue" (valueChange)="changeValueDate($event)" placeholder="Nhập giá trị mặc định"></codx-input>
     </div>
+    
     <div class="mt-4">
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'description'" default="Hiển thị chuỗi gợi ý khi chưa có dữ liệu" class="fw-bold"></codx-label>
         <codx-input type="text" [crrValue]="data.description" field="description" placeholder="Nhập giá trị hiển thị" (valueChange)="changeValue($event)"></codx-input>
@@ -16,8 +17,17 @@
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'dataFormat'" default="Định dạng ngày" class="fw-bold"></codx-label>
         <codx-input type="valuelist" [crrValue]="data.dataFormat" field="dataFormat" [refValue]="'BP004'"  (valueChange)="changeValue($event)"></codx-input>
     </div>
-
     <div class="border-top mt-8">
+        <div class="mt-4">
+            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'dependence'" default="Liên kết" class="fw-bold"></codx-label>
+            <!-- <codx-input type="valuelist" [crrValue]="data.dataFormat" field="dataFormat" [refValue]="'BP004'"  (valueChange)="changeValue($event)"></codx-input> -->
+            <div class="pb-2">
+                <ejs-combobox #cbbDependence [dataSource]='dependenceData' [value]="data?.dependence" [fields]="fields" [allowCustom]="true" placeholder='Liên kết'></ejs-combobox>
+            </div>
+            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'lbldependence'"  default="Hệ thống tự động kiểm tra ngày được nhập phải lớn hơn ngày của trường liên kết" ngClass="text-gray-500 fs-7"></codx-label>
+        </div>
+    </div>
+    <div class="border-top mt-4">
         <div class="d-flex align-items-center mt-4">
             <codx-input type="switch" [crrValue]="data.isRequired" field="isRequired" label="Bắt buộc"  (valueChange)="changeValue($event)" class="mt-2"></codx-input>
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Bắt buộc" class="fw-bold ms-2"></codx-label>
@@ -27,4 +37,5 @@
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Điều kiện hiển thị" class="fw-bold ms-2"></codx-label>
         </div>
     </div>
+  
 </div>

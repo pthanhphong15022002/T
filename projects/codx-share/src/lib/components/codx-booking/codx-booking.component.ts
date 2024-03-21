@@ -1214,7 +1214,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         this.view.dataService.copy().subscribe((res) => {
           if (res) {
             res.resources = res.resources ?? evt?.resources;
-            res.resources = res.items ?? evt?.items;
+            res.items = res.items ?? evt?.items;
             if (this.resourceType == EPCONST.VLL.ResourceType.Stationery) {
               let dModel = new DialogModel();
               dModel.IsFull = true;

@@ -151,10 +151,18 @@ export const routes: Routes = [
         component: JournalV2Component,
         data: { noReuse: true },
       },
+
+      {
+        path: 'journals/:funcID',
+        component: JournalV2Component,
+        data: { noReuse: true },
+      },
+
       {
         path: 'report/detail/:funcID',
         component: CodxReportViewDetailComponent,
       },
+      
       {
         path: 'cashpayments/:funcID/:journalNo',
         component: CashPaymentsComponent,
