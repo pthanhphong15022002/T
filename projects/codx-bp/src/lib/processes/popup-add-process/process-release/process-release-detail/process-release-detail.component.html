@@ -1,202 +1,434 @@
-<div class="d-flex flex-column w-100 h-100" [ngClass]="!right ? 'bg-light py-4 px-8': ''">
-    <div class="d-flex justify-content-between align-items-center pb-4" *ngIf="!right">
-        <div>
-            <i class="icon-arrow_back cursor-pointer" (click)="dialog?.close()"></i>
-            <codx-label default="Chi tiết quy trình" class="mx-2 fs-5 fw-bold"></codx-label>
-        </div>
-        <i class="icon-close cursor-pointer" (click)="dialog?.close()"></i>
+<div
+  class="d-flex flex-column w-100 h-100"
+  [ngClass]="!right ? 'bg-light py-4 px-8' : ''"
+>
+  <div
+    class="d-flex justify-content-between align-items-center pb-4"
+    *ngIf="!right"
+  >
+    <div>
+      <i class="icon-arrow_back cursor-pointer" (click)="dialog?.close()"></i>
+      <codx-label
+        default="Chi tiết quy trình"
+        class="mx-2 fs-5 fw-bold"
+      ></codx-label>
     </div>
-    <div class="d-flex w-100 h-100 bg-white">
-        <div class="d-flex flex-column w-400px border-right p-6" *ngIf="!right">
-            <div>
-                <span class="fw-bold fs-5">{{data?.title}}</span>
-            </div>
-            <div class="text-gray-500 py-1">
-                <codx-label default="Ngày tạo: "></codx-label>
-                <span>{{data?.createdOn | date: 'dd/MM/yyyy'}}</span>
-            </div>
-            <div class="d-flex align-items-center py-2">
-                <codx-vll
-                [name]="'BP014'"
-                [value]="data?.status"
-                [showText]="true"
-                [showBgColor]="true"
-                class="badge badge-light badge-sm"
-                >
-                </codx-vll>
-            </div>
-            <div class="d-flex align-items-center mt-2">
-               <codx-img [objectId]="data?.createdBy" [objectType]="'AD_Users'" [width]="50"></codx-img>
-               <div class="d-flex flex-column ms-2">
-                    <span>{{info?.userName}}</span>
-                    <span class="text-gray-500">{{info?.positionName}}</span>
-                    <span class="text-gray-500">{{info?.orgUnitName}}</span>
-                </div>
-            </div>
-            <div class="d-flex flex-column border-top my-4 pt-4">
-                <codx-label [formName]="formModel?.formName" fiedName="lblProcessReDetailTime" default="Thời gian thực hiện" class="fw-bold"></codx-label>
-                <div class="d-flex align-items-center justify-content-between mt-4">
-                    <codx-label [formName]="formModel?.formName" fiedName="lblProcessReDetailTimeStart" default="Kế hoạch"></codx-label>
-                    <div class="d-flex align-items-center">
-                        {{data?.startDate ? (data?.startDate | date : 'dd/MM/yyyy') : 'dd/MM/yyyy'}} - {{data?.endDate ? (data?.endDate | date : 'dd/MM/yyyy') : 'dd/MM/yyyy'}}
-                    </div>
-                </div>
-                <div class="d-flex align-items-center justify-content-between">
-                    <codx-label [formName]="formModel?.formName" fiedName="lblProcessReDetailTimeActual" default="Thực tế"></codx-label>
-                    <div class="d-flex align-items-center">
-                        {{data?.actualStart ? (data?.actualStart | date : 'dd/MM/yyyy') : 'dd/MM/yyyy'}} - {{data?.actualEnd ? (data?.actualEnd | date : 'dd/MM/yyyy') : 'dd/MM/yyyy'}}
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex justify-content-center mt-2">
-                <div class="bp-progress-release blues">
-                    <span class="progress-left">
-                        <span class="progress-bar"></span>
-                    </span>
-                    <span class="progress-right">
-                        <span class="progress-bar"></span>
-                    </span>
-                    <div class="progress-value d-flex flex-column align-items-center justify-content-center w-100 h-100">
-                        <span class="fw-bold fs-1 h-10px mb-4">{{data?.countTask}}</span>
-                        <codx-label default="công việc" class="text-gray-600 fs-5-sm"></codx-label>
-                    </div>
-                </div>
-                
-            </div>
+    <i class="icon-close cursor-pointer" (click)="dialog?.close()"></i>
+  </div>
+  <div class="d-flex w-100 h-100 bg-white">
+    <div class="d-flex flex-column w-400px border-right p-6" *ngIf="!right">
+      <div>
+        <span class="fw-bold fs-5">{{ data?.title }}</span>
+      </div>
+      <div class="text-gray-500 py-1">
+        <codx-label default="Ngày tạo: "></codx-label>
+        <span>{{ data?.createdOn | date : "dd/MM/yyyy" }}</span>
+      </div>
+      <div class="d-flex align-items-center py-2">
+        <codx-vll
+          [name]="'BP014'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm"
+        >
+        </codx-vll>
+      </div>
+      <div class="d-flex align-items-center mt-2">
+        <codx-img
+          [objectId]="data?.createdBy"
+          [objectType]="'AD_Users'"
+          [width]="50"
+        ></codx-img>
+        <div class="d-flex flex-column ms-2">
+          <span>{{ info?.userName }}</span>
+          <span class="text-gray-500">{{ info?.positionName }}</span>
+          <span class="text-gray-500">{{ info?.orgUnitName }}</span>
         </div>
-        <div class="w-100 prd-nav" [ngClass]="!right ? 'ps-4 pt-4': ''">
-            <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs"  (navChange)="onNavChange($event)">
-                <li [ngbNavItem]="1">
-                    <div ngbNavLink (click)="onNavChange(1)"><codx-label default="Công việc"></codx-label></div>
-                    <ng-template ngbNavContent>
-                        <div class="d-flex flex-column w-100 field-grid-collapse overflow-auto" [ngStyle]="!right ? {'height': 'calc(100vh - 115px)'} : ''" [class.h-100]="right">
-                            <div class="grid-collapse pe-4" ngbAccordion *ngIf="listStage.length > 0">
-                                <div  ngbAccordionItem [collapsed]="false" *ngFor="let item of listStage">
-                                    <div class="d-flex align-items-center justify-content-between px-4 py-2 bg-row-active" ngbAccordionHeader>
-                                        <!-- <button ngbAccordionButton></button> -->
-                                        <div class="d-flex flex-column">
-                                            <div class="d-flex align-items-center">
-                                                <i class="mx-1" [class]="item?.settings?.icon" [style.color]="item?.settings?.color"></i>
-                                                <span class="fw-bold mx-2 bg-row-text-active">{{item.stepName}}</span>
-                                            </div>
-                                            <div class="d-flex align-items-center mt-2 ms-10">
-                                                <codx-label [formName]="formModel?.formName" fiedName="lblProcessReDetailTimeStart" default="Kế hoạch:" class="text-gray-500"></codx-label>
-                                                <span class="fw-bold me-1 mx-1">{{item?.duration}}</span>
-                                                <span class="">{{data?.interval | vll : 'VL004' : 'text' | async}}</span>
-                                                <codx-label [formName]="formModel?.formName" fiedName="lblProcessReDetailTimeActual" default="Thực tế:" class="text-gray-500 ms-2"></codx-label>
-
-                                            </div>
-                                        </div>
-                                        <div class="d-flex flex-column w-200px">
-                                            <div class="d-flex align-items-center justify-content-end fw-bold">
-                                                <span class="me-1">{{item.percentCompleted}}%</span>
-                                                <codx-label [formName]="formModel?.formName" fiedName="lblProcessReDetailCompleted" default="hoàn thành"></codx-label>
-                                            </div>
-                                            <div class="progress bg-white mt-2" style="height:7px">
-                                                <div class="progress-bar" role="progressbar" [style.width]="item.percentCompleted + '%'" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                              </div>
-                                            <div class="d-flex align-items-center justify-content-between mt-2">
-                                                <div class="d-flex align-items-center">
-                                                    <span class="fw-bold">{{item.countCompleted}}/{{item.countTask}}</span>
-                                                    <codx-label [formName]="formModel?.formName" fiedName="lblProcessReDetailCompleted" default="hoàn tất" class="text-gray-500 ms-2"></codx-label>
-                                                </div>
-                                                <div class="d-flex align-items-center">
-                                                    <span class="fw-bold">0</span>
-                                                    <codx-label [formName]="formModel?.formName" fiedName="lblProcessReDetailLate" default="trễ hạn" class="text-gray-500 ms-2"></codx-label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div ngbAccordionCollapse>
-                                        <div ngbAccordionBody>
-                                            <ng-template>
-                                                <div class="d-flex flex-column">
-                                                    <div class="d-flex flex-column pb-4" *ngFor="let item2 of item.child" >
-                                                        <div class="d-flex flex-column">
-                                                            <ng-container *ngTemplateOutlet="tmpRow; context: { $implicit: item2 }"></ng-container>
-                                                            <ng-container *ngIf="item2.activityType == 'Conditions'" >
-                                                                <div class="d-flex align-items-center cursor-pointer w-100 pt-2"  *ngFor="let item3 of item2?.child">
-                                                                    <ng-container *ngTemplateOutlet="tmpRow; context: { $implicit: item3 , b:true}"></ng-container>
-                                                                </div>
-                                                            </ng-container>
-                                                        </div>
-                                                        <!-- <div class="d-flex align-items-center row-grid-collapse cursor-pointer" (click)="addEditStages('Task','add',null,item2,item)">
+      </div>
+      <div class="d-flex flex-column border-top my-4 pt-4">
+        <codx-label
+          [formName]="formModel?.formName"
+          fiedName="lblProcessReDetailTime"
+          default="Thời gian thực hiện"
+          class="fw-bold"
+        ></codx-label>
+        <div class="d-flex align-items-center justify-content-between mt-4">
+          <codx-label
+            [formName]="formModel?.formName"
+            fiedName="lblProcessReDetailTimeStart"
+            default="Kế hoạch"
+          ></codx-label>
+          <div class="d-flex align-items-center">
+            {{
+              data?.startDate
+                ? (data?.startDate | date : "dd/MM/yyyy")
+                : "dd/MM/yyyy"
+            }}
+            -
+            {{
+              data?.endDate
+                ? (data?.endDate | date : "dd/MM/yyyy")
+                : "dd/MM/yyyy"
+            }}
+          </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-between">
+          <codx-label
+            [formName]="formModel?.formName"
+            fiedName="lblProcessReDetailTimeActual"
+            default="Thực tế"
+          ></codx-label>
+          <div class="d-flex align-items-center">
+            {{
+              data?.actualStart
+                ? (data?.actualStart | date : "dd/MM/yyyy")
+                : "dd/MM/yyyy"
+            }}
+            -
+            {{
+              data?.actualEnd
+                ? (data?.actualEnd | date : "dd/MM/yyyy")
+                : "dd/MM/yyyy"
+            }}
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center mt-2">
+        <div class="bp-progress-release blues">
+          <span class="progress-left">
+            <span class="progress-bar"></span>
+          </span>
+          <span class="progress-right">
+            <span class="progress-bar"></span>
+          </span>
+          <div
+            class="progress-value d-flex flex-column align-items-center justify-content-center w-100 h-100"
+          >
+            <span class="fw-bold fs-1 h-10px mb-4">{{ data?.countTask }}</span>
+            <codx-label
+              default="công việc"
+              class="text-gray-600 fs-5-sm"
+            ></codx-label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="w-100 prd-nav" [ngClass]="!right ? 'ps-4 pt-4' : ''">
+      <ul
+        ngbNav
+        #nav="ngbNav"
+        [(activeId)]="active"
+        class="nav-tabs"
+        (navChange)="onNavChange($event)"
+      >
+        <li [ngbNavItem]="1">
+          <div ngbNavLink (click)="onNavChange(1)">
+            <codx-label default="Công việc"></codx-label>
+          </div>
+          <ng-template ngbNavContent>
+            <div
+              class="d-flex flex-column w-100 field-grid-collapse overflow-auto"
+              [ngStyle]="!right ? { height: 'calc(100vh - 115px)' } : ''"
+              [class.h-100]="right"
+            >
+              <div
+                class="grid-collapse pe-4"
+                ngbAccordion
+                *ngIf="listStage.length > 0"
+              >
+                <div
+                  ngbAccordionItem
+                  [collapsed]="false"
+                  *ngFor="let item of listStage"
+                >
+                  <div
+                    class="d-flex align-items-center justify-content-between px-4 py-2 bg-row-active"
+                    ngbAccordionHeader
+                  >
+                    <!-- <button ngbAccordionButton></button> -->
+                    <div class="d-flex flex-column">
+                      <div class="d-flex align-items-center">
+                        <i
+                          class="mx-1"
+                          [class]="item?.settings?.icon"
+                          [style.color]="item?.settings?.color"
+                        ></i>
+                        <span class="fw-bold mx-2 bg-row-text-active">{{
+                          item.stepName
+                        }}</span>
+                      </div>
+                      <div class="d-flex align-items-center mt-2 ms-10">
+                        <codx-label
+                          [formName]="formModel?.formName"
+                          fiedName="lblProcessReDetailTimeStart"
+                          default="Kế hoạch"
+                          class="text-gray-500 label-colon"
+                        ></codx-label>
+                        <span class="fw-bold me-1 mx-1">{{
+                          item?.duration
+                        }}</span>
+                        <span class="">{{
+                          data?.interval | vll : "VL004" : "text" | async
+                        }}</span>
+                        <codx-label
+                          [formName]="formModel?.formName"
+                          fiedName="lblProcessReDetailTimeActual"
+                          default="Thực tế"
+                          class="text-gray-500 ms-2 label-colon"
+                        ></codx-label>
+                        <span class="fw-bold me-1 mx-1">{{
+                          data?.actualHours > 0 ? data?.actualHours : 0
+                        }}</span
+                        ><span class="mx-1 fw-bold">
+                          <span class="">{{
+                            data?.interval | vll : "VL004" : "text" | async
+                          }}</span></span
+                        >
+                      </div>
+                    </div>
+                    <div class="d-flex flex-column w-200px">
+                      <div
+                        class="d-flex align-items-center justify-content-end fw-bold"
+                      >
+                        <span class="me-1">{{ item.percentCompleted }}%</span>
+                        <codx-label
+                          [formName]="formModel?.formName"
+                          fiedName="lblProcessReDetailCompleted"
+                          default="hoàn thành"
+                        ></codx-label>
+                      </div>
+                      <div class="progress bg-white mt-2" style="height: 7px">
+                        <div
+                          class="progress-bar"
+                          role="progressbar"
+                          [style.width]="item.percentCompleted + '%'"
+                          aria-valuenow="25"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        ></div>
+                      </div>
+                      <div
+                        class="d-flex align-items-center justify-content-between mt-2"
+                      >
+                        <div class="d-flex align-items-center">
+                          <span class="fw-bold"
+                            >{{ item.countCompleted }}/{{
+                              item.countTask
+                            }}</span
+                          >
+                          <codx-label
+                            [formName]="formModel?.formName"
+                            fiedName="lblProcessReDetailCompleted"
+                            default="hoàn tất"
+                            class="text-gray-500 ms-2"
+                          ></codx-label>
+                        </div>
+                        <div class="d-flex align-items-center">
+                          <span class="fw-bold">0</span>
+                          <codx-label
+                            [formName]="formModel?.formName"
+                            fiedName="lblProcessReDetailLate"
+                            default="trễ hạn"
+                            class="text-gray-500 ms-2"
+                          ></codx-label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div ngbAccordionCollapse>
+                    <div ngbAccordionBody>
+                      <ng-template>
+                        <div class="d-flex flex-column">
+                          <div
+                            class="d-flex flex-column pb-4"
+                            *ngFor="let item2 of item.child"
+                          >
+                            <div class="d-flex flex-column">
+                              <ng-container
+                                *ngTemplateOutlet="
+                                  tmpRow;
+                                  context: { $implicit: item2 }
+                                "
+                              ></ng-container>
+                              <ng-container
+                                *ngIf="item2.activityType == 'Conditions'"
+                              >
+                                <div
+                                  class="d-flex align-items-center cursor-pointer w-100 pt-2"
+                                  *ngFor="let item3 of item2?.child"
+                                >
+                                  <ng-container
+                                    *ngTemplateOutlet="
+                                      tmpRow;
+                                      context: { $implicit: item3, b: true }
+                                    "
+                                  ></ng-container>
+                                </div>
+                              </ng-container>
+                            </div>
+                            <!-- <div class="d-flex align-items-center row-grid-collapse cursor-pointer" (click)="addEditStages('Task','add',null,item2,item)">
                                                             <codx-label default="Thêm công việc" class="my-2 ms-4" ></codx-label>
                                                         </div> -->
-                                                    </div>
-                                                </div>
-                                                <!-- <div class="d-flex align-items-center row-grid-collapse cursor-pointer" (click)="addEditStages('Task','add',null,item,item)">
+                          </div>
+                        </div>
+                        <!-- <div class="d-flex align-items-center row-grid-collapse cursor-pointer" (click)="addEditStages('Task','add',null,item,item)">
                                                     <codx-label default="Thêm công việc" class="my-2 ms-14" ></codx-label>
                                                 </div> -->
-                                            </ng-template>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </ng-template>
-                </li>
-                <li [ngbNavItem]="2">
-                    <div ngbNavLink (click)="onNavChange(2)"><codx-label default="Kết quả đầu ra"></codx-label></div>
-                    <ng-template ngbNavContent>
-                        <div class="w-100 h-100">
-                            <div class="align-items-center justify-content-between pt-2 px-2" *ngFor="let item of listDocument">
-                                <span>{{item?.title}}</span>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="2">
+          <div ngbNavLink (click)="onNavChange(2)">
+            <codx-label default="Kết quả đầu ra"></codx-label>
+          </div>
+          <ng-template ngbNavContent>
+            <div class="w-100 h-100">
+              <div
+                class="align-items-center justify-content-between pt-2 px-2"
+                *ngFor="let item of listDocument"
+              >
+                <span>{{ item?.title }}</span>
 
-                                <codx-thumbnail
-                                    [files]="item.filess"
-                                    displayThumb="simple"
-                                    [hideDelete]="'1'"
-                                    [hideMoreF]="'0'"
-                                    [isClick]="false"
-                                >
-                                </codx-thumbnail>
-                            </div>
-                        </div>
-                    </ng-template>
-                </li>
-            </ul>
-            <div [ngbNavOutlet]="nav" class="mt-2"></div>
-        </div>
+                <codx-thumbnail
+                  [files]="item.filess"
+                  displayThumb="simple"
+                  [hideDelete]="'1'"
+                  [hideMoreF]="'0'"
+                  [isClick]="false"
+                >
+                </codx-thumbnail>
+              </div>
+            </div>
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="nav" class="mt-2"></div>
     </div>
+  </div>
 </div>
 <ng-template #tmpRow let-data let-isCon="b" let-index="c">
-    <div class="row d-flex align-items-center cursor-pointer w-100" (dblclick)="openForm(data?.dataTask)">
-        <div class="col-2 d-flex align-items-center" [class.ps-8]="isCon">
-            <i *ngIf="isCon" class="icon-arrow_right_alt"></i><i [class]="data?.settings?.icon" [style.color]="data?.settings?.color"></i><span class="mx-2">{{data.activityType}}</span>
-        </div>
-        <div class="col-3 d-flex flex-column"><span class="fw-bold">{{data.stepName}}</span><span>{{data?.memo}}</span></div>
-        <div class="col-3 d-flex flex-column">
-            <div class="d-flex align-items-center" *ngIf="data.activityType != 'Conditions'">
-                <codx-label default="Kế hoạch:" class="me-2 w-60px"></codx-label><span class="fw-bold">{{data?.duration}}</span><span class="mx-1 fw-bold">{{data?.interval | vll : 'VL004' : 'text' | async}}</span>
-            </div>
-            <div class="d-flex align-items-center" *ngIf="data.activityType != 'Conditions'">
-                <codx-label default="Hoàn tất:" class="me-2 w-60px"></codx-label><span class="fw-bold">{{data?.actualEnd}}</span>
-            </div>
-        </div>
-        <div class="col-2">
-            <ng-container *ngIf="data.activityType != 'Conditions'">
-                <codx-vll
-                    [name]="'BP014'"
-                    [value]="data?.status"
-                    [showText]="true"
-                    [showBgColor]="true"
-                    class="badge badge-light badge-sm"
-                >
-                </codx-vll>
-            </ng-container>
-        </div>
-        <div class="col-1">
-            <ng-container *ngIf="data?.pers">
-                <codx-imgs [objectId]="data?.pers" [objectType]="'AD_Users'" [width]="30" [numberImages]="4"></codx-imgs>
-            </ng-container>
-        </div>
-        <div class="col-1 d-flex justify-content-end">
-            <ng-container *ngIf="data.attachments && data.attachments >0">
-                <div class="d-flex align-items-center justify-content-center position-relative border rounded w-30px p-2"><i class="icon-attach_file"></i><div class="d-flex align-items-center justify-content-center position-absolute bp-attach-number rounded-circle">{{data.attachments}}</div></div>
-            </ng-container>
-        </div>
+  <div
+    class="row d-flex align-items-center cursor-pointer w-100"
+    (dblclick)="openForm(data?.dataTask)"
+  >
+    <div class="col-2 d-flex align-items-center" [class.ps-8]="isCon">
+      <i *ngIf="isCon" class="icon-arrow_right_alt"></i
+      ><i
+        [class]="data?.settings?.icon"
+        [style.color]="data?.settings?.color"
+      ></i
+      ><span class="mx-2">{{ data.activityType }}</span>
     </div>
+    <div class="col-3 d-flex flex-column">
+      <span class="fw-bold">{{ data.stepName }}</span
+      ><span>{{ data?.memo }}</span>
+    </div>
+    <div class="col-3 d-flex">
+      <div class="col-10 d-flex flex-column">
+        <div
+          class="d-flex align-items-center"
+          *ngIf="data.activityType != 'Conditions'"
+        >
+          <codx-label
+            default="Kế hoạch"
+            class="me-2 w-60px label-colon"
+          ></codx-label
+          ><span class="fw-bold">{{ data?.duration }}</span
+          ><span class="mx-1 fw-bold">{{
+            data?.interval | vll : "VL004" : "text" | async
+          }}</span>
+          <span class="ms-1 me-1">|</span>
+          <codx-label default="Thực tế" class="w-60px label-colon"></codx-label
+          ><span class="fw-bold">{{
+            data?.actualHours > 0 ? data?.actualHours : 0
+          }}</span
+          ><span class="mx-1 fw-bold">
+            {{ data?.interval | vll : "VL004" : "text" | async }}</span
+          >
+        </div>
+        <div
+          class="d-flex align-items-center"
+          *ngIf="data.activityType != 'Conditions'"
+        >
+          <codx-label
+            default="Hoàn tất"
+            class="me-2 w-60px label-colon"
+          ></codx-label
+          ><span class="fw-bold">
+            {{ data?.actualEnd | fmDT : "dmy" : true }}
+          </span>
+        </div>
+      </div>
+      <div class="col-2 d-flex align-items-center">
+        <div
+          *ngIf="
+            data.endDate &&
+            (data?.actualEnd | checkDuedateValue : data?.endDate)
+          "
+          class="icon-notifications icon-18 text-danger"
+          [ngbTooltip]="tempDueDate"
+        ></div>
+        <ng-template #tempDueDate>
+          <codx-label
+            [formModel]="formModel"
+            default="Quá hạn"
+            name="lbltempDueDateIns"
+          ></codx-label>
+        </ng-template>
+      </div>
+    </div>
+    <div class="col-2">
+      <ng-container *ngIf="data.activityType != 'Conditions'">
+        <codx-vll
+          [name]="'BP014'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm"
+        >
+        </codx-vll>
+      </ng-container>
+    </div>
+    <div class="col-1">
+      <ng-container *ngIf="data?.pers">
+        <codx-imgs
+          [objectId]="data?.pers"
+          [objectType]="'AD_Users'"
+          [width]="30"
+          [numberImages]="4"
+        ></codx-imgs>
+      </ng-container>
+    </div>
+    <div class="col-1 d-flex justify-content-end">
+      <div
+        class="col-6 d-flex align-items-center justify-content-center position-relative border rounded w-30px p-2"
+      >
+        <i class="icon-i-file-earmark-text"></i>
+      </div>
+      <ng-container *ngIf="data.attachments && data.attachments > 0">
+        <div
+          class="col-6 d-flex align-items-center justify-content-center position-relative border rounded w-30px p-2 ms-3"
+        >
+          <i class="icon-attach_file"></i>
+          <div
+            class="d-flex align-items-center justify-content-center position-absolute bp-attach-number rounded-circle"
+          >
+            {{ data.attachments }}
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <!-- <div (click)="changePer(data)">
+      <span class="icon-add"></span>
+      <codx-label default="Thêm công việc"></codx-label>
+  </div> -->
+  </div>
 </ng-template>
 <!-- <div class="col-1 d-flex align-items-center"><i [class]="data?.settings?.icon" [style.color]="data?.settings?.color"></i><span class="mx-2">{{data.activityType}}</span></div>
 <div class="col-3"><span>{{data?.memo}}</span></div>

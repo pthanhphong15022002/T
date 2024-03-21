@@ -293,6 +293,9 @@ export class CodxAddBookingRoomComponent extends UIComponent {
             this.tmplstDevice.push(tmpDevice);
           });
         }
+        if(this.data.resources?.length>0){
+
+        }
       }
       this.detectorRef.detectChanges();
       if (this.funcType == _addMF && this.optionalData != null) {
@@ -342,29 +345,24 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       }
     }
 
-    if (this.funcType != _addMF) {
-      this.codxBookingService
-        .getBookingItems(this.data.recID)
-        .subscribe((res: any) => {
-          if (res) {
-            Array.from(res).forEach((item: any) => {
-              let tmpSta = new BookingItems();
-              (tmpSta.itemID = item?.itemID),
-                (tmpSta.quantity = item?.quantity),
-                (tmpSta.itemName = item?.itemName),
-                (tmpSta.umid = item?.umid),
-                (tmpSta.umName =
-                  item?.umName != null && item?.umName != ''
-                    ? item?.umName
-                    : item?.umid),
-                (tmpSta.objectType = 'EP_Resources'),
-                (tmpSta.objectID = item?.resourceRecID),
-                this.lstStationery.push(tmpSta);
-            });
-            this.changeDetectorRef.detectChanges();
-          }
-        });
-    }
+    if (this.funcType != _addMF &&  this.data?.items?.length>0) {
+      
+      Array.from(this.data?.items).forEach((item: any) => {
+        let tmpSta = new BookingItems();
+        (tmpSta.itemID = item?.itemID),
+          (tmpSta.quantity = item?.quantity),
+          (tmpSta.itemName = item?.itemName),
+          (tmpSta.umid = item?.umid),
+          (tmpSta.umName =
+            item?.umName != null && item?.umName != ''
+              ? item?.umName
+              : item?.umid),
+          (tmpSta.objectType = 'EP_Resources'),
+          (tmpSta.objectID = item?.resourceRecID),
+          this.lstStationery.push(tmpSta);
+      });
+      this.changeDetectorRef.detectChanges();
+    }   
 
     this.isAfterRender = true;
   }
@@ -466,6 +464,20 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           });
           this.curUser = tmpResource;
           this.resources.push(tmpResource);
+          if(this.funcType == _copyMF && this.data?.resources?.length>0){
+            this.data?.resources.forEach(att=>{              
+              if(att?.userID != this.curUser?.userID){    
+                if(att.roleType=="1") att.roleType="3";           
+                this.listRoles.forEach((element) => {
+                  if (element.value == att?.roleType) {
+                    att.icon = element?.icon;
+                    att.roleName = element?.text;
+                  }
+                }); 
+                this.resources.push(att);
+              };
+            })
+          }
           this.data.attendees =  this.resources?.length;
           this.attendeesNumber = this.data.attendees;
           this.changeDetectorRef.detectChanges();

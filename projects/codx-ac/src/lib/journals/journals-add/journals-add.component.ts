@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Injector,
+  NgZone,
   Optional,
   ViewChild,
 } from '@angular/core';
@@ -86,6 +87,7 @@ export class JournalsAddComponent extends UIComponent {
     private inject: Injector,
     private acService: CodxAcService,
     private notification: NotificationsService,
+    private zone : NgZone,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -100,66 +102,68 @@ export class JournalsAddComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    this.getVll('AC122', 'vllAC122');
-    this.getVll('AC107', 'vllAC107');
-    this.getVll('AC104', 'vllAC104');
-    this.getVll('AC105', 'vllAC105');
-    this.getVll('AC125', 'vllAC125');
-    this.getVll('AC126', 'vllAC126');
-    this.getVll('AC108', 'vllAC108');
-    this.getVll('AC109', 'vllAC109');
-    this.getVll('AC110', 'vllAC110');
-    this.getVll('AC111', 'vllAC111');
-    this.api
-      .exec<any>(
-        'AC',
-        'JournalsPermissionBusiness',
-        'GetPermissionByJournalAsync',
-        this.dataDefault.journalNo
-      )
-      .subscribe((res) => {
-        if (res) {
-          if (res['1']) {
-            this.perCreate = res['1'].join(';');
-            this.oldPerCreate = this.perCreate;
+    this.zone.runOutsideAngular(() => {
+      this.getVll('AC122', 'vllAC122');
+      this.getVll('AC107', 'vllAC107');
+      this.getVll('AC104', 'vllAC104');
+      this.getVll('AC105', 'vllAC105');
+      this.getVll('AC125', 'vllAC125');
+      this.getVll('AC126', 'vllAC126');
+      this.getVll('AC108', 'vllAC108');
+      this.getVll('AC109', 'vllAC109');
+      this.getVll('AC110', 'vllAC110');
+      this.getVll('AC111', 'vllAC111');
+
+      this.cache
+        .viewSettingValues('ACParameters')
+        .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
+        .subscribe((res) => {
+          let dataValue = JSON.parse(res.dataValue);
+          if (!this.formJournal.form.data.isEdit)
+            this.formJournal.form.setValue(
+              'idimControl',
+              dataValue.IDIMControl,
+              {}
+            );
+          this.baseCurr = dataValue.BaseCurr;
+        });
+
+      this.api
+        .exec<any>(
+          'AC',
+          'JournalsPermissionBusiness',
+          'GetPermissionByJournalAsync',
+          this.dataDefault.journalNo
+        )
+        .subscribe((res) => {
+          if (res) {
+            if (res['1']) {
+              this.perCreate = res['1'].join(';');
+              this.oldPerCreate = this.perCreate;
+            }
+            if (res['5']) {
+              this.perApproval = res['5'].join(';');
+              this.oldPerApproval = this.perApproval;
+            }
+            if (res['6']) {
+              this.perPost = res['6'].join(';');
+              this.oldPerPost = this.perPost;
+            }
+            if (res['9']) {
+              this.perShare = res['9'].join(';');
+              this.oldPerShare = this.perShare;
+            }
+            if (res['10']) {
+              this.perPost = res['10'].join(';');
+              this.oldPerPost = this.perPost;
+            }
           }
-          if (res['5']) {
-            this.perApproval = res['5'].join(';');
-            this.oldPerApproval = this.perApproval;
-          }
-          if (res['6']) {
-            this.perPost = res['6'].join(';');
-            this.oldPerPost = this.perPost;
-          }
-          if (res['9']) {
-            this.perShare = res['9'].join(';');
-            this.oldPerShare = this.perShare;
-          }
-          if (res['10']) {
-            this.perPost = res['10'].join(';');
-            this.oldPerPost = this.perPost;
-          }
-        }
-      });
+        });  
+    })
   }
 
   ngAfterViewInit() {
-    this.cache
-      .viewSettingValues('ACParameters')
-      .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
-      .subscribe((res) => {
-        let dataValue = JSON.parse(res.dataValue);
-        if (!this.formJournal.form.data.isEdit)
-          this.formJournal.form.setValue(
-            'idimControl',
-            dataValue.IDIMControl,
-            {}
-          );
-        this.baseCurr = dataValue.BaseCurr;
-      });
-
     this.onDisableTab();
-    this.detectorRef.detectChanges();
   }
 
   ngDoCheck() {

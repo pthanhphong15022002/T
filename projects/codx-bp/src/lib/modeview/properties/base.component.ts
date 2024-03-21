@@ -10,6 +10,7 @@ export abstract class BasePropertyComponent
     user:any;
     @Input() isBack = false;
     @Input() data: any;
+    @Input() dataTable: any;
     @Output() dataChange = new EventEmitter<any>();
     @Output() back = new EventEmitter<any>();
     constructor(

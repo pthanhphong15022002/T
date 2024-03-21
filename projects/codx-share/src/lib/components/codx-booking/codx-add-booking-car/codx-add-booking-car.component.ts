@@ -417,8 +417,22 @@ export class CodxAddBookingCarComponent
 
           this.curUser = tmpResource;
           this.resources.push(tmpResource);
+          if(this.funcType == _copyMF && this.data?.resources?.length>0){
+            this.data?.resources.forEach(att=>{              
+              if(att?.userID != this.curUser?.userID && att?.roleType !="2"){    
+                if(att.roleType=="1") att.roleType="3";           
+                this.listRoles.forEach((element) => {
+                  if (element.value == att?.roleType) {
+                    att.icon = element?.icon;
+                    att.roleName = element?.text;
+                  }
+                }); 
+                this.resources.push(att);
+              };
+            })
+          }
         }
-        if (this.funcType != _addMF) {
+        if (this.funcType != _addMF && this.funcType != _copyMF) {
           if (this.data.resources != null) {
             this.loadAttendees(this.data?.resources);
           } else if (this.data.resources == null) {

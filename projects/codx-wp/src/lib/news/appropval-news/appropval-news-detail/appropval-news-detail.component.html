@@ -2,10 +2,10 @@
     <codx-detail-tmp 
         [header]="header" 
         [body]="body" 
-        (clickMF)="clickMF($event)" 
         [formModel]="formModel" 
         [hideMF]="hideMFC"
         [dataItem]="data"
+        (clickMF)="clickMF($event)" 
         (changeDataMF)="changeDataMF($event,data)"
     >
     </codx-detail-tmp>
@@ -173,9 +173,9 @@
         </div>
         <ng-container *ngIf="data.category == '1' || data.category == '3' || data.category == '4';else news">
             <div class="row mt-2">
-                <div class="border border-3 border-light ms- py-5">
+                <div class="border border-3 border-light py-5">
                     <ng-container *ngIf="data?.contents">
-                        <div [innerHTML]="data.contents | safe:'html'"></div>
+                        <div class="w-100 overflow-auto" [innerHTML]="data.contents | safe:'html'"></div>
                     </ng-container>
                     <div class="mt-4 p-4">
                         <codx-view-files 

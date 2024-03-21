@@ -175,12 +175,8 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
 
     this.initForm();
 
-    if (!this.isAddNew) {
-      this.codxBookingService
-        .getBookingItems(this.data?.recID)
-        .subscribe((res: any) => {
-          if (res) {
-            res.forEach((item) => {
+    if (!this.isAddNew || this.funcType ==_copyMF) {
+      this.data?.items?.forEach((item) => {
               let tmpSta = new BookingItems();
               (tmpSta.itemID = item?.itemID),
                 (tmpSta.quantity = item?.quantity),
@@ -196,8 +192,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
             });
             this.changeTab(2); //Lấy xong cart mới chuyển sang tab thông tin khi edit
             this.detectorRef.detectChanges();
-          }
-        });
+         
     }
   }
 
