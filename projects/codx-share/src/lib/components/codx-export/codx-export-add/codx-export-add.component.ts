@@ -320,12 +320,12 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
         var obj3 = 
         {
           text: x.text,
-          key: "form" +  this.dataGoupField[i].stepNo + "_" + x.key,
+          key: "f" +  this.dataGoupField[i].stepNo + "_owner." + x.key,
           category: 'Drag or click the field to insert.',
           htmlAttributes: { draggable: true },
         }
         var obj4 = {
-          key: "form" +  this.dataGoupField[i].stepNo + "_" + x.key,
+          key: "f" +  this.dataGoupField[i].stepNo + "_owner." + x.key,
           headerText: x.text,
         };
         this.gridViewSettup.push(obj4);

@@ -188,7 +188,7 @@ export class ContractsComponent extends UIComponent {
       this.processID = params['processID'] || null;
     });
     this.getAccount();
-    this.getColumsGrid(this.grvSetup);
+    // this.getColumsGrid(this.grvSetup);
     const [valueListTab, tabDefaut] = await Promise.all([
       this.cmService.getValueList('CRM086'),
       this.cmService.getSettingContract(),
@@ -1089,6 +1089,60 @@ export class ContractsComponent extends UIComponent {
   //end duyet
   //------------------------------"Permissions", "Closed", "ClosedOn", "ClosedBy"--------------------------------------//
   getColumsGrid(grvSetup) {
+    // this.columnGrids = [];
+    // this.arrFieldIsVisible.forEach((key) => {
+    //   let field = Util.camelize(key);
+    //   let template: any;
+    //   let colums: any;
+      // switch (key) {
+        // case 'ContractName':
+        //   template = this.tempContractName;
+        //   break;
+        // case 'CustomerID':
+        //   template = this.tempCustomerID;
+        //   break;
+        // case 'ContractAmt':
+        //   template = this.tempContractAmt;
+        //   break;
+        // case 'PaidAmt':
+        //   template = this.tempPaidAmt;
+        //   break;
+        // case 'CurrencyID':
+        //   template = this.tempCurrencyID;
+        //   break;
+        // case 'ApplyProcess':
+        //   template = this.tempApplyProcess;
+        //   break;
+        // case 'StepID':
+        //   template = this.tempStepID;
+        //   break;
+        // case 'Status':
+        //   template = this.tempStatus;
+        //   break;
+        // case 'Owner':
+        //   template = this.tempOwner;
+        //   break;
+        // default:
+        //   break;
+      // }
+      // if (template) {
+      //   colums = {
+      //     field: field,
+      //     headerText: grvSetup[key].headerText,
+      //     width: grvSetup[key].width,
+      //     template: template,
+      //     // textAlign: 'center',
+      //   };
+      // } else {
+      //   colums = {
+      //     field: field,
+      //     headerText: grvSetup[key].headerText,
+      //     width: grvSetup[key].width,
+      //   };
+      // }
+
+      // this.columnGrids.push(colums);
+    // });
     this.views = [
       {
         type: ViewType.listdetail,

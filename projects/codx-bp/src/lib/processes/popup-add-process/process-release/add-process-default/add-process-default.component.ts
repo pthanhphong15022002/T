@@ -357,7 +357,7 @@ export class AddProcessDefaultComponent implements OnInit{
           permissions: this.data?.permissions,
           indexNo: 1
         }
-        let fieldName = "form" + this.data.stepNo 
+        let fieldName = "f" + this.data.stepNo + "_owner"
         valueForm[fieldName] = 
         {
           userName: this.infoUser?.userName,
