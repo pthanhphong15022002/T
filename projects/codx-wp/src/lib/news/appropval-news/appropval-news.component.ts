@@ -26,14 +26,12 @@ export class AppropvalNewsComponent extends UIComponent {
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('tmpDetail') tmpDetail: AppropvalNewsDetailComponent;
-  tabAsside:any[] =[];
-  loadedApprover = false;
   approvers: any;
-  haveApprovePermission=false;
   approvePre='';
   approveDv: any='';
-  dataValues: any;
-  predicates: any;
+  tabAsside = [];
+  predicates:string;
+  datavalues:string;
   constructor(
     private injector: Injector,
     private auth: AuthStore,
@@ -46,119 +44,28 @@ export class AppropvalNewsComponent extends UIComponent {
     this.user = this.auth.get();
   }
   onInit(): void {    
-     
-    this.router.params.subscribe((param) => {
-      if (param['funcID']) {
-        this.function = null ;
-        this.loadedApprover =false;  
-        this.detectorRef.detectChanges(); 
-
-        this.cache.functionList(param['funcID'])
-        .subscribe((func: any) => {
-          if (func)
-          {
-            this.function = func;
-            this.cache
-              .gridViewSetup(func.formName, func.gridViewName)
-              .subscribe((grd: any) => {
-                this.gridViewSetUp = grd;
-            });
-            if((this.function.functionID =="WPT0213" ||this.function.functionID =="WPT0212")){//&& this.dataValues?.length ==0 && this.predicates?.length ==0
-              this.api.execSv(
-              "WP",
-              "WP",
-              'NewsBusiness',
-              'GetWPApproveRoleAsync',
-              [])
-              .subscribe((res: any) => {
-                if(res?.length>0){
-                  this.approvePre = res[0] ;
-                  this.approveDv = res[1];
-                  this.predicates = this.approvePre;
-                  this.dataValues =this.approveDv;
-                }
-                this.loadDataTab();
-                this.loadedApprover =true;  
-                this.detectorRef.detectChanges();              
-              });
-            }
-            else{
-              this.loadDataTab();
-              this.loadedApprover =true;   
-              this.detectorRef.detectChanges();       
-            }
-          }
+    let funcID = this.router.snapshot.params["funcID"];
+    this.predicates = this.router.snapshot.queryParams["predicate"];
+    this.datavalues = this.router.snapshot.queryParams["dataValue"];
+    this.cache.functionList(funcID)
+    .subscribe((func: any) => {
+      if (func)
+      {
+        this.function = func;
+        this.cache
+          .gridViewSetup(func.formName, func.gridViewName)
+          .subscribe((grd: any) => {
+            this.gridViewSetUp = grd;
         });
       }
     });
-  }
-  viewChanged(evt: any) {
-    
-    this.funcID = this.router.snapshot.params['funcID'];
-    this.function=null;    
-    this.loadedApprover =false;  
-    this.getValue();
-    this.detectorRef.detectChanges();  
-    // this.cache.functionList(this.funcID)
-    //     .subscribe((func: any) => {
-    //       if (func)
-    //       {
-    //         this.function = func;
-    //         this.cache
-    //           .gridViewSetup(func.formName, func.gridViewName)
-    //           .subscribe((grd: any) => {
-    //             this.gridViewSetUp = grd;
-    //         });
-    //         if((this.function.functionID =="WPT0213" ||this.function.functionID =="WPT0212")){
-    //           this.api.execSv(
-    //           "WP",
-    //           "WP",
-    //           'NewsBusiness',
-    //           'GetWPApproveRoleAsync',
-    //           [])
-    //           .subscribe((res: any) => {
-    //             if(res?.length>0){
-    //               this.approvePre = res[0] ;
-    //               this.approveDv = res[1];
-    //               this.predicates = this.approvePre;
-    //               this.dataValues =this.approveDv;
-    //             }
-    //             this.loadDataTab();
-    //             this.loadedApprover =true;  
-    //             this.detectorRef.detectChanges();              
-    //           });
-    //         }
-    //         else{
-    //           this.loadDataTab();
-    //           this.loadedApprover =true;   
-    //           this.detectorRef.detectChanges();       
-    //         }
-    //       }
-    //     });
-  }
-  ngAfterViewInit(): void {
-    this.views = [
-      {
-        type: ViewType.listdetail,
-        active: true,
-        sameData: true,
-        model: {
-          template: this.itemTemplate,
-          headerTemplate: this.headerTemplate,
-          panelRightRef: this.panelRightRef,
-        },
-      },
-    ];
-    this.getValue();
-    this.detectorRef.detectChanges();
-  }
-
-  // get value
-  getValue(){
-    this.cache.valueList("WP004").subscribe((vll:any) => {
+    this.loadDataTab(funcID,this.predicates,this.datavalues);
+    this.cache.valueList("WP004")
+    .subscribe((vll:any) => {
       if(vll)
       {
         this.vllWP004 = vll.datas;
+        this.detectorRef.detectChanges();
       }
     });
     this.tabAsside = [
@@ -192,47 +99,55 @@ export class AppropvalNewsComponent extends UIComponent {
       }
     ];
   }
-  // get data tab list
-  loadDataTab() {
-    if (this.function){
-      let preTab ="";
-      let dvTab ="";
-      if((this.function.functionID =="WPT0213" ||this.function.functionID =="WPT0212")){
-        preTab=this.approvePre;
-        dvTab=this.approveDv;
-      }
-      this.api.execSv(
-        this.service,
-        this.assemblyName,
-        'NewsBusiness',
-        'GetDataTabApproAsync',
-        [this.function.functionID ,dvTab, preTab])
-        .subscribe((res: any[]) => {
-          if(res) 
-          {
-            this.tabAsside.map((tab: any) => {
-              tab.total = 0;
-              if(tab.value == "")
-                res.forEach(x => tab.total += x.Count);
-              else 
-              {
-                let ele = res.find(x => x.Status == tab.value);
-                tab.total = ele ? ele.Count : 0;
-              }
-            });
-            this.detectorRef.detectChanges();
-          }
-          else{
-            this.tabAsside.map((tab: any) => {
-              tab.total = 0;
-            });
-            this.detectorRef.detectChanges();
-          }
-      });
-    }
+
+  ngAfterViewInit(): void {
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          headerTemplate: this.headerTemplate,
+          panelRightRef: this.panelRightRef,
+        },
+      },
+    ];
+    this.detectorRef.detectChanges();
   }
 
-  //selected change
+
+  loadDataTab(funcID:string,predicates:string = "",dataValues:string = "") {
+    this.api.execSv(
+    "WP",
+    "WP",
+    'NewsBusiness',
+    'GetDataTabApproAsync',
+    [funcID,predicates,dataValues])
+    .subscribe((res: any[]) => {
+      if(res) 
+      {
+        this.tabAsside.map((tab: any) => {
+          tab.total = 0;
+          if(tab.value == "")
+            res.forEach(x => tab.total += x.Count);
+          else 
+          {
+            let ele = res.find(x => x.Status == tab.value);
+            tab.total = ele ? ele.Count : 0;
+          }
+        });
+      }
+      else
+      {
+        this.tabAsside.map((tab: any) => {
+          tab.total = 0;
+        });
+      }
+      this.detectorRef.detectChanges();
+    });
+  }
+
   selectedChange(event: any) {
     if (event?.data?.recID) 
     {
@@ -241,36 +156,23 @@ export class AppropvalNewsComponent extends UIComponent {
     }
   }
   
-  // click tab approval
   clickTabApprove(item) {
-    let predicatesTab;
-    let dataValuesTab;
-    if((this.function.functionID =="WPT0213" ||this.function.functionID =="WPT0212")&& this.approveDv?.length>0 && this.approvePre?.length>0)
-    {      
-      if(item?.value?.length>0){
-        predicatesTab = ["ApproveStatus = @0",this.approvePre];
-        dataValuesTab = [item.value ,this.approveDv];
-      }
-      else{        
-        predicatesTab = [this.approvePre];
-        dataValuesTab = [this.approveDv];
-      }
-    }
-    else{
-      if(item?.value?.length>0){
-        predicatesTab = ["ApproveStatus = @0"];
-        dataValuesTab = [item.value];
-      }
-      else{        
-        predicatesTab = null;
-        dataValuesTab = null;
-      }
-    }
-    this.view.dataService.page = 0;
-    this.view.dataService.setPredicates(predicatesTab, dataValuesTab);
-    this.tabAsside.forEach((e) => {
+    if(item)
+    {
+      this.tabAsside.forEach((e) => {
         e.active = e.value === item.value ;
-    });
+      });
+      if(item.value)
+      {
+        this.detectorRef.detectChanges();
+        this.view.dataService.setPredicates(["ApproveStatus = @0"], [item.value]);
+      }
+      else 
+      {
+        this.detectorRef.detectChanges();
+        this.view.dataService.setPredicates([], []);
+      }
+    }
   }
 
   // click moreFunc
@@ -345,7 +247,6 @@ export class AppropvalNewsComponent extends UIComponent {
 
         })
       });
-      this.loadDataTab();
     }
   }
 
@@ -532,14 +433,20 @@ export class AppropvalNewsComponent extends UIComponent {
     }
   }
 
-  // change approval post
   changeApproSatusPost(data:any){
-    debugger
+    let idx = this.view.dataService.data.findIndex(x => x.recID == data.recID);
     let tabActive = this.tabAsside.find(x => x.active);
+    let tmp = this.view.dataService.data[idx];
     if(tabActive.value == "")
-      this.view.dataService.update(data).subscribe();
+    {
+      tmp.approveStatus = data.approveStatus;
+      tmp.modifiedOn = new Date();
+      this.view.dataService.update(tmp).subscribe();
+
+    }
     else
-      this.view.dataService.remove(data).subscribe();
-    this.loadDataTab();
+      this.view.dataService.remove(tmp).subscribe();
+    this.loadDataTab(this.view.funcID,this.predicates,this.datavalues);
+    this.detectorRef.detectChanges();
   }
 }

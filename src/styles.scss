@@ -4628,3 +4628,10 @@ contracts-detail .instance-select{
     overflow-x: hidden;
    }
 }
+.footerCard-item .tooltip-inner{
+  min-width: 180px;
+  div{
+    text-align: left;
+    white-space: nowrap;
+  }
+}
