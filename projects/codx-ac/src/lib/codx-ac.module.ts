@@ -126,6 +126,7 @@ import { CashCountingsComponent } from './vouchers/cash-countings/cash-countings
 import { CashCountingsAddComponent } from './vouchers/cash-countings/cash-countings-add/cash-countings-add.component';
 import { AssetCountingsComponent } from './vouchers/asset-countings/asset-countings.component';
 import { CashtransfersDetailComponent } from './vouchers/cashtransfers/cashtransfers-detail/cashtransfers-detail.component';
+import { AssetAcquisitionsComponent } from './vouchers/asset-acquisitions/asset-acquisitions.component';
 
 export const routes: Routes = [
   {
@@ -355,6 +356,11 @@ export const routes: Routes = [
         ],
       },
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
+      {
+        path: 'assetacquisitions/:funcID/:journalNo',
+        component: AssetAcquisitionsComponent,
+        data: { noReuse: true },
+      },
       //----phát hành quy trình DP-CRM----//
       {
         path: 'deals/:funcID',
@@ -504,6 +510,7 @@ export const routes: Routes = [
     CashCountingsAddComponent,
     AssetCountingsComponent,
     CashtransfersDetailComponent,
+    AssetAcquisitionsComponent
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

@@ -64,6 +64,6 @@ export class CodxAiComponent {
   }
 
   tets(){
-    window.open("https://console.trogiupluat.vn/Chatbox/Index?p=eyJ1c2VyQWdlbnREb2N1bWVudElkIjoiNjVlZTgzNDIxMzQzOWJhN2RmMTJjMjZhIiwibHZPcGVuQXBpS2V5SWQiOiI2NWJiM2EwMmNiMWQ4ZmZhYzdlZDcxOTYifQ==");
+    window.open("https://console.trogiupluat.vn/Chatbox/Document?k=NDgyMTEzZTcOGVjZGEMjVmNmVlNzVjMDBjMUwYTUNmMyZWExZGRiNQNGJiNTAwMjcMTdiMjNiYWIYQ&docIds=6fadd2cf-e738-11ee-94d7-00155d035517");
   }
 }

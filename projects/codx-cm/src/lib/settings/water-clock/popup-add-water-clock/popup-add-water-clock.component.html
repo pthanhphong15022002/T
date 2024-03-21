@@ -53,9 +53,25 @@
       >
       </codx-input>
     </div>
+    <div class="form-group" *ngIf="fieldName == 'parentID'">
+      <codx-label [formModel]="form.formModel" fiedName="parentID">
+      </codx-label>
+      <codx-input
+        #cbxParentID
+        [field]="'parentID'"
+        [formModel]="form.formModel"
+        [Group]="form?.formGroup"
+        (valueChange)="valueChangeCbx($event)"
+        [disabled]="viewOnly"
+      >
+      </codx-input>
+    </div>
     <ng-container
       *ngIf="
-        fieldName != 'siteID' && fieldName != 'refID' && fieldName != 'assetID'
+        fieldName != 'siteID' &&
+        fieldName != 'refID' &&
+        fieldName != 'assetID' &&
+        fieldName != 'parentID'
       "
     >
       <div class="form-group">

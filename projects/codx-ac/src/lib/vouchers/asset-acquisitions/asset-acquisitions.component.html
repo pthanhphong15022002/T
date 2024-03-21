@@ -1,0 +1,25 @@
+<codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
+  (buttonClick)="click($event)" [predicates]="predicates" assemblyName="{{assemblyName}}"
+  [className]="className" [service]="service" [method]="method" [idField]="idField" [hideMoreFuncs]="!itemSelected"
+  (changeDataMF)="changeMF($event, itemSelected)" (clickMF)="clickMF($event, itemSelected)"
+  [dataValues]="dataValues" (selectedChange)="selectedChange($event)" [isSubView]="true"
+  [titleToolBarTmp]="titleToolBarTmp">
+</codx-views>
+
+<!-- titleToolBarTmp -->
+<ng-template #titleToolBarTmp let-data>
+  <div class="d-flex align-items-center">
+    <span [ngbTooltip]="tooltip" type="button" class="btn btn-icon btn-sm btn-light-primary ms-3" (click)="editJournal()">
+      <i class="icon-edit icon-16"></i>
+    </span>
+    <ng-template #tooltip let-data>
+      <span *ngIf="this.journal">{{'Chỉnh sửa sổ nhật kí('+this.journal.journalDesc+')'}}</span>
+    </ng-template>
+    <codx-page-title class="page-title d-flex align-items-center flex-wrap ms-2"></codx-page-title>
+  </div>
+</ng-template>
+<!-- titleToolBarTmp -->
+<ng-template #templateGrid let-data>
+  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMF($event, data)" [formModel]="view.formModel"
+    (clickMF)="clickMF($event, data)" type="view"></codx-mfunc>
+</ng-template>
