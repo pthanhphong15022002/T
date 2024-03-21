@@ -1,4 +1,4 @@
-<codx-views #view idField="recID" [views]="views" [button]="buttons" [isSubView]="true"
+<codx-views #view idField="recID" [views]="views" [button]="buttons" [isSubView]="isSubView"
 [hideMoreFuncs]="!itemSelected" [entityName]="view.entityName" (buttonClick)="toolBarClick($event)" (changeDataMF)="changeDataMF($event,'views')"
 (selectedChange)="onSelectedItem($event)" (clickMF)="clickMF($event, itemSelected)">
 </codx-views>

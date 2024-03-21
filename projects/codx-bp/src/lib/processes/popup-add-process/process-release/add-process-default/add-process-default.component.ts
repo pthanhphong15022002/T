@@ -451,18 +451,53 @@ export class AddProcessDefaultComponent implements OnInit{
               if(!this.dataIns.documentControl[index]?.files) this.dataIns.documentControl[index].files = [];
               this.dataIns.documentControl[index].files.push(obj);
             }
-          })
-          if(type == 1) this.dialog.close(this.dataIns)
-          else this.startProcess(this.dataIns.recID)
-          this.api.execSv("BP","BP","ProcessInstancesBusiness","UpdateInsAsync",this.dataIns).subscribe();
+          })          
+          this.api.execSv("BP","BP","ProcessInstancesBusiness","UpdateInsAsync",this.dataIns).subscribe(savedIn=>{
+            
+            if(this.type=='add'){
+              this.bpService.createTaskOnSaveInstance(this.dataIns.recID).subscribe(res=>{
+                if(type == 1){
+                  this.dialog.close(this.dataIns);              
+                } 
+                else{
+                  this.startInstance(this.dataIns.recID)
+                }
+              });
+            }
+            else{
+              if(type == 1){
+                this.dialog.close(this.dataIns);              
+              } 
+              else{
+                this.startInstance(this.dataIns.recID)
+              }
+            }
+          });
           //this.dataIns.documentControl.
         }
       });
     }
     else
     {
-      if(type == 1) this.dialog.close(this.dataIns)
-      else this.startProcess(this.dataIns.recID)
+      if(this.type=='add'){
+        this.bpService.createTaskOnSaveInstance(this.dataIns.recID).subscribe(res=>{
+          if(type == 1){
+            this.dialog.close(this.dataIns);              
+          } 
+          else{
+            this.startInstance(this.dataIns.recID)
+          }
+        });
+      }
+      else{
+        if(type == 1){
+          this.dialog.close(this.dataIns);              
+        } 
+        else{
+          this.startInstance(this.dataIns.recID)
+        }
+      }
+      
     }
    
   }
@@ -599,6 +634,20 @@ export class AddProcessDefaultComponent implements OnInit{
       });
   }
 
+  startInstance(recID:any) {
+    this.bpService.startInstance(recID)
+      .subscribe((res:any) => {
+        if (res) {
+          if(res?.recID){
+            this.dataIns=res;
+          }
+          else{
+            this.dataIns.status = '3';
+          }
+          this.dialog.close(this.dataIns);
+        }
+      });
+  }
   dataChangeAttachment(e:any)
   {
     this.isAttach = e;

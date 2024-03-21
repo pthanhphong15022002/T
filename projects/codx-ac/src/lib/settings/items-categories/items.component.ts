@@ -42,13 +42,13 @@ export class ItemsComponent extends UIComponent {
   ];
   funcName = '';
   headerText: any;
-  optionSidebar: SidebarModel = new SidebarModel();
   fmItemsPurchase: any = fmItemsPurchase;
   fmItemsSales: any = fmItemsSales;
   fmItemsProduction: any = fmItemsProduction;
   fgItemsPurchase: FormGroup;
   fgItemsSales: FormGroup;
   fgItemsProduction: FormGroup;
+  itemSelected:any;
   private destroy$ = new Subject<void>();
   isSubView: boolean;
 
@@ -96,21 +96,28 @@ export class ItemsComponent extends UIComponent {
       {
         type: ViewType.grid,
         active: true,
-        sameData: false,
+        sameData: true,
         model: {
           template2: this.templateGrid,
         },
       },
     ];
-
-    //* thiết lập cấu hình sidebar
-    this.optionSidebar.DataService = this.view.dataService;
-    this.optionSidebar.FormModel = this.view.formModel;
-    this.optionSidebar.Width = '800px';
   }
 
   ngDoCheck() {
     this.detectorRef.detectChanges();
+  }
+
+  ngOnDestroy() {
+    this.onDestroy();
+  }
+
+  /**
+   * *Hàm hủy các obsevable subcrible
+   */
+  onDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
   //#endregion Init
 
@@ -155,40 +162,33 @@ export class ItemsComponent extends UIComponent {
    */
   addNew(e) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
-    let data: any = {
-      headerText: this.headerText,
-      fgItemsPurchase: this.fgItemsPurchase,
-      fgItemsSales: this.fgItemsSales,
-      fgItemsProduction: this.fgItemsProduction,
-    };
     this.view.dataService.addNew().subscribe((res: any) => {
       if (res) {
         res.isAdd = true;
-        data.dataDefault = res;
+        let data: any = {
+          headerText: this.headerText,
+          dataDefault: { ...res },
+          fgItemsPurchase: this.fgItemsPurchase,
+          fgItemsSales: this.fgItemsSales,
+          fgItemsProduction: this.fgItemsProduction,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '800px';
         let dialog = this.callfunc.openSide(
           ItemsAddComponent,
           data,
-          this.optionSidebar,
+          option,
           this.view.funcID
         );
-        // dialog.closed.subscribe((res) => {
-        //   if (res.event == null) {
-        //     if(data.dataDefault?.itemID?.trim() == '' || data.dataDefault?.itemID?.trim() == undefined) return;
-        //     this.view.dataService
-        //       .delete([data.dataDefault], false,null,null,null,null,null,false)
-        //       .pipe(takeUntil(this.destroy$))
-        //       .subscribe((res: any) => { });
-        //   }
-        // });
       }
     });
   }
 
   edit(e, dataEdit) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
-    if (dataEdit) {
-      this.view.dataService.dataSelected = dataEdit;
-    }
+    if (dataEdit) this.view.dataService.dataSelected = dataEdit;
     this.view.dataService.edit(dataEdit).subscribe((res: any) => {
       if (res) {
         res.isEdit = true;
@@ -199,10 +199,14 @@ export class ItemsComponent extends UIComponent {
           fgItemsProduction: this.fgItemsProduction,
           dataDefault: { ...res },
         };
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '800px';
         let dialog = this.callfunc.openSide(
           ItemsAddComponent,
           data,
-          this.optionSidebar,
+          option,
           this.view.funcID
         );
       }
@@ -211,9 +215,7 @@ export class ItemsComponent extends UIComponent {
 
   copy(e, dataCopy) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
-    if (dataCopy) {
-      this.view.dataService.dataSelected = dataCopy;
-    }
+    if (dataCopy) this.view.dataService.dataSelected = dataCopy;
     this.view.dataService.copy().subscribe((res: any) => {
       if (res) {
         res.isCopy = true;
@@ -224,10 +226,14 @@ export class ItemsComponent extends UIComponent {
           fgItemsProduction: this.fgItemsProduction,
           dataDefault: res,
         };
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '800px';
         let dialog = this.callfunc.openSide(
           ItemsAddComponent,
           data,
-          this.optionSidebar,
+          option,
           this.view.funcID
         );
       }
@@ -238,7 +244,23 @@ export class ItemsComponent extends UIComponent {
     this.view.dataService
       .delete([dataDelete], true)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {});
+      .subscribe((res: any) => {
+        if (res && !res?.error) {
+          if (this.view.dataService.data.length == 0) {
+            this.itemSelected = undefined;
+            this.detectorRef.detectChanges();
+          }
+        }
+      });
+  }
+
+  changeDataMF(event, type: any = '') {
+    this.acService.changeMFCategories(event,type);
+  }
+
+  onSelectedItem(event) {
+    this.itemSelected = event;
+    this.detectorRef.detectChanges();
   }
   //#endregion Function
 }

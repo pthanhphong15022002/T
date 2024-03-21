@@ -74,11 +74,9 @@
   >
     <div class="d-flex justify-content-between w-100">
       <div class="d-flex flex-column">
-        <codx-label
-          default="Không nhắc nhở"
-          class="fw-bold"
-          fiedName="Reminder0"
-        ></codx-label>
+        <div class="fw-bold">
+          {{ "0" | vll : "BP025" : "text" | async }}
+        </div>
         <codx-label
           default="Khi công việc bị quá hạn, chương trình sẽ không xử lý tự động hoặc nhắc nhở người thực hiện"
           class="text-gray-600 mt-1"
@@ -100,11 +98,9 @@
   >
     <div class="d-flex justify-content-between w-100">
       <div class="d-flex flex-column">
-        <codx-label
-          default="Nhắc nhở"
-          class="fw-bold"
-          fiedName="Reminder1"
-        ></codx-label>
+        <div class="fw-bold">
+          {{ "1" | vll : "BP025" : "text" | async }}
+        </div>
         <codx-label
           default="Tự động cảnh báo cho người thực hiện công việc"
           class="text-gray-600 mt-1"
@@ -199,16 +195,16 @@
               </div>
             </td>
           </tr>
-          <tr (click)="addNNewReminder()">
-            <td scope="row" style="border: none">
+          <tr>
+            <td scope="row" style="border: none" (click)="addNNewReminder()">
               <span>{{ countTime }}</span>
             </td>
             <td>
               <codx-input
+                #inputDuration
                 field="duration"
                 refValue="BP024"
                 type="valuelist"
-                [crrValue]="''"
                 (valueChange)="valueChangeAlertType($event, -1)"
               ></codx-input>
             </td>
@@ -216,12 +212,11 @@
               <div class="d-flex">
                 <div class="d-flex me-2">
                   <codx-input
+                    #inputNoti
                     field="noti"
                     type="checkbox"
                     [class]="'check-circle'"
-                    [crrValue]="checkType(null, '1') ?? false"
                     (valueChange)="valueChangeAlertType($event, -1)"
-                    [disabled]="true"
                   ></codx-input>
                   <codx-label
                     default="Thông báo"
@@ -232,12 +227,11 @@
                 </div>
                 <div class="d-flex">
                   <codx-input
+                    #inputAlert
                     field="alertMail"
                     [class]="'check-circle'"
                     type="checkbox"
-                    [crrValue]="checkType(null, '2') ?? false"
                     (valueChange)="valueChangeAlertType($event, -1)"
-                    [disabled]="true"
                   ></codx-input>
                   <codx-label
                     default="Mail"
@@ -272,11 +266,9 @@
   >
     <div class="d-flex justify-content-between w-100">
       <div class="d-flex flex-column">
-        <codx-label
-          default="Xử lý tự động"
-          class="fw-bold"
-          fiedName="Reminder2"
-        ></codx-label>
+        <div class="fw-bold">
+          {{ "2" | vll : "BP025" : "text" | async }}
+        </div>
         <codx-label
           default="Tự động cập nhật tình trạng công việc khi quá hạn"
           class="text-gray-600 mt-1"
@@ -304,7 +296,7 @@
         [class]="'w-40px'"
         type="valuelist"
         field="autoComplete"
-        [crrValue]="'1'"
+        refValue="BP027"
         (valueChange)="valueChangeAuto($event)"
       ></codx-input>
     </div>

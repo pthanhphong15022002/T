@@ -45,6 +45,9 @@ export class WarehousesComponent extends UIComponent {
     private callfunc: CallFuncService,
     private acService: CodxAcService) {
     super(inject);
+    this.router.data.subscribe((res) => {
+      if (res && res['isSubView']) this.isSubView = res.isSubView;
+    });
   }
   //#endregion
 
