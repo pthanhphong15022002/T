@@ -163,7 +163,7 @@ export const routes: Routes = [
         path: 'report/detail/:funcID',
         component: CodxReportViewDetailComponent,
       },
-      
+
       {
         path: 'cashpayments/:funcID/:journalNo',
         component: CashPaymentsComponent,
@@ -175,7 +175,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'assetjournals/:funcID/:journalNo',
+        path: 'assetacquisitions/:funcID/:journalNo',
         component: AssetJournalsComponent,
         data: { noReuse: true },
       },
@@ -216,7 +216,7 @@ export const routes: Routes = [
         data: { noReuse: true, runMode: 1 },
       },
       {
-        path: 'assetjournals/:funcID',
+        path: 'assetacquisitions/:funcID',
         component: AssetJournalsComponent,
         data: { noReuse: true, runMode: 1 },
       },
