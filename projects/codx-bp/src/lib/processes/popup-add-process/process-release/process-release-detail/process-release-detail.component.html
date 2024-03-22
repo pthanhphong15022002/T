@@ -313,7 +313,7 @@
   </div>
 </div>
 <ng-template #tmpRow let-data let-isCon="b" let-index="c">
-  <div
+  <div *ngIf="!(data?.dataTask?.canceled ==true) "
     class="row d-flex align-items-center cursor-pointer w-100"
     (dblclick)="openForm(data?.dataTask)"
   >
@@ -424,7 +424,7 @@
         </div>
       </ng-container>
     </div>
-    <!-- <div (click)="changePer(data)">
+    <!-- <div (click)="addNewTask(data)">
       <span class="icon-add"></span>
       <codx-label default="Thêm công việc"></codx-label>
   </div> -->

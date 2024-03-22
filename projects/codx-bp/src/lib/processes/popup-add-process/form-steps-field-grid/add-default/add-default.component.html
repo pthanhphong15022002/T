@@ -12,7 +12,7 @@
                     <i [ngClass]="!myDrop.isOpen() ? 'icon-arrow_drop_down' : 'icon-arrow_drop_up' "></i>
                 </div>
                 <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                    <button ngbDropdownItem [class.active]="vllDefault?.value == item.value" *ngFor="let item of vllBP001.datas" (click)="changeActivity(item)"><i [ngClass]="item.icon" class="me-3" [style.color]="item?.color"></i>{{item.text}}</button>
+                    <button ngbDropdownItem [class.active]="vllDefault?.value == item.value" *ngFor="let item of vllBP001?.datas" (click)="changeActivity(item)"><i [ngClass]="item.icon" class="me-3" [style.color]="item?.color"></i>{{item.text}}</button>
                 </div>
             </div>
         </ng-template>
