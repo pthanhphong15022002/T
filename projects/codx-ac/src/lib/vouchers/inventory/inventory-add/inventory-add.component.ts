@@ -107,7 +107,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
     this.destroy$.complete();
   }
 
-  beforeInitGrid(eleGrid:CodxGridviewV2Component){
+  initGrid(eleGrid:CodxGridviewV2Component){
     let hideFields = [];
     let setting = this.acService.getSettingFromJournal(eleGrid,this.journal);
     eleGrid = setting[0];
@@ -252,6 +252,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
         oLine = this.genFixedDims(oLine);
         this.detectorRef.detectChanges();
         this.eleGridVouchers.endProcess();
+        this.onDestroy();
       }
     })
   }
@@ -293,8 +294,8 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
               if (res.data != null) {
                 this.notification.notifyCode('E0860');
                 this.dialog.close({type:'discard'});
-                this.onDestroy();
               }
+              this.onDestroy();
             });
         }
       });
@@ -381,6 +382,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
         if(this.eleGridVouchers && this.eleGridVouchers?.isSaveOnClick) this.eleGridVouchers.isSaveOnClick = false;
         if(this.eleGridVouchers && this.eleGridVouchers?.isSaveOnClick) this.eleGridVouchers.isSaveOnClick = false;
         this.ngxLoader.stop();
+        this.onDestroy();
       });
   }
   //#endregion Method

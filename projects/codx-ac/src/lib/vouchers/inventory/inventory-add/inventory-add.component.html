@@ -455,7 +455,7 @@
       [entityName]="fmVouchersLines.entityName" predicates="TransID=@0" [dataValues]="master?.data?.recID"
       [hideMoreFunc]="master.data?.isReadOnly ? true : false" service="IV"
       [editOnClick]="master.data?.isReadOnly ? false : true" rowNoField="rowNo"
-      (gridInit)="beforeInitGrid($event)" (eventAction)="onActionGrid($event)" (actionCompleted)="onActionGrid($event)"
+      (gridInit)="initGrid($event)" (eventAction)="onActionGrid($event)" (actionCompleted)="onActionGrid($event)"
       [editSettings]="master.data?.isReadOnly ? editSettings : {}"
       (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
     <ng-container *ngIf="!master.data?.isReadOnly">

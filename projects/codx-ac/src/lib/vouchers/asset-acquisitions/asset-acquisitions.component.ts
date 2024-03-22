@@ -30,7 +30,7 @@ export class AssetAcquisitionsComponent extends UIComponent {
   assemblyName = 'ERM.Business.Core';
   method = 'LoadDataAsync';
   className = 'DataBusiness';
-  entityName = 'AM_AssetAcquisitions';
+  entityName = 'AM_assetjournal';
   idField = 'recID';
   dataValues = '';
   predicates = '';
@@ -42,7 +42,8 @@ export class AssetAcquisitionsComponent extends UIComponent {
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   journalNo: string;
   journalSV: CRUDService;
-
+  parentFunc: any;
+  func: any;
   constructor(private acService: CodxAcService, private inject: Injector) {
     super(inject);
     this.router.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
@@ -56,6 +57,7 @@ export class AssetAcquisitionsComponent extends UIComponent {
   }
 
   onInit(): void {
+    this.getFunc();
     this.getJournal();
   }
 
@@ -68,15 +70,30 @@ export class AssetAcquisitionsComponent extends UIComponent {
         model: {
           template2: this.templateGrid,
         },
-      }];
+      },
+    ];
 
     this.acService.setChildLinks();
-
+    this.detectorRef.detectChanges();
   }
 
   ngOnDestroy() {
     this.onDestroy();
   }
+
+  getFunc() {
+    this.cache.functionList(this.funcID).subscribe((item) => {
+      if (item) {
+        this.func = item;
+        this.cache.functionList(item.parentID).subscribe((item2) => {
+          if (item2) {
+            this.parentFunc = item2;
+          }
+        });
+      }
+    });
+  }
+
   getJournal() {
     this.api
       .exec('AC', 'ACBusiness', 'GetJournalAsync', [this.journalNo])

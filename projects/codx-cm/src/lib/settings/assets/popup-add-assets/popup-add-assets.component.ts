@@ -318,7 +318,7 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
         this.data.refID, //CMCustomer
       ])
       .subscribe((res) => {
-        if (res) {
+        if (res && res?.length > 0) {
           let predicate = '';
           let dataValue = '';
 
@@ -339,7 +339,7 @@ export class PopupAddAssetsComponent implements OnInit, AfterViewInit {
           this.notiService.notifyCode(
             'CM064',
             0,
-            '"' + this.gridViewSetup['siteID'].headerText + '"'
+            '"' + this.gridViewSetup['SiteID']?.headerText + '"'
           );
         }
 
