@@ -519,7 +519,7 @@
               </div>
             </div>
             <div [ngClass]="master?.data?.subType == '2' ? 'd-none' : ''" class="col-3">
-              <div class="form-group">
+              <div class="form-group mb-0">
                 <codx-label style="white-space: nowrap !important" fiedName="InvoiceForm"
                   [formModel]="dialog.formModel">
                 </codx-label>
@@ -529,7 +529,7 @@
               </div>
             </div>
             <div [ngClass]="master?.data?.subType == '2' ? 'd-none' : ''" class="col-2">
-              <div class="form-group">
+              <div class="form-group mb-0">
                 <codx-label style="white-space: nowrap !important" fiedName="InvoiceSeriNo"
                   [formModel]="dialog.formModel">
                 </codx-label>
@@ -539,7 +539,7 @@
               </div>
             </div>
             <div [ngClass]="master?.data?.subType == '2' ? 'd-none' : ''" class="col-2">
-              <div class="form-group">
+              <div class="form-group mb-0">
                 <codx-label style="white-space: nowrap !important" fiedName="InvoiceNo" [formModel]="dialog.formModel">
                 </codx-label>
                 <codx-input [disabled]="master.data?.isReadOnly ? true : false"
@@ -549,7 +549,7 @@
               </div>
             </div>
             <div [ngClass]="master?.data?.subType == '2' ? 'd-none' : ''" class="col-2">
-              <div class="form-group">
+              <div class="form-group mb-0">
                 <codx-label style="white-space: nowrap !important" fiedName="InvoiceDate"
                   [formModel]="dialog.formModel">
                 </codx-label>
@@ -562,7 +562,7 @@
             <div
               [ngClass]="master?.data?.currencyID != null && master?.data?.currencyID == baseCurr ? 'd-none' : ''"
               class="col-1">
-              <div class="form-group">
+              <div class="form-group mb-0">
                 <codx-label style="white-space: nowrap !important" fiedName="TaxExchRate"
                   [formModel]="dialog.formModel">
                 </codx-label>

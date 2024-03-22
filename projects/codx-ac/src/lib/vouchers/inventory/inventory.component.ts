@@ -332,6 +332,7 @@ export class InventoryComponent extends UIComponent {
             }
           })
         }
+        this.onDestroy();
       });
   }
 
@@ -374,6 +375,7 @@ export class InventoryComponent extends UIComponent {
             }
           }
         })
+        this.onDestroy();
       });
   }
 
@@ -448,8 +450,10 @@ export class InventoryComponent extends UIComponent {
                         .pipe(takeUntil(this.destroy$))
                         .subscribe();
                     }
+                    this.onDestroy();
                   });
               }
+              this.onDestroy();
             });
         }
       });
@@ -497,8 +501,10 @@ export class InventoryComponent extends UIComponent {
                     .pipe(takeUntil(this.destroy$))
                     .subscribe();
                 }
+                this.onDestroy();
               });
           }
+          this.onDestroy();
         });
     }
   }
@@ -518,6 +524,7 @@ export class InventoryComponent extends UIComponent {
             this.detectorRef.detectChanges();
           }
         }
+        this.onDestroy();
       });
   }
 
@@ -548,6 +555,7 @@ export class InventoryComponent extends UIComponent {
             }
           });
         })
+        this.onDestroy();
       });
   }
 
@@ -611,8 +619,12 @@ export class InventoryComponent extends UIComponent {
                   if (res && !res.update.error) {
                     this.notification.notifyCode('AC0029', 0, text);
                   }
+                  this.onDestroy();
                 });
-            } else this.notification.notifyCode(result?.msgCodeError);
+            } else{
+              this.notification.notifyCode(result?.msgCodeError);
+              this.onDestroy();
+            } 
           });
       });
   }
@@ -636,8 +648,12 @@ export class InventoryComponent extends UIComponent {
               if (res && !res.update.error) {
                 this.notification.notifyCode('AC0029', 0, text);
               }
+              this.onDestroy();
             });
-        } else this.notification.notifyCode(result?.msgCodeError);
+        } else{
+          this.notification.notifyCode(result?.msgCodeError);
+          this.onDestroy();
+        } 
       });
   }
 
@@ -648,6 +664,7 @@ export class InventoryComponent extends UIComponent {
   validateVourcher(text: any, data: any) {
     this.api
       .exec('IV', 'VouchersBusiness', 'ValidateVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -655,6 +672,7 @@ export class InventoryComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -665,6 +683,7 @@ export class InventoryComponent extends UIComponent {
   postVoucher(text: any, data: any) {
     this.api
       .exec('IV', 'VouchersBusiness', 'PostVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -672,6 +691,7 @@ export class InventoryComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -682,6 +702,7 @@ export class InventoryComponent extends UIComponent {
   unPostVoucher(text: any, data: any) {
     this.api
       .exec('IV', 'VouchersBusiness', 'UnPostVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -689,6 +710,7 @@ export class InventoryComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -746,7 +768,6 @@ export class InventoryComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any, type: any = '') {
-    console.log(event);
     let data = this.view.dataService.dataSelected;
     this.acService.changeMFVoucher(event, data, type, this.journal, this.view.formModel);
   }

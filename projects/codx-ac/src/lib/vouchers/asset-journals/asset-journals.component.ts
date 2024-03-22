@@ -1,5 +1,18 @@
-import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { ButtonModel, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  ButtonModel,
+  NotificationsService,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -30,16 +43,18 @@ export class AssetJournalsComponent extends UIComponent {
   legalName: any;
   dataDefault: any;
   hideFields: Array<any> = [];
-  button: ButtonModel[] = [{
-    //? nút thêm phiếu
-    id: 'btnAdd',
-    icon: 'icon-i-file-earmark-plus',
-  }];
+  button: ButtonModel[] = [
+    {
+      //? nút thêm phiếu
+      id: 'btnAdd',
+      icon: 'icon-i-file-earmark-plus',
+    },
+  ];
   bhLogin: boolean = false;
   bankPayID: any;
   bankNamePay: any;
   bankReceiveName: any;
-  viewActive:number = ViewType.listdetail;
+  viewActive: number = ViewType.listdetail;
   ViewType = ViewType;
   private destroy$ = new Subject<void>();
   constructor(
@@ -47,7 +62,7 @@ export class AssetJournalsComponent extends UIComponent {
     private acService: CodxAcService,
     private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
-    private notification: NotificationsService,
+    private notification: NotificationsService
   ) {
     super(inject);
     this.cache
@@ -59,26 +74,24 @@ export class AssetJournalsComponent extends UIComponent {
           this.legalName = res[0].legalName;
         }
       });
-    this.router.params
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((params) => {
-        this.journalNo = params?.journalNo;
-      });
+    this.router.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      this.journalNo = params?.journalNo;
+    });
   }
   //#endregion Constructor
 
   //#region Init
   onInit(): void {
-    if(!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
+    if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
     this.cache
-    .functionList(this.funcID)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res) => {
-      if (res) {
-        this.headerText = res?.defaultName || res?.customName;
-        this.runmode = res?.runMode;
-      }
-    });
+      .functionList(this.funcID)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          this.headerText = res?.defaultName || res?.customName;
+          this.runmode = res?.runMode;
+        }
+      });
     this.getJournal();
   }
 
@@ -189,7 +202,7 @@ export class AssetJournalsComponent extends UIComponent {
   }
 
   viewChanged(view) {
-    if(view && view?.view?.type == this.viewActive) return;
+    if (view && view?.view?.type == this.viewActive) return;
     this.viewActive = view?.view?.type;
     this.detectorRef.detectChanges();
   }
@@ -207,7 +220,6 @@ export class AssetJournalsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res != null) {
-          console.log(res);
           res.isAdd = true;
           if (this.dataDefault == null) this.dataDefault = { ...res };
           let data = {
@@ -218,24 +230,24 @@ export class AssetJournalsComponent extends UIComponent {
             baseCurr: this.baseCurr,
           };
           let optionSidebar = new SidebarModel();
-            optionSidebar.DataService = this.view?.dataService;
-            optionSidebar.FormModel = this.view?.formModel;
-            let dialog = this.callfc.openSide(
-              AssetJournalsAddComponent,
-              data,
-              optionSidebar,
-              this.view.funcID
-            );
-            dialog.closed.subscribe((res) => {
-              if (res && res?.event) {
-                if (res?.event?.type === 'discard') {
-                  if(this.view.dataService.data.length == 0){
-                    this.itemSelected = undefined;
-                    this.detectorRef.detectChanges();
-                  } 
+          optionSidebar.DataService = this.view?.dataService;
+          optionSidebar.FormModel = this.view?.formModel;
+          let dialog = this.callfc.openSide(
+            AssetJournalsAddComponent,
+            data,
+            optionSidebar,
+            this.view.funcID
+          );
+          dialog.closed.subscribe((res) => {
+            if (res && res?.event) {
+              if (res?.event?.type === 'discard') {
+                if (this.view.dataService.data.length == 0) {
+                  this.itemSelected = undefined;
+                  this.detectorRef.detectChanges();
                 }
               }
-            })
+            }
+          });
         }
       });
   }
@@ -246,7 +258,7 @@ export class AssetJournalsComponent extends UIComponent {
    * @param data
    * @returns
    */
-  changeMFDetail(event: any,type: any = '') {}
+  changeMFDetail(event: any, type: any = '') {}
 
   /**
    * *Hàm call set default data khi thêm mới chứng từ
@@ -278,5 +290,3 @@ export class AssetJournalsComponent extends UIComponent {
 
   //#endregion
 }
-
-

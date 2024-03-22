@@ -66,15 +66,9 @@ export class CashpaymentDetailComponent extends UIDetailComponent {
   isReadMore:any = false;
   constructor(
     private inject: Injector,
-    private acService: CodxAcService,
-    private authStore: AuthStore,
-    private shareService: CodxShareService,
-    private notification: NotificationsService,
-    private tenant: TenantStore,
     public codxService: CodxService
   ) {
     super(inject);
-    this.authStore = inject.get(AuthStore);
   }
   //#endregion Constructor
 
@@ -151,6 +145,7 @@ export class CashpaymentDetailComponent extends UIDetailComponent {
           this.itemSelected = res;
           this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
           this.detectorRef.detectChanges();
+          this.onDestroy();
         });
     }
   }

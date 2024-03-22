@@ -44,10 +44,6 @@ export class InventoryDetailComponent extends UIDetailComponent {
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
-    private acService: CodxAcService,
-    private shareService: CodxShareService,
-    private notification: NotificationsService,
-    private tenant: TenantStore,
     public codxService: CodxService
   ) {
     super(inject);
@@ -114,6 +110,7 @@ export class InventoryDetailComponent extends UIDetailComponent {
       .subscribe((res: any) => {
         this.itemSelected = res;
         this.detectorRef.detectChanges();
+        this.onDestroy();
       });
     }
   }
