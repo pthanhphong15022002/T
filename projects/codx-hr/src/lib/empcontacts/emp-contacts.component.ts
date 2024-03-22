@@ -137,7 +137,7 @@ export class EmpContactsComponent extends UIComponent {
 
     this.views = [
       // {
-      //   id: '1',
+      //   id: '0',
       //   type: ViewType.grid,
       //   sameData: true,
       //   model: {
@@ -161,30 +161,30 @@ export class EmpContactsComponent extends UIComponent {
           template: this.cardTemp,
         },
       },
-      {
-        id: '3',
-        type: ViewType.tree_list,
-        sameData: false,
-        request: this.request,
-        model: {
-          resizable: false,
-          template: this.tmpTree,
-          panelRightRef: this.tmpTreeItemDetail,
-          resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
-        },
-      },
-      {
-        id: '4',
-        type: ViewType.tree_card,
-        sameData: false,
-        request: this.request,
-        model: {
-          resizable: false,
-          template: this.tmpTree,
-          panelRightRef: this.tmpTreeItemDetailCard,
-          resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
-        }
-      }
+      // {
+      //   id: '3',
+      //   type: ViewType.tree_list,
+      //   sameData: false,
+      //   request: this.request,
+      //   model: {
+      //     resizable: false,
+      //     template: this.tmpTree,
+      //     panelRightRef: this.tmpTreeItemDetail,
+      //     resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
+      //   },
+      // },
+      // {
+      //   id: '4',
+      //   type: ViewType.tree_card,
+      //   sameData: false,
+      //   request: this.request,
+      //   model: {
+      //     resizable: false,
+      //     template: this.tmpTree,
+      //     panelRightRef: this.tmpTreeItemDetailCard,
+      //     resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
+      //   }
+      // }
     ];
 
     this.detectorRef.detectChanges();

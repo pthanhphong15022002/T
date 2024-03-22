@@ -126,6 +126,7 @@ import { CashCountingsComponent } from './vouchers/cash-countings/cash-countings
 import { CashCountingsAddComponent } from './vouchers/cash-countings/cash-countings-add/cash-countings-add.component';
 import { AssetCountingsComponent } from './vouchers/asset-countings/asset-countings.component';
 import { CashtransfersDetailComponent } from './vouchers/cashtransfers/cashtransfers-detail/cashtransfers-detail.component';
+import { AssetAcquisitionsComponent } from './vouchers/asset-acquisitions/asset-acquisitions.component';
 
 export const routes: Routes = [
   {
@@ -162,7 +163,7 @@ export const routes: Routes = [
         path: 'report/detail/:funcID',
         component: CodxReportViewDetailComponent,
       },
-      
+
       {
         path: 'cashpayments/:funcID/:journalNo',
         component: CashPaymentsComponent,
@@ -174,7 +175,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'assetjournals/:funcID/:journalNo',
+        path: 'assetacquisitions/:funcID/:journalNo',
         component: AssetJournalsComponent,
         data: { noReuse: true },
       },
@@ -215,7 +216,7 @@ export const routes: Routes = [
         data: { noReuse: true, runMode: 1 },
       },
       {
-        path: 'assetjournals/:funcID',
+        path: 'assetacquisitions/:funcID',
         component: AssetJournalsComponent,
         data: { noReuse: true, runMode: 1 },
       },
@@ -355,6 +356,11 @@ export const routes: Routes = [
         ],
       },
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
+      {
+        path: 'assetacquisitions/:funcID/:journalNo',
+        component: AssetAcquisitionsComponent,
+        data: { noReuse: true },
+      },
       //----phát hành quy trình DP-CRM----//
       {
         path: 'deals/:funcID',
@@ -504,6 +510,7 @@ export const routes: Routes = [
     CashCountingsAddComponent,
     AssetCountingsComponent,
     CashtransfersDetailComponent,
+    AssetAcquisitionsComponent
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

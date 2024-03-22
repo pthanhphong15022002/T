@@ -305,7 +305,8 @@ export class ModeviewComponent implements OnInit {
         data.title += " " + this.count.datetime;
         data.controlType = "MaskBox";
         data.dataFormat = "d";
-        data.dataType = "DateTime"
+        data.dataType = "DateTime";
+        //data.defaultValue = new Date();
         break;
       }
       case "Attachment":
@@ -473,7 +474,10 @@ export class ModeviewComponent implements OnInit {
   formatTitle(str:any)
   {
     str = str.toLowerCase();
-    return this.xoa_dau(str.replaceAll(" ","_").replaceAll("/","_")) + "_" + this.stepNo;
+    str = str.replaceAll(" ","_");
+    str = str.replaceAll("/","_");
+    var res = this.xoa_dau(str) + "_" + this.stepNo;
+    return res;
   }
 
   drop2(event:any)
