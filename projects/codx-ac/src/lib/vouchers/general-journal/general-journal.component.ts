@@ -46,21 +46,11 @@ export class GeneralJournalComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
-    private authStore: AuthStore,
     private shareService: CodxShareService,
     private codxCommonService: CodxCommonService,
     private notification: NotificationsService,
-    private tenant: TenantStore,
   ) {
     super(inject);
-    // this.cache
-    //   .companySetting()
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res.length > 0) {
-    //       this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
-    //     }
-    //   });
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
@@ -293,6 +283,7 @@ export class GeneralJournalComponent extends UIComponent {
             }
           })
         }
+        this.onDestroy();
       });
   }
 
@@ -335,6 +326,7 @@ export class GeneralJournalComponent extends UIComponent {
             }
           }
         })
+        this.onDestroy();
       });
   }
 
@@ -409,8 +401,10 @@ export class GeneralJournalComponent extends UIComponent {
                         .pipe(takeUntil(this.destroy$))
                         .subscribe();
                     }
+                    this.onDestroy();
                   });
               }
+              this.onDestroy();
             });
         }
       });
@@ -458,6 +452,7 @@ export class GeneralJournalComponent extends UIComponent {
                     .pipe(takeUntil(this.destroy$))
                     .subscribe();
                 }
+                this.onDestroy();
               });
           }
         });
@@ -479,6 +474,7 @@ export class GeneralJournalComponent extends UIComponent {
             this.detectorRef.detectChanges();
           }
         }
+        this.onDestroy();
       });
   }
 
@@ -509,6 +505,7 @@ export class GeneralJournalComponent extends UIComponent {
             }
           });
         })
+        this.onDestroy();
       });
   }
 
@@ -572,8 +569,12 @@ export class GeneralJournalComponent extends UIComponent {
                   if (res && !res.update.error) {
                     this.notification.notifyCode('AC0029', 0, text);
                   }
+                  this.onDestroy();
                 });
-            } else this.notification.notifyCode(result?.msgCodeError);
+            } else {
+              this.notification.notifyCode(result?.msgCodeError);
+              this.onDestroy();
+            }
           });
       });
   }
@@ -597,8 +598,12 @@ export class GeneralJournalComponent extends UIComponent {
               if (res && !res.update.error) {
                 this.notification.notifyCode('AC0029', 0, text);
               }
+              this.onDestroy();
             });
-        } else this.notification.notifyCode(result?.msgCodeError);
+        } else{
+          this.notification.notifyCode(result?.msgCodeError);
+          this.onDestroy();
+        } 
       });
   }
 
@@ -609,6 +614,7 @@ export class GeneralJournalComponent extends UIComponent {
   validateVourcher(text: any, data: any) {
     this.api
       .exec('AC', 'GeneralJournalsBusiness', 'ValidateVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -616,6 +622,7 @@ export class GeneralJournalComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -626,6 +633,7 @@ export class GeneralJournalComponent extends UIComponent {
   postVoucher(text: any, data: any) {
     this.api
       .exec('AC', 'GeneralJournalsBusiness', 'PostVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -633,6 +641,7 @@ export class GeneralJournalComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -643,6 +652,7 @@ export class GeneralJournalComponent extends UIComponent {
   unPostVoucher(text: any, data: any) {
     this.api
       .exec('AC', 'GeneralJournalsBusiness', 'UnPostVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -650,6 +660,7 @@ export class GeneralJournalComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 

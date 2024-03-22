@@ -308,7 +308,7 @@ export class CodxAcService {
     private pageTitleService: PageTitleService,
     private authStore: AuthStore
   ) {
-    this.getCache();
+    //this.getCache();
   }
 
   hideToolbar(v) {

@@ -117,7 +117,7 @@ export class GeneralJournalAddComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  beforeInitGridGeneral(eleGrid:CodxGridviewV2Component){
+  initGridGeneral(eleGrid:CodxGridviewV2Component){
     let hideFields = [];
     let setting = this.acService.getSettingFromJournal(eleGrid,this.journal);
     eleGrid = setting[0];
@@ -151,7 +151,7 @@ export class GeneralJournalAddComponent extends UIComponent {
    * *Hàm khởi tạo trước khi init của lưới SettledInvoices (Ẩn hiện các cột theo đồng tiền hạch toán)
    * @param columnsGrid danh sách cột của lưới
    */
-  beforeInitGridSettledInvoices(eleGrid) {
+  initGridSettledInvoices(eleGrid) {
     this.settingFormatGridSettledInvoices(eleGrid);
     //* Thiết lập các field ẩn theo đồng tiền hạch toán
     let hideFields = [];
@@ -561,6 +561,7 @@ export class GeneralJournalAddComponent extends UIComponent {
             this.eleGridGeneral.refresh();
           }
         }
+        this.onDestroy();
       });
   }
 
@@ -579,6 +580,7 @@ export class GeneralJournalAddComponent extends UIComponent {
           this.master.setValue('memo', res?.data?.memo, {});
           this.preData = { ...this.master?.data };
         }
+        this.onDestroy();
       });
   }
 
@@ -610,6 +612,7 @@ export class GeneralJournalAddComponent extends UIComponent {
           }
           this.isPreventChange = false;
         }
+        this.onDestroy();
       });
   }
 
@@ -624,6 +627,7 @@ export class GeneralJournalAddComponent extends UIComponent {
           this.master.data,
           ''
         ])
+        .pipe(takeUntil(this.destroy$))
         .subscribe((res:any) => {
           if (res) {
             this.preData = {...this.master?.data};
@@ -634,6 +638,7 @@ export class GeneralJournalAddComponent extends UIComponent {
               this.detectorRef.detectChanges();
             }
           }
+          this.onDestroy();
         });
   }
 
@@ -659,6 +664,7 @@ export class GeneralJournalAddComponent extends UIComponent {
           this.detectorRef.detectChanges();
         }
       }
+      this.onDestroy();
     });
   }
 
@@ -685,6 +691,7 @@ export class GeneralJournalAddComponent extends UIComponent {
       if (res) {
         this.eleGridGeneral.addRow(res, this.eleGridGeneral.dataSource.length);
       }
+      this.onDestroy();
     })
   }
 
@@ -702,6 +709,7 @@ export class GeneralJournalAddComponent extends UIComponent {
       if (res) {
         this.eleGridVatInvoices.addRow(res, this.eleGridVatInvoices.dataSource.length);
       }
+      this.onDestroy();
     })
   }
 

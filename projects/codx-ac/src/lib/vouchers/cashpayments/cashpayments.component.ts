@@ -87,7 +87,6 @@ export class CashPaymentsComponent extends UIComponent {
     private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private zone : NgZone
   ) {
     super(inject);
     if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
@@ -101,8 +100,7 @@ export class CashPaymentsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    this.zone.runOutsideAngular(()=>{
-      this.cache
+    this.cache
       .companySetting()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
@@ -128,6 +126,7 @@ export class CashPaymentsComponent extends UIComponent {
         this.predicate = '';
         this.runmode = res.runMode;
       }
+      this.onDestroy();
     });
 
     this.cache
@@ -139,9 +138,7 @@ export class CashPaymentsComponent extends UIComponent {
           if (!this.runmode) this.runmode = res?.runMode;
         }
       });
-
     this.getJournal();
-    })
   }
 
   ngDoCheck() {
@@ -343,6 +340,7 @@ export class CashPaymentsComponent extends UIComponent {
             }
           });
         }
+        this.onDestroy();
       });
   }
 
@@ -385,6 +383,7 @@ export class CashPaymentsComponent extends UIComponent {
             }
           }
         });
+        this.onDestroy();
       });
   }
 
@@ -462,6 +461,7 @@ export class CashPaymentsComponent extends UIComponent {
                     }
                   });
               }
+              this.onDestroy();
             });
         }
       });
@@ -512,6 +512,7 @@ export class CashPaymentsComponent extends UIComponent {
                 }
               });
           }
+          this.onDestroy();
         });
     }
   }
@@ -558,6 +559,7 @@ export class CashPaymentsComponent extends UIComponent {
             this.detectorRef.detectChanges();
           }
         }
+        this.onDestroy();
       });
   }
 
@@ -588,6 +590,7 @@ export class CashPaymentsComponent extends UIComponent {
             }
           });
         })
+        this.onDestroy();
       });
   }
 
@@ -675,8 +678,12 @@ export class CashPaymentsComponent extends UIComponent {
                   if (res && !res.update.error) {
                     this.notification.notifyCode('AC0029', 0, text);
                   }
+                  this.onDestroy();
                 });
-            } else this.notification.notifyCode(result?.msgCodeError);
+            } else{
+              this.notification.notifyCode(result?.msgCodeError);
+              this.onDestroy();
+            } 
           });
       });
   }
@@ -700,8 +707,12 @@ export class CashPaymentsComponent extends UIComponent {
               if (res && !res.update.error) {
                 this.notification.notifyCode('AC0029', 0, text);
               }
+              this.onDestroy();
             });
-        } else this.notification.notifyCode(result?.msgCodeError);
+        } else{
+          this.notification.notifyCode(result?.msgCodeError);
+          this.onDestroy();
+        } 
       });
   }
 
@@ -712,6 +723,7 @@ export class CashPaymentsComponent extends UIComponent {
   validateVourcher(text: any, data: any) {
     this.api
       .exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -719,6 +731,7 @@ export class CashPaymentsComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -729,6 +742,7 @@ export class CashPaymentsComponent extends UIComponent {
   postVoucher(text: any, data: any) {
     this.api
       .exec('AC', 'CashPaymentsBusiness', 'PostVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -736,6 +750,7 @@ export class CashPaymentsComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -746,6 +761,7 @@ export class CashPaymentsComponent extends UIComponent {
   unPostVoucher(text: any, data: any) {
     this.api
       .exec('AC', 'CashPaymentsBusiness', 'UnPostVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -753,6 +769,7 @@ export class CashPaymentsComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -821,6 +838,7 @@ export class CashPaymentsComponent extends UIComponent {
             'TransferToBankAsync',
             [data.recID, tk, 'test']
           )
+          .pipe(takeUntil(this.destroy$))
           .subscribe((res) => {
             if (res && !res?.error) {
               data.status = '8';
@@ -829,6 +847,7 @@ export class CashPaymentsComponent extends UIComponent {
             } else {
               this.notification.notify(res.data.data.result.message, '2');
             }
+            this.onDestroy();
           });
       }
     });
