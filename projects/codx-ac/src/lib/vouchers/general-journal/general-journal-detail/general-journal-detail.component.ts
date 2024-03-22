@@ -40,16 +40,9 @@ export class GeneralJournalDetailComponent extends UIDetailComponent {
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
-    private acService: CodxAcService,
-    private authStore: AuthStore,
-    private shareService: CodxShareService,
-    private notification: NotificationsService,
-    private tenant: TenantStore,
     public codxService: CodxService
   ) {
     super(inject);
-    this.authStore = inject.get(AuthStore);
-    //this.userID = this.authStore.get().userID; //? get tên user đăng nhập
   }
   //#endregion Constructor
 
@@ -111,6 +104,7 @@ export class GeneralJournalDetailComponent extends UIDetailComponent {
       .subscribe((res: any) => {
         this.itemSelected = res;
         this.detectorRef.detectChanges();
+        this.onDestroy();
       });
     } 
   }

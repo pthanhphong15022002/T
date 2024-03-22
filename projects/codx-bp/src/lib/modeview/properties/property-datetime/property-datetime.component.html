@@ -22,7 +22,7 @@
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'dependence'" default="Liên kết" class="fw-bold"></codx-label>
             <!-- <codx-input type="valuelist" [crrValue]="data.dataFormat" field="dataFormat" [refValue]="'BP004'"  (valueChange)="changeValue($event)"></codx-input> -->
             <div class="pb-2">
-                <ejs-combobox #cbbDependence [dataSource]='dependenceData' [value]="data?.dependence" [fields]="fields" [allowCustom]="true" placeholder='Liên kết'></ejs-combobox>
+                <ejs-combobox #cbbDependence  [fields]="fields" [allowCustom]="true" placeholder='Liên kết' (valueChange)="changeValue({field:'dependence',data: $event})"></ejs-combobox>
             </div>
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'lbldependence'"  default="Hệ thống tự động kiểm tra ngày được nhập phải lớn hơn ngày của trường liên kết" ngClass="text-gray-500 fs-7"></codx-label>
         </div>

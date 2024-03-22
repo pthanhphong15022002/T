@@ -16,7 +16,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
-import { Subject } from 'rxjs';
+import { Subject, pipe } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { CodxAcService } from '../../codx-ac.service';
 import { JournalsAddIdimcontrolComponent } from './journals-add-idimcontrol/journals-add-idimcontrol.component';
@@ -87,7 +87,6 @@ export class JournalsAddComponent extends UIComponent {
     private inject: Injector,
     private acService: CodxAcService,
     private notification: NotificationsService,
-    private zone : NgZone,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -102,68 +101,76 @@ export class JournalsAddComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    this.zone.runOutsideAngular(() => {
-      this.getVll('AC122', 'vllAC122');
-      this.getVll('AC107', 'vllAC107');
-      this.getVll('AC104', 'vllAC104');
-      this.getVll('AC105', 'vllAC105');
-      this.getVll('AC125', 'vllAC125');
-      this.getVll('AC126', 'vllAC126');
-      this.getVll('AC108', 'vllAC108');
-      this.getVll('AC109', 'vllAC109');
-      this.getVll('AC110', 'vllAC110');
-      this.getVll('AC111', 'vllAC111');
+    this.getVll('AC122', 'vllAC122');
+    this.getVll('AC107', 'vllAC107');
+    this.getVll('AC104', 'vllAC104');
+    this.getVll('AC105', 'vllAC105');
+    this.getVll('AC125', 'vllAC125');
+    this.getVll('AC126', 'vllAC126');
+    this.getVll('AC108', 'vllAC108');
+    this.getVll('AC109', 'vllAC109');
+    this.getVll('AC110', 'vllAC110');
+    this.getVll('AC111', 'vllAC111');
 
-      this.cache
-        .viewSettingValues('ACParameters')
-        .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
-        .subscribe((res) => {
-          let dataValue = JSON.parse(res.dataValue);
-          if (!this.formJournal.form.data.isEdit)
-            this.formJournal.form.setValue(
-              'idimControl',
-              dataValue.IDIMControl,
-              {}
-            );
-          this.baseCurr = dataValue.BaseCurr;
-        });
+    this.cache
+      .viewSettingValues('ACParameters')
+      .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]),takeUntil(this.destroy$))
+      .subscribe((res) => {
+        let dataValue = JSON.parse(res.dataValue);
+        if (!this.dataDefault.isEdit)
+          this.formJournal.form.setValue(
+            'idimControl',
+            dataValue.IDIMControl,
+            {}
+          );
+        this.baseCurr = dataValue.BaseCurr;
+      });
 
-      this.api
-        .exec<any>(
-          'AC',
-          'JournalsPermissionBusiness',
-          'GetPermissionByJournalAsync',
-          this.dataDefault.journalNo
-        )
-        .subscribe((res) => {
-          if (res) {
-            if (res['1']) {
-              this.perCreate = res['1'].join(';');
-              this.oldPerCreate = this.perCreate;
-            }
-            if (res['5']) {
-              this.perApproval = res['5'].join(';');
-              this.oldPerApproval = this.perApproval;
-            }
-            if (res['6']) {
-              this.perPost = res['6'].join(';');
-              this.oldPerPost = this.perPost;
-            }
-            if (res['9']) {
-              this.perShare = res['9'].join(';');
-              this.oldPerShare = this.perShare;
-            }
-            if (res['10']) {
-              this.perPost = res['10'].join(';');
-              this.oldPerPost = this.perPost;
-            }
+    this.api
+      .exec<any>(
+        'AC',
+        'JournalsPermissionBusiness',
+        'GetPermissionByJournalAsync',
+        this.dataDefault.journalNo
+      )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          if (res['1']) {
+            this.perCreate = res['1'].join(';');
+            this.oldPerCreate = this.perCreate;
           }
-        });  
-    })
+          if (res['5']) {
+            this.perApproval = res['5'].join(';');
+            this.oldPerApproval = this.perApproval;
+          }
+          if (res['6']) {
+            this.perPost = res['6'].join(';');
+            this.oldPerPost = this.perPost;
+          }
+          if (res['9']) {
+            this.perShare = res['9'].join(';');
+            this.oldPerShare = this.perShare;
+          }
+          if (res['10']) {
+            this.perPost = res['10'].join(';');
+            this.oldPerPost = this.perPost;
+          }
+        }
+      });  
   }
 
   ngAfterViewInit() {
     this.onDisableTab();
+  }
+
+  ngOnDestroy() {
+    this.onDestroy();
+  }
+
+  onDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   ngDoCheck() {
@@ -273,6 +280,7 @@ export class JournalsAddComponent extends UIComponent {
           .exec('AC', 'JournalsBusiness', 'LoadOneDataAsync', [
             this.formJournal.form.data.journalName,
           ])
+          .pipe(takeUntil(this.destroy$))
           .subscribe((res: any) => {
             if (res) {
               delete res?.journalNo;
@@ -280,6 +288,7 @@ export class JournalsAddComponent extends UIComponent {
               delete res?.journalName;
               delete res?.recID;
               delete res?.isTemplate;
+              delete res?.buid;
               this.isPreventChange = true;
               this.formJournal.form.formGroup.patchValue(res);
               Object.assign(this.formJournal.form.data, res);
@@ -287,6 +296,7 @@ export class JournalsAddComponent extends UIComponent {
               this.isPreventChange = false;
               this.detectorRef.detectChanges();
             }
+            this.onDestroy();
           });
         break;
       case 'journaltype':
@@ -297,7 +307,8 @@ export class JournalsAddComponent extends UIComponent {
               d.datas.filter(
                 (d) => d.value === this.formJournal.form.data.journalType
               )
-            )
+            ),
+            takeUntil(this.destroy$)
           )
           .subscribe((res) => {
             if (res && res.length > 0) {
@@ -312,6 +323,7 @@ export class JournalsAddComponent extends UIComponent {
               this.onDisableTab();
               this.detectorRef.detectChanges();
             }
+            this.onDestroy();
           });
         break;
       case 'reasonid':
@@ -394,6 +406,7 @@ export class JournalsAddComponent extends UIComponent {
       });
       this.image
         .updateFileDirectReload(this.formJournal?.form?.data?.recID)
+        .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {
           if (res) {
             this.formJournal.form
@@ -476,10 +489,12 @@ export class JournalsAddComponent extends UIComponent {
           unPoster,
           share,
         ])
+        .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {
           this.dialog.close(true);
         });
     } else this.dialog.close(true);
+    this.onDestroy();
   }
   //#endregion Method
 
@@ -560,6 +575,7 @@ export class JournalsAddComponent extends UIComponent {
       .pipe(map((d) => d.datas.map((v) => v.value)))
       .subscribe((res) => {
         this[propName] = res;
+        this.onDestroy();
       });
   }
 

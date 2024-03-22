@@ -951,7 +951,7 @@
       [editSettings]="master.data?.isReadOnly ? editSettings : {}"
       [hideMoreFunc]="master.data?.isReadOnly ? true : false"
       [editOnClick]="master.data?.isReadOnly ? false : true" [entityName]="fmSalesInvoiceLines.entityName"
-      predicates="TransID=@0" (gridInit)="beforeInitGridSalesInvoices($event)"
+      predicates="TransID=@0" (gridInit)="initGridSalesInvoices($event)"
       [dataValues]="master?.data?.recID" service="AC" (eventAction)="onActionGridSalesInvoice($event)"
       (cellChanged)="valueChangeLine($event)" (actionCompleted)="onActionGridSalesInvoice($event)"
       rowNoField="rowNo"></codx-gridview-v2>

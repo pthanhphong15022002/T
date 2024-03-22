@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { BasePropertyComponent } from '../base.component';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 
@@ -7,14 +7,20 @@ import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
   templateUrl: './property-datetime.component.html',
   styleUrls: ['./property-datetime.component.css']
 })
-export class PropertyDatetimeComponent extends BasePropertyComponent implements OnChanges{
+export class PropertyDatetimeComponent extends BasePropertyComponent implements AfterViewInit , OnChanges{
   @ViewChild('cbbDependence') combobox!: ComboBoxComponent;
 
   fields: Object = {text: 'text', value: 'id'};
   dependenceData: { [key: string]: Object }[] = [];
 
+  ngAfterViewInit(): void {
+    this.getDataDependence();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes?.data?.currentValue != changes?.data?.previousValue) this.getDataDependence();
+    if(changes?.data?.currentValue != changes?.data?.previousValue) {
+      this.getDataDependence();
+    }
   }
 
   getDataDependence()
@@ -39,7 +45,10 @@ export class PropertyDatetimeComponent extends BasePropertyComponent implements 
         })
       }
     });
-    this.combobox.value = this.data?.dependence || '';
+    
+    this.combobox.dataSource = this.dependenceData;
+    this.combobox.value = this.data?.dependence || "";
+    
     this.combobox.refresh();
     this.ref.detectChanges();
   }
@@ -49,4 +58,5 @@ export class PropertyDatetimeComponent extends BasePropertyComponent implements 
     this.data[e?.field] = e?.data?.fromDate;
     this.dataChange.emit(this.data);
   }
+ 
 }
