@@ -22,4 +22,11 @@ export class PropertyNumberComponent extends BasePropertyComponent implements On
      else this.numberP = true;
    }
  }
+
+ changeValueNumber(e:any)
+ {
+  this.data[e?.field] = e?.data;
+  this.dataChange.emit(this.data);
+ }
+ 
 }

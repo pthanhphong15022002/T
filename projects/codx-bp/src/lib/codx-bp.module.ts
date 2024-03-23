@@ -84,6 +84,7 @@ import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { ShareCrmModule } from 'projects/codx-dp/src/lib/share-crm/share-crm.module';
 import { BPPopupChangePermissionComponent } from './processes/popup-add-process/form-steps-field-grid/bp-popup-change-permission/bp-popup-change-permission.component';
+import { PropertyCbbDependenceComponent } from './modeview/properties/property-cbb-dependence/property-cbb-dependence.component';
 
 export const routes: Routes = [
   {
@@ -165,6 +166,7 @@ export const routes: Routes = [
     PropertyShareComponent,
     PropertyTableComponent,
     PropertyUserinfoComponent,
+    PropertyCbbDependenceComponent,
 
     FormSettingComboboxComponent,
     FormAdvancedSettingsComponent,
