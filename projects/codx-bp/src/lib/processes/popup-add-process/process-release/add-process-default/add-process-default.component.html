@@ -90,6 +90,7 @@
                                 [placeholder]="child?.description"
                                 [Group]="dynamicFormsForm"
                                 [ControlName]="child?.fieldName"
+                                [min]="(child.dataType == 'Decimal' && child.validateControl != '1')? 0 : undefined"
                                 >
                             </codx-input>
                         </ng-container>

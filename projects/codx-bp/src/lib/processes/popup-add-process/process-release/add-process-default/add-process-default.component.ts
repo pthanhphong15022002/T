@@ -85,6 +85,7 @@ export class AddProcessDefaultComponent implements OnInit{
       })
     }
   }
+
   getData()
   {
     var index = 0;
@@ -99,7 +100,6 @@ export class AddProcessDefaultComponent implements OnInit{
     this.data.settings = typeof this.data.settings === 'string' ? JSON.parse(this.data.settings) : this.data.settings;
     this.formatData()
   }
-
 
   formatData()
   {
@@ -118,6 +118,7 @@ export class AddProcessDefaultComponent implements OnInit{
           else if(element.fieldType == "Attachment") element.documentControl = typeof element.documentControl == 'string' ? JSON.parse(element.documentControl): element.documentControl;
           else if(element.fieldType == "DateTime") {
             if(element.defaultValue == "Now") element.defaultValue = new Date();
+            if(element.validateControl == "1") validate = this.customeValidatorDateValiControl;
             if(element.dependences) validate = this.customeValidatorDate(element);
           }
 
@@ -230,20 +231,23 @@ export class AddProcessDefaultComponent implements OnInit{
       const pass = control.value
       const confirmPass = this.dynamicFormsForm.get(field2);
       if(!pass) return null;
-      if (pass < confirmPass?.value) {
+      if(dt.validateControl == "1" && pass < new Date())
+      {
+        return {'pastDate': true};
+      }
+      else if (pass < confirmPass?.value) {
           let mess = dt?.fieldName + " phải lớn hơn " + field2
           return {'comparedate': true,mess:mess};
       }
       return null;
     }
   }
-  customValidatorFN(control: AbstractControl): ValidationErrors | null {
-      const pass = control.get('password');
-      const confirmPass = control.get('password_confirmation');
-      if (pass.value !== confirmPass.value) {
-          return {'Password and confirm password mismatch': true};
-      }
-      return null;
+  customeValidatorDateValiControl(control: AbstractControl): ValidationErrors | null {
+    const pass = control.value
+    if (pass && pass < new Date()) {
+      return {'pastDate': true};
+    }
+    return null;
   }
   getInfoUser()
   {
@@ -589,6 +593,7 @@ export class AddProcessDefaultComponent implements OnInit{
     const email = [];
     const phone = [];
     const date = [];
+    const pastDate = [];
     const controls = this.dynamicFormsForm.controls;
     for (const name in controls) {
         if (controls[name].invalid && controls[name].errors)
@@ -596,6 +601,7 @@ export class AddProcessDefaultComponent implements OnInit{
           if(controls[name].errors?.email) email.push(name);
           else if(controls[name].errors?.pattern) phone.push(name);
           else if(controls[name].errors?.comparedate) date.push(controls[name].errors.mess)
+          else if(controls[name].errors?.pastDate) pastDate.push(name)
           else invalid.push(name);
         }
         else if (controls[name].invalid) {
@@ -606,13 +612,15 @@ export class AddProcessDefaultComponent implements OnInit{
     var nameEmail = email.join(" , ");
     var namePhone = phone.join(" , ");
     var nameDate = date.join(" , ");
-    if(email.length == 0 && phone.length == 0 && date.length == 0) this.notifySvr.notifyCode('SYS009', 0, name);
+    var namePastDate = pastDate.join(" , ");
+    if(email.length == 0 && phone.length == 0 && date.length == 0 && pastDate.length == 0) this.notifySvr.notifyCode('SYS009', 0, name);
     else 
     {
       var str = "";
       if(nameEmail) str += nameEmail + " sai định dạng email. ";
       if(namePhone) str += namePhone + " sai định dạng. ";
       if(nameDate) str += nameDate + " ";
+      if(namePastDate) str += namePastDate + " không được nhập ngày quá khứ. ";
       if(name) str += name + "không được phép bỏ trống.";
       this.notifySvr.notify(str);
     }

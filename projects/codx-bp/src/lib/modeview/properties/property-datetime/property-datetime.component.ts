@@ -65,4 +65,9 @@ export class PropertyDatetimeComponent extends BasePropertyComponent implements 
     else  this.data[e?.field] = ""
     this.dataChange.emit(this.data);
   }
+  changeValueValiControl(e:any)
+  {
+    this.data[e?.field] = e?.data ? "1" : "0";
+    this.dataChange.emit(this.data);
+  }
 }

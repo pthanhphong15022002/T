@@ -25,7 +25,7 @@ export class PropertyNumberComponent extends BasePropertyComponent implements On
 
  changeValueNumber(e:any)
  {
-  this.data[e?.field] = e?.data;
+  this.data[e?.field] = e?.data ? "1" : "0";
   this.dataChange.emit(this.data);
  }
  

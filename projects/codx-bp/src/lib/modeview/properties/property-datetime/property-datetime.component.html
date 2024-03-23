@@ -16,6 +16,10 @@
             <codx-input type="switch" label="Now" [crrValue]="data?.defaultValue == 'Now'? true : false" field="defaultValue" (valueChange)="changeValueDateNow($event)" class="mt-2"></codx-input>
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'now'" default="Thời gian hiện tại" class="ms-2"></codx-label>    
         </div>
+        <div class="d-flex align-items-center mt-2">
+            <codx-input type="switch" label="Now" [crrValue]="data?.validateControl == '1'? true : false" field="validateControl" (valueChange)="changeValueValiControl($event)" class="mt-2"></codx-input>
+            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'validateControl'" default="Không nhập ngày quá khứ" class="ms-2"></codx-label>    
+        </div>
     </div>
     <div class="mt-4">
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'description'" default="Hiển thị chuỗi gợi ý khi chưa có dữ liệu" class="fw-bold"></codx-label>
