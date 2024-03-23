@@ -191,6 +191,20 @@ export const fmJournal: FormModel = {
   funcID: 'ACT',
 };
 
+export const fmAssetJournal: FormModel = {
+  formName: 'AssetAcquisitions',
+  gridViewName: 'grvAssetAcquisitions',
+  entityName: 'AM_AssetJournals',
+  entityPer: 'AM_AssetJournals',
+};
+
+export const fmAssetJournalsLines: FormModel = {
+  formName: 'AssetAcquisitionsLines',
+  gridViewName: 'grvAssetAcquisitionsLines',
+  entityName: 'AM_AssetJournalsLines',
+  entityPer: 'AM_AssetJournalsLines',
+};
+
 export enum MorfuncDefault {
   Sua = 'SYS03',
   Xoa = 'SYS02',
@@ -308,7 +322,7 @@ export class CodxAcService {
     private pageTitleService: PageTitleService,
     private authStore: AuthStore
   ) {
-    this.getCache();
+    //this.getCache();
   }
 
   hideToolbar(v) {

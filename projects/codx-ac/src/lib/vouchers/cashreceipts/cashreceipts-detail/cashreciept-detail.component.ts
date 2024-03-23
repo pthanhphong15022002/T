@@ -98,16 +98,9 @@ export class CashrecieptDetailComponent extends UIDetailComponent {
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
-    private acService: CodxAcService,
-    private authStore: AuthStore,
-    private shareService: CodxShareService,
-    private notification: NotificationsService,
-    private tenant: TenantStore,
     public codxService: CodxService
   ) {
     super(inject);
-    this.authStore = inject.get(AuthStore);
-    //this.userID = this.authStore.get().userID; //? get tên user đăng nhập
   }
   //#endregion Constructor
 
@@ -183,6 +176,7 @@ export class CashrecieptDetailComponent extends UIDetailComponent {
           this.setTotalRecord();
           this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
           this.detectorRef.detectChanges();
+          this.onDestroy();
         });
     }
   }

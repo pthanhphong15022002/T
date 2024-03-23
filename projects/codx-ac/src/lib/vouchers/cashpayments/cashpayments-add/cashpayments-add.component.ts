@@ -119,7 +119,6 @@ export class CashPaymentAddComponent extends UIComponent {
     inject: Injector,
     private acService: CodxAcService,
     private notification: NotificationsService,
-    private roundService: RoundService,
     private ngxLoader: NgxUiLoaderService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData,
@@ -192,7 +191,7 @@ export class CashPaymentAddComponent extends UIComponent {
   //  * *Hàm khởi tạo trước khi init của lưới Cashpaymentlines (Ẩn hiện,format,predicate các cột của lưới theo sổ nhật ký)
   //  * @param columnsGrid : danh sách cột của lưới
   //  */
-  beforeInitGridCashpayments(eleGrid: CodxGridviewV2Component) {
+  initGridCashpayments(eleGrid: CodxGridviewV2Component) {
     let hideFields = [];
     let setting = this.acService.getSettingFromJournal(eleGrid, this.journal);
     eleGrid = setting[0];
@@ -226,7 +225,7 @@ export class CashPaymentAddComponent extends UIComponent {
    * *Hàm khởi tạo trước khi init của lưới SettledInvoices (Ẩn hiện các cột theo đồng tiền hạch toán)
    * @param columnsGrid danh sách cột của lưới
    */
-  beforeInitGridSettledInvoices(eleGrid) {
+  initGridSettledInvoices(eleGrid:CodxGridviewV2Component) {
     this.settingFormatGridSettledInvoices(eleGrid);
     //* Thiết lập các field ẩn theo đồng tiền hạch toán
     let hideFields = [];
@@ -299,6 +298,7 @@ export class CashPaymentAddComponent extends UIComponent {
                 this.master?.data?.subType,
                 this.elementTabDetail
               );
+              this.onDestroy();
             });
         } else {
           this.isPreventChange = true;
@@ -810,11 +810,8 @@ export class CashPaymentAddComponent extends UIComponent {
               this.eleGridCashPayment.refresh();
             }, 50);
           }
-          // if (this.master.data.journalType.toLowerCase() == 'bp') {
-          //   this.bankNamePay = res?.data?.bankPayname;
-          //   this.detectorRef.detectChanges();
-          // }
         }
+        this.onDestroy();
       });
   }
 
@@ -836,6 +833,7 @@ export class CashPaymentAddComponent extends UIComponent {
           this.master.data.bankReceiveName = res?.data?.bankReceiveName;
           this.isPreventChange = false;
         }
+        this.onDestroy();
       });
   }
 
@@ -862,6 +860,7 @@ export class CashPaymentAddComponent extends UIComponent {
             this.eleGridCashPayment.refresh();
           }
         }
+        this.onDestroy();
       });
   }
 
@@ -881,6 +880,7 @@ export class CashPaymentAddComponent extends UIComponent {
           this.master.setValue('bankAcctID', null, {});
           this.preData = { ...this.master?.data };
         }
+        this.onDestroy();
       });
   }
 
@@ -899,6 +899,7 @@ export class CashPaymentAddComponent extends UIComponent {
           this.master.setValue('memo', res?.data?.memo, {});
           this.preData = { ...this.master?.data };
         }
+        this.onDestroy();
       });
   }
 
@@ -930,6 +931,7 @@ export class CashPaymentAddComponent extends UIComponent {
           }
           this.isPreventChange = false;
         }
+        this.onDestroy();
       });
   }
 
@@ -944,6 +946,7 @@ export class CashPaymentAddComponent extends UIComponent {
         this.master.data,
         ''
       ])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
           this.preData = { ...this.master?.data };
@@ -954,6 +957,7 @@ export class CashPaymentAddComponent extends UIComponent {
             this.detectorRef.detectChanges();
           }
         }
+        this.onDestroy();
       });
   }
 
@@ -979,6 +983,7 @@ export class CashPaymentAddComponent extends UIComponent {
             this.detectorRef.detectChanges();
           }
         }
+        this.onDestroy();
       });
   }
 
@@ -1021,6 +1026,7 @@ export class CashPaymentAddComponent extends UIComponent {
       if (res) {
         this.eleGridCashPayment.addRow(res, this.eleGridCashPayment.dataSource.length);
       }
+      this.onDestroy();
     })
   }
 
@@ -1125,6 +1131,7 @@ export class CashPaymentAddComponent extends UIComponent {
       if (res) {
         this.eleGridVatInvoices.addRow(res, this.eleGridVatInvoices.dataSource.length);
       }
+      this.onDestroy();
     })
   }
 
@@ -1208,34 +1215,6 @@ export class CashPaymentAddComponent extends UIComponent {
       this.eleGridSettledInvoices.showHideColumns(['SettledAmt2'], hSettledAmt2);
       this.eleGridSettledInvoices.showHideColumns(['SettledDisc2'], hSettledDisc2);
     }
-  }
-
-  /**
-   * *Hàm get ghi chú từ lí do chi + đối tượng + tên người nhận
-   * @returns
-   */
-  getMemoMaster() {
-    let newMemo = ''; //? tên ghi chú mới
-    let reasonName = ''; //? tên lí do chi
-    let objectName = ''; //? tên đối tượng
-    let payName = ''; //? tên người nhận
-
-    let indexReason =
-      this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex(
-        (x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value
-      );
-    if (indexReason > -1) {
-      reasonName = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].ReasonName + ' - ';
-    }
-
-    let indexObject = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
-    if (indexObject > -1) {
-      objectName = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName + ' - ';
-    }
-    if (this.master?.data?.payee) payName = this.master?.data?.payee + ' - ';
-
-    newMemo = reasonName + objectName + payName;
-    return newMemo.substring(0, newMemo.lastIndexOf(' - ') + 1);
   }
 
   /**
@@ -1479,6 +1458,7 @@ export class CashPaymentAddComponent extends UIComponent {
         this.bankReceiveName = res?.BankReceiveName || '';
         this.textTotal = res?.TextNum || '';
         this.detectorRef.detectChanges();
+        this.onDestroy();
       });
   }
   //#endregion Function

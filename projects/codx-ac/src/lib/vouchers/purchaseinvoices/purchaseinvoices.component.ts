@@ -85,21 +85,11 @@ export class PurchaseinvoicesComponent extends UIComponent {
   constructor(
     inject: Injector,
     private acService: CodxAcService,
-    private authStore: AuthStore,
     private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore,
   ) {
     super(inject);
-    // this.cache
-    //   .companySetting()
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res.length > 0) {
-    //       this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
-    //     }
-    //   });
   this.cache
       .viewSettingValues('ACParameters')
       .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
@@ -317,6 +307,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
             }
           })
         }
+        this.onDestroy();
       });
   }
 
@@ -359,6 +350,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
                   optionSidebar,
                   this.view.funcID
                 );
+                this.onDestroy();
               });
           }
         });
@@ -405,6 +397,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
             }
           }
         })
+        this.onDestroy();
       });
   }
 
@@ -479,6 +472,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
                         .pipe(takeUntil(this.destroy$))
                         .subscribe();
                     }
+                    this.onDestroy();
                   });
               }
             });
@@ -528,6 +522,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
                     .pipe(takeUntil(this.destroy$))
                     .subscribe();
                 }
+                this.onDestroy();
               });
           }
         });
@@ -549,6 +544,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
             this.detectorRef.detectChanges();
           }
         }
+        this.onDestroy();
       });
   }
 
@@ -579,6 +575,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
             }
           });
         })
+        this.onDestroy();
       });
   }
 
@@ -624,6 +621,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -644,6 +642,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -664,6 +663,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -702,8 +702,12 @@ export class PurchaseinvoicesComponent extends UIComponent {
                   if (res && !res.update.error) {
                     this.notification.notifyCode('AC0029', 0, text);
                   }
+                  this.onDestroy();
                 });
-            } else this.notification.notifyCode(result?.msgCodeError);
+            } else{
+              this.notification.notifyCode(result?.msgCodeError);
+              this.onDestroy();
+            } 
           });
       });
   }
@@ -727,8 +731,12 @@ export class PurchaseinvoicesComponent extends UIComponent {
               if (res && !res.update.error) {
                 this.notification.notifyCode('AC0029', 0, text);
               }
+              this.onDestroy();
             });
-        } else this.notification.notifyCode(result?.msgCodeError);
+        } else{
+          this.notification.notifyCode(result?.msgCodeError);
+          this.onDestroy();
+        } 
       });
   }
 
@@ -811,18 +819,6 @@ export class PurchaseinvoicesComponent extends UIComponent {
   onSelectedItem(event) {
     this.itemSelected = event;
     this.detectorRef.detectChanges();
-    // if (this.view?.views) {
-    //   let view = this.view?.views.find((x) => x.type == 1);
-    //   if (view && view.active == true) return;
-    // }
-    // if (typeof event.data !== 'undefined') {
-    //   if (event?.data.data || event?.data.error) {
-    //     return;
-    //   } else {
-    //     this.itemSelected = event?.data;
-    //     this.detectorRef.detectChanges();
-    //   }
-    // }
   }
 
   viewChanged(view) {

@@ -30,7 +30,7 @@ export class AssetAcquisitionsComponent extends UIComponent {
   assemblyName = 'ERM.Business.Core';
   method = 'LoadDataAsync';
   className = 'DataBusiness';
-  entityName = 'AM_AssetAcquisitions';
+  entityName = 'AM_assetjournal';
   idField = 'recID';
   dataValues = '';
   predicates = '';

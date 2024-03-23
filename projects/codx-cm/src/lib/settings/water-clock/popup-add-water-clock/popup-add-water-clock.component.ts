@@ -176,30 +176,28 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
       case 'siteID':
         if (this.siteIDOld == e.data) return;
         this.siteIDOld = e.data
-        this.data.parentID = null;
-        this.cbxParentID.crrValue = null;
+        if (this.cbxParentID) {
+          this.data.parentID = null;
+          this.cbxParentID.crrValue = null;
 
-        if (e.data) { predicate = 'SiteID=@0'; dataValue = `${this.data.siteID}` };
+          if (e.data) { predicate = 'SiteID=@0'; dataValue = `${this.data.siteID}` };
 
-        if (this.data.refID) {
-          if (predicate) {
-            predicate += ' and RefID=@1'; dataValue += ";" + `${this.data.refID}`;
-          } else {
-            predicate = 'RefID=@0'; dataValue = `${this.data.refID}`;
-          }
-        };
+          if (this.data.refID) {
+            if (predicate) {
+              predicate += ' and RefID=@1'; dataValue += ";" + `${this.data.refID}`;
+            } else {
+              predicate = 'RefID=@0'; dataValue = `${this.data.refID}`;
+            }
+          };
+          (
+            this.cbxParentID.ComponentCurrent as CodxComboboxComponent
+          ).dataService.predicates = predicate;
+          (
+            this.cbxParentID.ComponentCurrent as CodxComboboxComponent
+          ).dataService.dataValues = dataValue;
 
-
-
-        (
-          this.cbxParentID.ComponentCurrent as CodxComboboxComponent
-        ).dataService.predicates = predicate;
-        (
-          this.cbxParentID.ComponentCurrent as CodxComboboxComponent
-        ).dataService.dataValues = dataValue;
-
-        this.form.formGroup.patchValue({ parentID: this.data['parentID'] });
-
+          this.form.formGroup.patchValue({ parentID: this.data['parentID'] });
+        }
 
         if (this.loadedCus) return;
         this.data.refID = null;
@@ -215,27 +213,30 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
 
       case 'refID':
         if (this.oldRef == e.data) return;
-        this.data.parentID = null;
-        this.cbxParentID.crrValue = null;
-        if (this.data.siteID) { predicate = 'SiteID=@0'; dataValue = `${this.data.siteID}` };
 
-        if (e.data) {
-          if (predicate) {
-            predicate += ' and RefID=@1'; dataValue += ";" + `${this.data.refID}`;
-          } else {
-            predicate = 'RefID=@0'; dataValue = `${this.data.refID}`;
-          }
-        };
+        if (this.cbxParentID) {
+          this.data.parentID = null;
+          this.cbxParentID.crrValue = null;
+          if (this.data.siteID) { predicate = 'SiteID=@0'; dataValue = `${this.data.siteID}` };
 
-        (
-          this.cbxParentID.ComponentCurrent as CodxComboboxComponent
-        ).dataService.predicates = predicate;
-        (
-          this.cbxParentID.ComponentCurrent as CodxComboboxComponent
-        ).dataService.dataValues = dataValue;
-        this.form.formGroup.patchValue({ parentID: this.data['parentID'] });
+          if (e.data) {
+            if (predicate) {
+              predicate += ' and RefID=@1'; dataValue += ";" + `${this.data.refID}`;
+            } else {
+              predicate = 'RefID=@0'; dataValue = `${this.data.refID}`;
+            }
+          };
+          (
+            this.cbxParentID.ComponentCurrent as CodxComboboxComponent
+          ).dataService.predicates = predicate;
+          (
+            this.cbxParentID.ComponentCurrent as CodxComboboxComponent
+          ).dataService.dataValues = dataValue;
+          this.form.formGroup.patchValue({ parentID: this.data['parentID'] });
+        }
 
-        if (!e.data || e.data == this.oldRef) {
+
+        if (!e.data) {
           return;
         }
         this.oldRef = e.data
@@ -387,7 +388,7 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
         this.data.refID, //CMCustomer
       ])
       .subscribe((res) => {
-        if (res) {
+        if (res && res?.length > 0) {
           let predicate = '';
           let dataValue = '';
           this.loadedCus = true
@@ -408,7 +409,7 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
           this.notiService.notifyCode(
             'CM064',
             0,
-            '"' + this.gridViewSetup['siteID'].headerText + '"'
+            '"' + this.gridViewSetup['SiteID']?.headerText + '"'
           );
           this.loadedCus = false
         }
