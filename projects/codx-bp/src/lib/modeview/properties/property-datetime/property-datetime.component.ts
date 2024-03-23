@@ -48,7 +48,7 @@ export class PropertyDatetimeComponent extends BasePropertyComponent implements 
     });
     
     this.combobox.dataSource = this.dependenceData;
-    this.combobox.value = this.data?.dependence || "";
+    this.combobox.value = this.data?.dependences || "";
     
     this.combobox.refresh();
     this.ref.detectChanges();

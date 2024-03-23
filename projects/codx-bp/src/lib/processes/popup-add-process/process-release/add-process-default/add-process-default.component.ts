@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Optional, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
@@ -77,9 +77,13 @@ export class AddProcessDefaultComponent implements OnInit{
   }
   getVll()
   {
-    this.cache.valueList("BP022").subscribe(item=>{
-      this.vllBP022 = item;
-    })
+    this.vllBP022 = this.shareService.loadValueList("BP022");
+    if(isObservable(this.vllBP022))
+    {
+      this.vllBP022.subscribe(item=>{
+        this.vllBP022 = item
+      })
+    }
   }
   getData()
   {
@@ -96,6 +100,7 @@ export class AddProcessDefaultComponent implements OnInit{
     this.formatData()
   }
 
+
   formatData()
   {
     let indexTable = 0;
@@ -110,14 +115,13 @@ export class AddProcessDefaultComponent implements OnInit{
           
           if(element.fieldType == "Email") validate = Validators.email;
           else if(element.fieldType == "Phone") validate = Validators.pattern("[0-9 ]{11}");
-          
-          this.dynamicFormsForm.addControl(field, new FormControl(element.defaultValue , validate));
-          
-          if(element.fieldType == "Attachment") 
-          {
-            //this.dataIns.documentControl = JSON.parse(element.documentControl);
-            element.documentControl = typeof element.documentControl == 'string' ? JSON.parse(element.documentControl): element.documentControl;
+          else if(element.fieldType == "Attachment") element.documentControl = typeof element.documentControl == 'string' ? JSON.parse(element.documentControl): element.documentControl;
+          else if(element.fieldType == "DateTime") {
+            if(element.defaultValue == "Now") element.defaultValue = new Date();
+            if(element.dependences) validate = this.customeValidatorDate(element);
           }
+
+          this.dynamicFormsForm.addControl(field, new FormControl(element.defaultValue , validate));
         }
         else 
         {
@@ -195,6 +199,7 @@ export class AddProcessDefaultComponent implements OnInit{
         }
         this.indexUploadUserInfo[field] = 0;
       }
+      
       var index = list.findIndex(x=>x.columnOrder == element.columnOrder)
       if(index >= 0)
       {
@@ -218,6 +223,28 @@ export class AddProcessDefaultComponent implements OnInit{
     this.table = list;
   }
 
+  customeValidatorDate(dt:any)
+  { 
+    let field2 = dt.dependences.toLowerCase();
+    return (control: AbstractControl): ValidationErrors | null =>{
+      const pass = control.value
+      const confirmPass = this.dynamicFormsForm.get(field2);
+      if(!pass) return null;
+      if (pass < confirmPass?.value) {
+          let mess = dt?.fieldName + " phải lớn hơn " + field2
+          return {'comparedate': true,mess:mess};
+      }
+      return null;
+    }
+  }
+  customValidatorFN(control: AbstractControl): ValidationErrors | null {
+      const pass = control.get('password');
+      const confirmPass = control.get('password_confirmation');
+      if (pass.value !== confirmPass.value) {
+          return {'Password and confirm password mismatch': true};
+      }
+      return null;
+  }
   getInfoUser()
   {
     let paras = [this.user.userID];
@@ -229,7 +256,6 @@ export class AddProcessDefaultComponent implements OnInit{
         this.infoUser = item;
       })
     }
-    debugger
   }
 
   getField(key: string): string {
@@ -554,7 +580,6 @@ export class AddProcessDefaultComponent implements OnInit{
         this.notifySvr.notify(name);
         return false;
       }
-
       return true;
     }
   }
@@ -563,12 +588,14 @@ export class AddProcessDefaultComponent implements OnInit{
     const invalid = [];
     const email = [];
     const phone = [];
+    const date = [];
     const controls = this.dynamicFormsForm.controls;
     for (const name in controls) {
         if (controls[name].invalid && controls[name].errors)
         {
           if(controls[name].errors?.email) email.push(name);
           else if(controls[name].errors?.pattern) phone.push(name);
+          else if(controls[name].errors?.comparedate) date.push(controls[name].errors.mess)
           else invalid.push(name);
         }
         else if (controls[name].invalid) {
@@ -578,12 +605,14 @@ export class AddProcessDefaultComponent implements OnInit{
     var name = invalid.join(" , ");
     var nameEmail = email.join(" , ");
     var namePhone = phone.join(" , ");
-    if(email.length == 0 && phone.length == 0) this.notifySvr.notifyCode('SYS009', 0, name);
+    var nameDate = date.join(" , ");
+    if(email.length == 0 && phone.length == 0 && date.length == 0) this.notifySvr.notifyCode('SYS009', 0, name);
     else 
     {
       var str = "";
       if(nameEmail) str += nameEmail + " sai định dạng email. ";
       if(namePhone) str += namePhone + " sai định dạng. ";
+      if(nameDate) str += nameDate + " ";
       if(name) str += name + "không được phép bỏ trống.";
       this.notifySvr.notify(str);
     }
