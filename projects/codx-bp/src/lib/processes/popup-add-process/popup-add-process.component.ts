@@ -961,14 +961,13 @@ export class PopupAddProcessComponent {
             if(elm2.child && elm2.child.length>0)
             {
               elm2.child.forEach(elm3=>{
-                if(elm.child[stt+1])
-                {
-                  elm3.stepNo = i;
-                  elm3.settings.nextSteps =  [{nextStepID: elm.child[stt+1].recID}] 
-                  if(typeof elm3.settings === 'object') elm3.settings = JSON.stringify(elm3.settings);
-                  result2.push(elm3);
-                  i++;
-                }
+                elm3.stepNo = i;
+                let nextStepsID = null;
+                if(elm.child[stt+1]) nextStepsID = elm.child[stt+1].recID
+                elm3.settings.nextSteps =  [{nextStepID: nextStepsID}] 
+                if(typeof elm3.settings === 'object') elm3.settings = JSON.stringify(elm3.settings);
+                result2.push(elm3);
+                i++;
               })
             }
           }
