@@ -97,7 +97,7 @@ export class PropertyCbbDependenceComponent extends BasePropertyComponent implem
         let endIndex = de.indexOf("}",omd);
         de = this.replaceBetween(de,(startIndex+1),endIndex,index);
       }
-      else de += ","+ str;
+      else de += ";"+ str;
     }
     
     this.dataTable[this.dtCbb.columnOrder].children[this.dtCbb.columnNo].dependences = de;
