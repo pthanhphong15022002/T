@@ -1490,7 +1490,7 @@
             class="icon-more_vert icon-22 me-2 btn btn-icon btn-active-light-primary"
           ></span> -->
           <div
-            *ngIf="itemSession.length > 0"
+          
             class="d-flex align-items-center me-2 left-100"
           >
             <div ngbDropdown container="body">
@@ -1516,7 +1516,7 @@
                     ></codx-label>
                   </a>
                 </li>
-                <li>
+                <!-- <li>
                   <a
                     (click)="sortSession()"
                     ngbDropdownItem
@@ -1527,7 +1527,7 @@
                       default="Di chuyển phần"
                     ></codx-label>
                   </a>
-                </li>
+                </li> -->
                 <li>
                   <a
                     (click)="deleteCard(itemSession.seqNo, '', '', 'S')"
@@ -1540,7 +1540,7 @@
                     ></codx-label>
                   </a>
                 </li>
-                <li *ngIf="itemSession.seqNo >= 1">
+                <li *ngIf="itemSession.seqNo >= 1" >
                   <a
                     (click)="mergeSession(itemSession)"
                     ngbDropdownItem

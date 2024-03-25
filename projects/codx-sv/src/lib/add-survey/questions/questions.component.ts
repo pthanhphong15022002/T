@@ -676,34 +676,46 @@ export class QuestionsComponent
   }
 
   deleteSession(seqNoSession) {
-    this.notification
+    if(this.questions[seqNoSession].children.length == 0)
+    {
+      this.deleteBefore(seqNoSession)
+    }
+    else
+    {
+      this.notification
       .alert(
         'Xóa câu hỏi và mục?',
         'Việc xóa một mục cũng sẽ xóa các câu hỏi và câu trả lời trong mục đó.'
       )
       .closed.subscribe((x) => {
         if (x.event?.status == 'Y') {
-          var dataTemp = JSON.parse(JSON.stringify(this.questions));
-          let tempQuestion = this.questions[seqNoSession];
-          dataTemp = dataTemp.filter((x) => x.seqNo != seqNoSession);
-          dataTemp.forEach((x, index) => {
-            x.seqNo = index;
-          });
-          this.questions = dataTemp;
-          this.change.detectChanges();
-          let data = [...[tempQuestion], ...tempQuestion.children];
-          this.SVServices.signalSave.next('saving');
-          if (this.questions.length + 1 == seqNoSession + 1)
-            this.setTimeoutDeleteData(
-              tempQuestion.children.length > 0 ? data : [tempQuestion]
-            );
-          else
-            this.setTimeoutDeleteData(
-              tempQuestion.children.length > 0 ? data : [tempQuestion],
-              this.questions
-            );
+          this.deleteBefore(seqNoSession)
         }
       });
+    }
+   
+  }
+  deleteBefore(seqNoSession:any)
+  {
+    var dataTemp = JSON.parse(JSON.stringify(this.questions));
+    let tempQuestion = this.questions[seqNoSession];
+    dataTemp = dataTemp.filter((x) => x.seqNo != seqNoSession);
+    dataTemp.forEach((x, index) => {
+      x.seqNo = index;
+    });
+    this.questions = dataTemp;
+    this.change.detectChanges();
+    let data = [...[tempQuestion], ...tempQuestion.children];
+    this.SVServices.signalSave.next('saving');
+    if (this.questions.length + 1 == seqNoSession + 1)
+      this.setTimeoutDeleteData(
+        tempQuestion.children.length > 0 ? data : [tempQuestion]
+      );
+    else
+      this.setTimeoutDeleteData(
+        tempQuestion.children.length > 0 ? data : [tempQuestion],
+        this.questions
+      );
   }
 
   deleteNoSession(seqNoSession, seqNoQuestion, recIDQuestion) {
