@@ -384,9 +384,14 @@
           </div>
           <div>
             <ng-container *ngFor="let item2 of item?.groupChild , let i = index">
-              <div (click)="onSelect(item2.text)" [id]="item2?.key" (dragstart)="dragStart($event)" draggable="true" [class.border-top]="i>0" class="p-2 bg-export-hover cursor-move" title="Kéo và thả vào văn bản">
+              <div (click)="item2?.isGroup? undefined : onSelect(item2.text)" [id]="item2?.key" (dragstart)="item2?.isGroup? undefined :dragStart($event)" draggable="true" [class.border-top]="i>0" class="p-2 bg-export-hover cursor-move" title="Kéo và thả vào văn bản">
                 {{item2.text}}
               </div>
+              <ng-container *ngFor="let item3 of item2?.groupChild , let i2 = index">
+                <div (click)="onSelect(item3.text)" [id]="item3?.key" (dragstart)="dragStart($event)" draggable="true" [class.border-top]="i2>0" class="p-2 ps-8 bg-export-hover cursor-move" title="Kéo và thả vào văn bản">
+                  {{item3.text}}
+                </div>
+              </ng-container>
             </ng-container>
           </div>
         </ng-container>

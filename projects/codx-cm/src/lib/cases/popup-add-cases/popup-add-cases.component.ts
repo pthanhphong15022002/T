@@ -33,8 +33,7 @@ import { CustomFieldService } from 'projects/codx-dp/src/lib/share-crm/codx-inpu
 })
 export class PopupAddCasesComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   // view child
   @ViewChild('tabGeneralInfoDetail') tabGeneralInfoDetail: TemplateRef<any>;
   @ViewChild('tabCustomFieldDetail') tabCustomFieldDetail: TemplateRef<any>;
@@ -336,8 +335,8 @@ export class PopupAddCasesComponent
         this.cases.permissions =
           this.cases?.permissions && this.cases?.permissions?.length > 0
             ? this.cases?.permissions.filter(
-                (x) => x.roleType != 'O' && x.objectType != '1'
-              )
+              (x) => x.roleType != 'O' && x.objectType != '1'
+            )
             : this.cases?.permissions;
         let result = this.checkProcessInList($event.data);
         if (result) {
@@ -1024,7 +1023,7 @@ export class PopupAddCasesComponent
   addFile(e) {
     this.attachment.uploadFile();
   }
-  fileAdded(e) {}
+  fileAdded(e) { }
   getfileCount(e) {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;

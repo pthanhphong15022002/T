@@ -41,8 +41,7 @@ import { CustomFieldService } from 'projects/codx-dp/src/lib/share-crm/codx-inpu
 })
 export class PopupAddDealComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   // view child
   @ViewChild('tabGeneralInfoDetail') tabGeneralInfoDetail: TemplateRef<any>;
   @ViewChild('tabCostItems') tabCostItems: TemplateRef<any>;
@@ -286,7 +285,7 @@ export class PopupAddDealComponent
     this.executeApiCalls();
   }
 
-  onInit(): void {}
+  onInit(): void { }
 
   async ngAfterViewInit(): Promise<void> {
     if (this.tenant == 'qtsc') {
@@ -968,8 +967,8 @@ export class PopupAddDealComponent
         this.deal.permissions =
           this.deal?.permissions && this.deal?.permissions?.length > 0
             ? this.deal?.permissions.filter(
-                (x) => x.roleType != 'O' && x.objectType != '1'
-              )
+              (x) => x.roleType != 'O' && x.objectType != '1'
+            )
             : this.deal?.permissions;
         if (processId) {
           this.deal.applyProcess = true;
@@ -1446,9 +1445,9 @@ export class PopupAddDealComponent
   HandleEndDate(listSteps: any, action: string, endDateValue: any) {
     endDateValue =
       action === this.actionAdd ||
-      action === this.actionCopy ||
-      (this.action === this.actionEdit &&
-        (this.deal.status == '1' || this.deal.status == '15'))
+        action === this.actionCopy ||
+        (this.action === this.actionEdit &&
+          (this.deal.status == '1' || this.deal.status == '15'))
         ? new Date()
         : new Date(endDateValue);
     let dateNow = endDateValue;
@@ -1691,7 +1690,7 @@ export class PopupAddDealComponent
       }
     });
   }
-  changeAutoNum(e) {}
+  changeAutoNum(e) { }
 
   //----------------------CACULATE---------------------------//
 

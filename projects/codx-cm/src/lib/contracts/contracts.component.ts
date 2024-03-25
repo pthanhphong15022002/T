@@ -200,7 +200,7 @@ export class ContractsComponent extends UIComponent {
     }
   }
 
-  async ngOnChanges(changes: SimpleChanges) {}
+  async ngOnChanges(changes: SimpleChanges) { }
 
   ngAfterViewInit() {
     this.getColumsGrid(this.grvSetup);
@@ -566,10 +566,10 @@ export class ContractsComponent extends UIComponent {
           this.notiService
             .alertCode('DP033', null, [
               '"' +
-                data?.contractName +
-                '" ' +
-                'Người phụ trách không tồn tại trong quy trình' +
-                ' ',
+              data?.contractName +
+              '" ' +
+              'Người phụ trách không tồn tại trong quy trình' +
+              ' ',
             ])
             .subscribe((x) => {
               if (x.event && x.event.status == 'Y') {
@@ -1633,7 +1633,7 @@ export class ContractsComponent extends UIComponent {
             e,
             data,
             this.afterSave,
-            this.frmModelExport, //this.view.formModel,
+            this.view.formModel,//this.frmModelExport, 
             this.view.dataService,
             this,
             customData
@@ -1672,7 +1672,7 @@ export class ContractsComponent extends UIComponent {
           return [];
         })
       )
-      .subscribe(() => {});
+      .subscribe(() => { });
   }
 
   liquidationContract(data) {
@@ -1762,7 +1762,7 @@ export class ContractsComponent extends UIComponent {
         }
       });
   }
-  reloadListStep(listSteps: any) {}
+  reloadListStep(listSteps: any) { }
 
   handelMoveStage(event, contract) {
     if (event) {

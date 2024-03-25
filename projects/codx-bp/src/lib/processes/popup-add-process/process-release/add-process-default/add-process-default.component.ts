@@ -421,7 +421,7 @@ export class AddProcessDefaultComponent implements OnInit{
         this.dataIns.instanceNo = instanceNo,
         this.dataIns.instanceID = this.dataIns.recID,
         this.dataIns.status= "1",
-        this.dataIns.currentStage= stageF.recID,
+        this.dataIns.currentStage = stageF.recID,
         this.dataIns.currentStep= step.recID,
         this.dataIns.lastUpdate= null,
         this.dataIns.closed= false,

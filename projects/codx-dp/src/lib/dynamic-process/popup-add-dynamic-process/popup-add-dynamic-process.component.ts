@@ -902,7 +902,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         task.assignControl = this.process?.dependRule ?? '0';
         check = true;
       }
-      if(check && this.listStepEdit.some((id) => id == stepItem?.recID)){
+      if(check && !this.listStepEdit.some((id) => id == stepItem?.recID)){
         this.listStepEdit.push(stepItem?.recID);
       }
     }
