@@ -192,7 +192,7 @@ export class PopupAddInstanceComponent implements OnInit {
     }
   }
 
-  buttonClick(e: any) {}
+  buttonClick(e: any) { }
 
   async promiseAll() {
     this.action === 'edit' &&
@@ -562,9 +562,9 @@ export class PopupAddInstanceComponent implements OnInit {
   HandleEndDate(listSteps: any, action: string, endDateValue: any) {
     endDateValue =
       action === 'add' ||
-      action === 'copy' ||
-      (this.action === 'edit' &&
-        (this.instance.status == '1' || this.instance.status == '15'))
+        action === 'copy' ||
+        (this.action === 'edit' &&
+          (this.instance.status == '1' || this.instance.status == '15'))
         ? new Date()
         : new Date(endDateValue);
     let dateNow = endDateValue;

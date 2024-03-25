@@ -457,7 +457,7 @@ export class ModeviewComponent implements OnInit {
     }
     data.recID = Util.uid();
     data.width = "";
-    data.fieldName = this.formatTitle(data.title.toLowerCase());
+    data.fieldName = this.formatTitle(data.title);
     data.description  =  data.description || "Câu trả lời";
     data.columnOrder = this.table.length;
     data.columnNo = 0;

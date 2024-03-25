@@ -6,6 +6,7 @@ import {
   DialogRef,
   NotificationsService,
   UIComponent,
+  Util,
 } from 'codx-core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CodxAcService, fmAssetJournalsLines } from '../../../codx-ac.service';
@@ -42,13 +43,15 @@ export class AssetJournalsAddComponent extends UIComponent {
     allowNextRowEdit: false,
   };
   fmAssetJournalsLines: any = fmAssetJournalsLines;
-  tabInfo: TabModel[] = [ //? thiết lập footer
+  tabInfo: TabModel[] = [
+    //? thiết lập footer
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
   private destroy$ = new Subject<void>();
+  lstLines = [];
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -147,12 +150,20 @@ export class AssetJournalsAddComponent extends UIComponent {
   valueChangeMaster(e) {}
 
   //#region  tab grid
-  onActionGrid(event: any) {}
+  initGrid(eleGrid: CodxGridviewV2Component){
+    this.lstLines = eleGrid.dataSource ?? [];
+  }
+
+  onActionGrid(event: any) {
+    console.log("onActionGrid", event);
+  }
   /**
    * *Hàm xử lí change value trên detail
    * @param event
    */
-  valueChangeLine(event: any) {}
+  valueChangeLine(event: any) {
+    console.log('event change: ', event);
+  }
   //#endregion
 
   /**
@@ -183,9 +194,20 @@ export class AssetJournalsAddComponent extends UIComponent {
   }
 
   //#region crud
-  addRowDetail() {}
+  addRowDetail() {
+    let line = {};
+    line['rowNo'] = this.eleGridAcquisitions.dataSource.length;
+    line['recID'] = Util.uid();
+    line['transID'] = this.formAsset.data?.recID;
+    this.eleGridAcquisitions.addRow(
+      line,
+      this.eleGridAcquisitions.dataSource.length
+    );
+    this.lstLines.push(line);
+    this.detectorRef.detectChanges();
+  }
 
-  onDiscard(){}
-  onSave(type){}
+  onDiscard() {}
+  onSave(type) {}
   //#endregion
 }

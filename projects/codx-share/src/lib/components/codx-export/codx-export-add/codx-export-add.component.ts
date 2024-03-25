@@ -287,28 +287,60 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     // this.dataGoupField.forEach(elm=>{
     //   list = list.concat(elm.extendInfo);
     // })
-
     for(var i = 0 ; i < this.dataGoupField.length ; i ++)
     {
       this.dataGoupField[i].groupChild = [];
       
       this.dataGoupField[i].extendInfo.forEach(element=>{
-        var obj = {
-          text: element?.title,
-          key: element?.fieldName,
-          category: 'Drag or click the field to insert.',
-          htmlAttributes: { draggable: true },
-        };
-  
-        var obj2 = {
-          key: element.fieldName,
-          headerText: element.title,
-          referedType: element.refType,
-          referedValue: element.refValue,
-        };
-        
-        this.gridViewSettup.push(obj2);
-        this.dataGoupField[i].groupChild.push(obj);
+        if(element.controlType != "Table")
+        {
+          var obj = {
+            text: element?.title,
+            key: element?.fieldName,
+            category: 'Drag or click the field to insert.',
+            htmlAttributes: { draggable: true },
+          };
+    
+          var obj2 = {
+            key: element.fieldName,
+            headerText: element.title,
+            referedType: element.refType,
+            referedValue: element.refValue,
+          };
+          
+          this.gridViewSettup.push(obj2);
+          this.dataGoupField[i].groupChild.push(obj);
+        }
+        else
+        {
+          element.dataFormat = typeof element.dataFormat == 'string' ? JSON.parse(element.dataFormat) :  element.dataFormat;
+          var objP = {
+            text: element?.title,
+            key: element?.fieldName,
+            category: 'Drag or click the field to insert.',
+            htmlAttributes: { draggable: true },
+            isGroup:true,
+            groupChild : []
+          };
+          element.dataFormat.forEach(elm2=>{
+            var obj = {
+              text: elm2?.title,
+              key: element.fieldName+"."+elm2?.fieldName,
+              category: 'Drag or click the field to insert.',
+              htmlAttributes: { draggable: true },
+            };
+      
+            var obj2 = {
+              key: element.fieldName+"."+elm2.fieldName,
+              headerText: elm2.title,
+              referedType: elm2.refType,
+              referedValue: elm2.refValue,
+            };
+            objP.groupChild.push(obj);
+            this.gridViewSettup.push(obj2);
+          })
+          this.dataGoupField[i].groupChild.push(objP);
+        }
       })
 
       if(!this.isSign)
@@ -693,11 +725,11 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
         text += '|' + check[0].referedValue;
     }
 
-    // this.container.documentEditor.editor.insertField(
-    //   fieldCode,
-    //   '[' + text + ']'
-    // );
-    this.container.documentEditor.editor.insertText('[' + text + '] ');
+    this.container.documentEditor.editor.insertField(
+      fieldCode,
+      '[' + text + ']'
+    );
+    //this.container.documentEditor.editor.insertText('[' + text + '] ');
     this.container.documentEditor.focusIn();
   }
 
