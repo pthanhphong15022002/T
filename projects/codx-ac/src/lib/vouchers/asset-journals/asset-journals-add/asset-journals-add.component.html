@@ -12,7 +12,7 @@
 >
 </codx-form>
 <ng-template #TmpSubToolbar>
-  <div *ngIf="formAsset" class="w-100">
+  <div *ngIf="formAsset?.formGroup" class="w-100">
     <div
       class="d-flex align-items-center justify-content-between pt-3 ac-popupfull"
     >
@@ -115,88 +115,90 @@
   </div>
 </ng-template>
 <ng-template #TmpBody>
-  <ejs-tab
-    (selecting)="selecting($event)"
-    (selected)="onTabSelectedMaster($event)"
-  >
-    <e-tabitems>
-      <e-tabitem>
-        <ng-template #headerText>
-          <div class="d-flex align-items-top me-2 mt-2">
-            <i class="icon-info icon-18 me-2"></i>
-            <codx-label
-              class="fw-bold"
-              style="font-size: 14px !important"
-              fiedName="lblGeneral"
-              [formModel]="dialog.formModel"
-              default="Thông tin chung"
-            ></codx-label>
-          </div>
-        </ng-template>
-        <ng-template #content>
-          <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
-        </ng-template>
-      </e-tabitem>
-      <e-tabitem *ngIf="dialog.formModel.funcID == 'ACT821'">
-        <ng-template #headerText>
-          <div class="d-flex align-items-top me-2 mt-2">
-            <i class="icon-i-file-earmark-text icon-18 me-2"></i>
-            <codx-label
-              class="fw-bold"
-              style="font-size: 14px !important"
-              fiedName="lblAssetRevaluations"
-              [formModel]="dialog.formModel"
-              default="Hội đồng đánh giá"
-            ></codx-label>
-          </div>
-        </ng-template>
-        <ng-template #content>
-          <ng-container *ngTemplateOutlet="TmpTabRevaluations"></ng-container>
-        </ng-template>
-      </e-tabitem>
-    </e-tabitems>
-  </ejs-tab>
-  <div class="mt-3" style="height: calc(100vh - 415px) !important">
-    <!-- Start: Tab Detail -->
-    <ejs-tab (selecting)="selecting($event)" #elementTabDetail>
+  <ng-container *ngIf="formAsset?.formGroup">
+    <ejs-tab
+      (selecting)="selecting($event)"
+      (selected)="onTabSelectedMaster($event)"
+    >
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2 mt-2">
-              <i class="icon-format_list_numbered icon-18 me-2"></i>
+              <i class="icon-info icon-18 me-2"></i>
               <codx-label
-                style="font-size: 14px !important"
                 class="fw-bold"
-                fiedName="lblInfoDetail1"
+                style="font-size: 14px !important"
+                fiedName="lblGeneral"
                 [formModel]="dialog.formModel"
-                default="Thông tin Chi tiết"
+                default="Thông tin chung"
               ></codx-label>
             </div>
           </ng-template>
           <ng-template #content>
-            <ng-container *ngTemplateOutlet="TmpTabLine"></ng-container>
+            <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
+          </ng-template>
+        </e-tabitem>
+        <e-tabitem *ngIf="dialog.formModel.funcID == 'ACT821'">
+          <ng-template #headerText>
+            <div class="d-flex align-items-top me-2 mt-2">
+              <i class="icon-i-file-earmark-text icon-18 me-2"></i>
+              <codx-label
+                class="fw-bold"
+                style="font-size: 14px !important"
+                fiedName="lblAssetRevaluations"
+                [formModel]="dialog.formModel"
+                default="Hội đồng đánh giá"
+              ></codx-label>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="TmpTabRevaluations"></ng-container>
           </ng-template>
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-  </div>
-  <div style="height: 50px !important" class="listcash-content row">
-    <div class="row align-items-center">
-      <div
-        *ngIf="formAsset.formGroup"
-        id="ac-column-def"
-        class="d-flex align-items-center cursor-pointer w-fit ac-refdoc mt-2"
-      >
-        <span class="icon-attach_file icon-20 me-2"></span>
-        <codx-label
-          default="Kèm theo chứng từ gốc"
-          class="text-gray-600"
-          fiedName="attachmentFileAsset"
-          [formModel]="formAsset.formModel"
-        ></codx-label>
+    <div class="mt-3" style="height: calc(100vh - 415px) !important">
+      <!-- Start: Tab Detail -->
+      <ejs-tab (selecting)="selecting($event)" #elementTabDetail>
+        <e-tabitems>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex align-items-top me-2 mt-2">
+                <i class="icon-format_list_numbered icon-18 me-2"></i>
+                <codx-label
+                  style="font-size: 14px !important"
+                  class="fw-bold"
+                  fiedName="lblInfoDetail1"
+                  [formModel]="dialog.formModel"
+                  default="Thông tin Chi tiết"
+                ></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="TmpTabLine"></ng-container>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+    </div>
+    <div style="height: 50px !important" class="listcash-content row">
+      <div class="row align-items-center">
+        <div
+          *ngIf="formAsset.formGroup"
+          id="ac-column-def"
+          class="d-flex align-items-center cursor-pointer w-fit ac-refdoc mt-2"
+        >
+          <span class="icon-attach_file icon-20 me-2"></span>
+          <codx-label
+            default="Kèm theo chứng từ gốc"
+            class="text-gray-600"
+            fiedName="attachmentFileAsset"
+            [formModel]="formAsset.formModel"
+          ></codx-label>
+        </div>
       </div>
     </div>
-  </div>
+  </ng-container>
 </ng-template>
 <ng-template #TmpFooter>
   <div
@@ -452,7 +454,7 @@
 <ng-template #TmpTabRevaluations></ng-template>
 
 <ng-template #TmpTabLine>
-  <ng-container>
+  <ng-container *ngIf="formAsset?.formGroup && isLoad">
     <div
       id="gridcash"
       class="tabline-content header-table-ac position-relative"
@@ -470,7 +472,7 @@
         [entityName]="fmAssetJournalsLines.entityName"
         predicates="TransID=@0"
         [dataValues]="formAsset?.data?.recID"
-        [hideMoreFunc]="true"
+        [hideMoreFunc]="false"
         service="AM"
         [editOnClick]="true"
         [templateMore]="templateMore"
@@ -479,6 +481,7 @@
         (eventAction)="onActionGrid($event)"
         (actionCompleted)="onActionGrid($event)"
         (cellChanged)="valueChangeLine($event)"
+        (onDelete)="onDelete($event)"
       ></codx-gridview-v2>
       <ng-container>
         <div #btnRef class="btn-addline">
@@ -488,8 +491,8 @@
               tab-index="15"
               id="btnAddCash"
               class="btn btn-sm btn-light-primary btnAddCash"
-              (keydown.enter)="onAddLine(); $event.preventDefault()"
-              (click)="onAddLine()"
+              (keydown.enter)="addRowDetail(); $event.preventDefault()"
+              (click)="addRowDetail()"
             >
               <i class="icon-playlist_add icon-16"></i>
               <codx-label

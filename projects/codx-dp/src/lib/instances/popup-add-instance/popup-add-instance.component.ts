@@ -143,7 +143,7 @@ export class PopupAddInstanceComponent implements OnInit {
       : '550';
 
     this.user = this.authStore.get();
-    if (this.action === 'edit') {
+    if (this.action === 'edit' || this.action === 'view') {
       this.autoName = dt?.data?.autoName;
       this.owner = this.instance?.owner;
     } else {
@@ -158,6 +158,7 @@ export class PopupAddInstanceComponent implements OnInit {
       } else {
         this.owner = '';
       }
+      this.instance.owner = this.owner;
     }
     this.cache
       .gridViewSetup(
