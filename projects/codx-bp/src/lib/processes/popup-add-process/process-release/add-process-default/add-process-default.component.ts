@@ -128,7 +128,8 @@ export class AddProcessDefaultComponent implements OnInit{
           else if(element.fieldType == "DateTime") 
           {
             if(element.defaultValue == "Now") element.defaultValue = new Date();
-            if(element.validateControl == "1") validate = this.customeValidatorDateValiControl;
+            //Ngày không được bé hơn ngày hiện tại
+            if(element.validateControl == "1") validate = this.customeValidatorDateValiControl(element);
             if(element.dependences) validate = this.customeValidatorDate(element);
           }
 
@@ -248,6 +249,7 @@ export class AddProcessDefaultComponent implements OnInit{
     return (control: AbstractControl): ValidationErrors | null =>{
       const pass = control.value
       const confirmPass = this.dynamicFormsForm.get(field2);
+      if(dt?.isRequired && !pass) return {'isRequired': true};
       if(!pass) return null;
       if(dt.validateControl == "1" && pass < new Date())
       {
@@ -260,13 +262,19 @@ export class AddProcessDefaultComponent implements OnInit{
       return null;
     }
   }
-  customeValidatorDateValiControl(control: AbstractControl): ValidationErrors | null {
-    const pass = control.value
-    if (pass && pass < new Date()) {
-      return {'pastDate': true};
+
+  customeValidatorDateValiControl(dt:any)
+  { 
+    return (control: AbstractControl): ValidationErrors | null =>{
+      const pass = control.value
+      if(dt?.isRequired && !pass) return {'isRequired': true};
+      else if (pass && pass < new Date()) {
+        return {'pastDate': true};
+      }
+      return null;
     }
-    return null;
   }
+ 
   getInfoUser()
   {
     let paras = [this.user.userID];
