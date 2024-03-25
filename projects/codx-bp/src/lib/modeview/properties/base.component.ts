@@ -41,7 +41,7 @@ export abstract class BasePropertyComponent
 
     backDefault()
     {
-      this.back.emit(true);
+      this.back.emit(this.data);
     }
 
     changeValueAutoNumber(e:any)
