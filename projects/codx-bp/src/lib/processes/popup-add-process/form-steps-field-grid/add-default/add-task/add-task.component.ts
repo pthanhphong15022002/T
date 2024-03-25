@@ -210,47 +210,47 @@ export class AddTaskComponent
   }
 
   default() {
-    var vllStage = this.vll.datas.filter((x) => x.value == 'Task')[0];
+    var vllStage = this.vll?.datas?.filter((x) => x.value == 'Task')[0];
     let allowEdit = "0";
-    if (this.process.settings && this.process.settings.length > 0) {
-      allowEdit = this.process.settings.filter(
+    if (this?.process?.settings && this.process?.settings?.length > 0) {
+      allowEdit = this.process?.settings?.filter(
         (x) => x.fieldName == 'AllowEdit'
       )[0];
     }
     this.data = new BP_Processes_Steps();
     this.data.recID = Util.uid();
-    this.data.stepNo = this.process.steps.length;
-    this.data.stageID = this.stage.recID;
-    this.data.parentID = this.parent.recID;
+    this.data.stepNo = this.process?.steps?.length;
+    this.data.stageID = this.stage?.recID;
+    this.data.parentID = this.parent?.recID;
     this.data.activityType = 'Task';
-    this.data.stepName = vllStage.text + ' ' + (this.parent.child.length + 1);
-    this.data.reminder = this.process.reminder;
+    this.data.stepName = vllStage?.text + ' ' + (this.parent?.child?.length + 1);
+    this.data.reminder = this.process?.reminder;
     this.data.eventControl = null;
     this.data.interval = '1';
     this.data.memo = '';
     this.data.duration = 0;
     this.data.location = '';
     this.data.settings = {
-      icon: vllStage.icon,
-      color: vllStage.color,
-      backGround: vllStage.textColor,
+      icon: vllStage?.icon,
+      color: vllStage?.color,
+      backGround: vllStage?.textColor,
       checkList: '',
       nextSteps: '',
-      allowEdit: allowEdit
+      allowEdit: allowEdit 
     };
-    if (!this.process.documentControl) this.process.documentControl = [];
+    if (!this.process?.documentControl) this.process.documentControl = [];
     this.dataChange.emit(this.data);
   }
   changeActivity() {
     var vllStage = this.vll.datas.filter(
       (x) => x.value == this.activityType
     )[0];
-    this.data.settings.icon = vllStage.icon;
-    this.data.settings.color = vllStage.color;
-    this.data.settings.backGround = vllStage.textColor;
+    this.data.settings.icon = vllStage?.icon;
+    this.data.settings.color = vllStage?.color;
+    this.data.settings.backGround = vllStage?.textColor;
     this.data.activityType = this.activityType;
     if (this.parent?.child)
-      this.data.stepName = vllStage.text + ' ' + (this.parent.child.length + 1);
+      this.data.stepName = vllStage?.text + ' ' + (this.parent.child.length + 1);
     if (this.data.activityType == 'Form') {
       if (!this.data.extendInfo || this.data.extendInfo.length == 0) {
         this.isNewForm = true;

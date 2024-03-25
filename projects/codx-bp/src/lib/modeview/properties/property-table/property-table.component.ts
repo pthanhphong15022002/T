@@ -75,8 +75,10 @@ export class PropertyTableComponent extends BasePropertyComponent implements OnI
     }
     else
     {
+      e.fieldName = this.formatTitle(e?.title);
       this.data.dataFormat[this.indexSelected]= e
     }
+    this.dataChange.emit(this.data);
   }
 
   genData(data:any)
@@ -214,7 +216,10 @@ export class PropertyTableComponent extends BasePropertyComponent implements OnI
   formatTitle(str:any)
   {
     str = str.toLowerCase();
-    return this.xoa_dau(str.replaceAll(" ","_").replaceAll("/","_"));
+    str = str.replaceAll(" ","_");
+    str = str.replaceAll("/","_");
+    var res = this.xoa_dau(str);
+    return res;
   }
 
   xoa_dau(str) {

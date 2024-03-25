@@ -326,7 +326,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       this.tabContent.push(this.task);
     }
     this.waitForInputContactRendered(100);
-    this.getRefInstance(100,500);
+    this.getRefInstance(100, 500);
   }
 
   waitForInputContactRendered(time: number) {
@@ -341,13 +341,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getRefInstance(time: number, timEnd: number){
+  getRefInstance(time: number, timEnd: number) {
     if (timEnd == 5000) {
       return;
     } else if (this.inputDeal && this.inputDeal?.ComponentCurrent?.dataService.data?.length > 0) {
       let data = this.inputDeal?.ComponentCurrent?.dataService.data;
-        this.refInstance = data[0]?.RefID;
-        this.loadSoureRef();
+      this.refInstance = data[0]?.RefID;
+      this.loadSoureRef();
     } else {
       setTimeout((time: number) => {
         this.getRefInstance(time, time + 500);
@@ -465,8 +465,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   async getContractByRecID() {
     return this.recIDContract
       ? await firstValueFrom(
-          this.contractService.getContractByRecID(this.recIDContract)
-        )
+        this.contractService.getContractByRecID(this.recIDContract)
+      )
       : null;
   }
 
@@ -872,19 +872,19 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       ? new Date(this.contracts?.effectiveTo)
       : null;
 
-      if (
-        (event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') &&
-        startDate &&
-        endDate && 
-        !this.contracts?.interval 
-      ) {
-        let startYear = startDate.getFullYear();
-        let endYear = endDate.getFullYear();
-        let startMonth = startDate.getMonth();
-        let endMonth = endDate.getMonth();
-        let interval = (endYear - startYear) * 12 + (endMonth - startMonth);
-        this.contracts.interval = (interval / 12).toFixed(1);
-      }
+    if (
+      (event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') &&
+      startDate &&
+      endDate &&
+      !this.contracts?.interval
+    ) {
+      let startYear = startDate.getFullYear();
+      let endYear = endDate.getFullYear();
+      let startMonth = startDate.getMonth();
+      let endMonth = endDate.getMonth();
+      let interval = (endYear - startYear) * 12 + (endMonth - startMonth);
+      this.contracts.interval = (interval / 12).toFixed(1);
+    }
     // if (this.contracts?.interval) {
     //   if (event?.field == 'effectiveFrom') {
     //     let interval = parseInt(this.contracts?.interval) || 0;

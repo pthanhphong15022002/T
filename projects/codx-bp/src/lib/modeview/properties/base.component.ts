@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogModel } from "codx-core";
 import { CodxShareService } from "projects/codx-share/src/public-api";
 import { CodxBpService } from "../../codx-bp.service";
@@ -12,6 +12,7 @@ export abstract class BasePropertyComponent
     @Input() data: any;
     @Input() dataTable: any;
     @Output() dataChange = new EventEmitter<any>();
+    @Output() dataChangeTableEmit = new EventEmitter<any>();
     @Output() back = new EventEmitter<any>();
     constructor(
       public authstore: AuthStore,
@@ -40,7 +41,7 @@ export abstract class BasePropertyComponent
 
     backDefault()
     {
-      this.back.emit(true);
+      this.back.emit(this.data);
     }
 
     changeValueAutoNumber(e:any)
@@ -84,5 +85,15 @@ export abstract class BasePropertyComponent
           });
         }
       });
+    }
+
+    valueChangeData(e:any)
+    {
+      this.dataChange.emit(e);
+    }
+    
+    valueChangeTableEmit(e:any)
+    {
+      this.dataChangeTableEmit.emit(e);
     }
 }
