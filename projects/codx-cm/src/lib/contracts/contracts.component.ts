@@ -254,7 +254,7 @@ export class ContractsComponent extends UIComponent {
         if (isDetail) res.isbookmark = false;
         if (
           data?.approveStatus == '3' &&
-          !['CM0204_2', 'SYS05', 'CM0204_17', 'CM0204_7'].includes(
+          !['CM0204_2', 'SYS05', 'CM0204_17', 'CM0204_7','SYS003','SYS004','SYS001','SYS002','SYS009','SYS008',''].includes(
             res?.functionID
           )
         ) {
