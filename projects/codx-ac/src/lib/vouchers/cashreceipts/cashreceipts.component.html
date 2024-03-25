@@ -38,7 +38,7 @@
   <ng-container *ngIf="itemSelected && viewActive == ViewType.listdetail">
     <cashreciept-detail [formModel]="view.formModel" [dataService]="this.view.dataService" [dataItem]="itemSelected"
       [recID]="itemSelected?.recID" [baseCurr]="baseCurr" [journal]="journal" [headerText]="headerText"
-      [gridViewSetup]="view?.gridViewSetup" [legalName]="legalName" [hideFields]="hideFields"
+      [gridViewSetup]="view?.gridViewSetup" [hideFields]="hideFields"
       [dataDefault]="dataDefault"></cashreciept-detail>
   </ng-container>
 </ng-template>
