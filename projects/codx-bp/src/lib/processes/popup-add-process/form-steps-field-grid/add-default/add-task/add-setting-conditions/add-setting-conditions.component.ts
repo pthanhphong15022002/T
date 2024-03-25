@@ -587,6 +587,7 @@ export class AddSettingConditionsComponent {
 
   convertOperator(data:any, number:any)
   {
+    if(!data?.operator) return "";
     switch(data.operator.toLowerCase())
     {
       case 'eq' : case '=' : return data.field + "==" + "@" + number;

@@ -16,7 +16,8 @@
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'dataFormat'" default="Định dạng hiển thị" class="fw-bold"></codx-label>
         <codx-input type="valuelist" [crrValue]="data.dataFormat" field="dataFormat" [refValue]="'BP003'"  (valueChange)="changeValue($event)"></codx-input>
     </div>
-    <div class="border-top mt-8">
+    <lib-property-cbb-dependence [data]="data" [dataTable]="dataTable" (dataChange)="valueChangeData($event)" (dataChangeTableEmit)="valueChangeTableEmit($event)"></lib-property-cbb-dependence>
+    <div class="border-top mt-6">
         <div class="d-flex align-items-center mt-4">
             <codx-input type="switch" [crrValue]="data.isRequired" field="isRequired" label="Bắt buộc"  (valueChange)="changeValue($event)" class="mt-2"></codx-input>
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Bắt buộc" class="fw-bold ms-2"></codx-label>

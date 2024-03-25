@@ -3,7 +3,7 @@
 
 <ng-template #panelLeftRef>
   <div class="survey-home h-100">
-    <div class="p-2 bg-body body-survey px-5">
+    <div class="bg-body body-survey px-5">
       <div class="d-flex justify-content-between align-items-center py-2">
         <codx-label
           default="Khảo sát mẫu"
@@ -27,14 +27,14 @@
       <div class="d-flex align-items-center div-title">
         <div class="card-survey rounded-2" (click)="createNewSurvey()">
           <img src="./assets/themes/sv/default/img/AddSurvey.svg" class="rounded-2"/>
-          <div class="py-2 fw-bold">
+          <div class="my-2 fw-bold line-clamp line-clamp-2">
             <span>Trống</span>
           </div>
         </div>
         <ng-container *ngIf="dataSurveysSystem && dataSurveysSystem.length>0">
           <div class="card-survey rounded-2" *ngFor="let item of dataSurveysSystem" (click)="clone(item)">
             <img [src]="getImgSrc(item , 'card')" class="rounded-2"/>
-            <div class="py-2 fw-bold">
+            <div class="my-2 fw-bold line-clamp line-clamp-2">
               <span>{{item?.title}}</span>
             </div>
           </div>
