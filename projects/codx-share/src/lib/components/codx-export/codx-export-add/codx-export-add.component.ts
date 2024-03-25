@@ -287,7 +287,6 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     // this.dataGoupField.forEach(elm=>{
     //   list = list.concat(elm.extendInfo);
     // })
-    debugger
     for(var i = 0 ; i < this.dataGoupField.length ; i ++)
     {
       this.dataGoupField[i].groupChild = [];
