@@ -1492,9 +1492,8 @@ export class QuestionsComponent
   }
 
   uploadVideo(dataQuestion) {}
-
  
-  clickQuestionMF(seqNoSession, itemQuestion, answerType) {
+  clickQuestionMF(seqNoSession, itemQuestion, answerType ) {
     this.generateGuid();
     var recID = JSON.parse(JSON.stringify(this.GUID));
     if (answerType) {
@@ -1929,7 +1928,6 @@ export class QuestionsComponent
       );
     }
   }
-
   valueChangeAnswer(e, seqNoSession, itemQuestion, itemAnswer) {
     if (e.data && e.data != itemAnswer[e.field]) {
       // let dataTemp = JSON.parse(JSON.stringify(this.questions));
@@ -1946,7 +1944,7 @@ export class QuestionsComponent
       );
     }
   }
-
+ 
   valueChangeAnswerMatrix(seqNoSession, itemQuestion, itemAnswer, data)
   {
     var index =  this.questions[seqNoSession].children[itemQuestion.seqNo].answers.findIndex(x=>x.seqNo == itemAnswer.seqNo && x.isColumn == itemAnswer.isColumn);
