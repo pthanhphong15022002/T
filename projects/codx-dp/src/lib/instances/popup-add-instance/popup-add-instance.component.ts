@@ -332,7 +332,7 @@ export class PopupAddInstanceComponent implements OnInit {
                 this.listStep[index].fields[idxField];
             } else
               this.listCustomFile.push(this.listStep[index].fields[idxField]);
-            if (field.dataType == 'N')// && valueOld != result)
+            if (field.dataType == 'N' && valueOld != result)
               this.caculateField();
           }
         }

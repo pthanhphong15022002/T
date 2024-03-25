@@ -152,6 +152,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   eventDropRef = true;
   valCheckBox = [];
   isChange = false;
+  dataValueRef = ''
 
   constructor(
     private cache: CacheService,
@@ -195,12 +196,12 @@ export class CodxInputCustomFieldComponent implements OnInit {
     //gia tri mặc dinh khi them moi
     if (this.isAdd && !this.customField.dataValue) {
       if (this.customField.defaultValue) {
-        this.customField.dataValue = this.customField.defaultValue;
+        this.dataValueRef = this.customField.defaultValue;
+        this.isChange = true
       } else if (this.customField.dataType == 'D') {
-        this.customField.dataValue = moment(new Date()).toDate();
+        this.dataValueRef = moment(new Date()).toDate().toString();
+        this.isChange = true
       }
-      this.isChange = true
-
     }
 
     //danh sach data chuyen qua - loai PA ra khoi format
@@ -214,15 +215,18 @@ export class CodxInputCustomFieldComponent implements OnInit {
           x.refType == this.customField.refType
       );
       if (data) {
-        this.customField.dataValue = data.dataValue;
+        this.dataValueRef = data.dataValue;
         this.isChange = true
       }
     }
-    if (this.isChange)
+    if (this.isChange) {
       this.valueChangeCustom.emit({
-        e: this.customField.dataValue,
+        e: this.dataValueRef,
         data: this.customField,
       });
+      this.customField.dataValue = this.dataValueRef
+    }
+
 
     switch (this.customField.dataType) {
       case 'N':
