@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Optional, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
@@ -23,11 +23,6 @@ export class AddProcessDefaultComponent implements OnInit{
   @Input() type = 'add';
   @Input() stepID:any;
   @Output() dataChange = new EventEmitter<any>();
-  data:any;
-  dialog:any;
-  table:any
-  dataTable = {};
-  dataUserInfo = {};
   formModel = 
   {
     funcID:'',
@@ -35,6 +30,11 @@ export class AddProcessDefaultComponent implements OnInit{
     gridViewName: 'grvDynamicForms',
     entityName: 'BP_Instances'
   }
+  data:any;
+  dialog:any;
+  table:any
+  dataTable = {};
+  dataUserInfo = {};
   dynamicFormsForm: FormGroup;
   subTitle:any;
   tableField:any;
@@ -46,6 +46,7 @@ export class AddProcessDefaultComponent implements OnInit{
   indexUploadUserInfo = {};
   defaultFieldName = "";
   infoUser:any;
+  listFieldAuto = [];
   constructor(
     private notifySvr: NotificationsService,
     private shareService: CodxShareService,
@@ -77,10 +78,15 @@ export class AddProcessDefaultComponent implements OnInit{
   }
   getVll()
   {
-    this.cache.valueList("BP022").subscribe(item=>{
-      this.vllBP022 = item;
-    })
+    this.vllBP022 = this.shareService.loadValueList("BP022");
+    if(isObservable(this.vllBP022))
+    {
+      this.vllBP022.subscribe(item=>{
+        this.vllBP022 = item
+      })
+    }
   }
+
   getData()
   {
     var index = 0;
@@ -98,6 +104,7 @@ export class AddProcessDefaultComponent implements OnInit{
 
   formatData()
   {
+    this.listFieldAuto = [];
     let indexTable = 0;
     var list = [];
     let extendInfo = JSON.parse(JSON.stringify(typeof this.data.extendInfo == 'string' ?  JSON.parse(this.data.extendInfo) : this.data.extendInfo))
@@ -110,14 +117,15 @@ export class AddProcessDefaultComponent implements OnInit{
           
           if(element.fieldType == "Email") validate = Validators.email;
           else if(element.fieldType == "Phone") validate = Validators.pattern("[0-9 ]{11}");
-          
-          this.dynamicFormsForm.addControl(field, new FormControl(element.defaultValue , validate));
-          
-          if(element.fieldType == "Attachment") 
+          else if(element.fieldType == "Attachment") element.documentControl = typeof element.documentControl == 'string' ? JSON.parse(element.documentControl): element.documentControl;
+          else if(element.fieldType == "DateTime") 
           {
-            //this.dataIns.documentControl = JSON.parse(element.documentControl);
-            element.documentControl = typeof element.documentControl == 'string' ? JSON.parse(element.documentControl): element.documentControl;
+            if(element.defaultValue == "Now") element.defaultValue = new Date();
+            if(element.validateControl == "1") validate = this.customeValidatorDateValiControl;
+            if(element.dependences) validate = this.customeValidatorDate(element);
           }
+
+          this.dynamicFormsForm.addControl(field, new FormControl(element.defaultValue , validate));
         }
         else 
         {
@@ -195,6 +203,15 @@ export class AddProcessDefaultComponent implements OnInit{
         }
         this.indexUploadUserInfo[field] = 0;
       }
+      if(element.autoNumber?.autoNumberControl) 
+      {
+        var objAuto = 
+        {
+          field: field,
+          autoNumberNo: element.autoNumber?.autoNumberNo
+        }
+        this.listFieldAuto.push(objAuto);
+      }
       var index = list.findIndex(x=>x.columnOrder == element.columnOrder)
       if(index >= 0)
       {
@@ -218,6 +235,31 @@ export class AddProcessDefaultComponent implements OnInit{
     this.table = list;
   }
 
+  customeValidatorDate(dt:any)
+  { 
+    let field2 = dt.dependences.toLowerCase();
+    return (control: AbstractControl): ValidationErrors | null =>{
+      const pass = control.value
+      const confirmPass = this.dynamicFormsForm.get(field2);
+      if(!pass) return null;
+      if(dt.validateControl == "1" && pass < new Date())
+      {
+        return {'pastDate': true};
+      }
+      else if (pass < confirmPass?.value) {
+          let mess = dt?.fieldName + " phải lớn hơn " + field2
+          return {'comparedate': true,mess:mess};
+      }
+      return null;
+    }
+  }
+  customeValidatorDateValiControl(control: AbstractControl): ValidationErrors | null {
+    const pass = control.value
+    if (pass && pass < new Date()) {
+      return {'pastDate': true};
+    }
+    return null;
+  }
   getInfoUser()
   {
     let paras = [this.user.userID];
@@ -229,7 +271,6 @@ export class AddProcessDefaultComponent implements OnInit{
         this.infoUser = item;
       })
     }
-    debugger
   }
 
   getField(key: string): string {
@@ -300,6 +341,15 @@ export class AddProcessDefaultComponent implements OnInit{
             this.bpService.genAutoNumber(this.formModel?.funcID, this.formModel.entityName, "InstanceNo")
           );
         }
+        if(this.listFieldAuto.length>0)
+        {
+          this.listFieldAuto.forEach(async item=>{
+            valueForm[item.field] = await firstValueFrom(
+              this.bpService.getAutoNumber(item.autoNumberNo)
+            );
+          })
+        }
+
         var stageF = this.process.steps.filter(x=>x.activityType == "Stage")[0];
         var stage = 
         {
@@ -360,7 +410,7 @@ export class AddProcessDefaultComponent implements OnInit{
         let fieldName = "f" + this.data.stepNo + "_owner"
         valueForm[fieldName] = 
         {
-          userName: this.infoUser?.userName,
+          username: this.infoUser?.userName,
           createdOn: new Date(),
           position: this.infoUser?.positionID,
           orgUnit: this.infoUser?.orgUnitID,
@@ -554,7 +604,6 @@ export class AddProcessDefaultComponent implements OnInit{
         this.notifySvr.notify(name);
         return false;
       }
-
       return true;
     }
   }
@@ -563,12 +612,16 @@ export class AddProcessDefaultComponent implements OnInit{
     const invalid = [];
     const email = [];
     const phone = [];
+    const date = [];
+    const pastDate = [];
     const controls = this.dynamicFormsForm.controls;
     for (const name in controls) {
         if (controls[name].invalid && controls[name].errors)
         {
           if(controls[name].errors?.email) email.push(name);
           else if(controls[name].errors?.pattern) phone.push(name);
+          else if(controls[name].errors?.comparedate) date.push(controls[name].errors.mess)
+          else if(controls[name].errors?.pastDate) pastDate.push(name)
           else invalid.push(name);
         }
         else if (controls[name].invalid) {
@@ -578,12 +631,16 @@ export class AddProcessDefaultComponent implements OnInit{
     var name = invalid.join(" , ");
     var nameEmail = email.join(" , ");
     var namePhone = phone.join(" , ");
-    if(email.length == 0 && phone.length == 0) this.notifySvr.notifyCode('SYS009', 0, name);
+    var nameDate = date.join(" , ");
+    var namePastDate = pastDate.join(" , ");
+    if(email.length == 0 && phone.length == 0 && date.length == 0 && pastDate.length == 0) this.notifySvr.notifyCode('SYS009', 0, name);
     else 
     {
       var str = "";
       if(nameEmail) str += nameEmail + " sai định dạng email. ";
       if(namePhone) str += namePhone + " sai định dạng. ";
+      if(nameDate) str += nameDate + " ";
+      if(namePastDate) str += namePastDate + " không được nhập ngày quá khứ. ";
       if(name) str += name + "không được phép bỏ trống.";
       this.notifySvr.notify(str);
     }

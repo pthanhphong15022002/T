@@ -544,7 +544,7 @@
         [gridViewName]="journal.entryMode == '1' ? 'grvCashReceiptsLines' : 'grvCashReceiptsLinesOneAccount'"
         entityName="AC_CashReceiptsLines" predicates="TransID=@0" [dataValues]="master.data.recID"
         [templateMore]="templateMore" service="AC"
-        [editOnClick]="master.data?.isReadOnly ? false : true" (gridInit)="beforeInitGridCashReceipt($event)"
+        [editOnClick]="master.data?.isReadOnly ? false : true" (gridInit)="initGridCashReceipt($event)"
         rowNoField="rowNo" (eventAction)="onActionGridCashReceipt($event)"
         (actionCompleted)="onActionGridCashReceipt($event)" (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
       <ng-container *ngIf="!master.data?.isReadOnly">
@@ -585,7 +585,7 @@
         [showEmptyRecord]="false" entityName="AC_SettledInvoices" rowHeight="35" [showEmptyRecord]="false"
         gridLines="Both" [hideMoreFunc]="true" service="AC" predicates="TransID=@0"
         [editSettings]="master.data?.isReadOnly ? editSettings : {}" [dataValues]="master.data.recID"
-        [autoFitColumns]="true" (gridInit)="beforeInitGridSettledInvoices($event)"
+        [autoFitColumns]="true" (gridInit)="initGridSettledInvoices($event)"
         (cellChanged)="valueChangeLineSettledInvoices($event)">
       </codx-gridview-v2>
       <ng-container *ngIf="!master.data?.isReadOnly">

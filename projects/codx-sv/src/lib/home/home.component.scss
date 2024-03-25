@@ -10,7 +10,7 @@
 .survey-home {
   .body-survey {
     background-color: #F1F3F4 !important;
-    height: 225px !important;
+    height: 215px !important;
   }
   .e-tab .e-tab-header:not(.e-vertical)::before
   {
@@ -29,8 +29,8 @@
   }
 
   .card-survey {
-    width: 167px;
-    height: 127px;
+    width: 160px;
+    height: 120px;
     margin-right: 10px;
     align-content: center;
     cursor: pointer;
@@ -50,8 +50,8 @@
 } 
 
   img {
-    width: 167px;
-    height: 127px;
+    width: 160px;
+    height: 120px;
     background-color: white;
     //border-radius: 7px;
   }
@@ -66,10 +66,11 @@
   padding: 5px 15px;
   .e-content
   {
-    height: calc(100% - 265px)!important;
+    height: calc(100% - 275px)!important;
     width: calc(100% - 20px);
     text-align: left !important;
     position: fixed;
+    overflow: auto;
     .e-item , .e-item > div
     {
       height: 100% !important;

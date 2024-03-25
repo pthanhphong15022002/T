@@ -392,35 +392,39 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     });
   }
   addNewTask(oldTask){
-    var option = new SidebarModel();
-    option.FormModel = {
-      formName: 'BPTasks',
-      gridViewName: 'grvBPTasks',
-      entityName: 'BP_Tasks',
+    let lstParent = JSON.parse(JSON.stringify(this.listStage));
+    lstParent.forEach((elm) => {
+      delete elm.child;
+    });
+    var obj = {
+      type: "add",
+      activityType: "Task",
+      process: this.process,
+      data: null,
+      parent: parent,
+      stage: lstParent?.find(x=>x?.recID == oldTask?.stageID),
+      listStage: lstParent,
+      hideDelete: true
     };
-    let popup = this.callFc.openSide(
-      AddDefaultComponent,
-      {
-        data: oldTask,
-        process: this.process,
-        dataIns: this.data,
-      },
-      option
-    );
+    let option = new SidebarModel();
+    option.Width = 'Auto';
+    option.FormModel = this.formModel;
+    let popup = this.callFc.openSide(AddDefaultComponent,obj,option);    
     popup.closed.subscribe((res) => {
       if (res && res?.event) {
         this.data = res?.event;
       }
     });
   }
-  changePer(task){
+  changePer(data){
     var option = new SidebarModel();
     let dialogAP = this.callFc.openForm(
       BPPopupChangePermissionComponent,
       '',
       500,
       250,
-      ''
+      '',
+      {data:data},
     );
     dialogAP.closed.subscribe((res) => {
       if (res && res?.event) {

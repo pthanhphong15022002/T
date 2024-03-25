@@ -140,7 +140,7 @@ export class SalesinvoicesAddComponent extends UIComponent {
    * *Hàm thiết lập lưới trước khi init
    * @param eleGrid 
    */
-  beforeInitGridSalesInvoices(eleGrid: CodxGridviewV2Component) {
+  initGridSalesInvoices(eleGrid: CodxGridviewV2Component) {
     let preDIM1 = '';
     let dtvDIM1 = '';
     let preDIM2 = '';
