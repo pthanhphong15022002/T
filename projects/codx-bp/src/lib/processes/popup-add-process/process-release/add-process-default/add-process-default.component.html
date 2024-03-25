@@ -87,9 +87,11 @@
                                 [refValue]="child.refValue"
                                 [refType]="child.refType" 
                                 [field]="getField(child?.fieldName)"
-                                [placeholder]="child?.description"
+                                [placeholder]="child?.autoNumber?.autoNumberControl ? 'Số tự động' :child?.description"
                                 [Group]="dynamicFormsForm"
                                 [ControlName]="child?.fieldName"
+                                [min]="(child.dataType == 'Decimal' && child.validateControl != '1')? 0 : undefined"
+                                [disabled]="child?.autoNumber?.autoNumberControl"
                                 >
                             </codx-input>
                         </ng-container>

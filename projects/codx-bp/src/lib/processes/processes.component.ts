@@ -240,7 +240,6 @@ export class ProcessesComponent
   clickMF(e, data) {
     this.itemSelected = data;
     this.titleAction = e.text;
-    debugger
     switch (e.functionID) {
       case 'SYS03':
         this.edit(data);
@@ -284,7 +283,9 @@ export class ProcessesComponent
       }
     }
   }
-
+  dbClickEvent(e) {
+    this.clickMF(e?.e, e?.data);
+  }
   openFormDiagram() {
     let option = new DialogModel();
     option.IsFull = true;
@@ -313,7 +314,8 @@ export class ProcessesComponent
             res.disabled = data?.status == '5' ? false : true;
             break;
           case 'SYS02':
-            res.disabled = data?.status == '5' || data?.status == '2' ? true : false;
+            res.disabled =
+              data?.status == '5' || data?.status == '2' ? true : false;
             break;
         }
       });

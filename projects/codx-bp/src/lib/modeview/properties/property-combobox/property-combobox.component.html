@@ -88,6 +88,7 @@
               </table>
         </ng-template>
     </div>
+    <lib-property-cbb-dependence [data]="data" [dataTable]="dataTable" (dataChange)="valueChangeData($event)" (dataChangeTableEmit)="valueChangeTableEmit($event)"></lib-property-cbb-dependence>
     <div class="border-top mt-8">
         <div class="d-flex align-items-center mt-4">
             <codx-input type="radio" name="radiomwuser" [crrValue]="'3'" field="refType" label="DropDown" [checked]="dropdown" (valueChange)="changeValue($event)"></codx-input>

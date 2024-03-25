@@ -18,7 +18,8 @@ export class PropertyDatetimeComponent extends BasePropertyComponent implements 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes?.data?.currentValue != changes?.data?.previousValue) {
+    if(changes?.data?.currentValue != changes?.data?.previousValue) 
+    {
       this.getDataDependence();
     }
   }
@@ -47,7 +48,7 @@ export class PropertyDatetimeComponent extends BasePropertyComponent implements 
     });
     
     this.combobox.dataSource = this.dependenceData;
-    this.combobox.value = this.data?.dependence || "";
+    this.combobox.value = this.data?.dependences || "";
     
     this.combobox.refresh();
     this.ref.detectChanges();
@@ -58,5 +59,15 @@ export class PropertyDatetimeComponent extends BasePropertyComponent implements 
     this.data[e?.field] = e?.data?.fromDate;
     this.dataChange.emit(this.data);
   }
- 
+  changeValueDateNow(e:any)
+  {
+    if(e?.data == true) this.data[e?.field] = "Now"
+    else  this.data[e?.field] = ""
+    this.dataChange.emit(this.data);
+  }
+  changeValueValiControl(e:any)
+  {
+    this.data[e?.field] = e?.data ? "1" : "0";
+    this.dataChange.emit(this.data);
+  }
 }

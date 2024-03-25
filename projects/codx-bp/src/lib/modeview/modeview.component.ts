@@ -115,9 +115,10 @@ export class ModeviewComponent implements OnInit {
   {
     var vlls = this.vllBP002.datas;
     data.forEach(elm => {
+      this.count[elm.fieldType.toLowerCase()] ++;
+      
       var indexs = vlls.findIndex(x=>x.value == elm.fieldType);
       elm.value = vlls[indexs].value;
-
       if(elm.fieldType == "Title") 
       {
         elm.columnOrder = 0;
@@ -229,7 +230,6 @@ export class ModeviewComponent implements OnInit {
         }
         i++;
       })
-      debugger
       let objectIndex = JSON.parse(JSON.stringify(this.table[event.currentIndex]));
       this.selectedItem(objectIndex.children[0]);
       //moveItemInArray( this.table, (event.currentIndex + 1), event.currentIndex);
@@ -586,7 +586,7 @@ export class ModeviewComponent implements OnInit {
       delete elm.textColor;
       delete elm.value;
     })
- 
+    debugger
     this.dialog.close(result);
   }
 
@@ -612,6 +612,11 @@ export class ModeviewComponent implements OnInit {
       e.fieldName = this.formatTitle(e.title);
       this.table[e?.columnOrder].children[e.columnNo] = e;
     }
+  }
+  
+  dataChangeTableEmit(e:any)
+  {
+    this.table = e;
   }
 
   resetIndex()
