@@ -3,7 +3,7 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators }
 import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
-import { elementAt, firstValueFrom, isObservable } from 'rxjs';
+import { Subject, elementAt, firstValueFrom, isObservable } from 'rxjs';
 import { AddTableRowComponent } from './add-table-row/add-table-row.component';
 import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 import { environment } from 'src/environments/environment';
@@ -23,18 +23,20 @@ export class AddProcessDefaultComponent implements OnInit{
   @Input() type = 'add';
   @Input() stepID:any;
   @Output() dataChange = new EventEmitter<any>();
-  data:any;
-  dialog:any;
-  table:any
-  dataTable = {};
-  dataUserInfo = {};
   formModel = 
   {
     funcID:'',
     formName: 'DynamicForms',
     gridViewName: 'grvDynamicForms',
-    entityName: 'BP_Instances'
+    entityName: 'BP_Instances',
+    currentData: null,
+    bindValue: null
   }
+  data:any;
+  dialog:any;
+  table:any
+  dataTable = {};
+  dataUserInfo = {};
   dynamicFormsForm: FormGroup;
   subTitle:any;
   tableField:any;
@@ -46,6 +48,9 @@ export class AddProcessDefaultComponent implements OnInit{
   indexUploadUserInfo = {};
   defaultFieldName = "";
   infoUser:any;
+  listFieldAuto = [];
+  gridViewSetup = [];
+
   constructor(
     private notifySvr: NotificationsService,
     private shareService: CodxShareService,
@@ -65,6 +70,8 @@ export class AddProcessDefaultComponent implements OnInit{
     this.type = dt?.data?.type ? dt?.data?.type : this.type;
     this.dialog = dialog;
     this.formModel.funcID = this.dialog.formModel?.funcID;
+    this.formModel.bindValue = new Subject();
+
   }
   ngOnInit(): void {
     if(this.type == 'add')  {
@@ -103,11 +110,13 @@ export class AddProcessDefaultComponent implements OnInit{
 
   formatData()
   {
+    this.listFieldAuto = [];
     let indexTable = 0;
     var list = [];
     let extendInfo = JSON.parse(JSON.stringify(typeof this.data.extendInfo == 'string' ?  JSON.parse(this.data.extendInfo) : this.data.extendInfo))
     extendInfo.forEach(element => {
       let field = element.fieldName.toLowerCase();
+      this.gridViewSetup[field]=element
       if(element.fieldType != "Title") 
       {
         if(this.type == 'add') {
@@ -116,7 +125,8 @@ export class AddProcessDefaultComponent implements OnInit{
           if(element.fieldType == "Email") validate = Validators.email;
           else if(element.fieldType == "Phone") validate = Validators.pattern("[0-9 ]{11}");
           else if(element.fieldType == "Attachment") element.documentControl = typeof element.documentControl == 'string' ? JSON.parse(element.documentControl): element.documentControl;
-          else if(element.fieldType == "DateTime") {
+          else if(element.fieldType == "DateTime") 
+          {
             if(element.defaultValue == "Now") element.defaultValue = new Date();
             if(element.validateControl == "1") validate = this.customeValidatorDateValiControl;
             if(element.dependences) validate = this.customeValidatorDate(element);
@@ -200,7 +210,15 @@ export class AddProcessDefaultComponent implements OnInit{
         }
         this.indexUploadUserInfo[field] = 0;
       }
-      
+      if(element.autoNumber?.autoNumberControl) 
+      {
+        var objAuto = 
+        {
+          field: field,
+          autoNumberNo: element.autoNumber?.autoNumberNo
+        }
+        this.listFieldAuto.push(objAuto);
+      }
       var index = list.findIndex(x=>x.columnOrder == element.columnOrder)
       if(index >= 0)
       {
@@ -330,6 +348,15 @@ export class AddProcessDefaultComponent implements OnInit{
             this.bpService.genAutoNumber(this.formModel?.funcID, this.formModel.entityName, "InstanceNo")
           );
         }
+        if(this.listFieldAuto.length>0)
+        {
+          this.listFieldAuto.forEach(async item=>{
+            valueForm[item.field] = await firstValueFrom(
+              this.bpService.getAutoNumber(item.autoNumberNo)
+            );
+          })
+        }
+
         var stageF = this.process.steps.filter(x=>x.activityType == "Stage")[0];
         var stage = 
         {
@@ -390,7 +417,7 @@ export class AddProcessDefaultComponent implements OnInit{
         let fieldName = "f" + this.data.stepNo + "_owner"
         valueForm[fieldName] = 
         {
-          userName: this.infoUser?.userName,
+          username: this.infoUser?.userName,
           createdOn: new Date(),
           position: this.infoUser?.positionID,
           orgUnit: this.infoUser?.orgUnitID,
@@ -401,7 +428,7 @@ export class AddProcessDefaultComponent implements OnInit{
         this.dataIns.instanceNo = instanceNo,
         this.dataIns.instanceID = this.dataIns.recID,
         this.dataIns.status= "1",
-        this.dataIns.currentStage= stageF.recID,
+        this.dataIns.currentStage = stageF.recID,
         this.dataIns.currentStep= step.recID,
         this.dataIns.lastUpdate= null,
         this.dataIns.closed= false,

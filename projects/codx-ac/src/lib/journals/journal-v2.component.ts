@@ -24,7 +24,6 @@ import { NameByIdPipe } from '../pipes/name-by-id.pipe';
 import { BehaviorSubject, Subject, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { CodxAcService } from '../codx-ac.service';
-import { IJournal } from '../journals/interfaces/IJournal.interface';
 import { JournalViewsettingComponent } from './journals-viewsetting/journal-viewsetting/journal-viewsetting.component';
 
 @Component({
@@ -347,27 +346,6 @@ export class JournalV2Component extends UIComponent {
 
   setDefault() {
     return this.api.exec('AC', 'JournalsBusiness', 'SetDefaultAsync');
-  }
-
-  sortData(): void {
-    const temp: any[] = this.view.dataService.data;
-    this.view.dataService.data = [
-      ...temp.filter((j: IJournal) =>
-        this.journalTypes134.includes(j.journalType)
-      ),
-      ...temp.filter((j: IJournal) =>
-        this.journalTypes135.includes(j.journalType)
-      ),
-      ...temp.filter((j: IJournal) =>
-        this.journalTypes136.includes(j.journalType)
-      ),
-      ...temp.filter((j: IJournal) =>
-        this.journalTypes137.includes(j.journalType)
-      ),
-      ...temp.filter((j: IJournal) =>
-        this.journalTypes138.includes(j.journalType)
-      ),
-    ];
   }
 
   /**

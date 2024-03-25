@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Host
 import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxGridviewV2Component, CodxInplaceComponent, CodxInputComponent, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, UIComponent, Util } from 'codx-core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { Dialog, isCollide } from '@syncfusion/ej2-angular-popups';
-import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { EditSettingsModel, row } from '@syncfusion/ej2-angular-grids';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService, fmVouchersLines } from '../../../codx-ac.service';
@@ -79,7 +78,6 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(
-        takeUntil(this.destroy$),
         map((arr: any[]) => arr.find((a) => a.category === '1')),
         map((data) => JSON.parse(data.dataValue))
       ).subscribe((res:any)=>{

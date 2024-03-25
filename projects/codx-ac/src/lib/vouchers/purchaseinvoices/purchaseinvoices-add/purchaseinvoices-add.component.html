@@ -666,7 +666,7 @@
       [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [templateMore]="templateMore"
       [hideMoreFunc]="master.data?.isReadOnly ? true : false"
       [entityName]="fmPurchaseInvoicesLines.entityName" predicates="TransID=@0"
-      (gridInit)="beforeInitGridPurchaseInvoices($event)" [dataValues]="master?.data?.recID" service="AC"
+      (gridInit)="initGridPurchaseInvoices($event)" [dataValues]="master?.data?.recID" service="AC"
       [editOnClick]="master.data?.isReadOnly ? false : true"
       (eventAction)="onActionGridPurchaseInvoice($event)" (cellChanged)="valueChangeLine($event)"
       (actionCompleted)="onActionGridPurchaseInvoice($event)" rowNoField="rowNo"></codx-gridview-v2>

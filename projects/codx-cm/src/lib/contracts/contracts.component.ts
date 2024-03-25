@@ -200,7 +200,7 @@ export class ContractsComponent extends UIComponent {
     }
   }
 
-  async ngOnChanges(changes: SimpleChanges) {}
+  async ngOnChanges(changes: SimpleChanges) { }
 
   ngAfterViewInit() {
     this.getColumsGrid(this.grvSetup);
@@ -254,7 +254,7 @@ export class ContractsComponent extends UIComponent {
         if (isDetail) res.isbookmark = false;
         if (
           data?.approveStatus == '3' &&
-          !['CM0204_2', 'SYS05', 'CM0204_17', 'CM0204_7'].includes(
+          !['CM0204_2', 'SYS05', 'CM0204_17', 'CM0204_7','SYS003','SYS004','SYS001','SYS002','SYS009','SYS008','SYS010'].includes(
             res?.functionID
           )
         ) {
@@ -268,6 +268,7 @@ export class ContractsComponent extends UIComponent {
             'CM0204_17',
             'CM0204_3',
             'CM0204_7',
+            'SYS003','SYS004','SYS001','SYS002','SYS009','SYS008','SYS010'
           ].includes(res?.functionID)
         ) {
           res.disabled = true;
@@ -280,6 +281,7 @@ export class ContractsComponent extends UIComponent {
             'CM0204_22',
             'CM0204_17',
             'CM0204_7',
+            'SYS003','SYS004','SYS001','SYS002','SYS009','SYS008','SYS010'
           ].includes(res?.functionID)
         ) {
           res.disabled = true;
@@ -566,10 +568,10 @@ export class ContractsComponent extends UIComponent {
           this.notiService
             .alertCode('DP033', null, [
               '"' +
-                data?.contractName +
-                '" ' +
-                'Người phụ trách không tồn tại trong quy trình' +
-                ' ',
+              data?.contractName +
+              '" ' +
+              'Người phụ trách không tồn tại trong quy trình' +
+              ' ',
             ])
             .subscribe((x) => {
               if (x.event && x.event.status == 'Y') {
@@ -1633,7 +1635,7 @@ export class ContractsComponent extends UIComponent {
             e,
             data,
             this.afterSave,
-            this.frmModelExport, //this.view.formModel,
+            this.view.formModel,//this.frmModelExport, 
             this.view.dataService,
             this,
             customData
@@ -1672,7 +1674,7 @@ export class ContractsComponent extends UIComponent {
           return [];
         })
       )
-      .subscribe(() => {});
+      .subscribe(() => { });
   }
 
   liquidationContract(data) {
@@ -1762,7 +1764,7 @@ export class ContractsComponent extends UIComponent {
         }
       });
   }
-  reloadListStep(listSteps: any) {}
+  reloadListStep(listSteps: any) { }
 
   handelMoveStage(event, contract) {
     if (event) {

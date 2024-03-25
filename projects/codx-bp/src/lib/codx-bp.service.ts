@@ -81,6 +81,17 @@ export class CodxBpService {
       [funcID, entityName, key]
     );
   }
+
+  getAutoNumber(key: any) {
+    return this.api.execSv<any>(
+      APICONSTANT.SERVICES.SYS,
+      APICONSTANT.ASSEMBLY.AD,
+      'AutoNumbersBusiness',
+      'GetAutoNumberAsync',
+      key
+    );
+  }
+  
   createTaskOnSaveInstance(recID) {
     return this.api.execSv<any>(
       "BP",

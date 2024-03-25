@@ -59,7 +59,6 @@ export class GeneralJournalComponent extends UIComponent {
         this.baseCurr = dataValue?.BaseCurr || '';
       })
     this.router.params
-      .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
         this.journalNo = params?.journalNo; //? get số journal từ router
       });
@@ -84,7 +83,6 @@ export class GeneralJournalComponent extends UIComponent {
   ngAfterViewInit() {
     this.cache
       .functionList(this.view.funcID)
-      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
           this.headerText = res?.defaultName; //? lấy tên chứng từ (Phiếu chi)
@@ -404,7 +402,6 @@ export class GeneralJournalComponent extends UIComponent {
                     this.onDestroy();
                   });
               }
-              this.onDestroy();
             });
         }
       });
@@ -725,15 +722,16 @@ export class GeneralJournalComponent extends UIComponent {
    * *Hàm get data mặc định của chứng từ
    */
   getJournal() {
+    let options = new DataRequest();
+    options.entityName = 'AC_Journals';
+    options.pageLoading = false;
+    options.predicates = 'JournalNo=@0';
+    options.dataValues = this.journalNo;
     this.api
-      .exec('AC', 'ACBusiness', 'GetJournalAsync', [this.journalNo])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res) {
-          this.journal = res[0]; // data journal
-          this.hideFields = res[1]; // array field ẩn từ sổ nhật kí
-        }
-      });
+      .execSv('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(map((r) => r?.[0] ?? [])).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+        this.journal = res[0]; 
+      })
   }
 
   /**

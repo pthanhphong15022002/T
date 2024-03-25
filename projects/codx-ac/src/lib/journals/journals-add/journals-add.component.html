@@ -104,9 +104,13 @@
 <!-- Start: TabEstablish -->
 <ng-template #tabestablish>
   <ng-container *ngIf="formJournal?.form?.formGroup">
-    <div class="line-around-flex pb-3">
+    <!-- <div class="line-around-flex pb-3">
       <codx-label style="font-size: 15px !important;" default="Thiết lập chung"
         class="fw-bold text-primary"></codx-label>
+    </div> -->
+    <div class="mb-3">
+      <codx-label style="font-size: 15px !important;" default="Thiết lập chung"
+      class="fw-bold text-primary"></codx-label>
     </div>
     <div class="row">
       <div class="col-6">
@@ -387,9 +391,13 @@
         </div>
       </div>
     </div>
-    <div class="line-around-flex pb-3">
+    <!-- <div class="line-around-flex pb-3">
       <codx-label style="font-size: 15px !important;" default="Thiết lập hạn mức"
         class="fw-bold text-primary"></codx-label>
+    </div> -->
+    <div class="mb-3">
+      <codx-label style="font-size: 15px !important;" default="Thiết lập hạn mức"
+      class="fw-bold text-primary"></codx-label>
     </div>
     <div class="row">
       <div class="col-8">
@@ -408,9 +416,13 @@
       </div>
     </div>
     <div [ngStyle]="vllAC125.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}">
-      <div class="line-around-flex pb-3">
+      <!-- <div class="line-around-flex pb-3">
         <codx-label style="font-size: 15px !important;" default="Thiết lập thuế"
           class="fw-bold text-primary"></codx-label>
+      </div> -->
+      <div class="mb-3">
+        <codx-label style="font-size: 15px !important;" default="Thiết lập thuế"
+        class="fw-bold text-primary"></codx-label>
       </div>
       <div class="d-flex justify-content-between form-group">
         <codx-label fiedName="VatControl" [formModel]="dialog.formModel"></codx-label>
@@ -432,9 +444,13 @@
       </div>
     </div>
     <div [ngStyle]="vllAC108.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}">
-      <div class="line-around-flex pb-3">
+      <!-- <div class="line-around-flex pb-3">
         <codx-label style="font-size: 15px !important;" default="Thiết lập công nợ"
           class="fw-bold text-primary"></codx-label>
+      </div> -->
+      <div class="mb-3">
+        <codx-label style="font-size: 15px !important;" default="Thiết lập công nợ"
+        class="fw-bold text-primary"></codx-label>
       </div>
       <div class="row">
         <div class="col-8">
@@ -470,9 +486,13 @@
       </div>
     </div>
     <div [ngStyle]="vllAC109.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}">
-      <div class="line-around-flex pb-3">
+      <!-- <div class="line-around-flex pb-3">
         <codx-label style="font-size: 15px !important;" default="Thiết lập kho"
           class="fw-bold text-primary"></codx-label>
+      </div> -->
+      <div class="mb-3">
+        <codx-label style="font-size: 15px !important;" default="Thiết lập kho"
+        class="fw-bold text-primary"></codx-label>
       </div>
       <div [ngStyle]="vllAC110.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="row">
         <div class="col-8">

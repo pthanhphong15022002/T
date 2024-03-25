@@ -37,8 +37,7 @@ import { CustomFieldService } from 'projects/codx-dp/src/lib/share-crm/codx-inpu
 })
 export class PopupAddLeadComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   // view child
   @ViewChild('tabGeneralInfoDetail') tabGeneralInfoDetail: TemplateRef<any>;
   @ViewChild('tabGeneralSystemDetail') tabGeneralSystemDetail: TemplateRef<any>;
@@ -239,7 +238,7 @@ export class PopupAddLeadComponent
     this.isCategory = this.lead.category == '1';
   }
 
-  onInit(): void {}
+  onInit(): void { }
 
   ngAfterViewInit(): void {
     this.tabInfo = [this.menuGeneralInfo, this.menuGeneralSystem];
@@ -346,8 +345,8 @@ export class PopupAddLeadComponent
           if (exchangeRateNew == 0) {
             this.notificationsService.notify(
               'Tỷ giá tiền tệ "' +
-                this.lead.currencyID +
-                '" chưa thiết lập xin hay chọn lại !',
+              this.lead.currencyID +
+              '" chưa thiết lập xin hay chọn lại !',
               '3'
             );
             this.form.formGroup.patchValue(this.lead);
@@ -928,9 +927,9 @@ export class PopupAddLeadComponent
   HandleEndDate(listSteps: any, action: string, endDateValue: any) {
     endDateValue =
       action === this.actionAdd ||
-      action === this.actionCopy ||
-      (this.action === this.actionEdit &&
-        (this.lead.status == '1' || this.lead.status == '15'))
+        action === this.actionCopy ||
+        (this.action === this.actionEdit &&
+          (this.lead.status == '1' || this.lead.status == '15'))
         ? new Date()
         : new Date(endDateValue);
     let dateNow = endDateValue;

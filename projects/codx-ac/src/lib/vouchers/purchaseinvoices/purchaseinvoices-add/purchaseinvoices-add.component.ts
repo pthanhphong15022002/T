@@ -24,11 +24,6 @@ import {
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService, fmPurchaseInvoicesLines, fmVATInvoices } from '../../../codx-ac.service';
-import {
-  IJournal,
-  Vll067,
-  Vll075,
-} from '../../../journals/interfaces/IJournal.interface';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AC_PurchaseInvoicesLines } from '../../../models/AC_PurchaseInvoicesLines.model';
 import { AC_VATInvoices } from '../../../models/AC_VATInvoices.model';
@@ -50,8 +45,6 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
   @ViewChild('elementTabDetail') elementTabDetail: any;
   @ViewChild('eleCbxObjectID') eleCbxObjectID: any;
   @ViewChild('eleCbxCurrencyID') eleCbxCurrencyID: any;
-
-
   headerText: string;
   dialog: DialogRef;
   dialogData?: any;
@@ -105,7 +98,6 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(
-        takeUntil(this.destroy$),
         map((arr: any[]) => arr.find((a) => a.category === '1')),
         map((data) => JSON.parse(data.dataValue))
       ).subscribe((res: any) => {
@@ -138,23 +130,24 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * *Hàm thiết lập lưới trước khi init
    * @param eleGrid 
    */
-  beforeInitGridPurchaseInvoices(eleGrid: CodxGridviewV2Component) {
-    let hideFields = [];
-    //* Thiết lập ẩn hiện các cột theo sổ nhật ký
-    if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
-      hideFields = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
-    }
-    let setting = this.acService.getSettingFromJournal(eleGrid, this.journal, this.master?.data, this.baseCurr, hideFields);
-    eleGrid = setting[0];
-    hideFields = setting[1];
+  initGridPurchaseInvoices(eleGrid: CodxGridviewV2Component) {
+    
+    // let hideFields = [];
+    // //* Thiết lập ẩn hiện các cột theo sổ nhật ký
+    // if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
+    //   hideFields = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
+    // }
+    // let setting = this.acService.getSettingFromJournal(eleGrid, this.journal, this.master?.data, this.baseCurr, hideFields);
+    // eleGrid = setting[0];
+    // hideFields = setting[1];
 
-    if (this.master?.data?.currencyID == this.baseCurr) { //? nếu không sử dụng ngoại tệ
-      hideFields.push('PurcAmt2');
-      hideFields.push('DiscAmt2');
-      hideFields.push('NetAmt2');
-      hideFields.push('MiscAmt2');
-    }
-    eleGrid.showHideColumns(hideFields);
+    // if (this.master?.data?.currencyID == this.baseCurr) { //? nếu không sử dụng ngoại tệ
+    //   hideFields.push('PurcAmt2');
+    //   hideFields.push('DiscAmt2');
+    //   hideFields.push('NetAmt2');
+    //   hideFields.push('MiscAmt2');
+    // }
+    // eleGrid.showHideColumns(hideFields);
   }
 
   //#endregion Init
