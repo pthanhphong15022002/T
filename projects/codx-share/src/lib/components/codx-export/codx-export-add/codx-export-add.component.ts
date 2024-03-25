@@ -725,11 +725,11 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
         text += '|' + check[0].referedValue;
     }
 
-    // this.container.documentEditor.editor.insertField(
-    //   fieldCode,
-    //   '[' + text + ']'
-    // );
-    this.container.documentEditor.editor.insertText('[' + text + '] ');
+    this.container.documentEditor.editor.insertField(
+      fieldCode,
+      '[' + text + ']'
+    );
+    //this.container.documentEditor.editor.insertText('[' + text + '] ');
     this.container.documentEditor.focusIn();
   }
 
