@@ -8,12 +8,14 @@
           <div class="form-group col-8">
             <codx-label class="fw-bold" fiedName="ResourceName" [formModel]="form.formModel">
             </codx-label>
-            <codx-input ControlName="resourceName" [formModel]="form.formModel" [Group]="form.formGroup"  [disabled]="viewOnly"></codx-input>
+            <codx-input ControlName="resourceName" [formModel]="form.formModel" [Group]="form.formGroup"
+              [disabled]="viewOnly"></codx-input>
           </div>
           <div class="form-group col-4">
             <codx-label class="fw-bold" fiedName="UMID" [formModel]="form.formModel">
             </codx-label>
-            <codx-input ControlName="umid" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly"></codx-input>
+            <codx-input ControlName="umid" [formModel]="form.formModel" [Group]="form.formGroup"
+              [disabled]="viewOnly"></codx-input>
           </div>
         </div>
 
@@ -22,15 +24,16 @@
             <codx-label class="fw-bold" fiedName="GroupID" [formModel]="form.formModel">
             </codx-label>
 
-            <codx-input ControlName="groupID" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
+            <codx-input ControlName="groupID" [formModel]="form.formModel" [Group]="form.formGroup"
+              [disabled]="viewOnly">
             </codx-input>
           </div>
           <div class="form-group col-4">
             <codx-label fiedName="ResourceID" [formModel]="form.formModel">
             </codx-label>
 
-            <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly"
-              [disabled]="autoNumDisable"></codx-input>
+            <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
+              [disabled]="viewOnly" [disabled]="autoNumDisable"></codx-input>
           </div>
         </div>
 
@@ -38,8 +41,8 @@
           <div class="form-group col-12">
             <codx-label class="fw-bold" fiedName="Location" [formModel]="form.formModel">
             </codx-label>
-            <codx-input type="combobox" refValue="EP_Warehouses" field="location" [crrValue]="this.defaultWarehouse" [disabled]="viewOnly"
-              (valueChange)="valueChange($event)">
+            <codx-input type="combobox" refValue="EP_Warehouses" field="location" [crrValue]="this.defaultWarehouse"
+              [disabled]="viewOnly" (valueChange)="valueChange($event)">
             </codx-input>
           </div>
         </div>
@@ -67,8 +70,8 @@
         <div class="d-flex justify-content-start mb-4">
           <div *ngIf="data?.recID" class="upload-img">
             <codx-img #imageUpLoad [width]="100" imageType="circle" [objectType]="'EP_Resources'"
-              [objectName]="data?.resourceName" aria-disabled="false" [funcId]="formModel?.funcID" [isAllowEdit]=" viewOnly ? false : true"
-              [objectId]="imgRecID" [objectName]="data?.resourceName">
+              [objectName]="data?.resourceName" aria-disabled="false" [funcId]="formModel?.funcID"
+              [isAllowEdit]=" viewOnly ? false : true" [objectId]="imgRecID" [objectName]="data?.resourceName">
             </codx-img>
           </div>
           <div class="d-flex align-items-center">
@@ -174,7 +177,76 @@
       </div>
     </ng-container>
   </ng-template>
+  <ng-template #tabMoreInfo1>
+    <ng-container *ngIf="form && form.formGroup">
+      <table class="w-100">
+        <thead class="h-50px w-100">
+          <tr class="bg-light">
+            <th scope="col ps-2"><codx-label name="lblApprover" default="Người thực hiện"
+                [formModel]="formModel"></codx-label></th>
+            <th scope="col"><codx-label name="lblStepType" default="Hành động" [formModel]="formModel"></codx-label>
+            </th>
+            <th scope="col"><codx-label name="lblSignatureType" default="Loại chữ ký"
+                [formModel]="formModel"></codx-label>
+            </th>
+            <th scope="col"><codx-label name="lblAllowEditAreas" default="Chỉnh sửa vùng ký"
+                [formModel]="formModel"></codx-label></th>
+            <th scope="col"><codx-label name="lblC" default="Xác nhận xem" [formModel]="formModel"></codx-label>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-bottom" *ngFor="let item of warehouses; let index = index">
+            <td>
+              <div class=" d-flex flex-row align-items-center">
+                <div class="d-flex align-items-start me-3">
+                  <div ngbDropdown class="dropdown">
+                    <span ngbDropdownToggle type="button" id="dropdownMenuButton1" aria-haspopup="true"
+                      aria-expanded="false">
+                      <span class="icon-more_vert icon-18"></span>
+                    </span>
+                    <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                      <a ngbDropdownItem class="dropdown-item" (click)="editWarehouse(index)">
+                        <div class="d-flex align-items-center cursor-pointer">
+                          <span class="icon-edit text-primary icon-16"></span>
+                          <span class="ms-2"><codx-label name="lblEdit" default="Chỉnh sửa"></codx-label> </span>
+                        </div>
+                      </a>
+                      <a ngbDropdownItem class="dropdown-item" (click)="deleteWarehouse(index)">
+                        <div class="d-flex align-items-center cursor-pointer">
+                          <span class="icon-delete text-danger icon-16"></span>
+                          <span class="ms-2"><codx-label name="lblDelete" default="Xóa"></codx-label></span>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex flex-column align-items-start pt-3 mb-2">
 
+
+                </div>
+              </div>
+
+
+            </td>
+            <td class="">
+                
+            </td>
+            <td class="">
+             
+            </td>
+            <td class="">
+              
+            </td>
+            <td class="">
+              
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </ng-container>
+  </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">
       <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="viewOnly">

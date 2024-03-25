@@ -80,6 +80,7 @@ export class PopupAddStationeryComponent
   isPriceVisible: boolean = false;
   mfuncID: any;
   viewOnly=false;
+  warehouses=[];
 
   constructor(
     injector: Injector,
@@ -233,5 +234,11 @@ export class PopupAddStationeryComponent
   setTitle(event) {
     this.title = this.tmpTitle;
     this.detectorRef.detectChanges();
+  }
+  editWarehouse(evt){
+
+  }
+  deleteWarehouse(evt){
+    
   }
 }
