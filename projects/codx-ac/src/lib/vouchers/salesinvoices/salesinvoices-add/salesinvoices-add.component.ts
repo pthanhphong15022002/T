@@ -20,11 +20,6 @@ import {
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService, fmSalesInvoicesLines, fmVATInvoices } from '../../../codx-ac.service';
-import {
-  IJournal,
-  Vll067,
-  Vll075,
-} from '../../../journals/interfaces/IJournal.interface';
 import { Subject, map, takeUntil } from 'rxjs';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { AC_SalesInvoicesLines } from '../../../models/AC_SalesInvoicesLines.model';

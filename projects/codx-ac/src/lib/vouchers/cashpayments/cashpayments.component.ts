@@ -102,7 +102,6 @@ export class CashPaymentsComponent extends UIComponent {
   onInit(): void {
     this.cache
       .companySetting()
-      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res.length > 0) {
           this.legalName = res[0].legalName;
@@ -111,17 +110,17 @@ export class CashPaymentsComponent extends UIComponent {
 
     this.cache
       .viewSettingValues('ACParameters')
-      .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]), takeUntil(this.destroy$))
+      .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
       .subscribe((res) => {
         let dataValue = JSON.parse(res.dataValue);
         this.baseCurr = dataValue?.BaseCurr || '';
       })
 
-    this.router.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+    this.router.params.subscribe((params) => {
       this.journalNo = params?.journalNo;
     });
 
-    this.router.data.pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+    this.router.data.subscribe((res: any) => {
       if (res && res['runMode'] && res['runMode'] == '1') {
         this.predicate = '';
         this.runmode = res.runMode;
@@ -131,7 +130,6 @@ export class CashPaymentsComponent extends UIComponent {
 
     this.cache
       .functionList(this.funcID)
-      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
           this.headerText = res?.defaultName || res?.customName;
@@ -316,7 +314,6 @@ export class CashPaymentsComponent extends UIComponent {
             headerText: this.headerText, //? tiêu đề voucher
             journal: { ...this.journal }, //?  data journal
             oData: { ...res }, //?  data của cashpayment
-            hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
             baseCurr: this.baseCurr, //?  đồng tiền hạch toán
             legalName: this.legalName, //? tên company
           };
@@ -777,15 +774,16 @@ export class CashPaymentsComponent extends UIComponent {
    * *Hàm get data mặc định của chứng từ
    */
   getJournal() {
+    let options = new DataRequest();
+    options.entityName = 'AC_Journals';
+    options.pageLoading = false;
+    options.predicates = 'JournalNo=@0';
+    options.dataValues = this.journalNo;
     this.api
-      .exec('AC', 'ACBusiness', 'GetJournalAsync', [this.journalNo])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res) {
-          this.journal = res[0]; // data journal
-          this.hideFields = res[1]; // array field ẩn từ sổ nhật kí
-        }
-      });
+      .execSv('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(map((r) => r?.[0] ?? [])).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+        this.journal = res[0]; 
+      })
   }
 
   /**

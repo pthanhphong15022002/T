@@ -62,7 +62,6 @@ export class CashreceiptsComponent extends UIComponent {
   dataCategory: any; //? data của category
   journal: any; //? data sổ nhật kí
   baseCurr: any; //? đồng tiền hạch toán
-  legalName: any; //? tên công ty
   dataDefault: any; //? data default của phiếu
   hideFields: Array<any> = []; //? array field được ẩn lấy từ journal
   button: ButtonModel[] = [
@@ -72,10 +71,6 @@ export class CashreceiptsComponent extends UIComponent {
       icon: 'icon-i-file-earmark-plus',
     },
   ];
-  bhLogin: boolean = false;
-  bankPayID: any;
-  bankNamePay: any;
-  bankReceiveName: any;
   viewActive: number = ViewType.listdetail;
   ViewType = ViewType;
   fmJournal:FormModel =  fmJournal;
@@ -286,7 +281,6 @@ export class CashreceiptsComponent extends UIComponent {
             oData: { ...res }, //?  data của cashpayment
             hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
             baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-            legalName: this.legalName, //? tên company
           };
           let optionSidebar = new SidebarModel();
           optionSidebar.DataService = this.view?.dataService;
@@ -330,7 +324,6 @@ export class CashreceiptsComponent extends UIComponent {
           oData: { ...res }, //?  data của cashpayment
           hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
           baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-          legalName: this.legalName, //? tên company
         };
         let optionSidebar = new SidebarModel();
         optionSidebar.DataService = this.view?.dataService;
@@ -426,10 +419,10 @@ export class CashreceiptsComponent extends UIComponent {
                         .add(datas)
                         .pipe(takeUntil(this.destroy$))
                         .subscribe();
+                      this.onDestroy();
                     }
                   });
               }
-              this.onDestroy();
             });
         }
       });
@@ -477,9 +470,9 @@ export class CashreceiptsComponent extends UIComponent {
                     .pipe(takeUntil(this.destroy$))
                     .subscribe();
                 }
+                this.onDestroy();
               });
           }
-          this.onDestroy();
         });
     }
   }
@@ -547,7 +540,6 @@ export class CashreceiptsComponent extends UIComponent {
       oData: { ...dataView },
       hideFields: [...this.hideFields],
       baseCurr: this.baseCurr,
-      legalName: this.legalName,
     };
     let optionSidebar = new SidebarModel();
     optionSidebar.DataService = this.view?.dataService;
@@ -764,16 +756,16 @@ export class CashreceiptsComponent extends UIComponent {
    * *Hàm get data mặc định của chứng từ
    */
   getJournal() {
+    let options = new DataRequest();
+    options.entityName = 'AC_Journals';
+    options.pageLoading = false;
+    options.predicates = 'JournalNo=@0';
+    options.dataValues = this.journalNo;
     this.api
-      .exec('AC', 'ACBusiness', 'GetJournalAsync', [this.journalNo])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res) {
-          this.journal = res[0]; // data journal
-          this.hideFields = res[1]; // array field ẩn từ sổ nhật kí
-          this.detectorRef.detectChanges();
-        }
-      });
+      .execSv('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(map((r) => r?.[0] ?? [])).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+        this.journal = res[0]; 
+      })
   }
 
   /**
