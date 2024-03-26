@@ -591,10 +591,10 @@
       #iconRight
       *ngIf="
         itemQuestion.active &&
-        (itemQuestion.answerType == 'O' || itemQuestion.answerType == 'C')
+        (itemQuestion.answerType == 'O' || itemQuestion.answerType == 'C' || itemQuestion.answerType == 'L')
       "
     >
-      <div class="has-action-menu" *ngIf="!itemAnswer.other">
+      <div class="has-action-menu" *ngIf="!itemAnswer.other && itemQuestion.answerType != 'L'">
         <div class="action-menu img-sv-cricle d-flex align-items-center justify-content-center  ">
           <span
             class="icon-image icon-22"
@@ -611,11 +611,12 @@
           ></span>
         </div>
       </div>
+      <!-- *ngIf="itemQuestion.answers?.length > 1 || itemQuestion.answerType == 'L'" -->
       <div
-        class="cur-point"
+        class="cur-point pt-1"
         (click)="deleteAnswer(seqNoSession, itemQuestion.seqNo, itemAnswer)"
         [ngClass]="itemAnswer.other ? 'm-l-6' : ''"
-        *ngIf="itemQuestion.answers?.length > 1"
+       
       >
         <span class="icon-close icon-22 pd-s-e-10"></span>
       </div>
