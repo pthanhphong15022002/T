@@ -98,7 +98,10 @@
       </ng-container>
       <span
         style="margin-left: 30px"
-        *ngIf="formAsset.data?.validated || formAsset.data?.isReadOnly"
+        *ngIf="
+          (formAsset.data?.validated || formAsset.data?.isReadOnly) &&
+          formAsset?.data?.subType
+        "
       >
         <codx-vll
           [name]="formAsset?.gridviewSetup['SubType']?.referedValue"
@@ -215,7 +218,7 @@
         id="btncancle"
         [shortcut]="'alt+c'"
         [autoClick]="true"
-        *ngIf="!formAsset.data?.validated"
+        *ngIf="!formAsset.data?.validated && !formAsset.data?.isReadOnly"
         type="button"
         class="btn btn-md btn-danger me-2"
         (keydown.enter)="onDiscard(); $event.preventDefault()"
@@ -234,6 +237,7 @@
         id="btnsaveas"
         [shortcut]="'alt+shift+s'"
         [autoClick]="true"
+        *ngIf="!formAsset.data?.validated && !formAsset.data?.isReadOnly"
         type="button"
         class="btn btn-md btn-primary me-2"
         (keydown.enter)="onSave('saveadd'); $event.preventDefault()"
@@ -251,6 +255,7 @@
       <button
         [shortcut]="'alt+s'"
         [autoClick]="true"
+        *ngIf="!formAsset.data?.validated && !formAsset.data?.isReadOnly"
         id="btnsave"
         type="button"
         class="btn btn-md btn-light-primary"
@@ -282,7 +287,7 @@
 
 <ng-template #TmpTabGeneral>
   <ng-container *ngIf="formAsset?.formGroup">
-    <div style="height: 200px" class="mt-3 ac-master">
+    <div style="height: 200px" class="mt-3 ac-formAsset">
       <div style="flex-wrap: nowrap" class="row d-flex overflow-auto h-100">
         <div style="min-width: 800px; padding-right: 0" class="col-8">
           <div class="row" style="max-width: 1000px">
@@ -299,6 +304,7 @@
                   [Group]="formAsset?.formGroup"
                   field="issueNo"
                   [formModel]="dialog?.formModel"
+                  [disabled]="formAsset.data?.isReadOnly ? true : false"
                   (valueChange)="valueChangeMaster($event)"
                 >
                 </codx-input>
@@ -317,6 +323,7 @@
                   [Group]="formAsset.formGroup"
                   [formModel]="dialog.formModel"
                   field="issueOn"
+                  [disabled]="formAsset.data?.isReadOnly ? true : false"
                   (controlBlur)="valueChangeMaster($event)"
                 ></codx-input>
               </div>
@@ -334,6 +341,7 @@
                   [Group]="formAsset.formGroup"
                   field="reasonID"
                   [formModel]="dialog.formModel"
+                  [disabled]="formAsset.data?.isReadOnly ? true : false"
                   (valueChange)="valueChangeMaster($event)"
                 >
                 </codx-input>
@@ -353,6 +361,7 @@
                 <codx-input
                   [Group]="formAsset.formGroup"
                   field="memo"
+                  [disabled]="formAsset.data?.isReadOnly ? true : false"
                   [formModel]="dialog.formModel"
                   (controlBlur)="valueChangeMaster($event)"
                 >
@@ -380,6 +389,7 @@
                     [Group]="formAsset.formGroup"
                     [formModel]="formAsset.formModel"
                     field="voucherDate"
+                    [disabled]="formAsset.data?.isReadOnly ? true : false"
                     (valueChange)="valueChangeMaster($event)"
                   >
                   </codx-input>
@@ -396,6 +406,7 @@
                   <codx-input
                     [Group]="formAsset.formGroup"
                     field="voucherNo"
+                    [disabled]="formAsset.data?.isReadOnly ? true : false"
                     [formModel]="dialog.formModel"
                     (valueChange)="valueChangeMaster($event)"
                   >
@@ -419,6 +430,7 @@
                     [Group]="formAsset.formGroup"
                     field="postedDate"
                     [formModel]="dialog.formModel"
+                    [disabled]="formAsset.data?.isReadOnly ? true : false"
                     (valueChange)="valueChangeMaster($event)"
                   >
                   </codx-input>
@@ -438,6 +450,7 @@
                   <codx-input
                     field="status"
                     [formModel]="dialog.formModel"
+                    [disabled]="formAsset.data?.isReadOnly ? true : false"
                     [Group]="formAsset.formGroup"
                   >
                   </codx-input>
@@ -465,16 +478,16 @@
         [showEmptyRecord]="false"
         gridLines="Both"
         [autoFitColumns]="true"
-        [editSettings]="editSettings"
+        [editSettings]="formAsset.data?.isReadOnly ? editSettings : {}"
         [formName]="fmAssetJournalsLines.formName"
         idField="recID"
         [gridViewName]="fmAssetJournalsLines.gridViewName"
         [entityName]="fmAssetJournalsLines.entityName"
         predicates="TransID=@0"
         [dataValues]="formAsset?.data?.recID"
-        [hideMoreFunc]="false"
+        [hideMoreFunc]="formAsset.data?.isReadOnly ? true : false"
         service="AM"
-        [editOnClick]="true"
+        [editOnClick]="formAsset.data?.isReadOnly ? false : true"
         [templateMore]="templateMore"
         rowNoField="rowNo"
         (gridInit)="initGrid($event)"
@@ -482,8 +495,9 @@
         (actionCompleted)="onActionGrid($event)"
         (cellChanged)="valueChangeLine($event)"
         (onDelete)="onDelete($event)"
+        (onEdit)="onEdit($event)"
       ></codx-gridview-v2>
-      <ng-container>
+      <ng-container *ngIf="!formAsset.data?.isReadOnly">
         <div #btnRef class="btn-addline">
           <div class="d-flex align-items-center">
             <button

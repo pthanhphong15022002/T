@@ -201,6 +201,9 @@ export class AssetJournalsComponent extends UIComponent {
       case 'SYS02':
         // this.delete(data);
         break;
+      case 'SYS05':
+        this.viewData(data);
+        break;
     }
   }
 
@@ -269,7 +272,42 @@ export class AssetJournalsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         res.isEdit = true;
-        if (this.dataDefault == null) this.dataDefault = { ...res };
+        let data = {
+          headerText: this.headerText,
+          journal: { ...this.journal },
+          oData: { ...res },
+          hideFields: [...this.hideFields],
+          baseCurr: this.baseCurr,
+        };
+        let optionSidebar = new SidebarModel();
+        optionSidebar.DataService = this.view?.dataService;
+        optionSidebar.FormModel = this.fmAssetJournal;
+        let dialog = this.callfc.openSide(
+          AssetJournalsAddComponent,
+          data,
+          optionSidebar,
+          this.view.funcID
+        );
+        dialog.closed.subscribe((res) => {
+          if (res && res?.event) {
+            this.itemSelected = JSON.parse(JSON.stringify(res?.event));
+            this.view.dataService.update(this.itemSelected, true).subscribe((ele)=>{});
+            this.detectorRef.detectChanges();
+
+          }
+        });
+      });
+  }
+
+  viewData(data){
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        res.isReadOnly = true;
         let data = {
           headerText: this.headerText,
           journal: { ...this.journal },

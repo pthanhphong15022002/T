@@ -283,7 +283,7 @@ export class AssetJournalsAddComponent extends UIComponent {
         if (res) {
           res.rowNo = this.eleGridAcquisitions.dataSource.length + 1;
           this.lstLines.push(res);
-          this.eleGridAcquisitions.addRow(res, res.rowNo, true);
+          this.eleGridAcquisitions.addRow(res, this.eleGridAcquisitions.dataSource.length, true);
         }
         this.onDestroy();
         this.detectorRef.detectChanges();
@@ -294,6 +294,10 @@ export class AssetJournalsAddComponent extends UIComponent {
     console.log(e);
   }
 
+  onEdit(e){
+    console.log('onEdit: ', e);
+  }
+
   delete(data) {
     this.eleGridAcquisitions.deleteRow(data, true);
     this.lstLinesDeletes.push(data);
@@ -302,16 +306,20 @@ export class AssetJournalsAddComponent extends UIComponent {
   }
 
   copy(data) {
-    let lst = JSON.parse(JSON.stringify(this.lstLines));
-    let ele = JSON.parse(JSON.stringify(data));
-    ele.recID = Util.uid();
-    // ele._uuid = Util.uid();
-    // ele.index = this.eleGridAcquisitions?.dataSource?.length + 1;
-    ele.rowNo = this.eleGridAcquisitions?.dataSource?.length + 1;
-    lst.push(ele);
-    this.lstLines = JSON.parse(JSON.stringify(lst));
-    this.eleGridAcquisitions.addRow(ele, ele.rowNo, true);
-    this.detectorRef.detectChanges();
+    let ele = {...data};
+    this.eleGridAcquisitions.saveRow((res: any) => {
+      if (res && res.type != 'error') {
+        let lst = JSON.parse(JSON.stringify(this.lstLines));
+        ele.recID = Util.uid();
+        // ele.index = this.eleGridAcquisitions?.dataSource?.length + 1;
+        ele.rowNo = this.eleGridAcquisitions?.dataSource?.length + 1;
+        lst.push(ele);
+        this.lstLines = JSON.parse(JSON.stringify(lst));
+        this.eleGridAcquisitions.addRow(ele, this.eleGridAcquisitions.dataSource.length, true);
+        this.detectorRef.detectChanges();
+      }
+    })
+
   }
 
   onDiscard() {}
