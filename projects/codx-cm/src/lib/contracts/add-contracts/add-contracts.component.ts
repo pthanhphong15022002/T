@@ -70,7 +70,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   REQUIRE = [
     'contractID',
     'customerID',
-    'contractAmt',
     'pmtMethodID',
     'pmtMethodID',
     'contractName',

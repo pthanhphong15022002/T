@@ -90,6 +90,7 @@ palettes:any=['#1BA3C6','#2CB5C0','#30BCAD','#21B087','#33A65C','#57A337','#57A3
         })
       }
     });
+
   }
 
   ngAfterViewInit() {
@@ -141,6 +142,13 @@ palettes:any=['#1BA3C6','#2CB5C0','#30BCAD','#21B087','#33A65C','#57A337','#57A3
   subscription:Subscription;
   onActions(e) {
     if (e.type == 'reportLoaded') {
+      let pattern =
+      /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+
+        if(this.arrReport.length > 1 && !this.reportID.match(pattern)){
+          this.codxService.navigate('',`${this.view.function?.module ? this.view.function?.module.toLocaleLowerCase() : 'ep'}/dashboard-view/${this.reportID}`);
+          return;
+        }
       this.arrReport = e.data;
       if (this.arrReport.length) {
         let arrChildren: any = [];
@@ -155,7 +163,7 @@ palettes:any=['#1BA3C6','#2CB5C0','#30BCAD','#21B087','#33A65C','#57A337','#57A3
           if(idx>-1){
             this.pageTitle.setSubTitle(arrChildren[idx].title);
             this.pageTitle.setChildren(arrChildren);
-            this.codxService.navigate('', arrChildren[idx].path);
+            //this.codxService.navigate('', arrChildren[idx].path);
             this.funcID = this.arrReport[idx].reportID;
           }
           else{

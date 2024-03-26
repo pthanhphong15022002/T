@@ -676,34 +676,46 @@ export class QuestionsComponent
   }
 
   deleteSession(seqNoSession) {
-    this.notification
+    if(this.questions[seqNoSession].children.length == 0)
+    {
+      this.deleteBefore(seqNoSession)
+    }
+    else
+    {
+      this.notification
       .alert(
         'Xóa câu hỏi và mục?',
         'Việc xóa một mục cũng sẽ xóa các câu hỏi và câu trả lời trong mục đó.'
       )
       .closed.subscribe((x) => {
         if (x.event?.status == 'Y') {
-          var dataTemp = JSON.parse(JSON.stringify(this.questions));
-          let tempQuestion = this.questions[seqNoSession];
-          dataTemp = dataTemp.filter((x) => x.seqNo != seqNoSession);
-          dataTemp.forEach((x, index) => {
-            x.seqNo = index;
-          });
-          this.questions = dataTemp;
-          this.change.detectChanges();
-          let data = [...[tempQuestion], ...tempQuestion.children];
-          this.SVServices.signalSave.next('saving');
-          if (this.questions.length + 1 == seqNoSession + 1)
-            this.setTimeoutDeleteData(
-              tempQuestion.children.length > 0 ? data : [tempQuestion]
-            );
-          else
-            this.setTimeoutDeleteData(
-              tempQuestion.children.length > 0 ? data : [tempQuestion],
-              this.questions
-            );
+          this.deleteBefore(seqNoSession)
         }
       });
+    }
+   
+  }
+  deleteBefore(seqNoSession:any)
+  {
+    var dataTemp = JSON.parse(JSON.stringify(this.questions));
+    let tempQuestion = this.questions[seqNoSession];
+    dataTemp = dataTemp.filter((x) => x.seqNo != seqNoSession);
+    dataTemp.forEach((x, index) => {
+      x.seqNo = index;
+    });
+    this.questions = dataTemp;
+    this.change.detectChanges();
+    let data = [...[tempQuestion], ...tempQuestion.children];
+    this.SVServices.signalSave.next('saving');
+    if (this.questions.length + 1 == seqNoSession + 1)
+      this.setTimeoutDeleteData(
+        tempQuestion.children.length > 0 ? data : [tempQuestion]
+      );
+    else
+      this.setTimeoutDeleteData(
+        tempQuestion.children.length > 0 ? data : [tempQuestion],
+        this.questions
+      );
   }
 
   deleteNoSession(seqNoSession, seqNoQuestion, recIDQuestion) {
@@ -1480,9 +1492,8 @@ export class QuestionsComponent
   }
 
   uploadVideo(dataQuestion) {}
-
  
-  clickQuestionMF(seqNoSession, itemQuestion, answerType) {
+  clickQuestionMF(seqNoSession, itemQuestion, answerType ) {
     this.generateGuid();
     var recID = JSON.parse(JSON.stringify(this.GUID));
     if (answerType) {
@@ -1917,7 +1928,6 @@ export class QuestionsComponent
       );
     }
   }
-
   valueChangeAnswer(e, seqNoSession, itemQuestion, itemAnswer) {
     if (e.data && e.data != itemAnswer[e.field]) {
       // let dataTemp = JSON.parse(JSON.stringify(this.questions));
@@ -1934,7 +1944,7 @@ export class QuestionsComponent
       );
     }
   }
-
+ 
   valueChangeAnswerMatrix(seqNoSession, itemQuestion, itemAnswer, data)
   {
     var index =  this.questions[seqNoSession].children[itemQuestion.seqNo].answers.findIndex(x=>x.seqNo == itemAnswer.seqNo && x.isColumn == itemAnswer.isColumn);

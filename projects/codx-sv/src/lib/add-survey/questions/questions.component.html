@@ -375,7 +375,7 @@
   let-itemQuestion="itemQuestion"
   let-answerType="answerType"
 >
-  <div ngbDropdown container="body" placement="right auto" display="dynamic" class="d-inline-block">
+  <div ngbDropdown container="body"  placement="right auto" display="dynamic" class="d-inline-block">
     <button
       type="button"
       class="btn btn-light btn-sm dropdown1 border bg-white"
@@ -390,12 +390,12 @@
     </button>
     <div ngbDropdownMenu>
       <ng-container *ngIf="listMoreFunc && listMoreFunc.length >0">
-        <button ngbDropdownItem (click)="clickQuestionMF(seqNoSession, itemQuestion, item.id)" [class.border-bottom]="item.group" *ngFor="let item of listMoreFunc">
+        <div ngbDropdownItem  (click)="clickQuestionMF(seqNoSession, itemQuestion, item.id)" [class.border-bottom]="item.group" *ngFor="let item of listMoreFunc">
           <div class="d-flex align-items-center py-2" >
             <span class="icon-20" [ngClass]="item.icon"></span>
             <codx-label fiedName="" [default]="item.name" class="fs-6 ms-4"></codx-label>
           </div>
-        </button>
+        </div>
       </ng-container>
     </div>
   </div>
@@ -1490,7 +1490,7 @@
             class="icon-more_vert icon-22 me-2 btn btn-icon btn-active-light-primary"
           ></span> -->
           <div
-            *ngIf="itemSession.length > 0"
+          
             class="d-flex align-items-center me-2 left-100"
           >
             <div ngbDropdown container="body">
@@ -1516,7 +1516,7 @@
                     ></codx-label>
                   </a>
                 </li>
-                <li>
+                <!-- <li>
                   <a
                     (click)="sortSession()"
                     ngbDropdownItem
@@ -1527,7 +1527,7 @@
                       default="Di chuyển phần"
                     ></codx-label>
                   </a>
-                </li>
+                </li> -->
                 <li>
                   <a
                     (click)="deleteCard(itemSession.seqNo, '', '', 'S')"
@@ -1540,7 +1540,7 @@
                     ></codx-label>
                   </a>
                 </li>
-                <li *ngIf="itemSession.seqNo >= 1">
+                <li *ngIf="itemSession.seqNo >= 1" >
                   <a
                     (click)="mergeSession(itemSession)"
                     ngbDropdownItem
