@@ -1,3 +1,4 @@
+import { fmAssetJournal } from './../../codx-ac.service';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,7 +8,9 @@ import {
 } from '@angular/core';
 import {
   ButtonModel,
+  CRUDService,
   NotificationsService,
+  RequestOption,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -57,6 +60,7 @@ export class AssetJournalsComponent extends UIComponent {
   viewActive: number = ViewType.listdetail;
   ViewType = ViewType;
   private destroy$ = new Subject<void>();
+  fmAssetJournal = fmAssetJournal;
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
@@ -189,7 +193,23 @@ export class AssetJournalsComponent extends UIComponent {
    * @param event
    * @param data
    */
-  clickMoreFunction(e, data) {}
+  clickMoreFunction(e, data) {
+    this.itemSelected = data;
+    switch (e.functionID) {
+      case 'SYS03':
+        this.edit(data);
+        break;
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'SYS04':
+        this.copy(data);
+        break;
+      case 'SYS05':
+        this.viewData(data);
+        break;
+    }
+  }
 
   /**
    * * Hàm get data và get dữ liệu chi tiết của chứng từ khi được chọn
@@ -221,7 +241,8 @@ export class AssetJournalsComponent extends UIComponent {
       .subscribe((res) => {
         if (res != null) {
           res.isAdd = true;
-          if (this.dataDefault == null) this.dataDefault = { ...res };
+          if (this.dataDefault == null)
+            this.dataDefault = JSON.parse(JSON.stringify({ ...res }));
           let data = {
             headerText: this.headerText,
             journal: { ...this.journal },
@@ -231,7 +252,7 @@ export class AssetJournalsComponent extends UIComponent {
           };
           let optionSidebar = new SidebarModel();
           optionSidebar.DataService = this.view?.dataService;
-          optionSidebar.FormModel = this.view?.formModel;
+          optionSidebar.FormModel = this.fmAssetJournal;
           let dialog = this.callfc.openSide(
             AssetJournalsAddComponent,
             data,
@@ -240,18 +261,145 @@ export class AssetJournalsComponent extends UIComponent {
           );
           dialog.closed.subscribe((res) => {
             if (res && res?.event) {
-              if (res?.event?.type === 'discard') {
-                if (this.view.dataService.data.length == 0) {
-                  this.itemSelected = undefined;
-                  this.detectorRef.detectChanges();
-                }
-              }
+              this.detectorRef.detectChanges();
             }
           });
         }
       });
   }
 
+  edit(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        res.isEdit = true;
+        let data = {
+          headerText: this.headerText,
+          journal: { ...this.journal },
+          oData: { ...res },
+          hideFields: [...this.hideFields],
+          baseCurr: this.baseCurr,
+        };
+        let optionSidebar = new SidebarModel();
+        optionSidebar.DataService = this.view?.dataService;
+        optionSidebar.FormModel = this.fmAssetJournal;
+        let dialog = this.callfc.openSide(
+          AssetJournalsAddComponent,
+          data,
+          optionSidebar,
+          this.view.funcID
+        );
+        dialog.closed.subscribe((res) => {
+          if (res && res?.event) {
+            this.itemSelected = JSON.parse(JSON.stringify(res?.event));
+            this.view.dataService
+              .update(this.itemSelected, true)
+              .subscribe((ele) => {});
+            this.detectorRef.detectChanges();
+          }
+        });
+      });
+  }
+
+  copy(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .copy()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res != null) {
+          res.isCopy = true;
+          if (this.dataDefault == null)
+            this.dataDefault = JSON.parse(JSON.stringify({ ...res }));
+          let data = {
+            headerText: this.headerText,
+            journal: { ...this.journal },
+            oData: { ...res },
+            hideFields: [...this.hideFields],
+            baseCurr: this.baseCurr,
+          };
+          let optionSidebar = new SidebarModel();
+          optionSidebar.DataService = this.view?.dataService;
+          optionSidebar.FormModel = this.fmAssetJournal;
+          let dialog = this.callfc.openSide(
+            AssetJournalsAddComponent,
+            data,
+            optionSidebar,
+            this.view.funcID
+          );
+          dialog.closed.subscribe((res) => {
+            if (res && res.event != null) {
+              this.itemSelected = JSON.parse(JSON.stringify(res.event));
+              this.view.dataService.update(this.itemSelected, true).subscribe();
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+      });
+  }
+
+  delete(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .delete([data], true, (option: RequestOption) =>
+        this.beforeDelete(option, data)
+      )
+      .subscribe((res: any) => {});
+  }
+
+  beforeDelete(opt: RequestOption, data) {
+    opt.methodName = 'DeleteAssetJournalsAsync';
+    opt.className = 'AssetJournalsBusiness';
+    opt.assemblyName = 'AM';
+    opt.service = 'AM';
+    opt.data = data.recID;
+    return true;
+  }
+
+  viewData(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        res.isReadOnly = true;
+        let data = {
+          headerText: this.headerText,
+          journal: { ...this.journal },
+          oData: { ...res },
+          hideFields: [...this.hideFields],
+          baseCurr: this.baseCurr,
+        };
+        let optionSidebar = new SidebarModel();
+        optionSidebar.DataService = this.view?.dataService;
+        optionSidebar.FormModel = this.fmAssetJournal;
+        let dialog = this.callfc.openSide(
+          AssetJournalsAddComponent,
+          data,
+          optionSidebar,
+          this.view.funcID
+        );
+        dialog.closed.subscribe((res) => {
+          if (res && res?.event) {
+            this.itemSelected = JSON.parse(JSON.stringify(res?.event));
+            this.view.dataService
+              .update(this.itemSelected, true)
+              .subscribe((ele) => {});
+            this.detectorRef.detectChanges();
+          }
+        });
+      });
+  }
   /**
    * *Hàm ẩn hiện các morefunction của từng chứng từ ( trên view danh sách và danh sách chi tiết)
    * @param event : danh sách morefunction

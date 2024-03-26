@@ -6,10 +6,9 @@
     [data]="dataIns"
     [group]="dynamicFormsForm"
 >
-
 </codx-form>
 <ng-template #customToolbar>
-    <div class="d-flex align-items-center justify-content-between px-3 py-4 w-100">
+    <div class="d-flex align-items-center justify-content-between px-1 py-4 w-100">
         <div class="d-flex flex-column w-100">
             <div class="d-flex align-items-center">
                 <i *ngIf="table[0].child[0].fieldType == 'Title'" class="icon-22 me-2" [ngClass]="data?.settings?.icon" [style.color]="data?.settings?.color"></i>
@@ -39,7 +38,7 @@
     <div class="d-flex flex-column justify-content-between w-100 h-100 bg-white ">
         <div class="d-flex flex-column w-100 h-100 overflow-auto">
             <ng-container *ngFor="let item of table , let i = index">
-                <div class="d-flex align-items-center justify-content-between p-2" *ngIf="i>0">
+                <div class="d-flex align-items-center justify-content-between py-2" *ngIf="i>0">
                     <div class="d-flex flex-column w-100 px-2" [class.pb-2]="child.fieldType == 'Title'" *ngFor="let child of item.child">
                         <div class="d-flex align-items-center">
                             <codx-label 
