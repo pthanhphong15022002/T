@@ -320,16 +320,10 @@ export class AddProcessDefaultComponent implements OnInit {
   getInfoUser() {
     let paras = [this.user.userID];
     let keyRoot = 'BPUserInfo' + this.user.userID;
-    this.infoUser = this.shareService.loadDataCache(
-      paras,
-      keyRoot,
-      'HR',
-      'HR',
-      'EmployeesBusiness',
-      'GetTmpEmployeeAsync'
-    );
-    if (isObservable(this.infoUser)) {
-      this.infoUser.subscribe((item) => {
+    this.infoUser = this.shareService.loadDataCache(paras,keyRoot,"HR","HR","EmployeesBusiness","GetTmpEmployeeAsync");
+    if(isObservable(this.infoUser))
+    {
+      this.infoUser.subscribe(item=>{
         this.infoUser = item;
       });
     }
