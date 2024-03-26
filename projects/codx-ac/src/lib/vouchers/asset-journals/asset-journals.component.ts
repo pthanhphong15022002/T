@@ -10,6 +10,7 @@ import {
   ButtonModel,
   CRUDService,
   NotificationsService,
+  RequestOption,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -199,7 +200,7 @@ export class AssetJournalsComponent extends UIComponent {
         this.edit(data);
         break;
       case 'SYS02':
-        // this.delete(data);
+        this.delete(data);
         break;
       case 'SYS04':
         this.copy(data);
@@ -341,6 +342,26 @@ export class AssetJournalsComponent extends UIComponent {
           });
         }
       });
+  }
+
+  delete(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .delete([data], true, (option: RequestOption) =>
+        this.beforeDelete(option, data)
+      )
+      .subscribe((res: any) => {});
+  }
+
+  beforeDelete(opt: RequestOption, data) {
+    opt.methodName = 'DeleteAssetJournalsAsync';
+    opt.className = 'AssetJournalsBusiness';
+    opt.assemblyName = 'AM';
+    opt.service = 'AM';
+    opt.data = data.recID;
+    return true;
   }
 
   viewData(data) {
