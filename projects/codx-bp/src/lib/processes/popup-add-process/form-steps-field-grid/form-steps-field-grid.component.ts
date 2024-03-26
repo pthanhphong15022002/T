@@ -394,6 +394,22 @@ export class FormStepsFieldGridComponent
         dt.permissionsName = this.getImg(dt?.permissions);
       }
     }
+    if(!dt?.extendInfo) return dt;
+    
+    dt.extendInfo.forEach((element) => {
+
+      if (typeof element.documentControl != 'string') {
+        element.documentControl = JSON.stringify(element.documentControl)
+      }
+      
+      if (typeof element.dataFormat != 'string') {
+        element.dataFormat = JSON.stringify(element.dataFormat)
+      }
+
+      if (typeof element.tableFormat != 'string') {
+        element.tableFormat = JSON.stringify(element.tableFormat) 
+      }
+    });
     return dt;
   }
   getNextStepHTML(val: any, id: any) {
@@ -568,10 +584,7 @@ export class FormStepsFieldGridComponent
               }
   
               if (typeof element.dataFormat != 'string') {
-                element.dataFormat =
-                  element.dataFormat?.length > 0
-                    ? JSON.stringify(element.dataFormat)
-                    : null;
+                element.dataFormat = JSON.stringify(element.dataFormat)
               }
               if (typeof element.tableFormat != 'string') {
                 element.tableFormat = JSON.stringify(element.tableFormat) 

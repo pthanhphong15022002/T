@@ -33,6 +33,7 @@ export class PropertyCbbDependenceComponent extends BasePropertyComponent implem
 
   getDataDependenceCBB()
   {
+    if(!this.dataTable) return ;
     this.dependenceCBBData = [];
     let dtTable = JSON.parse(JSON.stringify(this.dataTable));
     dtTable = dtTable.slice(0,(this.data.columnOrder + 1));
