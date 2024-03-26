@@ -348,12 +348,12 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         this.pmtTermIDChange(field);
         break;
       case 'buyer':
-        let indexbuyer = event?.component?.dataService?.data.findIndex((x) => x.ObjectID == event.data);
+        let indexbuyer = event?.component?.dataService?.data.findIndex((x) => x.EmployeeID == event.data);
         if (value == '' || value == null || indexbuyer == -1) {
           this.master.data.buyerName = null;
           return;
         }
-        this.master.data.buyerName = event?.component?.dataService?.data[indexbuyer].ObjectName;
+        this.master.data.buyerName = event?.component?.dataService?.data[indexbuyer].EmployeeName;
         break;
     }
   }
@@ -376,7 +376,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     ]).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
       if (res) {
         Object.assign(oLine, res);
-        oLine = this.genFixedDims(oLine);
+        //oLine = this.genFixedDims(oLine);
         oLine.updateColumns = '';
         this.detectorRef.detectChanges();
         this.eleGridPurchaseInvoice.endProcess();
@@ -960,17 +960,6 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         this.dialog.dataService.update(this.master.data).subscribe();
         break;
     }
-  }
-
-  genFixedDims(line: any) {
-    let fixedDims: string[] = Array(10).fill('0');
-    for (let i = 0; i < 10; i++) {
-      if (line['idiM' + i]) {
-        fixedDims[i] = '1';
-      }
-    }
-    line.fixedDIMs = fixedDims.join('');
-    return line;
   }
 
   /**

@@ -24,7 +24,7 @@
               <i class="icon-arrow_drop_down_circle icon-16 mt-1"></i>
               <div style="margin-left: -5px;" class="input-circle h-20px input-border-0 w-400px mb-1">
                 <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
-                  [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist"
+                  [cssClass]="'rounded-pill border-1 mt-1'" cssPopup="h-350px w-400px" [isMulti]="false" type="valuelist"
                   field="subType" [refValue]="master?.gridviewSetup['SubType']?.referedValue"
                   [value]="master?.data?.subType" emptyText="Loại phiếu"
                   (valueChange)="changeSubType($event)"></codx-dropdown-select>
@@ -32,9 +32,9 @@
             </div>
           </ng-container>
           <span *ngIf="(master.data?.validated) || (master.data?.isReadOnly)">
-            <codx-vll [name]="master?.gridviewSetup['SubType']?.referedValue"
-              [formModel]="master.formModel" [field]="'SubType'" [value]="master.data?.subType"
-              [showText]="true" [showBgColor]="true" class="badge badge-light-primary badge-sm mt-1">
+            <codx-vll [name]="master?.gridviewSetup['SubType']?.referedValue" [formModel]="dialog.formModel"
+              [field]="'SubType'" [value]="master?.data?.subType" [showText]="true" [showBgColor]="true"
+              class="badge badge-light-primary badge-sm mt-1">
             </codx-vll>
           </span>
         </ng-container>
