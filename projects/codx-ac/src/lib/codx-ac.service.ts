@@ -203,7 +203,12 @@ export const fmAssetJournalsLines: FormModel = {
   entityName: 'AM_AssetJournalsLines',
   entityPer: 'AM_AssetJournalsLines',
 };
-
+export const fmCountingMembers: FormModel = {
+  formName: 'CountingMembers',
+  gridViewName: 'grvCountingMembers',
+  entityName: 'AC_CountingMembers',
+  entityPer: 'AC_CountingMembers',
+};
 export enum MorfuncDefault {
   Sua = 'SYS03',
   Xoa = 'SYS02',
