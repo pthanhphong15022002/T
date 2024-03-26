@@ -3,7 +3,7 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators }
 import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
-import { elementAt, firstValueFrom, isObservable } from 'rxjs';
+import { Subject, elementAt, firstValueFrom, isObservable } from 'rxjs';
 import { AddTableRowComponent } from './add-table-row/add-table-row.component';
 import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 import { environment } from 'src/environments/environment';
@@ -28,7 +28,9 @@ export class AddProcessDefaultComponent implements OnInit{
     funcID:'',
     formName: 'DynamicForms',
     gridViewName: 'grvDynamicForms',
-    entityName: 'BP_Instances'
+    entityName: 'BP_Instances',
+    currentData: null,
+    bindValue: null
   }
   data:any;
   dialog:any;
@@ -47,6 +49,8 @@ export class AddProcessDefaultComponent implements OnInit{
   defaultFieldName = "";
   infoUser:any;
   listFieldAuto = [];
+  gridViewSetup = [];
+
   constructor(
     private notifySvr: NotificationsService,
     private shareService: CodxShareService,
@@ -66,6 +70,8 @@ export class AddProcessDefaultComponent implements OnInit{
     this.type = dt?.data?.type ? dt?.data?.type : this.type;
     this.dialog = dialog;
     this.formModel.funcID = this.dialog.formModel?.funcID;
+    this.formModel.bindValue = new Subject();
+
   }
   ngOnInit(): void {
     if(this.type == 'add')  {
@@ -110,6 +116,7 @@ export class AddProcessDefaultComponent implements OnInit{
     let extendInfo = JSON.parse(JSON.stringify(typeof this.data.extendInfo == 'string' ?  JSON.parse(this.data.extendInfo) : this.data.extendInfo))
     extendInfo.forEach(element => {
       let field = element.fieldName.toLowerCase();
+      this.gridViewSetup[field]=element
       if(element.fieldType != "Title") 
       {
         if(this.type == 'add') {
@@ -121,7 +128,8 @@ export class AddProcessDefaultComponent implements OnInit{
           else if(element.fieldType == "DateTime") 
           {
             if(element.defaultValue == "Now") element.defaultValue = new Date();
-            if(element.validateControl == "1") validate = this.customeValidatorDateValiControl;
+            //Ngày không được bé hơn ngày hiện tại
+            if(element.validateControl == "1") validate = this.customeValidatorDateValiControl(element);
             if(element.dependences) validate = this.customeValidatorDate(element);
           }
 
@@ -241,6 +249,7 @@ export class AddProcessDefaultComponent implements OnInit{
     return (control: AbstractControl): ValidationErrors | null =>{
       const pass = control.value
       const confirmPass = this.dynamicFormsForm.get(field2);
+      if(dt?.isRequired && !pass) return {'isRequired': true};
       if(!pass) return null;
       if(dt.validateControl == "1" && pass < new Date())
       {
@@ -253,13 +262,19 @@ export class AddProcessDefaultComponent implements OnInit{
       return null;
     }
   }
-  customeValidatorDateValiControl(control: AbstractControl): ValidationErrors | null {
-    const pass = control.value
-    if (pass && pass < new Date()) {
-      return {'pastDate': true};
+
+  customeValidatorDateValiControl(dt:any)
+  { 
+    return (control: AbstractControl): ValidationErrors | null =>{
+      const pass = control.value
+      if(dt?.isRequired && !pass) return {'isRequired': true};
+      else if (pass && pass < new Date()) {
+        return {'pastDate': true};
+      }
+      return null;
     }
-    return null;
   }
+ 
   getInfoUser()
   {
     let paras = [this.user.userID];
