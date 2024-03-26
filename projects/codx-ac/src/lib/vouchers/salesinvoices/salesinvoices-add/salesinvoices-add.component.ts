@@ -532,14 +532,6 @@ export class SalesinvoicesAddComponent extends UIComponent {
    * *Hàm thêm mới dòng cashpayments
    */
   addLine() {
-    let oLine = this.setDefaultLine();
-    this.eleGridSalesInvoice.addRow(oLine, this.eleGridSalesInvoice.dataSource.length);
-  }
-
-  /**
-   * *Hàm set data mặc định từ master khi thêm dòng mới
-   */
-  setDefaultLine() {
     this.api.exec('AC','SalesInvoicesLinesBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if (res) {
         this.eleGridSalesInvoice.addRow(res, this.eleGridSalesInvoice.dataSource.length);
