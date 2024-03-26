@@ -807,6 +807,50 @@
     </codx-input>
   </ng-container>
 
+  <ng-container *ngIf="customField.dataType == 'RM'">
+    <div class="d-flex align-items-top me-3">
+      <span class="me-2">
+        <codx-input
+          type="checkbox"
+          name="checkbox"
+          class="check-circle"
+          placeholder=""
+          field="isAlert"
+          [crrValue]="remindDefault?.isAlert"
+          (valueChange)="valueChangeChbx($event)"
+          [disabled]="disable"
+        >
+        </codx-input>
+      </span>
+      <codx-label name="lblAlert" formName="Settings" default="Thông báo">
+      </codx-label>
+      <span class="me-2 ms-6">
+        <codx-input
+          type="checkbox"
+          name="checkbox"
+          placeholder=""
+          class="check-circle"
+          field="isMail"
+          [crrValue]="remindDefault?.isMail"
+          (valueChange)="valueChangeChbx($event)"
+          [disabled]="disable"
+        >
+        </codx-input>
+      </span>
+      <codx-label name="lblEmail" formName="Settings" default="Email">
+      </codx-label>
+      <div class="setting-btnright">
+        <a
+          href="javascript:void(0)"
+          (click)="disable ? '' : openPopupSettingRemind()"
+        >
+          <span class="w-30px d-flex justify-content-center"
+            ><span class="icon-18" [ngClass]="'icon-email'"></span></span
+        ></a>
+      </div>
+    </div>
+  </ng-container>
+
   <div *ngIf="showErrMess" class="errorMessage text-danger ms-3" data-field="">
     {{ errorMessage }}
   </div>
