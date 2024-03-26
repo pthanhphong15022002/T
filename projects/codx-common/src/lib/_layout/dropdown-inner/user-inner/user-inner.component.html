@@ -23,6 +23,7 @@
       <div class="menu-item">
         <div class="menu-content d-flex align-items-center px-3">
           <codx-img
+            #imageUploader
             class="symbol symbol-60px me-5"
             [objectId]="_user.userID"
             [objectName]="_user.userName"
@@ -35,6 +36,7 @@
             [width]="60"
             (reloadChanged)="avatarChanged($event)"
             [imgOn]="modifiedOn"
+            (handleInput)="handleInput($event)"
           >
           </codx-img>
           <div class="d-flex flex-column">

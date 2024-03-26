@@ -362,8 +362,8 @@ export class UserComponent extends UIComponent {
 
   changeDataMF(e: any, data: any) {
     if (!data) return;
-    let dl = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
-    dl[0].disabled = true;
+    let dl = e.filter((x: { functionID: string }) => x.functionID == 'SYS02' || x.functionID == "SYS010");
+    dl.forEach(elm=>{elm.disabled = true;})
     let copyMF = e.filter((x) => x.functionID == 'SYS04');
     copyMF[0].disabled = true;
     if (data.status == '1') {
