@@ -30,11 +30,12 @@
 
   .card-survey {
     width: 160px;
-    height: 120px;
+    height: 145px;
     margin-right: 10px;
     align-content: center;
     cursor: pointer;
     text-align: center;
+    background: transparent !important
   }
 
   .card-survey:hover {
