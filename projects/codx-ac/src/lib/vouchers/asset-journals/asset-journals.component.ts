@@ -201,6 +201,9 @@ export class AssetJournalsComponent extends UIComponent {
       case 'SYS02':
         // this.delete(data);
         break;
+      case 'SYS04':
+        this.copy(data);
+        break;
       case 'SYS05':
         this.viewData(data);
         break;
@@ -237,7 +240,8 @@ export class AssetJournalsComponent extends UIComponent {
       .subscribe((res) => {
         if (res != null) {
           res.isAdd = true;
-          if (this.dataDefault == null) this.dataDefault = JSON.parse(JSON.stringify({ ...res }));
+          if (this.dataDefault == null)
+            this.dataDefault = JSON.parse(JSON.stringify({ ...res }));
           let data = {
             headerText: this.headerText,
             journal: { ...this.journal },
@@ -291,15 +295,55 @@ export class AssetJournalsComponent extends UIComponent {
         dialog.closed.subscribe((res) => {
           if (res && res?.event) {
             this.itemSelected = JSON.parse(JSON.stringify(res?.event));
-            this.view.dataService.update(this.itemSelected, true).subscribe((ele)=>{});
+            this.view.dataService
+              .update(this.itemSelected, true)
+              .subscribe((ele) => {});
             this.detectorRef.detectChanges();
-
           }
         });
       });
   }
 
-  viewData(data){
+  copy(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .copy()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res != null) {
+          res.isCopy = true;
+          if (this.dataDefault == null)
+            this.dataDefault = JSON.parse(JSON.stringify({ ...res }));
+          let data = {
+            headerText: this.headerText,
+            journal: { ...this.journal },
+            oData: { ...res },
+            hideFields: [...this.hideFields],
+            baseCurr: this.baseCurr,
+          };
+          let optionSidebar = new SidebarModel();
+          optionSidebar.DataService = this.view?.dataService;
+          optionSidebar.FormModel = this.fmAssetJournal;
+          let dialog = this.callfc.openSide(
+            AssetJournalsAddComponent,
+            data,
+            optionSidebar,
+            this.view.funcID
+          );
+          dialog.closed.subscribe((res) => {
+            if (res && res.event != null) {
+              this.itemSelected = JSON.parse(JSON.stringify(res.event));
+              this.view.dataService.update(this.itemSelected, true).subscribe();
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+      });
+  }
+
+  viewData(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -327,9 +371,10 @@ export class AssetJournalsComponent extends UIComponent {
         dialog.closed.subscribe((res) => {
           if (res && res?.event) {
             this.itemSelected = JSON.parse(JSON.stringify(res?.event));
-            this.view.dataService.update(this.itemSelected, true).subscribe((ele)=>{});
+            this.view.dataService
+              .update(this.itemSelected, true)
+              .subscribe((ele) => {});
             this.detectorRef.detectChanges();
-
           }
         });
       });

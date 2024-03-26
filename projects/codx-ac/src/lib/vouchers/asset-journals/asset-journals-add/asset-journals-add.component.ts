@@ -192,20 +192,12 @@ export class AssetJournalsAddComponent extends UIComponent {
       case 'add':
       case 'update':
       case 'delete':
+        this.eleGridAcquisitions.isSaveOnClick = false;
+        this.eleGridAcquisitions.isSave = false;
+
         break;
       case 'closeEdit':
-        if (
-          this.eleGridAcquisitions &&
-          this.eleGridAcquisitions.rowDataSelected
-        ) {
-          this.eleGridAcquisitions.rowDataSelected = null;
-        }
-        if (this.eleGridAcquisitions.isSaveOnClick)
-          this.eleGridAcquisitions.isSaveOnClick = false;
-        setTimeout(() => {
-          let element = document.getElementById('btnAddCash');
-          element.focus();
-        }, 100);
+        this.eleGridAcquisitions.isSaveOnClick = false;
         break;
       case 'beginEdit':
         // let oAccount = this.acService.getCacheValue('account', event?.data.accountID);
@@ -219,10 +211,15 @@ export class AssetJournalsAddComponent extends UIComponent {
    * @param event
    */
   valueChangeLine(event: any) {
-    // let oLine = event.data;
-    // let field = event.field;
-    // this.eleGridAcquisitions.startProcess();
-    // this.eleGridAcquisitions.endProcess();
+    this.eleGridAcquisitions.isSave = false;
+    this.eleGridAcquisitions.isSaveOnClick = false;
+    this.eleGridAcquisitions.isOutsideDataSource = true;
+    let index = this.lstLines.findIndex(x => x.recID == event?.data?.recID);
+    if(index != -1){
+      this.lstLines[index] = event?.data;
+    }else{
+      this.lstLines.push(event?.data);
+    }
     this.detectorRef.detectChanges();
   }
   //#endregion
@@ -259,6 +256,7 @@ export class AssetJournalsAddComponent extends UIComponent {
   onClick(e) {
     if (this.eleGridAcquisitions && this.eleGridAcquisitions?.gridRef?.isEdit) {
       this.eleGridAcquisitions.isSaveOnClick = false;
+      this.eleGridAcquisitions.isOutsideDataSource = true;
       setTimeout(() => {
         if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
           e.target.focus();
@@ -284,6 +282,8 @@ export class AssetJournalsAddComponent extends UIComponent {
           res.rowNo = this.eleGridAcquisitions.dataSource.length + 1;
           this.lstLines.push(res);
           this.eleGridAcquisitions.addRow(res, this.eleGridAcquisitions.dataSource.length, true);
+          this.eleGridAcquisitions.isSaveOnClick = false;
+          this.eleGridAcquisitions.isOutsideDataSource = true;
         }
         this.onDestroy();
         this.detectorRef.detectChanges();
@@ -322,7 +322,9 @@ export class AssetJournalsAddComponent extends UIComponent {
 
   }
 
-  onDiscard() {}
+  onDiscard() {
+    this.closeForm();
+  }
   onSave(type) {
     if (this.formAsset.data.isAdd) {
       this.onAdd();

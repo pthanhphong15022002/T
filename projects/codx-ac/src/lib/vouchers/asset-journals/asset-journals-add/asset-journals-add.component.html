@@ -489,6 +489,8 @@
         service="AM"
         [editOnClick]="formAsset.data?.isReadOnly ? false : true"
         [templateMore]="templateMore"
+        [isSave]="false"
+        [isOutsideDataSource]="true"
         rowNoField="rowNo"
         (gridInit)="initGrid($event)"
         (eventAction)="onActionGrid($event)"
