@@ -70,6 +70,7 @@ export class AssetJournalsAddComponent extends UIComponent {
   lstAccountMembers = [];
   lstAccMemDeletes = [];
   isLoad: boolean = false;
+  isSaveAdd = false;
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -452,49 +453,113 @@ export class AssetJournalsAddComponent extends UIComponent {
   }
 
   onAdd(type) {
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option), 0)
-      .subscribe(async (res) => {
-        if (res) {
-          if (this.lstAccountMembers?.length > 0) {
-            await firstValueFrom(
-              this.addOrUpdateCountingMembers(this.lstAccountMembers, [])
-            );
+    if (!this.isSaveAdd) {
+      this.dialog.dataService
+        .save((option: any) => this.beforeSave(option), 0)
+        .subscribe(async (res) => {
+          if (res) {
+            if (this.lstAccountMembers?.length > 0) {
+              await firstValueFrom(
+                this.addOrUpdateCountingMembers(this.lstAccountMembers, [])
+              );
+            }
+            if (type == 'save') {
+              this.dialog.close(res);
+              this.onDestroy();
+            } else {
+              this.isSaveAdd = true;
+              this.refreshForm();
+            }
           }
-          if (type == 'save') {
-            this.dialog.close(res);
-            this.onDestroy();
-          } else {
-            this.refreshForm();
+        });
+    } else {
+      this.api
+        .execSv<any>(
+          'AM',
+          'AM',
+          'AssetJournalsBusiness',
+          'AddAssetJournalsAsync',
+          [this.formAsset.data, this.lstLines]
+        )
+        .subscribe(async (res) => {
+          if (res) {
+            (this.dialog.dataService as CRUDService).add(res).subscribe();
+
+            if (this.lstAccountMembers?.length > 0) {
+              await firstValueFrom(
+                this.addOrUpdateCountingMembers(this.lstAccountMembers, [])
+              );
+            }
+            if (type == 'save') {
+              this.isSaveAdd = false;
+              this.dialog.close(res);
+              this.onDestroy();
+            } else {
+              this.isSaveAdd = true;
+              this.refreshForm();
+            }
+            this.notification.notifyCode('SYS006');
           }
-        }
-      });
+        });
+    }
   }
 
   onUpdate(type) {
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option))
-      .subscribe(async (res) => {
-        if (res && res.update) {
-          if (
-            this.lstAccountMembers?.length > 0 ||
-            this.lstAccMemDeletes?.length > 0
-          ) {
-            await firstValueFrom(
-              this.addOrUpdateCountingMembers(
-                this.lstAccountMembers,
-                this.lstAccMemDeletes
-              )
-            );
+    if (!this.isSaveAdd) {
+      this.dialog.dataService
+        .save((option: any) => this.beforeSave(option))
+        .subscribe(async (res) => {
+          if (res && res.update) {
+            if (
+              this.lstAccountMembers?.length > 0 ||
+              this.lstAccMemDeletes?.length > 0
+            ) {
+              await firstValueFrom(
+                this.addOrUpdateCountingMembers(
+                  this.lstAccountMembers,
+                  this.lstAccMemDeletes
+                )
+              );
+            }
+            if (type == 'save') {
+              this.isSaveAdd = false;
+              this.dialog.close(res.update);
+              this.onDestroy();
+            } else {
+              this.isSaveAdd = true;
+              this.refreshForm();
+            }
+            this.notification.notifyCode('SYS006');
           }
-          if (type == 'save') {
-            this.dialog.close(res.update);
-            this.onDestroy();
-          } else {
-            this.refreshForm();
+        });
+    } else {
+      this.api
+        .execSv<any>(
+          'AM',
+          'AM',
+          'AssetJournalsBusiness',
+          'AddAssetJournalsAsync',
+          [this.formAsset.data, this.lstLines]
+        )
+        .subscribe(async (res) => {
+          if (res) {
+            (this.dialog.dataService as CRUDService).add(res).subscribe();
+            if (this.lstAccountMembers?.length > 0) {
+              await firstValueFrom(
+                this.addOrUpdateCountingMembers(this.lstAccountMembers, [])
+              );
+            }
+            if (type == 'save') {
+              this.isSaveAdd = false;
+              this.dialog.close(res);
+              this.onDestroy();
+            } else {
+              this.isSaveAdd = true;
+              this.refreshForm();
+            }
           }
-        }
-      });
+        });
+    }
   }
 
   beforeSave(op) {
@@ -544,6 +609,10 @@ export class AssetJournalsAddComponent extends UIComponent {
   }
 
   refreshGrid() {
+    this.lstLines = [];
+    this.lstLinesDeletes = [];
+    this.lstAccMemDeletes = [];
+    this.lstAccountMembers = [];
     if (this.eleGridAcquisitions) {
       this.eleGridAcquisitions.dataSource = [];
       this.eleGridAcquisitions.refresh();
