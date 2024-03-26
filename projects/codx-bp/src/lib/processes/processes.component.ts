@@ -82,7 +82,7 @@ export class ProcessesComponent
       {
         type: ViewType.grid,
         active: false,
-        sameData: true,
+        sameData: false,
         model: {
           template2: this.templateMore,
         },
@@ -237,7 +237,12 @@ export class ProcessesComponent
     }
   }
 
-  clickMF(e, data) {
+  async clickMF(e, ele) {
+    let data = await firstValueFrom(
+      this.api.execSv<any>('BP', 'BP', 'ProcessesBusiness', 'GetAsync', [
+        ele?.recID,
+      ])
+    );
     this.itemSelected = data;
     this.titleAction = e.text;
     switch (e.functionID) {

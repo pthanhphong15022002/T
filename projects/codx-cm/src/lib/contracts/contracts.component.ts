@@ -254,7 +254,7 @@ export class ContractsComponent extends UIComponent {
         if (isDetail) res.isbookmark = false;
         if (
           data?.approveStatus == '3' &&
-          !['CM0204_2', 'SYS05', 'CM0204_17', 'CM0204_7','SYS003','SYS004','SYS001','SYS002','SYS009','SYS008',''].includes(
+          !['CM0204_2', 'SYS05', 'CM0204_17', 'CM0204_7','SYS003','SYS004','SYS001','SYS002','SYS009','SYS008','SYS010'].includes(
             res?.functionID
           )
         ) {
@@ -268,6 +268,7 @@ export class ContractsComponent extends UIComponent {
             'CM0204_17',
             'CM0204_3',
             'CM0204_7',
+            'SYS003','SYS004','SYS001','SYS002','SYS009','SYS008','SYS010'
           ].includes(res?.functionID)
         ) {
           res.disabled = true;
@@ -280,6 +281,7 @@ export class ContractsComponent extends UIComponent {
             'CM0204_22',
             'CM0204_17',
             'CM0204_7',
+            'SYS003','SYS004','SYS001','SYS002','SYS009','SYS008','SYS010'
           ].includes(res?.functionID)
         ) {
           res.disabled = true;
