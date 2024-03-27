@@ -420,6 +420,7 @@
           (dropDataFormatPA)="dropDataFormatPA($event)"
           (valueChangeCustom)="valueChangeCustom($event)"
           [disable]="viewOnly"
+          [isAdd]="field.dataType == 'RM' && action != 'edit'"
         >
         </codx-input-custom-field>
         <ng-container *ngIf="field.defaultValue && field.dataType == 'PA'">

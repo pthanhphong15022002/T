@@ -213,8 +213,11 @@ export class CodxEmailComponent implements OnInit {
               .getEmailTemplate(this.templateID)
               .subscribe((res1) => {
                 if (res1 != null) {
+
                   console.log('getEmailTemplate', res1);
                   this.data = res1[0];
+                  if (!this.data.createdBy)  //?? createdBy bằng Null =>Bắt invalid =>lỗi
+                    this.data.createdBy = this.auth.get().userID;
                   this.dialogETemplate.patchValue(this.data);
                   if (this.data?.gridviewName) {
                     //Load field theo cubeID của EmailTemplate
@@ -258,6 +261,7 @@ export class CodxEmailComponent implements OnInit {
                     let lstCube = res1[2] as any[];
                     this.dataSource = [...this.dataSource, ...lstCube];
                   }
+
                   this.formModel.currentData = this.data =
                     this.dialogETemplate.value;
                   this.isAfterRender = true;
@@ -777,13 +781,13 @@ export class CodxEmailComponent implements OnInit {
     else return true;
   }
 
-  fileAdded(event) {}
+  fileAdded(event) { }
 
   openFormUploadFile() {
     this.ContentEmail.attachment.uploadFile();
   }
 
-  getfileCount(e: any) {}
+  getfileCount(e: any) { }
 
   public selection: NodeSelection = new NodeSelection();
   //public range: Range;
@@ -863,7 +867,7 @@ export class CodxEmailComponent implements OnInit {
     this.listviewInstance.dataBind();
   }
 
-  onActionComplete(args: any): void {}
+  onActionComplete(args: any): void { }
 
   valueChangeContentEmail(e: any) {
     this.dataAI = {
@@ -879,7 +883,7 @@ export class CodxEmailComponent implements OnInit {
         this.data.message = res.data.Data;
         this.isLoadingAI = false;
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }
 
   fetch(data: any, prompt: any) {
