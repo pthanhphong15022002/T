@@ -757,6 +757,13 @@ export class ContractsComponent extends UIComponent {
   }
 
   async addContract() {
+    // this.api.exec<any>(
+    //   'CM',
+    //   'ContractsBusiness',
+    //   'ReminderPresentAsync',
+    //   []
+    // ).subscribe();
+
     this.view.dataService.addNew().subscribe(async (res) => {
       await this.openPopupContract(
         this.processID,

@@ -73,7 +73,6 @@ export class WarehouseTransfersAddComponent extends UIComponent {
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(
-        takeUntil(this.destroy$),
         map((arr: any[]) => arr.find((a) => a.category === '1')),
         map((data) => JSON.parse(data.dataValue))
       ).subscribe((res: any) => {
@@ -105,14 +104,14 @@ export class WarehouseTransfersAddComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  beforeInitGrid(eleGrid:CodxGridviewV2Component){
-    let hideFields = [];
-    let setting = this.acService.getSettingFromJournal(eleGrid,this.journal);
-    eleGrid = setting[0];
-    if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
-      hideFields = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
-    }
-    eleGrid.showHideColumns(hideFields);
+  initGrid(eleGrid:CodxGridviewV2Component){
+    // let hideFields = [];
+    // let setting = this.acService.getSettingFromJournal(eleGrid,this.journal);
+    // eleGrid = setting[0];
+    // if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
+    //   hideFields = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
+    // }
+    // eleGrid.showHideColumns(hideFields);
   }
   //#endregion Init
 
@@ -130,13 +129,13 @@ export class WarehouseTransfersAddComponent extends UIComponent {
    * @param event
    * @param data
    */
-  clickMF(event: any, data) {
-    switch (event.functionID) {
+  clickMF(event: any) {
+    switch (event.event.functionID) {
       case 'SYS104':
-        this.copyRow(data);
+        this.copyRow(event.data);
         break;
       case 'SYS102':
-        this.deleteRow(data);
+        this.deleteRow(event.data);
         break;
     }
   }
@@ -153,55 +152,25 @@ export class WarehouseTransfersAddComponent extends UIComponent {
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
     switch (field.toLowerCase()) {
-      case 'reasonid':
-        let indexrs = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value);
-        let memo = '';
-        if (value == '' || value == null || indexrs == -1) {
-          this.isPreventChange = true;
-          this.master.setValue(field, null, {});
-          this.master.data.reasonName = null;
-          this.isPreventChange = false;
-          return;
-        } 
-        this.master.data.reasonName = event?.component?.itemsSelected[0]?.ReasonName;
-        memo = this.getMemoMaster();
-        this.master.setValue('memo',memo,{});
-        break;
       case 'fromwhid':
-        let indexfromwhid = event?.component?.dataService?.data.findIndex((x) => x.WarehouseID == event.data);
-        let memo2 = '';
-        if (value == '' || value == null || indexfromwhid == -1) {
-          this.isPreventChange = true;
-          this.master.setValue(field, null, {});
-          this.master.data.fromWHIDName = null;
-          this.isPreventChange = false;
-          return;
-        }
-        this.master.data.fromWHIDName = event?.component?.dataService?.data[indexfromwhid].WarehouseName;
-        memo2 = this.getMemoMaster();
-        this.master.setValue('memo', memo2, {});
+        this.fromWHIDChange(field);
         break;
+
       case 'towhid':
-        let indextowhid = event?.component?.dataService?.data.findIndex((x) => x.WarehouseID == event.data);
-        let memo3 = '';
-        if (value == '' || value == null || indextowhid == -1) {
-          this.isPreventChange = true;
-          this.master.setValue(field, null, {});
-          this.master.data.toWHIDName = null;
-          this.isPreventChange = false;
-          return;
-        }
-        this.master.data.toWHIDName = event?.component?.dataService?.data[indextowhid].WarehouseName;
-        memo3 = this.getMemoMaster();
-        this.master.setValue('memo', memo3, {});
+        this.toWHIDChange(field);
         break;
+
+      case 'reasonid':
+        this.reasonIDChange(field);
+        break;
+      
       case 'requester':
-        let indexrq = event?.component?.dataService?.data.findIndex((x) => x.ObjectID == event.data);
+        let indexrq = event?.component?.dataService?.data.findIndex((x) => x.EmployeeID == event.data);
         if(value == '' || value == null || indexrq == -1){
           this.master.data.requesterName = null;
           return;
         }
-        this.master.data.requesterName = event?.component?.itemsSelected[0]?.ObjectName;
+        this.master.data.requesterName = event?.component?.itemsSelected[0]?.EmployeeName;
         break;
     }
   }
@@ -223,11 +192,11 @@ export class WarehouseTransfersAddComponent extends UIComponent {
     ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if (res) {
         Object.assign(oLine, res);
-        this.genFixedDims(oLine);
         this.detectorRef.detectChanges();
         if(type === 'receipt') this.eleGridReceipt.endProcess();
         else this.eleGridIssue.endProcess();
       }
+      this.onDestroy();
     })
   }
 
@@ -377,6 +346,56 @@ export class WarehouseTransfersAddComponent extends UIComponent {
   //#endregion Method
 
   //#region Function
+  fromWHIDChange(field: any) {
+    this.api.exec('IV', 'TransfersBusiness', 'ValueChangedAsync', [
+      field,
+      this.master.data,
+    ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {
+          this.master.data.fromWHIDName = res?.data?.fromWHIDName;
+          let memo = this.getMemoMaster();
+          this.master.setValue('memo',memo,{});
+          this.detectorRef.detectChanges();
+        }
+        this.onDestroy();
+      })
+  }
+
+  toWHIDChange(field: any) {
+    this.api.exec('IV', 'TransfersBusiness', 'ValueChangedAsync', [
+      field,
+      this.master.data,
+    ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {
+          this.master.data.toWHIDName = res?.data?.toWHIDName;
+          let memo = this.getMemoMaster();
+          this.master.setValue('memo',memo,{});
+          this.detectorRef.detectChanges();
+        }
+        this.onDestroy();
+      })
+  }
+
+  reasonIDChange(field: any) {
+    this.api.exec('IV', 'TransfersBusiness', 'ValueChangedAsync', [
+      field,
+      this.master.data,
+    ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {
+          this.master.data.reasonName = res?.data?.reasonName;
+          let memo = this.getMemoMaster();
+          this.master.setValue('memo',memo,{});
+          this.detectorRef.detectChanges();
+        }
+        this.onDestroy();
+      })
+  }
 
   onAddLine(type) {
     this.master.save(null, 0, '', '', false,{allowCompare:false})
@@ -405,27 +424,15 @@ export class WarehouseTransfersAddComponent extends UIComponent {
   }
 
   addLine(type) {
-    let oLine = this.setDefaultLine();
-    if(type === 'issue')
-      this.eleGridIssue.addRow(oLine, this.eleGridIssue.dataSource.length);
-    else 
-      this.eleGridReceipt.addRow(oLine, this.eleGridReceipt.dataSource.length);
-  }
-
-  setDefaultLine() {
-    let model : any = new IV_TransfersLines();
-    let oLine = Util.camelizekeyObj(model);
-    oLine.transID = this.master.data.recID;
-    oLine.idiM4 = this.master.data.fromWHID;
-    oLine.idiM42 = this.master.data.toWHID;
-    oLine.reasonID = this.master.data.reasonID;
-    let indexReason = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value);
-    if (indexReason > -1) {
-      oLine.note = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].ReasonName;
-    }
-    oLine = this.genFixedDims(oLine);
-    oLine = this.acService.getDataSettingFromJournal(oLine,this.journal);
-    return oLine;
+    this.api.exec('IV','TransfersLinesBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      if (res) {
+        if(type === 'issue') 
+          this.eleGridIssue.addRow(res, this.eleGridIssue.dataSource.length);
+        else
+          this.eleGridReceipt.addRow(res, this.eleGridReceipt.dataSource.length);
+      }
+      this.onDestroy();
+    })
   }
 
   onActionGrid(event: any,type) {
@@ -459,85 +466,46 @@ export class WarehouseTransfersAddComponent extends UIComponent {
     let reasonName = '';
     let fromName = '';
     let toName = '';
-
-    let indexReason =
-      this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex(
-        (x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value
-      );
-    if (indexReason > -1) {
-      reasonName = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].ReasonName + ' - ';
+    
+    if (this.master.data.reasonID) {
+      reasonName = this.master.data.reasonName + ' - ';
     }
 
     let indexFrom =
       this.eleCbxFromWHID?.ComponentCurrent?.dataService?.data.findIndex(
         (x) => x.WarehouseID == this.eleCbxFromWHID?.ComponentCurrent?.value
       );
-    if (indexFrom > -1) {
-      fromName = this.eleCbxFromWHID?.ComponentCurrent?.dataService?.data[indexFrom].WarehouseName + ' - ';
+    if (this.master.data.fromWHID) {
+      fromName = this.master.data.fromWHIDName + ' - ';
     }
-
-    let indexTo =
-      this.eleCbxToWHID?.ComponentCurrent?.dataService?.data.findIndex(
-        (x) => x.WarehouseID == this.eleCbxToWHID?.ComponentCurrent?.value
-      );
-    if (indexTo > -1) {
-      toName = this.eleCbxToWHID?.ComponentCurrent?.dataService?.data[indexTo].WarehouseName + ' - ';
+    
+    if (this.master.data.toWHID) {
+      toName = this.master.data.toWHIDName + ' - ';
     }
 
     newMemo = reasonName + fromName + toName;
     return newMemo.substring(0, newMemo.lastIndexOf(' - ') + 1);
   }
-
-  genFixedDims(line: any) {
-    let fixedDims1: string[] = Array(10).fill('0');
-    let fixedDims2: string[] = Array(10).fill('0');
-    for (let i = 0; i < 10; i++) {
-      if (line['idiM' + i + '1']) {
-        fixedDims1[i] = '1';
-      }
-      if (line['idiM' + i + '2']) {
-        fixedDims2[i] = '1';
-      }
-    }
-    line.fixedDIMs = fixedDims1.join('');
-    line.fixedDIMs2 = fixedDims2.join('');
-    return line;
-  }
-
-  /**
-   * *Hàm ẩn các morefunction trong lưới
-   * @param event
-   */
-  changeMF(event) {
-    event.forEach((element) => {
-      if (element.functionID == 'SYS104' || element.functionID == 'SYS102') {
-        element.disabled = false;
-        element.isbookmark = false;
-      } else {
-        element.disabled = true;
-      }
-    });
-  }
-
   
   copyRow(data) {
+    let newData = {...data};
     if (this.eleGridIssue && this.elementTabDetail?.selectingID == '0') {
       this.eleGridIssue.saveRow((res:any)=>{ //? save lưới trước
         if(res){
-          data.recID = Util.uid();
-          data.index = this.eleGridIssue.dataSource.length;
-          delete data?._oldData;
-          this.eleGridIssue.addRow(data, this.eleGridIssue.dataSource.length);
+          newData.recID = Util.uid();
+          newData.index = this.eleGridIssue.dataSource.length;
+          delete newData?._oldData;
+          this.eleGridIssue.addRow(newData, this.eleGridIssue.dataSource.length);
         }
       })
     }
     if (this.eleGridReceipt && this.elementTabDetail?.selectingID == '2') {
       this.eleGridReceipt.saveRow((res:any)=>{ //? save lưới trước
         if(res){
-          data.recID = Util.uid();
-          data.index = this.eleGridReceipt.dataSource.length;
-          delete data?._oldData;
-          this.eleGridReceipt.addRow(data, this.eleGridReceipt.dataSource.length);
+          newData.recID = Util.uid();
+          newData.index = this.eleGridReceipt.dataSource.length;
+          delete newData?._oldData;
+          this.eleGridReceipt.addRow(newData, this.eleGridReceipt.dataSource.length);
         }
       })
     }
