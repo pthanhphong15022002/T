@@ -59,11 +59,13 @@ export class CodxInputCustomFieldComponent implements OnInit {
   @Input() dataSourceRef: any; //data load để ref
   @Input() isLoadDataRef = false;
   @Input() isDropRef = false; // chỉnh sửa vị trí field
+  // @Input() isViewDefaultValue = false; // view giá trị mặc định
 
   @Output() valueChangeCustom = new EventEmitter<any>();
   @Output() addFileCompleted = new EventEmitter<boolean>();
   @Output() rezisePopup = new EventEmitter<any>();
   @Output() dropDataFormatPA = new EventEmitter<any>();
+  @Output() isCreatedTempletMail = new EventEmitter<any>();
 
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('comboxValue') comboxValue: ComboBoxComponent; ///value seclect 1
@@ -164,6 +166,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   //   dateRemind :''
   // }
   rulerNo = 'CM_20010'; //tesst
+  copiedTempMail = false;
 
   constructor(
     private cache: CacheService,
@@ -1172,11 +1175,26 @@ export class CodxInputCustomFieldComponent implements OnInit {
     });
   }
 
-  openPopupSettingRemind() {
+  settingRemindMail() {
+    if (this.remindDefault?.emailTemplate != this.customField.recID) {
+      let obj = [
+        this.remindDefault?.emailTemplate, [this.customField.recID]
+      ]
+      this.api.execSv<any>("SYS", "AD", "EmailTemplatesBusiness", "CopyEmailTemplateByRecIDAsync", obj).subscribe(res => {
+        if (res) {
+          this.openPopupSettingRemind(this.customField.recID)
+          this.isCreatedTempletMail.emit(this.customField.recID)
+          this.copiedTempMail = true;
+        } else this.openPopupSettingRemind(this.customField.recID);
+      })
+    } else this.openPopupSettingRemind(this.remindDefault.emailTemplate)
+  }
+
+  openPopupSettingRemind(templateID) {
     let data = {
       //  dialog: this.dialog,
       formGroup: null,
-      templateID: this.customField?.recID,
+      templateID: templateID,
       showIsTemplate: true,
       showIsPublish: true,
       showSendLater: true,
@@ -1196,14 +1214,24 @@ export class CodxInputCustomFieldComponent implements OnInit {
     popEmail.closed.subscribe((res) => {
       if (res && res.event) {
         //done làm gi
+        if (!this.copiedTempMail)
+          this.isCreatedTempletMail.emit(this.customField.recID)
       }
     });
   }
   valueChangeTimeRM(e) {
     this.remindDefault['dateRemind'] = e?.data?.fromDate;
+    this.valueChangeCustom.emit({
+      e: JSON.stringify(this.remindDefault),
+      data: this.customField,
+    });
   }
   valueChangeRM(e) {
-    this.remindDefault['reminderTime'] = e?.data
+    this.remindDefault['reminderTime'] = e?.data;
+    this.valueChangeCustom.emit({
+      e: JSON.stringify(this.remindDefault),
+      data: this.customField,
+    });
   }
   //-------------END -RM-------------//
 }
