@@ -200,14 +200,16 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
       );
       return;
     }
-    var check = this.stepService.compareDates(this.actualEnd, this.actualEndMax, "h");
-    if (check < 0){
-      this.notiService.notifyCode(
-        'DP035',
-        0,
-        this.headerTextInsStep['ActualEnd']
-      );
-      return;
+    if(this.actualEnd && this.progressData == 100){
+      var check = this.stepService.compareDates(this.actualEnd, this.actualEndMax, "h");
+      if (check < 0){
+        this.notiService.notifyCode(
+          'DP035',
+          0,
+          this.headerTextInsStep['ActualEnd']
+        );
+        return;
+      }
     }
 
     if (this.attachment && this.attachment.fileUploadList.length) {

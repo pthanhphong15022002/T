@@ -32,7 +32,6 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupAddLeadComponent } from '../leads/popup-add-lead/popup-add-lead.component';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 import { PopupAddDealComponent } from '../deals/popup-add-deal/popup-add-deal.component';
-import { CM_Deals } from '../models/cm_model';
 
 @Component({
   selector: 'codx-cmcustomer',

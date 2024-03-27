@@ -272,6 +272,7 @@ export class ResourcesComponent extends UIComponent {
         ) {
           func.disabled = false;
         }
+        if(func.functionID==EPCONST.MFUNCID.S_UpdateQuantity)  func.disabled = true;
 
         if (data.status == '1') {
           e.forEach((func) => {

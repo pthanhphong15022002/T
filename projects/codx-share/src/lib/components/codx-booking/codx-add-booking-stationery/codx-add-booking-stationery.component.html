@@ -50,6 +50,12 @@
         <div class="py-5 px-2 text-center tab-pane-header h-100">
           <ng-container *ngIf="currentTab == 1; else addNewRequest">
             <div class="d-flex justify-content-end align-items-center mb-2">
+              <div class="d-flex flex-row align-items-center ">
+                  
+                  <codx-label class="pe-5" name="lblWarehouseID" default="Kho"> </codx-label>                  
+                  <codx-input class="pe-5" type="combobox" refValue="EP_Warehouses" field="warehouseID" [crrValue]="data?.warehouseID">
+                  </codx-input> 
+              </div>
               <codx-searchbar class="w-200px" iconPos="right" (searchEvent)="search($event)"></codx-searchbar>
               <button class="btn btn-icon btn-tran position-relative mx-5">
                 <span class="icon-shopping_cart icon-20 text-primary"></span>
