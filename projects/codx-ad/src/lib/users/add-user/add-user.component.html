@@ -12,8 +12,15 @@
 </codx-layout-add>
 <ng-template #tabDescription1>
   <ng-container>
-    <codx-input field="employeeID" refValue="FiscalPeriods" type="Combobox">
-    </codx-input>
+    <codx-input
+      type="valuelist"
+      [crrValue]="''"
+      refValue="AC083"
+      refType="2C"
+      field="payType"
+      [multiple]="false"
+      (valueChange)="valueChangeTest($event)"
+    ></codx-input>
   </ng-container>
 </ng-template>
 <ng-template #tabDescription>

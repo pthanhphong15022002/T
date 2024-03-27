@@ -4,6 +4,7 @@
         <div class="mt-4">
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data?.controlType" [fiedName]="'title'" default="Tên ô nhập liệu" class="fw-bold"></codx-label>
             <codx-input type="text" [crrValue]="data?.title" field="title" (valueChange)="changeValue($event)"></codx-input>
+            <span class="fst-italic fw-light">ID: {{data?.fieldName}}</span>
         </div>
         <div class="border-top mt-8">
             <div class="d-flex align-items-center mt-4">

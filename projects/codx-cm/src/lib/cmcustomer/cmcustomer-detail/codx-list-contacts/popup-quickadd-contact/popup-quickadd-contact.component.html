@@ -260,6 +260,16 @@
     >
     </codx-input>
   </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="Memo"> </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [crrValue]="data?.memo"
+      (valueChange)="valueChange($event)"
+      field="memo"
+    >
+    </codx-input>
+  </div>
   <div class="d-flex align-items-center">
     <div class="me-3">
       <codx-input

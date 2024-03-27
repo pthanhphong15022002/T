@@ -31,7 +31,20 @@ export class CodxBookingService {
     );
   }
 
-
+  resourceTrans(recID,option) {
+    //Opition:
+    //1:Nhập kho, cộng AvailableQty,AvailableQty;
+    //2:Cấp phát, trừ full
+    //3:Gửi duyệt, cộng ReservedQty;
+    //4:Từ chối duyệt, trừ ReservedQty;
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourceTransBusiness',
+      'ResourceTransAsync',
+      [recID,option]
+    );
+  }
   autoApproveStationery(recID:string, refID:string) {
     return this.api.execSv(
       'EP',

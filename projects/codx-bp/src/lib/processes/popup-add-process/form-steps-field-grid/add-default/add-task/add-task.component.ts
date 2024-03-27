@@ -82,7 +82,7 @@ export class AddTaskComponent
       title: "Người lập phiếu_Bộ phận",
       controlType : "ComboBox",
       refType : "3",
-      refValue : "OrganizationUnits",
+      refValue : "HRDepartmentUnits",
       dataType : "String"
     },
     {
@@ -98,7 +98,7 @@ export class AddTaskComponent
       title: "Người lập phiếu_Phòng ban",
       controlType : "ComboBox",
       refType : "3",
-      refValue : "OrganizationUnits",
+      refValue : "HRDepartments",
       dataType : "String"
     },
     {
@@ -106,7 +106,7 @@ export class AddTaskComponent
       title: "Người lập phiếu_Công ty",
       controlType : "ComboBox",
       refType : "3",
-      refValue : "OrganizationUnits",
+      refValue : "HRCompany",
       dataType : "String"
     },
   ];

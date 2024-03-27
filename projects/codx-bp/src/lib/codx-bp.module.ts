@@ -86,6 +86,7 @@ import { ShareCrmModule } from 'projects/codx-dp/src/lib/share-crm/share-crm.mod
 import { BPPopupChangePermissionComponent } from './processes/popup-add-process/form-steps-field-grid/bp-popup-change-permission/bp-popup-change-permission.component';
 import { PropertyCbbDependenceComponent } from './modeview/properties/property-cbb-dependence/property-cbb-dependence.component';
 import { ViewListProcessesComponent } from './processes/view-list-processes/view-list-processes.component';
+import { TramTestDiagramComponent } from './tram-test-diagram/test-diagram.component';
 
 export const routes: Routes = [
   {
@@ -123,6 +124,11 @@ export const routes: Routes = [
       {
         path: 'share/dynamic/:funcID',
         component: DynamicFormComponent,
+      },
+      {
+        path: 'test-diagram/:funcID/:id',
+        component: TramTestDiagramComponent,
+        data: { noReuse: true },
       },
     ],
   },
@@ -203,6 +209,7 @@ export const routes: Routes = [
     SettingMailComponent,
     BPPopupChangePermissionComponent,
     ViewListProcessesComponent,
+    TramTestDiagramComponent
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

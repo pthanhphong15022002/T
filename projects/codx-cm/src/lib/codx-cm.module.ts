@@ -24,7 +24,7 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { SliderModule } from '@syncfusion/ej2-angular-inputs';
+import { RatingModule, SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { CmCustomerComponent } from './cmcustomer/cmcustomer.component';
 import { CmCustomerDetailComponent } from './cmcustomer/cmcustomer-detail/cmcustomer-detail.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -372,6 +372,7 @@ const T_Pipe: Type<any>[] = [
     BulletChartModule,
     AccumulationChartModule,
     ShareCrmModule,
+    RatingModule
   ],
   exports: [RouterModule],
   providers: [

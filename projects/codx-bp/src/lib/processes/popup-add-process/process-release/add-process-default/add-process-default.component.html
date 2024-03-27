@@ -50,12 +50,12 @@
                             </codx-label> 
                             <span *ngIf="child.isRequired" class="text-danger mx-2">(*)</span>
 
-                            <i class="icon-add_box ms-2 text-primary cursor-pointer" *ngIf="child.fieldType == 'Table'" (click)="addRow(child.dataFormat,child.fieldName,child.indexTable)"></i>
+                            <i class="icon-add_box ms-2 text-primary cursor-pointer" *ngIf="child.fieldType == 'Table'" (click)="addRow(child.dataFormat,child.fieldName,child.indexTable,null,child?.tableFormat?.hasIndexNo)"></i>
                         </div>
                         
                         <ng-container [ngSwitch]="child?.fieldType">
                             <ng-container *ngSwitchCase="'Attachment'">
-                                <ng-container *ngIf="!child.documentControl">
+                                <ng-container *ngIf="!child.documentControl || child?.documentControl.length==0">
                                     <codx-attachment 
                                         #attachment
                                         [hideDes]="'1'"
@@ -69,7 +69,7 @@
                                     >
                                     </codx-attachment>
                                 </ng-container>
-                                <ng-container *ngIf="child.documentControl">
+                                <ng-container *ngIf="child.documentControl && child?.documentControl.length>0">
                                     <div class="pt-2">
                                         <lib-attachment-grid [data]="child.documentControl" [dataIns]="dataIns" [formModel]="formModel" (dataChange)="dataChangeAttachmentGrid($event)" (dataChangeAttachment)="dataChangeAttachment($event)"></lib-attachment-grid>
                                     </div>

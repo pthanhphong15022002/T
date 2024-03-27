@@ -81,6 +81,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
   lstWarehourse=[];
   autoComfirm =EPCONST.APPROVALRULE.NotHaved;
   viewOnly=false;
+  defaultWarehouse: any;
   constructor(
     private injector: Injector,
     private auth: AuthStore,
@@ -126,6 +127,11 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
     this.codxBookingService.getListWarehouse().subscribe((res:any)=>{
       if(res){
         this.lstWarehourse=res;
+        this.defaultWarehouse = res?.find(x=>x.isSystem);
+        if(this.funcType == _addMF ||this.funcType == _copyMF){
+          this.data.warehouseID = this.defaultWarehouse?.warehouseID;
+          this.detectorRef.detectChanges();
+        }
       }
     });
 
