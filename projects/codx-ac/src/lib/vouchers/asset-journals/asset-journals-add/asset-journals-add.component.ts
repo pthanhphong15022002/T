@@ -15,8 +15,12 @@ import {
   UIComponent,
   Util,
 } from 'codx-core';
-import { Subject, map, takeUntil } from 'rxjs';
-import { CodxAcService, fmAssetJournalsLines } from '../../../codx-ac.service';
+import { Subject, firstValueFrom, map, takeUntil } from 'rxjs';
+import {
+  CodxAcService,
+  fmAssetJournalsLines,
+  fmCountingMembers,
+} from '../../../codx-ac.service';
 import { RoundService } from '../../../round.service';
 import {
   EditSettingsModel,
@@ -33,6 +37,8 @@ export class AssetJournalsAddComponent extends UIComponent {
   @ViewChild('formAsset') public formAsset: CodxFormComponent;
   @ViewChild('eleGridAcquisitions')
   eleGridAcquisitions: CodxGridviewV2Component;
+  @ViewChild('eleGridAccountMember')
+  eleGridAccountMember: CodxGridviewV2Component;
 
   headerText: string;
   dialog!: DialogRef;
@@ -50,6 +56,7 @@ export class AssetJournalsAddComponent extends UIComponent {
     allowNextRowEdit: false,
   };
   fmAssetJournalsLines: any = fmAssetJournalsLines;
+  fmCountingMembers = fmCountingMembers;
   tabInfo: TabModel[] = [
     //? thiết lập footer
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
@@ -60,7 +67,10 @@ export class AssetJournalsAddComponent extends UIComponent {
   private destroy$ = new Subject<void>();
   lstLines = [];
   lstLinesDeletes = [];
+  lstAccountMembers = [];
+  lstAccMemDeletes = [];
   isLoad: boolean = false;
+  isSaveAdd = false;
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -108,8 +118,6 @@ export class AssetJournalsAddComponent extends UIComponent {
     }, 100);
     this.detectorRef.detectChanges();
   }
-
-
 
   /**
    * *Hàm hủy các observable api
@@ -179,7 +187,7 @@ export class AssetJournalsAddComponent extends UIComponent {
 
   valueChangeMaster(e) {}
 
-  //#region  tab grid
+  //#region  tab grid lines
   initGrid(eleGrid: CodxGridviewV2Component) {
     console.log('lst', eleGrid);
   }
@@ -192,20 +200,12 @@ export class AssetJournalsAddComponent extends UIComponent {
       case 'add':
       case 'update':
       case 'delete':
+        this.eleGridAcquisitions.isSaveOnClick = false;
+        this.eleGridAcquisitions.isSave = false;
+
         break;
       case 'closeEdit':
-        if (
-          this.eleGridAcquisitions &&
-          this.eleGridAcquisitions.rowDataSelected
-        ) {
-          this.eleGridAcquisitions.rowDataSelected = null;
-        }
-        if (this.eleGridAcquisitions.isSaveOnClick)
-          this.eleGridAcquisitions.isSaveOnClick = false;
-        setTimeout(() => {
-          let element = document.getElementById('btnAddCash');
-          element.focus();
-        }, 100);
+        this.eleGridAcquisitions.isSaveOnClick = false;
         break;
       case 'beginEdit':
         // let oAccount = this.acService.getCacheValue('account', event?.data.accountID);
@@ -219,14 +219,17 @@ export class AssetJournalsAddComponent extends UIComponent {
    * @param event
    */
   valueChangeLine(event: any) {
-    // let oLine = event.data;
-    // let field = event.field;
-    // this.eleGridAcquisitions.startProcess();
-    // this.eleGridAcquisitions.endProcess();
+    this.eleGridAcquisitions.isSave = false;
+    this.eleGridAcquisitions.isSaveOnClick = false;
+    this.eleGridAcquisitions.isOutsideDataSource = true;
+    let index = this.lstLines.findIndex((x) => x.recID == event?.data?.recID);
+    if (index != -1) {
+      this.lstLines[index] = event?.data;
+    } else {
+      this.lstLines.push(event?.data);
+    }
     this.detectorRef.detectChanges();
   }
-  //#endregion
-
   /**
    * *Hàm thêm dòng cho các lưới
    * @returns
@@ -259,6 +262,7 @@ export class AssetJournalsAddComponent extends UIComponent {
   onClick(e) {
     if (this.eleGridAcquisitions && this.eleGridAcquisitions?.gridRef?.isEdit) {
       this.eleGridAcquisitions.isSaveOnClick = false;
+      this.eleGridAcquisitions.isOutsideDataSource = true;
       setTimeout(() => {
         if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
           e.target.focus();
@@ -267,10 +271,12 @@ export class AssetJournalsAddComponent extends UIComponent {
       }, 100);
     }
   }
-  //#region crud
   addRowDetail() {
-    this.addLine();
-    this.detectorRef.detectChanges();
+    this.eleGridAcquisitions.saveRow((res: any) => {
+      if (res && res.type != 'error') {
+        this.addLine();
+      }
+    });
   }
 
   addLine() {
@@ -283,7 +289,13 @@ export class AssetJournalsAddComponent extends UIComponent {
         if (res) {
           res.rowNo = this.eleGridAcquisitions.dataSource.length + 1;
           this.lstLines.push(res);
-          this.eleGridAcquisitions.addRow(res, res.rowNo, true);
+          this.eleGridAcquisitions.addRow(
+            res,
+            this.eleGridAcquisitions.dataSource.length,
+            true
+          );
+          this.eleGridAcquisitions.isSaveOnClick = false;
+          this.eleGridAcquisitions.isOutsideDataSource = true;
         }
         this.onDestroy();
         this.detectorRef.detectChanges();
@@ -294,53 +306,260 @@ export class AssetJournalsAddComponent extends UIComponent {
     console.log(e);
   }
 
+  onEdit(e) {
+    console.log('onEdit: ', e);
+  }
+
   delete(data) {
-    this.eleGridAcquisitions.deleteRow(data, true);
-    this.lstLinesDeletes.push(data);
-    this.lstLines = this.eleGridAcquisitions.dataSource;
-    this.detectorRef.detectChanges();
+    this.eleGridAcquisitions.saveRow((res: any) => {
+      if (res && res.type != 'error') {
+        this.eleGridAcquisitions.deleteRow(data, true);
+        this.lstLinesDeletes.push(data);
+        this.lstLines = this.eleGridAcquisitions.dataSource;
+        this.detectorRef.detectChanges();
+      }
+    });
   }
 
   copy(data) {
-    let lst = JSON.parse(JSON.stringify(this.lstLines));
-    let ele = JSON.parse(JSON.stringify(data));
-    ele.recID = Util.uid();
-    // ele._uuid = Util.uid();
-    // ele.index = this.eleGridAcquisitions?.dataSource?.length + 1;
-    ele.rowNo = this.eleGridAcquisitions?.dataSource?.length + 1;
-    lst.push(ele);
-    this.lstLines = JSON.parse(JSON.stringify(lst));
-    this.eleGridAcquisitions.addRow(ele, ele.rowNo, true);
+    let ele = { ...data };
+    this.eleGridAcquisitions.saveRow((res: any) => {
+      if (res && res.type != 'error') {
+        let lst = JSON.parse(JSON.stringify(this.lstLines));
+        ele.recID = Util.uid();
+        // ele.index = this.eleGridAcquisitions?.dataSource?.length + 1;
+        ele.rowNo = this.eleGridAcquisitions?.dataSource?.length + 1;
+        lst.push(ele);
+        this.lstLines = JSON.parse(JSON.stringify(lst));
+        this.eleGridAcquisitions.addRow(
+          ele,
+          this.eleGridAcquisitions.dataSource.length,
+          true
+        );
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+  //#endregion
+
+  //#region tab account member
+  valueChangeAccount(event) {
+    if (event?.field == 'memberID') {
+      event.data.memberName = event?.itemData?.UserName;
+      event.data.position =
+        event?.itemData?.PositionName ?? event.data.position;
+      this.eleGridAccountMember.saveRow((res: any) => {
+        if (res && res.type != 'error') {
+          let index = this.eleGridAccountMember.dataSource.findIndex(
+            (x) => x.recID == event.data.recID
+          );
+          this.eleGridAccountMember.updateRow(index, event.data, false);
+        }
+      });
+    }
+    this.eleGridAccountMember.isSave = false;
+    this.eleGridAccountMember.isSaveOnClick = false;
+    this.eleGridAccountMember.isOutsideDataSource = true;
+    let index = this.lstAccountMembers.findIndex(
+      (x) => x.recID == event?.data?.recID
+    );
+    if (index != -1) {
+      this.lstAccountMembers[index] = event?.data;
+    } else {
+      this.lstAccountMembers.push(event?.data);
+    }
     this.detectorRef.detectChanges();
   }
-
-  onDiscard() {}
-  onSave(type) {
-    if (this.formAsset.data.isAdd) {
-      this.onAdd();
-    } else if (this.formAsset.data.isEdit) {
-      this.onUpdate();
+  initGridAccount(e) {}
+  onActionGridAccount(e) {}
+  clickMFAccount(event: any) {
+    switch (event.event.functionID) {
+      case 'SYS101':
+        this.addAccountMember();
+        break;
+      case 'SYS104':
+        this.copyAccountMember(event.data);
+        break;
+      case 'SYS102':
+        this.deleteAccountMember(event.data);
+        break;
     }
   }
 
-  onAdd() {
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option), 0)
-      .subscribe(async (res) => {
-        if (res) {
-          this.dialog.close(res);
-        }
-      });
+  addAccountMember() {
+    this.eleGridAccountMember.saveRow((ele: any) => {
+      if (ele && ele.type != 'error') {
+        this.api
+          .exec('AC', 'CountingMembersBusiness', 'SetDefaultAsync', [
+            this.formAsset.data.recID,
+          ])
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((res: any) => {
+            if (res) {
+              this.lstAccountMembers.push(res);
+              this.eleGridAccountMember.addRow(
+                res,
+                this.eleGridAccountMember.dataSource.length,
+                true
+              );
+              this.eleGridAccountMember.isSaveOnClick = false;
+              this.eleGridAccountMember.isOutsideDataSource = true;
+            }
+            this.onDestroy();
+            this.detectorRef.detectChanges();
+          });
+      }
+    });
+  }
+  copyAccountMember(data) {
+    let ele = { ...data };
+    this.eleGridAccountMember.saveRow((res: any) => {
+      if (res && res.type != 'error') {
+        let lst = JSON.parse(JSON.stringify(this.lstAccountMembers));
+        ele.recID = Util.uid();
+        ele.index = this.eleGridAccountMember?.dataSource?.length;
+        lst.push(ele);
+        this.lstAccMemDeletes = JSON.parse(JSON.stringify(lst));
+        this.eleGridAccountMember.addRow(
+          ele,
+          this.eleGridAccountMember.dataSource.length,
+          true
+        );
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+  deleteAccountMember(data) {
+    this.eleGridAccountMember.saveRow((ele: any) => {
+      if (ele && ele.type != 'error') {
+        this.eleGridAccountMember.deleteRow(data, true);
+        this.lstAccMemDeletes.push(data);
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+  //#endregion
+
+  //#region footer
+  onDiscard() {
+    this.closeForm();
+  }
+  onSave(type) {
+    if (this.formAsset.data.isAdd) {
+      this.onAdd(type);
+    } else if (this.formAsset.data.isEdit) {
+      this.onUpdate(type);
+    }
   }
 
-  onUpdate() {
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option))
-      .subscribe(async (res) => {
-        if (res && res.update) {
-          this.dialog.close(res.update);
-        }
-      });
+  onAdd(type) {
+    if (!this.isSaveAdd) {
+      this.dialog.dataService
+        .save((option: any) => this.beforeSave(option), 0)
+        .subscribe(async (res) => {
+          if (res) {
+            if (this.lstAccountMembers?.length > 0) {
+              await firstValueFrom(
+                this.addOrUpdateCountingMembers(this.lstAccountMembers, [])
+              );
+            }
+            if (type == 'save') {
+              this.dialog.close(res);
+              this.onDestroy();
+            } else {
+              this.isSaveAdd = true;
+              this.refreshForm();
+            }
+          }
+        });
+    } else {
+      this.api
+        .execSv<any>(
+          'AM',
+          'AM',
+          'AssetJournalsBusiness',
+          'AddAssetJournalsAsync',
+          [this.formAsset.data, this.lstLines]
+        )
+        .subscribe(async (res) => {
+          if (res) {
+            (this.dialog.dataService as CRUDService).add(res).subscribe();
+
+            if (this.lstAccountMembers?.length > 0) {
+              await firstValueFrom(
+                this.addOrUpdateCountingMembers(this.lstAccountMembers, [])
+              );
+            }
+            if (type == 'save') {
+              this.isSaveAdd = false;
+              this.dialog.close(res);
+              this.onDestroy();
+            } else {
+              this.isSaveAdd = true;
+              this.refreshForm();
+            }
+            this.notification.notifyCode('SYS006');
+          }
+        });
+    }
+  }
+
+  onUpdate(type) {
+    if (!this.isSaveAdd) {
+      this.dialog.dataService
+        .save((option: any) => this.beforeSave(option))
+        .subscribe(async (res) => {
+          if (res && res.update) {
+            if (
+              this.lstAccountMembers?.length > 0 ||
+              this.lstAccMemDeletes?.length > 0
+            ) {
+              await firstValueFrom(
+                this.addOrUpdateCountingMembers(
+                  this.lstAccountMembers,
+                  this.lstAccMemDeletes
+                )
+              );
+            }
+            if (type == 'save') {
+              this.isSaveAdd = false;
+              this.dialog.close(res.update);
+              this.onDestroy();
+            } else {
+              this.isSaveAdd = true;
+              this.refreshForm();
+            }
+            this.notification.notifyCode('SYS006');
+          }
+        });
+    } else {
+      this.api
+        .execSv<any>(
+          'AM',
+          'AM',
+          'AssetJournalsBusiness',
+          'AddAssetJournalsAsync',
+          [this.formAsset.data, this.lstLines]
+        )
+        .subscribe(async (res) => {
+          if (res) {
+            (this.dialog.dataService as CRUDService).add(res).subscribe();
+            if (this.lstAccountMembers?.length > 0) {
+              await firstValueFrom(
+                this.addOrUpdateCountingMembers(this.lstAccountMembers, [])
+              );
+            }
+            if (type == 'save') {
+              this.isSaveAdd = false;
+              this.dialog.close(res);
+              this.onDestroy();
+            } else {
+              this.isSaveAdd = true;
+              this.refreshForm();
+            }
+          }
+        });
+    }
   }
 
   beforeSave(op) {
@@ -358,6 +577,50 @@ export class AssetJournalsAddComponent extends UIComponent {
       : [this.formAsset.data, this.lstLines];
     op.data = data;
     return true;
+  }
+
+  addOrUpdateCountingMembers(list, deletes) {
+    return this.api.execSv<any>(
+      'AC',
+      'AC',
+      'CountingMembersBusiness',
+      'CRUDListCountingsAsync',
+      [this.formAsset.data.recID, list, deletes]
+    );
+  }
+
+  refreshForm() {
+    this.api
+      .exec('AM', 'AssetJournalsBusiness', 'SetDefaultAsync', [
+        null,
+        this.journal,
+        'add',
+      ])
+      .subscribe((res: any) => {
+        if (res) {
+          res.data.isAdd = true;
+          this.formAsset.refreshData({ ...res.data });
+          setTimeout(() => {
+            this.refreshGrid();
+          }, 100);
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  refreshGrid() {
+    this.lstLines = [];
+    this.lstLinesDeletes = [];
+    this.lstAccMemDeletes = [];
+    this.lstAccountMembers = [];
+    if (this.eleGridAcquisitions) {
+      this.eleGridAcquisitions.dataSource = [];
+      this.eleGridAcquisitions.refresh();
+    }
+    if (this.eleGridAccountMember) {
+      this.eleGridAccountMember.dataSource = [];
+      this.eleGridAccountMember.refresh();
+    }
   }
   //#endregion
 }

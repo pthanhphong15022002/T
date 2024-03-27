@@ -16,6 +16,7 @@ import {
   AESCryptoService,
   AuthService,
   AuthStore,
+  NotificationsService,
   UIComponent,
 } from 'codx-core';
 import { environment } from 'src/environments/environment';
@@ -99,7 +100,8 @@ export class ReviewComponent extends UIComponent implements OnInit {
     private auth: AuthStore,
     private sanitizer: DomSanitizer,
     private aesCrypto: AESCryptoService,
-    private authService: AuthService
+    private authService: AuthService,
+    private noti: NotificationsService
   ) {
     super(injector);
     this.user = this.auth.get();
@@ -746,6 +748,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
         if (res && res.status == '2') this.isSent = true;
       });
     }
+    else this.noti.notify("Vui lòng trả lời hết câu hỏi bắt buộc.")
   }
 
   setErrorElm(recID: any) {
@@ -789,8 +792,8 @@ export class ReviewComponent extends UIComponent implements OnInit {
         el.remove();
       });
     } else {
-      document.getElementById('formError' + id).remove();
-      document.getElementById('formId' + id).classList.remove('border-danger');
+      if(document.getElementById('formError' + id)) document.getElementById('formError' + id).remove();
+      if(document.getElementById('formId' + id)) document.getElementById('formId' + id).classList.remove('border-danger');
     }
   }
 }

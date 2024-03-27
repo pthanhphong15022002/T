@@ -654,18 +654,13 @@ export class AddTaskComponent
               }
   
               if (typeof element.documentControl != 'string') {
-                element.documentControl =
-                  element.documentControl?.length > 0
-                    ? JSON.stringify(element.documentControl)
-                    : null;
+                element.documentControl = JSON.stringify(element.documentControl)
               }
-  
+              
               if (typeof element.dataFormat != 'string') {
-                element.dataFormat =
-                  element.dataFormat?.length > 0
-                    ? JSON.stringify(element.dataFormat)
-                    : null;
+                element.dataFormat = JSON.stringify(element.dataFormat)
               }
+
               if (typeof element.tableFormat != 'string') {
                 element.tableFormat = JSON.stringify(element.tableFormat) 
               }
