@@ -409,7 +409,7 @@
           </ng-container>
         </div>
       </ng-container>
-
+      <!-- view defaultvalue -->
       <div class="form-group" *ngIf="fieldCus">
         <codx-input-custom-field
           #tempInput
@@ -420,6 +420,7 @@
           (dropDataFormatPA)="dropDataFormatPA($event)"
           (valueChangeCustom)="valueChangeCustom($event)"
           [disable]="viewOnly"
+          [isAdd]="field.dataType == 'RM' && action != 'edit'"
         >
         </codx-input-custom-field>
         <ng-container *ngIf="field.defaultValue && field.dataType == 'PA'">

@@ -788,7 +788,11 @@ export class AddTaskComponent
           };
           this.process.documentControl.push(documentControl);
         }
-
+        else
+        {
+          let indexP = this.process.documentControl.findIndex(x=>x.templateID == res?.event[0].recID)
+          if(res?.event[3] && indexP >= 0 && res?.event[3]?.recID) this.process.documentControl[indexP].files[0].fileID = res?.event[3].recID
+        }
         this.dataChangeProcess.emit(this.process);
         this.dataChange.emit(this.data);
       }

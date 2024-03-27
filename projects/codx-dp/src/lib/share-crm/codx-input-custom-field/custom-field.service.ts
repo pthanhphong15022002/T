@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CacheService, NotificationsService } from 'codx-core';
+import { ApiHttpService, CacheService, NotificationsService } from 'codx-core';
 
 @Injectable({
   providedIn: 'root',
@@ -7,8 +7,9 @@ import { CacheService, NotificationsService } from 'codx-core';
 export class CustomFieldService {
   constructor(
     private cache: CacheService,
-    private notiService: NotificationsService
-  ) {}
+    private notiService: NotificationsService,
+    private api: ApiHttpService,
+  ) { }
   //----------------------CACULATE---------------------------//
   point = '';
   arrCheck = ['+', '-', 'x', '/', 'Avg(', '(', ')'];
@@ -240,4 +241,9 @@ export class CustomFieldService {
     return true;
   }
   //--------------------------------------------------//
+
+  //---------------Tempmail---------------//
+  deletedTempmail(recID) {
+    return this.api.execSv<any>("SYS", "AD", "EmailTemplatesBusiness", "DeleteEmailTemplateByRecIDAsync", recID)
+  }
 }

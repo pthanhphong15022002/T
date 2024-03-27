@@ -1,0 +1,10 @@
+<div ngbDropdown *ngIf="function">
+    <button (click)="openChatDoc(module)"
+        type="button"
+        class="dropdown-toggle btn btn-sm btn-icon mx-2"
+        ngbDropdownToggle
+    >
+        <span *ngIf="function.smallIcon" [inlineSVG]="function.smallIcon" class="svg-icon svg-icon-3 svg-icon-primary"></span>
+        <span class="text-primary ms-1 pt-1px">Help</span>
+    </button>
+</div>

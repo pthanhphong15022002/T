@@ -50,7 +50,7 @@
         <div class="py-5 px-2 text-center tab-pane-header h-100">
           <ng-container *ngIf="currentTab == 1; else addNewRequest">
             <div class="d-flex justify-content-end align-items-center mb-2">
-              <div class="d-flex flex-row align-items-center ">
+              <div class="d-flex flex-row align-items-center pe-5">
                   
                   <codx-label class="pe-5" name="lblWarehouseID" default="Kho"> </codx-label>                  
                   <codx-input class="pe-5" type="combobox" refValue="EP_Warehouses" field="warehouseID" [crrValue]="data?.warehouseID">
@@ -199,15 +199,15 @@
           <div class="form-group col-6">
             <codx-label class="d-flex justify-content-start" fiedName="OrgUnitID" [formModel]="formModel">
             </codx-label>
-            <codx-input [disabled]="data?.category == '1'" type="combobox"
+            <codx-input [disabled]="data?.category == '1' || viewOnly" type="combobox"
               field="orgUnitID" refValue="OrganizationUnits" [crrValue]="dialogAddBookingStationery?.value.orgUnitID"
-              (valueChange)="valueChange($event)"  [disabled]="viewOnly">
+              (valueChange)="valueChange($event)" >
             </codx-input>
           </div>
           <div class="form-group col-6">
             <codx-label class="d-flex justify-content-start" name="lblQtyEmp" default="Số lượng nhân viên">
             </codx-label>
-            <codx-input [disabled]="data?.category == '1'" type="number" field="attendees"  [disabled]="viewOnly"
+            <codx-input [disabled]="data?.category == '1'|| viewOnly" type="number" field="attendees" 
             [showSpinButton]="false" [crrValue]="data?.attendees" (valueChange)="valueChange($event)">
             </codx-input>
           </div>

@@ -1,5 +1,5 @@
 import { detach } from '@syncfusion/ej2-base';
-import { filter } from 'rxjs';
+import { Subscription, filter } from 'rxjs';
 import {
   ChangeDetectorRef,
   Component,
@@ -29,7 +29,7 @@ import { ViewFileDialogComponent } from 'projects/codx-common/src/lib/component/
 import moment from 'moment';
 import { Permission } from '@shared/models/file.model';
 import { SignalRService } from '../services/signalr.service';
-import { MessageItem, tmpMessage } from '../models/WP_Messages.model';
+import { MessageItem, WP_Messages, tmpMessage } from '../models/WP_Messages.model';
 import { MessageSystemPipe } from 'projects/codx-common/src/lib/pipe/mssgSystem.pipe';
 import { CHAT } from '../models/chat-const.model';
 @Component({
@@ -38,21 +38,23 @@ import { CHAT } from '../models/chat-const.model';
   styleUrls: ['./chat-box.component.scss'],
 })
 export class CodxChatBoxComponent implements OnInit, AfterViewInit {
-  chatboxTitle = '';
-  @HostListener('click', ['$event'])
-  onClick(event: any) {
-    this.isChatBox(event.target);
-    this.checkActive(this.groupID);
-  }
+  // @HostListener('click', ['$event'])
+  // onClick(event: any) {
+  //   this.isChatBox(event.target);
+  //   this.checkActive(this.groupID);
+  // }
   @Input() groupID: any;
   @Input() group: any;
-
   @Output() close = new EventEmitter<any>();
   @Output() collapse = new EventEmitter<any>();
+
+  subscriptions = new Subscription();
+
   funcID: string = 'WPT11';
   formModel: FormModel = null;
   grdViewSetUp: any = null;
   moreFC: any = null;
+  chatboxTitle = '';
   function: any = null;
   user: any = {};
   arrMessages: any[] = [];
@@ -75,9 +77,9 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   emojiPerLine: number = 7;
   emojiMaxFrequentRows: number = 4;
   emojiReview: boolean = false;
+
+
   vllL1480: Array<any> = [];
-  isReply: boolean = false;
-  mssgReply: any = null;
   FILE_REFERTYPE = {
     IMAGE: 'image',
     VIDEO: 'video',
@@ -94,6 +96,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   @ViewChild('mssgType5') mssgType5: TemplateRef<any>;
   @ViewChild('tmpViewMember') tmpViewMember: TemplateRef<any>;
 
+  @ViewChild("inputElement") inputElement:ElementRef<HTMLInputElement>;
   constructor(
     private api: ApiHttpService,
     private auth: AuthStore,
@@ -124,7 +127,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.signalR.incomingMessage
+    let subscripbe1 = this.signalR.incomingMessage
     .subscribe((mssg:any) => {
       if(mssg && mssg.groupID == this.group.groupID) 
       {
@@ -133,7 +136,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.signalR.groupChange
+    let subscripbe2 = this.signalR.groupChange
     .subscribe((group:any) => {
       if(group && this.group.groupID == group.groupID)
       {
@@ -148,314 +151,147 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
         this.dt.detectChanges();
       } 
     });
+
+    this.subscriptions.add(subscripbe1);
+    this.subscriptions.add(subscripbe2);
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
   getSetting() {
     // get function
     if (this.funcID) {
-      this.cache.functionList(this.funcID).subscribe((func: any) => {
-        if (func) {
+      let subscribe1 = this.cache.functionList(this.funcID)
+      .subscribe((func: any) => {
+        if (func) 
+        {
           this.function = JSON.parse(JSON.stringify(func));
           this.formModel.funcID = func.functionID;
           this.formModel.entityName = func.entityName;
           this.formModel.formName = func.formName;
           this.formModel.gridViewName = func.gridViewName;
-          this.cache
+          this.subscriptions.add(
+            this.cache
             .gridViewSetup(func.formName, func.gridViewName)
             .subscribe((grd: any) => {
               if (grd) {
                 this.grdViewSetUp = JSON.parse(JSON.stringify(grd));
                 this.dt.detectChanges();
               }
-            });
-          this.cache
+          }));
+          this.subscriptions.add(
+            this.cache
             .moreFunction(func.formName, func.gridViewName)
             .subscribe((mFC: any) => {
               if (mFC) {
                 this.moreFC = JSON.parse(JSON.stringify(mFC));
               }
-            });
+          }));
         }
       });
+      this.subscriptions.add(subscribe1);
     }
     // get valuelist vote
-    this.cache.valueList('L1480').subscribe((vll: any) => {
+    let subscribe2 = this.cache.valueList('L1480')
+    .subscribe((vll: any) => {
       if (vll?.datas) {
         this.vllL1480 = vll.datas;
       }
     });
-    // get mssage deleted
-    this.cache.message('CHAT002').subscribe((res: any) => {
+
+    let subscribe3 = this.cache.message('CHAT002')
+    .subscribe((res: any) => {
       this.mssgDeleted = res.defaultName;
     });
-    // get more funtion hệ thống dùng tạm cho moreFunction chat
-    this.cache.moreFunction('CoDXSystem', '').subscribe((mFuc: any) => {
+
+    let subscribe4 = this.cache.moreFunction('CoDXSystem', '')
+    .subscribe((mFuc: any) => {
       if (mFuc) {
         this.sysMoreFunc = Array.from<any>(mFuc).filter(
           (x) => x.functionID == 'SYS02'
         );
       }
     });
+    this.subscriptions.add(subscribe2);
+    this.subscriptions.add(subscribe3);
+    this.subscriptions.add(subscribe4);
   }
 
-  // get group infor
   getGroupInfo() {
-    if (this.groupID) 
-    {
-      this.api
-        .execSv(
-          'WP',
-          'ERM.Business.WP',
-          'GroupBusiness',
-          'GetGroupByIDAsync',
-          this.groupID
-        ).subscribe((res: any) => {
-          if (res) 
+    if (this.groupID) {
+      let subscribe = this.api.execSv
+      (
+        'WP',
+        'ERM.Business.WP',
+        'GroupBusiness',
+        'GetGroupByIDAsync',
+        this.groupID
+      ).subscribe((res: any) => {
+        if(res) 
+        {
+          this.group = res;
+          if (this.group.members) 
           {
-            this.group = res;
-            if (res.members) {
-              if (this.group?.groupType == '1') {
-                let tempUser = res.members.filter(
-                  (x) => x.userID != this.user?.userID
-                );
-                if (tempUser?.length > 0) {
-                  this.chatboxTitle = tempUser[0].userName;
-                }
-              }
-              this.crrMembers = Array.from<any>(res.members)
-                .map((x) => x.userID)
-                .join(';');
+            this.crrMembers = Array.from<any>(this.group.members)
+              .map((x) => x.userID)
+              .join(';');
+          }
+          this.dt.detectChanges();
+        }
+      });
+      this.subscriptions.add(subscribe);
+    }
+  }
+
+  getMessage(isScroll: boolean = false) {
+    if (!this.isLoading && !this.isFull) {
+      this.isLoading = true;
+      this.page++;
+      let subscribe = this.api
+      .execSv('WP', 'ERM.Business.WP', 'ChatBusiness', 'GetMessageAsync', [this.groupID,this.page])
+      .subscribe((res: any[]) => {
+        if(res && res?.length > 0)
+        {
+          if (isScroll) 
+          {
+            let data = Array.from<any>(res[0]).reverse();
+            if (data.length > 0) {
+              this.arrMessages = data.concat(this.arrMessages);
+            }
+          } 
+          else {
+            let data = Array.from<any>(res[0]);
+            if (data.length > 0) {
+              this.arrMessages = data.reverse();
             }
           }
-        });
+          this.isFull = this.page == Math.ceil(res[1] / 20);
+          this.isLoading = false;
+          this.dt.detectChanges();
+        }
+      });
+      this.subscriptions.add(subscribe);
     }
   }
-  // get message
-  getMessage(isScroll: boolean = false) {
-    if (!this.isLoading) {
-      if (!this.isFull) {
-        this.isLoading = true;
-        this.page++;
-        this.api
-          .execSv('WP', 'ERM.Business.WP', 'ChatBusiness', 'GetMessageAsync', [
-            this.groupID,
-            this.page,
-          ])
-          .subscribe((res: any[]) => {
-            if(res && res?.length > 0)
-            {
-              if (isScroll) 
-              {
-                let data = Array.from<any>(res[0]).reverse();
-                if (data.length > 0) {
-                  this.arrMessages = data.concat(this.arrMessages);
-                }
-              } 
-              else {
-                let data = Array.from<any>(res[0]);
-                if (data.length > 0) {
-                  this.arrMessages = data.reverse();
-                }
-              }
-              this.isFull = this.page == Math.ceil(res[1] / 20);
-              this.isLoading = false;
-              this.dt.detectChanges();
-            }
-          });
-      }
-    }
-  }
-  // scroll up load data
+
   scroll(element: HTMLElement) {
-    if (!this.isLoading && element.scrollTop <= 100) {
+    if (!this.isLoading && element.scrollTop <= 100) 
+    {
       this.getMessage(true);
     }
   }
-  reactedMessage(mssg: any, vote: any) {
-    //Thêm react
-    let myVote = mssg?.votes?.filter((x) => x.createdBy == this.user?.userID);
-    if (mssg?.votes?.length == 0 || myVote?.length == 0) {
-      if (!mssg.lstVote) {
-        mssg.lstVote = [];
-      }
-      let index = mssg.lstVote.findIndex((x) => x.voteType == vote.voteType);
-      if (index != -1) {
-        mssg.lstVote[index].count++;
-      } else {
-        let newVote = {
-          voteType: vote.voteType,
-          count: 1,
-        };
-        mssg.lstVote.push(newVote);
-      }
-      let tmpVote = {
-        voteType: vote.voteType,
-        createdBy: vote.createdBy,
-      };
-      if (!mssg.votes) {
-        mssg.votes = [];
-      }
-      mssg.votes.push(tmpVote);
-      if (this.user.userID == vote.createdBy) {
-        mssg.myVote = tmpVote;
-      }
-    } else if (myVote?.length > 0) {
-      //Cập nhập react
-      if (myVote[0]?.voteType != vote?.voteType) {
-        let oldVote = mssg.votes.find((x) => x.createdBy == vote.createdBy);
-        let indexOld = mssg.lstVote.findIndex(
-          (x) => x.voteType == oldVote.voteType
-        );
-        let indexNew = mssg.lstVote.findIndex(
-          (x) => x.voteType == vote.voteType
-        );
-        if (indexOld != -1) {
-          mssg.lstVote[indexOld].count <= 1
-            ? mssg.lstVote.splice(indexOld, 1)
-            : mssg.lstVote[indexOld].count--;
-        }
-        if (indexNew != -1) {
-          mssg.lstVote[indexNew].count++;
-        } else {
-          let newVote = {
-            voteType: vote.voteType,
-            count: 1,
-          };
-          mssg.lstVote.push(newVote);
-        }
-        if (this.user.userID == vote.createdBy) {
-          mssg.myVote.voteType = vote.voteType;
-        }
-        let index = mssg.votes.findIndex((x) => x.createdBy == vote.createdBy);
-        mssg.votes[index].voteType = vote.voteType;
-      }
-      //Xóa
-      else {
-        let index = mssg.lstVote.findIndex((x) => x.voteType == vote.voteType);
-        if (index != -1) {
-          mssg.lstVote[index].count <= 1
-            ? mssg.lstVote.splice(index, 1)
-            : mssg.lstVote[index].count--;
-        }
-        if (this.user.userID == vote.createdBy) {
-          mssg.myVote = null;
-        }
-        let i = mssg.votes.findIndex((x) => x.createdBy == vote.createdBy);
-        mssg.votes.splice(i, 1);
-      }
-    }
-    this.dt.detectChanges();
-  }
-  // CRUD vote
-  updateVote(mssg: any, vote: any, type: string) {
-    //add
-    if (type == 'add') {
-      if (!mssg.lstVote) {
-        mssg.lstVote = [];
-      }
-      let index = mssg.lstVote.findIndex((x) => x.voteType == vote.voteType);
-      if (index != -1) {
-        mssg.lstVote[index].count++;
-      } else {
-        let newVote = {
-          voteType: vote.voteType,
-          count: 1,
-        };
-        mssg.lstVote.push(newVote);
-      }
-      let tmpVote = {
-        voteType: vote.voteType,
-        createdBy: vote.createdBy,
-      };
-      if (!mssg.votes) {
-        mssg.votes = [];
-      }
-      mssg.votes.push(tmpVote);
-      if (this.user.userID == vote.createdBy) {
-        mssg.myVote = tmpVote;
-      }
-    }
-    //remove
-    else if (type == 'remove') {
-      let index = mssg.lstVote.findIndex((x) => x.voteType == vote.voteType);
-      if (index != -1) {
-        mssg.lstVote[index].count <= 1
-          ? mssg.lstVote.splice(index, 1)
-          : mssg.lstVote[index].count--;
-      }
-      if (this.user.userID == vote.createdBy) {
-        mssg.myVote = null;
-      }
-      let i = mssg.votes.findIndex((x) => x.createdBy == vote.createdBy);
-      mssg.votes.splice(i, 1);
-    }
-    //update
-    else {
-      let oldVote = mssg.votes.find((x) => x.createdBy == vote.createdBy);
-      let indexOld = mssg.lstVote.findIndex(
-        (x) => x.voteType == oldVote.voteType
-      );
-      let indexNew = mssg.lstVote.findIndex((x) => x.voteType == vote.voteType);
-      if (indexOld != -1) {
-        mssg.lstVote[indexOld].count <= 1
-          ? mssg.lstVote.splice(indexOld, 1)
-          : mssg.lstVote[indexOld].count--;
-      }
-      if (indexNew != -1) {
-        mssg.lstVote[indexNew].count++;
-      } else {
-        let newVote = {
-          voteType: vote.voteType,
-          count: 1,
-        };
-        mssg.lstVote.push(newVote);
-      }
-      if (this.user.userID == vote.createdBy) {
-        mssg.myVote.voteType = vote.voteType;
-      }
-      let index = mssg.votes.findIndex((x) => x.createdBy == vote.createdBy);
-      mssg.votes[index].voteType = vote.voteType;
-    }
-    this.dt.detectChanges();
-  }
-  // close
+  
+
+
+
   closeChatBox() {
     this.close.emit();
   }
 
-  // send message
-  message: string = '';
-  sendMessage() {
-    if (!this.blocked && this.message.trim()) {
-      this.blocked = true;
-      let mssg = new MessageItem(this.groupID);
-      mssg.message = this.message;
-      mssg.messageType = '1';
-      mssg.userID = this.user?.userID;
-      mssg.createdBy = this.user?.userID;
-      mssg.createdOn = new Date();
-      if (this.mssgReply) {
-        mssg.refID = this.mssgReply.recID;
-        mssg.messageType = '4';
-        let refContent = {
-          type: this.mssgReply.messageType,
-          content: this.mssgReply.message,
-          createdName: this.mssgReply.createdName,
-        };
-        mssg.refContent = refContent;
-      }
-
-      this.signalR.sendData(CHAT.BE_FUNC.SendMessage, JSON.stringify(mssg));
-      this.message = '';
-      this.isReply = false;
-      this.replyTo = '';
-      this.blocked = false;
-      this.mssgReply = null;
-      this.dt.detectChanges();
-    }
-  }
-  // check active
+  
+ 
   checkActive(id: string) {
     if (id) {
       let _elementSelected = document.getElementById(id);
@@ -473,7 +309,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
       }
     }
   }
-  // check tag name
+
   isChatBox(element: HTMLElement) {
     if (element.tagName == 'CODX-CHAT-BOX') {
       if (!element.classList.contains('active'))
@@ -481,29 +317,29 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
       return;
     } else this.isChatBox(element.parentElement);
   }
-  // collapse box chat
+
   collapsed() {
     this.collapse.emit(this.groupID);
   }
-  // add emoji
+
   addEmoji(event) {
     this.data.message += event.emoji.native;
   }
 
-  // click upload files
+
   clickUploadFiles() {
     if (this.codxATM) {
       this.codxATM.uploadFile();
     }
   }
 
-  // click upload images
+
   clickUploadImages() {
     if (this.codxATMImages) {
       this.codxATMImages.uploadFile();
     }
   }
-  // add files
+
   addFiles(event: any) {
     if (Array.isArray(event?.data)) {
       let files = Array.from<any>(event.data);
@@ -521,7 +357,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
       });
       this.codxATM.objectId = message.recID;
 
-      this.codxATM.saveFilesMulObservable().subscribe((res: any) => {
+      let subscribe = this.codxATM.saveFilesMulObservable().subscribe((res: any) => {
         if (res) {
           message.message = '';
           message.messageType = '2';
@@ -537,9 +373,10 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
           });
         } else this.notifiSV.notify('SYS019');
       });
+      this.subscriptions.add(subscribe);
     }
   }
-  // add files image
+
   addFileImages(event: any) {
     if (Array.isArray(event?.data)) {
       let images = Array.from<any>(event.data);
@@ -559,7 +396,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
         message.refType = 'm';
       }
       this.codxATMImages.objectId = message.recID;
-      this.codxATMImages.saveFilesMulObservable().subscribe((res: any) => {
+      let subscribe = this.codxATMImages.saveFilesMulObservable().subscribe((res: any) => {
         if (res)
           this.signalR.sendData(
             CHAT.BE_FUNC.SendMessage,
@@ -567,10 +404,11 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
           );
         else this.notifiSV.notify('SYS019');
       });
+      this.subscriptions.add(subscribe);
     }
   }
 
-  // click files
+
   clickViewFile(file) {
     let option = new DialogModel();
     option.FormModel = this.formModel;
@@ -588,42 +426,11 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
     );
   }
 
-  // handle tooltip emoji mssg
+
   openTooltipEmoji(tooltip: any, mssg: any) {
     tooltip.isOpen() ? tooltip.close() : tooltip.open({ mssg });
   }
-  // click vote mssg
-  clickVoteMssg(mssg: any, vote: any) {
-    this.signalR.sendData(
-      CHAT.BE_FUNC.ReactMessage,
-      this.groupID,
-      mssg.recID,
-      vote.value
-    );
-    this.dt.detectChanges();
-  }
-  defaultReact(mssg: any) {
-    this.clickVoteMssg(mssg, this.vllL1480[0]);
-  }
 
-  replyTo: string = '';
-  // reply message
-  clickReplyMssg(mssg: any = null) {
-    this.isReply = mssg ? true : false;
-    this.replyTo = mssg ? 'Đang trả lời ' : '';
-    this.mssgReply = mssg;
-    if (mssg) {
-      if (this.mssgReply.messageType == '2') {
-        this.data.fileName = this.mssgReply.fileName;
-        this.data.fileSize = this.mssgReply.fileSize;
-        this.data.fileType = this.mssgReply.fileType;
-      }
-      if (mssg.createdBy != this.user.userID) {
-        this.replyTo += mssg.createdName;
-      }
-    }
-  }
-  // format file size
   formatBytes(bytes, decimals = 2) {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
@@ -633,7 +440,6 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 
-  // group by tin nhắn theo ngày
   checkDate(index: number) {
     var mssg1 = this.arrMessages[index];
     var mssg2 = this.arrMessages[index + 1];
@@ -642,7 +448,6 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
     return false;
   }
 
-  //
   showCBB: boolean = false;
   width: number = 720;
   height: number = window.innerHeight;
@@ -656,28 +461,19 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
       this.signalR.sendData(CHAT.BE_FUNC.EditMemberAsync,this.group.groupID,jsMember);
     }
     this.showCBB = false;
+    this.dt.detectChanges();
   }
-  //click add member
-  clickAddMemeber() 
-  {
-    this.showCBB = true;
-  }
-  //xóa tin nhắn
-  deleteMessage(mssg: any) {
-    this.signalR.sendData(CHAT.BE_FUNC.DeleteMessage, this.groupID, mssg.recID);
-  }
-  // show vote
+
   lstVoted: any[] = [];
   clickShowVote(mssg: any) {
-    if (this.popupVoted) {
-      this.api
-        .execSv('WP', 'ERM.Business.WP', 'ChatBusiness', 'GetVoteAsync', [
-          mssg.recID,
-        ])
-        .subscribe((res: any[]) => {
-          this.lstVoted = res;
-          this.callFC.openForm(this.popupVoted, '', 500, 300);
-        });
+    if (this.popupVoted) 
+    {
+      let subscribe = this.api.execSv('WP', 'ERM.Business.WP', 'ChatBusiness', 'GetVoteAsync', [mssg.recID])
+      .subscribe((res: any[]) => {
+        this.lstVoted = res;
+        this.callFC.openForm(this.popupVoted, '', 500, 300);
+      });
+      this.subscriptions.add(subscribe);
     }
   }
 
@@ -686,7 +482,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
     {
       this.group.isFavorite = !this.group.isFavorite; 
       this.dt.detectChanges();
-      this.api
+      let subscribe = this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
@@ -696,42 +492,118 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
       ).subscribe((res:any) => 
       {
         if(res) this.signalR.sendData(CHAT.BE_FUNC.FavoriteGroupAsync,this.group.groupID);
-      })    
+      });  
+      this.subscriptions.add(subscribe);  
     }
   }
 
-  closePopupVote(dialog: any) {
-    dialog?.close();
-  }
 
   memberSelected: any = null;
   clickViewMember(data: any) {
     let dialogModel = new DialogModel();
     dialogModel.FormModel = this.formModel;
-    this.api
-      .execSv(
-        'HR',
-        'ERM.Business.HR',
-        'EmployeesBusiness',
-        'GetEmpByUserIDAsync',
-        [data.UserID]
-      )
-      .subscribe((member: any) => {
-        this.callFC.openForm(
-          this.tmpViewMember,
-          'Thông tin người dùng',
-          300,
-          350,
-          '',
-          member,
-          '',
-          dialogModel
-        );
-      });
+    let subscribe = this.api
+    .execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EmployeesBusiness',
+      'GetEmpByUserIDAsync',
+      [data.UserID]).subscribe((member: any) => {
+      this.callFC.openForm(
+        this.tmpViewMember,
+        'Thông tin người dùng',
+        300,
+        350,
+        '',
+        member,
+        '',
+        dialogModel
+      );
+    });
+    this.subscriptions.add(subscribe);
   }
-  //
-  closePoppViewMember(dialog: DialogRef) {
-    dialog?.close();
+
+
+  message:string = "";
+  valueChange(event:any){
+    this.message = event.data;
   }
-  click(dialog, member) {}
+  keyUp(event:any){
+    debugger
+  }
+
+
+
+  sendMessage() {
+    if(!this.message || !this.message.trim())
+    {
+      debugger 
+      return;
+    }
+    let mssg = new MessageItem(this.groupID);
+      mssg.message = this.message;
+      mssg.messageType = '1';
+      mssg.userID = this.user.userID;
+      mssg.createdBy = this.user.userID;
+      mssg.createdOn = new Date();
+      if (this.replyMssg) 
+      {
+        mssg.messageType = '4';
+        mssg.refID = this.replyMssg.recID;
+        mssg.refContent = {
+          type: this.replyMssg.messageType,
+          content: this.replyMssg.message,
+          createdName: this.replyMssg.createdName,
+        };
+      }
+      this.signalR.sendData(CHAT.BE_FUNC.SendMessage, mssg);
+      this.message = "";
+      this.replyMssg = null;
+      this.dt.detectChanges();
+  }
+
+  
+
+
+  clickMF(event:any){
+    if(event)
+    {
+      switch(event.type){
+        case "delete":
+          this.deleteMessage(event.data);
+          break;
+        case "vote":
+          let mssg = event.data.mssg;
+          let vote = event.data.vote;
+          this.voteMessage(mssg.recID,vote.value);
+          break;
+        case "reply":
+          this.replyMessage(event.data);
+          break;
+      }
+    }
+  }
+
+  deleteMessage(mssg:any) {
+    this.signalR.sendData(CHAT.BE_FUNC.DeleteMessage, this.groupID, mssg.recID);
+  }
+
+  voteMessage(mssgID:any,voteType:any){
+    this.signalR.sendData(CHAT.BE_FUNC.VoteMessageAsync,this.groupID,mssgID,voteType);
+  }
+
+  replyMssg:any = null;
+  replyMessage(mssg:any) {
+    if (mssg) 
+    {
+      this.replyMssg = mssg;
+      // if (mssg.messageType == '2') 
+      // {
+      //   this.data.fileName = this.replyMssg.fileName;
+      //   this.data.fileSize = this.replyMssg.fileSize;
+      //   this.data.fileType = this.replyMssg.fileType;
+      // }
+      this.dt.detectChanges();
+    }
+  }
 }
