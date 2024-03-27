@@ -568,4 +568,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.title = 'Thêm ' + e;
     this.changeDetector.detectChanges();
   }
+
+  valueChangeTest(event) {
+    debugger;
+  }
 }
