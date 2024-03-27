@@ -22,6 +22,7 @@ export class AddTableRowComponent implements OnInit{
     this.formModel = dialog.formModel;
     this.dialog = dialog;
     this.data = dt?.data?.dataTable;
+    debugger
     this.result = dt?.data?.result;
   }
   ngOnInit(): void {
