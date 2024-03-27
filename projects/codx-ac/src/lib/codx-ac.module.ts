@@ -23,11 +23,7 @@ import { LayoutComponent } from './_layout/layout.component';
 import { ApprovalsComponent as ApprovalsComponentWS } from 'projects/codx-ws/src/lib/approvals/approvals.component';
 import { CodxAcComponent } from './codx-ac.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { DropdownDetailComponent } from './journals/components/dropdown-detail/dropdown-detail.component';
-import { GroupShareComponent } from './journals/components/group-share/group-share.component';
-import { Group067Component } from './journals/components/group067/group067.component';
 import { JournalsAddComponent } from './journals/journals-add/journals-add.component';
-import { JournalspermissionEditComponent } from './journals/journalspermission-edit/journalspermission-edit.component';
 import { AllocateToolsComponent } from './periodic/allocate-tools/allocate-tools.component';
 import { PopAddAllocateToolsComponent } from './periodic/allocate-tools/pop-add-allocate-tools/pop-add-allocate-tools.component';
 import { DeductPrepaidExpensesComponent } from './periodic/deduct-prepaid-expenses/deduct-prepaid-expenses.component';
@@ -180,6 +176,11 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
+        path: 'assetrevaluations/:funcID/:journalNo',
+        component: AssetJournalsComponent,
+        data: { noReuse: true },
+      },
+      {
         path: 'generaljournals/:funcID/:journalNo',
         component: GeneralJournalComponent,
         data: { noReuse: true },
@@ -217,6 +218,11 @@ export const routes: Routes = [
       },
       {
         path: 'assetacquisitions/:funcID',
+        component: AssetJournalsComponent,
+        data: { noReuse: true, runMode: 1 },
+      },
+      {
+        path: 'assetrevaluations/:funcID',
         component: AssetJournalsComponent,
         data: { noReuse: true, runMode: 1 },
       },
@@ -392,6 +398,13 @@ export const routes: Routes = [
         component: DynamicFormComponent,
       },
       //-----------end--------------//
+      //-----------Xet duyet--------------//
+      {
+        path: 'requestsforadvances/:funcID',
+        component: AdvancePaymentRequestComponent,
+        data: { noReuse: true },
+      },
+      //-----------end--------------//
     ],
   },
   {
@@ -426,7 +439,6 @@ export const routes: Routes = [
     PurchaseinvoicesComponent,
     PurchaseinvoicesAddComponent,
     JournalsAddComponent,
-    DropdownDetailComponent,
     SettledInvoicesAdd,
     DashboardComponent,
     PeriodicComponent,
@@ -435,12 +447,9 @@ export const routes: Routes = [
     SearchingComponent,
     InventoryComponent,
     InventoryAddComponent,
-    Group067Component,
-    GroupShareComponent,
     SuggestionAdd,
     ReplacePipe,
     UpdateTheLedgerComponent,
-    JournalspermissionEditComponent,
     DepreciatingFixedAssetsComponent,
     PopAddDepreciatingFixedAssetsComponent,
     AllocateToolsComponent,

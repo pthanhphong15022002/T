@@ -82,7 +82,7 @@ export class AddTaskComponent
       title: "Người lập phiếu_Bộ phận",
       controlType : "ComboBox",
       refType : "3",
-      refValue : "OrganizationUnits",
+      refValue : "HRDepartmentUnits",
       dataType : "String"
     },
     {
@@ -98,7 +98,7 @@ export class AddTaskComponent
       title: "Người lập phiếu_Phòng ban",
       controlType : "ComboBox",
       refType : "3",
-      refValue : "OrganizationUnits",
+      refValue : "HRDepartments",
       dataType : "String"
     },
     {
@@ -106,7 +106,7 @@ export class AddTaskComponent
       title: "Người lập phiếu_Công ty",
       controlType : "ComboBox",
       refType : "3",
-      refValue : "OrganizationUnits",
+      refValue : "HRCompany",
       dataType : "String"
     },
   ];
@@ -654,18 +654,13 @@ export class AddTaskComponent
               }
   
               if (typeof element.documentControl != 'string') {
-                element.documentControl =
-                  element.documentControl?.length > 0
-                    ? JSON.stringify(element.documentControl)
-                    : null;
+                element.documentControl = JSON.stringify(element.documentControl)
               }
-  
+              
               if (typeof element.dataFormat != 'string') {
-                element.dataFormat =
-                  element.dataFormat?.length > 0
-                    ? JSON.stringify(element.dataFormat)
-                    : null;
+                element.dataFormat = JSON.stringify(element.dataFormat)
               }
+
               if (typeof element.tableFormat != 'string') {
                 element.tableFormat = JSON.stringify(element.tableFormat) 
               }

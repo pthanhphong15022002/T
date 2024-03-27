@@ -8,6 +8,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core';
 import {
   UserModel,
@@ -23,6 +24,7 @@ import {
   AlertConfirmInputConfig,
   FilesService,
   DialogModel,
+  ImageViewerComponent,
 } from 'codx-core';
 import { Observable, of, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -31,6 +33,7 @@ import { CodxClearCacheComponent } from '../../codx-clear-cache/codx-clear-cache
 import { CodxCreateIndexComponent } from '../../codx-create-index/codx-create-index.component';
 import { SignalRService } from '../../drawers/chat/services/signalr.service';
 import { FormSettingComponent } from 'projects/codx-share/src/lib/components/form-setting/form-setting.component';
+import { CodxImageCropperComponent } from '../../../component/image-cropper/image-cropper.component';
 
 @Component({
   selector: 'codx-user-inner',
@@ -59,6 +62,9 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   modifiedOn = new Date();
   sysSetting;
   profileURL = null;
+
+  @ViewChild('imageUploader') imageUploader: ImageViewerComponent;
+
   constructor(
     public codxService: CodxService,
     private auth: AuthService,
@@ -72,7 +78,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     private element: ElementRef,
     private signalRSV: SignalRService,
     private callSV: CallFuncService,
-    private fileSv: FilesService
+    private fileSv: FilesService,
   ) {
     this.cache.functionList('ADS05').subscribe((res) => {
       if (res) {
@@ -362,6 +368,36 @@ export class UserInnerComponent implements OnInit, OnDestroy {
       '',
       dModel
     );
+  }
+
+  handleInput(event: any) {
+    let objData = {
+      image: event,
+    };
+    let waitingLogin = this.callSV.openForm(
+      CodxImageCropperComponent,
+      '',
+      0,
+      380,
+      '',
+      objData
+    );
+    waitingLogin.closed.subscribe(async (res) => {
+      if(res && res.event){
+        let tempFile: File = this.blobToFile(res.event, 'avatar.png');
+        this.imageUploader.imageUpload.fileName = tempFile.name;
+        this.imageUploader.imageUpload.item = tempFile;
+        this.imageUploader.imageUpload.fileSize = tempFile.size;
+        this.imageUploader.uploadAvatar();
+      }
+    });
+  }
+
+  blobToFile(theBlob: Blob, fileName: string): File {
+    const b: any = theBlob;
+    b.lastModifiedDate = new Date();
+    b.name = fileName;
+    return theBlob as File;
   }
 }
 

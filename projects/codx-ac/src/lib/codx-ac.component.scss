@@ -482,15 +482,19 @@
     }
 }
 
-// .card-pur-less {
-//     .table-ac {
-//         height: calc(100vh - 450px) !important;
-//     }
+.card-pur-less {
+    .table-ac {
+        height: calc(100vh - 385px) !important;
+    }
 
-//     .ac-empty {
-//         height: calc(100vh - 490px) !important;
-//     }
-// }
+    .ac-empty {
+        height: calc(100vh - 435px) !important;
+    }
+
+    .table-body-ac{
+        height: calc(100vh - 475px) !important;
+    }
+}
 
 .card-transfer {
     .table-ac {
@@ -542,6 +546,9 @@
         animation-name: none !important;
     }
     codx-view-content{
+        animation-name: none !important;
+    }
+    codx-view-list{
         animation-name: none !important;
     }
 }

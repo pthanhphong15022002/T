@@ -70,7 +70,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   REQUIRE = [
     'contractID',
     'customerID',
-    'contractAmt',
     'pmtMethodID',
     'pmtMethodID',
     'contractName',
@@ -1469,7 +1468,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
               this.listCustomFile.push(
                 this.listInstanceSteps[index].fields[idxField]
               );
-            if (field.dataType == 'N') // && (valueOld != result || (valueOld == result && this.dataSourceRef?.length > 0)))
+            if (field.dataType == 'N' && valueOld != result)
               this.caculateField();
           }
         }

@@ -24,7 +24,6 @@ import { NameByIdPipe } from '../pipes/name-by-id.pipe';
 import { BehaviorSubject, Subject, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { CodxAcService } from '../codx-ac.service';
-import { IJournal } from '../journals/interfaces/IJournal.interface';
 import { JournalViewsettingComponent } from './journals-viewsetting/journal-viewsetting/journal-viewsetting.component';
 
 @Component({
@@ -57,6 +56,8 @@ export class JournalV2Component extends UIComponent {
   mainFilterValue: string;
   subFilterValue: string;
   ViewType = ViewType;
+  lstGroup:any;
+  selectedToolBar:any;
   button: ButtonModel[] = [
     {
       icon: 'icon-i-journal-plus',
@@ -74,17 +75,26 @@ export class JournalV2Component extends UIComponent {
     private acService: CodxAcService,
   ) {
     super(inject);
+    this.cache.valueList('AC177').subscribe((func) => {
+      if(func){
+        this.lstGroup = func.datas;
+        this.selectedToolBar = this.lstGroup[0].value;
+      }else{
+        this.lstGroup = [];
+      }
+      this.detectorRef.detectChanges(); 
+    });
   }
   //#endregion Contrucstor
 
   //#region Init
   onInit() {
     if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
-      this.cache.valueList('AC077').pipe(takeUntil(this.destroy$)).subscribe((func) => {
+      this.cache.valueList('AC077').subscribe((func) => {
         if (func) this.func = func.datas;
       });
 
-      this.cache.functionList(this.funcID).pipe(takeUntil(this.destroy$)).subscribe((res) => {
+      this.cache.functionList(this.funcID).subscribe((res) => {
         if (res) {
           this.funcName = res.defaultName;
         }
@@ -92,11 +102,6 @@ export class JournalV2Component extends UIComponent {
   }
 
   ngAfterViewInit() {
-    this.codxService.setStyleToolbarLayout(
-      this.view.elementRef.nativeElement,
-      'toolbar2'
-    );
-
     this.views = [
       {
         type: ViewType.smallcard,
@@ -155,6 +160,12 @@ export class JournalV2Component extends UIComponent {
     }
   }
 
+  selectedChangeToolBar(data:any){
+    this.selectedToolBar = data.value;
+    this.view.dataService.setPredicates(['Category=@0'],[data.value]);
+    this.detectorRef.detectChanges();
+  }
+
   changeMF(event) {
     if (event) {
       this.acService.changeMFJournal(event, this.mainFilterValue);
@@ -190,9 +201,6 @@ export class JournalV2Component extends UIComponent {
   }
 
   toolbarClick(event) {
-    // this.zone.runOutsideAngular(()=>{
-      
-    // })
     switch (event.id) {
       case 'btnAdd':
         this.addNew(event);
@@ -307,7 +315,6 @@ export class JournalV2Component extends UIComponent {
             this.onDestroy();
           });
       }
-      this.onDestroy();
     });
   }
 
@@ -347,27 +354,6 @@ export class JournalV2Component extends UIComponent {
 
   setDefault() {
     return this.api.exec('AC', 'JournalsBusiness', 'SetDefaultAsync');
-  }
-
-  sortData(): void {
-    const temp: any[] = this.view.dataService.data;
-    this.view.dataService.data = [
-      ...temp.filter((j: IJournal) =>
-        this.journalTypes134.includes(j.journalType)
-      ),
-      ...temp.filter((j: IJournal) =>
-        this.journalTypes135.includes(j.journalType)
-      ),
-      ...temp.filter((j: IJournal) =>
-        this.journalTypes136.includes(j.journalType)
-      ),
-      ...temp.filter((j: IJournal) =>
-        this.journalTypes137.includes(j.journalType)
-      ),
-      ...temp.filter((j: IJournal) =>
-        this.journalTypes138.includes(j.journalType)
-      ),
-    ];
   }
 
   /**

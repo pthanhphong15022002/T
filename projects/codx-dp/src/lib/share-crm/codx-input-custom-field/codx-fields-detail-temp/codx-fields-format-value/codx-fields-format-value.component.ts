@@ -2,10 +2,13 @@ import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import {
   ApiHttpService,
   CacheService,
+  CallFuncService,
   DataRequest,
   FormModel,
 } from 'codx-core';
+import { CallFuncConfig } from 'codx-core/lib/services/callFunc/call-func.config';
 import moment from 'moment';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
 @Component({
   selector: 'codx-fields-format-value',
@@ -38,12 +41,14 @@ export class CodxFieldsFormatValueComponent implements OnInit {
   dataValueTypePA: any = [];
   noteVll = '';
   isCustomVll = true; //laf vll tuwj theem
+  remindDefault: any;
 
   constructor(
     private cache: CacheService,
     private changeRef: ChangeDetectorRef,
-    private api: ApiHttpService
-  ) {}
+    private api: ApiHttpService,
+    private callfc: CallFuncService,
+  ) { }
 
   // ngOnChanges() {
   //   // if (this.data.dataType == 'TA') this.getColumnTable(this.data);
@@ -78,6 +83,9 @@ export class CodxFieldsFormatValueComponent implements OnInit {
         break;
       case 'PA':
         this.parseValuePA(this.data.dataValue);
+        break;
+      case 'RM':
+        this.remindDefault = JSON.parse(this.data.dataValue);
         break;
     }
   }
@@ -176,4 +184,32 @@ export class CodxFieldsFormatValueComponent implements OnInit {
     return arrTable;
   }
   //--------------end------------//
+
+  openPopupSettingRemind() {
+    let data = {
+      //  dialog: this.dialog,
+      formGroup: null,
+      templateID: this.data?.recID,
+      showIsTemplate: true,
+      showIsPublish: true,
+      showSendLater: true,
+      files: null,
+      isAddNew: false,
+      notSendMail: true,
+    };
+
+    let popEmail = this.callfc.openForm(
+      CodxEmailComponent,
+      '',
+      800,
+      screen.height,
+      '',
+      data
+    );
+    popEmail.closed.subscribe((res) => {
+      if (res && res.event) {
+        //done làm gi
+      }
+    });
+  }
 }

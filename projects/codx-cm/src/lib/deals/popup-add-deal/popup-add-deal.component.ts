@@ -668,23 +668,6 @@ export class PopupAddDealComponent
       );
       return;
     }
-    // if (!this.deal?.owner) {
-    //   this.notificationsService.notifyCode(
-    //     'SYS009',
-    //     0,
-    //     '"' + this.gridViewSetup['SalespersonID']?.headerText + '"'
-    //   );
-    //   return;
-    // }
-    // if (this.checkEndDayInstance(this.deal?.endDate, this.dateMax)) {
-    //   this.notificationsService.notifyCode(
-    //     'DP032',
-    //     0,
-    //     '"' + this.gridViewSetup['EndDate']?.headerText + '"',
-    //     '"' + this.dateMessage + '"'
-    //   );
-    //   return;
-    // }
     if (this.deal.applyProcess) {
       let ischeck = true;
       let ischeckFormat = true;
@@ -801,7 +784,7 @@ export class PopupAddDealComponent
               this.listCustomFile.push(
                 this.listInstanceSteps[index].fields[idxField]
               );
-            if (field.dataType == 'N') // && valueOld != result)
+            if (field.dataType == 'N' && valueOld != result)
               this.caculateField();
           }
         }
@@ -1354,6 +1337,8 @@ export class PopupAddDealComponent
           this.deal.datas = instance.datas;
           this.addPermission(instance?.permissions);
           this.onAdd();
+        }else{
+          this.isSave = true;
         }
       });
     } else {

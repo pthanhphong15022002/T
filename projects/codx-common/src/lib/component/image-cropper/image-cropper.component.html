@@ -1,0 +1,39 @@
+<ng-container class="container">
+    <div class="nav p-1">
+      <div class="float-end d-flex justify-content-between w-100">
+        <div>
+          <button type="button" class="btn btn-icon" (click)="close()">
+            <i class="icon-close icon-18"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="header p-2 d-flex flex-column" style="height: 300px">
+
+        <image-cropper
+            [imageBase64]="imageBase64"
+            [maintainAspectRatio]="true"
+            [aspectRatio]="1 / 1"
+            format="png"
+            (imageCropped)="imageCropped($event)"
+            (imageLoaded)="imageLoaded($event)"
+            (cropperReady)="cropperReady()"
+            (loadImageFailed)="loadImageFailed()"
+        ></image-cropper>
+
+    </div>
+
+    <div class="nav p-1">
+        <div class="d-flex justify-content-between w-100">
+          <div></div>
+          <div>
+            <button type="button" class="btn btn-xs" (click)="close()">
+              Hủy
+            </button>
+            <button type="button" class="btn btn-xs btn-primary" (click)="success()">
+              Cập nhật
+            </button>
+          </div>
+        </div>
+      </div>
+</ng-container>

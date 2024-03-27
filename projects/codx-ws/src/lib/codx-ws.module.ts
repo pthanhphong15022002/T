@@ -78,6 +78,8 @@ import { SearchingComponent as SearchingESComponent } from 'projects/codx-es/src
 import { CodxCoModule } from 'projects/codx-co/src/public-api';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { DetailNotebookComponent } from './personal/master-detail/my-page/detail-notebook/detail-notebook.component';
+import { EPDashboardComponent } from 'projects/codx-ep/src/lib/dashboard/dashboard.component';
+import { CmDashboardComponent } from 'projects/codx-cm/src/lib/cm-dashboard/cm-dashboard.component';
 const routes: Routes = [
   {
     path: '',
@@ -193,10 +195,20 @@ const routes: Routes = [
         path: 'tm/dashboard/:funcID',
         component: TMDashboardComponent,
       },
+      //EP
+      {
+        path: 'ep/dashboard/:funcID',
+        component: EPDashboardComponent,
+      },
       //FD
       {
         path: 'mykudostrans/:funcID',
         component: PersonalAchievementComponent,
+      },
+      //CM
+      {
+        path: 'cm/dashboard/:funcID',
+        component: CmDashboardComponent,
       },
       {
         path: 'mywallet/:funcID',

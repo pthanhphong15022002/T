@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Host
 import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxGridviewV2Component, CodxInplaceComponent, CodxInputComponent, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, UIComponent, Util } from 'codx-core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { Dialog, isCollide } from '@syncfusion/ej2-angular-popups';
-import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { EditSettingsModel, row } from '@syncfusion/ej2-angular-grids';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService, fmVouchersLines } from '../../../codx-ac.service';
@@ -79,7 +78,6 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(
-        takeUntil(this.destroy$),
         map((arr: any[]) => arr.find((a) => a.category === '1')),
         map((data) => JSON.parse(data.dataValue))
       ).subscribe((res:any)=>{
@@ -107,12 +105,60 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
     this.destroy$.complete();
   }
 
-  initGrid(eleGrid:CodxGridviewV2Component){
+  initGrid(eleGrid: CodxGridviewV2Component) {
+    let preAccountID = '';
+    let dtvAccountID = '';
+    let preOffsetAcctID = '';
+    let dtvOffsetAcctID = '';
+    let preDIM1 = '';
+    let dtvDIM1 = '';
+    let preDIM2 = '';
+    let dtvDIM2 = '';
+    let preDIM3 = '';
+    let dtvDIM3 = '';
     let hideFields = [];
-    let setting = this.acService.getSettingFromJournal(eleGrid,this.journal);
-    eleGrid = setting[0];
-    if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
-      hideFields = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
+
+    if (this.journal.drAcctControl == '1' || this.journal.drAcctControl == '2') {
+      preAccountID = '@0.Contains(AccountID)';
+      dtvAccountID = `[${this.journal?.drAcctID}]`;
+    }
+    eleGrid.setPredicates('accountID', preAccountID, dtvAccountID);
+
+    if (
+      (this.journal.crAcctControl == '1' || this.journal.crAcctControl == '2') &&
+      this.journal.entryMode == '1'
+    ) {
+      preOffsetAcctID = '@0.Contains(AccountID)';
+      dtvOffsetAcctID = `[${this.journal?.crAcctID}]`;
+    }
+    eleGrid.setPredicates('offsetAcctID', preOffsetAcctID, dtvOffsetAcctID);
+
+    if (this.journal.diM1Control == '1' || this.journal.diM1Control == '2') {
+      preDIM1 = '@0.Contains(ProfitCenterID)';
+      dtvDIM1 = `[${this.journal?.diM1}]`;
+    }
+    eleGrid.setPredicates('diM1', preDIM1, dtvDIM1);
+
+    if (this.journal.diM2Control == '1' || this.journal.diM2Control == '2') {
+      preDIM2 = '@0.Contains(CostCenterID)';
+      dtvDIM2 = `[${this.journal?.diM2}]`;
+    }
+    eleGrid.setPredicates('diM2', preDIM2, dtvDIM2);
+
+    if (this.journal.diM3Control == '1' || this.journal.diM3Control == '2') {
+      preDIM3 = '@0.Contains(CostItemID)';
+      dtvDIM3 = `[${this.journal?.diM3}]`;
+    }
+    eleGrid.setPredicates('diM3', preDIM3, dtvDIM3);
+
+    if (this.journal.diM1Control == "0") hideFields.push("DIM1");
+    if (this.journal.diM2Control == "0") hideFields.push("DIM2");
+    if (this.journal.diM3Control == "0") hideFields.push("DIM3");
+    if (this.journal.projectControl == "0") hideFields.push("ProjectID");
+    if (this.journal.loanControl == "0") hideFields.push("ContractID");
+    if (this.journal.assetControl == "0") {
+      hideFields.push("AssetGroupID");
+      hideFields.push("AssetType");
     }
     eleGrid.showHideColumns(hideFields);
   }
@@ -133,13 +179,13 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
    * @param event
    * @param data
    */
-  clickMF(event: any, data) {
-    switch (event.functionID) {
+  clickMF(event: any) {
+    switch (event.event.functionID) {
       case 'SYS104':
-        this.copyRow(data);
+        this.copyRow(event.data);
         break;
       case 'SYS102':
-        this.deleteRow(data);
+        this.deleteRow(event.data);
         break;
     }
   }
@@ -159,78 +205,32 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
     switch (field.toLowerCase()) {
+      case 'warehouseid':
+        this.wareHouseIDChange(field);
+        break;
       case 'reasonid':
-        let indexrs = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value);
-        if(value == '' || value == null || indexrs == -1){
-          this.isPreventChange = true;
-          let memo = this.getMemoMaster();
-          this.master.setValue(field,null,{});
-          this.master.setValue('memo',memo,{});
-          this.master.data.reasonName = null;
-          this.isPreventChange = false;
-          return;
-        } 
-        this.master.data.reasonName = event?.component?.itemsSelected[0]?.ReasonName;
-        let memo = this.getMemoMaster();
-        this.master.setValue('memo',memo,{});
+        this.reasonIDChange(field);
         break;
       case 'objectid':
-        let indexob = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
-        if(value == '' || value == null || indexob == -1){
-          this.isPreventChange = true;
-          let memo = this.getMemoMaster();
-          this.master.setValue(field,null,{});
-          this.master.setValue('objectType',null,{});
-          this.master.setValue('memo',memo,{});
-          this.master.data.objectName = null;
-          this.isPreventChange = false;
-          return;
-        } 
-        this.master.data.objectName = event?.component?.itemsSelected[0]?.ObjectName;
-        let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
-        this.master.setValue('objectType',objectType,{});
-        let memo2 = this.getMemoMaster();
-        this.master.setValue('memo',memo2,{});
+        this.objectIDChange(field);
         break;
-      
       case 'requester':
-        let indexrq = this.eleCbxRequester?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxRequester?.ComponentCurrent?.value);
+        let indexrq = this.eleCbxRequester?.ComponentCurrent?.dataService?.data.findIndex((x) => x.EmployeeID == this.eleCbxRequester?.ComponentCurrent?.value);
         if(value == '' || value == null || indexrq == -1){
           this.isPreventChange = true;
-          let memo = this.getMemoMaster();
           this.master.setValue(field,null,{});
-          this.master.setValue('memo',memo,{});
           this.master.data.requesterName = null;
           this.isPreventChange = false;
           return;
         }
-        this.master.data.requesterName = event?.component?.itemsSelected[0]?.ObjectName;
-        let memo3 = this.getMemoMaster();
-        this.master.setValue('memo',memo3,{});
+        this.master.data.requesterName = event?.component?.itemsSelected[0]?.EmployeeName;
         break;
-      case 'warehouseid':
-        let indexwarehouse = event?.component?.dataService?.data.findIndex((x) => x.WarehouseID == event.data);
-        if (value == '' || value == null || indexwarehouse == -1) {
-          this.master.data.warehouseName = null;
-          return;
-        }
-        this.master.data.warehouseName = event?.component?.dataService?.data[indexwarehouse].WarehouseName;
-        break;
+      
       case 'dim1':
-        let indexdim1 = event?.component?.dataService?.data.findIndex((x) => x.ProfitCenterID == event.data);
-        if (value == '' || value == null || indexdim1 == -1) {
-          this.master.data.diM1Name = null;
-          return;
-        }
-        this.master.data.diM1Name = event?.component?.dataService?.data[indexdim1].ProfitCenterName;
+        this.diM1Change(field);
         break;
       case 'dim2':
-        let indexdim2 = event?.component?.dataService?.data.findIndex((x) => x.CostCenterID == event.data);
-        if (value == '' || value == null || indexdim2 == -1) {
-          this.master.data.diM2Name = null;
-          return;
-        }
-        this.master.data.diM2Name = event?.component?.dataService?.data[indexdim2].CostCenterName;
+        this.diM2Change(field);
         break;
     }
   }
@@ -388,25 +388,86 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
   //#endregion Method
 
   //#region Function
-
-  addLine() {
-    let oLine = this.setDefaultLine();
-    this.eleGridVouchers.addRow(oLine,this.eleGridVouchers.dataSource.length);
+  wareHouseIDChange(field: any) {
+    this.api.exec('IV', 'VouchersBusiness', 'ValueChangedAsync', [
+      field,
+      this.master.data,
+    ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {
+          this.master.data.warehouseName = res?.data?.warehouseName;
+        }
+        this.onDestroy();
+      })
   }
 
-  /**
-   * *Hàm set data mặc định từ master khi thêm dòng mới
-   */
-  setDefaultLine() {
-    let model : any = new IV_VouchersLines();
-    let oLine = Util.camelizekeyObj(model);
-    oLine.transID = this.master.data.recID;
-    oLine.idiM4 = this.master.data.warehouseID;
-    oLine.note = this.master.data.memo;
-    oLine.reasonID = this.master.data.reasonID;
-    oLine = this.genFixedDims(oLine);
-    oLine = this.acService.getDataSettingFromJournal(oLine,this.journal);
-    return oLine;
+  reasonIDChange(field: any) {
+    this.api.exec('IV', 'VouchersBusiness', 'ValueChangedAsync', [
+      field,
+      this.master.data,
+    ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {
+          this.master.data.reasonName = res?.data?.reasonName;
+          let memo = this.getMemoMaster();
+          this.master.setValue('memo',memo,{});
+          this.detectorRef.detectChanges();
+        }
+        this.onDestroy();
+      })
+  }
+
+  objectIDChange(field: any) {
+    this.api.exec('IV', 'VouchersBusiness', 'ValueChangedAsync', [
+      field,
+      this.master.data,
+    ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {
+          this.master.data.objectName = res?.data?.objectName;
+        }
+        this.onDestroy();
+      })
+  }
+
+  diM1Change(field: any) {
+    this.api.exec('IV', 'VouchersBusiness', 'ValueChangedAsync', [
+      field,
+      this.master.data,
+    ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {
+          this.master.data.diM1Name = res?.data?.diM1Name;
+        }
+        this.onDestroy();
+      })
+  }
+
+  diM2Change(field: any) {
+    this.api.exec('IV', 'VouchersBusiness', 'ValueChangedAsync', [
+      field,
+      this.master.data,
+    ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {
+          this.master.data.diM2Name = res?.data?.diM2Name;
+        }
+        this.onDestroy();
+      })
+  }
+
+  addLine() {
+    this.api.exec('IV','VouchersLinesBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      if (res) {
+        this.eleGridVouchers.addRow(res, this.eleGridVouchers.dataSource.length);
+      }
+      this.onDestroy();
+    })
   }
 
   onActionGrid(event: any){
@@ -445,29 +506,13 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
   getMemoMaster() {
     let newMemo = ''; 
     let reasonName = '';
-    let objectName = '';
-    let requesterName = '';
-
-    let indexReason =
-      this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex(
-        (x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value
-      );
-    if (indexReason > -1) {
-      reasonName = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].ReasonName + ' - ';;
+    
+    if (this.master.data.reasonID) {
+      reasonName = this.master.data.reasonName;
     }
 
-    let indexObject = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
-    if (indexObject > -1) {
-      objectName = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName + ' - ';
-    }
-
-    let indexRequest = this.eleCbxRequester?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxRequester?.ComponentCurrent?.value);
-    if (indexRequest > -1) {
-      requesterName = this.eleCbxRequester?.ComponentCurrent?.dataService?.data[indexRequest].ObjectName + ' - ';
-    }
-
-    newMemo = reasonName + objectName + requesterName;
-    return newMemo.substring(0, newMemo.lastIndexOf(' - ') + 1);
+    newMemo = reasonName
+    return newMemo;
   }
 
   /**
@@ -501,13 +546,14 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
    * @param data
    */
   copyRow(data) {
+    let newData = {...data};
     if (this.eleGridVouchers) {
       this.eleGridVouchers.saveRow((res:any)=>{
         if(res){
-          data.recID = Util.uid();
-          data.index = this.eleGridVouchers.dataSource.length;
-          delete data?._oldData;
-          this.eleGridVouchers.addRow(data, this.eleGridVouchers.dataSource.length);
+          newData.recID = Util.uid();
+          newData.index = this.eleGridVouchers.dataSource.length;
+          delete newData?._oldData;
+          this.eleGridVouchers.addRow(newData, this.eleGridVouchers.dataSource.length);
         }
       })
     }

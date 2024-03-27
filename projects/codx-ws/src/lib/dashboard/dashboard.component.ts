@@ -99,6 +99,7 @@ export class DashboardComponent extends WSUIComponent{
 
   selectedChange(data:any)
   {
+    debugger
     this.codxService.navigate("","/ws/"+data.moduleID.toLowerCase()+"/dashboard/"+data.recID);
     this.codxWsService.functionID = data.reportID;
     data.functionID = data.reportID;

@@ -1160,7 +1160,7 @@ export class PopupAddLeadComponent
               this.listCustomFile.push(
                 this.listInstanceSteps[index].fields[idxField]
               );
-            if (field.dataType == 'N') // && valueOld != result)
+            if (field.dataType == 'N' && valueOld != result)
               this.caculateField();
           }
         }

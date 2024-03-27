@@ -26,7 +26,6 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { ActivatedRoute } from '@angular/router';
 import { CodxAcService, fmJournal } from '../../codx-ac.service';
 import { InventoryAddComponent } from './inventory-add/inventory-add.component';
@@ -74,21 +73,12 @@ export class InventoryComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
-    private authStore: AuthStore,
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private codxCommonService: CodxCommonService,
-    private tenant: TenantStore,
   ) {
     super(inject);
-    // this.cache
-    //   .companySetting()
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res.length > 0) {
-    //       this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
-    //     }
-    //   });
+    if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
@@ -97,7 +87,6 @@ export class InventoryComponent extends UIComponent {
         this.baseCurr = dataValue?.BaseCurr || '';
       })
     this.router.params
-      .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
         this.journalNo = params?.journalNo; //? get số journal từ router
       });
@@ -112,14 +101,12 @@ export class InventoryComponent extends UIComponent {
   //#region Init
 
   onInit(): void {
-    if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
     this.getJournal(); //? lấy data journal và các field ẩn từ sổ nhật kí
   }
 
   ngAfterViewInit() {
     this.cache
       .functionList(this.view.funcID)
-      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
           this.headerText = res?.defaultName; //? lấy tên chứng từ (Phiếu chi)
@@ -453,7 +440,6 @@ export class InventoryComponent extends UIComponent {
                     this.onDestroy();
                   });
               }
-              this.onDestroy();
             });
         }
       });
@@ -504,7 +490,6 @@ export class InventoryComponent extends UIComponent {
                 this.onDestroy();
               });
           }
-          this.onDestroy();
         });
     }
   }
@@ -776,15 +761,16 @@ export class InventoryComponent extends UIComponent {
    * *Hàm get data mặc định của chứng từ
    */
   getJournal() {
+    let options = new DataRequest();
+    options.entityName = 'AC_Journals';
+    options.pageLoading = false;
+    options.predicates = 'JournalNo=@0';
+    options.dataValues = this.journalNo;
     this.api
-      .exec('AC', 'ACBusiness', 'GetJournalAsync', [this.journalNo])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res && res.length > 0) {
-          this.journal = res[0]; // data journal
-          this.hideFields = res[1]; // array field ẩn từ sổ nhật kí
-        }
-      });
+      .execSv('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(map((r) => r?.[0] ?? [])).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+        this.journal = res[0]; 
+      })
   }
 
   /**

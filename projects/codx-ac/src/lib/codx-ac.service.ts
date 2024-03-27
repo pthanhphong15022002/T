@@ -13,7 +13,6 @@ import {
   PageTitleService,
 } from 'codx-core';
 import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
-import { IJournal } from './journals/interfaces/IJournal.interface';
 import { Subject } from '@microsoft/signalr';
 
 export const fmPurchaseInvoicesLines: FormModel = {
@@ -81,15 +80,15 @@ export const fmSalesInvoicesLines: FormModel = {
 
 export const fmVouchersLines: FormModel = {
   entityName: 'IV_VouchersLines',
-  formName: 'VouchersLinesReceipts',
-  gridViewName: 'grvVouchersLinesReceipts',
+  formName: 'InventoryReceiptsLines',
+  gridViewName: 'grvInventoryReceiptsLines',
   entityPer: 'IV_VouchersLines',
 };
 
 export const fmIssueVouchersLines: FormModel = {
   entityName: 'IV_VouchersLines',
-  formName: 'VouchersLinesIssues',
-  gridViewName: 'grvVouchersLinesIssues',
+  formName: 'InventoryIssuesLines',
+  gridViewName: 'grvInventoryIssuesLines',
   entityPer: 'IV_VouchersLines',
 };
 
@@ -109,15 +108,15 @@ export const fmGeneralJournalsLinesOne: FormModel = {
 
 export const fmIssueTransfersLines: FormModel = {
   entityName: 'IV_TransfersLines',
-  formName: 'TransfersIssueLines',
-  gridViewName: 'grvTransfersIssueLines',
+  formName: 'TransfersIssues',
+  gridViewName: 'grvTransfersIssues',
   entityPer: 'IV_TransfersLines',
 };
 
 export const fmReceiptTransfersLines: FormModel = {
   entityName: 'IV_TransfersLines',
-  formName: 'TransfersReceiptLines',
-  gridViewName: 'grvTransfersReceiptLines',
+  formName: 'TransfersReceipts',
+  gridViewName: 'grvTransfersReceipts',
   entityPer: 'IV_TransfersLines',
 };
 
@@ -204,7 +203,12 @@ export const fmAssetJournalsLines: FormModel = {
   entityName: 'AM_AssetJournalsLines',
   entityPer: 'AM_AssetJournalsLines',
 };
-
+export const fmCountingMembers: FormModel = {
+  formName: 'CountingMembers',
+  gridViewName: 'grvCountingMembers',
+  entityName: 'AC_CountingMembers',
+  entityPer: 'AC_CountingMembers',
+};
 export enum MorfuncDefault {
   Sua = 'SYS03',
   Xoa = 'SYS02',
@@ -1398,43 +1402,43 @@ export class CodxAcService {
     }
     eleGrid.setPredicates('diM3', preDIM3, dtvDIM3);
 
-    let arrayType = ['PI', 'SI'];
-    if (arrayType.includes(journal.journalType)) {
-      if (!journal.useDutyTax) {
-        //? không sử dụng thuế xuất nhập khẩu (ẩn)
-        hideFields.push('SalesTaxPct');
-        hideFields.push('SalesTaxAmt');
-        hideFields.push('SalesTaxAmt2');
-      } else {
-        if (data && data?.currencyID == baseCurr)
-          hideFields.push('SalesTaxAmt2');
-      }
+    // let arrayType = ['PI', 'SI'];
+    // if (arrayType.includes(journal.journalType)) {
+    //   if (!journal.useDutyTax) {
+    //     //? không sử dụng thuế xuất nhập khẩu (ẩn)
+    //     hideFields.push('SalesTaxPct');
+    //     hideFields.push('SalesTaxAmt');
+    //     hideFields.push('SalesTaxAmt2');
+    //   } else {
+    //     if (data && data?.currencyID == baseCurr)
+    //       hideFields.push('SalesTaxAmt2');
+    //   }
 
-      if (!journal.useExciseTax) {
-        //? không sử dụng thuế TTĐB (ẩn)
-        hideFields.push('ExciseTaxPct');
-        hideFields.push('ExciseTaxAmt');
-        hideFields.push('ExciseTaxAmt2');
-      } else {
-        if (data && data?.currencyID == baseCurr)
-          hideFields.push('ExciseTaxAmt2');
-      }
+    //   if (!journal.useExciseTax) {
+    //     //? không sử dụng thuế TTĐB (ẩn)
+    //     hideFields.push('ExciseTaxPct');
+    //     hideFields.push('ExciseTaxAmt');
+    //     hideFields.push('ExciseTaxAmt2');
+    //   } else {
+    //     if (data && data?.currencyID == baseCurr)
+    //       hideFields.push('ExciseTaxAmt2');
+    //   }
 
-      if (journal.vatControl == '0') {
-        //? không sử dụng thuế GTGT (ẩn)
-        hideFields.push('VATPct');
-        hideFields.push('VATAmt');
-        hideFields.push('VATBase');
-        hideFields.push('VATAmt2');
-        hideFields.push('VATBase2');
-        hideFields.push('VATID');
-      } else {
-        if (data && data?.currencyID == baseCurr) {
-          hideFields.push('VATAmt2');
-          hideFields.push('VATBase2');
-        }
-      }
-    }
+    //   if (journal.vatControl == '0') {
+    //     //? không sử dụng thuế GTGT (ẩn)
+    //     hideFields.push('VATPct');
+    //     hideFields.push('VATAmt');
+    //     hideFields.push('VATBase');
+    //     hideFields.push('VATAmt2');
+    //     hideFields.push('VATBase2');
+    //     hideFields.push('VATID');
+    //   } else {
+    //     if (data && data?.currencyID == baseCurr) {
+    //       hideFields.push('VATAmt2');
+    //       hideFields.push('VATBase2');
+    //     }
+    //   }
+    // }
 
     return [eleGrid, hideFields];
   }
