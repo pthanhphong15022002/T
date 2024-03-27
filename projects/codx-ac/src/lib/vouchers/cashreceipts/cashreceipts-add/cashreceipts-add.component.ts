@@ -276,7 +276,12 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         this.showHideTabDetail(this.master?.data?.subType, this.elementTabDetail);
       }
     }
-    this.setValidateForm()
+    this.setValidateForm();
+    let hSettlement = false;
+    if(this.journal.settleControl == "1" && (this.master.data.subType == this.journal.journalType + '9')){
+      hSettlement = true;
+    }
+    this.eleGridCashReceipt.showHideColumns(['Settlement'],hSettlement); 
   }
 
   /**

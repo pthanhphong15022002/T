@@ -782,7 +782,7 @@ export class AddProcessDefaultComponent implements OnInit {
     this.isAttach = e;
   }
 
-  addRow(data: any, fieldName: any, index = 0, result: any = null) {
+  addRow(data: any, fieldName: any, index = 0, result: any = null,hasIndexNo=false) {
     if (!this.dataTable[fieldName.toLowerCase()])
       this.dataTable[fieldName.toLowerCase()] = [];
     var option = new DialogModel();
@@ -801,15 +801,26 @@ export class AddProcessDefaultComponent implements OnInit {
 
     popup.closed.subscribe((res) => {
       if (res?.event) {
-        if (!result) this.dataTable[fieldName.toLowerCase()].push(res?.event);
+        if (!result) {
+          if(hasIndexNo) res.event.indexNo = this.dataTable[fieldName.toLowerCase()].length + 1
+          this.dataTable[fieldName.toLowerCase()].push(res?.event);
+        }
         else this.dataTable[fieldName.toLowerCase()][result.index] = res.event;
         var grid = this.gridView.find((_, i) => i == index);
         grid.refresh();
       }
     });
   }
-  deleteRow(data: any, fieldName: any, index = 0) {
+  deleteRow(data: any, fieldName: any, index = 0 , hasIndexNo = false) {
     this.dataTable[fieldName.toLowerCase()].splice(data.index, 1);
+    if(hasIndexNo)
+    {
+      let i = 1;
+      this.dataTable[fieldName.toLowerCase()].forEach(elm=>{
+        elm.indexNo = i;
+        i++;
+      })
+    }
     var grid = this.gridView.find((_, i) => i == index);
     grid.refresh();
   }
@@ -830,7 +841,7 @@ export class AddProcessDefaultComponent implements OnInit {
           .alert('Thông báo', 'Bạn có chắc chắn muốn xóa?', config)
           .closed.subscribe((x) => {
             if (x.event.status == 'Y')
-              this.deleteRow(e?.data, data.fieldName, data.indexTable);
+              this.deleteRow(e?.data, data.fieldName, data.indexTable , data?.tableFormat?.hasIndexNo);
           });
         break;
       }

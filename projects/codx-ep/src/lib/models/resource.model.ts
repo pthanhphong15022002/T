@@ -20,3 +20,13 @@ export class ResourceTrans {
   companyID:string;
   createdBy:string;
 }
+
+export class Warehouses {
+  warehouseID: string;
+  owner: string;
+  createdBy: string;
+  createdOn: Date;
+  reservedQty: number;
+  availableQty: number;
+  currentQty: number;
+}
