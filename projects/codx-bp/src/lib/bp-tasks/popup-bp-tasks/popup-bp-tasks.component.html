@@ -188,12 +188,14 @@
                   class="form-check-input"
                   type="checkbox"
                   [value]="cl?.status == '1' ? true : false"
+                  [disabled]="!privileged"
                   (change)="valueChangeCb($event, indexC)"
                 />
                 <input
                   class="mx-2 form-control"
                   [value]="cl?.taskName"
                   placeholder="Thêm mục"
+                  [disabled]="!privileged"
                   (change)="valueChangeCheckList($event, indexC)"
                   style="border: none"
                 />
@@ -290,6 +292,7 @@
                   style="width: 100%"
                   field="yes"
                   [checked]="data?.result == '1'"
+                  [disabled]="!privileged"
                   (valueChange)="changeRadio($event)"
                 ></codx-input>
               </span>
@@ -312,6 +315,7 @@
                   style="width: 100%"
                   field="no"
                   [checked]="data?.result != '1'"
+                  [disabled]="!privileged"
                   (valueChange)="changeRadio($event)"
                 ></codx-input>
               </span>
@@ -335,6 +339,7 @@
           (valueChange)="valueChange($event)"
           placeholder="Nhập ý kiến"
           [crrValue]="data?.comment ?? ''"
+          [disabled]="!privileged"
         >
         </codx-input>
       </div>

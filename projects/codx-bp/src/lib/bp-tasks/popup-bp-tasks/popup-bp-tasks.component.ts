@@ -71,7 +71,7 @@ export class PopupBpTasksComponent implements OnInit {
       ? JSON.parse(JSON.stringify(dt?.data?.dataIns))
       : null;
     this.user = this.authstore.get();
-    // if(dt?.data?.privileged != null) this.privileged = dt?.data?.privileged;
+    if (dt?.data?.privileged != null) this.privileged = dt?.data?.privileged;
     this.subTitle = dt?.data?.subTitle;
   }
   ngOnInit(): void {
@@ -81,7 +81,7 @@ export class PopupBpTasksComponent implements OnInit {
           ? '1'
           : this.data?.result;
     }
-    this.checkList = this.data.checkList ?? [];
+    this.checkList = this.data?.checkList ?? [];
     this.countCheck = this.checkList.filter((x) => x.status == '1').length;
     this.getInfo();
     this.getVll();
@@ -256,6 +256,7 @@ export class PopupBpTasksComponent implements OnInit {
 
   //#region ActivityType = 'Task'
   addCheckList() {
+    if (!this.privileged) return;
     let obj = {
       recID: Util.uid(),
       taskName: '',
@@ -358,7 +359,6 @@ export class PopupBpTasksComponent implements OnInit {
           // this.getDataFileAsync(this.dataSelected.recID);
         }
       });
-
     }
   }
 }
