@@ -1,14 +1,15 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, CodxService, DataRequest, DialogModel, FormModel, NotificationsService } from 'codx-core';
-import { map, of } from 'rxjs';
+import { Subscription, map, of } from 'rxjs';
 import { NotifyDrawerPopupComponent } from '../notify-drawer-popup/notify-drawer-popup.component';
+import { subscribe } from 'diagnostics_channel';
 
 @Component({
   selector: 'codx-notify-body',
   templateUrl: './notify-body.component.html',
   styleUrls: ['./notify-body.component.scss']
 })
-export class NotifyBodyComponent implements OnInit {
+export class NotifyBodyComponent implements OnInit, OnDestroy {
 
   @Input() mode:string = "";
   @Input() formModel:FormModel = null;
@@ -32,6 +33,8 @@ export class NotifyBodyComponent implements OnInit {
   }
   isAfterRender=false;
   funcList: any;
+  subscriptions = new Subscription();
+
   constructor(
     private api:ApiHttpService,
     private dt:ChangeDetectorRef,
@@ -44,11 +47,13 @@ export class NotifyBodyComponent implements OnInit {
   {
     this.model = new DataRequest("Notification","grvNotification","BG_Notification","","",1,20);
     this.user = auth.get();
-    this.cache.functionList('BGT001').subscribe(func=>{
+    let subscribe = this.cache.functionList('BGT001').subscribe(func=>{
       this.funcList = func;
       this.isAfterRender = true;
     });
+    this.subscriptions.add(subscribe);
   }
+ 
 
   ngOnInit(): void {
     if(this.defaultStatus)
@@ -59,27 +64,33 @@ export class NotifyBodyComponent implements OnInit {
     this.getNotiAsync();
   }
 
-   // get set up
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
    getSetUp(){
-    this.cache.message("SYS010").subscribe((mssg:any) => {
+    let subcribe1 = this.cache.message("SYS010").subscribe((mssg:any) => {
       if(mssg){
         this.mssgNoData = mssg.defaultName;
       }
     });
-    this.cache.valueList("SYS055")
+    let subcribe2 = this.cache.valueList("SYS055")
     .subscribe((vll:any) => {
       if(vll){
         this.vllType = vll.datas;
         this.type = vll.datas[0];
       }
     });
-    this.cache.valueList("SYS057")
+    let subcribe3 = this.cache.valueList("SYS057")
     .subscribe((vll:any) => {
       if(vll){
         this.vllStatus = vll.datas;
         this.status = vll.datas[0];
       }
     });
+    this.subscriptions.add(subcribe1);
+    this.subscriptions.add(subcribe2);
+    this.subscriptions.add(subcribe3);
   }
 
   // load data noti
@@ -90,7 +101,7 @@ export class NotifyBodyComponent implements OnInit {
       this.model.page = this.model.page + 1; 
     this.loaded = true;
     this.model.dataObj = JSON.stringify(this.notiFilter);
-    this.api.execSv(
+    let subscribe = this.api.execSv(
       'BG',
       'ERM.Business.BG',
       'NotificationBusinesss',
@@ -109,6 +120,7 @@ export class NotifyBodyComponent implements OnInit {
               this.loaded = false;
         }
     });
+    this.subscriptions.add(subscribe);
   }
 
   // scroll
@@ -121,8 +133,9 @@ export class NotifyBodyComponent implements OnInit {
   // view detail noti
   clickNotification(item:any,element:any){
     if(element.target.tagName !== 'A'){
-      if(!item.read){
-        this.api.execSv(
+      if(!item.read)
+      {
+        let subscribe = this.api.execSv(
           'BG',
           'ERM.Business.BG',
           'NotificationBusinesss',
@@ -130,20 +143,21 @@ export class NotifyBodyComponent implements OnInit {
           [item.recID]).subscribe((res:boolean) => {
             item.read = res;
         });
+        this.subscriptions.add(subscribe);
       }
       var queryParam = { predicate:"RecID=@0",dataValue:item.transID};
       if(item.view)
         Object.assign(queryParam, {view: item.view});
-      if(item?.parentID){
-        this.cache.functionList(item.function).subscribe(func=>{
-          if(func?.url){
+      if(item?.parentID)
+      {
+        let subscribe = this.cache.functionList(item.function).subscribe(func=>{
+          if(func && func?.url){
             this.codxService.openUrlNewTab(null,func?.url+"/"+item?.parentID,queryParam);
           }
         });
+        this.subscriptions.add(subscribe);
       }
-      else{
-        this.codxService.openUrlNewTab(item.function,"",queryParam);
-      }
+      else this.codxService.openUrlNewTab(item.function,"",queryParam);
     }
   }
 
@@ -175,19 +189,23 @@ export class NotifyBodyComponent implements OnInit {
     if(event){
       switch(event.functionID){
         case "WP005": // ghim
-          this.checkBookmark(item.recID,"add")
+          let subscribe1 = this.checkBookmark(item.recID,"add")
           .subscribe((res:boolean) => item.isBookmark = res);
+          this.subscriptions.add(subscribe1);
           break; 
         case "WP006": // bỏ ghim
-          this.checkBookmark(item.recID,"remove")
-          .subscribe((res:boolean) => item.isBookmark = !res);
+          let subscribe2 = this.checkBookmark(item.recID,"remove")
+                                .subscribe((res:boolean) => item.isBookmark = !res);
+          this.subscriptions.add(subscribe2);
           break; 
         case "WP007": // đánh dấu đã đọc
-          this.checkRead(item.recID)
+          let subscribe3 = this.checkRead(item.recID)
           .subscribe((res:boolean) => item.read = res);
+          this.subscriptions.add(subscribe3);
           break; 
         case "WP008": // xóa
-          this.notiSV.alertCode("SYS030").subscribe((res1:any) => {
+          let subscribe4 = this.notiSV.alertCode("SYS030")
+          .subscribe((res1:any) => {
             if(res1.event.status === "Y"){
               this.api.execSv(
                 "BG",
@@ -207,6 +225,7 @@ export class NotifyBodyComponent implements OnInit {
                 });
             }
           });
+          this.subscriptions.add(subscribe4);
           break;
         default:
           break;

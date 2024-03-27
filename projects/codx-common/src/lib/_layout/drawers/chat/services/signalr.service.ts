@@ -1,16 +1,10 @@
 import {
-  ApplicationRef,
-  ComponentFactoryResolver,
   EventEmitter,
   Injectable,
-  Injector,
-  TemplateRef,
 } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { AuthStore } from 'codx-core';
-import { error, group } from 'console';
 import { environment } from 'src/environments/environment';
-import { Post } from 'src/shared/models/post';
 import { CHAT } from '../models/chat-const.model';
 
 @Injectable({
@@ -28,9 +22,10 @@ export class SignalRService {
   openBoxChat = new EventEmitter<any>(); // open box chat
   removeGroup = new EventEmitter<any>(); // remove group
   favoriteGroup = new EventEmitter<any>(); // favorite group
+  groupChange = new EventEmitter<any>(); // group change
   incomingMessage = new EventEmitter<any>(); // recive message
   messageChange = new EventEmitter<any>();  // message change
-  groupChange = new EventEmitter<any>(); // group change
+  voteMessage = new EventEmitter<any>();  // vote message 
 
   constructor(private authStore: AuthStore) {
     this.createConnection();
@@ -97,10 +92,10 @@ export class SignalRService {
           case CHAT.UI_FUNC.DeletedMessage:
             this.messageChange.emit(res);
             break;
-          
-          //phản hồi tin nhắn
-          case CHAT.UI_FUNC.ReactedMessage:
-            this.incomingMessage.emit(res);
+            
+          // vote tin nhắn
+          case CHAT.UI_FUNC.VoteMessage:
+            this.voteMessage.emit(res.data);
             break;
           
           //Gửi chat của hệ thống và mở chat box

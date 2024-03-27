@@ -36,13 +36,13 @@
                             <div class="w-200px">
                                 <codx-temp-full 
                                     [dataItem]="item"
+                                    [imageId]="item.groupType == '1' ? item.groupID2 : item.groupID"
+                                    [imageObjType]="item.groupType == '1' ? 'AD_Users':'WP_Groups'"
+                                    [imageWidth]="35"
+                                    [imgCss]="'symbol symbol-circle me-2'"
                                     [title]="item.groupType == '1' ? item.groupName2 : item.groupName"
                                     titleLine="1"
-                                    [imageId]="item.groupType == '1' ? item.groupID2 : item.groupID"
-                                    [imageType]="item.groupType == '1' ? 'AD_Users':'WP_Groups'"
-                                    [imageWidth]="35"
                                     [hideMF]="true"
-                                    [imgCss]="'symbol symbol-circle me-2'"
                                 ></codx-temp-full>
                             </div>
                         </ng-template>

@@ -9,19 +9,49 @@
     position: relative;
     margin-left: 10px; 
 }
-
+// header
 .chat-box-header{
-    width: 100%;
-    height: 60px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
+    height: 60px;
     padding: 12px 8px 5px;
     border-bottom: 1px solid var(--gray-150);
 }
 .group-avatar{
     position: relative;
     margin-right: 10px;
+}
+.isOnline::after{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 8px;
+    width: 8px;
+    background-color: greenyellow;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.group-infor{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.line-break{
+    line-break: anywhere;
+}
+
+
+// footer
+.chat-box-body{
+    width: 99%;
+    //height: 476px;
+    height: calc(100% - 100px); 
+    overflow: auto;
+    padding: 6px 10px;
 }
 .message-reciver-avatar{
     position: relative;
@@ -32,37 +62,14 @@
     background-color: var(--gray-150);
     padding: 4px;
 }
-.status{
-    position: absolute;
-    bottom: -5px;
-    right: 2px;
+.word-break_all{
+    word-break: break-all;
 }
-.icon-online{
-    height: 8px;
-    width: 8px;
-    background-color: greenyellow;
-    border-radius: 50%;
-    display: inline-block;
-}
-.group-infor{
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.group-infor_name{
-    width: 50%;
-    height: 100%;
-    line-break: anywhere;
+.max-h-100px{
+    max-height: 100px !important;
 }
 
-.chat-box-body{
-    width: 99%;
-    //height: 476px;
-    height: calc(100% - 100px); 
-    overflow: auto;
-    padding: 6px 10px;
-}
+// footer
 .chat-box-footer{
     width: 100%;
     padding: 0 10px;
@@ -131,7 +138,6 @@
 }
 
 .message-files{
-    // width: 80%;
     width: 280px;
 }
 .message-emoji{
@@ -181,7 +187,6 @@ codx-chat-box.active{
     .footer-button span{
         color: --primary-active;
     }
-
 }
 
 
@@ -221,17 +226,11 @@ codx-chat-box.active{
     border-radius: 4px;
     padding: 4px;
 }
-// .reply-content{
-//     width: 90%;
-//     line-break: anywhere;
-// }
 
 .reply-content{
     max-width: 250px;
     padding: 4px 10px;
 }
-
-
 
 .message-send{
     color: #fff;
@@ -244,22 +243,6 @@ codx-chat-box.active{
     background-color: var(--bs-primary-rgb);
     border-radius: 6px;
     padding: 4px;
-}
-.message-system{
-    margin: 10px 0px;
-    // background: var(--primary-light); 
-    text-align: center;
-    font-style: italic;
-    font-weight: 400;
-    border-radius: 25px;
-}
-.input{
-    width: 100%;
-    padding: 6px 10px;
-    text-align: left;
-    outline: none;
-    border: 1px solid var(--gray-150);
-    border-radius: 3px;
 }
 
 .popup-vote{

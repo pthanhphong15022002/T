@@ -1,0 +1,28 @@
+.message-function{
+    display: none;
+}
+.message:hover{
+    .message-function{
+        display: block; 
+    }
+}
+.bg-mssg-send{
+    background-color: #eceffe;
+}
+
+.bg-mssg-recive{
+    background-color: #f1f2f5;
+}
+.max-w-250{
+    max-width: 250px;
+}
+.word-break_all{
+    word-break: break-all;
+}
+
+.border-left-3{
+    border-left: 3px solid;
+}
+.box-shadow{
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}

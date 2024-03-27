@@ -7,6 +7,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   ViewChild,
@@ -24,39 +25,38 @@ import {
 } from 'codx-core';
 import { SignalRService } from '../services/signalr.service';
 import { CHAT } from '../models/chat-const.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'codx-chat-list',
   templateUrl: './chat-list.component.html',
   styleUrls: ['./chat-list.component.scss'],
 })
-export class CodxChatListComponent implements OnInit, AfterViewInit {
+export class CodxChatListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() formModel: FormModel;
-  @Output('getTotalMessage') getTotalMessage: EventEmitter<any> = new EventEmitter();
   @ViewChild('codxListView') codxListView: CodxListviewComponent;
 
+  subscriptions = new Subscription();
   user: any = null;
   isSearching: boolean = false;
-
   constructor(
     private api: ApiHttpService,
     private signalRSV: SignalRService,
     private cache: CacheService,
     private dt: ChangeDetectorRef,
-    private notificationsService: NotificationsService,
-    private CodxCommonService: CodxCommonService,
     private auth: AuthStore
   ) 
   {
     this.user = this.auth.get();
   }
+ 
 
   ngOnInit(): void {
   }
 
   ngAfterViewInit() {
-    this.signalRSV.incomingMessage
+    let subscribe1 = this.signalRSV.incomingMessage
     .subscribe((mssg: any) => {
       if (mssg) 
       {
@@ -82,7 +82,7 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.signalRSV.groupChange
+    let subscribe2 = this.signalRSV.groupChange
     .subscribe((group:any) => {
       if(group)
       {
@@ -92,7 +92,7 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
       } 
     });
 
-    this.signalRSV.addGroup
+    let subscribe3 = this.signalRSV.addGroup
     .subscribe((groupID:any) => {
       if(groupID)
       {
@@ -109,7 +109,7 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.signalRSV.removeGroup
+    let subscribe4 = this.signalRSV.removeGroup
     .subscribe((groupID:any) => {
       if(groupID)
       {
@@ -122,8 +122,13 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
         }
       }
     });
-
-    
+    this.subscriptions.add(subscribe1);
+    this.subscriptions.add(subscribe2);
+    this.subscriptions.add(subscribe3);
+    this.subscriptions.add(subscribe4);
+  }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   search(searchText: any, searchType = "") {
@@ -158,15 +163,15 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
     {
       this.signalRSV.sendData(CHAT.BE_FUNC.OpenBoxChatAsync, data.groupID);
       if (data.lastMssg) data.lastMssg.isRead = true;
-      this.api
-        .execSv(
+      this.dt.detectChanges();
+      let subscribe = this.api.execSv(
           'WP',
           'ERM.Business.WP',
           'ChatBusiness',
           'UpdateMessageByGroupAsync',
           data.groupID
         ).subscribe();
-      this.dt.detectChanges();
+      this.subscriptions.add(subscribe);
     }
   }
 
@@ -206,7 +211,7 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
    if(group)
    {
       group.isFavorite = !group.isFavorite;
-      this.api.execSv(
+      let subscribe = this.api.execSv(
         'WP',
         'ERM.Business.WP',
         'ContactFavoriteBusiness',
@@ -215,7 +220,8 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
       ).subscribe((res:any) => 
       {
         if(res) this.signalRSV.sendData(CHAT.BE_FUNC.FavoriteGroupAsync,group.groupID);
-      })
+      });
+      this.subscriptions.add(subscribe);
    } 
   }
 

@@ -12,6 +12,7 @@ export abstract class AppConfig {
   hideFavCount: boolean;
   singleExec: boolean;
   asideMinimize: string;
+  lvai: any;
   sureMeet: any;
   firebase: any;
   captchaKey: string;

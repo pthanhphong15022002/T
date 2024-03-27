@@ -1,6 +1,7 @@
 import {
   Component,
   Injector,
+  OnDestroy,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
@@ -16,18 +17,21 @@ import {
 } from 'codx-core';
 import { PopupSearchPostComponent } from './list-post/popup-search/popup-search.component';
 import { HttpClient } from '@angular/common/http';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'codx-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class HomeComponent extends UIComponent {
+export class HomeComponent extends UIComponent implements OnDestroy {
   views: Array<ViewModel> | any = [];
   dataService: CRUDService = null;
   predicatePortal: string = '';
   dataValuePortal: String = '';
   user: any = null;
+
+  subcription = Subscription.EMPTY;
   @ViewChild('content') content: TemplateRef<any>;
   constructor(
     private injector: Injector,
@@ -37,18 +41,20 @@ export class HomeComponent extends UIComponent {
     super(injector);
     this.user = this.auth.get();
   }
+  ngOnDestroy(): void {
+   this.subcription.unsubscribe();
+  }
 
   onInit(): void {
-    this.router.params.subscribe((params) => {
+    this.subcription = this.router.params.subscribe((params) => {
       let funcID = params['funcID'];
-      this.cache.functionList(funcID).subscribe((f) => {
-        if (f) {
+      this.cache.functionList(funcID)
+      .subscribe((f) => {
+        if (f) 
           this.page.setSubTitle(f.customName);
-        }
       });
     });
     this.predicatePortal = '(Category = @0 || Category = @1 || Category = @2) && (ApproveControl=@3 || ( ApproveControl=@4 && (ApproveStatus=@5 || (ApproveStatus != @6 && CreatedBy =@7))))';
-    //'(Category = @1 || Category = @3 || Category = @4) && (ApproveControl=@0 || ( ApproveControl=@1 && (ApproveStatus=@5 || (ApproveStatus != @4 && CreatedBy =@Me))))'
     this.dataValuePortal = `1;3;4;0;1;5;4;` +this.user?.userID;
   }
 
@@ -69,7 +75,6 @@ export class HomeComponent extends UIComponent {
   }
 
   
-  //open popup search portal
   clickShowPopupSearch() {
     let option = new DialogModel();
     option.IsFull = true;
