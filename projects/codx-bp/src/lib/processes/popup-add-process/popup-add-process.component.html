@@ -130,10 +130,18 @@
       <div class="d-flex align-items-center justify-content-end">
         <ng-container *ngIf="currentTab == 1">
           <div class="d-flex mx-4 bg-gray-100 p-1 step-process-tab">
-            <div class="p-3 cursor-pointer" [class.active]="processTabIndex == 0" (click)="activeTab(0)">
+            <div
+              class="p-3 cursor-pointer"
+              [class.active]="processTabIndex == 0"
+              (click)="activeTab(0)"
+            >
               <i class="icon-i-bar-chart-steps"></i>
             </div>
-            <div class="p-3 cursor-pointer" [class.active]="processTabIndex == 1" (click)="activeTab(1)">
+            <div
+              class="p-3 cursor-pointer"
+              [class.active]="processTabIndex == 1"
+              (click)="activeTab(1)"
+            >
               <i class="icon-account_tree"></i>
             </div>
           </div>
@@ -147,7 +155,10 @@
       </div>
     </div>
     <div class="stepper-body pt-4 px-4">
-      <div class="card shadow-none rounded-0 border-0 mx-auto h-100" [style]="{'width':'1100px'}">
+      <div
+        class="card shadow-none rounded-0 border-0 mx-auto h-100"
+        [style]="{ width: '1100px' }"
+      >
         <div
           class="scroll-y"
           class="dp-step step-content"
@@ -172,7 +183,11 @@
               [ngClass]="currentTab == 1 ? 'active show' : ''"
             >
               <ng-container *ngIf="processTabIndex == 0">
-                <lib-form-steps-field-grid [data]="data" [formModel]="dialog?.formModel" (dataChange)="valueChange2($event)"></lib-form-steps-field-grid>
+                <lib-form-steps-field-grid
+                  [data]="data"
+                  [formModel]="dialog?.formModel"
+                  (dataChange)="valueChange2($event)"
+                ></lib-form-steps-field-grid>
               </ng-container>
               <ng-container *ngIf="processTabIndex == 1">
                 <ng-template [ngTemplateOutlet]="tmpStepFields"></ng-template>
@@ -216,9 +231,7 @@
               >
               </codx-label>
             </div>
-            <div
-              class="right d-flex align-items-center justify-content-end"
-            >
+            <div class="right d-flex align-items-center justify-content-end">
               <!-- <div
                 *ngIf="currentTab == 0"
                 class="d-flex justify-content-start cursor-pointer text-primary"
@@ -283,7 +296,7 @@
 <ng-template #tmpInfomation>
   <div class="container-infomation">
     <div class="w-100 h-100 p-8">
-      <div class="form-group">
+      <div class="form-group d-flex align-items-center">
         <codx-tag
           field="tags"
           [entityName]="dialog.formModel.entityName"
@@ -292,6 +305,32 @@
           [value]="data?.tags"
           (valueChange)="valueChange($event)"
         ></codx-tag>
+        <div class="d-flex ms-3">
+          <div class="symbol symbol-circle symbol-30px symbol-vllicon">
+            <codx-input
+              class=""
+              type="vllicon"
+              refValue="L1470"
+              field="icon"
+              [crrValue]="data?.icon"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+
+          <div class="ms-4">
+            <codx-input
+              class="ms-4"
+              type="colorpicker"
+              [showText]="false"
+              [modeSwitcher]="false"
+              [crrValue]="data?.color"
+              field="color"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
       </div>
       <div class="form-group">
         <codx-label
@@ -504,14 +543,14 @@
 </ng-template>
 
 <ng-template #tmpStepFields>
-  <div
-    class="dp-step step-content container-fluid p-0 h-100"
-  >
+  <div class="dp-step step-content container-fluid p-0 h-100">
     <codx-diagram></codx-diagram>
   </div>
 </ng-template>
 
 <ng-template #tmpResult>
-  <lib-add-file-from-process-default [data]="data" [formModel]="dialog?.formModel"></lib-add-file-from-process-default>
+  <lib-add-file-from-process-default
+    [data]="data"
+    [formModel]="dialog?.formModel"
+  ></lib-add-file-from-process-default>
 </ng-template>
-
