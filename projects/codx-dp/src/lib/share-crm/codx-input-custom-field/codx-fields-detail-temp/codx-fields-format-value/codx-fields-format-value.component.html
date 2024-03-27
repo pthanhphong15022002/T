@@ -362,4 +362,81 @@
     >
     </codx-fields-detail-temp>
   </ng-container>
+  <ng-container *ngIf="data.dataType == 'RM'">
+    <div class="ms-6">
+      <div class="form-group">
+        <codx-label
+          name="lblDateRemind"
+          [formName]="formModel"
+          default="Ngày nhắc nhở"
+        >
+        </codx-label>
+        <div>
+          <span
+            [innerHTML]="
+              remindDefault?.dateRemind | formatDataValue : 'D' : '1' | async
+            "
+          ></span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <codx-label
+            name="lblTimeRemind"
+            [formName]="formModel"
+            default="Thời gian nhắc nhở (ngày)"
+          >
+          </codx-label>
+          <div class="col-4">
+            <span>{{ remindDefault?.reminderTime ?? 0 }}</span>
+          </div>
+          <div class="col-8">
+            <div class="d-flex align-items-top me-3">
+              <!-- <span class="me-2">
+          <codx-input
+            type="checkbox"
+            name="checkbox"
+            class="check-circle"
+            placeholder=""
+            field="isAlert"
+            [crrValue]="remindDefault?.isAlert"
+            (valueChange)="valueChangeChbx($event)"
+            [disabled]="disable"
+          >
+          </codx-input>
+        </span>
+        <codx-label name="lblAlert" formName="Settings" default="Thông báo"> 
+        </codx-label>-->
+              <span class="me-2 ms-6">
+                <codx-input
+                  type="checkbox"
+                  name="checkbox"
+                  placeholder=""
+                  class="check-circle"
+                  field="isMail"
+                  [crrValue]="remindDefault?.isMail"
+                  [disabled]="true"
+                >
+                </codx-input>
+              </span>
+              <codx-label name="lblEmail" formName="Settings" default="Email">
+              </codx-label>
+              <div class="setting-btnright">
+                <a
+                  href="javascript:void(0)"
+                  (click)="true ? '' : openPopupSettingRemind()"
+                >
+                  <span class="w-30px d-flex justify-content-center"
+                    ><span
+                      class="icon-18"
+                      [ngClass]="'icon-email'"
+                    ></span></span
+                ></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 </ng-container>

@@ -1,4 +1,6 @@
-import { LayoutAddComponent } from 'codx-core';
+import { filter } from 'rxjs';
+import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
+import { LayoutAddComponent, ViewType } from 'codx-core';
 import {
   AfterViewInit,
   Component,
@@ -6,6 +8,7 @@ import {
   Injector,
   Optional,
   Output,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -20,6 +23,7 @@ import {
 } from 'codx-core';
 import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
 import { EPCONST } from '../../codx-ep.constant';
+import { Warehouses } from '../../models/resource.model';
 
 const _addMF = EPCONST.MFUNCID.Add;
 const _copyMF = EPCONST.MFUNCID.Copy;
@@ -34,6 +38,7 @@ export class PopupAddStationeryComponent
   extends UIComponent
   implements AfterViewInit
 {
+  @ViewChild('tmpWarehouse') tmpWarehouse: TemplateRef<any>;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @ViewChild('form') form: LayoutAddComponent;
   @Output() loadData = new EventEmitter();
@@ -49,14 +54,14 @@ export class PopupAddStationeryComponent
       name: 'lblGeneralInfo',
     },
     {
-      icon: 'icon-person_add_alt_1',
-      text: 'Định mức sử dụng',
-      name: 'lblQuotaInfo',
-    },
-    {
       icon: 'icon-tune',
       text: 'Thông tin khác',
       name: 'lblMoreInfo',
+    },
+    {
+      icon: 'icon-person_add_alt_1',
+      text: 'Định mức sử dụng',
+      name: 'lblQuotaInfo',
     },
   ];
   data: any = {};
@@ -80,6 +85,8 @@ export class PopupAddStationeryComponent
   isPriceVisible: boolean = false;
   mfuncID: any;
   viewOnly=false;
+  warehouses=[];
+  curWarehouse = new Warehouses();
 
   constructor(
     injector: Injector,
@@ -97,6 +104,7 @@ export class PopupAddStationeryComponent
     this.formModel = this.dialogRef.formModel;
     if (this.isAdd) {
       this.imgRecID = null;
+      this.data.warehouses=[];
     } else {
       this.imgRecID = this.data.recID;
       this.defaultWarehouse = this.data.location;
@@ -214,11 +222,13 @@ export class PopupAddStationeryComponent
       }
     }
 
-    if (event?.field == 'location') {
+    if (event?.field == 'location'&& event?.data!='') {
       this.epService.getWarehousesOwner(event.data).subscribe((res: string) => {
-        this.warehouseOwner = res[0];
-        this.warehouseOwnerName = res[1];
-        this.detectorRef.detectChanges();
+        if(res){
+          this.warehouseOwner = res[0];
+          this.warehouseOwnerName = res[1];
+          this.detectorRef.detectChanges();
+        }
       });
     }
 
@@ -226,12 +236,68 @@ export class PopupAddStationeryComponent
       this.data.owner = this.warehouseOwner;
       this.detectorRef.detectChanges();
     }
+    
   }
-
+  warehouseChange(event){
+    if(event?.field && (event?.data!='' || event?.data>=0)){      
+      this.curWarehouse[event?.field] = event.data;
+      if(event?.field =='warehouseID' ){
+        this.epService.getWarehousesOwner(event.data).subscribe((res: any) => {
+          if(res){
+            this.curWarehouse.owner = res[0];
+            this.detectorRef.detectChanges();
+          }
+        });
+      }
+    }
+    
+  }
   buttonClick(event) {}
 
   setTitle(event) {
     this.title = this.tmpTitle;
     this.detectorRef.detectChanges();
   }
+  deleteWarehouse(wh){
+    if(this.data?.warehouses?.length>0 && wh !=null){
+      this.data.warehouses=this.data?.warehouses?.filter(x=>x?.warehouseID != wh?.warehouseID);
+      this.detectorRef.detectChanges();
+    }
+  }
+  addEditWarehouse(wh:any, isAdd=true){
+    if(isAdd){
+      this.curWarehouse = new Warehouses();
+      this.curWarehouse.availableQty=0;
+      this.curWarehouse.reservedQty=0;
+      this.curWarehouse.currentQty=0;
+    }
+    else{
+      this.curWarehouse = {...wh};
+    }    
+    let dialogWH = this.callfc.openForm(this.tmpWarehouse, '', 400, 500);
+  }
+  saveWarehouse(dialog){
+    if(this.data?.warehouses==null) this.data.warehouses=[];
+    let addWH = true;
+    for (let index = 0; index < this.data?.warehouses.length; index++) {      
+      if(this.data?.warehouses[index]?.warehouseID == this.curWarehouse?.warehouseID){
+        this.data.warehouses[index]=this.curWarehouse;
+        addWH=false;
+      }      
+    }
+    if(addWH){
+      this.data.warehouses.push(this.curWarehouse);    
+    }    
+    this.data.availableQty=0;
+    this.data.reservedQty=0;
+    this.data.currentQty=0;
+    this.data.warehouses.forEach(x=>{
+      if(x?.availableQty >0) this.data.availableQty+=x?.availableQty ;      
+      if(x?.reservedQty >0) this.data.reservedQty+=x?.reservedQty ;
+      if(x?.currentQty >0) this.data.currentQty+=x?.currentQty ;
+    })
+    this.detectorRef.detectChanges();
+    dialog && dialog.close();
+  }
 }
+

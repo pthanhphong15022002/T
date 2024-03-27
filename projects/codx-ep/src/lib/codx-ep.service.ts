@@ -456,12 +456,13 @@ export class CodxEpService {
       recID
     );
   }
-  updateInfo(model: any) {
-    return this.api.exec<any>(
+  addUpdateBooking(model: any,isAdd) {
+    return this.api.execSv(
       'EP',
+      'ERM.Business.EP',
       'BookingsBusiness',
-      'UpdateInfoAsync',
-      [model]
+      'AddUpdateAsync',
+      [model,isAdd]
     );
   }
 

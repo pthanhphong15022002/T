@@ -161,6 +161,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   //   isMail: false,
   //   reminderTime: 5,
   //   emailTemplate: '',
+  //   dateRemind :''
   // }
   rulerNo = 'CM_20010'; //tesst
 
@@ -377,7 +378,6 @@ export class CodxInputCustomFieldComponent implements OnInit {
         break;
       case 'RM':
         this.remindDefault = JSON.parse(this.customField.dataValue);
-
         break;
     }
   }
@@ -1199,6 +1199,11 @@ export class CodxInputCustomFieldComponent implements OnInit {
       }
     });
   }
-
+  valueChangeTimeRM(e) {
+    this.remindDefault['dateRemind'] = e?.data?.fromDate;
+  }
+  valueChangeRM(e) {
+    this.remindDefault['reminderTime'] = e?.data
+  }
   //-------------END -RM-------------//
 }
