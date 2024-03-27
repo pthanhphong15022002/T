@@ -472,9 +472,9 @@ export class AddProcessDefaultComponent implements OnInit {
         let fieldName = 'f' + this.data.stepNo + '_owner';
         valueForm[fieldName] = {
           username: this.infoUser?.userName,
-          createdOn: new Date(),
+          createdon: new Date(),
           position: this.infoUser?.positionID,
-          orgUnit: this.infoUser?.orgUnitID,
+          orgunit: this.infoUser?.orgUnitID,
           department: this.infoUser?.departmentID,
           company: this.infoUser?.companyID,
         };
