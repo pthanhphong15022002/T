@@ -176,6 +176,11 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
+        path: 'assetrevaluations/:funcID/:journalNo',
+        component: AssetJournalsComponent,
+        data: { noReuse: true },
+      },
+      {
         path: 'generaljournals/:funcID/:journalNo',
         component: GeneralJournalComponent,
         data: { noReuse: true },
@@ -213,6 +218,11 @@ export const routes: Routes = [
       },
       {
         path: 'assetacquisitions/:funcID',
+        component: AssetJournalsComponent,
+        data: { noReuse: true, runMode: 1 },
+      },
+      {
+        path: 'assetrevaluations/:funcID',
         component: AssetJournalsComponent,
         data: { noReuse: true, runMode: 1 },
       },
