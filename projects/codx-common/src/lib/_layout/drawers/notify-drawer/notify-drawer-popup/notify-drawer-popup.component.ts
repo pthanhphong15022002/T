@@ -1,8 +1,9 @@
 
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { ApiHttpService, AuthStore, CacheService, CodxService, DataRequest, DialogData, DialogRef, FormModel, ScrollComponent } from 'codx-core';
 import { NotifyBodyComponent } from '../notify-body/notify-body.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'codx-notify-popup',
@@ -10,7 +11,7 @@ import { NotifyBodyComponent } from '../notify-body/notify-body.component';
   styleUrls: ['./notify-drawer-popup.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class NotifyDrawerPopupComponent implements OnInit, AfterViewInit {
+export class NotifyDrawerPopupComponent implements OnInit, AfterViewInit,OnDestroy {
   dialogRef: DialogRef;
   vllType: any[] = [];
   type: any = null;
@@ -18,6 +19,7 @@ export class NotifyDrawerPopupComponent implements OnInit, AfterViewInit {
   status: any = null;
   mode = "0";
   isAfterRender=false;
+  subscritions = new Subscription();
   @ViewChild("notiBody") notiBody: NotifyBodyComponent;
   funcList: any;
   constructor
@@ -33,25 +35,32 @@ export class NotifyDrawerPopupComponent implements OnInit, AfterViewInit {
       
     });
   }
+ 
 
 
   ngOnInit(): void {
-    this.cache.valueList("SYS055")
+    let subscribe1 = this.cache.valueList("SYS055")
     .subscribe((vll:any) => {
       if(vll){
         this.vllType = vll.datas;
         this.type = vll.datas[0];
       }
     });
-    this.cache.valueList("SYS057")
+    let subscribe2 = this.cache.valueList("SYS057")
     .subscribe((vll:any) => {
       if(vll){
         this.vllStatus = vll.datas;
         this.status = vll.datas[0];
       }
     });
+    this.subscritions.add(subscribe1);
+    this.subscritions.add(subscribe2);
   }
   ngAfterViewInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this.subscritions.unsubscribe();
   }
   //
   clickTab(mode: any) {

@@ -6,6 +6,7 @@ import {
   OnInit,
   Optional,
   ViewChild,
+  OnDestroy
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -22,13 +23,14 @@ import {
 import { SignalRService } from '../../services/signalr.service';
 import { GroupItem, WP_Groups } from '../../models/WP_Groups.model';
 import { CHAT } from '../../models/chat-const.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'chat-popup-add',
   templateUrl: './popup-add-group.component.html',
   styleUrls: ['./popup-add-group.component.css'],
 })
-export class AddGroupChatComponent implements OnInit, AfterViewInit {
+export class AddGroupChatComponent implements OnInit, AfterViewInit,OnDestroy {
   dialogData: any = null;
   dialogRef: any = null;
   gridViewSetUp: any = null;
@@ -38,6 +40,7 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
   gridModel: DataRequest;
   strUserID: string = '';
   arrUsers: string[] = [];
+  subscription = Subscription.EMPTY;
   @ViewChild('codxImg') codxImg: ImageViewerComponent;
   @ViewChild('codxListView') codxListView: CodxListviewComponent;
   constructor(
@@ -55,6 +58,7 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
     this.group = new GroupItem();
     this.gridModel = new DataRequest();
   }
+ 
 
   ngOnInit(): void {
     this.setData();
@@ -62,7 +66,10 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
   }
 
-  // set data
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
   setData() {
     if (this.dialogData) {
       this.headerText = this.dialogData.headerText;
@@ -159,7 +166,7 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
     {
       this.isLoading = true;
       this.group.groupID = Util.uid();
-      this.api
+      this.subscription = this.api
       .execSv(
         'WP',
         'ERM.Business.WP',

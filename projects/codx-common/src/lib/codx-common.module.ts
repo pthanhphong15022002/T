@@ -89,6 +89,10 @@ import { AttachmentGridFilesComponent } from './component/attachment-grid/attach
 import { CodxMentionComponent } from './component/codx-mention/codx-mention.component';
 import { MentionModule } from '@syncfusion/ej2-angular-dropdowns';
 import { SelectViettelCertificateComponent } from './component/pdf/public-esign/select-viettel-certificate/select-viettel-certificate.component';
+import { AutoFocusDirective } from './_layout/drawers/chat/directives/auto-focus/auto-focus.directive';
+import { CodxMessageComponent } from './_layout/drawers/chat/codx-message/codx-message.component';
+import { CodxHelpComponent } from './_layout/drawers/help/codx-help/codx-help.component';
+import { DisctintPipe } from './_layout/drawers/chat/pipes/disctint.pipe';
 //#endregion
 
 const T_Component: Type<any>[] = [
@@ -99,11 +103,6 @@ const T_Component: Type<any>[] = [
   ActiviesApprovalListComponent,
   ActiviesSliderComponent,
   AlertDrawerComponent,
-  CodxChatComponent,
-  CodxChatContainerComponent,
-  CodxChatListComponent,
-  CodxChatBoxComponent,
-  AddGroupChatComponent,
   ChatInnerComponent,
   MessengerDrawerComponent,
   CodxNotesComponent,
@@ -144,7 +143,15 @@ const T_Component: Type<any>[] = [
   CodxAiComponent,
   PresentationComponent,
   CodxMentionComponent,
+  CodxHelpComponent,
 
+  //Chat
+  CodxMessageComponent,
+  CodxChatComponent,
+  CodxChatContainerComponent,
+  CodxChatListComponent,
+  CodxChatBoxComponent,
+  AddGroupChatComponent,
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -168,10 +175,11 @@ const T_Pipe: Type<any>[] = [
   FilterPipe,
   TimeFromPipe,
   SubstringPipe,
+  DisctintPipe
   //#endregion
 ];
 
-const T_Directive: Type<any>[] = [DebounceDirective];
+const T_Directive: Type<any>[] = [DebounceDirective,AutoFocusDirective];
 
 @NgModule({
   declarations: [T_Component, T_Pipe, T_Directive],

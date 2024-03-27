@@ -6,6 +6,7 @@ import {
   EventEmitter,
   HostBinding,
   Injector,
+  OnDestroy,
   OnInit,
   Output,
   TemplateRef,
@@ -24,11 +25,11 @@ import {
   CRUDService,
   UserModel,
 } from 'codx-core';
-import { NgbDropdown, NgbDropdownConfig } from '@ng-bootstrap/ng-bootstrap';
 import { CodxChatListComponent } from '../chat-list/chat-list.component';
 import { AddGroupChatComponent } from '../popup/popup-add-group/popup-add-group.component';
 import { SignalRService } from '../services/signalr.service';
 import { CHAT } from '../models/chat-const.model';
+import { Subscription } from 'rxjs';
 declare var window: any;
 
 @Component({
@@ -36,13 +37,13 @@ declare var window: any;
   templateUrl: './codx-chat.component.html',
   styleUrls: ['./codx-chat.component.scss'],
 })
-export class CodxChatComponent implements OnInit, AfterViewInit {
+export class CodxChatComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostBinding('class') get class() {
     return (
       'd-flex align-items-center ' + this.codxService.toolbarButtonMarginClass
     );
   }
-
+  subscriptions = new Subscription();
   loaded = false;
   loadFavorite = false;
   count: number = 0;
@@ -68,7 +69,7 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   )
   {
     this.user = this.auth.get();
-    this.cache.functionList(this.funcID)
+    let requestFunc = this.cache.functionList(this.funcID)
       .subscribe((func:any) => {
         if (func)
         {
@@ -85,9 +86,11 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
           })
         }
       });
+    this.subscriptions.add(requestFunc);
   }
+  
 
-  showChat:boolean = true;
+  showChat:boolean = false;
   ngOnInit(): void {
     this.showChat = this.user.tenant ? true : false;
     this.getTotalMessage();
@@ -95,7 +98,7 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.addContainerChat();
-    this.signalRSV.incomingMessage
+    let subscribe1 = this.signalRSV.incomingMessage
     .subscribe((res: any) => {
       if(res && this.user && res?.createdBy != this.user?.userID)
       {
@@ -103,8 +106,7 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
         this.dt.detectChanges();
       }
     });
-
-    this.signalRSV.openBoxChat
+    let subscribe2 = this.signalRSV.openBoxChat
     .subscribe((res: any) => {
       if(res)
       {
@@ -112,27 +114,31 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.signalRSV.removeGroup
+    let subscribe3 =this.signalRSV.removeGroup
     .subscribe((res: any) => {
       if(res)
       {
         this.getTotalMessage();
       }
     });
+
+    this.subscriptions.add(subscribe1);
+    this.subscriptions.add(subscribe2);
+    this.subscriptions.add(subscribe3);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   getTotalMessage() {
-    this.api
+    let subscribe = this.api
       .execSv('WP', 'ERM.Business.WP', 'ChatBusiness', 'GetTotalMessageAsync')
       .subscribe((res: any) => {
         this.count = res;
+        this.dt.detectChanges();
       });
-  }
-
-  openChatList() {
-    if (!this.loaded) {
-      this.loaded = true;
-    }
+    this.subscriptions.add(subscribe);
   }
 
   addContainerChat() {
@@ -163,23 +169,23 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
       '',
       option
     );
-    popup.closed.subscribe((res: any) => {
+    let subscribe = popup.closed.subscribe((res: any) => {
       if (res.event)
       {
         (this.codxListChat.codxListView.dataService as CRUDService).add(res.event).subscribe();
       }
     });
+    this.subscriptions.add(subscribe);
   }
 
   clickReadAll() {
-    // chưa có mssgCode
-    this.notifySV.alertCode('Đánh dấu đã xem tất cả ?')
+    let subscribe1 = this.notifySV.alertCode('Đánh dấu đã xem tất cả ?') // chưa có mssgCode
     .subscribe((res: any) => {
       if (res?.event?.status === "Y")
       {
         this.count = 0;
         this.dt.detectChanges();
-        this.api
+        let subscribe2 = this.api
         .execSv(
           'WP',
           'ERM.Business.WP',
@@ -188,11 +194,14 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
         ).subscribe((res:boolean) => {
           if(res)
           {
-            this.codxListChat.codxListView.dataService.data.map((item:any) => { item.lastMssg.isRead = true });
+            this.codxListChat.codxListView.dataService.data.map((item:any) => item.lastMssg.isRead = true );
+            this.dt.detectChanges();
           }
         });
+        this.subscriptions.add(subscribe2);
       }
     });
+    this.subscriptions.add(subscribe1);
   }
 
   search(searchText:any, searchType = "")

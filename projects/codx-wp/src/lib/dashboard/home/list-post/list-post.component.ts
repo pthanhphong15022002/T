@@ -5,6 +5,7 @@ import {
   Injector,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges,
   TemplateRef,
@@ -32,6 +33,8 @@ import { WP_Comments } from '../../../models/WP_Comments.model';
 import { PopupAddPostComponent } from './popup-add/popup-add-post.component';
 import { PopupDetailComponent } from './popup-detail/popup-detail.component';
 import { PopupSavePostComponent } from './popup-save/popup-save.component';
+import { Subscription } from 'rxjs';
+import { subscribe } from 'diagnostics_channel';
 
 const SHARECONTROLS = {
   OWNER: '1',
@@ -59,7 +62,7 @@ const MEMBERTYPE = {
   styleUrls: ['./list-post.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
+export class ListPostComponent implements OnInit, AfterViewInit,OnChanges, OnDestroy {
 
   @Input() funcID: string = 'WP';
   @Input() favoriteID: string;
@@ -80,6 +83,7 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
   @ViewChild('listview') listview: CodxListviewComponent;
   @ViewChild("tmpCBBShare") CBBShare:TemplateRef<any>;
 
+  subscritions = new Subscription();
   user: any;
   dataService: CRUDService = null;
   function:any = null;
@@ -110,6 +114,7 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
     this.dataService = new CRUDService(this.injector);
     this.user = this.authStore.get();
   }
+
   
   ngAfterViewInit() {
   }
@@ -150,22 +155,20 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
     this.getSetting();
   }
 
-  //get thiết lập
+  ngOnDestroy(): void {
+    this.subscritions.unsubscribe();
+  }
   getSetting() {
-    // placeholder {0} bạn đang nghĩ gì
-    this.cache.message('WP011').subscribe((mssg: any) => {
+    let subscribe1 = this.cache.message('WP011').subscribe((mssg: any) => {
       if (mssg?.customName) this.mssgPlaceHolder = Util.stringFormat(mssg.customName, this.user.userName);
     });
-    // mesage không có dữ liệu
-    this.cache.message('WP035').subscribe((mssg: any) => {
+    let subscribe2 = this.cache.message('WP035').subscribe((mssg: any) => {
       if (mssg?.customName) this.mssgWP035 = mssg.customName;
     });
-    // message bài viết đang được xét duyệt
-    this.cache.message('WP038').subscribe((mssg: any) => {
+    let subscribe3 = this.cache.message('WP038').subscribe((mssg: any) => {
       if (mssg?.customName) this.mssgWP038 = mssg.customName;
     });
-    // get function - formModel - gridviewSetup - more funtion WP
-    this.cache.functionList("WP").subscribe((func) => {
+    let subscribe4 = this.cache.functionList("WP").subscribe((func) => {
         if (func)
         {
           this.function = func;
@@ -187,21 +190,25 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
           this.dt.detectChanges();
         }
     });
+    this.subscritions.add(subscribe1);
+    this.subscritions.add(subscribe2);
+    this.subscritions.add(subscribe3);
+    this.subscritions.add(subscribe4);
   }
-  // click moreFC
+
   clickMF(event: any, post: any) {
     if (event && post) {
       switch (event.functionID) {
-        case 'WP001': // cập nhật
+        case 'WP001': 
           this.editPost(post);
           break;
-        case 'WP002': // xóa
+        case 'WP002':
           this.deletePost(post);
           break;
-        case 'WP003': // chia sẻ
+        case 'WP003': 
           this.sharePost(post);
           break;
-        case 'WP004': // lưu vào sổ tay
+        case 'WP004': 
           this.savePost(post);
           break;
         default:
@@ -210,7 +217,6 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
     }
   }
 
-  // tạo bài viết
   addPost() {
     let moreFuc = this.sysMoreFunc.find(x => x.functionID === "WP000");
     var obj = {
@@ -232,18 +238,21 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
       '',
       option
     );
-    popup.closed.subscribe((res: any) => {
+    let subscribe = popup.closed.subscribe((res: any) => {
       if(!res || res.closedBy=="escape" || !res.event) return;
       (this.listview.dataService as CRUDService).add(res.event).subscribe();
     });
+    this.subscritions.add(subscribe);
   }
 
   // xóa bài viết
   deletePost(data: any) {
-    if (data?.recID) {
-      (this.listview.dataService as CRUDService)
+    if (data?.recID) 
+    {
+      let subscribe = (this.listview.dataService as CRUDService)
         .delete([data],true,(op: any) => this.beforDelete(op, data.recID),'','WP022','','WP023')
         .subscribe();
+      this.subscritions.add(subscribe);
     }
   }
   
@@ -279,13 +288,13 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
       '',
       option
     );
-    popup.closed.subscribe((res: any) => {
+    let subscribe = popup.closed.subscribe((res: any) => {
       if(!res || res.closedBy=="escape" || !res.event) return;
       (this.listview.dataService as CRUDService).update(res.event).subscribe();
     });
+    this.subscritions.add(subscribe);
   }
   
-  // share bài viết
   sharePost(post: any) {
     if (post){
       let data = new WP_Comments();
@@ -321,14 +330,15 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
         '',
         option
       );
-      popup.closed.subscribe((res: any) => {
+      let subscribe = popup.closed.subscribe((res: any) => {
         if(!res || res.closedBy=="escape" || !res.event) return;
         (this.listview.dataService as CRUDService).add(res.event).subscribe();
       });
+      this.subscritions.add(subscribe);
+
     }
   }
 
-  // lưu trữ bài viết
   savePost(post: any) {
     if (post) {
       let data = JSON.parse(JSON.stringify(post));
@@ -342,34 +352,31 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
       option.DataService = this.listview.dataService as CRUDService;
       option.FormModel = this.formModel;
       option.zIndex = 100;
-
       this.callFC.openForm(PopupSavePostComponent, '', 500, 400, '', obj, '');
     }
   }
 
-  // xem chi tiết bài viết
   naviagteWPNew(data: any) {
-    if (data){
-      //cập nhật số lượng view
-      this.api
-      .execSv(
+    if (data)
+    {
+      let subscribe1 = this.api.execSv(
       'WP',
       'ERM.Business.WP',
       'NewsBusiness',
       'UpdateViewAsync',
       [data.recID])
       .subscribe();
-      // naviagte qua WP_News
-      this.cache.functionList("WP2")
+
+      let subscribe2 = this.cache.functionList("WP2")
       .subscribe((func:any) => {
         let url = `${func.url}/${data.category}/${data.recID}`;
         this.codxService.navigate('',url);
       });
-      
+      this.subscritions.add(subscribe1);
+      this.subscritions.add(subscribe2);
     }
   }
 
-  //xem chi tiết bài viết
   clickViewDetail(file: any){
     if(file){
       let option = new DialogModel();
@@ -390,26 +397,23 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
     }
   }
 
-  //click xem thêm 
   clickReadMore(item){
     item.isShortContent = false;
-    this.api.execSv("WP","ERM.Business.WP","CommentsBusiness","GetContentAsync",[item.recID])
+    let subscribe = this.api.execSv("WP","ERM.Business.WP","CommentsBusiness","GetContentAsync",[item.recID])
     .subscribe((res:string) => {
       item.shortContent = "";
       item.contents = res;
       this.dt.detectChanges();
     }); 
+    this.subscritions.add(subscribe);
   }
   
 
-  // xóa bài viết trên client
   removePost(data:any){
     (this.listview.dataService as CRUDService).remove(data).subscribe();
   }
 
   dataSelected:any = null;
-  
-  // open cbb share
   openCBBShare(data){
     if(data.write){
       this.dataSelected = JSON.parse(JSON.stringify(data));
@@ -419,7 +423,6 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
     }
   }
 
-  //change mode share
   changePermission(event:any){
     if(event)
     {
@@ -494,12 +497,13 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
     }
   }
 
-  //
   onAction(e:any){
     if(this.listview?.dataService?.predicates){
       let post = this.listview.dataService.data[0];
-      if(post?.category == "9" || post?.category == "10"){
-        this.api
+      if(post?.category == "9" || post?.category == "10")
+      {
+        
+        this.subscritions.add(this.api
           .execSv(
           'DM',
           'ERM.Business.DM',
@@ -508,7 +512,7 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
           [this.listview.dataService.dataValues])
           .subscribe((res:any[]) => {
             this.clickViewDetail(res);
-          });
+          }));
       }
     }
   }
