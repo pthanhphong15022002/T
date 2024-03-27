@@ -483,46 +483,46 @@ export class CodxAcService {
       }
       if (
         [MorfuncDefault.Sua, MorfuncDefault.Xoa].includes(element.functionID) &&
+        data?.status != '0' &&
         data?.status != '1' &&
         data?.status != '2'
       )
         element.disabled = true;
       if (Object.values(MorfuncCash).includes(element.functionID)) {
         switch (data?.status) {
+          case '0':
+            if (
+              ![
+                MorfuncCash.KiemTraHopLePC,
+                MorfuncCash.KiemTraHopLeUNC,
+                MorfuncCash.InPC,
+                MorfuncCash.InUNC,
+              ].includes(element.functionID)
+            )
+              element.disabled = true;
+            break;
           case '1':
-            if (!data?.validated) {
+            if (journal.approvalControl == '0') {
               if (
                 ![
-                  MorfuncCash.KiemTraHopLePC,
-                  MorfuncCash.KiemTraHopLeUNC,
+                  MorfuncCash.GhiSoPC,
+                  MorfuncCash.GhiSoUNC,
+                  MorfuncCash.InPC,
+                  MorfuncCash.InUNC,
+                  MorfuncCash.ChuyenTienDienTu,
+                ].includes(element.functionID)
+              )
+                element.disabled = true;
+            } else {
+              if (
+                ![
+                  MorfuncCash.GuiDuyetPC,
+                  MorfuncCash.GuiDuyetUNC,
                   MorfuncCash.InPC,
                   MorfuncCash.InUNC,
                 ].includes(element.functionID)
               )
                 element.disabled = true;
-            } else {
-              if (journal.approvalControl == '0') {
-                if (
-                  ![
-                    MorfuncCash.GhiSoPC,
-                    MorfuncCash.GhiSoUNC,
-                    MorfuncCash.InPC,
-                    MorfuncCash.InUNC,
-                    MorfuncCash.ChuyenTienDienTu,
-                  ].includes(element.functionID)
-                )
-                  element.disabled = true;
-              } else {
-                if (
-                  ![
-                    MorfuncCash.GuiDuyetPC,
-                    MorfuncCash.GuiDuyetUNC,
-                    MorfuncCash.InPC,
-                    MorfuncCash.InUNC,
-                  ].includes(element.functionID)
-                )
-                  element.disabled = true;
-              }
             }
             break;
 
@@ -599,7 +599,7 @@ export class CodxAcService {
             break;
         }
       }
-      event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
+      //event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
     }, {});
   }
 
@@ -618,45 +618,45 @@ export class CodxAcService {
       }
       if (
         [MorfuncDefault.Sua, MorfuncDefault.Xoa].includes(element.functionID) &&
+        data?.status != '0' &&
         data?.status != '1' &&
         data?.status != '2'
       )
         element.disabled = true;
       if (Object.values(MorfuncCashReceipt).includes(element.functionID)) {
         switch (data?.status) {
+          case '0':
+            if (
+              ![
+                MorfuncCashReceipt.KiemTraHopLePT,
+                MorfuncCashReceipt.KiemTraHopLeBC,
+                MorfuncCashReceipt.InPT,
+                MorfuncCashReceipt.InBC,
+              ].includes(element.functionID)
+            )
+              element.disabled = true;
+            break;
           case '1':
-            if (!data?.validated) {
+            if (journal.approvalControl == '0') {
               if (
                 ![
-                  MorfuncCashReceipt.KiemTraHopLePT,
-                  MorfuncCashReceipt.KiemTraHopLeBC,
+                  MorfuncCashReceipt.GhiSoPT,
+                  MorfuncCashReceipt.GhiSoBC,
                   MorfuncCashReceipt.InPT,
                   MorfuncCashReceipt.InBC,
                 ].includes(element.functionID)
               )
                 element.disabled = true;
             } else {
-              if (journal.approvalControl == '0') {
-                if (
-                  ![
-                    MorfuncCashReceipt.GhiSoPT,
-                    MorfuncCashReceipt.GhiSoBC,
-                    MorfuncCashReceipt.InPT,
-                    MorfuncCashReceipt.InBC,
-                  ].includes(element.functionID)
-                )
-                  element.disabled = true;
-              } else {
-                if (
-                  ![
-                    MorfuncCashReceipt.GuiDuyetPT,
-                    MorfuncCashReceipt.GuiDuyetBC,
-                    MorfuncCashReceipt.InPT,
-                    MorfuncCashReceipt.InBC,
-                  ].includes(element.functionID)
-                )
-                  element.disabled = true;
-              }
+              if (
+                ![
+                  MorfuncCashReceipt.GuiDuyetPT,
+                  MorfuncCashReceipt.GuiDuyetBC,
+                  MorfuncCashReceipt.InPT,
+                  MorfuncCashReceipt.InBC,
+                ].includes(element.functionID)
+              )
+                element.disabled = true;
             }
             break;
 
@@ -714,7 +714,7 @@ export class CodxAcService {
             break;
         }
       }
-      event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
+      //event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
     }, {});
   }
 
@@ -733,39 +733,39 @@ export class CodxAcService {
       }
       if (
         [MorfuncDefault.Sua, MorfuncDefault.Xoa].includes(element.functionID) &&
+        data?.status != '0' &&
         data?.status != '1' &&
         data?.status != '2'
       )
         element.disabled = true;
       if (Object.values(MorfuncGeneralJournals).includes(element.functionID)) {
         switch (data?.status) {
+          case '0':
+            if (
+              ![
+                MorfuncGeneralJournals.KiemTraHopLe,
+                MorfuncGeneralJournals.In,
+              ].includes(element.functionID)
+            )
+              element.disabled = true;
+            break;
           case '1':
-            if (!data?.validated) {
+            if (journal.approvalControl == '0') {
               if (
                 ![
-                  MorfuncGeneralJournals.KiemTraHopLe,
+                  MorfuncGeneralJournals.GhiSo,
                   MorfuncGeneralJournals.In,
                 ].includes(element.functionID)
               )
                 element.disabled = true;
             } else {
-              if (journal.approvalControl == '0') {
-                if (
-                  ![
-                    MorfuncGeneralJournals.GhiSo,
-                    MorfuncGeneralJournals.In,
-                  ].includes(element.functionID)
-                )
-                  element.disabled = true;
-              } else {
-                if (
-                  ![
-                    MorfuncGeneralJournals.GuiDuyet,
-                    MorfuncGeneralJournals.In,
-                  ].includes(element.functionID)
-                )
-                  element.disabled = true;
-              }
+              if (
+                ![
+                  MorfuncGeneralJournals.GuiDuyet,
+                  MorfuncGeneralJournals.In,
+                ].includes(element.functionID)
+              )
+                element.disabled = true;
             }
             break;
 
@@ -815,7 +815,7 @@ export class CodxAcService {
             break;
         }
       }
-      event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
+      //event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
     }, {});
   }
 
@@ -916,7 +916,7 @@ export class CodxAcService {
             break;
         }
       }
-      event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
+      //event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
     }, {});
   }
 
@@ -935,38 +935,38 @@ export class CodxAcService {
       }
       if (
         [MorfuncDefault.Sua, MorfuncDefault.Xoa].includes(element.functionID) &&
+        data?.status != '0' &&
         data?.status != '1' &&
         data?.status != '2'
       )
         element.disabled = true;
       if (Object.values(MorfuncPur).includes(element.functionID)) {
         switch (data?.status) {
+          case '0':
+            if (
+              ![MorfuncPur.KiemTraHopLe, MorfuncPur.In].includes(
+                element.functionID
+              )
+            )
+              element.disabled = true;
+            break;
           case '1':
-            if (!data?.validated) {
+            if (journal.approvalControl == '0') {
               if (
-                ![MorfuncPur.KiemTraHopLe, MorfuncPur.In].includes(
+                ![
+                  MorfuncPur.GhiSo,
+                  MorfuncPur.In,
+                  MorfuncPur.PhanBoChiPhi,
+                ].includes(element.functionID)
+              )
+                element.disabled = true;
+            } else {
+              if (
+                ![MorfuncPur.GuiDuyet, MorfuncPur.In].includes(
                   element.functionID
                 )
               )
                 element.disabled = true;
-            } else {
-              if (journal.approvalControl == '0') {
-                if (
-                  ![
-                    MorfuncPur.GhiSo,
-                    MorfuncPur.In,
-                    MorfuncPur.PhanBoChiPhi,
-                  ].includes(element.functionID)
-                )
-                  element.disabled = true;
-              } else {
-                if (
-                  ![MorfuncPur.GuiDuyet, MorfuncPur.In].includes(
-                    element.functionID
-                  )
-                )
-                  element.disabled = true;
-              }
             }
             break;
 
@@ -1010,7 +1010,7 @@ export class CodxAcService {
             break;
         }
       }
-      event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
+      //event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
     }, {});
   }
 
@@ -1029,42 +1029,42 @@ export class CodxAcService {
       }
       if (
         [MorfuncDefault.Sua, MorfuncDefault.Xoa].includes(element.functionID) &&
+        data?.status != '0' &&
         data?.status != '1' &&
         data?.status != '2'
       )
         element.disabled = true;
       if (Object.values(MorfuncSale).includes(element.functionID)) {
         switch (data?.status) {
+          case '0':
+            if (
+              ![
+                MorfuncSale.KiemTraHopLe,
+                MorfuncSale.In,
+                MorfuncSale.demo,
+              ].includes(element.functionID)
+            )
+              element.disabled = true;
+            break;
           case '1':
-            if (!data?.validated) {
+            if (journal.approvalControl == '0') {
               if (
                 ![
-                  MorfuncSale.KiemTraHopLe,
+                  MorfuncSale.GhiSo,
                   MorfuncSale.In,
                   MorfuncSale.demo,
                 ].includes(element.functionID)
               )
                 element.disabled = true;
             } else {
-              if (journal.approvalControl == '0') {
-                if (
-                  ![
-                    MorfuncSale.GhiSo,
-                    MorfuncSale.In,
-                    MorfuncSale.demo,
-                  ].includes(element.functionID)
-                )
-                  element.disabled = true;
-              } else {
-                if (
-                  ![
-                    MorfuncSale.GuiDuyet,
-                    MorfuncSale.In,
-                    MorfuncSale.demo,
-                  ].includes(element.functionID)
-                )
-                  element.disabled = true;
-              }
+              if (
+                ![
+                  MorfuncSale.GuiDuyet,
+                  MorfuncSale.In,
+                  MorfuncSale.demo,
+                ].includes(element.functionID)
+              )
+                element.disabled = true;
             }
             break;
 
@@ -1116,7 +1116,7 @@ export class CodxAcService {
             break;
         }
       }
-      event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
+      //event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
     }, {});
   }
 
@@ -1135,45 +1135,45 @@ export class CodxAcService {
       }
       if (
         [MorfuncDefault.Sua, MorfuncDefault.Xoa].includes(element.functionID) &&
+        data?.status != '0' &&
         data?.status != '1' &&
         data?.status != '2'
       )
         element.disabled = true;
       if (Object.values(MorfuncVoucher).includes(element.functionID)) {
         switch (data?.status) {
+          case '0':
+            if (
+              ![
+                MorfuncVoucher.KiemTraHopLeNK,
+                MorfuncVoucher.KiemTraHopLeXK,
+                MorfuncVoucher.InNK,
+                MorfuncVoucher.InXK,
+              ].includes(element.functionID)
+            )
+              element.disabled = true;
+            break;
           case '1':
-            if (!data?.validated) {
+            if (journal.approvalControl == '0') {
               if (
                 ![
-                  MorfuncVoucher.KiemTraHopLeNK,
-                  MorfuncVoucher.KiemTraHopLeXK,
+                  MorfuncVoucher.GhiSoNK,
+                  MorfuncVoucher.GhiSoXK,
                   MorfuncVoucher.InNK,
                   MorfuncVoucher.InXK,
                 ].includes(element.functionID)
               )
                 element.disabled = true;
             } else {
-              if (journal.approvalControl == '0') {
-                if (
-                  ![
-                    MorfuncVoucher.GhiSoNK,
-                    MorfuncVoucher.GhiSoXK,
-                    MorfuncVoucher.InNK,
-                    MorfuncVoucher.InXK,
-                  ].includes(element.functionID)
-                )
-                  element.disabled = true;
-              } else {
-                if (
-                  ![
-                    MorfuncVoucher.GuiDuyetNK,
-                    MorfuncVoucher.GuiDuyetXK,
-                    MorfuncVoucher.InNK,
-                    MorfuncVoucher.InXK,
-                  ].includes(element.functionID)
-                )
-                  element.disabled = true;
-              }
+              if (
+                ![
+                  MorfuncVoucher.GuiDuyetNK,
+                  MorfuncVoucher.GuiDuyetXK,
+                  MorfuncVoucher.InNK,
+                  MorfuncVoucher.InXK,
+                ].includes(element.functionID)
+              )
+                element.disabled = true;
             }
             break;
 
@@ -1231,7 +1231,7 @@ export class CodxAcService {
             break;
         }
       }
-      event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
+      //event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
     }, {});
   }
 
@@ -1250,36 +1250,36 @@ export class CodxAcService {
       }
       if (
         [MorfuncDefault.Sua, MorfuncDefault.Xoa].includes(element.functionID) &&
+        data?.status != '0' &&
         data?.status != '1' &&
         data?.status != '2'
       )
         element.disabled = true;
       if (Object.values(MorfuncTranfers).includes(element.functionID)) {
         switch (data?.status) {
+          case '0':
+            if (
+              ![MorfuncTranfers.KiemTraHopLe, MorfuncTranfers.In].includes(
+                element.functionID
+              )
+            )
+              element.disabled = true;
+            break;
           case '1':
-            if (!data?.validated) {
+            if (journal.approvalControl == '0') {
               if (
-                ![MorfuncTranfers.KiemTraHopLe, MorfuncTranfers.In].includes(
+                ![MorfuncTranfers.GhiSo, MorfuncTranfers.In].includes(
                   element.functionID
                 )
               )
                 element.disabled = true;
             } else {
-              if (journal.approvalControl == '0') {
-                if (
-                  ![MorfuncTranfers.GhiSo, MorfuncTranfers.In].includes(
-                    element.functionID
-                  )
+              if (
+                ![MorfuncTranfers.GuiDuyet, MorfuncTranfers.In].includes(
+                  element.functionID
                 )
-                  element.disabled = true;
-              } else {
-                if (
-                  ![MorfuncTranfers.GuiDuyet, MorfuncTranfers.In].includes(
-                    element.functionID
-                  )
-                )
-                  element.disabled = true;
-              }
+              )
+                element.disabled = true;
             }
             break;
 
@@ -1325,7 +1325,7 @@ export class CodxAcService {
             break;
         }
       }
-      event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
+      //event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
     }, {});
   }
 

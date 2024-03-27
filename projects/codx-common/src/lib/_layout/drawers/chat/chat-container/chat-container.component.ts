@@ -15,6 +15,7 @@ import { ɵglobal as global } from '@angular/core';
 import { CodxChatBoxComponent } from '../chat-box/chat-box.component';
 import { SignalRService } from '../services/signalr.service';
 import { CHAT } from '../models/chat-const.model';
+import { Subscription } from 'rxjs';
 declare var window: any;
 
 @Component({
@@ -35,6 +36,7 @@ export class CodxChatContainerComponent implements OnInit, OnDestroy {
     display: flex;
     justify-content: end;`);
   }
+  subscriptions = new Subscription();
   lstGroupActive: Array<any> = [];
   lstGroupCollapse: Array<any> = [];
   constructor
@@ -54,7 +56,7 @@ export class CodxChatContainerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {}
 
   ngAfterViewInit() {
-    this.signalRSV.openBoxChat
+    let subscribe1 = this.signalRSV.openBoxChat
     .subscribe((group: any) => {
       if (group) 
       {
@@ -62,7 +64,7 @@ export class CodxChatContainerComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.signalRSV.addGroup
+    let subscribe2 = this.signalRSV.addGroup
     .subscribe((groupID:any) => {
       if(groupID)
       {
@@ -83,7 +85,7 @@ export class CodxChatContainerComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.signalRSV.removeGroup
+    let subscribe3 = this.signalRSV.removeGroup
     .subscribe((groupID:any) => {
       if(groupID)
       {
@@ -103,8 +105,14 @@ export class CodxChatContainerComponent implements OnInit, OnDestroy {
         this.dt.detectChanges();
       }
     });
+
+    this.subscriptions.add(subscribe1);
+    this.subscriptions.add(subscribe2);
+    this.subscriptions.add(subscribe3);
   }
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 
   handleBoxChat(data: any) {
     if(!data) return;

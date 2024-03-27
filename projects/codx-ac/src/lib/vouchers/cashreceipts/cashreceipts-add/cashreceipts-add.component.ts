@@ -384,6 +384,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   valueChangeLine(event: any) {
     let oLine = event.data;
     let field = event.field;
+    if(field.toLowerCase() === 'settledno') oLine.settledID = event?.itemData?.RecID;
     this.eleGridCashReceipt.startProcess();
     this.api.exec('AC','CashReceiptsLinesBusiness','ValueChangedAsync',[this.master.data,oLine,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       Object.assign(oLine, res);
@@ -660,6 +661,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         this.isPreventChange = true;
         this.master.setValue('currencyID',res?.data?.currencyID,{});
         this.master.setValue('exchangeRate',(res?.data?.exchangeRate),{});
+        this.master.data.cashBookName = res?.data?.cashBookName;
         this.isPreventChange = false;
         this.preData = {...this.master?.data};
         if(res?.isRefreshGrid){
@@ -871,20 +873,19 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @param typeSettledInvoices
    */
   addSettledInvoices() {
-    let objectName = '';
-    let indexObject =
-      this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex(
-        (x) => x.ObjectID == this.master.data.objectID
-      );
-    if (indexObject > -1) {
-      objectName =
-        this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject]
-          .ObjectName;
+    let data = {};
+    data['master'] = this.master.data;
+    if(this.master.data.subType == (this.journal.journalType + '9')){
+      if (this.eleGridCashReceipt && this.eleGridCashReceipt.rowDataSelected && this.eleGridCashReceipt.rowDataSelected.objectID) {
+        data['line'] = this.eleGridCashReceipt.rowDataSelected;
+      }else{
+        this.notification.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.master.gridviewSetup['ObjectID']?.headerText + '"'
+        );
+      }
     }
-    let obj = {
-      cashpayment: this.master.data,
-      objectName: objectName,
-    };
     let opt = new DialogModel();
     let dataModel = new FormModel();
     opt.FormModel = dataModel;
@@ -894,7 +895,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
       null,
       null,
       '',
-      obj,
+      data,
       '',
       opt
     );

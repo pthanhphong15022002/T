@@ -158,6 +158,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   dataValueRef = ''
   //dataType RM
   remindDefault: any
+  remindDataValue: any
   // remindDefault = {  // default value remind setting
   //   isAlert: false,
   //   isMail: false,
@@ -167,6 +168,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
   // }
   rulerNo = 'CM_20010'; //tesst
   copiedTempMail = false;
+  isAddNewTemp = false;
+  dataValueOld: any
 
   constructor(
     private cache: CacheService,
@@ -199,6 +202,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.dataValueOld = this.customField.dataValue
     //gia tri tung form
     if (this.refVersion && this.customField?.versions?.length > 0) {
       let idx = this.customField.versions.findIndex(
@@ -380,7 +384,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
           this.dataValueCaculate = this.customField.dataValue;
         break;
       case 'RM':
-        this.remindDefault = JSON.parse(this.customField.dataValue);
+        this.remindDataValue = JSON.parse(this.customField?.dataValue)
+        this.remindDefault = JSON.parse(this.customField?.defaultValue);
         break;
     }
   }
@@ -1176,18 +1181,20 @@ export class CodxInputCustomFieldComponent implements OnInit {
   }
 
   settingRemindMail() {
-    if (this.remindDefault?.emailTemplate != this.customField.recID) {
+    if (!this.dataValueOld) {
       let obj = [
         this.remindDefault?.emailTemplate, [this.customField.recID]
       ]
       this.api.execSv<any>("SYS", "AD", "EmailTemplatesBusiness", "CopyEmailTemplateByRecIDAsync", obj).subscribe(res => {
         if (res) {
-          this.openPopupSettingRemind(this.customField.recID)
-          this.isCreatedTempletMail.emit(this.customField.recID)
+          this.isAddNewTemp = false
           this.copiedTempMail = true;
-        } else this.openPopupSettingRemind(this.customField.recID);
+          this.openPopupSettingRemind(this.customField.recID)
+        } else { this.isAddNewTemp = true, this.openPopupSettingRemind(this.customField.recID); }
       })
-    } else this.openPopupSettingRemind(this.remindDefault.emailTemplate)
+    } else {
+      this.checkAddNewTemp(this.remindDataValue?.emailTemplate);
+    }
   }
 
   openPopupSettingRemind(templateID) {
@@ -1199,7 +1206,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
       showIsPublish: true,
       showSendLater: true,
       files: null,
-      isAddNew: this.isAdd,
+      isAddNew: this.isAddNewTemp,
       notSendMail: true,
     };
 
@@ -1213,25 +1220,43 @@ export class CodxInputCustomFieldComponent implements OnInit {
     );
     popEmail.closed.subscribe((res) => {
       if (res && res.event) {
-        //done làm gi
+        let recIDTemp = res.event?.recID
+        if (this.isAddNewTemp) {
+          this.remindDataValue['emailTemplate'] = recIDTemp;
+          this.valueChangeCustom.emit({
+            e: JSON.stringify(this.remindDataValue),
+            data: this.customField,
+          });
+        }
         if (!this.copiedTempMail)
-          this.isCreatedTempletMail.emit(this.customField.recID)
+          this.isCreatedTempletMail.emit(recIDTemp)
+
+        //done làm gi
+        this.isAddNewTemp = false
+        this.dataValueOld = this.remindDataValue;
       }
     });
   }
   valueChangeTimeRM(e) {
-    this.remindDefault['dateRemind'] = e?.data?.fromDate;
+    this.remindDataValue['dateRemind'] = e?.data?.fromDate;
     this.valueChangeCustom.emit({
-      e: JSON.stringify(this.remindDefault),
+      e: JSON.stringify(this.remindDataValue),
       data: this.customField,
     });
   }
   valueChangeRM(e) {
-    this.remindDefault['reminderTime'] = e?.data;
+    this.remindDataValue['reminderTime'] = e?.data;
     this.valueChangeCustom.emit({
-      e: JSON.stringify(this.remindDefault),
+      e: JSON.stringify(this.remindDataValue),
       data: this.customField,
     });
+  }
+
+  checkAddNewTemp(recID) {
+    this.api.execSv<any>("SYS", "AD", "EmailTemplatesBusiness", "IsExitTempletAsync", recID).subscribe(res => {
+      this.isAddNewTemp = !res;
+      this.openPopupSettingRemind(recID)
+    })
   }
   //-------------END -RM-------------//
 }

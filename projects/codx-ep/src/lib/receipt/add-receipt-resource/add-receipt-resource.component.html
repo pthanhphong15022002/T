@@ -48,9 +48,8 @@
     <div class="form-group">
       <codx-label fiedName="Title" [formModel]="form?.formModel">
       </codx-label>
-      <codx-input field="title" (valueChange)="valueChange($event)" ControlName="Title" [formModel]="form?.formModel"
-        [Group]="form?.formGroup" [disabled]="viewOnly">
-      </codx-input>
+      <codx-input ControlName="title" [formModel]="form.formModel" [Group]="form.formGroup"
+        [disabled]="viewOnly"></codx-input>
     </div>
     <!-- <div class="form-group">
       <codx-label fiedName="ReasonID" [formModel]="form?.formModel">
