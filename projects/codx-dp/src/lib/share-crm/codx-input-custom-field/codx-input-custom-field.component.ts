@@ -29,6 +29,7 @@ import {
 import { PopupSelectFieldReferenceComponent } from './popup-select-field-reference/popup-select-field-reference.component';
 import moment from 'moment';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
 @Component({
   selector: 'codx-input-custom-field',
@@ -153,6 +154,16 @@ export class CodxInputCustomFieldComponent implements OnInit {
   valCheckBox = [];
   isChange = false;
   dataValueRef = ''
+  //dataType RM
+  remindDefault: any
+  // remindDefault = {  // default value remind setting
+  //   isAlert: false,
+  //   isMail: false,
+  //   reminderTime: 5,
+  //   emailTemplate: '',
+  //   dateRemind :''
+  // }
+  rulerNo = 'CM_20010'; //tesst
 
   constructor(
     private cache: CacheService,
@@ -364,6 +375,9 @@ export class CodxInputCustomFieldComponent implements OnInit {
           !this.isExitOperator(this.customField.dataValue)
         )
           this.dataValueCaculate = this.customField.dataValue;
+        break;
+      case 'RM':
+        this.remindDefault = JSON.parse(this.customField.dataValue);
         break;
     }
   }
@@ -933,12 +947,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   //-------------CheckBox-----------------//
   valueChangeCheckBox(e, value) {
-    // let value = [];
-    // if (this.customField.dataValue)
-    //   this.valCheckBox = this.customField.dataValue.split(';');
     if (e.checked) {
       if (this.mutiSelectVll) {
-        // this.valCheckBox = this.valCheckBox.filter((x) => x != e.field);
         this.valCheckBox.push(value);
       } else this.valCheckBox = [value];
     } else {
@@ -946,19 +956,6 @@ export class CodxInputCustomFieldComponent implements OnInit {
         this.valCheckBox = this.valCheckBox.filter((x) => x != value);
       } else this.valCheckBox = [];
     }
-
-    //dung core fail
-    // if (e.data) {
-    //   if (this.mutiSelectVll) {
-    //     // this.valCheckBox = this.valCheckBox.filter((x) => x != e.field);
-    //     this.valCheckBox.push(e.field);
-    //   } else this.valCheckBox = [e.field];
-    // } else {
-    //   if (this.mutiSelectVll) {
-    //     this.valCheckBox = this.valCheckBox.filter((x) => x != e.field);
-    //   } else this.valCheckBox = [];
-    // }
-
     let dtValue = '';
     if (this.valCheckBox?.length > 0) dtValue = this.valCheckBox.join(';');
     this.valueChangeCustom.emit({
@@ -1165,4 +1162,48 @@ export class CodxInputCustomFieldComponent implements OnInit {
     this.isShowMore = !this.isShowMore;
     this.rezisePopup.emit(this.widthRezise);
   }
+  //----------Field -RM ------------//
+  valueChangeChbx(e) {
+    if (this.remindDefault[e.field] == e.data) return
+    this.remindDefault[e.field] = e.data;
+    this.valueChangeCustom.emit({
+      e: JSON.stringify(this.remindDefault),
+      data: this.customField,
+    });
+  }
+
+  openPopupSettingRemind() {
+    let data = {
+      //  dialog: this.dialog,
+      formGroup: null,
+      templateID: this.customField?.recID,
+      showIsTemplate: true,
+      showIsPublish: true,
+      showSendLater: true,
+      files: null,
+      isAddNew: this.isAdd,
+      notSendMail: true,
+    };
+
+    let popEmail = this.callfc.openForm(
+      CodxEmailComponent,
+      '',
+      800,
+      screen.height,
+      '',
+      data
+    );
+    popEmail.closed.subscribe((res) => {
+      if (res && res.event) {
+        //done làm gi
+      }
+    });
+  }
+  valueChangeTimeRM(e) {
+    this.remindDefault['dateRemind'] = e?.data?.fromDate;
+  }
+  valueChangeRM(e) {
+    this.remindDefault['reminderTime'] = e?.data
+  }
+  //-------------END -RM-------------//
 }

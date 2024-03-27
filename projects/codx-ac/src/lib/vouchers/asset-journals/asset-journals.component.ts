@@ -1,4 +1,4 @@
-import { fmAssetJournal } from './../../codx-ac.service';
+import { fmAssetJournal, fmCountingMembers } from './../../codx-ac.service';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -61,6 +61,7 @@ export class AssetJournalsComponent extends UIComponent {
   ViewType = ViewType;
   private destroy$ = new Subject<void>();
   fmAssetJournal = fmAssetJournal;
+  fmCountingMembers = fmCountingMembers;
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
@@ -253,6 +254,7 @@ export class AssetJournalsComponent extends UIComponent {
           let optionSidebar = new SidebarModel();
           optionSidebar.DataService = this.view?.dataService;
           optionSidebar.FormModel = this.fmAssetJournal;
+          optionSidebar.FormModel.funcID = this.view.funcID;
           let dialog = this.callfc.openSide(
             AssetJournalsAddComponent,
             data,
@@ -287,6 +289,7 @@ export class AssetJournalsComponent extends UIComponent {
         let optionSidebar = new SidebarModel();
         optionSidebar.DataService = this.view?.dataService;
         optionSidebar.FormModel = this.fmAssetJournal;
+        optionSidebar.FormModel.funcID = this.view.funcID;
         let dialog = this.callfc.openSide(
           AssetJournalsAddComponent,
           data,
@@ -327,6 +330,7 @@ export class AssetJournalsComponent extends UIComponent {
           let optionSidebar = new SidebarModel();
           optionSidebar.DataService = this.view?.dataService;
           optionSidebar.FormModel = this.fmAssetJournal;
+          optionSidebar.FormModel.funcID = this.view.funcID;
           let dialog = this.callfc.openSide(
             AssetJournalsAddComponent,
             data,
@@ -352,7 +356,14 @@ export class AssetJournalsComponent extends UIComponent {
       .delete([data], true, (option: RequestOption) =>
         this.beforeDelete(option, data)
       )
-      .subscribe((res: any) => {});
+      .subscribe((res: any) => {
+        if(res){
+          this.view.dataService.onAction.next({
+            type: 'delete',
+            data: data,
+          });
+        }
+      });
   }
 
   beforeDelete(opt: RequestOption, data) {

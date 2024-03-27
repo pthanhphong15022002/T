@@ -108,15 +108,15 @@ export const fmGeneralJournalsLinesOne: FormModel = {
 
 export const fmIssueTransfersLines: FormModel = {
   entityName: 'IV_TransfersLines',
-  formName: 'TransfersIssueLines',
-  gridViewName: 'grvTransfersIssueLines',
+  formName: 'TransfersIssues',
+  gridViewName: 'grvTransfersIssues',
   entityPer: 'IV_TransfersLines',
 };
 
 export const fmReceiptTransfersLines: FormModel = {
   entityName: 'IV_TransfersLines',
-  formName: 'TransfersReceiptLines',
-  gridViewName: 'grvTransfersReceiptLines',
+  formName: 'TransfersReceipts',
+  gridViewName: 'grvTransfersReceipts',
   entityPer: 'IV_TransfersLines',
 };
 
@@ -203,7 +203,12 @@ export const fmAssetJournalsLines: FormModel = {
   entityName: 'AM_AssetJournalsLines',
   entityPer: 'AM_AssetJournalsLines',
 };
-
+export const fmCountingMembers: FormModel = {
+  formName: 'CountingMembers',
+  gridViewName: 'grvCountingMembers',
+  entityName: 'AC_CountingMembers',
+  entityPer: 'AC_CountingMembers',
+};
 export enum MorfuncDefault {
   Sua = 'SYS03',
   Xoa = 'SYS02',

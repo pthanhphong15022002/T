@@ -87,7 +87,6 @@ export class InventoryComponent extends UIComponent {
         this.baseCurr = dataValue?.BaseCurr || '';
       })
     this.router.params
-      .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
         this.journalNo = params?.journalNo; //? get số journal từ router
       });

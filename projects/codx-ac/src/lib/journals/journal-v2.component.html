@@ -1,8 +1,25 @@
-<codx-views class="ac-animation-none" [toolbarDisplay]="true" #view [views]="views" [button]="button"
+<ng-container *ngIf="lstGroup">
+  <codx-views class="ac-animation-none" [toolbarDisplay]="true" #view [views]="views" [button]="button"
   [entityName]="view.entityName" (buttonClick)="toolbarClick($event)" (selectedChange)="onSelected($event)"
   (searchChange)="search($event)" (clickMF)="clickMF($event, itemSelected)" (changeDataMF)="changeMF($event)"
-  [hideMoreFuncs]="!itemSelected">
+  [hideMoreFuncs]="!itemSelected" [titleToolBarTmp]="titleToolBarTmp" [predicates]="'Category=@0'" [dataValues]="selectedToolBar">
 </codx-views>
+</ng-container>
+
+<ng-template #titleToolBarTmp let-data>
+  <div class="d-flex align-items-center">
+    <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3 ms-3"><span class="text-dark text-hover-primary cursor-pointer">{{funcName}}</span></h1>
+    <span class="h-20px border-gray-200 border-start mx-4"></span>
+    <div class="d-flex align-items-center mt-1">
+        <ng-container *ngFor="let item of lstGroup ; let i = index">
+            <div class="me-4 cursor-pointer fw-bold" [class.text-primary]="selectedToolBar == item?.value"
+            (click)="selectedChangeToolBar(item)">
+                <span>{{item?.text}}</span>
+            </div>
+        </ng-container>
+    </div>
+</div>
+</ng-template>
 
 <!-- <ng-template #contentTemplate>
   <div class="px-4 bg-body list-survey h-100">

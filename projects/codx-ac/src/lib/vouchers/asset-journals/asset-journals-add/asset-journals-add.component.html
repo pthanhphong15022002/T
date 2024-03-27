@@ -464,7 +464,63 @@
   </ng-container>
 </ng-template>
 
-<ng-template #TmpTabRevaluations></ng-template>
+<ng-template #TmpTabRevaluations>
+  <ng-container *ngIf="formAsset?.formGroup && isLoad">
+    <div
+      id="gridcash"
+      class="tabline-content header-table-ac position-relative"
+    >
+      <ng-container *ngIf="!formAsset.data?.isReadOnly">
+        <div #btnRef class="btn-addline" style="top: -32px !important;">
+          <div class="d-flex align-items-center">
+            <button
+              style="border: 1px solid !important"
+              tab-index="15"
+              id="btnAddCash"
+              class="btn btn-sm btn-light-primary btnAddCash"
+              (keydown.enter)="addAccountMember(); $event.preventDefault()"
+              (click)="addAccountMember()"
+            >
+              <i class="icon-playlist_add icon-16"></i>
+              <codx-label
+                [formModel]="dialog.formModel"
+                fiedName="lblAddAccount"
+                default="Thêm dòng"
+              ></codx-label>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+      <codx-gridview-v2
+        #eleGridAccountMember
+        class="tabLine"
+        [showEmptyRecord]="false"
+        gridLines="Both"
+        [autoFitColumns]="true"
+        [editSettings]="formAsset.data?.isReadOnly ? editSettings : {}"
+        [formName]="fmCountingMembers.formName"
+        idField="recID"
+        [gridViewName]="fmCountingMembers.gridViewName"
+        [entityName]="fmCountingMembers.entityName"
+        predicates="TransID=@0"
+        [dataValues]="formAsset?.data?.recID"
+        [hideMoreFunc]="true"
+        service="AC"
+        [editOnClick]="formAsset.data?.isReadOnly ? false : true"
+        [isSave]="false"
+        [isOutsideDataSource]="true"
+        [moreFcItems]="'SYS104;SYS102'"
+        rowNoField="rowNo"
+        [moreFcModel]="dialog.formModel"
+        (clickMF)="clickMFAccount($event)"
+        (gridInit)="initGridAccount($event)"
+        (eventAction)="onActionGridAccount($event)"
+        (actionCompleted)="onActionGridAccount($event)"
+        (cellChanged)="valueChangeAccount($event)"
+      ></codx-gridview-v2>
+    </div>
+  </ng-container>
+</ng-template>
 
 <ng-template #TmpTabLine>
   <ng-container *ngIf="formAsset?.formGroup && isLoad">
@@ -513,7 +569,7 @@
               <i class="icon-playlist_add icon-16"></i>
               <codx-label
                 [formModel]="dialog.formModel"
-                fiedName="lblSaveAndClear"
+                fiedName="lblAddLines"
                 default="Thêm dòng"
               ></codx-label>
             </button>
