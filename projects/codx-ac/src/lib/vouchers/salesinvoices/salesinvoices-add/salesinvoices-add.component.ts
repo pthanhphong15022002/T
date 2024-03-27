@@ -20,11 +20,6 @@ import {
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService, fmSalesInvoicesLines, fmVATInvoices } from '../../../codx-ac.service';
-import {
-  IJournal,
-  Vll067,
-  Vll075,
-} from '../../../journals/interfaces/IJournal.interface';
 import { Subject, map, takeUntil } from 'rxjs';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { AC_SalesInvoicesLines } from '../../../models/AC_SalesInvoicesLines.model';
@@ -101,7 +96,6 @@ export class SalesinvoicesAddComponent extends UIComponent {
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(
-        takeUntil(this.destroy$),
         map((arr: any[]) => arr.find((a) => a.category === '1')),
         map((data) => JSON.parse(data.dataValue))
       ).subscribe((res: any) => {
@@ -140,7 +134,11 @@ export class SalesinvoicesAddComponent extends UIComponent {
    * *Hàm thiết lập lưới trước khi init
    * @param eleGrid 
    */
-  beforeInitGridSalesInvoices(eleGrid: CodxGridviewV2Component) {
+  initGridSalesInvoices(eleGrid: CodxGridviewV2Component) {
+    let preAccountID = '';
+    let dtvAccountID = '';
+    let preOffsetAcctID = '';
+    let dtvOffsetAcctID = '';
     let preDIM1 = '';
     let dtvDIM1 = '';
     let preDIM2 = '';
@@ -149,88 +147,86 @@ export class SalesinvoicesAddComponent extends UIComponent {
     let dtvDIM3 = '';
     let hideFields = [];
 
-    if (this.journal.diM1Control == '1' || this.journal.diM1Control == '2') { //? nếu phòng ban là mặc định hoặc trong danh sách
+    if (this.journal.drAcctControl == '1' || this.journal.drAcctControl == '2') {
+      preAccountID = '@0.Contains(AccountID)';
+      dtvAccountID = `[${this.journal?.drAcctID}]`;
+    }
+    eleGrid.setPredicates('accountID', preAccountID, dtvAccountID);
+
+    if (
+      (this.journal.crAcctControl == '1' || this.journal.crAcctControl == '2') &&
+      this.journal.entryMode == '1'
+    ) {
+      preOffsetAcctID = '@0.Contains(AccountID)';
+      dtvOffsetAcctID = `[${this.journal?.crAcctID}]`;
+    }
+    eleGrid.setPredicates('offsetAcctID', preOffsetAcctID, dtvOffsetAcctID);
+
+    if (this.journal.diM1Control == '1' || this.journal.diM1Control == '2') {
       preDIM1 = '@0.Contains(ProfitCenterID)';
       dtvDIM1 = `[${this.journal?.diM1}]`;
     }
     eleGrid.setPredicates('diM1', preDIM1, dtvDIM1);
 
-    if (this.journal.diM2Control == '1' || this.journal.diM2Control == '2') { //? nếu TTCP là mặc định hoặc trong danh sách
+    if (this.journal.diM2Control == '1' || this.journal.diM2Control == '2') {
       preDIM2 = '@0.Contains(CostCenterID)';
       dtvDIM2 = `[${this.journal?.diM2}]`;
     }
     eleGrid.setPredicates('diM2', preDIM2, dtvDIM2);
 
-    if (this.journal.diM3Control == '1' || this.journal.diM3Control == '2') { //? nếu mục phí là mặc định hoặc trong danh sách
+    if (this.journal.diM3Control == '1' || this.journal.diM3Control == '2') {
       preDIM3 = '@0.Contains(CostItemID)';
       dtvDIM3 = `[${this.journal?.diM3}]`;
     }
     eleGrid.setPredicates('diM3', preDIM3, dtvDIM3);
 
-    //* Thiết lập ẩn hiện các cột theo sổ nhật ký
-    if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
-      hideFields = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
-    }
+    if (this.journal.diM1Control == "0") hideFields.push("DIM1");
+    if (this.journal.diM2Control == "0") hideFields.push("DIM2");
+    if (this.journal.diM3Control == "0") hideFields.push("DIM3");
+    if (this.journal.projectControl == "0") hideFields.push("ProjectID");
+    if (this.journal.loanControl == "0") hideFields.push("ContractID");
+    if (this.journal.assetControl == "0"){
+      hideFields.push("AssetGroupID");
+      hideFields.push("AssetType");
+    } 
+    if (this.journal.subControl == "0") hideFields.push("ObjectID");
 
-    if (!this.journal.useDutyTax) { //? không sử dụng thuế xuất nhập khẩu (ẩn)
+    let array = this.journal.idimControl.split(';');
+    for (let index = 0; index < 10; index++) {
+      if(array.includes(index.toString())) hideFields.push("IDIM"+index);
+    }
+    if (!this.journal.useDutyTax) {
       hideFields.push('SalesTaxPct');
       hideFields.push('SalesTaxAmt');
       hideFields.push('SalesTaxAmt2');
-    } else {
-      if (this.master?.data?.currencyID == this.baseCurr) hideFields.push('SalesTaxAmt2');
+    }else{
+      if (this.dataDefault && this.dataDefault?.currencyID == this.baseCurr) hideFields.push('SalesTaxAmt2');
     }
-
-
-    if (!this.journal.useExciseTax) { //? không sử dụng thuế TTĐB (ẩn)
+    if (!this.journal.useExciseTax) {
       hideFields.push('ExciseTaxPct');
       hideFields.push('ExciseTaxAmt');
       hideFields.push('ExciseTaxAmt2');
-    } else {
-      if (this.master?.data?.currencyID == this.baseCurr) hideFields.push('ExciseTaxAmt2');
+    }else{
+      if (this.dataDefault && this.dataDefault?.currencyID == this.baseCurr) hideFields.push('ExciseTaxAmt2');
     }
-
-    if (this.journal.vatControl == '0') { //? không sử dụng thuế GTGT (ẩn)
+    if (this.journal.vatControl == '0') {
       hideFields.push('VATPct');
       hideFields.push('VATAmt');
       hideFields.push('VATBase');
       hideFields.push('VATAmt2');
       hideFields.push('VATBase2');
       hideFields.push('VATID');
-    } else {
-      if (this.master?.data?.currencyID == this.baseCurr) {
+    }else{
+      if (this.dataDefault && this.dataDefault?.currencyID == this.baseCurr){
         hideFields.push('VATAmt2');
         hideFields.push('VATBase2');
       }
     }
-
-    if (this.master?.data?.currencyID == this.baseCurr) { //? nếu không sử dụng ngoại tệ
-      hideFields.push('PurcAmt2');
-      hideFields.push('DiscAmt2');
+    if (this.dataDefault && this.dataDefault?.currencyID == this.baseCurr){
+      hideFields.push('SalesAmt2');
       hideFields.push('NetAmt2');
-      hideFields.push('MiscAmt2');
     }
-
     eleGrid.showHideColumns(hideFields);
-  }
-
-  /**
-   * *Hàm check validate trước khi save line (VATInvoice)
-   * @param data 
-   * @returns 
-   */
-  beforeSaveRowVATInvoice(event: any) {
-    if (event.rowData) {
-      if (event.rowData.quantity == 0 || event.rowData.quantity < 0) {
-        this.eleGridVatInvoices.showErrorField('quantity', 'E0341');
-        event.cancel = true;
-        return;
-      }
-      if (event.rowData.unitPrice == 0 || event.rowData.unitPrice < 0) {
-        this.eleGridVatInvoices.showErrorField('unitPrice', 'E0730');
-        event.cancel = true;
-        return;
-      }
-    }
   }
 
   /**
@@ -257,13 +253,13 @@ export class SalesinvoicesAddComponent extends UIComponent {
    * @param event
    * @param data
    */
-  clickMF(event: any, data) {
-    switch (event.functionID) {
+  clickMF(event: any) {
+    switch (event.event.functionID) {
       case 'SYS104':
-        this.copyRow(data);
+        this.copyRow(event.data);
         break;
       case 'SYS102':
-        this.deleteRow(data);
+        this.deleteRow(event.data);
         break;
     }
   }
@@ -299,30 +295,6 @@ export class SalesinvoicesAddComponent extends UIComponent {
     this.master.setValue('updateColumns', '', {});
     switch (field.toLowerCase()) {
       case 'objectid':
-        let indexob = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
-        if (value == '' || value == null || indexob == -1) {
-          this.isPreventChange = true;
-          let memo = this.getMemoMaster();
-          this.master.setValue(field, null, {});
-          this.master.setValue('objectName', null, {});
-          this.master.setValue('objectType', null, {});
-          this.master.setValue('address', null, {});
-          this.master.setValue('taxCode', null, {});
-          this.master.setValue('warehouseID', null, {});
-          this.master.setValue('pmtMethodID', null, {});
-          this.master.setValue('pmtTermID', null, {});
-          this.master.setValue('delModeID', null, {});
-          this.master.setValue('memo', memo, {});
-          this.master.data.pmtMethodName = null;
-          this.master.data.pmtTermName = null;
-          this.detectorRef.detectChanges();
-          this.isPreventChange = false;
-          return;
-        }
-        let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
-        this.master.setValue('objectType', objectType, {});
-        let memo = this.getMemoMaster();
-        this.master.setValue('memo', memo, {});
         this.objectIDChange(field);
         break;
 
@@ -368,22 +340,12 @@ export class SalesinvoicesAddComponent extends UIComponent {
         if (value == null) return;
         this.voucherDateChange(field);
         break;
-      case 'pmtmethodid':
-        let indexpmtmethod = event?.component?.dataService?.data.findIndex((x) => x.PmtMethodID == event.data);
-        if (value == '' || value == null || indexpmtmethod == -1) {
-          this.master.data.pmtMethodName = null;
-          return;
-        }
-        this.master.data.pmtMethodName = event?.component?.dataService?.data[indexpmtmethod].PmtMethodName;
-        break;
-      case 'pmttermid':
-        let indexpmtterm = event?.component?.dataService?.data.findIndex((x) => x.PmtTermID == event.data);
-        if (value == '' || value == null || indexpmtterm == -1) {
-          this.master.data.pmtTermName = null;
-          return;
-        }
-        this.master.data.pmtTermName = event?.component?.dataService?.data[indexpmtterm].PmtTermName;
-        break;
+        case 'pmtmethodid':
+          this.pmtMethodIDChange(field);
+          break;
+        case 'pmttermid':
+          this.pmtTermIDChange(field);
+          break;
       case 'salespersonid':
         let indexsalesperson = event?.component?.dataService?.data.findIndex((x) => x.SalespersonID == event.data);
         if (value == '' || value == null || indexsalesperson == -1) {
@@ -570,22 +532,12 @@ export class SalesinvoicesAddComponent extends UIComponent {
    * *Hàm thêm mới dòng cashpayments
    */
   addLine() {
-    let oLine = this.setDefaultLine();
-    this.eleGridSalesInvoice.addRow(oLine, this.eleGridSalesInvoice.dataSource.length);
-  }
-
-  /**
-   * *Hàm set data mặc định từ master khi thêm dòng mới
-   */
-  setDefaultLine() {
-    let model = new AC_SalesInvoicesLines();
-    let oLine = Util.camelizekeyObj(model);
-    oLine.transID = this.master.data.recID;
-    oLine.idiM4 = this.master.data.warehouseID;
-    oLine.note = this.master.data.memo;
-    oLine = this.genFixedDims(oLine);
-    oLine = this.acService.getDataSettingFromJournal(oLine, this.journal);
-    return oLine;
+    this.api.exec('AC','SalesInvoicesLinesBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      if (res) {
+        this.eleGridSalesInvoice.addRow(res, this.eleGridSalesInvoice.dataSource.length);
+      }
+      this.onDestroy();
+    })
   }
 
   /**
@@ -643,6 +595,8 @@ export class SalesinvoicesAddComponent extends UIComponent {
           this.master.setValue('multi', (res?.data?.multi), {});
           this.master.data.pmtMethodName = res?.data?.pmtMethodName;
           this.master.data.pmtTermName = res?.data?.pmtTermName;
+          let memo = this.getMemoMaster();
+          this.master.setValue('memo', memo, {});
           if (this.eleGridSalesInvoice.dataSource.length) {
             this.master.preData = { ...this.master.data };
             this.dialog.dataService.update(this.master.data).subscribe();
@@ -654,6 +608,36 @@ export class SalesinvoicesAddComponent extends UIComponent {
           this.isPreventChange = false;
           this.detectorRef.detectChanges();
         }
+      })
+  }
+
+  pmtMethodIDChange(field: any) {
+    this.api.exec('AC', 'SalesInvoicesBusiness', 'ValueChangedAsync', [
+      field,
+      this.master.data,
+      ''
+    ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {
+          this.master.data.pmtMethodName = res?.data?.pmtMethodName;
+        }
+        this.onDestroy();
+      })
+  }
+
+  pmtTermIDChange(field: any) {
+    this.api.exec('AC', 'SalesInvoicesBusiness', 'ValueChangedAsync', [
+      field,
+      this.master.data,
+      ''
+    ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {
+          this.master.data.pmtTermName = res?.data?.pmtTermName;
+        }
+        this.onDestroy();
       })
   }
 
@@ -835,13 +819,14 @@ export class SalesinvoicesAddComponent extends UIComponent {
    * @param data
    */
   copyRow(data) {
+    let newData = {...data};
     if (this.eleGridSalesInvoice) {
       this.eleGridSalesInvoice.saveRow((res: any) => { //? save lưới trước
         if (res) {
-          data.recID = Util.uid();
-          data.index = this.eleGridSalesInvoice.dataSource.length;
-          delete data?._oldData;
-          this.eleGridSalesInvoice.addRow(data, this.eleGridSalesInvoice.dataSource.length);
+          newData.recID = Util.uid();
+          newData.index = this.eleGridSalesInvoice.dataSource.length;
+          delete newData?._oldData;
+          this.eleGridSalesInvoice.addRow(newData, this.eleGridSalesInvoice.dataSource.length);
         }
       })
     }
@@ -890,15 +875,15 @@ export class SalesinvoicesAddComponent extends UIComponent {
   showHideTabMaster(type, eleTab) {
     if (eleTab) {
       switch (type) {
-        case '1':
-        case '4':
-        case '5':
+        case `${this.journal.journalType+'1'}`:
+        case `${this.journal.journalType+'4'}`:
+        case `${this.journal.journalType+'5'}`:
           eleTab.hideTab(0, false);
           eleTab.hideTab(1, false);
           eleTab.hideTab(2, true);
           break;
-        case '2':
-        case '3':
+        case `${this.journal.journalType+'2'}`:
+        case `${this.journal.journalType+'3'}`:
           eleTab.hideTab(0, false);
           eleTab.hideTab(1, false);
           eleTab.hideTab(2, false);
@@ -922,7 +907,6 @@ export class SalesinvoicesAddComponent extends UIComponent {
             setTimeout(() => {
               if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
                 e.target.focus();
-                e.target.select();
               }
             }, 100);
           }

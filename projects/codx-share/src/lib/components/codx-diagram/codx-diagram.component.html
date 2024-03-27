@@ -1,17 +1,23 @@
 <div class="container-fluid h-100 p-0 control-section diagram-drawing-tool p-1">
-  <button class="btn btn-danger" (click)="clickchoi()">Get JSON data</button>
-<button class="btn btn-info ms-3" (click)="clickPan(true)">zoom Pan</button>
-<button class="btn btn-danger ms-3" (click)="clickPan(false)">
-  stop zoom Pan
-</button>
-<button class="btn btn-success ms-3" (click)="clickForm()">
-  chỉnh nè
-</button>
-<button class="btn btn-success ms-3" (click)="clickRF()">
-  tải lại
-</button>
+  <div class="row h-35px w-100" *ngIf="!viewOnly">
+    <div class="col d-flex float-start">
+      <button class="btn btn-danger" (click)="clickchoi()">Get JSON data</button>
+      <button class="btn btn-info ms-3" (click)="clickPan(true)">zoom Pan</button>
+      <button class="btn btn-danger ms-3" (click)="clickPan(false)">
+        stop zoom Pan
+      </button>
+      <button class="btn btn-success ms-3" (click)="clickForm()">
+        chỉnh nè
+      </button>
+      <button class="btn btn-success ms-3" (click)="clickRF()">
+        tải lại
+      </button>
+    </div>
+
+  </div>
+
   <div class="row" style="height: calc(100% - 35px)">
-    <div style="width: 10%" class="dragarea property-section border ">
+    <div style="width: 10%" class="dragarea property-section border " [ngClass]="viewOnly ? 'd-none': ''">
       <div
         cdkDropList
         class="w-100 h-100 pt-5"
@@ -183,11 +189,9 @@
         </div>
     </div> -->
     </div>
-    <div style="width: 90%; height: 100%" class="diagramzone border ">
+    <div style="width: 90%; height: 100%" class="diagramzone border " [ngClass]="viewOnly ? 'w-100': ''">
       <ejs-diagram
         #diagram
-        [nodes]="defaultData"
-        [connectors]="defaultCnn"
         [snapSettings]="snapSettings"
         (created)="created()"
         (mouseEnter)="mouseEnter($event)"
@@ -200,11 +204,12 @@
         (positionChange)="onDrop($event)"
         [selectedItems]="selectedItems"
         (onUserHandleMouseDown)="userHandleClick($event)"
+        (collectionChange)="collectionChange($event)"
         [drawingObject]=" { type: 'Orthogonal' }"
         [serializationSettings]="{preventDefaults: true}"
       >
         <ng-template #nodeTemplate let-data>
-          <ng-container [ngSwitch]="data?.shape?.version">
+          <ng-container [ngSwitch]="data?.shape?.version?.toLowerCase()">
             <ng-container *ngSwitchCase="'form'">
               <ng-container
                 *ngTemplateOutlet="
@@ -229,7 +234,7 @@
                 "
               ></ng-container>
             </ng-container>
-            <ng-container *ngSwitchCase="'esign'">
+            <ng-container *ngSwitchCase="'sign'">
               <ng-container
                 *ngTemplateOutlet="
                   esignTemplate;
@@ -253,6 +258,22 @@
                 "
               ></ng-container>
             </ng-container>
+            <ng-container *ngSwitchCase="'approve'">
+              <ng-container
+                *ngTemplateOutlet="
+                  approveTemplate;
+                  context: { $implicit: data }
+                "
+              ></ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="'check'">
+              <ng-container
+                *ngTemplateOutlet="
+                  checkTemplate;
+                  context: { $implicit: data }
+                "
+              ></ng-container>
+            </ng-container>
           </ng-container>
         </ng-template>
       </ejs-diagram>
@@ -266,12 +287,12 @@
 <ng-template #formTemplate let-data>
   <ng-container class="border rounded" style="background-color: #fff">
     <div
-      class="container h-200px w-300px border border-dark rounded"
+      class="container h-auto w-300px border border-dark rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">
         <div
-          class="col-3 d-flex align-items-center"
+          class="col-6 d-flex align-items-center ps-3"
           (click)="clickAddForm(data)"
         >
           <span class="icon-note_add icon-21 me-1 text-primary"></span>
@@ -283,26 +304,26 @@
             ></codx-label>
           </span>
         </div>
-        <div class="col-9 d-flex align-items-center justify-content-end p-0">
-          <div class="border rounded bg-warning px-1 me-3">2 giờ</div>
+        <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
+          <div class="border rounded bg-warning px-1 me-3 fs-7">2 giờ</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
           <i
             class="icon-close icon-16 text-danger"
+            *ngIf="!viewOnly"
             (click)="deleteNode(data)"
           ></i>
         </div>
       </div>
-      <div class="row h-100px d-flex align-items-center m-2">
-        <!-- <codx-input type="textarea" format="ed3" field="memo" (valueChange)="valueDataChange($event)"></codx-input>
-        <codx-input type="colorpicker" field="color" (valueChange)="valueDataChange($event)"></codx-input> -->
+      <div class="row h-70px d-flex align-items-center mx-3">
+
+        <codx-input type="textarea" format="ed3" height="70px" field="memo" (valueChange)="valueDataChange($event,data)"  [crrValue]="data.data?.stepName" [disabled]="viewOnly"></codx-input>
+
       </div>
-      <div class="row h-30px">
-        <div class="col d-flex align-items-center justify-content-end p-0">
-          <div
-            class="border rounded-circle bg-warning px-1 me-3 h-25px w-25px d-flex align-items-center"
-          >
-            <i class="icon-i-person-check icon-21"></i>
-          </div>
+      <div class="row h-50px">
+        <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
+          <codx-imgs  [objectId]="getUserPermission(data.data?.permissions)"
+            objectType="AD_Users" [width]="35"  [numberImages]="2" *ngIf="data.data?.permissions">
+          </codx-imgs>
         </div>
       </div>
     </div>
@@ -312,12 +333,12 @@
 <ng-template #taskTemplate let-data>
   <ng-container class="border rounded" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded"
+      class="container h-auto w-300px border border-dark rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">
         <div
-          class="col-6 d-flex align-items-center"
+          class="col-6 d-flex align-items-center p-1 ps-3"
           (click)="clickAddForm(data)"
         >
           <span class="icon-i-check2-square icon-21 me-1 text-success"></span>
@@ -329,26 +350,23 @@
             ></codx-label>
           </span>
         </div>
-        <div class="col-6 d-flex align-items-center justify-content-end p-0">
-          <div class="border rounded bg-warning px-1 me-3">5 ngày</div>
+        <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
+          <div class="border rounded bg-warning px-1 me-3 fs-7">5 ngày</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
-          <i class="icon-close icon-16 text-danger"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
       </div>
       <div
-        class="row h-100px d-flex align-items-center border rounded p-3"
+        class="row h-70px d-flex align-items-center border rounded mx-3"
         style="background-color: #fff"
       >
-        <h5 class="fw-bold">Tiêu đề công việc</h5>
-        <div>Nội dung công việc chi tiết</div>
+        <h5 class="fw-bold">{{data.data?.stepName}}</h5>
       </div>
-      <div class="row h-30px">
-        <div class="col d-flex align-items-center justify-content-end p-0">
-          <div
-            class="border rounded-circle bg-warning px-1 me-3 h-25px w-25px d-flex align-items-center"
-          >
-            <i class="icon-i-person-check icon-21"></i>
-          </div>
+      <div class="row h-50px">
+        <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
+          <codx-imgs  [objectId]="getUserPermission(data.data?.permissions)"
+            objectType="AD_Users" [width]="35"  [numberImages]="2" *ngIf="data.data?.permissions">
+          </codx-imgs>
         </div>
       </div>
     </div>
@@ -364,15 +382,15 @@
   </div>
 </ng-template>
 
-<ng-template #esignTemplate>
+<ng-template #esignTemplate let-data>
   <ng-container class="border rounded" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded"
+      class="container h-auto w-300px border border-dark rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">
         <div
-          class="col-4 d-flex align-items-center"
+          class="col-6 d-flex align-items-center p-1 ps-3"
           (click)="clickAddForm(data)"
         >
           <span class="icon-i-pen icon-21 me-1 text-info"></span>
@@ -384,40 +402,37 @@
             ></codx-label>
           </span>
         </div>
-        <div class="col-8 d-flex align-items-center justify-content-end p-0">
-          <div class="border rounded bg-warning px-1 me-3">5 ngày</div>
+        <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
+          <div class="border rounded bg-warning px-1 me-3 fs-7">5 ngày</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
-          <i class="icon-close icon-16 text-danger"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
       </div>
       <div
-        class="row h-100px d-flex align-items-center border rounded p-3"
+        class="row h-70px d-flex align-items-center border rounded mx-3"
         style="background-color: #fff"
       >
-        <h5 class="fw-bold">Tiêu đề</h5>
-        <div>Nội dung chi tiết</div>
+        <h5 class="fw-bold">{{data.data?.stepName}}</h5>
       </div>
-      <div class="row h-30px">
-        <div class="col d-flex align-items-center justify-content-end p-0">
-          <div
-            class="border rounded-circle bg-warning px-1 me-3 h-25px w-25px d-flex align-items-center"
-          >
-            <i class="icon-i-person-check icon-21"></i>
-          </div>
+      <div class="row h-50px">
+        <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
+          <codx-imgs  [objectId]="getUserPermission(data.data?.permissions)"
+            objectType="AD_Users" [width]="35"  [numberImages]="2" *ngIf="data.data?.permissions">
+          </codx-imgs>
         </div>
       </div>
     </div>
   </ng-container>
 </ng-template>
-<ng-template #eventTemplate>
+<ng-template #eventTemplate let-data>
   <ng-container class="border rounded" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded"
+      class="container h-auto w-300px border border-dark rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">
         <div
-          class="col-4 d-flex align-items-center"
+          class="col-6 d-flex align-items-center p-1 ps-3"
           (click)="clickAddForm(data)"
         >
           <span
@@ -431,40 +446,37 @@
             ></codx-label>
           </span>
         </div>
-        <div class="col-8 d-flex align-items-center justify-content-end p-0">
-          <div class="border rounded bg-warning px-1 me-3">5 ngày</div>
+        <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
+          <div class="border rounded bg-warning px-1 me-3 fs-7">5 ngày</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
-          <i class="icon-close icon-16 text-danger"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
       </div>
       <div
-        class="row h-100px d-flex align-items-center border rounded p-3"
+        class="row h-70px d-flex align-items-center border rounded mx-3"
         style="background-color: #fff"
       >
-        <h5 class="fw-bold">Tên sự kiện</h5>
-        <div>Nội dung sự kiện</div>
+        <h5 class="fw-bold">{{data.data?.stepName}}</h5>
       </div>
-      <div class="row h-30px">
-        <div class="col d-flex align-items-center justify-content-end p-0">
-          <div
-            class="border rounded-circle bg-warning px-1 me-3 h-25px w-25px d-flex align-items-center"
-          >
-            <i class="icon-i-person-check icon-21"></i>
-          </div>
+      <div class="row h-50px">
+        <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
+          <codx-imgs  [objectId]="getUserPermission(data.data?.permissions)"
+            objectType="AD_Users" [width]="35"  [numberImages]="2" *ngIf="data.data?.permissions">
+          </codx-imgs>
         </div>
       </div>
     </div>
   </ng-container>
 </ng-template>
-<ng-template #emailTemplate>
+<ng-template #emailTemplate let-data>
   <ng-container class="border rounded" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded"
+      class="container h-auto w-300px border border-dark rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">
         <div
-          class="col-4 d-flex align-items-center"
+          class="col-6 d-flex align-items-center p-1 ps-3"
           (click)="clickAddForm(data)"
         >
           <span
@@ -478,26 +490,110 @@
             ></codx-label>
           </span>
         </div>
-        <div class="col-8 d-flex align-items-center justify-content-end p-0">
+        <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
           <div class="border rounded bg-warning px-1 me-3">2 giờ</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
-          <i class="icon-close icon-16 text-danger"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
       </div>
       <div
-        class="row h-100px d-flex align-items-center border rounded m-3"
+        class="row h-70px d-flex align-items-center border rounded mx-3"
         style="background-color: #fff"
       >
-        <h5 class="fw-bold">Gửi mail đến ...</h5>
-        <div>Nội dung</div>
+        <h5 class="fw-bold">{{data.data?.stepName}}</h5>
       </div>
+      <div class="row h-50px">
+        <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
+          <codx-imgs  [objectId]="getUserPermission(data.data?.permissions)"
+            objectType="AD_Users" [width]="35"  [numberImages]="2" *ngIf="data.data?.permissions">
+          </codx-imgs>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+
+<ng-template #approveTemplate let-data>
+  <ng-container class="border rounded border-danger" style="background-color: #fff">
+    <div
+      class="container h-auto w-300px border border-dark rounded px-0"
+      style="background-color: #fff"
+    >
       <div class="row h-30px">
-        <div class="col d-flex align-items-center justify-content-end p-0">
-          <div
-            class="border rounded-circle bg-warning px-1 me-3 h-25px w-25px d-flex align-items-center"
-          >
-            <i class="icon-i-person-check icon-21"></i>
-          </div>
+        <div
+          class="col-6 d-flex align-items-center p-1 ps-3"
+          (click)="clickAddForm(data)"
+        >
+          <span class="icon-i-pen icon-21 me-1 text-info"></span>
+          <span class="text-danger fw-bold"
+            ><codx-label
+              formName="sys"
+              default="Phê duyệt"
+              name="lblApproval"
+            ></codx-label>
+          </span>
+        </div>
+        <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
+          <div class="border rounded bg-warning px-1 me-3 fs-7">5 ngày</div>
+          <i class="icon-i-three-dots icon-16 me-2"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
+        </div>
+      </div>
+      <div
+        class="row h-70px d-flex align-items-center border rounded mx-3"
+        style="background-color: #fff"
+      >
+        <h5 class="fw-bold">{{data.data?.stepName}}</h5>
+      </div>
+      <div class="row h-50px">
+        <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
+          <codx-imgs  [objectId]="getUserPermission(data.data?.permissions)"
+            objectType="AD_Users" [width]="35"  [numberImages]="2" *ngIf="data.data?.permissions">
+          </codx-imgs>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #checkTemplate let-data>
+  <ng-container class="border rounded" style="background-color: #fff">
+    <div
+      class="container h-auto w-300px border border-dark rounded px-0"
+      style="background-color: #fff"
+    >
+      <div class="row h-30px">
+        <div
+          class="col-6 d-flex align-items-center p-1 ps-3"
+          (click)="clickAddForm(data)"
+        >
+          <span class="icon-i-pen icon-21 me-1 text-info"></span>
+          <span class="text-info fw-bold"
+            ><codx-label
+              formName="sys"
+              default="Kiểm tra"
+              name="lblCheck"
+            ></codx-label>
+          </span>
+        </div>
+        <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
+          <div class="border rounded bg-warning px-1 me-3 fs-7">5 ngày</div>
+          <i class="icon-i-three-dots icon-16 me-2"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
+        </div>
+      </div>
+      <div
+        class="row h-70px d-flex align-items-center border rounded mx-3"
+        style="background-color: #fff"
+      >
+        <h5 class="fw-bold">{{data.data?.stepName}}</h5>
+      </div>
+      <div class="row h-50px">
+        <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
+          <codx-imgs  [objectId]="getUserPermission(data.data?.permissions)"
+            objectType="AD_Users" [width]="35"  [numberImages]="2" *ngIf="data.data?.permissions">
+          </codx-imgs>
         </div>
       </div>
     </div>

@@ -26,7 +26,6 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { ActivatedRoute } from '@angular/router';
 import { CodxAcService, fmJournal } from '../../codx-ac.service';
 import { InventoryAddComponent } from './inventory-add/inventory-add.component';
@@ -74,21 +73,12 @@ export class InventoryComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
-    private authStore: AuthStore,
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private codxCommonService: CodxCommonService,
-    private tenant: TenantStore,
   ) {
     super(inject);
-    // this.cache
-    //   .companySetting()
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res.length > 0) {
-    //       this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
-    //     }
-    //   });
+    if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
@@ -97,7 +87,6 @@ export class InventoryComponent extends UIComponent {
         this.baseCurr = dataValue?.BaseCurr || '';
       })
     this.router.params
-      .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
         this.journalNo = params?.journalNo; //? get số journal từ router
       });
@@ -112,14 +101,12 @@ export class InventoryComponent extends UIComponent {
   //#region Init
 
   onInit(): void {
-    if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
     this.getJournal(); //? lấy data journal và các field ẩn từ sổ nhật kí
   }
 
   ngAfterViewInit() {
     this.cache
       .functionList(this.view.funcID)
-      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
           this.headerText = res?.defaultName; //? lấy tên chứng từ (Phiếu chi)
@@ -332,6 +319,7 @@ export class InventoryComponent extends UIComponent {
             }
           })
         }
+        this.onDestroy();
       });
   }
 
@@ -374,6 +362,7 @@ export class InventoryComponent extends UIComponent {
             }
           }
         })
+        this.onDestroy();
       });
   }
 
@@ -448,6 +437,7 @@ export class InventoryComponent extends UIComponent {
                         .pipe(takeUntil(this.destroy$))
                         .subscribe();
                     }
+                    this.onDestroy();
                   });
               }
             });
@@ -497,6 +487,7 @@ export class InventoryComponent extends UIComponent {
                     .pipe(takeUntil(this.destroy$))
                     .subscribe();
                 }
+                this.onDestroy();
               });
           }
         });
@@ -518,6 +509,7 @@ export class InventoryComponent extends UIComponent {
             this.detectorRef.detectChanges();
           }
         }
+        this.onDestroy();
       });
   }
 
@@ -548,6 +540,7 @@ export class InventoryComponent extends UIComponent {
             }
           });
         })
+        this.onDestroy();
       });
   }
 
@@ -611,8 +604,12 @@ export class InventoryComponent extends UIComponent {
                   if (res && !res.update.error) {
                     this.notification.notifyCode('AC0029', 0, text);
                   }
+                  this.onDestroy();
                 });
-            } else this.notification.notifyCode(result?.msgCodeError);
+            } else{
+              this.notification.notifyCode(result?.msgCodeError);
+              this.onDestroy();
+            } 
           });
       });
   }
@@ -636,8 +633,12 @@ export class InventoryComponent extends UIComponent {
               if (res && !res.update.error) {
                 this.notification.notifyCode('AC0029', 0, text);
               }
+              this.onDestroy();
             });
-        } else this.notification.notifyCode(result?.msgCodeError);
+        } else{
+          this.notification.notifyCode(result?.msgCodeError);
+          this.onDestroy();
+        } 
       });
   }
 
@@ -648,6 +649,7 @@ export class InventoryComponent extends UIComponent {
   validateVourcher(text: any, data: any) {
     this.api
       .exec('IV', 'VouchersBusiness', 'ValidateVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -655,6 +657,7 @@ export class InventoryComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -665,6 +668,7 @@ export class InventoryComponent extends UIComponent {
   postVoucher(text: any, data: any) {
     this.api
       .exec('IV', 'VouchersBusiness', 'PostVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -672,6 +676,7 @@ export class InventoryComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -682,6 +687,7 @@ export class InventoryComponent extends UIComponent {
   unPostVoucher(text: any, data: any) {
     this.api
       .exec('IV', 'VouchersBusiness', 'UnPostVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -689,6 +695,7 @@ export class InventoryComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -746,7 +753,6 @@ export class InventoryComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any, type: any = '') {
-    console.log(event);
     let data = this.view.dataService.dataSelected;
     this.acService.changeMFVoucher(event, data, type, this.journal, this.view.formModel);
   }
@@ -755,15 +761,16 @@ export class InventoryComponent extends UIComponent {
    * *Hàm get data mặc định của chứng từ
    */
   getJournal() {
+    let options = new DataRequest();
+    options.entityName = 'AC_Journals';
+    options.pageLoading = false;
+    options.predicates = 'JournalNo=@0';
+    options.dataValues = this.journalNo;
     this.api
-      .exec('AC', 'ACBusiness', 'GetJournalAsync', [this.journalNo])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res && res.length > 0) {
-          this.journal = res[0]; // data journal
-          this.hideFields = res[1]; // array field ẩn từ sổ nhật kí
-        }
-      });
+      .execSv('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(map((r) => r?.[0] ?? [])).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+        this.journal = res[0]; 
+      })
   }
 
   /**

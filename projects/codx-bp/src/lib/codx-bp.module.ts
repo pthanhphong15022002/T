@@ -84,6 +84,9 @@ import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { ShareCrmModule } from 'projects/codx-dp/src/lib/share-crm/share-crm.module';
 import { BPPopupChangePermissionComponent } from './processes/popup-add-process/form-steps-field-grid/bp-popup-change-permission/bp-popup-change-permission.component';
+import { PropertyCbbDependenceComponent } from './modeview/properties/property-cbb-dependence/property-cbb-dependence.component';
+import { ViewListProcessesComponent } from './processes/view-list-processes/view-list-processes.component';
+import { TramTestDiagramComponent } from './tram-test-diagram/test-diagram.component';
 
 export const routes: Routes = [
   {
@@ -121,6 +124,11 @@ export const routes: Routes = [
       {
         path: 'share/dynamic/:funcID',
         component: DynamicFormComponent,
+      },
+      {
+        path: 'test-diagram/:funcID/:id',
+        component: TramTestDiagramComponent,
+        data: { noReuse: true },
       },
     ],
   },
@@ -165,6 +173,7 @@ export const routes: Routes = [
     PropertyShareComponent,
     PropertyTableComponent,
     PropertyUserinfoComponent,
+    PropertyCbbDependenceComponent,
 
     FormSettingComboboxComponent,
     FormAdvancedSettingsComponent,
@@ -199,6 +208,8 @@ export const routes: Routes = [
     FormSettingAdvancedTasksComponent,
     SettingMailComponent,
     BPPopupChangePermissionComponent,
+    ViewListProcessesComponent,
+    TramTestDiagramComponent
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

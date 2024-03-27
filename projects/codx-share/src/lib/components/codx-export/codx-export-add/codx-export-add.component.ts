@@ -87,22 +87,30 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     {
       key: "orgunit",
       text: "Người lập phiếu_Bộ phận",
-      isSign: false
+      isSign: false,
+      refType : "3",
+      refValue : "HRDepartmentUnits"
     },
     {
       key: "position",
       text: "Người lập phiếu_Chức danh",
-      isSign: false
+      isSign: false,
+      refType : "3",
+      refValue : "Positions"
     },
     {
       key: "department",
       text: "Người lập phiếu_Phòng ban",
-      isSign: false
+      isSign: false,
+      refType : "3",
+      refValue : "HRDepartments"
     },
     {
       key: "company",
       text: "Người lập phiếu_Công ty",
-      isSign: false
+      isSign: false,
+      refType : "3",
+      refValue : "HRCompany"
     },
     {
       key: "signature1",
@@ -287,28 +295,78 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     // this.dataGoupField.forEach(elm=>{
     //   list = list.concat(elm.extendInfo);
     // })
-
     for(var i = 0 ; i < this.dataGoupField.length ; i ++)
     {
       this.dataGoupField[i].groupChild = [];
       
       this.dataGoupField[i].extendInfo.forEach(element=>{
-        var obj = {
-          text: element?.title,
-          key: element?.fieldName,
-          category: 'Drag or click the field to insert.',
-          htmlAttributes: { draggable: true },
-        };
-  
-        var obj2 = {
-          key: element.fieldName,
-          headerText: element.title,
-          referedType: element.refType,
-          referedValue: element.refValue,
-        };
-        
-        this.gridViewSettup.push(obj2);
-        this.dataGoupField[i].groupChild.push(obj);
+        if(element.controlType != "Table")
+        {
+          var obj = {
+            text: element?.title,
+            key: element?.fieldName,
+            category: 'Drag or click the field to insert.',
+            htmlAttributes: { draggable: true },
+          };
+    
+          var obj2 = {
+            key: element.fieldName,
+            headerText: element.title,
+            referedType: element.refType,
+            referedValue: element.refValue,
+          };
+          
+          this.gridViewSettup.push(obj2);
+          this.dataGoupField[i].groupChild.push(obj);
+        }
+        else
+        {
+          element.dataFormat = typeof element.dataFormat == 'string' ? JSON.parse(element.dataFormat) :  element.dataFormat;
+          element.tableFormat = typeof element.tableFormat == 'string' ? JSON.parse(element.tableFormat) :  element.tableFormat;
+          var objP = {
+            text: element?.title,
+            key: element?.fieldName,
+            category: 'Drag or click the field to insert.',
+            htmlAttributes: { draggable: true },
+            isGroup:true,
+            groupChild : []
+          };
+          element.dataFormat.forEach(elm2=>{
+            var obj = {
+              text: elm2?.title,
+              key: element.fieldName+"."+elm2?.fieldName,
+              category: 'Drag or click the field to insert.',
+              htmlAttributes: { draggable: true },
+            };
+      
+            var obj2 = {
+              key: element.fieldName+"."+elm2.fieldName,
+              headerText: elm2.title,
+              referedType: elm2.refType,
+              referedValue: elm2.refValue,
+            };
+            objP.groupChild.push(obj);
+            this.gridViewSettup.push(obj2);
+          })
+
+          if(element?.tableFormat?.hasIndexNo) 
+          {
+            var objIndex = {
+              text: 'Số thứ tự',
+              key: element.fieldName+".indexNo",
+              category: 'Drag or click the field to insert.',
+              htmlAttributes: { draggable: true },
+            };
+      
+            var obj2Index = {
+              key: element.fieldName+".indexNo",
+              headerText: "Số thứ tự",
+            };
+            objP.groupChild.unshift(objIndex);
+            this.gridViewSettup.push(obj2Index);
+          }
+          this.dataGoupField[i].groupChild.push(objP);
+        }
       })
 
       if(!this.isSign)
@@ -317,15 +375,18 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
       }
       
       this.listRequester.forEach(x=>{
+        let key = "f" +  this.dataGoupField[i].stepNo + "_owner." + x.key;
+        if(x.refType) key += "|" + x.refType;
+        if(x.refValue) key += "|" + x.refValue;
         var obj3 = 
         {
           text: x.text,
-          key: "form" +  this.dataGoupField[i].stepNo + "_" + x.key,
+          key: key,
           category: 'Drag or click the field to insert.',
           htmlAttributes: { draggable: true },
         }
         var obj4 = {
-          key: "form" +  this.dataGoupField[i].stepNo + "_" + x.key,
+          key: key,
           headerText: x.text,
         };
         this.gridViewSettup.push(obj4);
@@ -524,7 +585,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                         if (saveW) {
                           let r = item[1][0];
                           r.recID = this.data.recID;
-                          this.dialog.close([r, this.type]);
+                          this.dialog.close([r, this.type ,this.nameFile,saveW.data]);
                         }
                       });
                     }
@@ -693,11 +754,11 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
         text += '|' + check[0].referedValue;
     }
 
-    // this.container.documentEditor.editor.insertField(
-    //   fieldCode,
-    //   '[' + text + ']'
-    // );
-    this.container.documentEditor.editor.insertText('[' + text + '] ');
+    this.container.documentEditor.editor.insertField(
+      fieldCode,
+      '[' + text + ']'
+    );
+    //this.container.documentEditor.editor.insertText('[' + text + '] ');
     this.container.documentEditor.focusIn();
   }
 

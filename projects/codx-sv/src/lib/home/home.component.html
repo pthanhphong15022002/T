@@ -3,7 +3,7 @@
 
 <ng-template #panelLeftRef>
   <div class="survey-home h-100">
-    <div class="p-2 bg-body body-survey px-5">
+    <div class="bg-body body-survey px-5">
       <div class="d-flex justify-content-between align-items-center py-2">
         <codx-label
           default="Khảo sát mẫu"
@@ -27,15 +27,15 @@
       <div class="d-flex align-items-center div-title">
         <div class="card-survey rounded-2" (click)="createNewSurvey()">
           <img src="./assets/themes/sv/default/img/AddSurvey.svg" class="rounded-2"/>
-          <div class="py-2 fw-bold">
+          <div class="my-2 fw-bold line-clamp line-clamp-2">
             <span>Trống</span>
           </div>
         </div>
         <ng-container *ngIf="dataSurveysSystem && dataSurveysSystem.length>0">
           <div class="card-survey rounded-2" *ngFor="let item of dataSurveysSystem" (click)="clone(item)">
             <img [src]="getImgSrc(item , 'card')" class="rounded-2"/>
-            <div class="py-2 fw-bold">
-              <span>{{item?.title}}</span>
+            <div class="my-2 fw-bold line-clamp line-clamp-1">
+              <span [title]="item?.title">{{item?.title}}</span>
             </div>
           </div>
         </ng-container>
@@ -119,7 +119,7 @@
 <ng-template #templateListCard let-item>
   <div (click)="update(item)">
     <codx-card-img
-      cardCss="border rounded-2 card-img-mwp img-storage w-225px h-225px"
+      cardCss="border rounded-2 card-img-mwp img-storage w-225px h-230px"
       (clickMF)="clickMF($event, item)"
       [imageSrc]="getImgSrc(item , 'card')"
       imgCss="h-150px w-100"
@@ -135,12 +135,17 @@
   </div>
   <ng-template #titleTmp>
     <div class="d-flex flex-column w-100">
-      <div class="d-flex align-item-center w-100">
-        <span class="line-clamp line-clamp-2 my-1 h-35px text-dark">{{item.title}}</span>
+      <div class="d-flex flex-column w-100 h-50px pb-3">
+        <span class="line-clamp line-clamp-2 text-dark fw-bold pt-1">{{item.title}}</span>
+        <div class="d-flex align-item-center">
+          <span class="me-1">{{item?.repondents}}</span>
+          <span class="text-gray-600">câu trả lời</span>
+        </div>
       </div>
-      <div class="d-flex align-item-center justify-content-end">
+      <div class="d-flex align-item-center justify-content-between pb-2">
         <!-- <i class="icon-i-file-earmark-text-fill icon-15 text-primary"></i>
         <span class="ms-2 fs-7 text-gray-500">{{getStatus(item,"status")}}</span> -->
+        <span class="me-2">{{item?.createdOn | date: 'dd/MM/yyyy'}}</span> 
         <codx-vll
           [value]="item?.status"
           [name]="'SV003'"

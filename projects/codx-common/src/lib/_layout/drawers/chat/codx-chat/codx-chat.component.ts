@@ -82,7 +82,7 @@ export class CodxChatComponent implements OnInit, AfterViewInit, OnDestroy {
           this.cache.gridViewSetup(this.formModel.formName,this.formModel.gridViewName)
           .subscribe((grd:any) => {
             this.grdViewSetUp = grd;
-            this.dt.detectChanges();
+            //this.dt.detectChanges();
           })
         }
       });

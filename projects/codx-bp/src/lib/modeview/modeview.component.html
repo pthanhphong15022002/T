@@ -232,7 +232,7 @@
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-2 rd-3px" *ngIf="viewType == 1">
-                        <span class="text-muted text-truncate mw-55px">{{data.defaultValue ? (data.defaultValue | date: 'dd/MM/yyyy HH:mm:ss') : data.description}}</span>
+                        <span class="text-muted text-truncate mw-55px">{{data?.defaultValue && data?.defaultValue != 'Now' ? (data.defaultValue | date: 'dd/MM/yyyy HH:mm:ss') : (data?.defaultValue ? data?.defaultValue : data.description)}}</span>
                         <div class="d-flex align-items-center">
                           <i class="icon-i-calendar text-dark"></i>
                           <i class="icon-i-clock ms-3 text-dark"></i>
@@ -589,10 +589,10 @@
           <lib-property-text [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-text>
         </ng-container>
         <ng-container *ngSwitchCase="'Text'">
-          <lib-property-text [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-text>
+          <lib-property-text [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)" (dataChangeTableEmit)="dataChangeTableEmit($event)"></lib-property-text>
         </ng-container>
         <ng-container *ngSwitchCase="'ValueList'">
-          <lib-property-valuelist [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-valuelist>
+          <lib-property-valuelist [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)"></lib-property-valuelist>
         </ng-container>
         <ng-container *ngSwitchCase="'DateTime'">
           <lib-property-datetime [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)"></lib-property-datetime>
@@ -604,7 +604,7 @@
           <lib-property-yesno [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-yesno>
         </ng-container>
         <ng-container *ngSwitchCase="'User'">
-          <lib-property-user [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-user>
+          <lib-property-user [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)"></lib-property-user>
         </ng-container>
         <ng-container *ngSwitchCase="'Rank'">
           <lib-property-rank [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-rank>
@@ -613,13 +613,13 @@
           <lib-property-progress [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-progress>
         </ng-container>
         <ng-container *ngSwitchCase="'Phone'">
-          <lib-property-phone [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-phone>
+          <lib-property-phone [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)"></lib-property-phone>
         </ng-container>
         <ng-container *ngSwitchCase="'Email'">
-          <lib-property-phone [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-phone>
+          <lib-property-phone [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)"></lib-property-phone>
         </ng-container>
         <ng-container *ngSwitchCase="'Address'">
-          <lib-property-phone [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-phone>
+          <lib-property-phone [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)"></lib-property-phone>
         </ng-container>
         <ng-container *ngSwitchCase="'Expression'">
           <lib-property-expression [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-expression>
@@ -628,7 +628,7 @@
           <lib-property-attachment [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-attachment>
         </ng-container>
         <ng-container *ngSwitchCase="'ComboBox'">
-          <lib-property-combobox [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-combobox>
+          <lib-property-combobox [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)"></lib-property-combobox>
         </ng-container>
         <ng-container *ngSwitchCase="'Table'">
           <lib-property-table [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-table>

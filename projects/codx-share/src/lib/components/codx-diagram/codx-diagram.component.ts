@@ -1,5 +1,7 @@
-import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ViewEncapsulation, TemplateRef, ViewChild, ChangeDetectorRef, ElementRef, Optional } from "@angular/core";
+import { P } from "@angular/cdk/keycodes";
+import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ViewEncapsulation, TemplateRef, ViewChild, ChangeDetectorRef, ElementRef, Optional, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { HierarchicalTreeService, MindMapService, RadialTreeService, ComplexHierarchicalTreeService, DataBindingService, SnappingService, PrintAndExportService, BpmnDiagramsService, SymmetricLayoutService, ConnectorBridgingService, UndoRedoService, LayoutAnimationService, DiagramContextMenuService, ConnectorEditingService, DiagramComponent, SymbolPaletteComponent, BpmnShapeModel, ConnectorModel, ContextMenuSettingsModel, DiagramBeforeMenuOpenEventArgs, DiagramTools, HeaderModel, LaneModel, NodeModel, PaletteModel, PortConstraints, PortVisibility, RulerSettingsModel, SelectorConstraints, SelectorModel, ShapeStyleModel, SnapConstraints, SnapSettingsModel, SwimLaneModel, UserHandleModel, cloneObject } from "@syncfusion/ej2-angular-diagrams";
+import { shadowProperty } from "@syncfusion/ej2-angular-documenteditor";
 import { ExpandMode, MenuEventArgs } from "@syncfusion/ej2-angular-navigations";
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel } from "codx-core";
 import { FormEditConnectorComponent } from "projects/codx-share/src/lib/components/codx-diagram/form-edit-connector/form-edit-connector.component";
@@ -28,12 +30,15 @@ import { FormEditConnectorComponent } from "projects/codx-share/src/lib/componen
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CodxDiagramComponent implements OnInit, AfterViewInit {
+export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
 
   @ViewChild('diagram') diagram: DiagramComponent;
   @ViewChild('palette') palette: SymbolPaletteComponent;
   @ViewChild('nodeTemplate') nodeTemplate: TemplateRef<any>;
-
+  @Input() columns:any=[];
+  @Input() process:any={};
+  @Input() viewOnly:boolean=false;
+  @Input() recID!:any;
 
   dialog:any;
   data:any
@@ -51,20 +56,33 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
 
   }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['viewOnly'] ){
+      if(!changes['viewOnly'].currentValue){
+        if(this.diagram) this.diagram.tool = DiagramTools.Default;
+      }
+      else{
+        if(this.diagram) this.diagram.tool = DiagramTools.ZoomPan
+      }
+    }
+  }
 
   ngOnInit(): void {
 
   }
   ngAfterViewInit(): void {
-
+    if(this.recID){
+      this.getProcess();
+    }
+    else this.initProcess();
   }
 
   created(): void {
-    this.diagram.fitToPage();
+    //this.diagram.fitToPage();
     this.diagram.clearSelection();
     this.diagram.scrollSettings.canAutoScroll = true;
 
-    //this.diagram.tool = DiagramTools.ZoomPan;
+    if(this.viewOnly) this.diagram.tool = DiagramTools.ZoomPan;
   }
   clickPan(isPan) {
     if (this.diagram && isPan) this.diagram.tool = DiagramTools.ZoomPan;
@@ -231,7 +249,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit {
     { id: 'event', text: 'Sự kiện', icon: 'icon-i-calendar2-event-fill' },
     { id: 'email', text: 'Gửi mail', icon: 'icon-mail' },
     { id: 'task', text: 'Công việc', icon: 'icon-check-correct' },
-    { id: 'esign', text: 'Ký số', icon: 'icon-i-pen' },
+    { id: 'sign', text: 'Ký số', icon: 'icon-i-pen' },
     { id: 'image', text: 'hình ảnh', icon: 'icon-broken_image' },
   ];
   documentClick(args: MouseEvent): void {
@@ -909,7 +927,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit {
         this.diagram.add(swimLane);
         break;
       case 'form':
-      case 'esign':
+      case 'sign':
       case 'image':
       case 'task':
       case 'event':
@@ -935,16 +953,20 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit {
     this.targetItem = undefined;
     //this.diagram.dataBind()
   }
+
   clickForm() {
     let option = new SidebarModel();
     option.FormModel = this.dialog?.formModel;
     option.Width = '550px';
     this.callfc.openSide(FormEditConnectorComponent, '', option, '');
   }
+
   logData(e) {
     console.log(e);
   }
+
   clickAddForm(data: any) {
+    if(this.viewOnly) return;
     console.log('addForm nè', data);
   }
 
@@ -955,6 +977,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit {
       if (connector) this.diagram.removeData(connector as any);
     }
   }
+
   nodeSelected: any;
   drawNode: any;
   onSelect(e: any) {
@@ -1024,6 +1047,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit {
   userHandleClick(e: any) {
     this.getTool(e.element.name);
   }
+
   public getTool(action: string) {
     if (action == 'delete') {
       this.diagram.remove();
@@ -1115,7 +1139,8 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit {
       // console.log('Nối',this.nodeSelected);
     }
   }
-  valueDataChange(e: any) {
+
+  valueDataChange(e: any, data:any=null) {
     if (this.nodeSelected) {
       if (!this.formData[this.nodeSelected.id]) {
         this.formData[this.nodeSelected.id] = {};
@@ -1200,6 +1225,248 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit {
       this.diagram.paste();
     }
   }
+  initProcess(){
+    if(this.process && this.columns.length){
+      let objDiagram:any={};
+      objDiagram.id=this.makeid(10);
+      objDiagram.processID=this.process.recID;
+      let shape:any={};
+      shape.type='SwimLane';
+      shape.hasHeader=true;
+      shape.isLane=true;
+      // objDiagram.offsetY=-200;
+      // objDiagram.offsetX=100;
+      objDiagram.margin= { left: 50, top: 20 },
+      objDiagram.height = 700;
+      objDiagram.width = 500;
+      shape.orientation="Vertical";
+      shape.margin= { left: 50, top: 20 },
+      shape.width=500;
+      shape.header = {
+        id:this.makeid(5),
+        height:30,
+        annotation:{
+          id: this.process.processID,
+          content:this.process.processName,
+          style: { fontSize: 16, color: '#0099ff', bold: true }
+        },
+
+      }
+      shape.lanes=[];
+
+
+      let stepNodes:any=[];
+      for(let i =0;i < this.columns.length;i++){
+        objDiagram.width = 500*(i+1);
+        let objLane:any={};
+        objLane.id=this.makeid(10);
+        //objLane.canMove=false;
+        objLane.height=700;
+        objLane.width=500;
+        objLane.header={
+          id:this.makeid(5),
+          height:30,
+          annotation:{
+            id: this.makeid(5),
+            refID:this.columns[i].keyField,
+            content:this.columns[i].headerText,
+            style:{bold:true}
+          },
+
+        }
+        let maxheight:any=0
+        let maxwidth:any=objLane.width;
+        objLane.children=[];
+        if(this.process.steps && this.process.steps.length){
+          let currentStageActions= this.process.steps.filter((x:any)=>x.stageID==this.columns[i].keyField);
+          let offset=50;
+          currentStageActions = currentStageActions.sort((a:any,b:any)=> a.stepNo-b.stepNo)
+          for(let j =0;j < currentStageActions.length;j++){
+
+            let model:any={};
+            model.id = this.makeid(10);
+            model.refID = currentStageActions[j].recID;
+            if(currentStageActions[j].activityType?.toLowerCase() == 'conditions'){
+              model.shape = {
+                type: 'Flow',
+                shape: 'Decision',
+              };
+              model.width=100;
+              model.height=50;
+              model.annotations=[
+                {
+                    content: currentStageActions[j].stepName,
+                    style: { fontSize: 10 }
+                }
+              ];
+
+              if(currentStageActions[j].settings){
+                let setting = JSON.parse(currentStageActions[j].settings);
+                if(setting && setting.nextSteps){
+                  for(let i = 0; i<setting.nextSteps.length;i++){
+                    if(setting.nextSteps[i].nextStepID){
+                      let step = currentStageActions.find((x:any)=>x.recID == setting.nextSteps[i].nextStepID);
+                      if(step){
+                        let stepModel:any={};
+                        stepModel.id = this.makeid(10);
+                        stepModel.refID = step.recID;
+                        stepModel.refSourceID=model.refID;
+                        if(step.activityType?.toLowerCase() != 'conditions'){
+                          stepModel.shape = {
+                            type: 'HTML',
+                            version: step.activityType?.toLowerCase(),
+
+                          };
+                          if(maxwidth < ((i+1)*300 + 100)){
+                            maxwidth=((i+1)*300 + 100)
+                          }
+
+                          objLane.width = maxwidth;
+                          model.margin={
+                            top: offset,
+                            left: (objLane.width + 100)/2
+                          }
+                          stepModel.width = 300;
+                          stepModel.height = 150;
+                          stepModel.offsetY = offset+200;
+                          stepModel.offsetX = i*300 + 50;
+                          stepModel.margin={
+                            top: offset +200,
+                            left: i*300 + 50
+                          }
+                          if(objLane.children.findIndex((c:any)=>c.refID==stepModel.refID) == -1){
+                            objLane.children.push(stepModel)
+                            stepNodes.push(stepModel);
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            else{
+              model.shape = {
+                type: 'HTML',
+                version: currentStageActions[j].activityType?.toLowerCase(),
+
+              };
+              model.width = 300;
+              model.height = 150;
+              model.offsetY = offset;
+              model.offsetX = (objLane.width - model.width)/2;
+
+            }
+
+              if(!model.margin){
+                model.margin={
+                  top: offset,
+                  //left: (objLane.width - model.width)/2
+                }
+              }
+
+              offset=offset+200;
+            model.data=currentStageActions[j];
+            // model.margin={
+            //   top: offset,
+            //   left: 20
+            // }
+            //model.parentID=objLane.id;
+
+            if(objLane.children.findIndex((c:any)=>c.refID==model.refID) == -1){
+              objLane.children.push(model)
+              stepNodes.push(model);
+            }
+
+
+
+          }
+
+          if(maxheight < offset + 200){
+            maxheight = offset + 200;
+
+          }
+          objDiagram.height = maxheight;
+
+          objLane.height = maxheight
+          //objLane.width = maxwidth
+          offset=0;
+        }
+        //let maxMargin=0;
+        objLane.children =objLane.children.sort((x:any,b:any)=>x.refSourceID ? -1 : 1 )
+        objLane.children.forEach((child:any)=>{
+          if(child.shape.type =='Flow'){
+            child.margin.left=(maxwidth - child.width)/2;
+            // child.offsetX =  (maxwidth- 200)/2;
+          }
+          else{
+            if(child.refSourceID){
+              let refItems =  objLane.children.filter((x:any)=>x.refSourceID==child.refSourceID);
+              if(refItems.length){
+                if(refItems.indexOf(child)>-1){
+                  child.margin.left=(refItems.indexOf(child)*350 )
+                  child.offsetX =  (refItems.indexOf(child)*350)
+                  //maxMargin = refItems.indexOf(child)*350 ;
+                }
+              }
+            }
+            else{
+              child.margin.left=(objLane.width - child.width)/2
+              child.offsetX =  (objLane.width - child.width)/2;
+            }
+
+          }
+        })
+        shape.lanes.push(objLane)
+
+      }
+      objDiagram.shape=shape;
+      // objDiagram.isPhase=false;
+      // objDiagram.isLane=false;
+      setTimeout(()=>{
+        this.diagram.addNode(objDiagram);
+        this.process.steps.forEach((x:any)=>{
+          if(x.settings){
+            let setting = JSON.parse(x.settings)
+            if(setting && setting.nextSteps && setting.nextSteps.length){
+              for(let i = 0; i< setting.nextSteps.length;i++){
+                if(setting.nextSteps[i].nextStepID){
+                  let source = stepNodes.find((s:any)=>s.refID== x.recID);
+                  let target = stepNodes.find((s:any)=>s.refID== setting.nextSteps[i].nextStepID);
+                  if(source && target){
+                    let connector: ConnectorModel = {
+                      id: this.makeid(10),
+                      sourceID: source.id,
+                      targetID:target.id,
+                      targetDecorator: {
+                        shape: 'Arrow',
+                        style: { strokeColor: '#757575', fill: '#757575' },
+                      },
+                      style: { strokeWidth: 1, strokeColor: '#757575' },
+                      type: 'Straight',
+                    };
+                    if(setting.nextSteps[i].predicateName){
+                      connector.annotations= [{content:setting.nextSteps[i].predicateName, style: {fill: 'white'}}]
+                    }
+                    //arrConn.push(connector);
+                    this.diagram.addConnector(connector);
+                  }
+
+                }
+
+
+              }
+
+            }
+            //debugger
+          }
+
+        })
+      },500)
+      this.detectorRef.detectChanges();
+    }
+  }
+
   private makeid(length) {
     let result = '';
     const characters =
@@ -1255,7 +1522,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit {
     let obj = JSON.parse(dataDiagram);
     if (Object.keys(obj).length && obj.nodes) {
       console.log(JSON.stringify(obj.nodes));
-      console.log(JSON.stringify(obj.connectors));
+      //console.log(JSON.stringify(obj.connectors));
     }
   }
   shape: any = { type: 'HTML', shape: 'Rectangle' };
@@ -1269,5 +1536,39 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit {
     },
   };
 
+  getUserPermission(permission:any){
+    if(permission && permission.length){
+      let user = permission.filter((x:any)=>x.objectType == 'U' || x.objectType == '1');
+      return user.map((x:any)=>x.objectID).join(';');
+    }
+  }
+
+  lstSteps:any=[];
+
+  getProcess() {
+    if(this.recID){
+      let sub= this.api
+      .execSv('BP', 'BP', 'ProcessesBusiness', 'GetAsync', this.recID)
+      .subscribe((item) => {
+        if (item) {
+          this.process = item;
+          let sub1 = this.api.execSv('BP','BP','ProcessesBusiness','GetColumnsKanbanAsync',[{},this.recID]).subscribe((res:any)=>{
+            this.columns=res?.columns;
+            this.initProcess()
+            sub1.unsubscribe();
+          })
+
+          this.lstSteps = this.process?.steps?.filter(
+            (x) => x.activityType == 'Stage'
+          );
+        }
+        sub.unsubscribe();
+      });
+    }
+
+   }
+   collectionChange(e:any){
+    if(this.diagram) this.diagram.fitToPage();
+   }
   //===========
 }

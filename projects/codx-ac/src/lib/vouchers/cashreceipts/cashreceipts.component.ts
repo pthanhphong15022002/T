@@ -62,7 +62,6 @@ export class CashreceiptsComponent extends UIComponent {
   dataCategory: any; //? data của category
   journal: any; //? data sổ nhật kí
   baseCurr: any; //? đồng tiền hạch toán
-  legalName: any; //? tên công ty
   dataDefault: any; //? data default của phiếu
   hideFields: Array<any> = []; //? array field được ẩn lấy từ journal
   button: ButtonModel[] = [
@@ -72,10 +71,6 @@ export class CashreceiptsComponent extends UIComponent {
       icon: 'icon-i-file-earmark-plus',
     },
   ];
-  bhLogin: boolean = false;
-  bankPayID: any;
-  bankNamePay: any;
-  bankReceiveName: any;
   viewActive: number = ViewType.listdetail;
   ViewType = ViewType;
   fmJournal:FormModel =  fmJournal;
@@ -84,22 +79,12 @@ export class CashreceiptsComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
-    private authStore: AuthStore,
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private codxCommonService: CodxCommonService,
     private tenant: TenantStore
   ) {
     super(inject);
-    this.authStore = inject.get(AuthStore);
-    // this.cache
-    //   .companySetting()
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res.length > 0) {
-    //       this.legalName = res[0].legalName;
-    //     }
-    //   });
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
@@ -204,6 +189,14 @@ export class CashreceiptsComponent extends UIComponent {
   ngOnDestroy() {
     this.onDestroy();
   }
+
+  /**
+   * *Hàm hủy các obsevable subcrible
+   */
+  onDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
   //#endregion
 
   //#region Event
@@ -277,6 +270,7 @@ export class CashreceiptsComponent extends UIComponent {
   addNewVoucher() {
     this.view.dataService
       .addNew((o) => this.setDefault(this.dataDefault))
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res != null) {
           res.isAdd = true;
@@ -287,7 +281,6 @@ export class CashreceiptsComponent extends UIComponent {
             oData: { ...res }, //?  data của cashpayment
             hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
             baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-            legalName: this.legalName, //? tên company
           };
           let optionSidebar = new SidebarModel();
           optionSidebar.DataService = this.view?.dataService;
@@ -309,6 +302,7 @@ export class CashreceiptsComponent extends UIComponent {
             }
           });
         }
+        this.onDestroy();
       });
   }
 
@@ -330,7 +324,6 @@ export class CashreceiptsComponent extends UIComponent {
           oData: { ...res }, //?  data của cashpayment
           hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
           baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-          legalName: this.legalName, //? tên company
         };
         let optionSidebar = new SidebarModel();
         optionSidebar.DataService = this.view?.dataService;
@@ -351,6 +344,7 @@ export class CashreceiptsComponent extends UIComponent {
             }
           }
         });
+        this.onDestroy();
       });
   }
 
@@ -425,6 +419,7 @@ export class CashreceiptsComponent extends UIComponent {
                         .add(datas)
                         .pipe(takeUntil(this.destroy$))
                         .subscribe();
+                      this.onDestroy();
                     }
                   });
               }
@@ -475,6 +470,7 @@ export class CashreceiptsComponent extends UIComponent {
                     .pipe(takeUntil(this.destroy$))
                     .subscribe();
                 }
+                this.onDestroy();
               });
           }
         });
@@ -496,6 +492,7 @@ export class CashreceiptsComponent extends UIComponent {
             this.detectorRef.detectChanges();
           }
         }
+        this.onDestroy();
       });
   }
 
@@ -526,6 +523,7 @@ export class CashreceiptsComponent extends UIComponent {
             }
           });
         })
+        this.onDestroy();
       });
   }
 
@@ -542,7 +540,6 @@ export class CashreceiptsComponent extends UIComponent {
       oData: { ...dataView },
       hideFields: [...this.hideFields],
       baseCurr: this.baseCurr,
-      legalName: this.legalName,
     };
     let optionSidebar = new SidebarModel();
     optionSidebar.DataService = this.view?.dataService;
@@ -613,18 +610,6 @@ export class CashreceiptsComponent extends UIComponent {
   onSelectedItem(event) {
     this.itemSelected = event;
     this.detectorRef.detectChanges();
-    // if(this.view?.views){
-    //   let view = this.view?.views.find(x => x.type == 1);
-    //   if (view && view.active == true) return;
-    // }
-    // if (typeof event.data !== 'undefined') {
-    //   if (event?.data.data || event?.data.error) {
-    //     return;
-    //   } else {
-    //     this.itemSelected = event?.data;
-    //     this.detectorRef.detectChanges();
-    //   }
-    // }
   }
 
   viewChanged(view) {
@@ -670,8 +655,12 @@ export class CashreceiptsComponent extends UIComponent {
                     this.itemSelected = res.update.data;
                     this.detectorRef.detectChanges();
                   }
+                  this.onDestroy();
                 });
-            } else this.notification.notifyCode(result?.msgCodeError);
+            } else{
+              this.notification.notifyCode(result?.msgCodeError);
+              this.onDestroy();
+            } 
           });
       });
   }
@@ -697,8 +686,12 @@ export class CashreceiptsComponent extends UIComponent {
                 this.itemSelected = res.update.data;
                 this.detectorRef.detectChanges();
               }
+              this.onDestroy();
             });
-        } else this.notification.notifyCode(result?.msgCodeError);
+        } else{
+          this.notification.notifyCode(result?.msgCodeError);
+          this.onDestroy();
+        } 
       });
   }
 
@@ -709,6 +702,7 @@ export class CashreceiptsComponent extends UIComponent {
   validateVourcher(text: any, data: any) {
     this.api
       .exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -716,6 +710,7 @@ export class CashreceiptsComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -726,6 +721,7 @@ export class CashreceiptsComponent extends UIComponent {
   postVoucher(text: any, data: any) {
     this.api
       .exec('AC', 'CashReceiptsBusiness', 'PostVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -733,6 +729,7 @@ export class CashreceiptsComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -743,6 +740,7 @@ export class CashreceiptsComponent extends UIComponent {
   unPostVoucher(text: any, data: any) {
     this.api
       .exec('AC', 'CashReceiptsBusiness', 'UnPostVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -750,6 +748,7 @@ export class CashreceiptsComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -757,16 +756,16 @@ export class CashreceiptsComponent extends UIComponent {
    * *Hàm get data mặc định của chứng từ
    */
   getJournal() {
+    let options = new DataRequest();
+    options.entityName = 'AC_Journals';
+    options.pageLoading = false;
+    options.predicates = 'JournalNo=@0';
+    options.dataValues = this.journalNo;
     this.api
-      .exec('AC', 'ACBusiness', 'GetJournalAsync', [this.journalNo])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res) {
-          this.journal = res[0]; // data journal
-          this.hideFields = res[1]; // array field ẩn từ sổ nhật kí
-          this.detectorRef.detectChanges();
-        }
-      });
+      .execSv('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(map((r) => r?.[0] ?? [])).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+        this.journal = res[0]; 
+      })
   }
 
   /**
@@ -797,14 +796,6 @@ export class CashreceiptsComponent extends UIComponent {
       params,
       this.view?.formModel
     );
-  }
-
-  /**
-   * *Hàm hủy các obsevable subcrible
-   */
-  onDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
   //#endregion
 }

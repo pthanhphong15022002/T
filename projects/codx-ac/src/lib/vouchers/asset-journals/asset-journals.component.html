@@ -1,4 +1,4 @@
-<codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
+<codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [entityName]="'AM_AssetJournals'"
   (buttonClick)="toolbarClick($event)" predicates="JournalNo=@0" [hideMoreFuncs]="!itemSelected"
   (changeDataMF)="changeMFDetail($event,'viewdetail')" (clickMF)="clickMoreFunction($event, itemSelected)"
   [dataValues]="journalNo" (selectedChange)="onSelectedItem($event)" [isSubView]="true"

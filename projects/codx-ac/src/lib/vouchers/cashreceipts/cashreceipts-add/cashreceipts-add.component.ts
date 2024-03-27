@@ -36,12 +36,6 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   dataDefault: any;
   journal: any;
   fmSettledInvoices:any = fmSettledInvoices;
-  fmCashReceiptsLine: FormModel = {
-    funcID: 'ACT0401',
-    formName: 'CashReceiptsLines',
-    entityName: 'AC_CashReceiptsLines',
-    gridViewName: 'AC_CashReceiptsLines',
-  };
   tabInfo: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -88,9 +82,8 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(
-        takeUntil(this.destroy$),
         map((arr: any[]) => arr.find((a) => a.category === '1')),
-        map((data) => JSON.parse(data.dataValue))
+        map((data) => JSON.parse(data.dataValue)),takeUntil(this.destroy$)
       ).subscribe((res:any)=>{
         if (res) {
           this.postDateControl = res?.PostedDateControl;
@@ -123,33 +116,75 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   //  * *Hàm khởi tạo trước khi init của lưới Cashpaymentlines (Ẩn hiện,format,predicate các cột của lưới theo sổ nhật ký)
   //  * @param columnsGrid : danh sách cột của lưới
   //  */
-  beforeInitGridCashReceipt(eleGrid:CodxGridviewV2Component) {
+  initGrid(eleGrid:CodxGridviewV2Component) {
+    let preAccountID = '';
+    let dtvAccountID = '';
+    let preOffsetAcctID = '';
+    let dtvOffsetAcctID = '';
+    let preDIM1 = '';
+    let dtvDIM1 = '';
+    let preDIM2 = '';
+    let dtvDIM2 = '';
+    let preDIM3 = '';
+    let dtvDIM3 = '';
     let hideFields = [];
-    let setting = this.acService.getSettingFromJournal(eleGrid,this.journal);
-    eleGrid = setting[0];
-    //* Thiết lập format number theo đồng tiền hạch toán
-    this.settingFormatGridCashReceipt(eleGrid)
 
-    //* Thiết lập ẩn hiện các cột theo sổ nhật ký
-    if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
-      hideFields = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
-    }
-    if (!hideFields.includes('Settlement') && this.master?.data?.subType == '11') { //? nếu chứng từ loại chi thanh toán nhà cung cấp(ko theo hóa đơn)
-      hideFields.push('Settlement'); //? => ẩn field phương pháp cấn trừ
-    }
+    this.settingFormatGrid(eleGrid)
 
-    //* Thiết lập các field ẩn cho 2 mode tài khoản
+    if (this.journal.drAcctControl == '1' || this.journal.drAcctControl == '2') {
+      preAccountID = '@0.Contains(AccountID)';
+      dtvAccountID = `[${this.journal?.drAcctID}]`;
+    }
+    eleGrid.setPredicates('accountID', preAccountID, dtvAccountID);
+
+    if (
+      (this.journal.crAcctControl == '1' || this.journal.crAcctControl == '2') &&
+      this.journal.entryMode == '1'
+    ) {
+      preOffsetAcctID = '@0.Contains(AccountID)';
+      dtvOffsetAcctID = `[${this.journal?.crAcctID}]`;
+    }
+    eleGrid.setPredicates('offsetAcctID', preOffsetAcctID, dtvOffsetAcctID);
+
+    if (this.journal.diM1Control == '1' || this.journal.diM1Control == '2') {
+      preDIM1 = '@0.Contains(ProfitCenterID)';
+      dtvDIM1 = `[${this.journal?.diM1}]`;
+    }
+    eleGrid.setPredicates('diM1', preDIM1, dtvDIM1);
+
+    if (this.journal.diM2Control == '1' || this.journal.diM2Control == '2') {
+      preDIM2 = '@0.Contains(CostCenterID)';
+      dtvDIM2 = `[${this.journal?.diM2}]`;
+    }
+    eleGrid.setPredicates('diM2', preDIM2, dtvDIM2);
+
+    if (this.journal.diM3Control == '1' || this.journal.diM3Control == '2') {
+      preDIM3 = '@0.Contains(CostItemID)';
+      dtvDIM3 = `[${this.journal?.diM3}]`;
+    }
+    eleGrid.setPredicates('diM3', preDIM3, dtvDIM3);
+
+    if (this.journal.diM1Control == "0") hideFields.push("DIM1");
+    if (this.journal.diM2Control == "0") hideFields.push("DIM2");
+    if (this.journal.diM3Control == "0") hideFields.push("DIM3");
+    if (this.journal.projectControl == "0") hideFields.push("ProjectID");
+    if (this.journal.loanControl == "0") hideFields.push("ContractID");
+    if (this.journal.assetControl == "0"){
+      hideFields.push("AssetGroupID");
+      hideFields.push("AssetType");
+    } 
+    if (this.journal.subControl == "0") hideFields.push("ObjectID");
+    if (this.journal.settleControl == "0" || this.dataDefault.subType == (this.journal.journalType + "1")) hideFields.push("Settlement");
+
     if (this.journal.entryMode == '1') {
-      if (this.master?.data?.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
-        hideFields.push('DR2'); //? => ẩn field tiền Nợ,HT
-      }
-    } else { //? nếu loại mode 1 tài khoản trên nhiều dòng
-      if (this.master?.data?.currencyID == this.baseCurr) {
-        //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
-        hideFields.push('DR2'); //? => ẩn field tiền Có,HT
-        hideFields.push('CR2'); //? => ẩn field tiền Nợ,HT
+      if (this.dataDefault.currencyID == this.baseCurr) hideFields.push('DR2');
+    }else{
+      if (this.dataDefault.currencyID == this.baseCurr){
+        hideFields.push('DR2');
+        hideFields.push('CR2');
       }
     }
+
     eleGrid.showHideColumns(hideFields);
   }
 
@@ -157,7 +192,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * *Hàm khởi tạo trước khi init của lưới SettledInvoices (Ẩn hiện các cột theo đồng tiền hạch toán)
    * @param columnsGrid danh sách cột của lưới
    */
-  beforeInitGridSettledInvoices(eleGrid) {
+  initGridSettledInvoices(eleGrid) {
     this.settingFormatGridSettledInvoices(eleGrid);
     //* Thiết lập các field ẩn theo đồng tiền hạch toán
     let hideFields = [];
@@ -184,13 +219,13 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @param event
    * @param data
    */
-  clickMF(event: any, data) {
-    switch (event.functionID) {
+  clickMF(event: any) {
+    switch (event.event.functionID) {
       case 'SYS104':
-        this.copyRow(data);
+        this.copyRow(event.data);
         break;
       case 'SYS102':
-        this.deleteRow(data);
+        this.deleteRow(event.data);
         break;
     }
   }
@@ -227,6 +262,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
               this.master?.data?.subType,
               this.elementTabDetail
             );
+            this.onDestroy();
           });
         } else {
           this.isPreventChange = true;
@@ -240,7 +276,12 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         this.showHideTabDetail(this.master?.data?.subType, this.elementTabDetail);
       }
     }
-    this.setValidateForm()
+    this.setValidateForm();
+    let hSettlement = false;
+    if(this.journal.settleControl == "1" && (this.master.data.subType == this.journal.journalType + '9')){
+      hSettlement = true;
+    }
+    this.eleGridCashReceipt.showHideColumns(['Settlement'],hSettlement); 
   }
 
   /**
@@ -432,13 +473,14 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @param data
    */
   copyRow(data) {
+    let newData = {...data};
     if (this.eleGridCashReceipt && this.elementTabDetail?.selectingID == '0') {
       this.eleGridCashReceipt.saveRow((res:any)=>{ //? save lưới trước
         if(res){
-          data.recID = Util.uid();
-          data.index = this.eleGridCashReceipt.dataSource.length;
-          delete data?._oldData;
-          this.eleGridCashReceipt.addRow(data, this.eleGridCashReceipt.dataSource.length);
+          newData.recID = Util.uid();
+          newData.index = this.eleGridCashReceipt.dataSource.length;
+          delete newData?._oldData;
+          this.eleGridCashReceipt.addRow(newData, this.eleGridCashReceipt.dataSource.length);
         }
       })
     }
@@ -534,7 +576,6 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         if (res?.update) {
           this.dialog.dataService.update(res.data).subscribe();
           if (type == 'save') {
-            this.onDestroy();
             this.dialog.close();
           }else{
             this.api
@@ -631,11 +672,8 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
             this.eleGridCashReceipt.refresh();
           }, 50);
         }
-        // if (this.master.data.journalType.toLowerCase() == 'bp') {
-        //   this.bankNamePay = res?.data?.bankPayname;
-        //   this.detectorRef.detectChanges();
-        // }
       }
+      this.onDestroy();
     });
   }
 
@@ -664,6 +702,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
           this.eleGridCashReceipt.refresh();
         }
       }
+      this.onDestroy();
     });
   }
 
@@ -683,6 +722,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
           this.master.setValue('bankAcctID', null, {});
           this.preData = { ...this.master?.data };
         }
+        this.onDestroy();
       });
   }
 
@@ -701,6 +741,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
           this.master.setValue('memo', res?.data?.memo, {});
           this.preData = { ...this.master?.data };
         }
+        this.onDestroy();
       });
   }
 
@@ -732,6 +773,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         }
         this.isPreventChange = false;
       }
+      this.onDestroy();
     });
   }
 
@@ -746,6 +788,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
           this.master.data,
           ''
         ])
+        .pipe(takeUntil(this.destroy$))
         .subscribe((res:any) => {
           if (res) {
             this.preData = {...this.master?.data};
@@ -756,6 +799,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
               this.detectorRef.detectChanges();
             }
           }
+          this.onDestroy();
         });
   }
 
@@ -781,6 +825,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
           this.detectorRef.detectChanges();
         }
       }
+      this.onDestroy();
     });
   }
 
@@ -789,19 +834,16 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    */
   addRowDetail() {
     switch (this.master?.data?.subType) {
-      case '11':
+      case `${this.journal.journalType+'1'}`:
         this.addLine();
         break;
-      case '12':
+      case `${this.journal.journalType+'2'}`:
         this.addSettledInvoices();
         break;
-      case '13':
+      case `${this.journal.journalType+'3'}`:
         this.addSuggestion('2');
         break;
-      // case '14':
-      //   this.addSuggestion('2');
-      //   break;
-      case '19':
+      case `${this.journal.journalType+'9'}`:
         if (this.elementTabDetail && this.elementTabDetail?.selectingID == '0') {
           this.addLine();
         }
@@ -820,66 +862,8 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
       if (res) {
         this.eleGridCashReceipt.addRow(res, this.eleGridCashReceipt.dataSource.length);
       }
+      this.onDestroy();
     })
-  }
-
-  /**
-   * *Hàm ràng buộc không được bỏ trống phòng ban,mục phí,ttcp của tài khoản
-   * @param oLine
-   * @param oAccount
-   * @param oOffsetAcct
-   * @returns
-   */
-  setLockAndRequireFields(oLine, oAccount, oOffsetAcct) {
-    if ((oAccount == null && oOffsetAcct == null) || (this.journal.entryMode == '2' && oLine.dr == 0 && oLine.cr == 0)) {
-      return;
-    } else {
-      let rDIM1 = false;
-      let rDIM2 = false;
-      let rDIM3 = false;
-
-      let lDIM1 = true;
-      let lDIM2 = true;
-      let lDIM3 = true;
-
-      //* Set require field
-      if (this.journal.entryMode == '1' && (oAccount?.diM1Control == '1' || oAccount?.diM1Control == '3' || oOffsetAcct?.diM1Control == '2' || oOffsetAcct?.diM1Control == '3'))
-        rDIM1 = true;
-      if (this.journal.entryMode == '2' && ((oAccount?.diM1Control == '1' && oLine.dr > 0) || (oAccount?.diM1Control == '2' && oLine.cr > 0) || oAccount?.diM1Control == '3'))
-        rDIM1 = true;
-      this.eleGridCashReceipt.setRequiredFields(['diM1'],rDIM1);
-
-      if (this.journal.entryMode == '1' && (oAccount?.diM2Control == '1' || oAccount?.diM2Control == '3' || oOffsetAcct?.diM2Control == '2' || oOffsetAcct?.diM2Control == '3'))
-        rDIM2 = true;
-      if (this.journal.entryMode == '2' && ((oAccount?.diM2Control == '1' && oLine.dr > 0) || (oAccount?.diM2Control == '2' && oLine.cr > 0) || oAccount?.diM2Control == '3'))
-        rDIM2 = true;
-        this.eleGridCashReceipt.setRequiredFields(['diM2'],rDIM2);
-
-      if (this.journal.entryMode == '1' && (oAccount?.diM3Control == '1' || oAccount?.diM3Control == '3' || oOffsetAcct?.diM3Control == '2' || oOffsetAcct?.diM3Control == '3'))
-        rDIM3 = true;
-      if (this.journal.entryMode == '2' && ((oAccount?.diM3Control == '1' && oLine.dr > 0) || (oAccount?.diM3Control == '2' && oLine.cr > 0) || oAccount?.diM3Control == '3'))
-        rDIM3 = true;
-        this.eleGridCashReceipt.setRequiredFields(['diM3'],rDIM3);
-
-      //* Set lock field
-      if (this.journal.entryMode == '1' && (oAccount?.diM1Control == '4' || oOffsetAcct?.diM1Control == '5'))
-        lDIM1 = false;
-      if (this.journal.entryMode == '2' && ((oAccount?.diM1Control == '4' && oLine.dr > 0) || (oAccount?.diM1Control == '5' && oLine.cr > 0)))
-        lDIM1 = false;
-      this.eleGridCashReceipt.setEditableFields(['diM1'],lDIM1);
-
-      if (this.journal.entryMode == '1' && (oAccount?.diM2Control == '4' || oOffsetAcct?.diM2Control == '5'))
-        lDIM2 = false;
-      if (this.journal.entryMode == '2' && ((oAccount?.diM2Control == '4' && oLine.dr > 0) || (oAccount?.diM2Control == '5' && oLine.cr > 0)))
-        lDIM2 = false;
-      this.eleGridCashReceipt.setEditableFields(['diM2'],lDIM2);
-
-      if (this.journal.entryMode == '1' && (oAccount?.diM3Control == '4' || oOffsetAcct?.diM3Control == '5'))
-        lDIM3 = false;
-      if (this.journal.entryMode == '2' && ((oAccount?.diM3Control == '4' && oLine.dr > 0) || (oAccount?.diM3Control == '5' && oLine.cr > 0)))
-        lDIM3 = false;
-      this.eleGridCashReceipt.setEditableFields(['diM3'],lDIM3);
-    }
   }
 
   /**
@@ -974,25 +958,29 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @param eleTab
    */
   showHideTabDetail(type, eleTab) {
-    switch (type) {
-      case '11':
-      case '13':
-      case '14':
-        eleTab.hideTab(0, false);
-        eleTab.hideTab(1, true);
-        eleTab.hideTab(2, true);
-        break;
-      case '12':
-        eleTab.hideTab(0, true);
-        eleTab.hideTab(1, false);
-        eleTab.hideTab(2, true);
-        break;
-      case '19':
+    if (eleTab) {
+      switch (type) {
+        case `${this.journal.journalType+'1'}`:
+        case `${this.journal.journalType+'3'}`:
+        case `${this.journal.journalType+'4'}`:
+          eleTab.hideTab(0, false);
+          eleTab.hideTab(1, true);
+          eleTab.hideTab(2, true);
+          eleTab.select(0);
+          break;
+        case `${this.journal.journalType+'2'}`:
+          eleTab.hideTab(0, true);
+          eleTab.hideTab(1, false);
+          eleTab.hideTab(2, true);
+          eleTab.select(1);
+          break;
+        case `${this.journal.journalType+'9'}`:
           eleTab.hideTab(0, false);
           eleTab.hideTab(1, false);
           eleTab.hideTab(2, false);
           eleTab.select(0);
           break;
+      }
     }
   }
 
@@ -1014,7 +1002,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     }
     this.eleGridCashReceipt.showHideColumns(['DR2'], hDR2);
     this.eleGridCashReceipt.showHideColumns(['CR2'], hCR2);
-    this.settingFormatGridCashReceipt(this.eleGridCashReceipt);
+    this.settingFormatGrid(this.eleGridCashReceipt);
     }
 
     if (this.eleGridSettledInvoices) {
@@ -1090,9 +1078,6 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
       }, 100);
         break;
       case 'beginEdit': //? trước khi thêm dòng
-        let oAccount = this.acService.getCacheValue('account', event?.data.accountID);
-        let oOffsetAccount = this.acService.getCacheValue('account',event?.data.offsetAcctID);
-        this.setLockAndRequireFields(event?.data,oAccount,oOffsetAccount);
         break;
     }
   }
@@ -1143,7 +1128,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * *Hàm setting format tiền theo đồng tiền hạch toán
    * @param eleGrid
    */
-  settingFormatGridCashReceipt(eleGrid){
+  settingFormatGrid(eleGrid){
     let setting = eleGrid.systemSetting;
     if (this.master.data.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
       eleGrid.setFormatField('dr','n'+(setting.dBaseCurr || 0));

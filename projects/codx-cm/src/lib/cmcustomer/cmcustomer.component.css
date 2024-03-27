@@ -5,3 +5,22 @@
   border-bottom-color: rgba(0, 0, 0, 0.08);
   box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
 }
+.ejs-rating-star {
+  color: #ccc;
+  font-size: 24px;
+}
+
+::ng-deep .ejs-rating-star.filled {
+  color: gold;
+}
+::ng-deep span.e-rating-item-container.e-rating-selected {
+  font-size: 14px;
+  color: gold !important;
+}
+::ng-deep span.e-rating-item-container.e-rating-intermediate.e-rating-focus {
+  font-size: 14px;
+  color: gold !important;
+}
+::ng-deep span.e-rating-item-container {
+  font-size: 14px !important;
+}

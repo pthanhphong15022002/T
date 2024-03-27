@@ -48,22 +48,11 @@ export class CashtransfersComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
-    private authStore: AuthStore,
     private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore,
   ) {
     super(inject);
-    // this.cache
-    //   .companySetting()
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res.length > 0) {
-    //       this.baseCurr = res[0].baseCurr;
-    //     }
-    //   });
-      
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
@@ -297,6 +286,7 @@ export class CashtransfersComponent extends UIComponent {
             }
           })
         }
+        this.onDestroy();
       });
   }
 
@@ -342,6 +332,7 @@ export class CashtransfersComponent extends UIComponent {
             }
           })
         }
+        this.onDestroy();
       });
   }
 
@@ -409,6 +400,7 @@ export class CashtransfersComponent extends UIComponent {
                   }
                 })
               }
+              this.onDestroy();
             });
         }
       });
@@ -449,6 +441,7 @@ export class CashtransfersComponent extends UIComponent {
               }
             })
           }
+          this.onDestroy();
         });
     }
   }
@@ -498,6 +491,7 @@ export class CashtransfersComponent extends UIComponent {
             }
           });
         })
+        this.onDestroy();
       });
   }
 
@@ -538,6 +532,7 @@ export class CashtransfersComponent extends UIComponent {
                   }
                 });
             } else this.notification.notifyCode(result?.msgCodeError);
+            this.onDestroy();
           });
       });
   }
@@ -561,8 +556,12 @@ export class CashtransfersComponent extends UIComponent {
               if (res && !res.update.error) {
                 this.notification.notifyCode('AC0029', 0, text);
               }
+              this.onDestroy();
             });
-        } else this.notification.notifyCode(result?.msgCodeError);
+        } else{
+          this.notification.notifyCode(result?.msgCodeError);
+          this.onDestroy();
+        } 
       });
   }
 
@@ -573,6 +572,7 @@ export class CashtransfersComponent extends UIComponent {
   validateVourcher(text: any, data: any) {
     this.api
       .exec('AC', 'CashTranfersBusiness', 'ValidateVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -580,6 +580,7 @@ export class CashtransfersComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -590,6 +591,7 @@ export class CashtransfersComponent extends UIComponent {
   postVoucher(text: any, data: any) {
     this.api
       .exec('AC', 'CashTranfersBusiness', 'PostVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -597,6 +599,7 @@ export class CashtransfersComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -607,6 +610,7 @@ export class CashtransfersComponent extends UIComponent {
   unPostVoucher(text: any, data: any) {
     this.api
       .exec('AC', 'CashTranfersBusiness', 'UnPostVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -614,6 +618,7 @@ export class CashtransfersComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 

@@ -91,7 +91,8 @@
           field.dataType != 'A' &&
           field.dataType != 'R' &&
           field.dataType != 'C' &&
-          field.dataType != 'PA'
+          field.dataType != 'PA' &&
+          field.dataType != 'RM'
         "
       >
         <div class="d-flex justify-content-between">
@@ -408,7 +409,7 @@
           </ng-container>
         </div>
       </ng-container>
-
+      <!-- view defaultvalue -->
       <div class="form-group" *ngIf="fieldCus">
         <codx-input-custom-field
           #tempInput

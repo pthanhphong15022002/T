@@ -313,7 +313,7 @@
   </div>
 </div>
 <ng-template #tmpRow let-data let-isCon="b" let-index="c">
-  <div
+  <div *ngIf="!(data?.dataTask?.canceled ==true) "
     class="row d-flex align-items-center cursor-pointer w-100"
     (dblclick)="openForm(data?.dataTask)"
   >
@@ -408,12 +408,14 @@
     <div class="col-1 d-flex justify-content-end">
       <div
         class="col-6 d-flex align-items-center justify-content-center position-relative border rounded w-30px p-2"
+        *ngIf="data.activityType == 'Form'" (click)="openForm(data?.dataTask)"
       >
         <i class="icon-i-file-earmark-text"></i>
       </div>
       <ng-container *ngIf="data.attachments && data.attachments > 0">
         <div
-          class="col-6 d-flex align-items-center justify-content-center position-relative border rounded w-30px p-2 ms-3"
+          [ngClass]="data.activityType == 'Form' ? 'col-6 ms-3' : ''"
+          class="d-flex align-items-center justify-content-center position-relative border rounded w-30px p-2"
         >
           <i class="icon-attach_file"></i>
           <div
@@ -424,7 +426,7 @@
         </div>
       </ng-container>
     </div>
-    <!-- <div (click)="changePer(data)">
+    <!-- <div (click)="addNewTask(data)">
       <span class="icon-add"></span>
       <codx-label default="Thêm công việc"></codx-label>
   </div> -->

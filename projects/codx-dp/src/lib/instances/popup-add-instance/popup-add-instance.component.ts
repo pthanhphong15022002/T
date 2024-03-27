@@ -104,6 +104,7 @@ export class PopupAddInstanceComponent implements OnInit {
   isLoadedCF = false; // da lay danh sach CF
   isShowMore = false;
   widthDefault: string;
+  templetCreated = [];
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -143,7 +144,7 @@ export class PopupAddInstanceComponent implements OnInit {
       : '550';
 
     this.user = this.authStore.get();
-    if (this.action === 'edit') {
+    if (this.action === 'edit' || this.action === 'view') {
       this.autoName = dt?.data?.autoName;
       this.owner = this.instance?.owner;
     } else {
@@ -158,6 +159,7 @@ export class PopupAddInstanceComponent implements OnInit {
       } else {
         this.owner = '';
       }
+      this.instance.owner = this.owner;
     }
     this.cache
       .gridViewSetup(
@@ -192,7 +194,7 @@ export class PopupAddInstanceComponent implements OnInit {
     }
   }
 
-  buttonClick(e: any) {}
+  buttonClick(e: any) { }
 
   async promiseAll() {
     this.action === 'edit' &&
@@ -428,7 +430,7 @@ export class PopupAddInstanceComponent implements OnInit {
         if (res && res.save) {
           this.dialog.close(res.save);
           this.changeDetectorRef.detectChanges();
-        }
+        } else this.deletedTempletMailCustomField()
       });
   }
   onUpdate() {
@@ -437,8 +439,12 @@ export class PopupAddInstanceComponent implements OnInit {
       .subscribe((res) => {
         if (res.update) {
           this.dialog.close(res.update);
-        }
+        } else this.deletedTempletMailCustomField()
       });
+  }
+  //Xoa templet tao
+  deletedTempletMailCustomField() {
+    if (this.templetCreated?.length > 0) this.customFieldSV.deletedTempmail(this.templetCreated)
   }
   autoClickedSteps() {
     this.instance.stepID = this.listStep[0]?.stepID;
@@ -562,9 +568,9 @@ export class PopupAddInstanceComponent implements OnInit {
   HandleEndDate(listSteps: any, action: string, endDateValue: any) {
     endDateValue =
       action === 'add' ||
-      action === 'copy' ||
-      (this.action === 'edit' &&
-        (this.instance.status == '1' || this.instance.status == '15'))
+        action === 'copy' ||
+        (this.action === 'edit' &&
+          (this.instance.status == '1' || this.instance.status == '15'))
         ? new Date()
         : new Date(endDateValue);
     let dateNow = endDateValue;
@@ -731,5 +737,10 @@ export class PopupAddInstanceComponent implements OnInit {
     width = Util.getViewPort().width.toString();
     this.dialog.setWidth(this.isShowMore ? width : this.widthDefault);
     this.changeDetectorRef.detectChanges();
+  }
+
+  isCreatedTempletMail(e) {
+    if (e && !this.templetCreated.includes(e))
+      this.templetCreated.push(e)
   }
 }

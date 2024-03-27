@@ -69,35 +69,25 @@ export class SalesinvoicesComponent extends UIComponent {
   ];
   viewActive: number = ViewType.listdetail;
   ViewType = ViewType;
-  fmJournal:FormModel =  fmJournal;
-  journalSV:CRUDService;
+  fmJournal: FormModel = fmJournal;
+  journalSV: CRUDService;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
-    private authStore: AuthStore,
     private shareService: CodxShareService,
     private codxCommonService: CodxCommonService,
-    private notification: NotificationsService,
-    private tenant: TenantStore
+    private notification: NotificationsService
   ) {
     super(inject);
-    // this.cache
-    //   .companySetting()
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res.length > 0) {
-    //       this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
-    //     }
-    //   });
-  this.cache
+    this.cache
       .viewSettingValues('ACParameters')
       .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
       .subscribe((res) => {
         let dataValue = JSON.parse(res.dataValue);
         this.baseCurr = dataValue?.BaseCurr || '';
-      })
+      });
     this.router.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       this.journalNo = params?.journalNo; //? get số journal từ router
     });
@@ -252,7 +242,7 @@ export class SalesinvoicesComponent extends UIComponent {
         this.printVoucher(data, e.functionID); //? in chứng từ
         break;
       case 'ACT060501':
-        this.EInvoices(data, e.functionID); //? hóa đơn điện tử
+        this.EInvoices(data, e.functionID, e.text); //? hóa đơn điện tử
         break;
     }
   }
@@ -344,6 +334,7 @@ export class SalesinvoicesComponent extends UIComponent {
             }
           });
         }
+        this.onDestroy();
       });
   }
 
@@ -386,6 +377,7 @@ export class SalesinvoicesComponent extends UIComponent {
             }
           }
         });
+        this.onDestroy();
       });
   }
 
@@ -398,9 +390,9 @@ export class SalesinvoicesComponent extends UIComponent {
     let newdataCopy = { ...dataCopy };
     if (this.journal && this.journal.assignRule == '0') {
       let data = {
-        journalType : this.journal.journalType,
-        journalNo : this.journalNo
-      }
+        journalType: this.journal.journalType,
+        journalNo: this.journalNo,
+      };
       let opt = new DialogModel();
       opt.FormModel = this.view.formModel;
       let dialog = this.callfc.openForm(
@@ -460,6 +452,7 @@ export class SalesinvoicesComponent extends UIComponent {
                         .pipe(takeUntil(this.destroy$))
                         .subscribe();
                     }
+                    this.onDestroy();
                   });
               }
             });
@@ -509,6 +502,7 @@ export class SalesinvoicesComponent extends UIComponent {
                     .pipe(takeUntil(this.destroy$))
                     .subscribe();
                 }
+                this.onDestroy();
               });
           }
         });
@@ -530,36 +524,40 @@ export class SalesinvoicesComponent extends UIComponent {
             this.detectorRef.detectChanges();
           }
         }
+        this.onDestroy();
       });
   }
 
-  editJournal(){
+  editJournal() {
     this.journalSV
       .edit(this.journal)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         res.isEdit = true;
-        this.cache.gridViewSetup(this.fmJournal.formName,this.fmJournal.gridViewName).subscribe((o)=>{
-          let data = {
-            headerText: ('Chỉnh sửa sổ nhật kí').toUpperCase(),
-            oData: { ...res },
-          };
-          let option = new SidebarModel();
-          option.FormModel = this.fmJournal;
-          option.DataService = this.journalSV;
-          option.Width = '800px';
-          let dialog = this.callfc.openSide(
-            JournalsAddComponent,
-            data,
-            option,
-            this.fmJournal.funcID
-          );
-          dialog.closed.subscribe((res) => {
-            if (res && res.event) {
-              this.getJournal();
-            }
+        this.cache
+          .gridViewSetup(this.fmJournal.formName, this.fmJournal.gridViewName)
+          .subscribe((o) => {
+            let data = {
+              headerText: 'Chỉnh sửa sổ nhật kí'.toUpperCase(),
+              oData: { ...res },
+            };
+            let option = new SidebarModel();
+            option.FormModel = this.fmJournal;
+            option.DataService = this.journalSV;
+            option.Width = '800px';
+            let dialog = this.callfc.openSide(
+              JournalsAddComponent,
+              data,
+              option,
+              this.fmJournal.funcID
+            );
+            dialog.closed.subscribe((res) => {
+              if (res && res.event) {
+                this.getJournal();
+              }
+            });
           });
-        })
+        this.onDestroy();
       });
   }
 
@@ -586,7 +584,7 @@ export class SalesinvoicesComponent extends UIComponent {
       optionSidebar,
       this.view.funcID
     );
-    dialog.closed.subscribe((res) => { });
+    dialog.closed.subscribe((res) => {});
   }
 
   /**
@@ -606,6 +604,7 @@ export class SalesinvoicesComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -623,6 +622,7 @@ export class SalesinvoicesComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -640,6 +640,7 @@ export class SalesinvoicesComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -676,8 +677,12 @@ export class SalesinvoicesComponent extends UIComponent {
                   if (res && !res.update.error) {
                     this.notification.notifyCode('AC0029', 0, text);
                   }
+                  this.onDestroy();
                 });
-            } else this.notification.notifyCode(result?.msgCodeError);
+            } else {
+              this.notification.notifyCode(result?.msgCodeError);
+              this.onDestroy();
+            }
           });
       });
   }
@@ -701,8 +706,12 @@ export class SalesinvoicesComponent extends UIComponent {
               if (res && !res.update.error) {
                 this.notification.notifyCode('AC0029', 0, text);
               }
+              this.onDestroy();
             });
-        } else this.notification.notifyCode(result?.msgCodeError);
+        } else {
+          this.notification.notifyCode(result?.msgCodeError);
+          this.onDestroy();
+        }
       });
   }
 
@@ -752,7 +761,7 @@ export class SalesinvoicesComponent extends UIComponent {
     );
   }
 
-  EInvoices(data: any, functionID: string) {
+  EInvoices(data: any, functionID: string, text: string) {
     var lstID = [data.recID];
     this.api
       .execSv(
@@ -763,7 +772,17 @@ export class SalesinvoicesComponent extends UIComponent {
         [lstID, true, true]
       )
       .subscribe((res: any) => {
-        if (res) {
+        if (res && res.length > 0) {
+          //debugger;
+          this.notification.notifyCode('AC0029', 0, text);
+          if (Array.isArray(res)) {
+            res.forEach((element) => {
+              this.itemSelected = element;
+              this.view.dataService.update(element).subscribe();
+            });
+          }
+          // this.itemSelected = res;
+          //this.view.dataService.update(this.itemSelected).subscribe();
           // this.journal = res[0]; // data journal
           // this.hideFields = res[1]; // array field ẩn từ sổ nhật kí
         }
@@ -797,15 +816,16 @@ export class SalesinvoicesComponent extends UIComponent {
    * *Hàm get data mặc định của chứng từ
    */
   getJournal() {
+    let options = new DataRequest();
+    options.entityName = 'AC_Journals';
+    options.pageLoading = false;
+    options.predicates = 'JournalNo=@0';
+    options.dataValues = this.journalNo;
     this.api
-      .exec('AC', 'ACBusiness', 'GetJournalAsync', [this.journalNo])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res) {
-          this.journal = res[0]; // data journal
-          this.hideFields = res[1]; // array field ẩn từ sổ nhật kí
-        }
-      });
+      .execSv('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(map((r) => r?.[0] ?? [])).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+        this.journal = res[0]; 
+      })
   }
 
   /**

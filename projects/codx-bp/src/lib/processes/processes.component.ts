@@ -82,7 +82,7 @@ export class ProcessesComponent
       {
         type: ViewType.grid,
         active: false,
-        sameData: true,
+        sameData: false,
         model: {
           template2: this.templateMore,
         },
@@ -237,10 +237,14 @@ export class ProcessesComponent
     }
   }
 
-  clickMF(e, data) {
+  async clickMF(e, ele) {
+    let data = await firstValueFrom(
+      this.api.execSv<any>('BP', 'BP', 'ProcessesBusiness', 'GetAsync', [
+        ele?.recID,
+      ])
+    );
     this.itemSelected = data;
     this.titleAction = e.text;
-    debugger
     switch (e.functionID) {
       case 'SYS03':
         this.edit(data);
@@ -284,7 +288,9 @@ export class ProcessesComponent
       }
     }
   }
-
+  dbClickEvent(e) {
+    this.clickMF(e?.e, e?.data);
+  }
   openFormDiagram() {
     let option = new DialogModel();
     option.IsFull = true;
@@ -313,7 +319,8 @@ export class ProcessesComponent
             res.disabled = data?.status == '5' ? false : true;
             break;
           case 'SYS02':
-            res.disabled = data?.status == '5' || data?.status == '2' ? true : false;
+            res.disabled =
+              data?.status == '5' || data?.status == '2' ? true : false;
             break;
         }
       });

@@ -81,6 +81,17 @@ export class CodxBpService {
       [funcID, entityName, key]
     );
   }
+
+  getAutoNumber(key: any) {
+    return this.api.execSv<any>(
+      APICONSTANT.SERVICES.SYS,
+      APICONSTANT.ASSEMBLY.AD,
+      'AutoNumbersBusiness',
+      'GetAutoNumberAsync',
+      key
+    );
+  }
+  
   createTaskOnSaveInstance(recID) {
     return this.api.execSv<any>(
       "BP",
@@ -97,6 +108,15 @@ export class CodxBpService {
       'ProcessesBusiness',
       'StartInstanceAsync',
       [recID]
+    );
+  }
+  authorityTask(recID,approver:any) {
+    return this.api.execSv<any>(
+      "BP",
+      "ERM.Business.BP",
+      'ProcessesBusiness',
+      'AuthorityAsync',
+      [recID,approver]
     );
   }
 
@@ -155,15 +175,6 @@ export class CodxBpService {
     );
   }
 
-  authorityTask(recID, approvers = []) {
-    return this.api.execSv<any>(
-      APICONSTANT.SERVICES.BP,
-      APICONSTANT.ASSEMBLY.BP,
-      'UsersBusiness',
-      'GetUserByIDAsync',
-      [recID, approvers]
-    );
-  }
 
   getFilesByListIDs(lstIDs) {
     return this.api.execSv<any>(

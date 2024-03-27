@@ -29,7 +29,7 @@ import {
   DP_Instances_Steps_Tasks,
   DP_Instances_Steps_Tasks_Roles,
 } from 'projects/codx-dp/src/lib/models/models';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, forkJoin, mergeMap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { CodxCmService } from '../codx-cm.service';
 import { ContractsService } from './service-contracts.service';
@@ -146,6 +146,8 @@ export class ContractsComponent extends UIComponent {
   processID = '';
   valueListTab;
   tabDefaut;
+  disabledDisposalID = false;
+  viewType = '';
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
@@ -178,7 +180,7 @@ export class ContractsComponent extends UIComponent {
       this.arrFieldIsVisible = arrField
         .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
         .map((x: any) => x.fieldName);
-      this.getColumsGrid(this.grvSetup);
+      // this.getColumsGrid(this.grvSetup);
     }
     this.vllStatus = this.grvSetup['Status'].referedValue;
     this.vllApprove = this.grvSetup['ApproveStatus'].referedValue;
@@ -187,7 +189,7 @@ export class ContractsComponent extends UIComponent {
       this.processID = params['processID'] || null;
     });
     this.getAccount();
-    this.getColumsGrid(this.grvSetup);
+    // this.getColumsGrid(this.grvSetup);
     const [valueListTab, tabDefaut] = await Promise.all([
       this.cmService.getValueList('CRM086'),
       this.cmService.getSettingContract(),
@@ -198,7 +200,7 @@ export class ContractsComponent extends UIComponent {
     }
   }
 
-  async ngOnChanges(changes: SimpleChanges) {}
+  async ngOnChanges(changes: SimpleChanges) { }
 
   ngAfterViewInit() {
     this.getColumsGrid(this.grvSetup);
@@ -206,6 +208,9 @@ export class ContractsComponent extends UIComponent {
 
   changeTab(e) {
     this.tabClicked = e;
+  }
+  changeView(e) {
+    this.viewType = e?.view?.type;
   }
 
   click(e) {
@@ -249,32 +254,40 @@ export class ContractsComponent extends UIComponent {
         if (isDetail) res.isbookmark = false;
         if (
           data?.approveStatus == '3' &&
-          res?.functionID != 'CM0204_2' &&
-          res?.functionID != 'SYS05' &&
-          res?.functionID != 'CM0204_17'
+          !['CM0204_2', 'SYS05', 'CM0204_17', 'CM0204_7', 'SYS003', 'SYS004', 'SYS001', 'SYS002', 'SYS009', 'SYS008', 'SYS010'].includes(
+            res?.functionID
+          )
         ) {
           res.disabled = true;
         } else if (
           ['3', '4', '5', '6', '17'].includes(data?.status) &&
-          res?.functionID != 'SYS05' &&
-          res?.functionID != 'CM0204_16' && 
-          res?.functionID != 'CM0204_22' &&
-          res?.functionID != 'CM0204_17' &&
-          res?.functionID != 'CM0204_3'
+          ![
+            'SYS05',
+            'CM0204_16',
+            'CM0204_22',
+            'CM0204_17',
+            'CM0204_3',
+            'CM0204_7',
+            'SYS003', 'SYS004', 'SYS001', 'SYS002', 'SYS009', 'SYS008', 'SYS010'
+          ].includes(res?.functionID)
         ) {
           res.disabled = true;
         } else if (
           data?.closed &&
-          res?.functionID != 'CM0204_16' &&
-          res?.functionID != 'SYS05' &&
-          res?.functionID != 'CM0204_2' &&
-          res?.functionID != 'CM0204_22' &&
-          res?.functionID != 'CM0204_17'
+          ![
+            'CM0204_16',
+            'SYS05',
+            'CM0204_2',
+            'CM0204_22',
+            'CM0204_17',
+            'CM0204_7',
+            'SYS003', 'SYS004', 'SYS001', 'SYS002', 'SYS009', 'SYS008', 'SYS010'
+          ].includes(res?.functionID)
         ) {
           res.disabled = true;
         } else {
           switch (res.functionID) {
-            case 'SYS04'://copy
+            case 'SYS04': //copy
               res.disabled = !(data?.write || data?.alloweStatus);
               break;
             case 'SYS03': //sửa
@@ -290,27 +303,46 @@ export class ContractsComponent extends UIComponent {
             case 'CM0204_2': //Hủy yêu cầu duyệt
               res.disabled = data?.approveStatus != '3';
               break;
-            case 'CM0204_17'://chia sẻ
+            case 'CM0204_17': //chia sẻ
               res.disabled = !data?.alloweStatus;
               break;
             case 'CM0204_14': // phân công người phụ trách
-              res.disabled = !(data?.alloweStatus == '1')
+              res.disabled = !(data?.alloweStatus == '1');
               break;
 
             case 'CM0204_22': // đổi trạng thái
               res.disabled = !(data?.alloweStatus && !data?.closed);
               break;
             case 'CM0204_9': // bắt đầu
-              res.disabled = !(data?.alloweStatus && data?.status == '1' && !data?.closed)
+              res.disabled = !(
+                data?.alloweStatus &&
+                data?.status == '1' &&
+                !data?.closed
+              );
               break;
             case 'CM0204_10': // thành công
-              res.disabled = !(data?.alloweStatus && !data?.closed && data?.applyProcess && data?.status == '2');
+              res.disabled = !(
+                data?.alloweStatus &&
+                !data?.closed &&
+                data?.applyProcess &&
+                data?.status == '2'
+              );
               break;
             case 'CM0204_11': // thất bại
-              res.disabled = !(data?.alloweStatus && !data?.closed && data?.applyProcess && data?.status == '2');
+              res.disabled = !(
+                data?.alloweStatus &&
+                !data?.closed &&
+                data?.applyProcess &&
+                data?.status == '2'
+              );
               break;
             case 'CM0204_8': // chuyển giai đoạn
-              res.disabled = !(data?.applyProcess && data?.status == '2' && !data?.closed && data?.alloweStatus);
+              res.disabled = !(
+                data?.applyProcess &&
+                data?.status == '2' &&
+                !data?.closed &&
+                data?.alloweStatus
+              );
               break;
             case 'CM0204_13': // thêm công việc
               res.disabled = data?.closed;
@@ -325,26 +357,38 @@ export class ContractsComponent extends UIComponent {
               break;
 
             case 'CM0204_15': // Đóng hợp đồng
-              res.disabled = !(!data?.closed && data?.alloweStatus && data?.approveStatus != '3');
+              res.disabled = !(
+                !data?.closed &&
+                data?.alloweStatus &&
+                data?.approveStatus != '3'
+              );
               break;
             case 'CM0204_16': // mở lại hợp đồng
               res.disabled = !(data?.closed && data?.alloweStatus);
               break;
             case 'CM0204_18': // thanh lý
-              res.disabled = !(data?.status != '17' &&  !data?.closed && data?.alloweStatus && data?.approveStatus != '3');
+              res.disabled = !(
+                data?.status != '17' &&
+                !data?.closed &&
+                data?.alloweStatus &&
+                data?.approveStatus != '3'
+              );
               break;
 
             case 'CM0204_5': //Đã giao hàng
             case 'CM0204_4':
               res.disabled = true;
               break;
-            case 'CM0204_3'://gia hạn
-            case 'CM0204_21':// phụ lục
+            case 'CM0204_3': //gia hạn
+            case 'CM0204_21': // phụ lục
               res.disabled = data?.closed;
               break;
             case 'CM0204_6': //hoàn tất hợp đồng
               res.disabled = data?.status == '1' || data?.closed;
-              break; 
+              break;
+            case 'CM0204_7': //xem chi tiet
+              res.disabled = this.viewType != '11';
+              break;
           }
         }
       });
@@ -524,10 +568,10 @@ export class ContractsComponent extends UIComponent {
           this.notiService
             .alertCode('DP033', null, [
               '"' +
-                data?.contractName +
-                '" ' +
-                'Người phụ trách không tồn tại trong quy trình' +
-                ' ',
+              data?.contractName +
+              '" ' +
+              'Người phụ trách không tồn tại trong quy trình' +
+              ' ',
             ])
             .subscribe((x) => {
               if (x.event && x.event.status == 'Y') {
@@ -713,6 +757,13 @@ export class ContractsComponent extends UIComponent {
   }
 
   async addContract() {
+    // this.api.exec<any>(
+    //   'CM',
+    //   'ContractsBusiness',
+    //   'ReminderPresentAsync',
+    //   []
+    // ).subscribe();
+
     this.view.dataService.addNew().subscribe(async (res) => {
       await this.openPopupContract(
         this.processID,
@@ -1088,6 +1139,60 @@ export class ContractsComponent extends UIComponent {
   //end duyet
   //------------------------------"Permissions", "Closed", "ClosedOn", "ClosedBy"--------------------------------------//
   getColumsGrid(grvSetup) {
+    // this.columnGrids = [];
+    // this.arrFieldIsVisible.forEach((key) => {
+    //   let field = Util.camelize(key);
+    //   let template: any;
+    //   let colums: any;
+    // switch (key) {
+    // case 'ContractName':
+    //   template = this.tempContractName;
+    //   break;
+    // case 'CustomerID':
+    //   template = this.tempCustomerID;
+    //   break;
+    // case 'ContractAmt':
+    //   template = this.tempContractAmt;
+    //   break;
+    // case 'PaidAmt':
+    //   template = this.tempPaidAmt;
+    //   break;
+    // case 'CurrencyID':
+    //   template = this.tempCurrencyID;
+    //   break;
+    // case 'ApplyProcess':
+    //   template = this.tempApplyProcess;
+    //   break;
+    // case 'StepID':
+    //   template = this.tempStepID;
+    //   break;
+    // case 'Status':
+    //   template = this.tempStatus;
+    //   break;
+    // case 'Owner':
+    //   template = this.tempOwner;
+    //   break;
+    // default:
+    //   break;
+    // }
+    // if (template) {
+    //   colums = {
+    //     field: field,
+    //     headerText: grvSetup[key].headerText,
+    //     width: grvSetup[key].width,
+    //     template: template,
+    //     // textAlign: 'center',
+    //   };
+    // } else {
+    //   colums = {
+    //     field: field,
+    //     headerText: grvSetup[key].headerText,
+    //     width: grvSetup[key].width,
+    //   };
+    // }
+
+    // this.columnGrids.push(colums);
+    // });
     this.views = [
       {
         type: ViewType.listdetail,
@@ -1537,7 +1642,7 @@ export class ContractsComponent extends UIComponent {
             e,
             data,
             this.afterSave,
-            this.frmModelExport, //this.view.formModel,
+            this.view.formModel,//this.frmModelExport, 
             this.view.dataService,
             this,
             customData
@@ -1547,21 +1652,41 @@ export class ContractsComponent extends UIComponent {
       });
   }
 
+  getAutoNumber() {
+    forkJoin([
+      this.cmService.getFieldAutoNoDefault('CM0207', this.entityName),
+      this.contractService.getAutoCodeByFunctionId('CM0207', 'CM_Contracts'),
+    ])
+      .pipe(
+        mergeMap(([checkAuto, autoCode]) => {
+          if (checkAuto && !checkAuto.stop) {
+            if (autoCode) {
+              this.disabledDisposalID = autoCode;
+              this.liquidation.disposalID = autoCode;
+              this.changeDetectorRef.markForCheck();
+            } else {
+              this.disabledDisposalID = false;
+              this.notiService.notify(
+                'Số tự động thanh lý hợp đồng chưa được thiết lập',
+                '3'
+              );
+            }
+          } else {
+            this.disabledDisposalID = false;
+            this.notiService.notify(
+              'Số tự động thanh lý hợp đồng chưa được bật',
+              '3'
+            );
+          }
+          return [];
+        })
+      )
+      .subscribe(() => { });
+  }
+
   liquidationContract(data) {
     this.liquidation = JSON.parse(JSON.stringify(data));
-    this.contractService
-      .getAutoCodeByFunctionId('CM0207', 'CM_Contracts')
-      .subscribe((res) => {
-        if (res) {
-          this.liquidation.disposalID = res;
-          this.changeDetectorRef.markForCheck();
-        } else {
-          this.notiService.notify(
-            'Số tự động thanh lý hợp đồng chưa được thiết lâp',
-            '3'
-          );
-        }
-      });
+    this.getAutoNumber();
     this.liquidation.status = '17';
     this.liquidation.disposalOn = new Date();
     this.liquidation.debtClosingOn = new Date();
@@ -1588,15 +1713,16 @@ export class ContractsComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.liquidation.disposalNewContact = this.liquidation
-            .disposalNewContact
-            ? this.liquidation.disposalNewContact
+            ?.disposalNewContact
+            ? this.liquidation?.disposalNewContact
             : res?.contactName;
-          this.liquidation.disposalEmail = this.liquidation.disposalEmail
-            ? this.liquidation.disposalEmail
+          this.liquidation.disposalEmail = this.liquidation?.disposalEmail
+            ? this.liquidation?.disposalEmail
             : res?.personalEmail;
-          this.liquidation.disposalPhone = this.liquidation.disposalPhone
-            ? this.liquidation.disposalPhone
+          this.liquidation.disposalPhone = this.liquidation?.disposalPhone
+            ? this.liquidation?.disposalPhone
             : res?.mobile;
+          this.changeDetectorRef.markForCheck();
         }
       });
     let opt = new DialogModel();
@@ -1626,6 +1752,10 @@ export class ContractsComponent extends UIComponent {
   }
 
   saveLiquidation() {
+    if (!this.liquidation?.disposalID) {
+      this.notiService.notifyCode('SYS009', 0, 'Số biên bản thanh lý');
+      return;
+    }
     this.api
       .exec<any>('CM', 'ContractsBusiness', 'DisposalContractAsync', [
         this.liquidation,
@@ -1641,7 +1771,7 @@ export class ContractsComponent extends UIComponent {
         }
       });
   }
-  reloadListStep(listSteps: any) {}
+  reloadListStep(listSteps: any) { }
 
   handelMoveStage(event, contract) {
     if (event) {

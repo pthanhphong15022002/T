@@ -22,6 +22,7 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { firstValueFrom } from 'rxjs';
+import { StepService } from '../step.service';
 
 @Component({
   selector: 'codx-progress',
@@ -61,6 +62,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     private authStore: AuthStore,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
+    private stepService: StepService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -198,16 +200,16 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
       );
       return;
     }
-    if (
-      this.actualEnd &&
-      new Date(this.actualEndMax) > new Date(this.actualEnd)
-    ) {
-      this.notiService.notifyCode(
-        'DP035',
-        0,
-        this.headerTextInsStep['ActualEnd']
-      );
-      return;
+    if(this.actualEnd && this.progressData == 100){
+      var check = this.stepService.compareDates(this.actualEnd, this.actualEndMax, "h");
+      if (check < 0){
+        this.notiService.notifyCode(
+          'DP035',
+          0,
+          this.headerTextInsStep['ActualEnd']
+        );
+        return;
+      }
     }
 
     if (this.attachment && this.attachment.fileUploadList.length) {

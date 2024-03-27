@@ -172,6 +172,13 @@ export class PopupAddCustomFieldComponent implements OnInit {
   titleField: any = '';
   viewOnly = false;
   plancehoderVll = '';
+  remindDefault = {  // default value remind setting
+    isAlert: false,
+    isMail: false,
+    reminderTime: 5,
+    emailTemplate: '',
+    dateRemind: ''
+  }
 
   constructor(
     private cache: CacheService,
@@ -310,7 +317,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         }
       });
     }
-    if (e.field == 'dataFormat' || e.field == 'refValue')
+    if (e.field == 'dataFormat' || e.field == 'refValue' || (e.field == 'dataType' && e.data == 'RM'))
       this.creatFieldCustom();
     if (e.field == 'dataType' && e.data == 'CF') this.selectFieldNum();
   }
@@ -324,7 +331,19 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   creatFieldCustom() {
-    if (
+    if (this.field.dataType == 'RM') {
+      if (this.action == 'edit' || this.action == 'view') {
+        this.remindDefault = JSON.parse(this.field.defaultValue);
+      } else
+        this.remindDefault.emailTemplate = this.field.recID;
+      this.fieldCus = JSON.parse(
+        JSON.stringify(
+          Object.assign(this.field, {
+            dataValue: JSON.stringify(this.remindDefault),//tesst CM_40001
+          })
+        )
+      );
+    } else if (
       (this.field.dataFormat &&
         (this.field.dataType == 'N' ||
           this.field.dataType == 'P' ||
@@ -435,7 +454,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
       !this.field.dataFormat &&
       this.field.dataType != 'R' &&
       this.field.dataType != 'A' &&
-      this.field.dataType != 'C'
+      this.field.dataType != 'C' &&
+      this.field.dataType != 'RM'
     ) {
       this.notiService.notifyCode(
         'SYS009',
@@ -641,7 +661,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     });
   }
 
-  closeDialog() {}
+  closeDialog() { }
 
   getNameForm() {
     //tisnh sau
@@ -758,7 +778,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
           this.element.selectData =
           this.element.sortedData =
           this.element.actionData.list =
-            this.listVll;
+          this.listVll;
       }
     }
     if (this.datasVllCbx) this.datasVllCbx.refresh();
@@ -1054,17 +1074,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   valueChangeCustom(event) {
     if (event && event.data) {
       var result = event.e;
-      var field = event.data;
 
-      // var result = event.e?.data;
-      // var field = event.data;
-      // switch (field.dataType) {
-      //   case 'P':
-      //   case 'L':
-      //   case 'PA':
-      //     result = event.e;
-      //     break;
-      // }
       this.field.defaultValue = result;
       if (this.fieldCus) {
         this.fieldCus.defaultValue = this.fieldCus.dataValue = result;
@@ -1386,5 +1396,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
       )
     );
     if (this.tempView) this.tempView.parseValuePA(this.fieldCus.dataValue);
+  }
+
+  //-----------------Remind------------------//
+  valueChangeChbx(e) {
+
   }
 }

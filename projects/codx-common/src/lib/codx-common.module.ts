@@ -89,6 +89,8 @@ import { AttachmentGridFilesComponent } from './component/attachment-grid/attach
 import { CodxMentionComponent } from './component/codx-mention/codx-mention.component';
 import { MentionModule } from '@syncfusion/ej2-angular-dropdowns';
 import { SelectViettelCertificateComponent } from './component/pdf/public-esign/select-viettel-certificate/select-viettel-certificate.component';
+import { CodxImageCropperComponent } from './component/image-cropper/image-cropper.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
 import { AutoFocusDirective } from './_layout/drawers/chat/directives/auto-focus/auto-focus.directive';
 import { CodxMessageComponent } from './_layout/drawers/chat/codx-message/codx-message.component';
 import { CodxHelpComponent } from './_layout/drawers/help/codx-help/codx-help.component';
@@ -129,6 +131,7 @@ const T_Component: Type<any>[] = [
   ThumbnailComponent,
   BreadcumbComponent,
   AttachmentWebComponent,
+  CodxImageCropperComponent,
   //#endregion
 
   BackHomeComponent,
@@ -198,7 +201,8 @@ const T_Directive: Type<any>[] = [DebounceDirective,AutoFocusDirective];
     SliderModule,
     UploaderModule,
     DialogModule,
-    MentionModule
+    MentionModule,
+    ImageCropperModule,
   ],
   exports: [T_Component, T_Pipe, T_Directive],
 })

@@ -1,0 +1,9 @@
+<div class="border-top mt-8" *ngIf="dataTable">
+    <div class="mt-4 pb-2 d-flex align-items-end justify-content-between">
+        <div class="d-flex flex-column justify-content-end pe-2 w-100">
+            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'dependences'" default="Liên kết" class="fw-bold"></codx-label>
+            <ejs-combobox #cbbDependence [fields]="fields" [allowCustom]="true" placeholder='Liên kết' (valueChange)="changeValueCBB($event)"></ejs-combobox>
+        </div>
+        <ejs-combobox #cbb2  [fields]="fields" [allowCustom]="true" placeholder='Liên kết' (valueChange)="changeValueCCBB($event)"></ejs-combobox>
+    </div>
+</div>

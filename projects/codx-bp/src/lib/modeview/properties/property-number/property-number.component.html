@@ -3,6 +3,7 @@
     <div class="mt-4">
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'title'" default="Tên ô nhập liệu" class="fw-bold"></codx-label>
         <codx-input type="text" [crrValue]="data.title" field="title" (valueChange)="changeValue($event)"></codx-input>
+        <span class="fst-italic fw-light">ID: {{data?.fieldName}}</span>
     </div>
     <div class="mt-4">
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'defaultValue'" default="Giá trị mặc định khi thêm mới biểu mẫu" class="fw-bold"></codx-label>
@@ -20,6 +21,10 @@
             <codx-input type="radio" name="radiomwnumber" [crrValue]="'P'" field="dataFormat" label="Phần trăm" [checked]="numberP"  (valueChange)="changeValue($event)" ngClass="ms-4"></codx-input>
         </div>
         <div class="d-flex align-items-center mt-4">
+            <codx-input type="switch" [crrValue]="data?.validateControl == '1'? true : false" field="validateControl" label="Số âm"  (valueChange)="changeValueNumber($event)" class="mt-2"></codx-input>
+            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'ValidateControl'" default="Số âm" class="fw-bold ms-2"></codx-label>
+        </div>
+        <div class="d-flex align-items-center mt-1">
             <codx-input type="switch" [crrValue]="data.isRequired" field="isRequired" label="Bắt buộc"  (valueChange)="changeValue($event)" class="mt-2"></codx-input>
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Bắt buộc" class="fw-bold ms-2"></codx-label>
         </div>

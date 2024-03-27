@@ -19,6 +19,7 @@
       field="title"
       (valueChange)="changeValue($event)"
     ></codx-input>
+    <span class="fst-italic fw-light">ID: {{data?.fieldName}}</span>
   </div>
   <div class="mt-4">
     <codx-label
@@ -121,7 +122,7 @@
       </div>
     </div>
   </div>
-
+  <lib-property-cbb-dependence [data]="data" [dataTable]="dataTable" (dataChange)="valueChangeData($event)" (dataChangeTableEmit)="valueChangeTableEmit($event)"></lib-property-cbb-dependence>
   <div class="border-top mt-8">
     <div class="d-flex align-items-center mt-4">
       <codx-input

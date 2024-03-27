@@ -46,21 +46,11 @@ export class GeneralJournalComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
-    private authStore: AuthStore,
     private shareService: CodxShareService,
     private codxCommonService: CodxCommonService,
     private notification: NotificationsService,
-    private tenant: TenantStore,
   ) {
     super(inject);
-    // this.cache
-    //   .companySetting()
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res.length > 0) {
-    //       this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
-    //     }
-    //   });
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
@@ -69,7 +59,6 @@ export class GeneralJournalComponent extends UIComponent {
         this.baseCurr = dataValue?.BaseCurr || '';
       })
     this.router.params
-      .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
         this.journalNo = params?.journalNo; //? get số journal từ router
       });
@@ -94,7 +83,6 @@ export class GeneralJournalComponent extends UIComponent {
   ngAfterViewInit() {
     this.cache
       .functionList(this.view.funcID)
-      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
           this.headerText = res?.defaultName; //? lấy tên chứng từ (Phiếu chi)
@@ -293,6 +281,7 @@ export class GeneralJournalComponent extends UIComponent {
             }
           })
         }
+        this.onDestroy();
       });
   }
 
@@ -335,6 +324,7 @@ export class GeneralJournalComponent extends UIComponent {
             }
           }
         })
+        this.onDestroy();
       });
   }
 
@@ -409,6 +399,7 @@ export class GeneralJournalComponent extends UIComponent {
                         .pipe(takeUntil(this.destroy$))
                         .subscribe();
                     }
+                    this.onDestroy();
                   });
               }
             });
@@ -458,6 +449,7 @@ export class GeneralJournalComponent extends UIComponent {
                     .pipe(takeUntil(this.destroy$))
                     .subscribe();
                 }
+                this.onDestroy();
               });
           }
         });
@@ -479,6 +471,7 @@ export class GeneralJournalComponent extends UIComponent {
             this.detectorRef.detectChanges();
           }
         }
+        this.onDestroy();
       });
   }
 
@@ -509,6 +502,7 @@ export class GeneralJournalComponent extends UIComponent {
             }
           });
         })
+        this.onDestroy();
       });
   }
 
@@ -572,8 +566,12 @@ export class GeneralJournalComponent extends UIComponent {
                   if (res && !res.update.error) {
                     this.notification.notifyCode('AC0029', 0, text);
                   }
+                  this.onDestroy();
                 });
-            } else this.notification.notifyCode(result?.msgCodeError);
+            } else {
+              this.notification.notifyCode(result?.msgCodeError);
+              this.onDestroy();
+            }
           });
       });
   }
@@ -597,8 +595,12 @@ export class GeneralJournalComponent extends UIComponent {
               if (res && !res.update.error) {
                 this.notification.notifyCode('AC0029', 0, text);
               }
+              this.onDestroy();
             });
-        } else this.notification.notifyCode(result?.msgCodeError);
+        } else{
+          this.notification.notifyCode(result?.msgCodeError);
+          this.onDestroy();
+        } 
       });
   }
 
@@ -609,6 +611,7 @@ export class GeneralJournalComponent extends UIComponent {
   validateVourcher(text: any, data: any) {
     this.api
       .exec('AC', 'GeneralJournalsBusiness', 'ValidateVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -616,6 +619,7 @@ export class GeneralJournalComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -626,6 +630,7 @@ export class GeneralJournalComponent extends UIComponent {
   postVoucher(text: any, data: any) {
     this.api
       .exec('AC', 'GeneralJournalsBusiness', 'PostVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -633,6 +638,7 @@ export class GeneralJournalComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -643,6 +649,7 @@ export class GeneralJournalComponent extends UIComponent {
   unPostVoucher(text: any, data: any) {
     this.api
       .exec('AC', 'GeneralJournalsBusiness', 'UnPostVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -650,6 +657,7 @@ export class GeneralJournalComponent extends UIComponent {
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
+        this.onDestroy();
       });
   }
 
@@ -714,15 +722,16 @@ export class GeneralJournalComponent extends UIComponent {
    * *Hàm get data mặc định của chứng từ
    */
   getJournal() {
+    let options = new DataRequest();
+    options.entityName = 'AC_Journals';
+    options.pageLoading = false;
+    options.predicates = 'JournalNo=@0';
+    options.dataValues = this.journalNo;
     this.api
-      .exec('AC', 'ACBusiness', 'GetJournalAsync', [this.journalNo])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res) {
-          this.journal = res[0]; // data journal
-          this.hideFields = res[1]; // array field ẩn từ sổ nhật kí
-        }
-      });
+      .execSv('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(map((r) => r?.[0] ?? [])).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+        this.journal = res[0]; 
+      })
   }
 
   /**

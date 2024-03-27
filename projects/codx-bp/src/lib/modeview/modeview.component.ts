@@ -115,9 +115,10 @@ export class ModeviewComponent implements OnInit {
   {
     var vlls = this.vllBP002.datas;
     data.forEach(elm => {
+      this.count[elm.fieldType.toLowerCase()] ++;
+      
       var indexs = vlls.findIndex(x=>x.value == elm.fieldType);
       elm.value = vlls[indexs].value;
-
       if(elm.fieldType == "Title") 
       {
         elm.columnOrder = 0;
@@ -229,7 +230,6 @@ export class ModeviewComponent implements OnInit {
         }
         i++;
       })
-      debugger
       let objectIndex = JSON.parse(JSON.stringify(this.table[event.currentIndex]));
       this.selectedItem(objectIndex.children[0]);
       //moveItemInArray( this.table, (event.currentIndex + 1), event.currentIndex);
@@ -457,7 +457,7 @@ export class ModeviewComponent implements OnInit {
     }
     data.recID = Util.uid();
     data.width = "";
-    data.fieldName = this.formatTitle(data.title.toLowerCase());
+    data.fieldName = this.formatTitle(data.title);
     data.description  =  data.description || "Câu trả lời";
     data.columnOrder = this.table.length;
     data.columnNo = 0;
@@ -474,7 +474,10 @@ export class ModeviewComponent implements OnInit {
   formatTitle(str:any)
   {
     str = str.toLowerCase();
-    return this.xoa_dau(str.replaceAll(" ","_").replaceAll("/","_")) + "_" + this.stepNo;
+    str = str.replaceAll(" ","_");
+    str = str.replaceAll("/","_");
+    var res = this.xoa_dau(str) + "_" + this.stepNo;
+    return res;
   }
 
   drop2(event:any)
@@ -583,7 +586,7 @@ export class ModeviewComponent implements OnInit {
       delete elm.textColor;
       delete elm.value;
     })
- 
+    debugger
     this.dialog.close(result);
   }
 
@@ -609,6 +612,11 @@ export class ModeviewComponent implements OnInit {
       e.fieldName = this.formatTitle(e.title);
       this.table[e?.columnOrder].children[e.columnNo] = e;
     }
+  }
+  
+  dataChangeTableEmit(e:any)
+  {
+    this.table = e;
   }
 
   resetIndex()

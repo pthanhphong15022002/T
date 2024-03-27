@@ -6,5 +6,4 @@ import { BasePropertyComponent } from '../base.component';
   styleUrls: ['./property-text.component.css']
 })
 export class PropertyTextComponent extends BasePropertyComponent{
- 
 }
