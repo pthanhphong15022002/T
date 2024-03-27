@@ -1075,20 +1075,19 @@ export class CashPaymentAddComponent extends UIComponent {
    * @param typeSettledInvoices
    */
   addSettledInvoices() {
-    let objectName = '';
-    let indexObject =
-      this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex(
-        (x) => x.ObjectID == this.master.data.objectID
-      );
-    if (indexObject > -1) {
-      objectName =
-        this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject]
-          .ObjectName;
+    let data = {};
+    data['master'] = this.master.data;
+    if(this.master.data.subType == (this.journal.journalType + '9')){
+      if (this.eleGridCashPayment && this.eleGridCashPayment.rowDataSelected && this.eleGridCashPayment.rowDataSelected.objectID) {
+        data['line'] = this.eleGridCashPayment.rowDataSelected;
+      }else{
+        this.notification.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.master.gridviewSetup['ObjectID']?.headerText + '"'
+        );
+      }
     }
-    let obj = {
-      cashpayment: this.master.data,
-      objectName: objectName,
-    };
     let opt = new DialogModel();
     let dataModel = new FormModel();
     opt.FormModel = dataModel;
@@ -1098,7 +1097,7 @@ export class CashPaymentAddComponent extends UIComponent {
       null,
       null,
       '',
-      obj,
+      data,
       '',
       opt
     );
@@ -1392,7 +1391,7 @@ export class CashPaymentAddComponent extends UIComponent {
   setValidateForm() {
     let rObjectID = false;
     let lstRequire: any = [];
-    if (this.elementTabDetail?.selectingID == '1') {
+    if (this.elementTabDetail?.selectingID == '1' && this.master.data.subType == (this.journal.journalType+'2')) {
       rObjectID = true;
     }
     lstRequire.push({ field: 'ObjectID', isDisable: false, require: rObjectID });

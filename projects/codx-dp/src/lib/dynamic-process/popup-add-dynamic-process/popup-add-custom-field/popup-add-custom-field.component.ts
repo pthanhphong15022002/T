@@ -177,6 +177,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     isMail: false,
     reminderTime: 5,
     emailTemplate: '',
+    dateRemind: ''
   }
 
   constructor(
@@ -331,7 +332,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   creatFieldCustom() {
     if (this.field.dataType == 'RM') {
-      this.remindDefault.emailTemplate = this.field.recID;
+      if (this.action == 'edit' || this.action == 'view') {
+        this.remindDefault = JSON.parse(this.field.defaultValue);
+      } else
+        this.remindDefault.emailTemplate = this.field.recID;
       this.fieldCus = JSON.parse(
         JSON.stringify(
           Object.assign(this.field, {
