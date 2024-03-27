@@ -10,6 +10,17 @@
   font-size: 24px;
 }
 
-.ejs-rating-star.filled {
+::ng-deep .ejs-rating-star.filled {
   color: gold;
+}
+::ng-deep span.e-rating-item-container.e-rating-selected {
+  font-size: 14px;
+  color: gold !important;
+}
+::ng-deep span.e-rating-item-container.e-rating-intermediate.e-rating-focus {
+  font-size: 14px;
+  color: gold !important;
+}
+::ng-deep span.e-rating-item-container {
+  font-size: 14px !important;
 }

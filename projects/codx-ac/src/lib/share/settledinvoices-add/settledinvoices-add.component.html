@@ -104,7 +104,7 @@
         <div class="form-group mb-0">
           <codx-label style="white-space: nowrap !important;" fiedName="AccountID" default="Tài khoản">
           </codx-label>
-          <codx-input type="combobox" refType="4" refValue="AccountsAC" field="accountID" (valueChange)="valueChange($event)">
+          <codx-input type="combobox" refType="4" refValue="AccountsAC" [crrValue]="accountID" field="accountID" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
@@ -146,7 +146,7 @@
           <codx-label style="white-space: nowrap !important;" fiedName="lblCurencies" [formModel]="dialog.formModel" default="Số tiền chi trả">
           </codx-label>
           <div class="ac-input">
-            <codx-input type="number" [crrValue]="cashpayment.totalAmt" field="payAmt" (valueChange)="valueChange($event)">
+            <codx-input type="number" [crrValue]="master.totalAmt" field="payAmt" (valueChange)="valueChange($event)">
           </codx-input>
           </div>
         </div>
@@ -155,7 +155,7 @@
         <div style="margin-bottom: unset !important;" class="form-group">
           <codx-label style="white-space: nowrap !important;" fiedName="currencyID" [formModel]="dialog.formModel" default="Tiền tệ">
           </codx-label>
-          <codx-input field="currencyID" [disabled]="true" type="text" [crrValue]="cashpayment.currencyID"></codx-input>
+          <codx-input field="currencyID" [disabled]="true" type="text" [crrValue]="master.currencyID"></codx-input>
         </div>
       </div>
       <div class="col-xl-2">
