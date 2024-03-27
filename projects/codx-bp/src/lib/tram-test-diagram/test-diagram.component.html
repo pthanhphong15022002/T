@@ -1,0 +1,23 @@
+<codx-views
+  #view
+  [funcID]="funcID"
+  service="BP"
+  assemblyName="ERM.Business.BP"
+  entityName="BP_Processes"
+  className="ProcessesBusiness"
+  [method]="method"
+  [views]="views"
+  [button]="button"
+  (buttonClick)="click($event)"
+  [dataObj]="dataObj"
+  [moreFuncs]="moreFuncs"
+  [autoLoad]="true"
+  idField="recID"
+
+  (clickMF)="clickMF($event, itemSelected)"
+>
+</codx-views>
+
+<ng-template #contentTemplate let-data>
+  <codx-diagram [columns]="columns" [viewOnly]="true" [process]="process"></codx-diagram>
+</ng-template>

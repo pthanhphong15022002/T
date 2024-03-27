@@ -39,8 +39,8 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
   dialog!: DialogRef;
-  title: string;
-  cashpayment: any;
+  master: any;
+  line:any;
   vouchers: Array<any> = [];
   gridModel: DataRequest = new DataRequest();
   invoiceDueDate: any;
@@ -51,6 +51,9 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   predicates: string;
   dataValues: string;
   objectName:any;
+  objectID:any;
+  objectType:any;
+  accountID:any;
   isDblCLick: boolean = false;
   dataFilter:any = {};
   selectRow:any=[];
@@ -68,11 +71,20 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.cashpayment = dialogData.data.cashpayment;
-    this.objectName = dialogData.data.objectName;
-    this.title = dialogData.data.title;
-    this.typePay = this.cashpayment.totalAmt == 0 ? 0 : 1;
+    this.master = dialogData.data?.master;
+    this.line = dialogData.data?.line;
+    this.typePay = this.master.totalAmt == 0 ? 0 : 1;
     this.gridModel.page = 1;
+    if (this.line) {
+      this.objectName = this.line.objectName;
+      this.objectID = this.line.objectID;
+      this.objectType = this.line.objectType;
+      this.accountID = this.line.accountID;
+    }else{
+      this.objectName = this.master.objectName;
+      this.objectID = this.master.objectID;
+      this.objectType = this.master.objectType;
+    }
   }
   //#endregion Constructor
 
@@ -106,7 +118,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   beforeInitGrid(eleGrid:CodxGridviewV2Component){
     this.settingFormatGridSettledInvoices(eleGrid);
     let hideFields = [];
-    if (this.cashpayment.currencyID == this.baseCurr) {
+    if (this.master.currencyID == this.baseCurr) {
       hideFields.push('BalAmt2');
       hideFields.push('SettledAmt2');
       hideFields.push('CashDisc2');
@@ -119,11 +131,15 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
    */
   setDefault(){
     this.mapPredicates.set('currencyID', 'CurrencyID = @0');
-    this.mapDataValues.set('currencyID', this.cashpayment.currencyID);
+    this.mapDataValues.set('currencyID', this.master.currencyID);
     this.mapPredicates.set('objectID', 'ObjectID = @0');
-    this.mapDataValues.set('objectID', this.cashpayment.objectID);
-    this.dataFilter.currencyID = this.cashpayment.currencyID;
-    this.dataFilter.payAmt = this.cashpayment.totalAmt;
+    this.mapDataValues.set('objectID', this.objectID);
+    this.mapPredicates.set('objectType', 'ObjectType = @0');
+    this.mapDataValues.set('objectType', this.objectType);
+    this.mapPredicates.set('accountID', 'AccountID = @0');
+    this.mapDataValues.set('accountID', this.accountID);
+    this.dataFilter.currencyID = this.master.currencyID;
+    this.dataFilter.payAmt = this.master.totalAmt;
     this.gridModel.sort = [{ field: 'InvoiceDueDate', dir: 'asc' }];
   }
   //#endregion Init
@@ -142,11 +158,12 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
       this.api.exec('AC', 'SettledInvoicesBusiness', 'AutoPayOnLineAsync', [
         [data],
         this.dataFilter?.accountID ? this.dataFilter.accountID : '',
-        this.cashpayment.objectID,
-        this.cashpayment.journalType,
-        this.cashpayment.voucherDate,
-        this.cashpayment.currencyID,
-        this.cashpayment.exchangeRate
+        this.objectID,
+        this.objectType,
+        this.master.journalType,
+        this.master.voucherDate,
+        this.master.currencyID,
+        this.master.exchangeRate
       ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
         if (res.length) {
           res.reduce((pre, data) => { 
@@ -196,11 +213,12 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
         this.api.exec('AC', 'SettledInvoicesBusiness', 'AutoPayOnLineAsync', [
           this.grid.arrSelectedRows,
           this.dataFilter?.accountID ? this.dataFilter.accountID : '',
-          this.cashpayment.objectID,
-          this.cashpayment.journalType,
-          this.cashpayment.voucherDate,
-          this.cashpayment.currencyID,
-          this.cashpayment.exchangeRate
+          this.objectID,
+          this.objectType,
+          this.master.journalType,
+          this.master.voucherDate,
+          this.master.currencyID,
+          this.master.exchangeRate
         ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
           if (res.length) {
             res.reduce((pre, data) => { 
@@ -264,6 +282,8 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
         this.dataFilter.accountid = e.data;
         this.mapPredicates.set('accountID', 'AccountID = @0');
         this.mapDataValues.set('accountID', e.data);
+        this.accountID = e.data;
+        this.detectorRef.detectChanges();
         break;
       case 'invoiceduedate':
         this.dataFilter.invoiceDueDate = e.data.toDate;
@@ -291,9 +311,9 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
         this.api.exec('AC', 'SettledInvoicesBusiness', 'ValueChangedAsync', [
           event.field,
           oLine,
-          this.cashpayment.voucherDate,
-          this.cashpayment.currencyID,
-          this.cashpayment.exchangeRate
+          this.master.voucherDate,
+          this.master.currencyID,
+          this.master.exchangeRate
         ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
           if (res) {
             this.grid.gridRef.setCellValue(res?.recID, 'settledAmt', res?.settledAmt);
@@ -313,7 +333,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   apply() {
     this.api
       .exec('AC', 'SettledInvoicesBusiness', 'SaveListAsync', [
-        this.cashpayment,
+        this.master,
         this.grid.arrSelectedRows,
       ])
       .pipe(takeUntil(this.destroy$))
@@ -385,11 +405,12 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     this.api.exec('AC', 'SettledInvoicesBusiness', 'LoadSettledAsync', [
       this.gridModel,
       this.dataFilter?.accountID ? this.dataFilter.accountID : '',
-      this.cashpayment.objectID,
-      this.cashpayment.journalType,
-      this.cashpayment.voucherDate,
-      this.cashpayment.currencyID,
-      this.cashpayment.exchangeRate,
+      this.objectID,
+      this.objectType,
+      this.master.journalType,
+      this.master.voucherDate,
+      this.master.currencyID,
+      this.master.exchangeRate,
       this.dataFilter.payAmt,
       type,
     ]).pipe(takeUntil(this.destroy$)).subscribe((res:any) =>{
@@ -422,7 +443,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
 
   settingFormatGridSettledInvoices(eleGrid){
     let setting = eleGrid.systemSetting;
-    if (this.cashpayment.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
+    if (this.master.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
       eleGrid.setFormatField('balAmt','n'+(setting.dBaseCurr || 0));
       eleGrid.setFormatField('balAmt2','n'+(setting.dBaseCurr || 0));
       eleGrid.setFormatField('settledAmt','n'+(setting.dBaseCurr || 0));
