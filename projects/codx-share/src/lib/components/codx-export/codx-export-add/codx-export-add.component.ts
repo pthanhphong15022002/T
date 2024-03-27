@@ -362,7 +362,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
               key: element.fieldName+".indexNo",
               headerText: "Số thứ tự",
             };
-            objP.groupChild.push(objIndex);
+            objP.groupChild.unshift(objIndex);
             this.gridViewSettup.push(obj2Index);
           }
           this.dataGoupField[i].groupChild.push(objP);
