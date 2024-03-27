@@ -322,6 +322,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
         else
         {
           element.dataFormat = typeof element.dataFormat == 'string' ? JSON.parse(element.dataFormat) :  element.dataFormat;
+          element.tableFormat = typeof element.tableFormat == 'string' ? JSON.parse(element.tableFormat) :  element.tableFormat;
           var objP = {
             text: element?.title,
             key: element?.fieldName,
@@ -347,6 +348,23 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
             objP.groupChild.push(obj);
             this.gridViewSettup.push(obj2);
           })
+
+          if(element?.tableFormat?.hasIndexNo) 
+          {
+            var objIndex = {
+              text: 'Số thứ tự',
+              key: element.fieldName+".indexNo",
+              category: 'Drag or click the field to insert.',
+              htmlAttributes: { draggable: true },
+            };
+      
+            var obj2Index = {
+              key: element.fieldName+".indexNo",
+              headerText: "Số thứ tự",
+            };
+            objP.groupChild.push(objIndex);
+            this.gridViewSettup.push(obj2Index);
+          }
           this.dataGoupField[i].groupChild.push(objP);
         }
       })
