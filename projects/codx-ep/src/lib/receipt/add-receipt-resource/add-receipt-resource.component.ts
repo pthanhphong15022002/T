@@ -81,9 +81,10 @@ export class AddReceiptResourceComponent extends UIComponent {
   approvalRule: string;
   isPopupStationeryCbb: boolean;
   categoryID: string;
-  viewOnly: any;
+  viewOnly=false;
   lstStationery=[];
   listUM: any;
+  popupTitle: any;
   
   constructor(
     injector: Injector,
@@ -99,7 +100,13 @@ export class AddReceiptResourceComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.data = { ...dialogData?.data[0] };
+    this.data = dialogData?.data?.data ;
+    this.funcType = dialogData?.data?.funcType ;
+    this.popupTitle = dialogData?.data?.popupTitle ;
+    this.viewOnly = dialogData?.data?.viewOnly ;
+    if(this.data &&(this.funcType==_addMF || !(this.data?.items?.length>0))){
+      this.data.items =[];
+    }
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef?.formModel;
     this.funcID = this.formModel?.funcID;
@@ -156,6 +163,7 @@ export class AddReceiptResourceComponent extends UIComponent {
       let tmpSta = new BookingItems();
       (tmpSta.itemID = item.ResourceID),
         (tmpSta.quantity = 1),
+        (tmpSta.issueQuantity = 1),
         (tmpSta.itemName = item.ResourceName),
         (tmpSta.umid = item.UMID),
         (tmpSta.umName = item.UMID),
@@ -167,11 +175,11 @@ export class AddReceiptResourceComponent extends UIComponent {
       if (tmpUM != null && tmpUM?.length > 0) {
         tmpSta.umName = tmpUM[0]?.umName;
       }
-      this.lstStationery.push(tmpSta);
+      this.data?.items.push(tmpSta);
     });
-    this.lstStationery = [
+    this.data.items = [
       ...new Map(
-        this.lstStationery.map((item) => [item['itemID'], item])
+        this.data?.items.map((item) => [item['itemID'], item])
       ).values(),
     ];
 
@@ -212,15 +220,17 @@ export class AddReceiptResourceComponent extends UIComponent {
   //-----------------------------------Validate Func---------------------------------//
   //---------------------------------------------------------------------------------//
   beforeSave(option: RequestOption) {
-    let itemData = this.data;
-    option.methodName = 'SaveAsync';
+    this.data.owner = this.user?.userID;
+    this.data.resourceType = "6";
+    this.data.category = "0";//Nhập kho VPP
+    option.methodName = 'AddUpdateAsync';
     let isAdd = true;
     if (this.funcType == _editMF) {
       isAdd = false;
     }
     option.data = [
-      itemData,
-      isAdd,null, this.lstStationery
+      this.data,
+      isAdd,
     ];
     return true;
   }
@@ -251,7 +261,7 @@ export class AddReceiptResourceComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
 
   startSave(approval) {
-    if (!this.isEP) {
+    if (false) {
     } else {
       this.dialogRef.dataService
         .save(
@@ -270,7 +280,7 @@ export class AddReceiptResourceComponent extends UIComponent {
             }
             
               if (approval) {
-                this.startRelease();
+                this.startImport();
               } else {
                 this.dialogRef && this.dialogRef.close(this.returnData);
               }
@@ -318,6 +328,22 @@ export class AddReceiptResourceComponent extends UIComponent {
           );
         });
     } 
+  }
+
+  startImport(){
+    if(this.returnData){
+      this.codxBookingService.resourceTrans(this.returnData?.recID,"1").subscribe(res=>{
+        if(res){          
+          this.notificationsService.notifyCode('SYS034');          
+          this.dialogRef && this.dialogRef.close(res);
+        }
+        else{
+          this.onSaving=false;
+
+        }
+        this.detectorRef.detectChanges();
+      });
+    }
   }
   
   //---------------------------------------------------------------------------------//

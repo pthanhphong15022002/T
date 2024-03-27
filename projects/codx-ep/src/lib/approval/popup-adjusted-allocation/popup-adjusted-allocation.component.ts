@@ -66,7 +66,7 @@ export class PopupAdjustedAllocationComponent extends UIComponent {
     if (overQuantity?.length > 0) {
       this.notificationsService?.alertCode('EP022').subscribe((alr) => {
         if (alr?.event?.status == 'Y') {
-          this.codxEpService.updateInfo(this.data).subscribe((res) => {
+          this.codxEpService.addUpdateBooking(this.data,false).subscribe((res) => {
             if (res) {
               this.dialogRef && this.dialogRef.close(true);
             }
@@ -77,7 +77,7 @@ export class PopupAdjustedAllocationComponent extends UIComponent {
       });
     }
     else{
-      this.codxEpService.updateInfo(this.data).subscribe(res=>{
+      this.codxEpService.addUpdateBooking(this.data,false).subscribe(res=>{
         if(res){
           this.dialogRef && this.dialogRef.close(true);
         }

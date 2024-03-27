@@ -71,9 +71,9 @@ export const routes: Routes = [
       },      
       
       {
-        path: 'receiptresource/:funcID',
+        path: 'receiptstationery/:funcID',
         data: { noReuse: true },
-        component: EPBookingComponent,
+        component: ReceiptResourceComponent,
       },
       {
         path: 'approvestationery/:funcID',
