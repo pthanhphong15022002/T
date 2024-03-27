@@ -56,6 +56,8 @@ export class JournalV2Component extends UIComponent {
   mainFilterValue: string;
   subFilterValue: string;
   ViewType = ViewType;
+  lstGroup:any;
+  selectedToolBar:any;
   button: ButtonModel[] = [
     {
       icon: 'icon-i-journal-plus',
@@ -73,6 +75,15 @@ export class JournalV2Component extends UIComponent {
     private acService: CodxAcService,
   ) {
     super(inject);
+    this.cache.valueList('AC177').pipe(takeUntil(this.destroy$)).subscribe((func) => {
+      if(func){
+        this.lstGroup = func.datas;
+        this.selectedToolBar = this.lstGroup[0].value;
+      }else{
+        this.lstGroup = [];
+      }
+      this.detectorRef.detectChanges(); 
+    });
   }
   //#endregion Contrucstor
 
@@ -91,10 +102,10 @@ export class JournalV2Component extends UIComponent {
   }
 
   ngAfterViewInit() {
-    this.codxService.setStyleToolbarLayout(
-      this.view.elementRef.nativeElement,
-      'toolbar2'
-    );
+    // this.codxService.setStyleToolbarLayout(
+    //   this.view.elementRef.nativeElement,
+    //   'toolbar2'
+    // );
 
     this.views = [
       {
@@ -152,6 +163,12 @@ export class JournalV2Component extends UIComponent {
         this.addNewJournalSample(e, data);
         break;
     }
+  }
+
+  selectedChangeToolBar(data:any){
+    this.selectedToolBar = data.value;
+    this.view.dataService.setPredicates(['Category=@0'],[data.value]);
+    this.detectorRef.detectChanges();
   }
 
   changeMF(event) {

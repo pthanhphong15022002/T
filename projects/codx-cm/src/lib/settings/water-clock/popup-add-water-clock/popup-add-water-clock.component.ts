@@ -51,6 +51,7 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
   loadedCus: boolean = false;
   oldRef = '';
   siteIDOld = '';
+  isWaterClock = false;
 
   constructor(
     private cache: CacheService,
@@ -64,7 +65,9 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
     this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
     this.headerText = dt?.data?.headerText;
     this.action = dt?.data?.action;
+    this.action = dt?.data?.action;
     this.gridViewSetup = dt?.data?.gridViewSetup;
+    this.isWaterClock = this.gridViewSetup['AssetID']?.formName == 'CMWaterClock'
     this.viewOnly = this.action == 'view';
     let arrField = Object.values(this.gridViewSetup).filter(
       (x: any) => x.allowPopup
@@ -141,7 +144,7 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
     let dataValue = '';
     switch (e.field) {
       case 'parentID':
-        if (this.gridViewSetup['AssetID'].formName == 'CMWaterClockCustomer' || this.parentID == e.data) return; //
+        if (!this.isWaterClock || this.parentID == e.data) return; //
         //danh cho chi so đông ho
         (
           this.cbxSiteID.ComponentCurrent as CodxComboboxComponent
@@ -254,10 +257,10 @@ export class PopupAddWaterClockComponent implements OnInit, AfterViewInit {
     op.className = 'AssetsBusiness';
     let data = [];
     if (this.action == 'add' || this.action == 'copy') {
-      op.methodName = 'SaveAsync';
+      op.methodName = this.isWaterClock ? 'SaveWaterClockAsync' : 'SaveAsync';
       data = [this.data];
     } else if (this.action == 'edit') {
-      op.methodName = 'UpdateAsync';
+      op.methodName = this.isWaterClock ? 'UpdateWaterClockAsync' : 'UpdateAsync';
       data = [this.data, this.oldAssetId];
     }
     op.data = data;

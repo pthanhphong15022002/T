@@ -382,7 +382,7 @@
 
         <ng-template #buttonApprove>
           <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-outline-primary ms-1">
+            <button type="button" class="btn btn-outline-primary ms-1" (click)="authority()">
               <codx-label
                 [name]="'lblbt4' + data?.activityType"
                 [formName]="dialog?.formModel?.formName"
@@ -435,7 +435,7 @@
 
         <ng-template #buttonCheck>
           <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-outline-primary ms-1">
+            <button type="button" class="btn btn-outline-primary ms-1"(click)="authority()">
               <codx-label
                 [name]="'lblbt3' + data?.activityType"
                 [formName]="dialog?.formModel?.formName"
@@ -525,7 +525,7 @@
             <button
               type="button"
               class="btn btn-outline-primary ms-1"
-              (click)="return()"
+              (click)="authority()"
             >
               <codx-label
                 [name]="'lblbt2' + data?.activityType"
@@ -555,7 +555,7 @@
 
         <ng-template #buttonStamp>
           <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-outline-primary ms-1">
+            <button type="button" class="btn btn-outline-primary ms-1"(click)="authority()">
               <codx-label
                 [name]="'lblbt2' + data?.activityType"
                 [formName]="dialog?.formModel?.formName"

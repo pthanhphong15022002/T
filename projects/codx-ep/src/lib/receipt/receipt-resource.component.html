@@ -1,0 +1,67 @@
+<codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entity"
+  [views]="views" [button]="buttons " (buttonClick)="click($event)" [idField]="idField"  [moreFuncs]="moreFunc" 
+  [className]="className" [method]="method" (selectedChange)="changeItemDetail($event)" [selectedFirst]="true"
+  [autoLoad]="true" (onActions)="onActionClick($event)" 
+  (viewChanged)="viewChanged($event)"  (changeDataMF)="changeDataMF($event, itemDetail)" (clickMF)="clickMF($event, itemDetail)">
+  
+<!----------------------------------List---------------------------------->
+<ng-template #titleTmp let-data>
+  <div class="w-100">
+    <div class=" w-100 d-flex flex-row justify-content-between align-items-center">
+      <span class="fw-bold" [innerHTML]="data?.requester"></span>
+      </div>
+    <div class="text-gray-600">
+      <span *ngIf="data?.positionName" [innerHTML]="data?.positionName"></span>
+    </div>
+    <div class="line-clamp line-clamp-2">
+      <span [innerHTML]="data?.title "></span>
+    </div>    
+    <div class="d-flex align-items-center pt-2">
+
+      <codx-vll [showText]="true" [showBgColor]="true" [name]="'EP022'" [value]="data?.approveStatus ?? '1'"
+        class="badge badge-light badge-md fs-7">
+      </codx-vll>
+
+      <!-- <codx-vll [showText]="true" [showBgColor]="true" [name]="'EP020'"
+        [value]="data?.issueStatus" class="badge badge-light badge-md ">
+      </codx-vll> -->
+      <div [innerHTML]=" data?.createdOn | fmDT "></div>
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #itemTemplate let-data>
+  <codx-temp-full cardCss="card-template border-bottom p-3" [typeMF]="'hover'" moreFuncCss="me-10"
+     [titleTmp]="titleTmp" [icoCss]="
+      'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
+    " [imageId]="data?.createdBy" imageObjType="AD_Users" [titleLine]="2" [dataItem]="data" [formModel]="view?.formModel"
+    [footer]="footerTmp" (clickMF)="clickMF($event, data)" (changeDataMF)="changeDataMF($event, data)" 
+    [dataItem]="data">
+  </codx-temp-full>
+</ng-template>
+
+<ng-template #footerTmp let-data> </ng-template>
+
+<ng-template #panelRightRef>
+    <codx-booking-view-detail #viewdetail [viewMode]="'1'" [itemDetail]="itemDetail" [funcID]="funcID" [crrEntityName]="crrEntityName"
+    [formModel]="formModel" [resourceType]="'6'"  (cancel)="cancel($event)"
+    (edit)="edit($event)" (copy)="copy($event)" (view)="viewDetail($event)" (release)="release($event)" (reloadData)="reloadData($event)"
+    (delete)="delete($event)" (setPopupTitle)="setPopupTitle($event)"  
+    (setPopupTitleOption)="setPopupTitleOption($event)"></codx-booking-view-detail>
+    <!-- <codx-view-detail-booking #viewdetail [recID]="itemDetail?.recID" [funcID]="funcID" [crrEntityName]="crrEntityName" [itemDetail]="itemDetail"
+    [formModel]="formModel" [resourceType]="resourceType" (reschedule)="reschedule($event)" (cancel)="cancel($event)"
+    (invite)="invite($event)" (edit)="edit($event)" (copy)="copy($event)" (release)="release($event)" (reloadData)="reloadData($event)"
+    (delete)="delete($event)" (setPopupTitle)="setPopupTitle($event)"  (allocate)="allocate($event)" (setAllocateStatus)="setAllocateStatus($event)"
+    (setPopupTitleOption)="setPopupTitleOption($event)"></codx-view-detail-booking> -->
+</ng-template>
+
+<!-- Other -->
+<ng-template #mfButton let-data>
+  <div class="mt-1 me-1">
+    <codx-mfunc [dataItem]="data" [formModel]="formModel" (clickMF)="clickMF($event, data)" type="hover"
+      (changeDataMF)="changeDataMF($event, data)"></codx-mfunc>
+  </div>
+</ng-template>
+
+</codx-views>

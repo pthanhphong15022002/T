@@ -1,3 +1,4 @@
+import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import {
   ChangeDetectorRef,
   Component,
@@ -23,6 +24,7 @@ import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
 import { CodxBpService } from '../../codx-bp.service';
+import { CoDxAddApproversComponent } from 'projects/codx-common/src/lib/component/codx-approval-procress/codx-add-approvers/codx-add-approvers.component';
 
 @Component({
   selector: 'lib-popup-bp-tasks',
@@ -297,6 +299,19 @@ export class PopupBpTasksComponent implements OnInit {
   dataChange(e: any) {
     this.dataIns = e;
     this.dialog.close(this.dataIns);
+  }
+  authority(){
+    let dialogAuthority = this.callfc.openForm(CoDxAddApproversComponent,'',500,250,'',{mode:'1'});
+    dialogAuthority.closed.subscribe(res=>{
+      if(res?.event){
+        this.bpSv.authorityTask(this.data.recID,res?.event).subscribe(res=>{
+          if(res){
+            this.notiService.notifyCode('SYS034');
+            this.dialog && this.dialog.close();
+          }
+        })
+      }
+    })
   }
 
   return() {

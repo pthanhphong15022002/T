@@ -43,6 +43,8 @@ import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/
 import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts.component';
 import { PopupAdjustedAllocationComponent } from './approval/popup-adjusted-allocation/popup-adjusted-allocation.component';
+import { ReceiptResourceComponent } from './receipt/receipt-resource.component';
+import { AddReceiptResourceComponent } from './receipt/add-receipt-resource/add-receipt-resource.component';
 
 export const routes: Routes = [
   {
@@ -66,6 +68,12 @@ export const routes: Routes = [
         path: 'bookingstationery/:funcID',
         data: { noReuse: true },
         component: EPBookingComponent,
+      },      
+      
+      {
+        path: 'receiptstationery/:funcID',
+        data: { noReuse: true },
+        component: ReceiptResourceComponent,
       },
       {
         path: 'approvestationery/:funcID',
@@ -212,6 +220,8 @@ export const routes: Routes = [
     PopupDriverAssignComponent,
     PopupAdjustedAllocationComponent,
     EPDashboardComponent,
+    ReceiptResourceComponent,
+    AddReceiptResourceComponent,
   ],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

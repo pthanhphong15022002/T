@@ -39,6 +39,7 @@ import { GridColumn } from '@syncfusion/ej2-angular-grids';
 import { Approver, ResponseModel } from '../../models/ApproveProcess.model';
 import { EP_BookingInputParam } from './codx-booking.model';
 import { PopupAdjustedAllocationComponent } from 'projects/codx-ep/src/lib/approval/popup-adjusted-allocation/popup-adjusted-allocation.component';
+import { AddReceiptResourceComponent } from 'projects/codx-ep/src/lib/receipt/add-receipt-resource/add-receipt-resource.component';
 
 @Component({
   selector: 'codx-booking',
