@@ -1227,6 +1227,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
             e: JSON.stringify(this.remindDefault),
             data: this.customField,
           });
+          this.dataValueOld = this.remindDefault;
         }
         if (!this.copiedTempMail)
           this.isCreatedTempletMail.emit(recIDTemp)
