@@ -1222,32 +1222,32 @@ export class CodxInputCustomFieldComponent implements OnInit {
       if (res && res.event) {
         let recIDTemp = res.event?.recID
         if (this.isAddNewTemp) {
-          this.remindDefault['emailTemplate'] = recIDTemp;
+          this.remindDataValue['emailTemplate'] = recIDTemp;
           this.valueChangeCustom.emit({
-            e: JSON.stringify(this.remindDefault),
+            e: JSON.stringify(this.remindDataValue),
             data: this.customField,
           });
-          this.dataValueOld = this.remindDefault;
         }
         if (!this.copiedTempMail)
           this.isCreatedTempletMail.emit(recIDTemp)
 
         //done làm gi
         this.isAddNewTemp = false
+        this.dataValueOld = this.remindDataValue;
       }
     });
   }
   valueChangeTimeRM(e) {
-    this.remindDefault['dateRemind'] = e?.data?.fromDate;
+    this.remindDataValue['dateRemind'] = e?.data?.fromDate;
     this.valueChangeCustom.emit({
-      e: JSON.stringify(this.remindDefault),
+      e: JSON.stringify(this.remindDataValue),
       data: this.customField,
     });
   }
   valueChangeRM(e) {
-    this.remindDefault['reminderTime'] = e?.data;
+    this.remindDataValue['reminderTime'] = e?.data;
     this.valueChangeCustom.emit({
-      e: JSON.stringify(this.remindDefault),
+      e: JSON.stringify(this.remindDataValue),
       data: this.customField,
     });
   }
