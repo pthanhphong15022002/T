@@ -320,10 +320,16 @@ export class AddProcessDefaultComponent implements OnInit {
   getInfoUser() {
     let paras = [this.user.userID];
     let keyRoot = 'BPUserInfo' + this.user.userID;
-    this.infoUser = this.shareService.loadDataCache(paras,keyRoot,"HR","HR","EmployeesBusiness","GetTmpEmployeeAsync");
-    if(isObservable(this.infoUser))
-    {
-      this.infoUser.subscribe(item=>{
+    this.infoUser = this.shareService.loadDataCache(
+      paras,
+      keyRoot,
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetTmpEmployeeAsync'
+    );
+    if (isObservable(this.infoUser)) {
+      this.infoUser.subscribe((item) => {
         this.infoUser = item;
       });
     }
@@ -472,9 +478,9 @@ export class AddProcessDefaultComponent implements OnInit {
         let fieldName = 'f' + this.data.stepNo + '_owner';
         valueForm[fieldName] = {
           username: this.infoUser?.userName,
-          createdOn: new Date(),
+          createdon: new Date(),
           position: this.infoUser?.positionID,
-          orgUnit: this.infoUser?.orgUnitID,
+          orgunit: this.infoUser?.orgUnitID,
           department: this.infoUser?.departmentID,
           company: this.infoUser?.companyID,
         };
@@ -782,7 +788,13 @@ export class AddProcessDefaultComponent implements OnInit {
     this.isAttach = e;
   }
 
-  addRow(data: any, fieldName: any, index = 0, result: any = null,hasIndexNo=false) {
+  addRow(
+    data: any,
+    fieldName: any,
+    index = 0,
+    result: any = null,
+    hasIndexNo = false
+  ) {
     if (!this.dataTable[fieldName.toLowerCase()])
       this.dataTable[fieldName.toLowerCase()] = [];
     var option = new DialogModel();
@@ -802,24 +814,25 @@ export class AddProcessDefaultComponent implements OnInit {
     popup.closed.subscribe((res) => {
       if (res?.event) {
         if (!result) {
-          if(hasIndexNo) res.event.indexNo = this.dataTable[fieldName.toLowerCase()].length + 1
+          if (hasIndexNo)
+            res.event.indexNo =
+              this.dataTable[fieldName.toLowerCase()].length + 1;
           this.dataTable[fieldName.toLowerCase()].push(res?.event);
-        }
-        else this.dataTable[fieldName.toLowerCase()][result.index] = res.event;
+        } else
+          this.dataTable[fieldName.toLowerCase()][result.index] = res.event;
         var grid = this.gridView.find((_, i) => i == index);
         grid.refresh();
       }
     });
   }
-  deleteRow(data: any, fieldName: any, index = 0 , hasIndexNo = false) {
+  deleteRow(data: any, fieldName: any, index = 0, hasIndexNo = false) {
     this.dataTable[fieldName.toLowerCase()].splice(data.index, 1);
-    if(hasIndexNo)
-    {
+    if (hasIndexNo) {
       let i = 1;
-      this.dataTable[fieldName.toLowerCase()].forEach(elm=>{
+      this.dataTable[fieldName.toLowerCase()].forEach((elm) => {
         elm.indexNo = i;
         i++;
-      })
+      });
     }
     var grid = this.gridView.find((_, i) => i == index);
     grid.refresh();
@@ -841,7 +854,12 @@ export class AddProcessDefaultComponent implements OnInit {
           .alert('Thông báo', 'Bạn có chắc chắn muốn xóa?', config)
           .closed.subscribe((x) => {
             if (x.event.status == 'Y')
-              this.deleteRow(e?.data, data.fieldName, data.indexTable , data?.tableFormat?.hasIndexNo);
+              this.deleteRow(
+                e?.data,
+                data.fieldName,
+                data.indexTable,
+                data?.tableFormat?.hasIndexNo
+              );
           });
         break;
       }
