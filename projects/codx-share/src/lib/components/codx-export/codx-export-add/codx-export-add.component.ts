@@ -87,22 +87,30 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     {
       key: "orgunit",
       text: "Người lập phiếu_Bộ phận",
-      isSign: false
+      isSign: false,
+      refType : "3",
+      refValue : "HRDepartmentUnits"
     },
     {
       key: "position",
       text: "Người lập phiếu_Chức danh",
-      isSign: false
+      isSign: false,
+      refType : "3",
+      refValue : "Positions"
     },
     {
       key: "department",
       text: "Người lập phiếu_Phòng ban",
-      isSign: false
+      isSign: false,
+      refType : "3",
+      refValue : "HRDepartments"
     },
     {
       key: "company",
       text: "Người lập phiếu_Công ty",
-      isSign: false
+      isSign: false,
+      refType : "3",
+      refValue : "HRCompany"
     },
     {
       key: "signature1",
@@ -349,15 +357,18 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
       }
       
       this.listRequester.forEach(x=>{
+        let key = "f" +  this.dataGoupField[i].stepNo + "_owner." + x.key;
+        if(x.refType) key += "|" + x.refType;
+        if(x.refValue) key += "|" + x.refValue;
         var obj3 = 
         {
           text: x.text,
-          key: "f" +  this.dataGoupField[i].stepNo + "_owner." + x.key,
+          key: key,
           category: 'Drag or click the field to insert.',
           htmlAttributes: { draggable: true },
         }
         var obj4 = {
-          key: "f" +  this.dataGoupField[i].stepNo + "_owner." + x.key,
+          key: key,
           headerText: x.text,
         };
         this.gridViewSettup.push(obj4);
