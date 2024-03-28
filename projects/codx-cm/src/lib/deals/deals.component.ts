@@ -440,8 +440,6 @@ export class DealsComponent
             if(['SYS003','SYS004','SYS001','SYS002','SYS009','SYS008','',''].includes(functionID)){
               eventItem.disabled = this.checkMoreReason(data);
             }else{
-              console.table(eventItem);
-              
             }
           }
         } else {
