@@ -609,9 +609,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'SYS003': //đính kèm file
-            if (!task?.isTaskDefault) {
-              res.isblur = true;
-            }
+            res.disabled = true;
             break;
           case 'DP20': // tiến độ
             if (
@@ -1942,7 +1940,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       UpdateProgressComponent,
       '',
       550,
-      400,
+      600,
       '',
       dataInput
     );
