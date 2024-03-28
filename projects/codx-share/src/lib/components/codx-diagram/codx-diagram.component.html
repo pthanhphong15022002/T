@@ -285,9 +285,9 @@
 <!--- Đây là khu vực template dành cho diagram node --->
 
 <ng-template #formTemplate let-data>
-  <ng-container class="border rounded" style="background-color: #fff">
+  <ng-container class="border rounded border-primary" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border border-primary rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">
@@ -331,9 +331,9 @@
 </ng-template>
 
 <ng-template #taskTemplate let-data>
-  <ng-container class="border rounded" style="background-color: #fff">
+  <ng-container class="border rounded border-success" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border border-success rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">
@@ -383,9 +383,9 @@
 </ng-template>
 
 <ng-template #esignTemplate let-data>
-  <ng-container class="border rounded" style="background-color: #fff">
+  <ng-container class="border rounded border-info" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border  border-info rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">
@@ -425,9 +425,9 @@
   </ng-container>
 </ng-template>
 <ng-template #eventTemplate let-data>
-  <ng-container class="border rounded" style="background-color: #fff">
+  <ng-container class="border rounded border-warning" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border border-warning rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">
@@ -469,9 +469,9 @@
   </ng-container>
 </ng-template>
 <ng-template #emailTemplate let-data>
-  <ng-container class="border rounded" style="background-color: #fff">
+  <ng-container class="border rounded border-warning" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border border-warning rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">
@@ -517,15 +517,15 @@
 <ng-template #approveTemplate let-data>
   <ng-container class="border rounded border-danger" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border border-danger rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">
         <div
-          class="col-6 d-flex align-items-center p-1 ps-3"
+          class="col-6 d-flex align-items-center p-1 ps-3 text-danger"
           (click)="clickAddForm(data)"
         >
-          <span class="icon-i-pen icon-21 me-1 text-info"></span>
+          <span class="icon-i-pen icon-21 me-1"></span>
           <span class="text-danger fw-bold"
             ><codx-label
               formName="sys"
@@ -558,9 +558,9 @@
 </ng-template>
 
 <ng-template #checkTemplate let-data>
-  <ng-container class="border rounded" style="background-color: #fff">
+  <ng-container class="border rounded border-info" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border border-info rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">

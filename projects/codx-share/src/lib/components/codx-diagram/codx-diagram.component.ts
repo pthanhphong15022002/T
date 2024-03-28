@@ -1226,7 +1226,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
     }
   }
   initProcess(){
-    if(this.process && this.columns.length){
+    if(this.process){
       let objDiagram:any={};
       objDiagram.id=this.makeid(10);
       objDiagram.processID=this.process.recID;
@@ -1254,7 +1254,9 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
       }
       shape.lanes=[];
 
-
+      this.columns= this.process?.steps?.filter(
+        (x) => x.activityType == 'Stage'
+      );
       let stepNodes:any=[];
       for(let i =0;i < this.columns.length;i++){
         objDiagram.width = 500*(i+1);
@@ -1552,15 +1554,10 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
       .subscribe((item) => {
         if (item) {
           this.process = item;
-          let sub1 = this.api.execSv('BP','BP','ProcessesBusiness','GetColumnsKanbanAsync',[{},this.recID]).subscribe((res:any)=>{
-            this.columns=res?.columns;
-            this.initProcess()
-            sub1.unsubscribe();
-          })
-
           this.lstSteps = this.process?.steps?.filter(
             (x) => x.activityType == 'Stage'
           );
+          this.columns = this.lstSteps;
         }
         sub.unsubscribe();
       });
@@ -1568,7 +1565,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
 
    }
    collectionChange(e:any){
-    if(this.diagram) this.diagram.fitToPage();
+    if(this.diagram && this.viewOnly) this.diagram.fitToPage();
    }
   //===========
 }
