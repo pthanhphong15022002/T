@@ -739,7 +739,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  isCreatedTempletMail(e) {
+  createdTempletMail(e) {
     if (e && !this.templetCreated.includes(e))
       this.templetCreated.push(e)
   }
