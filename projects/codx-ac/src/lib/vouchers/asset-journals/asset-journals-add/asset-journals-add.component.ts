@@ -11,6 +11,7 @@ import {
   CodxGridviewV2Component,
   DialogData,
   DialogRef,
+  FormModel,
   NotificationsService,
   UIComponent,
   Util,
@@ -18,7 +19,8 @@ import {
 import { Subject, firstValueFrom, map, takeUntil } from 'rxjs';
 import {
   CodxAcService,
-  fmAssetJournalsLines,
+  fmAssetAcquisitionsLines,
+  fmAssetRevaluationsLines,
   fmCountingMembers,
 } from '../../../codx-ac.service';
 import { RoundService } from '../../../round.service';
@@ -55,7 +57,7 @@ export class AssetJournalsAddComponent extends UIComponent {
     allowEditOnDblClick: false,
     allowNextRowEdit: false,
   };
-  fmAssetJournalsLines: any = fmAssetJournalsLines;
+  fmAssetJournalsLines: FormModel;
   fmCountingMembers = fmCountingMembers;
   tabInfo: TabModel[] = [
     //? thiết lập footer
@@ -95,6 +97,10 @@ export class AssetJournalsAddComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
+    this.fmAssetJournalsLines =
+      this.dialog.formModel.funcID == 'ACT811'
+        ? fmAssetAcquisitionsLines
+        : fmAssetRevaluationsLines;
     this.acService.setPopupSize(this.dialog, '100%', '100%');
   }
 
