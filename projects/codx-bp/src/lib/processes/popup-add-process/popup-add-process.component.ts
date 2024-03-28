@@ -320,7 +320,7 @@ export class PopupAddProcessComponent {
       allowEdit: allowEdit?.fieldValue
     });
 
- 
+
     form.stepNo = 1;
     form.stepName = vllForm.text + ' 1';
     form.activityType = 'Form';
@@ -547,11 +547,11 @@ export class PopupAddProcessComponent {
 
   //#region control Share
   //Control share
-  sharePerm(share) {
+  sharePerm(share, roleType) {
     this.listCombobox = {};
     this.multiple = true;
     this.vllShare = 'BP016';
-    this.typeShare = '1';
+    this.typeShare = roleType;
     this.multiple = true;
     let option = new DialogModel();
     option.zIndex = 1010;
@@ -573,12 +573,12 @@ export class PopupAddProcessComponent {
     );
   }
 
-  defaultRoleNotAdmin(objectID, objectName, objectType) {
+  defaultRoleNotAdmin(objectID, objectName, objectType, typeShare) {
     let perm = new BP_Processes_Permissions();
     perm.objectID = objectID;
     perm.objectName = objectName;
     perm.objectType = objectType;
-    perm.roleType = 'P';
+    perm.roleType = typeShare;
     perm.create = true;
     perm.read = true;
     perm.update = false;
@@ -593,12 +593,12 @@ export class PopupAddProcessComponent {
     return perm;
   }
 
-  searchAddUsers(e) {
+  searchAddUsers(e, typeShare) {
     if (e && e?.component?.itemsSelected?.length > 0) {
       let permissions = this.data.permissions ?? [];
       const data = e?.component?.itemsSelected[0];
       if (data) {
-        let perm = this.defaultRoleNotAdmin(data?.UserID, data?.UserName, 'U');
+        let perm = this.defaultRoleNotAdmin(data?.UserID, data?.UserName, 'U', typeShare);
         permissions = this.checkUserPermission(permissions, perm);
         this.data.permissions = permissions;
       }
@@ -607,7 +607,7 @@ export class PopupAddProcessComponent {
     }
   }
 
-  applyShare(e) {
+  applyShare(e, typeShare) {
     let permissions = this.data?.permissions ?? [];
     if (e?.length > 0) {
       let value = e;
@@ -625,7 +625,8 @@ export class PopupAddProcessComponent {
               ? data?.objectName
               : data?.text
             : this.user?.userName,
-          data.objectType
+          data.objectType,
+          typeShare
         );
 
         permissions = this.checkUserPermission(permissions, perm);
@@ -700,7 +701,7 @@ export class PopupAddProcessComponent {
       .alertCode('SYS030')
       .pipe(takeUntil(this.destroyFrom$))
       .subscribe((x) => {
-        if (x.event.status == 'Y') {
+        if (x?.event?.status == 'Y') {
           this.data.permissions.splice(index, 1);
           this.detectorRef.markForCheck();
         }
@@ -783,7 +784,7 @@ export class PopupAddProcessComponent {
           this.extendInfos.forEach((element) => {
             if (element.controlType == 'Attachment') {
               if (!element?.documentControl || element?.documentControl.length == 0) {
-                var obj = 
+                var obj =
                 {
                   recID: Util.uid(),
                   title: element.title,
@@ -794,7 +795,7 @@ export class PopupAddProcessComponent {
                   stepNo: this.data?.steps[1].stepNo,
                   fieldID: element.recID,
                   memo: this.data?.steps[1].memo,
-                  permissions: 
+                  permissions:
                   [
                     {
                       objectID: this.user?.userID,
@@ -849,14 +850,14 @@ export class PopupAddProcessComponent {
                   : null;
             }
             if (typeof element.tableFormat != 'string') {
-              element.tableFormat = JSON.stringify(element.tableFormat) 
+              element.tableFormat = JSON.stringify(element.tableFormat)
             }
           });
 
           this.data.steps[index].extendInfo = this.extendInfos;
 
           this.data = Object.assign({},  this.data);
-          
+
         }
         this.detectorRef.detectChanges();
       }
@@ -943,7 +944,7 @@ export class PopupAddProcessComponent {
     let result = JSON.parse(JSON.stringify(this.data));
     let count = result.steps.length;
     let result_1 = result.steps.filter(x=>x.activityType == "Stage");
-  
+
     result_1.forEach((elm: any) => {
       elm.stepNo = i;
       i++;
@@ -964,7 +965,7 @@ export class PopupAddProcessComponent {
                 elm3.stepNo = i;
                 let nextStepsID = null;
                 if(elm.child[stt+1]) nextStepsID = elm.child[stt+1].recID
-                elm3.settings.nextSteps =  [{nextStepID: nextStepsID}] 
+                elm3.settings.nextSteps =  [{nextStepID: nextStepsID}]
                 if(typeof elm3.settings === 'object') elm3.settings = JSON.stringify(elm3.settings);
                 result2.push(elm3);
                 i++;
@@ -991,12 +992,12 @@ export class PopupAddProcessComponent {
         }
       });
     }
-   
+
     if(result2.length>0)
     {
       for(var x = 0 ; x < result2.length ; x++)
       {
-        if(result2[x].activityType == "Form") 
+        if(result2[x].activityType == "Form")
         {
           if(result2[x].extendInfo && result2[x].extendInfo.length>0)
           {
@@ -1005,14 +1006,14 @@ export class PopupAddProcessComponent {
             });
           }
         }
-        
+
         if(typeof result2[x].settings == 'string') result2[x].settings = JSON.parse(result2[x].settings);
         if(result2[x + 1]?.recID && result2[x].activityType != 'Conditions')
         {
-          if(!result2[x]?.settings?.nextSteps) result2[x].settings.nextSteps = [{nextStepID: result2[x + 1]?.recID}] 
+          if(!result2[x]?.settings?.nextSteps) result2[x].settings.nextSteps = [{nextStepID: result2[x + 1]?.recID}]
         }
         else if(result2[x].activityType != 'Conditions') result2[x].settings.nextSteps = null;
-        
+
         result2[x].settings = JSON.stringify(result2[x].settings);
 
         if(typeof result2[x].reminder != "string" && result2[x].reminder) result2[x].reminder = JSON.stringify(result2[x].reminder);
@@ -1020,14 +1021,23 @@ export class PopupAddProcessComponent {
         result2[x].stepType = null;
       }
     }
-    
     var fristFormIndex = result2.findIndex(x=>x.activityType == "Form");
     var fristStageIndex = result2.findIndex(x=>x.activityType == "Stage");
-    if(fristFormIndex>=0) result2[fristFormIndex].stepType = "1";
-    if(fristStageIndex>=0) result2[fristStageIndex].stepType = "1";
-    result2[result2.length - 1].stepType = "2";
-    var lastStageIndex = result2.findIndex(x=>x.recID == result2[result2.length - 1].stageID);
-    if(lastStageIndex>=0) result2[lastStageIndex].stepType = "2";
+    var countStage = result2.filter(x=>x.activityType == "Stage").length;
+    if(countStage == 1)
+    {
+      if(fristFormIndex>=0) result2[fristFormIndex].stepType = "3";
+      if(fristStageIndex>=0) result2[fristStageIndex].stepType = "3";
+      result2[result2.length - 1].stepType = "3";
+    }
+    else
+    {
+      if(fristFormIndex>=0) result2[fristFormIndex].stepType = "1";
+      if(fristStageIndex>=0) result2[fristStageIndex].stepType = "1";
+      result2[result2.length - 1].stepType = "2";
+      var lastStageIndex = result2.findIndex(x=>x.recID == result2[result2.length - 1].stageID);
+      if(lastStageIndex>=0) result2[lastStageIndex].stepType = "2";
+    }
     result.steps = result2;
     op.data = result;
     return true;

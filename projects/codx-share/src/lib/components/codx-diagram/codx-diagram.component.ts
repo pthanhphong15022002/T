@@ -1,10 +1,11 @@
 import { P } from "@angular/cdk/keycodes";
-import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ViewEncapsulation, TemplateRef, ViewChild, ChangeDetectorRef, ElementRef, Optional, Input, OnChanges, SimpleChanges } from "@angular/core";
+import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ViewEncapsulation, TemplateRef, ViewChild, ChangeDetectorRef, ElementRef, Optional, Input, OnChanges, SimpleChanges, OnDestroy } from "@angular/core";
 import { HierarchicalTreeService, MindMapService, RadialTreeService, ComplexHierarchicalTreeService, DataBindingService, SnappingService, PrintAndExportService, BpmnDiagramsService, SymmetricLayoutService, ConnectorBridgingService, UndoRedoService, LayoutAnimationService, DiagramContextMenuService, ConnectorEditingService, DiagramComponent, SymbolPaletteComponent, BpmnShapeModel, ConnectorModel, ContextMenuSettingsModel, DiagramBeforeMenuOpenEventArgs, DiagramTools, HeaderModel, LaneModel, NodeModel, PaletteModel, PortConstraints, PortVisibility, RulerSettingsModel, SelectorConstraints, SelectorModel, ShapeStyleModel, SnapConstraints, SnapSettingsModel, SwimLaneModel, UserHandleModel, cloneObject } from "@syncfusion/ej2-angular-diagrams";
 import { shadowProperty } from "@syncfusion/ej2-angular-documenteditor";
 import { ExpandMode, MenuEventArgs } from "@syncfusion/ej2-angular-navigations";
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel } from "codx-core";
 import { FormEditConnectorComponent } from "projects/codx-share/src/lib/components/codx-diagram/form-edit-connector/form-edit-connector.component";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'codx-diagram',
@@ -30,7 +31,7 @@ import { FormEditConnectorComponent } from "projects/codx-share/src/lib/componen
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
+export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnDestroy {
 
   @ViewChild('diagram') diagram: DiagramComponent;
   @ViewChild('palette') palette: SymbolPaletteComponent;
@@ -39,9 +40,11 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
   @Input() process:any={};
   @Input() viewOnly:boolean=false;
   @Input() recID!:any;
-
+  vllStepType:any=[];
+  vllInterval:any=[];
   dialog:any;
   data:any
+  subscription:Subscription = new Subscription();
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
@@ -54,8 +57,28 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
+     let sub = this.cache.valueList('BP001').subscribe((res:any)=>{
 
+      if(res){
+        this.vllStepType=res.datas;
+      }
+
+    })
+    this.subscription.add(sub);
+     let sub1 = this.cache.valueList('BP019').subscribe((res:any)=>{
+
+      if(res){
+        this.vllInterval=res.datas;
+      }
+
+    })
+    this.subscription.add(sub1);
   }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe()
+  }
+
+
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['viewOnly'] ){
       if(!changes['viewOnly'].currentValue){
@@ -1226,7 +1249,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
     }
   }
   initProcess(){
-    if(this.process && this.columns.length){
+    if(this.process){
       let objDiagram:any={};
       objDiagram.id=this.makeid(10);
       objDiagram.processID=this.process.recID;
@@ -1252,9 +1275,11 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
         },
 
       }
-      shape.lanes=[];
-
-
+      shape.lanes=[];;
+      this.process!.steps = this.process?.steps.sort((a:any,b:any)=> a.stepNo-b.stepNo)
+      this.columns= this.process?.steps?.filter(
+        (x) => x.activityType == 'Stage'
+      );
       let stepNodes:any=[];
       for(let i =0;i < this.columns.length;i++){
         objDiagram.width = 500*(i+1);
@@ -1268,8 +1293,8 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
           height:30,
           annotation:{
             id: this.makeid(5),
-            refID:this.columns[i].keyField,
-            content:this.columns[i].headerText,
+            refID:this.columns[i].recID,
+            content:this.columns[i].stepName,
             style:{bold:true}
           },
 
@@ -1278,7 +1303,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
         let maxwidth:any=objLane.width;
         objLane.children=[];
         if(this.process.steps && this.process.steps.length){
-          let currentStageActions= this.process.steps.filter((x:any)=>x.stageID==this.columns[i].keyField);
+          let currentStageActions= this.process.steps.filter((x:any)=>x.stageID==this.columns[i].recID);
           let offset=50;
           currentStageActions = currentStageActions.sort((a:any,b:any)=> a.stepNo-b.stepNo)
           for(let j =0;j < currentStageActions.length;j++){
@@ -1301,7 +1326,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
               ];
 
               if(currentStageActions[j].settings){
-                let setting = JSON.parse(currentStageActions[j].settings);
+                let setting = typeof currentStageActions[j].settings == 'string' ?  JSON.parse(currentStageActions[j].settings) : currentStageActions[j].settings;
                 if(setting && setting.nextSteps){
                   for(let i = 0; i<setting.nextSteps.length;i++){
                     if(setting.nextSteps[i].nextStepID){
@@ -1334,7 +1359,14 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
                             top: offset +200,
                             left: i*300 + 50
                           }
+                          stepModel.data = step;
                           if(objLane.children.findIndex((c:any)=>c.refID==stepModel.refID) == -1){
+                            objLane.children.push(stepModel)
+                            stepNodes.push(stepModel);
+                          }
+                          else{
+                            objLane.children = objLane.children.filter((c:any)=>c.refID!=stepModel.refID);
+                            stepNodes = stepNodes.filter((x:any)=>x.refID != stepModel.refID);
                             objLane.children.push(stepModel)
                             stepNodes.push(stepModel);
                           }
@@ -1427,7 +1459,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
         this.diagram.addNode(objDiagram);
         this.process.steps.forEach((x:any)=>{
           if(x.settings){
-            let setting = JSON.parse(x.settings)
+            let setting = typeof x.settings == 'string' ? JSON.parse(x.settings) : x.settings
             if(setting && setting.nextSteps && setting.nextSteps.length){
               for(let i = 0; i< setting.nextSteps.length;i++){
                 if(setting.nextSteps[i].nextStepID){
@@ -1552,15 +1584,10 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
       .subscribe((item) => {
         if (item) {
           this.process = item;
-          let sub1 = this.api.execSv('BP','BP','ProcessesBusiness','GetColumnsKanbanAsync',[{},this.recID]).subscribe((res:any)=>{
-            this.columns=res?.columns;
-            this.initProcess()
-            sub1.unsubscribe();
-          })
-
           this.lstSteps = this.process?.steps?.filter(
             (x) => x.activityType == 'Stage'
           );
+          this.columns = this.lstSteps;
         }
         sub.unsubscribe();
       });
@@ -1568,7 +1595,20 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
 
    }
    collectionChange(e:any){
-    if(this.diagram) this.diagram.fitToPage();
+    if(this.diagram && this.viewOnly) this.diagram.fitToPage();
+   }
+
+   getVllObject(type:string){
+    if(type && this.vllStepType){
+      return this.vllStepType.find((x:any)=>x.value==type);
+    }
+    return {text:'',value:'',icon:'',color:'', textColor:''};
+   }
+   getIntervalObject(type:string){
+    if(type && this.vllInterval){
+      return this.vllInterval.find((x:any)=>x.value==type);
+    }
+    return {text:'',value:'',icon:'',color:'', textColor:''};
    }
   //===========
 }

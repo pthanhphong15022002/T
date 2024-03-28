@@ -225,16 +225,27 @@ export class AssetJournalsAddComponent extends UIComponent {
    * @param event
    */
   valueChangeLine(event: any) {
-    this.eleGridAcquisitions.isSave = false;
-    this.eleGridAcquisitions.isSaveOnClick = false;
-    this.eleGridAcquisitions.isOutsideDataSource = true;
-    let index = this.lstLines.findIndex((x) => x.recID == event?.data?.recID);
-    if (index != -1) {
-      this.lstLines[index] = event?.data;
-    } else {
-      this.lstLines.push(event?.data);
+    if(event?.value){
+      this.eleGridAcquisitions.isSave = false;
+      this.eleGridAcquisitions.isSaveOnClick = false;
+      this.eleGridAcquisitions.isOutsideDataSource = true;
+      if(event?.field == 'employeeID'){
+        if(event?.itemData){
+          event.data.employeeID = event?.itemData?.EmployeeID;
+          event.data.orgUnitID = event?.itemData?.OrgUnitID;
+          event.data.departmentID = event?.itemData?.DepartmentID;
+          event.data.companyID = event?.itemData?.CompanyID;
+        }
+      }
+      let index = this.lstLines.findIndex((x) => x.recID == event?.data?.recID);
+      if (index != -1) {
+        this.lstLines[index] = event?.data;
+      } else {
+        this.lstLines.push(event?.data);
+      }
+      this.detectorRef.detectChanges();
     }
-    this.detectorRef.detectChanges();
+
   }
   /**
    * *Hàm thêm dòng cho các lưới
@@ -535,7 +546,6 @@ export class AssetJournalsAddComponent extends UIComponent {
               this.isSaveAdd = true;
               this.refreshForm();
             }
-            this.notification.notifyCode('SYS006');
           }
         });
     } else {
@@ -564,6 +574,7 @@ export class AssetJournalsAddComponent extends UIComponent {
               this.refreshForm();
             }
           }
+          this.notification.notifyCode('SYS006');
         });
     }
   }
