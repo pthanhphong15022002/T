@@ -1270,8 +1270,8 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
           height:30,
           annotation:{
             id: this.makeid(5),
-            refID:this.columns[i].keyField,
-            content:this.columns[i].headerText,
+            refID:this.columns[i].recID,
+            content:this.columns[i].stepName,
             style:{bold:true}
           },
 
@@ -1280,7 +1280,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
         let maxwidth:any=objLane.width;
         objLane.children=[];
         if(this.process.steps && this.process.steps.length){
-          let currentStageActions= this.process.steps.filter((x:any)=>x.stageID==this.columns[i].keyField);
+          let currentStageActions= this.process.steps.filter((x:any)=>x.stageID==this.columns[i].recID);
           let offset=50;
           currentStageActions = currentStageActions.sort((a:any,b:any)=> a.stepNo-b.stepNo)
           for(let j =0;j < currentStageActions.length;j++){
