@@ -190,19 +190,34 @@ export const fmJournal: FormModel = {
   funcID: 'ACT',
 };
 
-export const fmAssetJournal: FormModel = {
+export const fmAssetAcquisitionsJournal: FormModel = {
   formName: 'AssetAcquisitions',
   gridViewName: 'grvAssetAcquisitions',
   entityName: 'AM_AssetJournals',
   entityPer: 'AM_AssetJournals',
 };
 
-export const fmAssetJournalsLines: FormModel = {
+export const fmAssetRevaluationsJournal: FormModel = {
+  formName: 'AssetRevaluations',
+  gridViewName: 'grvAssetRevaluations',
+  entityName: 'AM_AssetJournals',
+  entityPer: 'AM_AssetJournals',
+};
+
+export const fmAssetAcquisitionsLines: FormModel = {
   formName: 'AssetAcquisitionsLines',
   gridViewName: 'grvAssetAcquisitionsLines',
   entityName: 'AM_AssetJournalsLines',
   entityPer: 'AM_AssetJournalsLines',
 };
+
+export const fmAssetRevaluationsLines: FormModel = {
+  formName: 'AssetRevaluationsLines',
+  gridViewName: 'grvAssetRevaluationsLines',
+  entityName: 'AM_AssetJournalsLines',
+  entityPer: 'AM_AssetJournalsLines',
+};
+
 export const fmCountingMembers: FormModel = {
   formName: 'CountingMembers',
   gridViewName: 'grvCountingMembers',
