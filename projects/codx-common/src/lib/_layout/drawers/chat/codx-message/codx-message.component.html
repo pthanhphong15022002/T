@@ -13,7 +13,7 @@
                         <div class="text-dark word-break_all">{{data.message}}</div>
                         <div class="d-flex align-items-center justify-content-between">
                             <div *ngIf="data.votes" class="d-flex">
-                                <span *ngFor="let item of data.votes | disctintPipe:'voteType'">
+                                <span *ngFor="let item of data.votes | disctintPipe:'voteType'" (click)="clickShowVotes()">
                                     <codx-vll 
                                         [path]="'assets/themes/wp/default/img/'"
                                         [name]="'L1480'" 
@@ -144,5 +144,7 @@
         </ng-container>
     </div>
 </ng-template>
+
+<ng-template #popupShow></ng-template>
 
 
