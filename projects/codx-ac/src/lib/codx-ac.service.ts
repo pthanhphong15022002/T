@@ -584,20 +584,25 @@ export class CodxAcService {
               element.disabled = true;
             break;
 
-          case '8':
-          case '11':
-            if (
-              ![MorfuncCash.InUNC, MorfuncCash.KiemTraTrangThai].includes(
-                element.functionID
-              )
-            )
-              element.disabled = true;
-            break;
+          // case '8':
+          // case '11':
+          //   if (
+          //     ![MorfuncCash.InUNC, MorfuncCash.KiemTraTrangThai].includes(
+          //       element.functionID
+          //     )
+          //   )
+          //     element.disabled = true;
+          //   break;
 
           default:
             element.disabled = true;
             break;
         }
+      }
+
+      if (data.eBankingID) {
+        if (MorfuncCash.KiemTraTrangThai == element.functionID)
+          element.disabled = false;
       }
       event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
     }, {});
@@ -852,10 +857,9 @@ export class CodxAcService {
             } else {
               if (journal.approvalControl == '0') {
                 if (
-                  ![
-                    MorfuncCashTranfers.GhiSo,
-                    MorfuncCashTranfers.In,
-                  ].includes(element.functionID)
+                  ![MorfuncCashTranfers.GhiSo, MorfuncCashTranfers.In].includes(
+                    element.functionID
+                  )
                 )
                   element.disabled = true;
               } else {
@@ -882,10 +886,9 @@ export class CodxAcService {
 
           case '3':
             if (
-              ![
-                MorfuncCashTranfers.HuyDuyet,
-                MorfuncCashTranfers.In,
-              ].includes(element.functionID)
+              ![MorfuncCashTranfers.HuyDuyet, MorfuncCashTranfers.In].includes(
+                element.functionID
+              )
             )
               element.disabled = true;
             break;
@@ -893,20 +896,18 @@ export class CodxAcService {
           case '5':
           case '9':
             if (
-              ![
-                MorfuncCashTranfers.GhiSo,
-                MorfuncCashTranfers.In,
-              ].includes(element.functionID)
+              ![MorfuncCashTranfers.GhiSo, MorfuncCashTranfers.In].includes(
+                element.functionID
+              )
             )
               element.disabled = true;
             break;
 
           case '6':
             if (
-              ![
-                MorfuncCashTranfers.KhoiPhuc,
-                MorfuncCashTranfers.In,
-              ].includes(element.functionID)
+              ![MorfuncCashTranfers.KhoiPhuc, MorfuncCashTranfers.In].includes(
+                element.functionID
+              )
             )
               element.disabled = true;
             break;
