@@ -466,6 +466,7 @@ export class CashPaymentAddComponent extends UIComponent {
   valueChangeLine(event: any) {
     let oLine = event.data;
     let field = event.field;
+    if(field.toLowerCase() === 'settledno') oLine.settledID = event?.itemData?.RecID;
     this.eleGridCashPayment.startProcess();
     this.api.exec('AC','CashPaymentsLinesBusiness','ValueChangedAsync',[this.master.data,oLine,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       Object.assign(oLine, res);
@@ -836,7 +837,7 @@ export class CashPaymentAddComponent extends UIComponent {
           this.isPreventChange = true;
           this.master.setValue('currencyID', res?.data?.currencyID, {});
           this.master.setValue('exchangeRate', (res?.data?.exchangeRate), {});
-          this.master.setValue('cashBookName', (res?.data?.cashBookName), {});
+          this.master.data.cashBookName = res?.data?.cashBookName;
           if (this.master.data.journalType.toLowerCase() === 'bp') this.master.data.bankPayname = res?.data?.bankPayname
           this.isPreventChange = false;
           this.preData = { ...this.master?.data };

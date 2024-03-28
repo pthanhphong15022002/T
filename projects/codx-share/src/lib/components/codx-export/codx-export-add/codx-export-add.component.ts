@@ -585,7 +585,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                         if (saveW) {
                           let r = item[1][0];
                           r.recID = this.data.recID;
-                          this.dialog.close([r, this.type]);
+                          this.dialog.close([r, this.type ,this.nameFile,saveW.data]);
                         }
                       });
                     }

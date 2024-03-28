@@ -832,7 +832,7 @@
             default="Thời gian nhắc nhở (ngày)"
           >
           </codx-label>
-          <div class="col-4">
+          <div class="col-2">
             <codx-input
               field="reminderTime"
               type="number"
@@ -843,7 +843,7 @@
               [disabled]="disable"
             ></codx-input>
           </div>
-          <div class="col-8">
+          <div class="col-10">
             <div class="d-flex align-items-top me-3">
               <!-- <span class="me-2">
           <codx-input
@@ -878,7 +878,7 @@
               <div class="setting-btnright">
                 <a
                   href="javascript:void(0)"
-                  (click)="disable ? '' : openPopupSettingRemind()"
+                  (click)="disable ? '' : settingRemindMail()"
                 >
                   <span class="w-30px d-flex justify-content-center"
                     ><span

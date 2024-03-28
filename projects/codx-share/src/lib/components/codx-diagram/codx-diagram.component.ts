@@ -38,6 +38,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
   @Input() columns:any=[];
   @Input() process:any={};
   @Input() viewOnly:boolean=false;
+  @Input() recID!:any;
 
   dialog:any;
   data:any
@@ -70,7 +71,10 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
 
   }
   ngAfterViewInit(): void {
-    this.initProcess();
+    if(this.recID){
+      this.getProcess();
+    }
+    else this.initProcess();
   }
 
   created(): void {
@@ -962,6 +966,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
   }
 
   clickAddForm(data: any) {
+    if(this.viewOnly) return;
     console.log('addForm nè', data);
   }
 
@@ -1221,7 +1226,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
     }
   }
   initProcess(){
-    if(this.process && this.columns.length){
+    if(this.process){
       let objDiagram:any={};
       objDiagram.id=this.makeid(10);
       objDiagram.processID=this.process.recID;
@@ -1231,26 +1236,30 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
       shape.isLane=true;
       // objDiagram.offsetY=-200;
       // objDiagram.offsetX=100;
-      objDiagram.margin= { left: 20, top: 0 },
+      objDiagram.margin= { left: 50, top: 20 },
       objDiagram.height = 700;
+      objDiagram.width = 500;
       shape.orientation="Vertical";
-      shape.margin= { left: 20, top: 0 },
+      shape.margin= { left: 50, top: 20 },
+      shape.width=500;
       shape.header = {
         id:this.makeid(5),
         height:30,
         annotation:{
           id: this.process.processID,
           content:this.process.processName,
-          style: { fontSize: 16, color: '#797979', bold: true }
+          style: { fontSize: 16, color: '#0099ff', bold: true }
         },
 
       }
       shape.lanes=[];
 
-
+      this.columns= this.process?.steps?.filter(
+        (x) => x.activityType == 'Stage'
+      );
       let stepNodes:any=[];
       for(let i =0;i < this.columns.length;i++){
-
+        objDiagram.width = 500*(i+1);
         let objLane:any={};
         objLane.id=this.makeid(10);
         //objLane.canMove=false;
@@ -1261,8 +1270,9 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
           height:30,
           annotation:{
             id: this.makeid(5),
-            refID:this.columns[i].keyField,
-            content:this.columns[i].headerText
+            refID:this.columns[i].recID,
+            content:this.columns[i].stepName,
+            style:{bold:true}
           },
 
         }
@@ -1270,7 +1280,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
         let maxwidth:any=objLane.width;
         objLane.children=[];
         if(this.process.steps && this.process.steps.length){
-          let currentStageActions= this.process.steps.filter((x:any)=>x.stageID==this.columns[i].keyField);
+          let currentStageActions= this.process.steps.filter((x:any)=>x.stageID==this.columns[i].recID);
           let offset=50;
           currentStageActions = currentStageActions.sort((a:any,b:any)=> a.stepNo-b.stepNo)
           for(let j =0;j < currentStageActions.length;j++){
@@ -1283,6 +1293,8 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
                 type: 'Flow',
                 shape: 'Decision',
               };
+              model.width=100;
+              model.height=50;
               model.annotations=[
                 {
                     content: currentStageActions[j].stepName,
@@ -1291,7 +1303,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
               ];
 
               if(currentStageActions[j].settings){
-                let setting = JSON.parse(currentStageActions[j].settings);
+                let setting = typeof currentStageActions[j].settings == 'string' ?  JSON.parse(currentStageActions[j].settings) : currentStageActions[j].settings;
                 if(setting && setting.nextSteps){
                   for(let i = 0; i<setting.nextSteps.length;i++){
                     if(setting.nextSteps[i].nextStepID){
@@ -1351,7 +1363,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
               if(!model.margin){
                 model.margin={
                   top: offset,
-                  left: (objLane.width - model.width)/2
+                  //left: (objLane.width - model.width)/2
                 }
               }
 
@@ -1379,14 +1391,14 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
           objDiagram.height = maxheight;
 
           objLane.height = maxheight
-          objLane.width = maxwidth
+          //objLane.width = maxwidth
           offset=0;
         }
-        let maxMargin=0;
+        //let maxMargin=0;
         objLane.children =objLane.children.sort((x:any,b:any)=>x.refSourceID ? -1 : 1 )
         objLane.children.forEach((child:any)=>{
           if(child.shape.type =='Flow'){
-            child.margin.left=(maxwidth)/2;
+            child.margin.left=(maxwidth - child.width)/2;
             // child.offsetX =  (maxwidth- 200)/2;
           }
           else{
@@ -1396,13 +1408,13 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
                 if(refItems.indexOf(child)>-1){
                   child.margin.left=(refItems.indexOf(child)*350 )
                   child.offsetX =  (refItems.indexOf(child)*350)
-                  maxMargin = refItems.indexOf(child)*350 ;
+                  //maxMargin = refItems.indexOf(child)*350 ;
                 }
               }
             }
             else{
-              child.margin.left=(maxwidth - child.width )/2
-              //child.offsetX =  (objLane.width - child.width)/2;
+              child.margin.left=(objLane.width - child.width)/2
+              child.offsetX =  (objLane.width - child.width)/2;
             }
 
           }
@@ -1417,7 +1429,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
         this.diagram.addNode(objDiagram);
         this.process.steps.forEach((x:any)=>{
           if(x.settings){
-            let setting = JSON.parse(x.settings)
+            let setting = typeof x.settings == 'string' ? JSON.parse(x.settings) : x.settings
             if(setting && setting.nextSteps && setting.nextSteps.length){
               for(let i = 0; i< setting.nextSteps.length;i++){
                 if(setting.nextSteps[i].nextStepID){
@@ -1528,9 +1540,32 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
 
   getUserPermission(permission:any){
     if(permission && permission.length){
-      let user = permission.filter((x:any)=>x.objectType == 'U');
-      return user.map((x:any)=>x.objectName).join(';');
+      let user = permission.filter((x:any)=>x.objectType == 'U' || x.objectType == '1');
+      return user.map((x:any)=>x.objectID).join(';');
     }
   }
+
+  lstSteps:any=[];
+
+  getProcess() {
+    if(this.recID){
+      let sub= this.api
+      .execSv('BP', 'BP', 'ProcessesBusiness', 'GetAsync', this.recID)
+      .subscribe((item) => {
+        if (item) {
+          this.process = item;
+          this.lstSteps = this.process?.steps?.filter(
+            (x) => x.activityType == 'Stage'
+          );
+          this.columns = this.lstSteps;
+        }
+        sub.unsubscribe();
+      });
+    }
+
+   }
+   collectionChange(e:any){
+    if(this.diagram && this.viewOnly) this.diagram.fitToPage();
+   }
   //===========
 }

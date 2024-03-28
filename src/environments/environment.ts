@@ -44,6 +44,11 @@ export const environment = {
     app_id: 'demo.suremeet@gmail.com',
     app_secret: '123456',
   },
+  lvai:{
+    "Url": "https://api.trogiupluat.vn/api/Chat/v1/document/upload?api-version=1.0",
+    "API_KEY" : "NDgyMTEzZTcOGVjZGEMjVmNmVlNzVjMDBjMUwYTUNmMyZWExZGRiNQNGJiNTAwMjcMTdiMjNiYWIYQ",
+    "AgentDocumentId" : "65ee834213439ba7df12c269"
+  },
   captchaKey: '6LctVdwkAAAAAF_yJPT2NGF2SvEpCKyLS4t68Ps1',
   captchaEnable: 0,
 

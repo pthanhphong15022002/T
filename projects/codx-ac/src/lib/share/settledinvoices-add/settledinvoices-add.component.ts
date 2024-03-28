@@ -24,7 +24,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { AnimationModel, ProgressBar } from '@syncfusion/ej2-angular-progressbar';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CodxAcService, fmSettledInvoices } from 'projects/codx-ac/src/lib/codx-ac.service';
 import { SelectionSettingsModel } from '@syncfusion/ej2-angular-grids';
 
@@ -85,6 +85,18 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
       this.objectID = this.master.objectID;
       this.objectType = this.master.objectType;
     }
+    let options = new DataRequest();
+    options.entityName = 'AC_SubObjects';
+    options.pageLoading = false;
+    options.predicates = 'ObjectID=@0 and ObjectType=@1';
+    options.dataValues = `${this.objectID};${this.objectType}`;
+    this.api
+      .execSv('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(map((r) => r?.[0] ?? [])).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+        if (res) {
+          this.objectName = res[0].objectName;
+        }
+      })
   }
   //#endregion Constructor
 

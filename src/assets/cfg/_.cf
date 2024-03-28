@@ -19,6 +19,11 @@
     "icon": "",
     "logo": ""
   },
+  "lvai":{
+    "Url": "https://api.trogiupluat.vn/api/Chat/v1/document/upload?api-version=1.0",
+    "API_KEY" : "NDgyMTEzZTcOGVjZGEMjVmNmVlNzVjMDBjMUwYTUNmMyZWExZGRiNQNGJiNTAwMjcMTdiMjNiYWIYQ",
+    "AgentDocumentId" : "65ee834213439ba7df12c269"
+  },
   "externalLogin": {
     "amazonId": "amzn1.application-oa2-client.f074ae67c0a146b6902cc0c4a3297935",
     "facebookId": "553419903425493",

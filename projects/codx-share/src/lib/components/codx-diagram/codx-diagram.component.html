@@ -204,6 +204,7 @@
         (positionChange)="onDrop($event)"
         [selectedItems]="selectedItems"
         (onUserHandleMouseDown)="userHandleClick($event)"
+        (collectionChange)="collectionChange($event)"
         [drawingObject]=" { type: 'Orthogonal' }"
         [serializationSettings]="{preventDefaults: true}"
       >
@@ -284,9 +285,9 @@
 <!--- Đây là khu vực template dành cho diagram node --->
 
 <ng-template #formTemplate let-data>
-  <ng-container class="border rounded" style="background-color: #fff">
+  <ng-container class="border rounded border-primary" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border border-primary rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">
@@ -308,13 +309,14 @@
           <i class="icon-i-three-dots icon-16 me-2"></i>
           <i
             class="icon-close icon-16 text-danger"
+            *ngIf="!viewOnly"
             (click)="deleteNode(data)"
           ></i>
         </div>
       </div>
       <div class="row h-70px d-flex align-items-center mx-3">
 
-        <codx-input type="textarea" format="ed3" height="70px" field="memo" (valueChange)="valueDataChange($event,data)"  [crrValue]="data.data?.stepName"></codx-input>
+        <codx-input type="textarea" format="ed3" height="70px" field="memo" (valueChange)="valueDataChange($event,data)"  [crrValue]="data.data?.stepName" [disabled]="viewOnly"></codx-input>
 
       </div>
       <div class="row h-50px">
@@ -329,9 +331,9 @@
 </ng-template>
 
 <ng-template #taskTemplate let-data>
-  <ng-container class="border rounded" style="background-color: #fff">
+  <ng-container class="border rounded border-success" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border border-success rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">
@@ -351,7 +353,7 @@
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
           <div class="border rounded bg-warning px-1 me-3 fs-7">5 ngày</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
-          <i class="icon-close icon-16 text-danger"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
       </div>
       <div
@@ -381,9 +383,9 @@
 </ng-template>
 
 <ng-template #esignTemplate let-data>
-  <ng-container class="border rounded" style="background-color: #fff">
+  <ng-container class="border rounded border-info" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border  border-info rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">
@@ -403,7 +405,7 @@
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
           <div class="border rounded bg-warning px-1 me-3 fs-7">5 ngày</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
-          <i class="icon-close icon-16 text-danger"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
       </div>
       <div
@@ -423,9 +425,9 @@
   </ng-container>
 </ng-template>
 <ng-template #eventTemplate let-data>
-  <ng-container class="border rounded" style="background-color: #fff">
+  <ng-container class="border rounded border-warning" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border border-warning rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">
@@ -447,7 +449,7 @@
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
           <div class="border rounded bg-warning px-1 me-3 fs-7">5 ngày</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
-          <i class="icon-close icon-16 text-danger"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
       </div>
       <div
@@ -467,9 +469,9 @@
   </ng-container>
 </ng-template>
 <ng-template #emailTemplate let-data>
-  <ng-container class="border rounded" style="background-color: #fff">
+  <ng-container class="border rounded border-warning" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border border-warning rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">
@@ -491,7 +493,7 @@
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
           <div class="border rounded bg-warning px-1 me-3">2 giờ</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
-          <i class="icon-close icon-16 text-danger"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
       </div>
       <div
@@ -515,15 +517,15 @@
 <ng-template #approveTemplate let-data>
   <ng-container class="border rounded border-danger" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border border-danger rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">
         <div
-          class="col-6 d-flex align-items-center p-1 ps-3"
+          class="col-6 d-flex align-items-center p-1 ps-3 text-danger"
           (click)="clickAddForm(data)"
         >
-          <span class="icon-i-pen icon-21 me-1 text-info"></span>
+          <span class="icon-i-pen icon-21 me-1"></span>
           <span class="text-danger fw-bold"
             ><codx-label
               formName="sys"
@@ -535,7 +537,7 @@
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
           <div class="border rounded bg-warning px-1 me-3 fs-7">5 ngày</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
-          <i class="icon-close icon-16 text-danger"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
       </div>
       <div
@@ -556,9 +558,9 @@
 </ng-template>
 
 <ng-template #checkTemplate let-data>
-  <ng-container class="border rounded" style="background-color: #fff">
+  <ng-container class="border rounded border-info" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border border-info rounded px-0"
       style="background-color: #fff"
     >
       <div class="row h-30px">
@@ -578,7 +580,7 @@
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
           <div class="border rounded bg-warning px-1 me-3 fs-7">5 ngày</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
-          <i class="icon-close icon-16 text-danger"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
       </div>
       <div

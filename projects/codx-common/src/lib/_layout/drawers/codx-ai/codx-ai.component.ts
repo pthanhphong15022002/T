@@ -40,6 +40,7 @@ export class CodxAiComponent {
       iconCss:'icon-i-file-earmark-medical'
     },
   ];
+
   constructor(
     private callFunc : CallFuncService
   ) {
@@ -61,9 +62,5 @@ export class CodxAiComponent {
   presentation()
   {
     this.callFunc.openForm(PresentationComponent,"",800,700)
-  }
-
-  tets(){
-    window.open("https://console.trogiupluat.vn/Chatbox/Document?k=NDgyMTEzZTcOGVjZGEMjVmNmVlNzVjMDBjMUwYTUNmMyZWExZGRiNQNGJiNTAwMjcMTdiMjNiYWIYQ&docIds=6fadd2cf-e738-11ee-94d7-00155d035517");
   }
 }
