@@ -65,7 +65,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   @Output() addFileCompleted = new EventEmitter<boolean>();
   @Output() rezisePopup = new EventEmitter<any>();
   @Output() dropDataFormatPA = new EventEmitter<any>();
-  @Output() isCreatedTempletMail = new EventEmitter<any>();
+  @Output() createdTempletMail = new EventEmitter<any>();
 
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('comboxValue') comboxValue: ComboBoxComponent; ///value seclect 1
@@ -1228,8 +1228,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
             data: this.customField,
           });
         }
-        if (!this.copiedTempMail)
-          this.isCreatedTempletMail.emit(recIDTemp)
+        if (this.copiedTempMail || this.isAddNewTemp)
+          this.createdTempletMail.emit(recIDTemp)
 
         //done làm gi
         this.isAddNewTemp = false
