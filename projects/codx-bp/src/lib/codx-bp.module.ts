@@ -87,6 +87,7 @@ import { BPPopupChangePermissionComponent } from './processes/popup-add-process/
 import { PropertyCbbDependenceComponent } from './modeview/properties/property-cbb-dependence/property-cbb-dependence.component';
 import { ViewListProcessesComponent } from './processes/view-list-processes/view-list-processes.component';
 import { TramTestDiagramComponent } from './tram-test-diagram/test-diagram.component';
+import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
 
 export const routes: Routes = [
   {
@@ -234,7 +235,8 @@ export const routes: Routes = [
     SplitterAllModule,
     DynamicSettingModule,
     NgbAccordionModule,
-    ShareCrmModule
+    ShareCrmModule,
+    ProgressBarAllModule 
     // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],

@@ -82,7 +82,6 @@ export class AddReceiptResourceComponent extends UIComponent {
   isPopupStationeryCbb: boolean;
   categoryID: string;
   viewOnly=false;
-  lstStationery=[];
   listUM: any;
   popupTitle: any;
   
@@ -192,24 +191,22 @@ export class AddReceiptResourceComponent extends UIComponent {
       if (event?.data < 0) {
         event.data = 0;
       }
-      this.lstStationery.forEach((item) => {
+      this.data?.items?.forEach((item) => {
         if (item.itemID === event?.field) {
           item.quantity = event.data;
+          item.issueQuantity = event.data;
         }
       });
       this.changeDetectorRef.detectChanges();
     }
-    // this.lstStationery = this.lstStationery.filter((item) => {
-    //   return item.quantity != 0;
-    // });
   }
 
   deleteStationery(itemID: any) {
     if (this.viewOnly) {
       return;
     }
-    if (itemID != null && this.lstStationery != null) {
-      this.lstStationery = this.lstStationery.filter((item) => {
+    if (itemID != null && this.data?.items != null) {
+      this.data.items = this.data?.items?.filter((item) => {
         return item?.itemID != itemID;
       });
     }

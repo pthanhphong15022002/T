@@ -334,6 +334,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (this.field.dataType == 'RM') {
       if (this.action == 'edit' || this.action == 'view') {
         this.remindDefault = JSON.parse(this.field.defaultValue);
+        this.remindDefault.emailTemplate = this.field.recID;
       } else
         this.remindDefault.emailTemplate = this.field.recID;
       this.fieldCus = JSON.parse(

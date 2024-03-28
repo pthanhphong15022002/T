@@ -62,7 +62,7 @@
             <codx-label formName="fmBPFieldGrid" fiedName="lblTaskLocation" default="Địa điểm" class="fw-bold"></codx-label>
             <codx-input type="text" field="location" [crrValue]="data?.location" (valueChange)="valueChange($event)"></codx-input>
         </div>
-        <div class="d-flex flex-column border-top mt-4 pt-4" *ngIf="activityType != 'Form'">
+        <div class="d-flex flex-column border-top mt-4 pt-4" *ngIf="activityType != 'Form' || (activityType == 'Form' && data?.stepNo > 1)">
             <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center"><codx-label formName="fmBPFieldGrid" fiedName="lblTaskOwners" default="Người thực hiện" class="fw-bold"></codx-label> <span class="text-danger ms-2">(*)</span></div>
                 <button

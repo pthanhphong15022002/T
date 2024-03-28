@@ -78,7 +78,7 @@
       </codx-vll>
 
       <codx-vll *ngIf="resourceType=='6' || (resourceType=='2' && data?.issueControl)" [showText]="true" [showBgColor]="true" [name]="resourceType=='6'?'EP020':'EP027'"
-        [value]="data?.issueStatus" class="badge badge-light badge-md ">
+        [value]="data?.issueStatus ??'1'" class="badge badge-light badge-md ">
       </codx-vll>
       <div [innerHTML]=" data?.createdOn | fmDT "></div>
     </div>
