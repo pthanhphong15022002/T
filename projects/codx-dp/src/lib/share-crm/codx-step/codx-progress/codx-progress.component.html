@@ -1,4 +1,12 @@
-<div class="d-flex flex-column p-5 h-100">
+<codx-form
+  #form
+  [headerText]="'Cập nhật kết quả thực hiện'"
+  [subHeaderText]="'Cho phép cập nhật tiến độ theo tỷ lệ hoàn thành'"
+  [body]="updateProgressBody"
+  [footer]="updateProgressFooter"
+  [dialog]="dialog"
+></codx-form>
+<!-- <div class="d-flex flex-column p-5 h-100">
   <div>
     <ng-container [ngTemplateOutlet]="header"></ng-container>
   </div>
@@ -8,7 +16,7 @@
   <div class="">
     <ng-container [ngTemplateOutlet]="updateProgressFooter"></ng-container>
   </div>
-</div>
+</div> -->
 
 <ng-template #popupProgress>
   <div class="d-flex flex-column p-5 h-100">
@@ -168,7 +176,7 @@
           hideFolder="1"
           hideImageUpload="0"
           hideImageThumb="0"
-          hideUploadBtn="1"
+          hideUploadBtn="0"
           [showMessage]="0"
           hideDes="1"
           type="inline"
@@ -184,7 +192,8 @@
 
 <ng-template #updateProgressFooter>
   <div class="mb-4 d-flex justify-content-between w-100">
-    <button
+    <div></div>
+    <!-- <button
       style="float: left"
       type="button"
       class="btn btn-light-primary me-3"
@@ -198,7 +207,7 @@
           default="Đính kèm"
         ></codx-label>
       </span>
-    </button>
+    </button> -->
     <button type="button" class="btn btn-primary" (click)="save()">
       <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
     </button>
