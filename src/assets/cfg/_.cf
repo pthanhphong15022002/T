@@ -1,6 +1,6 @@
 {
-  "apiUrl": "http://localhost:8011",
-  "reportUrl": "http://localhost:4203/report",
+  "apiUrl": "http://172.16.7.34:8011",
+  "reportUrl": "http://172.16.7.34:4203/report",
   "shopping": "https://172.16.7.34:44317/Shopping",
   "urlUpload": "http://172.16.7.34:8011/lvfile",
   "office365": "",
@@ -18,6 +18,11 @@
     "title": "",
     "icon": "",
     "logo": ""
+  },
+  "lvai":{
+    "Url": "https://api.trogiupluat.vn/api/Chat/v1/document/upload?api-version=1.0",
+    "API_KEY" : "NDgyMTEzZTcOGVjZGEMjVmNmVlNzVjMDBjMUwYTUNmMyZWExZGRiNQNGJiNTAwMjcMTdiMjNiYWIYQ",
+    "AgentDocumentId" : "65ee834213439ba7df12c269"
   },
   "externalLogin": {
     "amazonId": "amzn1.application-oa2-client.f074ae67c0a146b6902cc0c4a3297935",

@@ -204,6 +204,7 @@
         (positionChange)="onDrop($event)"
         [selectedItems]="selectedItems"
         (onUserHandleMouseDown)="userHandleClick($event)"
+        (collectionChange)="collectionChange($event)"
         [drawingObject]=" { type: 'Orthogonal' }"
         [serializationSettings]="{preventDefaults: true}"
       >
@@ -284,18 +285,21 @@
 <!--- Đây là khu vực template dành cho diagram node --->
 
 <ng-template #formTemplate let-data>
-  <ng-container class="border rounded" style="background-color: #fff">
+  <ng-container class="border rounded " style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
-      style="background-color: #fff"
+      class="container h-auto w-300px border rounded px-0"
+      style="background-color: #fff;"
+      [style.border]="'2px solid'+getVllObject('Form').color +'!important'"
+
     >
       <div class="row h-30px">
         <div
           class="col-6 d-flex align-items-center ps-3"
           (click)="clickAddForm(data)"
+          [style.color]="getVllObject('Form').color"
         >
-          <span class="icon-note_add icon-21 me-1 text-primary"></span>
-          <span class="text-primary fw-bold"
+          <span class="{{getVllObject('Form').icon}} icon-21 me-1"></span>
+          <span class=" fw-bold"
             ><codx-label
               formName="sys"
               default="forms"
@@ -304,17 +308,19 @@
           </span>
         </div>
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
-          <div class="border rounded bg-warning px-1 me-3 fs-7">2 giờ</div>
+          <div class="border rounded bg-warning px-1 me-3 fs-7">{{data.data?.duration+' '+ getIntervalObject(data.data?.interval).text}}</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
           <i
             class="icon-close icon-16 text-danger"
+            *ngIf="!viewOnly"
             (click)="deleteNode(data)"
           ></i>
         </div>
       </div>
-      <div class="row h-70px d-flex align-items-center mx-3">
-
-        <codx-input type="textarea" format="ed3" height="70px" field="memo" (valueChange)="valueDataChange($event,data)"  [crrValue]="data.data?.stepName"></codx-input>
+      <div class="row h-70px d-flex align-items-center border rounded mx-3">
+        <h5 class="fw-bold">{{data.data?.stepName}}</h5>
+        <span class="text-truncate" title="{{data.data?.memo}}">{{data.data?.memo}}</span>
+        <!-- <codx-input type="textarea" format="ed3" height="70px" field="memo" (valueChange)="valueDataChange($event,data)"  [crrValue]="data.data?.stepName" [disabled]="viewOnly"></codx-input> -->
 
       </div>
       <div class="row h-50px">
@@ -329,18 +335,20 @@
 </ng-template>
 
 <ng-template #taskTemplate let-data>
-  <ng-container class="border rounded" style="background-color: #fff">
+  <ng-container class="border rounded border-success" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border  rounded px-0"
       style="background-color: #fff"
+      [style.border]="'2px solid'+getVllObject('Task').color +' !important'"
     >
       <div class="row h-30px">
         <div
           class="col-6 d-flex align-items-center p-1 ps-3"
           (click)="clickAddForm(data)"
+          [style.color]="getVllObject('Task').color"
         >
-          <span class="icon-i-check2-square icon-21 me-1 text-success"></span>
-          <span class="text-success fw-bold"
+        <span class="{{getVllObject('Task').icon}} icon-21 me-1"></span>
+          <span class="fw-bold"
             ><codx-label
               formName="sys"
               default="Công việc"
@@ -349,9 +357,9 @@
           </span>
         </div>
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
-          <div class="border rounded bg-warning px-1 me-3 fs-7">5 ngày</div>
+          <div class="border rounded bg-warning px-1 me-3 fs-7">{{data.data?.duration  +' '+ getIntervalObject(data.data?.interval).text}}</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
-          <i class="icon-close icon-16 text-danger"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
       </div>
       <div
@@ -359,6 +367,7 @@
         style="background-color: #fff"
       >
         <h5 class="fw-bold">{{data.data?.stepName}}</h5>
+        <span class="text-truncate" title="{{data.data?.memo}}">{{data.data?.memo}}</span>
       </div>
       <div class="row h-50px">
         <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
@@ -381,18 +390,20 @@
 </ng-template>
 
 <ng-template #esignTemplate let-data>
-  <ng-container class="border rounded" style="background-color: #fff">
+  <ng-container class="border rounded " style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border rounded px-0"
       style="background-color: #fff"
+      [style.border]="'2px solid'+getVllObject('Sign').color +' !important'"
     >
       <div class="row h-30px">
         <div
           class="col-6 d-flex align-items-center p-1 ps-3"
           (click)="clickAddForm(data)"
+          [style.color]="getVllObject('Sign').color"
         >
-          <span class="icon-i-pen icon-21 me-1 text-info"></span>
-          <span class="text-info fw-bold"
+        <span class="{{getVllObject('Sign').icon}} icon-21 me-1"></span>
+          <span class=" fw-bold"
             ><codx-label
               formName="sys"
               default="Ký số"
@@ -401,9 +412,9 @@
           </span>
         </div>
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
-          <div class="border rounded bg-warning px-1 me-3 fs-7">5 ngày</div>
+          <div class="border rounded bg-warning px-1 me-3 fs-7">{{data.data?.duration +' '+ getIntervalObject(data.data?.interval).text}}</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
-          <i class="icon-close icon-16 text-danger"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
       </div>
       <div
@@ -411,6 +422,7 @@
         style="background-color: #fff"
       >
         <h5 class="fw-bold">{{data.data?.stepName}}</h5>
+        <span class="text-truncate" title="{{data.data?.memo}}">{{data.data?.memo}}</span>
       </div>
       <div class="row h-50px">
         <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
@@ -423,20 +435,20 @@
   </ng-container>
 </ng-template>
 <ng-template #eventTemplate let-data>
-  <ng-container class="border rounded" style="background-color: #fff">
+  <ng-container class="border rounded border-warning" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border rounded px-0"
       style="background-color: #fff"
+      [style.border]="'2px solid'+getVllObject('Event').color +' !important'"
     >
       <div class="row h-30px">
         <div
           class="col-6 d-flex align-items-center p-1 ps-3"
           (click)="clickAddForm(data)"
+          [style.color]="getVllObject('Event').color"
         >
-          <span
-            class="icon-i-calendar2-event-fill icon-21 me-1 text-warning"
-          ></span>
-          <span class="text-warning fw-bold"
+        <span class="{{getVllObject('Event').icon}} icon-21 me-1"></span>
+          <span class="fw-bold"
             ><codx-label
               formName="sys"
               default="Sự kiện"
@@ -445,9 +457,9 @@
           </span>
         </div>
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
-          <div class="border rounded bg-warning px-1 me-3 fs-7">5 ngày</div>
+          <div class="border rounded bg-warning px-1 me-3 fs-7">{{data.data?.duration +' '+ getIntervalObject(data.data?.interval).text}}</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
-          <i class="icon-close icon-16 text-danger"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
       </div>
       <div
@@ -455,6 +467,7 @@
         style="background-color: #fff"
       >
         <h5 class="fw-bold">{{data.data?.stepName}}</h5>
+        <span class="text-truncate" title="{{data.data?.memo}}">{{data.data?.memo}}</span>
       </div>
       <div class="row h-50px">
         <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
@@ -467,20 +480,20 @@
   </ng-container>
 </ng-template>
 <ng-template #emailTemplate let-data>
-  <ng-container class="border rounded" style="background-color: #fff">
+  <ng-container class="border rounded " style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border  rounded px-0"
       style="background-color: #fff"
+      [style.border]="'2px solid'+getVllObject('Email').color +' !important' "
     >
       <div class="row h-30px">
         <div
           class="col-6 d-flex align-items-center p-1 ps-3"
           (click)="clickAddForm(data)"
+          [style.color]="getVllObject('Email').color"
         >
-          <span
-            class="icon-i-calendar2-event-fill icon-21 me-1 text-warning"
-          ></span>
-          <span class="text-warning fw-bold"
+        <span class="{{getVllObject('Email').icon}} icon-21 me-1"></span>
+          <span class="fw-bold"
             ><codx-label
               formName="sys"
               default="Gửi mail"
@@ -489,9 +502,9 @@
           </span>
         </div>
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
-          <div class="border rounded bg-warning px-1 me-3">2 giờ</div>
+          <div class="border rounded bg-warning px-1 me-3">{{data.data?.duration+' '+ getIntervalObject(data.data?.interval).text}}</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
-          <i class="icon-close icon-16 text-danger"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
       </div>
       <div
@@ -499,6 +512,7 @@
         style="background-color: #fff"
       >
         <h5 class="fw-bold">{{data.data?.stepName}}</h5>
+        <span class="text-truncate" title="{{data.data?.memo}}">{{data.data?.memo}}</span>
       </div>
       <div class="row h-50px">
         <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
@@ -513,17 +527,19 @@
 
 
 <ng-template #approveTemplate let-data>
-  <ng-container class="border rounded border-danger" style="background-color: #fff">
+  <ng-container class="border rounded " style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border rounded px-0"
       style="background-color: #fff"
+      [style.border]="'2px solid'+getVllObject('Approve').color +' !important'"
     >
       <div class="row h-30px">
         <div
-          class="col-6 d-flex align-items-center p-1 ps-3"
+          class="col-6 d-flex align-items-center p-1 ps-3 "
           (click)="clickAddForm(data)"
+          [style.color]="getVllObject('Approve').color"
         >
-          <span class="icon-i-pen icon-21 me-1 text-info"></span>
+        <span class="{{getVllObject('Approve').icon}} icon-21 me-1"></span>
           <span class="text-danger fw-bold"
             ><codx-label
               formName="sys"
@@ -533,9 +549,9 @@
           </span>
         </div>
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
-          <div class="border rounded bg-warning px-1 me-3 fs-7">5 ngày</div>
+          <div class="border rounded bg-warning px-1 me-3 fs-7">{{data.data?.duration+' '+ getIntervalObject(data.data?.interval).text}}</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
-          <i class="icon-close icon-16 text-danger"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
       </div>
       <div
@@ -543,6 +559,7 @@
         style="background-color: #fff"
       >
         <h5 class="fw-bold">{{data.data?.stepName}}</h5>
+        <span class="text-truncate" title="{{data.data?.memo}}">{{data.data?.memo}}</span>
       </div>
       <div class="row h-50px">
         <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
@@ -558,16 +575,18 @@
 <ng-template #checkTemplate let-data>
   <ng-container class="border rounded" style="background-color: #fff">
     <div
-      class="container h-auto w-300px border border-dark rounded px-0"
+      class="container h-auto w-300px border  rounded px-0"
       style="background-color: #fff"
+      [style.border]="'2px solid'+getVllObject('Check').color +' !important'"
     >
       <div class="row h-30px">
         <div
           class="col-6 d-flex align-items-center p-1 ps-3"
           (click)="clickAddForm(data)"
+          [style.color]="getVllObject('Check').color"
         >
-          <span class="icon-i-pen icon-21 me-1 text-info"></span>
-          <span class="text-info fw-bold"
+        <span class="{{getVllObject('Check').icon}} icon-21 me-1"></span>
+          <span class="fw-bold"
             ><codx-label
               formName="sys"
               default="Kiểm tra"
@@ -576,9 +595,9 @@
           </span>
         </div>
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
-          <div class="border rounded bg-warning px-1 me-3 fs-7">5 ngày</div>
+          <div class="border rounded bg-warning px-1 me-3 fs-7">{{data.data?.duration +' '+ getIntervalObject(data.data?.interval).text}}</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
-          <i class="icon-close icon-16 text-danger"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
       </div>
       <div
@@ -586,6 +605,7 @@
         style="background-color: #fff"
       >
         <h5 class="fw-bold">{{data.data?.stepName}}</h5>
+        <span class="text-truncate" title="{{data.data?.memo}}">{{data.data?.memo}}</span>
       </div>
       <div class="row h-50px">
         <div class="col d-flex align-items-center justify-content-end p-1 pe-3">

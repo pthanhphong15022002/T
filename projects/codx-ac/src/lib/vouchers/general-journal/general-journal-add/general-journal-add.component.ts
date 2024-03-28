@@ -159,7 +159,7 @@ export class GeneralJournalAddComponent extends UIComponent {
       hideFields.push("AssetType");
     } 
     if (this.journal.subControl == "0") hideFields.push("ObjectID");
-    if (this.journal.settleControl == "0" || this.dataDefault.subType == (this.journal.journalType + "1")) hideFields.push("Settlement");
+    if (this.journal.settleControl == "0") hideFields.push("Settlement");
 
     if (this.journal.entryMode == '1') {
       if (this.dataDefault.currencyID == this.baseCurr) hideFields.push('DR2');
@@ -300,6 +300,7 @@ export class GeneralJournalAddComponent extends UIComponent {
   valueChangeLine(event: any) {
     let oLine = event.data;
     let field = event.field;
+    if(field.toLowerCase() === 'settledno') oLine.settledID = event?.itemData?.RecID;
     this.eleGridGeneral.startProcess();
     this.api.exec('AC','GeneralJournalsLinesBusiness','ValueChangedAsync',[this.master.data,oLine,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       Object.assign(oLine, res);
@@ -742,20 +743,17 @@ export class GeneralJournalAddComponent extends UIComponent {
    * @param typeSettledInvoices
    */
   addSettledInvoices() {
-    let objectName = '';
-    let indexObject =
-      this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex(
-        (x) => x.ObjectID == this.master.data.objectID
+    let data = {};
+    data['master'] = this.master.data;
+    if (this.eleGridGeneral && this.eleGridGeneral.rowDataSelected && this.eleGridGeneral.rowDataSelected.objectID) {
+      data['line'] = this.eleGridGeneral.rowDataSelected;
+    }else{
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.master.gridviewSetup['ObjectID']?.headerText + '"'
       );
-    if (indexObject > -1) {
-      objectName =
-        this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject]
-          .ObjectName;
     }
-    let obj = {
-      cashpayment: this.master.data,
-      objectName: objectName,
-    };
     let opt = new DialogModel();
     let dataModel = new FormModel();
     opt.FormModel = dataModel;
@@ -765,7 +763,7 @@ export class GeneralJournalAddComponent extends UIComponent {
       null,
       null,
       '',
-      obj,
+      data,
       '',
       opt
     );

@@ -31,8 +31,10 @@ export class BP_Processes {
   views: number;
   attachments: number;
   comments: number;
-  owner: string;;
-  buid: string;;
+  owner: string;
+  buid: string;
+  icon: string;
+  color: string;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;

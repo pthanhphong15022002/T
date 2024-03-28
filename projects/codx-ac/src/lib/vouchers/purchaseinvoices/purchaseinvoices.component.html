@@ -100,12 +100,8 @@
     </div>
     <div style="height: 35px !important" class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-end codx-badge">
-        <codx-vll *ngIf="data?.status == '1'" [formModel]="view.formModel" [field]="'Status'"
-          [value]="data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
+        <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true" [showBgColor]="true"
           class="badge badge-light badge-sm">
-        </codx-vll>
-        <codx-vll *ngIf="data?.status != '1'" [formModel]="view.formModel" [field]="'Status'" [value]="data?.status"
-          [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
         </codx-vll>
         <div class="d-flex align-items-center">
           <img style="width: 18px; height: 18px; margin-top: -1px" src="../assets/themes/ac/default/img/calendar.svg"
@@ -204,8 +200,8 @@
             class="place-holder text-gray-600">{{view.gridViewSetup['PmtMethodID'].headerText}}</span>
         </div>
         <div class="d-flex align-items-center">
-          <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="data?.status"
-            [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm border-0">
+          <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status"
+            [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
           </codx-vll>
         </div>
       </div>

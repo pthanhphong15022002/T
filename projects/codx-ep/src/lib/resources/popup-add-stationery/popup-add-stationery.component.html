@@ -179,14 +179,14 @@
   </ng-template>
   <ng-template #tabMoreInfo>
     <ng-container *ngIf="form && form.formGroup">
-      <div class="d-flex justify-content-end">
+      <!-- <div class="d-flex justify-content-end">
         <button class="btn btn-sm btn-light-primary me-2 py-2 d-flex flex-row align-items-center" [disabled]="viewOnly"
         (click)="addEditWarehouse(null,true)">
         <span class="icon-layers icon-18 me-2 py-2"></span>
         <codx-label name="lblChooseStationery" class="fw-bold" default="Thêm kho">
         </codx-label>
-      </button>
-      </div>
+      </button> 
+      </div>-->
       <div class="d-none">
         <codx-inplace  type="combobox" field="warehouseID" refType="3"
                   [refValue]="'EP_Warehouses'" [value]="" [disabled]="true"></codx-inplace>                

@@ -902,7 +902,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         task.assignControl = this.process?.dependRule ?? '0';
         check = true;
       }
-      if(check && !this.listStepEdit.some((id) => id == stepItem?.recID)){
+      if (check && !this.listStepEdit.some((id) => id == stepItem?.recID)) {
         this.listStepEdit.push(stepItem?.recID);
       }
     }
@@ -4828,8 +4828,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     } else if (this.action === 'edit') {
       this.stepSuccess = this.stepList.find((x) => x.isSuccessStep == true);
       this.stepFail = this.stepList.find((x) => x.isFailStep == true);
-      this.isUseSuccessOld = this.stepSuccess.isUsed;
-      this.isUseFailOld = this.stepFail.isUsed;
+      this.isUseSuccessOld = this.stepSuccess?.isUsed;
+      this.isUseFailOld = this.stepFail?.isUsed;
     }
   }
   editTest(data) {

@@ -1059,7 +1059,7 @@ export class CodxShareService {
       var widthThumb = 1.2;
       var arr = url.split('/');
       var uploadID = arr[arr.length - 2];
-
+      var tenant = arr[1]; 
       if (width <= 30 * widthThumb) wt = 30;
       else if (width <= 60 * widthThumb) wt = 60;
       else if (width <= 120 * widthThumb) wt = 120;
@@ -1067,7 +1067,6 @@ export class CodxShareService {
       else if (width <= 500 * widthThumb) wt = 500;
       else if (width <= 650 * widthThumb) wt = 600;
 
-      let tenant = environment.appName || this.tenant.getName();
       return (
         environment.urlUpload +
         '/api/' +

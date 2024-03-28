@@ -157,7 +157,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   returnData: any;
   title = '';
   checkLoop: boolean;
-  showAllResource: any;
+  showAllResource = true;
   isPopupStationeryCbb: boolean;
   idUserSelected: any;
   popover: any;
@@ -172,6 +172,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   haveEP = true;
   oStartDate: any;
   oEndDate: any;
+  cbbAllResource=[];
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
@@ -556,7 +557,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
                     }
                   });
                   this.validateStartEndTime(this.startTime, this.endTime);
-                  //this.getResourceForCurrentTime();
+                  this.getResourceForCurrentTime(true);
                 }
               });
           }
@@ -882,10 +883,17 @@ export class CodxAddBookingRoomComponent extends UIComponent {
     this.changeDetectorRef.detectChanges();
   }
 
-  showAllResourceChange(evt: any) {
+  // showAllResourceChange(evt: any) {
+  //   if (evt != null) {
+  //     this.showAllResource = evt;
+  //     this.getResourceForCurrentTime(true);
+  //     this.detectorRef.detectChanges();
+  //   }
+  // }
+  showAvailableResourceChange(evt: any) {
     if (evt != null) {
       this.showAllResource = evt;
-      this.getResourceForCurrentTime(true);
+      this.getResourceForCurrentTime();
       this.detectorRef.detectChanges();
     }
   }
@@ -1369,7 +1377,6 @@ export class CodxAddBookingRoomComponent extends UIComponent {
         tempEndTime[1],
         0
       );
-      this.getResourceForCurrentTime();
       this.changeDetectorRef.detectChanges();
     }
     return true;
@@ -1628,10 +1635,12 @@ export class CodxAddBookingRoomComponent extends UIComponent {
 
   getResourceForCurrentTime(showAllChange = false) {
     if(!this.haveEP) return;//Ko mua EP => ko cần lấy phòng khả dụng mà cho nhập dịa điểm
-    let getNewList = true;
-    if(!showAllChange){
-      if(this.oStartDate?.toString() == this.data?.startDate?.toString() && this.oEndDate?.toString() == this.data?.endDate?.toString()) getNewList = false;
+    let getNewList = true;    
+    if(this.cbbAllResource?.length > 0 && this.showAllResource){
+      getNewList = false;      
+      this.cbbResource = [...this.cbbAllResource];
     }
+  
     if(getNewList){
       this.oStartDate= this.data.startDate;
       this.oEndDate= this.data.endDate;
@@ -1655,6 +1664,9 @@ export class CodxAddBookingRoomComponent extends UIComponent {
               tmpRes.owner = item?.owner;
               this.cbbResource.push(tmpRes);
             });
+            if(this.showAllResource){
+              this.cbbAllResource = [...this.cbbResource];
+            }
             let resourceStillAvailable = false;
             if (this.data.resourceID != null) {
               for (let i = 0; i < this.cbbResource?.length; i++) {

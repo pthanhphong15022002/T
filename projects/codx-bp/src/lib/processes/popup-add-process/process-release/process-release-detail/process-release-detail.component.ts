@@ -6,6 +6,7 @@ import {
   OnInit,
   Optional,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -24,6 +25,8 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
 import { AddDefaultComponent } from '../../form-steps-field-grid/add-default/add-default.component';
 import { BPPopupChangePermissionComponent } from '../../form-steps-field-grid/bp-popup-change-permission/bp-popup-change-permission.component';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
+import { AnimationModel, ILoadedEventArgs, ProgressBar, ProgressTheme } from '@syncfusion/ej2-angular-progressbar';
 
 @Component({
   selector: 'lib-process-release-detail',
@@ -31,6 +34,7 @@ import { BPPopupChangePermissionComponent } from '../../form-steps-field-grid/bp
   styleUrls: ['./process-release-detail.component.scss'],
 })
 export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
+  @ViewChild('circular1') public circular1: ProgressBar;
   @Input() data: any;
   @Input() process: any;
   @Input() formModel: any;
@@ -44,6 +48,50 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   info: any;
   tempPermission = [];
   listDocument = [];
+  VllBP014:any;
+  public type1: string = 'Circular';
+  public min1: number = 0;
+  public max1: number = 100;
+  public value1: number = 0;
+  public secondaryProgress1: number = 90;
+  public height: string = '85';
+  public width: string = '85';
+  public trackThickness: number = 7;
+  public progressThickness: number = 7;
+  public animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
+  public annotationColors: string[] = ['#e91e63', '#0078D6', '#317ab9', '#007bff', '#FFD939'];
+  listMF = [
+    {
+      functionID: 'BP0701',
+      customName: 'Giao việc',
+      largeIcon: 'icon-person_add_alt_1',
+      color: '#005DC7'
+    },
+    {
+      functionID: 'BP0702',
+      customName: 'Ủy quyền',
+      largeIcon: 'icon-i-people',
+      color: '#0078FF'
+    },
+    {
+      functionID: 'BP0703',
+      customName: 'Trả về',
+      largeIcon: 'icon-i-arrow-90deg-right',
+      color: '#FFA800'
+    },
+    {
+      functionID: 'BP0704',
+      customName: 'Từ chối',
+      largeIcon: 'icon-i-x-circle',
+      color: '#F64E60'
+    },
+    {
+      functionID: 'BP0705',
+      customName: 'Duyệt',
+      largeIcon: 'icon-check_circle',
+      color: '#1BC5BD'
+    }
+  ]
   constructor(
     private shareService: CodxShareService,
     private cache: CacheService,
@@ -51,6 +99,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     private callFc: CallFuncService,
     private dtc: ChangeDetectorRef,
     private auth: AuthStore,
+    public dmSV: CodxDMService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -60,6 +109,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     if (dt?.data?.process)
       this.process = JSON.parse(JSON.stringify(dt?.data?.process));
     this.user = this.auth.get();
+    this.getVll();
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (
@@ -75,9 +125,20 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     this.getData();
     this.getInfo();
     this.getInStance();
+    this.getVll();
   }
   onNavChange(e: any) {
     this.active = e;
+  }
+  getVll()
+  {
+   this.VllBP014 = this.shareService.loadValueList("BP014");
+   if(isObservable(this.VllBP014))
+   {
+      this.VllBP014.subscribe(item=>{
+        this.VllBP014 = item;
+      })
+   }  
   }
   getInfo() {
     let paras = [this.data.createdBy];
@@ -212,6 +273,8 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       this.count = this.process.steps.length;
       this.listStage = this.process.steps.filter((x) => !x.parentID);
       this.count -= this.listStage.length;
+      let countTaskSum = 0;
+      let countTaskCompletedSum = 0;
       this.listStage.forEach((elm) => {
         elm.child = this.getListChild(elm) || [];
         elm.settings =
@@ -226,13 +289,20 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
           elm.countCompleted = 0;
           elm.child.forEach((element) => {
             if (element.activityType != 'Conditions' && element.status == '5')
+            {
               elm.countCompleted++;
+              countTaskCompletedSum ++;
+            }  
             else if (element.activityType == 'Conditions') {
               if (element.child && element.child.length > 0) {
                 if (element.child.some((x) => x.status == '5'))
+                {
                   elm.countCompleted++;
+                  countTaskCompletedSum++;
+                }
               }
             }
+            countTaskSum ++;
           });
 
           elm.percentCompleted = (elm.countCompleted / elm.countTask) * 100;
@@ -240,11 +310,16 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
           elm.percentCompleted = elm.percentCompleted.toFixed(2);
           elm.duration = elm.child.reduce((n, { duration }) => n + duration, 0);
         }
+        var index = this.listTask.findIndex((x) => x.stepID == elm.recID);
+        if(index >= 0)
+        {
+          elm.colorStatus = this.VllBP014.datas.filter(x=>x.value == this.listTask[index].status)[0].color;
+        }
       });
-      this.data.countTask = this.listStage.reduce(
-        (n, { countTask }) => n + countTask,
-        0
-      );
+      this.data.countTask = countTaskSum;
+      this.value1 = (countTaskCompletedSum / countTaskSum) * 100;
+      this.circular1.value= this.value1;
+      this.circular1.refresh();
     }
   }
 
@@ -432,4 +507,8 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       }
     });
   }
+  public load(args: ILoadedEventArgs): void {
+ 
+  
+}
 }

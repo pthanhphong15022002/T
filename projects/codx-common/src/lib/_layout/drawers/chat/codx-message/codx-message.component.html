@@ -1,0 +1,150 @@
+<ng-container *ngIf="data">
+    <div class="d-flex align-items-center my-4 message" [ngClass]="{'flex-row-reverse' : user.userID == data?.createdBy}">
+        <ng-container [ngSwitch]="data.messageType">
+            <!-- Text -->
+            <ng-container *ngSwitchCase="1">
+                <div class="d-flex">
+                    <div *ngIf="user.userID != data.createdBy" class="me-2">
+                        <codx-img [objectId]="data.createdBy" [objectType]="'AD_Users'" [width]="30">
+                        </codx-img>
+                    </div>
+                    <div class="d-flex flex-column py-2 px-4 rounded max-w-250 "  [ngClass]="user.userID == data.createdBy ?'bg-mssg-send':'bg-mssg-recive'">
+                        <div class="fw-bold" *ngIf="user.userID != data.createdBy">{{data.createdName}}</div>
+                        <div class="text-dark word-break_all">{{data.message}}</div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div *ngIf="data.votes" class="d-flex">
+                                <span *ngFor="let item of data.votes | disctintPipe:'voteType'" (click)="clickShowVotes()">
+                                    <codx-vll 
+                                        [path]="'assets/themes/wp/default/img/'"
+                                        [name]="'L1480'" 
+                                        [value]="item.voteType"
+                                        [showIcon]="true" 
+                                        [icoCss]="'w-15px h-15px'">
+                                    </codx-vll>
+                                    <span>{{item.count}}</span>
+                                </span>
+                            </div>
+                            <div class="text-end"><span>{{data.createdOn | date:'hh:mm'}}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <!-- Files -->
+            <ng-container *ngSwitchCase="2">
+                <div class="d-flex">
+                    <div *ngIf="user.userID != data.createdBy" class="me-2">
+                        <codx-img [objectId]="data.createdBy" [objectType]="'AD_Users'" [width]="30">
+                        </codx-img>
+                    </div>
+                    <div class="d-flex flex-column p-2">
+                        <codx-view-files 
+                            [objectID]="data.recID" 
+                            [objectType]="'WP_Messages'"
+                            [formModel]="formModel"
+                            [format]="data.fileType == 'image'||data.fileType == 'video'?'grid':''"
+                            (selectFile)="clickViewFile($event)">
+                        </codx-view-files>
+                    </div>
+                </div>
+            </ng-container>
+            <!-- System -->
+            <ng-container *ngSwitchCase="3">
+                <div class="text-center" [innerHTML]="data | mssgSYS | async"></div>
+            </ng-container>
+            <!-- Reply -->
+            <ng-container *ngSwitchCase="4">
+                <div class="d-flex">
+                    <div *ngIf="user.userID != data.createdBy" class="me-2">
+                        <codx-img [objectId]="data.createdBy" [objectType]="'AD_Users'" [width]="30">
+                        </codx-img>
+                    </div>
+                    <div class="d-flex flex-column py-2 px-4 rounded max-w-250 "  [ngClass]="user.userID == data.createdBy ?'bg-mssg-send':'bg-mssg-recive'">
+                        <div class="d-flex flex-column border-left-3 ps-2 border-success mb-1" *ngIf="data.refContent?.type != '2'">
+                            <!-- <div *ngIf="data.refContent?.type == '2' && data.refFileType == 'image'|| data.refFileType == 'video'" class="overflow-hidden pe-1" style="height:45px;width:45px">
+                                <codx-view-files [objectID]="data?.refID" [objectType]="'WP_Messages'"
+                                    [formModel]="formModel"
+                                    [format]="data?.refFileType == 'image'||data?.refFileType == 'video'?'grid':''"
+                                    (selectFile)="clickViewFile($event)">
+                                </codx-view-files>
+                            </div> -->
+                            <div class="fw-bold">{{data.refContent?.createdName}}</div>
+                            <div class="text-gray-600 word-break_all">{{data.refContent?.content}}</div>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <div class="text-dark word-break_all">{{data.message}}</div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div *ngIf="data.votes" class="d-flex">
+                                <span *ngFor="let item of data.votes | disctintPipe:'voteType'">
+                                    <codx-vll 
+                                        [path]="'assets/themes/wp/default/img/'"
+                                        [name]="'L1480'" 
+                                        [value]="item.voteType"
+                                        [showIcon]="true" 
+                                        [icoCss]="'w-15px h-15px'">
+                                    </codx-vll>
+                                    <span>{{item.count}}</span>
+                                </span>
+                            </div>
+                            <div class="text-end"><span>{{data.createdOn | date:'hh:mm'}}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <!-- Delete -->
+            <ng-container *ngSwitchCase="5">
+                <div class="d-flex">
+                    <div *ngIf="user.userID != data.createdBy" class="me-2">
+                        <codx-img [objectId]="data.createdBy" [objectType]="'AD_Users'" [width]="30"></codx-img>
+                    </div>
+                    <div class="d-flex flex-column py-2 px-4 rounded max-w-250" [ngClass]="user.userID == data.createdBy ?'bg-mssg-send':'bg-mssg-recive'">
+                        <div *ngIf="user.userID != data.createdBy" class="fw-bold">{{data.createdName}}</div>
+                        <div class="text-dark">Tin nhắn đã bị xóa</div>
+                        <div class="text-end">{{data.createdOn | date:'hh:mm'}}</div>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+        <div class="message-function mx-2" *ngIf="data.messageType != '3' && data.messageType != '5'">
+            <div class="d-flex align-items-center cursor-pointer fw-bold mx-2">
+                <div ngbDropdown *ngIf="data.createdBy == user.userID" class="me-2">
+                    <div ngbDropdownToggle id="dropdown" container="body"
+                        class="icon-more_vert">
+                    </div>
+                    <div ngbDropdownMenu aria-labelledby="dropdown">
+                        <button ngbDropdownItem class="text-danger" (click)="clickDelete(data)">
+                            <i class="icon-close text-danger"></i>
+                            Xóa
+                        </button>
+                    </div>
+                </div>
+                <div class="me-2"> 
+                    <div #p="ngbPopover" 
+                        placement="bottom"
+                        [autoClose]="true" 
+                        triggers="manual"
+                        [ngbPopover]="tooltipEmoji">
+                        <span class="icon-tag_faces" (click)="p.isOpen() ? p.close() : p.open()"></span>
+                    </div>
+                </div>
+                <div *ngIf="data.refType != 'm'" class="me-2">
+                    <span class="icon-reply me-2" (click)="clickReply(data)"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #tooltipEmoji>
+    <div class="row me-2 cursor-pointer">
+        <ng-container *ngFor="let item of vllL1480" class="cursor-pointer">
+            <div (click)="clickVote(item)" class="col cursor-pointer">
+                <img class="h-15px w-15px cursor-pointer" [src]="'assets/themes/wp/default/img/' + item.icon" [ngbTooltip]="item.text">
+            </div>
+        </ng-container>
+    </div>
+</ng-template>
+
+<ng-template #popupShow></ng-template>
+
+

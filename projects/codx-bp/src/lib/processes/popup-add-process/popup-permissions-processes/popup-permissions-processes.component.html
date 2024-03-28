@@ -46,23 +46,9 @@
                       <div class="text-gray-500 fs-7">
                         <span
                           [innerHTML]="
-                            perm.roleType | vll : 'BP020 ' : 'text' | async
+                            perm.roleType | vll : 'BP020' : 'text' | async
                           "
                         ></span>
-                        <!-- <span *ngIf="perm.roleType == 'O'">
-                          <codx-label
-                            default="Quản trị viên"
-                            [formModel]="dialog.formModel"
-                            fiedName="role_admin"
-                          ></codx-label>
-                        </span>
-                        <span *ngIf="perm.roleType == 'P'">
-                          <codx-label
-                            default="Người sử dụng"
-                            [formModel]="dialog.formModel"
-                            fiedName="role_user"
-                          ></codx-label>
-                        </span> -->
                       </div>
                     </div>
                   </ng-template>
@@ -83,25 +69,7 @@
                         {{ perm.objectName }}
                       </div>
                       <div class="text-gray-500 fs-7">
-                        <span
-                          [innerHTML]="
-                            perm.roleType | vll : 'BP020 ' : 'text' | async
-                          "
-                        ></span>
-                        <!-- <span *ngIf="perm.roleType == 'O'">
-                          <codx-label
-                            default="Quản trị viên"
-                            [formModel]="dialog.formModel"
-                            fiedName="role_admin"
-                          ></codx-label>
-                        </span>
-                        <span *ngIf="perm.roleType == 'P'">
-                          <codx-label
-                            default="Người sử dụng"
-                            [formModel]="dialog.formModel"
-                            fiedName="role_user"
-                          ></codx-label>
-                        </span> -->
+                        {{ perm.roleType | vll : "BP020" : "text" | async }}
                       </div>
                     </div>
                   </ng-template>

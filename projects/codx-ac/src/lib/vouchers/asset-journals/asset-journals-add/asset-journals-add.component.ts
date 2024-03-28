@@ -11,6 +11,7 @@ import {
   CodxGridviewV2Component,
   DialogData,
   DialogRef,
+  FormModel,
   NotificationsService,
   UIComponent,
   Util,
@@ -18,7 +19,8 @@ import {
 import { Subject, firstValueFrom, map, takeUntil } from 'rxjs';
 import {
   CodxAcService,
-  fmAssetJournalsLines,
+  fmAssetAcquisitionsLines,
+  fmAssetRevaluationsLines,
   fmCountingMembers,
 } from '../../../codx-ac.service';
 import { RoundService } from '../../../round.service';
@@ -55,7 +57,7 @@ export class AssetJournalsAddComponent extends UIComponent {
     allowEditOnDblClick: false,
     allowNextRowEdit: false,
   };
-  fmAssetJournalsLines: any = fmAssetJournalsLines;
+  fmAssetJournalsLines: FormModel;
   fmCountingMembers = fmCountingMembers;
   tabInfo: TabModel[] = [
     //? thiết lập footer
@@ -95,6 +97,10 @@ export class AssetJournalsAddComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
+    this.fmAssetJournalsLines =
+      this.dialog.formModel.funcID == 'ACT811'
+        ? fmAssetAcquisitionsLines
+        : fmAssetRevaluationsLines;
     this.acService.setPopupSize(this.dialog, '100%', '100%');
   }
 
@@ -219,16 +225,27 @@ export class AssetJournalsAddComponent extends UIComponent {
    * @param event
    */
   valueChangeLine(event: any) {
-    this.eleGridAcquisitions.isSave = false;
-    this.eleGridAcquisitions.isSaveOnClick = false;
-    this.eleGridAcquisitions.isOutsideDataSource = true;
-    let index = this.lstLines.findIndex((x) => x.recID == event?.data?.recID);
-    if (index != -1) {
-      this.lstLines[index] = event?.data;
-    } else {
-      this.lstLines.push(event?.data);
+    if(event?.value){
+      this.eleGridAcquisitions.isSave = false;
+      this.eleGridAcquisitions.isSaveOnClick = false;
+      this.eleGridAcquisitions.isOutsideDataSource = true;
+      if(event?.field == 'employeeID'){
+        if(event?.itemData){
+          event.data.employeeID = event?.itemData?.EmployeeID;
+          event.data.orgUnitID = event?.itemData?.OrgUnitID;
+          event.data.departmentID = event?.itemData?.DepartmentID;
+          event.data.companyID = event?.itemData?.CompanyID;
+        }
+      }
+      let index = this.lstLines.findIndex((x) => x.recID == event?.data?.recID);
+      if (index != -1) {
+        this.lstLines[index] = event?.data;
+      } else {
+        this.lstLines.push(event?.data);
+      }
+      this.detectorRef.detectChanges();
     }
-    this.detectorRef.detectChanges();
+
   }
   /**
    * *Hàm thêm dòng cho các lưới
@@ -529,7 +546,6 @@ export class AssetJournalsAddComponent extends UIComponent {
               this.isSaveAdd = true;
               this.refreshForm();
             }
-            this.notification.notifyCode('SYS006');
           }
         });
     } else {
@@ -558,6 +574,7 @@ export class AssetJournalsAddComponent extends UIComponent {
               this.refreshForm();
             }
           }
+          this.notification.notifyCode('SYS006');
         });
     }
   }

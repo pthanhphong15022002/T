@@ -30,6 +30,7 @@ export class AppConfigService extends AppConfig {
         environment.singleExec = res.singleExec;
         environment.asideMinimize = res.asideMinimize;
         environment.SureMeet = res.sureMeet;
+        environment.lvai = res.lvai;
         environment.firebase = res.firebase;
         environment.externalLogin = res.externalLogin;
         environment.captchaKey = res.captchaKey;

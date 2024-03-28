@@ -1,15 +1,16 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CallFuncService, DataRequest, DialogModel, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CompanyEditComponent } from './popup-edit/company-edit/company-edit.component';
 import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-company-infor',
   templateUrl: './company-infor.component.html',
   styleUrls: ['./company-infor.component.scss']
 })
-export class CompanyInforComponent extends UIComponent {
+export class CompanyInforComponent extends UIComponent implements OnDestroy {
 
   entityName:string = 'WP_News';
   gridViewName:string = 'grvNews';
@@ -18,15 +19,20 @@ export class CompanyInforComponent extends UIComponent {
   views: Array<ViewModel> = [];
   userPermission:any = null;
   loaded:boolean = false;
+
+  subscritions = new Subscription();
   @ViewChild('panelLeftRef') panelLefRef :  TemplateRef<any>;
   constructor(
     private injector:Injector,
     private callc:CallFuncService,
     private notifySvr:NotificationsService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
   ) 
   {
     super(injector);
+  }
+  ngOnDestroy(): void {
+    this.subscritions.unsubscribe();
   }
   ngAfterViewInit(): void {
     this.views= [{
@@ -49,19 +55,21 @@ export class CompanyInforComponent extends UIComponent {
   }
   // get permission by user
   getUserPermission(funcID:string){
-    if(funcID){
-      this.api.execSv("SYS","ERM.Business.SYS","CommonBusiness","GetUserPermissionsAsync",[funcID])
+    if(funcID)
+    {
+      let subscribe = this.api.execSv("SYS","ERM.Business.SYS","CommonBusiness","GetUserPermissionsAsync",[funcID])
       .subscribe((res:any) => {
         if(res){
           this.userPermission = res;
           this.detectorRef.detectChanges();
         }
       });
+      this.subscritions.add(subscribe);
     }
   }
   // get companyinfor
   loadData(){
-    this.api
+    let subscribe = this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
@@ -75,6 +83,7 @@ export class CompanyInforComponent extends UIComponent {
           }
           this.loaded = true;
       });
+      this.subscritions.add(subscribe);
   }
 
   clickShowPopupEdit(){
@@ -84,7 +93,7 @@ export class CompanyInforComponent extends UIComponent {
       option.FormModel = this.view.formModel;
       option.IsFull = true;
       let popup = this.callc.openForm(CompanyEditComponent,"",0,0,"",this.data,"",option);
-      popup.closed.subscribe((res:any)=>{
+      let subscribe = popup.closed.subscribe((res:any)=>{
         if(res?.event){
           let isAppro = res.event[0];
           if(!isAppro)
@@ -95,6 +104,7 @@ export class CompanyInforComponent extends UIComponent {
           this.notifySvr.notifyCode('WP024');
         }
       });
+      this.subscritions.add(subscribe);
     }
   }
 
