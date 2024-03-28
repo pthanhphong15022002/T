@@ -440,7 +440,7 @@
   </div>
 
   <ng-container>
-    <div class="d-flex align-items-center nav-item w-100 mb-1">
+    <!-- <div class="d-flex align-items-center nav-item w-100 mb-1">
       <div class="d-flex align-items-center mb-2">
         <span class="icon-attach_file icon-18 me-2 text-primary"></span>
         <div class="fw-bold text-primary">
@@ -452,7 +452,7 @@
           </codx-label>
         </div>
       </div>
-    </div>
+    </div> -->
     <div>
       <codx-attachment
         #attachment
@@ -461,7 +461,7 @@
         hideFolder="1"
         hideImageUpload="0"
         hideImageThumb="0"
-        hideUploadBtn="1"
+        hideUploadBtn="0"
         [showMessage]="0"
         hideDes="1"
         type="inline"
@@ -480,7 +480,8 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-between">
-    <button
+
+    <!-- <button
       type="button"
       class="btn btn-light-primary me-3"
       (click)="addFile($event)"
@@ -494,7 +495,8 @@
           default="Đính kèm"
         ></codx-label>
       </span>
-    </button>
+    </button> -->
+    <div></div>
     <div class="d-flex justify-content-end">
       <button
         *ngIf="

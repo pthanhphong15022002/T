@@ -730,12 +730,10 @@
 </ng-template>
 
 <ng-template #tmpStepFields>
-  <div class="dp-step step-content container-fluid p-0 h-100">
-    <codx-diagram
-      [viewOnly]="true"
-      [recID]="data.recID"
-      *ngIf="data.recID"
-    ></codx-diagram>
+  <div
+    class="dp-step step-content container-fluid p-0 h-100"
+  >
+    <codx-diagram [viewOnly]="true" [recID]="data.recID" *ngIf="data.recID"></codx-diagram>
   </div>
 </ng-template>
 

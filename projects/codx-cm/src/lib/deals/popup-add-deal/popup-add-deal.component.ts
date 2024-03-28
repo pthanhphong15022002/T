@@ -212,8 +212,10 @@ export class PopupAddDealComponent
     this.copyTransID = dt?.data?.copyTransID;
     // this.tenant = this.tenantStore.get().tenant;
     const currentUrl = this.routerLink.url;
-    this.tenant = 'qtsc';
-    // this.tenant = currentUrl.includes("qtsc") ? "qtsc" : "";
+    // this.tenant = 'qtsc';
+    console.log(currentUrl);
+    this.tenant = currentUrl.includes("qtsc") ? "qtsc" : "";
+    console.log(this.tenant);
 
     // add view from customer
     this.isviewCustomer = dt?.data?.isviewCustomer;
