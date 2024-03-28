@@ -1303,7 +1303,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
               ];
 
               if(currentStageActions[j].settings){
-                let setting = JSON.parse(currentStageActions[j].settings);
+                let setting = typeof currentStageActions[j].settings == 'string' ?  JSON.parse(currentStageActions[j].settings) : currentStageActions[j].settings;
                 if(setting && setting.nextSteps){
                   for(let i = 0; i<setting.nextSteps.length;i++){
                     if(setting.nextSteps[i].nextStepID){
@@ -1429,7 +1429,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
         this.diagram.addNode(objDiagram);
         this.process.steps.forEach((x:any)=>{
           if(x.settings){
-            let setting = JSON.parse(x.settings)
+            let setting = typeof x.settings == 'string' ? JSON.parse(x.settings) : x.settings
             if(setting && setting.nextSteps && setting.nextSteps.length){
               for(let i = 0; i< setting.nextSteps.length;i++){
                 if(setting.nextSteps[i].nextStepID){
