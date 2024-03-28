@@ -22,6 +22,7 @@ export class AttachmentGridFilesComponent implements OnInit{
     this.referType = dt?.data?.referType
   }
   ngOnInit(): void {
+    debugger
     if(this.listData && this.listData.length>0)
     {
       var ids = this.listData.map(function(item) {
