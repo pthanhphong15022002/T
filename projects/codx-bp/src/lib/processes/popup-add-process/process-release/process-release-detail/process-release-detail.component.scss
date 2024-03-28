@@ -8,10 +8,8 @@
     position: relative;
     .accordion-item
     {
-        border-top: none !important;
-        border-left: none !important;
-        border-right: none !important;
-        border-radius: 0;
+        border-left-width: 5px;
+        border-radius: 5px;
     }
     .accordion-button
     {
@@ -76,23 +74,19 @@
 }
 .prd-nav
 {
-    .nav-tabs
-    {
-        border: none !important;
-    }
     .nav-link
     {
-        color: black !important;
+      padding: 9px 35px !important;
+      background-color: var(--gray-150);
+      margin-right: 3px;
+      color: var(--gray-600);
+      cursor: pointer;
     }
     .nav-link.active
     {
-        border: none !important;
-        border-bottom: 3px solid var(--primary-active) !important;
-        color: var(--primary-active) !important;
-    }
-    .nav-link:not(.active):hover , .nav-link:not(.active):focus
-    {
-        border: none !important;
+      border: none !important;
+      background-color: var(--text-primary) !important;
+      color: white !important;
     }
 } 
 .bg-row-text-active
@@ -110,12 +104,12 @@
 
 
 .bp-progress-release {
-    width: 150px;
-    height: 150px !important;
+    width: 75px;
+    height: 75px !important;
     float: left; 
     line-height: 150px;
     background: none;
-    margin: 20px;
+    margin: 0 0 0 30px;
     box-shadow: none;
     position: relative;
   }
@@ -124,7 +118,7 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 12px solid #F1F2F6;
+    border: 8px solid #F1F2F6;
     position: absolute;
     top: 0;
     left: 0;
@@ -144,7 +138,7 @@
     width: 100%;
     height: 100%;
     background: none;
-    border-width: 12px;
+    border-width: 8px;
     border-style: solid;
     position: absolute;
     top: 0;
@@ -219,3 +213,152 @@
       transform: rotate(135deg);
     }
   }
+  .bp-ngbTab-content
+  {
+    height: calc(100% - 28px);
+    border-top-right-radius: 5px
+  }
+  .bg-bp-tb-header
+  {
+    background-color: white;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    .bp-stepName
+    {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+  }
+  .bg-bp-tb-header.collapsed
+  {
+    background-color: var(--gray-150);
+    .bp-stepName
+    {
+      color: black;
+      font-weight: normal;
+    }
+  }
+  .bp-img-folder
+  {
+    width: 22px;
+  }
+  .pt-1px
+  {
+    padding-top: 1px;
+  }
+  .bp-ins-sta-cl
+  {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+
+  $background-color: white;     // all backgrounds
+  $connector-color: #369;       // connectors and text
+  $shadow-color: #8F949A;
+  $box-color: #afafaf;          // box border
+
+  // major dimensions
+  // ----------------
+  $tree-margin-left: 0px;
+
+  $entry-height: 3em;           // total hight of entry: card + gap on top
+
+  $card-ident: 2em;             // card horizontal ident (to nearest connector)
+  $card-height: 1.5em;
+  $card-width: 15em;            // 'auto' is acceptable
+  $card-padding-top: ($card-height - 1em)/2;
+  $card-padding-side: $card-padding-top * 2;
+
+  $hconnector-top: 1em;
+
+  // =================== Don't edit below this line ========================
+
+  $card-margin-top: $entry-height - $card-height; // card vertical gap
+  $connector-vident: ($entry-height)/2 + $card-margin-top - 1.5em;
+  $tree-ident: $card-width;     // connector horizontal ident (to card's front)
+
+  $background-color-presudo: $background-color;   //for dev: beige;
+  $box-shadow: 1px 1px 4px $shadow-color;
+  $width-presudo: 0px;
+  
+  .bp-tree {
+    & ul {
+      margin: -1.5em 0 0 1em; // whole tree indentation TODO:
+      padding:0;
+      list-style:none;
+      color:#E4E4E9;
+      position:relative;
+    }
+    &:before, ul:before {
+      content:"";
+      display:block;
+      width:$width-presudo;
+      position:absolute;
+      top:0;
+      bottom:0;
+      left:0;
+      border-left:1px solid; // vertical connectors
+    }
+    &:before
+    {
+      border-left: none 
+    }
+    & li {
+      margin:0;
+      padding: $card-margin-top 0 0 $card-ident; // indentation + .5em
+      position:relative;
+      &:before {
+        border-top:1px solid;
+        content:"";
+        display:block;
+        height:100%;
+        left:0;
+        margin-top: $hconnector-top; // border top width
+        position:absolute;
+        top: $connector-vident; // (line-height/2)
+        width:$card-ident; // same with indentation
+      }
+      &:last-child:before {
+        background: $background-color-presudo; // same with body background
+        bottom:0;
+        height:auto;
+        top: $connector-vident; // (line-height/2)
+      }
+    }
+    & > li:before {
+      border-top:none !important;
+    }
+    & li div {
+      margin: -2px 0 0 0;
+      color: black;
+    }
+  
+  }
+  
+  // Espasially for root level ul
+  ul.tree {
+    margin-left: 0px; // Set ident for the root ul (whole tree ident)
+    &:before {
+      border-left:none; // Remove left border for the root ul
+    }
+  }
+  
+  // Put it to sticky divs
+  .sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0px;
+    width: 100%;
+  }
+
+  .bp-tree-2
+  {
+    &ul
+    {
+      margin: -1.5em 0 0 0.7em !important;
+    }
+  }
+.border-radius-4px
+{
+  border-radius: 4px;
+}

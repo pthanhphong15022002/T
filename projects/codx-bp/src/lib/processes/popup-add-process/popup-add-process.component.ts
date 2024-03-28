@@ -1016,7 +1016,26 @@ export class PopupAddProcessComponent {
         result2[x].settings = JSON.stringify(result2[x].settings);
 
         if(typeof result2[x].reminder != "string" && result2[x].reminder) result2[x].reminder = JSON.stringify(result2[x].reminder);
+
+        result2[x].stepType = null;
       }
+    }
+    var fristFormIndex = result2.findIndex(x=>x.activityType == "Form");
+    var fristStageIndex = result2.findIndex(x=>x.activityType == "Stage");
+    var countStage = result2.filter(x=>x.activityType == "Stage").length;
+    if(countStage == 1)
+    {
+      if(fristFormIndex>=0) result2[fristFormIndex].stepType = "3";
+      if(fristStageIndex>=0) result2[fristStageIndex].stepType = "3";
+      result2[result2.length - 1].stepType = "3";
+    }
+    else
+    {
+      if(fristFormIndex>=0) result2[fristFormIndex].stepType = "1";
+      if(fristStageIndex>=0) result2[fristStageIndex].stepType = "1";
+      result2[result2.length - 1].stepType = "2";
+      var lastStageIndex = result2.findIndex(x=>x.recID == result2[result2.length - 1].stageID);
+      if(lastStageIndex>=0) result2[lastStageIndex].stepType = "2";
     }
     result.steps = result2;
     op.data = result;

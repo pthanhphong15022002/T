@@ -75,7 +75,7 @@ export class JournalV2Component extends UIComponent {
     private acService: CodxAcService,
   ) {
     super(inject);
-    this.cache.valueList('AC177').pipe(takeUntil(this.destroy$)).subscribe((func) => {
+    this.cache.valueList('AC177').subscribe((func) => {
       if(func){
         this.lstGroup = func.datas;
         this.selectedToolBar = this.lstGroup[0].value;
@@ -90,11 +90,11 @@ export class JournalV2Component extends UIComponent {
   //#region Init
   onInit() {
     if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
-      this.cache.valueList('AC077').pipe(takeUntil(this.destroy$)).subscribe((func) => {
+      this.cache.valueList('AC077').subscribe((func) => {
         if (func) this.func = func.datas;
       });
 
-      this.cache.functionList(this.funcID).pipe(takeUntil(this.destroy$)).subscribe((res) => {
+      this.cache.functionList(this.funcID).subscribe((res) => {
         if (res) {
           this.funcName = res.defaultName;
         }
@@ -102,11 +102,6 @@ export class JournalV2Component extends UIComponent {
   }
 
   ngAfterViewInit() {
-    // this.codxService.setStyleToolbarLayout(
-    //   this.view.elementRef.nativeElement,
-    //   'toolbar2'
-    // );
-
     this.views = [
       {
         type: ViewType.smallcard,
@@ -206,9 +201,6 @@ export class JournalV2Component extends UIComponent {
   }
 
   toolbarClick(event) {
-    // this.zone.runOutsideAngular(()=>{
-      
-    // })
     switch (event.id) {
       case 'btnAdd':
         this.addNew(event);
@@ -323,7 +315,6 @@ export class JournalV2Component extends UIComponent {
             this.onDestroy();
           });
       }
-      this.onDestroy();
     });
   }
 

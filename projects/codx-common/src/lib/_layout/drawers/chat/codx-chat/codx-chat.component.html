@@ -1,5 +1,5 @@
-<div *ngIf="showChat" ngbDropdown id="codxChat" [autoClose]="false" class="dropdown" [ngbTooltip]="codxService.asideMode != '2' ? function?.defaultName : ''">
-  <button ngbDropdownToggle aria-labelledby="codxChat" type="button" class="btn btn-sm btn-icon" >
+<div *ngIf="showChat" ngbDropdown  [autoClose]="'outside'" class="dropdown" [ngbTooltip]="codxService.asideMode != '2' ? function?.defaultName : ''">
+  <button ngbDropdownToggle id="codxChat" type="button" class="btn btn-sm btn-icon" >
     <div class="d-flex align-items-center">
       <div class="btn btn-icon btn-clean position-relative" [ngClass]="codxService.toolbarButtonHeightClass">
         <span [inlineSVG]="'./assets/themes/sys/default/img/header_chatting.svg'" class="svg-icon" [ngClass]="
@@ -21,15 +21,14 @@
     </div>
   </button>
   <div ngbDropdownMenu aria-labelledby="codxChat" class="chat-popup">
-    <div ngbDropdownItem aria-labelledby="codxChat" class="chat-list">
+    <div ngbDropdownItem class="chat-list">
       <div class="chat-list-header">
         <div class="fw-bold fs-4 text-dark">
-          <codx-label [formModel]="formModel" name="lblHeadertext" [default]="'Tin nhắn'"></codx-label>
+          <codx-label [formModel]="formModel" name="lblChat" [default]="'Tin nhắn'"></codx-label>
         </div>
         <div class="d-flex align-items-center justify-content-between mt-2">
           <div class="chatbox-search w-100">
-            <codx-searchbar #codxSearch [iconPos]="'left'" [width]="300" (searchEvent)="search($event)">
-            </codx-searchbar>
+            <codx-searchbar #codxSearch [iconPos]="'left'" [width]="300" (searchEvent)="search($event)"></codx-searchbar>
           </div>
           <div class="d-flex align-items-center justify-content-end chat-list-header_func ms-6">
             <button type="button" class="btn-light btn btn-icon btn-sm ms-1" (click)="search(null,'searchFavorite')">

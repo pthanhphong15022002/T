@@ -335,11 +335,7 @@
               <div class="form-group mb-0 d-flex" style="flex-direction: column;">
                 <codx-label style="white-space: nowrap !important" fiedName="Status" [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input *ngIf="master.data?.status == '1'" [disabled]="true" field="status"
-                  [formModel]="dialog.formModel" [crrValue]="master.data?.validated ? '1' : '7'">
-                </codx-input>
-                <codx-input *ngIf="master.data?.status != '1'" [disabled]="true" field="status"
-                  [formModel]="dialog.formModel" [crrValue]="master.data?.status">
+                <codx-input [disabled]="true" field="status" [formModel]="dialog.formModel" [Group]="master.formGroup">
                 </codx-input>
               </div>
             </div>

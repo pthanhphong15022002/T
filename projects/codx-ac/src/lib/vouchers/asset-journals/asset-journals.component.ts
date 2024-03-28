@@ -1,4 +1,8 @@
-import { fmAssetJournal, fmCountingMembers } from './../../codx-ac.service';
+import {
+  fmAssetAcquisitionsJournal,
+  fmAssetRevaluationsJournal,
+  fmCountingMembers,
+} from './../../codx-ac.service';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,6 +13,7 @@ import {
 import {
   ButtonModel,
   CRUDService,
+  FormModel,
   NotificationsService,
   RequestOption,
   SidebarModel,
@@ -60,7 +65,7 @@ export class AssetJournalsComponent extends UIComponent {
   viewActive: number = ViewType.listdetail;
   ViewType = ViewType;
   private destroy$ = new Subject<void>();
-  fmAssetJournal = fmAssetJournal;
+  fmAssetJournal: FormModel;
   fmCountingMembers = fmCountingMembers;
   constructor(
     private inject: Injector,
@@ -87,7 +92,13 @@ export class AssetJournalsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
+    if (!this.funcID) {
+      this.funcID = this.router.snapshot.params['funcID'];
+      this.fmAssetJournal =
+        this.funcID == 'ACT811'
+          ? fmAssetAcquisitionsJournal
+          : fmAssetRevaluationsJournal;
+    }
     this.cache
       .functionList(this.funcID)
       .pipe(takeUntil(this.destroy$))
@@ -357,7 +368,7 @@ export class AssetJournalsComponent extends UIComponent {
         this.beforeDelete(option, data)
       )
       .subscribe((res: any) => {
-        if(res){
+        if (res) {
           this.view.dataService.onAction.next({
             type: 'delete',
             data: data,
