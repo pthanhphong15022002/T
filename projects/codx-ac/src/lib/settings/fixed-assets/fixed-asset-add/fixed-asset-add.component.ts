@@ -101,7 +101,7 @@ export class FixedAssetAddComponent extends UIComponent {
         this.notification.notifyCode('SYS006');
       else
         this.notification.notifyCode('SYS007');
-      this.dialog.close();
+      this.dialog.close(this.form.form.data.isEdit ? res?.update?.data : res?.save?.data);
     })
   }
   //#endregion

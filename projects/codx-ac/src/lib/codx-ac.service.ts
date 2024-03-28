@@ -224,6 +224,14 @@ export const fmCountingMembers: FormModel = {
   entityName: 'AC_CountingMembers',
   entityPer: 'AC_CountingMembers',
 };
+export const fmAsset: FormModel = {
+  formName: 'Assets',
+  gridViewName: 'grvAssets',
+  entityName: 'AM_Assets',
+  entityPer: 'AM_Assets',
+  funcID: 'ACS821',
+};
+
 export enum MorfuncDefault {
   Sua = 'SYS03',
   Xoa = 'SYS02',
@@ -867,10 +875,9 @@ export class CodxAcService {
             } else {
               if (journal.approvalControl == '0') {
                 if (
-                  ![
-                    MorfuncCashTranfers.GhiSo,
-                    MorfuncCashTranfers.In,
-                  ].includes(element.functionID)
+                  ![MorfuncCashTranfers.GhiSo, MorfuncCashTranfers.In].includes(
+                    element.functionID
+                  )
                 )
                   element.disabled = true;
               } else {
@@ -897,10 +904,9 @@ export class CodxAcService {
 
           case '3':
             if (
-              ![
-                MorfuncCashTranfers.HuyDuyet,
-                MorfuncCashTranfers.In,
-              ].includes(element.functionID)
+              ![MorfuncCashTranfers.HuyDuyet, MorfuncCashTranfers.In].includes(
+                element.functionID
+              )
             )
               element.disabled = true;
             break;
@@ -908,20 +914,18 @@ export class CodxAcService {
           case '5':
           case '9':
             if (
-              ![
-                MorfuncCashTranfers.GhiSo,
-                MorfuncCashTranfers.In,
-              ].includes(element.functionID)
+              ![MorfuncCashTranfers.GhiSo, MorfuncCashTranfers.In].includes(
+                element.functionID
+              )
             )
               element.disabled = true;
             break;
 
           case '6':
             if (
-              ![
-                MorfuncCashTranfers.KhoiPhuc,
-                MorfuncCashTranfers.In,
-              ].includes(element.functionID)
+              ![MorfuncCashTranfers.KhoiPhuc, MorfuncCashTranfers.In].includes(
+                element.functionID
+              )
             )
               element.disabled = true;
             break;
@@ -1064,11 +1068,9 @@ export class CodxAcService {
           case '1':
             if (journal.approvalControl == '0') {
               if (
-                ![
-                  MorfuncSale.GhiSo,
-                  MorfuncSale.In,
-                  MorfuncSale.demo,
-                ].includes(element.functionID)
+                ![MorfuncSale.GhiSo, MorfuncSale.In, MorfuncSale.demo].includes(
+                  element.functionID
+                )
               )
                 element.disabled = true;
             } else {
@@ -1555,5 +1557,17 @@ export class CodxAcService {
       });
       this.pageTitleService.setChildren(links);
     });
+  }
+
+  replaceData(dataInput, dataOut) {
+    let result = JSON.parse(JSON.stringify(dataOut));
+    let keyInput = Object.keys(dataInput);
+    let keyOut = Object.keys(dataOut);
+    keyInput.forEach((key) => {
+      if (keyOut.includes(key) && key != 'recID' && key != 'placeInService') {
+        result[key] = dataInput[key];
+      }
+    });
+    return result;
   }
 }

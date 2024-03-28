@@ -471,7 +471,7 @@
       class="tabline-content header-table-ac position-relative"
     >
       <ng-container *ngIf="!formAsset.data?.isReadOnly">
-        <div #btnRef class="btn-addline" style="top: -32px !important;">
+        <div #btnRef class="btn-addline" style="top: -32px !important">
           <div class="d-flex align-items-center">
             <button
               style="border: 1px solid !important"
@@ -556,15 +556,34 @@
         (onEdit)="onEdit($event)"
       ></codx-gridview-v2>
       <ng-container *ngIf="!formAsset.data?.isReadOnly">
-        <div #btnRef class="btn-addline">
+        <div #btnRef class="btn-addline" style="right: 110px">
           <div class="d-flex align-items-center">
             <button
               style="border: 1px solid !important"
               tab-index="15"
               id="btnAddCash"
               class="btn btn-sm btn-light-primary btnAddCash"
-              (keydown.enter)="addRowDetail(); $event.preventDefault()"
-              (click)="addRowDetail()"
+              (keydown.enter)="addRowDetail('add'); $event.preventDefault()"
+              (click)="addRowDetail('add')"
+            >
+              <i class="icon-playlist_add icon-16"></i>
+              <codx-label
+                [formModel]="dialog.formModel"
+                fiedName="lblAddAsset"
+                default="Thêm"
+              ></codx-label>
+            </button>
+          </div>
+        </div>
+        <div #btnRef class="btn-addline ms-1">
+          <div class="d-flex align-items-center">
+            <button
+              style="border: 1px solid !important"
+              tab-index="15"
+              id="btnAddCash"
+              class="btn btn-sm btn-light-primary btnAddCash"
+              (keydown.enter)="addRowDetail('addLine'); $event.preventDefault()"
+              (click)="addRowDetail('addLine')"
             >
               <i class="icon-playlist_add icon-16"></i>
               <codx-label
