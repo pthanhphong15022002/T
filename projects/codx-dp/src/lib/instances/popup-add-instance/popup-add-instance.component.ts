@@ -430,7 +430,7 @@ export class PopupAddInstanceComponent implements OnInit {
         if (res && res.save) {
           this.dialog.close(res.save);
           this.changeDetectorRef.detectChanges();
-        } else this.deletedTempletMailCustomField()
+        }
       });
   }
   onUpdate() {
@@ -439,10 +439,10 @@ export class PopupAddInstanceComponent implements OnInit {
       .subscribe((res) => {
         if (res.update) {
           this.dialog.close(res.update);
-        } else this.deletedTempletMailCustomField()
+        }
       });
   }
-  //Xoa templet tao
+  //Xoa templet tao => chưa xử lý dc ??
   deletedTempletMailCustomField() {
     if (this.templetCreated?.length > 0) this.customFieldSV.deletedTempmail(this.templetCreated)
   }
