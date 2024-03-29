@@ -1339,7 +1339,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
                         if(step.activityType?.toLowerCase() != 'conditions'){
                           stepModel.shape = {
                             type: 'HTML',
-                            version: step.activityType?.toLowerCase(),
+                            version: 'step',
 
                           };
                           if(maxwidth < ((i+1)*300 + 100)){
@@ -1380,7 +1380,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
             else{
               model.shape = {
                 type: 'HTML',
-                version: currentStageActions[j].activityType?.toLowerCase(),
+                version: 'step'
 
               };
               model.width = 300;
@@ -1588,6 +1588,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
             (x) => x.activityType == 'Stage'
           );
           this.columns = this.lstSteps;
+          this.initProcess();
         }
         sub.unsubscribe();
       });
