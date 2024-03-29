@@ -1196,6 +1196,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
             e: JSON.stringify(this.remindDataValue),
             data: this.customField,
           });
+          this.createdTempletMail.emit(this.customField.recID)
           this.openPopupSettingRemind(this.customField.recID)
         } else { this.isAddNewTemp = true, this.openPopupSettingRemind(this.customField.recID); }
       })
@@ -1234,10 +1235,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
             e: JSON.stringify(this.remindDataValue),
             data: this.customField,
           });
-        }
-        if (this.copiedTempMail || this.isAddNewTemp)
           this.createdTempletMail.emit(recIDTemp)
-
+        }
         //done làm gi
         this.isAddNewTemp = false
         this.dataValueOld = this.remindDataValue;
