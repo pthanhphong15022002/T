@@ -361,6 +361,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   category: any;
   isUseSuccessOld = true;
   isUseFailOld = true;
+  tempEmailDeleted = []; //id cua email temp
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -2905,7 +2906,10 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             }
           }
         }
-
+        if (this.fieldCrr.dataType == "RM" && this.fieldCrr.defaultValue) {
+          let tempEmail = JSON.parse(this.fieldCrr.defaultValue)?.emailTemplate;
+          if (tempEmail) this.tempEmailDeleted.push(tempEmail)
+        }
         // if(!this.isChange) this.isChange=true ;
         this.changeDetectorRef.detectChanges();
         //this.changeDetectorRef.markForCheck();
@@ -5376,18 +5380,10 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     this.attachment?.clearData();
     this.imageAvatar?.clearData();
     this.onDestroy();
-    // this.stepList = [];
-    // this.listStepAdd = [];
-    // this.listStepDelete = [];
-    // this.listStepEdit = [];
-    // this.listStepDrop = [];
-    // this.taskList = [];
-    // this.taskGroupList = [];
-    // this.roleGroupTaskOld = [];
-    // this.listStepApprover = [];
-    // this.listStepApproverDelete = [];
-    // this.stepNew = null;
-    // this.stepEdit = null;
+    //xoa email templep xoa
+    if (this.tempEmailDeleted?.length > 0) {
+      this.api.execSv<any>("SYS", "AD", "EmailTemplatesBusiness", "DeleteEmailTemplateByListRecIDAsync", this.tempEmailDeleted).subscribe();
+    }
   }
 
   setNameTypeTask(taskType) {

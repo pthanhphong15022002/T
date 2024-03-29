@@ -288,7 +288,12 @@ export const routes: Routes = [
       },
       {
         path: 'assetcountings/:funcID/:journalNo',
-        component: AssetCountingsComponent,
+        component: CashCountingsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'inventorycounting/:funcID/:journalNo',
+        component: CashCountingsComponent,
         data: { noReuse: true },
       },
       // {
