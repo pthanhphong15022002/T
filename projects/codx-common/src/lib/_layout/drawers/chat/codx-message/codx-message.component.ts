@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AuthStore, FormModel, UserModel } from 'codx-core';
+import { AuthStore, CallFuncService, DialogModel, FormModel, UserModel } from 'codx-core';
 import { Subscription } from 'rxjs';
 import { SignalRService } from '../services/signalr.service';
 
@@ -21,6 +21,7 @@ export class CodxMessageComponent implements OnInit,AfterViewInit,OnDestroy {
   (
     private signalR:SignalRService,
     private detectorRef:ChangeDetectorRef,
+    private callFCSV:CallFuncService,
     private auth:AuthStore
   ) 
   {
@@ -113,5 +114,10 @@ export class CodxMessageComponent implements OnInit,AfterViewInit,OnDestroy {
       };
       this.clickMF.emit(event);
     }
+  }
+
+  clickShowVotes(){
+    let dialog = new DialogModel();
+    
   }
 }

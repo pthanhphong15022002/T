@@ -1,4 +1,8 @@
-import { fmAssetJournal, fmCountingMembers } from './../../codx-ac.service';
+import {
+  fmAssetAcquisitionsJournal,
+  fmAssetRevaluationsJournal,
+  fmCountingMembers,
+} from './../../codx-ac.service';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,10 +13,13 @@ import {
 import {
   ButtonModel,
   CRUDService,
+  DialogModel,
+  FormModel,
   NotificationsService,
   RequestOption,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -60,7 +67,7 @@ export class AssetJournalsComponent extends UIComponent {
   viewActive: number = ViewType.listdetail;
   ViewType = ViewType;
   private destroy$ = new Subject<void>();
-  fmAssetJournal = fmAssetJournal;
+  fmAssetJournal: FormModel;
   fmCountingMembers = fmCountingMembers;
   constructor(
     private inject: Injector,
@@ -87,7 +94,13 @@ export class AssetJournalsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
+    if (!this.funcID) {
+      this.funcID = this.router.snapshot.params['funcID'];
+      this.fmAssetJournal =
+        this.funcID == 'ACT811'
+          ? fmAssetAcquisitionsJournal
+          : fmAssetRevaluationsJournal;
+    }
     this.cache
       .functionList(this.funcID)
       .pipe(takeUntil(this.destroy$))
@@ -251,15 +264,22 @@ export class AssetJournalsComponent extends UIComponent {
             hideFields: [...this.hideFields],
             baseCurr: this.baseCurr,
           };
-          let optionSidebar = new SidebarModel();
-          optionSidebar.DataService = this.view?.dataService;
-          optionSidebar.FormModel = this.fmAssetJournal;
-          optionSidebar.FormModel.funcID = this.view.funcID;
-          let dialog = this.callfc.openSide(
+          let dialogModel = new DialogModel();
+          dialogModel.IsFull = true;
+          dialogModel.zIndex = 999;
+          dialogModel.DataService = this.view?.dataService;
+          dialogModel.FormModel = this.fmAssetJournal;
+          dialogModel.FormModel.funcID = this.view.funcID;
+
+          let dialog = this.callfc.openForm(
             AssetJournalsAddComponent,
+            '',
+            Util.getViewPort().width - 100,
+            Util.getViewPort().height - 100,
+            '',
             data,
-            optionSidebar,
-            this.view.funcID
+            '',
+            dialogModel
           );
           dialog.closed.subscribe((res) => {
             if (res && res?.event) {
@@ -286,15 +306,22 @@ export class AssetJournalsComponent extends UIComponent {
           hideFields: [...this.hideFields],
           baseCurr: this.baseCurr,
         };
-        let optionSidebar = new SidebarModel();
-        optionSidebar.DataService = this.view?.dataService;
-        optionSidebar.FormModel = this.fmAssetJournal;
-        optionSidebar.FormModel.funcID = this.view.funcID;
-        let dialog = this.callfc.openSide(
+        let dialogModel = new DialogModel();
+        dialogModel.IsFull = true;
+        dialogModel.zIndex = 999;
+        dialogModel.DataService = this.view?.dataService;
+        dialogModel.FormModel = this.fmAssetJournal;
+        dialogModel.FormModel.funcID = this.view.funcID;
+
+        let dialog = this.callfc.openForm(
           AssetJournalsAddComponent,
+          '',
+          Util.getViewPort().width - 100,
+          Util.getViewPort().height - 100,
+          '',
           data,
-          optionSidebar,
-          this.view.funcID
+          '',
+          dialogModel
         );
         dialog.closed.subscribe((res) => {
           if (res && res?.event) {
@@ -327,15 +354,21 @@ export class AssetJournalsComponent extends UIComponent {
             hideFields: [...this.hideFields],
             baseCurr: this.baseCurr,
           };
-          let optionSidebar = new SidebarModel();
-          optionSidebar.DataService = this.view?.dataService;
-          optionSidebar.FormModel = this.fmAssetJournal;
-          optionSidebar.FormModel.funcID = this.view.funcID;
-          let dialog = this.callfc.openSide(
+          let dialogModel = new DialogModel();
+          dialogModel.IsFull = true;
+          dialogModel.zIndex = 999;
+          dialogModel.DataService = this.view?.dataService;
+          dialogModel.FormModel = this.fmAssetJournal;
+          dialogModel.FormModel.funcID = this.view.funcID;
+          let dialog = this.callfc.openForm(
             AssetJournalsAddComponent,
+            '',
+            Util.getViewPort().width - 100,
+            Util.getViewPort().height - 100,
+            '',
             data,
-            optionSidebar,
-            this.view.funcID
+            '',
+            dialogModel
           );
           dialog.closed.subscribe((res) => {
             if (res && res.event != null) {
@@ -357,7 +390,7 @@ export class AssetJournalsComponent extends UIComponent {
         this.beforeDelete(option, data)
       )
       .subscribe((res: any) => {
-        if(res){
+        if (res) {
           this.view.dataService.onAction.next({
             type: 'delete',
             data: data,
@@ -391,14 +424,21 @@ export class AssetJournalsComponent extends UIComponent {
           hideFields: [...this.hideFields],
           baseCurr: this.baseCurr,
         };
-        let optionSidebar = new SidebarModel();
-        optionSidebar.DataService = this.view?.dataService;
-        optionSidebar.FormModel = this.fmAssetJournal;
-        let dialog = this.callfc.openSide(
+        let dialogModel = new DialogModel();
+        dialogModel.IsFull = true;
+        dialogModel.zIndex = 999;
+        dialogModel.DataService = this.view?.dataService;
+        dialogModel.FormModel = this.fmAssetJournal;
+        dialogModel.FormModel.funcID = this.view.funcID;
+        let dialog = this.callfc.openForm(
           AssetJournalsAddComponent,
+          '',
+          Util.getViewPort().width - 100,
+          Util.getViewPort().height - 100,
+          '',
           data,
-          optionSidebar,
-          this.view.funcID
+          '',
+          dialogModel
         );
         dialog.closed.subscribe((res) => {
           if (res && res?.event) {

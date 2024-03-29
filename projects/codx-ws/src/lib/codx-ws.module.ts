@@ -80,6 +80,7 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { DetailNotebookComponent } from './personal/master-detail/my-page/detail-notebook/detail-notebook.component';
 import { EPDashboardComponent } from 'projects/codx-ep/src/lib/dashboard/dashboard.component';
 import { CmDashboardComponent } from 'projects/codx-cm/src/lib/cm-dashboard/cm-dashboard.component';
+import { RequestsComponent } from 'projects/codx-ep/src/lib/requests/requests.component';
 const routes: Routes = [
   {
     path: '',
@@ -333,6 +334,10 @@ const routes: Routes = [
             path: 'taskextends/:funcID',
             component: TaskExtendsComponent,
           },
+          {
+            path: 'businesstrip/:funcID',
+            component: RequestsComponent,
+          },
           // //Tìm kiếm
           // {
           //   path: 'searching/:funcID',
@@ -409,6 +414,7 @@ const routes: Routes = [
     AcModule,
     CodxHRModule,
     CodxCoModule,
+    CodxEPModule,
     //CodxWpModule,
     //CodxWpV2Module,
     //CodxCoModule,
