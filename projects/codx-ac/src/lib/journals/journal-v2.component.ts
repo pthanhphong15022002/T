@@ -201,7 +201,7 @@ export class JournalV2Component extends UIComponent {
   }
 
   toolbarClick(event) {
-    switch (event.id) {
+        switch (event.id) {
       case 'btnAdd':
         this.addNew(event);
         break;
@@ -219,6 +219,7 @@ export class JournalV2Component extends UIComponent {
       .subscribe((res) => {
         if (res != null) {
           res.isAdd = true;
+          res.category = this.selectedToolBar;
           let data = {
             headerText: this.headerText,
             oData: { ...res },
@@ -247,6 +248,7 @@ export class JournalV2Component extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         res.isEdit = true;
+        res.category = this.selectedToolBar;
         let data = {
           headerText: this.headerText,
           oData: { ...res },
@@ -315,7 +317,7 @@ export class JournalV2Component extends UIComponent {
             this.onDestroy();
           });
       }
-    });
+          });
   }
 
   addNewJournalSample(e, data) {

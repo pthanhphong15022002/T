@@ -45,6 +45,7 @@ export class JournalsAddComponent extends UIComponent {
   vllAC109: any = [];
   vllAC110: any = [];
   vllAC111: any = [];
+  vllAC201: any = [];
   isOpenCbb: any = false;
   isMultiple: any = false;
   comboboxName: any;
@@ -111,10 +112,11 @@ export class JournalsAddComponent extends UIComponent {
     this.getVll('AC109', 'vllAC109');
     this.getVll('AC110', 'vllAC110');
     this.getVll('AC111', 'vllAC111');
+    this.getVll2('AC201', 'vllAC201');
 
     this.cache
       .viewSettingValues('ACParameters')
-      .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]),takeUntil(this.destroy$))
+      .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
       .subscribe((res) => {
         let dataValue = JSON.parse(res.dataValue);
         if (!this.dataDefault.isEdit)
@@ -347,11 +349,13 @@ export class JournalsAddComponent extends UIComponent {
         this.formJournal.form.setValue('fiscalYear', fiscalYear, {});
         break;
       case 'vatcontrol':
+      case 'discountcontrol':
+      case 'coscontrol':
         this.isPreventChange = true;
         if (value) {
-          this.formJournal.form.setValue('vatControl', '1', {});
+          this.formJournal.form.setValue(field, '1', {});
         } else {
-          this.formJournal.form.setValue('vatControl', '0', {});
+          this.formJournal.form.setValue(field, '0', {});
         }
         this.isPreventChange = false;
         break;
@@ -575,7 +579,13 @@ export class JournalsAddComponent extends UIComponent {
       .pipe(map((d) => d.datas.map((v) => v.value)))
       .subscribe((res) => {
         this[propName] = res;
-        this.onDestroy();
+      });
+  }
+  getVll2(vllCode: string, propName: string) {
+    this.cache
+      .valueList(vllCode)
+      .subscribe((res) => {
+        this[propName] = res?.datas;
       });
   }
 
