@@ -1184,21 +1184,22 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   settingRemindMail() {
     if (!this.dataValueOld) {
+      let recIDEmailTemp = Util.uid();// this.customField.recID; => do cái reciD khi tiếp tục add ko đổi mà save mới đổi
       let obj = [
-        this.remindDefault?.emailTemplate, [this.customField.recID]
+        this.remindDefault?.emailTemplate, [recIDEmailTemp]
       ]
       this.api.execSv<any>("SYS", "AD", "EmailTemplatesBusiness", "CopyEmailTemplateByRecIDAsync", obj).subscribe(res => {
         if (res) {
           this.isAddNewTemp = false
           this.copiedTempMail = true;
-          this.remindDataValue['emailTemplate'] = this.customField.recID;
+          this.remindDataValue['emailTemplate'] = recIDEmailTemp;
           this.valueChangeCustom.emit({
             e: JSON.stringify(this.remindDataValue),
             data: this.customField,
           });
-          this.createdTempletMail.emit(this.customField.recID)
-          this.openPopupSettingRemind(this.customField.recID)
-        } else { this.isAddNewTemp = true, this.openPopupSettingRemind(this.customField.recID); }
+          this.createdTempletMail.emit(recIDEmailTemp)
+          this.openPopupSettingRemind(recIDEmailTemp)
+        } else { this.isAddNewTemp = true, this.openPopupSettingRemind(recIDEmailTemp); }
       })
     } else {
       this.checkAddNewTemp(this.remindDataValue?.emailTemplate);
