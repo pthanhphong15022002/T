@@ -4,6 +4,7 @@ import {
   Injector,
   Optional,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   CRUDService,
@@ -36,7 +37,8 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 @Component({
   selector: 'lib-asset-journals-add',
   templateUrl: './asset-journals-add.component.html',
-  styleUrls: ['./asset-journals-add.component.css'],
+  styleUrls: ['./asset-journals-add.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class AssetJournalsAddComponent extends UIComponent {
   //#region Contructor
@@ -499,31 +501,14 @@ export class AssetJournalsAddComponent extends UIComponent {
         if (this.eleGridAccountMember) {
           this.eleGridAccountMember.saveRow((res: any) => {
             if (res && res.type != 'error') {
-              this.api
-                .exec('AC', 'CountingMembersBusiness', 'SetDefaultAsync', [
-                  this.formAsset.data.recID,
-                ])
-                .pipe(takeUntil(this.destroy$))
-                .subscribe((res: any) => {
-                  if (res) {
-                    this.lstAccountMembers.push(res);
-                    this.eleGridAccountMember.addRow(
-                      res,
-                      this.eleGridAccountMember.dataSource.length
-                    );
-                  } else {
-                    let member = {};
-                    member['recID'] = Util.uid();
-                    member['transID'] = this.formAsset.data.recID;
+              let member = {};
+              member['recID'] = Util.uid();
+              member['transID'] = this.formAsset.data.recID;
 
-                    this.eleGridAccountMember.addRow(
-                      member,
-                      this.eleGridAccountMember.dataSource.length
-                    );
-                  }
-                  this.onDestroy();
-                  this.detectorRef.detectChanges();
-                });
+              this.eleGridAccountMember.addRow(
+                member,
+                this.eleGridAccountMember.dataSource.length
+              );
             }
           });
           return;
