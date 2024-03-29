@@ -1174,10 +1174,10 @@ export class CodxInputCustomFieldComponent implements OnInit {
   }
   //----------Field -RM ------------//
   valueChangeChbx(e) {
-    if (this.remindDefault[e.field] == e.data) return
-    this.remindDefault[e.field] = e.data;
+    if (this.remindDataValue[e.field] == e.data) return
+    this.remindDataValue[e.field] = e.data;
     this.valueChangeCustom.emit({
-      e: JSON.stringify(this.remindDefault),
+      e: JSON.stringify(this.remindDataValue),
       data: this.customField,
     });
   }
