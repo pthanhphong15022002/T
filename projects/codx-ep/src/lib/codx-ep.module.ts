@@ -45,6 +45,8 @@ import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts
 import { PopupAdjustedAllocationComponent } from './approval/popup-adjusted-allocation/popup-adjusted-allocation.component';
 import { ReceiptResourceComponent } from './receipt/receipt-resource.component';
 import { AddReceiptResourceComponent } from './receipt/add-receipt-resource/add-receipt-resource.component';
+import { RequestsComponent } from './requests/requests.component';
+import { RequestsViewDetaiComponent } from './requests/requests-view-detai/requests-view-detai.component';
 
 export const routes: Routes = [
   {
@@ -63,7 +65,6 @@ export const routes: Routes = [
         path: '**',
         redirectTo: 'error/404',
       },
-
       {
         path: 'bookingstationery/:funcID',
         data: { noReuse: true },
@@ -148,6 +149,11 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
+        path: 'businesstrip/:funcID',
+        component: RequestsComponent,
+        data: { noReuse: true },
+      },
+      {
         path: 'instances/:funcID/:processID',
         component: ViewInstancesComponent,
         data: { noReuse: true },
@@ -222,6 +228,8 @@ export const routes: Routes = [
     EPDashboardComponent,
     ReceiptResourceComponent,
     AddReceiptResourceComponent,
+    RequestsComponent,
+    RequestsViewDetaiComponent
   ],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -1,0 +1,99 @@
+<codx-detail-tmp 
+    [header]="header" 
+    [formModel]="formModel" 
+    [dataItem]="data" 
+    [body]="body"
+    [footer]="footer" 
+    (changeDataMF)="changeDataMF($event)">
+</codx-detail-tmp>
+
+<ng-template #header>
+    <div class="d-flex flex-column w-100 mb-2">
+        <div class="d-flex justify-content-between w-100">
+            <div class="d-flex">
+                <div class="me-2">
+                    <codx-img [objectId]="data.employeeID" [objectType]="'HR_Employees'" [objectName]="data.employeeName" [width]="50"></codx-img>
+                </div>
+                <div class="d-flex flex-column align-items-stretch">
+                    <div class="fw-bold"><span>{{data.employeeName}}</span></div>
+                    <div class="text-dark"><i class="icon-location_on me-2"></i><span>{{data.positionName}}</span></div>
+                    <div class="d-flex align-items-center text-gray-600">
+                        <span class="me-3">
+                            <i class="icon-phone_android me-2"></i>
+                            {{data.phone}}
+                        </span>
+                        <span>
+                            <i class="icon-phone_android text-warning me-2"></i>
+                            {{data.mail}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <codx-vll [name]="'EP033'" [value]="data.status" [showText]="true" [showBgColor]="true"></codx-vll>
+            </div>
+        </div>
+        <!-- <div>
+            <codx-tag [formModel]="formModel" [value]=data.tags></codx-tag>
+        </div> -->
+    </div>
+</ng-template>
+<ng-template #body>
+    <div class="w-100 h-100">
+        <div class="form-group">
+            <span>{{data.memo}}</span>
+        </div>
+        <div class="form-group">
+            <div class="d-flex">
+                <div class="d-flex align-items-center">
+                    <codx-label [formModel]="formModel" name="FromDate" default="Từ ngày:" class="text-dark me-2"></codx-label>
+                    <div *ngIf="data.fromDate" [innerHTML]="data.fromDate | formatvalue : formModel : 'fromDate' | async"></div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <codx-label [formModel]="formModel" name="ToDate" default="Đến ngày:" class="text-dark me-2"></codx-label>
+                    <div *ngIf="data.toDate" [innerHTML]="data.toDate | formatvalue : formModel : 'toDate' | async"></div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" *ngIf="data.location">
+            <span>{{data.location}}</span>
+        </div>
+        <!-- <div class="form-group">
+            <div class="d-flex">
+                <div class="d-flex flex-column me-4">
+                    <codx-label [formModel]="formModel" name="Resources" default="Người đi cùng" class="fw-bold mb-2"></codx-label>
+                    <codx-imgs 
+                        [isToolTip]="true" 
+                        [objectId]="data.resourceIDs" 
+                        [objectType]="'AD_Users'" 
+                        [width]="30" 
+                        [numberImages]="3">
+                    </codx-imgs>
+                </div>
+                <div class="d-flex flex-column me-4">
+                    <codx-label [formModel]="formModel" name="lblBookingCard" default="Đặt xe" class="fw-bold mb-2"></codx-label>
+                    <div class="d-flex align-items-center">
+                        <codx-img [objectId]="data.resourceID" [objectType]="'EP_Resources'" [objectName]="data.resourceName" [width]="30" class="me-2"></codx-img>
+                        <div>{{data.resourceCode}} - {{data.resourceName}}</div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</ng-template>
+<ng-template #footer>
+    <codx-tabs 
+        *ngIf="data && formModel"
+        [entityName]="formModel.entityName" 
+        [objectID]="data.recID"
+        [funcID]="formModel.funcID" 
+        [refID]="data.recID" 
+        [refType]="formModel.entityName"
+        [transID]="data.recID" 
+        [approveStatus]="data.status"
+        [formModel]="formModel" 
+        [dataSelected]="data"
+        [data]="data" 
+        [keyField]="'recID'">
+    </codx-tabs>
+</ng-template>

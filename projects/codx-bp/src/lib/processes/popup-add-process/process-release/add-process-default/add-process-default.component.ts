@@ -149,6 +149,11 @@ export class AddProcessDefaultComponent implements OnInit {
     extendInfo.forEach((element) => {
       let field = element.fieldName.toLowerCase();
       this.gridViewSetup[field] = element;
+      if (element.fieldType == 'Attachment')
+      element.documentControl =
+        typeof element.documentControl == 'string'
+          ? JSON.parse(element.documentControl)
+          : element.documentControl;
       if (element.fieldType != 'Title') {
         if (this.type == 'add') {
           let validate = element.isRequired ? Validators.required : null;
@@ -156,11 +161,6 @@ export class AddProcessDefaultComponent implements OnInit {
           if (element.fieldType == 'Email') validate = Validators.email;
           else if (element.fieldType == 'Phone')
             validate = Validators.pattern('[0-9 ]{11}');
-          else if (element.fieldType == 'Attachment')
-            element.documentControl =
-              typeof element.documentControl == 'string'
-                ? JSON.parse(element.documentControl)
-                : element.documentControl;
           else if (element.fieldType == 'DateTime') {
             if (element.defaultValue == 'Now')
               element.defaultValue = new Date();
@@ -175,21 +175,19 @@ export class AddProcessDefaultComponent implements OnInit {
             field,
             new FormControl(element.defaultValue, validate)
           );
-        } else {
+        } 
+        else 
+        {
           if (element.fieldType == 'Attachment') {
-            element.documentControl =
-              typeof element.documentControl == 'string'
-                ? JSON.parse(element.documentControl)
-                : element.documentControl;
             if (element.documentControl)
-              element.documentControl = this.dataIns.documentControl.filter(
-                (x) => x.fieldID == element.recID
-              );
+            {
+              this.dataIns.documentControl.forEach(x=>{
+                let index =  element.documentControl.findIndex(y=>y.recID == x.recID);
+                if(index >= 0) element.documentControl[index] = x;
+              })
+            }
           }
-          this.dataIns.datas =
-            typeof this.dataIns.datas === 'string'
-              ? JSON.parse(this.dataIns.datas)
-              : this.dataIns.datas;
+          this.dataIns.datas = typeof this.dataIns.datas === 'string' ? JSON.parse(this.dataIns.datas) : this.dataIns.datas;
           let dataEdit = this.dataIns.datas;
           this.dynamicFormsForm.addControl(
             field,
@@ -320,10 +318,16 @@ export class AddProcessDefaultComponent implements OnInit {
   getInfoUser() {
     let paras = [this.user.userID];
     let keyRoot = 'BPUserInfo' + this.user.userID;
-    this.infoUser = this.shareService.loadDataCache(paras,keyRoot,"HR","HR","EmployeesBusiness","GetTmpEmployeeAsync");
-    if(isObservable(this.infoUser))
-    {
-      this.infoUser.subscribe(item=>{
+    this.infoUser = this.shareService.loadDataCache(
+      paras,
+      keyRoot,
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetTmpEmployeeAsync'
+    );
+    if (isObservable(this.infoUser)) {
+      this.infoUser.subscribe((item) => {
         this.infoUser = item;
       });
     }
@@ -472,9 +476,9 @@ export class AddProcessDefaultComponent implements OnInit {
         let fieldName = 'f' + this.data.stepNo + '_owner';
         valueForm[fieldName] = {
           username: this.infoUser?.userName,
-          createdOn: new Date(),
+          createdon: new Date(),
           position: this.infoUser?.positionID,
-          orgUnit: this.infoUser?.orgUnitID,
+          orgunit: this.infoUser?.orgUnitID,
           department: this.infoUser?.departmentID,
           company: this.infoUser?.companyID,
         };
@@ -557,9 +561,11 @@ export class AddProcessDefaultComponent implements OnInit {
       (await this.attachment.saveFilesObservable()).subscribe((item2) => {
         if (item2) {
           let arr = [];
-          if (!Array.isArray(item2)) {
+          if (!Array.isArray(item2)) 
+          {
             arr.push(item2);
-          } else arr = item2;
+          } 
+          else arr = item2;
           arr.forEach((elm) => {
             var obj = {
               fileID: elm.data.recID,
@@ -725,6 +731,7 @@ export class AddProcessDefaultComponent implements OnInit {
   }
 
   dataChangeAttachmentGrid(e: any) {
+    if(!this.dataIns.documentControl) this.dataIns.documentControl = [];
     if (Array.isArray(e)) {
       e.forEach((elm) => {
         var dt = JSON.parse(JSON.stringify(elm));
@@ -732,8 +739,8 @@ export class AddProcessDefaultComponent implements OnInit {
           (x) => x.recID == elm.recID
         );
         if (index >= 0) this.dataIns.documentControl[index] = dt;
+        else this.dataIns.documentControl.push(dt)
       });
-
       //this.api.execSv("BP","BP","ProcessInstancesBusiness","UpdateInsAsync",this.dataIns).subscribe();
     }
   }
@@ -782,7 +789,13 @@ export class AddProcessDefaultComponent implements OnInit {
     this.isAttach = e;
   }
 
-  addRow(data: any, fieldName: any, index = 0, result: any = null,hasIndexNo=false) {
+  addRow(
+    data: any,
+    fieldName: any,
+    index = 0,
+    result: any = null,
+    hasIndexNo = false
+  ) {
     if (!this.dataTable[fieldName.toLowerCase()])
       this.dataTable[fieldName.toLowerCase()] = [];
     var option = new DialogModel();
@@ -802,24 +815,25 @@ export class AddProcessDefaultComponent implements OnInit {
     popup.closed.subscribe((res) => {
       if (res?.event) {
         if (!result) {
-          if(hasIndexNo) res.event.indexNo = this.dataTable[fieldName.toLowerCase()].length + 1
+          if (hasIndexNo)
+            res.event.indexNo =
+              this.dataTable[fieldName.toLowerCase()].length + 1;
           this.dataTable[fieldName.toLowerCase()].push(res?.event);
-        }
-        else this.dataTable[fieldName.toLowerCase()][result.index] = res.event;
+        } else
+          this.dataTable[fieldName.toLowerCase()][result.index] = res.event;
         var grid = this.gridView.find((_, i) => i == index);
         grid.refresh();
       }
     });
   }
-  deleteRow(data: any, fieldName: any, index = 0 , hasIndexNo = false) {
+  deleteRow(data: any, fieldName: any, index = 0, hasIndexNo = false) {
     this.dataTable[fieldName.toLowerCase()].splice(data.index, 1);
-    if(hasIndexNo)
-    {
+    if (hasIndexNo) {
       let i = 1;
-      this.dataTable[fieldName.toLowerCase()].forEach(elm=>{
+      this.dataTable[fieldName.toLowerCase()].forEach((elm) => {
         elm.indexNo = i;
         i++;
-      })
+      });
     }
     var grid = this.gridView.find((_, i) => i == index);
     grid.refresh();
@@ -841,7 +855,12 @@ export class AddProcessDefaultComponent implements OnInit {
           .alert('Thông báo', 'Bạn có chắc chắn muốn xóa?', config)
           .closed.subscribe((x) => {
             if (x.event.status == 'Y')
-              this.deleteRow(e?.data, data.fieldName, data.indexTable , data?.tableFormat?.hasIndexNo);
+              this.deleteRow(
+                e?.data,
+                data.fieldName,
+                data.indexTable,
+                data?.tableFormat?.hasIndexNo
+              );
           });
         break;
       }

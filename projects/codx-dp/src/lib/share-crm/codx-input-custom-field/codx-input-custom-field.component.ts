@@ -65,7 +65,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   @Output() addFileCompleted = new EventEmitter<boolean>();
   @Output() rezisePopup = new EventEmitter<any>();
   @Output() dropDataFormatPA = new EventEmitter<any>();
-  @Output() isCreatedTempletMail = new EventEmitter<any>();
+  @Output() createdTempletMail = new EventEmitter<any>();
 
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('comboxValue') comboxValue: ComboBoxComponent; ///value seclect 1
@@ -384,8 +384,10 @@ export class CodxInputCustomFieldComponent implements OnInit {
           this.dataValueCaculate = this.customField.dataValue;
         break;
       case 'RM':
-        this.remindDataValue = JSON.parse(this.customField?.dataValue)
-        this.remindDefault = JSON.parse(this.customField?.defaultValue);
+        if (this.customField?.dataValue)
+          this.remindDataValue = JSON.parse(this.customField?.dataValue)
+        if (this.customField?.defaultValue)
+          this.remindDefault = JSON.parse(this.customField?.defaultValue);
         break;
     }
   }
@@ -1189,6 +1191,12 @@ export class CodxInputCustomFieldComponent implements OnInit {
         if (res) {
           this.isAddNewTemp = false
           this.copiedTempMail = true;
+          this.remindDataValue['emailTemplate'] = this.customField.recID;
+          this.valueChangeCustom.emit({
+            e: JSON.stringify(this.remindDataValue),
+            data: this.customField,
+          });
+          this.createdTempletMail.emit(this.customField.recID)
           this.openPopupSettingRemind(this.customField.recID)
         } else { this.isAddNewTemp = true, this.openPopupSettingRemind(this.customField.recID); }
       })
@@ -1227,10 +1235,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
             e: JSON.stringify(this.remindDataValue),
             data: this.customField,
           });
+          this.createdTempletMail.emit(recIDTemp)
         }
-        if (!this.copiedTempMail)
-          this.isCreatedTempletMail.emit(recIDTemp)
-
         //done làm gi
         this.isAddNewTemp = false
         this.dataValueOld = this.remindDataValue;
