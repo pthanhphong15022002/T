@@ -507,8 +507,6 @@
         [hideMoreFunc]="true"
         service="AC"
         [editOnClick]="formAsset.data?.isReadOnly ? false : true"
-        [isSave]="false"
-        [isOutsideDataSource]="true"
         [moreFcItems]="'SYS104;SYS102'"
         rowNoField="rowNo"
         [moreFcModel]="dialog.formModel"
@@ -545,8 +543,6 @@
         service="AM"
         [editOnClick]="formAsset.data?.isReadOnly ? false : true"
         [templateMore]="templateMore"
-        [isSave]="false"
-        [isOutsideDataSource]="true"
         rowNoField="rowNo"
         (gridInit)="initGrid($event)"
         (eventAction)="onActionGrid($event)"
@@ -563,8 +559,8 @@
               tab-index="15"
               id="btnAddCash"
               class="btn btn-sm btn-light-primary btnAddCash"
-              (keydown.enter)="addRowDetail('add'); $event.preventDefault()"
-              (click)="addRowDetail('add')"
+              (keydown.enter)="onAddLine('add'); $event.preventDefault()"
+              (click)="onAddLine('add')"
             >
               <i class="icon-playlist_add icon-16"></i>
               <codx-label
@@ -582,8 +578,8 @@
               tab-index="15"
               id="btnAddCash"
               class="btn btn-sm btn-light-primary btnAddCash"
-              (keydown.enter)="addRowDetail('addLine'); $event.preventDefault()"
-              (click)="addRowDetail('addLine')"
+              (keydown.enter)="onAddLine('addLine'); $event.preventDefault()"
+              (click)="onAddLine('addLine')"
             >
               <i class="icon-playlist_add icon-16"></i>
               <codx-label
