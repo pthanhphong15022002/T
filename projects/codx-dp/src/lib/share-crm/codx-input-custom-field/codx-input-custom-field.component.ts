@@ -384,8 +384,10 @@ export class CodxInputCustomFieldComponent implements OnInit {
           this.dataValueCaculate = this.customField.dataValue;
         break;
       case 'RM':
-        this.remindDataValue = JSON.parse(this.customField?.dataValue)
-        this.remindDefault = JSON.parse(this.customField?.defaultValue);
+        if (this.customField?.dataValue)
+          this.remindDataValue = JSON.parse(this.customField?.dataValue)
+        if (this.customField?.defaultValue)
+          this.remindDefault = JSON.parse(this.customField?.defaultValue);
         break;
     }
   }
@@ -1189,6 +1191,11 @@ export class CodxInputCustomFieldComponent implements OnInit {
         if (res) {
           this.isAddNewTemp = false
           this.copiedTempMail = true;
+          this.remindDataValue['emailTemplate'] = this.customField.recID;
+          this.valueChangeCustom.emit({
+            e: JSON.stringify(this.remindDataValue),
+            data: this.customField,
+          });
           this.openPopupSettingRemind(this.customField.recID)
         } else { this.isAddNewTemp = true, this.openPopupSettingRemind(this.customField.recID); }
       })
