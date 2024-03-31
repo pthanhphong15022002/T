@@ -848,6 +848,6 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
 
   changeFileName(e:any)
   {
-    if(this.type == 'word') this.nameFile = e?.data + + ".docx";
+    if(this.type == 'word') this.nameFile = e?.data + ".docx";
   }
 }
