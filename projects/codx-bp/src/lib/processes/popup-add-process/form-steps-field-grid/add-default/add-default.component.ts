@@ -34,6 +34,7 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
     if(dt?.data?.activityType) this.activityType = dt.data.activityType;
     if(dt?.data?.listStage) this.listStage = dt.data.listStage;
     if(dt?.data?.hideDelete) this.hideDelete = dt?.data?.hideDelete
+    if(dt?.data?.formModel) this.formModel = dt?.data?.formModel
 
     if(this.type == 'add') this.hideDelete = true;
   }

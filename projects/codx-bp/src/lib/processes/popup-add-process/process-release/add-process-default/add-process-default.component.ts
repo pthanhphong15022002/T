@@ -533,7 +533,9 @@ export class AddProcessDefaultComponent implements OnInit {
             //addFile nếu có
             this.addFileAttach(type);
           });
-      } else if (this.type == 'edit') {
+      } 
+      else if (this.type == 'edit') 
+      {
         this.dataIns.title = valueForm[this.subTitle];
         (this.dataIns.modifiedOn = new Date()),
           (this.dataIns.modifiedBy = this.user?.userID);
@@ -548,7 +550,15 @@ export class AddProcessDefaultComponent implements OnInit {
 
           this.dataIns.datas = JSON.stringify(this.dataIns.datas);
         } else this.dataIns.datas = JSON.stringify(valueForm);
-        this.updateIns();
+        
+        if (
+          this.attachment?.fileUploadList &&
+          this.attachment?.fileUploadList?.length > 0
+        ) 
+        {
+          this.addFileAttach(type);
+        }
+        else this.updateIns();
       }
     }
   }
@@ -610,8 +620,10 @@ export class AddProcessDefaultComponent implements OnInit {
           //this.dataIns.documentControl.
         }
       });
-    } else {
-      if (this.type == 'add') {
+    } else 
+    {
+      if (this.type == 'add') 
+      {
         this.bpService
           .createTaskOnSaveInstance(this.dataIns.recID)
           .subscribe((res) => {
@@ -621,10 +633,15 @@ export class AddProcessDefaultComponent implements OnInit {
               this.startInstance(this.dataIns.recID);
             }
           });
-      } else {
-        if (type == 1) {
+      } 
+      else 
+      {
+        if (type == 1) 
+        {
           this.dialog.close(this.dataIns);
-        } else {
+        } 
+        else 
+        {
           this.startInstance(this.dataIns.recID);
         }
       }

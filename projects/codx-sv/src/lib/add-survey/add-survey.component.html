@@ -35,12 +35,11 @@
           default="Tùy chỉnh giao diện"
         ></codx-label>
       </ng-template> -->
-      <div class="d-flex align-items-center ms-4 me-6 mt-1px">
-        <!-- <codx-input type="checkbox" class="me-2" [crrValue]="dataSV?.isTemplate"  [field]="'isTemplate'" (valueChange)="valueChange($event)"></codx-input> -->
-        <codx-input type="checkbox" field="isTemplate" [checked]="dataSV?.isTemplate" (valueChange)="valueChange($event)"></codx-input>
-        <codx-label class="ms-2" default="Lưu thành mẫu"></codx-label>
-      </div>
-
+     
+      <button type="button"  class="btn btn-sm btn-3699FF me-2 text-white" (click)="saveTemplate()">
+        <i class="icon-i-file-earmark  text-white"></i>
+        <codx-label [fiedName]="'lblSVReview'" formName="SVExample"  default="Lưu thành mẫu" class="ms-1 fw-bold"></codx-label>
+      </button>
       <button type="button"  class="btn btn-sm btn-3699FF me-2 text-white" (click)="review()">
         <ng-container *ngIf="dataSV.status != '3' , else elseStatus">
           <i class="icon-i-eye icon-18  text-white"></i>

@@ -252,7 +252,7 @@
                     <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentSign'" [default]="'Tài liệu ký số'" class="fw-bold" *ngIf="activityType == 'Sign'"></codx-label>
                     <button type="button" class="btn btn-outline-secondary" (click)="openAttach2()"><i class="icon-attach_file"></i></button>
                 </div>
-                <div class="mt-4">
+                <div class="mt-2">
                     <div class="d-flex flex-column w-100" *ngFor="let item of listDocument">
                         <div class="d-flex align-items-center w-100 justify-content-between">
                             <div class="d-flex flex-column w-100">
@@ -270,7 +270,7 @@
                                         <i class="icon-gesture cursor-pointer" [id]="'esign'+f.recID" [ngClass]="item?.files[i]?.eSign == true ? 'text-primary' : ''" (click)="selectEsign(f.recID , item.recID)"></i>
                                     </ng-template>
                                 </ng-container>
-                                <span class="text-gray-500">{{item.title}}</span>
+                                <span class="text-gray-500 mb-2">{{item.title}}</span>
                             </div>
                            
                         </div>
