@@ -462,7 +462,7 @@ export class ModeviewComponent implements OnInit {
     }
     data.recID = Util.uid();
     data.width = "";
-    data.fieldName = this.formatTitle(data.title);
+    
     data.description  =  data.description || "Câu trả lời";
     data.columnOrder = this.table.length;
     data.columnNo = 0;
@@ -472,16 +472,17 @@ export class ModeviewComponent implements OnInit {
     data.dataFormat = data.dataFormat || "";
     data.defaultValue = data.defaultValue || null;
     data.fieldType = data.fieldType || data.value;
+    data.fieldName = this.formatTitle(data.title , data.columnOrder , data.columnNo);
     //data.text = data.title; //Lát bỏ
     return data;
   }
 
-  formatTitle(str:any)
+  formatTitle(str:any,columnOrder:any,columnNo:any)
   {
     str = str.toLowerCase();
     str = str.replaceAll(" ","_");
     str = str.replaceAll("/","_");
-    var res = this.xoa_dau(str) + "_" + this.stepNo;
+    var res = this.xoa_dau(str) + "_" + this.stepNo + "_" + columnOrder + "_" +columnNo;
     return res;
   }
 
@@ -613,7 +614,7 @@ export class ModeviewComponent implements OnInit {
       }
     }
     else {
-      e.fieldName = this.formatTitle(e.title);
+      e.fieldName = this.formatTitle(e.title,e.columnOrder,e.columnNo);
       this.table[e?.columnOrder].children[e.columnNo] = e;
       if(e?.fieldType == "Attachment")
       {

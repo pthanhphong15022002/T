@@ -363,7 +363,11 @@ export class AddProcessDefaultComponent implements OnInit {
         }
       });
   }
-
+  dataUploadAttachment(e:any)
+  {
+    if(!e || e.length <=0) return;
+    this.attachment.fileUploadList = this.attachment.fileUploadList.concat(e);
+  }
   async onSave(type = 1) {
     var valueForm = this.dynamicFormsForm.value;
     var keysUserInfo = Object.keys(this.dataUserInfo);

@@ -281,14 +281,15 @@
       <div class="h-100">
         <i class="fs-30px icon-i-file-earmark-text-fill me-2 icon-exp-word"></i>
       </div>
-      <div class="h-100">
+      <div class="h-100" *ngIf="!dataFile">
         <codx-input
           type="text"
           ngClass="w-100"
           class="border-0 ip-header-tmpname"
           [Group]="exportAddForm"
           ControlName="templateName"
-          [placeholder]="'Tên template mẫu'"          
+          [placeholder]="'Tên template mẫu'"
+          [disabled]="dataFile"          
           [ngClass]="{ 'is-invalid': submitted && f.templateName.errors }"
         ></codx-input>
         <codx-input
@@ -297,10 +298,21 @@
           class="border-0 ip-header-tmpdes"
           [Group]="exportAddForm"
           ControlName="description"
-          [placeholder]="'Nhập mô tả'"   
+          [placeholder]="'Nhập mô tả'" 
+          [disabled]="dataFile"      
           [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
         >
         </codx-input>
+      </div>
+      <div class="h-100" *ngIf="dataFile">
+        <codx-input
+          type="text"
+          ngClass="w-100"
+          class="border-0 ip-header-tmpname"
+          [placeholder]="'Tên mẫu'"
+          [crrValue]="nameFile"
+          (valueChange)="changeFileName($event)"
+        ></codx-input>
       </div>
     </div>
     <div>
@@ -315,14 +327,14 @@
         hideImageThumb="1"
         [functionID]="dialog?.formModel?.funcID"
         (fileAdded)="getfileCount($event)"
-        (fileGet)="getFile($event)"
+        (fileGet)="!dataFile?getFile($event):undefined"
         (fileSave)="fileSave($event)"
         [objectId]="data?.recID"
         [allowMultiFile]="0"
         showMessage="0"
         idBrowse="3"
         [allowExtensions]="'.docx'"
-        [isSaveSelected]="'2'"
+        [isSaveSelected]="!dataFile?'2':'0'"
         class="w-100"
         
       >
@@ -337,6 +349,7 @@
         <codx-label default="Download" formName="fmExportWordDownload" fiedName="lblExportWordDownload"></codx-label>
       </button>
       <button
+        *ngIf="!dataFile"
         type="button"
         class="btn btn-light-primary ms-3"
         (click)="openFormUploadFile()"

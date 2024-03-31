@@ -123,6 +123,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
       isSign: true
     }
   ];
+  dataFile:any;
   constructor(
     private tenant: TenantStore,
     private readonly auth: AuthService,
@@ -143,15 +144,20 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     this.isFristVer = dt.data?.isFristVer || false;
     this.isSign = dt.data?.isSign || false;
     this.formModel = dt.data.formModel;
-    if(dt.data?.groupField) {
+    this.dataFile = dt.data?.dataFile
+    if(dt.data?.groupField) 
+    {
       this.isHasFields = true;
       this.isGroup = true;
       this.dataGoupField = dt.data?.groupField;
       this.formatGroupField();
     }
-    if (this.action == 'add') {
+    if (this.action == 'add') 
+    {
       this.headerText = 'Thêm ' + this.type + ' Template';
-    } else if (this.action == 'edit') {
+    } 
+    else if (this.action == 'edit') 
+    {
       this.headerText = 'Chỉnh sửa ' + this.type + ' Template';
     }
     this.data = dialog.dataService || dt.data?.data;
@@ -232,6 +238,8 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
           this.auth.userValue.userID + '|' + this.auth.userValue.securityKey
         );
       this.serviceUrl = baseurl;
+
+      if(this.dataFile)this.getFile(this.dataFile);
     }
   }
   public fields: object = { tooltip: 'category' };
@@ -410,7 +418,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
 
   onSave() {
     this.submitted = true;
-    if (this.exportAddForm.invalid) {
+    if (this.exportAddForm.invalid && !this.dataFile) {
       this.checkIsRequired();
       return;
     }
@@ -549,57 +557,71 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
             } else this.notifySvr.notifyCode('SYS023');
           });
       } else {
-        this.exportAddForm.value.refID = this.refID;
-        this.exportAddForm.value.refType = this.refType;
-        this.exportAddForm.value.docFile = null;
-        this.exportAddForm.value.xmlFile = null;
-        this.exportAddForm.value.xmlSchemaFile = null;
-        this.exportAddForm.value.xsltStylessheet = null;
-        if (!this.exportAddForm.value.isDefault)
-          this.exportAddForm.value.isDefault = false;
-        if (!this.exportAddForm.value.isLocal)
-          this.exportAddForm.value.isLocal = false;
-        if (!this.exportAddForm.value.isSystem)
-          this.exportAddForm.value.isSystem = false;
-        this.api
-          .execActionData<any>(
-            'AD_WordTemplates',
-            [this.exportAddForm.value],
-            'UpdateAsync'
-          )
-          .subscribe((item) => {
-            if (!item) return;
-            if (item[0] == true) {
-              if (this.isContentChange) {
-                this.file
-                  .deleteFileToTrash(this.idCrrFile, '', true)
-                  .subscribe((res) => {
-                    if (res) {
-                      this.attachment1.objectId = this.data.recID;
-                      this.attachment1.objectType = 'AD_WordTemplates';
-                      this.attachment1.fileUploadList.forEach((elm) => {
-                        elm.objectType = 'AD_WordTemplates';
-                        elm.funcID = 'AD002';
-                      });
-                      this.onSaveWord().subscribe((saveW) => {
-                        if (saveW) {
-                          let r = item[1][0];
-                          r.recID = this.data.recID;
-                          this.dialog.close([r, this.type ,this.nameFile,saveW.data]);
-                        }
-                      });
-                    }
-                  });
+        if(!this.dataFile)
+        {
+          this.exportAddForm.value.refID = this.refID;
+          this.exportAddForm.value.refType = this.refType;
+          this.exportAddForm.value.docFile = null;
+          this.exportAddForm.value.xmlFile = null;
+          this.exportAddForm.value.xmlSchemaFile = null;
+          this.exportAddForm.value.xsltStylessheet = null;
+          if (!this.exportAddForm.value.isDefault)
+            this.exportAddForm.value.isDefault = false;
+          if (!this.exportAddForm.value.isLocal)
+            this.exportAddForm.value.isLocal = false;
+          if (!this.exportAddForm.value.isSystem)
+            this.exportAddForm.value.isSystem = false;
+          this.api
+            .execActionData<any>(
+              'AD_WordTemplates',
+              [this.exportAddForm.value],
+              'UpdateAsync'
+            )
+            .subscribe((item) => {
+              if (!item) return;
+              if (item[0] == true) {
+                if (this.isContentChange) {
+                  this.file
+                    .deleteFileToTrash(this.idCrrFile, '', true)
+                    .subscribe((res) => {
+                      if (res) {
+                        this.attachment1.objectId = this.data.recID;
+                        this.attachment1.objectType = 'AD_WordTemplates';
+                        this.attachment1.fileUploadList.forEach((elm) => {
+                          elm.objectType = 'AD_WordTemplates';
+                          elm.funcID = 'AD002';
+                        });
+                        this.onSaveWord().subscribe((saveW) => {
+                          if (saveW) {
+                            let r = item[1][0];
+                            r.recID = this.data.recID;
+                            this.dialog.close([r, this.type ,this.nameFile,saveW.data]);
+                          }
+                        });
+                      }
+                    });
+                } else {
+                  let r = item[1][0];
+                  r.recID = this.data.recID;
+                  this.dialog.close([r, this.type]);
+                }
+                this.notifySvr.notifyCode('RS002');
               } else {
-                let r = item[1][0];
-                r.recID = this.data.recID;
-                this.dialog.close([r, this.type]);
+                this.notifySvr.notify('SYS021');
               }
-              this.notifySvr.notifyCode('RS002');
-            } else {
-              this.notifySvr.notify('SYS021');
-            }
-          });
+            });
+        }
+        else
+        {
+          if(!this.nameFile) this.notifySvr.notify("Vui lòng nhập tên file.")
+          else if (this.isContentChange)
+          {
+            this.onSaveWord().subscribe((saveW) => {
+              this.dialog.close(this.attachment1.fileUploadList)
+            });
+          }
+          else this.notifySvr.notify("Chưa có thay đổi nội dung.")
+        }
       }
     }
   }
@@ -658,7 +680,8 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
       mergeMap((blob: Blob) => {
         if(!this.nameFile) this.nameFile = this.formModel.entityName + ".docx";
         var file = new File([blob], this.nameFile);
-        this.attachment1.isSaveSelected = '1';
+        
+        if(!this.dataFile) this.attachment1.isSaveSelected = '1';
         this.attachment1.fileUploadList = [];
         
         return this.attachment1.handleFileInputObservable([
@@ -821,5 +844,10 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     if (!this.fileCount || this.fileCount == 0)
       return this.notifySvr.notifyCode('OD022');
     return true;
+  }
+
+  changeFileName(e:any)
+  {
+    if(this.type == 'word') this.nameFile = e?.data + + ".docx";
   }
 }
