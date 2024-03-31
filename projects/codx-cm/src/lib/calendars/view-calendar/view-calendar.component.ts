@@ -132,7 +132,7 @@ export class ViewCalendarComponent
   entityName = 'CM_Contracts';
   className = 'ContractsBusiness';
   assemblyName = 'ERM.Business.CM';
-  methodLoadData = 'GetListContractsAsync';
+  methodLoadData = 'GetAllContractsAsync';
   requestData = new DataRequest();
   listTaskType = [];
   isAdmin = false;

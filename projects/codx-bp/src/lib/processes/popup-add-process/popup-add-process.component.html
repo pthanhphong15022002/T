@@ -305,32 +305,6 @@
           [value]="data?.tags"
           (valueChange)="valueChange($event)"
         ></codx-tag>
-        <div class="d-flex ms-3">
-          <div class="symbol symbol-circle symbol-30px symbol-vllicon">
-            <codx-input
-              class=""
-              type="vllicon"
-              refValue="L1470"
-              field="icon"
-              [crrValue]="data?.icon"
-              (valueChange)="valueChange($event)"
-            >
-            </codx-input>
-          </div>
-
-          <div class="ms-4">
-            <codx-input
-              class="ms-4"
-              type="colorpicker"
-              [showText]="false"
-              [modeSwitcher]="false"
-              [crrValue]="data?.color"
-              field="color"
-              (valueChange)="valueChange($event)"
-            >
-            </codx-input>
-          </div>
-        </div>
       </div>
       <div class="form-group">
         <codx-label
@@ -362,83 +336,296 @@
         >
         </codx-input>
       </div>
-      <div class="form-group">
-        <div class="d-flex justify-content-between">
-          <div class="d-flex justify-content-start">
-            <codx-label
-              name="lblPermissions"
-              [formModel]="dialog.formModel"
-              default="Người sử dụng"
-            >
-            </codx-label>
-          </div>
-          <div class="d-flex justify-content-end cursor-pointer">
-            <button
-              type="button"
-              class="btn btn-icon btn-sm btn-light-primary me-2"
-              (click)="sharePerm(controlShare)"
-            >
-              <i class="icon-person_add_alt_1 icon-16"></i>
-            </button>
-
-            <button
-              type="button"
-              class="btn btn-icon btn-sm btn-light-primary me-2"
-              (click)="clickRoles()"
-            >
-              <i class="icon-settings icon-16"></i>
-            </button>
-          </div>
-        </div>
-        <div class="form-user">
-          <div class="d-flex flex-wrap">
-            <ng-container
-              *ngIf="data?.permissions != null && data?.permissions?.length > 0"
-            >
-              <ng-container *ngFor="let perm of data?.permissions; index as i">
-                <div
-                  class="cursor-pointer has-action-menu-od me-5 d-flex align-items-center position-relative user-style line-clamp line-clamp-1"
+      <div class="row">
+        <div class="col-8 d-flex flex-column">
+          <div class="mb-2">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex flex-column justify-content-start">
+                <codx-label
+                  class="fw-bold"
+                  name="lblPermissions"
+                  [formModel]="dialog.formModel"
+                  default="Người sử dụng"
                 >
-                  <div class="me-2">
-                    <codx-img
-                      [width]="20"
-                      [objectId]="perm.objectID"
-                      [objectName]="perm.objectName"
-                      objectType="AD_Users"
+                </codx-label>
+                <codx-label
+                  name="lblPermissions_use"
+                  [formModel]="dialog.formModel"
+                  class="text-gray-600 font-italic"
+                  style="font-style: italic"
+                  default="Được phép tạo yêu cầu trong quy trình"
+                >
+                </codx-label>
+              </div>
+              <div class="d-flex justify-content-end cursor-pointer">
+                <button
+                  type="button"
+                  class="btn btn-icon btn-sm btn-light-primary me-2"
+                  (click)="sharePerm(controlShare, 'P')"
+                >
+                  <i class="icon-person_add_alt_1 icon-16"></i>
+                </button>
+
+                <!-- <button
+                  type="button"
+                  class="btn btn-icon btn-sm btn-light-primary me-2"
+                  (click)="clickRoles()"
+                >
+                  <i class="icon-settings icon-16"></i>
+                </button> -->
+              </div>
+            </div>
+            <div class="form-user mt-1">
+              <div class="d-flex flex-wrap">
+                <ng-container
+                  *ngIf="
+                    data?.permissions != null && data?.permissions?.length > 0
+                  "
+                >
+                  <ng-container
+                    *ngFor="let perm of data?.permissions; index as i"
+                  >
+                    <div *ngIf="perm.roleType == 'P'"
+                      class="cursor-pointer has-action-menu-od me-5 d-flex align-items-center position-relative user-style line-clamp line-clamp-1"
                     >
-                    </codx-img>
-                  </div>
-                  <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
-                  <ng-container *ngIf="checkAssignRemove(i)">
-                    <div class="action-menu-od" (click)="removeUser(i)">
-                      <i class="icon-close icon-14"></i>
+                      <div class="me-2">
+                        <codx-img
+                          [width]="20"
+                          [objectId]="perm.objectID"
+                          [objectName]="perm.objectName"
+                          objectType="AD_Users"
+                        >
+                        </codx-img>
+                      </div>
+                      <div class="text-gray-600 fw-bold">
+                        {{ perm.objectName }}
+                      </div>
+                      <ng-container *ngIf="checkAssignRemove(i)">
+                        <div class="action-menu-od" (click)="removeUser(i)">
+                          <i class="icon-close icon-14"></i>
+                        </div>
+                      </ng-container>
                     </div>
                   </ng-container>
-                </div>
-              </ng-container>
-            </ng-container>
+                </ng-container>
 
-            <div class="input-sm w-200px">
+                <!-- <div class="input-sm w-200px">
+                  <codx-input
+                    #inputUser
+                    field="searchUser"
+                    type="combobox"
+                    refValue="Users"
+                    (valueChange)="searchAddUsers($event, 'P')"
+                  >
+                  </codx-input>
+                </div> -->
+              </div>
+            </div>
+          </div>
+          <div class="mb-2">
+            <div class="d-flex justify-content-between mt-2">
+              <div class="d-flex flex-column justify-content-start">
+                <codx-label
+                  class="fw-bold"
+                  name="lblPermissions_owner"
+                  [formModel]="dialog.formModel"
+                  default="Quản lý quy trình"
+                >
+                </codx-label>
+                <codx-label
+                  name="lblPermissions_ownerDes"
+                  [formModel]="dialog.formModel"
+                  class="text-gray-600"
+                  style="font-style: italic"
+                  default="Được phép chỉnh sửa thiết lập qy trình, xem tất cả yêu cầu và đóng yêu cầu khi trong luồng quy trình"
+                >
+                </codx-label>
+              </div>
+              <div class="d-flex justify-content-end cursor-pointer">
+                <button
+                  type="button"
+                  class="btn btn-icon btn-sm btn-light-primary me-2"
+                  (click)="sharePerm(controlShare, 'O')"
+                >
+                  <i class="icon-person_add_alt_1 icon-16"></i>
+                </button>
+
+                <!-- <button
+                  type="button"
+                  class="btn btn-icon btn-sm btn-light-primary me-2"
+                  (click)="clickRoles()"
+                >
+                  <i class="icon-settings icon-16"></i>
+                </button> -->
+              </div>
+            </div>
+            <div class="form-user mt-1">
+              <div class="d-flex flex-wrap">
+                <ng-container
+                  *ngIf="
+                    data?.permissions != null && data?.permissions?.length > 0
+                  "
+                >
+                  <ng-container
+                    *ngFor="let perm of data?.permissions; index as i"
+                  >
+                    <div *ngIf="perm.roleType == 'O'"
+                      class="cursor-pointer has-action-menu-od me-5 d-flex align-items-center position-relative user-style line-clamp line-clamp-1"
+                    >
+                      <div class="me-2">
+                        <codx-img
+                          [width]="20"
+                          [objectId]="perm.objectID"
+                          [objectName]="perm.objectName"
+                          objectType="AD_Users"
+                        >
+                        </codx-img>
+                      </div>
+                      <div class="text-gray-600 fw-bold">
+                        {{ perm.objectName }}
+                      </div>
+                      <ng-container *ngIf="checkAssignRemove(i)">
+                        <div class="action-menu-od" (click)="removeUser(i)">
+                          <i class="icon-close icon-14"></i>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </ng-container>
+
+                <!-- <div class="input-sm w-200px">
+                  <codx-input
+                    #inputUser
+                    field="searchUser"
+                    type="combobox"
+                    refValue="Users"
+                    (valueChange)="searchAddUsers($event, 'O')"
+                  >
+                  </codx-input>
+                </div> -->
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between mt-2">
+            <div class="d-flex flex-column justify-content-start">
+              <codx-label
+                name="lblPermissions_follow"
+                class="fw-bold"
+                [formModel]="dialog.formModel"
+                default="Theo dõi"
+              >
+              </codx-label>
+              <codx-label
+                name="lblPermissions_followDes"
+                [formModel]="dialog.formModel"
+                class="text-gray-600"
+                style="font-style: italic"
+                default="Xem được tất cả yêu cầu trong quy trình"
+              >
+              </codx-label>
+            </div>
+            <div class="d-flex justify-content-end cursor-pointer">
+              <button
+                type="button"
+                class="btn btn-icon btn-sm btn-light-primary me-2"
+                (click)="sharePerm(controlShare, 'S')"
+              >
+                <i class="icon-person_add_alt_1 icon-16"></i>
+              </button>
+
+              <!-- <button
+                type="button"
+                class="btn btn-icon btn-sm btn-light-primary me-2"
+                (click)="clickRoles()"
+              >
+                <i class="icon-settings icon-16"></i>
+              </button> -->
+            </div>
+          </div>
+          <div class="form-user mt-1">
+            <div class="d-flex flex-wrap">
+              <ng-container
+                *ngIf="
+                  data?.permissions != null && data?.permissions?.length > 0
+                "
+              >
+                <ng-container
+                  *ngFor="let perm of data?.permissions; index as i"
+                >
+                  <div *ngIf="perm.roleType == 'S'"
+                    class="cursor-pointer has-action-menu-od me-5 d-flex align-items-center position-relative user-style line-clamp line-clamp-1"
+                  >
+                    <div class="me-2">
+                      <codx-img
+                        [width]="20"
+                        [objectId]="perm.objectID"
+                        [objectName]="perm.objectName"
+                        objectType="AD_Users"
+                      >
+                      </codx-img>
+                    </div>
+                    <div class="text-gray-600 fw-bold">
+                      {{ perm.objectName }}
+                    </div>
+                    <ng-container *ngIf="checkAssignRemove(i)">
+                      <div class="action-menu-od" (click)="removeUser(i)">
+                        <i class="icon-close icon-14"></i>
+                      </div>
+                    </ng-container>
+                  </div>
+                </ng-container>
+              </ng-container>
+
+              <!-- <div class="input-sm w-200px">
+                <codx-input
+                  #inputUser
+                  field="searchUser"
+                  type="combobox"
+                  refValue="Users"
+                  (valueChange)="searchAddUsers($event, 'S')"
+                >
+                </codx-input>
+              </div> -->
+            </div>
+          </div>
+        </div>
+
+        <div class="col-4 form-group">
+          <codx-label
+            name="lblAvatarProcess"
+            [formModel]="dialog.formModel"
+            default="Ảnh đại diện"
+          >
+          </codx-label>
+          <ng-container [ngTemplateOutlet]="avatarProcess"></ng-container>
+          <div class="d-flex mt-2">
+            <div class="symbol symbol-circle symbol-30px symbol-vllicon">
               <codx-input
-                #inputUser
-                field="searchUser"
-                type="combobox"
-                refValue="Users"
-                (valueChange)="searchAddUsers($event)"
+                class=""
+                type="vllicon"
+                refValue="L1470"
+                field="icon"
+                [crrValue]="data?.icon"
+                (valueChange)="valueChange($event)"
+              >
+              </codx-input>
+            </div>
+
+            <div class="ms-4">
+              <codx-input
+                class="ms-4"
+                type="colorpicker"
+                [showText]="false"
+                [modeSwitcher]="false"
+                [crrValue]="data?.color"
+                field="color"
+                (valueChange)="valueChange($event)"
               >
               </codx-input>
             </div>
           </div>
         </div>
-      </div>
-      <div class="form-group">
-        <codx-label
-          name="lblAvatarProcess"
-          [formModel]="dialog.formModel"
-          default="Ảnh đại diện"
-        >
-        </codx-label>
-        <ng-container [ngTemplateOutlet]="avatarProcess"></ng-container>
       </div>
     </div>
     <!-- <div class="info-right d-flex flex-column align-items-center">
@@ -536,7 +723,7 @@
     [multiple]="multiple"
     chkParent="O"
     [listCombobox]="listCombobox"
-    (eventApply)="applyShare($event)"
+    (eventApply)="applyShare($event, roleType)"
     [listName]="vllShare"
   >
   </codx-share>

@@ -384,8 +384,10 @@ export class CodxInputCustomFieldComponent implements OnInit {
           this.dataValueCaculate = this.customField.dataValue;
         break;
       case 'RM':
-        this.remindDataValue = JSON.parse(this.customField?.dataValue)
-        this.remindDefault = JSON.parse(this.customField?.defaultValue);
+        if (this.customField?.dataValue)
+          this.remindDataValue = JSON.parse(this.customField?.dataValue)
+        if (this.customField?.defaultValue)
+          this.remindDefault = JSON.parse(this.customField?.defaultValue);
         break;
     }
   }
@@ -1172,25 +1174,32 @@ export class CodxInputCustomFieldComponent implements OnInit {
   }
   //----------Field -RM ------------//
   valueChangeChbx(e) {
-    if (this.remindDefault[e.field] == e.data) return
-    this.remindDefault[e.field] = e.data;
+    if (this.remindDataValue[e.field] == e.data) return
+    this.remindDataValue[e.field] = e.data;
     this.valueChangeCustom.emit({
-      e: JSON.stringify(this.remindDefault),
+      e: JSON.stringify(this.remindDataValue),
       data: this.customField,
     });
   }
 
   settingRemindMail() {
     if (!this.dataValueOld) {
+      let recIDEmailTemp = Util.uid();// this.customField.recID; => do cái reciD khi tiếp tục add ko đổi mà save mới đổi
       let obj = [
-        this.remindDefault?.emailTemplate, [this.customField.recID]
+        this.remindDefault?.emailTemplate, [recIDEmailTemp]
       ]
       this.api.execSv<any>("SYS", "AD", "EmailTemplatesBusiness", "CopyEmailTemplateByRecIDAsync", obj).subscribe(res => {
         if (res) {
           this.isAddNewTemp = false
           this.copiedTempMail = true;
-          this.openPopupSettingRemind(this.customField.recID)
-        } else { this.isAddNewTemp = true, this.openPopupSettingRemind(this.customField.recID); }
+          this.remindDataValue['emailTemplate'] = recIDEmailTemp;
+          this.valueChangeCustom.emit({
+            e: JSON.stringify(this.remindDataValue),
+            data: this.customField,
+          });
+          this.createdTempletMail.emit(recIDEmailTemp)
+          this.openPopupSettingRemind(recIDEmailTemp)
+        } else { this.isAddNewTemp = true, this.openPopupSettingRemind(recIDEmailTemp); }
       })
     } else {
       this.checkAddNewTemp(this.remindDataValue?.emailTemplate);
@@ -1227,10 +1236,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
             e: JSON.stringify(this.remindDataValue),
             data: this.customField,
           });
-        }
-        if (this.copiedTempMail || this.isAddNewTemp)
           this.createdTempletMail.emit(recIDTemp)
-
+        }
         //done làm gi
         this.isAddNewTemp = false
         this.dataValueOld = this.remindDataValue;

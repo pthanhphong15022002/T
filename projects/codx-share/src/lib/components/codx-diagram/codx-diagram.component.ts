@@ -1,10 +1,11 @@
 import { P } from "@angular/cdk/keycodes";
-import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ViewEncapsulation, TemplateRef, ViewChild, ChangeDetectorRef, ElementRef, Optional, Input, OnChanges, SimpleChanges } from "@angular/core";
+import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ViewEncapsulation, TemplateRef, ViewChild, ChangeDetectorRef, ElementRef, Optional, Input, OnChanges, SimpleChanges, OnDestroy } from "@angular/core";
 import { HierarchicalTreeService, MindMapService, RadialTreeService, ComplexHierarchicalTreeService, DataBindingService, SnappingService, PrintAndExportService, BpmnDiagramsService, SymmetricLayoutService, ConnectorBridgingService, UndoRedoService, LayoutAnimationService, DiagramContextMenuService, ConnectorEditingService, DiagramComponent, SymbolPaletteComponent, BpmnShapeModel, ConnectorModel, ContextMenuSettingsModel, DiagramBeforeMenuOpenEventArgs, DiagramTools, HeaderModel, LaneModel, NodeModel, PaletteModel, PortConstraints, PortVisibility, RulerSettingsModel, SelectorConstraints, SelectorModel, ShapeStyleModel, SnapConstraints, SnapSettingsModel, SwimLaneModel, UserHandleModel, cloneObject } from "@syncfusion/ej2-angular-diagrams";
 import { shadowProperty } from "@syncfusion/ej2-angular-documenteditor";
 import { ExpandMode, MenuEventArgs } from "@syncfusion/ej2-angular-navigations";
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel } from "codx-core";
 import { FormEditConnectorComponent } from "projects/codx-share/src/lib/components/codx-diagram/form-edit-connector/form-edit-connector.component";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'codx-diagram',
@@ -30,7 +31,7 @@ import { FormEditConnectorComponent } from "projects/codx-share/src/lib/componen
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
+export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnDestroy {
 
   @ViewChild('diagram') diagram: DiagramComponent;
   @ViewChild('palette') palette: SymbolPaletteComponent;
@@ -39,9 +40,11 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
   @Input() process:any={};
   @Input() viewOnly:boolean=false;
   @Input() recID!:any;
-
+  vllStepType:any=[];
+  vllInterval:any=[];
   dialog:any;
   data:any
+  subscription:Subscription = new Subscription();
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
@@ -54,8 +57,28 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
+     let sub = this.cache.valueList('BP001').subscribe((res:any)=>{
 
+      if(res){
+        this.vllStepType=res.datas;
+      }
+
+    })
+    this.subscription.add(sub);
+     let sub1 = this.cache.valueList('BP019').subscribe((res:any)=>{
+
+      if(res){
+        this.vllInterval=res.datas;
+      }
+
+    })
+    this.subscription.add(sub1);
   }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe()
+  }
+
+
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['viewOnly'] ){
       if(!changes['viewOnly'].currentValue){
@@ -1252,8 +1275,8 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
         },
 
       }
-      shape.lanes=[];
-
+      shape.lanes=[];;
+      this.process!.steps = this.process?.steps.sort((a:any,b:any)=> a.stepNo-b.stepNo)
       this.columns= this.process?.steps?.filter(
         (x) => x.activityType == 'Stage'
       );
@@ -1316,7 +1339,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
                         if(step.activityType?.toLowerCase() != 'conditions'){
                           stepModel.shape = {
                             type: 'HTML',
-                            version: step.activityType?.toLowerCase(),
+                            version: 'step',
 
                           };
                           if(maxwidth < ((i+1)*300 + 100)){
@@ -1336,7 +1359,14 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
                             top: offset +200,
                             left: i*300 + 50
                           }
+                          stepModel.data = step;
                           if(objLane.children.findIndex((c:any)=>c.refID==stepModel.refID) == -1){
+                            objLane.children.push(stepModel)
+                            stepNodes.push(stepModel);
+                          }
+                          else{
+                            objLane.children = objLane.children.filter((c:any)=>c.refID!=stepModel.refID);
+                            stepNodes = stepNodes.filter((x:any)=>x.refID != stepModel.refID);
                             objLane.children.push(stepModel)
                             stepNodes.push(stepModel);
                           }
@@ -1350,7 +1380,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
             else{
               model.shape = {
                 type: 'HTML',
-                version: currentStageActions[j].activityType?.toLowerCase(),
+                version: 'step'
 
               };
               model.width = 300;
@@ -1558,6 +1588,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
             (x) => x.activityType == 'Stage'
           );
           this.columns = this.lstSteps;
+          this.initProcess();
         }
         sub.unsubscribe();
       });
@@ -1566,6 +1597,19 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges {
    }
    collectionChange(e:any){
     if(this.diagram && this.viewOnly) this.diagram.fitToPage();
+   }
+
+   getVllObject(type:string){
+    if(type && this.vllStepType){
+      return this.vllStepType.find((x:any)=>x.value==type);
+    }
+    return {text:'',value:'',icon:'',color:'', textColor:''};
+   }
+   getIntervalObject(type:string){
+    if(type && this.vllInterval){
+      return this.vllInterval.find((x:any)=>x.value==type);
+    }
+    return {text:'',value:'',icon:'',color:'', textColor:''};
    }
   //===========
 }
