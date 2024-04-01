@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AttachmentComponent } from '../attachment/attachment.component';
-import { ApiHttpService, CallFuncService, DialogModel } from 'codx-core';
+import { ApiHttpService, CallFuncService, DialogModel, NotificationsService } from 'codx-core';
 import { AttachmentGridFilesComponent } from './attachment-grid-files/attachment-grid-files.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
@@ -21,6 +21,7 @@ export class AttachmentGridComponent implements OnInit{
   selectedIndex:any;
   listInfoFile = [];
   constructor(
+    private notifv: NotificationsService,
     private callFuc: CallFuncService,
     public dmSV: CodxDMService,
     private api: ApiHttpService,
@@ -166,9 +167,12 @@ export class AttachmentGridComponent implements OnInit{
 
   editFile(id:any,index:any)
   {
-    this.selectedIndex = index;
     var info = this.listInfoFile.filter(x=>x.recID == id)
-    
+    if(!info[0].extension.includes('doc')) {
+      this.notifv.notify("Chỉ hỗ trợ file word")
+      return;
+    }
+    this.selectedIndex = index;
     if(info && info[0])
     {
       this.openFormTemplate('word',info)

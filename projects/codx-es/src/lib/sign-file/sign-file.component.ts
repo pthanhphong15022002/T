@@ -331,6 +331,9 @@ export class SignFileComponent extends UIComponent {
       var view = e.filter((x: { functionID: string }) => x.functionID == 'SYS05');    
       if (view?.length) view[0].disabled = true;
 
+      var viewFile = e.filter((x: { functionID: string }) => x.functionID == 'EST01102');    
+      if (viewFile?.length) viewFile[0].disabled = true;
+
       var release = e.filter(
         (x: { functionID: string }) => x.functionID == 'EST01105'
       );
