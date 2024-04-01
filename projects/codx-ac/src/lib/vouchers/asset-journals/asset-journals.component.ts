@@ -222,9 +222,50 @@ export class AssetJournalsComponent extends UIComponent {
       case 'SYS05':
         this.viewData(data);
         break;
+      case 'SYS003': //Kiểm tra hợp lệ - thay morore sau
+        this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
+        break;
+      case 'SYS004':
+        this.postVoucher(e.text, data); //? ghi sổ chứng từ
+        break;
+      case 'SYS001':
+        this.unPostVoucher(e.text, data); //? khôi phục chứng từ
+        break;
     }
   }
-
+  /**
+   * *Hàm ẩn hiện các morefunction của từng chứng từ ( trên view danh sách và danh sách chi tiết)
+   * @param event : danh sách morefunction
+   * @param data
+   * @returns
+   */
+  changeMFDetail(e: any,dataSelectd ,type = '') {
+    // let data = dataSelectd ?? this.view?.dataService?.dataSelected;
+    // if (e != null) {
+    //   e.forEach((res) => {
+    //     if (type === 'grid') res.isbookmark = false;
+    //     if (
+    //       ['SYS03', 'SYS02'].includes(res.functionID) &&
+    //       data?.status != '0' &&
+    //       data?.status != '1' &&
+    //       data?.status != '2'
+    //     )
+    //       res.disabled = true;
+    //     if (
+    //       (data.status == '0' || data.status == '2') &&
+    //       !['SYS003'].includes(res.functionID)
+    //     )
+    //       res.disabled = true; //Ẩn tất cả more trừ kiểm tra hợp lệ.
+    //     if (
+    //       (data.status == '1' || data.status == '5' || data.status == '9') &&
+    //       !['SYS004'].includes(res.functionID)
+    //     )
+    //       res.disabled = true; //Ẩn tất cả more trừ khôi phục.
+    //     if (data.status == '6' && !['SYS001'].includes(res.functionID))
+    //       res.disabled = true;
+    //   });
+    // }
+  }
   /**
    * * Hàm get data và get dữ liệu chi tiết của chứng từ khi được chọn
    * @param event
@@ -451,13 +492,6 @@ export class AssetJournalsComponent extends UIComponent {
         });
       });
   }
-  /**
-   * *Hàm ẩn hiện các morefunction của từng chứng từ ( trên view danh sách và danh sách chi tiết)
-   * @param event : danh sách morefunction
-   * @param data
-   * @returns
-   */
-  changeMFDetail(event: any, type: any = '') {}
 
   /**
    * *Hàm call set default data khi thêm mới chứng từ
@@ -487,5 +521,62 @@ export class AssetJournalsComponent extends UIComponent {
       });
   }
 
+  //#endregion
+
+  //#region more
+  validateVourcher(text: any, data: any) {
+    this.api
+      .exec('AM', 'AssetJournalsBusiness', 'ValidateVourcherAsync', [
+        data,
+        text,
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res[1]) {
+          this.itemSelected = res[0];
+          this.view.dataService.update(this.itemSelected).subscribe();
+          this.notification.notifyCode('AC0029', 0, text);
+          this.detectorRef.detectChanges();
+        }
+        this.onDestroy();
+      });
+  }
+  /**
+   * *Hàm ghi sổ chứng từ (xử lí cho MF ghi sổ)
+   * @param data
+   */
+  postVoucher(text: any, data: any) {
+    this.api
+      .exec('AM', 'AssetJournalsBusiness', 'PostVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res[1]) {
+          this.itemSelected = res[0];
+          this.view.dataService.update(this.itemSelected).subscribe();
+          this.notification.notifyCode('AC0029', 0, text);
+          this.detectorRef.detectChanges();
+        }
+        this.onDestroy();
+      });
+  }
+
+  /**
+   * *Hàm khôi phục chứng từ (xử lí cho MF khôi phục)
+   * @param data
+   */
+  unPostVoucher(text: any, data: any) {
+    this.api
+      .exec('AM', 'AssetJournalsBusiness', 'UnPostVourcherAsync', [data, text])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res[1]) {
+          this.itemSelected = res[0];
+          this.view.dataService.update(this.itemSelected).subscribe();
+          this.notification.notifyCode('AC0029', 0, text);
+          this.detectorRef.detectChanges();
+        }
+        this.onDestroy();
+      });
+  }
   //#endregion
 }
