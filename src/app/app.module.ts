@@ -39,7 +39,6 @@ import { LayoutTenantComponent } from '@modules/auth/tenants/layout/layout.compo
 import { SosComponent } from '@pages/sos/sos.component';
 import { CodxContainersComponent } from './codx-containers/codx-containers.component';
 import { CodxPmModule } from 'projects/codx-pm/src/public-api';
-import { ReceiveResponseBankHubComponent } from './pages/receive-response-bank-hub/receive-response-bank-hub.component';
 
 registerLocaleData(localeVi);
 
@@ -82,7 +81,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   // textColor: '#FFFFFF',
   // textPosition: POSITION.centerCenter,
   // maxTime: -1,
-  minTime: 100
+  minTime: 100,
 };
 
 @NgModule({
@@ -92,7 +91,6 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     SosComponent,
     LayoutTenantComponent,
     CodxContainersComponent,
-    ReceiveResponseBankHubComponent,
   ],
   imports: [
     BrowserModule,
@@ -101,7 +99,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     HttpClientModule,
 
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
-    NgxUiLoaderRouterModule,//forRoot({ showForeground: true }), // import this module for showing loader automatically when navigating between app routes
+    NgxUiLoaderRouterModule, //forRoot({ showForeground: true }), // import this module for showing loader automatically when navigating between app routes
     NgxUiLoaderHttpModule.forRoot({ showForeground: false }),
 
     SharedModule,
@@ -142,4 +140,4 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

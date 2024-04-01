@@ -14,6 +14,6 @@ export class PopupInfoTransferComponent {
     @Optional() dialogData?: DialogData
   ) {
     this.dialog = dialog;
-    this.data = dialogData?.data?.data;
+    this.data = dialogData?.data;
   }
 }

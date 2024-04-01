@@ -1,0 +1,51 @@
+<codx-form #form [body]="body" [formModel]="dialog.formModel" [dialog]="dialog" [data]="data" [openMore]="false"
+    class="ac-dialog">
+</codx-form>
+
+
+<ng-template #body let-data>
+    <div class="form-group">
+        <codx-label fiedName="sourceAccount" [formModel]="form.formModel" default="Tài khoản nguồn">
+        </codx-label>
+        <span>{{data?.sourceAccount}}</span>
+    </div>
+    <div class="form-group">
+        <codx-label fiedName="benName" [formModel]="form.formModel" default="Tài khoản nhận">
+        </codx-label>
+        <span>{{data?.benName}}</span>
+    </div>
+    <div class="form-group">
+        <codx-label fiedName="benAccount" [formModel]="form?.formModel" default="Số tài khoản">
+        </codx-label>
+        <span>{{data?.benAccount}}</span>
+    </div>
+    <div class="form-group">
+        <codx-label fiedName="benBankCode" [formModel]="form?.formModel" default="Mã ngân hàng">
+        </codx-label>
+        <span>{{data?.benBankCode}}</span>
+    </div>
+    <div class="form-group">
+        <codx-label fiedName="description" [formModel]="form?.formModel" default="Nội dung chuyển khoản">
+        </codx-label>
+        <span>{{data?.description}}</span>
+    </div>
+    <div class="form-group">
+        <codx-label fiedName="amount" [formModel]="form?.formModel" default="Số tiền">
+        </codx-label>
+        <span>{{data?.amount}}</span>
+    </div>
+    <div class="form-group">
+        <codx-label fiedName="totalFee" [formModel]="form?.formModel" default="Phí giao dịch">
+        </codx-label>
+        <span>{{data?.totalFee}}</span>
+    </div>
+    <div class="form-group">
+        <codx-label fiedName="refNo" [formModel]="form?.formModel" default="Mã giao dịch">
+        </codx-label>
+        <span>{{data?.refNo}}</span>
+    </div>
+</ng-template>
+
+<ng-template #body>
+
+</ng-template>

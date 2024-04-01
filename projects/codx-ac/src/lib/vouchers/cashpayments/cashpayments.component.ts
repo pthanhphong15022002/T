@@ -892,7 +892,7 @@ export class CashPaymentsComponent extends UIComponent {
                       null,
                       null,
                       '',
-                      data.eBanking,
+                      res.data.data,
                       '',
                       opt
                     );
