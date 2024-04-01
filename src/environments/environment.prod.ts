@@ -2,6 +2,7 @@ export const environment = {
   production: false,
   isDesign: false,
   mutiTenant: true,
+  isUserBankHub: false,
   dfPe: '',
   appVersion: 'v101lv',
   TNDATA_KEY: 'tnf649fc9a5f55',
@@ -9,6 +10,7 @@ export const environment = {
   pdfUrl: 'http://172.16.7.34:8015/api/pdf',
   shopping: 'http://172.16.7.34:8111/Shopping',
   urlUpload: 'http://172.16.1.210:8011',
+  bankhubUrl: '',
   office365: 'https://view.officeapps.live.com/op/view.aspx?src=',
   reportUrl: '',
   appName: 'hps-file-test', // Tam thoi de hard

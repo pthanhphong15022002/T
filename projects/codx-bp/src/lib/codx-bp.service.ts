@@ -110,6 +110,17 @@ export class CodxBpService {
       [recID]
     );
   }
+
+  addDocControl(insID,taskID,docs) {
+    return this.api.execSv<any>(
+      "BP",
+      "ERM.Business.BP",
+      'ProcessInstancesBusiness',
+      'AddDocControlAsync',
+      [insID,taskID,docs]
+    );
+  }
+
   authorityTask(recID,approver:any) {
     return this.api.execSv<any>(
       "BP",

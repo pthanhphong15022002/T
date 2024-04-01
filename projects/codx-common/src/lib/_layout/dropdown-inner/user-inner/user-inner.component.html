@@ -240,11 +240,25 @@
         </div>
       </ng-container>
       <div class="menu-item">
-        <span (click)="runCompare()" class="menu-link px-5">
+        <span
+          (click)="runCompare()"
+          *ngIf="user && user.tenant == 'default' && user.userID == 'CODXADMIN'"
+          class="menu-link px-5"
+        >
           <codx-label
             fiedName="lblCompare"
             [formModel]="formModel"
             default="Chạy so sánh"
+          ></codx-label>
+        </span>
+      </div>
+
+      <div class="menu-item">
+        <span (click)="testGetMongo()" class="menu-link px-5">
+          <codx-label
+            fiedName="lblMông"
+            [formModel]="formModel"
+            default="Lấy thông tin Mongo"
           ></codx-label>
         </span>
       </div>

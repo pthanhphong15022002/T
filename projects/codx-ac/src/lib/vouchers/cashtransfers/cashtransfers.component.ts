@@ -61,7 +61,6 @@ export class CashtransfersComponent extends UIComponent {
         this.baseCurr = dataValue?.BaseCurr || '';
       })
     this.router.params
-      .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
         this.journalNo = params?.journalNo;
       });
@@ -83,7 +82,6 @@ export class CashtransfersComponent extends UIComponent {
     if(!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
     this.cache
     .functionList(this.funcID)
-    .pipe(takeUntil(this.destroy$))
     .subscribe((res) => {
       if (res) {
         this.headerText = res?.defaultName || res?.customName;

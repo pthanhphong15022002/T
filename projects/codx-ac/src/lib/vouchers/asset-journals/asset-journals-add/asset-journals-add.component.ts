@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import {
   CRUDService,
+  CodxDropdownSelectComponent,
   CodxFormComponent,
   CodxGridviewV2Component,
   DialogData,
@@ -25,6 +26,7 @@ import {
   fmAssetRevaluationsLines,
   fmCountingMembers,
   fmAsset,
+  fmVATInvoices,
 } from '../../../codx-ac.service';
 import { RoundService } from '../../../round.service';
 import {
@@ -34,6 +36,7 @@ import {
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
 import { FixedAssetAddComponent } from '../../../settings/fixed-assets/fixed-asset-add/fixed-asset-add.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 @Component({
   selector: 'lib-asset-journals-add',
   templateUrl: './asset-journals-add.component.html',
@@ -47,6 +50,9 @@ export class AssetJournalsAddComponent extends UIComponent {
   eleGridAcquisitions: CodxGridviewV2Component;
   @ViewChild('eleGridAccountMember')
   eleGridAccountMember: CodxGridviewV2Component;
+  @ViewChild('elementTabDetail') elementTabDetail: any;
+  @ViewChild('eleGridVatInvoices') eleGridVatInvoices: CodxGridviewV2Component;
+  @ViewChild('eleCbxSubType') eleCbxSubType: CodxDropdownSelectComponent;
 
   headerText: string;
   dialog!: DialogRef;
@@ -65,6 +71,7 @@ export class AssetJournalsAddComponent extends UIComponent {
   };
   fmAssetJournalsLines: FormModel;
   fmCountingMembers = fmCountingMembers;
+  fmVATInvoices: any = fmVATInvoices;
   tabInfo: TabModel[] = [
     //? thiết lập footer
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
@@ -144,14 +151,80 @@ export class AssetJournalsAddComponent extends UIComponent {
   //#endregion
 
   //#region Event
-
+  createTabDetail(event: any, eleTab: TabComponent) {
+    this.showHideTabDetail(
+      this.formAsset?.data?.subType,
+      this.elementTabDetail
+    );
+  }
   /**
    * *Hàm xử lí đổi loại chứng từ
    * @param event
    * @param eleTab
    */
-  changeSubType(event?: any) {}
-
+  changeSubType(event?: any) {
+    if (
+      event &&
+      event.data[0] &&
+      ((this.eleGridAcquisitions &&
+        this.eleGridAcquisitions.dataSource.length > 0) ||
+        (this.eleGridVatInvoices &&
+          this.eleGridVatInvoices.dataSource.length > 0))
+    ) {
+      this.notification.alertCode('AC0014', null).subscribe((res) => {
+        if (res?.event?.status === 'Y') {
+          this.api
+            .exec('AM', 'AssetJournalsBusiness', 'ChangeSubTypeAsync', [
+              this.formAsset.data,
+              event.data[0],
+            ])
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res: any) => {
+              this.formAsset.setValue('subType', event.data[0], {});
+              this.dialog.dataService.update(this.formAsset.data).subscribe();
+              if (this.eleGridAcquisitions)
+                this.eleGridAcquisitions.dataSource = [];
+              if (this.eleGridVatInvoices)
+                this.eleGridVatInvoices.dataSource = [];
+              this.showHideTabDetail(
+                this.formAsset?.data?.subType,
+                this.elementTabDetail
+              );
+              this.onDestroy();
+            });
+        } else {
+          this.eleCbxSubType.setValue(this.formAsset.data.subType);
+        }
+      });
+    } else {
+      this.formAsset.setValue('subType', event.data[0], {
+        onlySelf: true,
+        emitEvent: false,
+      });
+      this.detectorRef.detectChanges();
+      if (this.elementTabDetail) {
+        this.showHideTabDetail(
+          this.formAsset?.data?.subType,
+          this.elementTabDetail
+        );
+      }
+    }
+  }
+  showHideTabDetail(type, eleTab) {
+    if (eleTab) {
+      switch (type) {
+        case `${this.journal.journalType + '1'}`:
+          eleTab.hideTab(0, false);
+          eleTab.hideTab(1, false);
+          eleTab.select(0);
+          break;
+        default:
+          eleTab.hideTab(1, true);
+          eleTab.select(0);
+          break;
+      }
+    }
+  }
   /**
    * *Hàm click nút đóng form
    */
@@ -200,7 +273,15 @@ export class AssetJournalsAddComponent extends UIComponent {
   }
   //#endregion
 
-  valueChangeMaster(e) {}
+  valueChangeMaster(e) {
+    if (e && e?.field) {
+      switch (e.field) {
+        case 'objectID':
+          this.formAsset.data.objectType = e?.type;
+          break;
+      }
+    }
+  }
 
   //#region  tab grid lines
   initGrid(eleGrid: CodxGridviewV2Component) {
@@ -235,35 +316,39 @@ export class AssetJournalsAddComponent extends UIComponent {
    * @param event
    */
   async valueChangeLine(event: any) {
-    if (event?.value) {
-      if (event?.field == 'assetID') {
-        let asset = await firstValueFrom(
-          this.api.execSv<any>('AM', 'AM', 'AssetsBusiness', 'GetAsync', [
-            event?.value,
-          ])
-        );
-        if (asset) {
-          event.data = this.acService.replaceData(asset, event.data);
-        }
-        let idx = this.eleGridAcquisitions.dataSource?.findIndex(
-          (x) => x.recID == event.data.recID
-        );
-        if (idx != -1) this.eleGridAcquisitions.updateRow(idx, event.data);
+    if (event?.value && event?.field) {
+      switch (event.field) {
+        case 'assetID':
+          {
+            let asset = await firstValueFrom(
+              this.api.execSv<any>('AM', 'AM', 'AssetsBusiness', 'GetAsync', [
+                event?.value,
+              ])
+            );
+            if (asset) {
+              event.data = this.acService.replaceData(asset, event.data);
+            }
+            let idx = this.eleGridAcquisitions.dataSource?.findIndex(
+              (x) => x.recID == event.data.recID
+            );
+            if (idx != -1) this.eleGridAcquisitions.updateRow(idx, event.data);
+          }
+          break;
+        case 'costAmt':
+        case 'deprPeriods':
+          if (event.data.deprMethod == '1') {
+            event.data.deprRate =
+              event.data?.deprPeriods > 0
+                ? event.data.costAmt / event.data?.deprPeriods
+                : 0;
+            let idx = this.eleGridAcquisitions.dataSource?.findIndex(
+              (x) => x.recID == event.data.recID
+            );
+            if (idx != -1) this.eleGridAcquisitions.updateRow(idx, event.data);
+          }
+          break;
       }
-      if (event?.field == 'employeeID') {
-        if (event?.itemData) {
-          event.data.employeeID = event?.itemData?.EmployeeID;
-          event.data.orgUnitID = event?.itemData?.OrgUnitID;
-          event.data.departmentID = event?.itemData?.DepartmentID;
-          event.data.companyID = event?.itemData?.CompanyID;
-        }
-      }
-      let index = this.lstLines.findIndex((x) => x.recID == event?.data?.recID);
-      if (index != -1) {
-        this.lstLines[index] = event?.data;
-      } else {
-        this.lstLines.push(event?.data);
-      }
+
       this.detectorRef.detectChanges();
     }
   }
@@ -326,6 +411,20 @@ export class AssetJournalsAddComponent extends UIComponent {
           //? save lưới trước
           if (res) {
             this.eleGridAccountMember.isSaveOnClick = false;
+            setTimeout(() => {
+              if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+                e.target.focus();
+                // e.target.select();
+              }
+            }, 100);
+          }
+        });
+      }
+      if (this.eleGridVatInvoices && this.eleGridVatInvoices?.gridRef?.isEdit) {
+        this.eleGridVatInvoices.saveRow((res: any) => {
+          //? save lưới trước
+          if (res) {
+            this.eleGridVatInvoices.isSaveOnClick = false;
             setTimeout(() => {
               if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
                 e.target.focus();
@@ -471,17 +570,48 @@ export class AssetJournalsAddComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
   initGridAccount(e) {}
-  onActionGridAccount(e) {}
-  clickMFAccount(event: any) {
+  onActionGridAccount(event: any) {
+    switch (event.type) {
+      case 'autoAdd':
+        // this.onAddLine('');
+        break;
+      case 'closeEdit':
+        if (
+          this.eleGridVatInvoices &&
+          this.eleGridVatInvoices.rowDataSelected
+        ) {
+          this.eleGridVatInvoices.rowDataSelected = null;
+        }
+        if (this.eleGridVatInvoices.isSaveOnClick)
+          this.eleGridVatInvoices.isSaveOnClick = false;
+
+        if (
+          this.eleGridAccountMember &&
+          this.eleGridAccountMember.rowDataSelected
+        ) {
+          this.eleGridAccountMember.rowDataSelected = null;
+        }
+        if (this.eleGridAccountMember.isSaveOnClick)
+          this.eleGridAccountMember.isSaveOnClick = false;
+        break;
+      case 'beginEdit':
+        event.data.entryMode = this.journal.entryMode;
+        // let oAccount = this.acService.getCacheValue('account', event?.data.accountID);
+        // let oOffsetAccount = this.acService.getCacheValue('account', event?.data.offsetAcctID);
+        // this.setLockAndRequireFields(event?.data, oAccount, oOffsetAccount);
+        break;
+    }
+  }
+  clickMFAccount(event: any, type) {
     switch (event.event.functionID) {
       case 'SYS101':
         this.addAccountMember();
         break;
       case 'SYS104':
-        this.copyAccountMember(event.data);
+        this.copyAccountMember(event.data, type);
         break;
       case 'SYS102':
-        this.deleteAccountMember(event.data);
+        this.deleteAccountMember(event.data, type);
         break;
     }
   }
@@ -515,35 +645,107 @@ export class AssetJournalsAddComponent extends UIComponent {
         }
       });
   }
-  copyAccountMember(data) {
+  copyAccountMember(data, type) {
     let ele = { ...data };
-    this.eleGridAccountMember.saveRow((res: any) => {
-      if (res && res.type != 'error') {
-        let lst = JSON.parse(JSON.stringify(this.lstAccountMembers));
-        ele.recID = Util.uid();
-        ele.index = this.eleGridAccountMember?.dataSource?.length;
-        lst.push(ele);
-        this.lstAccMemDeletes = JSON.parse(JSON.stringify(lst));
-        this.eleGridAccountMember.addRow(
-          ele,
-          this.eleGridAccountMember.dataSource.length,
-          true
-        );
-        this.detectorRef.detectChanges();
-      }
-    });
+    if (this.eleGridAccountMember && type == 'member') {
+      this.eleGridAccountMember.saveRow((res: any) => {
+        if (res && res.type != 'error') {
+          let lst = JSON.parse(JSON.stringify(this.lstAccountMembers));
+          ele.recID = Util.uid();
+          ele.index = this.eleGridAccountMember?.dataSource?.length;
+          ele.entryMode = this.journal.entryMode;
+          this.eleGridAccountMember.addRow(
+            ele,
+            this.eleGridAccountMember.dataSource.length
+          );
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
+    if (this.eleGridVatInvoices && type == 'vat') {
+      this.eleGridVatInvoices.saveRow((res: any) => {
+        if (res && res.type != 'error') {
+          let lst = JSON.parse(JSON.stringify(this.lstAccountMembers));
+          ele.recID = Util.uid();
+          ele.index = this.eleGridVatInvoices?.dataSource?.length;
+          ele.entryMode = this.journal.entryMode;
+          this.eleGridVatInvoices.addRow(
+            ele,
+            this.eleGridVatInvoices.dataSource.length
+          );
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
   }
-  deleteAccountMember(data) {
-    this.eleGridAccountMember.saveRow((ele: any) => {
-      if (ele && ele.type != 'error') {
-        this.eleGridAccountMember.deleteRow(data);
-        this.lstAccMemDeletes.push(data);
-        this.detectorRef.detectChanges();
-      }
-    });
+  deleteAccountMember(data, type) {
+    if (this.eleGridAccountMember && type == 'member') {
+      this.eleGridAccountMember.saveRow((ele: any) => {
+        if (ele && ele.type != 'error') {
+          this.eleGridAccountMember.deleteRow(data);
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
+    if (this.eleGridVatInvoices && type == 'vat') {
+      this.eleGridVatInvoices.saveRow((res: any) => {
+        if (res && res.type != 'error') {
+          this.eleGridVatInvoices.deleteRow(data);
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
   }
   //#endregion
 
+  /**
+   * *Hàm thêm dòng hóa đơn GTGT
+   */
+  addLineVatInvoices() {
+    this.formAsset
+      .save(null, 0, '', '', false, { allowCompare: false })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (!res) return;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) return;
+        }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) return;
+        }
+        if (this.eleGridVatInvoices) {
+          this.eleGridVatInvoices.saveRow(async (res: any) => {
+            if (res && res.type != 'error') {
+              let obj = {};
+              obj['recID'] = Util.uid();
+              obj['transID'] = this.formAsset.data.recID;
+              obj['objectID'] = this.formAsset.data.objectID;
+              obj['objectType'] = this.formAsset.data.objectType;
+              obj['lineID'] = this.formAsset.data.recID;
+
+              if (obj['objectID'] && obj['objectType']) {
+                let sub = await firstValueFrom(
+                  this.api.execSv<any>(
+                    'AC',
+                    'AC',
+                    'SubObjectsBusiness',
+                    'GetOneDataAsync',
+                    [obj['objectID'], obj['objectType']]
+                  )
+                );
+                obj['objectName'] = sub?.objectName;
+              }
+
+              this.eleGridVatInvoices.addRow(
+                obj,
+                this.eleGridVatInvoices.dataSource.length
+              );
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+      });
+  }
   //#region footer
   onDiscard() {
     if (this.formAsset && this.formAsset.data._isEdit) {
@@ -606,8 +808,37 @@ export class AssetJournalsAddComponent extends UIComponent {
             isError = true;
         }
 
-        if (this.eleGridAcquisitions || this.eleGridAcquisitions?.isEdit) {
+        if (this.eleGridAccountMember || this.eleGridAcquisitions?.isEdit) {
+          this.eleGridAcquisitions.saveRow((res: any) => {});
+        }
+
+        if (
+          (this.eleGridAcquisitions || this.eleGridAcquisitions?.isEdit) &&
+          this.elementTabDetail.selectingID == '0'
+        ) {
           this.eleGridAcquisitions.saveRow((res: any) => {
+            //? save lưới trước
+            if (res && res.type != 'error') {
+              if (type == 'save') {
+                this.dialog.close(res);
+                this.onDestroy();
+              } else {
+                this.refreshForm();
+              }
+              if (this.formAsset.data.isAdd || this.formAsset.data.isCopy)
+                this.notification.notifyCode('SYS006');
+              else this.notification.notifyCode('SYS007');
+            } else {
+              this.ngxLoader.stop();
+            }
+          });
+          return;
+        }
+        if (
+          (this.eleGridVatInvoices || this.eleGridAcquisitions?.isEdit) &&
+          this.elementTabDetail.selectingID == '1'
+        ) {
+          this.eleGridVatInvoices.saveRow((res: any) => {
             //? save lưới trước
             if (res && res.type != 'error') {
               if (type == 'save') {

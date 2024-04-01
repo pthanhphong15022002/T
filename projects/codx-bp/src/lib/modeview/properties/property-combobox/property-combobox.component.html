@@ -1,111 +1,243 @@
 <div class="d-flex flex-column w-100 h-100 px-4 py-6">
-    <lib-property-default-title [data]="data" [isBack]="isBack" (dataChange)="changeValue($event)" (back)="backDefault()"></lib-property-default-title>
-    <div class="mt-4">
-        <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'title'" default="Tên ô nhập liệu" class="fw-bold"></codx-label>
-        <codx-input type="text" [crrValue]="data.title" field="title" (valueChange)="changeValue($event)"></codx-input>
-        <span class="fst-italic fw-light">ID: {{data?.fieldName}}</span>
+  <lib-property-default-title
+    [data]="data"
+    [isBack]="isBack"
+    (dataChange)="changeValue($event)"
+    (back)="backDefault()"
+  ></lib-property-default-title>
+  <div class="mt-4">
+    <codx-label
+      formName="DynamicForms"
+      [gridViewName]="'grvDynamicForms' + data.controlType"
+      [fiedName]="'title'"
+      default="Tên ô nhập liệu"
+      class="fw-bold"
+    ></codx-label>
+    <codx-input
+      type="text"
+      [crrValue]="data.title"
+      field="title"
+      (valueChange)="changeValue($event)"
+    ></codx-input>
+    <span class="fst-italic fw-light">ID: {{ data?.fieldName }}</span>
+  </div>
+  <div class="mt-4">
+    <codx-label
+      formName="DynamicForms"
+      [gridViewName]="'grvDynamicForms' + data.controlType"
+      [fiedName]="'description'"
+      default="Hiển thị chuỗi gợi ý khi chưa có dữ liệu"
+      class="fw-bold"
+    ></codx-label>
+    <codx-input
+      type="text"
+      [crrValue]="data.description"
+      field="description"
+      placeholder="Nhập giá trị hiển thị"
+      (valueChange)="changeValue($event)"
+    ></codx-input>
+  </div>
+  <div class="border-top mt-8">
+    <div class="d-flex align-items-center justify-content-between mt-4">
+      <codx-label
+        formName="DynamicForms"
+        [fiedName]="'listNames'"
+        default="Danh sách giá trị"
+        class="fw-bold"
+      ></codx-label>
+      <i
+        class="icon-edit_square cursor-pointer"
+        (click)="openSettingCbx()"
+        *ngIf="data.dataFormat"
+      ></i>
     </div>
-    <div class="mt-4">
-        <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'description'" default="Hiển thị chuỗi gợi ý khi chưa có dữ liệu" class="fw-bold"></codx-label>
-        <codx-input type="text" [crrValue]="data.description" field="description" placeholder="Nhập giá trị hiển thị" (valueChange)="changeValue($event)"></codx-input>
+    <div
+      class="d-flex align-items-center m-2"
+      *ngIf="!data?.refValue; else tmpData"
+    >
+      <button
+        type="button"
+        class="btn btn-light w-100"
+        (click)="openSettingCbx()"
+      >
+        <i class="icon-i-plus"></i>
+        <codx-label
+          formName="DynamicForms"
+          fiedName="lblAddEditCbb"
+          default="Thiết lập/Chỉnh sửa danh sách"
+        ></codx-label>
+      </button>
+      <button
+        type="button"
+        class="btn btn-light w-100"
+        (click)="openSettingCbx('1')"
+      >
+        <i class="icon-i-plus"></i>
+        <codx-label
+          formName="DynamicForms"
+          fiedName="lblCustomType1"
+          default="Type 1"
+        ></codx-label>
+      </button>
+      <button
+        type="button"
+        class="btn btn-light w-100"
+        (click)="openSettingCbx('2')"
+      >
+        <i class="icon-i-plus"></i>
+        <codx-label
+          formName="DynamicForms"
+          fiedName="lblCustomType2"
+          default="Type 2"
+        ></codx-label>
+      </button>
     </div>
-    <div class="border-top mt-8">
-        <div class="d-flex align-items-center justify-content-between mt-4">
-            <codx-label formName="DynamicForms" [fiedName]="'listNames'" default="Danh sách giá trị" class="fw-bold"></codx-label>
-            <i class="icon-edit_square cursor-pointer" (click)="openSettingCbx()" *ngIf="data.dataFormat"></i>
-        </div>
-        <div class="d-flex align-items-center m-2" *ngIf="!data?.refValue, else tmpData">
-            <button type="button" class="btn btn-light w-100" (click)="openSettingCbx()"><i class="icon-i-plus"></i> <codx-label formName="DynamicForms" fiedName="lblAddEditCbb" default="Thiết lập/Chỉnh sửa danh sách"></codx-label></button>
-        </div>
-        <ng-template #tmpData>
-            <table class="table cursor-pointer mt-2" (click)="openSettingCbx()">
-                <thead class="thead-light">
-                  <tr class="fw-bold">
-                    <th scope="col-4 d-flex justify-content-center align-items-center">
-                      <codx-label
-                        default="Tên trường dữ liệu"
-                        name="lblFNameTable"
-                        [formName]="'DynamicForms'"
-                        [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
-                      ></codx-label>
-                    </th>
-                    <th scope="col-2 d-flex justify-content-center align-items-center">
-                      <codx-label
-                        default="Hiển thị"
-                        name="lblShowTable"
-                        [formName]="'DynamicForms'"
-                        [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
-                      ></codx-label>
-                    </th>
-                    <th scope="col-2 d-flex justify-content-center align-items-center">
-                      <codx-label
-                        default="Lưu"
-                        name="lblSaveTable"
-                        [formName]="'DynamicForms'"
-                        [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
-                      ></codx-label>
-                    </th>
-                    <th scope="col-2 d-flex justify-content-center align-items-center">
-                      <codx-label
-                        default="Lọc"
-                        name="lblFilterTable"
-                        [formName]="'DynamicForms'"
-                        [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
-                      ></codx-label>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr class="border-top" *ngFor="let item of listCbx; index as i">
-                    <td scope="row" style="border: none">
-                      <span>{{ item }}</span>
-                    </td>
-                    <td>
-                      <codx-input
-                        field="allowShow"
-                        type="checkbox"
-                        [crrValue]="item?.allowShow ?? false"
-                        [disabled]="true"
-                      ></codx-input>
-                    </td>
-                    <td>
-                      <codx-input
-                        field="allowSave"
-                        type="checkbox"
-                        [crrValue]="item?.allowSave ?? false"
-                        [disabled]="true"
-                      ></codx-input>
-                    </td>
-                    <td>
-                      <codx-input
-                        field="allowFilter"
-                        type="checkbox"
-                        [crrValue]="item?.allowFilter ?? false"
-                        [disabled]="true"
-                      ></codx-input>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-        </ng-template>
+    <ng-template #tmpData>
+      <table class="table cursor-pointer mt-2" (click)="openSettingCbx()">
+        <thead class="thead-light">
+          <tr class="fw-bold">
+            <th scope="col-4 d-flex justify-content-center align-items-center">
+              <codx-label
+                default="Tên trường dữ liệu"
+                name="lblFNameTable"
+                [formName]="'DynamicForms'"
+                [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
+              ></codx-label>
+            </th>
+            <th scope="col-2 d-flex justify-content-center align-items-center">
+              <codx-label
+                default="Hiển thị"
+                name="lblShowTable"
+                [formName]="'DynamicForms'"
+                [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
+              ></codx-label>
+            </th>
+            <th scope="col-2 d-flex justify-content-center align-items-center">
+              <codx-label
+                default="Lưu"
+                name="lblSaveTable"
+                [formName]="'DynamicForms'"
+                [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
+              ></codx-label>
+            </th>
+            <th scope="col-2 d-flex justify-content-center align-items-center">
+              <codx-label
+                default="Lọc"
+                name="lblFilterTable"
+                [formName]="'DynamicForms'"
+                [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
+              ></codx-label>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-top" *ngFor="let item of listCbx; index as i">
+            <td scope="row" style="border: none">
+              <span>{{ item }}</span>
+            </td>
+            <td>
+              <codx-input
+                field="allowShow"
+                type="checkbox"
+                [crrValue]="item?.allowShow ?? false"
+                [disabled]="true"
+              ></codx-input>
+            </td>
+            <td>
+              <codx-input
+                field="allowSave"
+                type="checkbox"
+                [crrValue]="item?.allowSave ?? false"
+                [disabled]="true"
+              ></codx-input>
+            </td>
+            <td>
+              <codx-input
+                field="allowFilter"
+                type="checkbox"
+                [crrValue]="item?.allowFilter ?? false"
+                [disabled]="true"
+              ></codx-input>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-template>
+  </div>
+  <lib-property-cbb-dependence
+    [data]="data"
+    [dataTable]="dataTable"
+    (dataChange)="valueChangeData($event)"
+    (dataChangeTableEmit)="valueChangeTableEmit($event)"
+  ></lib-property-cbb-dependence>
+  <div class="border-top mt-8">
+    <div class="d-flex align-items-center mt-4">
+      <codx-input
+        type="radio"
+        name="radiomwuser"
+        [crrValue]="'3'"
+        field="refType"
+        label="DropDown"
+        [checked]="dropdown"
+        (valueChange)="changeValue($event)"
+      ></codx-input>
+      <codx-input
+        type="radio"
+        name="radiomwuser"
+        [crrValue]="'3P'"
+        field="refType"
+        label="Popup"
+        [checked]="popup"
+        (valueChange)="changeValue($event)"
+        ngClass="ms-4"
+      ></codx-input>
     </div>
-    <lib-property-cbb-dependence [data]="data" [dataTable]="dataTable" (dataChange)="valueChangeData($event)" (dataChangeTableEmit)="valueChangeTableEmit($event)"></lib-property-cbb-dependence>
-    <div class="border-top mt-8">
-        <div class="d-flex align-items-center mt-4">
-            <codx-input type="radio" name="radiomwuser" [crrValue]="'3'" field="refType" label="DropDown" [checked]="dropdown" (valueChange)="changeValue($event)"></codx-input>
-            <codx-input type="radio" name="radiomwuser" [crrValue]="'3P'" field="refType" label="Popup" [checked]="popup"  (valueChange)="changeValue($event)" ngClass="ms-4"></codx-input>
-        </div>
-        <div class="d-flex align-items-center mt-4">
-            <codx-input type="switch"  field="isRequired" label="Bắt buộc"  class="mt-2"></codx-input>
-            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Chọn nhiều giá trị" class="fw-bold ms-2"></codx-label>
-        </div>
-        <div class="d-flex align-items-center mt-1">
-            <codx-input type="switch" [crrValue]="data.isRequired" field="isRequired" label="Bắt buộc"  (valueChange)="changeValue($event)" class="mt-2"></codx-input>
-            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Bắt buộc" class="fw-bold ms-2"></codx-label>
-        </div>
-        <div class="d-flex align-items-center mt-1">
-            <codx-input type="switch"  field="isRequired" label="Bắt buộc"  class="mt-2"></codx-input>
-            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Điều kiện hiển thị" class="fw-bold ms-2"></codx-label>
-        </div>
+    <div class="d-flex align-items-center mt-4">
+      <codx-input
+        type="switch"
+        field="isRequired"
+        label="Bắt buộc"
+        class="mt-2"
+      ></codx-input>
+      <codx-label
+        formName="DynamicForms"
+        [gridViewName]="'grvDynamicForms' + data.controlType"
+        [fiedName]="'IsRequired'"
+        default="Chọn nhiều giá trị"
+        class="fw-bold ms-2"
+      ></codx-label>
     </div>
+    <div class="d-flex align-items-center mt-1">
+      <codx-input
+        type="switch"
+        [crrValue]="data.isRequired"
+        field="isRequired"
+        label="Bắt buộc"
+        (valueChange)="changeValue($event)"
+        class="mt-2"
+      ></codx-input>
+      <codx-label
+        formName="DynamicForms"
+        [gridViewName]="'grvDynamicForms' + data.controlType"
+        [fiedName]="'IsRequired'"
+        default="Bắt buộc"
+        class="fw-bold ms-2"
+      ></codx-label>
+    </div>
+    <div class="d-flex align-items-center mt-1">
+      <codx-input
+        type="switch"
+        field="isRequired"
+        label="Bắt buộc"
+        class="mt-2"
+      ></codx-input>
+      <codx-label
+        formName="DynamicForms"
+        [gridViewName]="'grvDynamicForms' + data.controlType"
+        [fiedName]="'IsRequired'"
+        default="Điều kiện hiển thị"
+        class="fw-bold ms-2"
+      ></codx-label>
+    </div>
+  </div>
 </div>
