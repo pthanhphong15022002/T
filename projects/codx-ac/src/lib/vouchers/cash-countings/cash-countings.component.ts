@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { AuthStore, ButtonModel, DataRequest, NotificationsService, SidebarModel, TenantStore, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { Subject, takeUntil } from 'rxjs';
+import { AuthStore, ButtonModel, DataRequest, DialogModel, NotificationsService, SidebarModel, TenantStore, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CashCountingsAddComponent } from './cash-countings-add/cash-countings-add.component';
+import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
 
 @Component({
   selector: 'lib-cash-countings',
@@ -28,7 +29,6 @@ userID: any;
 dataCategory: any;
 journal: any;
 baseCurr: any;
-legalName: any;
 dataDefault: any;
 hideFields: Array<any> = [];
 button: ButtonModel[] = [
@@ -38,10 +38,6 @@ button: ButtonModel[] = [
     icon: 'icon-i-file-earmark-plus',
   },
 ];
-bhLogin: boolean = false;
-bankPayID: any;
-bankNamePay: any;
-bankReceiveName: any;
 predicate: string = 'JournalNo=@0';
 viewActive: number = ViewType.listdetail;
 ViewType = ViewType;
@@ -57,13 +53,13 @@ constructor(
 ) {
   super(inject);
   this.cache
-    .companySetting()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (res.length > 0) {
-        this.baseCurr = res[0].baseCurr;
-      }
-    });
+    .viewSettingValues('ACParameters')
+    .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
+    .subscribe((res) => {
+      let dataValue = JSON.parse(res.dataValue);
+      this.baseCurr = dataValue?.BaseCurr || '';
+    })
+
   this.router.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
     this.journalNo = params?.journalNo;
   });
@@ -82,7 +78,6 @@ onInit(): void {
   if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
   this.cache
     .functionList(this.funcID)
-    .pipe(takeUntil(this.destroy$))
     .subscribe((res) => {
       if (res) {
         this.headerText = res?.defaultName || res?.customName;
@@ -98,26 +93,26 @@ ngDoCheck() {
 
 ngAfterViewInit() {
   this.views = [
-    {
-      type: ViewType.listdetail,
-      active: true,
-      sameData: true,
-      model: {
-        template: this.templateDetailLeft,
-        panelRightRef: this.templateDetailRight,
-        collapsed: true,
-        widthLeft: '23%',
-        //separatorSize:3
-      },
-    },
-    {
-      type: ViewType.list,
-      active: false,
-      sameData: true,
-      model: {
-        template: this.listTemplate,
-      },
-    },
+    // {
+    //   type: ViewType.listdetail,
+    //   active: true,
+    //   sameData: true,
+    //   model: {
+    //     template: this.templateDetailLeft,
+    //     panelRightRef: this.templateDetailRight,
+    //     collapsed: true,
+    //     widthLeft: '23%',
+    //     //separatorSize:3
+    //   },
+    // },
+    // {
+    //   type: ViewType.list,
+    //   active: false,
+    //   sameData: true,
+    //   model: {
+    //     template: this.listTemplate,
+    //   },
+    // },
     {
       type: ViewType.grid,
       active: false,
@@ -186,50 +181,47 @@ onDestroy() {
    * @param data
    */
   clickMoreFunction(e, data) {
-    // switch (e.functionID) {
-    //   case 'SYS02':
-    //     this.deleteVoucher(data); //? xóa chứng từ
-    //     break;
-    //   case 'SYS03':
-    //     this.editVoucher(data); //? sửa chứng từ
-    //     break;
-    //   case 'SYS04':
-    //     this.copyVoucher(data); //? sao chép chứng từ
-    //     break;
-    //   case 'SYS05':
-    //     this.viewVoucher(data); //? sao chép chứng từ
-    //     break;
-    //   case 'SYS002':
-    //     this.exportVoucher(data); //? xuất dữ liệu chứng từ
-    //     break;
-    //   case 'ACT041002':
-    //   case 'ACT042903':
-    //     this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
-    //     break;
-    //   case 'ACT041004':
-    //   case 'ACT042904':
-    //     this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
-    //     break;
-    //   case 'ACT041009':
-    //   case 'ACT042902':
-    //     this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
-    //     break;
-    //   case 'ACT041003':
-    //   case 'ACT042905':
-    //     this.postVoucher(e.text, data); //? ghi sổ chứng từ
-    //     break;
-    //   case 'ACT041008':
-    //   case 'ACT042906':
-    //     this.unPostVoucher(e.text, data); //? khôi phục chứng từ
-    //     break;
-    //   case 'ACT042901':
-    //     this.transferToBank(e.text, data); //? chuyển tiền ngân hàng điện tử
-    //     break;
-    //   case 'ACT041010':
-    //   case 'ACT042907':
-    //     this.printVoucher(data, e.functionID); //? in chứng từ
-    //     break;
-    // }
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deleteVoucher(data); //? xóa chứng từ
+        break;
+      case 'SYS03':
+        this.editVoucher(data); //? sửa chứng từ
+        break;
+      case 'SYS04':
+        this.copyVoucher(data); //? sao chép chứng từ
+        break;
+      case 'SYS05':
+        this.viewVoucher(data); //? sao chép chứng từ
+        break;
+      case 'SYS002':
+        this.exportVoucher(data); //? xuất dữ liệu chứng từ
+        break;
+      case 'ACT041002':
+      case 'ACT042903':
+        this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
+        break;
+      case 'ACT041004':
+      case 'ACT042904':
+        this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
+        break;
+      case 'ACT041009':
+      case 'ACT042902':
+        this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
+        break;
+      case 'ACT041003':
+      case 'ACT042905':
+        this.postVoucher(e.text, data); //? ghi sổ chứng từ
+        break;
+      case 'ACT041008':
+      case 'ACT042906':
+        this.unPostVoucher(e.text, data); //? khôi phục chứng từ
+        break;
+      case 'ACT041010':
+      case 'ACT042907':
+        this.printVoucher(data, e.functionID); //? in chứng từ
+        break;
+    }
   }
 
   /**
@@ -289,6 +281,7 @@ onDestroy() {
             }
           });
         }
+        this.onDestroy();
       });
   }
 
@@ -297,41 +290,39 @@ onDestroy() {
    * @param dataEdit : data chứng từ chỉnh sửa
    */
   editVoucher(dataEdit) {
-    // delete dataEdit.isReadOnly;
-    // this.view.dataService.dataSelected = { ...dataEdit };
-    // this.view.dataService
-    //   .edit(dataEdit)
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     res.isEdit = true;
-    //     let data = {
-    //       headerText: this.headerText,
-    //       journal: { ...this.journal },
-    //       oData: { ...res },
-    //       hideFields: [...this.hideFields],
-    //       baseCurr: this.baseCurr,
-    //       legalName: this.legalName,
-    //     };
-    //     let optionSidebar = new SidebarModel();
-    //     optionSidebar.DataService = this.view?.dataService;
-    //     optionSidebar.FormModel = this.view?.formModel;
-    //     let dialog = this.callfc.openSide(
-    //       CashPaymentAddComponent,
-    //       data,
-    //       optionSidebar,
-    //       this.view.funcID
-    //     );
-    //     dialog.closed.subscribe((res) => {
-    //       if (res && res?.event) {
-    //         if (res?.event?.type === 'discard') {
-    //           if (this.view.dataService.data.length == 0) {
-    //             this.itemSelected = undefined;
-    //             this.detectorRef.detectChanges();
-    //           }
-    //         }
-    //       }
-    //     });
-    //   });
+    delete dataEdit.isReadOnly;
+    this.view.dataService.dataSelected = { ...dataEdit };
+    this.view.dataService
+      .edit(dataEdit)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        res.isEdit = true;
+        let data = {
+          headerText: this.headerText,
+          journal: { ...this.journal },
+          oData: { ...res },
+          hideFields: [...this.hideFields],
+        };
+        let optionSidebar = new SidebarModel();
+        optionSidebar.DataService = this.view?.dataService;
+        optionSidebar.FormModel = this.view?.formModel;
+        let dialog = this.callfc.openSide(
+          CashCountingsAddComponent,
+          data,
+          optionSidebar,
+          this.view.funcID
+        );
+        dialog.closed.subscribe((res) => {
+          if (res && res?.event) {
+            if (res?.event?.type === 'discard') {
+              if (this.view.dataService.data.length == 0) {
+                this.itemSelected = undefined;
+                this.detectorRef.detectChanges();
+              }
+            }
+          }
+        });
+      });
   }
 
   /**
@@ -340,126 +331,126 @@ onDestroy() {
    * @param dataCopy : data chứng từ sao chép
    */
   copyVoucher(dataCopy) {
-    // let newdataCopy = { ...dataCopy };
-    // if (this.journal && this.journal.assignRule == '0') {
-    //   let data = {
-    //     journalType: this.journal.journalType,
-    //     journalNo: this.journalNo,
-    //   };
-    //   let opt = new DialogModel();
-    //   opt.FormModel = this.view.formModel;
-    //   let dialog = this.callfc.openForm(
-    //     NewvoucherComponent,
-    //     'Nhập số chứng từ mới',
-    //     null,
-    //     null,
-    //     '',
-    //     data,
-    //     '',
-    //     opt
-    //   );
-    //   dialog.closed.subscribe((res) => {
-    //     if (res && res?.event) {
-    //       let newvoucherNo = res?.event;
-    //       newdataCopy.voucherNo = newvoucherNo;
-    //       this.view.dataService
-    //         .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
-    //         .pipe(takeUntil(this.destroy$))
-    //         .subscribe((res: any) => {
-    //           if (res != null) {
-    //             res.isCopy = true;
-    //             let datas = { ...res };
-    //             this.view.dataService
-    //               .saveAs(datas)
-    //               .pipe(takeUntil(this.destroy$))
-    //               .subscribe((res) => {
-    //                 if (res) {
-    //                   let data = {
-    //                     headerText: this.headerText,
-    //                     journal: { ...this.journal },
-    //                     oData: { ...datas },
-    //                     hideFields: [...this.hideFields],
-    //                     baseCurr: this.baseCurr,
-    //                     legalName: this.legalName,
-    //                   };
-    //                   let optionSidebar = new SidebarModel();
-    //                   optionSidebar.DataService = this.view?.dataService;
-    //                   optionSidebar.FormModel = this.view?.formModel;
-    //                   let dialog2 = this.callfc.openSide(
-    //                     CashPaymentAddComponent,
-    //                     data,
-    //                     optionSidebar,
-    //                     this.view.funcID
-    //                   );
-    //                   dialog2.closed.subscribe((res) => {
-    //                     if (res && res?.event) {
-    //                       if (res?.event?.type === 'discard') {
-    //                         if (this.view.dataService.data.length == 0) {
-    //                           this.itemSelected = undefined;
-    //                           this.detectorRef.detectChanges();
-    //                         }
-    //                       }
-    //                     }
-    //                   });
-    //                   this.view.dataService
-    //                     .add(datas)
-    //                     .pipe(takeUntil(this.destroy$))
-    //                     .subscribe();
-    //                 }
-    //               });
-    //           }
-    //         });
-    //     }
-    //   });
-    // } else {
-    //   this.view.dataService
-    //     .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
-    //     .pipe(takeUntil(this.destroy$))
-    //     .subscribe((res: any) => {
-    //       if (res != null) {
-    //         res.isCopy = true;
-    //         let datas = { ...res };
-    //         this.view.dataService
-    //           .saveAs(datas)
-    //           .pipe(takeUntil(this.destroy$))
-    //           .subscribe((res) => {
-    //             if (res) {
-    //               let data = {
-    //                 headerText: this.headerText,
-    //                 journal: { ...this.journal },
-    //                 oData: { ...datas },
-    //                 hideFields: [...this.hideFields],
-    //                 baseCurr: this.baseCurr,
-    //                 legalName: this.legalName,
-    //               };
-    //               let optionSidebar = new SidebarModel();
-    //               optionSidebar.DataService = this.view?.dataService;
-    //               optionSidebar.FormModel = this.view?.formModel;
-    //               let dialog2 = this.callfc.openSide(
-    //                 CashPaymentAddComponent,
-    //                 data,
-    //                 optionSidebar,
-    //                 this.view.funcID
-    //               );
-    //               dialog2.closed.subscribe((res) => {
-    //                 if (res && res?.event) {
-    //                   if (res?.event?.type === 'discard') {
-    //                     if (this.view.dataService.data.length == 0) {
-    //                       this.itemSelected = undefined;
-    //                       this.detectorRef.detectChanges();
-    //                     }
-    //                   }
-    //                 }
-    //               });
-    //               this.view.dataService
-    //                 .add(datas)
-    //                 .pipe(takeUntil(this.destroy$))
-    //                 .subscribe();
-    //             }
-    //           });
-    //       }
-    //     });
-    // }
+    let newdataCopy = { ...dataCopy };
+    if (this.journal && this.journal.assignRule == '0') {
+      let data = {
+        journalType: this.journal.journalType,
+        journalNo: this.journalNo,
+      };
+      let opt = new DialogModel();
+      opt.FormModel = this.view.formModel;
+      let dialog = this.callfc.openForm(
+        NewvoucherComponent,
+        'Nhập số chứng từ mới',
+        null,
+        null,
+        '',
+        data,
+        '',
+        opt
+      );
+      dialog.closed.subscribe((res) => {
+        if (res && res?.event) {
+          let newvoucherNo = res?.event;
+          newdataCopy.voucherNo = newvoucherNo;
+          this.view.dataService
+            .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res: any) => {
+              if (res != null) {
+                res.isCopy = true;
+                let datas = { ...res };
+                this.view.dataService
+                  .saveAs(datas)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe((res) => {
+                    if (res) {
+                      let data = {
+                        headerText: this.headerText,
+                        journal: { ...this.journal },
+                        oData: { ...datas },
+                        hideFields: [...this.hideFields],
+                        baseCurr: this.baseCurr,
+                      };
+                      let optionSidebar = new SidebarModel();
+                      optionSidebar.DataService = this.view?.dataService;
+                      optionSidebar.FormModel = this.view?.formModel;
+                      let dialog2 = this.callfc.openSide(
+                        CashCountingsAddComponent,
+                        data,
+                        optionSidebar,
+                        this.view.funcID
+                      );
+                      dialog2.closed.subscribe((res) => {
+                        if (res && res?.event) {
+                          if (res?.event?.type === 'discard') {
+                            if (this.view.dataService.data.length == 0) {
+                              this.itemSelected = undefined;
+                              this.detectorRef.detectChanges();
+                            }
+                          }
+                        }
+                      });
+                      this.view.dataService
+                        .add(datas)
+                        .pipe(takeUntil(this.destroy$))
+                        .subscribe();
+                    }
+                    this.onDestroy();
+                  });
+              }
+            });
+        }
+      });
+    } else {
+      this.view.dataService
+        .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res: any) => {
+          if (res != null) {
+            res.isCopy = true;
+            let datas = { ...res };
+            this.view.dataService
+              .saveAs(datas)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((res) => {
+                if (res) {
+                  let data = {
+                    headerText: this.headerText,
+                    journal: { ...this.journal },
+                    oData: { ...datas },
+                    hideFields: [...this.hideFields],
+                    baseCurr: this.baseCurr,
+                  };
+                  let optionSidebar = new SidebarModel();
+                  optionSidebar.DataService = this.view?.dataService;
+                  optionSidebar.FormModel = this.view?.formModel;
+                  let dialog2 = this.callfc.openSide(
+                    CashCountingsAddComponent,
+                    data,
+                    optionSidebar,
+                    this.view.funcID
+                  );
+                  dialog2.closed.subscribe((res) => {
+                    if (res && res?.event) {
+                      if (res?.event?.type === 'discard') {
+                        if (this.view.dataService.data.length == 0) {
+                          this.itemSelected = undefined;
+                          this.detectorRef.detectChanges();
+                        }
+                      }
+                    }
+                  });
+                  this.view.dataService
+                    .add(datas)
+                    .pipe(takeUntil(this.destroy$))
+                    .subscribe();
+                }
+                this.onDestroy();
+              });
+          }
+        });
+    }
   }
 
   /**
@@ -467,26 +458,24 @@ onDestroy() {
    * @param dataEdit : data chứng từ chỉnh sửa
    */
   viewVoucher(dataView) {
-    // delete dataView.isEdit;
-    // dataView.isReadOnly = true;
-    // let data = {
-    //   headerText: this.headerText,
-    //   journal: { ...this.journal },
-    //   oData: { ...dataView },
-    //   hideFields: [...this.hideFields],
-    //   baseCurr: this.baseCurr,
-    //   legalName: this.legalName,
-    // };
-    // let optionSidebar = new SidebarModel();
-    // optionSidebar.DataService = this.view?.dataService;
-    // optionSidebar.FormModel = this.view?.formModel;
-    // let dialog = this.callfc.openSide(
-    //   CashPaymentAddComponent,
-    //   data,
-    //   optionSidebar,
-    //   this.view.funcID
-    // );
-    // dialog.closed.subscribe((res) => {});
+    delete dataView.isEdit;
+    dataView.isReadOnly = true;
+    let data = {
+      headerText: this.headerText,
+      journal: { ...this.journal },
+      oData: { ...dataView },
+      hideFields: [...this.hideFields],
+    };
+    let optionSidebar = new SidebarModel();
+    optionSidebar.DataService = this.view?.dataService;
+    optionSidebar.FormModel = this.view?.formModel;
+    let dialog = this.callfc.openSide(
+      CashCountingsAddComponent,
+      data,
+      optionSidebar,
+      this.view.funcID
+    );
+    dialog.closed.subscribe((res) => {});
   }
 
   /**
@@ -494,17 +483,17 @@ onDestroy() {
    * @param dataDelete : data xóa
    */
   deleteVoucher(dataDelete) {
-    // this.view.dataService
-    //   .delete([dataDelete], true)
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res && !res?.error) {
-    //       if (this.view.dataService.data.length == 0) {
-    //         this.itemSelected = undefined;
-    //         this.detectorRef.detectChanges();
-    //       }
-    //     }
-    //   });
+    this.view.dataService
+      .delete([dataDelete], true)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res && !res?.error) {
+          if (this.view.dataService.data.length == 0) {
+            this.itemSelected = undefined;
+            this.detectorRef.detectChanges();
+          }
+        }
+      });
   }
 
   /**
@@ -676,16 +665,16 @@ onDestroy() {
    * *Hàm get data mặc định của chứng từ
    */
   getJournal() {
+    let options = new DataRequest();
+    options.entityName = 'AC_Journals';
+    options.pageLoading = false;
+    options.predicates = 'JournalNo=@0';
+    options.dataValues = this.journalNo;
     this.api
-      .exec('AC', 'ACBusiness', 'GetJournalAsync', [this.journalNo])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res) {
-          this.journal = res[0]; // data journal
-          this.hideFields = res[1]; // array field ẩn từ sổ nhật kí
-          console.log(this.journal);
-        }
-      });
+      .execSv('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(map((r) => r?.[0] ?? [])).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+        this.journal = res[0]; 
+      })
   }
 
   /**
@@ -695,7 +684,6 @@ onDestroy() {
   setDefault(data: any, action: any = '') {
     return this.api.exec('AC', 'CountingsBusiness', 'SetDefaultAsync', [
       data,
-      this.journal,
       this.journalNo,
       action,
     ]);

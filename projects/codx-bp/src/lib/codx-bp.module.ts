@@ -88,6 +88,7 @@ import { PropertyCbbDependenceComponent } from './modeview/properties/property-c
 import { ViewListProcessesComponent } from './processes/view-list-processes/view-list-processes.component';
 import { TramTestDiagramComponent } from './tram-test-diagram/test-diagram.component';
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
+import { PropertyAttachmentAddRowComponent } from './modeview/properties/property-attachment/property-attachment-add-row/property-attachment-add-row.component';
 
 export const routes: Routes = [
   {
@@ -175,7 +176,8 @@ export const routes: Routes = [
     PropertyTableComponent,
     PropertyUserinfoComponent,
     PropertyCbbDependenceComponent,
-
+    PropertyAttachmentAddRowComponent,
+    
     FormSettingComboboxComponent,
     FormAdvancedSettingsComponent,
     PopupPermissionsProcessesComponent,

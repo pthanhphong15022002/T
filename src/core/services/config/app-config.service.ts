@@ -19,7 +19,9 @@ export class AppConfigService extends AppConfig {
         environment.apiUrl = res.apiUrl;
         environment.shopping = res.shopping;
         environment.urlUpload = res.urlUpload;
-        environment.appName = res.appName;
+        environment.bankhubUrl = res.bankhubUrl;
+        (environment.isUserBankHub = res.isUserBankHub),
+          (environment.appName = res.appName);
         environment.reportUrl = res.reportUrl;
         environment.office365 = res.office365;
         environment.saas = res.saas;

@@ -81,7 +81,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   // textColor: '#FFFFFF',
   // textPosition: POSITION.centerCenter,
   // maxTime: -1,
-  minTime: 100
+  minTime: 100,
 };
 
 @NgModule({
@@ -99,7 +99,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     HttpClientModule,
 
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
-    NgxUiLoaderRouterModule,//forRoot({ showForeground: true }), // import this module for showing loader automatically when navigating between app routes
+    NgxUiLoaderRouterModule, //forRoot({ showForeground: true }), // import this module for showing loader automatically when navigating between app routes
     NgxUiLoaderHttpModule.forRoot({ showForeground: false }),
 
     SharedModule,
@@ -140,4 +140,4 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

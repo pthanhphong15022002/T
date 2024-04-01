@@ -3,7 +3,7 @@ import { AuthStore, ButtonModel, DataRequest, NotificationsService, TenantStore,
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 
 @Component({
@@ -27,7 +27,6 @@ userID: any;
 dataCategory: any;
 journal: any;
 baseCurr: any;
-legalName: any;
 dataDefault: any;
 hideFields: Array<any> = [];
 button: ButtonModel[] = [
@@ -37,10 +36,6 @@ button: ButtonModel[] = [
     icon: 'icon-i-file-earmark-plus',
   },
 ];
-bhLogin: boolean = false;
-bankPayID: any;
-bankNamePay: any;
-bankReceiveName: any;
 predicate: string = 'JournalNo=@0';
 viewActive: number = ViewType.listdetail;
 ViewType = ViewType;
@@ -56,14 +51,13 @@ constructor(
 ) {
   super(inject);
   this.cache
-    .companySetting()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (res.length > 0) {
-        this.baseCurr = res[0].baseCurr;
-      }
-    });
-  this.router.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+    .viewSettingValues('ACParameters')
+    .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
+    .subscribe((res) => {
+      let dataValue = JSON.parse(res.dataValue);
+      this.baseCurr = dataValue?.BaseCurr || '';
+    })
+  this.router.params.subscribe((params) => {
     this.journalNo = params?.journalNo;
   });
 
@@ -81,7 +75,6 @@ onInit(): void {
   if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
   this.cache
     .functionList(this.funcID)
-    .pipe(takeUntil(this.destroy$))
     .subscribe((res) => {
       if (res) {
         this.headerText = res?.defaultName || res?.customName;
@@ -675,16 +668,16 @@ onDestroy() {
    * *Hàm get data mặc định của chứng từ
    */
   getJournal() {
+    let options = new DataRequest();
+    options.entityName = 'AC_Journals';
+    options.pageLoading = false;
+    options.predicates = 'JournalNo=@0';
+    options.dataValues = this.journalNo;
     this.api
-      .exec('AC', 'ACBusiness', 'GetJournalAsync', [this.journalNo])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res) {
-          this.journal = res[0]; // data journal
-          this.hideFields = res[1]; // array field ẩn từ sổ nhật kí
-          console.log(this.journal);
-        }
-      });
+      .execSv('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(map((r) => r?.[0] ?? [])).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+        this.journal = res[0]; 
+      })
   }
 
   /**
@@ -694,7 +687,6 @@ onDestroy() {
   setDefault(data: any, action: any = '') {
     return this.api.exec('AC', 'CountingsBusiness', 'SetDefaultAsync', [
       data,
-      this.journal,
       this.journalNo,
       action,
     ]);

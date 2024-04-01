@@ -65,7 +65,7 @@ export class ListContractsComponent implements OnInit, OnChanges {
   entityName = 'CM_Contracts';
   className = 'ContractsBusiness';
   assemblyName = 'ERM.Business.CM';
-  methodLoadData = 'GetListContractsAsync';
+  methodLoadData = 'GetAllContractsAsync';
 
   formModel: FormModel = {
     funcID: 'CM0204',

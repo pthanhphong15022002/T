@@ -114,7 +114,7 @@ export class ContractsComponent extends UIComponent {
   entityName = 'CM_Contracts';
   className = 'ContractsBusiness';
   assemblyName = 'ERM.Business.CM';
-  methodLoadData = 'GetListContractsAsync';
+  methodLoadData = 'GetAllContractsAsync';
   predicates = 'RefType==@0 && RefID==@1';
   button?: ButtonModel[] = [{ id: 'btnAdd' }];
   views: Array<ViewModel> = [];
