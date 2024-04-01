@@ -25,6 +25,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
 import { CodxBpService } from '../../codx-bp.service';
 import { CoDxAddApproversComponent } from 'projects/codx-common/src/lib/component/codx-approval-procress/codx-add-approvers/codx-add-approvers.component';
+import { BP_DocumentControl, BP_Files } from '../../models/BP_DocumentControl.model';
 
 @Component({
   selector: 'lib-popup-bp-tasks',
@@ -53,6 +54,7 @@ export class PopupBpTasksComponent implements OnInit {
   privileged = true;
   countCheck = 0;
   lstFile = [];
+  attDoc = new BP_DocumentControl();
   constructor(
     private authstore: AuthStore,
     private callfc: CallFuncService,
@@ -196,7 +198,7 @@ export class PopupBpTasksComponent implements OnInit {
     } else this.info = info;
   }
 
-  onSave(status = '5') {
+  async onSave(status = '5') {
     if (this.checkList?.length > 0) {
       for (let i = 0; i < this.checkList.length; i++) {
         const item = this.checkList[i];
@@ -206,6 +208,60 @@ export class PopupBpTasksComponent implements OnInit {
         }
       }
     }
+
+    if(this.attachment?.fileUploadList?.length>0){
+      if (
+        this.attachment.fileUploadList &&
+        this.attachment.fileUploadList.length > 0
+      ) {
+        this.attachment.addPermissions = this.data?.permissions;
+        this.attachment.objectId = this.data?.recID;
+        (await this.attachment.saveFilesObservable()).subscribe(
+          (uploaded: any) => {
+            if (uploaded) {
+              this.attDoc.stepID = this.data?.stepID;
+              this.attDoc.stepNo =this.data?.indexNo;
+              this.attDoc.title=this.data?.taskName;
+              this.attDoc.permissions=this.data?.permissions;
+              this.attDoc.files=[];
+              let arrFile=[]
+              if(uploaded?.length>1)
+              {
+                arrFile=uploaded;
+              }
+              else{ 
+                arrFile =[uploaded]
+              }
+              Array.from(arrFile).forEach((f:any)=>{
+                if(f?.data){
+                  let docFile = new BP_Files();
+                  docFile.fileID = f?.data?.recID;
+                  docFile.fileName = f?.data?.fileName;
+                  docFile.esign = false;
+                  docFile.type="1";      
+                  this.attDoc.files.push(docFile);
+                }
+              });
+            }
+            
+            this.bpSv.addDocControl(this.dataIns?.recID,this.data?.recID, [this.attDoc]).subscribe(added=>{
+              if(added ==null){
+                
+              }              
+              this.updateTaskStatus(status);
+            })
+
+          }
+        );
+      }
+    }
+    else{
+      this.updateTaskStatus(status);
+    }
+
+    
+  }
+  updateTaskStatus(status){
     //Update Task Status test
     this.api
       .execSv(
@@ -223,6 +279,7 @@ export class PopupBpTasksComponent implements OnInit {
         }
       });
   }
+  
 
   sendMail() {
     let data = {
@@ -290,7 +347,10 @@ export class PopupBpTasksComponent implements OnInit {
   addFile(evt: any) {
     this.attachment.uploadFile();
   }
-  fileAdded(e) {}
+  fileAdded(e) {
+    
+
+  }
   getfileCount(e) {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
