@@ -200,7 +200,15 @@ export class AssetJournalsAddComponent extends UIComponent {
   }
   //#endregion
 
-  valueChangeMaster(e) {}
+  valueChangeMaster(e) {
+    if(e && e?.field){
+      switch (e.field) {
+        case'objectID':
+          this.formAsset.data.objectType = e?.type;
+          break;
+      }
+    }
+  }
 
   //#region  tab grid lines
   initGrid(eleGrid: CodxGridviewV2Component) {
