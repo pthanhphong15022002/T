@@ -39,6 +39,7 @@ import { LayoutTenantComponent } from '@modules/auth/tenants/layout/layout.compo
 import { SosComponent } from '@pages/sos/sos.component';
 import { CodxContainersComponent } from './codx-containers/codx-containers.component';
 import { CodxPmModule } from 'projects/codx-pm/src/public-api';
+import { ReceiveResponseBankHubComponent } from './pages/receive-response-bank-hub/receive-response-bank-hub.component';
 
 registerLocaleData(localeVi);
 
@@ -91,6 +92,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     SosComponent,
     LayoutTenantComponent,
     CodxContainersComponent,
+    ReceiveResponseBankHubComponent,
   ],
   imports: [
     BrowserModule,

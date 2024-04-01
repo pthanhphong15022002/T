@@ -2,12 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   Injector,
-  NgZone,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
-  AuthStore,
   ButtonModel,
   CRUDService,
   DataRequest,
@@ -15,7 +13,6 @@ import {
   FormModel,
   NotificationsService,
   SidebarModel,
-  TenantStore,
   UIComponent,
   ViewModel,
   ViewType,
@@ -34,8 +31,8 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
-import { Router } from '@angular/router';
 import { JournalsAddComponent } from '../../journals/journals-add/journals-add.component';
+import { PopupInfoTransferComponent } from '../../share/popup-info-transfer/popup-info-transfer.component';
 declare var jsBh: any;
 @Component({
   selector: 'lib-cashpayments',
@@ -850,7 +847,10 @@ export class CashPaymentsComponent extends UIComponent {
                     this.view.dataService.update(data).subscribe();
                     this.notification.notifyCode('AC0029', 0, text);
                   } else {
-                    this.notification.notify(res.data.data.result.message, '2');
+                    this.notification.notify(
+                      res.data?.data?.result?.message,
+                      '2'
+                    );
                   }
                   this.onDestroy();
                 });
@@ -884,9 +884,23 @@ export class CashPaymentsComponent extends UIComponent {
                   if (res && !res?.error) {
                     data.status = '8';
                     this.view.dataService.update(data).subscribe();
-                    // this.notification.notifyCode('AC0029', 0, text);
+                    let opt = new DialogModel();
+                    opt.FormModel = this.view.formModel;
+                    let dialog = this.callfc.openForm(
+                      PopupInfoTransferComponent,
+                      'Thông tin lệnh chuyển',
+                      null,
+                      null,
+                      '',
+                      data.eBanking,
+                      '',
+                      opt
+                    );
                   } else {
-                    this.notification.notify(res.data.data.result.message, '2');
+                    this.notification.notify(
+                      res?.data?.data?.result?.message,
+                      '2'
+                    );
                   }
                   this.onDestroy();
                 });
