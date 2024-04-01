@@ -17,7 +17,7 @@
           <ng-container *ngIf="!formJournal?.form?.data.isTemplate">
             <codx-label fiedName="JournalName" [formModel]="dialog.formModel"></codx-label>
             <codx-input #eleCbxJournalName field="journalName" [formModel]="dialog.formModel"
-              (valueChange)="valueChange($event)" [Group]="formJournal?.form?.formGroup"></codx-input>
+              (valueChange)="valueChange($event)" [Group]="formJournal?.form?.formGroup" [disabled]="(formJournal?.form?.data.isEdit && formJournal?.form?.data.transCount > 0) ? true : false"></codx-input>
           </ng-container>
         </div>
         <div class="col-6 form-group">
@@ -65,17 +65,21 @@
         <codx-input field="cashBookID" [formModel]="dialog.formModel"
           [Group]="formJournal?.form?.formGroup"></codx-input>
       </div>
-      <div [ngStyle]="vllAC122.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}"
-        class="form-group">
-        <codx-label fiedName="ReasonID" [formModel]="dialog.formModel"></codx-label>
-        <codx-input field="reasonID" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+      <div [ngStyle]="vllAC122.includes(formJournal?.form?.data?.journalType) || vllAC107.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}">
+        <ng-container *ngFor="let item of vllAC201">
+          <div *ngIf="item.value === formJournal?.form?.data?.journalType" class="form-group">
+            <codx-label fiedName="ReasonID" [formModel]="dialog.formModel"></codx-label>
+            <codx-input field="reasonID" type="combobox" [refValue]="item.text" [refType]="'3'" [crrValue]="formJournal?.form?.data?.reasonID"
+            (valueChange)="valueChange($event)"></codx-input>
+          </div> 
+        </ng-container>   
       </div>
-      <div [ngStyle]="vllAC107.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}"
+      <!-- <div [ngStyle]=" ? '' :{display:'none'}"
         class="form-group">
         <codx-label fiedName="ReasonID" [formModel]="dialog.formModel"></codx-label>
         <codx-input type="combobox" field="reasonID" refType="3" refValue="InventoryReasonsAC"
           [crrValue]="formJournal?.form?.data?.reasonID" (valueChange)="valueChange($event)"></codx-input>
-      </div>
+      </div> -->
       <div [ngStyle]="vllAC104.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}"
         class="form-group">
         <codx-label fiedName="SubType" [formModel]="dialog.formModel"></codx-label>
@@ -441,6 +445,30 @@
         <codx-label fiedName="UseExciseTax" [formModel]="dialog.formModel"></codx-label>
         <codx-input field="useExciseTax" [formModel]="dialog.formModel"
           [Group]="formJournal?.form?.formGroup"></codx-input>
+      </div>
+      <div [style]="vllAC126.includes(formJournal?.form?.data?.journalType) ? '' : 'display: none !important;'"
+        class="d-flex justify-content-between form-group">
+        <codx-label fiedName="DiscountControl" [formModel]="dialog.formModel"></codx-label>
+        <codx-input field="discountControl" [formModel]="dialog.formModel"
+        [crrValue]="formJournal?.form?.data?.discountControl == '1' ? true : false" (valueChange)="valueChange($event)"></codx-input>
+      </div>
+      <div [style]="vllAC126.includes(formJournal?.form?.data?.journalType) ? '' : 'display: none !important;'"
+        class="d-flex justify-content-between form-group">
+        <codx-label fiedName="COSControl" [formModel]="dialog.formModel"></codx-label>
+        <codx-input field="cosControl" [formModel]="dialog.formModel"
+        [crrValue]="formJournal?.form?.data?.cosControl == '1' ? true : false" (valueChange)="valueChange($event)"></codx-input>
+      </div>
+      <div [style]="vllAC126.includes(formJournal?.form?.data?.journalType) ? '' : 'display: none !important;'"
+        class="d-flex justify-content-between form-group">
+        <codx-label fiedName="MiscChargeControl" [formModel]="dialog.formModel"></codx-label>
+        <codx-input field="miscChargeControl" [formModel]="dialog.formModel"
+        [Group]="formJournal?.form?.formGroup"></codx-input>
+      </div>
+      <div [style]="vllAC126.includes(formJournal?.form?.data?.journalType) && formJournal?.form?.data?.journalType === 'SI'  ? '' : 'display: none !important;'"
+        class="d-flex justify-content-between form-group">
+        <codx-label fiedName="CommissionControl" [formModel]="dialog.formModel"></codx-label>
+        <codx-input field="commissionControl" [formModel]="dialog.formModel"
+        [Group]="formJournal?.form?.formGroup"></codx-input>
       </div>
     </div>
     <div [ngStyle]="vllAC108.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}">

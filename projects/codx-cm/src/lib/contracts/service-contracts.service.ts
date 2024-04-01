@@ -190,7 +190,7 @@ export class ContractsService {
     return this.api.exec<any>(
       'CM',
       'ContractsBusiness',
-      'GetContractByRecIDAsync',
+      'GetOneAsync',
       data
     );
   }

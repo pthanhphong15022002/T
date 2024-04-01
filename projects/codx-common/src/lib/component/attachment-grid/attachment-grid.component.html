@@ -1,4 +1,26 @@
-<table class="table mt-2">
+<div class="d-flex flex-column mt-4" *ngFor="let item of data, let i = index">
+  <div class="d-flex align-items-center justify-content-between">
+    <div class="d-flex flex-column">
+      <span>{{item.title}} <span class="text-danger ms-1" *ngIf="item.isRequired">(*)</span></span>
+      <span class="text-gray-500">{{item.memo}}</span>
+    </div>
+    <div class="position-relative cursor-pointer"><span class="rounder-attach rounded-circle" *ngIf="item?.countAttach" (click)="openFormDetail(item?.fileAttach,('attach' + dataIns.recID))">{{item.countAttach}}</span><i class="icon-attach_file" (click)="openAttach(item.recID,i)"></i></div>
+  </div>
+  <div class="d-flex align-items-center justify-content-between mt-2" *ngFor="let item2 of item.files">
+    <codx-thumbnail
+      [files]="genHTML(item2.fileID)" 
+      displayThumb="simple" 
+      [hideDelete]="'1'"
+      [hideMoreF]="'0'"
+    >
+    </codx-thumbnail>
+    <div class="d-flex align-items-center">
+      <i class="icon-edit cursor-pointer" (click)="editFile(item2.fileID,i)"></i>
+    </div>
+  </div>
+</div>
+
+<!-- <table class="table mt-2">
     <thead>
       <tr class="fw-bold bg-light">
         <th scope="col"><codx-label default="Danh sách file đính kèm" [formName]="formModel?.formName" [fiedName]="'lblAttachGridListAttach'"></codx-label></th>
@@ -15,8 +37,8 @@
           <td class="position-relative"><span class="rounder-attach rounded-circle" *ngIf="item?.countAttach" (click)="openFormDetail(item.files,('attach' + dataIns.recID))">{{item.countAttach}}</span><i class="icon-attach_file" (click)="openAttach(item.recID,i)"></i></td>
       </tr>
     </tbody>
-  </table>
+  </table> -->
   <codx-attachment #attachment hideImageThumb="1" hideImageUpload="1" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
     hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel" 
-    [idField]="'RecID'" [isSaveSelected]="'1'" [objectType]="formModel?.entityName" [referType]="'attach'" (fileSave)="fileSave($event)">
+    [idField]="'RecID'"  [objectType]="formModel?.entityName" [referType]="'attach'" (fileAdded)="fileAdded($event)">
   </codx-attachment>

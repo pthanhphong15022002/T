@@ -27,12 +27,13 @@
         <div
           class="d-flex align-items-center p-3 border rounded h-40px m-3"
           style="cursor: pointer"
-          [id]="item.id"
+          [id]="item.value"
           cdkDrag
           cdkDragBoundary=".diagramzone"
           *ngFor="let item of menuDrag"
           (cdkDragStarted)="onDragStart($event)"
           (cdkDragDropped)="dragEnter($event)"
+          [style.border]="'1px solid'+item.color ? item.color : '#000'"
         >
           <span
             class="icon-20 me-2"
@@ -193,9 +194,8 @@
       <ejs-diagram
         #diagram
         [snapSettings]="snapSettings"
+        [scrollSettings]="scrollSettings"
         (created)="created()"
-        (mouseEnter)="mouseEnter($event)"
-        (selectionChange)="onSelect($event)"
         [contextMenuSettings]="contextMenuSettings"
         (contextMenuOpen)="contextMenuOpen($event)"
         (contextMenuClick)="contextMenuClick($event)"
@@ -203,10 +203,10 @@
         (elementDraw)="eleDraw($event)"
         (positionChange)="onDrop($event)"
         [selectedItems]="selectedItems"
-        (onUserHandleMouseDown)="userHandleClick($event)"
         (collectionChange)="collectionChange($event)"
         [drawingObject]=" { type: 'Orthogonal' }"
         [serializationSettings]="{preventDefaults: true}"
+        (textEdit)="textEdit($event)"
       >
         <ng-template #nodeTemplate let-data>
           <ng-container [ngSwitch]="data?.shape?.version?.toLowerCase()">
@@ -270,6 +270,14 @@
               <ng-container
                 *ngTemplateOutlet="
                   checkTemplate;
+                  context: { $implicit: data }
+                "
+              ></ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="'step'">
+              <ng-container
+                *ngTemplateOutlet="
+                  stepTemplate;
                   context: { $implicit: data }
                 "
               ></ng-container>
@@ -592,6 +600,47 @@
               default="Kiểm tra"
               name="lblCheck"
             ></codx-label>
+          </span>
+        </div>
+        <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
+          <div class="border rounded bg-warning px-1 me-3 fs-7">{{data.data?.duration +' '+ getIntervalObject(data.data?.interval).text}}</div>
+          <i class="icon-i-three-dots icon-16 me-2"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
+        </div>
+      </div>
+      <div
+        class="row h-70px d-flex align-items-center border rounded mx-3"
+        style="background-color: #fff"
+      >
+        <h5 class="fw-bold">{{data.data?.stepName}}</h5>
+        <span class="text-truncate" title="{{data.data?.memo}}">{{data.data?.memo}}</span>
+      </div>
+      <div class="row h-50px">
+        <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
+          <codx-imgs  [objectId]="getUserPermission(data.data?.permissions)"
+            objectType="AD_Users" [width]="35"  [numberImages]="2" *ngIf="data.data?.permissions">
+          </codx-imgs>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+<ng-template #stepTemplate let-data>
+  <ng-container class="border rounded" style="background-color: #fff">
+    <div
+      class="container h-auto w-300px border  rounded px-0"
+      style="background-color: #fff"
+      [style.border]="'2px solid'+getVllObject(data.data?.activityType).color +' !important'"
+    >
+      <div class="row h-30px">
+        <div
+          class="col-6 d-flex align-items-center p-1 ps-3"
+          (click)="clickAddForm(data)"
+          [style.color]="getVllObject(data.data?.activityType).color"
+        >
+        <span class="{{getVllObject(data.data?.activityType).icon}} icon-21 me-1"></span>
+          <span class="fw-bold fs-5"
+            >{{getVllObject(data.data?.activityType).text}}
           </span>
         </div>
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">

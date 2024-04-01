@@ -4,6 +4,7 @@ import { ApiHttpService, CacheService, DialogData, DialogRef, Util } from 'codx-
 import { count } from './modeview.variable';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 const DragConfig = {
   dragStartThreshold: 0,
   pointerDirectionChangeThreshold: 5,
@@ -28,8 +29,10 @@ export class ModeviewComponent implements OnInit {
   dataSelected: any;
   dialog:any;
   viewType = 1;
+  formModel:any;
+  listInfoFile = [];
   constructor(
-    private cache: CacheService,
+    public dmSV: CodxDMService,
     private api: ApiHttpService,
     private shareService: CodxShareService,
     @Optional() dt?: DialogData,
@@ -38,6 +41,7 @@ export class ModeviewComponent implements OnInit {
   {
     this.data = this.data || dt?.data?.extendInfo;
     this.stepNo = this.stepNo || dt?.data?.stepNo;
+    this.formModel = dt?.data?.formModel
     this.dialog = dialog;
   }
 
@@ -141,6 +145,7 @@ export class ModeviewComponent implements OnInit {
         else if(elm.fieldType == "Attachment")
         {
           elm.documentControl = typeof elm.documentControl == 'string' ? JSON.parse(elm.documentControl) :  elm.documentControl;
+          this.formatAttachment(elm)
         }
         elm.text = vlls[indexs].text;
         elm.icon = vlls[indexs].icon;
@@ -457,7 +462,7 @@ export class ModeviewComponent implements OnInit {
     }
     data.recID = Util.uid();
     data.width = "";
-    data.fieldName = this.formatTitle(data.title);
+    
     data.description  =  data.description || "Câu trả lời";
     data.columnOrder = this.table.length;
     data.columnNo = 0;
@@ -467,16 +472,17 @@ export class ModeviewComponent implements OnInit {
     data.dataFormat = data.dataFormat || "";
     data.defaultValue = data.defaultValue || null;
     data.fieldType = data.fieldType || data.value;
+    data.fieldName = this.formatTitle(data.title , data.columnOrder , data.columnNo);
     //data.text = data.title; //Lát bỏ
     return data;
   }
 
-  formatTitle(str:any)
+  formatTitle(str:any,columnOrder:any,columnNo:any)
   {
     str = str.toLowerCase();
     str = str.replaceAll(" ","_");
     str = str.replaceAll("/","_");
-    var res = this.xoa_dau(str) + "_" + this.stepNo;
+    var res = this.xoa_dau(str) + "_" + this.stepNo + "_" + columnOrder + "_" +columnNo;
     return res;
   }
 
@@ -586,7 +592,6 @@ export class ModeviewComponent implements OnInit {
       delete elm.textColor;
       delete elm.value;
     })
-    debugger
     this.dialog.close(result);
   }
 
@@ -609,8 +614,15 @@ export class ModeviewComponent implements OnInit {
       }
     }
     else {
-      e.fieldName = this.formatTitle(e.title);
+      e.fieldName = this.formatTitle(e.title,e.columnOrder,e.columnNo);
       this.table[e?.columnOrder].children[e.columnNo] = e;
+      if(e?.fieldType == "Attachment")
+      {
+        if(Array.isArray(e.documentControl) && e.documentControl.length>0)
+        {
+          this.formatAttachment(e)
+        }
+      }
     }
   }
   
@@ -659,5 +671,46 @@ export class ModeviewComponent implements OnInit {
     if (!key) return '';
 
     return Util.camelize(key);
+  }
+
+  formatAttachment(data:any)
+  {
+    if(data.documentControl && data.documentControl.length>0)
+    {
+      let ids = [];
+      for(var i = 0 ; i < data.documentControl.length ; i++)
+      {
+        if(data.documentControl[i].files && data.documentControl[i].files.length>0)
+        {
+          data.documentControl[i].files.forEach(element => {
+            if(!this.listInfoFile.some(x=>x.recID == element.fileID)) ids.push(element.fileID)
+          });
+        }
+      }
+     
+      this.getFile(ids);
+    }
+  }
+
+  getFile(data:any)
+  {
+    this.api.execSv("DM","DM","FileBussiness","GetListFileByIDAsync",JSON.stringify(data)).subscribe(item=>{
+      if(item) {
+        this.listInfoFile = this.listInfoFile.concat(item);
+      }
+    })
+  }
+
+  genHTML(id:any)
+  {
+    if(!id || this.listInfoFile.length ==0) return "";
+    var file = this.listInfoFile.filter(x => x.recID == id) as any;
+    if(file && file.length>0) {
+      var avatar = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(
+        file[0].extension
+      )}`
+      return '<img src="'+avatar+'" class="w-20px ms-2 me-2"></img><span class="text-gray-600">'+file[0].fileName+'<span>'
+    }
+    return "";
   }
 }

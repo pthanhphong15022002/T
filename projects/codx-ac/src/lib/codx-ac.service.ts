@@ -224,6 +224,14 @@ export const fmCountingMembers: FormModel = {
   entityName: 'AC_CountingMembers',
   entityPer: 'AC_CountingMembers',
 };
+export const fmAsset: FormModel = {
+  formName: 'Assets',
+  gridViewName: 'grvAssets',
+  entityName: 'AM_Assets',
+  entityPer: 'AM_Assets',
+  funcID: 'ACS821',
+};
+
 export enum MorfuncDefault {
   Sua = 'SYS03',
   Xoa = 'SYS02',
@@ -1554,5 +1562,17 @@ export class CodxAcService {
       });
       this.pageTitleService.setChildren(links);
     });
+  }
+
+  replaceData(dataInput, dataOut) {
+    let result = JSON.parse(JSON.stringify(dataOut));
+    let keyInput = Object.keys(dataInput);
+    let keyOut = Object.keys(dataOut);
+    keyInput.forEach((key) => {
+      if (keyOut.includes(key) && key != 'recID' && key != 'placeInService') {
+        result[key] = dataInput[key];
+      }
+    });
+    return result;
   }
 }
