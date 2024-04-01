@@ -27,12 +27,13 @@
         <div
           class="d-flex align-items-center p-3 border rounded h-40px m-3"
           style="cursor: pointer"
-          [id]="item.id"
+          [id]="item.value"
           cdkDrag
           cdkDragBoundary=".diagramzone"
           *ngFor="let item of menuDrag"
           (cdkDragStarted)="onDragStart($event)"
           (cdkDragDropped)="dragEnter($event)"
+          [style.border]="'1px solid'+item.color ? item.color : '#000'"
         >
           <span
             class="icon-20 me-2"
@@ -193,9 +194,8 @@
       <ejs-diagram
         #diagram
         [snapSettings]="snapSettings"
+        [scrollSettings]="scrollSettings"
         (created)="created()"
-        (mouseEnter)="mouseEnter($event)"
-        (selectionChange)="onSelect($event)"
         [contextMenuSettings]="contextMenuSettings"
         (contextMenuOpen)="contextMenuOpen($event)"
         (contextMenuClick)="contextMenuClick($event)"
@@ -203,10 +203,10 @@
         (elementDraw)="eleDraw($event)"
         (positionChange)="onDrop($event)"
         [selectedItems]="selectedItems"
-        (onUserHandleMouseDown)="userHandleClick($event)"
         (collectionChange)="collectionChange($event)"
         [drawingObject]=" { type: 'Orthogonal' }"
         [serializationSettings]="{preventDefaults: true}"
+        (textEdit)="textEdit($event)"
       >
         <ng-template #nodeTemplate let-data>
           <ng-container [ngSwitch]="data?.shape?.version?.toLowerCase()">

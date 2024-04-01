@@ -38,9 +38,7 @@
             class="text-white bi bi-eye icon-16"
           ></i>
         </div>
-        <div
-          class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase"
-        >
+        <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase">
           {{ headerText }}
         </div>
         <div class="ms-1">
@@ -341,7 +339,29 @@
               </div>
             </div>
           </div>
-
+          <div class="row mb-4" style="max-width: 1000px" *ngIf="dialog.formModel.funcID == 'ACT811'">
+            <div class="col-10">
+              <div class="form-group mb-0">
+                <codx-label
+                  #elelblObjectID
+                  style="white-space: nowrap !important"
+                  fiedName="ObjectID"
+                  [formModel]="dialog.formModel"
+                  default="Đối tượng"
+                >
+                </codx-label>
+                <codx-input
+                  [disabled]="formAsset.data?.isReadOnly ? true : false"
+                  #eleCbxObjectID
+                  [Group]="formAsset.formGroup"
+                  [formModel]="dialog.formModel"
+                  field="objectID"
+                  (valueChange)="valueChangeMaster($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+          </div>
           <div class="row" style="max-width: 1000px">
             <div class="col-10">
               <div class="form-group mb-0">
@@ -521,7 +541,10 @@
     >
       <div class="button-position">
         <ng-container *ngIf="!formAsset.data?.isReadOnly">
-          <div class="d-flex align-items-center" *ngIf="dialog.formModel.funcID == 'ACT811'">
+          <div
+            class="d-flex align-items-center"
+            *ngIf="dialog.formModel.funcID == 'ACT811'"
+          >
             <button
               style="border: 1px solid !important"
               tab-index="15"

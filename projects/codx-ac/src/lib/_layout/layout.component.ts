@@ -1,17 +1,15 @@
 import {
-  ChangeDetectionStrategy,
   Component,
-  HostListener,
+  Inject,
   Injector,
+  Renderer2,
   ViewEncapsulation,
 } from '@angular/core';
-import {
-  DialogRef,
-  LayoutBaseComponent,
-} from 'codx-core';
-
+import { DialogRef, LayoutBaseComponent } from 'codx-core';
+import { environment } from 'src/environments/environment';
 import { RoundService } from '../round.service';
 import { ActivatedRoute } from '@angular/router';
+import { DOCUMENT } from '@angular/common';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
@@ -24,7 +22,7 @@ export class LayoutComponent extends LayoutBaseComponent {
   constructor(
     inject: Injector,
     private round: RoundService,
-    private router: ActivatedRoute,
+    private router: ActivatedRoute
   ) {
     super(inject);
     this.module = 'AC';
@@ -32,6 +30,5 @@ export class LayoutComponent extends LayoutBaseComponent {
   }
   onInit(): void {}
 
-  onAfterViewInit(): void {
-  }
+  onAfterViewInit(): void {}
 }

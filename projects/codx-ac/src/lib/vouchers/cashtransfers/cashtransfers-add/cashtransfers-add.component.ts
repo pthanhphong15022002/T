@@ -39,8 +39,6 @@ export class CashtransfersAddComponent extends UIComponent {
   postDateControl:any;
   isload:any = false;
   isPreventChange:any = false;
-  cashbookname1:any='';
-  cashbookname2:any='';
   feeVATID:any='';
   vatPct:any=0;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
@@ -171,34 +169,34 @@ export class CashtransfersAddComponent extends UIComponent {
     this.master.setValue('updateColumns','',{});
     switch (field.toLowerCase()) {
       case 'cashbookid':
-        let indexcb = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CashBookID == this.eleCbxCashBook?.ComponentCurrent?.value);
-        if(value == '' || value == null || indexcb == -1){
-          this.isPreventChange = true;
-          this.master.setValue(field,null,{});
-          this.cashbookname1 = '';
-          let memo = this.getMemoMaster();
-          this.master.setValue('memo',memo,{});
-          this.isPreventChange = false;
-          this.detectorRef.detectChanges();
-          return;
-        } 
-        this.cashbookname1 = this.eleCbxCashBook.ComponentCurrent.itemsSelected[0].CashBookName;
+        // let indexcb = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CashBookID == this.eleCbxCashBook?.ComponentCurrent?.value);
+        // if(value == '' || value == null || indexcb == -1){
+        //   this.isPreventChange = true;
+        //   this.master.setValue(field,null,{});
+        //   this.cashbookname1 = '';
+        //   let memo = this.getMemoMaster();
+        //   this.master.setValue('memo',memo,{});
+        //   this.isPreventChange = false;
+        //   this.detectorRef.detectChanges();
+        //   return;
+        // } 
+        // this.cashbookname1 = this.eleCbxCashBook.ComponentCurrent.itemsSelected[0].CashBookName;
         this.cashBookIDChange(field);
         break;
 
       case 'cashbookid2':
-        let indexcb2 = this.eleCbxCashBook2?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CashBookID == this.eleCbxCashBook2?.ComponentCurrent?.value);
-        if(value == '' || value == null || indexcb2 == -1){
-          this.isPreventChange = true;
-          this.master.setValue(field,null,{});
-          this.cashbookname2 = '';
-          let memo = this.getMemoMaster();
-          this.master.setValue('memo',memo,{});
-          this.isPreventChange = false;
-          this.detectorRef.detectChanges();
-          return;
-        } 
-        this.cashbookname2 = this.eleCbxCashBook2.ComponentCurrent.itemsSelected[0].CashBookName;
+        // let indexcb2 = this.eleCbxCashBook2?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CashBookID == this.eleCbxCashBook2?.ComponentCurrent?.value);
+        // if(value == '' || value == null || indexcb2 == -1){
+        //   this.isPreventChange = true;
+        //   this.master.setValue(field,null,{});
+        //   this.cashbookname2 = '';
+        //   let memo = this.getMemoMaster();
+        //   this.master.setValue('memo',memo,{});
+        //   this.isPreventChange = false;
+        //   this.detectorRef.detectChanges();
+        //   return;
+        // } 
+        // this.cashbookname2 = this.eleCbxCashBook2.ComponentCurrent.itemsSelected[0].CashBookName;
         this.cashBookID2Change(field)
         break;
 
@@ -328,18 +326,19 @@ export class CashtransfersAddComponent extends UIComponent {
             this.onDestroy();
             this.dialog.close();
           } else {
-            // this.api
-            //   .exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
-            //     null,
-            //     this.journal,
-            //   ])
-            //   .subscribe((res: any) => {
-            //     if (res) {
-            //       res.data.isAdd = true;
-            //       this.master.refreshData({ ...res.data });             
-            //       this.detectorRef.detectChanges();
-            //     }
-            //   });
+            this.api
+              .exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
+                null,
+                this.journal.journalNo,
+                ""
+              ])
+              .subscribe((res: any) => {
+                if (res) {
+                  res.data.isAdd = true;
+                  this.master.refreshData({ ...res.data });
+                  this.detectorRef.detectChanges();
+                }
+              });
           }
           if (this.master.data.isAdd || this.master.data.isCopy)
             this.notification.notifyCode('SYS006');
@@ -353,8 +352,6 @@ export class CashtransfersAddComponent extends UIComponent {
 
   //#region Function
   cashBookIDChange(field:any){
-    let memo = this.getMemoMaster();
-    this.master.setValue('memo',memo,{});
     this.api.exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
       field,
       this.master.data,
@@ -368,6 +365,9 @@ export class CashtransfersAddComponent extends UIComponent {
         this.master.setValue('exchangeRate',(res?.data?.exchangeRate),{});
         this.master.setValue('multi',(res?.data?.multi),{});
         this.master.setValue('transferAmt2',(res?.data?.transferAmt2),{});
+        this.master.data.cashBook1Name = res?.data?.cashBook1Name;
+        let memo = this.getMemoMaster();
+        this.master.setValue('memo',memo,{});
         this.isPreventChange = false;
         this.preData = {...this.master?.data};
         this.detectorRef.detectChanges();
@@ -376,8 +376,6 @@ export class CashtransfersAddComponent extends UIComponent {
   }
 
   cashBookID2Change(field:any){
-    let memo = this.getMemoMaster();
-    this.master.setValue('memo',memo,{});
     this.api.exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
       field,
       this.master.data,
@@ -391,6 +389,9 @@ export class CashtransfersAddComponent extends UIComponent {
         this.master.setValue('exchangeRate',(res?.data?.exchangeRate),{});
         this.master.setValue('multi',(res?.data?.multi),{});
         this.master.setValue('transferAmt2',(res?.data?.transferAmt2),{});
+        this.master.data.cashBook2Name = res?.data?.cashBook2Name;
+        let memo = this.getMemoMaster();
+        this.master.setValue('memo',memo,{});
         this.isPreventChange = false;
         this.preData = {...this.master?.data};
         this.detectorRef.detectChanges();
@@ -426,16 +427,13 @@ export class CashtransfersAddComponent extends UIComponent {
     let cashbookName = '';
     let cashbookName2 = '';
 
-    let indexcb = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CashBookID == this.eleCbxCashBook?.ComponentCurrent?.value);
-    if (indexcb > -1) {
-      cashbookName = 'Chuyển từ '+this.eleCbxCashBook?.ComponentCurrent?.dataService?.data[indexcb].CashBookName;
+    if (this.master.data.cashBookID) {
+      cashbookName = 'Chuyển từ '+this.master.data.cashBook1Name;
     }
 
-    let indexcb2 = this.eleCbxCashBook2?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CashBookID == this.eleCbxCashBook2?.ComponentCurrent?.value);
-    if (indexcb2 > -1) {
-      cashbookName2 = ' chuyển đến '+this.eleCbxCashBook2?.ComponentCurrent?.dataService?.data[indexcb2].CashBookName;
+    if (this.master.data.cashBookID2) {
+      cashbookName = 'Chuyển đến '+this.master.data.cashBook2Name;
     }
-    
     newMemo = cashbookName + cashbookName2;
     return newMemo;
   }

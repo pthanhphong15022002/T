@@ -7,13 +7,16 @@
     <div class="position-relative cursor-pointer"><span class="rounder-attach rounded-circle" *ngIf="item?.countAttach" (click)="openFormDetail(item?.fileAttach,('attach' + dataIns.recID))">{{item.countAttach}}</span><i class="icon-attach_file" (click)="openAttach(item.recID,i)"></i></div>
   </div>
   <div class="d-flex align-items-center justify-content-between mt-2" *ngFor="let item2 of item.files">
-    <codx-thumbnail
-      [files]="genHTML(item2.fileID)" 
-      displayThumb="simple" 
-      [hideDelete]="'1'"
-      [hideMoreF]="'0'"
-    >
-    </codx-thumbnail>
+    <div class="d-flex align-items-center">
+      <i class="icon-gesture me-2" [class.text-primary]="item2.eSign"></i>
+      <codx-thumbnail
+        [files]="genHTML(item2.fileID)" 
+        displayThumb="simple" 
+        [hideDelete]="'1'"
+        [hideMoreF]="'0'"
+      >
+      </codx-thumbnail>
+    </div>
     <div class="d-flex align-items-center">
       <i class="icon-edit cursor-pointer" (click)="editFile(item2.fileID,i)"></i>
     </div>
