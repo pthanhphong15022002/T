@@ -228,7 +228,7 @@ export class AddTaskComponent
     this.data.eventControl = null;
     this.data.interval = '1';
     this.data.memo = '';
-    this.data.duration = 0;
+    this.data.duration = 1;
     this.data.location = '';
     this.data.settings = {
       icon: vllStage?.icon,
@@ -584,7 +584,7 @@ export class AddTaskComponent
       null,
       null,
       '',
-      { extendInfo: this.data.extendInfo, stepNo: this.data.stepNo },
+      { extendInfo: this.data.extendInfo, stepNo: this.data.stepNo , formModel: this.formModel},
       '',
       option
     );

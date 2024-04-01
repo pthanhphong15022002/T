@@ -818,7 +818,7 @@
           [field]="'dateRemind'"
           type="datetime"
           [format]="formatDate"
-          [crrValue]="remindDefault?.dateRemind"
+          [crrValue]="remindDataValue?.dateRemind"
           (valueChange)="valueChangeTimeRM($event)"
           [disabled]="disable"
         >
@@ -838,7 +838,7 @@
               type="number"
               [min]="0"
               [showSpinButton]="false"
-              [crrValue]="remindDefault?.reminderTime"
+              [crrValue]="remindDataValue?.reminderTime"
               (valueChange)="valueChangeRM($event)"
               [disabled]="disable"
             ></codx-input>
@@ -852,7 +852,7 @@
             class="check-circle"
             placeholder=""
             field="isAlert"
-            [crrValue]="remindDefault?.isAlert"
+            [crrValue]="remindDataValue?.isAlert"
             (valueChange)="valueChangeChbx($event)"
             [disabled]="disable"
           >
@@ -867,7 +867,7 @@
                   placeholder=""
                   class="check-circle"
                   field="isMail"
-                  [crrValue]="remindDefault?.isMail"
+                  [crrValue]="remindDataValue?.isMail"
                   (valueChange)="valueChangeChbx($event)"
                   [disabled]="disable"
                 >

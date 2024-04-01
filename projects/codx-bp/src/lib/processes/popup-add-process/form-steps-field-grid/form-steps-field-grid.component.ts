@@ -246,7 +246,8 @@ export class FormStepsFieldGridComponent
       parent: parent,
       stage: stage,
       listStage: lstParent,
-      hideDelete: hideDelete
+      hideDelete: hideDelete,
+      formModel: this.formModel
     };
     let option = new SidebarModel();
     option.Width = 'Auto';
@@ -511,7 +512,7 @@ export class FormStepsFieldGridComponent
       null,
       null,
       '',
-      { extendInfo: data.extendInfo, stepNo: data.stepNo },
+      { extendInfo: data.extendInfo, stepNo: data.stepNo, formModel:this.formModel},
       '',
       option
     );
