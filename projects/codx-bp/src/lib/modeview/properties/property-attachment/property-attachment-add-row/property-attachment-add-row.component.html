@@ -1,0 +1,51 @@
+<codx-form
+    [headerText]="(!data ? 'Thêm' : 'Chỉnh sửa') + ' hồ sơ mẫu'"
+    [dialog]="dialog"
+    [body]="body"
+    [footer]="footer"
+>
+</codx-form>
+<ng-template #body>
+    <div class="d-flex flex-column">
+        <div class="d-flex flex-column">
+            <div class="d-flex align-items-center">
+                <codx-label default="Tên mẫu hồ sơ" [formName]="'fmPropertyAttachAddRow'" [fiedName]="'lblAttachRowTitle'" class="fw-bold"></codx-label>
+                <span class="text-danger mx-2">(*)</span>
+            </div>
+            <codx-input type="text" [field]="'title'" [crrValue]="data?.title" (valueChange)="valueChange($event)"></codx-input>
+        </div>
+        <div class="d-flex flex-column mt-4">
+            <codx-label default="Diễn giải" [formName]="'fmPropertyAttachAddRow'" [fiedName]="'lblAttachRowMemo'" class="fw-bold"></codx-label>
+            <codx-input type="text" [field]="'memo'" [crrValue]="data?.memo" (valueChange)="valueChange($event)"></codx-input>
+        </div>
+        <div class="d-flex align-items-center justify-content-between mt-4">
+            <codx-label default="Bắt buộc" [formName]="'fmPropertyAttachAddRow'" [fiedName]="'lblAttachRowIsRequired'" class="fw-bold"></codx-label>
+            <codx-input type="switch" [field]="'isRequired'" [crrValue]="data?.isRequired" (valueChange)="valueChange($event)"></codx-input>
+        </div>
+        <div class="d-flex align-items-center justify-content-between mt-6 pt-6 border-top">
+            <codx-label default="Đính kèm mẫu" [formName]="'fmPropertyAttachAddRow'" [fiedName]="'lblAttachRowIsRequired'" class="fw-bold"></codx-label>
+            <i class="icon-attach_file cursor-pointer" (click)="openAttachment()"></i>
+        </div>
+        <div class="d-flex flex-column">
+            <div class="d-flex align-item-center justify-content-between mt-4" *ngFor="let item of listFileAttach ; let i = index">
+                <div class="d-flex align-item-center">
+                    <i class="icon-gesture cursor-pointer me-4 mt-1" [class.text-primary]="item?.eSign" (click)="changeEsign(i)"></i>
+                    <codx-temp-full imageSrc="{{item.avatar}}" imgCss="w-25px me-3"
+                        title="{{item.fileName}}"
+                        [descLine]="1">
+                    </codx-temp-full>
+                </div>
+                <i class="icon-close cursor-pointer" (click)="deleteRow(i)"></i>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" [disabled]="disableSave" (click)="!disableSave?onSave():undefined"><codx-label [formName]="formModel?.formName" fiedName="lblSave" default="Lưu"></codx-label></button>
+      </div>
+</ng-template>
+<codx-attachment #attachment hideImageUpload="1" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel"
+[idField]="'RecID'" [hideImageThumb]="'1'" [objectId]="data?.recID" [objectType]="formModel?.entityName" (fileAdded)="fileAdd($event)">
+</codx-attachment>

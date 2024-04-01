@@ -5,31 +5,31 @@
         <codx-input type="text" [crrValue]="data.title" field="title" (valueChange)="changeValue($event)"></codx-input>
         <span class="fst-italic fw-light">ID: {{data?.fieldName}}</span>
     </div>
-    <div class="d-flex flex-column mt-4">
-        <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'documentControl'" default="Danh sách mẫu" class="fw-bold"></codx-label>
-        <table class="table mt-2">
-            <thead>
-              <tr class="bg-light">
-                <th scope="col">Tên file</th>
-                <th scope="col">Mẫu</th>
-                <th scope="col">Bắt buộc</th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody>
-                <tr class="border-top" *ngFor="let item of data.documentControl , let i = index">                
-                    <th><codx-input type="text" placeholder="Tên File" field="title" [crrValue]="item.title" (valueChange)="valueChangeAttach($event,i)"></codx-input></th>
-                    <td><span class="cursor-pointer" (click)="openFormFile(item.files)">{{item.count}}</span><i class="icon-attach_file cursor-pointer" (click)="uploadFile(item.recID, i)"></i></td>
-                    <td class="text-center"><codx-input type="checkbox" [checked]="item.isRequired" field="isRequired" (valueChange)="valueChangeAttach($event,i)"></codx-input></td>
-                    <td><i class="icon-close cursor-pointer" (click)="deleteRow(i)"></i></td>
-                </tr>
-                <tr class="border-top cursor-pointer" (click)="addRow()">                
-                    <th class="text-muted">Thêm file</th>
-                    <td><i class="icon-attach_file"></i></td>
-                    <td class="text-center"><input type="checkbox" disabled/></td>
-                </tr>
-            </tbody>
-          </table>
+    <div class="d-flex flex-column mt-4 border-top pt-4">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'documentControl'" default="Danh sách mẫu" class="fw-bold"></codx-label>
+            <i class="icon-i-plus-square cursor-pointer" (click)="addRow()"></i>
+        </div>
+        <div class="d-flex flex-column py-2" *ngFor="let item of data?.documentControl , let i = index">
+            <div class="d-flex align-items-start justify-content-between">
+                <div class="d-flex flex-column">
+                    <span>{{item?.title}} <span class="text-danger ms-1" *ngIf="item?.isRequired">(*)</span></span>
+                    <span class="text-gray-500">{{item?.memo}}</span>
+                </div>
+                <div>
+                    <i class="icon-create cursor-pointer" (click)="addRow(item)"></i>
+                </div>
+            </div>
+            <ng-container *ngFor="let f of item?.files">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center mt-2">
+                        <i class="icon-gesture me-2 cursor-pointer" [title]="'mẫu ký số'" [class.text-primary]="f.eSign" (click)="eSign(f,i)"></i>
+                        <span [innerHTML]="genHTML(f.fileID)"></span>
+                    </div>
+                    <i class="icon-close cursor-pointer" (click)="deleteRow(f,i)"></i>
+                </div>
+            </ng-container>
+        </div>
     </div>
     <div class="border-top mt-8">
         <div class="d-flex align-items-center mt-4">
@@ -42,23 +42,3 @@
         </div>
     </div>
 </div>
-
-<codx-attachment 
-  #attachment 
-  hideImageUpload="1"
-  hideImageThumb="1" 
-  showMessage="0" 
-  hideBtnSave="1" 
-  hideFolder="1" 
-  hideUploadBtn="1"
-  hideDes="1" 
-  isDeleteTemp="1" 
-  isSaveSelected="1"
-  [allowMultiFile]="1" 
-  [idBrowse]="'add'"
-  hideMoreF="0" 
-  [idField]="'RecID'" 
-  [objectType]="' BP_Processes_Steps_ExtendInfo'"
-  (fileSave)="fileSave($event)"
->
-</codx-attachment>

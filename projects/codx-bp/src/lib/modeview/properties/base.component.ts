@@ -3,6 +3,7 @@ import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogModel }
 import { CodxShareService } from "projects/codx-share/src/public-api";
 import { CodxBpService } from "../../codx-bp.service";
 import { PopupAddAutoNumberComponent } from "projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component";
+import { CodxDMService } from "projects/codx-dm/src/lib/codx-dm.service";
 
 @Component({ template: '' })
 export abstract class BasePropertyComponent
@@ -11,6 +12,7 @@ export abstract class BasePropertyComponent
     @Input() isBack = false;
     @Input() data: any;
     @Input() dataTable: any;
+    @Input() formModel: any;
     @Output() dataChange = new EventEmitter<any>();
     @Output() dataChangeTableEmit = new EventEmitter<any>();
     @Output() back = new EventEmitter<any>();
@@ -21,7 +23,8 @@ export abstract class BasePropertyComponent
       public ref: ChangeDetectorRef,
       public bpService: CodxBpService,
       public callFuc: CallFuncService,
-      public cache: CacheService
+      public cache: CacheService,
+      public dmSV: CodxDMService,
     )
     {
       this.user = this.authstore.get();
