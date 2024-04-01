@@ -8,26 +8,13 @@ import {
 } from '@angular/core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations/src/tab/tab.component';
 import {
-  AuthStore,
   CodxService,
-  DataRequest,
-  DialogModel,
   FormModel,
-  NotificationsService,
-  PageTitleService,
   SidebarModel,
-  TenantStore,
-  UIComponent,
   UIDetailComponent,
-  Util,
 } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
-import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
-import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
-import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { CodxAcService } from '../../../codx-ac.service';
-import { CashreceiptsAddComponent } from '../cashreceipts-add/cashreceipts-add.component';
 declare var jsBh: any;
 @Component({
   selector: 'cashreciept-detail',
@@ -93,21 +80,18 @@ export class CashrecieptDetailComponent extends UIDetailComponent {
     entityName: 'AC_VATInvoices',
   };
   isShowLess: any = false;
-  isShowMore:any = true;
-  isReadMore:any = false;
+  isShowMore: any = true;
+  isReadMore: any = false;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
-  constructor(
-    private inject: Injector,
-    public codxService: CodxService
-  ) {
+  constructor(private inject: Injector, public codxService: CodxService) {
     super(inject);
   }
   //#endregion Constructor
 
   //#region Init
   onInit(): void {
-    if(this.recID) this.getDataDetail(this.dataItem,this.recID);
-    if(!this.formModel) this.getFormModel();
+    if (this.recID) this.getDataDetail(this.dataItem, this.recID);
+    if (!this.formModel) this.getFormModel();
   }
 
   ngAfterViewInit() {
@@ -144,7 +128,7 @@ export class CashrecieptDetailComponent extends UIDetailComponent {
     this.showHideTab(this.itemSelected?.subType, ele);
   }
 
-  selecting(event){
+  selecting(event) {
     if (event.isSwiped) {
       event.cancel = true;
     }
@@ -279,13 +263,13 @@ export class CashrecieptDetailComponent extends UIDetailComponent {
 
   /**
    * *Ham xem them & an bot dien giai
-   * @param type 
+   * @param type
    */
-  onShowMoreLess(type){
-    if(type === 'showmore'){
+  onShowMoreLess(type) {
+    if (type === 'showmore') {
       this.isShowMore = false;
       this.isShowLess = true;
-    }else{
+    } else {
       this.isShowMore = true;
       this.isShowLess = false;
     }
@@ -295,26 +279,28 @@ export class CashrecieptDetailComponent extends UIDetailComponent {
   /**
    * *Ham kiem tra dien giai khi vuot qua 2 dong
    */
-  onReadMore(){
+  onReadMore() {
     let ele = document.getElementById('eleMemo');
     if (ele) {
-      if (ele.offsetHeight < ele.scrollHeight || ele.offsetWidth < ele.scrollWidth){
+      if (
+        ele.offsetHeight < ele.scrollHeight ||
+        ele.offsetWidth < ele.scrollWidth
+      ) {
         this.isReadMore = true;
-      }else{
+      } else {
         this.isReadMore = false;
       }
       this.detectorRef.detectChanges();
     }
   }
 
-  getFormModel()
-  {
-    this.cache.functionList(this.funcID).subscribe(item=>{
+  getFormModel() {
+    this.cache.functionList(this.funcID).subscribe((item) => {
       this.formModel = new FormModel();
       this.formModel.entityName = item?.entityName;
       this.formModel.formName = item?.formName;
       this.formModel.gridViewName = item?.gridViewName;
-    })
+    });
   }
   //#endregion Function
 }

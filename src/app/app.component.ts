@@ -10,6 +10,8 @@ import {
   OnInit,
   HostListener,
   AfterViewInit,
+  Renderer2,
+  Inject,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -24,6 +26,7 @@ import {
 //import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 import { Title } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
+import { DOCUMENT } from '@angular/common';
 declare var window: any;
 
 @Component({
@@ -41,7 +44,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private tenant: TenantService,
     private layoutService: LayoutService,
     private titleService: Title,
-    private authSV: AuthService
+    private authSV: AuthService,
+    private _renderer2: Renderer2,
+    @Inject(DOCUMENT) private _document: Document
   ) {}
 
   ngOnInit() {
@@ -60,6 +65,12 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.unsubscribe.push(this.tenant.init(this.router));
 
+    if (environment.isUserBankHub) {
+      let script = this._renderer2.createElement('script');
+      script.type = 'text/javascript';
+      script.src = environment.bankhubUrl + '/js/bh.js';
+      this._renderer2.appendChild(this._document.head, script);
+    }
     // this.angularFireMessaging.requestToken.subscribe(
     //   (token) => {
     //     environment.FCMToken = token;
@@ -81,8 +92,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     //   });
   }
 
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() {}
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
   }

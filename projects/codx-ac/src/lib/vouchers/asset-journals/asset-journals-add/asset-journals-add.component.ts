@@ -200,7 +200,15 @@ export class AssetJournalsAddComponent extends UIComponent {
   }
   //#endregion
 
-  valueChangeMaster(e) {}
+  valueChangeMaster(e) {
+    if (e && e?.field) {
+      switch (e.field) {
+        case 'objectID':
+          this.formAsset.data.objectType = e?.type;
+          break;
+      }
+    }
+  }
 
   //#region  tab grid lines
   initGrid(eleGrid: CodxGridviewV2Component) {
@@ -235,35 +243,39 @@ export class AssetJournalsAddComponent extends UIComponent {
    * @param event
    */
   async valueChangeLine(event: any) {
-    if (event?.value) {
-      if (event?.field == 'assetID') {
-        let asset = await firstValueFrom(
-          this.api.execSv<any>('AM', 'AM', 'AssetsBusiness', 'GetAsync', [
-            event?.value,
-          ])
-        );
-        if (asset) {
-          event.data = this.acService.replaceData(asset, event.data);
-        }
-        let idx = this.eleGridAcquisitions.dataSource?.findIndex(
-          (x) => x.recID == event.data.recID
-        );
-        if (idx != -1) this.eleGridAcquisitions.updateRow(idx, event.data);
+    if (event?.value && event?.field) {
+      switch (event.field) {
+        case 'assetID':
+          {
+            let asset = await firstValueFrom(
+              this.api.execSv<any>('AM', 'AM', 'AssetsBusiness', 'GetAsync', [
+                event?.value,
+              ])
+            );
+            if (asset) {
+              event.data = this.acService.replaceData(asset, event.data);
+            }
+            let idx = this.eleGridAcquisitions.dataSource?.findIndex(
+              (x) => x.recID == event.data.recID
+            );
+            if (idx != -1) this.eleGridAcquisitions.updateRow(idx, event.data);
+          }
+          break;
+        case 'costAmt':
+        case 'deprPeriods':
+          if (event.data.deprMethod == '1') {
+            event.data.deprRate =
+              event.data?.deprPeriods > 0
+                ? event.data.costAmt / event.data?.deprPeriods
+                : 0;
+            let idx = this.eleGridAcquisitions.dataSource?.findIndex(
+              (x) => x.recID == event.data.recID
+            );
+            if (idx != -1) this.eleGridAcquisitions.updateRow(idx, event.data);
+          }
+          break;
       }
-      if (event?.field == 'employeeID') {
-        if (event?.itemData) {
-          event.data.employeeID = event?.itemData?.EmployeeID;
-          event.data.orgUnitID = event?.itemData?.OrgUnitID;
-          event.data.departmentID = event?.itemData?.DepartmentID;
-          event.data.companyID = event?.itemData?.CompanyID;
-        }
-      }
-      let index = this.lstLines.findIndex((x) => x.recID == event?.data?.recID);
-      if (index != -1) {
-        this.lstLines[index] = event?.data;
-      } else {
-        this.lstLines.push(event?.data);
-      }
+
       this.detectorRef.detectChanges();
     }
   }
