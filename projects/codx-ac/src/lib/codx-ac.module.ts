@@ -123,6 +123,7 @@ import { CashCountingsAddComponent } from './vouchers/cash-countings/cash-counti
 import { AssetCountingsComponent } from './vouchers/asset-countings/asset-countings.component';
 import { CashtransfersDetailComponent } from './vouchers/cashtransfers/cashtransfers-detail/cashtransfers-detail.component';
 import { AssetAcquisitionsComponent } from './vouchers/asset-acquisitions/asset-acquisitions.component';
+import { PopupInfoTransferComponent } from './share/popup-info-transfer/popup-info-transfer.component';
 
 export const routes: Routes = [
   {
@@ -443,6 +444,7 @@ export const routes: Routes = [
     CashPaymentAddComponent,
     PurchaseinvoicesComponent,
     PurchaseinvoicesAddComponent,
+    PopupInfoTransferComponent,
     JournalsAddComponent,
     SettledInvoicesAdd,
     DashboardComponent,
@@ -524,7 +526,7 @@ export const routes: Routes = [
     CashCountingsAddComponent,
     AssetCountingsComponent,
     CashtransfersDetailComponent,
-    AssetAcquisitionsComponent
+    AssetAcquisitionsComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
