@@ -557,9 +557,9 @@ export class AssetJournalsAddComponent extends UIComponent {
   //#region tab account member
   valueChangeAccount(event) {
     if (event?.field == 'memberID') {
-      event.data.memberName = event?.itemData?.UserName;
+      event.data.memberName = event?.itemData?.UserName ?? event?.itemData?.EmployeeName;
       event.data.position =
-        event?.itemData?.PositionName ?? event.data.position;
+        event?.itemData?.PositionName ?? event?.itemData?.PositionID;
       let index = this.eleGridAccountMember.dataSource.findIndex(
         (x) => x.recID == event.data.recID
       );
