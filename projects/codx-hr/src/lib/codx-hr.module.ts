@@ -150,6 +150,7 @@ import { PersonalInfoComponent } from './employee-list/employee-info-detail/comp
 import { LegalInfoComponent } from './employee-list/employee-info-detail/component/legal-info/legal-info.component';
 import { ForeignWorkersComponent } from './employee-list/employee-info-detail/component/foreign-workers/foreign-workers.component';
 import { PreviousExperienceComponent } from './employee-list/employee-info-detail/component/previous-experience/previous-experience.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 export const routes: Routes = [
   {
     path: '',
@@ -179,6 +180,10 @@ export const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+      },
       {
         path: 'report/:funcID',
         component: CodxReportViewsComponent,
