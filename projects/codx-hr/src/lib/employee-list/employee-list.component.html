@@ -18,16 +18,20 @@
         [default]="'Nhân viên'"></codx-label>
     </div>
     <div class="w-25 text-dark fw-bold p-3 fw-500">
-      <codx-label fiedName="lblEmployeeContact" [setRequire]="false" [formModel]="view.formModel"
-        [default]="'Liên hệ'"></codx-label>
+      <codx-label fiedName="lblEmployeeStatus" [setRequire]="false" [formModel]="view.formModel"
+        [default]="'Tình Trạng'"></codx-label>
+    </div>
+    <div class="w-25 text-dark fw-bold p-3 fw-500">
+      <codx-label fiedName="lblShiftWorking" [setRequire]="false" [formModel]="view.formModel"
+        [default]="'Thông tin chấm công'"></codx-label>
     </div>
     <div class="w-25 text-dark fw-bold p-3 fw-500">
       <codx-label fiedName="lblEmployeeInfo" [setRequire]="false" [formModel]="view.formModel"
         [default]="'Thông tin cá nhân'"></codx-label>
     </div>
     <div class="w-25 text-dark fw-bold p-3 fw-500">
-      <codx-label fiedName="lblEmployeeStatus" [setRequire]="false" [formModel]="view.formModel"
-        [default]="'Tình Trạng'"></codx-label>
+      <codx-label fiedName="lblEmployeeContact" [setRequire]="false" [formModel]="view.formModel"
+        [default]="'Liên hệ'"></codx-label>
     </div>
   </div>
 </ng-template>
@@ -107,74 +111,6 @@
         </div>
       </div>
     </div>
-    <!-- Liên hệ -->
-    <div class="w-25 p-3">
-      <div class="d-flex flex-column">
-        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-          <span #emailField class="data-text-color" [ngbTooltip]="emailTooltip"
-            [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async">
-          </span>
-          <ng-template #emailTooltip>
-            <span>{{grvSetup['Email']?.headerText}}</span>
-            <!-- <span>{{data.email}}</span> -->
-          </ng-template>
-        </div>
-        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-          <span class="data-text-color" [ngbTooltip]="data.phone? grvSetup?.Phone?.headerText : null"
-            [innerHTML]="data.phone | formatvalue : view.formModel : 'phone' | async">
-          </span>
-        </div>
-        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-          <span class="data-text-color" [ngbTooltip]="data.mobile? grvSetup?.Mobile?.headerText : null"
-            [innerHTML]="data.mobile | formatvalue : view.formModel : 'mobile' | async">
-          </span>
-        </div>
-      </div>
-    </div>
-    <!-- Thông tin cá nhân -->
-    <div class="w-25 p-3">
-      <div class="d-flex flex-column">
-        <div class="align-items-center1 mb-1">
-          <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'Birthday'"
-            [formModel]="view.formModel" default="Ngày sinh"></codx-label>
-          <ng-container *ngIf="data.birthday; else noBirthday">
-            <span class="data-text-color">{{ data.birthday | fmDT}}</span>
-          </ng-container>
-          <ng-template #noBirthday>
-            <span class="place-holder">{{grvSetup?.Birthday?.headerText}}</span>
-          </ng-template>
-        </div>
-        <div class="align-items-center mb-1">
-          <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'BirthPlace'"
-            [formModel]="view.formModel" default="Nơi sinh"></codx-label>
-          <span class="data-text-color"
-            [innerHTML]="data?.birthPlace | formatvalue : view.formModel : 'birthPlace'| async">
-          </span>
-        </div>
-        <div class="align-items-center">
-          <!-- <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'DegreeName'" 
-            [formModel]="view.formModel" default="Chuyên môn"></codx-label> -->
-          <div #degreeField *ngIf="data.degreeName; else noDegreeName">
-            <span [ngbTooltip]="reasonTooltip" class="line-clamp line-clamp-2 text-dark" #titleContent>{{
-              data?.degreeName }}</span>
-            <ng-template #reasonTooltip>
-              <div class="d-flex flex-column">
-                <span>{{ grvSetup?.DegreeName?.headerText }}</span>
-                <span [style.display]=" titleContent.scrollHeight <= degreeField.clientHeight? 'none': ''">
-                  <span>
-
-                    {{ data?.degreeName }}
-                  </span>
-                </span>
-              </div>
-            </ng-template>
-          </div>
-          <ng-template #noDegreeName>
-            <span class="place-holder">{{grvSetup['DegreeName']?.headerText}}</span>
-          </ng-template>
-        </div>
-      </div>
-    </div>
     <!-- Tình trạng -->
     <div class="w-25 p-3">
       <div class="d-flex has-action-menu justify-content-between w-100">
@@ -227,6 +163,107 @@
               (changeDataMF)="clickMF($event, data)" [dataItem]="data" type="hover">
             </codx-mfunc>
           </div>
+        </div>
+      </div>
+    </div>
+    <!-- Thông tin chấm công -->
+    <div class="w-25 p-3">
+      <div class="d-flex flex-column">
+        <div class="align-items-center1 mb-1">
+          <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'ShiftWorking'"
+            [formModel]="view.formModel" default="Ca làm việc"></codx-label>
+          <ng-container *ngIf="data.ShiftWorking; else noShiftWorking">
+            <span class="data-text-color">{{ data.ShiftWorking123 }}</span>
+          </ng-container>
+          <ng-template #noShiftWorking>
+            <span class="place-holder">{{grvSetup?.ShiftWorking?.headerText}}</span>
+          </ng-template>
+        </div>
+        <div class="align-items-center mb-1">
+          <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'ShiftCalendarID'"
+            [formModel]="view.formModel" default="Nhóm ngày nghỉ tuần"></codx-label>
+          <span class="data-text-color"
+            [innerHTML]="data?.shiftCalendarID | formatvalue : view.formModel : 'shiftCalendarID'| async">
+          </span>
+        </div>
+        <div class="align-items-center">
+          <!-- <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'DegreeName'" 
+            [formModel]="view.formModel" default="Chuyên môn"></codx-label> -->
+            <div class="align-items-center mb-1">
+              <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'ALObjectID'"
+                [formModel]="view.formModel" default="Đối tượng tính phép"></codx-label>
+              <span class="data-text-color"
+                [innerHTML]="data?.alObjectID | formatvalue : view.formModel : 'alObjectID'| async">
+              </span>
+            </div>
+        </div>
+      </div>
+    </div>
+    <!-- Thông tin cá nhân -->
+    <div class="w-25 p-3">
+      <div class="d-flex flex-column">
+        <div class="align-items-center1 mb-1">
+          <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'Birthday'"
+            [formModel]="view.formModel" default="Ngày sinh"></codx-label>
+          <ng-container *ngIf="data.birthday; else noBirthday">
+            <span class="data-text-color">{{ data.birthday | fmDT}}</span>
+          </ng-container>
+          <ng-template #noBirthday>
+            <span class="place-holder">{{grvSetup?.Birthday?.headerText}}</span>
+          </ng-template>
+        </div>
+        <div class="align-items-center mb-1">
+          <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'BirthPlace'"
+            [formModel]="view.formModel" default="Nơi sinh"></codx-label>
+          <span class="data-text-color"
+            [innerHTML]="data?.birthPlace | formatvalue : view.formModel : 'birthPlace'| async">
+          </span>
+        </div>
+        <div class="align-items-center">
+          <!-- <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'DegreeName'" 
+            [formModel]="view.formModel" default="Chuyên môn"></codx-label> -->
+          <div #degreeField *ngIf="data.degreeName; else noDegreeName">
+            <span [ngbTooltip]="reasonTooltip" class="line-clamp line-clamp-2 text-dark" #titleContent>{{
+              data?.degreeName }}</span>
+            <ng-template #reasonTooltip>
+              <div class="d-flex flex-column">
+                <span>{{ grvSetup?.DegreeName?.headerText }}</span>
+                <span [style.display]=" titleContent.scrollHeight <= degreeField.clientHeight? 'none': ''">
+                  <span>
+
+                    {{ data?.degreeName }}
+                  </span>
+                </span>
+              </div>
+            </ng-template>
+          </div>
+          <ng-template #noDegreeName>
+            <span class="place-holder">{{grvSetup['DegreeName']?.headerText}}</span>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+    <!-- Liên hệ -->
+    <div class="w-25 p-3">
+      <div class="d-flex flex-column">
+        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+          <span #emailField class="data-text-color" [ngbTooltip]="emailTooltip"
+            [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async">
+          </span>
+          <ng-template #emailTooltip>
+            <span>{{grvSetup['Email']?.headerText}}</span>
+            <!-- <span>{{data.email}}</span> -->
+          </ng-template>
+        </div>
+        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+          <span class="data-text-color" [ngbTooltip]="data.phone? grvSetup?.Phone?.headerText : null"
+            [innerHTML]="data.phone | formatvalue : view.formModel : 'phone' | async">
+          </span>
+        </div>
+        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+          <span class="data-text-color" [ngbTooltip]="data.mobile? grvSetup?.Mobile?.headerText : null"
+            [innerHTML]="data.mobile | formatvalue : view.formModel : 'mobile' | async">
+          </span>
         </div>
       </div>
     </div>

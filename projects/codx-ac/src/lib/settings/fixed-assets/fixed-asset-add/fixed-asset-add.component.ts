@@ -103,7 +103,7 @@ export class FixedAssetAddComponent extends UIComponent {
 
             if (grp) {
               const group = { ...grp };
-              if (group.autoAssetNo && group.autoNoFormat) {
+              if (group.autoNoFormat) {
                 let autoNumberAsset = await firstValueFrom(
                   this.api
                     .execSv<any>(
@@ -131,7 +131,6 @@ export class FixedAssetAddComponent extends UIComponent {
         case 'purcAmount':
           {
             if (e?.data && typeof e.data === 'number') {
-              data[e.field] = e.data;
               let quantity = data?.quantity ?? 0;
               let purcAmount = data?.purcAmount ?? 0;
               data.costAmt = quantity * purcAmount ?? 0;
@@ -140,8 +139,9 @@ export class FixedAssetAddComponent extends UIComponent {
                   ? data.costAmt / data?.deprPeriods
                   : false;
 
-              if (this.form && this.form.formGroup) {
-                this.form.formGroup.patchValue(data);
+              if (this.form) {
+                this.form.setValue('costAmt', data.costAmt, {});
+                this.form.setValue('deprRate', data.deprRate, {});
               }
             }
           }
@@ -151,8 +151,9 @@ export class FixedAssetAddComponent extends UIComponent {
           data.deprRate =
             data?.deprPeriods > 0 ? data.costAmt / data?.deprPeriods : 0;
           data.remainPeriods = Math.abs(data.servicePeriods - data.deprPeriods);
-          if (this.form && this.form.formGroup) {
-            this.form.formGroup.patchValue(data);
+          if (this.form) {
+            this.form.setValue('remainPeriods', data.remainPeriods, {});
+            this.form.setValue('deprRate', data.deprRate, {});
           }
           break;
         case 'servicePeriods':
@@ -160,6 +161,9 @@ export class FixedAssetAddComponent extends UIComponent {
             data.remainPeriods = Math.abs(
               data.servicePeriods - data.deprPeriods
             );
+            if (this.form) {
+              this.form.setValue('remainPeriods', data.remainPeriods, {});
+            }
           }
           break;
         case 'deprConvention':
@@ -167,7 +171,6 @@ export class FixedAssetAddComponent extends UIComponent {
         case 'deprCalendar':
           {
             if (e?.data) {
-              data[e.field] = e?.data;
               const ele = await firstValueFrom(
                 this.api
                   .execSv<any>(
@@ -188,8 +191,9 @@ export class FixedAssetAddComponent extends UIComponent {
                 data.deprStartDate = new Date(ele[0]);
 
                 if (this.form && this.form.formGroup) {
-                  this.form.formGroup.patchValue(data);
+                  this.form.formGroup.patchValue({'deprStartDate': data.deprStartDate});
                 }
+
                 this.detectorRef.detectChanges();
               }
             }
