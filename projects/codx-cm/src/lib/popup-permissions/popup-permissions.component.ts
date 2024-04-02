@@ -349,9 +349,7 @@ export class PopupPermissionsComponent implements OnInit {
   //#endregion
 
   valueChangeTab(event,tab) {
-    if(event?.data){
-      tab.isCheck = event?.data;
-    }
+    tab.isCheck = event?.data;
   }
 
   getConfig(){
