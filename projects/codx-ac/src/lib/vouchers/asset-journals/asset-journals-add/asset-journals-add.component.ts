@@ -212,16 +212,22 @@ export class AssetJournalsAddComponent extends UIComponent {
   }
   showHideTabDetail(type, eleTab) {
     if (eleTab) {
-      switch (type) {
-        case `${this.journal.journalType + '1'}`:
-          eleTab.hideTab(0, false);
-          eleTab.hideTab(1, false);
-          eleTab.select(0);
-          break;
-        default:
-          eleTab.hideTab(1, true);
-          eleTab.select(0);
-          break;
+      if (this.dialog.formModel.funcID === 'ACT811') {
+        switch (type) {
+          case `${this.journal.journalType + '1'}`:
+            eleTab.hideTab(0, false);
+            eleTab.hideTab(1, false);
+            eleTab.select(0);
+
+            break;
+          default:
+            eleTab.hideTab(1, true);
+            eleTab.select(0);
+            break;
+        }
+      } else {
+        eleTab.hideTab(1, true);
+        eleTab.select(0);
       }
     }
   }

@@ -222,14 +222,24 @@ export class AssetJournalsComponent extends UIComponent {
       case 'SYS05':
         this.viewData(data);
         break;
-      case 'SYS003': //Kiểm tra hợp lệ - thay morore sau
+      case 'ACT81101': //Kiểm tra hợp lệ - thay morore sau
+      case 'ACT82101':
         this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
         break;
-      case 'SYS004':
+      case 'ACT81106':
+      case 'ACT82106':
         this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
-      case 'SYS001':
+      case 'ACT81107':
+      case 'ACT82107':
         this.unPostVoucher(e.text, data); //? khôi phục chứng từ
+        break;
+      case 'ACT81108': //Hủy phiếu
+      case 'ACT82108':
+        break;
+      case 'ACT81102': //In phiếu
+      case 'ACT82102':
+        this.printVoucher(data, e.functionID);
         break;
     }
   }
@@ -239,32 +249,91 @@ export class AssetJournalsComponent extends UIComponent {
    * @param data
    * @returns
    */
-  changeMFDetail(e: any,dataSelectd ,type = '') {
-    // let data = dataSelectd ?? this.view?.dataService?.dataSelected;
-    // if (e != null) {
-    //   e.forEach((res) => {
-    //     if (type === 'grid') res.isbookmark = false;
-    //     if (
-    //       ['SYS03', 'SYS02'].includes(res.functionID) &&
-    //       data?.status != '0' &&
-    //       data?.status != '1' &&
-    //       data?.status != '2'
-    //     )
-    //       res.disabled = true;
-    //     if (
-    //       (data.status == '0' || data.status == '2') &&
-    //       !['SYS003'].includes(res.functionID)
-    //     )
-    //       res.disabled = true; //Ẩn tất cả more trừ kiểm tra hợp lệ.
-    //     if (
-    //       (data.status == '1' || data.status == '5' || data.status == '9') &&
-    //       !['SYS004'].includes(res.functionID)
-    //     )
-    //       res.disabled = true; //Ẩn tất cả more trừ khôi phục.
-    //     if (data.status == '6' && !['SYS001'].includes(res.functionID))
-    //       res.disabled = true;
-    //   });
-    // }
+  changeMFDetail(e: any, dataSelectd, type = '') {
+    let data = dataSelectd ?? this.view?.dataService?.dataSelected;
+    if (e != null) {
+      e.forEach((res) => {
+        if (type === 'grid') res.isbookmark = false;
+        if (
+          ['SYS03', 'SYS02'].includes(res.functionID) &&
+          data?.status != '0' &&
+          data?.status != '1' &&
+          data?.status != '2'
+        )
+          res.disabled = true;
+
+        switch (data?.status) {
+          case '0':
+            if (
+              ![
+                'ACT81101', //Kiểm tra hợp lệ
+                'ACT82101',
+                'ACT82102',
+                'ACT81102', // In phiếu
+              ].includes(res.functionID)
+            )
+              res.disabled = true;
+            break;
+          case '1':
+            if (
+              ![
+                'ACT81106', //Ghi sổ
+                'ACT82106',
+                'ACT82102',
+                'ACT81102', // In phiếu
+              ].includes(res.functionID)
+            )
+              res.disabled = true;
+
+            break;
+
+          case '2':
+            if (
+              ![
+                'ACT81101', // Kiểm tra hợp lệ
+                'ACT82101',
+                'ACT82102',
+                'ACT81102', // In phiếu
+              ].includes(res.functionID)
+            )
+              res.disabled = true;
+            break;
+
+          case '3':
+            if (!['ACT81102'].includes(res.functionID)) res.disabled = true;
+            break;
+
+          case '5':
+          case '9':
+            if (!['ACT81106','ACT82106','ACT81102','ACT82102'].includes(res.functionID))
+              res.disabled = true;
+            break;
+
+          case '6':
+            if (!['ACT81107', 'ACT82107','ACT81102','ACT82102'].includes(res.functionID))
+              res.disabled = true;
+            break;
+
+          case '10':
+            if (!['ACT81106','ACT82106'].includes(res.functionID)) res.disabled = true;
+            break;
+
+          // case '8':
+          // case '11':
+          //   if (
+          //     ![MorfuncCash.InUNC, MorfuncCash.KiemTraTrangThai].includes(
+          //       element.functionID
+          //     )
+          //   )
+          //     element.disabled = true;
+          //   break;
+
+          default:
+            res.disabled = true;
+            break;
+        }
+      });
+    }
   }
   /**
    * * Hàm get data và get dữ liệu chi tiết của chứng từ khi được chọn
@@ -534,7 +603,7 @@ export class AssetJournalsComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
-          this.view.dataService.update(this.itemSelected).subscribe();
+          this.view.dataService.update(this.itemSelected, true).subscribe();
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
@@ -552,7 +621,7 @@ export class AssetJournalsComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
-          this.view.dataService.update(this.itemSelected).subscribe();
+          this.view.dataService.update(this.itemSelected, true).subscribe();
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
@@ -571,12 +640,30 @@ export class AssetJournalsComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
-          this.view.dataService.update(this.itemSelected).subscribe();
+          this.view.dataService.update(this.itemSelected, true).subscribe();
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
         this.onDestroy();
       });
+  }
+
+  /**
+   * *Hàm in chứng từ (xử lí cho MF In)
+   * @param data
+   * @param reportID
+   * @param reportType
+   */
+  printVoucher(data: any, reportID: any, reportType: string = 'V') {
+    let params = {
+      Recs: data?.recID,
+    };
+    this.shareService.printReport(
+      reportID,
+      reportType,
+      params,
+      this.view?.formModel
+    );
   }
   //#endregion
 }
