@@ -1,6 +1,7 @@
 import {
   fmAssetAcquisitionsJournal,
   fmAssetRevaluationsJournal,
+  fmAssetLiquidationsJournal,
   fmCountingMembers,
 } from './../../codx-ac.service';
 import {
@@ -96,10 +97,17 @@ export class AssetJournalsComponent extends UIComponent {
   onInit(): void {
     if (!this.funcID) {
       this.funcID = this.router.snapshot.params['funcID'];
-      this.fmAssetJournal =
-        this.funcID == 'ACT811'
-          ? fmAssetAcquisitionsJournal
-          : fmAssetRevaluationsJournal;
+      switch (this.funcID) {
+        case 'ACT811':
+          this.fmAssetJournal = fmAssetAcquisitionsJournal;
+          break;
+        case 'ACT821':
+          this.fmAssetJournal = fmAssetRevaluationsJournal;
+          break;
+        case 'ACT871':
+          this.fmAssetJournal = fmAssetLiquidationsJournal;
+          break;
+      }
     }
     this.cache
       .functionList(this.funcID)
@@ -224,21 +232,26 @@ export class AssetJournalsComponent extends UIComponent {
         break;
       case 'ACT81101': //Kiểm tra hợp lệ - thay morore sau
       case 'ACT82101':
+      case 'ACT87101':
         this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
         break;
       case 'ACT81106':
       case 'ACT82106':
+      case 'ACT87106':
         this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
       case 'ACT81107':
       case 'ACT82107':
+      case 'ACT87107':
         this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
       case 'ACT81108': //Hủy phiếu
       case 'ACT82108':
+      case 'ACT87108':
         break;
       case 'ACT81102': //In phiếu
       case 'ACT82102':
+      case 'ACT87102':
         this.printVoucher(data, e.functionID);
         break;
     }
@@ -268,7 +281,9 @@ export class AssetJournalsComponent extends UIComponent {
               ![
                 'ACT81101', //Kiểm tra hợp lệ
                 'ACT82101',
+                'ACT87101',
                 'ACT82102',
+                'ACT87102',
                 'ACT81102', // In phiếu
               ].includes(res.functionID)
             )
@@ -279,6 +294,8 @@ export class AssetJournalsComponent extends UIComponent {
               ![
                 'ACT81106', //Ghi sổ
                 'ACT82106',
+                'ACT87106',
+                'ACT87102',
                 'ACT82102',
                 'ACT81102', // In phiếu
               ].includes(res.functionID)
@@ -292,7 +309,9 @@ export class AssetJournalsComponent extends UIComponent {
               ![
                 'ACT81101', // Kiểm tra hợp lệ
                 'ACT82101',
+                'ACT87101',
                 'ACT82102',
+                'ACT87102',
                 'ACT81102', // In phiếu
               ].includes(res.functionID)
             )
@@ -300,22 +319,42 @@ export class AssetJournalsComponent extends UIComponent {
             break;
 
           case '3':
-            if (!['ACT81102'].includes(res.functionID)) res.disabled = true;
+            if (!['ACT81102', 'ACT82102', 'ACT87102'].includes(res.functionID))
+              res.disabled = true;
             break;
 
           case '5':
           case '9':
-            if (!['ACT81106','ACT82106','ACT81102','ACT82102'].includes(res.functionID))
+            if (
+              ![
+                'ACT81106',
+                'ACT82106',
+                'ACT87106',
+                'ACT81102',
+                'ACT87102',
+                'ACT82102',
+              ].includes(res.functionID)
+            )
               res.disabled = true;
             break;
 
           case '6':
-            if (!['ACT81107', 'ACT82107','ACT81102','ACT82102'].includes(res.functionID))
+            if (
+              ![
+                'ACT81107',
+                'ACT82107',
+                'ACT87107',
+                'ACT81102',
+                'ACT82102',
+                'ACT87102',
+              ].includes(res.functionID)
+            )
               res.disabled = true;
             break;
 
           case '10':
-            if (!['ACT81106','ACT82106'].includes(res.functionID)) res.disabled = true;
+            if (!['ACT81106', 'ACT82106', 'ACT87106'].includes(res.functionID))
+              res.disabled = true;
             break;
 
           // case '8':
@@ -332,6 +371,7 @@ export class AssetJournalsComponent extends UIComponent {
             res.disabled = true;
             break;
         }
+        if (['SYS05'].includes(res.functionID)) res.disabled = false;
       });
     }
   }
