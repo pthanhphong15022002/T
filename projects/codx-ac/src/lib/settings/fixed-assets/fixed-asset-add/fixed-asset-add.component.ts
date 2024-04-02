@@ -134,6 +134,7 @@ export class FixedAssetAddComponent extends UIComponent {
               let quantity = data?.quantity ?? 0;
               let purcAmount = data?.purcAmount ?? 0;
               data.costAmt = quantity * purcAmount ?? 0;
+              if(data.salvage == 0) data.salvage = data.costAmt;
               data.deprRate =
                 data?.deprPeriods > 0
                   ? data.costAmt / data?.deprPeriods
@@ -141,6 +142,7 @@ export class FixedAssetAddComponent extends UIComponent {
 
               if (this.form) {
                 this.form.setValue('costAmt', data.costAmt, {});
+                this.form.setValue('salvage', data.salvage, {});
                 this.form.setValue('deprRate', data.deprRate, {});
               }
             }
@@ -151,8 +153,11 @@ export class FixedAssetAddComponent extends UIComponent {
           data.deprRate =
             data?.deprPeriods > 0 ? data.costAmt / data?.deprPeriods : 0;
           data.remainPeriods = Math.abs(data.servicePeriods - data.deprPeriods);
+          if(data.salvage == 0) data.salvage = data.costAmt;
+
           if (this.form) {
             this.form.setValue('remainPeriods', data.remainPeriods, {});
+            this.form.setValue('salvage', data.salvage, {});
             this.form.setValue('deprRate', data.deprRate, {});
           }
           break;

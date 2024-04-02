@@ -157,7 +157,6 @@ export class AssetJournalsComponent extends UIComponent {
           widthLeft: '23%',
         },
       },
-
     ];
     this.acService.setChildLinks();
   }
@@ -265,139 +264,151 @@ export class AssetJournalsComponent extends UIComponent {
         )
           res.disabled = true;
 
-        switch (data?.status) {
-          case '0':
-            if (
-              ![
-                'ACT81101', //Kiểm tra hợp lệ
-                'ACT82101',
-                'ACT87101',
-                'ACT83101',
-                'ACT84101',
-                'ACT82102',
-                'ACT87102',
-                'ACT83102',
-                'ACT84102',
-                'ACT81102', // In phiếu
-              ].includes(res.functionID)
-            )
+        if (
+          ![
+            'SYS03',
+            'SYS02',
+            'SYS05',
+            'SYS04',
+            'SYS001',
+            'SYS002',
+            'SYS003',
+            'SYS004',
+          ].includes(res.functionID)
+        ) {
+          switch (data?.status) {
+            case '0':
+              if (
+                ![
+                  'ACT81101', //Kiểm tra hợp lệ
+                  'ACT82101',
+                  'ACT87101',
+                  'ACT83101',
+                  'ACT84101',
+                  'ACT82102',
+                  'ACT87102',
+                  'ACT83102',
+                  'ACT84102',
+                  'ACT81102', // In phiếu
+                ].includes(res.functionID)
+              )
+                res.disabled = true;
+              break;
+            case '1':
+              if (
+                ![
+                  'ACT81106', //Ghi sổ
+                  'ACT82106',
+                  'ACT83106',
+                  'ACT84106',
+                  'ACT87106',
+                  'ACT87102',
+                  'ACT82102',
+                  'ACT83102',
+                  'ACT84102',
+                  'ACT81102', // In phiếu
+                ].includes(res.functionID)
+              )
+                res.disabled = true;
+
+              break;
+
+            case '2':
+              if (
+                ![
+                  'ACT81101', // Kiểm tra hợp lệ
+                  'ACT82101',
+                  'ACT83101',
+                  'ACT87101',
+                  'ACT84101',
+                  'ACT82102',
+                  'ACT83102',
+                  'ACT84102',
+                  'ACT87102',
+                  'ACT81102', // In phiếu
+                ].includes(res.functionID)
+              )
+                res.disabled = true;
+              break;
+
+            case '3':
+              if (
+                ![
+                  'ACT81102',
+                  'ACT82102',
+                  'ACT87102',
+                  'ACT83102',
+                  'ACT84102',
+                ].includes(res.functionID)
+              )
+                res.disabled = true;
+              break;
+
+            case '5':
+            case '9':
+              if (
+                ![
+                  'ACT81106',
+                  'ACT82106',
+                  'ACT87106',
+                  'ACT83106',
+                  'ACT84106',
+                  'ACT81102',
+                  'ACT87102',
+                  'ACT82102',
+                  'ACT83102',
+                  'ACT84102',
+                ].includes(res.functionID)
+              )
+                res.disabled = true;
+              break;
+
+            case '6':
+              if (
+                ![
+                  'ACT81107',
+                  'ACT82107',
+                  'ACT83107',
+                  'ACT87107',
+                  'ACT84107',
+                  'ACT81102',
+                  'ACT82102',
+                  'ACT83102',
+                  'ACT84102',
+                  'ACT87102',
+                ].includes(res.functionID)
+              )
+                res.disabled = true;
+              break;
+
+            case '10':
+              if (
+                ![
+                  'ACT81106',
+                  'ACT82106',
+                  'ACT87106',
+                  'ACT83106',
+                  'ACT84106',
+                ].includes(res.functionID)
+              )
+                res.disabled = true;
+              break;
+
+            // case '8':
+            // case '11':
+            //   if (
+            //     ![MorfuncCash.InUNC, MorfuncCash.KiemTraTrangThai].includes(
+            //       element.functionID
+            //     )
+            //   )
+            //     element.disabled = true;
+            //   break;
+
+            default:
               res.disabled = true;
-            break;
-          case '1':
-            if (
-              ![
-                'ACT81106', //Ghi sổ
-                'ACT82106',
-                'ACT83106',
-                'ACT84106',
-                'ACT87106',
-                'ACT87102',
-                'ACT82102',
-                'ACT83102',
-                'ACT84102',
-                'ACT81102', // In phiếu
-              ].includes(res.functionID)
-            )
-              res.disabled = true;
-
-            break;
-
-          case '2':
-            if (
-              ![
-                'ACT81101', // Kiểm tra hợp lệ
-                'ACT82101',
-                'ACT83101',
-                'ACT87101',
-                'ACT84101',
-                'ACT82102',
-                'ACT83102',
-                'ACT84102',
-                'ACT87102',
-                'ACT81102', // In phiếu
-              ].includes(res.functionID)
-            )
-              res.disabled = true;
-            break;
-
-          case '3':
-            if (
-              ![
-                'ACT81102',
-                'ACT82102',
-                'ACT87102',
-                'ACT83102',
-                'ACT84102',
-              ].includes(res.functionID)
-            )
-              res.disabled = true;
-            break;
-
-          case '5':
-          case '9':
-            if (
-              ![
-                'ACT81106',
-                'ACT82106',
-                'ACT87106',
-                'ACT83106',
-                'ACT84106',
-                'ACT81102',
-                'ACT87102',
-                'ACT82102',
-                'ACT83102',
-                'ACT84102',
-              ].includes(res.functionID)
-            )
-              res.disabled = true;
-            break;
-
-          case '6':
-            if (
-              ![
-                'ACT81107',
-                'ACT82107',
-                'ACT83107',
-                'ACT87107',
-                'ACT84107',
-                'ACT81102',
-                'ACT82102',
-                'ACT83102',
-                'ACT84102',
-                'ACT87102',
-              ].includes(res.functionID)
-            )
-              res.disabled = true;
-            break;
-
-          case '10':
-            if (
-              ![
-                'ACT81106',
-                'ACT82106',
-                'ACT87106',
-                'ACT83106',
-                'ACT84106',
-              ].includes(res.functionID)
-            )
-              res.disabled = true;
-            break;
-
-          // case '8':
-          // case '11':
-          //   if (
-          //     ![MorfuncCash.InUNC, MorfuncCash.KiemTraTrangThai].includes(
-          //       element.functionID
-          //     )
-          //   )
-          //     element.disabled = true;
-          //   break;
-
-          default:
-            res.disabled = true;
-            break;
+              break;
+          }
         }
-        if (['SYS05'].includes(res.functionID)) res.disabled = false;
       });
     }
   }
