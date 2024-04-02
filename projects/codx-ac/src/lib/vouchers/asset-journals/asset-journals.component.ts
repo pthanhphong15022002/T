@@ -42,8 +42,8 @@ import { AssetJournalsAddComponent } from './asset-journals-add/asset-journals-a
 export class AssetJournalsComponent extends UIComponent {
   //#region Constructor
   views: Array<ViewModel> = []; // model view
-  @ViewChild('templateDetailLeft') templateDetailLeft?: TemplateRef<any>;
-  @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('templateDetail') templateDetail: TemplateRef<any>;
   @ViewChild('listTemplate') listTemplate?: TemplateRef<any>;
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
   headerText: any;
@@ -139,57 +139,25 @@ export class AssetJournalsComponent extends UIComponent {
 
   ngAfterViewInit() {
     this.views = [
-      // {
-      //   type: ViewType.listdetail,
-      //   active: true,
-      //   sameData: true,
-      //   model: {
-      //     template: this.templateDetailLeft,
-      //     panelRightRef: this.templateDetailRight,
-      //     collapsed: true,
-      //     widthLeft: '23%',
-      //     //separatorSize:3
-      //   },
-      // },
-      // {
-      //   type: ViewType.list,
-      //   active: false,
-      //   sameData: true,
-      //   model: {
-      //     template: this.listTemplate,
-      //   },
-      // },
       {
         type: ViewType.grid,
-        active: false,
+        active: true,
         sameData: true,
         model: {
           template2: this.templateGrid,
         },
       },
-      // {
-      //   type: ViewType.grid_detail,
-      //   active: false,
-      //   sameData: true,
-      //   model: {
-      //     template2: this.templateGrid,
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        active: false,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+          widthLeft: '23%',
+        },
+      },
 
-      //   },
-
-      //   request:{service:'AC'},
-      //   subModel:{
-      //     entityName:'AC_CashPaymentsLines',
-      //     formName:'CashPaymentsLines',
-      //     gridviewName:'grvCashPaymentsLines',
-      //     parentField:'TransID',
-      //     parentNameField:'VoucherNo',
-      //     hideMoreFunc:true,
-      //     request:{
-      //       service: 'AC',
-      //     },
-      //     idField:'recID'
-      //   }
-      // },
     ];
     this.acService.setChildLinks();
   }
@@ -354,9 +322,13 @@ export class AssetJournalsComponent extends UIComponent {
 
           case '3':
             if (
-              !['ACT81102', 'ACT82102', 'ACT87102', 'ACT83102', 'ACT84102'].includes(
-                res.functionID
-              )
+              ![
+                'ACT81102',
+                'ACT82102',
+                'ACT87102',
+                'ACT83102',
+                'ACT84102',
+              ].includes(res.functionID)
             )
               res.disabled = true;
             break;
@@ -400,9 +372,13 @@ export class AssetJournalsComponent extends UIComponent {
 
           case '10':
             if (
-              !['ACT81106', 'ACT82106', 'ACT87106', 'ACT83106', 'ACT84106'].includes(
-                res.functionID
-              )
+              ![
+                'ACT81106',
+                'ACT82106',
+                'ACT87106',
+                'ACT83106',
+                'ACT84106',
+              ].includes(res.functionID)
             )
               res.disabled = true;
             break;
