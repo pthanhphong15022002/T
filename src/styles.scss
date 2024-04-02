@@ -4635,3 +4635,25 @@ contracts-detail .instance-select{
     white-space: nowrap;
   }
 }
+codx-wrapper.hover-scroll-overlay-y{
+  overflow: auto!important;
+}
+.tm-detail.tm-detail-full {
+  height: calc(100vh - 97px);
+  overflow: hidden;
+  codx-view-kanban .e-kanban .e-kanban-content {
+    margin-top: -15px;
+  }
+  ejs-kanban.e-control.e-kanban{
+    height: calc(100% - 82px);
+    codx-view-kanban .e-kanban .e-kanban-header .e-header-cells {
+      height: 32px;
+    }
+  }
+  .kanban-wrapper .e-control.e-fab{
+    display: none;
+  }
+}
+codx-view-kanban .e-kanban .e-kanban-table {
+  border-spacing: 5px!important;
+}

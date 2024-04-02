@@ -40,7 +40,7 @@
             <ng-container *ngFor="let item of table , let i = index">
                 <div class="d-flex align-items-center justify-content-between py-2" *ngIf="i>0">
                     <div class="d-flex flex-column w-100 px-2" [class.pb-2]="child.fieldType == 'Title'" *ngFor="let child of item.child">
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center" *ngIf="child?.fieldType != 'Note'">
                             <codx-label 
                                 [formName]="formModel.formName" 
                                 [gridViewName]="formModel.gridViewName + child.fieldType" 
@@ -70,8 +70,13 @@
                                     </codx-attachment>
                                 </ng-container>
                                 <ng-container *ngIf="child.documentControl && child?.documentControl.length>0">
-                                    <div class="pt-2">
-                                        <lib-attachment-grid [data]="child.documentControl" [dataIns]="dataIns" [formModel]="formModel" (dataChange)="dataChangeAttachmentGrid($event)" (dataChangeAttachment)="dataChangeAttachment($event)"></lib-attachment-grid>
+                                    <div class="">
+                                        <lib-attachment-grid [data]="child.documentControl" [dataIns]="dataIns" [formModel]="formModel" (dataChange)="dataChangeAttachmentGrid($event)" (dataUploadAttachment)="dataUploadAttachment($event)"></lib-attachment-grid>
+                                        <codx-attachment #attachment hideImageThumb="1" hideImageUpload="1" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+                                            hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel" 
+                                            [idField]="'RecID'"  
+                                        >
+                                        </codx-attachment>
                                     </div>
                                 </ng-container>
                             </ng-container>
@@ -90,6 +95,9 @@
                             </ng-container>
                             <ng-container *ngSwitchCase="'YesNo'">
                                 <ng-container *ngTemplateOutlet="yesno ; context: { $implicit: child }"></ng-container>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'Note'">
+                                <ng-container *ngTemplateOutlet="note ; context: { $implicit: child }"></ng-container>
                             </ng-container>
                             <ng-container *ngSwitchDefault>
                                 <codx-input
@@ -129,6 +137,12 @@
         <ng-container *ngIf="data.controlType != 'CheckBox'">
             <codx-input type="switch" [field]="data.fieldName" [crrValue]="false" (valueChange)="valueChange($event)"></codx-input>
         </ng-container>
+    </ng-template>
+    
+    <ng-template #note let-data let-id="b">
+        <div class="py-2">
+            <span [class.fw-bold]="data?.dataFormat?.bold" [class.fst-italic]="data?.dataFormat?.italic" [class.text-decoration-underline]="data?.dataFormat?.underlined" [style.color]="data?.dataFormat?.color" [ngClass]="data?.dataFormat?.size">{{data?.defaultValue}}</span>
+        </div>
     </ng-template>
 
     <ng-template #userInfo let-data let-id="b">

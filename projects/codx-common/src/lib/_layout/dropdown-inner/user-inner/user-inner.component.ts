@@ -78,7 +78,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     private element: ElementRef,
     private signalRSV: SignalRService,
     private callSV: CallFuncService,
-    private fileSv: FilesService,
+    private fileSv: FilesService
   ) {
     this.cache.functionList('ADS05').subscribe((res) => {
       if (res) {
@@ -270,6 +270,15 @@ export class UserInnerComponent implements OnInit, OnDestroy {
       });
   }
 
+  testGetMongo() {
+    this.api
+      .execSv('BG', 'ERM.Business.BG', 'TrackLogsBusiness', 'GetCollection', [])
+      .subscribe((res) => {
+        if (res) this.notifyService.notify('testGetMongo nè');
+        console.log(res);
+      });
+  }
+
   createIndex() {
     this.callSV.openForm(CodxCreateIndexComponent, 'Create Index', 700, 700);
   }
@@ -383,7 +392,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
       objData
     );
     waitingLogin.closed.subscribe(async (res) => {
-      if(res && res.event){
+      if (res && res.event) {
         let tempFile: File = this.blobToFile(res.event, 'avatar.png');
         this.imageUploader.imageUpload.fileName = tempFile.name;
         this.imageUploader.imageUpload.item = tempFile;

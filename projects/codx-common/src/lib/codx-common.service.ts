@@ -979,7 +979,7 @@ export class CodxCommonService {
       var widthThumb = 1.2;
       var arr = url.split('/');
       var uploadID = arr[arr.length - 2];
-      var tenant = arr[1];
+      var tenant =  arr[arr.length - 4]; 
       if (width <= 30 * widthThumb) wt = 30;
       else if (width <= 60 * widthThumb) wt = 60;
       else if (width <= 120 * widthThumb) wt = 120;

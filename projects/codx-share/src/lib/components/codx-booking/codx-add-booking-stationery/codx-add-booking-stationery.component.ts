@@ -82,6 +82,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
   autoComfirm =EPCONST.APPROVALRULE.NotHaved;
   viewOnly=false;
   defaultWarehouse: any;
+  warehouseLoaded =false;
   constructor(
     private injector: Injector,
     private auth: AuthStore,
@@ -129,8 +130,9 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
         this.lstWarehourse=res;
         this.defaultWarehouse = res?.find(x=>x.isSystem);
         if(this.funcType == _addMF ||this.funcType == _copyMF){
-          this.data.warehouseID = this.defaultWarehouse?.warehouseID;
+          //this.data.warehouseID = this.defaultWarehouse?.warehouseID;
           this.detectorRef.detectChanges();
+          //this.warehouseLoaded = true;
         }
       }
     });
@@ -258,8 +260,12 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
   }
 
   changeTab(tabNo: number) {
-    if (tabNo == 2 && this.cart.length == 0) {
+    if (tabNo == 2 && this.cart.length == 0 ) {
       this.notificationsService.notifyCode('EP011');
+      return;
+    }
+    if (tabNo == 2 && this.data?.warehouseID == null || this.data?.warehouseID?.length ==0 ) {
+      this.notificationsService.notifyCode('EP023');
       return;
     }
     this.currentTab = tabNo;
@@ -344,7 +350,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
   beforeSave(option: any) {
     let itemData = this.data;
     this.addQuota();
-    this.groupByWareHouse();
+    //this.groupByWareHouse();
     this.dialogAddBookingStationery.patchValue({ recID: this.data.recID });
     option.methodName = 'SaveAsync';
     option.data = [itemData, this.isAddNew, null, this.lstStationery];
@@ -591,7 +597,22 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
       ])
       .subscribe((res: any) => {
         this.listView.dataService.data = [];
-        if(res?.length>0 && res[0]!=null){          
+        if(res?.length>0 && res[0]!=null){     
+          if(this.data?.warehouseID!=null){
+            res[0]?.forEach(sta=>{
+              let curWH = sta.warehouses.find(x=>x?.warehouseID == this.data?.warehouseID);
+              if(curWH!=null){
+                sta.currentQty = curWH.currentQty;
+                sta.availableQty= curWH.availableQty;
+                sta.reservedQty= curWH.reservedQty;
+              }
+              else{
+                sta.currentQty = 0;
+                sta.availableQty= 0;
+                sta.reservedQty= 0;
+              }
+            });
+          }     
           this.listView.dataService.add(res[0]).subscribe();
 
         }
@@ -600,7 +621,26 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
   }
 
   //#region cart
-
+  warehouseChange(evt){
+    if(evt?.field && evt?.data?.length>0){
+      this.data.warehouseID = evt?.data;
+      this.listView.dataService.data.forEach(sta=>{
+        let curWH = sta.warehouses.find(x=>x?.warehouseID == evt?.data);
+        if(curWH!=null){
+          sta.currentQty = curWH.currentQty;
+          sta.availableQty= curWH.availableQty;
+          sta.reservedQty= curWH.reservedQty;
+          this.listView.dataService.update(sta).subscribe();
+        }
+        else{
+          sta.currentQty = 0;
+          sta.availableQty= 0;
+          sta.reservedQty= 0;
+          this.listView.dataService.update(sta).subscribe();
+        }
+      });
+    }
+  }
   getCartQty(cart = []): number {
     if (cart.length == 0) {
       return 0;

@@ -318,7 +318,7 @@ export class CashPaymentAddComponent extends UIComponent {
     if (event && event.data[0] && ((this.eleGridCashPayment && this.eleGridCashPayment.dataSource.length > 0)
       || (this.eleGridSettledInvoices && this.eleGridSettledInvoices.dataSource.length > 0)
       || (this.eleGridVatInvoices && this.eleGridVatInvoices.dataSource.length > 0))) {
-      this.notification.alertCode('AC0014', null).subscribe((res) => {
+      this.notification.alertCode('AC014', null).subscribe((res) => {
         if (res.event.status === 'Y') {
           let obj = {
             SubType: event.data[0]
@@ -466,7 +466,18 @@ export class CashPaymentAddComponent extends UIComponent {
   valueChangeLine(event: any) {
     let oLine = event.data;
     let field = event.field;
-    if(field.toLowerCase() === 'settledno') oLine.settledID = event?.itemData?.RecID;
+    switch(field.toLowerCase()){
+      case 'settledno':
+        oLine.settledID = event?.itemData?.RecID;
+        break;
+      case 'settlement':
+        if(oLine.settlement == '0'){
+          this.eleGridCashPayment.setEditableFields(['SettledNo'],false);
+        }else{
+          this.eleGridCashPayment.setEditableFields(['SettledNo'],true);
+        } 
+        break;
+    }
     this.eleGridCashPayment.startProcess();
     this.api.exec('AC','CashPaymentsLinesBusiness','ValueChangedAsync',[this.master.data,oLine,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       Object.assign(oLine, res);
@@ -499,6 +510,7 @@ export class CashPaymentAddComponent extends UIComponent {
         oLine.updateColumns = '';
         this.detectorRef.detectChanges();
         this.eleGridVatInvoices.endProcess();
+        this.detectorRef.detectChanges();
       }
     })
   }
@@ -1056,6 +1068,17 @@ export class CashPaymentAddComponent extends UIComponent {
           this.addLineVatInvoices();
         }
         break;
+      default:
+        if (this.elementTabDetail && this.elementTabDetail?.selectingID == '0') {
+          this.addLine();
+        }
+        if (this.elementTabDetail && this.elementTabDetail?.selectingID == '1') {
+          this.addSettledInvoices();
+        }
+        if (this.elementTabDetail && this.elementTabDetail?.selectingID == '2') {
+          this.addLineVatInvoices();
+        }
+        break;
     }
   }
 
@@ -1203,6 +1226,12 @@ export class CashPaymentAddComponent extends UIComponent {
           eleTab.hideTab(2, false);
           eleTab.select(0);
           break;
+        default:
+          eleTab.hideTab(0, false);
+          eleTab.hideTab(1, false);
+          eleTab.hideTab(2, false);
+          eleTab.select(0);
+          break;
       }
     }
   }
@@ -1273,9 +1302,11 @@ export class CashPaymentAddComponent extends UIComponent {
         }, 100);
         break;
       case 'beginEdit':
-        // let oAccount = this.acService.getCacheValue('account', event?.data.accountID);
-        // let oOffsetAccount = this.acService.getCacheValue('account', event?.data.offsetAcctID);
-        // this.setLockAndRequireFields(event?.data, oAccount, oOffsetAccount);
+        if(this.journal.journalType+'9' === this.master.data.subType){
+          let data = event.data;
+          if(data.settlement == '' || data.settlement == null || data.settlement == '0') 
+            this.eleGridCashPayment.setEditableFields(['SettledNo'],false);
+        }
         break;
     }
   }

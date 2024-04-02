@@ -5,6 +5,7 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/t
 import { Subject, map, takeUntil } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { RoundService } from '../../../round.service';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'lib-cash-countings-add',
@@ -15,18 +16,17 @@ import { RoundService } from '../../../round.service';
 export class CashCountingsAddComponent extends UIComponent {
   //#region Contructor
   @ViewChild('eleGridCounting') eleGridCounting: CodxGridviewV2Component;
-  @ViewChild('formCounting') public formCounting: CodxFormComponent;
+  @ViewChild('eleGridMember') eleGridMember: CodxGridviewV2Component;
+  @ViewChild('eleGridItems') eleGridItems: CodxGridviewV2Component;
+  @ViewChild('eleGridAsset') eleGridAsset: CodxGridviewV2Component;
+  @ViewChild('master') public master: CodxFormComponent;
+  @ViewChild('elementTabMaster') elementTabMaster: any;
+  @ViewChild('elementTabDetail') elementTabDetail: any;
   headerText: string;
   dialog!: DialogRef;
   dialogData?: any;
   dataDefault: any;
   journal: any;
-  bankAcctIDPay: any = null;
-  bankNamePay: any;
-  bankAcctIDReceive: any = null;
-  bankReceiveName: any;
-  ownerReceive: any;
-  textTotal: any;
   tabInfo: TabModel[] = [ //? thiết lập footer
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -41,22 +41,19 @@ export class CashCountingsAddComponent extends UIComponent {
     allowNextRowEdit: false
   }
   baseCurr: any;
-  legalName: any;
-  vatAccount: any;
   isPreventChange: any = false;
   postDateControl: any;
   nextTabIndex: number;
   refNo: any;
-  refTotalAmt: any = 0;
   preData: any;
   isload: any = false;
-  totalAmount:any = 0;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
     private acService: CodxAcService,
     private notification: NotificationsService,
     private roundService: RoundService,
+    private ngxLoader: NgxUiLoaderService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -76,7 +73,6 @@ export class CashCountingsAddComponent extends UIComponent {
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(
-        takeUntil(this.destroy$),
         map((arr: any[]) => arr.find((a) => a.category === '1')),
         map((data) => JSON.parse(data.dataValue))
       ).subscribe((res: any) => {
@@ -87,11 +83,7 @@ export class CashCountingsAddComponent extends UIComponent {
   }
 
   ngAfterViewInit() {
-    // if (this.formCashPayment?.data?.coppyForm) this.formCashPayment.data._isEdit = true; //? test copy để tạm
-    // if (this.formCashPayment?.data?.isEdit && (this.formCashPayment?.data?.subType === '3' || this.formCashPayment?.data?.subType === '4')) {
-    //   this.refNo = this.formCashPayment?.data?.refNo;
-    //   this.refTotalAmt = this.formCashPayment?.data?.refTotalAmt;
-    // }
+    if (this.master?.data?.coppyForm) this.master.data._isEdit = true;
   }
 
   /**
@@ -120,6 +112,17 @@ export class CashCountingsAddComponent extends UIComponent {
     this.dialog.close();
   }
 
+  clickMF(event: any) {
+    switch (event.event.functionID) {
+      case 'SYS104':
+        //this.copyRow(event.data);
+        break;
+      case 'SYS102':
+        //this.deleteRow(event.data);
+        break;
+    }
+  }
+
   selecting(event){
     if (event.isSwiped) {
       event.cancel = true;
@@ -127,11 +130,144 @@ export class CashCountingsAddComponent extends UIComponent {
   }
 
   /**
+   * *Hàm xử lí change value trên detail
+   * @param event
+   */
+  valueChangeLine(event: any) {
+    let oLine = event.data;
+    let field = event.field;
+    this.eleGridCounting.startProcess();
+    this.api.exec('AC','CountingFundsBusiness','ValueChangedAsync',[oLine,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      Object.assign(oLine, res);
+      oLine.updateColumns = '';
+      this.detectorRef.detectChanges();
+      this.eleGridCounting.endProcess();
+    })
+  }
+
+  /**
    * *Hàm thêm dòng cho các lưới
    * @returns
    */
-  onAddLine() {
-    
+  onAddLine(type) {
+    this.master.save(null, 0, '', '', false, { allowCompare: false })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (!res) return;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) return;
+        }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) return;
+        }
+        // if (this.eleGridMember && this.elementTabMaster?.selectingID == '1') {
+        //   this.eleGridMember.saveRow((res: any) => { //? save lưới trước
+        //     if (res && res.type != 'error') this.addRowDetail(type);
+        //   })
+        //   return;
+        // }
+        if (this.eleGridCounting && this.elementTabDetail?.selectingID == '0' && this.dialog.formModel.funcID === 'ACT281') {
+          this.eleGridCounting.saveRow((res: any) => { //? save lưới trước
+            if (res && res.type != 'error') this.addRowDetail(type);
+          })
+          return;
+        }
+        if (this.eleGridItems && this.elementTabDetail?.selectingID == '0' && this.dialog.formModel.funcID === 'ACT581') {
+          this.eleGridItems.saveRow((res: any) => { //? save lưới trước
+            if (res && res.type != 'error') this.addRowDetail(type);
+          })
+          return;
+        }
+        if (this.eleGridAsset && this.elementTabDetail?.selectingID == '0' && this.dialog.formModel.funcID === 'ACT881') {
+          this.eleGridAsset.saveRow((res: any) => { //? save lưới trước
+            if (res && res.type != 'error') this.addRowDetail(type);
+          })
+          return;
+        }
+      })
+  }
+
+  onAddLineMember() {
+    this.master.save(null, 0, '', '', false, { allowCompare: false })
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (!res) return;
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data') && !res.save.data) return;
+      }
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      if (this.eleGridMember && this.elementTabMaster?.selectingID == '1') {
+        this.eleGridMember.saveRow((res: any) => { //? save lưới trước
+          if (res && res.type != 'error') this.addLineMember();
+        })
+        return;
+      }
+    })
+  }
+
+  addRowDetail(type) {
+    switch(type){
+      case '1':
+        this.addLineCounting();
+        break;
+      case '2':
+        this.addLineCountingItems();
+        break;
+      case '3':
+        this.addLineCountingAssets();
+        break;
+    }
+  }
+
+  addLineMember() {
+    this.api.exec('AC','CountingMembersBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      if (res) {
+        this.eleGridMember.addRow(res, this.eleGridMember.dataSource.length);
+      }
+      this.onDestroy();
+    })
+  }
+
+  addLineCounting() {
+    if (this.eleGridCounting && this.eleGridCounting.dataSource.length) {
+      this.notification.alertCode('AC014', null).subscribe((res) => {
+        if (res.event.status === 'Y') {
+          this.api.exec('AC','CountingFundsBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+            if (res) {
+              this.eleGridCounting.refresh();
+            }
+            this.onDestroy();
+          })
+        }
+      })
+    }else{
+      this.api.exec('AC','CountingFundsBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+        if (res) {
+          this.eleGridCounting.refresh();
+        }
+        this.onDestroy();
+      })
+    }
+  }
+
+  addLineCountingItems() {
+    this.api.exec('AC','CountingItemsBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      if (res) {
+        this.eleGridItems.addRow(res, this.eleGridItems.dataSource.length);
+      }
+      this.onDestroy();
+    })
+  }
+
+  addLineCountingAssets() {
+    this.api.exec('AC','CountingAssetsBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      if (res) {
+        this.eleGridAsset.addRow(res, this.eleGridAsset.dataSource.length);
+      }
+      this.onDestroy();
+    })
   }
   //#endregion
 
@@ -141,7 +277,108 @@ export class CashCountingsAddComponent extends UIComponent {
    * @returns
    */
   onSaveVoucher(type) {
+    this.ngxLoader.start();
+    this.master.save(null, 0, '', '', false, { allowCompare: false })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        let isError = false;
+        if (!res) isError = true;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) isError = true;
+        }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) isError = true;
+        }
+        if(isError){
+          this.ngxLoader.stop();
+          return;
+        } 
+        if ((this.eleGridMember || this.eleGridMember?.isEdit) && this.elementTabMaster?.selectingID == '1') {
+          this.eleGridMember.saveRow((res: any) => { //? save lưới trước
+            if (res && res.type == 'error') {
+              this.ngxLoader.stop();
+              return;
+            }
+          })
+        }
+        if ((this.eleGridCounting || this.eleGridCounting?.isEdit) && this.elementTabDetail?.selectingID == '0') {
+          this.eleGridCounting.saveRow((res: any) => { //? save lưới trước
+            if (res && res.type != 'error') {
+              this.saveVoucher(type);
+            }else{
+              this.ngxLoader.stop();
+            }
+          })
+          return;
+        }
+        if ((this.eleGridItems || this.eleGridItems?.isEdit) && this.elementTabDetail?.selectingID == '0') {
+          this.eleGridItems.saveRow((res: any) => { //? save lưới trước
+            if (res && res.type != 'error') {
+              this.saveVoucher(type);
+            }else{
+              this.ngxLoader.stop();
+            }
+          })
+          return;
+        }
+        if ((this.eleGridAsset || this.eleGridAsset?.isEdit) && this.elementTabDetail?.selectingID == '0') {
+          this.eleGridAsset.saveRow((res: any) => { //? save lưới trước
+            if (res && res.type != 'error') {
+              this.saveVoucher(type);
+            }else{
+              this.ngxLoader.stop();
+            }
+          })
+          return;
+        }
+      });
+  }
 
+  /**
+   * lưu chứng từ
+   */
+  saveVoucher(type) {
+    this.api
+      .exec('AC', 'CountingsBusiness', 'UpdateVoucherAsync', [
+        this.master.data,
+        this.journal,
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res?.update) {
+          this.dialog.dataService.update(res.data).subscribe();
+          if (type == 'save') {
+            this.onDestroy();
+            this.dialog.close();
+          } else {
+            this.api
+              .exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
+                null,
+                this.journal.journalNo,
+                ""
+              ])
+              .subscribe((res: any) => {
+                if (res) {
+                  res.data.isAdd = true;
+                  this.master.refreshData({ ...res.data });
+                  setTimeout(() => {
+                    this.refreshGrid();
+                  }, 100);
+                  this.detectorRef.detectChanges();
+                }
+              });
+          }
+          if (this.master.data.isAdd || this.master.data.isCopy)
+            this.notification.notifyCode('SYS006');
+          else
+            this.notification.notifyCode('SYS007');
+
+        }
+        if (this.eleGridCounting && this.eleGridCounting?.isSaveOnClick) this.eleGridCounting.isSaveOnClick = false;
+        if (this.eleGridItems && this.eleGridItems.isSaveOnClick) this.eleGridItems.isSaveOnClick = false;
+        if (this.eleGridAsset && this.eleGridAsset.isSaveOnClick) this.eleGridAsset.isSaveOnClick = false;
+        this.ngxLoader.stop();
+      });
   }
 
   /**
@@ -149,6 +386,29 @@ export class CashCountingsAddComponent extends UIComponent {
    */
   onDiscardVoucher() {
 
+  }
+  //#endregion
+
+  //#region Function
+  /**
+   * *Hàm refresh tất cả dữ liệu chi tiết của tab detail
+   */
+  refreshGrid() {
+    if (this.eleGridCounting && this.elementTabDetail?.selectingID == '0') {
+      this.eleGridCounting.dataSource = [];
+      this.eleGridCounting.refresh();
+      return;
+    }
+    if (this.eleGridItems && this.elementTabDetail?.selectingID == '0') {
+      this.eleGridItems.dataSource = [];
+      this.eleGridItems.refresh();
+      return;
+    }
+    if (this.eleGridAsset && this.elementTabDetail?.selectingID == '0') {
+      this.eleGridAsset.dataSource = [];
+      this.eleGridAsset.refresh();
+      return;
+    }
   }
   //#endregion
 

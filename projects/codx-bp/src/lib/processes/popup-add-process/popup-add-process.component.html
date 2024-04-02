@@ -171,7 +171,7 @@
         >
           <div class="tab-content">
             <div
-              class="tab-pane fade"
+              class="tab-pane fade overflow-auto"
               id="pane_1"
               [ngClass]="currentTab == 0 ? 'active show' : ''"
             >
@@ -194,7 +194,7 @@
               </ng-container>
             </div>
             <div
-              class="tab-pane fade"
+              class="tab-pane fade overflow-auto"
               id="pane_2"
               [ngClass]="currentTab == 2 ? 'active show' : ''"
             >
@@ -294,7 +294,7 @@
 </div>
 
 <ng-template #tmpInfomation>
-  <div class="container-infomation">
+  <div class="container-infomation pb-2">
     <div class="w-100 h-100 p-8">
       <div class="form-group d-flex align-items-center">
         <codx-tag
@@ -366,13 +366,13 @@
                   <i class="icon-person_add_alt_1 icon-16"></i>
                 </button>
 
-                <button
+                <!-- <button
                   type="button"
                   class="btn btn-icon btn-sm btn-light-primary me-2"
                   (click)="clickRoles()"
                 >
                   <i class="icon-settings icon-16"></i>
-                </button>
+                </button> -->
               </div>
             </div>
             <div class="form-user mt-1">
@@ -450,13 +450,13 @@
                   <i class="icon-person_add_alt_1 icon-16"></i>
                 </button>
 
-                <button
+                <!-- <button
                   type="button"
                   class="btn btn-icon btn-sm btn-light-primary me-2"
                   (click)="clickRoles()"
                 >
                   <i class="icon-settings icon-16"></i>
-                </button>
+                </button> -->
               </div>
             </div>
             <div class="form-user mt-1">
@@ -534,13 +534,13 @@
                 <i class="icon-person_add_alt_1 icon-16"></i>
               </button>
 
-              <button
+              <!-- <button
                 type="button"
                 class="btn btn-icon btn-sm btn-light-primary me-2"
                 (click)="clickRoles()"
               >
                 <i class="icon-settings icon-16"></i>
-              </button>
+              </button> -->
             </div>
           </div>
           <div class="form-user mt-1">
@@ -723,7 +723,7 @@
     [multiple]="multiple"
     chkParent="O"
     [listCombobox]="listCombobox"
-    (eventApply)="applyShare($event, typeShare)"
+    (eventApply)="applyShare($event, roleType)"
     [listName]="vllShare"
   >
   </codx-share>
@@ -733,7 +733,7 @@
   <div
     class="dp-step step-content container-fluid p-0 h-100"
   >
-    <codx-diagram [viewOnly]="true" [recID]="data.recID" *ngIf="data.recID"></codx-diagram>
+    <codx-diagram [viewOnly]="true" [process]="data"></codx-diagram>
   </div>
 </ng-template>
 

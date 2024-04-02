@@ -260,6 +260,13 @@ export class AddProcessDefaultComponent implements OnInit {
         }
         this.indexUploadUserInfo[field] = 0;
       }
+      if(element.fieldType == "Note")
+      {
+        element.dataFormat =
+        typeof element.dataFormat == 'string'
+          ? JSON.parse(element.dataFormat)
+          : element.dataFormat;
+      }
       if (element.autoNumber?.autoNumberControl) {
         var objAuto = {
           field: field,
@@ -363,7 +370,11 @@ export class AddProcessDefaultComponent implements OnInit {
         }
       });
   }
-
+  dataUploadAttachment(e:any)
+  {
+    if(!e || e.length <=0) return;
+    this.attachment.fileUploadList = this.attachment.fileUploadList.concat(e);
+  }
   async onSave(type = 1) {
     var valueForm = this.dynamicFormsForm.value;
     var keysUserInfo = Object.keys(this.dataUserInfo);
@@ -533,7 +544,9 @@ export class AddProcessDefaultComponent implements OnInit {
             //addFile nếu có
             this.addFileAttach(type);
           });
-      } else if (this.type == 'edit') {
+      } 
+      else if (this.type == 'edit') 
+      {
         this.dataIns.title = valueForm[this.subTitle];
         (this.dataIns.modifiedOn = new Date()),
           (this.dataIns.modifiedBy = this.user?.userID);
@@ -548,7 +561,15 @@ export class AddProcessDefaultComponent implements OnInit {
 
           this.dataIns.datas = JSON.stringify(this.dataIns.datas);
         } else this.dataIns.datas = JSON.stringify(valueForm);
-        this.updateIns();
+        
+        if (
+          this.attachment?.fileUploadList &&
+          this.attachment?.fileUploadList?.length > 0
+        ) 
+        {
+          this.addFileAttach(type);
+        }
+        else this.updateIns();
       }
     }
   }
@@ -610,8 +631,10 @@ export class AddProcessDefaultComponent implements OnInit {
           //this.dataIns.documentControl.
         }
       });
-    } else {
-      if (this.type == 'add') {
+    } else 
+    {
+      if (this.type == 'add') 
+      {
         this.bpService
           .createTaskOnSaveInstance(this.dataIns.recID)
           .subscribe((res) => {
@@ -621,10 +644,15 @@ export class AddProcessDefaultComponent implements OnInit {
               this.startInstance(this.dataIns.recID);
             }
           });
-      } else {
-        if (type == 1) {
+      } 
+      else 
+      {
+        if (type == 1) 
+        {
           this.dialog.close(this.dataIns);
-        } else {
+        } 
+        else 
+        {
           this.startInstance(this.dataIns.recID);
         }
       }

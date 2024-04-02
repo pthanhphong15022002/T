@@ -206,7 +206,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
           this.lstRespondents = item[0];
           this.lstQuestion = item[1]
           this.lstCountQuestion = item[2];
-
+          debugger
           var index = this.lstRespondents.findIndex(x=>x.responds && x.responds.length >0);
           if(index >= 0) this.respondents = this.lstRespondents[index];
           this.getSetting();

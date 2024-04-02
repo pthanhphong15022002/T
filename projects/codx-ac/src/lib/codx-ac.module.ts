@@ -123,6 +123,7 @@ import { CashCountingsAddComponent } from './vouchers/cash-countings/cash-counti
 import { AssetCountingsComponent } from './vouchers/asset-countings/asset-countings.component';
 import { CashtransfersDetailComponent } from './vouchers/cashtransfers/cashtransfers-detail/cashtransfers-detail.component';
 import { AssetAcquisitionsComponent } from './vouchers/asset-acquisitions/asset-acquisitions.component';
+import { PopupInfoTransferComponent } from './share/popup-info-transfer/popup-info-transfer.component';
 
 export const routes: Routes = [
   {
@@ -181,6 +182,26 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
+        path: 'assetliquidations/:funcID/:journalNo',
+        component: AssetJournalsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'assettransfers/:funcID/:journalNo',
+        component: AssetJournalsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'assetdepreciations/:funcID/:journalNo',
+        component: AssetJournalsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'assetcountings/:funcID/:journalNo',
+        component: AssetJournalsComponent,
+        data: { noReuse: true },
+      },
+      {
         path: 'generaljournals/:funcID/:journalNo',
         component: GeneralJournalComponent,
         data: { noReuse: true },
@@ -223,6 +244,26 @@ export const routes: Routes = [
       },
       {
         path: 'assetrevaluations/:funcID',
+        component: AssetJournalsComponent,
+        data: { noReuse: true, runMode: 1 },
+      },
+      {
+        path: 'assetliquidations/:funcID',
+        component: AssetJournalsComponent,
+        data: { noReuse: true, runMode: 1 },
+      },
+      {
+        path: 'assettransfers/:funcID',
+        component: AssetJournalsComponent,
+        data: { noReuse: true, runMode: 1 },
+      },
+      {
+        path: 'assetdepreciations/:funcID',
+        component: AssetJournalsComponent,
+        data: { noReuse: true, runMode: 1 },
+      },
+      {
+        path: 'assetcountings/:funcID',
         component: AssetJournalsComponent,
         data: { noReuse: true, runMode: 1 },
       },
@@ -288,7 +329,12 @@ export const routes: Routes = [
       },
       {
         path: 'assetcountings/:funcID/:journalNo',
-        component: AssetCountingsComponent,
+        component: CashCountingsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'inventorycounting/:funcID/:journalNo',
+        component: CashCountingsComponent,
         data: { noReuse: true },
       },
       // {
@@ -438,6 +484,7 @@ export const routes: Routes = [
     CashPaymentAddComponent,
     PurchaseinvoicesComponent,
     PurchaseinvoicesAddComponent,
+    PopupInfoTransferComponent,
     JournalsAddComponent,
     SettledInvoicesAdd,
     DashboardComponent,
@@ -519,7 +566,7 @@ export const routes: Routes = [
     CashCountingsAddComponent,
     AssetCountingsComponent,
     CashtransfersDetailComponent,
-    AssetAcquisitionsComponent
+    AssetAcquisitionsComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

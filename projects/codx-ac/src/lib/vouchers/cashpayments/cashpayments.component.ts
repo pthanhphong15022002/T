@@ -2,12 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   Injector,
-  NgZone,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
-  AuthStore,
   ButtonModel,
   CRUDService,
   DataRequest,
@@ -15,7 +13,6 @@ import {
   FormModel,
   NotificationsService,
   SidebarModel,
-  TenantStore,
   UIComponent,
   ViewModel,
   ViewType,
@@ -34,8 +31,8 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
-import { Router } from '@angular/router';
 import { JournalsAddComponent } from '../../journals/journals-add/journals-add.component';
+import { PopupInfoTransferComponent } from '../../share/popup-info-transfer/popup-info-transfer.component';
 declare var jsBh: any;
 @Component({
   selector: 'lib-cashpayments',
@@ -78,15 +75,15 @@ export class CashPaymentsComponent extends UIComponent {
   fmCashpaymentLineOne: FormModel = fmCashPaymentsLinesOneAccount;
   fmSettledInvoices: FormModel = fmSettledInvoices;
   fmVATInvoices: FormModel = fmVATInvoices;
-  fmJournal:FormModel =  fmJournal;
-  journalSV:CRUDService;
+  fmJournal: FormModel = fmJournal;
+  journalSV: CRUDService;
   private destroy$ = new Subject<void>();
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
     private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
-    private notification: NotificationsService,
+    private notification: NotificationsService
   ) {
     super(inject);
     if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
@@ -100,13 +97,11 @@ export class CashPaymentsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    this.cache
-      .companySetting()
-      .subscribe((res: any) => {
-        if (res.length > 0) {
-          this.legalName = res[0].legalName;
-        }
-      });
+    this.cache.companySetting().subscribe((res: any) => {
+      if (res.length > 0) {
+        this.legalName = res[0].legalName;
+      }
+    });
 
     this.cache
       .viewSettingValues('ACParameters')
@@ -114,7 +109,7 @@ export class CashPaymentsComponent extends UIComponent {
       .subscribe((res) => {
         let dataValue = JSON.parse(res.dataValue);
         this.baseCurr = dataValue?.BaseCurr || '';
-      })
+      });
 
     this.router.params.subscribe((params) => {
       this.journalNo = params?.journalNo;
@@ -128,14 +123,12 @@ export class CashPaymentsComponent extends UIComponent {
       this.onDestroy();
     });
 
-    this.cache
-      .functionList(this.funcID)
-      .subscribe((res) => {
-        if (res) {
-          this.headerText = res?.defaultName || res?.customName;
-          if (!this.runmode) this.runmode = res?.runMode;
-        }
-      });
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) {
+        this.headerText = res?.defaultName || res?.customName;
+        if (!this.runmode) this.runmode = res?.runMode;
+      }
+    });
     this.getJournal();
   }
 
@@ -275,6 +268,9 @@ export class CashPaymentsComponent extends UIComponent {
       case 'ACT041010':
       case 'ACT042907':
         this.printVoucher(data, e.functionID); //? in chứng từ
+        break;
+      case 'ACT041013':
+        this.querytransfer(data);
         break;
     }
   }
@@ -560,33 +556,35 @@ export class CashPaymentsComponent extends UIComponent {
       });
   }
 
-  editJournal(){
+  editJournal() {
     this.journalSV
       .edit(this.journal)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         res.isEdit = true;
-        this.cache.gridViewSetup(this.fmJournal.formName,this.fmJournal.gridViewName).subscribe((o)=>{
-          let data = {
-            headerText: ('Chỉnh sửa sổ nhật kí').toUpperCase(),
-            oData: { ...res },
-          };
-          let option = new SidebarModel();
-          option.FormModel = this.fmJournal;
-          option.DataService = this.journalSV;
-          option.Width = '800px';
-          let dialog = this.callfc.openSide(
-            JournalsAddComponent,
-            data,
-            option,
-            this.fmJournal.funcID
-          );
-          dialog.closed.subscribe((res) => {
-            if (res && res.event) {
-              this.getJournal();
-            }
+        this.cache
+          .gridViewSetup(this.fmJournal.formName, this.fmJournal.gridViewName)
+          .subscribe((o) => {
+            let data = {
+              headerText: 'Chỉnh sửa sổ nhật kí'.toUpperCase(),
+              oData: { ...res },
+            };
+            let option = new SidebarModel();
+            option.FormModel = this.fmJournal;
+            option.DataService = this.journalSV;
+            option.Width = '800px';
+            let dialog = this.callfc.openSide(
+              JournalsAddComponent,
+              data,
+              option,
+              this.fmJournal.funcID
+            );
+            dialog.closed.subscribe((res) => {
+              if (res && res.event) {
+                this.getJournal();
+              }
+            });
           });
-        })
         this.onDestroy();
       });
   }
@@ -677,10 +675,10 @@ export class CashPaymentsComponent extends UIComponent {
                   }
                   this.onDestroy();
                 });
-            } else{
+            } else {
               this.notification.notifyCode(result?.msgCodeError);
               this.onDestroy();
-            } 
+            }
           });
       });
   }
@@ -706,10 +704,10 @@ export class CashPaymentsComponent extends UIComponent {
               }
               this.onDestroy();
             });
-        } else{
+        } else {
           this.notification.notifyCode(result?.msgCodeError);
           this.onDestroy();
-        } 
+        }
       });
   }
 
@@ -781,9 +779,11 @@ export class CashPaymentsComponent extends UIComponent {
     options.dataValues = this.journalNo;
     this.api
       .execSv('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
-      .pipe(map((r) => r?.[0] ?? [])).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
-        this.journal = res[0]; 
-      })
+      .pipe(map((r) => r?.[0] ?? []))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        this.journal = res[0];
+      });
   }
 
   /**
@@ -817,7 +817,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   //#endregion
-  
+
   //#region Bankhub
   /**
    * *Hàm chuyển tiền ngân hàng điện tử
@@ -825,32 +825,106 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    */
   transferToBank(text, data) {
-    this.checkLogin('970422', 'test', data, (o) => {
-      if (o) {
-        let tk = jsBh.decodeCookie('bankhub');
-        this.api
-          .execSv<any>(
-            'AC',
-            'AC',
-            'CashPaymentsBusiness',
-            'TransferToBankAsync',
-            [data.recID, tk, 'test']
-          )
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res) => {
-            if (res && !res?.error) {
-              data.status = '8';
-              this.view.dataService.update(data).subscribe();
-              this.notification.notifyCode('AC0029', 0, text);
-            } else {
-              this.notification.notify(res.data.data.result.message, '2');
+    const t = this;
+    this.getBankCode(data).subscribe((res: any) => {
+      if (res) {
+        if (res.bankCode == '970422' || res.bankCode == '970448') {
+          t.checkLogin(res.bankCode, 'test', data, (o) => {
+            if (o) {
+              let tk = jsBh.decodeCookie('bankhub');
+              this.api
+                .execSv<any>(
+                  'AC',
+                  'AC',
+                  'CashPaymentsBusiness',
+                  'TransferToBankAsync',
+                  [data.recID, tk, 'test']
+                )
+                .pipe(takeUntil(this.destroy$))
+                .subscribe((res) => {
+                  if (res && !res?.error) {
+                    data.status = '8';
+                    this.view.dataService.update(data).subscribe();
+                    this.notification.notifyCode('AC0029', 0, text);
+                  } else {
+                    this.notification.notify(
+                      res?.data?.data?.result?.message ||
+                        res?.data?.description ||
+                        res?.error,
+                      '2'
+                    );
+                  }
+                  this.onDestroy();
+                });
             }
-            this.onDestroy();
           });
+        } else {
+          this.notification.notify('Chưa hỗ trợ chuyển tiền ngân hàng này');
+        }
       }
     });
   }
 
+  querytransfer(data) {
+    const t = this;
+    this.getBankCode(data).subscribe((res: any) => {
+      if (res) {
+        if (res.bankCode == '970422' || res.bankCode == '970448') {
+          t.checkLogin(res.bankCode, 'test', data, (o) => {
+            if (o) {
+              let tk = jsBh.decodeCookie('bankhub');
+              this.api
+                .execSv<any>(
+                  'AC',
+                  'AC',
+                  'CashPaymentsBusiness',
+                  'QueryTransferAsync',
+                  [data.recID, tk, 'test']
+                )
+                .pipe(takeUntil(this.destroy$))
+                .subscribe((res) => {
+                  if (res && !res?.error) {
+                    data.status = '8';
+                    this.view.dataService.update(data).subscribe();
+                    let opt = new DialogModel();
+                    opt.FormModel = this.view.formModel;
+                    let dialog = this.callfc.openForm(
+                      PopupInfoTransferComponent,
+                      'Thông tin lệnh chuyển',
+                      null,
+                      null,
+                      '',
+                      res.data.data,
+                      '',
+                      opt
+                    );
+                  } else {
+                    this.notification.notify(
+                      res?.data?.data?.result?.message ||
+                        res?.data?.description ||
+                        res?.error,
+                      '2'
+                    );
+                  }
+                  this.onDestroy();
+                });
+            }
+          });
+        } else {
+          this.notification.notify('Chưa hỗ trợ cho ngân hàng này');
+        }
+      }
+    });
+  }
+
+  getBankCode(data) {
+    return this.api.exec(
+      'AC',
+      'CashBooksBusiness',
+      'GetBankCodeAsync',
+      data.cashBookID
+    );
+  }
   /**
    * *Hàm check đăng nhập
    */

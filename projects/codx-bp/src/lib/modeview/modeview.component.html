@@ -164,6 +164,9 @@
                     <ng-container *ngSwitchCase="'UserInfo'">
                       <ng-container *ngTemplateOutlet="userInfo ; context: { $implicit: subItem }"></ng-container>
                     </ng-container>
+                    <ng-container *ngSwitchCase="'Note'">
+                      <ng-container *ngTemplateOutlet="note ; context: { $implicit: subItem }"></ng-container>
+                    </ng-container>
                     <ng-container *ngSwitchDefault>...</ng-container>
                   </ng-container>
 
@@ -267,24 +270,20 @@
                         </div>
                       </ng-container>
                       <ng-container *ngIf="data.documentControl && data.documentControl.length > 0">
-                        <table class="table mt-2">
-                          <thead>
-                            <tr class="fw-bold bg-light">
-                              <th scope="col">Tên file</th>
-                              <th scope="col">Mẫu</th>
-                              <th scope="col">Bắt buộc</th>
-                              <th scope="col">Đính kèm</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr class="border-top cursor-pointer" *ngFor="let item of data.documentControl">
-                                <th class="border-none">{{item.title}}</th>
-                                <td><div class="d-flex align-items-center"><span>{{item.count}}</span><i class="icon-i-file-earmark-text icon-20 ms-2"></i></div></td>
-                                <td><input class="form-check-input" type="checkbox" id="flexCheckChecked" [checked]="item.isRequired" disabled></td>
-                                <td><i class="icon-attach_file"></i></td>
-                            </tr>
-                          </tbody>
-                        </table>
+                        <div class="d-flex flex-column my-3" *ngFor="let item of data.documentControl">
+                          <span>{{item.title}} <span class="text-danger ms-1" *ngIf="item?.isRequired">(*)</span></span>
+                          <span class="text-gray-500">{{item.memo}}</span>
+                          <div class="d-flex align-items-center justify-content-between mt-2" *ngFor="let item2 of item?.files">
+                            <div class="d-flex align-items-center" >
+                              <i class="icon-gesture me-2" [class.text-primary]="item2.eSign"></i>
+                              <span [innerHTML]="genHTML(item2.fileID)"></span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                              <i class="icon-edit-one icon-20 me-2"></i>
+                              <i class="icon-attach_file icon-20"></i>
+                            </div>
+                          </div>
+                        </div>
                       </ng-container>
                     </div>
                   </ng-template>
@@ -472,6 +471,18 @@
                     </div>
                   </ng-template>
 
+                  <!-- Phone -->
+                  <ng-template #note let-data>
+                    <div class="d-flex flex-column w-100">
+                      <div class="d-flex align-items-center">
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
+                      </div>
+                      <div class="d-flex align-items-center justify-content-between w-100 my-2 rd-3px">
+                        <span [class.fw-bold]="data?.dataFormat?.bold" [class.fst-italic]="data?.dataFormat?.italic" [class.text-decoration-underline]="data?.dataFormat?.underlined" [style.color]="data?.dataFormat?.color" [ngClass]="data?.dataFormat?.size">{{data.defaultValue}}</span>
+                      </div>
+                    </div>
+                  </ng-template>
+
                   <!-- UserInfo -->
                   <ng-template #userInfo let-data>
                     <div class="d-flex flex-column w-100">
@@ -625,7 +636,7 @@
           <lib-property-expression [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-expression>
         </ng-container>
         <ng-container *ngSwitchCase="'Attachment'">
-          <lib-property-attachment [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-attachment>
+          <lib-property-attachment [data]="dataSelected" [formModel]="formModel" (dataChange)="dataChange($event)"></lib-property-attachment>
         </ng-container>
         <ng-container *ngSwitchCase="'ComboBox'">
           <lib-property-combobox [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)"></lib-property-combobox>
@@ -635,6 +646,9 @@
         </ng-container>
         <ng-container *ngSwitchCase="'UserInfo'">
           <lib-property-userinfo [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-userinfo>
+        </ng-container>
+        <ng-container *ngSwitchCase="'Note'">
+          <lib-property-note [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-note>
         </ng-container>
       </ng-container>
     </div>
