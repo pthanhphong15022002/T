@@ -607,22 +607,27 @@ export class CodxAcService {
               element.disabled = true;
             break;
 
-          case '8':
-          case '11':
-            if (
-              ![MorfuncCash.InUNC, MorfuncCash.KiemTraTrangThai].includes(
-                element.functionID
-              )
-            )
-              element.disabled = true;
-            break;
+          // case '8':
+          // case '11':
+          //   if (
+          //     ![MorfuncCash.InUNC, MorfuncCash.KiemTraTrangThai].includes(
+          //       element.functionID
+          //     )
+          //   )
+          //     element.disabled = true;
+          //   break;
 
           default:
             element.disabled = true;
             break;
         }
       }
-      //event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
+
+      if (data.eBankingID) {
+        if (MorfuncCash.KiemTraTrangThai == element.functionID)
+          element.disabled = false;
+      }
+      event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
     }, {});
   }
 

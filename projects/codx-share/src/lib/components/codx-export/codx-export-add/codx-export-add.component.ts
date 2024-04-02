@@ -830,13 +830,13 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
 
   checkIsRequired() {
     var arr = [];
-    for (var i = 0; i < this.objRequied.length; i++) {
-      var field = capitalizeFirstLetter(this.objRequied[i]);
-      var data = this.data[field];
-      if (!data)
-        arr.push(this.gridViewSetupWord[this.objRequied[i]].headerText);
-    }
-
+    // for (var i = 0; i < this.objRequied.length; i++) {
+    //   var field = capitalizeFirstLetter(this.objRequied[i]);
+    //   var data = this.data[field];
+    //   if (!data)
+    //     arr.push(this.gridViewSetupWord[this.objRequied[i]].headerText);
+    // }
+    if(!this.exportAddForm.value.templateName) arr.push('Tên mẫu template');
     if (arr.length > 0) {
       var name = arr.join(' , ');
       return this.notifySvr.notifyCode('SYS009', 0, name);

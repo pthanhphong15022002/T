@@ -309,6 +309,9 @@ export class CodxApprovalComponent
     
     var view = data.filter((x: { functionID: string }) => x?.functionID == 'SYS05');    
     if (view?.length) view[0].disabled = true;
+
+    var viewEsign = data.filter((x: { functionID: string }) => x?.functionID == 'SYS200');    
+    if (viewEsign?.length && value?.status !='3') viewEsign[0].disabled = true;
     
     if (datas?.status != '3') {
       this.api

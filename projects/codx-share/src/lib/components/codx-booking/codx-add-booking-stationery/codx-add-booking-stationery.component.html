@@ -53,7 +53,7 @@
               <div class="d-flex flex-row align-items-center pe-5">
                   
                   <codx-label class="pe-5" name="lblWarehouseID" default="Kho"> </codx-label>                  
-                  <codx-input class="pe-5" type="combobox" refValue="EP_Warehouses" field="warehouseID" [crrValue]="data?.warehouseID">
+                  <codx-input class="pe-5" type="combobox" refValue="EP_Warehouses" field="warehouseID" [crrValue]="data?.warehouseID" (valueChange)="warehouseChange($event)" >
                   </codx-input> 
               </div>
               <codx-searchbar class="w-200px" iconPos="right" (searchEvent)="search($event)"></codx-searchbar>

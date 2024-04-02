@@ -126,13 +126,13 @@
 
     <div class="form-group" *ngIf="grView?.title?.allowPopup">
       <codx-label fiedName="Title" [formModel]="form.formModel"> </codx-label>
-      <codx-input ControlName="title" [formModel]="form.formModel" [Group]="form.formGroup"
+      <codx-input ControlName="title" [formModel]="form.formModel" [Group]="form.formGroup" 
         [disabled]="viewOnly"></codx-input>
     </div>
 
     <div class="form-group" *ngIf="grView?.memo?.allowPopup">
       <codx-label fiedName="Memo" [formModel]="form.formModel"> </codx-label>
-      <codx-input ControlName="memo" [formModel]="form.formModel" [Group]="form.formGroup" class="h-105px"
+      <codx-input ControlName="memo" [formModel]="form.formModel" [Group]="form.formGroup" class="h-105px" [attr.NoEnter]="true"
         [disabled]="viewOnly">
       </codx-input>
     </div>

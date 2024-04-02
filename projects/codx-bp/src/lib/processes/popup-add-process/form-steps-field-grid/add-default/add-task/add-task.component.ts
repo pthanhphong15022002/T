@@ -717,9 +717,11 @@ export class AddTaskComponent
   }
 
   getFieldExport() {
-    return this.process.steps.filter(
+    let arr = this.process.steps.filter(
       (x) => x.activityType == 'Form' && x.stepNo <= this.data.stepNo
     );
+    if(this.data.activityType == 'Form' && !arr.some(x=>x.recID == this.data.recID)) arr.push(this.data);
+    return arr;
   }
 
   openFormTemplate(val: any, type: any, data: any = null) {
