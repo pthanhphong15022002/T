@@ -1125,6 +1125,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     booking.bookingOn = data.startDate;
     // booking.approveStatus = '1';
     booking.resourceType = '1';
+    booking.approval = '1';
+    booking.reminder = data.reminder;
     //cần kiểm tra lại mapping cho 2 field này
     booking.title = data.meetingName; // tiêu đề cuộc họp
     booking.reasonID = null;

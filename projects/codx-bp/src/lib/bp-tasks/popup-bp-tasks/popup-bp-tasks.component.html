@@ -229,7 +229,7 @@
           </codx-label>
           <div
             class="d-flex align-items-center justify-content-center position-relative border rounded w-30px p-2 cursor-pointer"
-            (click)="privileged ? addFile($event) : null"
+            (click)="privileged && data?.status != '5' ? addFile($event) : null"
           >
             <i class="icon-attach_file"></i>
           </div>
