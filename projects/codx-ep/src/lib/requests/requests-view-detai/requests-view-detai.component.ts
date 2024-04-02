@@ -9,10 +9,8 @@ import { FormModel, UIDetailComponent } from 'codx-core';
 })
 export class RequestsViewDetaiComponent extends UIDetailComponent implements OnChanges, AfterViewInit {
 
-
-
   @Input() formModel:FormModel;
-  data:any;
+  @Input() data:any;
   constructor
   (
     injector:Injector
@@ -29,7 +27,7 @@ export class RequestsViewDetaiComponent extends UIDetailComponent implements OnC
 
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes && !changes.recID.firstChange && changes.recID && changes.recID.currentValue !== changes.recID.previousValue)
+    if(changes && changes.recID && changes.recID.currentValue !== changes.recID.previousValue)
     {
       this.loadDataInfo(this.recID,this.funcID);
     }
@@ -38,9 +36,12 @@ export class RequestsViewDetaiComponent extends UIDetailComponent implements OnC
   loadDataInfo(recID:string,funcID:string){
     this.api.execSv("EP","EP","RequestBusiness","GetRequestDetailAsync",[recID,funcID])
     .subscribe((res:any) => {
-      this.data = res;
-      this.detectorRef.detectChanges();
-    })
+      if(res)
+      {
+        this.data = res;
+        this.detectorRef.detectChanges();
+      }
+    });
   }
 
   changeDataMF(event:any){

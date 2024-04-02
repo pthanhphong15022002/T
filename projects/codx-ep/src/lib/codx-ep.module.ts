@@ -47,6 +47,7 @@ import { ReceiptResourceComponent } from './receipt/receipt-resource.component';
 import { AddReceiptResourceComponent } from './receipt/add-receipt-resource/add-receipt-resource.component';
 import { RequestsComponent } from './requests/requests.component';
 import { RequestsViewDetaiComponent } from './requests/requests-view-detai/requests-view-detai.component';
+import { PopupAddRequestComponent } from './requests/popup/popup-add-request/popup-add-request.component';
 
 export const routes: Routes = [
   {
@@ -229,7 +230,8 @@ export const routes: Routes = [
     ReceiptResourceComponent,
     AddReceiptResourceComponent,
     RequestsComponent,
-    RequestsViewDetaiComponent
+    RequestsViewDetaiComponent,
+    PopupAddRequestComponent
   ],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -182,6 +182,26 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
+        path: 'assetliquidations/:funcID/:journalNo',
+        component: AssetJournalsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'assettransfers/:funcID/:journalNo',
+        component: AssetJournalsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'assetdepreciations/:funcID/:journalNo',
+        component: AssetJournalsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'assetcountings/:funcID/:journalNo',
+        component: AssetJournalsComponent,
+        data: { noReuse: true },
+      },
+      {
         path: 'generaljournals/:funcID/:journalNo',
         component: GeneralJournalComponent,
         data: { noReuse: true },
@@ -224,6 +244,26 @@ export const routes: Routes = [
       },
       {
         path: 'assetrevaluations/:funcID',
+        component: AssetJournalsComponent,
+        data: { noReuse: true, runMode: 1 },
+      },
+      {
+        path: 'assetliquidations/:funcID',
+        component: AssetJournalsComponent,
+        data: { noReuse: true, runMode: 1 },
+      },
+      {
+        path: 'assettransfers/:funcID',
+        component: AssetJournalsComponent,
+        data: { noReuse: true, runMode: 1 },
+      },
+      {
+        path: 'assetdepreciations/:funcID',
+        component: AssetJournalsComponent,
+        data: { noReuse: true, runMode: 1 },
+      },
+      {
+        path: 'assetcountings/:funcID',
         component: AssetJournalsComponent,
         data: { noReuse: true, runMode: 1 },
       },
