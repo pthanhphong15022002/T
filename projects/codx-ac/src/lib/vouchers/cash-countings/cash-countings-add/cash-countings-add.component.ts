@@ -130,6 +130,22 @@ export class CashCountingsAddComponent extends UIComponent {
   }
 
   /**
+   * *Hàm xử lí change value trên detail
+   * @param event
+   */
+  valueChangeLine(event: any) {
+    let oLine = event.data;
+    let field = event.field;
+    this.eleGridCounting.startProcess();
+    this.api.exec('AC','CountingFundsBusiness','ValueChangedAsync',[oLine,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      Object.assign(oLine, res);
+      oLine.updateColumns = '';
+      this.detectorRef.detectChanges();
+      this.eleGridCounting.endProcess();
+    })
+  }
+
+  /**
    * *Hàm thêm dòng cho các lưới
    * @returns
    */
@@ -215,12 +231,25 @@ export class CashCountingsAddComponent extends UIComponent {
   }
 
   addLineCounting() {
-    this.api.exec('AC','CountingFundsBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-      if (res) {
-        this.eleGridCounting.addRow(res, this.eleGridCounting.dataSource.length);
-      }
-      this.onDestroy();
-    })
+    if (this.eleGridCounting && this.eleGridCounting.dataSource.length) {
+      this.notification.alertCode('AC014', null).subscribe((res) => {
+        if (res.event.status === 'Y') {
+          this.api.exec('AC','CountingFundsBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+            if (res) {
+              this.eleGridCounting.refresh();
+            }
+            this.onDestroy();
+          })
+        }
+      })
+    }else{
+      this.api.exec('AC','CountingFundsBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+        if (res) {
+          this.eleGridCounting.refresh();
+        }
+        this.onDestroy();
+      })
+    }
   }
 
   addLineCountingItems() {

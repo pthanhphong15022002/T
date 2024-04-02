@@ -58,6 +58,7 @@ import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-co
 import { PopupAssginDealComponent } from 'projects/codx-cm/src/lib/deals/popup-assgin-deal/popup-assgin-deal.component';
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { PopupPermissionsComponent } from 'projects/codx-cm/src/lib/popup-permissions/popup-permissions.component';
 
 @Component({
   selector: 'codx-instances',
@@ -1129,6 +1130,9 @@ export class InstancesComponent
         break;
       case 'DP23':
         this.cancelApprover(data);
+        break;
+      case 'DP34':
+        this.popupPermissions(data);
         break;
       //lay datas ra
       case 'SYS002':
@@ -2912,6 +2916,38 @@ export class InstancesComponent
 
         kanban.refresh();
         this.kanban = kanban;
+      });
+  }
+
+  popupPermissions(data) {
+    let dialogModel = new DialogModel();
+    let formModel = new FormModel();
+    formModel.formName = 'CMPermissions';
+    formModel.gridViewName = 'grvCMPermissions';
+    formModel.entityName = 'CM_Permissions';
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
+    let obj = {
+      data: data,
+      title: this.titleAction,
+      entityName: this.view.formModel.entityName,
+    };
+    this.callfc
+      .openForm(
+        PopupPermissionsComponent,
+        '',
+        950,
+        650,
+        '',
+        obj,
+        '',
+        dialogModel
+      )
+      .closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e?.event, true).subscribe();
+          this.detectorRef.detectChanges();
+        }
       });
   }
 }

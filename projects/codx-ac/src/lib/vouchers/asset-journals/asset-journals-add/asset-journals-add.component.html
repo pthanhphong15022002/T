@@ -126,7 +126,7 @@
               <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
             </ng-template>
           </e-tabitem>
-          <e-tabitem *ngIf="dialog.formModel.funcID == 'ACT821'">
+          <e-tabitem *ngIf="dialog.formModel.funcID == 'ACT821' || dialog.formModel.funcID == 'ACT871'">
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2 mt-2">
                 <i class="icon-i-file-earmark-text icon-18 me-2"></i>
@@ -135,7 +135,7 @@
                   style="font-size: 14px !important"
                   fiedName="lblAssetRevaluations"
                   [formModel]="dialog.formModel"
-                  default="Hội đồng đánh giá"
+                  [default]="dialog.formModel.funcID == 'ACT871' ? 'Hội đồng thanh lý' : 'Hội đồng đánh giá'"
                 ></codx-label>
               </div>
             </ng-template>
@@ -145,13 +145,14 @@
               ></ng-container>
             </ng-template>
           </e-tabitem>
+
         </e-tabitems>
       </ejs-tab>
     </div>
 
     <div class="mt-3 body-body">
       <!-- Start: Tab Detail -->
-      <ejs-tab (selecting)="selecting($event)" #elementTabDetail>
+      <ejs-tab (selecting)="selecting($event)" #elementTabDetail (created)="createTabDetail($event, elementTabDetail)">
         <e-tabitems>
           <e-tabitem>
             <ng-template #headerText>
@@ -170,6 +171,25 @@
             </ng-template>
             <ng-template #content>
               <ng-container *ngTemplateOutlet="TmpTabLine"></ng-container>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex align-items-top me-2 mt-2">
+                <i class="icon-i-graph-up icon-18 me-2"></i>
+                <codx-label
+                  style="font-size: 14px !important"
+                  class="fw-bold"
+                  fiedName="lblBillGTGT"
+                  [formModel]="dialog.formModel"
+                  default="Hóa đơn GTGT"
+                ></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <ng-container
+                *ngTemplateOutlet="TmpTabVATInvoices"
+              ></ng-container>
             </ng-template>
           </e-tabitem>
         </e-tabitems>
@@ -339,7 +359,11 @@
               </div>
             </div>
           </div>
-          <div class="row mb-4" style="max-width: 1000px" *ngIf="dialog.formModel.funcID == 'ACT811'">
+          <div
+            class="row mb-4"
+            style="max-width: 1000px"
+            *ngIf="dialog.formModel.funcID == 'ACT811'"
+          >
             <div class="col-10">
               <div class="form-group mb-0">
                 <codx-label
@@ -523,7 +547,7 @@
         [moreFcItems]="'SYS104;SYS102'"
         rowNoField="rowNo"
         [moreFcModel]="dialog.formModel"
-        (clickMF)="clickMFAccount($event)"
+        (clickMF)="clickMFAccount($event, 'member')"
         (gridInit)="initGridAccount($event)"
         (eventAction)="onActionGridAccount($event)"
         (actionCompleted)="onActionGridAccount($event)"
@@ -608,6 +632,58 @@
     </div>
   </ng-container>
 </ng-template>
+<ng-template #TmpTabVATInvoices>
+  <div class="tabline-content header-table-ac position-relative">
+    <codx-gridview-v2
+      #eleGridVatInvoices
+      [formName]="fmVATInvoices.formName"
+      [editSettings]="formAsset.data?.isReadOnly ? editSettings : {}"
+      [gridViewName]="fmVATInvoices.gridViewName"
+      [entityName]="fmVATInvoices.entityName"
+      rowNoField="rowNo"
+      [showEmptyRecord]="false"
+      [hideMoreFunc]="true"
+      [editOnClick]="formAsset.data?.isReadOnly ? false : true"
+      [moreFcItems]="'SYS104;SYS102'"
+      [moreFcModel]="dialog.formModel"
+      predicates="TransID=@0"
+      gridLines="Both"
+      (clickMF)="clickMFAccount($event, 'vat')"
+      (eventAction)="onActionGridAccount($event)"
+      (actionCompleted)="onActionGridAccount($event)"
+      (cellChanged)="valueChangeVAT($event)"
+      [autoFitColumns]="true"
+      [dataValues]="formAsset?.data?.recID"
+      service="AC"
+    >
+    </codx-gridview-v2>
+    <ng-container *ngIf="!formAsset.data?.isReadOnly">
+      <div #btnRef class="btn-addline">
+        <div class="d-flex align-items-center">
+          <div class="ms-2">
+            <button
+              tabindex="-1"
+              tab-index="15"
+              style="border: 1px solid !important"
+              class="btn btn-sm btn-light-primary"
+              (keydown.enter)="addLineVatInvoices(); $event.preventDefault()"
+              (click)="addLineVatInvoices()"
+              id="btnAddVAT"
+            >
+              <i class="icon-playlist_add icon-16"></i>
+              <codx-label
+                [formModel]="dialog.formModel"
+                fiedName="lblAddVat"
+                default="Thêm dòng"
+              ></codx-label>
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+
 <ng-template #templateMore let-data>
   <codx-mfunc
     [formModel]="dialog.formModel"
