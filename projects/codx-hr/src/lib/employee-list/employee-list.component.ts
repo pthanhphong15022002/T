@@ -99,7 +99,7 @@ export class EmployeeListComponent extends UIComponent {
         id: '1',
         type: ViewType.list,
         sameData: true,
-        //active: true,
+        active: false,
         model: {
           template: this.templateList,
           headerTemplate: this.headerTemplate,
@@ -110,6 +110,7 @@ export class EmployeeListComponent extends UIComponent {
         type: ViewType.tree_masterdetail,
         request: this.request,
         sameData: false,
+        active: true,
         model: {
           resizable: false,
           isCustomize: true,

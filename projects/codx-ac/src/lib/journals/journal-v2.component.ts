@@ -163,7 +163,7 @@ export class JournalV2Component extends UIComponent {
   selectedChangeToolBar(data:any){
     this.selectedToolBar = data.value;
     this.view.dataService.setPredicates(['Category=@0'],[data.value]);
-    this.detectorRef.detectChanges();
+    //this.detectorRef.detectChanges();
   }
 
   changeMF(event) {

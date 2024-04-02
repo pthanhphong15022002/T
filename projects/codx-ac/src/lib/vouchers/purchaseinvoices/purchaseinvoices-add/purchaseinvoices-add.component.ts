@@ -218,6 +218,36 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         hideFields.push('VATBase2');
       }
     }
+
+    if (this.journal.discountControl == '0') {
+      hideFields.push('DiscAmt');
+      hideFields.push('DiscPct');
+      // hideFields.push('TotalDiscAmt');
+      // hideFields.push('TotalDiscPct');
+      // hideFields.push('LineDiscAmt');
+      // hideFields.push('LineDiscPct');
+      hideFields.push('DiscAmt2');
+    }else{
+      if (this.dataDefault && this.dataDefault?.currencyID == this.baseCurr){
+        hideFields.push('DiscAmt2');
+      }
+    }
+
+    if (this.journal.cosControl == '0') {
+      hideFields.push('CostPrice');
+      hideFields.push('CostAmt');
+    }
+
+    if (!this.journal.miscChargeControl) {
+      hideFields.push('MiscAmt');
+      hideFields.push('MiscPrice');
+      hideFields.push('MiscAmt2');
+    }else{
+      if (this.dataDefault && this.dataDefault?.currencyID == this.baseCurr){
+        hideFields.push('MiscAmt2');
+      }
+    }
+
     if (this.dataDefault && this.dataDefault?.currencyID == this.baseCurr){
       hideFields.push('PurcAmt2');
       hideFields.push('NetAmt2');

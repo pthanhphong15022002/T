@@ -546,7 +546,6 @@ export class CodxAcService {
                   MorfuncCash.GhiSoUNC,
                   MorfuncCash.InPC,
                   MorfuncCash.InUNC,
-                  MorfuncCash.ChuyenTienDienTu,
                 ].includes(element.functionID)
               )
                 element.disabled = true;
@@ -639,6 +638,9 @@ export class CodxAcService {
 
       if (data.eBankingID) {
         if (MorfuncCash.KiemTraTrangThai == element.functionID)
+          element.disabled = false;
+      } else {
+        if (MorfuncCash.ChuyenTienDienTu == element.functionID)
           element.disabled = false;
       }
       event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));

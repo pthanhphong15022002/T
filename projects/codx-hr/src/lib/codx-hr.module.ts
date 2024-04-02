@@ -150,6 +150,8 @@ import { PersonalInfoComponent } from './employee-list/employee-info-detail/comp
 import { LegalInfoComponent } from './employee-list/employee-info-detail/component/legal-info/legal-info.component';
 import { ForeignWorkersComponent } from './employee-list/employee-info-detail/component/foreign-workers/foreign-workers.component';
 import { PreviousExperienceComponent } from './employee-list/employee-info-detail/component/previous-experience/previous-experience.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { EmployeeInfoProfileComponent } from './employee-list/employee-info-profile/employee-info-profile.component';
 export const routes: Routes = [
   {
     path: '',
@@ -173,12 +175,20 @@ export const routes: Routes = [
         path: 'employeedetail/:funcID',
         component: EmployeeInfoDetailComponent,
       },
+      {
+        path: 'employeeprofile/:funcID',
+        component: EmployeeInfoProfileComponent
+      }
     ],
   },
   {
     path: '',
     component: LayoutComponent,
     children: [
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+      },
       {
         path: 'report/:funcID',
         component: CodxReportViewsComponent,
@@ -472,7 +482,8 @@ const T_Component = [
   PersonalInfoComponent,
   LegalInfoComponent,
   ForeignWorkersComponent,
-  PreviousExperienceComponent
+  PreviousExperienceComponent,
+  EmployeeInfoProfileComponent
  
 ];
 @NgModule({

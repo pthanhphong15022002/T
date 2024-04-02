@@ -848,7 +848,9 @@ export class CashPaymentsComponent extends UIComponent {
                     this.notification.notifyCode('AC0029', 0, text);
                   } else {
                     this.notification.notify(
-                      res.data?.data?.result?.message,
+                      res?.data?.data?.result?.message ||
+                        res?.data?.description ||
+                        res?.error,
                       '2'
                     );
                   }
@@ -857,7 +859,7 @@ export class CashPaymentsComponent extends UIComponent {
             }
           });
         } else {
-          this.notification.notify('chưa hỗ trợ chuyển tiền ngân hàng này');
+          this.notification.notify('Chưa hỗ trợ chuyển tiền ngân hàng này');
         }
       }
     });
@@ -898,7 +900,9 @@ export class CashPaymentsComponent extends UIComponent {
                     );
                   } else {
                     this.notification.notify(
-                      res?.data?.data?.result?.message,
+                      res?.data?.data?.result?.message ||
+                        res?.data?.description ||
+                        res?.error,
                       '2'
                     );
                   }
@@ -907,7 +911,7 @@ export class CashPaymentsComponent extends UIComponent {
             }
           });
         } else {
-          this.notification.notify('chưa hỗ trợ cho ngân hàng này');
+          this.notification.notify('Chưa hỗ trợ cho ngân hàng này');
         }
       }
     });
