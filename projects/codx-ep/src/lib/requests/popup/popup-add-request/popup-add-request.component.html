@@ -1,0 +1,214 @@
+
+<codx-layout-add
+  #form
+  [title]="'Kế hoạch công tác'"
+  [tabInfo]="tabInfo"
+  [formModel]="dialog.formModel"
+  [footer]="footer"
+  [dialog]="dialog"
+  [openMore]="true"
+  [tabContent]="[tab1, tab2]"
+  [data]="data"
+>
+</codx-layout-add>
+<!-- tabContent1 -->
+<ng-template #tab1>
+    <div class="container p-4">
+        <div class="row mb-4">
+            <div class="col-10">
+                <div class="d-flex flex-column">
+                    <codx-label [formModel]="dialog.formModel" [name]="'EmployeeID'" [default]="'Người đề nghị:'" class="fw-bold mb-2"></codx-label>
+                    <div class="d-flex">
+                        <div class="me-6">
+                            <codx-img [objectId]="data.employeeID" [objectType]="'HR_Employees'" [objectName]="data.employeeName" [width]="50"></codx-img>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <div class="text-dark" *ngIf="data.employeeName">{{data.employeeName}}</div>
+                            <div class="text-dark" *ngIf="data.positionID" [innerHTML]="data.positionID | formatvalue : dialog.formModel : 'positionID' | async"></div>
+                            <div class="d-flex align-items-center text-gray-600">
+                                <div *ngIf="data.phone" class="me-2" [innerHTML]="data.phone | formatvalue : dialog.formModel : 'phone' | async">
+                                </div>
+                                <div *ngIf="data.email" [innerHTML]="data.email | formatvalue : dialog.formModel : 'email' | async">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2 col-2 d-flex justify-content-end">
+                <codx-input [field]="'employeeID'" [refType]="'P'" [refValue]="'Employees'" [type]="'combobox'" [crrValue]="data.employeeID" [showInput]="false" (valueChange)="valueChange($event)"></codx-input>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <codx-label [formModel]="dialog.formModel" [name]="'FromDate'" [default]="'Từ ngày'" class="fw-bold mb-2"></codx-label>
+                    <codx-input [formModel]="dialog.formModel" [field]="'fromDate'" [crrValue]="data.fromDate" (valueChange)="valueChange($event)"></codx-input>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <codx-label [formModel]="dialog.formModel" [name]="'ToDate'" [default]="'Đến ngày'" class="fw-bold mb-2"></codx-label>
+                    <codx-input [formModel]="dialog.formModel" [field]="'toDate'" [crrValue]="data.toDate" (valueChange)="valueChange($event)"></codx-input>
+                </div>  
+            </div>
+            <div class="col-4">
+                <div class="d-flex flex-column">
+                    <codx-label [formModel]="dialog.formModel" [name]="'SubType'" [default]="'Loại công tác'" class="fw-bold mb-2"></codx-label>
+                    <codx-input [formModel]="dialog.formModel" [field]="'subType'" [crrValue]="data.subType" (valueChange)="valueChange($event)"></codx-input>
+                </div>  
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex flex-column">
+                    <codx-label [formModel]="dialog.formModel" [name]="'ObjectID'" [default]="'Đơn vị công tác'" class="fw-bold"></codx-label>
+                    <codx-input [formModel]="dialog.formModel" [field]="'objectID'" [crrValue]="data.objectID" (valueChange)="valueChange($event)"></codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex flex-column">
+                    <codx-label [formModel]="dialog.formModel" [name]="'ReasonID'" [default]="'Mục đích'" class="fw-bold mb-2"></codx-label>
+                    <codx-input [formModel]="dialog.formModel" [field]="'reasonID'" [crrValue]="data.reasonID" (valueChange)="valueChange($event)"></codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex flex-column">
+                    <codx-label [formModel]="dialog.formModel" [name]="'Memo'" [default]="'Mô tả công việc'" class="fw-bold mb-2"></codx-label>
+                    <codx-input [formModel]="dialog.formModel" [field]="'memo'" [crrValue]="data.memo" (valueChange)="valueChange($event)"></codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-6">
+                <codx-input [formModel]="dialog.formModel" [field]="'hasBooking'" [checked]="false" [crrValue]="data.hasBooking" (valueChange)="valueChange($event)" [label]="'HasBooking'" [labelPosition]="'after'"></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-input [formModel]="dialog.formModel" [field]="'hasResources'" [checked]="false" [crrValue]="data.hasResource" (valueChange)="valueChange($event)" [label]="'HasResource'" [labelPosition]="'after'"></codx-input>
+            </div>
+        </div>
+        <div class="row mb-4" *ngIf="data.hasBooking">
+            <div class="col-12">
+                <div class="d-flex align-items-center justify-content-between">
+                    <codx-label [formModel]="dialog.formModel" [name]="'lblBookingCar'" [default]="'Đặt xe'" class="fw-bold mb-2"></codx-label>
+                    <codx-input [field]="'resourceID'" [refType]="'P'" [refValue]="'EP_Cars'" [type]="'combobox'" [crrValue]="data.resourceID" [showInput]="false" (valueChange)="valueChange($event)"></codx-input>
+                </div>
+                <div class="d-flex align-items-center" *ngIf="EPResource">
+                    <div class="me-2">
+                        <codx-img [objectId]="EPResource.RecID" [objectName]="data.ResourceName" [objectType]="'EP_Resources'" [width]="40"></codx-img>
+                    </div>
+                    <div class="flex flex-column">
+                        <div class="text-dark mb-2"><span>{{EPResource.Code}}</span> - <span>{{EPResource.ResourceName}}</span></div>
+                        <div class="d-flex align-items-center" *ngIf="EPResource.Equipments">
+                            <ng-container *ngFor="let item of EPResource.Equipments">
+                                <codx-vll [name]="'EP012'" [value]="item.EquipmentID" [showText]="true" [showIcon]="true" class="d-flex align-items-center text-gray-600 me-4"></codx-vll>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4" *ngIf="data.hasResources">
+            <div class="col-12">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <codx-label [formModel]="dialog.formModel" name="Resources" [default]="'Người đi cùng'" class="fw-bold"></codx-label>
+                    <codx-input [field]="'resources'" [refType]="'P'" [refValue]="'Users'" type="combobox" [crrValue]="ADResourcesIDs" [multiple]="true" [showInput]="false" (valueChange)="valueChange($event)"></codx-input>
+                </div>
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <ng-container *ngFor="let item of data.resources;let idx = index">
+                            <ng-container *ngIf="idx <= 3">
+                                <ng-container *ngIf="idx < 3;else tmpMoreResouces">
+                                    <div class="me-1 position-relative">
+                                        <codx-img [objectId]="item.userID" [objectType]="item.roleType == '2' ? 'EP_Resources' : 'AD_Users'" [width]="30"></codx-img>
+                                        <div class="position-absolute bottom-0 end-0">
+                                            <codx-vll [name]="'EP010'" [value]="item.roleType" [showIcon]="true" [path]="'./assets/themes/ep/default/img/'"></codx-vll>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <ng-template #tmpMoreResouces>
+                                    <div class="symbol symbol-30px symbol-circle">
+                                        <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">+{{data.resources.length - 3}}</span>
+                                    </div>
+                                </ng-template>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <div class="d-flex justify-content-end mb-2" *ngIf="vllEP010">
+                            <div class="d-flex" *ngFor="let item of vllEP010" class="ms-4"> 
+                                <span [inlineSVG]="'./assets/themes/ep/default/img/' + item.icon" class="me-1"></span>
+                                <span>{{item.text}}</span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <codx-label [formModel]="dialog.formModel" name="lblViewDetail" [default]="'Xem chi tiết...'" class="text-primary"></codx-label>
+                            <i class="icon-arrow_forward_ios text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<!-- tabContent2 -->
+<ng-template #tab2>
+    <div class="container p-4">
+        <div class="row form-group">
+            <div class="col-12">
+                <div class="d-flex justify-content-between">
+                    <codx-label [formModel]="dialog.formModel" [name]="'lblExpense'" [default]="'Chi phí:'" class="fw-bold"></codx-label>
+                    <button class="btn" (click)="addNewRow()">
+                        <i class="icon-add_circle_outline text-primary"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <codx-gridview-v2
+                #codxGridViewV2
+                calss="mb-2"
+                [gridViewName]="'grvRequests_Lines'"
+                [formName]="'Requests_Lines'"
+                [autoFitColumns]="false"
+                [editOnClick]="true"
+                [autoAddRow]="false"
+                [showEmptyRecord]="false"
+                [autoLoad]="false"
+                [templateMore]="tmpMoreFunc"
+                [editSettings]="editSettings"
+                [dataSource]="EPRequestsLines"
+                [idField]="'recID'"
+                (cellChanged)="valueCellChange($event)">
+            </codx-gridview-v2>
+            <div class="form-group d-flex justify-content-end" *ngIf="codxGridViewV2.dataSource.length > 0">
+                <div class="fw-bold">
+                    <span class="me-6">Tổng cộng:</span>
+                    <span>0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #footer>
+    <div class="d-flex align-items-center justify-content-end">
+        <button type="btn" class="btn btn-outline-primary me-2"><i class="icon-near_me me-1"></i>Gửi duyệt</button>
+        <button type="btn" class="btn btn-primary" (click)="onSave()">Lưu</button>
+    </div>
+</ng-template>
+
+<ng-template #tmpMoreFunc let-data>
+    <codx-mfunc
+        [dataItem]="data"
+        [formModel]="dialog.formModel"
+        (clickMF)="clickMF($event, data)"
+        (changeDataMF)="changeDataMF($event)"
+        type="hover"
+    ></codx-mfunc>
+</ng-template>

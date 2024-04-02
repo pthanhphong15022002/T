@@ -43,13 +43,14 @@ export class FormSettingComboboxComponent {
   tableName: any;
   linkFunction: any;
   cbb: any;
-  listFields: any;
-  displayNembers: any;
-  fieldFilters: any;
-  fieldSortings: any;
-  sortingDirection: any;
-  headerTexts: any;
+  listFields: any = [];
+  displayNembers: any = [];
+  fieldFilters: any = [];
+  fieldSortings: any = [];
+  sortingDirection: any = [];
+  headerTexts: any = [];
   comboboxType: any = '3';
+  lstTable: any = null;
   constructor(
     private api: ApiHttpService,
     private bpService: CodxBpService,
@@ -65,8 +66,49 @@ export class FormSettingComboboxComponent {
   }
 
   ngOnInit(): void {
-    if (this.data.refValue) {
-      this.getDataCombobox(this.data.refValue);
+    if (this.data.refValue) this.getDataCombobox(this.data.refValue);
+
+    if (this.comboboxType != '3') this.loadTableCustom();
+  }
+
+  loadTableCustom() {
+    this.api
+      .execSv('BP', 'ERM.Business.BP', 'ProcessesBusiness', 'GetCollection', [])
+      .subscribe((res: any[]) => {
+        if (res && res.length > 0) {
+          this.lstTable = [];
+          res.forEach((element) => {
+            let obj: any = {};
+            obj['text'] = element;
+            obj['value'] = element;
+            this.lstTable.push(obj);
+          });
+        } else this.lstTable = [];
+        console.log(res);
+      });
+  }
+
+  tableChange(evt: any) {
+    let data = evt.itemData;
+    this.tableName = data['value'];
+    this.lstGrids2 = [];
+    if (data && data['value']) {
+      this.api
+        .execSv('BP', 'ERM.Business.BP', 'ProcessesBusiness', 'GetListFields', [
+          data['value'],
+        ])
+        .subscribe((res: any[]) => {
+          if (res && res.length > 0) {
+            this.addNewRow();
+            res.forEach((element) => {
+              let obj: any = {};
+              obj['fieldName'] = element;
+              obj['headerText'] = element;
+              this.lstGrids2.push(obj);
+            });
+          }
+          console.log(res);
+        });
     }
   }
 
