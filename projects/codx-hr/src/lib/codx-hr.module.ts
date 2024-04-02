@@ -174,6 +174,10 @@ export const routes: Routes = [
         path: 'employeedetail/:funcID',
         component: EmployeeInfoDetailComponent,
       },
+      {
+        path: 'employeeprofile/:funcID',
+        component: EmployeeInfoProfileComponent
+      }
     ],
   },
   {
@@ -477,7 +481,8 @@ const T_Component = [
   PersonalInfoComponent,
   LegalInfoComponent,
   ForeignWorkersComponent,
-  PreviousExperienceComponent
+  PreviousExperienceComponent,
+  EmployeeInfoProfileComponent
  
 ];
 @NgModule({
