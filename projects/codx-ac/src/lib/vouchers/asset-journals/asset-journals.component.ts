@@ -3,6 +3,9 @@ import {
   fmAssetRevaluationsJournal,
   fmAssetLiquidationsJournal,
   fmCountingMembers,
+  fmAssetTransfersJournal,
+  fmAssetDepreciationsJournal,
+  fmAssetCountingsJournal,
 } from './../../codx-ac.service';
 import {
   ChangeDetectionStrategy,
@@ -106,6 +109,15 @@ export class AssetJournalsComponent extends UIComponent {
           break;
         case 'ACT871':
           this.fmAssetJournal = fmAssetLiquidationsJournal;
+          break;
+        case 'ACT831':
+          this.fmAssetJournal = fmAssetTransfersJournal;
+          break;
+        case 'ACT841':
+          this.fmAssetJournal = fmAssetDepreciationsJournal;
+          break;
+        case 'ACT881':
+          this.fmAssetJournal = fmAssetCountingsJournal;
           break;
       }
     }

@@ -28,6 +28,8 @@ import {
   fmCountingMembers,
   fmAsset,
   fmVATInvoices,
+  fmAssetTransfersLines,
+  fmAssetDepreciationsLines,
 } from '../../../codx-ac.service';
 import { RoundService } from '../../../round.service';
 import {
@@ -124,6 +126,15 @@ export class AssetJournalsAddComponent extends UIComponent {
         break;
       case 'ACT871':
         this.fmAssetJournalsLines = fmAssetLiquidationsLines;
+        break;
+      case 'ACT831':
+        this.fmAssetJournalsLines = fmAssetTransfersLines;
+        break;
+      case 'ACT841':
+        this.fmAssetJournalsLines = fmAssetDepreciationsLines;
+        break;
+      case 'ACT881':
+        this.fmAssetJournalsLines = fmAssetLiquidationsLines; // Chưa có
         break;
     }
   }
