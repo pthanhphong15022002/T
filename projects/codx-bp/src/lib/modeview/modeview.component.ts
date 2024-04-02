@@ -138,7 +138,7 @@ export class ModeviewComponent implements OnInit {
       }
       else
       {
-        if(elm.fieldType == "Table")
+        if(elm.fieldType == "Table" || elm.fieldType == "Note")
         {
           elm.dataFormat = typeof elm.dataFormat == 'string' ? JSON.parse(elm.dataFormat) :  elm.dataFormat;
         }
@@ -586,7 +586,8 @@ export class ModeviewComponent implements OnInit {
           delete elm2.value;
         })
       }
-      
+      //else if(elm.fieldType == "Note") if(typeof elm.dataFormat != 'string') elm.dataFormat = JSON.stringify(elm.dataFormat)
+
       delete elm.icon
       delete elm.text;
       delete elm.textColor;

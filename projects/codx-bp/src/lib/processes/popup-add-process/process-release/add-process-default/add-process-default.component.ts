@@ -260,6 +260,13 @@ export class AddProcessDefaultComponent implements OnInit {
         }
         this.indexUploadUserInfo[field] = 0;
       }
+      if(element.fieldType == "Note")
+      {
+        element.dataFormat =
+        typeof element.dataFormat == 'string'
+          ? JSON.parse(element.dataFormat)
+          : element.dataFormat;
+      }
       if (element.autoNumber?.autoNumberControl) {
         var objAuto = {
           field: field,

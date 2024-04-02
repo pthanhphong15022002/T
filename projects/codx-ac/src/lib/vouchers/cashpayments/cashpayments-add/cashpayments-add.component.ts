@@ -318,7 +318,7 @@ export class CashPaymentAddComponent extends UIComponent {
     if (event && event.data[0] && ((this.eleGridCashPayment && this.eleGridCashPayment.dataSource.length > 0)
       || (this.eleGridSettledInvoices && this.eleGridSettledInvoices.dataSource.length > 0)
       || (this.eleGridVatInvoices && this.eleGridVatInvoices.dataSource.length > 0))) {
-      this.notification.alertCode('AC0014', null).subscribe((res) => {
+      this.notification.alertCode('AC014', null).subscribe((res) => {
         if (res.event.status === 'Y') {
           let obj = {
             SubType: event.data[0]
@@ -510,6 +510,7 @@ export class CashPaymentAddComponent extends UIComponent {
         oLine.updateColumns = '';
         this.detectorRef.detectChanges();
         this.eleGridVatInvoices.endProcess();
+        this.detectorRef.detectChanges();
       }
     })
   }
