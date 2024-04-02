@@ -313,7 +313,8 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
         var index = this.listTask.findIndex((x) => x.stepID == elm.recID);
         if(index >= 0)
         {
-          elm.colorStatus = this.VllBP014.datas.filter(x=>x.value == this.listTask[index].status)[0].color;
+          elm.colorStatus = this.VllBP014.datas.filter(x=>x.value == this.listTask[index].status)[0].textColor;
+          elm.statusStage = this.listTask[index].status;
         }
       });
       this.data.countTask = countTaskSum;

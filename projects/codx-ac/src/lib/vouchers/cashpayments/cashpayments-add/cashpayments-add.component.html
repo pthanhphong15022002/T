@@ -168,7 +168,7 @@
       <div *ngIf="master.formGroup" id="ac-column-def"
         class="d-flex align-items-center cursor-pointer w-fit ac-refdoc mt-2">
         <img src="../assets/themes/ac/default/img/attachment.svg" class="w-20px h-20px me-2" />
-        <codx-input *ngIf="!master.data.isReadOnly" [disabled]="master.data?.isReadOnly ? true : false" #cbxRefdoc
+        <codx-input *ngIf="!master.data.isReadOnly" [disabled]="master.data?.isReadOnly ? true : false" #cbxRefdoc tab-index="16"
           style="width: 100%" class="fw-bold" [Group]="master.formGroup" field="refDocs" [formModel]="dialog.formModel"
           (valueChange)="valueChangeMaster($event)">
         </codx-input>
@@ -190,7 +190,7 @@
     <div *ngIf="!master.data.isReadOnly" class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
       <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true" *ngIf="!master.data?.validated" type="button"
         class="btn btn-md btn-danger me-2" (keydown.enter)="onDiscardVoucher(); $event.preventDefault()"
-        (click)="onDiscardVoucher()">
+        (click)="onDiscardVoucher()" tab-index="17">
         <div class="d-flex align-items-center">
           <i class="icon-cancel icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
@@ -198,7 +198,7 @@
       </button>
       <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" type="button"
         class="btn btn-md btn-primary me-2" (keydown.enter)="onSaveVoucher('saveadd'); $event.preventDefault()"
-        (click)="onSaveVoucher('saveadd')">
+        (click)="onSaveVoucher('saveadd')" tab-index="18">
         <div class="d-flex align-items-center">
           <i class="icon-add_to_photos icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
@@ -207,7 +207,7 @@
       <button [shortcut]="'alt+s'" [autoClick]="true" id="btnsave" type="button" class="btn btn-md btn-light-primary"
         style="border: 1px solid var(--primary-dark) !important"
         (keydown.enter)="onSaveVoucher('save'); $event.preventDefault()" (click)="onSaveVoucher('save')">
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center" tab-index="19">
           <i class="icon-save_alt icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
         </div>
@@ -527,7 +527,7 @@
         <div #btnRef class="btn-addline">
           <div class="d-flex align-items-center">
             <div *ngIf="master.data?.subType != '3' && master.data?.subType != '4'">
-              <button style="border: 1px solid !important;" tab-index="15" id="btnAddCash"
+              <button style="border: 1px solid !important;" tab-index="15" id="btnAddCash" tabindex="-1"
                 class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="
                 onAddLine(); $event.preventDefault()
                 " (click)="onAddLine()">
@@ -610,7 +610,7 @@
         <div #btnRef class="btn-addline">
           <div class="d-flex align-items-center">
             <div class="ms-2">
-              <button tabindex="-1" style="border: 1px solid !important" class="btn btn-sm btn-light-primary"
+              <button tabindex="-1" tab-index="15" style="border: 1px solid !important" class="btn btn-sm btn-light-primary"
                 (keydown.enter)="onAddLine(); $event.preventDefault()" (click)="onAddLine()" id="btnAddVAT">
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label [formModel]="dialog.formModel" fiedName="lblAddVat" default="Thêm dòng"></codx-label>

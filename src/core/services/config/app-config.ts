@@ -1,7 +1,9 @@
 export abstract class AppConfig {
+  isUserBankHub: boolean;
   shopping: string;
   apiUrl: string;
   urlUpload: string;
+  bankhubUrl: string;
   appName: string;
   reportUrl: string;
   office365: string;

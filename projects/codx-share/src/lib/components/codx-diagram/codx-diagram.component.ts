@@ -1,9 +1,10 @@
 import { P } from "@angular/cdk/keycodes";
 import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ViewEncapsulation, TemplateRef, ViewChild, ChangeDetectorRef, ElementRef, Optional, Input, OnChanges, SimpleChanges, OnDestroy } from "@angular/core";
-import { HierarchicalTreeService, MindMapService, RadialTreeService, ComplexHierarchicalTreeService, DataBindingService, SnappingService, PrintAndExportService, BpmnDiagramsService, SymmetricLayoutService, ConnectorBridgingService, UndoRedoService, LayoutAnimationService, DiagramContextMenuService, ConnectorEditingService, DiagramComponent, SymbolPaletteComponent, BpmnShapeModel, ConnectorModel, ContextMenuSettingsModel, DiagramBeforeMenuOpenEventArgs, DiagramTools, HeaderModel, LaneModel, NodeModel, PaletteModel, PortConstraints, PortVisibility, RulerSettingsModel, SelectorConstraints, SelectorModel, ShapeStyleModel, SnapConstraints, SnapSettingsModel, SwimLaneModel, UserHandleModel, cloneObject } from "@syncfusion/ej2-angular-diagrams";
+import { HierarchicalTreeService, MindMapService, RadialTreeService, ComplexHierarchicalTreeService, DataBindingService, SnappingService, PrintAndExportService, BpmnDiagramsService, SymmetricLayoutService, ConnectorBridgingService, UndoRedoService, LayoutAnimationService, DiagramContextMenuService, ConnectorEditingService, DiagramComponent, SymbolPaletteComponent, BpmnShapeModel, ConnectorModel, ContextMenuSettingsModel, DiagramBeforeMenuOpenEventArgs, DiagramTools, HeaderModel, LaneModel, NodeModel, PaletteModel, PortConstraints, PortVisibility, RulerSettingsModel, SelectorConstraints, SelectorModel, ShapeStyleModel, SnapConstraints, SnapSettingsModel, SwimLaneModel, UserHandleModel, cloneObject, ScrollSettingsModel } from "@syncfusion/ej2-angular-diagrams";
 import { shadowProperty } from "@syncfusion/ej2-angular-documenteditor";
 import { ExpandMode, MenuEventArgs } from "@syncfusion/ej2-angular-navigations";
-import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel } from "codx-core";
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel, UrlUtil, Util } from "codx-core";
+import { BP_Processes_Steps } from "projects/codx-bp/src/lib/models/BP_Processes.model";
 import { FormEditConnectorComponent } from "projects/codx-share/src/lib/components/codx-diagram/form-edit-connector/form-edit-connector.component";
 import { Subscription } from "rxjs";
 
@@ -40,11 +41,13 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
   @Input() process:any={};
   @Input() viewOnly:boolean=false;
   @Input() recID!:any;
+  @Input() scrollSettings: ScrollSettingsModel = {horizontalOffset:-500};
   vllStepType:any=[];
   vllInterval:any=[];
   dialog:any;
   data:any
   subscription:Subscription = new Subscription();
+  user:any;
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
@@ -56,11 +59,14 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
+    this.user = this.authStore.get()
     this.dialog = dialog;
      let sub = this.cache.valueList('BP001').subscribe((res:any)=>{
 
       if(res){
         this.vllStepType=res.datas;
+        this.menuDrag = [...this.menuDrag,...this.vllStepType];
+        this.detectorRef.detectChanges();
       }
 
     })
@@ -264,16 +270,10 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
 
   menuDrag: any = [
     //{ id: 'connector', text: 'Connector', icon: 'icon-timeline' },
-    { id: 'start', text: 'Bắt đầu', icon: 'icon-i-circle' },
-    { id: 'end', text: 'Kết thúc', icon: 'icon-i-circle' },
-    { id: 'decision', text: 'Điều kiện', icon: 'icon-i-diamond' },
-    { id: 'swimlane', text: 'SwimLane', icon: 'icon-view_quilt' },
-    { id: 'form', text: 'Forms', icon: 'icon-note_add' },
-    { id: 'event', text: 'Sự kiện', icon: 'icon-i-calendar2-event-fill' },
-    { id: 'email', text: 'Gửi mail', icon: 'icon-mail' },
-    { id: 'task', text: 'Công việc', icon: 'icon-check-correct' },
-    { id: 'sign', text: 'Ký số', icon: 'icon-i-pen' },
-    { id: 'image', text: 'hình ảnh', icon: 'icon-broken_image' },
+    { value: 'start', text: 'Bắt đầu', icon: 'icon-i-circle' },
+    { value: 'end', text: 'Kết thúc', icon: 'icon-i-circle fw-bold' },
+    { value: 'swimlane', text: 'SwimLane', icon: 'icon-view_quilt' },
+
   ];
   documentClick(args: MouseEvent): void {
     this.isDragging = true;
@@ -421,363 +421,363 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
   }
   // SymbolPalette Properties
   public expandMode: ExpandMode = 'Multiple';
-  public palettes: PaletteModel[] = [
-    {
-      id: 'flow',
-      expanded: true,
-      title: 'Flow Shapes',
-      symbols: [
-        {
-          id: 'Terminator',
-          addInfo: { tooltip: 'Terminator' },
-          width: 50,
-          height: 60,
-          shape: { type: 'Flow', shape: 'Terminator' },
-          style: { strokeWidth: 1, strokeColor: '#757575' },
-          ports: [
-            {
-              offset: { x: 0, y: 0.5 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-            {
-              offset: { x: 0.5, y: 0 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-            {
-              offset: { x: 1, y: 0.5 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-            {
-              offset: { x: 0.5, y: 1 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-          ],
-        },
-        {
-          id: 'Process',
-          addInfo: { tooltip: 'Process' },
-          width: 50,
-          height: 60,
-          shape: { type: 'Flow', shape: 'Process' },
-          style: { strokeWidth: 1, strokeColor: '#757575' },
-          ports: [
-            {
-              offset: { x: 0, y: 0.5 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-            {
-              offset: { x: 0.5, y: 0 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-            {
-              offset: { x: 1, y: 0.5 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-            {
-              offset: { x: 0.5, y: 1 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-          ],
-        },
-        {
-          id: 'Decision',
-          addInfo: { tooltip: 'Decision' },
-          width: 50,
-          height: 50,
-          shape: { type: 'Flow', shape: 'Decision' },
-          style: { strokeWidth: 1, strokeColor: '#757575' },
-          ports: [
-            {
-              offset: { x: 0, y: 0.5 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-            {
-              offset: { x: 0.5, y: 0 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-            {
-              offset: { x: 1, y: 0.5 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-            {
-              offset: { x: 0.5, y: 1 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-          ],
-        },
-        {
-          id: 'Document',
-          addInfo: { tooltip: 'Document' },
-          width: 50,
-          height: 50,
-          shape: { type: 'Flow', shape: 'Document' },
-          style: { strokeWidth: 1, strokeColor: '#757575' },
-          ports: [
-            {
-              offset: { x: 0, y: 0.5 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-            {
-              offset: { x: 0.5, y: 0 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-            {
-              offset: { x: 1, y: 0.5 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-            {
-              offset: { x: 0.5, y: 1 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-          ],
-        },
-        {
-          id: 'Predefinedprocess',
-          addInfo: { tooltip: 'Predefined process' },
-          width: 50,
-          height: 50,
-          shape: { type: 'Flow', shape: 'PreDefinedProcess' },
-          ports: [
-            {
-              offset: { x: 0, y: 0.5 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-            {
-              offset: { x: 0.5, y: 0 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-            {
-              offset: { x: 1, y: 0.5 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-            {
-              offset: { x: 0.5, y: 1 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-          ],
-          style: { strokeWidth: 1, strokeColor: '#757575' },
-        },
-        {
-          id: 'Data',
-          addInfo: { tooltip: 'Data' },
-          width: 50,
-          height: 50,
-          shape: { type: 'Flow', shape: 'Data' },
-          ports: [
-            {
-              offset: { x: 0, y: 0.5 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-            {
-              offset: { x: 0.5, y: 0 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-            {
-              offset: { x: 1, y: 0.5 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-            {
-              offset: { x: 0.5, y: 1 },
-              visibility: PortVisibility.Connect | PortVisibility.Hover,
-              constraints: PortConstraints.Draw,
-            },
-          ],
-          style: { strokeWidth: 1, strokeColor: '#757575' },
-        },
-        {
-          id: 'hehehehihi',
-          style: { strokeWidth: 1, strokeColor: '#757575' },
-          annotations: [{ content: 'hello' }],
-        },
-      ],
-    },
-    {
-      id: 'swimlaneShapes',
-      expanded: true,
-      title: 'Swimlane Shapes',
-      symbols: [
-        {
-          id: 'Horizontalswimlane',
-          addInfo: { tooltip: 'Horizontal swimlane' },
-          shape: {
-            type: 'SwimLane',
-            lanes: [
-              {
-                id: 'lane1',
-                style: { strokeColor: '#757575' },
-                height: 60,
-                width: 150,
-                header: {
-                  width: 50,
-                  height: 50,
-                  style: { strokeColor: '#757575', fontSize: 11 },
-                },
-              },
-            ],
-            orientation: 'Horizontal',
-            isLane: true,
-          },
-          height: 60,
-          width: 140,
-          offsetX: 70,
-          offsetY: 30,
-        },
-        {
-          id: 'Verticalswimlane',
-          addInfo: { tooltip: 'Vertical swimlane' },
-          shape: {
-            type: 'SwimLane',
-            lanes: [
-              {
-                id: 'lane1',
-                style: { strokeColor: '#757575' },
-                height: 150,
-                width: 60,
-                header: {
-                  width: 50,
-                  height: 50,
-                  style: { strokeColor: '#757575', fontSize: 11 },
-                },
-              },
-            ],
-            orientation: 'Vertical',
-            isLane: true,
-          },
-          height: 140,
-          width: 60,
-          // style: { fill: '#f5f5f5' },
-          offsetX: 70,
-          offsetY: 30,
-        },
-        {
-          id: 'Verticalphase',
-          addInfo: { tooltip: 'Vertical phase' },
-          shape: {
-            type: 'SwimLane',
-            phases: [
-              {
-                style: {
-                  strokeWidth: 1,
-                  strokeDashArray: '3,3',
-                  strokeColor: '#757575',
-                },
-              },
-            ],
-            annotations: [{ text: '' }],
-            orientation: 'Vertical',
-            isPhase: true,
-          },
-          height: 60,
-          width: 140,
-          style: { strokeColor: '#757575' },
-        },
-        {
-          id: 'Horizontalphase',
-          addInfo: { tooltip: 'Horizontal phase' },
-          shape: {
-            type: 'SwimLane',
-            phases: [
-              {
-                style: {
-                  strokeWidth: 1,
-                  strokeDashArray: '3,3',
-                  strokeColor: '#757575',
-                },
-              },
-            ],
-            annotations: [{ text: '' }],
-            orientation: 'Horizontal',
-            isPhase: true,
-          },
-          height: 60,
-          width: 140,
-          style: { strokeColor: '#757575' },
-        },
-      ],
-    },
-    {
-      id: 'connectors',
-      expanded: true,
-      symbols: [
-        {
-          id: 'Link1',
-          type: 'Orthogonal',
-          sourcePoint: { x: 0, y: 0 },
-          targetPoint: { x: 40, y: 40 },
-          targetDecorator: {
-            shape: 'Arrow',
-            style: { strokeColor: '#757575', fill: '#757575' },
-          },
-          style: { strokeWidth: 1, strokeColor: '#757575' },
-        },
-        {
-          id: 'Link2',
-          type: 'Orthogonal',
-          sourcePoint: { x: 0, y: 0 },
-          targetPoint: { x: 40, y: 40 },
-          targetDecorator: {
-            shape: 'Arrow',
-            style: { strokeColor: '#757575', fill: '#757575' },
-          },
-          style: {
-            strokeWidth: 1,
-            strokeDashArray: '4 4',
-            strokeColor: '#757575',
-          },
-        },
-        {
-          id: 'Link21',
-          type: 'Straight',
-          sourcePoint: { x: 0, y: 0 },
-          targetPoint: { x: 60, y: 60 },
-          targetDecorator: {
-            shape: 'Arrow',
-            style: { strokeColor: '#757575', fill: '#757575' },
-          },
-          style: { strokeWidth: 1, strokeColor: '#757575' },
-        },
-        {
-          id: 'Link22',
-          type: 'Straight',
-          sourcePoint: { x: 0, y: 0 },
-          targetPoint: { x: 60, y: 60 },
-          targetDecorator: {
-            shape: 'Arrow',
-            style: { strokeColor: '#757575', fill: '#757575' },
-          },
-          style: {
-            strokeWidth: 1,
-            strokeDashArray: '4 4',
-            strokeColor: '#757575',
-          },
-        },
-      ],
-      title: 'Connectors',
-    },
-  ];
+  // public palettes: PaletteModel[] = [
+  //   {
+  //     id: 'flow',
+  //     expanded: true,
+  //     title: 'Flow Shapes',
+  //     symbols: [
+  //       {
+  //         id: 'Terminator',
+  //         addInfo: { tooltip: 'Terminator' },
+  //         width: 50,
+  //         height: 60,
+  //         shape: { type: 'Flow', shape: 'Terminator' },
+  //         style: { strokeWidth: 1, strokeColor: '#757575' },
+  //         ports: [
+  //           {
+  //             offset: { x: 0, y: 0.5 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //           {
+  //             offset: { x: 0.5, y: 0 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //           {
+  //             offset: { x: 1, y: 0.5 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //           {
+  //             offset: { x: 0.5, y: 1 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         id: 'Process',
+  //         addInfo: { tooltip: 'Process' },
+  //         width: 50,
+  //         height: 60,
+  //         shape: { type: 'Flow', shape: 'Process' },
+  //         style: { strokeWidth: 1, strokeColor: '#757575' },
+  //         ports: [
+  //           {
+  //             offset: { x: 0, y: 0.5 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //           {
+  //             offset: { x: 0.5, y: 0 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //           {
+  //             offset: { x: 1, y: 0.5 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //           {
+  //             offset: { x: 0.5, y: 1 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         id: 'Decision',
+  //         addInfo: { tooltip: 'Decision' },
+  //         width: 50,
+  //         height: 50,
+  //         shape: { type: 'Flow', shape: 'Decision' },
+  //         style: { strokeWidth: 1, strokeColor: '#757575' },
+  //         ports: [
+  //           {
+  //             offset: { x: 0, y: 0.5 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //           {
+  //             offset: { x: 0.5, y: 0 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //           {
+  //             offset: { x: 1, y: 0.5 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //           {
+  //             offset: { x: 0.5, y: 1 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         id: 'Document',
+  //         addInfo: { tooltip: 'Document' },
+  //         width: 50,
+  //         height: 50,
+  //         shape: { type: 'Flow', shape: 'Document' },
+  //         style: { strokeWidth: 1, strokeColor: '#757575' },
+  //         ports: [
+  //           {
+  //             offset: { x: 0, y: 0.5 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //           {
+  //             offset: { x: 0.5, y: 0 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //           {
+  //             offset: { x: 1, y: 0.5 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //           {
+  //             offset: { x: 0.5, y: 1 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         id: 'Predefinedprocess',
+  //         addInfo: { tooltip: 'Predefined process' },
+  //         width: 50,
+  //         height: 50,
+  //         shape: { type: 'Flow', shape: 'PreDefinedProcess' },
+  //         ports: [
+  //           {
+  //             offset: { x: 0, y: 0.5 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //           {
+  //             offset: { x: 0.5, y: 0 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //           {
+  //             offset: { x: 1, y: 0.5 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //           {
+  //             offset: { x: 0.5, y: 1 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //         ],
+  //         style: { strokeWidth: 1, strokeColor: '#757575' },
+  //       },
+  //       {
+  //         id: 'Data',
+  //         addInfo: { tooltip: 'Data' },
+  //         width: 50,
+  //         height: 50,
+  //         shape: { type: 'Flow', shape: 'Data' },
+  //         ports: [
+  //           {
+  //             offset: { x: 0, y: 0.5 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //           {
+  //             offset: { x: 0.5, y: 0 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //           {
+  //             offset: { x: 1, y: 0.5 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //           {
+  //             offset: { x: 0.5, y: 1 },
+  //             visibility: PortVisibility.Connect | PortVisibility.Hover,
+  //             constraints: PortConstraints.Draw,
+  //           },
+  //         ],
+  //         style: { strokeWidth: 1, strokeColor: '#757575' },
+  //       },
+  //       {
+  //         id: 'hehehehihi',
+  //         style: { strokeWidth: 1, strokeColor: '#757575' },
+  //         annotations: [{ content: 'hello' }],
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: 'swimlaneShapes',
+  //     expanded: true,
+  //     title: 'Swimlane Shapes',
+  //     symbols: [
+  //       {
+  //         id: 'Horizontalswimlane',
+  //         addInfo: { tooltip: 'Horizontal swimlane' },
+  //         shape: {
+  //           type: 'SwimLane',
+  //           lanes: [
+  //             {
+  //               id: 'lane1',
+  //               style: { strokeColor: '#757575' },
+  //               height: 60,
+  //               width: 150,
+  //               header: {
+  //                 width: 50,
+  //                 height: 50,
+  //                 style: { strokeColor: '#757575', fontSize: 11 },
+  //               },
+  //             },
+  //           ],
+  //           orientation: 'Horizontal',
+  //           isLane: true,
+  //         },
+  //         height: 60,
+  //         width: 140,
+  //         offsetX: 70,
+  //         offsetY: 30,
+  //       },
+  //       {
+  //         id: 'Verticalswimlane',
+  //         addInfo: { tooltip: 'Vertical swimlane' },
+  //         shape: {
+  //           type: 'SwimLane',
+  //           lanes: [
+  //             {
+  //               id: 'lane1',
+  //               style: { strokeColor: '#757575' },
+  //               height: 150,
+  //               width: 60,
+  //               header: {
+  //                 width: 50,
+  //                 height: 50,
+  //                 style: { strokeColor: '#757575', fontSize: 11 },
+  //               },
+  //             },
+  //           ],
+  //           orientation: 'Vertical',
+  //           isLane: true,
+  //         },
+  //         height: 140,
+  //         width: 60,
+  //         // style: { fill: '#f5f5f5' },
+  //         offsetX: 70,
+  //         offsetY: 30,
+  //       },
+  //       {
+  //         id: 'Verticalphase',
+  //         addInfo: { tooltip: 'Vertical phase' },
+  //         shape: {
+  //           type: 'SwimLane',
+  //           phases: [
+  //             {
+  //               style: {
+  //                 strokeWidth: 1,
+  //                 strokeDashArray: '3,3',
+  //                 strokeColor: '#757575',
+  //               },
+  //             },
+  //           ],
+  //           annotations: [{ text: '' }],
+  //           orientation: 'Vertical',
+  //           isPhase: true,
+  //         },
+  //         height: 60,
+  //         width: 140,
+  //         style: { strokeColor: '#757575' },
+  //       },
+  //       {
+  //         id: 'Horizontalphase',
+  //         addInfo: { tooltip: 'Horizontal phase' },
+  //         shape: {
+  //           type: 'SwimLane',
+  //           phases: [
+  //             {
+  //               style: {
+  //                 strokeWidth: 1,
+  //                 strokeDashArray: '3,3',
+  //                 strokeColor: '#757575',
+  //               },
+  //             },
+  //           ],
+  //           annotations: [{ text: '' }],
+  //           orientation: 'Horizontal',
+  //           isPhase: true,
+  //         },
+  //         height: 60,
+  //         width: 140,
+  //         style: { strokeColor: '#757575' },
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: 'connectors',
+  //     expanded: true,
+  //     symbols: [
+  //       {
+  //         id: 'Link1',
+  //         type: 'Orthogonal',
+  //         sourcePoint: { x: 0, y: 0 },
+  //         targetPoint: { x: 40, y: 40 },
+  //         targetDecorator: {
+  //           shape: 'Arrow',
+  //           style: { strokeColor: '#757575', fill: '#757575' },
+  //         },
+  //         style: { strokeWidth: 1, strokeColor: '#757575' },
+  //       },
+  //       {
+  //         id: 'Link2',
+  //         type: 'Orthogonal',
+  //         sourcePoint: { x: 0, y: 0 },
+  //         targetPoint: { x: 40, y: 40 },
+  //         targetDecorator: {
+  //           shape: 'Arrow',
+  //           style: { strokeColor: '#757575', fill: '#757575' },
+  //         },
+  //         style: {
+  //           strokeWidth: 1,
+  //           strokeDashArray: '4 4',
+  //           strokeColor: '#757575',
+  //         },
+  //       },
+  //       {
+  //         id: 'Link21',
+  //         type: 'Straight',
+  //         sourcePoint: { x: 0, y: 0 },
+  //         targetPoint: { x: 60, y: 60 },
+  //         targetDecorator: {
+  //           shape: 'Arrow',
+  //           style: { strokeColor: '#757575', fill: '#757575' },
+  //         },
+  //         style: { strokeWidth: 1, strokeColor: '#757575' },
+  //       },
+  //       {
+  //         id: 'Link22',
+  //         type: 'Straight',
+  //         sourcePoint: { x: 0, y: 0 },
+  //         targetPoint: { x: 60, y: 60 },
+  //         targetDecorator: {
+  //           shape: 'Arrow',
+  //           style: { strokeColor: '#757575', fill: '#757575' },
+  //         },
+  //         style: {
+  //           strokeWidth: 1,
+  //           strokeDashArray: '4 4',
+  //           strokeColor: '#757575',
+  //         },
+  //       },
+  //     ],
+  //     title: 'Connectors',
+  //   },
+  // ];
   contextMenuSettings: ContextMenuSettingsModel = {
     show: true,
     items: [
@@ -906,48 +906,49 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
         this.diagram.addConnector(connector);
         break;
       case 'swimlane':
-        let height = 500;
-        if(ele) height = ele.offsetHeight
-        let swimLane: NodeModel = {
-          id: this.makeid(10),
-          shape: {
-            type: 'SwimLane',
-            header: {
-              height: 30,
-              style: { fill: '#fff', textAlign: 'Left' },
-              annotation: { content: 'Quy trình động' },
-            },
-            lanes: [
-              {
-                id: this.makeid(10),
-                canMove: true,
-                height: height,
-                width: 800,
-                header: {
-                  height: 30,
-                  style: { fontSize: 14, fill: '#fff' },
-                  annotation: { content: 'Bước quy trình' },
-                },
-              },
-            ],
-            phases: [
-              {
-                id: this.makeid(10),
-                offset: 170,
-                header: { annotation: { content: '' } },
-              },
-            ],
-            phaseSize: 0.5,
-            orientation: 'Vertical',
-            isLane: true,
-          },
-          height: height,
-          width: 800,
-          style: { strokeColor: '#ffffff', fill: '#ffffff' },
-          offsetX: model.offsetX,
-          offsetY: model.offsetY + 100,
-        };
-        this.diagram.add(swimLane);
+        // let height = 500;
+        // if(ele) height = ele.offsetHeight
+        // let swimLane: NodeModel = {
+        //   id: this.makeid(10),
+        //   shape: {
+        //     type: 'SwimLane',
+        //     header: {
+        //       height: 30,
+        //       style: { fill: '#fff', textAlign: 'Left' },
+        //       annotation: { content: 'Quy trình động' },
+        //     },
+        //     lanes: [
+        //       {
+        //         id: this.makeid(10),
+        //         canMove: true,
+        //         height: height,
+        //         width: 800,
+        //         header: {
+        //           height: 30,
+        //           style: { fontSize: 14, fill: '#fff' },
+        //           annotation: { content: 'Bước quy trình' },
+        //         },
+        //       },
+        //     ],
+        //     phases: [
+        //       {
+        //         id: this.makeid(10),
+        //         offset: 170,
+        //         header: { annotation: { content: '' } },
+        //       },
+        //     ],
+        //     phaseSize: 0.5,
+        //     orientation: 'Vertical',
+        //     isLane: true,
+        //   },
+        //   height: height,
+        //   width: 800,
+        //   style: { strokeColor: '#ffffff', fill: '#ffffff' },
+        //   offsetX: model.offsetX,
+        //   offsetY: model.offsetY + 100,
+        // };
+        // this.diagram.add(swimLane);
+        this.generateProcess();
         break;
       case 'form':
       case 'sign':
@@ -1249,10 +1250,11 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
     }
   }
   initProcess(){
-    if(this.process){
+    if(this.process && Object.keys(this.process).length){
       let objDiagram:any={};
       objDiagram.id=this.makeid(10);
       objDiagram.processID=this.process.recID;
+      objDiagram.isProcess=true;
       let shape:any={};
       shape.type='SwimLane';
       shape.hasHeader=true;
@@ -1275,11 +1277,14 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
         },
 
       }
-      shape.lanes=[];;
-      this.process!.steps = this.process?.steps.sort((a:any,b:any)=> a.stepNo-b.stepNo)
-      this.columns= this.process?.steps?.filter(
-        (x) => x.activityType == 'Stage'
-      );
+      shape.lanes=[];
+      if(this.process!.steps){
+        this.process!.steps = this.process?.steps.sort((a:any,b:any)=> a.stepNo-b.stepNo)
+        this.columns= this.process?.steps?.filter(
+          (x) => x.activityType == 'Stage'
+        );
+      }
+
       let stepNodes:any=[];
       for(let i =0;i < this.columns.length;i++){
         objDiagram.width = 500*(i+1);
@@ -1597,6 +1602,9 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
    }
    collectionChange(e:any){
     if(this.diagram && this.viewOnly) this.diagram.fitToPage();
+    else{
+      this.diagram.bringIntoView({x:600,y:200,width:1024,height:768} as any);
+    }
    }
 
    getVllObject(type:string){
@@ -1611,5 +1619,189 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
     }
     return {text:'',value:'',icon:'',color:'', textColor:''};
    }
+
+   dataValueSettings:any;
+   genData() {
+    this.process.category = '';
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingsBusiness',
+        'GetSettingByFormAsync',
+        ['BPParameters', '1']
+      )
+      .subscribe((st) => {
+        if (st && st['1']) {
+          this.dataValueSettings = JSON.stringify(st['1']);
+          this.process.settings = st['1'];
+        } else {
+          this.process.settings = [];
+        }
+      });
+      this.defaultAdminPermission();
+      this.defaultStep();
+    }
+    defaultAdminPermission() {
+      let perm :any={};
+      perm.objectID = this.user?.userID;
+      perm.objectName = this.user?.userName;
+      perm.objectType = '1';
+      perm.roleType = 'O';
+      perm.create = true;
+      perm.read = true;
+      perm.update = true;
+      perm.assign = true;
+      perm.delete = true;
+      perm.share = true;
+      perm.download = true;
+      perm.allowPermit = true;
+      perm.publish = true;
+      perm.isActive = true;
+
+      let permissions = [];
+      permissions.push(perm);
+      this.process.permissions = permissions;
+    }
+
+    generateProcess(){
+      this.process = {};
+      this.process.recID=Util.uid();
+      this.process.steps=[];
+      this.process.processName="Quy trình mới";
+      this.genData();
+    }
+
+    generateStage(type:string ='Form'){
+      let stage:any={};
+      stage.recID=Util.uid();
+      stage.activityType=type;
+    }
+    defaultStep() {
+      let lstStep = [];
+      var stage = new BP_Processes_Steps();
+      var form = new BP_Processes_Steps();
+      var vllStage = this.vllStepType.filter((x) => x.value == 'Stage')[0];
+      var vllForm = this.vllStepType.filter((x) => x.value == 'Form')[0];
+
+      stage.recID = Util.uid();
+      stage.stepNo = 0;
+      stage.activityType = 'Stage';
+      stage.stepName = vllStage.text + ' 1';
+      stage.reminder = this.process.reminder;
+      stage.eventControl = null;
+      stage.stepType = '1';
+      stage.permissions = [{ objectID: this.user?.userID, objectType: 'U' }];
+      var processallowDrag = null;
+      var processDefaultProcess = null;
+      var processCompleteControl = null;
+      var allowEdit = null;
+      if (this.process.settings && this.process.settings.length > 0) {
+        processallowDrag = this.process.settings.filter(
+          (x) => x.fieldName == 'AllowDrag'
+        )[0];
+        processDefaultProcess = this.process.settings.filter(
+          (x) => x.fieldName == 'DefaultProcess'
+        )[0];
+        processCompleteControl = this.process.settings.filter(
+          (x) => x.fieldName == 'CompleteControl'
+        )[0];
+        allowEdit = this.process.settings.filter(
+          (x) => x.fieldName == 'AllowEdit'
+        )[0];
+      }
+      form.recID = Util.uid();
+
+      stage.settings = JSON.stringify({
+        icon: 'icon-i-bar-chart-steps',
+        color: '#0078FF',
+        backGround: '#EAF0FF',
+        allowDrag: processallowDrag?.fieldValue || null,
+        defaultProcess: processDefaultProcess?.defaultProcess || null,
+        completeControl: processCompleteControl?.completeControl || null,
+        nextSteps: [{ nextStepID: form.recID }],
+        sortBy: null,
+        totalControl: null,
+        allowEdit: allowEdit?.fieldValue,
+      });
+
+      form.stepNo = 1;
+      form.stepName = vllForm.text + ' 1';
+      form.activityType = 'Form';
+      form.stageID = stage.recID;
+      form.parentID = stage.recID;
+      form.extendInfo = this.extendInfos;
+      form.memo = '';
+      form.duration = 1;
+      form.interval = '1';
+      form.stepType = '1';
+      form.settings = JSON.stringify({
+        icon: vllForm.icon,
+        color: vllForm.color,
+        backGround: vllForm.textColor,
+        nextSteps: null,
+        sortBy: null,
+        totalControl: null,
+        allowEdit: allowEdit?.fieldValue,
+      });
+      form.permissions = [{ objectID: this.user?.userID, objectType: 'U' }];
+      stage.child = [form];
+      lstStep.push(stage, form);
+      this.process.steps = lstStep;
+      this.cache.message('BP001').subscribe((item) => {
+        this.process.steps[0].stepName = item?.customName;
+      });
+      this.cache.message('BP002').subscribe((item) => {
+        this.process.steps[1].stepName = item?.customName;
+      });
+      this.setLstExtends()
+      this.initProcess();
+    }
+    lstShowExtends:any=[];
+    extendInfos:any=[];
+    setLstExtends() {
+      let lst = [];
+      if (this.extendInfos?.length > 0) {
+        this.extendInfos.forEach((res) => {
+          let count = 1;
+          let tmp = {};
+          tmp['columnOrder'] = res.columnOrder;
+          const index = lst.findIndex((x) => x.columnOrder == res.columnOrder);
+          if (index != -1) {
+            let indxChild = lst[index]['children'].findIndex(
+              (x) => x.columnNo == res.columnNo
+            );
+            if (indxChild != -1) {
+              lst[index]['children'][indxChild] = res;
+            } else {
+              lst[index]['children'].push(res);
+            }
+            lst[index]['children'].sort((a, b) => a.columnNo - b.columnNo);
+            count = lst[index]['children'].length ?? 1;
+            lst[index]['width'] = (100 / count).toString();
+          } else {
+            count = 1;
+            tmp['width'] = '100';
+            let lstChild = [];
+            lstChild.push(res);
+            tmp['children'] = lstChild;
+            lst.push(tmp);
+          }
+        });
+      }
+      this.lstShowExtends = lst;
+    }
+    textEdit(e:any){
+      if(e.element.processID){
+        this.process.processName=e.newValue;
+      }
+      if(e.element.data){
+        let step = this.columns.find((x:any)=>x.recID==e.element.refID);
+        if(step){
+          step.stepName=e.newValue;
+          e.element.data.stepName=e.newValue;
+        }
+      }
+    }
   //===========
 }
