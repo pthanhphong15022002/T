@@ -515,17 +515,29 @@
             </div>
 
             <ul
-              class="nav nav-tabs nav-pills flex-column border-0 p-3 pb-0 w-100 fw-bold text-muted"
+              class="nav nav-tabs nav-pills flex-column border-0 ps-3 pb-0 w-100 fw-bold text-muted"
             >
-              <ng-container *ngFor="let item of lstTab; let index = index">
-                <li
-                  class="nav-item w-100 mb-1 mt-2 mb-2"
-                  [class]="crrFuncTab == item.functionID ? 'active' : ''"
-                  (click)="clickTab(item)"
+              <li class="nav-item w-100 mb-1 mt-2 mb-2">
+                <a
+                  class="nav-link w-100 btn btn-lg btn-clean active"
+                  data-bs-toggle="tab"
+                  [id]="'tab_100'"
                 >
+                  <div class="d-flex align-items-center">
+                    <span class="icon-18 me-2" [ngClass]="'icon-person'"></span>
+                    <div class="fw-bold">
+                      <span>Thống kê tổng quan</span>
+                    </div>
+                  </div>
+                </a>
+              </li>
+              <ng-container *ngFor="let item of lstTab; let index = index">
+                <li class="nav-item w-100 mb-1 mt-2 mb-2">
                   <a
                     class="nav-link w-100 btn btn-lg btn-clean"
                     data-bs-toggle="tab"
+                    [class]="crrFuncTab == item.functionID ? 'active' : ''"
+                    (click)="clickTab(item)"
                     [id]="'tab_' + index"
                   >
                     <div class="d-flex align-items-center">
@@ -557,8 +569,18 @@
 
         <div class="w-100 user-right overflow-hidden flex-grow-1">
           <div class="tab-content">
-            <!-- Pane 1: Sơ yếu lí lịch -->
+            <!-- Pane 0: Sơ yếu lí lịch -->
             <div
+              *ngIf="
+                curriculumVitaeFunc && curriculumVitaeFunc.isActive == true
+              "
+              class="tab-pane fade show active"
+              id="pane_100"
+            >
+              <ng-container [ngTemplateOutlet]="dashboard"></ng-container>
+            </div>
+            <!-- Pane 1: Sơ yếu lí lịch -->
+            <!-- <div
               *ngIf="
                 curriculumVitaeFunc && curriculumVitaeFunc.isActive == true
               "
@@ -567,18 +589,18 @@
               [class]="crrFuncTab == curriculumVitaeFuncID ? 'active' : ''"
             >
               <ng-container [ngTemplateOutlet]="curriculumVitae"></ng-container>
-            </div>
+            </div> -->
             <!-- Pane 2: Thông tin công việc-->
-            <div
+            <!-- <div
               *ngIf="jobInfoFunc && jobInfoFunc.isActive == true"
               class="tab-pane fade show"
               id="pane_2"
               [class]="crrFuncTab == jobInfoFuncID ? 'active' : ''"
             >
               <ng-container [ngTemplateOutlet]="jobInfo"></ng-container>
-            </div>
+            </div> -->
             <!-- Pane 3: Lương phúc lợi-->
-            <div
+            <!-- <div
               *ngIf="
                 salaryBenefitInfoFunc && salaryBenefitInfoFunc.isActive == true
               "
@@ -587,9 +609,9 @@
               [class]="crrFuncTab == salaryBenefitInfoFuncID ? 'active' : ''"
             >
               <ng-container [ngTemplateOutlet]="benefit"></ng-container>
-            </div>
+            </div> -->
             <!-- Pane 4: Quá trình làm việc-->
-            <div
+            <!-- <div
               *ngIf="
                 workingProcessInfoFunc &&
                 workingProcessInfoFunc.isActive == true
@@ -599,34 +621,34 @@
               [class]="crrFuncTab == workingProcessInfoFuncID ? 'active' : ''"
             >
               <ng-container [ngTemplateOutlet]="workingProcess"></ng-container>
-            </div>
+            </div> -->
             <!-- Pane 5: Kiến thức-->
-            <div
+            <!-- <div
               *ngIf="knowledgeInfoFunc && knowledgeInfoFunc.isActive == true"
               class="tab-pane fade show"
               id="pane_5"
               [class]="crrFuncTab == knowledgeInfoFuncID ? 'active' : ''"
             >
               <ng-container [ngTemplateOutlet]="knowledge"></ng-container>
-            </div>
+            </div> -->
             <!-- Pane 6: Sức khỏe-->
-            <div
+            <!-- <div
               *ngIf="healthInfoFunc && healthInfoFunc.isActive == true"
               class="tab-pane fade show"
               id="pane_6"
               [class]="crrFuncTab == healthInfoFuncID ? 'active' : ''"
             >
               <ng-container [ngTemplateOutlet]="healthInfo"></ng-container>
-            </div>
+            </div> -->
             <!-- Pane 7: Nghỉ việc -->
-            <div
+            <!-- <div
               *ngIf="quitJobInfoFunc && quitJobInfoFunc.isActive == true"
               class="tab-pane fade show"
               id="pane_7"
               [class]="crrFuncTab == quitJobInfoFuncID ? 'active' : ''"
             >
               <ng-container [ngTemplateOutlet]="quitJob"></ng-container>
-            </div>
+            </div> -->
           </div>
         </div>
 
@@ -639,13 +661,112 @@
               <span class="text-gray-300">Xem tất cả</span>
             </div>
             <!-- Search bar -->
-            <codx-searchbar></codx-searchbar>
+            <div class="pt-3 pb-3">
+              <codx-searchbar iconPos="left"></codx-searchbar>
+            </div>
           </div>
           <!-- Tab -->
           <div class="scroll-y w-100"></div>
         </div>
       </div>
     </div>
+  </div>
+</ng-template>
+
+<!-- panel DASH BOARD -->
+<ng-template #dashboard>
+  <div class="d-flex">
+    <div class="profile-wrapper w-100 pe-4">
+      <div class="profile-filed w-100 p-3">
+        <!-- Header Content -->
+        <div class="d-flex justify-content-between">
+          <!--  -->
+          <div>
+            <div class="fs-3 text fw-bold pb-2">
+              <span>Xin chào, </span>
+              <span>Võ Ngọc Kim Trang</span>
+            </div>
+            <div>
+              <span class="text-gray-300">Đây là hồ sơ cá nhân của bạn</span>
+            </div>
+          </div>
+          <!-- selected box -->
+          <div>
+            <codx-valuelist></codx-valuelist>
+          </div>
+        </div>
+
+        <!-- Componet -->
+        <div class="d-flex flex-row justify-content-between">
+          <div
+            class="info-component d-flex justify-content-between align-items-center  flex-row p-4 mt-4 mb-4"
+          >
+            <div class="info d-flex flex-column">
+              <!-- title -->
+              <span class="pb-3">Công việc cần làm</span>
+              <!-- content -->
+              <span class="fs-3 text">15/24</span>
+            </div>
+            <div
+              class="icon d-flex justifu-content-center align-items-center flex-grow-1 ps-4"
+            >
+              <span>ICON</span>
+            </div>
+          </div>
+
+          <div
+            class="info-component d-flex justify-content-between align-items-center flex-row p-4 mt-4 mb-4"
+          >
+            <div class="info d-flex flex-column">
+              <!-- title -->
+              <span class="pb-3">Công việc cần làm</span>
+              <!-- content -->
+              <span class="fs-3 text">15/24</span>
+            </div>
+            <div
+              class="icon d-flex justifu-content-center align-items-center flex-grow-1 ps-4"
+            >
+              <span>ICON</span>
+            </div>
+          </div>
+
+          <div
+            class="info-component d-flex justify-content-between align-items-center flex-row p-4 mt-4 mb-4"
+          >
+            <div class="info d-flex flex-column">
+              <!-- title -->
+              <span class="pb-3">Công việc cần làm</span>
+              <!-- content -->
+              <span class="fs-3 text">15/24</span>
+            </div>
+            <div
+              class="icon d-flex justifu-content-center align-items-center flex-grow-1 ps-4"
+            >
+              <span>ICON</span>
+            </div>
+          </div>
+
+          <div
+            class="info-component d-flex justify-content-between align-items-center flex-row p-4 mt-4 mb-4"
+          >
+            <div class="info d-flex flex-column">
+              <!-- title -->
+              <span class="pb-3">Công việc cần làm</span>
+              <!-- content -->
+              <span class="fs-3 text">15/24</span>
+            </div>
+            <div
+              class="icon d-flex justifu-content-center align-items-center flex-grow-1 ps-4"
+            >
+              <span>ICON</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div></div>
+    <div></div>
+    <div></div>
   </div>
 </ng-template>
 

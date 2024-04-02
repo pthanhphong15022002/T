@@ -1068,6 +1068,7 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
     if (this.funcID) {
       this.hrService.getFunctionList(this.funcID).subscribe((res) => {
         this.lstTab = res;
+        console.log('lstTab',this.lstTab);
         for (let i = 0; i < res.length; i++) {
           switch (res[i].url) {
             case this.curriculumVitaeURL:
