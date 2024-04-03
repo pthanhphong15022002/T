@@ -170,26 +170,28 @@
             </div>
         </div>
         <div class="row form-group">
-            <codx-gridview-v2
-                #codxGridViewV2
-                calss="mb-2"
-                [gridViewName]="'grvRequests_Lines'"
-                [formName]="'Requests_Lines'"
-                [autoFitColumns]="false"
-                [editOnClick]="true"
-                [autoAddRow]="false"
-                [showEmptyRecord]="false"
-                [autoLoad]="false"
-                [templateMore]="tmpMoreFunc"
-                [editSettings]="editSettings"
-                [dataSource]="EPRequestsLines"
-                [idField]="'recID'"
-                (cellChanged)="valueCellChange($event)">
-            </codx-gridview-v2>
-            <div class="form-group d-flex justify-content-end" *ngIf="codxGridViewV2.dataSource.length > 0">
-                <div class="fw-bold">
-                    <span class="me-6">Tổng cộng:</span>
-                    <span>0</span>
+            <div class="d-flex flex-column">
+                <codx-gridview-v2
+                    #codxGridViewV2
+                    calss="mb-2"
+                    [gridViewName]="'grvRequests_Lines'"
+                    [formName]="'Requests_Lines'"
+                    [autoFitColumns]="false"
+                    [editOnClick]="true"
+                    [autoAddRow]="false"
+                    [showEmptyRecord]="false"
+                    [autoLoad]="false"
+                    [templateMore]="tmpMoreFunc"
+                    [editSettings]="editSettings"
+                    [dataSource]="EPRequestsLines"
+                    [idField]="'recID'"
+                    (cellChanged)="valueCellChange($event)">
+                </codx-gridview-v2>
+            </div>
+            <div class="d-flex flex-column align-items-end position-relative mt-4" *ngIf="data.totalAmount" >
+                <div class="d-flex fw-bold">
+                    <div class="me-6">Tổng cộng:</div>
+                    <div [innerHTML]="data.totalAmount | formatvalue : dialog.formModel : 'amount' | async"></div>
                 </div>
             </div>
         </div>
