@@ -1,13 +1,13 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, Optional, ViewChild } from '@angular/core';
-import { ApiHttpService, AuthStore, CacheService, CodxGridviewV2Component, DialogData, DialogRef, LayoutAddComponent, NotificationsService, Util } from 'codx-core';
-import { Subscription, map } from 'rxjs';
+import { DialogRef, CodxGridviewV2Component, CodxFormComponent, ApiHttpService, CacheService, AuthStore, NotificationsService, DialogData, Util } from 'codx-core';
+import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'ep-popup-add-request',
-  templateUrl: './popup-add-request.component.html',
-  styleUrls: ['./popup-add-request.component.css']
+  selector: 'ep-popup-add-ep-payment-request',
+  templateUrl: './popup-add-ep-payment-request.component.html',
+  styleUrls: ['./popup-add-ep-payment-request.component.css']
 })
-export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy {
+export class PopupAddEpPaymentRequestComponent implements OnInit,AfterViewInit,OnDestroy {
   
 
   dialog:DialogRef;
@@ -27,24 +27,8 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
     mode: 'Normal',
   };
   EPRequestsLines:any[] = [];
-  cbbWidth: number = 720;
-  cbbHeight: number = window.innerHeight;
-  isShowCBB:boolean = false;
-  tabInfo: any[] = [
-    {
-      icon: 'icon-info',
-      text: 'Thông tin chung',
-      name: 'tab1',
-    },
-    {
-      icon: 'icon-monetization_on',
-      text: 'Chí phí công tác',
-      name: 'tab2',
-    }
-  ];
-
   @ViewChild("codxGridViewV2") codxGridViewV2:CodxGridviewV2Component;
-  @ViewChild("form") form:LayoutAddComponent;
+  @ViewChild("form") form:CodxFormComponent;
 
 
   constructor
@@ -106,6 +90,34 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
   }
 
   ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  getEPRequest(recID:string){
+    let subcribe = this.api.execSv("EP","EP","RequestsBusiness","GetByIDAsync",recID)
+    .subscribe((res:any) => {
+      if(res)
+      {
+        this.data.employeeID = res.employeeID;
+        this.data.positionID = res.positionID;
+        this.data.fromDate = res.fromDate;
+        this.data.toDate = res.toDate;
+        this.data.memo = res.memo;
+        this.data.requestAmt = res.requestAmt;
+        this.data.pmtMethodID = res.pmtMethodID;
+        this.data.reasonID = res.reasonID;
+        if(res.lines?.length > 0)
+        {
+          this.data.lines = res.lines.map(item => ({ recID : Util.uid(), itemID : item.itemID, itemName: item.itemName, amount : item.amount}));
+          this.data.totalAmount = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
+        }
+        this.data.refID = res.recID;
+        this.data.refType = res.requestType;
+        this.data.refNo = res.requestNo;
+        this.detectorChange.detectChanges();
+      }
+    });
+    this.subscriptions.add(subcribe);
   }
 
   valueChange(event:any){
@@ -126,19 +138,6 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
         this.data.divisionID = value.DivisionID;
         this.data.companyID = value.CompanyID;
         break;
-      case "fromDate":
-      case "toDate":
-        value = event.data.fromDate;
-        this.data[field] = value;
-        break;
-      case "subType":
-        value = event.data;
-        this.data.subType = value;
-        break;
-      case "objectID":
-        this.data.objectID = event.data;
-        this.data.objectType = event.type;
-        break;
       case "reasonID":
         value = event.data;
         this.data.reasonID = event.data;
@@ -147,58 +146,9 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
         value = event.data;
         this.data.memo = value;
         break;
-      case "hasBooking":
+      case "refID":
         value = event.data;
-        this.data.hasBooking = event.data;
-        if(!this.data.hasBooking) 
-        {
-          this.EPResource = null;
-          this.driver = null;
-        }
-        break;
-      case "hasResources":
-        value = event.data;
-        this.data.hasResources = event.data;
-        if(!this.data.hasResources)
-        {
-          let EPBookingAttendee = {transID : this.data.recID, userID : this.user.userID, userName : this.user.userName, roleType : "1"};
-          this.data.resources.push(EPBookingAttendee);
-          this.ADResourcesIDs = this.user.userID + ";"
-        }
-        break;
-      case "resourceID":
-        value = event.data.dataSelected[0].dataSelected;
-        this.data.resourceID = value.ResourceID;
-        this.EPResource = value;
-        if(this.EPResource?.LinkID)
-          this.getEPResource(this.data.resourceID);
-        else 
-        {
-          this.driver = null;
-          let idx = this.data.resources.findIndex(x => x.roleType == "2");
-          if(idx > -1)
-            this.data.resources.splice(idx,1);
-        }
-        break;
-      case "resources":
-        value = event.data.dataSelected;
-        if(value.length > 0)
-        {
-          this.data.resources = this.data.resources.filter((item:any) => item.roleType != "3");
-          value.forEach((item:any) => {
-            let exists = this.data.resources.some(x => x.userID == item.id);
-            if(!exists)
-              this.data.resources.push({transID : this.data.recID, userID : item.id, userName : item.text, roleType : "3"})
-          });
-        }
-        else
-        {
-          this.data.resources = [];
-          this.data.resources.push({transID : this.data.recID, userID : this.user.userID, userName : this.user.userName, roleType : "1" });
-          if(this.data.resourceID == this.EPResource.ResourceID && this.driver.resourceID && this.EPResource.LinkID)
-            this.data.resources.push({transID : this.data.recID, userID : this.driver.resourceID, userName : this.driver.resourceName, roleType : "2"});
-        }
-        this.ADResourcesIDs = this.data.resources.filter(x => x.roleType != "2").map(x => x.userID).join(";"); 
+        this.data.refID = value;
         break;
       default:
         break;
@@ -235,7 +185,7 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
     event.forEach(x => x.disabled = x.functionID != "SYS02");
   }
 
-  clickMF(event:any,data:any){
+  clicGridViewkMF(event:any,data:any){
     if(event.functionID == "SYS02" && data)
     {
       this.codxGridViewV2.deleteRow(data,true);
@@ -260,7 +210,7 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
   }
 
   onSave(){
-    this.form.form.save(null, 0, '', '', false,{allowCompare:false})
+    this.form.save(null, 0, '', '', false,{allowCompare:false})
     .subscribe((res:any) => {
       if(res.save && res.save.data)
       {
@@ -268,4 +218,5 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
       }
     });
   }
+
 }
