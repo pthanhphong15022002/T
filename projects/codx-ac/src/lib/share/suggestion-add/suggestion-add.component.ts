@@ -35,7 +35,7 @@ export class SuggestionAdd  extends UIComponent implements OnInit {
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   dialog!: DialogRef;
-  oData: any;
+  master: any;
   dateNow: any = new Date();
   mapPredicates = new Map<string, string>();
   mapDataValues = new Map<string, string>();
@@ -45,13 +45,12 @@ export class SuggestionAdd  extends UIComponent implements OnInit {
     allowDeleting: false,
     mode: 'Normal',
   };
-  dataAdvance: any = [];
+  dataSource: any = [];
   objectName: any;
   dateSuggestion: any;
-  voucherNo:any;
   isClick:any = false;
-  type:any;
   headerText:any;
+  type:any="0";
   selectionOptions:SelectionSettingsModel = { type: 'Single', checkboxMode: 'ResetOnRowClick'};;
   private destroy$ = new Subject<void>();
   constructor(
@@ -65,10 +64,8 @@ export class SuggestionAdd  extends UIComponent implements OnInit {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.oData = dialogData.data?.oData;
-    this.objectName = dialogData.data?.objectName;
-    this.type = dialogData.data?.type;
-    this.headerText = dialogData.data?.headerText;
+    this.master = dialogData.data?.master;
+    this.objectName = this.master?.objectName;
   }
   //#endregion Constructor
 
@@ -100,8 +97,8 @@ export class SuggestionAdd  extends UIComponent implements OnInit {
         case 'datesuggestion':
           this.dateSuggestion = e.data.fromDate;
           break;
-        case 'voucherno':
-          this.voucherNo = e.data;
+        case 'type':
+          this.type = e.data;
           break;
       }
       
@@ -111,30 +108,35 @@ export class SuggestionAdd  extends UIComponent implements OnInit {
 
   //#region Function
   onSelected(event: any) {
-    if (event) {
-      if (this.isClick) {
-        this.isClick = false;
-        return;
-      }
-      this.isClick = true;
-      this.grid.gridRef.clearSelection();
-      this.grid.gridRef.selectRow(event?._rowIndex);
-    }
+    // if (event) {
+    //   if (this.isClick) {
+    //     this.isClick = false;
+    //     return;
+    //   }
+    //   this.isClick = true;
+    //   this.grid.gridRef.clearSelection();
+    //   this.grid.gridRef.selectRow(event?._rowIndex);
+    // }
   }
+
+  onDeselected(event:any){
+    if(!event.target) return;
+    this.grid.arrSelectedRows = [];
+    this.detectorRef.detectChanges();
+  }
+
   loadData(showArlert:any=true) {
-    let method = this.type === '1' ? 'LoadDataAdvancePaymentAsync' : 'LoadDataOrderPaymentAsync'
     this.api
-      .exec('AC', 'ACBusiness', method, [
-        this.oData.voucherDate,
+      .exec('EP', 'RequestsBusiness', 'LoadRequestAsync', [
+        this.master.voucherDate,
         this.dateSuggestion,
-        this.voucherNo,
-        this.oData.objectID,
-        this.oData.objectType
+        this.type,
+        this.master.objectID,
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if (res && res.length > 0) {
-          this.dataAdvance = res;
+        if (res) {
+          this.dataSource = res;
           this.detectorRef.detectChanges();
         }else{
           if(showArlert) this.notification.notifyCode('AC0027');
@@ -145,24 +147,7 @@ export class SuggestionAdd  extends UIComponent implements OnInit {
 
   //#region Method
   onApply() {
-    let className = (this.oData.journalType === 'CP' || this.oData.journalType === 'BP') ? 'CashPaymentsBusiness' : 'CashReceiptsBusiness';
-    let method = this.type === '1' ? 'SaveAdvancePaymentAsync' : 'SaveOrderPaymentAsync'
-    if (this.grid.arrSelectedRows.length > 0) {
-      this.api
-        .exec(
-          'AC',
-          className,
-          method,
-          [this.oData,this.grid.arrSelectedRows[0]]
-        )
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res:any) => {
-          if (res) {
-            this.onDestroy();
-            this.dialog.close(res);
-          }
-        });
-    }
+    console.log(this.grid.arrSelectedRows);
   }
   //#endregion Method
 }

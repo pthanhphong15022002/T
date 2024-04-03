@@ -82,7 +82,7 @@
     </div>
   </div>
 
-  <div class="w-100 min-w-250px p-2 d-flex flex-column">
+  <div class="w-100 min-w-200px p-2 d-flex flex-column">
     <div
       (mouseenter)="closePopover()"
       class="mb-1 fw-bold"
@@ -144,7 +144,7 @@
     >
     </codx-vll>
   </div>
-  <div class="min-w-300px p-2 d-flex flex-column">
+  <div class="min-w-350px p-2 d-flex flex-column w-100">
     <div class="d-flex mb-1">
       <codx-label
         class="label-colon text-dark fw-bold"
@@ -155,14 +155,14 @@
       ></codx-label>
       <div class="text-gray-600 d-flex">
         <div *ngIf="dataSelected.startDate">
-          <span>{{ dataSelected.startDate | date : "dd/MM/yyyy" }}</span>
+          <span>{{ dataSelected.startDate | fmDT: "dmy":true }}</span>
         </div>
         <div *ngIf="!dataSelected.startDate">
           <span class="place-holder">dd/mm/yyyy</span>
         </div>
         <span class="ms-1 me-1">-</span>
         <div *ngIf="dataSelected.endDate">
-          <span>{{ dataSelected.endDate | date : "dd/MM/yyyy" }}</span>
+          <span>{{ dataSelected.endDate | fmDT: "dmy":true }}</span>
         </div>
         <div *ngIf="!dataSelected.endDate">
           <span class="place-holder">dd/mm/yyyy</span>
@@ -184,14 +184,14 @@
       ></codx-label>
       <div class="text-gray-600 d-flex">
         <div *ngIf="dataSelected.actualStart">
-          <span>{{ dataSelected.actualStart | date : "dd/MM/yyyy" }}</span>
+          <span>{{ dataSelected.actualStart | fmDT: "dmy":true }}</span>
         </div>
         <div *ngIf="!dataSelected.actualStart">
           <span class="place-holder">dd/mm/yyyy</span>
         </div>
         <span class="ms-1 me-1">-</span>
         <div *ngIf="dataSelected.actualEnd">
-          <span>{{ dataSelected.actualEnd | date : "dd/MM/yyyy" }}</span>
+          <span>{{ dataSelected.actualEnd | fmDT: "dmy":true }}</span>
         </div>
         <div *ngIf="!dataSelected.actualEnd">
           <span class="place-holder">dd/mm/yyyy</span>
