@@ -184,6 +184,10 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     if (this.journal.assetControl == "0"){
       hideFields.push("AssetGroupID");
       hideFields.push("AssetType");
+      hideFields.push("ServiceDate");
+      hideFields.push("ServicePeriods");
+      hideFields.push("EmployeeID");
+      hideFields.push("SiteID");
     } 
     if (this.journal.subControl == "0") hideFields.push("ObjectID");
 

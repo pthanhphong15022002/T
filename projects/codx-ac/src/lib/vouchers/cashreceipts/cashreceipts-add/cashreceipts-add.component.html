@@ -229,7 +229,7 @@
               </div>
             </div>
             <div
-              [ngClass]="master?.data?.subType != (journal.journalType+'3') ? '' : 'd-none'"
+              [ngClass]="master?.data?.subType != (journal.journalType+'5') ? '' : 'd-none'"
               class="col-4">
               <div class="form-group">
                 <codx-label style="white-space: nowrap !important" fiedName="Payor" [formModel]="dialog.formModel">
@@ -239,19 +239,19 @@
                   (valueChange)="valueChangeMaster($event)"></codx-input>
               </div>
             </div>
-            <div [ngClass]="(master?.data?.subType == (journal.journalType+'3')) ? '' : 'd-none'" class="col-2">
+            <div [ngClass]="(master?.data?.subType == (journal.journalType+'5')) ? '' : 'd-none'" class="col-2">
               <div class="form-group">
-                <codx-label default="Đề nghị thanh toán" [formModel]="dialog.formModel">
+                <codx-label default="Đề nghị" [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input type="text" [disabled]="true" [crrValue]="refNo">
+                <codx-input type="text" [disabled]="true">
                 </codx-input>
               </div>
             </div>
-            <div [ngClass]="(master?.data?.subType == (journal.journalType+'3')) ? '' : 'd-none'" class="col-2">
+            <div [ngClass]="(master?.data?.subType == (journal.journalType+'5')) ? '' : 'd-none'" class="col-2">
               <div class="form-group">
-                <codx-label style="white-space: nowrap !important" fiedName="lblCashAdvance" default="Số tiền thanh toán">
+                <codx-label style="white-space: nowrap !important" fiedName="lblCashAdvance" default="Số tiền">
                 </codx-label>
-                <codx-input disabled="true" type="number" [crrValue]="0" [crrValue]="refTotalAmt">
+                <codx-input disabled="true" type="number">
                 </codx-input>
               </div>
             </div>
