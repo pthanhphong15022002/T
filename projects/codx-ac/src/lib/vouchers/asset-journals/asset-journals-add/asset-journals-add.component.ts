@@ -385,7 +385,7 @@ export class AssetJournalsAddComponent extends UIComponent {
    */
   onAddLine(type = '') {
     this.formAsset
-      .save(null, 0, '', '', false, { allowCompare: false })
+      .save(null, 0, '', '', false, { allowCompare: false, skipHasChange: true })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
@@ -642,7 +642,7 @@ export class AssetJournalsAddComponent extends UIComponent {
 
   addAccountMember() {
     this.formAsset
-      .save(null, 0, '', '', false, { allowCompare: false })
+      .save(null, 0, '', '', false, { allowCompare: false, skipHasChange: true })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
@@ -727,7 +727,7 @@ export class AssetJournalsAddComponent extends UIComponent {
    */
   addLineVatInvoices() {
     this.formAsset
-      .save(null, 0, '', '', false, { allowCompare: false })
+      .save(null, 0, '', '', false, { allowCompare: false, skipHasChange: true })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
@@ -889,7 +889,7 @@ export class AssetJournalsAddComponent extends UIComponent {
   }
   onSave(type) {
     this.formAsset
-      .save(null, 0, '', '', false, { allowCompare: false })
+      .save(null, 0, '', '', false, { allowCompare: false, skipHasChange: true })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         let isError = false;

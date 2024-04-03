@@ -46,6 +46,7 @@ export class FixedAssetAddComponent extends UIComponent {
     },
   ];
   private destroy$ = new Subject<void>();
+  isChangeSavl = false;
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -134,16 +135,16 @@ export class FixedAssetAddComponent extends UIComponent {
               let quantity = data?.quantity ?? 0;
               let purcAmount = data?.purcAmount ?? 0;
               data.costAmt = quantity * purcAmount ?? 0;
-              if(data.salvage == 0) data.salvage = data.costAmt;
+              if(this.form.form.data.isAdd) data.salvage = data.costAmt;
               data.deprRate =
                 data?.deprPeriods > 0
                   ? data.costAmt / data?.deprPeriods
-                  : false;
+                  : 0;
 
               if (this.form) {
                 this.form.setValue('costAmt', data.costAmt, {});
-                this.form.setValue('salvage', data.salvage, {});
                 this.form.setValue('deprRate', data.deprRate, {});
+                this.form.setValue('salvage', data.salvage, {});
               }
             }
           }
@@ -153,12 +154,12 @@ export class FixedAssetAddComponent extends UIComponent {
           data.deprRate =
             data?.deprPeriods > 0 ? data.costAmt / data?.deprPeriods : 0;
           data.remainPeriods = Math.abs(data.servicePeriods - data.deprPeriods);
-          if(data.salvage == 0) data.salvage = data.costAmt;
+          if(this.form.form.data.isAdd) data.salvage = data.costAmt;
 
           if (this.form) {
             this.form.setValue('remainPeriods', data.remainPeriods, {});
-            this.form.setValue('salvage', data.salvage, {});
             this.form.setValue('deprRate', data.deprRate, {});
+            this.form.setValue('salvage', data.salvage, {});
           }
           break;
         case 'servicePeriods':
@@ -203,6 +204,10 @@ export class FixedAssetAddComponent extends UIComponent {
               }
             }
           }
+          break;
+        case 'salvage':
+          this.isChangeSavl = true;
+          // this.form.setValue('salvage', data.salvage, {});
           break;
       }
       this.detectorRef.detectChanges();
