@@ -9,7 +9,7 @@
                     <i class="icon-i-check2-square icon-16"></i>
                 </div>
                 <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
-                    {{headerText}}
+                    Chọn đề nghị
                 </div>
             </div>
             <div class="d-flex align-items-center me-3">
@@ -81,14 +81,14 @@
                     <codx-label [formModel]="form.formModel" default="Ngày đề nghị đến">
                     </codx-label>
                     <codx-input field="voucherDate" type="datetime" [disabled]="true" format="d" 
-                        [crrValue]="oData.voucherDate"></codx-input>
+                        [crrValue]="master.voucherDate"></codx-input>
                 </div>
             </div>
             <div class="col-xl-2">
                 <div class="form-group">
-                    <codx-label [formModel]="form.formModel" default="Số chứng từ đến">
+                    <codx-label [formModel]="form.formModel" default="Loại đề nghị">
                     </codx-label>
-                    <codx-input field="voucherNo" type="text" (valueChange)="valueChange($event)"></codx-input>
+                    <codx-input field="type" [crrValue]="type" type="valuelist" refValue="AC212" (valueChange)="valueChange($event)"></codx-input>
                 </div>
             </div>
             <div class="col-xl-2 d-flex align-items-center mt-5">
@@ -103,10 +103,10 @@
     </div>
 </ng-template>
 <ng-template #tabDetail>
-    <div class="tabcash-content position-relative hidden-checkbox-mutilple">
-        <codx-gridview-v2 #grid [formName]="dialog.formModel.formName" [checkboxSelect]="true" idField="recID" [showEmptyRecord]="false"
-            (onSelected)="onSelected($event)" [gridViewName]="dialog.formModel.gridViewName" [selectionOptions]="selectionOptions"
-            [entityName]="dialog.formModel.entityName" [dataSource]="dataAdvance" hideMoreFunc="true" service="AC" [rowHeight]="40"
+    <div [ngClass]="dataSource.length == 0 ? 'hidden-checkbox-mutilple' : ''" class="tabcash-content position-relative">
+        <codx-gridview-v2 #grid [formName]="'Requests'" [checkboxSelect]="true" idField="recID" [showEmptyRecord]="false"
+            (onSelected)="onSelected($event)" (onDeselected)="onDeselected($event)" [gridViewName]="'grvRequests'" [selectionOptions]="selectionOptions"
+            [entityName]="'EP_Requests'" [dataSource]="dataSource" hideMoreFunc="true" service="AC" [rowHeight]="40"
             [autoFitColumns]="false" [editSettings]="noEditSetting"></codx-gridview-v2>
     </div>
 </ng-template>

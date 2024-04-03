@@ -83,7 +83,6 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
     
     if(this.user && this.actionType == "add")
     {
-      debugger
       this.data.employeeID = this.user.employee?.employeeID;
       this.data.employeeName = this.user.employee?.employeeName;
       this.data.positionID = this.user.employee?.positionID;
@@ -210,7 +209,7 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
   valueCellChange(event:any){
     let field = event.field;
     if(field == "itemID") event.data.itemName = event.itemData.ItemName;
-    let EPRequestsLines = {
+    let EPRequestsLine = {
       recID :  event.data.recID,
       transID : this.data.recID,
       itemID :  event.data.itemID,
@@ -220,8 +219,11 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
     if(!this.data.lines) this.data.lines = [];
     let idx = this.data.lines.findIndex((item:any) => item.recID == event.data.recID);
     if(idx > -1)
-      this.data.lines[idx] = EPRequestsLines;
-    else this.data.lines.push(EPRequestsLines);
+      this.data.lines[idx] = EPRequestsLine;
+    else this.data.lines.push(EPRequestsLine);
+    if(field == "amount" && this.data.lines.length > 0)
+      this.data.totalAmount = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
+    this.detectorChange.detectChanges();
   }
 
   addNewRow(){
@@ -262,7 +264,7 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
     .subscribe((res:any) => {
       if(res.save && res.save.data)
       {
-        this.dialog.close(res.save.data);
+        this.dialog.close(this.data);
       }
     });
   }

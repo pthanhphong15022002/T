@@ -27,14 +27,14 @@ export class RequestsViewDetaiComponent extends UIDetailComponent implements OnC
 
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes && changes.recID && changes.recID.currentValue !== changes.recID.previousValue)
+    if(changes && changes.recID && !changes.recID?.firstChange && changes.recID?.currentValue != changes.recID?.previousValue)
     {
       this.loadDataInfo(this.recID,this.funcID);
     }
   }
 
   loadDataInfo(recID:string,funcID:string){
-    this.api.execSv("EP","EP","RequestBusiness","GetRequestDetailAsync",[recID,funcID])
+    this.api.execSv("EP","EP","RequestsBusiness","GetRequestDetailAsync",[recID,funcID])
     .subscribe((res:any) => {
       if(res)
       {
