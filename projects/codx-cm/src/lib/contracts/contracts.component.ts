@@ -488,9 +488,9 @@ export class ContractsComponent extends UIComponent {
       case 'CM0204_20': // không sử dụng quy trình
         this.updateProcess(data, false);
         break;
-      // case 'SYS004': //mail
-      //   this.sendMail(data);
-      //   break;
+      case 'CM0204_23':
+        this.printDataSource(data, e.functionID);
+        break;
       default: {
         this.codxShareService.defaultMoreFunc(
           e,
@@ -1777,5 +1777,22 @@ export class ContractsComponent extends UIComponent {
     if (event) {
       this.moveStage(contract);
     }
+  }
+
+  /** in trường tùy chỉnh => more gọi vào
+  * @param data
+  * @param reportID
+  * @param reportType
+  */
+  printDataSource(data: any, reportID: any, reportType: string = 'V') {
+    let params = {
+      Recs: data?.recID,
+    };
+    this.codxShareService.printReport(
+      reportID,
+      reportType,
+      params,
+      this.view?.formModel
+    );
   }
 }
