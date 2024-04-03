@@ -5,6 +5,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupAddEpAdvanceRequestComponent } from '../../advance-requests/popup/popup-add-ep-advance-request/popup-add-ep-advance-request.component';
 import { PopupAddRequestComponent } from '../popup/popup-add-request/popup-add-request.component';
 import { Subscription } from 'rxjs';
+import { PopupAddEpPaymentRequestComponent } from '../../payment-requests/popup/popup-add-ep-payment-request/popup-add-ep-payment-request.component';
 
 @Component({
   selector: 'ep-requests-view-detai',
@@ -218,7 +219,7 @@ export class RequestsViewDetaiComponent extends UIDetailComponent implements OnC
           dialog.Width = '550px';
           dialog.FormModel = this.view.formModel;
           dialog.DataService = dataService;
-          this.callfc.openSide(PopupAddEpAdvanceRequestComponent,obj,dialog,this.view.funcID);
+          this.callfc.openSide(PopupAddEpPaymentRequestComponent,obj,dialog,this.view.funcID);
         }
       });
       this.subcriptions.add(subscribe);
