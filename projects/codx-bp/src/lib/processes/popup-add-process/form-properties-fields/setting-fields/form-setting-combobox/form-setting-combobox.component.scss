@@ -1,23 +1,21 @@
 table {
-
   border-collapse: collapse;
   width: 100%;
 }
 
-
 th,
 td {
-  padding: 2px 7px!important;
+  padding: 2px 7px !important;
   white-space: nowrap;
   border-bottom: 1px var(--gray-100) solid !important;
   height: 32px;
   vertical-align: middle;
 }
-.table tbody tr:last-child td{
+.table tbody tr:last-child td {
   border-bottom: 1px var(--gray-100) solid !important;
 }
 .bg-150 {
- border-top:2px var(--primary-lighter) solid;
+  border-top: 2px var(--primary-lighter) solid;
 }
 
 th {
@@ -25,20 +23,21 @@ th {
   left: 0;
   top: 0;
   z-index: 2;
-  background-color: var(--gray-100)!important;
+  background-color: var(--gray-100) !important;
 }
 
-ejs-combobox{
-  .e-input-group, .e-input-group.e-control-wrapper {
+ejs-combobox.hide-dropdown {
+  .e-input-group,
+  .e-input-group.e-control-wrapper {
     border: none !important;
     box-shadow: none !important;
   }
-  .e-input-group .e-input-group-icon, .e-input-group.e-control-wrapper .e-input-group-icon {
+  .e-input-group .e-input-group-icon,
+  .e-input-group.e-control-wrapper .e-input-group-icon {
     display: none !important;
   }
 }
 
-.h-265px
-{
+.h-265px {
   height: 265px;
 }

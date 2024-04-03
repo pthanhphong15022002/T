@@ -496,7 +496,7 @@ export class CmCustomerDetailComponent implements OnInit {
     if (this.isAdmin || this.dataSelected?.owner == this.user?.userID) {
       this.idTabShow = this.tabDefaut;
     } else {
-      this.idTabShow = this.dataSelected?.config;
+      this.idTabShow = this.dataSelected?.config == "full" ? this.tabDefaut: this.dataSelected?.config;
     }
   }
 }

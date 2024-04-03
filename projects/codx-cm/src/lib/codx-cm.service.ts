@@ -1830,6 +1830,15 @@ export class CodxCmService {
       procesID
     );
   }
+  getConfigurationProcess(procesID) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetConfigurationProcessAsync',
+      procesID
+    );
+  }
+
   async getSettingContract() {
     let res = await firstValueFrom(
       this.getParam('CMParameters', '1')

@@ -944,8 +944,7 @@ export class InstancesComponent
                 if (
                   !isUpdate ||
                   (data.status != '2' && !this.isEditInstance(data)) ||
-                  data.closed ||
-                  !data.permissionMoveInstances
+                  data.closed 
                 )
                   res.disabled = true;
                 break;
@@ -960,7 +959,7 @@ export class InstancesComponent
               //Copy
               case 'SYS104':
               case 'SYS04':
-                if (!this.isCreate || this.checkMoreReason(data, null))
+                if (!this.isCreate)
                   res.disabled = true;
                 break;
               //xóa
@@ -970,8 +969,7 @@ export class InstancesComponent
                 if (
                   !isDelete ||
                   data.closed ||
-                  (data.status != '2' && !this.isEditInstance(data)) ||
-                  !data.permissionMoveInstances
+                  (data.status != '2' && !this.isEditInstance(data)) 
                 )
                   res.disabled = true;
                 break;
