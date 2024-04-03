@@ -271,7 +271,7 @@ export class ContractsComponent extends UIComponent {
             'CM0204_17',
             'CM0204_3',
             'CM0204_7',
-            'SYS003', 'SYS004', 'SYS001', 'SYS002', 'SYS009', 'SYS008', 'SYS010'
+            'SYS003', 'SYS004', 'SYS001', 'SYS002', 'SYS009', 'SYS008', 'SYS010','CM0204_18'
           ].includes(res?.functionID)
         ) {
           res.disabled = true;
@@ -1375,7 +1375,7 @@ export class ContractsComponent extends UIComponent {
                 }
                 break;
               case '1':
-                this.startNew(this.dataSelected);
+                this.startNew(this.dataSelected,e?.event?.status);
                 break;
               case '3':
               case '5':
@@ -1399,7 +1399,7 @@ export class ContractsComponent extends UIComponent {
     });
   }
 
-  startNew(data) {
+  startNew(data, status) {
     this.notiService
       .alertCode('CM063', null, ['"' + data?.contractName + '"' || ''])
       .subscribe((x) => {
@@ -1414,14 +1414,19 @@ export class ContractsComponent extends UIComponent {
                 this.statusCodeID,
                 this.statusCodeCmt,
               ];
+              const dataStatus = [data.recID,this.statusCodeID,this.statusCodeCmt, status ]
               this.cmService
-                .moveStageBackDataCM(dataUpdate)
-                .subscribe((deal) => {
-                  if (deal) {
-                    this.dataSelected = deal;
-                    this.view.dataService
-                      .update(this.dataSelected, true)
-                      .subscribe();
+                .changeStatusContract(dataStatus)
+                .subscribe((contract) => {
+                  if (contract) {
+                    this.dataSelected.status = status;
+                    this.dataSelected.statusCodeID = this.statusCodeID;
+                    this.dataSelected.statusCodeCmt = this.statusCodeCmt;
+                    this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+                    this.view.dataService.dataSelected = this.dataSelected;
+                    this.view.dataService.update(this.dataSelected, true).subscribe();
+                    this.detectorRef.detectChanges();
+                    this.notiService.notifyCode('SYS007');
                   }
                 });
             }
