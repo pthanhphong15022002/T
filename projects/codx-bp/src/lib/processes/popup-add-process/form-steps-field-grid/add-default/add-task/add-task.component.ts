@@ -543,7 +543,7 @@ export class AddTaskComponent
     listForm.forEach(elm=>{
       let data = JSON.parse(JSON.stringify(this.listRequester));
       data.forEach(elm2=>{
-        elm2.fieldName = "form" + elm.stepNo + "_" + elm2.fieldName;
+        elm2.fieldName = "f" + elm.stepNo + "_owner." + elm2.fieldName;
       })
       elm.extendInfo = elm.extendInfo.concat(data)
     });

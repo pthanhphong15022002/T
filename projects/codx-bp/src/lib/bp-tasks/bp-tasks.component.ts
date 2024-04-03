@@ -160,8 +160,8 @@ export class BpTasksComponent
         };
         let popup = this.callfc.openSide(PopupBpTasksComponent, obj, option);
         popup.closed.subscribe((res) => {
-          if (res && res.event != null) {
-            this.view.dataService.update(res.event, true).subscribe();
+          if (res && res.event?.data != null) {
+            this.view.dataService.update(res.event?.data, true).subscribe();
             this.dataSelected = JSON.parse(JSON.stringify(res.event));
             this.detectorRef.detectChanges();
             // this.detectorRef.markForCheck();

@@ -630,7 +630,9 @@
     [process]="process"
     [dataIns]="dataIns"
     [stepID]="data?.stepID"
-    (dataChange)="dataChange($event)"
+    [taskID]="data?.recID"
+    [privileged]="privileged"
+    (dataTaskChange)="dataChange($event)"
   ></lib-add-process-default>
 </ng-container>
 
