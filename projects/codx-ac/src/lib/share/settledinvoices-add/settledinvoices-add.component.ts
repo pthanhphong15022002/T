@@ -144,12 +144,16 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   setDefault(){
     this.mapPredicates.set('currencyID', 'CurrencyID = @0');
     this.mapDataValues.set('currencyID', this.master.currencyID);
+    this.mapPredicates.set('balAmt', 'BalAmt > @0');
+    this.mapDataValues.set('balAmt', '0');
     this.mapPredicates.set('objectID', 'ObjectID = @0');
     this.mapDataValues.set('objectID', this.objectID);
     this.mapPredicates.set('objectType', 'ObjectType = @0');
     this.mapDataValues.set('objectType', this.objectType);
-    this.mapPredicates.set('accountID', 'AccountID = @0');
-    this.mapDataValues.set('accountID', this.accountID);
+    if(this.accountID){
+      this.mapPredicates.set('accountID', 'AccountID = @0');
+      this.mapDataValues.set('accountID', this.accountID);
+    }
     this.dataFilter.currencyID = this.master.currencyID;
     this.dataFilter.payAmt = this.master.totalAmt;
     this.gridModel.sort = [{ field: 'InvoiceDueDate', dir: 'asc' }];
