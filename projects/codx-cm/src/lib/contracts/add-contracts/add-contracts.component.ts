@@ -1037,7 +1037,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.contracts.applyProcess = !!this.contracts.processID;
           this.contracts?.processID &&
             this.getListInstanceSteps(this.contracts?.processID);
-        }else{
+        } else {
           this.notiService.notify('Quy trình này chưa thiết lập dòng sản phẩm', "3");
         }
       });
@@ -1054,7 +1054,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             this.contracts.applyProcess = !!this.contracts.processID;
             this.contracts?.processID &&
               this.getListInstanceSteps(this.contracts?.processID);
-          }else{
+          } else {
             this.notiService.notify('Dòng sản phẩm này không tồn tại.', "3");
           }
         });
@@ -1317,11 +1317,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
+        this.getArrCaculateField();
         this.getSettingFields(res[3], this.listInstanceSteps);
         this.listParticipants = [];
         this.listParticipants = JSON.parse(JSON.stringify(obj?.permissions));
         this.changeDetectorRef.detectChanges();
-      }else{
+      } else {
         this.notiService.notify('Quy trình thiết lập không đúng, hoặc không tồn tại vui lòng chọn dòng sản phẩm khác', "3");
       }
     });
