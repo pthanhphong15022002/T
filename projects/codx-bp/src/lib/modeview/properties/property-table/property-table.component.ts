@@ -246,6 +246,7 @@ export class PropertyTableComponent extends BasePropertyComponent implements OnI
     {
       this.data.dataFormat[index].value = e?.value;
       this.data.dataFormat[index] = this.genData(this.data.dataFormat[index]);
+      this.dataChange.emit(this.data);
     }
   }
 
