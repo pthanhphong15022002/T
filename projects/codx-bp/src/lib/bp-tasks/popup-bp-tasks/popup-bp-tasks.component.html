@@ -188,14 +188,14 @@
                   class="form-check-input"
                   type="checkbox"
                   [value]="cl?.status == '1' ? true : false"
-                  [disabled]="!privileged"
+                  [disabled]="!privileged || data?.status == '5'"
                   (change)="valueChangeCb($event, indexC)"
                 />
                 <input
                   class="mx-2 form-control"
                   [value]="cl?.taskName"
                   placeholder="Thêm mục"
-                  [disabled]="!privileged"
+                  [disabled]="!privileged || data?.status == '5'"
                   (change)="valueChangeCheckList($event, indexC)"
                   style="border: none"
                 />
