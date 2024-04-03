@@ -49,5 +49,5 @@
     </div>
 </ng-template>
 <ng-template #detailTemplate>
-    <ep-requests-view-detai *ngIf="dataSelected" [formModel]="view.formModel" [data]="dataSelected" [recID]="dataSelected.recID" [funcID]="view.funcID"></ep-requests-view-detai>
+    <ep-requests-view-detai #viewDetail *ngIf="dataSelected" [view]="view" [formModel]="view.formModel" [data]="dataSelected" [recID]="dataSelected.recID" [funcID]="view.funcID"></ep-requests-view-detai>
 </ng-template>

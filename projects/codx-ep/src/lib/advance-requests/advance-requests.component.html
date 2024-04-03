@@ -27,8 +27,8 @@
 </ng-template>
 <ng-template #titleTmp let-data>
     <div class="d-flex align-items-center justify-content-between fw-bold w-100">
-        <div >{{data.employeeName}}</div>
-        <div [innerHTML]="data.totalAmount | formatvalue : view.formModel : 'amount' | async"></div>
+        <div>{{data.employeeName}}</div>
+        <div [innerHTML]="data.totalAmount | formatvalue : view.formModel : 'totalAmount' | async"></div>
     </div>
 </ng-template>
 <ng-template #contentTmp let-data>
@@ -49,5 +49,5 @@
     </div>
 </ng-template>
 <ng-template #detailTemplate>
-    <ep-advance-requests-view-detai *ngIf="dataSelected" [formModel]="view.formModel" [data]="dataSelected" [recID]="dataSelected.recID" [funcID]="view.funcID"></ep-advance-requests-view-detai>
+    <ep-advance-requests-view-detai #viewDetail *ngIf="dataSelected" [view]="view" [formModel]="view.formModel" [data]="dataSelected" [recID]="dataSelected.recID" [funcID]="view.funcID"></ep-advance-requests-view-detai>
 </ng-template>
