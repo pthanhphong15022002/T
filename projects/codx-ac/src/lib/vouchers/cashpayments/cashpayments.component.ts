@@ -844,13 +844,14 @@ export class CashPaymentsComponent extends UIComponent {
                 .subscribe((res) => {
                   if (res && !res?.error) {
                     data.status = '8';
-                    this.view.dataService.update(data).subscribe();
-                    this.notification.notifyCode('AC0029', 0, text);
+                    this.view.dataService.update(res.data).subscribe();
+                    // this.notification.notifyCode('AC0029', 0, text);
+                    this.notification.notify('Chuyển lệnh thành công !');
                   } else {
                     this.notification.notify(
                       res?.data?.data?.result?.message ||
                         res?.data?.description ||
-                        res?.error,
+                        res?.msg,
                       '2'
                     );
                   }
