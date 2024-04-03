@@ -126,7 +126,7 @@
               <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
             </ng-template>
           </e-tabitem>
-          <e-tabitem *ngIf="dialog.formModel.funcID == 'ACT821'">
+          <e-tabitem *ngIf="dialog.formModel.funcID == 'ACT821' || dialog.formModel.funcID == 'ACT871'">
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2 mt-2">
                 <i class="icon-i-file-earmark-text icon-18 me-2"></i>
@@ -135,7 +135,7 @@
                   style="font-size: 14px !important"
                   fiedName="lblAssetRevaluations"
                   [formModel]="dialog.formModel"
-                  default="Hội đồng đánh giá"
+                  [default]="dialog.formModel.funcID == 'ACT871' ? 'Hội đồng thanh lý' : 'Hội đồng đánh giá'"
                 ></codx-label>
               </div>
             </ng-template>
@@ -651,6 +651,7 @@
       (clickMF)="clickMFAccount($event, 'vat')"
       (eventAction)="onActionGridAccount($event)"
       (actionCompleted)="onActionGridAccount($event)"
+      (cellChanged)="valueChangeVAT($event)"
       [autoFitColumns]="true"
       [dataValues]="formAsset?.data?.recID"
       service="AC"

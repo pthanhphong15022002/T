@@ -148,6 +148,9 @@ export class ContractsComponent extends UIComponent {
   tabDefaut;
   disabledDisposalID = false;
   viewType = '';
+  //cho phép thao tác khi thành công, thất bại, thanh lý.
+  allowTasks = false; 
+  allowContract = false;
   constructor(
     private inject: Injector,
     private authStore: AuthStore,

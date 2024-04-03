@@ -1,0 +1,212 @@
+<ng-container *ngIf="loaded">
+  <ng-container *ngIf="dataSelected; else noData">
+    <codx-detail-tmp
+      [header]="TmpHeaderDetail"
+      [body]="TmpBodyDetail"
+      [formModel]="formModel"
+      [dataItem]="dataSelected"
+      [footer]="TmpFooterDetail"
+      [hideMF]="codxService.asideMode == '2'"
+      (changeDataMF)="changeDataMF($event, dataSelected)"
+      (clickMF)="clickMF($event, dataSelected)"
+    >
+    </codx-detail-tmp>
+  </ng-container>
+</ng-container>
+
+<ng-template #TmpHeaderDetail let-data>
+  <div class="d-flex flex-wrap align-items-center justify-content-between mb-3">
+    <div class="mb-1">
+      <codx-vll
+        [name]="gridViewSetup?.SubType?.referedValue"
+        [formModel]="formModel"
+        [field]="'SubType'"
+        [value]="dataSelected?.subType"
+        [showText]="true"
+        [showBgColor]="true"
+        [showIcon]="true"
+        class="badge badge-light-primary badge-sm mt-1"
+      >
+      </codx-vll>
+    </div>
+    <div
+      class="d-flex justify-content-end mb-1"
+      *ngIf="codxService.asideMode != '2'"
+    >
+      <codx-mfunc
+        [dataItem]="dataSelected"
+        [formModel]="formModel"
+        (changeDataMF)="changeDataMF($event, dataSelected)"
+        (clickMF)="clickMF($event, dataSelected)"
+        [isBookMark]="true"
+        type="view"
+      ></codx-mfunc>
+    </div>
+  </div>
+  <div class="container_detail d-flex flex-column">
+    <div class="fw-bold fs-5 mb-2">Mua mưới tài sản cố định</div>
+    <div class="d-flex mb-2">
+      <div class="d-flex me-5">
+        <codx-label
+          fiedName="IssueNo"
+          class="fw-bold label-colon"
+          default="Số biên bản"
+          [formModel]="formModel"
+        >
+        </codx-label>
+        <span *ngIf="dataSelected?.issueNo" class="text-gray-600">
+          {{ dataSelected?.issueNo }}
+        </span>
+        <span
+          *ngIf="
+            (dataSelected?.issueNo == '' || dataSelected?.issueNo == null) &&
+            gridViewSetup
+          "
+          class="place-holder"
+        >
+          {{ gridViewSetup["IssueNo"].headerText }}
+        </span>
+      </div>
+      <div class="d-flex">
+        <codx-label
+          class="fw-bold label-colon"
+          default="Ngày biên bản"
+          fiedName="IssueOn"
+          [formModel]="formModel"
+        >
+        </codx-label>
+        <span
+          #IssueOn
+          [innerHTML]="
+            dataSelected?.issueOn
+              | formatvalue : formModel : 'IssueOn' : IssueOn
+              | async
+          "
+          class="text-gray-600"
+        ></span>
+      </div>
+    </div>
+    <div class="d-flex mb-2">
+      <codx-label
+        class="fw-bold label-colon"
+        default="Đơn vị"
+        fiedName="ObjectID"
+        [formModel]="formModel"
+      >
+      </codx-label>
+      <span
+        #objectID
+        [innerHTML]="
+          dataSelected?.objectID
+            | formatvalue : formModel : 'objectID' : objectID
+            | async
+        "
+        class="text-gray-600"
+      ></span>
+    </div>
+    <div class="d-flex mb-2">
+      <codx-label
+        class="fw-bold label-colon"
+        default="Diễn giải"
+        fiedName="Memo"
+        [formModel]="formModel"
+      >
+      </codx-label>
+      <span
+        #Memo
+        [innerHTML]="
+          dataSelected?.memo | formatvalue : formModel : 'Memo' : Memo | async
+        "
+        class="text-gray-600"
+      ></span>
+    </div>
+  </div>
+</ng-template>
+<ng-template #TmpBodyDetail let-data>
+  <div class="cm-scroll" [ngClass]="isShow ? 'cm-full' : ''">
+    <div
+      class="btn btn-white btn-icon tab-action"
+      (click)="clickShowTab(!isShow)"
+    >
+      <span class="icon-unfold_more icon-20"></span>
+    </div>
+    <div class="instance-select">
+      <ejs-tab
+        (selecting)="selecting($event)"
+        #elementTabDetail
+        (created)="createTab($event, elementTabDetail)"
+        id="tab_adaptive"
+        #adaptiveTab
+        heightAdjustMode="None"
+        height="250px"
+      >
+        <e-tabitems>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex align-items-top me-2">
+                <span class="icon-info text-hover-primary icon-16 me-2"></span>
+                <codx-label
+                  class="fw-bold text-hover-primary text-dark"
+                  default="Thông tin chi tiết"
+                  [formModel]="formModel"
+                  name="lblInformationDetail"
+                ></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="tabLines"></ng-container>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+    </div>
+  </div>
+</ng-template>
+<ng-template #TmpFooterDetail let-data>
+  <codx-tabs
+    [entityName]="formModel?.entityName"
+    [formModel]="formModel"
+    [objectID]="dataSelected.recID"
+    [funcID]="funcID"
+    [data]="dataSelected"
+    [keyField]="'recID'"
+  ></codx-tabs>
+</ng-template>
+
+<ng-template #tabLines>
+  <codx-gridview-v2
+    #grid
+    class="tabLine"
+    [showEmptyRecord]="false"
+    gridLines="Both"
+    [autoFitColumns]="true"
+    [formName]="fmAssetJournalsLines.formName"
+    idField="recID"
+    [gridViewName]="fmAssetJournalsLines.gridViewName"
+    [entityName]="fmAssetJournalsLines.entityName"
+    predicates="TransID=@0"
+    [dataValues]="id"
+    [hideMoreFunc]="true"
+    service="AM"
+    [editOnClick]="false"
+    rowNoField="rowNo"
+  ></codx-gridview-v2>
+</ng-template>
+
+<ng-template #noData>
+  <div class="empty-data">
+    <div class="container h-100">
+      <div class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
+          <img
+            src="../assets/themes/sys/default/img/DataEmpty.svg"
+            class="w-200px"
+          />
+          <div class="fs-5 text-dark fw-bold mt-2 text-center">
+            {{ "SYS011" | mssg | async }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

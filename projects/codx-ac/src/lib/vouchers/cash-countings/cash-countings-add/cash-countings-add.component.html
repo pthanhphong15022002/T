@@ -186,13 +186,25 @@
     <div style="height: 200px;" class="mt-3 ac-master">
       <div style="flex-wrap: nowrap;" class="row d-flex overflow-auto h-100">
         <div style="min-width: 800px;padding-right: 0;" class="col-8">
-          <div class="row" style="max-width: 1000px;margin-bottom: 15px;">
+          <div class="row" style="max-width: 1000px">
             <div class="col-6">
               <div class="form-group">
                 <codx-label style="white-space: nowrap !important" fiedName="ObjectID" [formModel]="dialog?.formModel">
                 </codx-label>
                 <codx-input [disabled]="master.data?.isReadOnly ? true : false" [Group]="master?.formGroup"
                   field="objectID" [formModel]="dialog?.formModel">
+                </codx-input>
+              </div>
+            </div>
+            <div *ngIf="dialog.formModel.funcID === 'ACT281'" class="col-2">
+              <div class="form-group">
+                <codx-label style="white-space: nowrap !important" fiedName="CurrencyID"
+                  [formModel]="dialog.formModel">
+                </codx-label>
+                <codx-input #cbxCurrencyID
+                  [disabled]="(!journal.multiCurrency) || (master.data?.isReadOnly ? true : false)"
+                  [Group]="master.formGroup" field="currencyID" [formModel]="dialog.formModel"
+                  >
                 </codx-input>
               </div>
             </div>
@@ -260,20 +272,6 @@
                   </codx-label>
                   <codx-input [Group]="master.formGroup" field="voucherNo" [formModel]="dialog.formModel"
                     [disabled]="(journal?.assignRule != '0' || master.data?.isReadOnly)">
-                  </codx-input>
-                </div>
-              </div>
-            </div>
-            <div style="width: 450px;float: right;" *ngIf="journal" class="row justify-content-end">
-              <div class="col-4">
-                <div class="form-group">
-                  <codx-label style="white-space: nowrap !important" fiedName="CurrencyID"
-                    [formModel]="dialog.formModel">
-                  </codx-label>
-                  <codx-input #cbxCurrencyID
-                    [disabled]="(!journal.multiCurrency) || (master.data?.isReadOnly ? true : false)"
-                    [Group]="master.formGroup" field="currencyID" [formModel]="dialog.formModel"
-                    >
                   </codx-input>
                 </div>
               </div>
@@ -494,7 +492,7 @@
         [hideMoreFunc]="true" [moreFcItems]="'SYS104;SYS102'" [moreFcModel]="dialog.formModel" (clickMF)="clickMF($event)"
         [gridViewName]="'grvCountingFunds'" [entityName]="'AC_CountingFunds'" predicates="TransID=@0"
         [dataValues]="master?.data?.recID" service="AC" [editOnClick]="master.data?.isReadOnly ? false : true"
-        rowNoField="rowNo"></codx-gridview-v2>
+        rowNoField="rowNo" (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
       <ng-container *ngIf="!master.data?.isReadOnly">
         <div #btnRef class="btn-addline">
           <div class="d-flex align-items-center">
@@ -503,7 +501,7 @@
                 class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="onAddLine('1'); $event.preventDefault()"
                 (click)="onAddLine('1')">
                 <i class="icon-playlist_add icon-16"></i>
-                <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
+                <codx-label fiedName="lblSaveAndClear" default="Đề xuất kiểm kê"></codx-label>
               </button>
             </div>
           </div>

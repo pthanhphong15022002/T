@@ -384,7 +384,18 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   valueChangeLine(event: any) {
     let oLine = event.data;
     let field = event.field;
-    if(field.toLowerCase() === 'settledno') oLine.settledID = event?.itemData?.RecID;
+    switch(field.toLowerCase()){
+      case 'settledno':
+        oLine.settledID = event?.itemData?.RecID;
+        break;
+      case 'settlement':
+        if(oLine.settlement == '0'){
+          this.eleGridCashReceipt.setEditableFields(['SettledNo'],false);
+        }else{
+          this.eleGridCashReceipt.setEditableFields(['SettledNo'],true);
+        } 
+        break;
+    }
     this.eleGridCashReceipt.startProcess();
     this.api.exec('AC','CashReceiptsLinesBusiness','ValueChangedAsync',[this.master.data,oLine,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       Object.assign(oLine, res);
@@ -1078,7 +1089,12 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         element.focus();
       }, 100);
         break;
-      case 'beginEdit': //? trước khi thêm dòng
+      case 'beginEdit':
+        if(this.journal.journalType+'9' === this.master.data.subType){
+          let data = event.data;
+          if(data.settlement == '' || data.settlement == null || data.settlement == '0') 
+            this.eleGridCashReceipt.setEditableFields(['SettledNo'],false);
+        }
         break;
     }
   }
