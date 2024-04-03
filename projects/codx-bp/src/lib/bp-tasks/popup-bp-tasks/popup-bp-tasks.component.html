@@ -88,7 +88,7 @@
           <span>
             {{
               data?.startDate
-                ? (data?.startDate | date : "dd/MM/yyyy HH:mm")
+                ? (data?.startDate | fmDT: "dmy":true)
                 : "dd/MM/yyyy HH:mm"
             }}</span
           >
@@ -96,7 +96,7 @@
           <span>
             {{
               data?.endDate
-                ? (data?.endDate | date : "dd/MM/yyyy HH:mm")
+                ? (data?.endDate | fmDT: "dmy":true)
                 : "dd/MM/yyyy HH:mm"
             }}</span
           >
