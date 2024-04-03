@@ -99,13 +99,14 @@ export class PopupPermissionsComponent implements OnInit {
 
   setTab(){
     let tabEntity = this.allTabId[this.entityName];
+    if(!tabEntity) return;
     if(!this.vllData){
       this.cache.valueList("CRM086").subscribe(res => {
         if(res?.datas){
           this.vllData = res?.datas;
-          let listDataTabView = this.vllData.filter(x => tabEntity.includes(x?.value));
+          let listDataTabView = this.vllData.filter(x => tabEntity?.includes(x?.value));
           if(listDataTabView){
-            this.listDataTabView = listDataTabView.map((x) => {return {...x, isCheck: false}});
+            this.listDataTabView = listDataTabView?.map((x) => {return {...x, isCheck: false}});
             this.config = this.lstPermissions[this.currentPemission]?.config;
             this.setConfig(this.config);
             this.changeDetectorRef.markForCheck();
@@ -114,9 +115,9 @@ export class PopupPermissionsComponent implements OnInit {
       })
     }
     if(this.vllData){
-      let listDataTabView = this.vllData.filter(x => tabEntity.includes(x?.value));
+      let listDataTabView = this.vllData.filter(x => tabEntity?.includes(x?.value));
       if(listDataTabView){
-        this.listDataTabView = listDataTabView.map((x) => {return {...x, isCheck: false}});
+        this.listDataTabView = listDataTabView?.map((x) => {return {...x, isCheck: false}});
         this.changeDetectorRef.markForCheck();
       }
     }
@@ -354,7 +355,7 @@ export class PopupPermissionsComponent implements OnInit {
 
   getConfig(){
     let tabCheck = this.listDataTabView?.filter(x => x.isCheck)?.map(x => x.value);
-    this.config = tabCheck.join(";");
+    this.config = tabCheck?.join(";") ?? "";
     return this.config;
   }
   setConfig(config:string){
@@ -493,26 +494,31 @@ export class PopupPermissionsComponent implements OnInit {
         : '0';
       this.lstPermissions[this.currentPemission].config = this.getConfig();
     }
+    const service = this.entityName == "DP_Instances" ? "DP" : "CM";
+    const assemply = this.entityName == "DP_Instances" ? "ERM.Business.DP" : "ERM.Business.CM";
+    const className = this.entityName == "DP_Instances" ? "InstancesBusiness" : "LeadsBusiness";
     this.api
       .execSv<any>(
-        'CM',
-        'ERM.Business.CM',
-        'LeadsBusiness',
+        service,
+        assemply,
+        className,
         'UpdatePermissionsAsync',
         [this.data, this.entityName]
       )
       .subscribe((res) => {
         if (res) {
-          this.data.full = res.full;
-          this.data.write = res.write;
-          this.data.assign = res.assign;
-          this.data.delete = res.delete;
-          this.data.upload = res.upload;
-          this.data.download =
-            res.download =
-            this.data.allowPermit =
-              res.allowPermit;
-          this.data.alloweStatus = res.alloweStatus;
+          if(this.entityName != "DP_Instances"){
+            this.data.full = res.full;
+            this.data.write = res.write;
+            this.data.assign = res.assign;
+            this.data.delete = res.delete;
+            this.data.upload = res.upload;
+            this.data.download =
+              res.download =
+              this.data.allowPermit =
+                res.allowPermit;
+            this.data.alloweStatus = res.alloweStatus;
+          }
           this.notiService.notifyCode('SYS034');
           this.dialog.close(this.data);
         }

@@ -105,6 +105,7 @@ export class PopupAddProcessComponent {
   lstShowExtends = [];
   dataValueSettings: any;
   countStage = 0;
+  vllBP016 = [];
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
@@ -130,6 +131,21 @@ export class PopupAddProcessComponent {
   ngOnInit(): void {
     this.genData();
     // this.bpSv.getEndDate(new Date(), '1', 4, 'STD').subscribe((res) => {});
+    this.cache.valueList('BP016').subscribe((vll) => {
+      if (vll && vll?.datas?.length > 0) {
+        this.vllBP016 = vll.datas;
+        if (this.action == 'add') {
+          const every = this.vllBP016.find((x) => x.value == '9');
+          let perm = this.defaultRoleNotAdmin(
+            null,
+            every?.text ?? every?.default,
+            '9',
+            'P'
+          );
+          this.data.permissions.push(Object.assign({}, perm));
+        }
+      }
+    });
   }
 
   genData() {
@@ -841,11 +857,11 @@ export class PopupAddProcessComponent {
             }
 
             if (typeof element.documentControl != 'string') {
-              element.documentControl = JSON.stringify(element.documentControl)
+              element.documentControl = JSON.stringify(element.documentControl);
             }
 
             if (typeof element.dataFormat != 'string') {
-              element.dataFormat = JSON.stringify(element.dataFormat)
+              element.dataFormat = JSON.stringify(element.dataFormat);
             }
             if (typeof element.tableFormat != 'string') {
               element.tableFormat = JSON.stringify(element.tableFormat);
