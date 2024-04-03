@@ -4,8 +4,14 @@
 }
 .dropdown-property-table
 {
+    position: relative;
+    .dropdown
+    {
+        z-index: 1056 !important;
+    }
     .dropdown-item.active
     {
+       
         i
         {
             color: white !important;

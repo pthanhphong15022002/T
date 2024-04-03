@@ -240,9 +240,13 @@ export class CashPaymentAddComponent extends UIComponent {
     if (this.journal.assetControl == "0"){
       hideFields.push("AssetGroupID");
       hideFields.push("AssetType");
+      hideFields.push("ServiceDate");
+      hideFields.push("ServicePeriods");
+      hideFields.push("EmployeeID");
+      hideFields.push("SiteID");
     } 
     if (this.journal.subControl == "0") hideFields.push("ObjectID");
-    if (this.journal.settleControl == "0" || this.dataDefault.subType == (this.journal.journalType + "2")) hideFields.push("Settlement");
+    if (this.journal.settleControl == "0") hideFields.push("Settlement");
 
     if (this.journal.entryMode == '1') {
       if (this.dataDefault.currencyID == this.baseCurr) hideFields.push('DR2');
@@ -460,19 +464,19 @@ export class CashPaymentAddComponent extends UIComponent {
       case 'settledno':
         oLine.settledID = event?.itemData?.RecID;
         break;
-      case 'settlement':
-        if(oLine.settlement == '0'){
-          this.eleGridCashPayment.setEditableFields(['SettledNo'],false);
-        }else{
-          this.eleGridCashPayment.setEditableFields(['SettledNo'],true);
-        } 
-        break;
     }
     this.eleGridCashPayment.startProcess();
     this.api.exec('AC','CashPaymentsLinesBusiness','ValueChangedAsync',[this.master.data,oLine,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       Object.assign(oLine, res);
       oLine.updateColumns = '';
       this.detectorRef.detectChanges();
+      if(this.journal.settleControl == "1" && (this.journal.journalType+'2' === this.master.data.subType || this.journal.journalType+'9' === this.master.data.subType)){
+        if(oLine.settlement != '0'){
+          this.eleGridCashPayment.setEditableFields(['SettledNo'],false);
+        }else{
+          this.eleGridCashPayment.setEditableFields(['SettledNo'],true);
+        } 
+      }
       this.eleGridCashPayment.endProcess();
     })
   }
@@ -1218,7 +1222,7 @@ export class CashPaymentAddComponent extends UIComponent {
       
     // set an hien can tru cong no
     let hSettlement = false;
-    if(this.journal.settleControl == "1" && (this.master.data.subType == this.journal.journalType + '3' || this.master.data.subType == this.journal.journalType + '9')){
+    if(this.journal.settleControl == "1" && (this.master.data.subType == this.journal.journalType + '2' || this.master.data.subType == this.journal.journalType + '9')){
       hSettlement = true;
     }
 
@@ -1284,9 +1288,9 @@ export class CashPaymentAddComponent extends UIComponent {
         }, 100);
         break;
       case 'beginEdit':
-        if(this.journal.journalType+'9' === this.master.data.subType){
+        if(this.journal.settleControl == "1" && (this.journal.journalType+'2' === this.master.data.subType || this.journal.journalType+'9' === this.master.data.subType)){
           let data = event.data;
-          if(data.settlement == '' || data.settlement == null || data.settlement == '0') 
+          if(data.settlement == '' || data.settlement == null || data.settlement != '0') 
             this.eleGridCashPayment.setEditableFields(['SettledNo'],false);
         }
         break;

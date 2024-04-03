@@ -157,6 +157,10 @@ export class GeneralJournalAddComponent extends UIComponent {
     if (this.journal.assetControl == "0"){
       hideFields.push("AssetGroupID");
       hideFields.push("AssetType");
+      hideFields.push("ServiceDate");
+      hideFields.push("ServicePeriods");
+      hideFields.push("EmployeeID");
+      hideFields.push("SiteID");
     } 
     if (this.journal.subControl == "0") hideFields.push("ObjectID");
     if (this.journal.settleControl == "0") hideFields.push("Settlement");
@@ -304,19 +308,19 @@ export class GeneralJournalAddComponent extends UIComponent {
       case 'settledno':
         oLine.settledID = event?.itemData?.RecID;
         break;
-      case 'settlement':
-        if(oLine.settlement == '0'){
-          this.eleGridGeneral.setEditableFields(['SettledNo'],false);
-        }else{
-          this.eleGridGeneral.setEditableFields(['SettledNo'],true);
-        } 
-        break;
     }
     this.eleGridGeneral.startProcess();
     this.api.exec('AC','GeneralJournalsLinesBusiness','ValueChangedAsync',[this.master.data,oLine,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       Object.assign(oLine, res);
       oLine.updateColumns = '';
       this.detectorRef.detectChanges();
+      if(this.journal.settleControl == "1"){
+        if(oLine.settlement != '0'){
+          this.eleGridGeneral.setEditableFields(['SettledNo'],false);
+        }else{
+          this.eleGridGeneral.setEditableFields(['SettledNo'],true);
+        } 
+      }
       this.eleGridGeneral.endProcess();
     })
   }
@@ -811,9 +815,9 @@ export class GeneralJournalAddComponent extends UIComponent {
       }, 100);
         break;
       case 'beginEdit':
-        if(this.journal.journalType+'9' === this.master.data.subType){
+        if(this.journal.settleControl == "1"){
           let data = event.data;
-          if(data.settlement == '' || data.settlement == null || data.settlement == '0') 
+          if(data.settlement == '' || data.settlement == null || data.settlement != '0') 
             this.eleGridGeneral.setEditableFields(['SettledNo'],false);
         }
         break;

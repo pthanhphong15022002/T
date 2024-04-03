@@ -936,6 +936,15 @@ export class CodxCmService {
       data
     );
   }
+  changeStatusContract(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'ContractsBusiness',
+      'ChangeStatusAsync',
+      data
+    );
+  }
   moveStageBackLead(data) {
     return this.api.execSv<any>(
       'CM',
