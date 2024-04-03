@@ -275,7 +275,7 @@ export class PopupBpTasksComponent implements OnInit {
         if (res) {
           if (this.data.activityType != 'Sign')
             this.notiService.notifyCode('SYS034');
-          this.dialog && this.dialog.close(res);
+          this.dialog && this.dialog.close({task:res});
         }
       });
   }
@@ -357,8 +357,9 @@ export class PopupBpTasksComponent implements OnInit {
   }
 
   dataChange(e: any) {
-    this.dataIns = e;
-    this.dialog.close(this.dataIns);
+    this.data = e[0];
+    this.dataIns = e[1];
+    this.dialog.close({task:this.data,ins:this.dataIns});
   }
   authority(){
     let dialogAuthority = this.callfc.openForm(CoDxAddApproversComponent,'',500,250,'',{mode:'1'});

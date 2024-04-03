@@ -109,8 +109,6 @@ export class CashPaymentAddComponent extends UIComponent {
   isPreventChange: any = false;
   postDateControl: any;
   nextTabIndex: number;
-  refNo: any;
-  refTotalAmt: any = 0;
   preData: any;
   totalAmount:any = 0;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
@@ -153,10 +151,6 @@ export class CashPaymentAddComponent extends UIComponent {
 
   ngAfterViewInit() {
     if (this.master?.data?.coppyForm) this.master.data._isEdit = true; //? test copy để tạm
-    if (this.master?.data?.isEdit && (this.master?.data?.subType === '3' || this.master?.data?.subType === '4')) {
-      this.refNo = this.master?.data?.refNo;
-      this.refTotalAmt = this.master?.data?.refTotalAmt;
-    }
   }
 
   ngOnDestroy() {
@@ -246,9 +240,13 @@ export class CashPaymentAddComponent extends UIComponent {
     if (this.journal.assetControl == "0"){
       hideFields.push("AssetGroupID");
       hideFields.push("AssetType");
+      hideFields.push("ServiceDate");
+      hideFields.push("ServicePeriods");
+      hideFields.push("EmployeeID");
+      hideFields.push("SiteID");
     } 
     if (this.journal.subControl == "0") hideFields.push("ObjectID");
-    if (this.journal.settleControl == "0" || this.dataDefault.subType == (this.journal.journalType + "1")) hideFields.push("Settlement");
+    if (this.journal.settleControl == "0") hideFields.push("Settlement");
 
     if (this.journal.entryMode == '1') {
       if (this.dataDefault.currencyID == this.baseCurr) hideFields.push('DR2');
@@ -318,7 +316,7 @@ export class CashPaymentAddComponent extends UIComponent {
     if (event && event.data[0] && ((this.eleGridCashPayment && this.eleGridCashPayment.dataSource.length > 0)
       || (this.eleGridSettledInvoices && this.eleGridSettledInvoices.dataSource.length > 0)
       || (this.eleGridVatInvoices && this.eleGridVatInvoices.dataSource.length > 0))) {
-      this.notification.alertCode('AC0014', null).subscribe((res) => {
+      this.notification.alertCode('AC014', null).subscribe((res) => {
         if (res.event.status === 'Y') {
           let obj = {
             SubType: event.data[0]
@@ -354,11 +352,7 @@ export class CashPaymentAddComponent extends UIComponent {
       }
     }
     this.setValidateForm();
-    let hSettlement = false;
-    if(this.journal.settleControl == "1" && (this.master.data.subType == this.journal.journalType + '9')){
-      hSettlement = true;
-    }
-    this.eleGridCashPayment.showHideColumns(['Settlement'],hSettlement); 
+    this.showHideColumn();
   }
 
   /**
@@ -470,19 +464,19 @@ export class CashPaymentAddComponent extends UIComponent {
       case 'settledno':
         oLine.settledID = event?.itemData?.RecID;
         break;
-      case 'settlement':
-        if(oLine.settlement == '0'){
-          this.eleGridCashPayment.setEditableFields(['SettledNo'],false);
-        }else{
-          this.eleGridCashPayment.setEditableFields(['SettledNo'],true);
-        } 
-        break;
     }
     this.eleGridCashPayment.startProcess();
     this.api.exec('AC','CashPaymentsLinesBusiness','ValueChangedAsync',[this.master.data,oLine,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       Object.assign(oLine, res);
       oLine.updateColumns = '';
       this.detectorRef.detectChanges();
+      if(this.journal.settleControl == "1" && (this.journal.journalType+'2' === this.master.data.subType || this.journal.journalType+'9' === this.master.data.subType)){
+        if(oLine.settlement != '0'){
+          this.eleGridCashPayment.setEditableFields(['SettledNo'],false);
+        }else{
+          this.eleGridCashPayment.setEditableFields(['SettledNo'],true);
+        } 
+      }
       this.eleGridCashPayment.endProcess();
     })
   }
@@ -510,6 +504,7 @@ export class CashPaymentAddComponent extends UIComponent {
         oLine.updateColumns = '';
         this.detectorRef.detectChanges();
         this.eleGridVatInvoices.endProcess();
+        this.detectorRef.detectChanges();
       }
     })
   }
@@ -550,19 +545,19 @@ export class CashPaymentAddComponent extends UIComponent {
         if (res.hasOwnProperty('update')) {
           if (res.update.hasOwnProperty('data') && !res.update.data) return;
         }
-        if (this.eleGridCashPayment && this.elementTabDetail?.selectingID == '0') { //? nếu lưới cashpayment có active hoặc đang edit
+        if (this.eleGridCashPayment && this.elementTabDetail?.selectingID == '0') {
           this.eleGridCashPayment.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') this.addRowDetail();
           })
           return;
         }
-        if (this.eleGridSettledInvoices && this.elementTabDetail?.selectingID == '1') { //? nếu lưới SettledInvoices có active hoặc đang edit
+        if (this.eleGridSettledInvoices && this.elementTabDetail?.selectingID == '1') {
           this.eleGridSettledInvoices.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') this.addRowDetail();
           })
           return;
         }
-        if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '2') { //? nếu lưới VatInvoices có active hoặc đang edit
+        if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '2') {
           this.eleGridVatInvoices.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') this.addRowDetail();
           })
@@ -1043,31 +1038,25 @@ export class CashPaymentAddComponent extends UIComponent {
    * *Hàm thêm dòng theo loại
    */
   addRowDetail() {
-    switch (this.master?.data?.subType) {
+    switch (this.master.data.subType) {
       case `${this.journal.journalType+'1'}`:
-        this.addLine();
-        break;
-      case `${this.journal.journalType+'2'}`:
         this.addSettledInvoices();
         break;
+
+      case `${this.journal.journalType+'2'}`:
       case `${this.journal.journalType+'3'}`:
-        this.addSuggestion('1');
+        this.addLine();
         break;
+
       case `${this.journal.journalType+'4'}`:
-        this.addSuggestion('2');
+        this.addLineVatInvoices();
         break;
+
+      case `${this.journal.journalType+'5'}`:
+        this.addRequest();
+        break;
+
       case `${this.journal.journalType+'9'}`:
-        if (this.elementTabDetail && this.elementTabDetail?.selectingID == '0') {
-          this.addLine();
-        }
-        if (this.elementTabDetail && this.elementTabDetail?.selectingID == '1') {
-          this.addSettledInvoices();
-        }
-        if (this.elementTabDetail && this.elementTabDetail?.selectingID == '2') {
-          this.addLineVatInvoices();
-        }
-        break;
-      default:
         if (this.elementTabDetail && this.elementTabDetail?.selectingID == '0') {
           this.addLine();
         }
@@ -1136,23 +1125,12 @@ export class CashPaymentAddComponent extends UIComponent {
   /**
    * *Ham them de nghi tam ung || thanh toan
    */
-  addSuggestion(type) {
-    let objectName = '';
-    let indexObject = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.master.data.objectID);
-    if (indexObject > -1) {
-      objectName = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName;
+  addRequest() {
+    let data = {
+      master:this.master.data
     }
-    let obj = {
-      oData: this.master.data,
-      objectName: objectName,
-      type,
-      headerText: type === '1' ? 'Chọn đề nghị tạm ứng' : 'Chọn đề nghị thanh toán'
-    };
     let opt = new DialogModel();
     let dataModel = new FormModel();
-    dataModel.formName = type === '1' ? 'AdvancedPayment' : 'PaymentOrder';
-    dataModel.gridViewName = type === '1' ? 'grvAdvancedPayment' : 'grvPaymentOrder';
-    dataModel.entityName = type === '1' ? 'AC_AdvancedPayment' : 'AC_PaymentOrder';
     opt.FormModel = dataModel;
     let dialog = this.callfc.openForm(
       SuggestionAdd,
@@ -1160,20 +1138,12 @@ export class CashPaymentAddComponent extends UIComponent {
       null,
       null,
       '',
-      obj,
+      data,
       '',
       opt
     );
     dialog.closed.subscribe((res) => {
       if (res && res.event) {
-        this.refNo = res.event.refNo;
-        this.refTotalAmt = res.event.refTotalAmt;
-        this.dialog.dataService.dataSelected.refID = res.event.refID;
-        this.dialog.dataService.dataSelected.refNo = res.event.refNo;
-        this.dialog.dataService.dataSelected.refTotalAmt = res.event.refTotalAmt;
-        this.dialog.dataService.dataSelected.refType = res.event.refType;
-        let data = { ...this.dialog.dataService.dataSelected };
-        this.dialog.dataService.update(data).subscribe();
         this.eleGridCashPayment.refresh();
       }
     });
@@ -1206,30 +1176,39 @@ export class CashPaymentAddComponent extends UIComponent {
     if (eleTab) {
       switch (type) {
         case `${this.journal.journalType+'1'}`:
-        case `${this.journal.journalType+'3'}`:
-        case `${this.journal.journalType+'4'}`:
-          eleTab.hideTab(0, false);
-          eleTab.hideTab(1, true);
-          eleTab.hideTab(2, true);
-          eleTab.select(0);
-          break;
-        case `${this.journal.journalType+'2'}`:
           eleTab.hideTab(0, true);
           eleTab.hideTab(1, false);
           eleTab.hideTab(2, true);
           eleTab.select(1);
           break;
+
+        case `${this.journal.journalType+'2'}`:
+        case `${this.journal.journalType+'3'}`:
+        case `${this.journal.journalType+'5'}`:
+          eleTab.hideTab(0, false);
+          eleTab.hideTab(1, true);
+          eleTab.hideTab(2, true);
+          eleTab.select(0);
+          break;
+
+        case `${this.journal.journalType+'4'}`:
+          eleTab.hideTab(0, true);
+          eleTab.hideTab(1, true);
+          eleTab.hideTab(2, false);
+          eleTab.select(2);
+          break;
+
         case `${this.journal.journalType+'9'}`:
           eleTab.hideTab(0, false);
           eleTab.hideTab(1, false);
           eleTab.hideTab(2, false);
           eleTab.select(0);
           break;
+
         default:
-          eleTab.hideTab(0, false);
-          eleTab.hideTab(1, false);
-          eleTab.hideTab(2, false);
-          eleTab.select(0);
+          eleTab.hideTab(0, true);
+          eleTab.hideTab(1, true);
+          eleTab.hideTab(2, true);
           break;
       }
     }
@@ -1240,6 +1219,14 @@ export class CashPaymentAddComponent extends UIComponent {
    */
   showHideColumn() {
     if (this.eleGridCashPayment) {
+      
+    // set an hien can tru cong no
+    let hSettlement = false;
+    if(this.journal.settleControl == "1" && (this.master.data.subType == this.journal.journalType + '2' || this.master.data.subType == this.journal.journalType + '9')){
+      hSettlement = true;
+    }
+
+    this.eleGridCashPayment.showHideColumns(['Settlement'],hSettlement); 
       //* Thiết lập hiện cột tiền HT cho lưới nếu chứng từ có ngoại tệ
       let hDR2 = false;
       let hCR2 = false;
@@ -1301,9 +1288,9 @@ export class CashPaymentAddComponent extends UIComponent {
         }, 100);
         break;
       case 'beginEdit':
-        if(this.journal.journalType+'9' === this.master.data.subType){
+        if(this.journal.settleControl == "1" && (this.journal.journalType+'2' === this.master.data.subType || this.journal.journalType+'9' === this.master.data.subType)){
           let data = event.data;
-          if(data.settlement == '' || data.settlement == null || data.settlement == '0') 
+          if(data.settlement == '' || data.settlement == null || data.settlement != '0') 
             this.eleGridCashPayment.setEditableFields(['SettledNo'],false);
         }
         break;
@@ -1422,7 +1409,7 @@ export class CashPaymentAddComponent extends UIComponent {
   setValidateForm() {
     let rObjectID = false;
     let lstRequire: any = [];
-    if (this.elementTabDetail?.selectingID == '1' && this.master.data.subType == (this.journal.journalType+'2')) {
+    if (this.master.data.subType == (this.journal.journalType+'1') || this.master.data.subType == (this.journal.journalType+'5')) {
       rObjectID = true;
     }
     lstRequire.push({ field: 'ObjectID', isDisable: false, require: rObjectID });

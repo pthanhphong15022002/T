@@ -194,14 +194,42 @@ export const fmAssetAcquisitionsJournal: FormModel = {
   formName: 'AssetAcquisitions',
   gridViewName: 'grvAssetAcquisitions',
   entityName: 'AM_AssetJournals',
-  entityPer: 'AM_AssetJournals',
+  entityPer: 'AM_AssetAcquisitions',
 };
 
 export const fmAssetRevaluationsJournal: FormModel = {
   formName: 'AssetRevaluations',
   gridViewName: 'grvAssetRevaluations',
   entityName: 'AM_AssetJournals',
-  entityPer: 'AM_AssetJournals',
+  entityPer: 'AM_AssetRevaluations',
+};
+
+export const fmAssetLiquidationsJournal: FormModel = {
+  formName: 'AssetLiquidations',
+  gridViewName: 'grvAssetLiquidations',
+  entityName: 'AM_AssetJournals',
+  entityPer: 'AM_AssetLiquidations',
+};
+
+export const fmAssetTransfersJournal: FormModel = {
+  formName: 'AssetTransfers',
+  gridViewName: 'grvAssetTransfers',
+  entityName: 'AM_AssetJournals',
+  entityPer: 'AM_AssetTransfers',
+};
+
+export const fmAssetDepreciationsJournal: FormModel = {
+  formName: 'AssetDepreciations',
+  gridViewName: 'grvAssetDepreciations',
+  entityName: 'AM_AssetJournals',
+  entityPer: 'AM_AssetDepreciations',
+};
+
+export const fmAssetCountingsJournal: FormModel = {
+  formName: 'AssetCountings',
+  gridViewName: 'grvAssetCountings',
+  entityName: 'AM_AssetJournals',
+  entityPer: 'AM_AssetCountings',
 };
 
 export const fmAssetAcquisitionsLines: FormModel = {
@@ -217,6 +245,34 @@ export const fmAssetRevaluationsLines: FormModel = {
   entityName: 'AM_AssetJournalsLines',
   entityPer: 'AM_AssetJournalsLines',
 };
+
+export const fmAssetLiquidationsLines: FormModel = {
+  formName: 'AssetLiquidationsLines',
+  gridViewName: 'grvAssetLiquidationsLines',
+  entityName: 'AM_AssetJournalsLines',
+  entityPer: 'AM_AssetJournalsLines',
+};
+
+export const fmAssetTransfersLines: FormModel = {
+  formName: 'AssetTransfersLines',
+  gridViewName: 'grvAssetTransfersLines',
+  entityName: 'AM_AssetJournalsLines',
+  entityPer: 'AM_AssetJournalsLines',
+};
+
+export const fmAssetDepreciationsLines: FormModel = {
+  formName: 'AssetDepreciationsLines',
+  gridViewName: 'grvAssetDepreciationsLines',
+  entityName: 'AM_AssetJournalsLines',
+  entityPer: 'AM_AssetJournalsLines',
+};
+
+// export const fmAssetDepreciationsLines: FormModel = {
+//   formName: 'AssetDepreciationsLines',
+//   gridViewName: 'grvAssetDepreciationsLines',
+//   entityName: 'AM_AssetJournalsLines',
+//   entityPer: 'AM_AssetJournalsLines',
+// };
 
 export const fmCountingMembers: FormModel = {
   formName: 'CountingMembers',
@@ -532,7 +588,6 @@ export class CodxAcService {
                   MorfuncCash.GhiSoUNC,
                   MorfuncCash.InPC,
                   MorfuncCash.InUNC,
-                  MorfuncCash.ChuyenTienDienTu,
                 ].includes(element.functionID)
               )
                 element.disabled = true;
@@ -625,6 +680,9 @@ export class CodxAcService {
 
       if (data.eBankingID) {
         if (MorfuncCash.KiemTraTrangThai == element.functionID)
+          element.disabled = false;
+      } else {
+        if (MorfuncCash.ChuyenTienDienTu == element.functionID)
           element.disabled = false;
       }
       event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));

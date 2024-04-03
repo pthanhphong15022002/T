@@ -75,6 +75,12 @@ export class JournalV2Component extends UIComponent {
     private acService: CodxAcService,
   ) {
     super(inject);
+  }
+  //#endregion Contrucstor
+
+  //#region Init
+  onInit() {
+    
     this.cache.valueList('AC177').subscribe((func) => {
       if(func){
         this.lstGroup = func.datas;
@@ -82,13 +88,8 @@ export class JournalV2Component extends UIComponent {
       }else{
         this.lstGroup = [];
       }
-      this.detectorRef.detectChanges(); 
     });
-  }
-  //#endregion Contrucstor
 
-  //#region Init
-  onInit() {
     if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
       this.cache.valueList('AC077').subscribe((func) => {
         if (func) this.func = func.datas;
@@ -163,7 +164,7 @@ export class JournalV2Component extends UIComponent {
   selectedChangeToolBar(data:any){
     this.selectedToolBar = data.value;
     this.view.dataService.setPredicates(['Category=@0'],[data.value]);
-    this.detectorRef.detectChanges();
+    //this.detectorRef.detectChanges();
   }
 
   changeMF(event) {

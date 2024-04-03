@@ -122,9 +122,9 @@
                 </div>
             </ng-container>
         </div>
-        <div class="d-flex align-items-center justify-content-end p-2">
-            <button type="button" class="btn btn-outline-primary me-2" [disabled]="isAttach" (click)="!isAttach?onSave():undefined"><codx-label [formName]="formModel.formName" fiedName="lblSave" default="Lưu"></codx-label></button>
-            <button class="btn btn-primary ms-2" [disabled]="isAttach" (click)="!isAttach?onSave(2):undefined" *ngIf="type != 'edit'"><codx-label [formName]="formModel.formName" fiedName="lblDone" default="Lưu & Bắt đầu thực hiện"></codx-label></button>
+        <div class="d-flex align-items-center justify-content-end p-2" *ngIf="privileged">
+            <button type="button" class="btn btn-outline-primary me-2" [disabled]="isAttach" *ngIf="data?.status != '5'" (click)="!isAttach?onSave():undefined"><codx-label [formName]="formModel.formName" fiedName="lblSave" default="Lưu"></codx-label></button>
+            <button class="btn btn-primary ms-2" [disabled]="isAttach" (click)="!isAttach?onSave(2):undefined" *ngIf="(type != 'edit' || data?.status != '5') && !taskID"><codx-label [formName]="formModel.formName" fiedName="lblDone" default="Lưu & Bắt đầu thực hiện"></codx-label></button>
         </div>
     </div>
     <ng-template #yesno let-data let-id="b">

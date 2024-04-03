@@ -50,7 +50,10 @@ export class AddProcessDefaultComponent implements OnInit {
   @Input() dataIns: any;
   @Input() type = 'add';
   @Input() stepID: any;
+  @Input() taskID: any;
+  @Input() privileged = true;
   @Output() dataChange = new EventEmitter<any>();
+  @Output() dataTaskChange = new EventEmitter<any>();
   formModel = {
     funcID: '',
     formName: 'DynamicForms',
@@ -155,22 +158,24 @@ export class AddProcessDefaultComponent implements OnInit {
           ? JSON.parse(element.documentControl)
           : element.documentControl;
       if (element.fieldType != 'Title') {
-        if (this.type == 'add') {
-          let validate = element.isRequired ? Validators.required : null;
+        let validate = element.isRequired ? Validators.required : null;
 
-          if (element.fieldType == 'Email') validate = Validators.email;
-          else if (element.fieldType == 'Phone')
-            validate = Validators.pattern('[0-9 ]{11}');
-          else if (element.fieldType == 'DateTime') {
-            if (element.defaultValue == 'Now')
-              element.defaultValue = new Date();
-            //Ngày không được bé hơn ngày hiện tại
-            if (element.validateControl == '1')
-              validate = this.customeValidatorDateValiControl(element);
-            if (element.dependences)
-              validate = this.customeValidatorDate(element);
-          }
+        if (element.fieldType == 'Email') validate = Validators.email;
+        else if (element.fieldType == 'Phone')
+          validate = Validators.pattern('[0-9 ]{11}');
+        else if (element.fieldType == 'DateTime') 
+        {
+          if (element.defaultValue == 'Now')
+            element.defaultValue = new Date();
+          //Ngày không được bé hơn ngày hiện tại
+          if (element.validateControl == '1')
+            validate = this.customeValidatorDateValiControl(element);
+          if (element.dependences)
+            validate = this.customeValidatorDate(element);
+        }
 
+        if (this.type == 'add' && !this.taskID) {
+        
           this.dynamicFormsForm.addControl(
             field,
             new FormControl(element.defaultValue, validate)
@@ -193,7 +198,7 @@ export class AddProcessDefaultComponent implements OnInit {
             field,
             new FormControl(
               dataEdit[field],
-              element.isRequired ? Validators.required : null
+              validate
             )
           );
         }
@@ -239,7 +244,7 @@ export class AddProcessDefaultComponent implements OnInit {
         // }
       }
       if (element.fieldType == 'UserInfo') {
-        if (this.type == 'add') {
+        if (this.type == 'add' || this.taskID) {
           this.dataUserInfo[field] = {
             idCardType: '1',
           };
@@ -547,7 +552,7 @@ export class AddProcessDefaultComponent implements OnInit {
       } 
       else if (this.type == 'edit') 
       {
-        this.dataIns.title = valueForm[this.subTitle];
+        if(!this.taskID) this.dataIns.title = valueForm[this.subTitle];
         (this.dataIns.modifiedOn = new Date()),
           (this.dataIns.modifiedBy = this.user?.userID);
         if (this.dataIns.datas) {
@@ -569,7 +574,9 @@ export class AddProcessDefaultComponent implements OnInit {
         {
           this.addFileAttach(type);
         }
-        else this.updateIns();
+        else {
+          this.updateIns();
+        }
       }
     }
   }
@@ -693,6 +700,10 @@ export class AddProcessDefaultComponent implements OnInit {
       .subscribe((item) => {
         this.dialog.close(this.dataIns);
         this.dataChange.emit(this.dataIns);
+        if(this.taskID)
+        {
+          this.updateTaskStatus('5');
+        }
       });
   }
 
@@ -948,4 +959,24 @@ export class AddProcessDefaultComponent implements OnInit {
       /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
   };
+
+  updateTaskStatus(status){
+    //Update Task Status test
+    this.api
+      .execSv(
+        'BP',
+        'ERM.Business.BP',
+        'ProcessesBusiness',
+        'UpdateStatusTaskAsync',
+        [this.taskID, status] //Hoàn tất
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dataTaskChange.emit([res,this.dataIns]);
+          // if (this.data.activityType != 'Sign')
+          //   this.notifySvr.notifyCode('SYS034');
+          // this.dialog && this.dialog.close(res);
+        }
+      });
+  }
 }

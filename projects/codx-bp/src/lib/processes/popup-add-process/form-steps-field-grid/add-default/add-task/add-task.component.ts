@@ -1,3 +1,4 @@
+
 import {
   Component,
   EventEmitter,
@@ -10,13 +11,12 @@ import {
 } from '@angular/core';
 import { BaseFieldComponent } from '../../base.component';
 import { BP_Processes_Steps } from 'projects/codx-bp/src/lib/models/BP_Processes.model';
-import { AlertConfirmInputConfig, DialogModel, Util } from 'codx-core';
+import { AlertConfirmInputConfig, CacheService, DialogModel, Util } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { AddSettingConditionsComponent } from './add-setting-conditions/add-setting-conditions.component';
 import { ModeviewComponent } from 'projects/codx-bp/src/lib/modeview/modeview.component';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { AddFileFromProcessComponent } from './add-file-from-process/add-file-from-process.component';
-import { Approver } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
 import { BpSignPDFComponent } from 'projects/codx-bp/src/lib/sign-pdf/bp-sign-pdf.component';
 
 @Component({
@@ -111,6 +111,8 @@ export class AddTaskComponent
     },
   ];
   isAllowEdit = "0"; 
+  vllBP017: any;
+  
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes?.activityType &&
@@ -121,7 +123,8 @@ export class AddTaskComponent
       if (this.data) this.changeActivity();
     }
   }
-  ngOnInit(): void {
+  ngOnInit(): void {    
+    
     if (this.process.settings && this.process.settings.length > 0) 
     {
       this.isAllowEdit = this.process.settings.filter(
@@ -366,8 +369,8 @@ export class AddTaskComponent
     if (e) {
       e.forEach((element) => {
         this.listUses.push({
-          objectID: element.id,
-          objectName: element.text,
+          objectID: element?.objectType =="SYS061" ? null:element?.id ?? element?.objectType,
+          objectName: element?.text ?? element?.objectName,
           objectType: element?.objectType =="SYS061" ? element?.id : element?.objectType,
           roleType: 'O',
         });
@@ -375,33 +378,35 @@ export class AddTaskComponent
     }
 
     this.data.permissions = this.listUses;
-    let approvers = [];
-    if (this.listUses?.length > 0) {
-      this.listUses?.forEach((per) => {
-        approvers.push({
-          approver: per?.objectID,
-          roleType: per?.objectType,
-          refID: this.data?.recID,
-        });
-      });
-      if (approvers?.length > 0) {
-        this.shareService
-          .getApproverByRole(approvers, false, this.data?.createdBy)
-          .subscribe((res) => {
-            if (res) {
-              this.data.pers = res?.map((x) => x.userID)?.join(';') ?? null;
-              if (this.data.pers == null || this.data.pers?.length == 0) {
-                this.data.pers = res?.map((x) => x.approver)?.join(';');
-              }
-            }
-            this.dataChange.emit(this.data);
-          });
-      } else {
-        this.dataChange.emit(this.data);
-      }
-    } else {
-      this.dataChange.emit(this.data);
-    }
+    //let approvers = [];
+    // if (this.listUses?.length > 0) {
+    //   this.listUses?.forEach((per) => {
+    //     approvers.push({
+    //       approver: per?.objectID,
+    //       roleType: per?.objectType,
+    //       refID: this.data?.recID,
+    //     });
+    //   });
+    //   if (approvers?.length > 0) {
+    //     this.shareService
+    //       .getApproverByRole(approvers, false, this.data?.createdBy)
+    //       .subscribe((res) => {
+    //         if (res) {
+    //           this.data.pers = res?.map((x) => x.userID)?.join(';') ?? null;
+    //           if (this.data.pers == null || this.data.pers?.length == 0) {
+    //             this.data.pers = res?.map((x) => x.approver)?.join(';');
+    //           }
+    //         }
+    //         this.dataChange.emit(this.data);
+    //       });
+    //   } else {
+    //     this.dataChange.emit(this.data);
+    //   }
+    // } else {
+    //   this.dataChange.emit(this.data);
+    // }
+    
+    this.dataChange.emit(this.data);
   }
 
   valueChangeUserEvent(e: any) {
@@ -543,7 +548,7 @@ export class AddTaskComponent
     listForm.forEach(elm=>{
       let data = JSON.parse(JSON.stringify(this.listRequester));
       data.forEach(elm2=>{
-        elm2.fieldName = "form" + elm.stepNo + "_" + elm2.fieldName;
+        elm2.fieldName = "f" + elm.stepNo + "_owner." + elm2.fieldName;
       })
       elm.extendInfo = elm.extendInfo.concat(data)
     });

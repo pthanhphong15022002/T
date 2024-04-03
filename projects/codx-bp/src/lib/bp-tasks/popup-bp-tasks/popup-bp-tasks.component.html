@@ -88,7 +88,7 @@
           <span>
             {{
               data?.startDate
-                ? (data?.startDate | date : "dd/MM/yyyy HH:mm")
+                ? (data?.startDate | fmDT: "dmy":true)
                 : "dd/MM/yyyy HH:mm"
             }}</span
           >
@@ -96,7 +96,7 @@
           <span>
             {{
               data?.endDate
-                ? (data?.endDate | date : "dd/MM/yyyy HH:mm")
+                ? (data?.endDate | fmDT: "dmy":true)
                 : "dd/MM/yyyy HH:mm"
             }}</span
           >
@@ -188,14 +188,14 @@
                   class="form-check-input"
                   type="checkbox"
                   [value]="cl?.status == '1' ? true : false"
-                  [disabled]="!privileged"
+                  [disabled]="!privileged || data?.status == '5'"
                   (change)="valueChangeCb($event, indexC)"
                 />
                 <input
                   class="mx-2 form-control"
                   [value]="cl?.taskName"
                   placeholder="Thêm mục"
-                  [disabled]="!privileged"
+                  [disabled]="!privileged || data?.status == '5'"
                   (change)="valueChangeCheckList($event, indexC)"
                   style="border: none"
                 />
@@ -229,7 +229,7 @@
           </codx-label>
           <div
             class="d-flex align-items-center justify-content-center position-relative border rounded w-30px p-2 cursor-pointer"
-            (click)="privileged ? addFile($event) : null"
+            (click)="privileged && data?.status != '5' ? addFile($event) : null"
           >
             <i class="icon-attach_file"></i>
           </div>
@@ -630,7 +630,9 @@
     [process]="process"
     [dataIns]="dataIns"
     [stepID]="data?.stepID"
-    (dataChange)="dataChange($event)"
+    [taskID]="data?.recID"
+    [privileged]="privileged"
+    (dataTaskChange)="dataChange($event)"
   ></lib-add-process-default>
 </ng-container>
 
