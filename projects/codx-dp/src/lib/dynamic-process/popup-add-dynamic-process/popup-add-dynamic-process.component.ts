@@ -1898,6 +1898,12 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       } else if ($event.field === 'no' && $event.component.checked === true) {
         this.process.closeInstanceOverdue = false;
       }
+    }else if (view == 'allowEditTaskControl') {
+      if ($event.field === 'yes' && $event.component.checked === true) {
+        this.process.allowEditTaskControl = true;
+      } else if ($event.field === 'no' && $event.component.checked === true) {
+        this.process.allowEditTaskControl = false;
+      }
     }
 
     this.changeDetectorRef.detectChanges();

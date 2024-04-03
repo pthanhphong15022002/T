@@ -135,7 +135,8 @@ export class ContractsViewDetailComponent
   };
 
   lstContacts: any;
-
+  allowTask = false;
+  isViewStep = false;
   constructor(
     private inject: Injector,
     private location: Location,
@@ -159,7 +160,7 @@ export class ContractsViewDetailComponent
     this.isView = dt?.data?.isView;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
     this.loadTabs();
     if (changes?.contract && this.contract) {
       this.listInsStep = null;
@@ -169,6 +170,7 @@ export class ContractsViewDetailComponent
       this.getDeal();
       this.getListCOntractByParentID();
       this.getUserContract();
+      await this.getConfigurationProcess();
     }
     if (changes?.contractAppendix && changes?.contractAppendix?.currentValue) {
       this.listContractInParentID = this.listContractInParentID ? this.listContractInParentID : [];
@@ -606,4 +608,16 @@ export class ContractsViewDetailComponent
       opt
     );
   }
+
+  async getConfigurationProcess(){
+    if(this.contract?.processID){
+      const res = await firstValueFrom(this.codxCmService.getConfigurationProcess(this.contract?.processID));
+      if(res && res[0] && res[0]?.allowTask){
+        this.isViewStep = !(res[0]?.allowTask && this.contract?.approveStatus != '3' && !this.contract?.closed) ;
+      }else{
+        this.isViewStep = !['1', '2', '15',].includes(this.contract?.status) || this.contract?.closed || this.contract?.approveStatus == '3';
+      }
+    }
+  }
+
 }

@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, Injector, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
-import { AuthStore, UIComponent, UserModel, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, SidebarModel, UIComponent, UserModel, ViewModel, ViewType } from 'codx-core';
 import { Subscription } from 'rxjs';
+import { PopupAddRequestComponent } from './popup/popup-add-request/popup-add-request.component';
 
 @Component({
   selector: 'ep-requests',
@@ -52,9 +53,65 @@ export class RequestsComponent extends UIComponent implements AfterViewInit,OnDe
   selectedChange(event:any){
     if(event)
     {
-      this.dataSelected = event;
+      this.dataSelected = event.data;
       this.detectorRef.detectChanges();
     }
   }
 
+
+  changeDataMF(event:any){
+    if(event)
+    {
+      event.map(x => {
+        if(x.functionID == "SYS01")
+        { 
+          x.disabled = false;
+          x.isbookmark = true;
+        }
+        else
+          x.disabled = true;
+      });
+    }
+  }
+
+  clickMF(event:any){
+    if(event)
+    {
+      switch(event.functionID)
+      {
+        case"SYS01":
+          this.openPopupAdd();
+          break;
+      }
+    }
+  }
+
+  openPopupAdd(){
+    if(this.view)
+    {
+      let subscribe = this.view.dataService
+      .addNew()
+      .subscribe((model:any) => {
+        if(model)
+        {
+          let dialog = new SidebarModel();
+          dialog.Width = '800px';
+          dialog.FormModel = this.view.formModel;
+          dialog.DataService = this.view.dataService;
+          let obj = {
+            data : model,
+            actionType: "add"
+          }
+          let popup = this.callfc.openSide(PopupAddRequestComponent,obj,dialog,this.view.funcID);
+          this.subcriptions.add(popup.closed.subscribe((res:any) => {
+            if(res && res.event)
+            {
+              this.subcriptions.add(this.view.dataService.add(res.event).subscribe());
+            }
+          }));
+        }
+      });
+      this.subcriptions.add(subscribe);
+    }
+  }
 }
