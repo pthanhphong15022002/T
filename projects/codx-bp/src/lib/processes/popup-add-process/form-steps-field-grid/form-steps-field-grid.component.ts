@@ -74,14 +74,16 @@ export class FormStepsFieldGridComponent
 
   ngOnInit(): void {
     this.listIds = [];
-    if (
-      this.tempPermission?.length == null ||
-      this.tempPermission?.length == 0
-    ) {
-      this.getPermission();
-    } else {
-      this.formatData();
-    }
+    // if (
+    //   this.tempPermission?.length == null ||
+    //   this.tempPermission?.length == 0
+    // ) {
+    //   this.getPermission();
+    // } else {
+    //   this.formatData();
+    // }
+    
+    this.formatData();
   }
   getPermission() {
     let approvers = [];
