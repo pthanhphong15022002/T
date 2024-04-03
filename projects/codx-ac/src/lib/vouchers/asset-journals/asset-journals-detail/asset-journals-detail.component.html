@@ -44,7 +44,11 @@
     </div>
   </div>
   <div class="container_detail d-flex flex-column">
-    <div class="fw-bold fs-5 mb-2">Mua mưới tài sản cố định</div>
+    <div class="fw-bold fs-5 mb-2"><span #objectID [innerHTML]="
+      data?.objectID
+        | formatvalue : formModel : 'ObjectID' : objectID
+        | async
+    "></span></div>
     <div class="d-flex mb-2">
       <div class="d-flex me-5">
         <codx-label
