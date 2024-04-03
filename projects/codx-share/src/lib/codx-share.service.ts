@@ -170,7 +170,7 @@ export class CodxShareService {
     this.cachedObservables.set(key, observable);
     return observable;
   }
-  
+
   loadCombobox(cbb: any): Observable<any> {
     let paras = ['Cbb', cbb];
     let keyRoot = 'Cbb' + cbb;
@@ -1013,6 +1013,16 @@ export class CodxShareService {
     );
   }
 
+  getRequestDataCO_Meetings(request) {
+    return this.api.execSv(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'GetListMeetingsCalendarAsync',
+      request
+    );
+  }
+
   getDataEP_Bookings(requestData) {
     return this.api.execSv(
       'EP',
@@ -1059,7 +1069,7 @@ export class CodxShareService {
       var widthThumb = 1.2;
       var arr = url.split('/');
       var uploadID = arr[arr.length - 2];
-      var tenant =  arr[arr.length - 4]; 
+      var tenant =  arr[arr.length - 4];
       if (width <= 30 * widthThumb) wt = 30;
       else if (width <= 60 * widthThumb) wt = 60;
       else if (width <= 120 * widthThumb) wt = 120;

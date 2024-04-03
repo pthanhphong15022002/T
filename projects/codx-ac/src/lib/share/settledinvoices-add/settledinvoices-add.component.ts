@@ -60,7 +60,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   typePay:any;
   baseCurr:any;
   isPreventLoad:any = false;
-  selectionOptions:SelectionSettingsModel = {checkboxOnly:true, type: 'Single' };
+  selectionOptions:SelectionSettingsModel = {checkboxOnly:true, type: 'Multiple' };
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,

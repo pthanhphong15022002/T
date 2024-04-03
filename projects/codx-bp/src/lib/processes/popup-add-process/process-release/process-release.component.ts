@@ -315,7 +315,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         'BP',
         'ERM.Business.BP',
         'ProcessesBusiness',
-        'StartProcessAsync',
+        'StartInstanceAsync',
         [this.view?.dataService?.dataSelected?.recID]
       )
       .subscribe((res:any) => {

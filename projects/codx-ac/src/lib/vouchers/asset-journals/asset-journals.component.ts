@@ -1,7 +1,11 @@
 import {
   fmAssetAcquisitionsJournal,
   fmAssetRevaluationsJournal,
+  fmAssetLiquidationsJournal,
   fmCountingMembers,
+  fmAssetTransfersJournal,
+  fmAssetDepreciationsJournal,
+  fmAssetCountingsJournal,
 } from './../../codx-ac.service';
 import {
   ChangeDetectionStrategy,
@@ -38,8 +42,8 @@ import { AssetJournalsAddComponent } from './asset-journals-add/asset-journals-a
 export class AssetJournalsComponent extends UIComponent {
   //#region Constructor
   views: Array<ViewModel> = []; // model view
-  @ViewChild('templateDetailLeft') templateDetailLeft?: TemplateRef<any>;
-  @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('templateDetail') templateDetail: TemplateRef<any>;
   @ViewChild('listTemplate') listTemplate?: TemplateRef<any>;
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
   headerText: any;
@@ -96,10 +100,26 @@ export class AssetJournalsComponent extends UIComponent {
   onInit(): void {
     if (!this.funcID) {
       this.funcID = this.router.snapshot.params['funcID'];
-      this.fmAssetJournal =
-        this.funcID == 'ACT811'
-          ? fmAssetAcquisitionsJournal
-          : fmAssetRevaluationsJournal;
+      switch (this.funcID) {
+        case 'ACT811':
+          this.fmAssetJournal = fmAssetAcquisitionsJournal;
+          break;
+        case 'ACT821':
+          this.fmAssetJournal = fmAssetRevaluationsJournal;
+          break;
+        case 'ACT871':
+          this.fmAssetJournal = fmAssetLiquidationsJournal;
+          break;
+        case 'ACT831':
+          this.fmAssetJournal = fmAssetTransfersJournal;
+          break;
+        case 'ACT841':
+          this.fmAssetJournal = fmAssetDepreciationsJournal;
+          break;
+        case 'ACT881':
+          this.fmAssetJournal = fmAssetCountingsJournal;
+          break;
+      }
     }
     this.cache
       .functionList(this.funcID)
@@ -119,57 +139,24 @@ export class AssetJournalsComponent extends UIComponent {
 
   ngAfterViewInit() {
     this.views = [
-      // {
-      //   type: ViewType.listdetail,
-      //   active: true,
-      //   sameData: true,
-      //   model: {
-      //     template: this.templateDetailLeft,
-      //     panelRightRef: this.templateDetailRight,
-      //     collapsed: true,
-      //     widthLeft: '23%',
-      //     //separatorSize:3
-      //   },
-      // },
-      // {
-      //   type: ViewType.list,
-      //   active: false,
-      //   sameData: true,
-      //   model: {
-      //     template: this.listTemplate,
-      //   },
-      // },
       {
         type: ViewType.grid,
-        active: false,
+        active: true,
         sameData: true,
         model: {
           template2: this.templateGrid,
         },
       },
-      // {
-      //   type: ViewType.grid_detail,
-      //   active: false,
-      //   sameData: true,
-      //   model: {
-      //     template2: this.templateGrid,
-
-      //   },
-
-      //   request:{service:'AC'},
-      //   subModel:{
-      //     entityName:'AC_CashPaymentsLines',
-      //     formName:'CashPaymentsLines',
-      //     gridviewName:'grvCashPaymentsLines',
-      //     parentField:'TransID',
-      //     parentNameField:'VoucherNo',
-      //     hideMoreFunc:true,
-      //     request:{
-      //       service: 'AC',
-      //     },
-      //     idField:'recID'
-      //   }
-      // },
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        active: false,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+          widthLeft: '23%',
+        },
+      },
     ];
     this.acService.setChildLinks();
   }
@@ -222,14 +209,39 @@ export class AssetJournalsComponent extends UIComponent {
       case 'SYS05':
         this.viewData(data);
         break;
-      case 'SYS003': //Kiểm tra hợp lệ - thay morore sau
+      case 'ACT81101': //Kiểm tra hợp lệ - thay morore sau
+      case 'ACT82101':
+      case 'ACT87101':
+      case 'ACT83101':
+      case 'ACT84101':
         this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
         break;
-      case 'SYS004':
+      case 'ACT81106':
+      case 'ACT82106':
+      case 'ACT87106':
+      case 'ACT83106':
+      case 'ACT84106':
         this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
-      case 'SYS001':
+      case 'ACT81107':
+      case 'ACT82107':
+      case 'ACT87107':
+      case 'ACT83107':
+      case 'ACT84107':
         this.unPostVoucher(e.text, data); //? khôi phục chứng từ
+        break;
+      case 'ACT81108': //Hủy phiếu
+      case 'ACT82108':
+      case 'ACT87108':
+      case 'ACT83108':
+      case 'ACT84108':
+        break;
+      case 'ACT81102': //In phiếu
+      case 'ACT82102':
+      case 'ACT87102':
+      case 'ACT83102':
+      case 'ACT84102':
+        this.printVoucher(data, e.functionID);
         break;
     }
   }
@@ -239,32 +251,166 @@ export class AssetJournalsComponent extends UIComponent {
    * @param data
    * @returns
    */
-  changeMFDetail(e: any,dataSelectd ,type = '') {
-    // let data = dataSelectd ?? this.view?.dataService?.dataSelected;
-    // if (e != null) {
-    //   e.forEach((res) => {
-    //     if (type === 'grid') res.isbookmark = false;
-    //     if (
-    //       ['SYS03', 'SYS02'].includes(res.functionID) &&
-    //       data?.status != '0' &&
-    //       data?.status != '1' &&
-    //       data?.status != '2'
-    //     )
-    //       res.disabled = true;
-    //     if (
-    //       (data.status == '0' || data.status == '2') &&
-    //       !['SYS003'].includes(res.functionID)
-    //     )
-    //       res.disabled = true; //Ẩn tất cả more trừ kiểm tra hợp lệ.
-    //     if (
-    //       (data.status == '1' || data.status == '5' || data.status == '9') &&
-    //       !['SYS004'].includes(res.functionID)
-    //     )
-    //       res.disabled = true; //Ẩn tất cả more trừ khôi phục.
-    //     if (data.status == '6' && !['SYS001'].includes(res.functionID))
-    //       res.disabled = true;
-    //   });
-    // }
+  changeMFDetail(e: any, dataSelectd, type = '') {
+    let data = dataSelectd ?? this.view?.dataService?.dataSelected;
+    if (e != null) {
+      e.forEach((res) => {
+        if (type === 'grid') res.isbookmark = false;
+        if (
+          ['SYS03', 'SYS02'].includes(res.functionID) &&
+          data?.status != '0' &&
+          data?.status != '1' &&
+          data?.status != '2'
+        )
+          res.disabled = true;
+
+        if (
+          ![
+            'SYS03',
+            'SYS02',
+            'SYS05',
+            'SYS04',
+            'SYS001',
+            'SYS002',
+            'SYS003',
+            'SYS004',
+          ].includes(res.functionID)
+        ) {
+          switch (data?.status) {
+            case '0':
+              if (
+                ![
+                  'ACT81101', //Kiểm tra hợp lệ
+                  'ACT82101',
+                  'ACT87101',
+                  'ACT83101',
+                  'ACT84101',
+                  'ACT82102',
+                  'ACT87102',
+                  'ACT83102',
+                  'ACT84102',
+                  'ACT81102', // In phiếu
+                ].includes(res.functionID)
+              )
+                res.disabled = true;
+              break;
+            case '1':
+              if (
+                ![
+                  'ACT81106', //Ghi sổ
+                  'ACT82106',
+                  'ACT83106',
+                  'ACT84106',
+                  'ACT87106',
+                  'ACT87102',
+                  'ACT82102',
+                  'ACT83102',
+                  'ACT84102',
+                  'ACT81102', // In phiếu
+                ].includes(res.functionID)
+              )
+                res.disabled = true;
+
+              break;
+
+            case '2':
+              if (
+                ![
+                  'ACT81101', // Kiểm tra hợp lệ
+                  'ACT82101',
+                  'ACT83101',
+                  'ACT87101',
+                  'ACT84101',
+                  'ACT82102',
+                  'ACT83102',
+                  'ACT84102',
+                  'ACT87102',
+                  'ACT81102', // In phiếu
+                ].includes(res.functionID)
+              )
+                res.disabled = true;
+              break;
+
+            case '3':
+              if (
+                ![
+                  'ACT81102',
+                  'ACT82102',
+                  'ACT87102',
+                  'ACT83102',
+                  'ACT84102',
+                ].includes(res.functionID)
+              )
+                res.disabled = true;
+              break;
+
+            case '5':
+            case '9':
+              if (
+                ![
+                  'ACT81106',
+                  'ACT82106',
+                  'ACT87106',
+                  'ACT83106',
+                  'ACT84106',
+                  'ACT81102',
+                  'ACT87102',
+                  'ACT82102',
+                  'ACT83102',
+                  'ACT84102',
+                ].includes(res.functionID)
+              )
+                res.disabled = true;
+              break;
+
+            case '6':
+              if (
+                ![
+                  'ACT81107',
+                  'ACT82107',
+                  'ACT83107',
+                  'ACT87107',
+                  'ACT84107',
+                  'ACT81102',
+                  'ACT82102',
+                  'ACT83102',
+                  'ACT84102',
+                  'ACT87102',
+                ].includes(res.functionID)
+              )
+                res.disabled = true;
+              break;
+
+            case '10':
+              if (
+                ![
+                  'ACT81106',
+                  'ACT82106',
+                  'ACT87106',
+                  'ACT83106',
+                  'ACT84106',
+                ].includes(res.functionID)
+              )
+                res.disabled = true;
+              break;
+
+            // case '8':
+            // case '11':
+            //   if (
+            //     ![MorfuncCash.InUNC, MorfuncCash.KiemTraTrangThai].includes(
+            //       element.functionID
+            //     )
+            //   )
+            //     element.disabled = true;
+            //   break;
+
+            default:
+              res.disabled = true;
+              break;
+          }
+        }
+      });
+    }
   }
   /**
    * * Hàm get data và get dữ liệu chi tiết của chứng từ khi được chọn
@@ -426,18 +572,14 @@ export class AssetJournalsComponent extends UIComponent {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService
-      .delete([data], true, (option: RequestOption) =>
-        this.beforeDelete(option, data)
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          this.view.dataService.onAction.next({
-            type: 'delete',
-            data: data,
-          });
-        }
-      });
+    this.view.dataService.delete([data], true).subscribe((res: any) => {
+      if (res) {
+        this.view.dataService.onAction.next({
+          type: 'delete',
+          data: data,
+        });
+      }
+    });
   }
 
   beforeDelete(opt: RequestOption, data) {
@@ -534,7 +676,7 @@ export class AssetJournalsComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
-          this.view.dataService.update(this.itemSelected).subscribe();
+          this.view.dataService.update(this.itemSelected, true).subscribe();
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
@@ -552,7 +694,7 @@ export class AssetJournalsComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
-          this.view.dataService.update(this.itemSelected).subscribe();
+          this.view.dataService.update(this.itemSelected, true).subscribe();
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
@@ -571,12 +713,30 @@ export class AssetJournalsComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
-          this.view.dataService.update(this.itemSelected).subscribe();
+          this.view.dataService.update(this.itemSelected, true).subscribe();
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
         this.onDestroy();
       });
+  }
+
+  /**
+   * *Hàm in chứng từ (xử lí cho MF In)
+   * @param data
+   * @param reportID
+   * @param reportType
+   */
+  printVoucher(data: any, reportID: any, reportType: string = 'V') {
+    let params = {
+      Recs: data?.recID,
+    };
+    this.shareService.printReport(
+      reportID,
+      reportType,
+      params,
+      this.view?.formModel
+    );
   }
   //#endregion
 }

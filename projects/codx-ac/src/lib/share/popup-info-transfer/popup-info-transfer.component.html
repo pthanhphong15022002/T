@@ -1,49 +1,90 @@
-<codx-form #form [body]="body" [formModel]="dialog.formModel" [dialog]="dialog" [data]="data" [openMore]="false"
-    class="ac-dialog">
+<codx-form #form [body]="body" headerText="Thông tin chi tiết lệnh chuyển tiền" [formModel]="dialog.formModel"
+    [dialog]="dialog" [data]="data" [openMore]="false" class="ac-dialog">
 </codx-form>
 
 
-<ng-template #body let-data>
-    <div class="form-group">
-        <codx-label fiedName="sourceAccount" [formModel]="form.formModel" default="Tài khoản nguồn">
-        </codx-label>
-        <span>{{data?.sourceAccount}}</span>
+<ng-template #body>
+    <div class="row">
+        <div class="col-6">
+            <div class="form-group row">
+                <div class="col-4">
+                    <codx-label fiedName="sourceAccount" [formModel]="form.formModel" default="Tài khoản nguồn">
+                    </codx-label>
+                </div>
+                <div class="col-8">
+                    <span>{{data?.sourceAccount}}</span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <codx-label fiedName="benName" [formModel]="form.formModel" default="Tài khoản nhận">
+                    </codx-label>
+                </div>
+                <div class="col-8">
+                    <span>{{data?.benName}}</span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <codx-label fiedName="benAccount" [formModel]="form.formModel" default="Số tài khoản">
+                    </codx-label>
+                </div>
+                <div class="col-8">
+                    <span>{{data?.benAccount}}</span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <codx-label fiedName="benBankCode" [formModel]="form.formModel" default="Mã ngân hàng">
+                    </codx-label>
+                </div>
+                <div class="col-8">
+                    <span>{{data?.benBankCode}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="form-group row">
+                <div class="col-4">
+                    <codx-label fiedName="description" [formModel]="form.formModel" default="Nội dung chuyển khoản">
+                    </codx-label>
+                </div>
+                <div class="col-8">
+                    <span>{{data?.description}}</span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <codx-label fiedName="amount" [formModel]="form.formModel" default="Số tiền">
+                    </codx-label>
+                </div>
+                <div class="col-8">
+                    <span>{{data?.amount}}</span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <codx-label fiedName="totalFee" [formModel]="form.formModel" default="Phí giao dịch">
+                    </codx-label>
+                </div>
+                <div class="col-8">
+                    <span>{{data?.totalFee}}</span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <codx-label fiedName="refNo" [formModel]="form.formModel" default="Mã giao dịch">
+                    </codx-label>
+                </div>
+                <div class="col-8">
+                    <span>{{data?.refNo}}</span>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <codx-label fiedName="benName" [formModel]="form.formModel" default="Tài khoản nhận">
-        </codx-label>
-        <span>{{data?.benName}}</span>
-    </div>
-    <div class="form-group">
-        <codx-label fiedName="benAccount" [formModel]="form?.formModel" default="Số tài khoản">
-        </codx-label>
-        <span>{{data?.benAccount}}</span>
-    </div>
-    <div class="form-group">
-        <codx-label fiedName="benBankCode" [formModel]="form?.formModel" default="Mã ngân hàng">
-        </codx-label>
-        <span>{{data?.benBankCode}}</span>
-    </div>
-    <div class="form-group">
-        <codx-label fiedName="description" [formModel]="form?.formModel" default="Nội dung chuyển khoản">
-        </codx-label>
-        <span>{{data?.description}}</span>
-    </div>
-    <div class="form-group">
-        <codx-label fiedName="amount" [formModel]="form?.formModel" default="Số tiền">
-        </codx-label>
-        <span>{{data?.amount}}</span>
-    </div>
-    <div class="form-group">
-        <codx-label fiedName="totalFee" [formModel]="form?.formModel" default="Phí giao dịch">
-        </codx-label>
-        <span>{{data?.totalFee}}</span>
-    </div>
-    <div class="form-group">
-        <codx-label fiedName="refNo" [formModel]="form?.formModel" default="Mã giao dịch">
-        </codx-label>
-        <span>{{data?.refNo}}</span>
-    </div>
+
+
 </ng-template>
 
 <ng-template #body>

@@ -22,8 +22,8 @@ import { firstValueFrom } from 'rxjs';
 import { Location } from '@angular/common';
 import { CodxCmService } from '../../codx-cm.service';
 import { ContractsService } from '../service-contracts.service';
-import { CallFuncService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, TenantStore, UIComponent } from 'codx-core';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { CallFuncService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, TenantStore, UIComponent } from 'codx-core';
 @Component({
   selector: 'contracts-view-detail',
   templateUrl: './contracts-view-right.component.html',
@@ -135,16 +135,17 @@ export class ContractsViewDetailComponent
   };
 
   lstContacts: any;
-
+  allowTask = false;
+  isViewStep = false;
   constructor(
     private inject: Injector,
     private location: Location,
     private tenantStore: TenantStore,
+    private callFunc: CallFuncService,
     private codxCmService: CodxCmService,
     private contractService: ContractsService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
-    private callFunc: CallFuncService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData,
   ) {
@@ -159,7 +160,7 @@ export class ContractsViewDetailComponent
     this.isView = dt?.data?.isView;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
     this.loadTabs();
     if (changes?.contract && this.contract) {
       this.listInsStep = null;
@@ -169,6 +170,7 @@ export class ContractsViewDetailComponent
       this.getDeal();
       this.getListCOntractByParentID();
       this.getUserContract();
+      await this.getConfigurationProcess();
     }
     if (changes?.contractAppendix && changes?.contractAppendix?.currentValue) {
       this.listContractInParentID = this.listContractInParentID ? this.listContractInParentID : [];
@@ -206,7 +208,7 @@ export class ContractsViewDetailComponent
     if (this.contract?.isAdminAll || this.contract?.owner == this.user?.userID) {
       this.idTabShow = this.tabDefaut;
     } else {
-      this.idTabShow = this.contract?.config;
+      this.idTabShow = this.contract?.config == "full" ? this.tabDefaut: this.contract?.config;
     }
   }
 
@@ -457,13 +459,6 @@ export class ContractsViewDetailComponent
       icon: 'icon-monetization_on',
       template: this.quotationsTab,
     };
-    // let quotations = {
-    //   name: 'References',
-    //   textDefault: 'Liên kết',
-    //   isActive: false,
-    //   icon: 'icon-i-link',
-    //   template: this.quotationsTab,
-    // };
     let idx = this.tabControl.findIndex((x) => x.name == 'Quotations');
     if (idx != -1) this.tabControl.splice(idx, 1);
     this.tabControl.push(quotations);
@@ -606,4 +601,16 @@ export class ContractsViewDetailComponent
       opt
     );
   }
+
+  async getConfigurationProcess(){
+    if(this.contract?.processID){
+      const res = await firstValueFrom(this.codxCmService.getConfigurationProcess(this.contract?.processID));
+      if(res && res[0] && res[0]?.allowTask){
+        this.isViewStep = !(res[0]?.allowTask && this.contract?.approveStatus != '3' && !this.contract?.closed) ;
+      }else{
+        this.isViewStep = !['1', '2', '15',].includes(this.contract?.status) || this.contract?.closed || this.contract?.approveStatus == '3';
+      }
+    }
+  }
+
 }

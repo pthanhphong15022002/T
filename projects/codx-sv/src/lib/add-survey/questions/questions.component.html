@@ -5,7 +5,7 @@
         <div class="KHCwJ dYYAhb w-100 cursor-pointer" [ngStyle]="{'background-image': 'url(' + avatar + ')'}" (click)="updateAvatar()">
         </div>
         <codx-attachment #attachment hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1" isSaveSelected="1"  hideImageThumb="1"
-          hideDes="1"  isDeleteTemp="1" [allowMultiFile]="0" [idBrowse]="'add'" 
+          hideDes="1"  isDeleteTemp="1" [allowMultiFile]="0" [idBrowse]="'add'"
           [idField]="'RecID'" [referType]="'avt'" [isReWrite]="true" [objectType]="formModel?.entityName" [objectId]="recID" [heightScroll]="30" ngClass="'pt-5'" hideImageUpload="1"
           (fileSave)="fileAdded($event)" [allowExtensions]="'.jpg,.png'"
         >
@@ -209,10 +209,11 @@
                               class="me-2"
                             ></codx-label>
                             <codx-input
+                              field="mandatory"
                               type="switch"
                               class="mt-1 mx-2"
                               (valueChange)="
-                                valueChangeMandatory($event, itemQuestion)
+                                valueChangeMandatory($event, itemSession,itemQuestion)
                               "
                               [crrValue]="itemQuestion.mandatory"
                             ></codx-input>
@@ -556,7 +557,7 @@
       </div>
       <div class="d-flex align-items-center  e-input-group-full me-2 ps-6 py-2">
         <span>{{ convertAnswer(itemQuestion.answers[0].answer,"f") }}</span>
-        <codx-input 
+        <codx-input
           type="text"
           placeholder="Nhãn (không bắt buộc)"
           [field]="'RForm'"
@@ -577,7 +578,7 @@
       </div>
       <div class="d-flex  align-items-center e-input-group-full me-2 ps-6 py-2">
         <span>{{ convertAnswer(itemQuestion.answers[0].answer,"t") }}</span>
-        <codx-input 
+        <codx-input
           type="text"
           placeholder="Nhãn (không bắt buộc)"
           [field]="'RTo'"
@@ -616,7 +617,7 @@
         class="cur-point pt-1"
         (click)="deleteAnswer(seqNoSession, itemQuestion.seqNo, itemAnswer)"
         [ngClass]="itemAnswer.other ? 'm-l-6' : ''"
-       
+
       >
         <span class="icon-close icon-22 pd-s-e-10"></span>
       </div>
@@ -803,7 +804,7 @@
   >
     <app-view-file [dataFile]="lstEditIV" [questionID]="itemQuestion.recID">
     </app-view-file>
-   
+
   </div>
   <div
     *ngIf="
@@ -839,7 +840,7 @@
                 <span class="icon-reorder"></span>
               </div>
               <span>{{ itemAnswerR.seqNo + 1 }}.</span>
-              
+
               <input
                 class="e-input me-2 ip-matrix"
                 type="text"
@@ -1098,7 +1099,7 @@
           ></codx-label>
         </div>
       </ng-container>
-      
+
     </div>
   </div>
 </ng-template>
@@ -1491,7 +1492,7 @@
             class="icon-more_vert icon-22 me-2 btn btn-icon btn-active-light-primary"
           ></span> -->
           <div
-          
+
             class="d-flex align-items-center me-2 left-100"
           >
             <div ngbDropdown container="body">

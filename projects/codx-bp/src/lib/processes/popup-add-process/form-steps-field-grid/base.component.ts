@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { ApiHttpService, AuthStore, CallFuncService, NotificationsService } from "codx-core";
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, NotificationsService } from "codx-core";
 import { CodxShareService } from "projects/codx-share/src/public-api";
 
 @Component({ template: '' })
@@ -20,7 +20,8 @@ export abstract class BaseFieldComponent
     @Output() back = new EventEmitter<any>();
 
     protected authstore!: AuthStore;
-    protected api: ApiHttpService;
+    protected api: ApiHttpService;    
+    protected cache: CacheService;
     protected shareService: CodxShareService;
     protected ref: ChangeDetectorRef;
     protected callFuc: CallFuncService;
@@ -36,7 +37,8 @@ export abstract class BaseFieldComponent
       this.callFuc = inject.get(CallFuncService);
       this.user = this.authstore.get();
       this.sanitizer = inject.get(DomSanitizer);
-      this.notifySvr = inject.get(NotificationsService);
+      this.notifySvr = inject.get(NotificationsService);      
+      this.cache = inject.get(CacheService);
     }
 
 }

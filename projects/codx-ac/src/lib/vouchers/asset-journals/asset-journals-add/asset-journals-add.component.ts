@@ -24,9 +24,12 @@ import {
   CodxAcService,
   fmAssetAcquisitionsLines,
   fmAssetRevaluationsLines,
+  fmAssetLiquidationsLines,
   fmCountingMembers,
   fmAsset,
   fmVATInvoices,
+  fmAssetTransfersLines,
+  fmAssetDepreciationsLines,
 } from '../../../codx-ac.service';
 import { RoundService } from '../../../round.service';
 import {
@@ -114,10 +117,26 @@ export class AssetJournalsAddComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    this.fmAssetJournalsLines =
-      this.dialog.formModel.funcID == 'ACT811'
-        ? fmAssetAcquisitionsLines
-        : fmAssetRevaluationsLines;
+    switch (this.dialog?.formModel?.funcID) {
+      case 'ACT811':
+        this.fmAssetJournalsLines = fmAssetAcquisitionsLines;
+        break;
+      case 'ACT821':
+        this.fmAssetJournalsLines = fmAssetRevaluationsLines;
+        break;
+      case 'ACT871':
+        this.fmAssetJournalsLines = fmAssetLiquidationsLines;
+        break;
+      case 'ACT831':
+        this.fmAssetJournalsLines = fmAssetTransfersLines;
+        break;
+      case 'ACT841':
+        this.fmAssetJournalsLines = fmAssetDepreciationsLines;
+        break;
+      case 'ACT881':
+        this.fmAssetJournalsLines = fmAssetLiquidationsLines; // Chưa có
+        break;
+    }
   }
 
   /**
@@ -212,16 +231,25 @@ export class AssetJournalsAddComponent extends UIComponent {
   }
   showHideTabDetail(type, eleTab) {
     if (eleTab) {
-      switch (type) {
-        case `${this.journal.journalType + '1'}`:
-          eleTab.hideTab(0, false);
-          eleTab.hideTab(1, false);
-          eleTab.select(0);
-          break;
-        default:
-          eleTab.hideTab(1, true);
-          eleTab.select(0);
-          break;
+      if (
+        this.dialog.formModel.funcID === 'ACT811' ||
+        this.dialog.formModel.funcID == 'ACT871'
+      ) {
+        switch (type) {
+          case `${this.journal.journalType + '1'}`:
+            eleTab.hideTab(0, false);
+            eleTab.hideTab(1, false);
+            eleTab.select(0);
+
+            break;
+          default:
+            eleTab.hideTab(1, true);
+            eleTab.select(0);
+            break;
+        }
+      } else {
+        eleTab.hideTab(1, true);
+        eleTab.select(0);
       }
     }
   }
@@ -317,6 +345,11 @@ export class AssetJournalsAddComponent extends UIComponent {
    */
   async valueChangeLine(event: any) {
     if (event?.value && event?.field) {
+      let idx =
+        event?.idx ??
+        this.eleGridAcquisitions.dataSource?.findIndex(
+          (x) => x.recID == event.data.recID
+        );
       switch (event.field) {
         case 'assetID':
           {
@@ -328,9 +361,6 @@ export class AssetJournalsAddComponent extends UIComponent {
             if (asset) {
               event.data = this.acService.replaceData(asset, event.data);
             }
-            let idx = this.eleGridAcquisitions.dataSource?.findIndex(
-              (x) => x.recID == event.data.recID
-            );
             if (idx != -1) this.eleGridAcquisitions.updateRow(idx, event.data);
           }
           break;
@@ -341,9 +371,6 @@ export class AssetJournalsAddComponent extends UIComponent {
               event.data?.deprPeriods > 0
                 ? event.data.costAmt / event.data?.deprPeriods
                 : 0;
-            let idx = this.eleGridAcquisitions.dataSource?.findIndex(
-              (x) => x.recID == event.data.recID
-            );
             if (idx != -1) this.eleGridAcquisitions.updateRow(idx, event.data);
           }
           break;
@@ -358,7 +385,7 @@ export class AssetJournalsAddComponent extends UIComponent {
    */
   onAddLine(type = '') {
     this.formAsset
-      .save(null, 0, '', '', false, { allowCompare: false })
+      .save(null, 0, '', '', false, { allowCompare: false, skipHasChange: true })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
@@ -525,9 +552,11 @@ export class AssetJournalsAddComponent extends UIComponent {
     this.eleGridAcquisitions.saveRow(async (res: any) => {
       if (res && res.type != 'error') {
         let asset = await firstValueFrom(
-          this.api.execSv<any>('AM', 'AM', 'AssetsBusiness', 'GetAsync', [
-            ele.assetID,
-          ])
+          this.api
+            .execSv<any>('AM', 'AM', 'AssetsBusiness', 'GetAsync', [
+              ele.assetID,
+            ])
+            .pipe(takeUntil(this.destroy$))
         );
         if (asset) {
           ele = this.acService.replaceData(asset, ele);
@@ -551,21 +580,16 @@ export class AssetJournalsAddComponent extends UIComponent {
   //#region tab account member
   valueChangeAccount(event) {
     if (event?.field == 'memberID') {
-      event.data.memberName = event?.itemData?.UserName;
+      event.data.memberName =
+        event?.itemData?.UserName ?? event?.itemData?.EmployeeName;
       event.data.position =
-        event?.itemData?.PositionName ?? event.data.position;
-      let index = this.eleGridAccountMember.dataSource.findIndex(
-        (x) => x.recID == event.data.recID
-      );
+        event?.itemData?.PositionName ?? event?.itemData?.PositionID;
+      let index =
+        event?.idx ??
+        this.eleGridAccountMember.dataSource.findIndex(
+          (x) => x.recID == event.data.recID
+        );
       this.eleGridAccountMember.updateRow(index, event.data, false);
-    }
-    let index = this.lstAccountMembers.findIndex(
-      (x) => x.recID == event?.data?.recID
-    );
-    if (index != -1) {
-      this.lstAccountMembers[index] = event?.data;
-    } else {
-      this.lstAccountMembers.push(event?.data);
     }
     this.detectorRef.detectChanges();
   }
@@ -618,7 +642,7 @@ export class AssetJournalsAddComponent extends UIComponent {
 
   addAccountMember() {
     this.formAsset
-      .save(null, 0, '', '', false, { allowCompare: false })
+      .save(null, 0, '', '', false, { allowCompare: false, skipHasChange: true })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
@@ -703,7 +727,7 @@ export class AssetJournalsAddComponent extends UIComponent {
    */
   addLineVatInvoices() {
     this.formAsset
-      .save(null, 0, '', '', false, { allowCompare: false })
+      .save(null, 0, '', '', false, { allowCompare: false, skipHasChange: true })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
@@ -722,6 +746,23 @@ export class AssetJournalsAddComponent extends UIComponent {
               obj['objectID'] = this.formAsset.data.objectID;
               obj['objectType'] = this.formAsset.data.objectType;
               obj['lineID'] = this.formAsset.data.recID;
+              obj['exchangeRate2'] = 0;
+              obj['quantity'] = 0;
+              obj['unitPrice'] = 0;
+              obj['vatPct'] = 0;
+              obj['vatBase'] = 0;
+              obj['vatAmt'] = 0;
+              obj['vatBase2'] = 0;
+              obj['vatAmt2'] = 0;
+              obj['vatBase3'] = 0;
+              obj['vatAmt3'] = 0;
+              obj['multi'] = false;
+              obj['selected'] = false;
+              obj['cancelled'] = false;
+              obj['assign'] = true;
+              obj['delete'] = true;
+              obj['write'] = true;
+              obj['share'] = true;
 
               if (obj['objectID'] && obj['objectType']) {
                 let sub = await firstValueFrom(
@@ -746,6 +787,59 @@ export class AssetJournalsAddComponent extends UIComponent {
         }
       });
   }
+
+  async valueChangeVAT(event) {
+    if (event?.value && event?.field) {
+      let unitPrice = event.data.unitPrice ?? 0;
+      let quantity = event.data.quantity ?? 0;
+      let vatBase = event.data.vatBase ?? 0;
+      let idx = event.idx ?? -1;
+
+      switch (event.field) {
+        case 'unitPrice':
+        case 'quantity': {
+          let vatID = event?.data?.vatid;
+          event.data.vatBase = unitPrice * quantity;
+          if (vatID != null && vatID?.trim() != '' && event.data.vatBase > 0) {
+            let vatPct = await firstValueFrom(
+              this.api
+                .execSv<any>('AC', 'AC', 'VATCodesBusiness', 'GetVATPctAsync', [
+                  vatID,
+                ])
+                .pipe(takeUntil(this.destroy$))
+            );
+            let vat = vatPct?.vatPct ?? 0;
+            event.data.vatAmt = event.data.vatBase * vat ?? 0;
+          }
+
+          if (idx != -1) this.eleGridVatInvoices.updateRow(idx, event.data);
+          break;
+        }
+        case 'vatBase':
+          let vatID = event?.data?.vatid;
+          if (vatID != null && vatID?.trim() != '' && vatBase > 0) {
+            let vatPct = await firstValueFrom(
+              this.api
+                .execSv<any>('AC', 'AC', 'VATCodesBusiness', 'GetVATPctAsync', [
+                  vatID,
+                ])
+                .pipe(takeUntil(this.destroy$))
+            );
+            let vat = vatPct?.vatPct ?? 0;
+            event.data.vatAmt = vatBase * vat ?? 0;
+            if (idx != -1) this.eleGridVatInvoices.updateRow(idx, event.data);
+          }
+          break;
+        case 'vatid':
+          let vat = event.itemData.VATPct ?? 0;
+          event.data.vatAmt = vatBase * vat ?? 0;
+          if (idx != -1) this.eleGridVatInvoices.updateRow(idx, event.data);
+          break;
+      }
+      this.detectorRef.detectChanges();
+    }
+  }
+
   //#region footer
   onDiscard() {
     if (this.formAsset && this.formAsset.data._isEdit) {
@@ -795,7 +889,7 @@ export class AssetJournalsAddComponent extends UIComponent {
   }
   onSave(type) {
     this.formAsset
-      .save(null, 0, '', '', false, { allowCompare: false })
+      .save(null, 0, '', '', false, { allowCompare: false, skipHasChange: true })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         let isError = false;
