@@ -69,6 +69,7 @@ export class DP_Processes {
   allowEstimatedEnd: boolean;
   allowEditInstanceControl: boolean;
   allowReturnInstanceControl: boolean;
+  allowEditTaskControl: boolean;
   createTask: boolean;
   dependRule: string;
   isMail: boolean;

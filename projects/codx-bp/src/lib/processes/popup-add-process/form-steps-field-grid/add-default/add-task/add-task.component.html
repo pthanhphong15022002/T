@@ -77,10 +77,18 @@
             <div class="d-flex flex-column">
                 <div class="d-flex align-items-center justify-content-between mt-2" *ngFor="let item of listUses , let i = index">
                     <div class="d-flex align-items-center">
-                        <codx-img [objectId]="item?.objectID" [objectType]="'AD_Users'" [referType]="'avt'" [width]="30"></codx-img>
+                        <!-- <codx-img [objectId]="item?.objectID" [objectType]="'AD_Users'" [referType]="'avt'" [width]="30"></codx-img>
                         <div class="d-flex flex-column ms-2">
                             <span>{{item.objectName}}</span>
-                        </div>
+                        </div> -->
+                        <codx-temp-full
+                        [imageId]="item?.objectType =='U' ? item?.objectID : null" 
+                        [desc]="item?.objectName" 
+                        [imageObjType]="'AD_Users'" [imageWidth]="30" [titleLine]="2"
+                        [imageSrc]="item?.objectType =='U' ? null : item?.objectID?.length>0 ? './assets/themes/sys/default/img/' + (item?.objectType | vll : 'BP017' : 'icon' | async ) :
+                        './assets/themes/sys/default/img/' + ('SYS061' | vll : 'BP017' : 'icon' | async )"
+                        [imgCss]="item?.objectType !='U'? 'w-30px p-1 me-3 bg-light-secondary rounded-circle' :'w-30px me-3'"
+                        [hideMF]="true"></codx-temp-full>
                     </div>
                     <div class="cursor-pointer" (click)="deleteUser(i)">
                         <i class="icon-close"></i>
@@ -121,7 +129,8 @@
                     <codx-img [objectId]="item?.objectID" [objectType]="'AD_Users'" [referType]="'avt'" [width]="30"></codx-img>
                     <div class="d-flex flex-column ms-2">
                         <span>{{item.objectName}}</span>
-                    </div>
+                    </div> 
+                    
                 </div>
                 <div class="cursor-pointer" (click)="deleteUser2(i)">
                     <i class="icon-close"></i>

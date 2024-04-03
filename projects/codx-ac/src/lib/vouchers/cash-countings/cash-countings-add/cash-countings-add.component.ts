@@ -146,11 +146,27 @@ export class CashCountingsAddComponent extends UIComponent {
   }
 
   /**
+   * *Hàm xử lí change value trên detail
+   * @param event
+   */
+  valueChangeLineItems(event: any) {
+    let oLine = event.data;
+    let field = event.field;
+    this.eleGridItems.startProcess();
+    this.api.exec('AC','CountingItemsBusiness','ValueChangedAsync',[oLine,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      Object.assign(oLine, res);
+      oLine.updateColumns = '';
+      this.detectorRef.detectChanges();
+      this.eleGridItems.endProcess();
+    })
+  }
+
+  /**
    * *Hàm thêm dòng cho các lưới
    * @returns
    */
   onAddLine(type) {
-    this.master.save(null, 0, '', '', false, { allowCompare: false })
+    this.master.save(null, 0, '', '', false, { allowCompare: false ,skipHasChange:true})
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
@@ -188,7 +204,7 @@ export class CashCountingsAddComponent extends UIComponent {
   }
 
   onAddLineMember() {
-    this.master.save(null, 0, '', '', false, { allowCompare: false })
+    this.master.save(null, 0, '', '', false, { allowCompare: false ,skipHasChange:true})
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (!res) return;

@@ -145,6 +145,24 @@ export class PopupAddEmployeesComponent implements OnInit {
       if (this.isAdd) {
         this.addEmployeeAsync(this.employee, this.funcID);
       } else {
+        if (
+          !this.employee["updateColumn"].includes('DepartmentID')
+        ) {
+          this.employee["updateColumn"] += 'DepartmentID;';
+          this.employee["updateColumns"] += 'DepartmentID;';
+        }
+        if (
+          !this.employee["updateColumn"].includes('DivisionID')
+        ) {
+          this.employee["updateColumn"] += 'DivisionID;';
+          this.employee["updateColumns"] += 'DivisionID;';
+        }
+        if (
+          !this.employee["updateColumn"].includes('CompanyID')
+        ) {
+          this.employee["updateColumn"] += 'CompanyID;';
+          this.employee["updateColumns"] += 'CompanyID;';
+        }
         this.updateEmployeeAsync(this.employee);
       }
     }
