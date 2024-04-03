@@ -260,25 +260,12 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
   }
 
   onSave(){
-    if(this.actionType == "add")
-    {
-      this.form.form.save(null, 0, '', '', false,{allowCompare:false})
-      .subscribe((res:any) => {
-        if(res.save && res.save.data)
-        {
-          this.dialog.close(this.data);
-        }
-      });
-    }
-    else if(this.actionType == "edit")
-    {
-      this.form.form.save(null, 0, '', '', false,{allowCompare:false})
-      .subscribe((res:any) => {
-        if(res.save && res.save.data)
-        {
-          this.dialog.close(this.data);
-        }
-      });
-    }
+    this.form.form.save(null, 0, '', '', false,{allowCompare:false})
+    .subscribe((res:any) => {
+      if(res.save && res.save.data)
+      {
+        this.dialog.close(this.data);
+      }
+    });
   }
 }

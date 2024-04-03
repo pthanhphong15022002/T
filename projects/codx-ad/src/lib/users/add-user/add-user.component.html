@@ -13,12 +13,11 @@
 <ng-template #tabDescription1>
   <ng-container>
     <codx-input
-      type="valuelist"
-      [crrValue]="'2'"
-      refValue="AC083"
-      refType="2C"
+      type="combobox"
+      [crrValue]="''"
+      refValue="BPQuang"
       field="payType"
-      [multiple]="true"
+      [multiple]="false"
       (valueChange)="valueChangeTest($event)"
     ></codx-input>
   </ng-container>
