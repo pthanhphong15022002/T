@@ -51,7 +51,7 @@ export class SuggestionAdd  extends UIComponent implements OnInit {
   isClick:any = false;
   headerText:any;
   type:any="0";
-  selectionOptions:SelectionSettingsModel = { type: 'Single', checkboxMode: 'ResetOnRowClick'};;
+  selectionOptions:SelectionSettingsModel = { type: 'Multiple', checkboxMode: 'ResetOnRowClick'};;
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
@@ -120,9 +120,10 @@ export class SuggestionAdd  extends UIComponent implements OnInit {
   }
 
   onDeselected(event:any){
-    if(!event.target) return;
-    this.grid.arrSelectedRows = [];
-    this.detectorRef.detectChanges();
+    if(event.isHeaderCheckboxClicked){
+      this.grid.arrSelectedRows = [];
+      this.detectorRef.detectChanges();
+    }
   }
 
   loadData(showArlert:any=true) {
@@ -147,7 +148,18 @@ export class SuggestionAdd  extends UIComponent implements OnInit {
 
   //#region Method
   onApply() {
-    console.log(this.grid.arrSelectedRows);
+    let classname = (this.master.journalType.toLowerCase() === 'cp' || this.master.journalType.toLowerCase() === 'bp') ? 'CashPaymentsLinesBusiness' : 'CashReceiptsLinesBusiness'
+    this.api
+      .exec('AC', classname, 'SaveRequestAsync', [
+        this.master,
+        this.grid.arrSelectedRows
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {
+          this.dialog.close(res);
+        }
+      });
   }
   //#endregion Method
 }

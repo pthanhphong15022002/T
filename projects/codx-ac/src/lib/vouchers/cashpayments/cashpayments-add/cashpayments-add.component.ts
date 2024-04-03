@@ -1140,9 +1140,7 @@ export class CashPaymentAddComponent extends UIComponent {
     );
     dialog.closed.subscribe((res) => {
       if (res && res.event) {
-        this.master.data.refNo = res.event.refNo;
-        this.master.data.refTotalAmt = res.event.requestNo;
-        this.master.data.refID = res.event.recID;
+        this.eleGridCashPayment.refresh();
       }
     });
   }
