@@ -279,7 +279,7 @@
               </div>
             </div>
             <div
-              [ngClass]="dialog?.formModel?.funcID == 'ACT213' && (master?.data?.subType != (journal.journalType+'3') && master?.data?.subType != (journal.journalType+'4')) ? '' : 'd-none'"
+              [ngClass]="dialog?.formModel?.funcID == 'ACT213' && master?.data?.subType != (journal.journalType+'5') ? '' : 'd-none'"
               class="col-4">
               <div class="form-group">
                 <codx-label style="white-space: nowrap !important" fiedName="Payee" [formModel]="dialog.formModel">
@@ -289,32 +289,23 @@
               </div>
             </div>
             <div
-              [ngClass]="dialog?.formModel?.funcID == 'ACT213' && (master?.data?.subType == (journal.journalType+'3') || master?.data?.subType == (journal.journalType+'4')) ? '' : 'd-none'"
+              [ngClass]="dialog?.formModel?.funcID == 'ACT213' && (master?.data?.subType == (journal.journalType+'5')) ? '' : 'd-none'"
               class="col-2">
               <div class="form-group">
-                <codx-label *ngIf="master?.data?.subType == (journal.journalType+'3')" default="Đề nghị tạm ứng"
+                <codx-label default="Đề nghị"
                   [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-label *ngIf="master?.data?.subType == (journal.journalType+'4')" default="Đề nghị thanh toán"
-                  [formModel]="dialog.formModel">
-                </codx-label>
-                <codx-input type="text" [disabled]="true" [crrValue]="refNo">
+                <codx-input type="text" [disabled]="true" [crrValue]="master.data.refNo">
                 </codx-input>
               </div>
             </div>
             <div
-              [ngClass]="dialog?.formModel?.funcID == 'ACT213' && (master?.data?.subType == (journal.journalType+'3') || master?.data?.subType == (journal.journalType+'4')) ? '' : 'd-none'"
+              [ngClass]="dialog?.formModel?.funcID == 'ACT213' && (master?.data?.subType == (journal.journalType+'5')) ? '' : 'd-none'"
               class="col-2">
               <div class="form-group">
-                <codx-label style="white-space: nowrap !important"
-                  *ngIf="master?.data?.subType == (journal.journalType+'3')" fiedName="lblCashAdvance"
-                  default="Số tiền tạm ứng">
+                <codx-label style="white-space: nowrap !important" fiedName="lblCashAdvance" default="Số tiền">
                 </codx-label>
-                <codx-label style="white-space: nowrap !important"
-                  *ngIf="master?.data?.subType == (journal.journalType+'4')" fiedName="lblCashAdvance"
-                  default="Số tiền thanh toán">
-                </codx-label>
-                <codx-input disabled="true" type="number" [crrValue]="0" [crrValue]="refTotalAmt">
+                <codx-input disabled="true" type="number" [crrValue]="0" [crrValue]="master.data.refTotalAmt">
                 </codx-input>
               </div>
             </div>

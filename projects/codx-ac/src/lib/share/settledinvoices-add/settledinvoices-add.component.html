@@ -180,7 +180,7 @@
 <!-- End: Tab basic -->
 <!-- Start: Grid voucher -->
 <ng-template #tabVoucher>
-  <div class="tabset-content position-relative">
+  <div [ngClass]="subInvoices.length == 0 ? 'hidden-checkbox-mutilple' : ''" class="tabset-content position-relative">
     <codx-gridview-v2 #grid [checkboxSelect]="true" idField="recID" [showEmptyRecord]="false" [editOnClick]="true"
       [selectionOptions]="selectionOptions" [formName]="fmSettledInvoices.formName" (onEdit)="onEdit($event)"
       [gridViewName]="fmSettledInvoices.gridViewName" (onCheckBoxChange)="onCheckAll($event)" (gridInit)="beforeInitGrid($event)"
