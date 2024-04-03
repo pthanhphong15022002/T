@@ -1,13 +1,12 @@
 import { AfterViewInit, Component, Injector, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { change } from '@syncfusion/ej2-angular-grids';
-import { FormModel, UIDetailComponent } from 'codx-core';
+import { UIDetailComponent, FormModel } from 'codx-core';
 
 @Component({
-  selector: 'ep-requests-view-detai',
-  templateUrl: './requests-view-detai.component.html',
-  styleUrls: ['./requests-view-detai.component.css']
+  selector: 'ep-advance-requests-view-detai',
+  templateUrl: './advance-requests-view-detai.component.html',
+  styleUrls: ['./advance-requests-view-detai.component.css']
 })
-export class RequestsViewDetaiComponent extends UIDetailComponent implements OnChanges, AfterViewInit {
+export class AdvanceRequestsViewDetaiComponent extends UIDetailComponent implements OnChanges, AfterViewInit {
 
   @Input() formModel:FormModel;
   @Input() data:any;
@@ -47,5 +46,4 @@ export class RequestsViewDetaiComponent extends UIDetailComponent implements OnC
   changeDataMF(event:any){
 
   }
-
 }

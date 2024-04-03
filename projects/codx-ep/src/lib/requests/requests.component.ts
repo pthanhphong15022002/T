@@ -1,7 +1,9 @@
 import { AfterViewInit, Component, Injector, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
-import { AuthStore, SidebarModel, UIComponent, UserModel, ViewModel, ViewType } from 'codx-core';
-import { Subscription } from 'rxjs';
+import { AuthStore, CRUDService, SidebarModel, UIComponent, UserModel, ViewModel, ViewType } from 'codx-core';
+import { Subscription, map } from 'rxjs';
 import { PopupAddRequestComponent } from './popup/popup-add-request/popup-add-request.component';
+import { PopupAddEpAdvanceRequestComponent } from '../advance-requests/popup/popup-add-ep-advance-request/popup-add-ep-advance-request.component';
+import { PopupAddEpPaymentRequestComponent } from '../payment-requests/popup/popup-add-ep-payment-request/popup-add-ep-payment-request.component';
 
 @Component({
   selector: 'ep-requests',
@@ -20,8 +22,8 @@ export class RequestsComponent extends UIComponent implements AfterViewInit,OnDe
   dataSelected:any;
   constructor
   (
-    injector:Injector,
-    auth:AuthStore
+    private injector:Injector,
+    private auth:AuthStore
   ) 
   {
     super(injector);
@@ -63,7 +65,7 @@ export class RequestsComponent extends UIComponent implements AfterViewInit,OnDe
     if(event)
     {
       event.map(x => {
-        if(x.functionID == "SYS01")
+        if(x.functionID == "SYS01" || x.functionID == "SYS02" || x.functionID == "SYS03" || x.functionID == "WSCO0411" || x.functionID == "WSCO0412")
         { 
           x.disabled = false;
           x.isbookmark = true;
@@ -74,19 +76,35 @@ export class RequestsComponent extends UIComponent implements AfterViewInit,OnDe
     }
   }
 
-  clickMF(event:any){
+  clickMF(event:any, data = null){
     if(event)
     {
       switch(event.functionID)
       {
         case"SYS01":
-          this.openPopupAdd();
+          this.add();
+          break;
+        case"SYS02":
+          if(!data) data = this.view.dataService.dataSelected;
+          this.delete(data);
+          break;
+        case"SYS03":
+          if(!data) data = this.view.dataService.dataSelected;
+          this.update(data);
+          break;
+        case"WSCO0411":
+          if(!data) data = this.view.dataService.dataSelected;
+          this.openPopupAdvance(data);
+          break;
+        case"WSCO0412":
+          if(!data) data = this.view.dataService.dataSelected;
+          this.openPopupPayment(data);
           break;
       }
     }
   }
 
-  openPopupAdd(){
+  add(){
     if(this.view)
     {
       let subscribe = this.view.dataService
@@ -106,7 +124,11 @@ export class RequestsComponent extends UIComponent implements AfterViewInit,OnDe
           this.subcriptions.add(popup.closed.subscribe((res:any) => {
             if(res && res.event)
             {
-              this.subcriptions.add(this.view.dataService.add(res.event).subscribe());
+              let dataItem = res.event;
+              if(dataItem.resources?.length > 0)
+                dataItem.resourceIDs = dataItem.resources.map(x => x.userID).join(";");
+              let subscribeUpdate = this.view.dataService.update(dataItem).subscribe();
+              this.subcriptions.add(subscribeUpdate);
             }
           }));
         }
@@ -114,4 +136,102 @@ export class RequestsComponent extends UIComponent implements AfterViewInit,OnDe
       this.subcriptions.add(subscribe);
     }
   }
+
+  delete(data:any){
+    if(data)
+    {
+      let subscribeDelete = this.view.dataService.delete([data],true).subscribe();
+      this.subcriptions.add(subscribeDelete);
+      this.detectorRef.detectChanges();
+    }
+  }
+
+  update(data:any){
+    if(data)
+    {
+      let dialog = new SidebarModel();
+      dialog.Width = '800px';
+      dialog.FormModel = this.view.formModel;
+      dialog.DataService = this.view.dataService;
+      let obj = {
+        data : data,
+        actionType: "edit"
+      }
+      let popup = this.callfc.openSide(PopupAddRequestComponent,obj,dialog,this.view.funcID);
+      this.subcriptions.add(popup.closed.subscribe((res:any) => {
+        if(res && res.event)
+        {
+          let dataItem = res.event;
+          if(dataItem.resources?.length > 0)
+            dataItem.resourceIDs = dataItem.resources.map(x => x.userID).join(";");
+          this.subcriptions.add(this.view.dataService.update(data).subscribe());
+          this.detectorRef.detectChanges();
+        }
+      }));
+    }
+  }
+
+
+  openPopupAdvance(data:any){
+    if(data)
+    {
+      let subscribe = this.api.execSv("EP","Core","DataBusiness","GetDefaultAsync",["WSCO042","EP_Requests"])
+      .subscribe((model:any) => {
+        if(model && model?.data)
+        {
+          model.data.refID = data.recID;
+          model.data.requestType = "AD";
+          let obj = {
+            data : model.data,
+            actionType: "add"
+          }
+          let dataService = new CRUDService(this.injector);
+          dataService.request.entityName = "EP_Requests";
+          dataService.request.funcID = "WSCO042";
+          dataService.service = "EP";
+          dataService.request.formName = "AdvanceRequests";
+          dataService.request.gridViewName = "grvAdvanceRequests";
+          dataService.dataSelected = model.data;
+          let dialog = new SidebarModel();
+          dialog.Width = '550px';
+          dialog.FormModel = this.view.formModel;
+          dialog.DataService = dataService;
+          this.callfc.openSide(PopupAddEpAdvanceRequestComponent,obj,dialog,this.view.funcID);
+        }
+      });
+      this.subcriptions.add(subscribe);
+    }
+  }
+
+  openPopupPayment(data:any){
+    if(data)
+    {
+      let subscribe = this.api.execSv("EP","Core","DataBusiness","GetDefaultAsync",["WSCO043","EP_Requests"])
+      .subscribe((model:any) => {
+        if(model && model?.data)
+        {
+          model.data.refID = data.recID;
+          model.data.requestType = "PA";
+          let obj = {
+            data : model.data,
+            actionType: "add"
+          }
+          let dataService = new CRUDService(this.injector);
+          dataService.request.entityName = "EP_Requests";
+          dataService.request.funcID = "WSCO042";
+          dataService.service = "EP";
+          dataService.request.formName = "AdvanceRequests";
+          dataService.request.gridViewName = "grvAdvanceRequests";
+          dataService.dataSelected = model.data;
+          let dialog = new SidebarModel();
+          dialog.Width = '550px';
+          dialog.FormModel = this.view.formModel;
+          dialog.DataService = dataService;
+          this.callfc.openSide(PopupAddEpAdvanceRequestComponent,obj,dialog,this.view.funcID);
+        }
+      });
+      this.subcriptions.add(subscribe);
+    }
+  }
+
 }

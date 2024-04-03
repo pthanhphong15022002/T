@@ -22,8 +22,8 @@ import { firstValueFrom } from 'rxjs';
 import { Location } from '@angular/common';
 import { CodxCmService } from '../../codx-cm.service';
 import { ContractsService } from '../service-contracts.service';
-import { CallFuncService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, TenantStore, UIComponent } from 'codx-core';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { CallFuncService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, TenantStore, UIComponent } from 'codx-core';
 @Component({
   selector: 'contracts-view-detail',
   templateUrl: './contracts-view-right.component.html',
@@ -141,11 +141,11 @@ export class ContractsViewDetailComponent
     private inject: Injector,
     private location: Location,
     private tenantStore: TenantStore,
+    private callFunc: CallFuncService,
     private codxCmService: CodxCmService,
     private contractService: ContractsService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
-    private callFunc: CallFuncService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData,
   ) {
@@ -208,7 +208,7 @@ export class ContractsViewDetailComponent
     if (this.contract?.isAdminAll || this.contract?.owner == this.user?.userID) {
       this.idTabShow = this.tabDefaut;
     } else {
-      this.idTabShow = this.contract?.config;
+      this.idTabShow = this.contract?.config == "full" ? this.tabDefaut: this.contract?.config;
     }
   }
 
@@ -459,13 +459,6 @@ export class ContractsViewDetailComponent
       icon: 'icon-monetization_on',
       template: this.quotationsTab,
     };
-    // let quotations = {
-    //   name: 'References',
-    //   textDefault: 'Liên kết',
-    //   isActive: false,
-    //   icon: 'icon-i-link',
-    //   template: this.quotationsTab,
-    // };
     let idx = this.tabControl.findIndex((x) => x.name == 'Quotations');
     if (idx != -1) this.tabControl.splice(idx, 1);
     this.tabControl.push(quotations);

@@ -176,21 +176,21 @@ export class WorkspaceComponent extends WSUIComponent{
       text:'Mail',
       iconCss:'icon-email'
     },
-    // {
-    //   id:'2',
-    //   text:'UPload',
-    //   iconCss:'icon-upload'
-    // },
+    {
+      id:'2',
+      text:'UPload',
+      iconCss:'icon-upload'
+    },
     {
       id:'3',
       text:'Key Result',
       iconCss:'icon-lightbulb'
     },
-    // {
-    //   id:'4',
-    //   text:'UPload Files',
-    //   iconCss:'icon-upload'
-    // }
+    {
+      id:'4',
+      text:'UPload Files',
+      iconCss:'icon-upload'
+    }
   ];
 
   // click open popupp
