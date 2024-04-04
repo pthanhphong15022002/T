@@ -67,7 +67,7 @@ export class HomeComponent extends UIComponent implements OnInit {
   tabIndex: any;
   user: any;
   dtService: CRUDService;
-
+  countSys = 0;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
 
   constructor(
@@ -89,6 +89,9 @@ export class HomeComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+    this.api.execSv<any>('SV','SV','SurveysBusiness','CountSurveyAsync').subscribe(res => {
+      this.countSys = res ?? 0;
+    })
     this.router.params.subscribe((params) => {
       if (params) {
         this.funcID = params['funcID'];
