@@ -331,6 +331,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
         {
           element.dataFormat = typeof element.dataFormat == 'string' ? JSON.parse(element.dataFormat) :  element.dataFormat;
           element.tableFormat = typeof element.tableFormat == 'string' ? JSON.parse(element.tableFormat) :  element.tableFormat;
+          
           var objP = {
             text: element?.title,
             key: element?.fieldName,
@@ -339,6 +340,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
             isGroup:true,
             groupChild : []
           };
+
           element.dataFormat.forEach(elm2=>{
             var obj = {
               text: elm2?.title,
@@ -353,8 +355,29 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
               referedType: elm2.refType,
               referedValue: elm2.refValue,
             };
+            
             objP.groupChild.push(obj);
             this.gridViewSettup.push(obj2);
+
+            if(elm2.dataType == 'Decimal')
+            {
+              var objD = {
+                text: 'Tổng cột '+elm2?.title,
+                key: element.fieldName+"_sum_"+elm2?.fieldName,
+                category: 'Drag or click the field to insert.',
+                htmlAttributes: { draggable: true },
+              };
+        
+              var obj2D = {
+                key: element.fieldName+"_sum_"+elm2?.fieldName,
+                headerText: 'Tổng cột '+elm2?.title,
+                referedType: elm2.refType,
+                referedValue: elm2.refValue,
+              };
+              objP.groupChild.push(objD);
+              this.gridViewSettup.push(obj2D);
+            }
+            
           })
 
           if(element?.tableFormat?.hasIndexNo) 
@@ -417,6 +440,10 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
   }
 
   onSave() {
+    if(this.type == 'word' && !this.exportAddForm.value.description && this.exportAddForm.value.templateName) 
+    {
+      this.exportAddForm.get('description').patchValue(this.exportAddForm.value.templateName)
+    }
     this.submitted = true;
     if (this.exportAddForm.invalid && !this.dataFile) {
       this.checkIsRequired();
@@ -841,8 +868,11 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
       var name = arr.join(' , ');
       return this.notifySvr.notifyCode('SYS009', 0, name);
     }
-    if (!this.fileCount || this.fileCount == 0)
-      return this.notifySvr.notifyCode('OD022');
+    if(!this.isContentChange)
+    {
+      if (!this.fileCount || this.fileCount == 0)
+        return this.notifySvr.notifyCode('OD022');
+    }
     return true;
   }
 

@@ -240,7 +240,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  promiseAll() {}
+  promiseAll() { }
 
   async getProcessIDBybusinessLineID(businessLineID) {
     let businessLine = await firstValueFrom(
@@ -1391,8 +1391,8 @@ export class PopupConvertLeadComponent implements OnInit {
         if (exchangeRateNew == 0) {
           this.notiService.notify(
             'Tỷ giá tiền tệ "' +
-              this.deal.currencyID +
-              '" chưa thiết lập xin hay chọn lại !',
+            this.deal.currencyID +
+            '" chưa thiết lập xin hay chọn lại !',
             '3'
           );
           return;

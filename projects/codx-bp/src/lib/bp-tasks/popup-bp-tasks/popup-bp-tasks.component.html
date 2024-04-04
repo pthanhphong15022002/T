@@ -187,7 +187,7 @@
                 <input
                   class="form-check-input"
                   type="checkbox"
-                  [value]="cl?.status == '1' ? true : false"
+                  [checked]="cl?.status == '1' ? true : false"
                   [disabled]="!privileged || data?.status == '5'"
                   (change)="valueChangeCb($event, indexC)"
                 />
@@ -347,7 +347,7 @@
       <div *ngIf="privileged">
         <!--Approve-->
         <ng-container
-          *ngIf="data?.activityType == 'Approve' && data?.status != '5'"
+          *ngIf="data?.activityType == 'Approve' && data?.status != '3'"
           [ngTemplateOutlet]="buttonApprove"
         ></ng-container>
         <!--Check-->
@@ -358,7 +358,7 @@
         <!--Task-->
         <ng-container
           *ngIf="
-            (data?.activityType == 'Task' || data?.activityType == 'Form') &&
+            (data?.activityType == 'Task' ) &&
             data?.status != '5'
           "
           [ngTemplateOutlet]="buttonTask"
@@ -492,7 +492,7 @@
             </div>
 
             <div class="d-flex justify-content-end">
-              <button type="button" class="btn btn-outline-primary ms-1">
+              <button type="button" class="btn btn-outline-primary ms-1" (click)="onSaveTask()">
                 <codx-label
                   [name]="'lblbt3' + data?.activityType"
                   [formName]="dialog?.formModel?.formName"

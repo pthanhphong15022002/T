@@ -1701,6 +1701,15 @@ export class CodxEsService {
       [userID]
     );
   }
+  getVNPTCer(userID) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'ApprovalTransBusiness',
+      'GetVNPTSmartCACerAsync',
+      [userID]
+    );
+  }
 }
 export class LayoutModel {
   isChange: boolean = false;
