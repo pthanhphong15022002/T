@@ -347,30 +347,30 @@
       <div *ngIf="privileged">
         <!--Approve-->
         <ng-container
-          *ngIf="data?.activityType == 'Approve' && data?.status != '3'"
+          *ngIf="data?.activityType == 'Approve' && data?.status == '3'"
           [ngTemplateOutlet]="buttonApprove"
         ></ng-container>
         <!--Check-->
         <ng-container
-          *ngIf="data?.activityType == 'Check' && data?.status != '5'"
+          *ngIf="data?.activityType == 'Check' && data?.status == '3'"
           [ngTemplateOutlet]="buttonCheck"
         ></ng-container>
         <!--Task-->
         <ng-container
           *ngIf="
             (data?.activityType == 'Task' ) &&
-            data?.status != '5'
+            data?.status == '3'
           "
           [ngTemplateOutlet]="buttonTask"
         ></ng-container>
         <!--Sign-->
         <ng-container
-          *ngIf="data?.activityType == 'Sign' && data?.status != '5'"
+          *ngIf="data?.activityType == 'Sign' && data?.status == '3'"
           [ngTemplateOutlet]="buttonSign"
         ></ng-container>
         <!--Stamp-->
         <ng-container
-          *ngIf="data?.activityType == 'Stamp' && data?.status != '5'"
+          *ngIf="data?.activityType == 'Stamp' && data?.status == '3'"
           [ngTemplateOutlet]="buttonStamp"
         ></ng-container>
 
