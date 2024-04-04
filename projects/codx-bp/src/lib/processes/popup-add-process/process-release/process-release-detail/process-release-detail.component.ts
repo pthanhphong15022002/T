@@ -26,7 +26,12 @@ import { isObservable } from 'rxjs';
 import { AddDefaultComponent } from '../../form-steps-field-grid/add-default/add-default.component';
 import { BPPopupChangePermissionComponent } from '../../form-steps-field-grid/bp-popup-change-permission/bp-popup-change-permission.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
-import { AnimationModel, ILoadedEventArgs, ProgressBar, ProgressTheme } from '@syncfusion/ej2-angular-progressbar';
+import {
+  AnimationModel,
+  ILoadedEventArgs,
+  ProgressBar,
+  ProgressTheme,
+} from '@syncfusion/ej2-angular-progressbar';
 
 @Component({
   selector: 'lib-process-release-detail',
@@ -48,7 +53,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   info: any;
   tempPermission = [];
   listDocument = [];
-  VllBP014:any;
+  VllBP014: any;
   public type1: string = 'Circular';
   public min1: number = 0;
   public max1: number = 100;
@@ -59,39 +64,103 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   public trackThickness: number = 7;
   public progressThickness: number = 7;
   public animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
-  public annotationColors: string[] = ['#e91e63', '#0078D6', '#317ab9', '#007bff', '#FFD939'];
-  listMF = [
+  public annotationColors: string[] = [
+    '#e91e63',
+    '#0078D6',
+    '#317ab9',
+    '#007bff',
+    '#FFD939',
+  ];
+  listMF = [];
+  listButtonMF = [
+    //Task;Check;Approve;Sign;Release;Stamp;Email;
+    //Task: Thực hiện,Giao việc;
     {
+      id: '1',
+      functionID: 'BP0701',
+      customName: 'Hoàn tất',
+      largeIcon: 'icon-person_add_alt_1',
+      color: '#005DC7',
+    },
+    {
+      id: '2',
       functionID: 'BP0701',
       customName: 'Giao việc',
       largeIcon: 'icon-person_add_alt_1',
-      color: '#005DC7'
+      color: '#005DC7',
     },
+
+    //Check: Kiểm tra
     {
+      id: '3',
+      functionID: 'BP0705',
+      customName: 'Kiểm tra',
+      largeIcon: 'icon-check_circle',
+      color: '#1BC5BD',
+    },
+    //Release: Phát hành
+    {
+      id: '4',
+      functionID: 'BP0701',
+      customName: 'Phát hành',
+      largeIcon: 'icon-person_add_alt_1',
+      color: '#005DC7',
+    },
+    //Email: Soạn thư
+    {
+      id: '5',
+      functionID: 'BP0701',
+      customName: 'Soạn thư',
+      largeIcon: 'icon-email',
+      color: '#005DC7',
+    },
+    //Stamp: Đóng dấu
+    {
+      id: '6',
+      functionID: 'BP0701',
+      customName: 'Đóng dấu',
+      largeIcon: 'icon-person_add_alt_1',
+      color: '#005DC7',
+    },
+    //Approve/Sign: Duyệt/Ký,Từ chối,Trả về,Ủy quyền;
+
+    {
+      id: '7',
       functionID: 'BP0702',
       customName: 'Ủy quyền',
       largeIcon: 'icon-i-people',
-      color: '#0078FF'
+      color: '#0078FF',
     },
     {
+      id: '8',
       functionID: 'BP0703',
       customName: 'Trả về',
       largeIcon: 'icon-i-arrow-90deg-right',
-      color: '#FFA800'
+      color: '#FFA800',
     },
     {
+      id: '9',
       functionID: 'BP0704',
       customName: 'Từ chối',
       largeIcon: 'icon-i-x-circle',
-      color: '#F64E60'
+      color: '#F64E60',
     },
     {
+      id: '10',
       functionID: 'BP0705',
       customName: 'Duyệt',
+      largeIcon: 'icon-i-pencil-square',
+      color: '#1BC5BD',
+    },
+    {
+      id: '11',
+      functionID: 'BP0705',
+      customName: 'Ký',
       largeIcon: 'icon-check_circle',
-      color: '#1BC5BD'
-    }
-  ]
+      color: '#1BC5BD',
+    },
+  ];
+  activeTask: any;
   constructor(
     private shareService: CodxShareService,
     private cache: CacheService,
@@ -130,15 +199,13 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   onNavChange(e: any) {
     this.active = e;
   }
-  getVll()
-  {
-   this.VllBP014 = this.shareService.loadValueList("BP014");
-   if(isObservable(this.VllBP014))
-   {
-      this.VllBP014.subscribe(item=>{
+  getVll() {
+    this.VllBP014 = this.shareService.loadValueList('BP014');
+    if (isObservable(this.VllBP014)) {
+      this.VllBP014.subscribe((item) => {
         this.VllBP014 = item;
-      })
-   }  
+      });
+    }
   }
   getInfo() {
     let paras = [this.data.createdBy];
@@ -169,10 +236,164 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       .subscribe((item) => {
         if (item) {
           this.listTask = item;
+          this.activeTask = this.listTask.find(
+            (x) => x.status == '3' && x.canceled != true && x.activityType != 'Stage'
+          );
+          this.changeMF();
           this.getPermission();
           this.dtc.detectChanges();
         }
       });
+  }
+
+  changeMF() {
+    if (this.activeTask != null) {
+      switch (this.activeTask.activityType) {
+        //Task;Check;Approve;Sign;Release;Stamp;Email;
+        case 'Task': {
+          this.listMF = [
+            {
+              id: '1',
+              functionID: 'BP0701',
+              customName: 'Hoàn tất',
+              largeIcon: 'icon-person_add_alt_1',
+              color: '#005DC7',
+            },
+            {
+              id: '2',
+              functionID: 'BP0701',
+              customName: 'Giao việc',
+              largeIcon: 'icon-person_add_alt_1',
+              color: '#005DC7',
+            },
+          ];
+          break;
+        }
+        case 'Check': {
+          this.listMF = [
+            //Check: Kiểm tra
+            {
+              id: '3',
+              functionID: 'BP0705',
+              customName: 'Kiểm tra',
+              largeIcon: 'icon-check_circle',
+              color: '#1BC5BD',
+            },
+          ];
+          break;
+        }
+        case 'Approve': {
+          this.listMF = [
+            //Approve: Duyệt,Từ chối,Trả về,Ủy quyền;
+            {
+              id: '10',
+              functionID: 'BP0705',
+              customName: 'Duyệt',
+              largeIcon: 'icon-check_circle',
+              color: '#1BC5BD',
+            },
+            {
+              id: '8',
+              functionID: 'BP0703',
+              customName: 'Trả về',
+              largeIcon: 'icon-i-arrow-90deg-right',
+              color: '#FFA800',
+            },
+            {
+              id: '9',
+              functionID: 'BP0704',
+              customName: 'Từ chối',
+              largeIcon: 'icon-i-x-circle',
+              color: '#F64E60',
+            },
+            {
+              id: '7',
+              functionID: 'BP0702',
+              customName: 'Ủy quyền',
+              largeIcon: 'icon-i-people',
+              color: '#0078FF',
+            },
+          ];
+          break;
+        }
+        case 'Sign': {
+          this.listMF = [
+            //Sign:Ký,Từ chối,Trả về,Ủy quyền;
+            {
+              id: '11',
+              functionID: 'BP0705',
+              customName: 'Ký',
+              largeIcon: 'icon-check_circle',
+              color: '#1BC5BD',
+            },
+            {
+              id: '9',
+              functionID: 'BP0704',
+              customName: 'Từ chối',
+              largeIcon: 'icon-i-x-circle',
+              color: '#F64E60',
+            },
+            {
+              id: '8',
+              functionID: 'BP0703',
+              customName: 'Trả về',
+              largeIcon: 'icon-i-arrow-90deg-right',
+              color: '#FFA800',
+            },
+            {
+              id: '7',
+              functionID: 'BP0702',
+              customName: 'Ủy quyền',
+              largeIcon: 'icon-i-people',
+              color: '#0078FF',
+            },
+          ];
+          break;
+        }
+        case 'Release': {
+          this.listMF = [
+            //Release: Phát hành
+            {
+              id: '4',
+              functionID: 'BP0701',
+              customName: 'Phát hành',
+              largeIcon: 'icon-person_add_alt_1',
+              color: '#005DC7',
+            },
+          ];
+          break;
+        }
+        case 'Stamp': {
+          this.listMF = [
+            //Stamp: Đóng dấu
+            {
+              id: '6',
+              functionID: 'BP0701',
+              customName: 'Đóng dấu',
+              largeIcon: 'icon-person_add_alt_1',
+              color: '#005DC7',
+            },
+          ];
+          break;
+        }
+        case 'Email': {
+          this.listMF = [
+            //Email: Soạn thư
+            {
+              id: '5',
+              functionID: 'BP0701',
+              customName: 'Soạn thư',
+              largeIcon: 'icon-person_add_alt_1',
+              color: '#005DC7',
+            },
+          ];
+          break;
+        }
+      }
+    } else {
+      this.listMF = [];
+    }
+    this.dtc.detectChanges();
   }
 
   getInStance() {
@@ -288,21 +509,18 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
           elm.countTask = elm.child.length;
           elm.countCompleted = 0;
           elm.child.forEach((element) => {
-            if (element.activityType != 'Conditions' && element.status == '5')
-            {
+            if (element.activityType != 'Conditions' && element.status == '5') {
               elm.countCompleted++;
-              countTaskCompletedSum ++;
-            }  
-            else if (element.activityType == 'Conditions') {
+              countTaskCompletedSum++;
+            } else if (element.activityType == 'Conditions') {
               if (element.child && element.child.length > 0) {
-                if (element.child.some((x) => x.status == '5'))
-                {
+                if (element.child.some((x) => x.status == '5')) {
                   elm.countCompleted++;
                   countTaskCompletedSum++;
                 }
               }
             }
-            countTaskSum ++;
+            countTaskSum++;
           });
 
           elm.percentCompleted = (elm.countCompleted / elm.countTask) * 100;
@@ -311,15 +529,16 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
           elm.duration = elm.child.reduce((n, { duration }) => n + duration, 0);
         }
         var index = this.listTask.findIndex((x) => x.stepID == elm.recID);
-        if(index >= 0)
-        {
-          elm.colorStatus = this.VllBP014.datas.filter(x=>x.value == this.listTask[index].status)[0].textColor;
+        if (index >= 0) {
+          elm.colorStatus = this.VllBP014.datas.filter(
+            (x) => x.value == this.listTask[index].status
+          )[0].textColor;
           elm.statusStage = this.listTask[index].status;
         }
       });
       this.data.countTask = countTaskSum;
       this.value1 = (countTaskCompletedSum / countTaskSum) * 100;
-      this.circular1.value= this.value1;
+      this.circular1.value = this.value1;
       this.circular1.refresh();
     }
   }
@@ -467,32 +686,32 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       }
     });
   }
-  addNewTask(oldTask){
+  addNewTask(oldTask) {
     let lstParent = JSON.parse(JSON.stringify(this.listStage));
     lstParent.forEach((elm) => {
       delete elm.child;
     });
     var obj = {
-      type: "add",
-      activityType: "Task",
+      type: 'add',
+      activityType: 'Task',
       process: this.process,
       data: null,
       parent: parent,
-      stage: lstParent?.find(x=>x?.recID == oldTask?.stageID),
+      stage: lstParent?.find((x) => x?.recID == oldTask?.stageID),
       listStage: lstParent,
-      hideDelete: true
+      hideDelete: true,
     };
     let option = new SidebarModel();
     option.Width = 'Auto';
     option.FormModel = this.formModel;
-    let popup = this.callFc.openSide(AddDefaultComponent,obj,option);    
+    let popup = this.callFc.openSide(AddDefaultComponent, obj, option);
     popup.closed.subscribe((res) => {
       if (res && res?.event) {
         this.data = res?.event;
       }
     });
   }
-  changePer(data){
+  changePer(data) {
     var option = new SidebarModel();
     let dialogAP = this.callFc.openForm(
       BPPopupChangePermissionComponent,
@@ -500,7 +719,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       500,
       250,
       '',
-      {data:data},
+      { data: data }
     );
     dialogAP.closed.subscribe((res) => {
       if (res && res?.event) {
@@ -508,8 +727,5 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       }
     });
   }
-  public load(args: ILoadedEventArgs): void {
- 
-  
-}
+  public load(args: ILoadedEventArgs): void {}
 }

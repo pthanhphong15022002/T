@@ -198,14 +198,21 @@ export class PopupBpTasksComponent implements OnInit {
     } else this.info = info;
   }
 
+  onSaveTask(){
+    if (this.checkList?.length > 0) {
+      this.checkList=this.checkList.filter(x=>x.taskName?.trim()?.length>0)
+    }
+    this.bpSv.checkListTask(this.data?.recID, this.checkList).subscribe(res=>{
+      if(res){
+        this.dialog && this.dialog.close();
+      }
+    })
+  }
+
   async onSave(status = '5') {
     if (this.checkList?.length > 0) {
-      for (let i = 0; i < this.checkList.length; i++) {
-        const item = this.checkList[i];
-        if (item.taskName == null || item.taskName?.trim() == '') {
-          this.checkList.splice(i, 1);
-          i--;
-        }
+      if (this.checkList?.length > 0) {
+        this.checkList=this.checkList.filter(x=>x.taskName?.trim()?.length>0)
       }
     }
 
@@ -263,15 +270,7 @@ export class PopupBpTasksComponent implements OnInit {
   }
   updateTaskStatus(status){
     //Update Task Status test
-    this.api
-      .execSv(
-        'BP',
-        'ERM.Business.BP',
-        'ProcessesBusiness',
-        'UpdateStatusTaskAsync',
-        [this.data.recID, status] //Hoàn tất
-      )
-      .subscribe((res) => {
+    this.bpSv.updateStatusTask(this.data.recID, status,this.checkList).subscribe((res) => {
         if (res) {
           if (this.data.activityType != 'Sign')
             this.notiService.notifyCode('SYS034');
