@@ -391,6 +391,51 @@ export enum MorfuncCashTranfers {
   KiemTraHopLe = 'ACT042201',
 }
 
+export enum MorfuncAsset {
+  GhiSo811 = 'ACT81106',
+  GuiDuyet811 = '',
+  HuyDuyet811 = 'ACT81108',
+  KhoiPhuc811 = 'ACT81107',
+  In811 = 'ACT81102',
+  KiemTraHopLe811 = 'ACT82101',
+
+  GhiSo821 = 'ACT82106',
+  GuiDuyet821 = '',
+  HuyDuyet821 = 'ACT82108',
+  KhoiPhuc821 = 'ACT82107',
+  In821 = 'ACT82102',
+  KiemTraHopLe821 = 'ACT82101',
+
+  GhiSo823 = 'ACT82306',
+  GuiDuyet823 = '',
+  HuyDuyet823 = 'ACT82308',
+  KhoiPhuc823 = 'ACT82307',
+  In823 = 'ACT82302',
+  KiemTraHopLe823 = 'ACT82301',
+
+  GhiSo831 = 'ACT83106',
+  GuiDuyet831 = '',
+  HuyDuyet831 = 'ACT83108',
+  KhoiPhuc831 = 'ACT83107',
+  In831 = 'ACT83102',
+  KiemTraHopLe831 = 'ACT83101',
+
+  GhiSo841 = 'ACT84106',
+  GuiDuyet841 = '',
+  HuyDuyet841 = 'ACT84108',
+  KhoiPhuc841 = 'ACT84107',
+  In841 = 'ACT84102',
+  KiemTraHopLe841 = 'ACT84101',
+
+  GhiSo871 = 'ACT87106',
+  GuiDuyet871 = '',
+  HuyDuyet871 = 'ACT87108',
+  KhoiPhuc871 = 'ACT87107',
+  In871 = 'ACT87102',
+  KiemTraHopLe871 = 'ACT87101',
+  
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -1407,6 +1452,115 @@ export class CodxAcService {
       }
       //event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
     }, {});
+  }
+
+  changeMFAsset(event, data, type: any = '', journal, formModel) {
+    event.reduce((pre, element) => {
+      if (
+        !Object.values(MorfuncAsset).includes(element.functionID) &&
+        !Object.values(MorfuncDefault).includes(element.functionID)
+      )
+        element.disabled = true;
+      if (type === 'viewgrid') element.isbookmark = false;
+      if (type === 'viewdetail') {
+        if (![MorfuncDefault.XuatDuLieu].includes(element.functionID)) {
+          element.isbookmark = true;
+        }
+      }
+      if (
+        [MorfuncDefault.Sua, MorfuncDefault.Xoa].includes(element.functionID) &&
+        data?.status != '0' &&
+        data?.status != '1' &&
+        data?.status != '2'
+      )
+        element.disabled = true;
+      if (Object.values(MorfuncAsset).includes(element.functionID)) {
+        switch (data?.status) {
+          case '0':
+            if (
+              ![MorfuncAsset.KiemTraHopLe811, MorfuncAsset.In811,MorfuncAsset.KiemTraHopLe821, MorfuncAsset.In821,
+                MorfuncAsset.KiemTraHopLe823, MorfuncAsset.In823,MorfuncAsset.KiemTraHopLe831, MorfuncAsset.In831,
+                MorfuncAsset.KiemTraHopLe841, MorfuncAsset.In841,MorfuncAsset.KiemTraHopLe871, MorfuncAsset.In871].includes(
+                element.functionID
+              )
+            )
+              element.disabled = true;
+            break;
+          case '1':
+            if (journal.approvalControl == '0') {
+              if (
+                ![MorfuncAsset.GhiSo811, MorfuncAsset.In811,MorfuncAsset.GhiSo821, MorfuncAsset.In821,
+                  MorfuncAsset.GhiSo823, MorfuncAsset.In823,MorfuncAsset.GhiSo831, MorfuncAsset.In831,
+                  MorfuncAsset.GhiSo841, MorfuncAsset.In841,MorfuncAsset.GhiSo871, MorfuncAsset.In871].includes(
+                  element.functionID
+                )
+              )
+                element.disabled = true;
+            } else {
+              if (
+                ![MorfuncAsset.GuiDuyet811, MorfuncAsset.In811,MorfuncAsset.GuiDuyet821, MorfuncAsset.In821,
+                  MorfuncAsset.GuiDuyet823, MorfuncAsset.In823,MorfuncAsset.GuiDuyet831, MorfuncAsset.In831,
+                  MorfuncAsset.GuiDuyet841, MorfuncAsset.In841,MorfuncAsset.GuiDuyet871, MorfuncAsset.In871].includes(
+                  element.functionID
+                )
+              )
+                element.disabled = true;
+            }
+            break;
+
+          case '2':
+            if (
+              ![MorfuncAsset.KiemTraHopLe811, MorfuncAsset.In811,MorfuncAsset.KiemTraHopLe821, MorfuncAsset.In821,
+                MorfuncAsset.KiemTraHopLe823, MorfuncAsset.In823,MorfuncAsset.KiemTraHopLe831, MorfuncAsset.In831,
+                MorfuncAsset.KiemTraHopLe841, MorfuncAsset.In841,MorfuncAsset.KiemTraHopLe871, MorfuncAsset.In871].includes(
+                element.functionID
+              )
+            )
+              element.disabled = true;
+            break;
+
+          case '3':
+            if (
+              ![MorfuncAsset.HuyDuyet811, MorfuncAsset.In811,MorfuncAsset.HuyDuyet821, MorfuncAsset.In821,
+                MorfuncAsset.HuyDuyet823, MorfuncAsset.In823,MorfuncAsset.HuyDuyet831, MorfuncAsset.In831,
+                MorfuncAsset.HuyDuyet841, MorfuncAsset.In841,MorfuncAsset.HuyDuyet871, MorfuncAsset.In871].includes(
+                element.functionID
+              )
+            )
+              element.disabled = true;
+            break;
+
+          case '5':
+          case '9':
+            if (
+              ![MorfuncAsset.GhiSo811, MorfuncAsset.In811,MorfuncAsset.GhiSo821, MorfuncAsset.In821,
+                MorfuncAsset.GhiSo823, MorfuncAsset.In823,MorfuncAsset.GhiSo831, MorfuncAsset.In831,
+                MorfuncAsset.GhiSo841, MorfuncAsset.In841,MorfuncAsset.GhiSo871, MorfuncAsset.In871].includes(
+                element.functionID
+              )
+            )
+              element.disabled = true;
+            break;
+
+          case '6':
+            if (
+              ![MorfuncAsset.KhoiPhuc811, MorfuncAsset.In811,MorfuncAsset.KhoiPhuc821, MorfuncAsset.In821,
+                MorfuncAsset.KhoiPhuc823, MorfuncAsset.In823,MorfuncAsset.KhoiPhuc831, MorfuncAsset.In831,
+                MorfuncAsset.KhoiPhuc841, MorfuncAsset.In841,MorfuncAsset.KhoiPhuc871, MorfuncAsset.In871].includes(
+                element.functionID
+              )
+            )
+              element.disabled = true;
+            break;
+
+          default:
+            element.disabled = true;
+            break;
+        }
+      }
+      //event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
+    }, {});
+    console.log(event);
   }
 
   changeMFJournal(event, type) {

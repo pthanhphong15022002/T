@@ -1,125 +1,27 @@
-<codx-views
-  class="ac-views"
-  #view
-  idField="recID"
-  [views]="views"
-  [button]="button"
-  [entityName]="'AM_AssetJournals'"
-  (buttonClick)="toolbarClick($event)"
-  predicates="JournalNo=@0"
-  [hideMoreFuncs]="!itemSelected"
-  (changeDataMF)="changeMFDetail($event, itemSelected)"
-  (clickMF)="clickMoreFunction($event, itemSelected)"
-  [dataValues]="journalNo"
-  (selectedChange)="onSelectedItem($event)"
-  [isSubView]="true"
-  (viewChanged)="viewChanged($event)"
-  [funcID]="funcID"
->
+<codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
+  (buttonClick)="toolbarClick($event)" [predicates]="predicate" [hideMoreFuncs]="!itemSelected" [titleToolBarTmp]="titleToolBarTmp"
+  (changeDataMF)="changeMFDetail($event,'viewdetail',itemSelected)" (clickMF)="clickMoreFunction($event, itemSelected)"
+  [dataValues]="journalNo" (selectedChange)="onSelectedItem($event)" [isSubView]="true"
+  (viewChanged)="viewChanged($event)" [funcID]="funcID">
 </codx-views>
+
+<!-- titleToolBarTmp -->
+<ng-template #titleToolBarTmp let-data>
+  <div class="d-flex align-items-center">
+    <span [ngbTooltip]="tooltip" type="button" class="btn btn-icon btn-sm btn-light-primary ms-3">
+      <i class="icon-edit icon-16"></i>
+    </span>
+    <ng-template #tooltip let-data>
+      <span *ngIf="this.journal">{{'Chỉnh sửa sổ nhật kí('+this.journal.journalDesc+')'}}</span>
+    </ng-template>
+    <codx-page-title class="page-title d-flex align-items-center flex-wrap ms-2"></codx-page-title>
+  </div>
+</ng-template>
+<!-- titleToolBarTmp -->
+
 <!-- Start: templateGrid -->
 <ng-template #templateGrid let-data>
-  <codx-mfunc
-    [dataItem]="data"
-    (changeDataMF)="changeMFDetail($event, data, 'grid')"
-    [formModel]="view.formModel"
-    (clickMF)="clickMoreFunction($event, data)"
-    type="view"
-  ></codx-mfunc>
+  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFDetail($event, 'viewgrid',data)" [formModel]="view.formModel"
+    (clickMF)="clickMoreFunction($event, data)" type="view"></codx-mfunc>
 </ng-template>
 <!-- End: templateGrid -->
-
-<!--List detail-->
-<ng-template #itemTemplate let-data>
-  <codx-temp-full
-    [titleTmp]="titleTmp"
-    cardCss="card-template border-bottom p-3"
-    [formModel]="view.formModel"
-    [modeImgs]="true"
-    [titleLine]="2"
-    [dataItem]="data"
-    [typeMF]="'hover'"
-    [moreFuncCss]="'me-15'"
-    [hideMF]="codxService.asideMode == '2'"
-  >
-  </codx-temp-full>
-  <ng-template #titleTmp>
-    <div class="d-flex flex-column text-content flex-grow-1">
-      <div class="d-flex justify-content-between">
-        <div class="d-flex align-items-center">
-          <span
-            *ngIf="data?.voucherNo"
-            class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase me-2"
-            >{{ data?.voucherNo }}</span
-          >
-          <span
-            *ngIf="
-              (data?.voucherNo == '' || data?.voucherNo == null) &&
-              view?.gridViewSetup
-            "
-            class="place-holder line-clamp line-clamp-1 fs-6 me-2"
-          >
-            {{ view?.gridViewSetup["VoucherNo"].headerText }}
-          </span>
-        </div>
-      </div>
-      <div class="d-flex justify-content-between mt-1">
-        <div class="d-flex align-items-center">
-          <span
-            *ngIf="data?.memo"
-            id="tipmemo"
-            class="text-gray-600 line-clamp line-clamp-2 me-3"
-            >{{ data?.memo }}</span
-          >
-          <span
-            *ngIf="
-              (data?.memo == '' || data?.memo == null) && view?.gridViewSetup
-            "
-            class="place-holder text-gray-600 line-clamp line-clamp-2 me-3"
-            >{{ view?.gridViewSetup["Memo"].headerText }}</span
-          >
-        </div>
-      </div>
-      <div class="d-flex justify-content-between align-items-center mt-1">
-        <div class="d-flex align-items-end codx-badge">
-          <codx-vll
-            [formModel]="view.formModel"
-            [field]="'Status'"
-            [value]="data?.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-light badge-sm"
-          >
-          </codx-vll>
-          <div class="d-flex align-items-center">
-            <span
-              [ngbTooltip]="view?.gridViewSetup?.VoucherDate?.headerText"
-              #voucherDate
-              [innerHTML]="
-                data?.voucherDate
-                  | formatvalue : view.formModel : 'voucherDate' : voucherDate
-                  | async
-              "
-              class="text-gray-600"
-            ></span>
-          </div>
-        </div>
-        <div class="d-flex">
-          <codx-imgs
-            [isToolTip]="true"
-            [objectId]="data?.createdBy"
-            [objectName]="data?.createdBy"
-            [objectType]="'AD_Users'"
-            [width]="25"
-            [numberImages]="1"
-          >
-          </codx-imgs>
-        </div>
-      </div>
-    </div>
-  </ng-template>
-</ng-template>
-<ng-template #templateDetail>
-  <lib-asset-journals-detail [dataSelected]="itemSelected" [formModel]="view.formModel" [gridViewSetup]="view?.gridViewSetup"></lib-asset-journals-detail>
-</ng-template>
-<!--end List detail-->
