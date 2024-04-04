@@ -16,8 +16,6 @@
       <span class="icon-arrow_back pe-6 icon-24 cursor-pointer" (click)="back()"></span>
       <i id="icon-sv-default" class="icon-i-file-earmark-text-fill fs-30px color-7248B9" [style.color]="primaryColor"></i>
       <codx-input type="text" [crrValue]="title" ngClass="add-sv-title border-bottom ms-2" [field]="'title'" [style.width]="width"  (valueChange)="valueChange($event)" [ngbTooltip]="title"></codx-input>
-
-     
     </div>
     <div class="justify-content-end d-flex align-items-center">
       <!-- <span
@@ -49,8 +47,6 @@
           <codx-label [fiedName]="'lblSVReview'" formName="SVReview"  default="Trả lời" class="ms-1 fw-bold"></codx-label>
         </ng-template>
       </button>
-
-      
       <button *ngIf="dataSV?.status != '3' && dataSV?.status != '4'" type="button" id="btn-sv-release" class="btn btn-sm text-white btn-7248B9" [style.backgroundColor]="primaryColor" (click)="release()">
         <codx-label [fiedName]="'lblSVRelease'" formName="SVRelease"  default="Phát hành" class="ms-1 fw-bold"></codx-label>
       </button>

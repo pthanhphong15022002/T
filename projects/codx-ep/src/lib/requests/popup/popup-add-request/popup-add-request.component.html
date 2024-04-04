@@ -26,9 +26,13 @@
                             <div class="text-dark" *ngIf="data.employeeName">{{data.employeeName}}</div>
                             <div class="text-dark" *ngIf="data.positionID" [innerHTML]="data.positionID | formatvalue : dialog.formModel : 'positionID' | async"></div>
                             <div class="d-flex align-items-center text-gray-600">
-                                <div *ngIf="data.phone" class="me-2" [innerHTML]="data.phone | formatvalue : dialog.formModel : 'phone' | async">
+                                <div *ngIf="data.phone" class="d-flex me-4">
+                                    <i class="icon-phone_android me-2"></i>
+                                    <div  class="me-2" [innerHTML]="data.phone | formatvalue : dialog.formModel : 'phone' | async"></div>
                                 </div>
-                                <div *ngIf="data.email" [innerHTML]="data.email | formatvalue : dialog.formModel : 'email' | async">
+                                <div *ngIf="data.email" class="d-flex me-4">
+                                    <i class="icon-email text-warning me-2"></i>
+                                    <div [innerHTML]="data.email | formatvalue : dialog.formModel : 'email' | async"></div>
                                 </div>
                             </div>
                         </div>
@@ -88,7 +92,7 @@
                 <codx-input [formModel]="dialog.formModel" [field]="'hasBooking'" [checked]="false" [crrValue]="data.hasBooking" (valueChange)="valueChange($event)" [label]="'HasBooking'" [labelPosition]="'after'"></codx-input>
             </div>
             <div class="col-6">
-                <codx-input [formModel]="dialog.formModel" [field]="'hasResources'" [checked]="false" [crrValue]="data.hasResource" (valueChange)="valueChange($event)" [label]="'HasResource'" [labelPosition]="'after'"></codx-input>
+                <codx-input [formModel]="dialog.formModel" [field]="'hasResources'" [checked]="false" [crrValue]="data.hasResources" (valueChange)="valueChange($event)" [label]="'HasResource'" [labelPosition]="'after'"></codx-input>
             </div>
         </div>
         <div class="row mb-4" *ngIf="data.hasBooking">
@@ -97,15 +101,15 @@
                     <codx-label [formModel]="dialog.formModel" [name]="'lblBookingCar'" [default]="'Đặt xe'" class="fw-bold mb-2"></codx-label>
                     <codx-input [field]="'resourceID'" [refType]="'P'" [refValue]="'EP_Cars'" [type]="'combobox'" [crrValue]="data.resourceID" [showInput]="false" (valueChange)="valueChange($event)"></codx-input>
                 </div>
-                <div class="d-flex align-items-center" *ngIf="EPResource">
+                <div class="d-flex align-items-center" *ngIf="data.resourceRecID">
                     <div class="me-2">
-                        <codx-img [objectId]="EPResource.RecID" [objectName]="data.ResourceName" [objectType]="'EP_Resources'" [width]="40"></codx-img>
+                        <codx-img [objectId]="data.resourceRecID" [objectName]="data.resourceName" [objectType]="'EP_Resources'" [width]="40"></codx-img>
                     </div>
                     <div class="flex flex-column">
-                        <div class="text-dark mb-2"><span>{{EPResource.Code}}</span> - <span>{{EPResource.ResourceName}}</span></div>
-                        <div class="d-flex align-items-center" *ngIf="EPResource.Equipments">
-                            <ng-container *ngFor="let item of EPResource.Equipments">
-                                <codx-vll [name]="'EP012'" [value]="item.EquipmentID" [showText]="true" [showIcon]="true" class="d-flex align-items-center text-gray-600 me-4"></codx-vll>
+                        <div class="text-dark mb-2"><span>{{data.resourceCode}}</span> - <span>{{data.resourceName}}</span></div>
+                        <div class="d-flex align-items-center" *ngIf="data.resourceEquipments">
+                            <ng-container *ngFor="let item of data.resourceEquipments">
+                                <codx-vll [name]="'EP012'" [value]="item.equipmentID" [showText]="true" [showIcon]="true" class="d-flex align-items-center text-gray-600 me-4"></codx-vll>
                             </ng-container>
                         </div>
                     </div>
@@ -116,9 +120,9 @@
             <div class="col-12">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <codx-label [formModel]="dialog.formModel" name="Resources" [default]="'Người đi cùng'" class="fw-bold"></codx-label>
-                    <codx-input [field]="'resources'" [refType]="'P'" [refValue]="'Users'" type="combobox" [crrValue]="ADResourcesIDs" [multiple]="true" [showInput]="false" (valueChange)="valueChange($event)"></codx-input>
+                    <codx-input [field]="'resources'" [refType]="'P'" [refValue]="'Users'" type="combobox" [crrValue]="data.resourceIDs" [multiple]="true" [showInput]="false" (valueChange)="valueChange($event)"></codx-input>
                 </div>
-                <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center justify-content-between" *ngIf="data.resources.length > 0">
                     <div class="d-flex align-items-center">
                         <ng-container *ngFor="let item of data.resources;let idx = index">
                             <ng-container *ngIf="idx <= 3">
@@ -183,7 +187,7 @@
                     [autoLoad]="false"
                     [templateMore]="tmpMoreFunc"
                     [editSettings]="editSettings"
-                    [dataSource]="EPRequestsLines"
+                    [dataSource]="data.lines"
                     [idField]="'recID'"
                     (cellChanged)="valueCellChange($event)">
                 </codx-gridview-v2>

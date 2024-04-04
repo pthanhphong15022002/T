@@ -91,7 +91,24 @@ export class CodxBpService {
       key
     );
   }
-  
+  checkListTask(recID,checkList) {
+    return this.api.execSv<any>(
+      "BP",
+      "ERM.Business.BP",
+      'ProcessTasksBusiness',
+      'CheckListTaskAsync',
+      [recID,checkList]
+    );
+  }
+  updateStatusTask(recID,status,checkList) {
+    return this.api.execSv<any>(
+      "BP",
+      "ERM.Business.BP",
+      'ProcessesBusiness',
+      'UpdateStatusTaskAsync',
+      [recID,status,checkList]
+    );
+  }
   createTaskOnSaveInstance(recID) {
     return this.api.execSv<any>(
       "BP",

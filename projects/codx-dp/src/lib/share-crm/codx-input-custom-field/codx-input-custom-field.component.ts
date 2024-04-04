@@ -217,7 +217,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
         this.dataValueRef = this.customField.defaultValue;
         this.isChange = true
       } else if (this.customField.dataType == 'D') {
-        this.dataValueRef = moment(new Date()).toDate().toString();
+        this.dataValueRef = new Date().toLocaleDateString();
         this.isChange = true
       }
     }

@@ -81,7 +81,7 @@ export class AddProcessDefaultComponent implements OnInit {
   infoUser: any;
   listFieldAuto = [];
   gridViewSetup = [];
-
+  listFieldDecimal = [];
   constructor(
     private notifySvr: NotificationsService,
     private shareService: CodxShareService,
@@ -222,6 +222,12 @@ export class AddProcessDefaultComponent implements OnInit {
             field: elm2.fieldName,
           };
           element.columnsGrid.push(obj);
+
+          if(elm2.dataType == 'Decimal')
+          {
+            let field = element.fieldName + "_sum_" + elm2.fieldName;
+            this.listFieldDecimal.push(field);
+          }
         });
 
         if (element?.tableFormat?.hasIndexNo) {
@@ -400,9 +406,23 @@ export class AddProcessDefaultComponent implements OnInit {
     if (this.dynamicFormsForm.invalid) this.findInvalidControls();
     else {
       var keysTable = Object.keys(this.dataTable);
+      
       if (keysTable.length > 0) {
         keysTable.forEach((k) => {
           valueForm[k] = this.dataTable[k];
+          let keysChildTable = Object.keys(this.dataTable[k][0]);
+          if(keysChildTable.length>0)
+          {
+            if(this.listFieldDecimal.some(x=>x.includes(k)))
+            {
+              keysChildTable.forEach(kc=>{
+                debugger
+                let fieldDecimal = k + '_sum_' + kc;
+                if(this.listFieldDecimal.includes(fieldDecimal))
+                  valueForm[fieldDecimal] = this.dataTable[k].reduce((a, b) => +a + +b[kc], 0);
+              })
+            }
+          }
         });
       }
       if (this.type == 'add') {

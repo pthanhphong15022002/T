@@ -19,7 +19,7 @@
 
 <ng-template #templateTree let-data>
   <div (click)="clickTreeNode($event)">
-    <div class="d-flex justify-content-between w-100 mb-5">
+    <div class="d-flex justify-content-between w-100 mb-5" (dblclick)="linkData(data?.type, data?.recID)">
       <div class="d-flex flex-row">
         <div class="d-flex flex-column w-500px min-w-500px">
           <div class="me-4 d-flex fw-bold fs-6 mb-1">

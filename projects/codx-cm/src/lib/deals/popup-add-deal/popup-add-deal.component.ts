@@ -1293,6 +1293,7 @@ export class PopupAddDealComponent
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
+        this.getArrCaculateField();
         this.getSettingFields(res[3], this.listInstanceSteps);
         this.listParticipants = [];
         this.listParticipants = JSON.parse(JSON.stringify(obj?.permissions));
@@ -1337,7 +1338,7 @@ export class PopupAddDealComponent
           this.deal.datas = instance.datas;
           this.addPermission(instance?.permissions);
           this.onAdd();
-        }else{
+        } else {
           this.isSave = true;
         }
       });
