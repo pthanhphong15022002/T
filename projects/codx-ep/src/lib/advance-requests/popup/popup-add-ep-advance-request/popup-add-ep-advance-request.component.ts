@@ -109,6 +109,7 @@ export class PopupAddEpAdvanceRequestComponent implements OnInit,AfterViewInit,O
     });
     this.subscriptions.add(subcribe);
   }
+  
   getEPRequest(recID:string){
     let subcribe = this.api.execSv("EP","EP","RequestsBusiness","GetByIDAsync",recID)
     .subscribe((res:any) => {
@@ -135,6 +136,7 @@ export class PopupAddEpAdvanceRequestComponent implements OnInit,AfterViewInit,O
     });
     this.subscriptions.add(subcribe);
   }
+  
   valueChange(event:any){
     let field = event.field;
     let value = null;

@@ -1,46 +1,64 @@
-import { AfterViewInit, Component, Injector, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, Injector, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { change } from '@syncfusion/ej2-angular-grids';
-import { CRUDService, FormModel, SidebarModel, UIDetailComponent, ViewsComponent } from 'codx-core';
+import { CRUDService, FormModel, ResponseModel, SidebarModel, UIDetailComponent, ViewsComponent } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupAddEpAdvanceRequestComponent } from '../../advance-requests/popup/popup-add-ep-advance-request/popup-add-ep-advance-request.component';
 import { PopupAddRequestComponent } from '../popup/popup-add-request/popup-add-request.component';
 import { Subscription } from 'rxjs';
 import { PopupAddEpPaymentRequestComponent } from '../../payment-requests/popup/popup-add-ep-payment-request/popup-add-ep-payment-request.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'ep-requests-view-detai',
   templateUrl: './requests-view-detai.component.html',
   styleUrls: ['./requests-view-detai.component.css']
 })
-export class RequestsViewDetaiComponent extends UIDetailComponent implements OnChanges, AfterViewInit {
+export class RequestsViewDetaiComponent extends UIDetailComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   @Input() formModel:FormModel;
   @Input() data:any;
   @Input() view:ViewsComponent;
 
-  runMode:string = "";
   subcriptions = new Subscription();
+  runMode:string = "";
+  releaseCategory:any;
+
   constructor
   (
     private injector:Injector,
     private codxShareService:CodxShareService,
+    private codxCommonSV : CodxCommonService
   ) 
   {
     super(injector);
   }
+  
 
   override onInit(): void {
-    this.cache.functionList(this.funcID).subscribe((func) => {
+    let subcribe = this.cache.functionList(this.funcID)
+    .subscribe((func) => {
       if (func) {
         this.runMode = func?.runMode;
       }
     });
+    this.subcriptions.add(subcribe);
     this.loadDataInfo(this.recID,this.funcID);
   }
 
   ngAfterViewInit(): void {
-
+    let subcribe = this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'CategoriesBusiness',
+      'GetCategoryByEntityNameAsync',
+      [this.view.entityName])
+      .subscribe((res:any) => 
+      {
+        this.releaseCategory = res;
+      });
+      this.subcriptions.add(subcribe);
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if(changes && changes.recID && !changes.recID?.firstChange && changes.recID?.currentValue != changes.recID?.previousValue)
     {
@@ -48,8 +66,12 @@ export class RequestsViewDetaiComponent extends UIDetailComponent implements OnC
     }
   }
 
+  ngOnDestroy(): void {
+    this.subcriptions.unsubscribe();
+  }
+
   loadDataInfo(recID:string,funcID:string){
-    this.api.execSv("EP","EP","RequestsBusiness","GetRequestDetailAsync",[recID,funcID])
+    let subcribe =  this.api.execSv("EP","EP","RequestsBusiness","GetRequestDetailAsync",[recID,funcID])
     .subscribe((res:any) => {
       if(res)
       {
@@ -57,6 +79,7 @@ export class RequestsViewDetaiComponent extends UIDetailComponent implements OnC
         this.detectorRef.detectChanges();
       }
     });
+    this.subcriptions.add(subcribe);
   }
 
   changeDataMF(event:any){
@@ -65,12 +88,7 @@ export class RequestsViewDetaiComponent extends UIDetailComponent implements OnC
     }
     else if(event)
     {
-      event.map(x => {
-        if(x.functionID == "SYS01" || x.functionID == "SYS02" || x.functionID == "SYS03" || x.functionID == "WSCO0411" || x.functionID == "WSCO0412")
-          x.disabled = false;
-        else
-          x.disabled = true;
-      });
+
     }
   }
 
@@ -97,6 +115,11 @@ export class RequestsViewDetaiComponent extends UIDetailComponent implements OnC
         case"WSCO0412":
           if(!data) data = this.view.dataService.dataSelected;
           this.openPopupPayment(data);
+          break;
+        case "WSCO0413":
+          this.sendApproval(this.data);
+          break;
+        default:
           break;
       }
     }
@@ -223,6 +246,20 @@ export class RequestsViewDetaiComponent extends UIDetailComponent implements OnC
         }
       });
       this.subcriptions.add(subscribe);
+    }
+  }
+
+  sendApproval(data:any){
+    let title = `${this.view.function.customName} - ${data.memo}`; 
+    this.codxCommonSV.codxReleaseDynamic("EP",data,this.releaseCategory,this.view.entityName,this.view.funcID,title,this.callBackApproval);
+  }
+
+  callBackApproval(res:any){
+    if(res?.rowCount > 0)
+    {
+      this.data.status = res.returnStatus;
+      this.view.dataService.dataSelected.status = res.returnStatus;
+      this.detectorRef.detectChanges();
     }
   }
 }

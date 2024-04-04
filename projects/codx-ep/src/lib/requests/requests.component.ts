@@ -67,10 +67,12 @@ export class RequestsComponent extends UIComponent implements AfterViewInit,OnDe
     if(event)
     {
       event.map(x => {
-        if(x.functionID == "SYS01" || x.functionID == "SYS02" || x.functionID == "SYS03" || x.functionID == "WSCO0411" || x.functionID == "WSCO0412")
+        if(x.functionID == "SYS01" || x.functionID == "SYS02" || x.functionID == "SYS03")
+        {
           x.disabled = false;
-        else
-          x.disabled = true;
+          x.isbookmark = true;
+        }          
+        else x.disabled = true;
       });
     }
   }
@@ -104,33 +106,30 @@ export class RequestsComponent extends UIComponent implements AfterViewInit,OnDe
   }
 
   add(){
-    if(this.view)
-    {
-      let subscribe = this.view.dataService
-      .addNew()
-      .subscribe((model:any) => {
-        if(model)
-        {
-          let dialog = new SidebarModel();
-          dialog.Width = '800px';
-          dialog.FormModel = this.view.formModel;
-          dialog.DataService = this.view.dataService;
-          let obj = {
-            data : model,
-            actionType: "add"
-          }
-          let popup = this.callfc.openSide(PopupAddRequestComponent,obj,dialog,this.view.funcID);
-          this.subcriptions.add(popup.closed.subscribe((res:any) => {
-            if(res && res.event)
-            {
-              let subscribeUpdate = this.view.dataService.update(res.event).subscribe();
-              this.subcriptions.add(subscribeUpdate);
-            }
-          }));
+    let subscribe = this.view.dataService
+    .addNew()
+    .subscribe((model:any) => {
+      if(model)
+      {
+        let dialog = new SidebarModel();
+        dialog.Width = '800px';
+        dialog.FormModel = this.view.formModel;
+        dialog.DataService = this.view.dataService;
+        let obj = {
+          data : model,
+          actionType: "add"
         }
-      });
-      this.subcriptions.add(subscribe);
-    }
+        let popup = this.callfc.openSide(PopupAddRequestComponent,obj,dialog,this.view.funcID);
+        this.subcriptions.add(popup.closed.subscribe((res:any) => {
+          if(res && res.event)
+          {
+            let subscribeUpdate = this.view.dataService.update(res.event).subscribe();
+            this.subcriptions.add(subscribeUpdate);
+          }
+        }));
+      }
+    });
+    this.subcriptions.add(subscribe);
   }
 
   delete(data:any){
@@ -163,7 +162,6 @@ export class RequestsComponent extends UIComponent implements AfterViewInit,OnDe
       }));
     }
   }
-
 
   openPopupAdvance(data:any){
     if(data)
