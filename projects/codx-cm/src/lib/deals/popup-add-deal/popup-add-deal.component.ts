@@ -210,13 +210,11 @@ export class PopupAddDealComponent
     this.model = { ApplyFor: '1' };
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.copyTransID = dt?.data?.copyTransID;
-    // this.tenant = this.tenantStore.get().tenant;
-    const currentUrl = this.routerLink.url;
+    const fullUrl = window.location.href;
+    // const currentUrl = this.routerLink.url;
     // this.tenant = 'qtsc';
-    console.log(currentUrl);
-    this.tenant = currentUrl.includes("qtsc") ? "qtsc" : "";
-    console.log(this.tenant);
-
+    console.log(fullUrl);
+    this.tenant = fullUrl.includes("qtsc") ? "qtsc" : "";
     // add view from customer
     this.isviewCustomer = dt?.data?.isviewCustomer;
     this.customerView = dt?.data?.customerView;
@@ -1295,6 +1293,7 @@ export class PopupAddDealComponent
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
+        this.getArrCaculateField();
         this.getSettingFields(res[3], this.listInstanceSteps);
         this.listParticipants = [];
         this.listParticipants = JSON.parse(JSON.stringify(obj?.permissions));
@@ -1339,7 +1338,7 @@ export class PopupAddDealComponent
           this.deal.datas = instance.datas;
           this.addPermission(instance?.permissions);
           this.onAdd();
-        }else{
+        } else {
           this.isSave = true;
         }
       });

@@ -5,6 +5,8 @@
     [dataItem]="data" 
     [body]="body"
     [footer]="footer" 
+    [hideMF]="false"
+    (clickMF)="clickMF($event)"
     (changeDataMF)="changeDataMF($event)">
 </codx-detail-tmp>
 
@@ -18,23 +20,23 @@
                 <div class="d-flex flex-column align-items-stretch">
                     <div class="fw-bold" *ngIf="data.employeeName"><span>{{data.employeeName}}</span></div>
                     <div class="text-dark" *ngIf="data.positionName"><i class="icon-location_on me-2"></i><span>{{data.positionName}}</span></div>
-                    <div class="d-flex align-items-center text-gray-600">
-                        <span class="me-3" *ngIf="data.phone">
+                    <div class="d-flex align-items-end text-gray-600">
+                        <div *ngIf="data.phone" class="d-flex me-3">
                             <i class="icon-phone_android me-2"></i>
-                            {{data.phone}}
-                        </span>
-                        <span *ngIf="data.mail">
-                            <i class="icon-phone_android text-warning me-2"></i>
-                            {{data.mail}}
-                        </span>
+                            <div [innerHTML]="data.phone | formatvalue : formModel : 'phone' | async"></div>
+                        </div>
+                        <div *ngIf="data.email" class="d-flex me-3">
+                            <i class="icon-email text-warning me-2"></i>
+                            <div [innerHTML]="data.email | formatvalue : formModel : 'email' | async"></div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div *ngIf="data.status">
-                <codx-vll [name]="'EP033'" [value]="data.status" [showText]="true" [showBgColor]="true"></codx-vll>
+                <codx-vll [name]="'EP033'" [value]="data.status" [showText]="true" [showBgColor]="true" [classList]="'badge rounded-pill'"></codx-vll>
             </div>
         </div>
-        <div *ngIf="data.tags" class="d-flex flex-column">
+        <div class="form-group" *ngIf="data.tags">
             <codx-tag [formModel]="formModel" [value]="data.tags"></codx-tag>
         </div>
     </div>
@@ -49,7 +51,7 @@
                 <div class="d-flex align-items-center">
                     <codx-label [formModel]="formModel" name="FromDate" default="Từ ngày" class="text-dark"></codx-label>
                     <span class="me-2">:</span>
-                    <div *ngIf="data.fromDate" [innerHTML]="data.fromDate | formatvalue : formModel : 'fromDate' | async"></div>
+                    <div *ngIf="data.fromDate" [innerHTML]="data.fromDate | formatvalue : formModel : 'fromDate' | async" class="me-6"></div>
                 </div>
                 <div class="d-flex align-items-center">
                     <codx-label [formModel]="formModel" name="ToDate" default="Đến ngày" class="text-dark"></codx-label>
@@ -63,53 +65,81 @@
         </div>
         <div class="form-group">
             <div class="d-flex">
-                <div class="d-flex flex-column me-5">
+                <div *ngIf="data.resources" class="d-flex flex-column me-10">
                     <codx-label [formModel]="formModel" name="Resources" [default]="'Người đi cùng'" class="fw-bold mb-2"></codx-label>
-                    <codx-imgs 
-                        *ngIf="data.resourceIDs"
-                        [isToolTip]="true" 
-                        [objectId]="data.resourceIDs" 
-                        [objectType]="'AD_Users'" 
-                        [width]="30" 
-                        [numberImages]="3">
-                    </codx-imgs>
+                    <div class="d-flex">
+                        <ng-container *ngFor="let item of data.resources;let idx = index">
+                            <ng-container *ngIf="idx <= 3">
+                                <ng-container *ngIf="idx < 3;else tmpMoreResouces">
+                                    <div class="me-1 position-relative">
+                                        <codx-img [objectId]="item.userID" [objectType]="item.roleType == '2' ? 'EP_Resources' : 'AD_Users'" [width]="30"></codx-img>
+                                        <div class="position-absolute bottom-0 end-0">
+                                            <codx-vll [name]="'EP010'" [value]="item.roleType" [showIcon]="true" [path]="'./assets/themes/ep/default/img/'"></codx-vll>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <ng-template #tmpMoreResouces>
+                                    <div class="symbol symbol-30px symbol-circle">
+                                        <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">+{{data.resources.length - 3}}</span>
+                                    </div>
+                                </ng-template>
+                            </ng-container>
+                        </ng-container>
+                    </div>
                 </div>
-                <div class="d-flex flex-column">
+                <div *ngIf="data.resourceID" class="d-flex flex-column">
                     <codx-label [formModel]="formModel" name="ResourceID" [default]="'Đặt xe'" class="fw-bold mb-2"></codx-label>
-                    <div *ngIf="data.resourceID" class="d-flex align-items-center">
+                    <div class="d-flex align-items-center">
                         <codx-img 
-                            [objectId]="data.resourceID" 
+                            [objectId]="data.resourceRecID" 
                             [objectType]="'EP_Resources'" 
                             [objectName]="data.resourceName" 
                             [width]="30" 
-                            class="me-2">
+                            class="me-4">
                         </codx-img>
-                        <div><span>{{data.resourceCode}}</span> - <span>{{data.resourceName}}</span></div>
+                        <div class="d-flex flex-column">
+                            <div>
+                                <span>{{data.resourceCode}}</span> - <span>{{data.resourceName}}</span>
+                            </div>
+                            <div class="d-flex align-items-center" *ngIf="data.resourceEquipments">
+                                <ng-container *ngFor="let item of data.resourceEquipments">
+                                    <codx-vll [name]="'EP012'" [value]="item.equipmentID" [showText]="true" [showIcon]="true" class="d-flex align-items-center text-gray-600 me-4"></codx-vll>
+                                </ng-container>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
         </div>
-        <div class="form-group">
-            <div class="d-flex mb-2 pb-1 pe-2 border-bottom border-light border-2">
-                <i class="icon-monetization_on me-2 fw-bold"></i>
-                <codx-label [formModel]="formModel" name="lblLabel1" [default]="'Chi phí'"></codx-label>
+        <div class="form-group min-w-500">
+            <div class="d-flex mb-2">
+                <div class="d-flex pb-1 pe-2 border-bottom border-primary border-2">
+                    <i class="icon-monetization_on me-2 fw-bold"></i>
+                    <codx-label [formModel]="formModel" name="lblLabel1" [default]="'Chi phí'"></codx-label>
+                </div>
             </div>
-            <div class="d-flex flex-column min-w-400" *ngIf="data.lines && data.lines?.length > 0">
-                <div class="d-flex align-items-start justify-content-between " *ngFor="let item of data.lines">
-                    <div class="d-flex align-items-stretch">
-                        <codx-img [objectId]="item.recID" [objectName]="item.itemName" [objectType]="'EP_Requests_Lines'" [width]="30" class="me-2"></codx-img>
-                        <div class="d-flex flex-column">
-                            <p class="text-dark">{{item.itemName}}</p>
-                            <p class="text-gray-600">{{item.note}}</p>
+            <div class="d-flex flex-column" *ngIf="data.lines && data.lines?.length > 0">
+                <div class="d-flex flex-column mb-2">
+                    <div *ngFor="let item of data.lines" class="d-flex align-items-start justify-content-between pt-2 w-100">
+                        <div class="d-flex align-items-center w-content me-10">
+                            <codx-img [objectId]="item.recID" [objectName]="item.itemName" [objectType]="'EP_Requests_Lines'" [width]="30" class="me-2"></codx-img>
+                            <div class="d-flex flex-column w-100">
+                                <p class="text-dark mb-0">{{item.itemName}}</p>
+                                <p class="text-gray-600 mb-0">{{item.note}}</p>
+                            </div>
+                        </div>
+                        <div class="text-dark" [innerHTML]="item.amount | formatvalue : formModel : 'amount' | async">
                         </div>
                     </div>
-                    <div class="text-dark">
-                        <span>{{item.amount}}</span>
-                    </div>
                 </div>
-                <div class="d-flex justify-centent-end fw-bold w-100 pt-1 ps-3 border-top border-1">
-                    <span class="me-4">Tổng cộng:</span>
-                    <span>{{data.totalAmount}}</span>
+                <div class="d-flex justify-content-end">
+                    <div class="d-flex fw-bold justify-content-between pt-1 ps-4 border-top border-light border-2">
+                        <div class="me-6">
+                            <span>Tổng cộng:</span>
+                        </div>
+                        <div [innerHTML]="data.totalAmount | formatvalue : formModel : 'amount' | async"></div>
+                    </div>
                 </div>
             </div>
         </div>

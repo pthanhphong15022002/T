@@ -889,6 +889,7 @@ export class PopupAddLeadComponent
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
+        this.getArrCaculateField();
         this.idxCrr = this.listInstanceSteps.findIndex(
           (x) => x.stepID == this.lead.stepID
         );

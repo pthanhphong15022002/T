@@ -182,7 +182,7 @@ export class MyInstancesComponent
                 option
               );
               popup.closed.subscribe((res) => {
-                if (res && res.event != null) {
+                if (res && res.event?.data != null) {
                   // this.view.dataService.update(res.event, true).subscribe();
                   // this.dataSelected = JSON.parse(JSON.stringify(res.event));
                   // this.detectorRef.detectChanges();

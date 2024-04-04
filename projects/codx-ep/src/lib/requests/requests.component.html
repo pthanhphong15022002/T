@@ -20,7 +20,9 @@
             [imageObjType]="'HR_Employees'" 
             [imageObjName]="data.employeeName" 
             [imageWidth]="40"
-            [hideMF]="true">
+            [formModel]="view.formModel"
+            [hideMF]="true"
+            (clickMF)="clickMF($event,data)">
         </codx-temp-full>
     </div>
 </ng-template>
@@ -35,21 +37,17 @@
             <div *ngIf="data.toDate" [innerHTML]="data.toDate | formatvalue : view?.formModel : 'toDate' | async"></div>
         </div>
         <div class="d-flex align-items-center justify-content-between w-100">
-            <div>
-                <codx-vll [name]="'EP033'" [value]="data.status" [showText]="true" [showBgColor]="true"></codx-vll>
-            </div>
-            <div *ngIf="data.resourceIDs">
-                <codx-imgs 
-                    [isToolTip]="true" 
-                    [objectId]="data.resourceIDs" 
-                    [objectType]="'AD_Users'" 
-                    [width]="30" 
-                    [numberImages]="3">
-                </codx-imgs>
-            </div>
+            <codx-vll [name]="'EP033'" [value]="data.status" [showText]="true" [showBgColor]="true" [classList]="'badge rounded-pill'"></codx-vll>
+            <codx-imgs *ngIf="data.resourceIDs"
+                [isToolTip]="true" 
+                [objectId]="data.resourceIDs" 
+                [objectType]="'AD_Users'" 
+                [width]="30" 
+                [numberImages]="3">
+            </codx-imgs>
         </div>
     </div>
 </ng-template>
 <ng-template #detailTemplate>
-    <ep-requests-view-detai *ngIf="dataSelected" [formModel]="view.formModel" [data]="dataSelected" [recID]="dataSelected.recID" [funcID]="view.funcID"></ep-requests-view-detai>
+    <ep-requests-view-detai #viewDetail *ngIf="dataSelected" [view]="view" [formModel]="view.formModel" [data]="dataSelected" [recID]="dataSelected.recID" [funcID]="view.funcID"></ep-requests-view-detai>
 </ng-template>
