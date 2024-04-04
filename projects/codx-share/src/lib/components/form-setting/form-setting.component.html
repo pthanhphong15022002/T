@@ -19,6 +19,7 @@
                 [fields]="field"
                 [allowDragAndDrop]="true"
                 (nodeSelected)="onSelected($event)"
+                [allowEditing]="true"
                 (created)="onCreate(treeELe)"
                 (nodeDropped)="nodeDropped($event)"
                 (nodeDragStop)="nodeDragStop($event)"
@@ -32,27 +33,28 @@
                   <div>
                     <div class="d-flex align-items-center hover-ne" *ngIf="!data.isButton">
                       <div
-                        class="mx-2 w-100 d-flex align-items-center"
+                        class="mx-2 w-100 d-flex align-items-center fw-bold"
                         [ngClass]="
                           data.functionType == 'G'
-                            ? 'border-top fw-bold  align-items-center'
+                            ? 'border-top   align-items-center text-uppercase fs-5'
                             : ''
                         "
                       >
                         <div
-                          style="width: 90%"
-                          class="d-flex align-items-center justify-content-start"
+                          style="width: 85%"
+                          class="d-flex align-items-center justify-content-start text-truncate"
+                          [title]="data.customName"
                         >
                           <span class="me-2" [ngClass]="data.largeIcon" [ngStyle]="{'color': data.color ? data.color : '#000'}" *ngIf="data.largeIcon && !data.smallIcon"></span>
                           <img class="w-20px h-20px me-2" [src]="data.smallIcon" *ngIf="data.smallIcon">
-                          <span class="text-dark fs-6 text-hover-primary">{{
+                          <span class="text-dark fs-6 text-hover-primary text-truncate" >{{
                             data.customName
                           }}</span>
                         </div>
                         <div
-                          style="width: 10%"
+                          style="width: 15%"
                           class="d-flex align-items-center justify-content-end"
-                          *ngIf="data.functionType == 'G'"
+                          *ngIf="data.functionType == 'G' && checkUserPermission(data)"
                           [title]="'Thêm chức năng'"
                         >
                           <!-- <button
@@ -68,10 +70,8 @@
                           </button> -->
                           <button
                           class="btn btn-sm btn-linght  me-3 float-end"
-                          (click)="
-                            $event.preventDefault(); onDeleteFunc(data.recID)
-                          "
-                        >
+                          (click)=" $event.preventDefault(); onDeleteFunc(data.recID)"
+                          >
                           <i
                             class="icon-delete text-danger"
                             style="font-size: 21px !important"
@@ -79,9 +79,9 @@
                         </button>
                         </div>
                         <div
-                        style="width: 10%"
+                        style="width: 15%"
                         class="d-flex align-items-center justify-content-end"
-                        *ngIf="data.functionType == 'F'"
+                        *ngIf="data.functionType != 'G' && checkUserPermission(data)"
                         [title]="'Xóa chức năng'"
                       >
                         <button
@@ -101,10 +101,10 @@
                               <span class="treeCount e-badge e-badge-primary"  *ngIf="data.functionType">{{ data.functionType }}</span>
                           </div> -->
                     </div>
-                    <div *ngIf="data.isButton">
-                      <div class="d-flex align-items-center">
+                    <div *ngIf="data.isButton"(click)="$event.preventDefault();onAddNewFunc(data.parentID,data)">
+                      <div class="d-flex align-items-center" >
 
-                          <div class="mx-2 w-100 text-primary fs-6 d-flex align-items-center" (click)="onAddNewFunc(data.parentID,data)">
+                          <div class="mx-2 w-100 text-primary fs-6 d-flex align-items-center" >
                              <i class="icon-add_circle_outline me-3"></i> <span>{{data.customName}}</span>
                           </div>
                            <!-- <div  class="ms-3">
@@ -178,10 +178,11 @@
                     >
                     </codx-label>
                     <codx-input
-                      field="name"
-                      [crrValue]="selectedData?.name"
+                      field="customName"
+                      [crrValue]="selectedData?.customName"
                       type="text"
                       (valueChange)="valueChange($event)"
+                      [disabled]="!enableEdit"
                       (focus)="onInputFocus($event)"
                     >
                     </codx-input>
@@ -231,7 +232,7 @@
                             type="Share"
                             refValue="SYS064"
                             field="resources"
-                            [disabled]="false"
+                            [disabled]="!enableEdit"
                             [dataShared]="[]"
                             [multiple]="true"
                             [showInput]="false"
@@ -281,7 +282,7 @@
                           </codx-input>
                           </div>
                           <div class="col-1 d-flex justify-content-end">
-                            <codx-input type="combobox" refType="P5" refValue="SYS063" [showInput]="false"  [multiple]="false" (valueChange)="valueCbbChange($event)"></codx-input>
+                            <codx-input type="combobox" refType="P5" refValue="SYS063"  [disabled]="!enableEdit" [showInput]="false"  [multiple]="false" (valueChange)="valueCbbChange($event)"></codx-input>
                           </div>
                         </div>
                       </div>
@@ -297,11 +298,12 @@
                       >
                       </codx-label>
                       <codx-input
-                        field="name"
-                        [crrValue]="selectedData?.name"
+                        field="customName"
+                        [crrValue]="selectedData?.customName"
                         type="text"
                         (valueChange)="valueChange($event)"
                         (focus)="onInputFocus($event)"
+                        [disabled]="!enableEdit"
                       >
                       </codx-input>
                     </div>
@@ -320,6 +322,7 @@
                         refValue="L1470"
                         [field]="'icon'"
                         [crrValue]="selectedData?.icon"
+                        [disabled]="!enableEdit"
                         class="bg-transparent"
                         (valueChange)="valueChange($event)"
                       ></codx-input>
@@ -402,7 +405,7 @@
                               type="Share"
                               refValue="SYS064"
                               field="resources"
-                              [disabled]="false"
+                              [disabled]="!enableEdit"
                               [dataShared]="[]"
                               [multiple]="true"
                               [showInput]="false"
@@ -465,10 +468,11 @@
                       >
                       </codx-label>
                       <codx-input
-                        field="name"
-                        [crrValue]="addData?.name"
+                        field="customName"
+                        [crrValue]="addData?.customName"
                         type="text"
                         (valueChange)="valueAddChange($event)"
+                        [disabled]="!enableEdit"
                       >
                       </codx-input>
                     </div>
@@ -489,6 +493,7 @@
                         [crrValue]="addData?.icon"
                         class="bg-transparent"
                         (valueChange)="valueAddChange($event)"
+                        [disabled]="!enableEdit"
                       ></codx-input>
                       <div
                         class="ps-3 d-flex justify-content-center align-items-center"
@@ -569,7 +574,7 @@
                               type="Share"
                               refValue="SYS064"
                               field="resources"
-                              [disabled]="false"
+                              [disabled]="!enableEdit"
                               [dataShared]="[]"
                               [multiple]="true"
                               [showInput]="false"
@@ -630,10 +635,11 @@
                     >
                     </codx-label>
                     <codx-input
-                      field="name"
-                      [crrValue]="addData?.name"
+                      field="customName"
+                      [crrValue]="addData?.customName"
                       type="text"
                       (valueChange)="valueAddChange($event)"
+                      [disabled]="!enableEdit"
                     >
                     </codx-input>
                   </div>
@@ -682,7 +688,7 @@
                             type="Share"
                             refValue="SYS064"
                             field="resources"
-                            [disabled]="false"
+                            [disabled]="!enableEdit"
                             [dataShared]="[]"
                             [multiple]="true"
                             [showInput]="false"
@@ -718,8 +724,8 @@
           <span class="text-muted fs-5">Thêm nhóm</span>
         </button>
       </div>
-      <div class="col-8 form-group d-flex justify-content-end p-0 ps-1" *ngIf="!user.administrator && !user.systemAdmin">
-        <button type="button" class="btn btn-danger btn-sm me-3" (click)="onRestore()" *ngIf="!isAddFunc && !isAddGroup">
+     <!-- <div class="col-8 form-group d-flex justify-content-end p-0 ps-1" *ngIf="!user.administrator && !user.systemAdmin">
+         <button type="button" class="btn btn-danger btn-sm me-3" (click)="onRestore()" *ngIf="!isAddFunc && !isAddGroup">
           <i class="icon-restore icon-16 me-2"></i><codx-label name="lblRestore" default="Khôi phục cài đặt"></codx-label>
         </button>
         <button type="button" class="btn btn-danger btn-sm me-3" (click)="onUndo()" *ngIf="isAddFunc || isAddGroup">
@@ -727,42 +733,45 @@
         </button>
         <button type="button" class="btn btn-primary btn-sm me-3" *ngIf="!isAddFunc && !isAddGroup && !isEditing" (click)="onSaveForm()">
           <i class="icon-save icon-16 me-2"></i><codx-label name="lblSave" default="Lưu Cá nhân"></codx-label>
-        </button>
-        <button type="button" class="btn btn-success btn-sm" *ngIf="isEditing"(click)="onEdit()">
+        </button> -->
+        <!-- <button type="button" class="btn btn-success btn-sm" *ngIf="isEditing"(click)="onEdit()">
           <i class="icon-system_update_alt icon-16"></i><codx-label name="lblEdit" default="Cập nhật" me-3></codx-label>
-        </button>
-        <button type="button" class="btn btn-primary btn-sm"*ngIf="isAddFunc || isAddGroup" (click)="onAddForm()">
+        </button> -->
+        <!-- <button type="button" class="btn btn-primary btn-sm"*ngIf="isAddFunc || isAddGroup" (click)="onAddForm()">
           <i class=" icon-playlist_add icon-16 me-2"></i><codx-label name="lblSave" default="Thêm mới"></codx-label>
         </button>
 
-      </div>
-      <div class="col-8 form-group d-flex justify-content-end p-0 ps-1" *ngIf="user.administrator || user.systemAdmin">
+      </div>-->
+      <div class="col-8 form-group d-flex justify-content-end p-0 ps-1" >
         <div class="w-25 d-flex justify-content-start">
-          <button type="button" class="btn btn-warning btn-sm" *ngIf="!isSystemEdit" (click)="onSystemEdit()">
+          <!-- <button type="button" class="btn btn-warning btn-sm" *ngIf="!isSystemEdit" (click)="onSystemEdit()">
            <i class="icon-repeat icon-16 me-2"></i> <codx-label name="lblEdit" default="Chỉnh sửa chung"></codx-label>
-          </button>
-          <button type="button" class="btn btn-warning btn-sm" *ngIf="isSystemEdit" (click)="onPersonalEdit()">
+          </button> -->
+          <!-- <button type="button" class="btn btn-warning btn-sm" *ngIf="isSystemEdit" (click)="onPersonalEdit()">
             <i class="icon-repeat icon-16 me-2"></i>  <codx-label name="lblPersonalEdit" default="Chỉnh sửa cá nhân"></codx-label>
-          </button>
+          </button> -->
         </div>
         <div class="w-75 d-flex justify-content-end">
-          <button type="button" class="btn btn-danger btn-sm me-3" (click)="onRestore()" *ngIf="!isAddFunc && !isAddGroup && !isSystemEdit">
+          <!-- <button type="button" class="btn btn-danger btn-sm me-3" (click)="onRestore()" *ngIf="!isAddFunc && !isAddGroup && !isSystemEdit">
             <i class="icon-restore icon-16 me-2"></i><codx-label name="lblRestore" default="Khôi phục cài đặt"></codx-label>
-          </button>
+          </button> -->
           <button type="button" class="btn btn-danger me-3 btn-sm" (click)="onUndo()" *ngIf="isAddFunc || isAddGroup">
             <i class="icon-cancel icon-16 me-2"></i> <codx-label name="lblCancel" default="Hủy"></codx-label>
           </button>
-          <button type="button" class="btn btn-primary btn-sm"*ngIf="isAddFunc || isAddGroup" (click)="onAddForm()">
+          <!-- <button type="button" class="btn btn-primary btn-sm"*ngIf="isAddFunc || isAddGroup" (click)="onAddForm()">
              <i class=" icon-playlist_add icon-16 me-2"></i><codx-label name="lblSave" default="Thêm mới"></codx-label>
-          </button>
+          </button> -->
 
-          <button type="button" class="btn btn-success btn-sm" *ngIf="isEditing"(click)="onEdit()">
+          <!-- <button type="button" class="btn btn-success btn-sm" *ngIf="isEditing"(click)="onEdit()">
             <i class="icon-system_update_alt icon-16 me-2"></i> <codx-label name="lblEdit" default="Cập nhật"></codx-label>
-          </button>
-          <button type="button" class="btn btn-primary me-3 btn-sm" *ngIf="!isAddFunc && !isAddGroup && !isEditing && !isSystemEdit" (click)="onSaveForm()">
+          </button> -->
+          <!-- <button type="button" class="btn btn-primary me-3 btn-sm" *ngIf="!isAddFunc && !isAddGroup && !isEditing && !isSystemEdit" (click)="onSaveForm()">
             <i class="icon-save icon-16 me-2"></i> <codx-label name="lblSave" default="Lưu Cá nhân"></codx-label>
-          </button>
-          <button type="button" class="btn btn-primary btn-sm" *ngIf="!isAddFunc && !isAddGroup && !isEditing && isSystemEdit"(click)="onSaveAdmin()">
+          </button> -->
+          <!-- <button type="button" class="btn btn-primary btn-sm" *ngIf="!isAddFunc && !isAddGroup && !isEditing && isSystemEdit"(click)="onSaveAdmin()">
+            <i class="icon-save icon-16 me-2"></i> <codx-label name="lblSave" default="Lưu"></codx-label>
+          </button> -->
+          <button type="button" class="btn btn-primary btn-sm" (click)="onSave()">
             <i class="icon-save icon-16 me-2"></i> <codx-label name="lblSave" default="Lưu"></codx-label>
           </button>
         </div>
