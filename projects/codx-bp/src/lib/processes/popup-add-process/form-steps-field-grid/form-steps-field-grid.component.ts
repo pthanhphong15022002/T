@@ -585,7 +585,9 @@ export class FormStepsFieldGridComponent
                     ? JSON.stringify(element.documentControl)
                     : null;
               }
-  
+              if (typeof element.visibleControl != 'string') {
+                element.visibleControl = JSON.stringify(element.visibleControl)
+              }
               if (typeof element.dataFormat != 'string') {
                 element.dataFormat = JSON.stringify(element.dataFormat)
               }

@@ -26,7 +26,7 @@
                                     <span class="mx-2">{{child?.item?.defaultValue || child?.field || 'Điều kiện lọc'}}</span>
                                     <i class="icon-16" [ngClass]="!myDrop.isOpen() ? 'icon-i-chevron-down' : 'icon-i-chevron-up' "></i>
                                 </div>
-                                <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="add-s-con-dropdown w-500px rounded-0">
+                                <div *ngIf="listForm" ngbDropdownMenu aria-labelledby="dropdownBasic1" class="add-s-con-dropdown w-500px rounded-0">
                                     <div class="d-flex h-100">
                                         <div ngbNav #nav="ngbNav" [(activeId)]="activeNav" class="nav-pills flex-column h-100" orientation="vertical">
                                             <ng-container [ngbNavItem]="'top'+i" *ngFor="let item of listForm , let i = index">
@@ -42,6 +42,23 @@
                                         <div [ngbNavOutlet]="nav" class="ms-4"></div>
                                     </div>
                                 </div>
+                                <div *ngIf="listExtendInfo" ngbDropdownMenu aria-labelledby="dropdownBasic1" class="add-s-con-dropdown w-500px rounded-0">
+                                  <div class="d-flex h-100" ngbDropdownItem *ngFor="let item of listExtendInfo" (click)="fieldChange(child,item)">
+                                    <span>{{item?.title}}</span>
+                                      <!-- <div ngbNav #nav="ngbNav" [(activeId)]="activeNav" class="nav-pills flex-column h-100" orientation="vertical">
+                                          <ng-container [ngbNavItem]="'top'+i" *ngFor="let item of listExtendInfo , let i = index">
+                                              <button class="w-200px border-0 rounded-0 text-start" ngbNavLink>{{item.stepName}}</button>
+                                              <ng-template ngbNavContent>
+                                                  <div class="d-flex flex-column w-100 h-100 overflow-auto">
+                                                      <div class="p-2 cursor-pointer" [ngClass]="child.field == item2.fieldName ? 'div-active' : ''" *ngFor="let item2 of item.extendInfo" (click)="myDrop.close();fieldChange(child,item2)">{{item2.title}}</div>
+                                                  </div>
+                                              </ng-template>
+                                          </ng-container>
+                                      </div>
+                                     
+                                      <div [ngbNavOutlet]="nav" class="ms-4"></div> -->
+                                  </div>
+                              </div>
                             </div>
                         </div>
                         <div class="col-9 d-flex align-items-center" *ngIf="child?.field">
@@ -314,8 +331,8 @@
     </div>
 </ng-template>
 <ng-template #footer>
-<div class="d-flex w-100">
-    <div class="d-flex align-items-center float-start w-100">
+<div class="d-flex align-items-end w-100">
+    <div class="d-flex align-items-center float-start w-100" *ngIf="listSteps && listSteps.length>0">
         <codx-label formName="fmBPFieldGrid" fiedName="lblTaskNextSteps" default="Hành động xử lý tiếp theo" class="fw-bold me-2"></codx-label>
         <div ngbDropdown #myDrop2="ngbDropdown" class="d-inline-block bp-ffg-dropdown">
             <div class="d-flex align-items-center justify-content-between border p-2 w-200px rounder cursor-pointer" ngbDropdownToggle>
