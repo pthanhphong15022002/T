@@ -264,11 +264,6 @@ export const routes: Routes = [
         data: { noReuse: true, runMode: 1 },
       },
       {
-        path: 'assetcountings/:funcID',
-        component: AssetJournalsComponent,
-        data: { noReuse: true, runMode: 1 },
-      },
-      {
         path: 'generaljournals/:funcID',
         component: GeneralJournalComponent,
         data: { noReuse: true, runMode: 1 },

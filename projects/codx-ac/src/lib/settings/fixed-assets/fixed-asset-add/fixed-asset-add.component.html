@@ -103,6 +103,14 @@
           </codx-input>
         </div>
       </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="DeprModelID"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="dialog.formModel"
+            field="deprModelID" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
     </div>
     <div class="row">
       <div class="col-6">

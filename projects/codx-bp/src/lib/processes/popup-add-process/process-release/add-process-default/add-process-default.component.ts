@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -90,6 +91,7 @@ export class AddProcessDefaultComponent implements OnInit {
     private api: ApiHttpService,
     private bpService: CodxBpService,
     private callFuc: CallFuncService,
+    private dChange: ChangeDetectorRef,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -387,6 +389,7 @@ export class AddProcessDefaultComponent implements OnInit {
     this.attachment.fileUploadList = this.attachment.fileUploadList.concat(e);
   }
   async onSave(type = 1) {
+    this.isSaving(true);
     var valueForm = this.dynamicFormsForm.value;
     var keysUserInfo = Object.keys(this.dataUserInfo);
     if (keysUserInfo.length > 0) {
@@ -399,10 +402,16 @@ export class AddProcessDefaultComponent implements OnInit {
         valueForm[k] = this.dataUserInfo[k];
       });
 
-      if (flag) return;
+      if (flag){
+        this.isSaving(false);
+        return;
+      }; 
     }
 
-    if (!this.checkAttachment()) return;
+    if (!this.checkAttachment()) {
+      this.isSaving(false);
+      return;
+    };
     if (this.dynamicFormsForm.invalid) this.findInvalidControls();
     else {
       var keysTable = Object.keys(this.dataTable);
@@ -786,6 +795,7 @@ export class AddProcessDefaultComponent implements OnInit {
       if (namePastDate) str += namePastDate + ' không được nhập ngày quá khứ. ';
       if (name) str += name + 'không được phép bỏ trống.';
       this.notifySvr.notify(str);
+      this.isSaving(false);
     }
   }
 
@@ -842,10 +852,18 @@ export class AddProcessDefaultComponent implements OnInit {
         }
         this.dialog.close(this.dataIns);
       }
+      else{
+        this.isSaving(false);
+        return;
+      };
     });
   }
   dataChangeAttachment(e: any) {
     this.isAttach = e;
+  }
+  isSaving(saving: boolean) {
+    this.isAttach = saving;
+    this.dChange.detectChanges();
   }
 
   addRow(

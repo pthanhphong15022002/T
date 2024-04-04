@@ -151,12 +151,6 @@ export class CodxTmmeetingsComponent
     if (body.classList.contains('toolbar-fixed'))
       this.toolbarCls = 'toolbar-fixed';
 
-    this.modelResource = new ResourceModel();
-    this.modelResource.assemblyName = 'CO';
-    this.modelResource.className = 'MeetingsBusiness';
-    this.modelResource.service = 'CO';
-    this.modelResource.method = 'GetListMeetingsAsync';
-
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'SYS';
     this.resourceKanban.assemblyName = 'SYS';
@@ -168,7 +162,7 @@ export class CodxTmmeetingsComponent
     this.request.assemblyName = 'CO';
     this.request.className = 'MeetingsBusiness';
     this.request.method = 'GetListMeetingsAsync';
-    this.request.idField = 'meetingID';
+    this.request.idField = "meetingID";
     this.request.dataObj = this.dataObj;
 
     this.requestSchedule = new ResourceModel();
@@ -634,16 +628,24 @@ export class CodxTmmeetingsComponent
     config.type = 'YesNo';
     this.notiSv.alertCode('SYS030').subscribe((x) => {
       if (x.event && x?.event?.status == 'Y') {
-        this.api.execSv<any>('CO','ERM.Business.CO','MeetingsBusiness','DeleteMeetingsAsync',[data?.recID]).subscribe((res)=>{
-          if(res){
-            this.view.dataService.remove(data).subscribe();
-            this.notiSv.notifyCode('SYS008');
-            this.notiSv.alertCode
-            this.detectorRef.detectChanges();
-          }
-        });
-      }});
-
+        this.api
+          .execSv<any>(
+            'CO',
+            'ERM.Business.CO',
+            'MeetingsBusiness',
+            'DeleteMeetingsAsync',
+            [data?.recID]
+          )
+          .subscribe((res) => {
+            if (res) {
+              this.view.dataService.remove(data).subscribe();
+              this.notiSv.notifyCode('SYS008');
+              this.notiSv.alertCode;
+              this.detectorRef.detectChanges();
+            }
+          });
+      }
+    });
   }
 
   beforeDel(opt: RequestOption) {

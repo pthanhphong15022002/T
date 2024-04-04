@@ -112,7 +112,7 @@
                                     [Group]="dynamicFormsForm"
                                     [ControlName]="child?.fieldName"
                                     [min]="(child.dataType == 'Decimal' && child.validateControl != '1')? 0 : undefined"
-                                    [disabled]="child?.autoNumber?.autoNumberControl"
+                                    [disabled]="child?.autoNumber?.autoNumberControl || isAttach"
                                     [gridViewSetup]="gridViewSetup"
                                     >
                                 </codx-input>

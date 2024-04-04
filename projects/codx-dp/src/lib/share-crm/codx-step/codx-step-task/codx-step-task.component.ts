@@ -1587,21 +1587,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       dataInput,
       'right'
     );
-    // let frmModel: FormModel = {
-    //   entityName: 'DP_Instances_Steps_Tasks',
-    //   formName: 'DPInstancesStepsTasks',
-    //   gridViewName: 'grvDPInstancesStepsTasks',
-    // };
-    // let option = new SidebarModel();
-    // option.Width = '550px';
-    // option.zIndex = 1011;
-    // option.FormModel = frmModel;
-    // let popupTask = this.callfc.openSide(
-    //   CodxAddTaskComponent,
-    //   dataInput,
-    //   option
-    // );
-    // let dataPopupOutput = await firstValueFrom(popupTask.closed);
     return dataPopupOutput;
   }
   //#endregion
