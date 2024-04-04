@@ -14,53 +14,90 @@
         </codx-label>
         <div class="d-flex align-items-center py-2">
           <div class="mx-2 fw-bold">
-            <codx-label default="Gợi ý tìm kiếm"  [fiedName]="'lblSVSearchSuggestions'" [formName]="'SVSearchSuggestions'"></codx-label> :
+            <codx-label
+              default="Gợi ý tìm kiếm"
+              [fiedName]="'lblSVSearchSuggestions'"
+              [formName]="'SVSearchSuggestions'"
+            ></codx-label>
+            :
           </div>
-          <div *ngFor="let item of vllSV005" class="mx-2 cursor-pointer" (click)="openFormSuggestion()">
-            <span>{{item?.default}}</span>
+          <div
+            *ngFor="let item of vllSV005"
+            class="mx-2 cursor-pointer"
+            (click)="openFormSuggestion()"
+          >
+            <span>{{ item?.default }}</span>
           </div>
           <div class="mx-2 cursor-pointer">
-            <codx-label default="Xem thêm"  [fiedName]="'lblSVMore'" [formName]="'SVMore'"></codx-label>...
+            <codx-label
+              default="Xem thêm"
+              [fiedName]="'lblSVMore'"
+              [formName]="'SVMore'"
+            ></codx-label
+            >...
           </div>
         </div>
       </div>
       <div class="d-flex align-items-center div-title">
         <div class="card-survey rounded-2" (click)="createNewSurvey()">
-          <img src="./assets/themes/sv/default/img/AddSurvey.svg" class="rounded-2"/>
+          <img
+            src="./assets/themes/sv/default/img/AddSurvey.svg"
+            class="rounded-2"
+          />
           <div class="my-2 fw-bold line-clamp line-clamp-2">
             <span>Trống</span>
           </div>
         </div>
-        <ng-container *ngIf="dataSurveysSystem && dataSurveysSystem.length>0">
-          <div class="card-survey rounded-2" *ngFor="let item of dataSurveysSystem" (click)="clone(item)">
-            <img [src]="getImgSrc(item , 'card')" class="rounded-2"/>
+        <ng-container *ngIf="dataSurveysSystem && dataSurveysSystem.length > 0">
+          <div
+            class="card-survey rounded-2"
+            *ngFor="let item of dataSurveysSystem"
+            (click)="clone(item)"
+          >
+            <img [src]="getImgSrc(item, 'card')" class="rounded-2" />
             <div class="my-2 fw-bold line-clamp line-clamp-1">
-              <span [title]="item?.title">{{item?.title}}</span>
+              <span [title]="item?.title">{{ item?.title }}</span>
             </div>
           </div>
         </ng-container>
+        <div class="mx-2 cursor-pointer" (click)="readMoreSys()">
+          <codx-label
+            default="Xem thêm"
+            [fiedName]="'lblSVMoreTemp'"
+            [formName]="'SVMore'"
+          ></codx-label
+          >...
+        </div>
       </div>
     </div>
     <div class="py-y bg-body list-survey">
       <div class="d-flex justify-content-between py-2 h-100">
-        <ejs-tab *ngIf="listFunctionList" height="100%" class="ejs-tab-survey"  (selected)='onTabSelect($event)'>
+        <ejs-tab
+          *ngIf="listFunctionList"
+          height="100%"
+          class="ejs-tab-survey"
+          (selected)="onTabSelect($event)"
+        >
           <e-tabitems>
             <!-- Tab danh sách tôi tạo -->
             <e-tabitem *ngFor="let item of listFunctionList">
               <ng-template #headerText>
                 <div class="d-flex align-items-top me-2">
-                  <codx-label [default]="item?.customName" class="fw-bold"></codx-label>
+                  <codx-label
+                    [default]="item?.customName"
+                    class="fw-bold"
+                  ></codx-label>
                 </div>
               </ng-template>
               <ng-template #content>
                 <ng-container *ngIf="tabIndex == 'SVT01'">
-                  <ng-container  *ngTemplateOutlet="tabCreate"></ng-container>
+                  <ng-container *ngTemplateOutlet="tabCreate"></ng-container>
                 </ng-container>
                 <ng-container *ngIf="tabIndex == 'SVT02'">
-                  <ng-container  *ngTemplateOutlet="tabRepondent"></ng-container>
+                  <ng-container *ngTemplateOutlet="tabRepondent"></ng-container>
                 </ng-container>
               </ng-template>
-           </e-tabitem>
+            </e-tabitem>
           </e-tabitems>
         </ejs-tab>
         <codx-searchbar
@@ -86,47 +123,71 @@
   </div>
 </ng-template>
 
-
-
 <ng-template #tabCreate>
-  <div *ngIf="dataSurveys" class="d-flex flex-wrap w-100 overflow-auto h-dataSurvey ">
-    <div class="px-2 mt-2" *ngFor="let item of dataSurveys">
-      <ng-container *ngTemplateOutlet=" templateListCard; context: { $implicit: item }"></ng-container>
-    </div>  
+  <div class="d-flex flex-wrap w-100 overflow-auto h-dataSurvey">
+    <codx-listview
+      #listViewSurveys
+      entityName="SV_Surveys"
+      [predicate]="'!IsTemplate'"
+      [dataValue]="''"
+      [assemblyName]="'SV'"
+      [isScrolling]="true"
+      [funcId]="tabIndex"
+      idField="recID"
+      [className]="'SurveysBusiness'"
+      [method]="'GetAsync'"
+      [itemTemplate]="templateListCard"
+      type="cardView"
+      service="SV"
+    >
+    </codx-listview>
+    <!-- <div class="px-2 mt-2" *ngFor="let item of dataSurveys">
+      <ng-container
+        *ngTemplateOutlet="templateListCard; context: { $implicit: item }"
+      ></ng-container>
+    </div> -->
   </div>
 </ng-template>
 
 <ng-template #tabRepondent>
-  <div *ngIf="dataSurveys" class="d-flex flex-wrap w-100">
-    <div class="px-2 mt-2" *ngFor="let item of dataSurveys">
-      <ng-container *ngTemplateOutlet=" templateListCardRepondent; context: { $implicit: item }"></ng-container>
-    </div>  
+  <div class="d-flex flex-wrap w-100">
+    <codx-listview
+      #listViewRepondent
+      entityName="SV_Respondents"
+      [predicate]="'CreatedBy=@0 or ObjectID=@0'"
+      [dataValue]="user?.userID"
+      [assemblyName]="'SV'"
+      [formName]="'Respondents'"
+      [gridViewName]="'grvRespondents'"
+      [funcId]="tabIndex"
+      [className]="'SurveysBusiness'"
+      idField="recID"
+      [method]="'GetAsync'"
+      [itemTemplate]="templateListCardRepondent"
+      type="cardView"
+      service="SV"
+    >
+    </codx-listview>
   </div>
 </ng-template>
 
-<ng-template #tabBookMark>
-  
-</ng-template>
+<ng-template #tabBookMark> </ng-template>
 
-<ng-template #tabDashboard>
-  
-</ng-template>
+<ng-template #tabDashboard> </ng-template>
 
-<ng-template #tabReport>
-  
-</ng-template>
+<ng-template #tabReport> </ng-template>
 
 <ng-template #templateListCard let-item>
   <div (click)="update(item)">
     <codx-card-img
       cardCss="border rounded-2 card-img-mwp img-storage w-225px h-230px"
       (clickMF)="clickMF($event, item)"
-      [imageSrc]="getImgSrc(item , 'card')"
+      [imageSrc]="getImgSrc(item, 'card')"
       imgCss="h-150px w-100"
       [titleTmp]="titleTmp"
       cssDes2="line-clamp line-clamp-1"
       imageWidth="223"
-      [bgColor]="getStatus(item,'bg')"
+      [bgColor]="getStatus(item, 'bg')"
       [formModel]="view.formModel"
       [typeMF]="'hover'"
       [dataItem]="item"
@@ -136,16 +197,18 @@
   <ng-template #titleTmp>
     <div class="d-flex flex-column w-100">
       <div class="d-flex flex-column w-100 h-50px pb-3">
-        <span class="line-clamp line-clamp-2 text-dark fw-bold pt-1">{{item.title}}</span>
+        <span class="line-clamp line-clamp-2 text-dark fw-bold pt-1">{{
+          item.title
+        }}</span>
         <div class="d-flex align-item-center">
-          <span class="me-1">{{item?.repondents}}</span>
+          <span class="me-1">{{ item?.repondents }}</span>
           <span class="text-gray-600">câu trả lời</span>
         </div>
       </div>
       <div class="d-flex align-item-center justify-content-between pb-2">
         <!-- <i class="icon-i-file-earmark-text-fill icon-15 text-primary"></i>
         <span class="ms-2 fs-7 text-gray-500">{{getStatus(item,"status")}}</span> -->
-        <span class="me-2">{{item?.createdOn | date: 'dd/MM/yyyy'}}</span> 
+        <span class="me-2">{{ item?.createdOn | date : "dd/MM/yyyy" }}</span>
         <codx-vll
           [value]="item?.status"
           [name]="'SV003'"
@@ -166,7 +229,7 @@
       cardCss="border rounded-2 card-img-mwp img-storage w-225px h-225px"
       (clickMF)="clickMF($event, item)"
       imgCss="h-150px w-100"
-      [imageSrc]="getImgSrc(item , 'repondent')"
+      [imageSrc]="getImgSrc(item, 'repondent')"
       [titleTmp]="titleTmpRepondent"
       cssDes2="line-clamp line-clamp-1"
       imageWidth="223"
@@ -179,11 +242,15 @@
   <ng-template #titleTmpRepondent>
     <div class="d-flex flex-column w-100">
       <div class="d-flex align-item-center w-100">
-        <span class="line-clamp line-clamp-2 my-1 h-35px text-dark">{{item?.unbounds?.title}}</span>
+        <span class="line-clamp line-clamp-2 my-1 h-35px text-dark">{{
+          item?.unbounds?.title
+        }}</span>
       </div>
       <div class="d-flex align-item-center">
         <i class="icon-i-clock icon-14 text-primary"></i>
-        <span class="ms-2 fs-7 text-gray-500">{{item?.createdOn | date: "dd/MM/yyyy"}}</span>
+        <span class="ms-2 fs-7 text-gray-500">{{
+          item?.createdOn | date : "dd/MM/yyyy"
+        }}</span>
       </div>
     </div>
   </ng-template>
