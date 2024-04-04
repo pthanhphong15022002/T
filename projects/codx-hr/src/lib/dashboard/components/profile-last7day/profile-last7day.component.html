@@ -1,0 +1,83 @@
+<div class="p-2">
+  <div class="p-3 pt-2 ps-1 border-bottom fs-14 hcs-text fw-500">
+    7 ngày chấm công gần nhất
+  </div>
+  <div class="pt-2">
+    <div class="d-flex justify-content-between px-1">
+      <div class="d-flex gap-5 p-3 pt-0 ps-2">
+        <div class="d-flex align-items-center gap-2 item-contain">
+          <div class="circle color-in"></div>
+          <div class="hcs-text fs-14">Vào</div>
+          <div class="inout-popover border rounded">
+            <ng-container
+              [ngTemplateOutlet]="inout"
+              [ngTemplateOutletContext]="{ $implicit: 'Remove' }"
+            ></ng-container>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 item-contain">
+          <div class="circle color-out"></div>
+          <div class="hcs-text fs-14">Ra</div>
+          <div class="inout-popover border rounded">
+            <ng-container
+              [ngTemplateOutlet]="inout"
+              [ngTemplateOutletContext]="{ $implicit: 'Remove' }"
+            ></ng-container>
+          </div>
+        </div>
+      </div>
+      <div class="hcs-text fs-12 font-italic">đơn vị tính(giờ)</div>
+    </div>
+    <ejs-chart
+      [chartArea]="chartArea"
+      id="chart-container"
+      height="185"
+      [primaryXAxis]="primaryXAxis"
+      [primaryYAxis]="primaryYAxis"
+      [title]="title"
+      [tooltip]="tooltip"
+      (load)="load($event)"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="chartData"
+          fill="#0078FF"
+          type="Column"
+          columnSpacing="0.5"
+          columnWidth="0.75"
+          xName="date"
+          yName="In"
+        ></e-series>
+        <e-series
+          [dataSource]="chartData"
+          fill="#06DDB8"
+          type="Column"
+          columnSpacing="0.5"
+          xName="date"
+          columnWidth="0.75"
+          yName="Out"
+        ></e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</div>
+
+<ng-template #inout let-item let-icon="icon" let-color="color">
+  <div class="p-2 d-flex gap-2 flex-column">
+    <div class="d-flex align-items-center gap-3">
+      <div class="circle color-in"></div>
+      <div class="hcs-text fs-12 fw-500">08:00</div>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <div class="circle color-out"></div>
+      <div class="hcs-text fs-12 fw-500">17:00</div>
+    </div>
+  </div>
+  <div
+    class="d-flex justify-content-between border-top p-2"
+    style="min-width: 157px"
+  >
+    <div class="hcs-text fs-12 fw-500">TG làm việc</div>
+    <div class="hcs-text fs-12 fw-500">9 giờ</div>
+  </div>
+</ng-template>

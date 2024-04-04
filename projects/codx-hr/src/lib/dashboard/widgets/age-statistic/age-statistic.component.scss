@@ -1,0 +1,71 @@
+.statistic-container{
+    display: flex;
+    width: 95%;
+    padding: var(--Spacing-250, 20px) 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 11px;
+    .statistic-header{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        .statistic-name{
+            color: #000;
+            font-family: Roboto;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 20px; /* 142.857% */
+        }
+        .statistic-all-emp{
+            color: var(--Text-Muted, #6C757D);
+            font-family: Roboto;
+            font-size: 11px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 20px;
+        }
+    }
+    .statistic-line{
+        width: 100%;
+        margin: 0;
+    }
+    .statistic-items{
+        width: 100%;
+        .statistic-item{
+            margin-bottom: 10px;
+            width: 100%;
+            .statistic-title{
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                margin-bottom: 5px;
+                .statistic-location-title{
+                    color: #505D6F;
+                    font-family: Roboto;
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 24px; /* 200% */
+                }
+                .statistic-location-total{
+                    color: #505D70;
+                    text-align: right;
+                    font-family: Roboto;
+                    font-size: 13px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: 24px; /* 184.615% */
+                }
+            }
+            .statistic-progress{
+                .progress-bar-custom{
+                    width: 100%;
+                    --bs-progress-height: 0.5rem;
+                }
+            }
+        }
+    }
+  }
+  

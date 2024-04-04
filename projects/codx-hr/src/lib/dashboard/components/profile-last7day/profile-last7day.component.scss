@@ -1,0 +1,34 @@
+.circle{
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    position: relative;
+  
+  }
+  
+  .item-contain{
+    position: relative;
+    cursor: pointer;
+    &:hover > .inout-popover{
+      display: block !important;
+  
+    }
+  }
+  
+  
+  .color-in{
+    background: #0078FF;
+  }
+  
+  .color-out{
+    background: #06DDB8;
+  }
+  .inout-popover{
+    display: none;
+    position: absolute;
+    top:16px;
+    left: 8px;
+    z-index: 99;
+    background-color: #fff;
+  }
+  

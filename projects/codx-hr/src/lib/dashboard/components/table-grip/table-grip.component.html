@@ -1,0 +1,86 @@
+<div *ngIf="isShowHeader" class="table-header mb-4">
+    <div class="d-flex align-items-center flex-row gap-3">
+      <i class="hcs-icon plus-no-circle-icon fs-16" (click)="clickEvents($event,'add')"></i>
+      <i class="hcs-icon edit-no-background-icon fs-16" (click)="clickEvents($event,'edit')"></i>
+      <i class="hcs-icon delete-icon fs-16" (click)="clickEvents($event,'delete')"></i>
+    </div>
+  </div>
+  
+  <ejs-grid #grid [dataSource]="data" class="border-0" (recordDoubleClick)="onRecordDoubleClick($event)"
+    (rowSelected)="onRowSelected($event)" [allowResizing]="allowResizing" allowSorting="true"
+    [allowFiltering]="allowFiltering" [searchSettings]="searchSettings" [selectedRowIndex]="selectedRowIndex"
+    [allowPaging]="allowPaging" [editSettings]="editSettings" [enableColumnVirtualization]="true" [height]="height"
+    (headerCellInfo)="headerCellInfo($event)">
+  
+   
+      <e-columns>
+        <ng-container *ngIf="multiple">
+        <e-column type="checkbox" width="50"></e-column>
+        </ng-container>
+        <ng-container *ngFor="let fielditem of listFields; let i = index">
+          <e-column [editType]="onCheckType(fielditem)" [field]="fielditem.field" [headerText]="fielditem.name"
+            [textAlign]="fielditem.textAlign" [width]="fielditem.width ?? 200">
+            <ng-template #template let-data>
+              <ng-container
+                *ngTemplateOutlet="templates.get(i) ?? defaultTemplate; context: { $implicit: templates.get(i) ? data : data[fielditem.field] }">
+              </ng-container>
+            </ng-template>
+          </e-column>
+        </ng-container>
+      </e-columns>
+  
+  
+    <!-- <ng-container *ngIf="!multiple">
+      <e-columns>
+        <ng-container *ngFor="let fielditem of listFields; let i = index">
+          <e-column [editType]="onCheckType(fielditem)" [field]="fielditem.field" [headerText]="fielditem.name"
+            [textAlign]="fielditem.textAlign" [width]="fielditem.width ?? 200">
+            <ng-template #template let-data>
+              <ng-container
+                *ngTemplateOutlet="templates.get(i) ?? defaultTemplate; context: { $implicit: templates.get(i) ? data : data[fielditem.field] }">
+              </ng-container>
+            </ng-template>
+          </e-column>
+        </ng-container>
+      </e-columns>
+    </ng-container> -->
+  
+    <ng-template #emptyRecordTemplate>
+      <div class="emptyRecordTemplate">
+        <span>Không có dữ liệu</span>
+      </div>
+    </ng-template>
+  </ejs-grid>
+  
+  <ng-template #defaultTemplate let-data>
+    <div>{{ data }}</div>
+  </ng-template>
+  
+  <ng-container *ngIf="isShow">
+    <ejs-dialog id="dialog" cssClass="dialog-custom" isModal="true" header="Dialog" (beforeOpen)="onBeforeOpen($event)"
+      [animationSettings]="animationSettings" showCloseIcon="true" #ejDialog width="60%" height="100%"
+      (overlayClick)="onOverlayClick()" [position]="{ X: 'right', Y: 'center' }">
+      <ng-template #footerTemplate>
+        <div class="d-flex flex-row justify-content-end p-3">
+          <div class="btn-footer">
+            <button ejs-button (click)="onSaveItem()" cssClass="hcs-button">Lưu</button>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template #content>
+        <div class="custom-content p-2">
+          <ng-container *ngTemplateOutlet="popupTemplate ?? noDataInPopup; context: { value: itemform }"></ng-container>
+        </div>
+      </ng-template>
+      <ng-template #header>
+        <div class="e-icon-settings dlg-template header-custom">
+          <span>{{ title }}</span>
+        </div>
+      </ng-template>
+    </ejs-dialog>
+  </ng-container>
+  
+  <ng-template #noDataInPopup>
+    <div>Không có template</div>
+  </ng-template>
+  

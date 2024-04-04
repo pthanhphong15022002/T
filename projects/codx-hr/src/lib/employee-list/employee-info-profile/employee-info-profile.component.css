@@ -165,9 +165,9 @@
 }
 
 /* info-component */
-.info-component {
+.info-item {
     gap: 31px;
-    border-radius: 10px;
+    border-radius: 20px;
     opacity: 0px;
     min-width: 184px;
     min-height: 90px;
@@ -178,4 +178,148 @@
     box-shadow: 0px 4px 4px 0px #1054CC73;
 
 
+}
+
+/* .bg-white{
+    border-radius: 10px;
+    padding-top: 20px;
+    border: 1px soild var(--primary-dark);
+} */
+
+/* Table new employee */
+.table-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #000;
+}
+
+.table-emp {
+    border: 1px solid #E2E3EE;
+    border-radius: 10px;
+    background: #FFFFFF;
+
+    padding: 15px;
+}
+
+.men {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 150%;
+    color: #EF6023;
+}
+
+.woman {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 150%;
+    color: #08AD36;
+}
+
+.info-emp {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #F64E60;
+
+    .name {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 11px;
+        line-height: 150%;
+        color: #000000;
+    }
+
+    .job {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 11px;
+        line-height: 150%;
+        /* identical to box height, or 16px */
+
+        color: #161719;
+    }
+
+    .TT {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 11px;
+        line-height: 150%;
+        color: #6C757D;
+    }
+}
+
+.qr-code-icon {
+    color: #F64E60;
+    font-size: 14px;
+}
+
+.emp-img {
+
+    width: 29px;
+    height: 29px;
+    border-radius: 50px;
+}
+
+p {
+    margin: 0;
+}
+
+.gender0 {
+    display: flex;
+    height: 24px;
+    justify-content: center;
+    align-items: center;
+    color: #08AD36;
+    text-align: center;
+    font-family: Roboto;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 218.182% */
+    border-radius: 30px;
+    background: #BCFFCF;
+    padding: 10px;
+}
+
+.info-date-working {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 150%;
+    color: #828282;
+    flex-wrap: nowrap;
+    display: flex;
+
+    .date-working {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 11px;
+        line-height: 150%;
+        color: black;
+
+    }
+}
+
+.holine-info {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 150%;
+    /* or 16px */
+
+    color: #005DC7;
 }

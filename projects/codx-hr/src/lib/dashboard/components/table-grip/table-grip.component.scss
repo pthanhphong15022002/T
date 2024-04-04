@@ -1,0 +1,131 @@
+.e-gridheader{
+    border: none;
+    border-radius: 4px;
+  }
+ 
+    .rows {
+        border-color: #e0e0e0;
+        border-style: solid;
+        text-align: "Left";
+        border-width: 1px 0px 0px 0px;
+
+    }
+.emptyRecordTemplate{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+
+//sdfsdssdsd
+.header-custom{
+  span{
+   color: #000;
+   font-family: Roboto;
+   font-size: 18px;
+   font-style: normal;
+   font-weight: 500;
+   line-height: 16px;
+  }
+
+}
+.btn-footer{
+  width: 157px;
+  height: 41px;
+}
+.custom-content{
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    height: 100%;
+
+}
+
+.e-checkbox-wrapper:hover .e-frame.e-check, .e-css.e-checkbox-wrapper .e-frame.e-check{
+  background-color: rgba(0, 120, 255, 1);
+}
+
+
+.e-dialog .e-dlg-header-content {
+   
+}
+.e-dialog .e-dlg-content {
+   
+   overflow: hidden;
+}
+.e-dialog{
+   width: 60%;
+   height: 100%;
+   top: 0;
+   max-width: 493px;
+   right: 0;
+   z-index: 1001;
+}
+
+.post-btn{
+    width: 100%;
+    padding: 10px;
+    background: #D3E8FF;
+    color: var(--Theme-Primary-Dark, var(--Theme-Primary-Dark, #0078FF));
+    font-family: Roboto;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    box-shadow: none;
+}
+
+.event-items::-webkit-scrollbar {
+   height: 10px;
+   width: 5px;
+ }
+ .event-items::-webkit-scrollbar-thumb {
+   background-color: #ccc;
+   border-radius: 5px;
+ }
+ .event-items::-webkit-scrollbar-track{
+   background-color: #f0f0f0;
+ }
+
+
+.e-dialog .e-scroll-disabled {
+   overflow:initial !important;
+}
+
+.plus-no-circle-icon{
+  color: rgba(0, 93, 199, 1);
+  cursor: pointer;
+  font-size: 13px;
+}
+.edit-no-background-icon{
+  color: rgba(0, 120, 255, 1);
+  cursor: pointer;
+  font-size: 13px;
+}
+.delete-icon{
+  color: rgba(246, 78, 96, 1);
+  cursor: pointer;
+  font-size: 13px;
+}
+.table-header{
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: end;
+  //padding: 0 40px 0 0;
+}
+
+.e-gridcontent .e-content{
+  &::-webkit-scrollbar {
+    height: 10px;
+    width: 5px;
+  }
+  &::-webkit-scrollbar-thumb{
+    background-color: #ccc;
+    border-radius: 5px;
+
+  }
+  &::-webkit-scrollbar-track  {
+    background-color: #f0f0f0;
+  }
+}

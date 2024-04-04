@@ -7143,4 +7143,61 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
     }
   }
 
+  listField:any = [
+    { id: "Employeeinfo", name: 'Nhân viên', field: "FullName", width:200 , textAlign: 'Left',type:'text'},
+    { id: "StartWorkingDate", name:'Tình trạng', field: "StartWorkingDate", width: 100 ,textAlign: 'Left', type:'combobox'},
+    { id: "Hotline", name: 'Liên hệ', field: "Phone", width: 100, textAlign: 'Left', type:'datetime' },
+]
+
+  listThanNhan:any[] = [
+    {
+      FullName:'Vũ Đại Kỳ',
+      Gender:1,
+      img:'assets/images/avar.png',
+      EmployeeCode: 'ELV02269',
+      JobWorking: 'Kiểm thử chất lượng phần mềm',
+      TT: 'Trung tâm CDC',
+      WorkingType: 'Thử việc',
+      StartWorkingDate:new Date().toISOString(),
+      Email:'nnpvi@lacviet.com.vn',
+      Phone:'(+84) 39-1234-5678'
+    },
+    {
+      FullName:'Vũ Đại Kỳ',
+      Gender:1,
+      img:'assets/images/avar.png',
+      EmployeeCode: 'ELV02269',
+      JobWorking: 'Kiểm thử chất lượng phần mềm',
+      TT: 'Trung tâm CDC',
+      WorkingType: 'Thử việc',
+      StartWorkingDate:new Date().toISOString(),
+      Email:'nnpvi@lacviet.com.vn',
+      Phone:'(+84) 39-1234-5678'
+    },
+    {
+      FullName:'Vũ Đại Kỳ',
+      Gender:1,
+      img:'assets/images/avar.png',
+      EmployeeCode: 'ELV02269',
+      JobWorking: 'Kiểm thử chất lượng phần mềm',
+      TT: 'Trung tâm CDC',
+      WorkingType: 'Thử việc',
+      StartWorkingDate:new Date().toISOString(),
+      Email:'nnpvi@lacviet.com.vn',
+      Phone:'(+84) 39-1234-5678'
+    },
+    {
+      FullName:'Vũ Đại Kỳ',
+      Gender:1,
+      img:'assets/images/avar.png',
+      EmployeeCode: 'ELV02269',
+      JobWorking: 'Kiểm thử chất lượng phần mềm',
+      TT: 'Trung tâm CDC',
+      WorkingType: 'Thử việc',
+      StartWorkingDate:new Date().toISOString(),
+      Email:'nnpvi@lacviet.com.vn',
+      Phone:'(+84) 39-1234-5678'
+    },
+  ]
+
 }

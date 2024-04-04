@@ -152,6 +152,12 @@ import { ForeignWorkersComponent } from './employee-list/employee-info-detail/co
 import { PreviousExperienceComponent } from './employee-list/employee-info-detail/component/previous-experience/previous-experience.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { EmployeeInfoProfileComponent } from './employee-list/employee-info-profile/employee-info-profile.component';
+import { ProfileDashboardLeaveComponent } from './dashboard/components/profile-dashboard-leave/profile-dashboard-leave.component';
+import { ProfileLast7dayComponent } from './dashboard/components/profile-last7day/profile-last7day.component';
+import { DashboardRegisterAprroveComponent } from './dashboard/components/dashboard-register-aprrove/dashboard-register-aprrove.component';
+import { TableGripComponent } from './dashboard/components/table-grip/table-grip.component';
+import { AgeStatisticComponent } from './dashboard/widgets/age-statistic/age-statistic.component';
+import { DirectivesModule } from './common/directives/directives.module';
 export const routes: Routes = [
   {
     path: '',
@@ -483,7 +489,13 @@ const T_Component = [
   LegalInfoComponent,
   ForeignWorkersComponent,
   PreviousExperienceComponent,
-  EmployeeInfoProfileComponent
+  EmployeeInfoProfileComponent,
+  ProfileLast7dayComponent, 
+  ProfileDashboardLeaveComponent,
+  DashboardRegisterAprroveComponent,
+  TableGripComponent, 
+  AgeStatisticComponent,
+  
  
 ];
 @NgModule({
@@ -502,6 +514,7 @@ const T_Component = [
     NgbModule,
     BasicPrimitivesModule,
     SpeedDialModule,
+    DirectivesModule
   ],
   exports: [T_Component],
   declarations: [T_Component,T_Pipe],
