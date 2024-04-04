@@ -158,6 +158,7 @@ import { DashboardRegisterAprroveComponent } from './dashboard/components/dashbo
 import { TableGripComponent } from './dashboard/components/table-grip/table-grip.component';
 import { AgeStatisticComponent } from './dashboard/widgets/age-statistic/age-statistic.component';
 import { DirectivesModule } from './common/directives/directives.module';
+import { MyTemComponent } from './dashboard/widgets/my-tem/my-tem.component';
 export const routes: Routes = [
   {
     path: '',
@@ -495,6 +496,7 @@ const T_Component = [
   DashboardRegisterAprroveComponent,
   TableGripComponent, 
   AgeStatisticComponent,
+  MyTemComponent
   
  
 ];

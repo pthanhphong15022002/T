@@ -8,7 +8,6 @@
     <div
       class="swiper-btn previous"
       libSwiperClicking
-      
       type="previous"
       ContainerID="grid-element"
     >
@@ -28,7 +27,7 @@
         [ngTemplateOutlet]="item"
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
-          color: '#17BB45',
+          color: '#EF6023',
         }"
       ></ng-container>
       <ng-container
@@ -44,7 +43,7 @@
         [ngTemplateOutlet]="item"
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
-          color: '#17BB45',
+          color: '#FF00A8',
         }"
       ></ng-container>
       <ng-container
@@ -52,7 +51,7 @@
         [ngTemplateOutlet]="item"
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
-          color: '#17BB45',
+          color: '#2F80ED',
         }"
       ></ng-container>
       <ng-container
@@ -60,7 +59,7 @@
         [ngTemplateOutlet]="item"
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
-          color: '#17BB45',
+          color: '#9B51E0',
         }"
       ></ng-container>
       <ng-container
@@ -68,7 +67,7 @@
         [ngTemplateOutlet]="item"
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
-          color: '#17BB45',
+          color: '#FFA800',
         }"
       ></ng-container>
       <ng-container
@@ -76,7 +75,7 @@
         [ngTemplateOutlet]="item"
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
-          color: '#17BB45',
+          color: '#323232',
         }"
       ></ng-container>
       <ng-container
@@ -191,24 +190,31 @@
   <div class="p-0 pointer" (click)="open($event)">
     <div
       class="d-flex flex-column border rounded container-item"
-      [ngStyle]="{ 'box-shadow': '0px 2px 4px 0px rgba(0, 0, 0, 0.1), 0 4px 0px 0px ' + color }"
-      >
+      [ngStyle]="{
+        'box-shadow':
+          '0px 2px 4px 0px rgba(0, 0, 0, 0.1), 0 4px 0px 0px ' + color
+      }"
+    >
       <div
-        class="d-flex gap-2 align-items-center justify-content-start m-2 py-2 pb-3 border-bottom"
+        class="d-flex gap-2 align-items-center justify-content-between m-2 py-2 pb-3 border-bottom"
       >
         <div
-          style="width: 35px; height: 35px"
-          class="border rounded-circle d-flex align-items-center justify-content-center text-white"
-          [ngStyle]="{ background: color }"
+          class="d-flex  align-items-center justify-content-start"
         >
-          <span class="fs-18"></span>
+          <div
+            style="width: 35px; height: 35px"
+            class="border rounded-circle d-flex align-items-center justify-content-center text-white"
+            [ngStyle]="{ background: color }"
+          >
+            <span class="fs-18"></span>
+          </div>
+          <div class="d-flex align-items-baseline gap-1 flex-column ms-3">
+            <div class="fw-500 fs-2 fw-bold">20</div>
+            <div class="fs-12 fw-400 text-grey">Ngoài nước</div>
+          </div>
         </div>
-        <div class="d-flex align-items-baseline gap-1 flex-column">
-          <div class="fw-500 fs-2 fw-bold">20</div>
-          <div class="fs-12 fw-400 text-grey">Ngoài nước</div>
-        </div>
+        <div>ICON</div>
       </div>
-      <div>Icon</div>
       <div
         class="d-flex align-items-start justify-content-around gap-2 p-2 pt-1"
       >

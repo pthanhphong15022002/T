@@ -6,6 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./my-tem.component.scss']
 })
 export class MyTemComponent {
-
-  
+  selectedTabs = 0 // 0: quản lý trực tiếp ; 1:Quản lý gián tiếp;
 }

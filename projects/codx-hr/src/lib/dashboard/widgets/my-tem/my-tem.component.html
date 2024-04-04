@@ -1,0 +1,35 @@
+<div class="border p-3 rounded bg-white">
+    <div class="d-flex justify-content-between pb-3 pt-1 align-items-center">
+      <div class="hcs-text fw-500">My team</div>
+      <div class="hcs-text pointer fs-12 text-primary">Xem tất cả</div>
+    </div>
+    <!-- <hcs-input-search [height]="'34px'"></hcs-input-search> -->
+    <div class="d-flex justify-content-around py-2">
+      <div (click)="selectedTabs=0" [ngClass]="{'tab-active': selectedTabs == 0}" class="hcs-text text-grey fs-13 pointer fw-500 p-2">Quản lý trực tiếp</div>
+      <div (click)="selectedTabs=1" [ngClass]="{'tab-active': selectedTabs == 1}" class="hcs-text text-grey fs-13 pointer fw-500 p-2">Quản lý gián tiếp</div>
+    </div>
+  
+    <div [ngSwitch]="selectedTabs">
+      <div *ngSwitchCase="0">
+        <div class="d-flex gap-3 align-items-start pointer py-2">
+          <img class="rounded-circle" width="40" height="40" src="/assets/images/avar.png" alt="" srcset="">
+          <div class="d-flex flex-column align-items-start gap-1">
+            <div class="hcs-text fs-12 text-black fw-500">Huỳnh Phước Hòa</div>
+            <div class="hcs-text sub-1 text-grey">Phát triển phần mềm</div>
+            <div class="hcs-text sub-2 fw-500">20 năm 9 tháng 0 ngày</div>
+          </div>
+        </div>
+      </div>
+      <div *ngSwitchCase="1">
+        <div class="d-flex gap-3 align-items-start pointer py-2">
+          <img class="rounded-circle" width="40" height="40" src="/assets/images/avar.png" alt="" srcset="">
+          <div class="d-flex flex-column align-items-start gap-1">
+            <div class="hcs-text fs-12 text-black fw-500">Huỳnh Phước Hòa</div>
+            <div class="hcs-text sub-1 text-grey">Phát triển phần mềm</div>
+            <div class="hcs-text sub-2 fw-500">20 năm 9 tháng 0 ngày</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
