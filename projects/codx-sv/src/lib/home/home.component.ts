@@ -89,7 +89,7 @@ export class HomeComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.api.execSv<any>('SV','SV','SurveysBusiness','CountSurveyAsync').subscribe(res => {
+    this.api.execSv<any>('SV','SV','SurveysBusiness','CountSurveySysAsync').subscribe(res => {
       this.countSys = res ?? 0;
     })
     this.router.params.subscribe((params) => {
