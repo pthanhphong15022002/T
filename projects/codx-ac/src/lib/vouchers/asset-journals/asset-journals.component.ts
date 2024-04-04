@@ -126,18 +126,18 @@ export class AssetJournalsComponent extends UIComponent {
 
   ngAfterViewInit() {
     this.views = [
-      // {
-      //   type: ViewType.listdetail,
-      //   active: true,
-      //   sameData: true,
-      //   model: {
-      //     template: this.templateDetailLeft,
-      //     panelRightRef: this.templateDetailRight,
-      //     collapsed: true,
-      //     widthLeft: '23%',
-      //     //separatorSize:3
-      //   },
-      // },
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.templateDetailLeft,
+          panelRightRef: this.templateDetailRight,
+          collapsed: true,
+          widthLeft: '23%',
+          //separatorSize:3
+        },
+      },
       // {
       //   type: ViewType.list,
       //   active: false,
@@ -286,15 +286,13 @@ export class AssetJournalsComponent extends UIComponent {
     if (this.runmode == '1') {
       this.shareService.changeMFApproval(event, data.unbounds);
     } else {
-      if (data) {
-        this.acService.changeMFAsset(
-          event,
-          data,
-          type,
-          this.journal,
-          this.view.formModel
-        );
-      }
+      this.acService.changeMFAsset(
+        event,
+        data,
+        type,
+        this.journal,
+        this.view.formModel
+      );
     }
   }
   /**

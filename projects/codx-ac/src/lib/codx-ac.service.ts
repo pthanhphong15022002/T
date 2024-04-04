@@ -397,7 +397,7 @@ export enum MorfuncAsset {
   HuyDuyet811 = 'ACT81108',
   KhoiPhuc811 = 'ACT81107',
   In811 = 'ACT81102',
-  KiemTraHopLe811 = 'ACT82101',
+  KiemTraHopLe811 = 'ACT81101',
 
   GhiSo821 = 'ACT82106',
   GuiDuyet821 = '',
