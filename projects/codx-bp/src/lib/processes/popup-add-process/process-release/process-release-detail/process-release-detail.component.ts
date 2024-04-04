@@ -28,6 +28,7 @@ import { BPPopupChangePermissionComponent } from '../../form-steps-field-grid/bp
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AnimationModel, ILoadedEventArgs, ProgressBar, ProgressTheme } from '@syncfusion/ej2-angular-progressbar';
 import { X } from '@angular/cdk/keycodes';
+import { BPCONST } from 'projects/codx-bp/src/lib/models/BP_Const.model';
 
 @Component({
   selector: 'lib-process-release-detail',
@@ -68,7 +69,8 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     '#FFD939',
   ];
   listMF = [];
-  listButtonMF = [
+  listButtonMF= [];
+  listButtonMF1 = [
     //Task;Check;Approve;Sign;Release;Stamp;Email;
     //Task: Thực hiện,Giao việc;
     {
@@ -187,6 +189,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     }
   }
   ngOnInit(): void {
+    this.getCache();
     this.getData();
     this.getInfo();
     this.getInStance();
@@ -194,6 +197,22 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   }
   onNavChange(e: any) {
     this.active = e;
+  }
+  getCache(){
+    this.cache.moreFunction('MyBPTasks','grvMyBPTasks').subscribe(res=>{
+      if(res){
+        Array.from(res)?.forEach((mf:any)=>{
+          this.listButtonMF.push({
+            functionID: mf?.functionID,
+            customName:  mf?.customName,
+            functionType: mf?.functionType,
+            largeIcon:  mf?.largeIcon,
+            color: mf?.color,
+          });
+
+        });
+      }
+    })
   }
   getVll() {
     this.VllBP014 = this.shareService.loadValueList('BP014');
@@ -247,103 +266,25 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       switch (this.activeTask.activityType) {
         //Task;Check;Approve;Sign;Release;Stamp;Email;
         case 'Task': {
-          this.listMF = [
-            {
-              id: '1',
-              functionID: 'BP0701',
-              customName: 'Hoàn tất',
-              largeIcon: 'icon-person_add_alt_1',
-              color: '#005DC7',
-            },
-            {
-              id: '2',
-              functionID: 'BP0701',
-              customName: 'Giao việc',
-              largeIcon: 'icon-person_add_alt_1',
-              color: '#005DC7',
-            },
-          ];
+          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Task);
           break;
         }
         case 'Check': {
-          this.listMF = [
-            //Check: Kiểm tra
-            {
-              id: '3',
-              functionID: 'BP0705',
-              customName: 'Kiểm tra',
-              largeIcon: 'icon-check_circle',
-              color: '#1BC5BD',
-            },
-          ];
+          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Check);
           break;
         }
         case 'Approve': {
-          this.listMF = [
-            //Approve: Duyệt,Từ chối,Trả về,Ủy quyền;
-            {
-              id: '10',
-              functionID: 'BP0705',
-              customName: 'Duyệt',
-              largeIcon: 'icon-check_circle',
-              color: '#1BC5BD',
-            },
-            {
-              id: '8',
-              functionID: 'BP0703',
-              customName: 'Trả về',
-              largeIcon: 'icon-i-arrow-90deg-right',
-              color: '#FFA800',
-            },
-            {
-              id: '9',
-              functionID: 'BP0704',
-              customName: 'Từ chối',
-              largeIcon: 'icon-i-x-circle',
-              color: '#F64E60',
-            },
-            {
-              id: '7',
-              functionID: 'BP0702',
-              customName: 'Ủy quyền',
-              largeIcon: 'icon-i-people',
-              color: '#0078FF',
-            },
-          ];
+          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Approve ||
+             x?.functionID ==BPCONST.TASKMF.Reject||
+             x?.functionID ==BPCONST.TASKMF.Redo||
+             x?.functionID ==BPCONST.TASKMF.Authority);            
           break;
         }
         case 'Sign': {
-          this.listMF = [
-            //Sign:Ký,Từ chối,Trả về,Ủy quyền;
-            {
-              id: '11',
-              functionID: 'BP0705',
-              customName: 'Ký',
-              largeIcon: 'icon-check_circle',
-              color: '#1BC5BD',
-            },
-            {
-              id: '9',
-              functionID: 'BP0704',
-              customName: 'Từ chối',
-              largeIcon: 'icon-i-x-circle',
-              color: '#F64E60',
-            },
-            {
-              id: '8',
-              functionID: 'BP0703',
-              customName: 'Trả về',
-              largeIcon: 'icon-i-arrow-90deg-right',
-              color: '#FFA800',
-            },
-            {
-              id: '7',
-              functionID: 'BP0702',
-              customName: 'Ủy quyền',
-              largeIcon: 'icon-i-people',
-              color: '#0078FF',
-            },
-          ];
+          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Sign ||
+             x?.functionID ==BPCONST.TASKMF.Reject||
+             x?.functionID ==BPCONST.TASKMF.Redo||
+             x?.functionID ==BPCONST.TASKMF.Authority);  
           break;
         }
         case 'Release': {
@@ -360,29 +301,11 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
           break;
         }
         case 'Stamp': {
-          this.listMF = [
-            //Stamp: Đóng dấu
-            {
-              id: '6',
-              functionID: 'BP0701',
-              customName: 'Đóng dấu',
-              largeIcon: 'icon-person_add_alt_1',
-              color: '#005DC7',
-            },
-          ];
+          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Stamp);
           break;
         }
-        case 'Email': {
-          this.listMF = [
-            //Email: Soạn thư
-            {
-              id: '5',
-              functionID: 'BP0701',
-              customName: 'Soạn thư',
-              largeIcon: 'icon-person_add_alt_1',
-              color: '#005DC7',
-            },
-          ];
+        case 'Email': {         
+          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Email);
           break;
         }
       }

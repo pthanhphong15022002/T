@@ -206,6 +206,7 @@
         (collectionChange)="collectionChange($event)"
         [drawingObject]=" { type: 'Orthogonal' }"
         [serializationSettings]="{preventDefaults: true}"
+        (mouseEnter)="mouseEnter($event)"
         (textEdit)="textEdit($event)"
       >
         <ng-template #nodeTemplate let-data>

@@ -881,7 +881,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
           this.diagram.addNodeToLane(model, swimlane, laneID);
         else this.diagram.add(model);
         break;
-      case 'decision':
+      case 'Conditions':
         model.shape = {
           type: 'Flow',
           shape: 'Decision',
@@ -950,12 +950,14 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
         // this.diagram.add(swimLane);
         this.generateProcess();
         break;
-      case 'form':
-      case 'sign':
-      case 'image':
-      case 'task':
-      case 'event':
-      case 'email':
+      case 'Form':
+      case 'Sign':
+      case 'Image':
+      case 'Task':
+      case 'Event':
+      case 'Email':
+      case 'Appove':
+      case 'Check':
         model.id = this.makeid(10);
         model.shape = {
           type: 'HTML',
@@ -1582,24 +1584,24 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
 
   lstSteps:any=[];
 
-  getProcess() {
-    if(this.recID){
-      let sub= this.api
-      .execSv('BP', 'BP', 'ProcessesBusiness', 'GetAsync', this.recID)
-      .subscribe((item) => {
-        if (item) {
-          this.process = item;
-          this.lstSteps = this.process?.steps?.filter(
-            (x) => x.activityType == 'Stage'
-          );
-          this.columns = this.lstSteps;
-          this.initProcess();
-        }
-        sub.unsubscribe();
-      });
-    }
+    getProcess() {
+      if(this.recID){
+        let sub= this.api
+        .execSv('BP', 'BP', 'ProcessesBusiness', 'GetAsync', this.recID)
+        .subscribe((item) => {
+          if (item) {
+            this.process = item;
+            this.lstSteps = this.process?.steps?.filter(
+              (x) => x.activityType == 'Stage'
+            );
+            this.columns = this.lstSteps;
+            this.initProcess();
+          }
+          sub.unsubscribe();
+        });
+      }
 
-   }
+    }
    collectionChange(e:any){
     if(this.diagram && this.viewOnly) this.diagram.fitToPage();
     else{
@@ -1672,8 +1674,8 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
       this.genData();
     }
 
-    generateStage(type:string ='Form'){
-      let stage:any={};
+    generateStep(type:string ='Form'){
+      let stage=new BP_Processes_Steps();;
       stage.recID=Util.uid();
       stage.activityType=type;
     }

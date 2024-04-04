@@ -45,7 +45,7 @@
             </div>
         </div>
     </div>
-    <div class="position-absolute top-0 w-100 bg-white" [ngClass]="isEdit?'h-100':'d-none h-0'">
+    <div class="position-absolute top-0 z-index-1057 w-100 bg-white" [ngClass]="isEdit?'h-100':'d-none h-0'">
         <ng-container *ngIf="dataEdit">
             <ng-container [ngSwitch]="dataEdit.value">
                 <ng-container *ngSwitchCase="'Text'">
