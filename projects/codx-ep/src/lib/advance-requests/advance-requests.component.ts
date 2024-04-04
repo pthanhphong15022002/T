@@ -1,7 +1,8 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { AuthStore, SidebarModel, UIComponent, UserModel, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, CRUDService, SidebarModel, UIComponent, UserModel, ViewModel, ViewType } from 'codx-core';
 import { Subscription } from 'rxjs';
 import { PopupAddEpAdvanceRequestComponent } from './popup/popup-add-ep-advance-request/popup-add-ep-advance-request.component';
+import { AdvanceRequestsViewDetaiComponent } from './advance-requests-view-detai/advance-requests-view-detai.component';
 
 @Component({
   selector: 'ep-advance-requests',
@@ -12,6 +13,7 @@ export class AdvanceRequestsComponent extends UIComponent {
 
   @ViewChild("itemTemplate") itemTemplate:TemplateRef<any>;
   @ViewChild("detailTemplate") detailTemplate:TemplateRef<any>;
+  @ViewChild("viewDetail") viewDetail:AdvanceRequestsViewDetaiComponent;
 
   user:UserModel = null;
   views:ViewModel[];
@@ -19,8 +21,8 @@ export class AdvanceRequestsComponent extends UIComponent {
   dataSelected:any;
   constructor
   (
-    injector:Injector,
-    auth:AuthStore
+    private injector:Injector,
+    private auth:AuthStore
   ) 
   {
     super(injector);
@@ -57,7 +59,6 @@ export class AdvanceRequestsComponent extends UIComponent {
       this.detectorRef.detectChanges();
     }
   }
-
 
   changeDataMF(event:any){
     if(event)
@@ -114,16 +115,8 @@ export class AdvanceRequestsComponent extends UIComponent {
           this.subcriptions.add(popup.closed.subscribe((res:any) => {
             if(res && res.event)
             {
-              let data = {
-                recID : res.event.recID,
-                employeeID : res.event.employeeID,
-                employeeName : res.event.employeeName,
-                memo : res.event.memo,
-                toDate : res.event.toDate,
-                status : res.event.status,
-                createdBy : res.event.createdBy
-              };
-              this.subcriptions.add(this.view.dataService.add(data).subscribe());
+              let subscribeUpdate = this.view.dataService.update(res.event).subscribe();
+              this.subcriptions.add(subscribeUpdate);
             }
           }));
         }
@@ -155,13 +148,73 @@ export class AdvanceRequestsComponent extends UIComponent {
       this.subcriptions.add(popup.closed.subscribe((res:any) => {
         if(res && res.event)
         {
-          let dataItem = res.event;
-          if(dataItem.resources?.length > 0)
-            dataItem.resourceIDs = dataItem.resources.map(x => x.userID).join(";");
-          this.subcriptions.add(this.view.dataService.update(data).subscribe());
+          this.subcriptions.add(this.view.dataService.update(res.event).subscribe());
+          this.viewDetail.loadDataInfo(res.event.recID,this.view.funcID);
           this.detectorRef.detectChanges();
         }
       }));
+    }
+  }
+
+  openPopupAdvance(data:any){
+    if(data)
+    {
+      let subscribe = this.api.execSv("EP","Core","DataBusiness","GetDefaultAsync",["WSCO042","EP_Requests"])
+      .subscribe((model:any) => {
+        if(model && model?.data)
+        {
+          model.data.refID = data.recID;
+          model.data.requestType = "AD";
+          let obj = {
+            data : model.data,
+            actionType: "add"
+          }
+          let dataService = new CRUDService(this.injector);
+          dataService.request.entityName = "EP_Requests";
+          dataService.request.funcID = "WSCO042";
+          dataService.service = "EP";
+          dataService.request.formName = "AdvanceRequests";
+          dataService.request.gridViewName = "grvAdvanceRequests";
+          dataService.dataSelected = model.data;
+          let dialog = new SidebarModel();
+          dialog.Width = '550px';
+          dialog.FormModel = this.view.formModel;
+          dialog.DataService = dataService;
+          this.callfc.openSide(PopupAddEpAdvanceRequestComponent,obj,dialog,this.view.funcID);
+        }
+      });
+      this.subcriptions.add(subscribe);
+    }
+  }
+
+  openPopupPayment(data:any){
+    if(data)
+    {
+      let subscribe = this.api.execSv("EP","Core","DataBusiness","GetDefaultAsync",["WSCO043","EP_Requests"])
+      .subscribe((model:any) => {
+        if(model && model?.data)
+        {
+          model.data.refID = data.recID;
+          model.data.requestType = "PA";
+          let obj = {
+            data : model.data,
+            actionType: "add"
+          }
+          let dataService = new CRUDService(this.injector);
+          dataService.request.entityName = "EP_Requests";
+          dataService.request.funcID = "WSCO042";
+          dataService.service = "EP";
+          dataService.request.formName = "AdvanceRequests";
+          dataService.request.gridViewName = "grvAdvanceRequests";
+          dataService.dataSelected = model.data;
+          let dialog = new SidebarModel();
+          dialog.Width = '550px';
+          dialog.FormModel = this.view.formModel;
+          dialog.DataService = dataService;
+          this.callfc.openSide(PopupAddEpAdvanceRequestComponent,obj,dialog,this.view.funcID);
+        }
+      });
+      this.subcriptions.add(subscribe);
     }
   }
 }

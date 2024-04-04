@@ -18,7 +18,6 @@ export class PopupAddEpAdvanceRequestComponent implements OnInit,AfterViewInit,O
   grvSetup:any;
   vllEP010:any;
   EPResource:any;
-  ADResourcesIDs:string = "";
   columnGrids:any[] = [];
   editSettings: any = {
     allowEditing: true,
@@ -45,7 +44,7 @@ export class PopupAddEpAdvanceRequestComponent implements OnInit,AfterViewInit,O
     if(dialogData && dialogData.data)
     {
       let obj = dialogData.data;
-      this.data = obj.data;
+      this.data = JSON.parse(JSON.stringify(obj.data));
       this.actionType = obj.actionType;
     }
     this.user = this.auth.get();
@@ -72,7 +71,7 @@ export class PopupAddEpAdvanceRequestComponent implements OnInit,AfterViewInit,O
       this.data.lines = [];
       this.data.resources = [];
       this.data.resources.push({transID : this.data.recID, userID : this.user.userID, userName : this.user.userName, roleType : "1"});
-      this.ADResourcesIDs = this.user.userID + ";";
+      this.data.resourceIDs = this.data.resources.map(x => x.userID).join(";");
       this.subscriptions.add(this.cache.companySetting()
       .subscribe((res:any) => {
         if(res)
@@ -83,6 +82,11 @@ export class PopupAddEpAdvanceRequestComponent implements OnInit,AfterViewInit,O
       if(this.data.refID)
         this.getEPRequest(this.data.refID);
     }
+    else if(this.actionType == "edit")
+    {
+      this.getRequestDetail(this.data.recID);
+    }
+
   }
 
   ngAfterViewInit(): void {
@@ -92,6 +96,20 @@ export class PopupAddEpAdvanceRequestComponent implements OnInit,AfterViewInit,O
     this.subscriptions.unsubscribe();
   }
 
+  getRequestDetail(recID:string){
+    let subcribe = this.api.execSv("EP","EP","RequestsBusiness","ConvertRequestDetailAsync",recID)
+    .subscribe((res:any) => {
+      if(res)
+      {
+        this.data = res;
+        this.data._isEdit = true;
+        this.dialog.dataService.dataSelected = this.data;
+        this.detectorChange.detectChanges();
+      }
+    });
+    this.subscriptions.add(subcribe);
+  }
+  
   getEPRequest(recID:string){
     let subcribe = this.api.execSv("EP","EP","RequestsBusiness","GetByIDAsync",recID)
     .subscribe((res:any) => {
@@ -108,8 +126,7 @@ export class PopupAddEpAdvanceRequestComponent implements OnInit,AfterViewInit,O
         if(res.lines?.length > 0)
         {
           this.data.lines = res.lines.map(item => ({ recID : Util.uid(), itemID : item.itemID, itemName: item.itemName, amount : item.amount}));
-          this.data.totalAmount = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
-          this.data.requestAmt = this.data.totalAmount;
+          this.data.totalAmount = res.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
         }
         this.data.refID = res.recID;
         this.data.refType = res.requestType;
@@ -119,6 +136,7 @@ export class PopupAddEpAdvanceRequestComponent implements OnInit,AfterViewInit,O
     });
     this.subscriptions.add(subcribe);
   }
+  
   valueChange(event:any){
     let field = event.field;
     let value = null;
@@ -158,8 +176,13 @@ export class PopupAddEpAdvanceRequestComponent implements OnInit,AfterViewInit,O
         this.data.memo = value;
         break;
       case "refID":
-        value = event.data;
-        this.data.refID = value;
+        value = event.data.dataSelected[0].dataSelected;
+        if(value)
+        {
+          this.data.refID = value.RecID;
+          this.data.refType = value.RequestType;
+          this.data.refNo = value.RequestNo;
+        }
         break;
       default:
         break;
@@ -200,32 +223,27 @@ export class PopupAddEpAdvanceRequestComponent implements OnInit,AfterViewInit,O
     if(event.functionID == "SYS02" && data)
     {
       this.codxGridViewV2.deleteRow(data,true);
-    }
-  }
-
-  driver:any;
-  getEPResource(resourceID:string){
-    let subcribe = this.api.execSv("EP","EP","ResourcesBusiness","GetResourceAsync",resourceID)
-    .subscribe((res:any) => {
-      if(res)
+      if(this.data.lines.length > 0)
       {
-        this.driver = res;
-        let idx = this.data.resources.findIndex(x => x.roleType == "2");
-        if(idx > -1)
-          this.data.resources.splice(idx,1);
-        this.data.resources.push({transID : this.data.recID, userID : this.driver.resourceID, userName : this.driver.resourceName, roleType : "2"});
+        this.data.lines = this.data.lines.filter(x => x.itemID != data.itemID);
+        if(this.data.lines.length > 0)
+          this.data.totalAmount = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
+        else this.data.totalAmount = 0;
         this.detectorChange.detectChanges();
       }
-    });
-    this.subscriptions.add(subcribe);
+    }
   }
 
   onSave(){
     this.form.save(null, 0, '', '', false,{allowCompare:false})
     .subscribe((res:any) => {
-      if(res.save && res.save.data)
+      if(res)
       {
-        this.dialog.close(this.data);
+        let save = this.actionType == "add" ? res.save.error : res.update.error;
+        if(!save)
+        {
+          this.dialog.close(this.data);
+        }
       }
     });
   }

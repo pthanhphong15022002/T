@@ -4,6 +4,7 @@ import { Subscription, map } from 'rxjs';
 import { PopupAddRequestComponent } from './popup/popup-add-request/popup-add-request.component';
 import { PopupAddEpAdvanceRequestComponent } from '../advance-requests/popup/popup-add-ep-advance-request/popup-add-ep-advance-request.component';
 import { PopupAddEpPaymentRequestComponent } from '../payment-requests/popup/popup-add-ep-payment-request/popup-add-ep-payment-request.component';
+import { RequestsViewDetaiComponent } from './requests-view-detai/requests-view-detai.component';
 
 @Component({
   selector: 'ep-requests',
@@ -15,6 +16,7 @@ export class RequestsComponent extends UIComponent implements AfterViewInit,OnDe
 
   @ViewChild("itemTemplate") itemTemplate:TemplateRef<any>;
   @ViewChild("detailTemplate") detailTemplate:TemplateRef<any>;
+  @ViewChild("viewDetail") viewDetail:RequestsViewDetaiComponent;
 
   user:UserModel = null;
   views:ViewModel[];
@@ -65,13 +67,12 @@ export class RequestsComponent extends UIComponent implements AfterViewInit,OnDe
     if(event)
     {
       event.map(x => {
-        if(x.functionID == "SYS01" || x.functionID == "SYS02" || x.functionID == "SYS03" || x.functionID == "WSCO0411" || x.functionID == "WSCO0412")
-        { 
+        if(x.functionID == "SYS01" || x.functionID == "SYS02" || x.functionID == "SYS03")
+        {
           x.disabled = false;
           x.isbookmark = true;
-        }
-        else
-          x.disabled = true;
+        }          
+        else x.disabled = true;
       });
     }
   }
@@ -105,36 +106,30 @@ export class RequestsComponent extends UIComponent implements AfterViewInit,OnDe
   }
 
   add(){
-    if(this.view)
-    {
-      let subscribe = this.view.dataService
-      .addNew()
-      .subscribe((model:any) => {
-        if(model)
-        {
-          let dialog = new SidebarModel();
-          dialog.Width = '800px';
-          dialog.FormModel = this.view.formModel;
-          dialog.DataService = this.view.dataService;
-          let obj = {
-            data : model,
-            actionType: "add"
-          }
-          let popup = this.callfc.openSide(PopupAddRequestComponent,obj,dialog,this.view.funcID);
-          this.subcriptions.add(popup.closed.subscribe((res:any) => {
-            if(res && res.event)
-            {
-              let dataItem = res.event;
-              if(dataItem.resources?.length > 0)
-                dataItem.resourceIDs = dataItem.resources.map(x => x.userID).join(";");
-              let subscribeUpdate = this.view.dataService.update(dataItem).subscribe();
-              this.subcriptions.add(subscribeUpdate);
-            }
-          }));
+    let subscribe = this.view.dataService
+    .addNew()
+    .subscribe((model:any) => {
+      if(model)
+      {
+        let dialog = new SidebarModel();
+        dialog.Width = '800px';
+        dialog.FormModel = this.view.formModel;
+        dialog.DataService = this.view.dataService;
+        let obj = {
+          data : model,
+          actionType: "add"
         }
-      });
-      this.subcriptions.add(subscribe);
-    }
+        let popup = this.callfc.openSide(PopupAddRequestComponent,obj,dialog,this.view.funcID);
+        this.subcriptions.add(popup.closed.subscribe((res:any) => {
+          if(res && res.event)
+          {
+            let subscribeUpdate = this.view.dataService.update(res.event).subscribe();
+            this.subcriptions.add(subscribeUpdate);
+          }
+        }));
+      }
+    });
+    this.subcriptions.add(subscribe);
   }
 
   delete(data:any){
@@ -161,16 +156,12 @@ export class RequestsComponent extends UIComponent implements AfterViewInit,OnDe
       this.subcriptions.add(popup.closed.subscribe((res:any) => {
         if(res && res.event)
         {
-          let dataItem = res.event;
-          if(dataItem.resources?.length > 0)
-            dataItem.resourceIDs = dataItem.resources.map(x => x.userID).join(";");
-          this.subcriptions.add(this.view.dataService.update(data).subscribe());
-          this.detectorRef.detectChanges();
+          this.subcriptions.add(this.view.dataService.update(res.event).subscribe());
+          this.viewDetail.loadDataInfo(res.event.recID,this.view.funcID);
         }
       }));
     }
   }
-
 
   openPopupAdvance(data:any){
     if(data)
@@ -227,7 +218,7 @@ export class RequestsComponent extends UIComponent implements AfterViewInit,OnDe
           dialog.Width = '550px';
           dialog.FormModel = this.view.formModel;
           dialog.DataService = dataService;
-          this.callfc.openSide(PopupAddEpAdvanceRequestComponent,obj,dialog,this.view.funcID);
+          this.callfc.openSide(PopupAddEpPaymentRequestComponent,obj,dialog,this.view.funcID);
         }
       });
       this.subcriptions.add(subscribe);
