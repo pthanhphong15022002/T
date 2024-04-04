@@ -159,6 +159,10 @@ import { TableGripComponent } from './dashboard/components/table-grip/table-grip
 import { AgeStatisticComponent } from './dashboard/widgets/age-statistic/age-statistic.component';
 import { DirectivesModule } from './common/directives/directives.module';
 import { MyTemComponent } from './dashboard/widgets/my-tem/my-tem.component';
+import { DashboardAgeChartComponent } from './dashboard/components/dashboard-age-chart/dashboard-age-chart.component';
+import { DashboardCardComponent } from './dashboard/components/dashboard-card/dashboard-card.component';
+import { DashboardGaugeChartComponent } from './dashboard/components/dashboard-gauge-chart/dashboard-gauge-chart.component';
+import { DashboardTotalemployeeChartComponent } from './dashboard/components/dashboard-totalemployee-chart/dashboard-totalemployee-chart.component';
 export const routes: Routes = [
   {
     path: '',
@@ -496,9 +500,12 @@ const T_Component = [
   DashboardRegisterAprroveComponent,
   TableGripComponent, 
   AgeStatisticComponent,
-  MyTemComponent
-  
- 
+  MyTemComponent,
+  DashboardAgeChartComponent,
+  DashboardCardComponent,
+  DashboardGaugeChartComponent,
+  DashboardTotalemployeeChartComponent,
+  DashboardComponent
 ];
 @NgModule({
   imports: [

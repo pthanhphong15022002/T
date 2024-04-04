@@ -1,0 +1,24 @@
+<ejs-grid [dataSource]="gridData">
+    <e-columns>
+      <e-column field="department" headerText="Phòng ban" width="120"></e-column>
+      <e-column field="total" headerText="Tất cả" width="120"></e-column>
+      <e-column field="malePercentage" headerText="Nam" width="120"></e-column>
+      <e-column field="femalePercentage" headerText="Nữ" width="120"></e-column>
+    </e-columns>
+    <ng-template #detailTemplate let-data>
+      <ejs-accordion>
+        <e-accordion-items>
+          <e-accordion-item *ngFor="let dept of data.departments">
+            <e-accordion-header>{{ dept.department }}</e-accordion-header>
+            <ng-container *ngIf="data.expanded">
+              <div>
+                <p>Tổng: {{ dept.total }}</p>
+                <p>Nam: {{ dept.malePercentage }}</p>
+                <p>Nữ: {{ dept.femalePercentage }}</p>
+              </div>
+            </ng-container>
+          </e-accordion-item>
+        </e-accordion-items>
+      </ejs-accordion>
+    </ng-template>
+  </ejs-grid>
