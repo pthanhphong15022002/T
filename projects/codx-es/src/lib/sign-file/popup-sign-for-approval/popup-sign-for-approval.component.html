@@ -141,7 +141,7 @@
         
       </div>
     </div>
-    <div class="modal-body pt-0 overflow-auto h-150px" *ngIf="lstCert?.length>0">
+    <div class="modal-body pt-0 overflow-auto h-150px" *ngIf="lstCert?.length>0 && this.selectedSupplier=='4'">
       <div class="mb-1 px-5" *ngFor="let item of lstCert;let idx = index">
         <div class="py-1 d-flex flex-row justify-content-start align-items-center">
           <div class="d-flex align-items-center pe-7">
@@ -151,6 +151,20 @@
           <div class="d-flex flex-column ">
             <span>{{item?.cert?.subjectDN}}</span>
             <span>{{item?.cert?.issuerDN}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body pt-0 overflow-auto h-150px" *ngIf="lstCert?.length>0 && this.selectedSupplier=='6'">
+      <div class="mb-1 px-5" *ngFor="let item of lstCert;let idx = index">
+        <div class="py-1 d-flex flex-row justify-content-start align-items-center">
+          <div class="d-flex align-items-center pe-7">
+            <codx-input class="col-1" type="radio" name="cert" [checked]="idx==0" (valueChange)="certChange($event,item)" >
+            </codx-input> 
+          </div>         
+          <div class="d-flex flex-column ">
+            <span>{{item?.cert_subject}}</span>
+            <span>{{item?.cert_status}}</span>
           </div>
         </div>
       </div>

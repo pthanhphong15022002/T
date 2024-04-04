@@ -47,8 +47,6 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   postDateControl:any;
   preData:any;
   nextTabIndex:any;
-  refNo:any;
-  refTotalAmt:any = 0;
   editSettings:EditSettingsModel = {
     allowAdding:false,
     allowEditing:false,
@@ -172,9 +170,13 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     if (this.journal.assetControl == "0"){
       hideFields.push("AssetGroupID");
       hideFields.push("AssetType");
+      hideFields.push("ServiceDate");
+      hideFields.push("ServicePeriods");
+      hideFields.push("EmployeeID");
+      hideFields.push("SiteID");
     } 
     if (this.journal.subControl == "0") hideFields.push("ObjectID");
-    if (this.journal.settleControl == "0" || this.dataDefault.subType == (this.journal.journalType + "1")) hideFields.push("Settlement");
+    if (this.journal.settleControl == "0") hideFields.push("Settlement");
 
     if (this.journal.entryMode == '1') {
       if (this.dataDefault.currencyID == this.baseCurr) hideFields.push('DR2');
@@ -277,11 +279,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
       }
     }
     this.setValidateForm();
-    let hSettlement = false;
-    if(this.journal.settleControl == "1" && (this.master.data.subType == this.journal.journalType + '9')){
-      hSettlement = true;
-    }
-    this.eleGridCashReceipt.showHideColumns(['Settlement'],hSettlement); 
+    this.showHideColumn();
   }
 
   /**
@@ -384,12 +382,23 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   valueChangeLine(event: any) {
     let oLine = event.data;
     let field = event.field;
-    if(field.toLowerCase() === 'settledno') oLine.settledID = event?.itemData?.RecID;
+    switch(field.toLowerCase()){
+      case 'settledno':
+        oLine.settledID = event?.itemData?.RecID;
+        break;
+    }
     this.eleGridCashReceipt.startProcess();
     this.api.exec('AC','CashReceiptsLinesBusiness','ValueChangedAsync',[this.master.data,oLine,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       Object.assign(oLine, res);
       oLine.updateColumns = '';
       this.detectorRef.detectChanges();
+      if(this.journal.settleControl == "1" && (this.journal.journalType+'2' === this.master.data.subType || this.journal.journalType+'9' === this.master.data.subType)){
+        if(oLine.settlement != '0'){
+          this.eleGridCashReceipt.setEditableFields(['SettledNo'],false);
+        }else{
+          this.eleGridCashReceipt.setEditableFields(['SettledNo'],true);
+        } 
+      }
       this.eleGridCashReceipt.endProcess();
     })
   }
@@ -835,16 +844,20 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * *Hàm thêm dòng theo loại nút
    */
   addRowDetail() {
-    switch (this.master?.data?.subType) {
+    switch (this.master.data.subType) {
       case `${this.journal.journalType+'1'}`:
-        this.addLine();
-        break;
-      case `${this.journal.journalType+'2'}`:
         this.addSettledInvoices();
         break;
+
+      case `${this.journal.journalType+'2'}`:
       case `${this.journal.journalType+'3'}`:
-        this.addSuggestion('2');
+        this.addLine();
         break;
+
+      case `${this.journal.journalType+'5'}`:
+        this.addRequest();
+        break;
+
       case `${this.journal.journalType+'9'}`:
         if (this.elementTabDetail && this.elementTabDetail?.selectingID == '0') {
           this.addLine();
@@ -911,22 +924,12 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   /**
    * *Ham them de nghi tam ung || thanh toan
    */
-  addSuggestion(type) {
-    let objectName = '';
-    let indexObject = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.master.data.objectID);
-    if (indexObject > -1) {
-      objectName = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName;}
-    let obj = {
-      oData: this.master.data,
-      objectName: objectName,
-      type,
-      headerText : type === '1' ? 'Chọn đề nghị hoàn ứng' : ''
-    };
+  addRequest() {
+    let data = {
+      master:this.master.data
+    }
     let opt = new DialogModel();
     let dataModel = new FormModel();
-    dataModel.formName = type === '1' ? 'AdvancedPayment' : 'PaymentOrder';
-    dataModel.gridViewName = type === '1' ? 'grvAdvancedPayment' : 'grvPaymentOrder';
-    dataModel.entityName = type === '1' ? 'AC_AdvancedPayment' : 'AC_PaymentOrder';
     opt.FormModel = dataModel;
     let dialog = this.callfc.openForm(
       SuggestionAdd,
@@ -934,21 +937,13 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
       null,
       null,
       '',
-      obj,
+      data,
       '',
       opt
     );
     dialog.closed.subscribe((res) => {
       if (res && res.event) {
-        this.refNo = res.event.refNo;
-        this.refTotalAmt = res.event.refTotalAmt;
-        this.dialog.dataService.dataSelected.refID = res.event.refID;
-        this.dialog.dataService.dataSelected.refNo = res.event.refNo;
-        this.dialog.dataService.dataSelected.refTotalAmt = res.event.refTotalAmt;
-        this.dialog.dataService.dataSelected.refType = res.event.refType;
-        let data = {...this.dialog.dataService.dataSelected};
-        this.dialog.dataService.update(data).subscribe();
-        this.eleGridCashReceipt.refresh();     
+        this.eleGridCashReceipt.refresh();
       }
     });
   }
@@ -962,24 +957,32 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     if (eleTab) {
       switch (type) {
         case `${this.journal.journalType+'1'}`:
-        case `${this.journal.journalType+'3'}`:
-        case `${this.journal.journalType+'4'}`:
-          eleTab.hideTab(0, false);
-          eleTab.hideTab(1, true);
-          eleTab.hideTab(2, true);
-          eleTab.select(0);
-          break;
-        case `${this.journal.journalType+'2'}`:
           eleTab.hideTab(0, true);
           eleTab.hideTab(1, false);
           eleTab.hideTab(2, true);
           eleTab.select(1);
           break;
+
+        case `${this.journal.journalType+'2'}`:
+        case `${this.journal.journalType+'3'}`:
+        case `${this.journal.journalType+'5'}`:
+          eleTab.hideTab(0, false);
+          eleTab.hideTab(1, true);
+          eleTab.hideTab(2, true);
+          eleTab.select(0);
+          break;
+
         case `${this.journal.journalType+'9'}`:
           eleTab.hideTab(0, false);
           eleTab.hideTab(1, false);
           eleTab.hideTab(2, false);
           eleTab.select(0);
+          break;
+
+        default:
+          eleTab.hideTab(0, true);
+          eleTab.hideTab(1, true);
+          eleTab.hideTab(2, true);
           break;
       }
     }
@@ -990,6 +993,11 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    */
   showHideColumn() {
     if (this.eleGridCashReceipt) {
+    // set an hien can tru cong no
+    let hSettlement = false;
+    if(this.journal.settleControl == "1" && (this.master.data.subType == this.journal.journalType + '2' || this.master.data.subType == this.journal.journalType + '9')){
+      hSettlement = true;
+    }
       //* Thiết lập hiện cột tiền HT cho lưới nếu chứng từ có ngoại tệ
     let hDR2 = false;
     let hCR2 = false;
@@ -1078,7 +1086,12 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         element.focus();
       }, 100);
         break;
-      case 'beginEdit': //? trước khi thêm dòng
+      case 'beginEdit':
+        if(this.journal.settleControl == "1" && (this.journal.journalType+'2' === this.master.data.subType || this.journal.journalType+'9' === this.master.data.subType)){
+          let data = event.data;
+          if(data.settlement == '' || data.settlement == null || data.settlement != '0') 
+            this.eleGridCashReceipt.setEditableFields(['SettledNo'],false);
+        }
         break;
     }
   }
@@ -1165,7 +1178,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   setValidateForm(){
     let rObjectID = false;
     let lstRequire :any = [];
-    if (this.elementTabDetail?.selectingID == '1') {
+    if (this.master.data.subType == (this.journal.journalType+'1') || this.master.data.subType == (this.journal.journalType+'5')) {
       rObjectID = true;
     }
     lstRequire.push({field : 'ObjectID',isDisable : false,require:rObjectID});

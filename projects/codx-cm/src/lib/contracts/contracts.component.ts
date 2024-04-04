@@ -148,6 +148,9 @@ export class ContractsComponent extends UIComponent {
   tabDefaut;
   disabledDisposalID = false;
   viewType = '';
+  //cho phép thao tác khi thành công, thất bại, thanh lý.
+  allowTasks = false; 
+  allowContract = false;
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
@@ -268,7 +271,7 @@ export class ContractsComponent extends UIComponent {
             'CM0204_17',
             'CM0204_3',
             'CM0204_7',
-            'SYS003', 'SYS004', 'SYS001', 'SYS002', 'SYS009', 'SYS008', 'SYS010'
+            'SYS003', 'SYS004', 'SYS001', 'SYS002', 'SYS009', 'SYS008', 'SYS010','CM0204_18'
           ].includes(res?.functionID)
         ) {
           res.disabled = true;
@@ -488,9 +491,9 @@ export class ContractsComponent extends UIComponent {
       case 'CM0204_20': // không sử dụng quy trình
         this.updateProcess(data, false);
         break;
-      // case 'SYS004': //mail
-      //   this.sendMail(data);
-      //   break;
+      case 'CM0204_23':
+        this.printDataSource(data, e.functionID);
+        break;
       default: {
         this.codxShareService.defaultMoreFunc(
           e,
@@ -1372,7 +1375,7 @@ export class ContractsComponent extends UIComponent {
                 }
                 break;
               case '1':
-                this.startNew(this.dataSelected);
+                this.startNew(this.dataSelected,e?.event?.status);
                 break;
               case '3':
               case '5':
@@ -1396,7 +1399,7 @@ export class ContractsComponent extends UIComponent {
     });
   }
 
-  startNew(data) {
+  startNew(data, status) {
     this.notiService
       .alertCode('CM063', null, ['"' + data?.contractName + '"' || ''])
       .subscribe((x) => {
@@ -1411,14 +1414,19 @@ export class ContractsComponent extends UIComponent {
                 this.statusCodeID,
                 this.statusCodeCmt,
               ];
+              const dataStatus = [data.recID,this.statusCodeID,this.statusCodeCmt, status ]
               this.cmService
-                .moveStageBackDataCM(dataUpdate)
-                .subscribe((deal) => {
-                  if (deal) {
-                    this.dataSelected = deal;
-                    this.view.dataService
-                      .update(this.dataSelected, true)
-                      .subscribe();
+                .changeStatusContract(dataStatus)
+                .subscribe((contract) => {
+                  if (contract) {
+                    this.dataSelected.status = status;
+                    this.dataSelected.statusCodeID = this.statusCodeID;
+                    this.dataSelected.statusCodeCmt = this.statusCodeCmt;
+                    this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+                    this.view.dataService.dataSelected = this.dataSelected;
+                    this.view.dataService.update(this.dataSelected, true).subscribe();
+                    this.detectorRef.detectChanges();
+                    this.notiService.notifyCode('SYS007');
                   }
                 });
             }
@@ -1777,5 +1785,22 @@ export class ContractsComponent extends UIComponent {
     if (event) {
       this.moveStage(contract);
     }
+  }
+
+  /** in trường tùy chỉnh => more gọi vào
+  * @param data
+  * @param reportID
+  * @param reportType
+  */
+  printDataSource(data: any, reportID: any, reportType: string = 'V') {
+    let params = {
+      Recs: data?.recID,
+    };
+    this.codxShareService.printReport(
+      reportID,
+      reportType,
+      params,
+      this.view?.formModel
+    );
   }
 }

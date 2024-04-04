@@ -661,23 +661,39 @@ export class CalendarNotesComponent
     if (showEvent == '0' || showEvent == 'false') return;
     this.CO_Meetings = [];
     this.onSwitchCountEven('CO_Meetings');
-    let setting = this.settingCalendar.find(x => x.transType == "CO_Meetings");
-    if(setting)
-    {
-      let json = JSON.parse(setting.dataValue);
-      let date = new Date();
-      let funcID = "COT03"; // lịch cá nhân
-      let predicates = json.Predicate;
-      let startDate = new Date(date.getFullYear(),date.getMonth(),1);
-      let endDate = moment(date).add(1, 'M').add(-1,'s').toDate();
-      this.codxShareSV.getDataCO_Meetings(funcID,predicates,"","",startDate,endDate).subscribe((res) => {
-        if (res)
-        {
+    let requestDataEP_Room: DataRequest = new DataRequest();
+    requestDataEP_Room.predicates = predicate;
+    requestDataEP_Room.dataValues = dataValue;
+    requestDataEP_Room.funcID = 'TMT0501';
+    requestDataEP_Room.formName = 'Meetings';
+    requestDataEP_Room.gridViewName = 'grvMeetings';
+    requestDataEP_Room.pageLoading = true;
+    requestDataEP_Room.page = 1;
+    requestDataEP_Room.pageSize = 1000;
+    requestDataEP_Room.entityName = 'CO_Meetings';
+    this.codxShareSV
+      .getRequestDataCO_Meetings(requestDataEP_Room)
+      .subscribe((res) => {
+        if (res) {
           this.getModelShare(res[0], param.Template, 'CO_Meetings');
         }
       });
-    }
-
+    // let setting = this.settingCalendar.find(x => x.transType == "CO_Meetings");
+    // if(setting)
+    // {
+    //   let json = JSON.parse(setting.dataValue);
+    //   let date = new Date();
+    //   let funcID = "COT03"; // lịch cá nhân
+    //   let predicates = json.Predicate;
+    //   let startDate = new Date(date.getFullYear(),date.getMonth(),1);
+    //   let endDate = moment(date).add(1, 'M').add(-1,'s').toDate();
+    //   this.codxShareSV.getDataCO_Meetings(funcID,predicates,"","",startDate,endDate).subscribe((res) => {
+    //     if (res)
+    //     {
+    //       this.getModelShare(res[0], param.Template, 'CO_Meetings');
+    //     }
+    //   });
+    // }
   }
 
   getRequestEP_BookingRoom(predicate, dataValue, param, showEvent) {
@@ -776,7 +792,7 @@ export class CalendarNotesComponent
             this.TM_Tasks.push(paramValue);
             break;
           case 'WP_Notes':
-            if(paramValue.data && paramValue.data.createdOn){
+            if (paramValue.data && paramValue.data.createdOn) {
               paramValue.calendarDate = paramValue.data.createdOn;
             }
             this.WP_Notes.push(paramValue);
@@ -852,8 +868,23 @@ export class CalendarNotesComponent
               ];
               break;
             case 'EP_BookingRooms':
+              let lst = this.EP_BookingRooms?.length > 0 ? JSON.parse(JSON.stringify(this.EP_BookingRooms)) : [];
+              lst = this.lstTransType.some(
+                (x) => x.transType == 'CO_Meetings' && x.isActive == '1'
+              )
+                ? lst.filter((x) =>
+                    !this.CO_Meetings.some(
+                      (c) =>
+                        c?.data?.location != null &&
+                        c?.data?.location?.trim() != '' &&
+                        x?.data?.refID == c?.data?.recID &&
+                        c?.data?.startDate == x?.data?.startDate &&
+                        c?.data?.endDate == x?.data?.endDate
+                    )
+                  )
+                : lst;
               this.lstView.dataService.data = [
-                ...this.EP_BookingRooms.filter((x) => {
+                ...lst.filter((x) => {
                   let xDate = new Date(x.calendarDate).toLocaleDateString();
                   return xDate == curDateSelected;
                 }).sort(this.orderByStartTime),
@@ -1368,16 +1399,17 @@ export class CalendarNotesComponent
     this.curHoverItem = item;
   }
   // get setting calendar
-  settingCalendar:any[] = [];
-  getCalendarSetting(){
+  settingCalendar: any[] = [];
+  getCalendarSetting() {
     this.api
       .execSv(
         'SYS',
         'ERM.Business.SYS',
         'SettingValuesBusiness',
         'GetCalendarSettingAsync',
-        ['WPCalendars'])
-        .subscribe((res: any) => {
+        ['WPCalendars']
+      )
+      .subscribe((res: any) => {
         if (res?.length > 0) {
           this.settingCalendar = res;
           this.detectorRef.detectChanges();

@@ -1083,7 +1083,8 @@ export class CodxAddTaskComponent implements OnInit {
     if (!this.stepsTasks['taskName']?.trim()) {
       message.push(this.view['taskName']);
     }
-    if (this.stepsTasks?.roles?.length <= 0) {
+
+    if (this.stepsTasks?.roles?.length <= 0 || !this.stepsTasks?.roles?.some(role => role?.roleType == "O")) {
       message.push(this.view['roles']);
     }
 

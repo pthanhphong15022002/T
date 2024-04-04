@@ -81,6 +81,8 @@ import { DetailNotebookComponent } from './personal/master-detail/my-page/detail
 import { EPDashboardComponent } from 'projects/codx-ep/src/lib/dashboard/dashboard.component';
 import { CmDashboardComponent } from 'projects/codx-cm/src/lib/cm-dashboard/cm-dashboard.component';
 import { RequestsComponent } from 'projects/codx-ep/src/lib/requests/requests.component';
+import { AdvanceRequestsComponent } from 'projects/codx-ep/src/lib/advance-requests/advance-requests.component';
+import { PaymentRequestsComponent } from 'projects/codx-ep/src/lib/payment-requests/payment-requests.component';
 const routes: Routes = [
   {
     path: '',
@@ -211,6 +213,7 @@ const routes: Routes = [
         path: 'cm/dashboard/:funcID',
         component: CmDashboardComponent,
       },
+      
       {
         path: 'mywallet/:funcID',
         component: PersonalUsageHistoryComponent,
@@ -338,6 +341,14 @@ const routes: Routes = [
             path: 'businesstrip/:funcID',
             component: RequestsComponent,
           },
+          {
+            path: 'advancerequests/:funcID',
+            component: AdvanceRequestsComponent,
+          },
+          {
+            path: 'paymentrequests/:funcID',
+            component: PaymentRequestsComponent,
+          }
           // //Tìm kiếm
           // {
           //   path: 'searching/:funcID',

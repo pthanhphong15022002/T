@@ -6,6 +6,7 @@ import {
   Injector,
 } from '@angular/core';
 import {
+  CodxFormComponent,
   DialogData,
   DialogRef,
   ImageViewerComponent,
@@ -68,7 +69,7 @@ export class AddApproversComponent extends UIComponent {
   //#endregion
 
   //#region ViewChild
-  @ViewChild('form', { static: true }) form;
+  @ViewChild('form', { static: true }) form?: CodxFormComponent;
   @ViewChild('imageUpload') imageUpload?: ImageViewerComponent;
 
   //#endregion
@@ -150,12 +151,13 @@ export class AddApproversComponent extends UIComponent {
     if (this.form.formGroup.status == 'INVALID') {
       return;
     }
-    if (this.dialog.dataService.hasSaved) {
-      this.dialog.dataService.hasSaved = false;
-      if (this.members.length)
-        this.dialog.dataService.update(this.master).subscribe();
-      this.dialog.close(true);
-    } else {
+    // if (this.dialog.dataService.hasSaved) {
+    //   this.dialog.dataService.hasSaved = false;
+    //   if (this.members.length)
+    //     this.dialog.dataService.update(this.master).subscribe();
+    //   this.dialog.close(true);
+    // } else {
+    if (this.form.hasChange) {
       this.dialog.dataService
         .save((opt: RequestOption) => this.beforeSave(opt), 0)
         .subscribe((res: any) => {
@@ -164,13 +166,12 @@ export class AddApproversComponent extends UIComponent {
             if (this.members.length > 0) {
               this.beforeSaveMember();
             } else {
-              this.dialog.dataService.hasSaved = true;
-
               this.dialog.close(this.master);
             }
           }
         });
     }
+    // }
   }
 
   removeDetail(item) {
@@ -196,11 +197,8 @@ export class AddApproversComponent extends UIComponent {
       ])
       .subscribe((res) => {
         if (res) {
-          // this.dialog.dataService.hasSaved = true;
-          this.dialog.dataService.hasSaved = true;
           this.master.members = res[2];
           this.master.memberIDs = res[1];
-          // this.dialog.dataService.update(this.master).subscribe((res2) => {
           this.dialog.close(this.master);
           this.imageUpload
             .updateFileDirectReload(this.master.recID)
@@ -209,8 +207,6 @@ export class AddApproversComponent extends UIComponent {
                 console.log('res', result);
               }
             });
-        } else {
-          this.dialog.dataService.hasSaved = true;
         }
       });
   }

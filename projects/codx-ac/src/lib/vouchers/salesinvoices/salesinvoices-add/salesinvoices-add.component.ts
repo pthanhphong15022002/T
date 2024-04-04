@@ -188,6 +188,10 @@ export class SalesinvoicesAddComponent extends UIComponent {
     if (this.journal.assetControl == "0"){
       hideFields.push("AssetGroupID");
       hideFields.push("AssetType");
+      hideFields.push("ServiceDate");
+      hideFields.push("ServicePeriods");
+      hideFields.push("EmployeeID");
+      hideFields.push("SiteID");
     } 
     if (this.journal.subControl == "0") hideFields.push("ObjectID");
 
@@ -222,6 +226,46 @@ export class SalesinvoicesAddComponent extends UIComponent {
         hideFields.push('VATBase2');
       }
     }
+
+    if (this.journal.discountControl == '0') {
+      hideFields.push('DiscAmt');
+      hideFields.push('DiscPct');
+      // hideFields.push('TotalDiscAmt');
+      // hideFields.push('TotalDiscPct');
+      // hideFields.push('LineDiscAmt');
+      // hideFields.push('LineDiscPct');
+      hideFields.push('DiscAmt2');
+    }else{
+      if (this.dataDefault && this.dataDefault?.currencyID == this.baseCurr){
+        hideFields.push('DiscAmt2');
+      }
+    }
+
+    if (this.journal.cosControl == '0') {
+      hideFields.push('CostPrice');
+      hideFields.push('CostAmt');
+    }
+
+    if (!this.journal.miscChargeControl) {
+      hideFields.push('MiscAmt');
+      hideFields.push('MiscPrice');
+      hideFields.push('MiscAmt2');
+    }else{
+      if (this.dataDefault && this.dataDefault?.currencyID == this.baseCurr){
+        hideFields.push('MiscAmt2');
+      }
+    }
+
+    if (!this.journal.commissionControl) {
+      hideFields.push('CommissionPct');
+      hideFields.push('CommissionAmt');
+      hideFields.push('CommissionAmt2');
+    }else{
+      if (this.dataDefault && this.dataDefault?.currencyID == this.baseCurr){
+        hideFields.push('CommissionAmt2');
+      }
+    }
+
     if (this.dataDefault && this.dataDefault?.currencyID == this.baseCurr){
       hideFields.push('SalesAmt2');
       hideFields.push('NetAmt2');

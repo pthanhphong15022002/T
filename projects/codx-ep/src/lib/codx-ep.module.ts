@@ -47,6 +47,13 @@ import { ReceiptResourceComponent } from './receipt/receipt-resource.component';
 import { AddReceiptResourceComponent } from './receipt/add-receipt-resource/add-receipt-resource.component';
 import { RequestsComponent } from './requests/requests.component';
 import { RequestsViewDetaiComponent } from './requests/requests-view-detai/requests-view-detai.component';
+import { PopupAddRequestComponent } from './requests/popup/popup-add-request/popup-add-request.component';
+import { AdvanceRequestsComponent } from './advance-requests/advance-requests.component';
+import { AdvanceRequestsViewDetaiComponent } from './advance-requests/advance-requests-view-detai/advance-requests-view-detai.component';
+import { PopupAddEpAdvanceRequestComponent } from './advance-requests/popup/popup-add-ep-advance-request/popup-add-ep-advance-request.component';
+import { PaymentRequestsViewDetaiComponent } from './payment-requests/payment-requests-view-detai/payment-requests-view-detai.component';
+import { PaymentRequestsComponent } from './payment-requests/payment-requests.component';
+import { PopupAddEpPaymentRequestComponent } from './payment-requests/popup/popup-add-ep-payment-request/popup-add-ep-payment-request.component';
 
 export const routes: Routes = [
   {
@@ -149,11 +156,6 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'businesstrip/:funcID',
-        component: RequestsComponent,
-        data: { noReuse: true },
-      },
-      {
         path: 'instances/:funcID/:processID',
         component: ViewInstancesComponent,
         data: { noReuse: true },
@@ -229,7 +231,14 @@ export const routes: Routes = [
     ReceiptResourceComponent,
     AddReceiptResourceComponent,
     RequestsComponent,
-    RequestsViewDetaiComponent
+    RequestsViewDetaiComponent,
+    PopupAddRequestComponent,
+    AdvanceRequestsComponent,
+    AdvanceRequestsViewDetaiComponent,
+    PopupAddEpAdvanceRequestComponent,
+    PaymentRequestsComponent,
+    PopupAddEpPaymentRequestComponent,
+    PaymentRequestsViewDetaiComponent
   ],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -844,11 +844,14 @@ export class CashPaymentsComponent extends UIComponent {
                 .subscribe((res) => {
                   if (res && !res?.error) {
                     data.status = '8';
-                    this.view.dataService.update(data).subscribe();
-                    this.notification.notifyCode('AC0029', 0, text);
+                    this.view.dataService.update(res.data).subscribe();
+                    // this.notification.notifyCode('AC0029', 0, text);
+                    this.notification.notify('Chuyển lệnh thành công !');
                   } else {
                     this.notification.notify(
-                      res.data?.data?.result?.message,
+                      res?.data?.data?.result?.message ||
+                        res?.data?.description ||
+                        res?.msg,
                       '2'
                     );
                   }
@@ -857,7 +860,7 @@ export class CashPaymentsComponent extends UIComponent {
             }
           });
         } else {
-          this.notification.notify('chưa hỗ trợ chuyển tiền ngân hàng này');
+          this.notification.notify('Chưa hỗ trợ chuyển tiền ngân hàng này');
         }
       }
     });
@@ -898,7 +901,9 @@ export class CashPaymentsComponent extends UIComponent {
                     );
                   } else {
                     this.notification.notify(
-                      res?.data?.data?.result?.message,
+                      res?.data?.data?.result?.message ||
+                        res?.data?.description ||
+                        res?.error,
                       '2'
                     );
                   }
@@ -907,7 +912,7 @@ export class CashPaymentsComponent extends UIComponent {
             }
           });
         } else {
-          this.notification.notify('chưa hỗ trợ cho ngân hàng này');
+          this.notification.notify('Chưa hỗ trợ cho ngân hàng này');
         }
       }
     });

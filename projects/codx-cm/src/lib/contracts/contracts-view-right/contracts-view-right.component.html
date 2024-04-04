@@ -804,7 +804,7 @@
     [taskAdd]="taskAdd"
     (moveStage)="handelMoveStage($event)"
     [isAdmin]="contract?.isAdminAll"
-    [isViewStep]="!(['1', '2', '15',].includes(contract?.status) && !contract?.closed && contract?.approveStatus != '3')"
+    [isViewStep]="isViewStep"
   ></step-task>
   <!-- [taskAdd]="dataTaskAdd" -->
 </ng-template>
