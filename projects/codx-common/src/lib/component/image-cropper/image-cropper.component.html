@@ -13,7 +13,7 @@
         <image-cropper
             [imageBase64]="imageBase64"
             [maintainAspectRatio]="true"
-            [aspectRatio]="1 / 1"
+            [aspectRatio]="heightCropper / widthCropper"
             format="png"
             (imageCropped)="imageCropped($event)"
             (imageLoaded)="imageLoaded($event)"
