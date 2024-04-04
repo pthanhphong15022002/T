@@ -11,9 +11,11 @@ import {
   CallFuncService,
   FormModel,
   NotificationsService,
+  TenantStore,
 } from 'codx-core';
 import { CodxCmService } from '../../../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'cm-view-history-customer',
@@ -44,7 +46,9 @@ export class ViewHistoryCustomerComponent {
     private api: ApiHttpService,
     private authstore: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
-    private notiService: NotificationsService
+    private notiService: NotificationsService,
+    private location: Location,
+    private tenantStore: TenantStore,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -145,6 +149,34 @@ export class ViewHistoryCustomerComponent {
       return step;
     } else {
       return null;
+    }
+  }
+  linkData(type: string, recID: string) {
+    if (type && recID) {
+      const url1 = this.location.prepareExternalUrl(this.location.path());
+      const parser = document.createElement('a');
+      parser.href = url1;
+      const domain = parser.origin;
+
+      let tenant = this.tenantStore.get().tenant;
+      let url = ``
+      switch (type) {
+        case "1":
+          url = `${domain}/${tenant}/cm/deals/CM0201?predicate=RecID=@0&dataValue=${recID}`;
+          break;
+        case "2":
+          url = `${domain}/${tenant}/cm/contracts/CM0206?predicate=RecID=@0&dataValue=${recID}`;
+          break;
+        case "3":
+          url = `${domain}/${tenant}/cm/quotations/CM0202?predicate=RecID=@0&dataValue=${recID}`;
+          break;
+      }
+      if (url) {
+        window.open(url, '_blank');
+      }
+      return;
+    } else {
+      this.notiService.notify('Không tìm thấy dữ liệu', '3');
     }
   }
 }

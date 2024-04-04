@@ -67,6 +67,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   dialogOtpPin: any;
   isApproved: boolean;
   selectedCert: any;
+  selectedSupplier: any;
   constructor(
     private inject: Injector,
     private esService: CodxEsService,
@@ -478,6 +479,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
         );
         supplierDialog.closed.subscribe((res) => {
           if (res?.event) {
+            this.selectedSupplier = res?.event;
             switch (res?.event) {
               //usb
               case '5': {
@@ -517,6 +519,34 @@ export class PopupSignForApprovalComponent extends UIComponent {
                   });
                 break;
               }
+              case '6': { //Vnpt Smart CA
+                  this.selectedSupplier='6';
+                  this.esService
+                    .getVNPTCer(this.signerInfo.thirdPartyID)
+                    .subscribe((cers) => {
+                      if (cers) {
+                        this.lstCert = cers?.filter((x) => x?.error == null);                        
+                        this.lstCert.push(this.lstCert[0]);                       
+                        this.detectorRef.detectChanges();
+                        if (this.lstCert?.length == 1) {
+                          //this.viettelESign(mode, comment, this.lstCert[0]?.cert_data);
+                        } else if (this.lstCert?.length > 1) {
+                          let dialogVNPTCers = this.callfc.openForm(
+                            this.viettelCers,
+                            '',
+                            450,
+                            300
+                          );
+                        }
+                      } else {
+                        this.notify.notify(
+                          'Không tìm thấy thông tin xác thực chữ ký số, vui lòng kiểm tra lại!',
+                          '2'
+                        );
+                      }
+                    });
+                  break;
+                }
               case '4': { //Viettel
                 this.esService
                   .getViettelCer(this.signerInfo.thirdPartyID)
@@ -543,7 +573,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
                 break;
               }
               //vnpt
-              default: {
+              case '3': {
                 this.pdfView
                   .signPDF(mode, comment, null, '3')
                   .then((resModel: ResponseModel) => {
@@ -573,6 +603,25 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
     this.pdfView
       .signPDF(data, comment, JSON.stringify(cert), '4')
+      .then((resModel: ResponseModel) => {
+        if (resModel?.msgCodeError == null && resModel?.rowCount > 0) {
+          this.notify.notifyCode('SYS034');
+          this.canOpenSubPopup = false;
+          dialogCers && dialogCers.close();
+        } else {
+          this.canOpenSubPopup = false;
+
+          this.notify.notifyCode('SYS021');
+          dialogCers && dialogCers.close();
+        }
+        this.dialog && this.dialog.close(resModel);
+      });
+  }
+  vnptSmartESign(data, comment, cert) {
+    let dialogCers = this.callfc.openForm(this.viettelESignWait, '', 450, 250);
+
+    this.pdfView
+      .signPDF(data, comment, JSON.stringify(cert), '6')
       .then((resModel: ResponseModel) => {
         if (resModel?.msgCodeError == null && resModel?.rowCount > 0) {
           this.notify.notifyCode('SYS034');
@@ -630,16 +679,26 @@ export class PopupSignForApprovalComponent extends UIComponent {
     this.dialog.close();
   }
   certChange(evt, cert) {
-    this.selectedCert = cert;
+    this.selectedCert = this.selectedSupplier =='4' ? cert?.cert : cert;
     this.detectorRef.detectChanges();
   }
   saveCert(dialog) {
-    if (this.selectedCert == null) this.selectedCert = this.lstCert[0].cert;
-    this.viettelESign(
-      '5',
-      this.dialogSignFile?.value?.comment,
-      this.selectedCert
-    );
+    
+    if (this.selectedCert == null) this.selectedCert = this.selectedSupplier =='4' ? this.lstCert[0]?.cert :this.lstCert[0];
+    if(this.selectedSupplier =='4'){      
+      this.viettelESign(
+        '5',
+        this.dialogSignFile?.value?.comment,
+        this.selectedCert
+      );
+    }
+    else if(this.selectedSupplier=='6'){
+      this.vnptSmartESign(
+        '5',
+        this.dialogSignFile?.value?.comment,
+        this.selectedCert
+      );
+    }
     dialog.close();
   }
 

@@ -1,8 +1,12 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { UIComponent, UserModel, ViewModel, AuthStore, ViewType, SidebarModel, CRUDService } from 'codx-core';
+import { UIComponent, UserModel, ViewModel, AuthStore, ViewType, SidebarModel, CRUDService, CodxService } from 'codx-core';
 import { Subscription } from 'rxjs';
 import { PopupAddEpAdvanceRequestComponent } from '../advance-requests/popup/popup-add-ep-advance-request/popup-add-ep-advance-request.component';
 import { PopupAddEpPaymentRequestComponent } from './popup/popup-add-ep-payment-request/popup-add-ep-payment-request.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { ResponseModel } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
+import { PaymentRequestsViewDetaiComponent } from './payment-requests-view-detai/payment-requests-view-detai.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'ep-payment-requests',
@@ -13,14 +17,19 @@ export class PaymentRequestsComponent extends UIComponent {
 
   @ViewChild("itemTemplate") itemTemplate:TemplateRef<any>;
   @ViewChild("detailTemplate") detailTemplate:TemplateRef<any>;
+  @ViewChild("viewDetail") viewDetail:PaymentRequestsViewDetaiComponent;
+
 
   user:UserModel = null;
   views:ViewModel[];
   subcriptions = new Subscription();
   dataSelected:any;
+  releaseCategory:any;
   constructor
   (
     private injector:Injector,
+    private codxCommonSV : CodxCommonService,
+    private codxShareService:CodxShareService,
     private auth:AuthStore
   ) 
   {
@@ -28,8 +37,8 @@ export class PaymentRequestsComponent extends UIComponent {
     this.user = auth.get();
   }
   override onInit(): void {
+    
   }
-
 
   ngAfterViewInit(): void {
     this.views = [
@@ -44,6 +53,15 @@ export class PaymentRequestsComponent extends UIComponent {
         }
       }
     ];
+    this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'CategoriesBusiness',
+      'GetProcessByCategoryIDAsync',
+      [this.view.entityName]
+    ).subscribe((res:any) => {
+      this.releaseCategory = res;
+    });
     this.detectorRef.detectChanges();
   }
 
@@ -90,6 +108,10 @@ export class PaymentRequestsComponent extends UIComponent {
           if(!data) data = this.view.dataService.dataSelected;
           this.update(data);
           break;
+        case "Gửi duyệt":
+          if(!data) data = this.view.dataService.dataSelected;
+          this.release(data);
+          break;
         default:
           break;
       }
@@ -114,16 +136,7 @@ export class PaymentRequestsComponent extends UIComponent {
         this.subcriptions.add(popup.closed.subscribe((res:any) => {
           if(res && res.event)
           {
-            let data = {
-              recID : res.event.recID,
-              employeeID : res.event.employeeID,
-              employeeName : res.event.employeeName,
-              memo : res.event.memo,
-              toDate : res.event.toDate,
-              status : res.event.status,
-              createdBy : res.event.createdBy
-            };
-            this.subcriptions.add(this.view.dataService.add(data).subscribe());
+            this.subcriptions.add(this.view.dataService.update(res.event).subscribe());
           }
         }));
       }
@@ -134,8 +147,7 @@ export class PaymentRequestsComponent extends UIComponent {
   delete(data:any){
     if(data)
     {
-      let subscribeDelete = this.view.dataService.delete([data],true).subscribe();
-      this.subcriptions.add(subscribeDelete);
+      this.subcriptions.add(this.view.dataService.delete([data],true).subscribe());
       this.detectorRef.detectChanges();
     }
   }
@@ -155,13 +167,85 @@ export class PaymentRequestsComponent extends UIComponent {
       this.subcriptions.add(popup.closed.subscribe((res:any) => {
         if(res && res.event)
         {
-          let dataItem = res.event;
-          if(dataItem.resources?.length > 0)
-            dataItem.resourceIDs = dataItem.resources.map(x => x.userID).join(";");
-          this.subcriptions.add(this.view.dataService.update(data).subscribe());
+          this.subcriptions.add(this.view.dataService.update(res.event).subscribe());
+          this.viewDetail.loadDataInfo(res.event,this.view.funcID);
           this.detectorRef.detectChanges();
         }
       }));
     }
+  }
+
+  openPopupAdvance(data:any){
+    if(data)
+    {
+      let subscribe = this.api.execSv("EP","Core","DataBusiness","GetDefaultAsync",["WSCO042","EP_Requests"])
+      .subscribe((model:any) => {
+        if(model && model?.data)
+        {
+          model.data.refID = data.recID;
+          model.data.requestType = "AD";
+          let obj = {
+            data : model.data,
+            actionType: "add"
+          }
+          let dataService = new CRUDService(this.injector);
+          dataService.request.entityName = "EP_Requests";
+          dataService.request.funcID = "WSCO042";
+          dataService.service = "EP";
+          dataService.request.formName = "AdvanceRequests";
+          dataService.request.gridViewName = "grvAdvanceRequests";
+          dataService.dataSelected = model.data;
+          let dialog = new SidebarModel();
+          dialog.Width = '550px';
+          dialog.FormModel = this.view.formModel;
+          dialog.DataService = dataService;
+          this.callfc.openSide(PopupAddEpAdvanceRequestComponent,obj,dialog,this.view.funcID);
+        }
+      });
+      this.subcriptions.add(subscribe);
+    }
+  }
+
+  openPopupPayment(data:any){
+    if(data)
+    {
+      let subscribe = this.api.execSv("EP","Core","DataBusiness","GetDefaultAsync",["WSCO043","EP_Requests"])
+      .subscribe((model:any) => {
+        if(model && model?.data)
+        {
+          model.data.refID = data.recID;
+          model.data.requestType = "PA";
+          let obj = {
+            data : model.data,
+            actionType: "add"
+          }
+          let dataService = new CRUDService(this.injector);
+          dataService.request.entityName = "EP_Requests";
+          dataService.request.funcID = "WSCO042";
+          dataService.service = "EP";
+          dataService.request.formName = "AdvanceRequests";
+          dataService.request.gridViewName = "grvAdvanceRequests";
+          dataService.dataSelected = model.data;
+          let dialog = new SidebarModel();
+          dialog.Width = '550px';
+          dialog.FormModel = this.view.formModel;
+          dialog.DataService = dataService;
+          this.callfc.openSide(PopupAddEpAdvanceRequestComponent,obj,dialog,this.view.funcID);
+        }
+      });
+      this.subcriptions.add(subscribe);
+    }
+  }
+
+  release(data:any){
+    if(data)
+    {
+      this.codxCommonSV.codxReleaseDynamic("EP",data,this.releaseCategory,this.view.entityName,this.view.funcID,data.memo,(res:ResponseModel) => {this.callbackRelase(res);});
+    }
+  }
+
+  callbackRelase(respone:ResponseModel)
+  {
+    debugger
   }
 }
