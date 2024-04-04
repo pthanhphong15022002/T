@@ -157,14 +157,16 @@ export class HomeComponent extends UIComponent implements OnInit {
       if (item && item[0]?.length > 0) {
         this.dataSurveysSystem =
           this.dataSurveysSystem?.length > 0
-            ? [...this.dataSurveysSystem, ...item[0]]
+            ? this.dataModel.pageLoading == true
+              ? [...this.dataSurveysSystem, ...item[0]]
+              : [...item[0]]
             : [...item[0]];
       }
     });
   }
 
   readMoreSys() {
-    this.dataModel.page++;
+    this.dataModel.pageLoading = false;
     this.getData();
   }
 
@@ -258,7 +260,6 @@ export class HomeComponent extends UIComponent implements OnInit {
     //     } else this.notifySvr.notifyCode('SYS022');
     //   });
   }
-
 
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];

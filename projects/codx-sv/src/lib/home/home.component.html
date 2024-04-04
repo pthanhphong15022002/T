@@ -60,7 +60,7 @@
             </div>
           </div>
         </ng-container>
-        <div class="mx-2 cursor-pointer" (click)="readMoreSys()">
+        <div class="mx-2 cursor-pointer" (click)="readMoreSys()" *ngIf="dataModel.pageLoading == true">
           <codx-label
             default="Xem thêm"
             [fiedName]="'lblSVMoreTemp'"
