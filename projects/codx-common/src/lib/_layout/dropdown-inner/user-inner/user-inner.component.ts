@@ -272,7 +272,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
   testGetMongo() {
     this.api
-      .execSv('BG', 'ERM.Business.BG', 'TrackLogsBusiness', 'GetCollection', [])
+      .execSv('BP', 'ERM.Business.BP', 'ProcessesBusiness', 'GetCollection', [])
       .subscribe((res) => {
         if (res) this.notifyService.notify('testGetMongo nè');
         console.log(res);
@@ -386,7 +386,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     let waitingLogin = this.callSV.openForm(
       CodxImageCropperComponent,
       '',
-      0,
+      500,
       380,
       '',
       objData

@@ -46,6 +46,8 @@ export class FixedAssetAddComponent extends UIComponent {
     },
   ];
   private destroy$ = new Subject<void>();
+  isPreventChange:any = false;
+  isChangeSavl = false;
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -85,123 +87,144 @@ export class FixedAssetAddComponent extends UIComponent {
   //#endregion
 
   //#region Event
-  async valueChange(e) {
-    if (e && e?.field) {
-      let data = this.form?.form?.data
-        ? JSON.parse(JSON.stringify(this.form?.form?.data))
-        : null;
-      switch (e?.field) {
-        case 'assetGroupID':
-          if (e?.data != null && e?.data?.trim() != '') {
-            const grp = await firstValueFrom(
-              this.api
-                .execSv<any>('AM', 'AM', 'AssetGroupsBusiness', 'GetAsync', [
-                  e?.data,
-                ])
-                .pipe(takeUntil(this.destroy$))
-            );
-
-            if (grp) {
-              const group = { ...grp };
-              if (group.autoNoFormat) {
-                let autoNumberAsset = await firstValueFrom(
-                  this.api
-                    .execSv<any>(
-                      'AM',
-                      'AM',
-                      'AssetGroupsBusiness',
-                      'GenerateAutoNumberAssetAsync',
-                      [group.autoNoFormat]
-                    )
-                    .pipe(takeUntil(this.destroy$))
-                );
-                if (autoNumberAsset) {
-                  data.assetID = autoNumberAsset;
-                }
-              }
-              data = this.acService.replaceData(group, data);
-              if (this.form && this.form.formGroup) {
-                this.form.formGroup.patchValue(data);
-              }
-              this.detectorRef.detectChanges();
-            }
-          }
-          break;
-        case 'quantity':
-        case 'purcAmount':
-          {
-            if (e?.data && typeof e.data === 'number') {
-              let quantity = data?.quantity ?? 0;
-              let purcAmount = data?.purcAmount ?? 0;
-              data.costAmt = quantity * purcAmount ?? 0;
-              data.deprRate =
-                data?.deprPeriods > 0
-                  ? data.costAmt / data?.deprPeriods
-                  : false;
-
-              if (this.form) {
-                this.form.setValue('costAmt', data.costAmt, {});
-                this.form.setValue('deprRate', data.deprRate, {});
-              }
-            }
-          }
-          break;
-        case 'costAmt':
-        case 'deprPeriods':
-          data.deprRate =
-            data?.deprPeriods > 0 ? data.costAmt / data?.deprPeriods : 0;
-          data.remainPeriods = Math.abs(data.servicePeriods - data.deprPeriods);
-          if (this.form) {
-            this.form.setValue('remainPeriods', data.remainPeriods, {});
-            this.form.setValue('deprRate', data.deprRate, {});
-          }
-          break;
-        case 'servicePeriods':
-          {
-            data.remainPeriods = Math.abs(
-              data.servicePeriods - data.deprPeriods
-            );
-            if (this.form) {
-              this.form.setValue('remainPeriods', data.remainPeriods, {});
-            }
-          }
-          break;
-        case 'deprConvention':
-        case 'placeInService':
-        case 'deprCalendar':
-          {
-            if (e?.data) {
-              const ele = await firstValueFrom(
-                this.api
-                  .execSv<any>(
-                    'AM',
-                    'AM',
-                    'AssetGroupsBusiness',
-                    'GetDeprStartDateAsync',
-                    [
-                      data?.deprCalendar,
-                      data?.deprConvention,
-                      data?.placeInService,
-                    ]
-                  )
-                  .pipe(takeUntil(this.destroy$))
-              );
-
-              if (ele[1]) {
-                data.deprStartDate = new Date(ele[0]);
-
-                if (this.form && this.form.formGroup) {
-                  this.form.formGroup.patchValue({'deprStartDate': data.deprStartDate});
-                }
-
-                this.detectorRef.detectChanges();
-              }
-            }
-          }
-          break;
-      }
-      this.detectorRef.detectChanges();
+  valueChange(event: any) {
+    if (this.isPreventChange) {
+      return;
     }
+    let field = event?.field || event?.ControlName;
+    this.api.exec('AM','AssetsBusiness','ValueChangedAsync',[this.form.data,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      console.log(res);
+      if(res){
+        this.isPreventChange = true;
+        this.form.formGroup.patchValue({...res});
+        this.isPreventChange = false;
+      }
+    })
+    // if (e && e?.field) {
+    //   let data = this.form?.form?.data
+    //     ? JSON.parse(JSON.stringify(this.form?.form?.data))
+    //     : null;
+    //   switch (e?.field) {
+    //     case 'assetGroupID':
+    //       if (e?.data != null && e?.data?.trim() != '') {
+    //         const grp = await firstValueFrom(
+    //           this.api
+    //             .execSv<any>('AM', 'AM', 'AssetGroupsBusiness', 'GetAsync', [
+    //               e?.data,
+    //             ])
+    //             .pipe(takeUntil(this.destroy$))
+    //         );
+
+    //         if (grp) {
+    //           const group = { ...grp };
+    //           if (group.autoNoFormat) {
+    //             let autoNumberAsset = await firstValueFrom(
+    //               this.api
+    //                 .execSv<any>(
+    //                   'AM',
+    //                   'AM',
+    //                   'AssetGroupsBusiness',
+    //                   'GenerateAutoNumberAssetAsync',
+    //                   [group.autoNoFormat]
+    //                 )
+    //                 .pipe(takeUntil(this.destroy$))
+    //             );
+    //             if (autoNumberAsset) {
+    //               data.assetID = autoNumberAsset;
+    //             }
+    //           }
+    //           data = this.acService.replaceData(group, data);
+    //           if (this.form && this.form.formGroup) {
+    //             this.form.formGroup.patchValue(data);
+    //           }
+    //           this.detectorRef.detectChanges();
+    //         }
+    //       }
+    //       break;
+    //     case 'quantity':
+    //     case 'purcAmount':
+    //       {
+    //         if (e?.data && typeof e.data === 'number') {
+    //           let quantity = data?.quantity ?? 0;
+    //           let purcAmount = data?.purcAmount ?? 0;
+    //           data.costAmt = quantity * purcAmount ?? 0;
+    //           if(this.form.form.data.isAdd) data.salvage = data.costAmt;
+    //           data.deprRate =
+    //             data?.deprPeriods > 0
+    //               ? data.costAmt / data?.deprPeriods
+    //               : 0;
+
+    //           if (this.form) {
+    //             this.form.setValue('costAmt', data.costAmt, {});
+    //             this.form.setValue('deprRate', data.deprRate, {});
+    //             this.form.setValue('salvage', data.salvage, {});
+    //           }
+    //         }
+    //       }
+    //       break;
+    //     case 'costAmt':
+    //     case 'deprPeriods':
+    //       data.deprRate =
+    //         data?.deprPeriods > 0 ? data.costAmt / data?.deprPeriods : 0;
+    //       data.remainPeriods = Math.abs(data.servicePeriods - data.deprPeriods);
+    //       if(this.form.form.data.isAdd) data.salvage = data.costAmt;
+
+    //       if (this.form) {
+    //         this.form.setValue('remainPeriods', data.remainPeriods, {});
+    //         this.form.setValue('deprRate', data.deprRate, {});
+    //         this.form.setValue('salvage', data.salvage, {});
+    //       }
+    //       break;
+    //     case 'servicePeriods':
+    //       {
+    //         data.remainPeriods = Math.abs(
+    //           data.servicePeriods - data.deprPeriods
+    //         );
+    //         if (this.form) {
+    //           this.form.setValue('remainPeriods', data.remainPeriods, {});
+    //         }
+    //       }
+    //       break;
+    //     case 'deprConvention':
+    //     case 'placeInService':
+    //     case 'deprCalendar':
+    //       {
+    //         if (e?.data) {
+    //           const ele = await firstValueFrom(
+    //             this.api
+    //               .execSv<any>(
+    //                 'AM',
+    //                 'AM',
+    //                 'AssetGroupsBusiness',
+    //                 'GetDeprStartDateAsync',
+    //                 [
+    //                   data?.deprCalendar,
+    //                   data?.deprConvention,
+    //                   data?.placeInService,
+    //                 ]
+    //               )
+    //               .pipe(takeUntil(this.destroy$))
+    //           );
+
+    //           if (ele[1]) {
+    //             data.deprStartDate = new Date(ele[0]);
+
+    //             if (this.form && this.form.formGroup) {
+    //               this.form.formGroup.patchValue({'deprStartDate': data.deprStartDate});
+    //             }
+
+    //             this.detectorRef.detectChanges();
+    //           }
+    //         }
+    //       }
+    //       break;
+    //     case 'salvage':
+    //       this.isChangeSavl = true;
+    //       // this.form.setValue('salvage', data.salvage, {});
+    //       break;
+    //   }
+    //   this.detectorRef.detectChanges();
+    // }
   }
   //#endregion
 

@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
+  AuthStore,
   ButtonModel,
   CRUDService,
   CacheService,
@@ -65,6 +66,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
   lstSteps = [];
   parentFunc:any;
   codxService: CodxService;
+  user: import("codx-core").UserModel;
   constructor(
     private api: ApiHttpService,
     private callFunc: CallFuncService,
@@ -73,9 +75,11 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     private detectorRef: ChangeDetectorRef,
     private cache: CacheService,
     private codxSv: CodxService,
+    private auth: AuthStore,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
+    this.user = auth.get()
     this.codxService = this.codxSv;
     this.router.params.subscribe((param) => {
       if (!this.funcID) this.funcID = param['funcID'];
@@ -247,8 +251,29 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
       '',
       option
     );
+    popup.closed.subscribe(res=>{
+      if(res?.event)
+      {
+        (this.view.currentView as any).kanban.updateCard(res?.event);
+        (this.view.dataService as CRUDService).update(res?.event).subscribe();
+        this.view.dataService.update(res?.event).subscribe();
+        (this.view.currentView as any).kanban.refresh();
+      }
+    })
   }
-
+  updateIns(data) {
+    this.api
+      .execSv(
+        'BP',
+        'BP',
+        'ProcessInstancesBusiness',
+        'UpdateInsAsync',
+        data
+      )
+      .subscribe((item) => {
+       
+      });
+  }
   clickMF(e: any) {
     var funcID = e?.functionID;
     switch (funcID) {
@@ -263,8 +288,6 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         this.deleteItem();
         break;
       }
-      case 'SYS05':
-        break;
       //start
       case 'BPT01011': {
         this.startProcess();
@@ -272,6 +295,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
       }
       //Xem chi tiết quy trình
       case 'BPT01012':
+      case 'SYS05':
       {
         this.openFormDetail(this.view?.dataService?.dataSelected)
         break;
@@ -281,11 +305,30 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
 
   changeDataMF(e:any)
   {
-    var approvelCL = e.filter(
-      (x: { functionID: string }) =>
-        x.functionID == 'BPT01011'
-    );
-    if (approvelCL[0] && this.view?.dataService?.dataSelected?.status == "2") approvelCL[0].disabled = true;
+    // var approvelCL = e.filter(
+    //   (x: { functionID: string }) =>
+    //     x.functionID == 'BPT01011'
+    // );
+    // if (approvelCL[0] && this.view?.dataService?.dataSelected?.status == "2") approvelCL[0].disabled = true;
+
+    if(e?.length>0){
+      e.forEach((mf:any)=>{
+        if(this.dataSelected?.status =='1'){
+             
+          if(mf?.functionID =='BPT01011' || mf?.functionID =='SYS02' || mf?.functionID =='SYS03'){
+            mf.disabled=true;
+          }
+          if((mf?.functionID =='BPT01011' || mf?.functionID =='SYS02' || mf?.functionID =='SYS03') && (this.user?.userID == this.dataSelected?.createdBy || this.user.administrator)){
+            mf.disabled=false;
+          }  
+        }
+        if(this.dataSelected?.status !='1' && this.dataSelected?.status !='5'){
+          if(mf?.functionID =='BPT01011'|| mf?.functionID =='SYS02' || mf?.functionID =='SYS03'){
+            mf.disabled=true;
+          }
+        }
+      })
+    }
   }
 
   startProcess() {
@@ -294,7 +337,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         'BP',
         'ERM.Business.BP',
         'ProcessesBusiness',
-        'StartProcessAsync',
+        'StartInstanceAsync',
         [this.view?.dataService?.dataSelected?.recID]
       )
       .subscribe((res:any) => {
@@ -309,6 +352,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
           this.notifiSer.notifyCode('SYS034');
           (this.view.currentView as any).kanban.updateCard(data);
           this.view.dataService.update(data).subscribe();
+          
         }
       });
   }

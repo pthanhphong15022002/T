@@ -1,0 +1,143 @@
+<!-- Start: template listdetail -->
+<ng-container *ngIf="itemSelected">
+  <codx-detail-tmp [header]="TmpHeaderDetail" [body]="TmpBodyDetail" [formModel]="formModel"
+    [dataItem]="itemSelected" [footer]="TmpFooterDetail" [hideMF]="codxService.asideMode == '2'">
+  </codx-detail-tmp>
+</ng-container>
+<!-- End: template listdetail -->
+
+<!-- Start: template listdetail Header-->
+<ng-template #TmpHeaderDetail>
+  <ng-container *ngIf="itemSelected">
+    <div class="d-flex justify-content-between flex-grow-1 mb-2">
+      <div class="d-flex">
+        <div class="d-flex me-5">
+          <codx-label class="fw-bold label-colon" default="Số chứng từ" [formModel]="formModel">
+          </codx-label>
+          <span *ngIf="itemSelected?.voucherNo" class="text-gray-600">
+            {{ itemSelected?.voucherNo }}
+          </span>
+          <span *ngIf="(itemSelected?.voucherNo == '' || itemSelected?.voucherNo == null) && gridViewSetup"
+            class="place-holder">
+            {{ gridViewSetup['VoucherNo'].headerText }}
+          </span>
+        </div>
+        <div class="d-flex">
+          <img style="width: 18px;height: 18px;" class="me-2" src="../assets/themes/ac/default/img/calendar.svg">
+          <codx-label class="fw-bold label-colon" default="Ngày chứng từ" [formModel]="formModel">
+          </codx-label>
+          <span #voucherDate [innerHTML]="
+                        itemSelected?.voucherDate
+                              | formatvalue : formModel : 'voucherDate' : voucherDate
+                              | async
+                          " class="text-gray-600"></span>
+        </div>
+      </div>
+      <div class="d-flex align-self-center">
+        <codx-vll [formModel]="formModel" [field]="'Status'" [value]="itemSelected?.status" [showText]="true"
+          [showBgColor]="true" class="badge badge-light badge-sm">
+        </codx-vll>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between flex-grow-1 mb-2">
+      <div class="d-flex">
+        <i class="icon-i-building me-2 icon-18"></i>
+        <span *ngIf="itemSelected?.objectName"
+          class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5">{{itemSelected?.objectName}}</span>
+        <span *ngIf="(itemSelected?.objectName == '' || itemSelected?.objectName == null) && gridViewSetup"
+          class="place-holder line-clamp line-clamp-1 fs-5 text-uppercase me-5">{{gridViewSetup['ObjectID'].headerText}}</span>
+      </div>
+      <div class="d-flex align-self-center">
+        <span class="badge badge-pill badge-primary me-3">
+          <span class="fw-bold"
+            [innerHTML]="(itemSelected?.totalDR | tranformValueNumber : (itemSelected?.currencyID !=  baseCurr ? 'S' : 'B') | async)+' '+itemSelected?.currencyID"></span>
+        </span>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+<!-- End: template listdetail Header-->
+
+<!-- Start: template listdetail Body-->
+<ng-template #TmpBodyDetail>
+  <ng-container *ngIf="itemSelected">
+    <div class="d-flex align-items-top mb-1">
+      <codx-label class="fw-bold label-colon text-nowrap" fiedName="IssueNo"
+        [formModel]="formModel">
+      </codx-label>
+      <span *ngIf="itemSelected?.issueNo" class="text-gray-600">{{itemSelected?.issueNo}}</span>
+      <span *ngIf="(itemSelected?.issueNo == '' || itemSelected?.issueNo == null) && gridViewSetup"
+        class="place-holder text-gray-600">{{gridViewSetup['IssueNo'].headerText}}</span>
+    </div>
+    <div class="d-flex align-items-top mb-1">
+      <codx-label fiedName="IssueOn" class="fw-bold label-colon" [formModel]="formModel">
+      </codx-label>
+      <span *ngIf="itemSelected?.issueOn" #issueOn [innerHTML]="
+                    itemSelected?.issueOn
+                          | formatvalue : formModel : 'issueOn' : issueOn
+                          | async
+                      " class="text-gray-600"></span>
+      <span *ngIf="(itemSelected?.issueOn == '' || itemSelected?.issueOn == null) && gridViewSetup"
+        class="place-holder text-gray-600">{{gridViewSetup['IssueOn'].headerText}}</span>
+    </div>
+    <div class="d-flex align-items-top mb-1">
+      <codx-label class="fw-bold label-colon text-nowrap" fiedName="ReasonID" [formModel]="formModel">
+      </codx-label>
+      <span *ngIf="itemSelected?.reasonName" class="text-gray-600">{{itemSelected?.reasonName}}</span>
+      <span *ngIf="(itemSelected?.reasonName == '' || itemSelected?.reasonName == null) && gridViewSetup"
+        class="place-holder text-gray-600">{{gridViewSetup['ReasonID'].headerText}}</span>
+    </div>
+    <div class="d-flex align-items-top">
+      <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="formModel">
+      </codx-label>
+      <div>
+        <span *ngIf="isShowMore" id="eleMemo" class="text-gray-600 line-clamp line-clamp-2">{{itemSelected?.memo}}</span>
+        <span *ngIf="isShowLess" class="text-gray-600 me-3">{{itemSelected?.memo}}</span>
+        <span *ngIf="(itemSelected?.memo == '' || itemSelected?.memo == null) && gridViewSetup"
+          class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{gridViewSetup['Memo'].headerText}}</span>
+        <div *ngIf="isReadMore" class="align-items-top cursor-pointer">
+          <span *ngIf="isShowMore" (click)="onShowMoreLess('showmore')" class="text-primary fw-bold text-underline">Xem Thêm</span>
+          <span *ngIf="isShowLess" (click)="onShowMoreLess('showless')" class="text-primary fw-bold text-underline">Ẩn bớt</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+<!-- End: template listdetail Body-->
+
+<!-- Start: template listdetail Footer-->
+<ng-template #TmpFooterDetail let-data>
+  <ng-container *ngIf="itemSelected">
+    <codx-tabs [entityName]="formModel.entityName" [formModel]="formModel" [objectID]="itemSelected?.recID"
+      [funcID]="formModel.funcID" [TabControl]="tabInfo" 
+      [data]="itemSelected" 
+      [keyField]="'recID'"></codx-tabs>
+  </ng-container>
+</ng-template>
+<!-- End: template listdetail Footer-->
+
+<!-- Start: template Tab AcctTrans-->
+<ng-template #tabAcctTrans>
+  <!-- <ng-container *ngIf="itemSelected">
+    <acctrants-table [itemSelected]="itemSelected" [baseCurr]="baseCurr">
+    </acctrants-table>
+  </ng-container> -->
+</ng-template>
+<!-- End: template Tab AcctTrans-->
+
+<!-- Start: template Tab SettledInvoices-->
+<ng-template #tabSettledInvoices>
+  <!-- <ng-container *ngIf="itemSelected">
+    <settledinvoices-table [itemSelected]="itemSelected" [baseCurr]="baseCurr">
+    </settledinvoices-table>
+  </ng-container> -->
+</ng-template>
+<!-- End: template Tab SettledInvoices-->
+
+<!-- Start: template Tab VatInvoices-->
+<ng-template #tabVatInvoices>
+  <!-- <ng-container *ngIf="itemSelected">
+    <vatinvoices-table [itemSelected]="itemSelected" [baseCurr]="baseCurr"></vatinvoices-table>
+  </ng-container> -->
+</ng-template>
+<!-- End: template Tab VatInvoices-->

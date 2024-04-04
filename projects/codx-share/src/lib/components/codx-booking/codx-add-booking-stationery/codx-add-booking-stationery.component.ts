@@ -600,11 +600,11 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
         if(res?.length>0 && res[0]!=null){     
           if(this.data?.warehouseID!=null){
             res[0]?.forEach(sta=>{
-              let curWH = sta.warehouses.find(x=>x?.warehouseID == this.data?.warehouseID);
+              let curWH = sta?.warehouses?.find(x=>x?.warehouseID == this.data?.warehouseID);
               if(curWH!=null){
-                sta.currentQty = curWH.currentQty;
-                sta.availableQty= curWH.availableQty;
-                sta.reservedQty= curWH.reservedQty;
+                sta.currentQty = curWH?.currentQty;
+                sta.availableQty= curWH?.availableQty;
+                sta.reservedQty= curWH?.reservedQty;
               }
               else{
                 sta.currentQty = 0;

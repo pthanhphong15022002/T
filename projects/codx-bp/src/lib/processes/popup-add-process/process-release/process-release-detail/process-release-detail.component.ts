@@ -27,6 +27,8 @@ import { AddDefaultComponent } from '../../form-steps-field-grid/add-default/add
 import { BPPopupChangePermissionComponent } from '../../form-steps-field-grid/bp-popup-change-permission/bp-popup-change-permission.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AnimationModel, ILoadedEventArgs, ProgressBar, ProgressTheme } from '@syncfusion/ej2-angular-progressbar';
+import { X } from '@angular/cdk/keycodes';
+import { BPCONST } from 'projects/codx-bp/src/lib/models/BP_Const.model';
 
 @Component({
   selector: 'lib-process-release-detail',
@@ -48,7 +50,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   info: any;
   tempPermission = [];
   listDocument = [];
-  VllBP014:any;
+  VllBP014: any;
   public type1: string = 'Circular';
   public min1: number = 0;
   public max1: number = 100;
@@ -59,39 +61,104 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   public trackThickness: number = 7;
   public progressThickness: number = 7;
   public animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
-  public annotationColors: string[] = ['#e91e63', '#0078D6', '#317ab9', '#007bff', '#FFD939'];
-  listMF = [
+  public annotationColors: string[] = [
+    '#e91e63',
+    '#0078D6',
+    '#317ab9',
+    '#007bff',
+    '#FFD939',
+  ];
+  listMF = [];
+  listButtonMF= [];
+  listButtonMF1 = [
+    //Task;Check;Approve;Sign;Release;Stamp;Email;
+    //Task: Thực hiện,Giao việc;
     {
+      id: '1',
+      functionID: 'BP0701',
+      customName: 'Hoàn tất',
+      largeIcon: 'icon-person_add_alt_1',
+      color: '#005DC7',
+    },
+    {
+      id: '2',
       functionID: 'BP0701',
       customName: 'Giao việc',
       largeIcon: 'icon-person_add_alt_1',
-      color: '#005DC7'
+      color: '#005DC7',
     },
+
+    //Check: Kiểm tra
     {
+      id: '3',
+      functionID: 'BP0705',
+      customName: 'Kiểm tra',
+      largeIcon: 'icon-check_circle',
+      color: '#1BC5BD',
+    },
+    //Release: Phát hành
+    {
+      id: '4',
+      functionID: 'BP0701',
+      customName: 'Phát hành',
+      largeIcon: 'icon-person_add_alt_1',
+      color: '#005DC7',
+    },
+    //Email: Soạn thư
+    {
+      id: '5',
+      functionID: 'BP0701',
+      customName: 'Soạn thư',
+      largeIcon: 'icon-email',
+      color: '#005DC7',
+    },
+    //Stamp: Đóng dấu
+    {
+      id: '6',
+      functionID: 'BP0701',
+      customName: 'Đóng dấu',
+      largeIcon: 'icon-person_add_alt_1',
+      color: '#005DC7',
+    },
+    //Approve/Sign: Duyệt/Ký,Từ chối,Trả về,Ủy quyền;
+
+    {
+      id: '7',
       functionID: 'BP0702',
       customName: 'Ủy quyền',
       largeIcon: 'icon-i-people',
-      color: '#0078FF'
+      color: '#0078FF',
     },
     {
+      id: '8',
       functionID: 'BP0703',
       customName: 'Trả về',
       largeIcon: 'icon-i-arrow-90deg-right',
-      color: '#FFA800'
+      color: '#FFA800',
     },
     {
+      id: '9',
       functionID: 'BP0704',
       customName: 'Từ chối',
       largeIcon: 'icon-i-x-circle',
-      color: '#F64E60'
+      color: '#F64E60',
     },
     {
+      id: '10',
       functionID: 'BP0705',
       customName: 'Duyệt',
+      largeIcon: 'icon-i-pencil-square',
+      color: '#1BC5BD',
+    },
+    {
+      id: '11',
+      functionID: 'BP0705',
+      customName: 'Ký',
       largeIcon: 'icon-check_circle',
-      color: '#1BC5BD'
-    }
-  ]
+      color: '#1BC5BD',
+    },
+  ];
+  activeTask: any;
   constructor(
     private shareService: CodxShareService,
     private cache: CacheService,
@@ -122,6 +189,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     }
   }
   ngOnInit(): void {
+    this.getCache();
     this.getData();
     this.getInfo();
     this.getInStance();
@@ -130,15 +198,29 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   onNavChange(e: any) {
     this.active = e;
   }
-  getVll()
-  {
-   this.VllBP014 = this.shareService.loadValueList("BP014");
-   if(isObservable(this.VllBP014))
-   {
-      this.VllBP014.subscribe(item=>{
+  getCache(){
+    this.cache.moreFunction('MyBPTasks','grvMyBPTasks').subscribe(res=>{
+      if(res){
+        Array.from(res)?.forEach((mf:any)=>{
+          this.listButtonMF.push({
+            functionID: mf?.functionID,
+            customName:  mf?.customName,
+            functionType: mf?.functionType,
+            largeIcon:  mf?.largeIcon,
+            color: mf?.color,
+          });
+
+        });
+      }
+    })
+  }
+  getVll() {
+    this.VllBP014 = this.shareService.loadValueList('BP014');
+    if (isObservable(this.VllBP014)) {
+      this.VllBP014.subscribe((item) => {
         this.VllBP014 = item;
-      })
-   }  
+      });
+    }
   }
   getInfo() {
     let paras = [this.data.createdBy];
@@ -169,10 +251,68 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       .subscribe((item) => {
         if (item) {
           this.listTask = item;
+          this.activeTask = this.listTask.find(
+            (x) => x.status == '3' && x.canceled != true && x.activityType != 'Stage'
+          );
+          this.changeMF();
           this.getPermission();
           this.dtc.detectChanges();
         }
       });
+  }
+
+  changeMF() {
+    if (this.activeTask != null) {
+      switch (this.activeTask.activityType) {
+        //Task;Check;Approve;Sign;Release;Stamp;Email;
+        case 'Task': {
+          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Task);
+          break;
+        }
+        case 'Check': {
+          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Check);
+          break;
+        }
+        case 'Approve': {
+          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Approve ||
+             x?.functionID ==BPCONST.TASKMF.Reject||
+             x?.functionID ==BPCONST.TASKMF.Redo||
+             x?.functionID ==BPCONST.TASKMF.Authority);            
+          break;
+        }
+        case 'Sign': {
+          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Sign ||
+             x?.functionID ==BPCONST.TASKMF.Reject||
+             x?.functionID ==BPCONST.TASKMF.Redo||
+             x?.functionID ==BPCONST.TASKMF.Authority);  
+          break;
+        }
+        case 'Release': {
+          this.listMF = [
+            //Release: Phát hành
+            {
+              id: '4',
+              functionID: 'BP0701',
+              customName: 'Phát hành',
+              largeIcon: 'icon-person_add_alt_1',
+              color: '#005DC7',
+            },
+          ];
+          break;
+        }
+        case 'Stamp': {
+          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Stamp);
+          break;
+        }
+        case 'Email': {         
+          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Email);
+          break;
+        }
+      }
+    } else {
+      this.listMF = [];
+    }
+    this.dtc.detectChanges();
   }
 
   getInStance() {
@@ -288,21 +428,18 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
           elm.countTask = elm.child.length;
           elm.countCompleted = 0;
           elm.child.forEach((element) => {
-            if (element.activityType != 'Conditions' && element.status == '5')
-            {
+            if (element.activityType != 'Conditions' && element.status == '5') {
               elm.countCompleted++;
-              countTaskCompletedSum ++;
-            }  
-            else if (element.activityType == 'Conditions') {
+              countTaskCompletedSum++;
+            } else if (element.activityType == 'Conditions') {
               if (element.child && element.child.length > 0) {
-                if (element.child.some((x) => x.status == '5'))
-                {
+                if (element.child.some((x) => x.status == '5')) {
                   elm.countCompleted++;
                   countTaskCompletedSum++;
                 }
               }
             }
-            countTaskSum ++;
+            countTaskSum++;
           });
 
           elm.percentCompleted = (elm.countCompleted / elm.countTask) * 100;
@@ -311,15 +448,16 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
           elm.duration = elm.child.reduce((n, { duration }) => n + duration, 0);
         }
         var index = this.listTask.findIndex((x) => x.stepID == elm.recID);
-        if(index >= 0)
-        {
-          elm.colorStatus = this.VllBP014.datas.filter(x=>x.value == this.listTask[index].status)[0].textColor;
+        if (index >= 0) {
+          elm.colorStatus = this.VllBP014.datas.filter(
+            (x) => x.value == this.listTask[index].status
+          )[0].textColor;
           elm.statusStage = this.listTask[index].status;
         }
       });
       this.data.countTask = countTaskSum;
       this.value1 = (countTaskCompletedSum / countTaskSum) * 100;
-      this.circular1.value= this.value1;
+      this.circular1.value = this.value1;
       this.circular1.refresh();
     }
   }
@@ -365,8 +503,14 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
           elm2.actualEnd = this.listTask[index].actualEnd;
 
           elm2.status = this.listTask[index].status;
+          
           elm2.dataTask = this.listTask[index];
-        } else elm2.permissions = null;
+
+          elm2.taskID = this.listTask[index].recID;
+        
+        } 
+        else elm2.permissions = null;
+
         if (elm2?.pers == null && this.tempPermission?.length > 0) {
           let pers = this.tempPermission.filter((x) => x.refID == elm2.recID);
           if (pers?.length > 0) {
@@ -392,26 +536,6 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     });
 
     return list;
-  }
-
-  popupTasks(dataStep, action) {
-    var option = new SidebarModel();
-    option.FormModel = {
-      formName: 'BPTasks',
-      gridViewName: 'grvBPTasks',
-      entityName: 'BP_Tasks',
-    };
-    option.zIndex = 1010;
-    let data = this.listTask.find((x) => x.stepID == dataStep.recID);
-    let subTitle = this.data?.title;
-    const obj = {
-      data: data,
-      dataIns: this.data,
-      subTitle: subTitle,
-      action: action,
-    };
-    let popup = this.callFc.openSide(PopupBpTasksComponent, obj, option);
-    popup.closed.subscribe((res) => {});
   }
 
   openForm(dt: any) {
@@ -463,9 +587,123 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     );
     popup.closed.subscribe((res) => {
       if (res && res?.event) {
-        this.data = res?.event;
+       
+        this.formatDataTask(res);
+        //this.data = res?.event;
       }
     });
+  }
+
+  formatDataTask(res:any)
+  {
+    debugger
+    if(res?.event?.ins) this.data = res?.event?.ins;
+    let index = this.listStage.findIndex(x=>x.recID == res?.event?.task?.stageID);
+    if(index >= 0)
+    {
+      let nextStepID = null;
+      let crrStage = this.listStage[index];
+      let crrNextStage = null;
+      let index2 = this.listStage[index].child.findIndex(x=>x.taskID == res?.event?.task?.recID);
+      if(index2>=0) 
+      {
+        let crrStep = this.listStage[index].child[index2];
+        if(crrStep?.settings?.nextSteps && crrStep?.settings?.nextSteps.length>0)
+        {
+          let idNextStep = crrStep.settings?.nextSteps[0].nextStepID; 
+          if(idNextStep)
+          {
+            let index3 = this.process.steps.findIndex(x=>x.recID == idNextStep);
+            if(index3>=0)
+            {
+              nextStepID = this.process.steps[index3].recID;
+              if(this.process.steps[index3].activityType != "Stage") nextStepID = this.process.steps[index3].settings?.nextSteps[0].nextStepID;
+              let index4 = this.listStage.findIndex(x=>x.recID == nextStepID);
+              if(index4 >= 0) crrNextStage = this.listStage[index4];
+            }
+          }
+        }
+        this.listStage[index].child[index2].status = res?.event?.task?.status;
+        this.listStage[index].child[index2].statusStage = res?.event?.task?.status;
+        this.listStage[index].child[index2].colorStatus = this.VllBP014.datas.filter(x=>x.value == res?.event?.task?.status)[0].textColor;
+      }
+     
+      if(crrStage?.recID != crrNextStage?.recID)
+      {
+        this.data.currentStage = crrNextStage?.recID || crrStage?.recID;
+        
+        let recID = crrNextStage?.recID || crrStage?.recID;
+        let index = this.listStage.findIndex(x=>x.recID == recID);
+        if(index>=0) 
+        {
+          if(crrNextStage)
+          {
+            nextStepID = this.listStage[index].settings?.nextSteps[0]?.nextStepID;
+            let index2 = this.listStage[index].child.findIndex(x=>x.recID == nextStepID);
+            if(index2 >=0) this.listStage[index].child[index2].status = '3';
+            this.listStage[index].statusStage = '3';
+            this.listStage[index].colorStatus = this.VllBP014.datas.filter(x=>x.value == crrNextStage.statusStage)[0].textColor;
+          }
+        }
+      
+        let indexCrr = this.listStage.findIndex(x=>x.recID == crrStage?.recID);
+        if(indexCrr>=0 )
+        {
+          this.listStage[indexCrr].statusStage = '5';
+          this.listStage[indexCrr].colorStatus = this.VllBP014.datas.filter(x=>x.value == crrStage.statusStage)[0].textColor;
+        }
+        
+      }
+      else if(nextStepID) 
+      {
+        let index2 =  this.listStage[index].child.findIndex(x=>x.recID == nextStepID);
+        if(index2 >= 0 ) 
+        {
+          this.listStage[index].child[index2].status = '3';
+        }
+      }
+
+      let countTaskSum = 0;
+      let countTaskCompletedSum = 0;
+      this.listStage.forEach((elm) => {
+        if (elm.child && elm.child.length > 0) {
+          elm.countTask = elm.child.length;
+          elm.countCompleted = 0;
+          elm.child.forEach((element) => {
+            if (element.activityType != 'Conditions' && element.status == '5')
+            {
+              elm.countCompleted++;
+              countTaskCompletedSum ++;
+            }  
+            else if (element.activityType == 'Conditions') {
+              if (element.child && element.child.length > 0) {
+                if (element.child.some((x) => x.status == '5'))
+                {
+                  elm.countCompleted++;
+                  countTaskCompletedSum++;
+                }
+              }
+            }
+            countTaskSum ++;
+          });
+
+          elm.percentCompleted = (elm.countCompleted / elm.countTask) * 100;
+
+          elm.percentCompleted = elm.percentCompleted.toFixed(2);
+          elm.duration = elm.child.reduce((n, { duration }) => n + duration, 0);
+        }
+        //var index = this.listTask.findIndex((x) => x.stepID == elm.recID);
+        // if(index >= 0)
+        // {
+        //   elm.colorStatus = this.VllBP014.datas.filter(x=>x.value == this.listTask[index].status)[0].textColor;
+        //   elm.statusStage = this.listTask[index].status;
+        // }
+      });
+      this.value1 = (countTaskCompletedSum / countTaskSum) * 100;
+      this.circular1.value= this.value1;
+      this.circular1.refresh();
+    }
+
   }
   addNewTask(oldTask){
     let lstParent = JSON.parse(JSON.stringify(this.listStage));
@@ -473,26 +711,26 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       delete elm.child;
     });
     var obj = {
-      type: "add",
-      activityType: "Task",
+      type: 'add',
+      activityType: 'Task',
       process: this.process,
       data: null,
       parent: parent,
-      stage: lstParent?.find(x=>x?.recID == oldTask?.stageID),
+      stage: lstParent?.find((x) => x?.recID == oldTask?.stageID),
       listStage: lstParent,
-      hideDelete: true
+      hideDelete: true,
     };
     let option = new SidebarModel();
     option.Width = 'Auto';
     option.FormModel = this.formModel;
-    let popup = this.callFc.openSide(AddDefaultComponent,obj,option);    
+    let popup = this.callFc.openSide(AddDefaultComponent, obj, option);
     popup.closed.subscribe((res) => {
       if (res && res?.event) {
         this.data = res?.event;
       }
     });
   }
-  changePer(data){
+  changePer(data) {
     var option = new SidebarModel();
     let dialogAP = this.callFc.openForm(
       BPPopupChangePermissionComponent,
@@ -500,7 +738,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       500,
       250,
       '',
-      {data:data},
+      { data: data }
     );
     dialogAP.closed.subscribe((res) => {
       if (res && res?.event) {
@@ -508,8 +746,10 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       }
     });
   }
-  public load(args: ILoadedEventArgs): void {
- 
-  
-}
+  public load(args: ILoadedEventArgs): void {}
+
+  close()
+  {
+    this.dialog.close(this.data)
+  }
 }

@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -50,7 +51,10 @@ export class AddProcessDefaultComponent implements OnInit {
   @Input() dataIns: any;
   @Input() type = 'add';
   @Input() stepID: any;
+  @Input() taskID: any;
+  @Input() privileged = true;
   @Output() dataChange = new EventEmitter<any>();
+  @Output() dataTaskChange = new EventEmitter<any>();
   formModel = {
     funcID: '',
     formName: 'DynamicForms',
@@ -78,7 +82,7 @@ export class AddProcessDefaultComponent implements OnInit {
   infoUser: any;
   listFieldAuto = [];
   gridViewSetup = [];
-
+  listFieldDecimal = [];
   constructor(
     private notifySvr: NotificationsService,
     private shareService: CodxShareService,
@@ -87,6 +91,7 @@ export class AddProcessDefaultComponent implements OnInit {
     private api: ApiHttpService,
     private bpService: CodxBpService,
     private callFuc: CallFuncService,
+    private dChange: ChangeDetectorRef,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -155,22 +160,24 @@ export class AddProcessDefaultComponent implements OnInit {
           ? JSON.parse(element.documentControl)
           : element.documentControl;
       if (element.fieldType != 'Title') {
-        if (this.type == 'add') {
-          let validate = element.isRequired ? Validators.required : null;
+        let validate = element.isRequired ? Validators.required : null;
 
-          if (element.fieldType == 'Email') validate = Validators.email;
-          else if (element.fieldType == 'Phone')
-            validate = Validators.pattern('[0-9 ]{11}');
-          else if (element.fieldType == 'DateTime') {
-            if (element.defaultValue == 'Now')
-              element.defaultValue = new Date();
-            //Ngày không được bé hơn ngày hiện tại
-            if (element.validateControl == '1')
-              validate = this.customeValidatorDateValiControl(element);
-            if (element.dependences)
-              validate = this.customeValidatorDate(element);
-          }
+        if (element.fieldType == 'Email') validate = Validators.email;
+        else if (element.fieldType == 'Phone')
+          validate = Validators.pattern('[0-9 ]{11}');
+        else if (element.fieldType == 'DateTime') 
+        {
+          if (element.defaultValue == 'Now')
+            element.defaultValue = new Date();
+          //Ngày không được bé hơn ngày hiện tại
+          if (element.validateControl == '1')
+            validate = this.customeValidatorDateValiControl(element);
+          if (element.dependences)
+            validate = this.customeValidatorDate(element);
+        }
 
+        if (this.type == 'add' && !this.taskID) {
+        
           this.dynamicFormsForm.addControl(
             field,
             new FormControl(element.defaultValue, validate)
@@ -193,7 +200,7 @@ export class AddProcessDefaultComponent implements OnInit {
             field,
             new FormControl(
               dataEdit[field],
-              element.isRequired ? Validators.required : null
+              validate
             )
           );
         }
@@ -217,6 +224,12 @@ export class AddProcessDefaultComponent implements OnInit {
             field: elm2.fieldName,
           };
           element.columnsGrid.push(obj);
+
+          if(elm2.dataType == 'Decimal')
+          {
+            let field = element.fieldName + "_sum_" + elm2.fieldName;
+            this.listFieldDecimal.push(field);
+          }
         });
 
         if (element?.tableFormat?.hasIndexNo) {
@@ -239,7 +252,7 @@ export class AddProcessDefaultComponent implements OnInit {
         // }
       }
       if (element.fieldType == 'UserInfo') {
-        if (this.type == 'add') {
+        if (this.type == 'add' || this.taskID) {
           this.dataUserInfo[field] = {
             idCardType: '1',
           };
@@ -376,6 +389,7 @@ export class AddProcessDefaultComponent implements OnInit {
     this.attachment.fileUploadList = this.attachment.fileUploadList.concat(e);
   }
   async onSave(type = 1) {
+    this.isSaving(true);
     var valueForm = this.dynamicFormsForm.value;
     var keysUserInfo = Object.keys(this.dataUserInfo);
     if (keysUserInfo.length > 0) {
@@ -388,16 +402,36 @@ export class AddProcessDefaultComponent implements OnInit {
         valueForm[k] = this.dataUserInfo[k];
       });
 
-      if (flag) return;
+      if (flag){
+        this.isSaving(false);
+        return;
+      }; 
     }
 
-    if (!this.checkAttachment()) return;
+    if (!this.checkAttachment()) {
+      this.isSaving(false);
+      return;
+    };
     if (this.dynamicFormsForm.invalid) this.findInvalidControls();
     else {
       var keysTable = Object.keys(this.dataTable);
+      
       if (keysTable.length > 0) {
         keysTable.forEach((k) => {
           valueForm[k] = this.dataTable[k];
+          let keysChildTable = Object.keys(this.dataTable[k][0]);
+          if(keysChildTable.length>0)
+          {
+            if(this.listFieldDecimal.some(x=>x.includes(k)))
+            {
+              keysChildTable.forEach(kc=>{
+                debugger
+                let fieldDecimal = k + '_sum_' + kc;
+                if(this.listFieldDecimal.includes(fieldDecimal))
+                  valueForm[fieldDecimal] = this.dataTable[k].reduce((a, b) => +a + +b[kc], 0);
+              })
+            }
+          }
         });
       }
       if (this.type == 'add') {
@@ -547,7 +581,7 @@ export class AddProcessDefaultComponent implements OnInit {
       } 
       else if (this.type == 'edit') 
       {
-        this.dataIns.title = valueForm[this.subTitle];
+        if(!this.taskID) this.dataIns.title = valueForm[this.subTitle];
         (this.dataIns.modifiedOn = new Date()),
           (this.dataIns.modifiedBy = this.user?.userID);
         if (this.dataIns.datas) {
@@ -569,7 +603,9 @@ export class AddProcessDefaultComponent implements OnInit {
         {
           this.addFileAttach(type);
         }
-        else this.updateIns();
+        else {
+          this.updateIns();
+        }
       }
     }
   }
@@ -693,6 +729,10 @@ export class AddProcessDefaultComponent implements OnInit {
       .subscribe((item) => {
         this.dialog.close(this.dataIns);
         this.dataChange.emit(this.dataIns);
+        if(this.taskID)
+        {
+          this.updateTaskStatus('5');
+        }
       });
   }
 
@@ -755,6 +795,7 @@ export class AddProcessDefaultComponent implements OnInit {
       if (namePastDate) str += namePastDate + ' không được nhập ngày quá khứ. ';
       if (name) str += name + 'không được phép bỏ trống.';
       this.notifySvr.notify(str);
+      this.isSaving(false);
     }
   }
 
@@ -811,10 +852,18 @@ export class AddProcessDefaultComponent implements OnInit {
         }
         this.dialog.close(this.dataIns);
       }
+      else{
+        this.isSaving(false);
+        return;
+      };
     });
   }
   dataChangeAttachment(e: any) {
     this.isAttach = e;
+  }
+  isSaving(saving: boolean) {
+    this.isAttach = saving;
+    this.dChange.detectChanges();
   }
 
   addRow(
@@ -948,4 +997,24 @@ export class AddProcessDefaultComponent implements OnInit {
       /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
   };
+
+  updateTaskStatus(status){
+    //Update Task Status test
+    this.api
+      .execSv(
+        'BP',
+        'ERM.Business.BP',
+        'ProcessesBusiness',
+        'UpdateStatusTaskAsync',
+        [this.taskID, status] //Hoàn tất
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dataTaskChange.emit([res,this.dataIns]);
+          // if (this.data.activityType != 'Sign')
+          //   this.notifySvr.notifyCode('SYS034');
+          // this.dialog && this.dialog.close(res);
+        }
+      });
+  }
 }

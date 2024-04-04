@@ -196,7 +196,7 @@
       <table class="w-100">
         <thead class="h-50px w-100">
           <tr class="bg-light">
-            <th scope="col"></th>
+            <!-- <th scope="col"></th> -->
             <th scope="col"><codx-label name="lblApprover" default="Kho" [formModel]="formModel"></codx-label></th>
             <th scope="col "><codx-label name="lblApprover" default="Người điều phối"
                 [formModel]="formModel"></codx-label></th>
@@ -211,7 +211,7 @@
         </thead>
         <tbody>
           <tr class="border-bottom" *ngFor="let item of data?.warehouses; let index = index">            
-            <td>
+            <!-- <td>
               <div class="d-flex align-items-start me-3">
                 <div ngbDropdown class="dropdown">
                   <span ngbDropdownToggle type="button" id="dropdownMenuButton1" aria-haspopup="true"
@@ -234,9 +234,10 @@
                   </div>
                 </div>
               </div>
-            </td>
+            </td> -->
             <td class="">
-              <codx-inplace  type="combobox" field="warehouseID" refType="3"
+              <codx-inplace  type="combobox" field="warehouseID" refType="3" 
+              [class]="'text-start'" [cssClass]="'text-start'" 
                 [refValue]="'EP_Warehouses'" [value]="item?.warehouseID" [disabled]="true"></codx-inplace>
               <!-- <codx-input type="combobox" refValue="EP_Warehouses" field="warehouseID" [crrValue]="item?.warehouseID" [showText]="true"
                 [disabled]="true">
@@ -245,6 +246,7 @@
             <td class="">
               
               <codx-inplace  type="combobox" field="owner" refType="3"
+              [class]="'text-start'" [cssClass]="'text-start'" 
                 [refValue]="'Users'" [value]="item?.owner" [disabled]="true"></codx-inplace>
               <!-- <codx-input type="combobox" refValue="Users" field="owner" [crrValue]="item?.owner" [disabled]="true" [showText]="true">
               </codx-input> -->

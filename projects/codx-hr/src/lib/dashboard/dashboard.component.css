@@ -1,0 +1,20 @@
+.card {
+    border-radius: 10px;
+    width: 230px;
+    margin-right: 10px;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: gray;
+}
+
+.card-number {
+    font-size: 18px;
+}
+
+.card-percent {
+    font-size: 14px;
+    font-weight: bold;
+}

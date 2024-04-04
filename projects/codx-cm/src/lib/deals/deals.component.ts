@@ -57,8 +57,7 @@ import { StepService } from 'projects/codx-dp/src/lib/share-crm/codx-step/step.s
 })
 export class DealsComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   @ViewChild('templateDetail', { static: true })
   templateDetail: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true })
@@ -263,12 +262,12 @@ export class DealsComponent
       this.codxCmService.getSettingContract()
     ]);
     this.valueListTab = valueListTab;
-    if(tabDefaut){
+    if (tabDefaut) {
       this.tabDefaut = tabDefaut?.ActiveTabDeals;
     }
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   onLoading(e) {
     //reload filter
@@ -434,12 +433,12 @@ export class DealsComponent
           }
           const functionID = eventItem.functionID;
           const mappingFunction = this.getRoleMoreFunction(functionID);
-          if(mappingFunction){
+          if (mappingFunction) {
             mappingFunction(eventItem, data);
-          }else{
-            if(['SYS003','SYS004','SYS001','SYS002','SYS009','SYS008','',''].includes(functionID)){
+          } else {
+            if (['SYS003', 'SYS004', 'SYS001', 'SYS002', 'SYS009', 'SYS008', '', ''].includes(functionID)) {
               eventItem.disabled = this.checkMoreReason(data);
-            }else{
+            } else {
             }
           }
         } else {
@@ -447,8 +446,8 @@ export class DealsComponent
             eventItem?.functionID !== 'CM0201_17'
               ? true
               : data?.alloweStatus == '1'
-              ? false
-              : true;
+                ? false
+                : true;
         }
       }
     }
@@ -459,7 +458,7 @@ export class DealsComponent
       eventItem.disabled =
         data?.alloweStatus == '1'
           ? this.checkMoreReason(data) ||
-            !data.applyProcess
+          !data.applyProcess
           : true;
     };
     let isDelete = (eventItem, data) => {
@@ -509,7 +508,7 @@ export class DealsComponent
       eventItem.disabled =
         data.closed ||
         (this.applyApprover != '1' && !data.applyProcess) ||
-        ['0',"3","4","5","6"].includes(data.status) ||
+        ['0', "3", "4", "5", "6"].includes(data.status) ||
         data?.approveStatus >= '3';
     };
     let isRejectApprover = (eventItem, data) => {
@@ -528,23 +527,23 @@ export class DealsComponent
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
-      eventItem.disabled = data?.alloweStatus == '1'? (data?.approveStatus == '3' || data.closed) : false;
+      eventItem.disabled = data?.alloweStatus == '1' ? (data?.approveStatus == '3' || data.closed) : false;
     };
     let isMoveReason = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
           ? (data.closed && data?.status != '1') ||
-            !data.applyProcess ||
-            ['1', '0', '15'].includes(data?.status) ||
-            this.checkMoreReason(data, false)
+          !data.applyProcess ||
+          ['1', '0', '15'].includes(data?.status) ||
+          this.checkMoreReason(data, false)
           : true;
     };
     let isUpdateProcess = (eventItem, data) => {
       eventItem.disabled = data.full
         ? data.closed ||
-          data.applyProcess ||
-          this.checkMoreReason(data, false) ||
-          (data?.applyProcess && ['3', '5'].includes(data.status))
+        data.applyProcess ||
+        this.checkMoreReason(data, false) ||
+        (data?.applyProcess && ['3', '5'].includes(data.status))
         : true;
     };
     let isDeleteProcess = (eventItem, data) => {
@@ -553,7 +552,7 @@ export class DealsComponent
         : true;
     };
     let isAddTask = (eventItem, data) => {
-      eventItem.disabled = 
+      eventItem.disabled =
         !data?.isAdminAll || this.checkMoreReason(data, false);
     };
 
@@ -707,7 +706,7 @@ export class DealsComponent
   //----------------- END ---------------------------//
 
   checkMoreReason(data, isShow: boolean = true) {
-    return (!['1','2','15'].includes(data?.status) || data?.approveStatus == '3' || data?.closed);
+    return (!['1', '2', '15'].includes(data?.status) || data?.approveStatus == '3' || data?.closed);
   }
 
   updateProcess(data, isCheck) {
@@ -743,10 +742,10 @@ export class DealsComponent
           this.notificationsService
             .alertCode('DP033', null, [
               '"' +
-                data?.dealName +
-                '" ' +
-                'Người phụ trách không tồn tại trong quy trình' +
-                ' ',
+              data?.dealName +
+              '" ' +
+              'Người phụ trách không tồn tại trong quy trình' +
+              ' ',
             ])
             .subscribe((x) => {
               if (x.event && x.event.status == 'Y') {
@@ -2717,13 +2716,13 @@ export class DealsComponent
       this.objectSumValue['grossProfit'] =
         this.objectSumValue['grossProfit'] ??
         0 +
-          (dataNew?.grossProfit ?? 0 - dataOld?.grossProfit ?? 0) *
-            exchangeRate;
+        (dataNew?.grossProfit ?? 0 - dataOld?.grossProfit ?? 0) *
+        exchangeRate;
       this.objectSumValue['grossProfitView'] =
         this.objectSumValue['grossProfitView'] ??
         0 +
-          (dataNew?.grossProfit ?? 0 - dataOld?.grossProfit ?? 0) *
-            exchangeRate;
+        (dataNew?.grossProfit ?? 0 - dataOld?.grossProfit ?? 0) *
+        exchangeRate;
     }
     this.view.currentView.sumData = this.objectSumValue;
   }
@@ -2732,5 +2731,22 @@ export class DealsComponent
     if (event) {
       this.moveStage(contract);
     }
+  }
+
+  /** in trường tùy chỉnh => more gọi vào
+  * @param data
+  * @param reportID
+  * @param reportType
+  */
+  printDataSource(data: any, reportID: any, reportType: string = 'V') {
+    let params = {
+      Recs: data?.recID,
+    };
+    this.codxShareService.printReport(
+      reportID,
+      reportType,
+      params,
+      this.view?.formModel
+    );
   }
 }

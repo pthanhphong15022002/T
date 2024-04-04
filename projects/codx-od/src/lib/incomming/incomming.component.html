@@ -145,6 +145,7 @@
   (viewChanged)="viewChange($event)"
   (changeDataMF)="changeDataMF($event,dataItem)"
   (clickMF)="openFormFuncID($event, dataItem)"
+  [hideMoreFuncs]="view?.formModel?.funcID && view?.formModel?.funcID.includes('ODT8')"
 >
 </codx-views>
 <ng-template #footerTmp let-data>

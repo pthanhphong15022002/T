@@ -99,9 +99,11 @@ export class EP_Boooking {
   online = false;
   title: string = '';
   reasonID: string = '';
+  approval: string;
   approveStatus: string;
   resourceType: string;
   refID: string;
+  reminder: number;
 }
 export class EP_BookingAttendees {
   userID: string;

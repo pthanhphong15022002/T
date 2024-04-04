@@ -936,6 +936,15 @@ export class CodxCmService {
       data
     );
   }
+  changeStatusContract(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'ContractsBusiness',
+      'ChangeStatusAsync',
+      data
+    );
+  }
   moveStageBackLead(data) {
     return this.api.execSv<any>(
       'CM',
@@ -1830,6 +1839,15 @@ export class CodxCmService {
       procesID
     );
   }
+  getConfigurationProcess(procesID) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetConfigurationProcessAsync',
+      procesID
+    );
+  }
+
   async getSettingContract() {
     let res = await firstValueFrom(
       this.getParam('CMParameters', '1')
