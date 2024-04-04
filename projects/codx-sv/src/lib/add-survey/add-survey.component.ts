@@ -174,6 +174,11 @@ export class AddSurveyComponent extends UIComponent {
   //Click morefunc
   clickMF(e:any)
   {
+    if(this.SvService.signalSave.getValue() == "saving") 
+    {
+      this.notifySvr.notifyCode("SV005");
+      return;
+    }
     switch(e?.functionID)
     {
       //Copy link
@@ -467,6 +472,11 @@ export class AddSurveyComponent extends UIComponent {
   }
 
   review() {
+    if(this.SvService.signalSave.getValue() == "saving") 
+    {
+      this.notifySvr.notifyCode("SV005");
+      return;
+    }
     var obj = 
     {
       funcID : this.funcID,
@@ -499,6 +509,11 @@ export class AddSurveyComponent extends UIComponent {
   }
   saveTemplate()
   {
+    if(this.SvService.signalSave.getValue() == "saving") 
+    {
+      this.notifySvr.notifyCode("SV005");
+      return;
+    }
     this.SvService.signalSave.next('saving');
     this.SvService.updateSV(this.recID,this.dataSV,true).subscribe(item=> { 
       if(item) {

@@ -572,18 +572,14 @@ export class AssetJournalsComponent extends UIComponent {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService
-      .delete([data], true, (option: RequestOption) =>
-        this.beforeDelete(option, data)
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          this.view.dataService.onAction.next({
-            type: 'delete',
-            data: data,
-          });
-        }
-      });
+    this.view.dataService.delete([data], true).subscribe((res: any) => {
+      if (res) {
+        this.view.dataService.onAction.next({
+          type: 'delete',
+          data: data,
+        });
+      }
+    });
   }
 
   beforeDelete(opt: RequestOption, data) {

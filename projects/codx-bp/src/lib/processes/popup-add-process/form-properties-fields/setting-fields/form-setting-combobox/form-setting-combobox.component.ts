@@ -66,7 +66,7 @@ export class FormSettingComboboxComponent {
   }
 
   ngOnInit(): void {
-    if (this.data.refValue) this.getDataCombobox(this.data.refValue);
+    this.getDataCombobox(this.data.refValue);
 
     if (this.comboboxType != '3') this.loadTableCustom();
   }
@@ -132,8 +132,9 @@ export class FormSettingComboboxComponent {
     // if(e && e?.data){
     //   this.data[e?.field] = e?.data;
     // }
-
-    if (
+    if (e?.field == 'title' && this.comboboxType != '3') {
+      this.cbb.comboboxName = e?.data;
+    } else if (
       e?.field == 'tableName' &&
       e?.component?.itemsSelected &&
       e?.component?.itemsSelected[0]
@@ -179,6 +180,19 @@ export class FormSettingComboboxComponent {
             }
           });
         }
+      } else {
+        this.api
+          .execSv(
+            'SYS',
+            'ERM.Business.Core',
+            'DataBusiness',
+            'GetDefaultEntityAsync',
+            ['SYS_ComboboxList']
+          )
+          .subscribe((res) => {
+            if (res) this.cbb = res;
+            this.cbb.comboboxType = this.data.refType = this.comboboxType;
+          });
       }
     });
   }
@@ -236,10 +250,18 @@ export class FormSettingComboboxComponent {
     }
     this.fieldSortings = this.fieldSortings.filter((x) => x);
     this.sortingDirection = this.sortingDirection.filter((x) => x);
-    this.cbb.comboboxName = !this.data.refValue
-      ? 'BPCBB' + processNo
-      : this.cbb.comboboxName;
-    this.cbb.comboboxType = this.data.refType;
+    if (this.comboboxType == '3') {
+      this.cbb.comboboxName = !this.data.refValue
+        ? 'BPCBB' + processNo
+        : this.cbb.comboboxName;
+      this.cbb.comboboxType = this.data.refType;
+    } else {
+      this.cbb.comboboxName = this.cbb.comboboxName || 'BPCBB' + processNo;
+      this.cbb.comboboxType = this.comboboxType;
+      this.cbb.entityName = this.cbb.tableName = this.tableName;
+      this.cbb.service = this.cbb.service || 'BP';
+    }
+
     this.cbb.tableFields = this.listFields.join(';');
     this.cbb.displayMembers = this.displayNembers.join(';');
     this.cbb.fieldSorting = this.fieldSortings.join(';');
@@ -267,10 +289,13 @@ export class FormSettingComboboxComponent {
       if (e?.currentTarget.checked) this.displayNembers.splice(index, 0, item);
       else this.displayNembers = this.displayNembers.filter((x) => x != item);
     } else if (field == 'fieldName') {
-      var headerText = this.gridViewSetup[e?.value].headerText;
+      var headerText = e?.value;
+      if (this.gridViewSetup && this.gridViewSetup[e?.value])
+        headerText = this.gridViewSetup[e?.value].headerText;
       this.listFields[index] = e?.value;
       this.headerTexts[index] = headerText;
       this.lstGrids[index].headerText = headerText;
+      this.lstGrids[index].fieldName = e?.value;
       if (index == this.lstGrids.length - 1) this.addNewRow();
     } else if (field == 'headerText') {
       this.headerTexts[index] = e?.target?.value;
@@ -282,7 +307,7 @@ export class FormSettingComboboxComponent {
       else this.fieldFilters = this.fieldFilters.filter((x) => x != item);
     } else if (field == 'sortingDirection') {
       this.sortingDirection[index] = e?.target?.value;
-    } else this.cbb[field] = e?.target?.value;
+    } else this.cbb[field] = e?.target?.value || e?.target?.checked;
   }
   //#endregion
 }

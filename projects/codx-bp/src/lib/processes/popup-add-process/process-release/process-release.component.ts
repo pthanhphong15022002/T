@@ -247,8 +247,29 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
       '',
       option
     );
+    popup.closed.subscribe(res=>{
+      if(res?.event)
+      {
+        (this.view.currentView as any).kanban.updateCard(res?.event);
+        (this.view.dataService as CRUDService).update(res?.event).subscribe();
+        this.view.dataService.update(res?.event).subscribe();
+        (this.view.currentView as any).kanban.refresh();
+      }
+    })
   }
-
+  updateIns(data) {
+    this.api
+      .execSv(
+        'BP',
+        'BP',
+        'ProcessInstancesBusiness',
+        'UpdateInsAsync',
+        data
+      )
+      .subscribe((item) => {
+       
+      });
+  }
   clickMF(e: any) {
     var funcID = e?.functionID;
     switch (funcID) {
@@ -309,6 +330,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
           this.notifiSer.notifyCode('SYS034');
           (this.view.currentView as any).kanban.updateCard(data);
           this.view.dataService.update(data).subscribe();
+          
         }
       });
   }

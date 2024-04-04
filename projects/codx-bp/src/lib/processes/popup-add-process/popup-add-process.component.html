@@ -385,18 +385,38 @@
                   <ng-container
                     *ngFor="let perm of data?.permissions; index as i"
                   >
-                    <div *ngIf="perm.roleType == 'P'"
+                    <div
+                      *ngIf="perm.roleType == 'P'"
                       class="cursor-pointer has-action-menu-od me-5 d-flex align-items-center position-relative user-style line-clamp line-clamp-1"
                     >
-                      <div class="me-2">
+                      <div
+                        class="me-2"
+                        *ngIf="
+                          perm?.objectType == '1' ||
+                            perm?.objectType?.trim() == 'U';
+                          else emtryImg
+                        "
+                      >
                         <codx-img
-                          [width]="20"
-                          [objectId]="perm.objectID"
-                          [objectName]="perm.objectName"
+                          [objectId]="perm?.objectID"
+                          [objectName]="perm?.objectName"
                           objectType="AD_Users"
+                          [width]="20"
                         >
                         </codx-img>
                       </div>
+                      <ng-template #emtryImg>
+                        <div class="user-mini-icon me-2">
+                          <img
+                            class="svg-icon"
+                            style="width: 18px !important"
+                            [src]="
+                              './assets/themes/sys/default/img/' +
+                              (perm.objectType | imgSvgVll : vllBP016)
+                            "
+                          />
+                        </div>
+                      </ng-template>
                       <div class="text-gray-600 fw-bold">
                         {{ perm.objectName }}
                       </div>
@@ -469,18 +489,38 @@
                   <ng-container
                     *ngFor="let perm of data?.permissions; index as i"
                   >
-                    <div *ngIf="perm.roleType == 'O'"
+                    <div
+                      *ngIf="perm.roleType == 'O'"
                       class="cursor-pointer has-action-menu-od me-5 d-flex align-items-center position-relative user-style line-clamp line-clamp-1"
                     >
-                      <div class="me-2">
+                      <div
+                        class="me-2"
+                        *ngIf="
+                          perm?.objectType == '1' ||
+                            perm?.objectType?.trim() == 'U';
+                          else emtryImg
+                        "
+                      >
                         <codx-img
-                          [width]="20"
-                          [objectId]="perm.objectID"
-                          [objectName]="perm.objectName"
+                          [objectId]="perm?.objectID"
+                          [objectName]="perm?.objectName"
                           objectType="AD_Users"
+                          [width]="20"
                         >
                         </codx-img>
                       </div>
+                      <ng-template #emtryImg>
+                        <div class="user-mini-icon me-2">
+                          <img
+                            class="svg-icon"
+                            style="width: 18px !important"
+                            [src]="
+                              './assets/themes/sys/default/img/' +
+                              (perm.objectType | imgSvgVll : vllBP016)
+                            "
+                          />
+                        </div>
+                      </ng-template>
                       <div class="text-gray-600 fw-bold">
                         {{ perm.objectName }}
                       </div>
@@ -553,18 +593,38 @@
                 <ng-container
                   *ngFor="let perm of data?.permissions; index as i"
                 >
-                  <div *ngIf="perm.roleType == 'S'"
+                  <div
+                    *ngIf="perm.roleType == 'S'"
                     class="cursor-pointer has-action-menu-od me-5 d-flex align-items-center position-relative user-style line-clamp line-clamp-1"
                   >
-                    <div class="me-2">
+                    <div
+                      class="me-2"
+                      *ngIf="
+                        perm?.objectType == '1' ||
+                          perm?.objectType?.trim() == 'U';
+                        else emtryImg
+                      "
+                    >
                       <codx-img
-                        [width]="20"
-                        [objectId]="perm.objectID"
-                        [objectName]="perm.objectName"
+                        [objectId]="perm?.objectID"
+                        [objectName]="perm?.objectName"
                         objectType="AD_Users"
+                        [width]="20"
                       >
                       </codx-img>
                     </div>
+                    <ng-template #emtryImg>
+                      <div class="user-mini-icon me-2">
+                        <img
+                          class="svg-icon"
+                          style="width: 18px !important"
+                          [src]="
+                            './assets/themes/sys/default/img/' +
+                            (perm.objectType | imgSvgVll : vllBP016)
+                          "
+                        />
+                      </div>
+                    </ng-template>
                     <div class="text-gray-600 fw-bold">
                       {{ perm.objectName }}
                     </div>
@@ -730,9 +790,7 @@
 </ng-template>
 
 <ng-template #tmpStepFields>
-  <div
-    class="dp-step step-content container-fluid p-0 h-100"
-  >
+  <div class="dp-step step-content container-fluid p-0 h-100">
     <codx-diagram [viewOnly]="true" [process]="data"></codx-diagram>
   </div>
 </ng-template>

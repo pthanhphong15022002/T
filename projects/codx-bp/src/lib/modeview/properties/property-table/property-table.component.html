@@ -14,7 +14,7 @@
                 <div class="d-flex align-items-center justify-content-between border-dotted-d3d6d9 p-2 mt-2" *ngFor="let item of data?.dataFormat , let i = index">
                     <span>{{item.title}}</span>
                     <div class="d-flex align-items-center dropdown-property-table">
-                        <div ngbDropdown class="d-inline-block" container="body" placement="left auto">
+                        <div ngbDropdown class="d-inline-block"  placement="left auto">
                             <div class="cursor-pointer mt-1" id="dropdownBasic1" ngbDropdownToggle>
                                 <i class="icon-24" [ngClass]="item?.icon" [style.color]="item?.textColor"></i>
                             </div>

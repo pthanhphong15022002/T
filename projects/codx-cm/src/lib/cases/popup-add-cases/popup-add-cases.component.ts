@@ -700,6 +700,7 @@ export class PopupAddCasesComponent
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
+        this.getArrCaculateField();
         this.getSettingFields(res[3], this.listInstanceSteps);
         this.listParticipants = [];
         this.listParticipants = JSON.parse(JSON.stringify(obj?.permissions));

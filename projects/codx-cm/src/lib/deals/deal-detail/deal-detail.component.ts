@@ -728,7 +728,7 @@ export class DealDetailComponent implements OnInit {
     if (this.dataSelected?.isAdminAll || this.dataSelected?.owner == this.user?.userID) {
       this.idTabShow = "1,2,5,6,7";
     } else {
-      this.idTabShow = this.dataSelected?.config;
+      this.idTabShow = this.dataSelected?.config == "full" ? this.tabDefaut: this.dataSelected?.config;
     }
   }
   linkData(type: string, recID: string) {

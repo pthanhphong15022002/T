@@ -26,12 +26,8 @@ import { isObservable } from 'rxjs';
 import { AddDefaultComponent } from '../../form-steps-field-grid/add-default/add-default.component';
 import { BPPopupChangePermissionComponent } from '../../form-steps-field-grid/bp-popup-change-permission/bp-popup-change-permission.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
-import {
-  AnimationModel,
-  ILoadedEventArgs,
-  ProgressBar,
-  ProgressTheme,
-} from '@syncfusion/ej2-angular-progressbar';
+import { AnimationModel, ILoadedEventArgs, ProgressBar, ProgressTheme } from '@syncfusion/ej2-angular-progressbar';
+import { X } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-process-release-detail',
@@ -584,8 +580,14 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
           elm2.actualEnd = this.listTask[index].actualEnd;
 
           elm2.status = this.listTask[index].status;
+          
           elm2.dataTask = this.listTask[index];
-        } else elm2.permissions = null;
+
+          elm2.taskID = this.listTask[index].recID;
+        
+        } 
+        else elm2.permissions = null;
+
         if (elm2?.pers == null && this.tempPermission?.length > 0) {
           let pers = this.tempPermission.filter((x) => x.refID == elm2.recID);
           if (pers?.length > 0) {
@@ -611,26 +613,6 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     });
 
     return list;
-  }
-
-  popupTasks(dataStep, action) {
-    var option = new SidebarModel();
-    option.FormModel = {
-      formName: 'BPTasks',
-      gridViewName: 'grvBPTasks',
-      entityName: 'BP_Tasks',
-    };
-    option.zIndex = 1010;
-    let data = this.listTask.find((x) => x.stepID == dataStep.recID);
-    let subTitle = this.data?.title;
-    const obj = {
-      data: data,
-      dataIns: this.data,
-      subTitle: subTitle,
-      action: action,
-    };
-    let popup = this.callFc.openSide(PopupBpTasksComponent, obj, option);
-    popup.closed.subscribe((res) => {});
   }
 
   openForm(dt: any) {
@@ -682,11 +664,125 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     );
     popup.closed.subscribe((res) => {
       if (res && res?.event) {
-        this.data = res?.event;
+       
+        this.formatDataTask(res);
+        //this.data = res?.event;
       }
     });
   }
-  addNewTask(oldTask) {
+
+  formatDataTask(res:any)
+  {
+    debugger
+    if(res?.event?.ins) this.data = res?.event?.ins;
+    let index = this.listStage.findIndex(x=>x.recID == res?.event?.task?.stageID);
+    if(index >= 0)
+    {
+      let nextStepID = null;
+      let crrStage = this.listStage[index];
+      let crrNextStage = null;
+      let index2 = this.listStage[index].child.findIndex(x=>x.taskID == res?.event?.task?.recID);
+      if(index2>=0) 
+      {
+        let crrStep = this.listStage[index].child[index2];
+        if(crrStep?.settings?.nextSteps && crrStep?.settings?.nextSteps.length>0)
+        {
+          let idNextStep = crrStep.settings?.nextSteps[0].nextStepID; 
+          if(idNextStep)
+          {
+            let index3 = this.process.steps.findIndex(x=>x.recID == idNextStep);
+            if(index3>=0)
+            {
+              nextStepID = this.process.steps[index3].recID;
+              if(this.process.steps[index3].activityType != "Stage") nextStepID = this.process.steps[index3].settings?.nextSteps[0].nextStepID;
+              let index4 = this.listStage.findIndex(x=>x.recID == nextStepID);
+              if(index4 >= 0) crrNextStage = this.listStage[index4];
+            }
+          }
+        }
+        this.listStage[index].child[index2].status = res?.event?.task?.status;
+        this.listStage[index].child[index2].statusStage = res?.event?.task?.status;
+        this.listStage[index].child[index2].colorStatus = this.VllBP014.datas.filter(x=>x.value == res?.event?.task?.status)[0].textColor;
+      }
+     
+      if(crrStage?.recID != crrNextStage?.recID)
+      {
+        this.data.currentStage = crrNextStage?.recID || crrStage?.recID;
+        
+        let recID = crrNextStage?.recID || crrStage?.recID;
+        let index = this.listStage.findIndex(x=>x.recID == recID);
+        if(index>=0) 
+        {
+          if(crrNextStage)
+          {
+            nextStepID = this.listStage[index].settings?.nextSteps[0]?.nextStepID;
+            let index2 = this.listStage[index].child.findIndex(x=>x.recID == nextStepID);
+            if(index2 >=0) this.listStage[index].child[index2].status = '3';
+            this.listStage[index].statusStage = '3';
+            this.listStage[index].colorStatus = this.VllBP014.datas.filter(x=>x.value == crrNextStage.statusStage)[0].textColor;
+          }
+        }
+      
+        let indexCrr = this.listStage.findIndex(x=>x.recID == crrStage?.recID);
+        if(indexCrr>=0 )
+        {
+          this.listStage[indexCrr].statusStage = '5';
+          this.listStage[indexCrr].colorStatus = this.VllBP014.datas.filter(x=>x.value == crrStage.statusStage)[0].textColor;
+        }
+        
+      }
+      else if(nextStepID) 
+      {
+        let index2 =  this.listStage[index].child.findIndex(x=>x.recID == nextStepID);
+        if(index2 >= 0 ) 
+        {
+          this.listStage[index].child[index2].status = '3';
+        }
+      }
+
+      let countTaskSum = 0;
+      let countTaskCompletedSum = 0;
+      this.listStage.forEach((elm) => {
+        if (elm.child && elm.child.length > 0) {
+          elm.countTask = elm.child.length;
+          elm.countCompleted = 0;
+          elm.child.forEach((element) => {
+            if (element.activityType != 'Conditions' && element.status == '5')
+            {
+              elm.countCompleted++;
+              countTaskCompletedSum ++;
+            }  
+            else if (element.activityType == 'Conditions') {
+              if (element.child && element.child.length > 0) {
+                if (element.child.some((x) => x.status == '5'))
+                {
+                  elm.countCompleted++;
+                  countTaskCompletedSum++;
+                }
+              }
+            }
+            countTaskSum ++;
+          });
+
+          elm.percentCompleted = (elm.countCompleted / elm.countTask) * 100;
+
+          elm.percentCompleted = elm.percentCompleted.toFixed(2);
+          elm.duration = elm.child.reduce((n, { duration }) => n + duration, 0);
+        }
+        //var index = this.listTask.findIndex((x) => x.stepID == elm.recID);
+        // if(index >= 0)
+        // {
+        //   elm.colorStatus = this.VllBP014.datas.filter(x=>x.value == this.listTask[index].status)[0].textColor;
+        //   elm.statusStage = this.listTask[index].status;
+        // }
+      });
+      this.value1 = (countTaskCompletedSum / countTaskSum) * 100;
+      this.circular1.value= this.value1;
+      this.circular1.refresh();
+    }
+
+  }
+  addNewTask(oldTask){
     let lstParent = JSON.parse(JSON.stringify(this.listStage));
     lstParent.forEach((elm) => {
       delete elm.child;
@@ -728,4 +824,9 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     });
   }
   public load(args: ILoadedEventArgs): void {}
+
+  close()
+  {
+    this.dialog.close(this.data)
+  }
 }

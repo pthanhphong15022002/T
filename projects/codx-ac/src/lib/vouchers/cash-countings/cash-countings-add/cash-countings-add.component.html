@@ -187,14 +187,12 @@
       <div style="flex-wrap: nowrap;" class="row d-flex overflow-auto h-100">
         <div style="min-width: 800px;padding-right: 0;" class="col-8">
           <div class="row" style="max-width: 1000px">
-            <div class="col-6">
-              <div class="form-group">
-                <codx-label style="white-space: nowrap !important" fiedName="ObjectID" [formModel]="dialog?.formModel">
-                </codx-label>
-                <codx-input [disabled]="master.data?.isReadOnly ? true : false" [Group]="master?.formGroup"
-                  field="objectID" [formModel]="dialog?.formModel">
-                </codx-input>
-              </div>
+            <div class="col-6 form-group">
+              <codx-label style="white-space: nowrap !important" fiedName="ObjectID" [formModel]="dialog?.formModel">
+              </codx-label>
+              <codx-input [disabled]="master.data?.isReadOnly ? true : false" [Group]="master?.formGroup"
+                field="objectID" [formModel]="dialog?.formModel">
+              </codx-input>
             </div>
             <div *ngIf="dialog.formModel.funcID === 'ACT281'" class="col-2">
               <div class="form-group">
@@ -516,7 +514,7 @@
         [hideMoreFunc]="true" [moreFcItems]="'SYS104;SYS102'" [moreFcModel]="dialog.formModel" (clickMF)="clickMF($event)"
         [gridViewName]="'grvCountingItems'" [entityName]="'AC_CountingItems'" predicates="TransID=@0"
         [dataValues]="master?.data?.recID" service="AC" [editOnClick]="master.data?.isReadOnly ? false : true"
-        rowNoField="rowNo"></codx-gridview-v2>
+        rowNoField="rowNo" (cellChanged)="valueChangeLineItems($event)"></codx-gridview-v2>
       <ng-container *ngIf="!master.data?.isReadOnly">
         <div #btnRef class="btn-addline">
           <div class="d-flex align-items-center">
