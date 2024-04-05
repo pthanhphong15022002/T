@@ -234,17 +234,24 @@ export class PopupAddEpAdvanceRequestComponent implements OnInit,AfterViewInit,O
     }
   }
 
-  onSave(){
+  onSave(isRelease:boolean = false){
+    if(isRelease)
+      this.data.status = "5";
     this.form.save(null, 0, '', '', false,{allowCompare:false})
     .subscribe((res:any) => {
       if(res)
       {
-        let save = this.actionType == "add" ? res.save.error : res.update.error;
-        if(!save)
+        let save = this.actionType == "add" ? !res.save.error : !res.update.error;
+        if(save)
         {
+          this.notiSV.notifyCode("SYS006");
           this.dialog.close(this.data);
         }
+        else
+          this.notiSV.notifyCode("SYS023");
       }
+      else
+        this.notiSV.notifyCode("SYS023");
     });
   }
 }

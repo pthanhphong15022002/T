@@ -66,14 +66,14 @@ export class RequestsComponent extends UIComponent implements AfterViewInit,OnDe
   changeDataMF(event:any){
     if(event)
     {
-      event.map(x => {
-        if(x.functionID == "SYS01" || x.functionID == "SYS02" || x.functionID == "SYS03")
-        {
-          x.disabled = false;
-          x.isbookmark = true;
-        }          
-        else x.disabled = true;
-      });
+      // event.map(x => {
+      //   if(x.functionID == "SYS01" || x.functionID == "SYS02" || x.functionID == "SYS03")
+      //   {
+      //     x.disabled = false;
+      //     x.isbookmark = true;
+      //   }          
+      //   else x.disabled = true;
+      // });
     }
   }
 
