@@ -219,8 +219,8 @@
     </codx-imgs>
   </div>
   <div class="footer-tag">
-    <div class="d-flex align-items-center justify-content-between">
-      <div class="tag-1line" *ngIf="data.tags && data?.tags.trim() != ''">
+    <div class="d-flex align-items-center">
+      <div class="tag-1line me-2" *ngIf="data.tags && data?.tags.trim() != ''">
         <codx-tag
           [entityName]="view.formModel.entityName"
           [disabled]="true"
@@ -229,7 +229,29 @@
         >
         </codx-tag>
       </div>
-      <div *ngIf="!data.tags"></div>
+      <div
+        *ngIf="data?.isOnline"
+        [ngbPopover]="popoverLinks"
+        #p1="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="p1.open()"
+        (mouseleave)="p1.close()"
+        placement="right left"
+      >
+        <i
+          class="icon-insert_link text-primary text-hover-primary icon-24"
+          (click)="openLinkMeeting(data)"
+        ></i>
+      </div>
+      <ng-template #popoverLinks>
+        <span>
+          <codx-label
+            name="lblLinkOnlineMeeting"
+            [formModel]="view.formModel"
+            default="Link họp online"
+          ></codx-label>
+        </span>
+      </ng-template>
     </div>
   </div>
   <div
