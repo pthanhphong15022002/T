@@ -87,7 +87,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   @Input() isTaskFirst = false; // giai đoạn đầu tiên
   @Input() isStart = true; // bắt đầu ngay
-  @Input() isClose = false; // đóng nhiệm vụ
   @Input() isRoleAll = true;
   @Input() isOnlyView = true; // đang ở giai đoạn nào
   @Input() isShowFile = true;
@@ -101,7 +100,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() askUpdateProgressStep = false; // lưu progress vào db
   @Input() ownerInstance; // lưu progress vào db
 
-  @Input() isViewStep = false; // chỉ xem
+  @Input() isView = false; // chỉ xem
   @Input() isMoveStage = false; // chuyển giai đoạn
   @Input() isLockSuccess = false; // lọc cái task 100%
 
@@ -817,14 +816,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             break;
           case 'DP20': // tiến độ
             res.isbookmark = false;
-            if (
-              !(
-                this.isRoleAll &&
-                this.isOnlyView &&
-                this.isUpdateProgressStep
-              ) ||
-              this.isClose
-            ) {
+            if (!(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)) {
               res.disabled = true;
             }
 
@@ -1852,7 +1844,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (this.isMoveStage) {
       return type !== 'G';
     }
-    if (this.isClose || this.isViewStep) {
+    if (this.isView) {
       return false;
     }
     if (this.isOnlyView && this.isStart) {
@@ -3117,7 +3109,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       isAdd: true, ///là add form để lấy giá trị mặc định gán vào
       taskID: task.recID,
       fieldOther: this.getFieldsOther(this.currentStep?.fields, task?.fieldID),
-      isView: this.isViewStep,
+      isView: this.isView,
     };
     let formModel: FormModel = {
       entityName: 'DP_Instances_Steps_Fields',

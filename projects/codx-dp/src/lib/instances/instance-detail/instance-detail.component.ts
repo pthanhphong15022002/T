@@ -81,6 +81,7 @@ export class InstanceDetailComponent implements OnInit {
   @Output() changeProgress = new EventEmitter<any>();
 
   id: any;
+  isView = false;
   totalInSteps: any;
   tmpDataSteps: DP_Instances_Steps;
   currentNameStep: Number;
@@ -311,7 +312,6 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    console.log(this.tabInstances);
     if (this.dataSelect?.permissions?.length > 0) {
       this.ownerInstance =
         this.dataSelect?.permissions
@@ -336,16 +336,14 @@ export class InstanceDetailComponent implements OnInit {
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     if (changes['dataSelect']) {
-      if (
-        changes['dataSelect'].currentValue?.recID == null ||
-        changes['dataSelect'].currentValue?.recID === this.id
-      )
-        return;
+      var instance = changes['dataSelect']?.currentValue as DP_Instances;
+      if (instance?.recID == null || instance?.recID === this.id) return;
       this.loaded = false; /// bien này không cần cũng được tại luôn có dataSelect -- bỏ loader vào  loadChangeData thì bị giật
-      this.id = changes['dataSelect'].currentValue.recID;
+      this.id = instance?.recID;
       this.loadChangeData();
       this.listRecIDAddNew = [];
       this.isChangeData = false;
+      this.isView = ["3","4","5","6"].includes(instance?.status) || instance?.closed || instance?.approveStatus == "3";
     }
   }
 

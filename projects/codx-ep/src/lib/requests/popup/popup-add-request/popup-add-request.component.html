@@ -192,10 +192,10 @@
                     (cellChanged)="valueCellChange($event)">
                 </codx-gridview-v2>
             </div>
-            <div class="d-flex flex-column align-items-end position-relative mt-4" *ngIf="data.totalAmount" >
+            <div class="d-flex flex-column align-items-end position-relative mt-4" *ngIf="data.requestAmt" >
                 <div class="d-flex fw-bold">
                     <div class="me-6">Tổng cộng:</div>
-                    <div [innerHTML]="data.totalAmount | formatvalue : dialog.formModel : 'amount' | async"></div>
+                    <div [innerHTML]="data.requestAmt | formatvalue : dialog.formModel : 'requestAmt' | async"></div>
                 </div>
             </div>
         </div>
@@ -204,8 +204,13 @@
 
 <ng-template #footer>
     <div class="d-flex align-items-center justify-content-end">
-        <button type="btn" class="btn btn-outline-primary me-2"><i class="icon-near_me me-1"></i>Gửi duyệt</button>
-        <button type="btn" class="btn btn-primary" (click)="onSave()">Lưu</button>
+        <button type="btn" class="btn btn-outline-primary me-2" *ngIf="actionType == 'add'" (click)="onSave(true)">
+            <i class="icon-near_me me-1"></i>
+            <codx-label [formModel]="dialog.formModel" name="lblRelase" default="Gửi duyệt"></codx-label>
+        </button>
+        <button type="btn" class="btn btn-primary" (click)="onSave()">
+            <codx-label [formModel]="dialog.formModel" name="lblSubmit" default="Lưu"></codx-label>
+        </button>
     </div>
 </ng-template>
 

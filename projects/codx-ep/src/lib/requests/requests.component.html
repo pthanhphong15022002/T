@@ -38,13 +38,33 @@
         </div>
         <div class="d-flex align-items-center justify-content-between w-100">
             <codx-vll [name]="'EP033'" [value]="data.status" [showText]="true" [showBgColor]="true" [classList]="'badge rounded-pill'"></codx-vll>
-            <codx-imgs *ngIf="data.resourceIDs"
+
+            <div class="d-flex" *ngIf="data.resources">
+                <ng-container *ngFor="let item of data.resources;let idx = index">
+                    <ng-container *ngIf="idx <= 3">
+                        <ng-container *ngIf="idx < 3;else tmpMoreResouces">
+                            <div class="me-1 position-relative">
+                                <codx-img [objectId]="item.userID" [objectType]="item.roleType == '2' ? 'EP_Resources' : 'AD_Users'" [width]="30"></codx-img>
+                                <!-- <div class="position-absolute bottom-0 end-0">
+                                    <codx-vll [name]="'EP010'" [value]="item.roleType" [showIcon]="true" [path]="'./assets/themes/ep/default/img/'"></codx-vll>
+                                </div> -->
+                            </div>
+                        </ng-container>
+                        <ng-template #tmpMoreResouces>
+                            <div class="symbol symbol-30px symbol-circle">
+                                <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">+{{data.resources.length - 3}}</span>
+                            </div>
+                        </ng-template>
+                    </ng-container>
+                </ng-container>
+            </div>
+            <!-- <codx-imgs *ngIf="data.resourceIDs"
                 [isToolTip]="true" 
                 [objectId]="data.resourceIDs" 
                 [objectType]="'AD_Users'" 
                 [width]="30" 
                 [numberImages]="3">
-            </codx-imgs>
+            </codx-imgs> -->
         </div>
     </div>
 </ng-template>

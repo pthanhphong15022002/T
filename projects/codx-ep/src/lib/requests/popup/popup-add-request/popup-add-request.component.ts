@@ -1,5 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, Optional, ViewChild } from '@angular/core';
 import { ApiHttpService, AuthStore, CacheService, CodxGridviewV2Component, DialogData, DialogRef, LayoutAddComponent, NotificationsService, Util } from 'codx-core';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { Subscription, map } from 'rxjs';
 
 @Component({
@@ -15,6 +17,11 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
   user:any;
   grvSetup:any;
   vllEP010:any;
+  ACObject:any;
+  EPResource:any;
+  BSReason:any;
+  vllACObjectType:string = "AC152i";
+  ACObjectType:any;
   columnGrids:any[] = [];
   editSettings: any = {
     allowEditing: true,
@@ -22,7 +29,6 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
     allowDeleting: true,
     mode: 'Normal',
   };
-  EPResource:any;
   tabInfo: any[] = [
     {
       icon: 'icon-info',
@@ -39,13 +45,17 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
   @ViewChild("codxGridViewV2") codxGridViewV2:CodxGridviewV2Component;
   @ViewChild("form") form:LayoutAddComponent;
 
+  runMode:string = "";
+  releaseCategory:any;
+  subcriptions = new Subscription();
 
   constructor
   (
     private api:ApiHttpService,
     private cache:CacheService,
     private auth:AuthStore,
-
+    private codxShareService:CodxShareService,
+    private codxCommonSV : CodxCommonService,
     private notiSV:NotificationsService,
     private detectorChange:ChangeDetectorRef,
     @Optional() dialogRef:DialogRef,
@@ -73,7 +83,14 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
       if(grv)
         this.grvSetup = grv;
     }));
-    
+    this.subcriptions.add(this.cache.valueList(this.vllACObjectType)
+    .subscribe((vll:any) => {
+      if(vll)
+      {
+        vll.data.forEach(item => this.ACObjectType[item.value] = item.text);
+      }
+    }));
+
     if(this.user && this.actionType == "add")
     {
       this.data.employeeID = this.user.employee?.employeeID;
@@ -85,13 +102,25 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
       this.data.resources = [];
       this.data.resources.push({transID : this.data.recID, userID : this.user.userID, userName : this.user.userName, roleType : "1"});
       this.data.resourceIDs = this.data.resources.map(x => x.userID).join(";");
-      this.subscriptions.add(this.cache.companySetting()
+      let subcribe1 = this.cache.companySetting()
       .subscribe((res:any) => {
         if(res)
         {
           this.data.currencyID = res[0]["baseCurr"] || "";
         }
-      }));
+      })
+      this.subscriptions.add(subcribe1);
+      let subcribe2 = this.api.execSv(
+        'ES',
+        'ERM.Business.ES',
+        'CategoriesBusiness',
+        'GetCategoryByEntityNameAsync',
+        [this.dialog.formModel.entityName])
+        .subscribe((res:any) => 
+        {
+          this.releaseCategory = res;
+        });
+      this.subcriptions.add(subcribe2);
     }
     else if(this.actionType == "edit")
     {
@@ -151,10 +180,22 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
       case "objectID":
         this.data.objectID = event.data;
         this.data.objectType = event.type;
+        if(event.component.itemsSelected?.length > 0)
+        {
+          this.ACObject = event.component.itemsSelected[0];
+          if(this.ACObjectType)
+            this.data.memo = this.ACObjectType[this.ACObject.ObjectType] + " "; 
+          this.data.memo = this.ACObject.ObjectName;
+        }
         break;
       case "reasonID":
         value = event.data;
         this.data.reasonID = event.data;
+        if(event.component.itemsSelected?.length > 0)
+        {
+          this.BSReason = event.component.itemsSelected[0];
+          this.data.memo =  this.BSReason.ReasonName + " " + this.data.memo;
+        }
         break;
       case "memo":
         value = event.data;
@@ -187,10 +228,14 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
         this.data.resourceRecID = value.RecID;
         this.data.resourceName = value.ResourceName;
         this.data.resourceCode = value.Code;
-        this.data.resourceEquipments = value.Equipments;
-        let idx = this.data.resources.findIndex(x => x.roleType == "2");
-        if(idx > -1)
-          this.data.resources.splice(idx,1);
+        if(value.Equipments?.length > 0)
+          this.data.resourceEquipments = value.Equipments.map(item => ({ equipmentID: item.EquipmentID, createdBy: item.CreatedBy, createdOn: item.CreatedOn}));
+        if(this.data.resources?.length > 0)
+        {
+          let idx = this.data.resources.some(x => x.roleType == "2");
+          if(idx > -1)
+            this.data.resources.splice(idx,1);
+        }
         this.data.resources.push({transID : this.data.recID, userID : value.ResourceID, userName : value.ResourceName, roleType : "2"});
         break;
       case "resources":
@@ -235,7 +280,7 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
       this.data.lines[idx] = EPRequestsLine;
     else this.data.lines.push(EPRequestsLine);
     if(field == "amount" && this.data.lines.length > 0)
-      this.data.totalAmount = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
+      this.data.requestAmt = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
     this.detectorChange.detectChanges();
   }
 
@@ -256,24 +301,62 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
       {
         this.data.lines = this.data.lines.filter(x => x.itemID != data.itemID);
         if(this.data.lines.length > 0)
-          this.data.totalAmount = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
-        else this.data.totalAmount = 0;
+          this.data.requestAmt = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
+        else this.data.requestAmt = 0;
         this.detectorChange.detectChanges();
       }
     }
   }
 
-  onSave(){
+  onSave(isRelease:boolean = false){
+    if(isRelease)
+    {
+      this.data.status == "5";
+    }
     this.form.form.save(null, 0, '', '', false,{allowCompare:false})
     .subscribe((res:any) => {
       if(res)
       {
-        let save = this.actionType == "add" ? res.save.error : res.update.error;
-        if(!save)
-        {
+        let save = this.actionType == "add" ? !res.save.error : !res.update.error;
+        if(save)
+        { 
+          // if(isRelease)
+          // {
+          //   this.onRelease(this.data);
+          // }
+          // else
+          // {
+          //   this.notiSV.notifyCode("SYS006");
+          //   this.dialog.close(this.data);
+          // }
+          this.notiSV.notifyCode("SYS006");
           this.dialog.close(this.data);
         }
+        else
+          this.notiSV.notifyCode("SYS023");
       }
+      else
+        this.notiSV.notifyCode("SYS023");
     });
+  }
+
+  onRelease(data:any){
+    if(data)
+    {
+      this.codxCommonSV.codxReleaseDynamic("EP",data,this.releaseCategory,this.dialog.formModel.entityName,this.dialog.formModel.funcID,data.memo,this.callBackApproval);
+    }
+  }
+
+  callBackApproval(res:any){
+    if(res?.rowCount > 0)
+    {
+      this.notiSV.notifyCode("Thêm mới thành công");
+      this.data.status = res.returnStatus;
+      this.dialog.close(this.data);
+    }
+    else
+    {
+      this.notiSV.notifyCode("SYS023");
+    }
   }
 }
