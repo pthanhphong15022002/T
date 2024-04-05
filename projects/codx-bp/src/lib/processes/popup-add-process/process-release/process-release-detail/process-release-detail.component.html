@@ -101,9 +101,9 @@
   <div class="w-100 h-100 position-relative">
     <div class="position-absolute top-0 end-0" *ngIf="!right">
       <div class="d-flex align-items-center">
-        <div class="d-flex align-items-center me-2 py-2 px-4 border-radius-4px text-white cursor-pointer" [style.backgroundColor]="item.color" *ngFor="let item of listMF">
-          <i [ngClass]="item.largeIcon" class="me-2 text-white"></i>
-          <span>{{item.customName}}</span>
+        <div class="d-flex align-items-center me-2 py-2 px-4 border-radius-4px text-white cursor-pointer" [style.backgroundColor]="item?.color" *ngFor="let item of listMF">
+          <i [ngClass]="item?.largeIcon" class="me-2 text-white"></i>
+          <span>{{item?.customName}}</span>
         </div>
       </div>
     </div>

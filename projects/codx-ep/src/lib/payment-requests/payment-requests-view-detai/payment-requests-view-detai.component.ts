@@ -64,15 +64,15 @@ export class PaymentRequestsViewDetaiComponent extends UIDetailComponent impleme
     if (this.runMode == '1') {
       this.codxShareService.changeMFApproval(event, this.data?.unbounds);
     }
-    else if(event)
-    {
-      event.map(x => {
-        if(x.functionID == "SYS01" || x.functionID == "SYS02" || x.functionID == "SYS03" || x.functionID == "WSCO0411" || x.functionID == "WSCO0412")
-          x.disabled = false;
-        else
-          x.disabled = true;
-      });
-    }
+    // else if(event)
+    // {
+    //   event.map(x => {
+    //     if(x.functionID == "SYS01" || x.functionID == "SYS02" || x.functionID == "SYS03" || x.functionID == "WSCO0411" || x.functionID == "WSCO0412")
+    //       x.disabled = false;
+    //     else
+    //       x.disabled = true;
+    //   });
+    // }
   }
 
   clickMF(event:any, data = null){

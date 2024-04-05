@@ -40,7 +40,7 @@ export class CodxHelpComponent implements OnInit, AfterViewInit, OnDestroy {
     this.realHub.start("dm")
     .then((res:RealHub) => {
       if(res) {
-        this.subcriptions.add(res.$subjectReal.asObservable()
+        res.$subjectReal.asObservable()
         .subscribe((z):any => 
         {
           if(z && z?.event == 'OpenChatDoc' && z?.message == this.session) 
@@ -52,7 +52,7 @@ export class CodxHelpComponent implements OnInit, AfterViewInit, OnDestroy {
               this.openTabGPT(respone.docID);
             }
           }
-        }));
+        })
       }
     });
   }

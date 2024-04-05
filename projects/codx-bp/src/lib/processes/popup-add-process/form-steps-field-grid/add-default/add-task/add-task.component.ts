@@ -546,11 +546,29 @@ export class AddTaskComponent
     );
 
     listForm.forEach(elm=>{
+      let dt = [];
+      elm.extendInfo.forEach(elm2=>{
+        if(elm2.controlType == 'Table')
+        {
+          var columns = JSON.parse(JSON.stringify(typeof elm2.dataFormat == 'string' ? JSON.parse(elm2.dataFormat) : elm2.dataFormat));
+          columns.forEach(elm3 =>
+          {
+            if(elm3.controlType == "Number")
+            {
+              elm3.title = "Tổng của cột " + elm3.title
+              elm3.fieldName = elm3.fieldName + "_sum_" + elm3.fieldName;
+              dt = dt.concat(elm3)
+            }
+          })
+        }
+      });
+
       let data = JSON.parse(JSON.stringify(this.listRequester));
       data.forEach(elm2=>{
         elm2.fieldName = "f" + elm.stepNo + "_owner." + elm2.fieldName;
       })
-      elm.extendInfo = elm.extendInfo.concat(data)
+      elm.extendInfo = elm.extendInfo.concat(dt)
+      elm.extendInfo = elm.extendInfo.concat(data);
     });
 
     let dataSteps = this.process.steps.filter(
@@ -661,7 +679,9 @@ export class AddTaskComponent
               if (typeof element.documentControl != 'string') {
                 element.documentControl = JSON.stringify(element.documentControl)
               }
-              
+              if (typeof element.visibleControl != 'string') {
+                element.visibleControl = JSON.stringify(element.visibleControl)
+              }
               if (typeof element.dataFormat != 'string') {
                 element.dataFormat = JSON.stringify(element.dataFormat)
               }

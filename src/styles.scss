@@ -4677,3 +4677,12 @@ codx-view-kanban .e-kanban .e-kanban-table {
   white-space: nowrap;
   margin-right: 0!important;
 }
+.news-detail-content{
+  overflow: hidden;
+}
+.news-detail-content img, .news-detail-content div, .news-detail-content table{
+  max-width: 100%!important;
+}
+.news-detail-content *{
+  max-width: 100%!important;
+}

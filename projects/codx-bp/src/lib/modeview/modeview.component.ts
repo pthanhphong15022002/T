@@ -151,6 +151,11 @@ export class ModeviewComponent implements OnInit {
         elm.icon = vlls[indexs].icon;
         elm.textColor = vlls[indexs].textColor;
       }
+      
+      if(elm.visibleControl)
+      {
+        elm.visibleControl = typeof elm.visibleControl == 'string' ? JSON.parse(elm.visibleControl) :  elm.visibleControl;
+      }
 
       if(!this.table.some(x=>x.columnOrder == elm.columnOrder))
       {
