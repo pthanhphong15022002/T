@@ -154,7 +154,7 @@ export class CodxSvService {
     this.cachedObservables.set(key, observable);
     return observable;
   }
- 
+
   loadAlertRule(ruleNo:any): Observable<any>
   {
     let paras = [ruleNo];
@@ -445,10 +445,9 @@ export class CodxSvService {
     ]);
   }
 
-  getDataSurveys(data:any,isSystem=false) {
+  getDataSurveys(data:any) {
     return this.api.execSv('SV', 'SV', 'SurveysBusiness', 'GetAsync', [
-      data,
-      isSystem
+      data
     ]);
   }
   getDataQuestion(recID:any) {
