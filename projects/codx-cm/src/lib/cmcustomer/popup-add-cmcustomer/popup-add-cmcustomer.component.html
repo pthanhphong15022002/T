@@ -214,7 +214,7 @@
           </div>
         </div>
       </div>
-      <div class="mb-2 mt-5" (mouseenter)="closePopover()">
+      <!-- <div class="mb-2 mt-5" (mouseenter)="closePopover()">
         <codx-label
           (mouseenter)="closePopover()"
           name="lblSystemInfo"
@@ -236,7 +236,7 @@
           </div>
         </div>
 
-      </div>
+      </div> -->
     </ng-container>
     <ng-container *ngIf="checkType == '2'" (mouseenter)="closePopover()">
       <div class="row">
@@ -849,6 +849,16 @@
       </codx-input>
     </div>
 
+  </div>
+  <div class="form-group" (mouseenter)="closePopover()">
+    <codx-label [formModel]="form.formModel" fiedName="ChannelID"></codx-label>
+    <codx-input
+      (mouseenter)="closePopover()"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="channelID"
+      [disabled]="isView">
+    </codx-input>
   </div>
   <div class="form-group" (mouseenter)="closePopover()">
     <codx-label [formModel]="form.formModel" fiedName="Memo"> </codx-label>
