@@ -551,16 +551,14 @@ export class ModeviewComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
+     
+      this.table[event.container.data[0].columnOrder].children.forEach((elm,i)=>{
+        elm.columnNo = i
+      });
       
-      for(var i = 0 ; i < this.table[event.container.data[0].columnOrder].children.length ; i++)
-      {
-        this.table[event.container.data[0].columnOrder].children[i].columnNo = i;
-      }
-
-      for(var i = 0 ; i < this.table[event.previousContainer.data[0].columnOrder].children.length ; i++)
-      {
-        this.table[event.previousContainer.data[0].columnOrder].children[i].columnNo = i;
-      }
+      this.table[event.previousContainer.data[0].columnOrder].children.forEach((elm,i)=>{
+        elm.columnNo = i
+      })
     }
 
     this.table = this.table.filter(x=>x.children != null && x.children.length>0);
