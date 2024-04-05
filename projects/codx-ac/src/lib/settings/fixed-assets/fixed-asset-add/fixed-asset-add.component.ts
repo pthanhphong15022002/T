@@ -148,7 +148,7 @@ export class FixedAssetAddComponent extends UIComponent {
     //           let quantity = data?.quantity ?? 0;
     //           let purcAmount = data?.purcAmount ?? 0;
     //           data.costAmt = quantity * purcAmount ?? 0;
-    //           if(this.form.form.data.isAdd) data.salvage = data.costAmt;
+    //           if(this.form.form.data.isAdd) data.salvage = data.costAmt;as
     //           data.deprRate =
     //             data?.deprPeriods > 0
     //               ? data.costAmt / data?.deprPeriods

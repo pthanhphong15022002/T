@@ -309,6 +309,10 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
   }
 
   onSave(isRelease:boolean = false){
+    if(isRelease)
+    {
+      this.data.status == "5";
+    }
     this.form.form.save(null, 0, '', '', false,{allowCompare:false})
     .subscribe((res:any) => {
       if(res)
@@ -316,17 +320,23 @@ export class PopupAddRequestComponent implements OnInit,AfterViewInit,OnDestroy 
         let save = this.actionType == "add" ? !res.save.error : !res.update.error;
         if(save)
         { 
-          if(isRelease)
-          {
-            this.onRelease(this.data);
-          }
-          else
-          {
-            this.notiSV.notifyCode("SYS006");
-            this.dialog.close(this.data);
-          }
+          // if(isRelease)
+          // {
+          //   this.onRelease(this.data);
+          // }
+          // else
+          // {
+          //   this.notiSV.notifyCode("SYS006");
+          //   this.dialog.close(this.data);
+          // }
+          this.notiSV.notifyCode("SYS006");
+          this.dialog.close(this.data);
         }
+        else
+          this.notiSV.notifyCode("SYS023");
       }
+      else
+        this.notiSV.notifyCode("SYS023");
     });
   }
 

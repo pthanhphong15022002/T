@@ -119,8 +119,12 @@
     </div>
 </ng-template>
 <ng-template #footer>
+    <button type="btn" class="btn btn-outline-primary me-2" (click)="onSave(true)">
+        <i class="icon-near_me me-1"></i>
+        <codx-label [formModel]="dialog.formModel" name="lblRelase" default="Gửi duyệt"></codx-label>
+    </button>
     <div class="d-flex align-items-center justify-content-end">
-        <button type="btn" class="btn btn-primary" (click)="onSave()">Lưu</button>
+        <button type="btn" class="btn btn-primary" (click)="onSave(false)">Lưu</button>
     </div>
 </ng-template>
 
