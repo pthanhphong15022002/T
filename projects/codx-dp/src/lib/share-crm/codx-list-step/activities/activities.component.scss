@@ -1,0 +1,36 @@
+.list-contracts{
+   display: flex;
+   flex-direction: column;
+}
+.cursor_not{
+   cursor: not-allowed;
+}
+.icon-container{
+   width: 32px;
+   height: 32px;
+   min-width: 32px;
+   border: 1px solid;
+   border-radius: 50%;
+}
+.drap-drop :hover{
+   background-color: rgb(245, 245, 245);
+}
+
+.task-hover:hover > .steplist-hearder .task-name{
+   color: var(--primary-dark)!important;
+ }
+ ::ng-deep .popover {
+   box-shadow: 0 0px 5px 1px #a1a1a1;
+   z-index: 100 !important;
+ }
+ ::ng-deep .popover-arrow {
+   transform: translate(10px, 0px) !important;
+ }
+ .model-func{
+   margin-top: 3px;
+   border-radius: 3px;
+   margin-left: 10px;
+ }
+ .model-func:hover{
+   background-color: var(--primary-lighter);
+ }
