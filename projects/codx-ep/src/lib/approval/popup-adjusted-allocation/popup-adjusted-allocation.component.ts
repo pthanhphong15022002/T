@@ -64,7 +64,7 @@ export class PopupAdjustedAllocationComponent extends UIComponent {
       (x) => x?.issueQuantity != x?.quantity
     );
     if (overQuantity?.length > 0) {
-      this.notificationsService?.alertCode('EP022').subscribe((alr) => {
+      this.notificationsService?.alertCode('EP024').subscribe((alr) => {
         if (alr?.event?.status == 'Y') {
           this.codxEpService.addUpdateBooking(this.data,false).subscribe((res) => {
             if (res) {
