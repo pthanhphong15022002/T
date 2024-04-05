@@ -286,15 +286,13 @@ export class AssetJournalsComponent extends UIComponent {
     if (this.runmode == '1') {
       this.shareService.changeMFApproval(event, data.unbounds);
     } else {
-      if (data) {
-        this.acService.changeMFAsset(
-          event,
-          data,
-          type,
-          this.journal,
-          this.view.formModel
-        );
-      }
+      this.acService.changeMFAsset(
+        event,
+        data,
+        type,
+        this.journal,
+        this.view.formModel
+      );
     }
   }
   /**

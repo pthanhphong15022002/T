@@ -78,18 +78,18 @@ export class PaymentRequestsComponent extends UIComponent {
   }
 
   changeDataMF(event:any){
-    if(event)
-    {
-      event.map(x => {
-        if(x.functionID == "SYS01" || x.functionID == "SYS02" || x.functionID == "SYS03" || x.functionID == "WSCO0411" || x.functionID == "WSCO0412")
-        { 
-          x.disabled = false;
-          x.isbookmark = true;
-        }
-        else
-          x.disabled = true;
-      });
-    }
+    // if(event)
+    // {
+    //   event.map(x => {
+    //     if(x.functionID == "SYS01" || x.functionID == "SYS02" || x.functionID == "SYS03" || x.functionID == "WSCO0411" || x.functionID == "WSCO0412")
+    //     { 
+    //       x.disabled = false;
+    //       x.isbookmark = true;
+    //     }
+    //     else
+    //       x.disabled = true;
+    //   });
+    // }
   }
 
   clickMF(event:any, data = null){

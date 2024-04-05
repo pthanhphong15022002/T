@@ -481,7 +481,7 @@
         [type]="'DP'"
       ></codx-step-chart> -->
     <div *ngIf="listSteps?.length > 0 && listSteps">
-      <step-task-instance
+      <!-- <step-task-instance
         [entityName]="'DP_Instances'"
         [isDataLoading]="false"
         [instance]="dataSelect"
@@ -496,7 +496,30 @@
         (addTaskHaveAssign)="addTaskHaveAssign($event)"
         [isAdmin]="dataSelect?.isAdminAll"
       >
-      </step-task-instance>
+      </step-task-instance> -->
+      <!-- <step-task
+        [entityName]="'CM_Contracts'"
+        [listInstanceStep]="listInsStep"
+        [dataCM]="contract"
+        [applyFor]="'4'"
+        (saveAssignTask)="saveAssign($event)"
+        (changeProgress)="autoStart($event)"
+        (isSusscess)="checkSusscess($event)"
+        [taskAdd]="taskAdd"
+        (moveStage)="handelMoveStage($event)"
+        [isAdmin]="contract?.isAdminAll"
+        [isViewStep]="isViewStep"
+      ></step-task> -->
+      <codx-list-step
+        [entityName]="'DP_Instances'"
+        [listInstanceStep]="listSteps"
+        [dataCM]="dataSelect"
+        [applyFor]="'4'"
+        (saveAssignTask)="saveAssign($event)"
+        (changeProgress)="autoStart($event)"
+        [isAdmin]="dataSelect?.isAdminAll"
+        [isView]="isView"
+      ></codx-list-step>
     </div>
     <!-- <codx-gantt-chart
       [dataSource]="ganttDs"

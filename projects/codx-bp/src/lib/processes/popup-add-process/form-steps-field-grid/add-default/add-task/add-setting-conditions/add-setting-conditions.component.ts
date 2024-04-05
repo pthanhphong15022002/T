@@ -29,6 +29,7 @@ export class AddSettingConditionsComponent {
   @Output() change = new EventEmitter<any>();
   dataStep: any;
   listForm: any;
+  listExtendInfo: any;
   dialog: any;
   fields: any[] = [];
   toDay: any = new Date();
@@ -71,7 +72,7 @@ export class AddSettingConditionsComponent {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.funcID = this.dialog.formModel.funcID;
+    this.funcID = this.dialog?.formModel?.funcID;
     this.filters.logic = 'or';
     this.filters.filters = [];
     let initFilter = new FilterModel();
@@ -104,7 +105,9 @@ export class AddSettingConditionsComponent {
     }
 
     this.listForm = dt?.data?.forms;
+    this.listExtendInfo = dt?.data?.extendInfo;
   }
+  
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['isPopup'] && !changes['isPopup'].currentValue){
       this.isPopup = false;
@@ -149,7 +152,7 @@ export class AddSettingConditionsComponent {
     }
 
 
-    if(this.dialog){
+    if(this.dialog?.formModel){
       this.cache
       .gridViewSetup(
         this.dialog.formModel.formName,
@@ -165,6 +168,16 @@ export class AddSettingConditionsComponent {
       });
     }
 
+    if(this.listForm)
+    {
+      this.formatListForm(this.listForm);
+    }
+  }
+
+  formatListForm(data:any)
+  {
+    var a = data;
+    debugger
   }
 
   addItem() {

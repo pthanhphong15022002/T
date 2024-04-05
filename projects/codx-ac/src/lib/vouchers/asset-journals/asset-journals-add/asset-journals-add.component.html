@@ -344,7 +344,7 @@
                 <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
               </button>
             </div>
-            <div class="">
+            <div *ngIf="dialog.formModel.funcID != 'ACT831'">
               <button style="border: 1px solid !important;" tab-index="15" id="btnAddCash" tabindex="-1"
                 class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="
                 onAddLine('3'); $event.preventDefault()

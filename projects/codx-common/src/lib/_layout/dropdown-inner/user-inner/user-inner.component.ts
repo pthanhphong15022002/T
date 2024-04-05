@@ -386,7 +386,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     let waitingLogin = this.callSV.openForm(
       CodxImageCropperComponent,
       '',
-      0,
+      500,
       380,
       '',
       objData
