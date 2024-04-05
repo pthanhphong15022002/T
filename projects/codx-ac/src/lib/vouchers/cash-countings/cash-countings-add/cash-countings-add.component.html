@@ -191,7 +191,7 @@
               <codx-label style="white-space: nowrap !important" fiedName="ObjectID" [formModel]="dialog?.formModel">
               </codx-label>
               <codx-input [disabled]="master.data?.isReadOnly ? true : false" [Group]="master?.formGroup"
-                field="objectID" [formModel]="dialog?.formModel">
+                field="objectID" [formModel]="dialog?.formModel" (valueChange)="valueChangeMaster($event)">
               </codx-input>
             </div>
             <div *ngIf="dialog.formModel.funcID === 'ACT281'" class="col-2">
@@ -489,7 +489,8 @@
         [editSettings]="master.data?.isReadOnly ? editSettings : {}" [formName]="'CountingFunds'" idField="recID"
         [hideMoreFunc]="true" [moreFcItems]="'SYS104;SYS102'" [moreFcModel]="dialog.formModel" (clickMF)="clickMF($event)"
         [gridViewName]="'grvCountingFunds'" [entityName]="'AC_CountingFunds'" predicates="TransID=@0"
-        [dataValues]="master?.data?.recID" service="AC" [editOnClick]="master.data?.isReadOnly ? false : true"
+        [dataValues]="master?.data?.recID" service="AC" (eventAction)="onActionGridCounting($event)"
+        (actionCompleted)="onActionGridCounting($event)" [editOnClick]="master.data?.isReadOnly ? false : true"
         rowNoField="rowNo" (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
       <ng-container *ngIf="!master.data?.isReadOnly">
         <div #btnRef class="btn-addline">
@@ -518,12 +519,20 @@
       <ng-container *ngIf="!master.data?.isReadOnly">
         <div #btnRef class="btn-addline">
           <div class="d-flex align-items-center">
-            <div>
+            <div class="me-2">
               <button style="border: 1px solid !important" tab-index="11" id="btnAddCash"
                 class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="onAddLine('2'); $event.preventDefault()"
                 (click)="onAddLine('2')">
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
+              </button>
+            </div>
+            <div>
+              <button style="border: 1px solid !important" tab-index="11" id="btnAddCash"
+                class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="onAddLine('4'); $event.preventDefault()"
+                (click)="onAddLine('4')">
+                <i class="icon-playlist_add icon-16"></i>
+                <codx-label fiedName="lblSaveAndClear" default="Đề xuất kiểm kê kho"></codx-label>
               </button>
             </div>
           </div>

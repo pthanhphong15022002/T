@@ -129,6 +129,19 @@ export class CashCountingsAddComponent extends UIComponent {
     }
   }
 
+  valueChangeMaster(event: any) {
+    if (this.isPreventChange) {
+      return;
+    }
+    let field = event?.field || event?.ControlName;
+    this.master.setValue('updateColumns', '', {});
+    switch (field.toLowerCase()) {
+      case 'objectid':
+        this.cashBookIDChange(field);
+        break;
+    }
+  }
+
   /**
    * *Hàm xử lí change value trên detail
    * @param event
@@ -234,6 +247,9 @@ export class CashCountingsAddComponent extends UIComponent {
       case '3':
         this.addLineCountingAssets();
         break;
+      case '4':
+        this.addLineAssetProposal();
+        break;
     }
   }
 
@@ -284,6 +300,28 @@ export class CashCountingsAddComponent extends UIComponent {
       }
       this.onDestroy();
     })
+  }
+
+  addLineAssetProposal() {
+    if (this.eleGridItems && this.eleGridItems.dataSource.length) {
+      this.notification.alertCode('AC014', null).subscribe((res) => {
+        if (res.event.status === 'Y') {
+          this.api.exec('AC','CountingItemsBusiness','SetDefaultProposalAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+            if (res) {
+              this.eleGridItems.refresh();
+            }
+            this.onDestroy();
+          })
+        }
+      })
+    }else{
+      this.api.exec('AC','CountingItemsBusiness','SetDefaultProposalAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+        if (res) {
+          this.eleGridItems.refresh();
+        }
+        this.onDestroy();
+      })
+    }
   }
   //#endregion
 
@@ -406,6 +444,29 @@ export class CashCountingsAddComponent extends UIComponent {
   //#endregion
 
   //#region Function
+  onActionGridCounting(event: any) {
+    switch (event.type) {
+      case 'autoAdd':
+        this.onAddLine('1');
+        break;
+      case 'add':
+      case 'update':
+      case 'delete':
+        let total = this?.eleGridCounting.dataSource.reduce((sum, data: any) => sum + data?.amount, 0);
+        this.master.setValue('countValue', total, {});
+        break;
+      case 'closeEdit':
+        if (this.eleGridCounting && this.eleGridCounting.rowDataSelected) {
+          this.eleGridCounting.rowDataSelected = null;
+        }
+        if (this.eleGridCounting.isSaveOnClick) this.eleGridCounting.isSaveOnClick = false;
+        setTimeout(() => {
+          let element = document.getElementById('btnAddCash');
+          element.focus();
+        }, 100);
+        break;
+    }
+  }
   /**
    * *Hàm refresh tất cả dữ liệu chi tiết của tab detail
    */
@@ -425,6 +486,23 @@ export class CashCountingsAddComponent extends UIComponent {
       this.eleGridAsset.refresh();
       return;
     }
+  }
+
+  cashBookIDChange(field: any) {
+    this.api.exec('AC', 'CountingsBusiness', 'ValueChangedAsync', [
+      field,
+      this.master.data,
+    ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {
+          this.isPreventChange = true;
+          this.master.setValue('actualValue', res?.data?.actualValue, {});
+          this.isPreventChange = false;
+          this.detectorRef.detectChanges();
+        }
+        this.onDestroy();
+      });
   }
   //#endregion
 
