@@ -34,6 +34,7 @@ export class CodxShareTaskComponent implements OnInit {
   read: boolean = true;
   update: boolean;
   assign: boolean;
+  updateProgress: boolean;
   upload: boolean;
   download: boolean;
   delete: boolean;

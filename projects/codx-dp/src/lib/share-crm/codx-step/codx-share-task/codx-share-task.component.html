@@ -147,11 +147,13 @@
               refValue="CRM052"
               [showInput]="showInput"
               (valueChange)="changUsers($event)"
+              [ngbTooltip]="'Chia sẻ'"
             >
             </codx-input>
           </div>
         </div>
       </div>
+
       <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 ps-6 role-right">
         <div class="list-role">
           <table class="table">
@@ -268,7 +270,7 @@
                   </codx-input>
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label
                     [default]="'Phân công'"
@@ -295,7 +297,7 @@
                   >
                   </codx-input>
                 </td>
-              </tr>
+              </tr> -->
               <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label
@@ -327,15 +329,15 @@
               <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label
-                    [default]="'Tải lên'"
+                    [default]="'Tiến độ'"
                     [formModel]="dialog.formModel"
-                    [fiedName]="'Upload'"
+                    [fiedName]="'UpdateProgress'"
                   ></codx-label>
                 </td>
                 <td>
                   <codx-label
-                    [default]="'Cho phép cập nhật file'"
-                    [name]="'lblDescriptionsUpdload'"
+                    [default]="'Cho phép cập nhật tiến độ'"
+                    [name]="'lblDescriptionsUpdateProgress'"
                   ></codx-label>
                 </td>
                 <td class="text-center">
@@ -343,15 +345,15 @@
                     class="test-check"
                     type="switch"
                     style="width: 100%"
-                    [crrValue]="upload"
-                    field="upload"
-                    (valueChange)="valueChange($event, 'upload')"
+                    [crrValue]="updateProgress"
+                    field="updateProgress"
+                    (valueChange)="valueChange($event, 'updateProgress')"
                     [disabled]="checkAdminUpdate()"
                   >
                   </codx-input>
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label
                     [default]="'Tải file'"
@@ -378,8 +380,8 @@
                   >
                   </codx-input>
                 </td>
-              </tr>
-              <tr>
+              </tr> -->
+              <!-- <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label
                     [default]="'Phân quyền'"
@@ -407,66 +409,7 @@
                   >
                   </codx-input>
                 </td>
-              </tr>
-
-              <tr>
-                <td class="font-size-lg text-dark">
-                  <codx-label
-                    [default]="'Cập nhật trạng thái'"
-                    [formModel]="dialog.formModel"
-                    [fiedName]="'AllowUpdateStatus'"
-                  ></codx-label>
-                </td>
-                <td>
-                  <codx-label
-                    [default]="'Cho phép cập nhật trạng thái'"
-                    [formModel]="dialog.formModel"
-                    [name]="'lblAllowUpdateStatus'"
-                  ></codx-label>
-                </td>
-                <td class="text-center">
-                  <codx-input
-                    class="test-check"
-                    type="switch"
-                    style="width: 100%"
-                    [crrValue]="allowUpdateStatus"
-                    field="allowUpdateStatus"
-                    (valueChange)="valueChange($event, 'allowUpdateStatus')"
-                    [disabled]="checkAdminUpdate()"
-                  >
-                  </codx-input>
-                </td>
-              </tr>
-
-              <tr *ngFor="let data of listDataTabView; let i = index">
-                <td class="font-size-lg text-dark d-flex align-items-center">
-                  <codx-label
-                    *ngIf="i==0"
-                    [default]="'Xem các nhóm thông tin'"
-                    [formModel]="dialog.formModel"
-                    [fiedName]="'viewTab'"
-                  ></codx-label>
-                </td>
-                <td>
-                  <codx-label
-                    [default]="data?.default"
-                    [formModel]="dialog.formModel"
-                    [fiedName]="data?.value"
-                  ></codx-label>
-                </td>
-                <td class="text-center">
-                  <codx-input
-                    class="test-check"
-                    type="switch"
-                    style="width: 100%"
-                    [crrValue]="data?.isCheck"
-                    [field]="data?.value"
-                    (valueChange)="valueChangeTab($event, data)"
-                    [disabled]="checkAdminUpdate()"
-                  >
-                  </codx-input>
-                </td>              
-              </tr>
+              </tr> -->
             </tbody>
           </table>
         </div>
