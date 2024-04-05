@@ -454,6 +454,8 @@ export class CashCountingsAddComponent extends UIComponent {
       case 'delete':
         let total = this?.eleGridCounting.dataSource.reduce((sum, data: any) => sum + data?.amount, 0);
         this.master.setValue('countValue', total, {});
+        let value = this.master.data.actualValue - this.master.data?.countValue;
+        this.master.setValue('diffValue', value, {});
         break;
       case 'closeEdit':
         if (this.eleGridCounting && this.eleGridCounting.rowDataSelected) {
@@ -498,6 +500,10 @@ export class CashCountingsAddComponent extends UIComponent {
         if (res) {
           this.isPreventChange = true;
           this.master.setValue('actualValue', res?.data?.actualValue, {});
+          let total = this?.eleGridCounting.dataSource.reduce((sum, data: any) => sum + data?.amount, 0);
+          this.master.setValue('countValue', total, {});
+          let value = this.master.data.actualValue - this.master.data?.countValue;
+          this.master.setValue('diffValue', value, {});
           this.isPreventChange = false;
           this.detectorRef.detectChanges();
         }
