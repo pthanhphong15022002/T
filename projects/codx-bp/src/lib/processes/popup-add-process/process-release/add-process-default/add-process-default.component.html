@@ -39,83 +39,86 @@
         <div class="d-flex flex-column w-100 h-100 overflow-auto">
             <ng-container *ngFor="let item of table , let i = index">
                 <div class="d-flex align-items-center justify-content-between py-2" *ngIf="i>0">
-                    <div class="d-flex flex-column w-100 px-2" [class.pb-2]="child.fieldType == 'Title'" *ngFor="let child of item.child">
-                        <div class="d-flex align-items-center" *ngIf="child?.fieldType != 'Note'">
-                            <codx-label 
-                                [formName]="formModel.formName" 
-                                [gridViewName]="formModel.gridViewName + child.fieldType" 
-                                [fieldName]="child.fieldName" 
-                                [default]="child.title" 
-                                [ngClass]="child.fieldType == 'Title' ? 'fw-bold fs-3 mt-1': 'fw-bold'">
-                            </codx-label> 
-                            <span *ngIf="child.isRequired" class="text-danger mx-2">(*)</span>
+                    <div class="d-flex flex-column w-100 px-2" [class.pb-2]="child.fieldType == 'Title'" *ngFor="let child of item.child" >
+                        <ng-container *ngIf="!f_Visible[child.fieldName]">
+                            <div class="d-flex align-items-center" *ngIf="child?.fieldType != 'Note'">
+                                <codx-label 
+                                    [formName]="formModel.formName" 
+                                    [gridViewName]="formModel.gridViewName + child.fieldType" 
+                                    [fieldName]="child.fieldName" 
+                                    [default]="child.title" 
+                                    [ngClass]="child.fieldType == 'Title' ? 'fw-bold fs-3 mt-1': 'fw-bold'">
+                                </codx-label> 
+                                <span *ngIf="child.isRequired" class="text-danger mx-2">(*)</span>
 
-                            <i class="icon-add_box ms-2 text-primary cursor-pointer" *ngIf="child.fieldType == 'Table'" (click)="addRow(child.dataFormat,child.fieldName,child.indexTable,null,child?.tableFormat?.hasIndexNo)"></i>
-                        </div>
-                        
-                        <ng-container [ngSwitch]="child?.fieldType">
-                            <ng-container *ngSwitchCase="'Attachment'">
-                                <ng-container *ngIf="!child.documentControl || child?.documentControl.length==0">
-                                    <codx-attachment 
-                                        #attachment
-                                        [hideDes]="'1'"
-                                        hideImageUpload="0"
-                                        [formModel]="formModel"
-                                        [objectId]="child.recID" 
-                                        [objectType]="formModel?.entityName"
-                                        hideBtnSave="1" 
-                                        hideFolder="1"
-                                        [referType]="'attach' + dataIns?.recID"
-                                    >
-                                    </codx-attachment>
-                                </ng-container>
-                                <ng-container *ngIf="child.documentControl && child?.documentControl.length>0">
-                                    <div class="">
-                                        <lib-attachment-grid [data]="child.documentControl" [dataIns]="dataIns" [formModel]="formModel" (dataChange)="dataChangeAttachmentGrid($event)" (dataUploadAttachment)="dataUploadAttachment($event)"></lib-attachment-grid>
-                                        <codx-attachment #attachment hideImageThumb="1" hideImageUpload="1" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-                                            hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel" 
-                                            [idField]="'RecID'"  
+                                <i class="icon-add_box ms-2 text-primary cursor-pointer" *ngIf="child.fieldType == 'Table'" (click)="addRow(child.dataFormat,child.fieldName,child.indexTable,null,child?.tableFormat?.hasIndexNo)"></i>
+                            </div>
+                            
+                            <ng-container [ngSwitch]="child?.fieldType">
+                                <ng-container *ngSwitchCase="'Attachment'">
+                                    <ng-container *ngIf="!child.documentControl || child?.documentControl.length==0">
+                                        <codx-attachment 
+                                            #attachment
+                                            [hideDes]="'1'"
+                                            hideImageUpload="0"
+                                            [formModel]="formModel"
+                                            [objectId]="child.recID" 
+                                            [objectType]="formModel?.entityName"
+                                            hideBtnSave="1" 
+                                            hideFolder="1"
+                                            [referType]="'attach' + dataIns?.recID"
                                         >
                                         </codx-attachment>
-                                    </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="child.documentControl && child?.documentControl.length>0">
+                                        <div class="">
+                                            <lib-attachment-grid [data]="child.documentControl" [dataIns]="dataIns" [formModel]="formModel" (dataChange)="dataChangeAttachmentGrid($event)" (dataUploadAttachment)="dataUploadAttachment($event)"></lib-attachment-grid>
+                                            <codx-attachment #attachment hideImageThumb="1" hideImageUpload="1" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+                                                hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel" 
+                                                [idField]="'RecID'"  
+                                            >
+                                            </codx-attachment>
+                                        </div>
+                                    </ng-container>
                                 </ng-container>
-                            </ng-container>
-                            <ng-container *ngSwitchCase="'Table'">
-                                <codx-gridview-v2
-                                    #gridView
-                                    [outputMoreFunc]="true"
-                                    [columnsGrid]="child.columnsGrid"
-                                    [dataSource]="dataTable[child.fieldName]"
-                                    (clickMF)="clickMFGrid($event,child)"
-                                >
-                                </codx-gridview-v2>
-                            </ng-container>
-                            <ng-container *ngSwitchCase="'UserInfo'">
-                            <ng-container *ngTemplateOutlet="userInfo ; context: { $implicit: child.fieldName , b: child.recID}"></ng-container>
-                            </ng-container>
-                            <ng-container *ngSwitchCase="'YesNo'">
-                                <ng-container *ngTemplateOutlet="yesno ; context: { $implicit: child }"></ng-container>
-                            </ng-container>
-                            <ng-container *ngSwitchCase="'Note'">
-                                <ng-container *ngTemplateOutlet="note ; context: { $implicit: child }"></ng-container>
-                            </ng-container>
-                            <ng-container *ngSwitchDefault>
-                                <codx-input
-                                    [formName]="formModel.formName" 
-                                    [gridViewName]="formModel.gridViewName + child.fieldType"
-                                    [formModel]="form.formModel"
-                                    [type]="(child?.controlType | addProcessDefaultPrice : child?.controlType : child?.dataType : child?.dataFormat: child?.refType)"
-                                    [refValue]="child.refValue"
-                                    [refType]="child.refType" 
-                                    [field]="getField(child?.fieldName)"
-                                    [placeholder]="child?.autoNumber?.autoNumberControl ? 'Số tự động' :child?.description"
-                                    [Group]="dynamicFormsForm"
-                                    [ControlName]="child?.fieldName"
-                                    [min]="(child.dataType == 'Decimal' && child.validateControl != '1')? 0 : undefined"
-                                    [disabled]="child?.autoNumber?.autoNumberControl "
-                                    [gridViewSetup]="gridViewSetup"
+                                <ng-container *ngSwitchCase="'Table'">
+                                    <codx-gridview-v2
+                                        #gridView
+                                        [outputMoreFunc]="true"
+                                        [columnsGrid]="child.columnsGrid"
+                                        [dataSource]="dataTable[child.fieldName]"
+                                        (clickMF)="clickMFGrid($event,child)"
                                     >
-                                </codx-input>
+                                    </codx-gridview-v2>
+                                </ng-container>
+                                <ng-container *ngSwitchCase="'UserInfo'">
+                                <ng-container *ngTemplateOutlet="userInfo ; context: { $implicit: child.fieldName , b: child.recID}"></ng-container>
+                                </ng-container>
+                                <ng-container *ngSwitchCase="'YesNo'">
+                                    <ng-container *ngTemplateOutlet="yesno ; context: { $implicit: child }"></ng-container>
+                                </ng-container>
+                                <ng-container *ngSwitchCase="'Note'">
+                                    <ng-container *ngTemplateOutlet="note ; context: { $implicit: child }"></ng-container>
+                                </ng-container>
+                                <ng-container *ngSwitchDefault>
+                                    <codx-input
+                                        [formName]="formModel.formName" 
+                                        [gridViewName]="formModel.gridViewName + child.fieldType"
+                                        [formModel]="form.formModel"
+                                        [type]="(child?.controlType | addProcessDefaultPrice : child?.controlType : child?.dataType : child?.dataFormat: child?.refType)"
+                                        [refValue]="child.refValue"
+                                        [refType]="child.refType" 
+                                        [field]="getField(child?.fieldName)"
+                                        [placeholder]="child?.autoNumber?.autoNumberControl ? 'Số tự động' :child?.description"
+                                        [Group]="dynamicFormsForm"
+                                        [ControlName]="child?.fieldName"
+                                        [min]="(child.dataType == 'Decimal' && child.validateControl != '1')? 0 : undefined"
+                                        [disabled]="child?.autoNumber?.autoNumberControl "
+                                        [gridViewSetup]="gridViewSetup"
+                                        (valueChange)="valueChangeInput($event)"
+                                        >
+                                    </codx-input>
+                                </ng-container>
                             </ng-container>
                         </ng-container>
                     </div>

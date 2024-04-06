@@ -177,20 +177,12 @@
         class="fw-bold ms-2"
       ></codx-label>
     </div>
-    <div class="d-flex align-items-center mt-1">
-      <codx-input
-        type="switch"
-        field="isRequired"
-        label="Bắt buộc"
-        class="mt-2"
-      ></codx-input>
-      <codx-label
-        formName="DynamicForms"
-        [gridViewName]="'grvDynamicForms' + data.controlType"
-        [fiedName]="'IsRequired'"
-        default="Điều kiện hiển thị"
-        class="fw-bold ms-2"
-      ></codx-label>
-    </div>
+    <div class="d-flex align-items-center justify-content-between mt-2">
+      <div class="d-flex align-items-center">
+          <codx-input type="switch" [crrValue]="data?.visibleControl?.visibleControl" field="visibleControl" label="Điều kiện hiện thị"  (valueChange)="changeValueVisibleControl($event)" class="mt-2"></codx-input>
+          <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'VisibleControl'" default="Điều kiện hiện thị" class="fw-bold ms-2"></codx-label>
+      </div>
+      <i class="icon-edit-one cursor-pointer" [class.text-primary]="data?.visibleControl?.visibleControl" (click)="data?.visibleControl?.visibleControl? openVisibleControlForm(): undefined"></i>
+  </div>
   </div>
 </div>
