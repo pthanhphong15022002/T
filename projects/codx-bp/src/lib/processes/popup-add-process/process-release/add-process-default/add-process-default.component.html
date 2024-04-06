@@ -38,9 +38,9 @@
     <div class="d-flex flex-column justify-content-between w-100 h-100 bg-white ">
         <div class="d-flex flex-column w-100 h-100 overflow-auto">
             <ng-container *ngFor="let item of table , let i = index">
-                <div class="d-flex align-items-center justify-content-between py-2" *ngIf="i>0">
-                    <div class="d-flex flex-column w-100 px-2" [class.pb-2]="child.fieldType == 'Title'" *ngFor="let child of item.child" >
-                        <ng-container *ngIf="!f_Visible[child.fieldName]">
+                <div class="d-flex align-items-center justify-content-between" *ngIf="i>0">
+                    <ng-container  *ngFor="let child of item.child">
+                        <div class="d-flex flex-column w-100 p-2" [class.pb-2]="child.fieldType == 'Title'"  *ngIf="!f_Visible[child.fieldName]">
                             <div class="d-flex align-items-center" *ngIf="child?.fieldType != 'Note'">
                                 <codx-label 
                                     [formName]="formModel.formName" 
@@ -53,7 +53,6 @@
 
                                 <i class="icon-add_box ms-2 text-primary cursor-pointer" *ngIf="child.fieldType == 'Table'" (click)="addRow(child.dataFormat,child.fieldName,child.indexTable,null,child?.tableFormat?.hasIndexNo)"></i>
                             </div>
-                            
                             <ng-container [ngSwitch]="child?.fieldType">
                                 <ng-container *ngSwitchCase="'Attachment'">
                                     <ng-container *ngIf="!child.documentControl || child?.documentControl.length==0">
@@ -120,8 +119,8 @@
                                     </codx-input>
                                 </ng-container>
                             </ng-container>
-                        </ng-container>
-                    </div>
+                        </div>
+                    </ng-container>
                 </div>
             </ng-container>
         </div>

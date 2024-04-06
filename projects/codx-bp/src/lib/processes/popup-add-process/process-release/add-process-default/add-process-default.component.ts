@@ -1079,13 +1079,24 @@ export class AddProcessDefaultComponent implements OnInit {
   {
     let comp = this.dynamicFormsForm.value[field];
     if(field == e?.field) comp = e?.data;
+    if(!comp) return false;
     switch(operator.toLowerCase())
     {
-      case 'eq' : case '=' : return comp == value;
-      case 'neq' : case '<>' : case '!=' : return comp != value;
-      case 'contains': return comp.includes(value);
-      case 'nocontains': return !comp.includes(value);
-      case 'startswitch': return comp.startsWith(value);
+      case 'eq' : case '=' : {
+        return comp == value;
+      }
+      case 'neq' : case '<>' : case '!=' : {
+        return comp != value;
+      }
+      case 'contains': {
+        return comp.includes(value);
+      }
+      case 'nocontains': {
+        return !comp.includes(value);
+      }
+      case 'startswitch': {
+        return comp.startsWith(value);
+      }
       case 'empty':
       {
         if(!comp) return true;
@@ -1096,10 +1107,18 @@ export class AddProcessDefaultComponent implements OnInit {
         if(comp) return true;
         return false;
       }
-      case 'gte' : case '>=' : return comp >= value;
-      case 'lte' : case '<=' : return comp <= value;
-      case '<' : return comp < value;
-      case '>' : return comp > value;
+      case 'gte' : case '>=' : {
+        return comp >= value;
+      }
+      case 'lte' : case '<=' : {
+        return comp <= value;
+      }
+      case '<' : {
+        return comp < value;
+      }
+      case '>' : {
+        return comp > value;
+      }
     }
     return false;
   }
