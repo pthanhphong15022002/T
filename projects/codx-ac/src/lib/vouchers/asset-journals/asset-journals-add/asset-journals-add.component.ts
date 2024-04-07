@@ -181,14 +181,57 @@ export class AssetJournalsAddComponent extends UIComponent {
   }
 
   clickMF(event: any) {
-    // switch (event.event.functionID) {
-    //   case 'SYS104':
-    //     this.copyRow(event.data);
-    //     break;
-    //   case 'SYS102':
-    //     this.deleteRow(event.data);
-    //     break;
-    // }
+    switch (event.event.functionID) {
+      case 'SYS104':
+        this.copyRow(event.data);
+        break;
+      case 'SYS102':
+        this.deleteRow(event.data);
+        break;
+    }
+  }
+
+  copyRow(data) {
+    let newData = {...data};
+    if (this.eleGridAsset && this.elementTabDetail?.selectingID == '0') {
+      this.eleGridAsset.saveRow((res: any) => { //? save lưới trước
+        if (res && res.type != 'error') {
+          newData.recID = Util.uid();
+          newData.index = this.eleGridAsset.dataSource.length;
+          delete newData?._oldData;
+          this.eleGridAsset.addRow(newData, this.eleGridAsset.dataSource.length);
+        }
+      })
+    }
+    if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '2') {
+      this.eleGridVatInvoices.saveRow((res: any) => { //? save lưới trước
+        if (res && res.type != 'error') {
+          newData.recID = Util.uid();
+          newData.entryMode = this.journal.entryMode;
+          newData.index = this.eleGridVatInvoices.dataSource.length;
+          delete newData?._oldData;
+          this.eleGridVatInvoices.addRow(newData, this.eleGridVatInvoices.dataSource.length);
+        }
+      })
+    }
+  }
+
+  deleteRow(data) {
+    if (this.eleGridAsset && this.elementTabDetail?.selectingID == '0') {
+      this.eleGridAsset.saveRow((res: any) => { //? save lưới trước
+        if (res && res.type != 'error') {
+          this.eleGridAsset.deleteRow(data);
+        }
+      })
+    }
+    if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '2') {
+      this.eleGridVatInvoices.saveRow((res: any) => { //? save lưới trước
+        if (res && res.type != 'error') {
+          data.entryMode = this.journal.entryMode;
+          this.eleGridVatInvoices.deleteRow(data);
+        }
+      })
+    }
   }
 
   selecting(event){
@@ -412,7 +455,6 @@ export class AssetJournalsAddComponent extends UIComponent {
       }
     })
   }
-
 
   addRowDetail(type){
     switch(type){

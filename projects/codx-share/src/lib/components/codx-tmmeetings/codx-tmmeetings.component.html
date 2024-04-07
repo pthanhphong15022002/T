@@ -197,7 +197,7 @@
     [date]="data.startDate"
     [rootData]="data"
     [formModel]="view.formModel"
-    [setting]="setting"
+    [setting]="data"
     [footer]="cardImgFooter"
     [dataItem]="data"
   >
@@ -207,8 +207,8 @@
 <!-- tách riêng để dễ fix sau này -->
 <ng-template #cardImgFooter let-data let-setting="setting">
   <div
-    *ngIf="setting?.permissions"
-    class="d-flex justify-content-center h-75px"
+    *ngIf="data?.permissions && data?.permissions?.length > 0"
+    class="d-flex justify-content-start h-60px"
   >
     <codx-imgs
       [objectId]="getResourceID(data)"
@@ -218,13 +218,9 @@
     >
     </codx-imgs>
   </div>
-  <div
-    *ngIf="!setting?.permissions"
-    class="d-flex justify-content-center h-50px"
-  ></div>
   <div class="footer-tag">
     <div class="d-flex align-items-center justify-content-between">
-      <div class="tag-1line" *ngIf="data.tags && setting?.tags">
+      <div class="tag-1line" *ngIf="data.tags && data?.tags.trim() != ''">
         <codx-tag
           [entityName]="view.formModel.entityName"
           [disabled]="true"
@@ -236,14 +232,35 @@
       <div *ngIf="!data.tags"></div>
     </div>
   </div>
-  <div class="footer-att" *ngIf="data.attachments > 0">
-    <span class="icon-attach_file icon-18 text-gray-600"> </span>
-    <span
-      class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary"
-    >
-      {{ data.attachments }}</span
-    >
+  <div
+    class="footer-att"
+    [ngbPopover]="popperAttachment"
+    #p="ngbPopover"
+    [openDelay]="500"
+    (mouseenter)="p.open()"
+    (mouseleave)="p.close()"
+    placement="right left"
+  >
+    <codx-attachment-temp
+      [objectID]="data?.recID"
+      [formModel]="view.formModel"
+      [viewType]="1"
+      referType="source"
+    ></codx-attachment-temp>
+    <!-- <span class="icon-attach_file icon-18"> </span>
+    <span class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary">
+      {{ data.attachments }}</span> -->
   </div>
+
+  <ng-template #popperAttachment>
+    <span>
+      <codx-label
+        name="lblAttachment"
+        [formModel]="view.formModel"
+        default="Tài liệu đính kèm"
+      ></codx-label>
+    </span>
+  </ng-template>
 </ng-template>
 
 <!-- calendar -->
