@@ -45,15 +45,15 @@ import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts
 import { PopupAdjustedAllocationComponent } from './approval/popup-adjusted-allocation/popup-adjusted-allocation.component';
 import { ReceiptResourceComponent } from './receipt/receipt-resource.component';
 import { AddReceiptResourceComponent } from './receipt/add-receipt-resource/add-receipt-resource.component';
-import { RequestsComponent } from './requests/requests.component';
-import { RequestsViewDetaiComponent } from './requests/requests-view-detai/requests-view-detai.component';
-import { PopupAddRequestComponent } from './requests/popup/popup-add-request/popup-add-request.component';
-import { AdvanceRequestsComponent } from './advance-requests/advance-requests.component';
-import { AdvanceRequestsViewDetaiComponent } from './advance-requests/advance-requests-view-detai/advance-requests-view-detai.component';
-import { PopupAddEpAdvanceRequestComponent } from './advance-requests/popup/popup-add-ep-advance-request/popup-add-ep-advance-request.component';
-import { PaymentRequestsViewDetaiComponent } from './payment-requests/payment-requests-view-detai/payment-requests-view-detai.component';
-import { PaymentRequestsComponent } from './payment-requests/payment-requests.component';
-import { PopupAddEpPaymentRequestComponent } from './payment-requests/popup/popup-add-ep-payment-request/popup-add-ep-payment-request.component';
+import { BusinesstripComponent } from './businesstrip/businesstrip.component';
+import { BusinesstripDetailComponent } from './businesstrip/businesstrip-detail/businesstrip-detail.component';
+import { PopupAddBusinesstripComponent } from './businesstrip/popup/popup-add-businesstrip/popup-add-businesstrip.component';
+import { AdvanceComponent } from './advance/advance.component';
+import { AdvanceDetailComponent } from './advance/advance-detail/advance-detail.component';
+import { PopupAddAdvanceComponent } from './advance/popup-add-advance/popup-add-advance.component';
+import { PaymentDetailComponent } from './payment/payment-detail/payment-detail.component';
+import { PaymentComponent } from './payment/payment.component';
+import { PopupAddPaymentComponent } from './payment/popup/popup-add-payment/popup-add-payment.component';
 
 export const routes: Routes = [
   {
@@ -230,15 +230,15 @@ export const routes: Routes = [
     EPDashboardComponent,
     ReceiptResourceComponent,
     AddReceiptResourceComponent,
-    RequestsComponent,
-    RequestsViewDetaiComponent,
-    PopupAddRequestComponent,
-    AdvanceRequestsComponent,
-    AdvanceRequestsViewDetaiComponent,
-    PopupAddEpAdvanceRequestComponent,
-    PaymentRequestsComponent,
-    PopupAddEpPaymentRequestComponent,
-    PaymentRequestsViewDetaiComponent
+    BusinesstripComponent,
+    PopupAddBusinesstripComponent,
+    BusinesstripDetailComponent,
+    AdvanceComponent,
+    AdvanceDetailComponent,
+    PopupAddAdvanceComponent,
+    PaymentComponent,
+    PaymentDetailComponent,
+    PopupAddPaymentComponent
   ],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
