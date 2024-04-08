@@ -1,0 +1,106 @@
+.chart-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .chart-header{
+    display: flex;
+    height: 40px;
+    align-items: center;
+    opacity: 0.6;
+    border-bottom: solid 1px #f0f0f0;
+  
+  }
+  .chart-header .department{
+    flex-grow: 1;
+  }
+  
+  .chart-header .header-number{
+    display: flex;
+    width: 30%;
+    justify-content: space-between;
+  }
+  
+  
+  .header-number .total,
+  .header-number .male,
+  .header-number .female{
+    width: 20%;
+    text-align: center;
+  }
+  
+  .bar {
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .bar.parent-bar {
+    margin-bottom: 8px;
+    font-weight: bolder;
+  }
+  
+  .children-bar {
+    display: block;
+    opacity: 1;
+    transition: display 0.3s ease-in-out;
+  }
+  
+  .hiden-children .children-bar {
+    display: none;
+  }
+  /*
+  .children-bar {
+    opacity: 1;
+    overflow: hidden;
+    transition: opacity 0.3s ease-in-out;
+  Ư
+  .hiden-children .children-bar {
+    opacity: 0;
+  } */
+  
+  .bar-container{
+    display: flex;
+    width: 100%;
+  }
+  .bar-info{
+    display: flex;
+    flex-grow: 1;
+    cursor: pointer;
+    align-items: center;
+  }
+  
+  .bar-label {
+    font-size: 14px;
+    width: 16%;
+  }
+  
+  .children-bar .bar-label{
+   padding-left: 10px;
+    box-sizing: border-box;
+  }
+  
+  .bar-fill-container{
+    flex-grow: 1;
+    overflow: hidden;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+    height: 12px;
+    margin: 0 10px;
+  }
+  
+  .bar-fill {
+    background-color: #17BB45;
+    height: 100%;
+    border-radius: 10px;
+  }
+  
+  .bar-number{
+    display: flex;
+    justify-content: space-between;
+    width: 30%;
+  }
+  .bar-number div{
+    width: 20%;
+    text-align: center;
+  }

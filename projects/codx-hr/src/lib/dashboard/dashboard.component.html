@@ -1,42 +1,87 @@
 <div>
   <!-- Card -->
     <div style="display: flex; max-width: 100%;justify-content: space-between;">
-      <lib-dashboard-card title="Card title" subtitle="Tổng mức lương NV" number="$47.5 M" percent="+ 2.9%" borderColor="#0DA738" percentColor="#0DA738" borderBottom="5px solid #0DA738"></lib-dashboard-card>
+      <lib-dashboard-card 
+      iconClass="icon-attach_money"
+      iconColor="#08AD36"
+      backgroundColor="#CEFFDC"
+      subtitle="Tổng mức lương NV" 
+      number="$47.5 M" 
+      percent="+ 2.9%" 
+      borderColor="#0DA738" 
+      percentColor="#0DA738" 
+      borderBottom="5px solid #0DA738">
+    </lib-dashboard-card>
 
-      <lib-dashboard-card title="Card title" subtitle="Mức độ hài lòng của NV" number="90%" percent="+ 2.9%" borderColor="#FF00A8" percentColor="#FF00A8" borderBottom="5px solid #FF00A8"></lib-dashboard-card>
+      <lib-dashboard-card 
+      iconClass="icon-i-hand-thumbs-up"
+      iconColor="#FF00A8"
+      backgroundColor="#FFE2E6"
+      subtitle="Mức độ hài lòng của NV" 
+      number="90%" percent="+ 2.9%" 
+      borderColor="#FF00A8" 
+      percentColor="#FF00A8" 
+      borderBottom="5px solid #FF00A8">
+    </lib-dashboard-card>
     
-      <lib-dashboard-card title="Card title" subtitle="NV đang làm việc" number="221" percent="+ 2.9%" borderColor="#005DC7" percentColor="#005DC7" borderBottom="5px solid #005DC7"></lib-dashboard-card>
+      <lib-dashboard-card 
+      iconClass="icon-groups"
+      iconColor="#005DC7"
+      backgroundColor="#EAF9FF"
+      subtitle="NV đang làm việc" 
+      number="221" 
+      percent="+ 2.9%" 
+      borderColor="#005DC7" 
+      percentColor="#005DC7" 
+      borderBottom="5px solid #005DC7">
+    </lib-dashboard-card>
     
-      <lib-dashboard-card title="Card title" subtitle="Mới vào làm trong tháng" number="01" percent="+ 2.9%" borderColor="#FFA800" percentColor="#FFA800" borderBottom="5px solid #FFA800"></lib-dashboard-card>
+      <lib-dashboard-card 
+      iconClass="icon-person_add"
+      iconColor="#FFA800"
+      backgroundColor="#FFF4DE"
+      subtitle="Mới vào làm trong tháng" 
+      number="01" 
+      percent="+ 2.9%" 
+      borderColor="#FFA800" 
+      percentColor="#FFA800" 
+      borderBottom="5px solid #FFA800">
+    </lib-dashboard-card>
     
-      <lib-dashboard-card title="Card title" subtitle="Đã nghỉ việc trong tháng" number="01" percent="+ 2.9%" borderColor="#6C757D" percentColor="#6C757D" borderBottom="5px solid #6C757D"></lib-dashboard-card>
+      <lib-dashboard-card 
+      iconClass="icon-person_remove"
+      iconColor="#6C757D"
+      backgroundColor="#F1F1FA"
+      subtitle="Đã nghỉ việc trong tháng" 
+      number="01" 
+      percent="+ 2.9%" 
+      borderColor="#6C757D" 
+      percentColor="#6C757D" 
+      borderBottom="5px solid #6C757D">
+    </lib-dashboard-card>
         </div>
     
+    <!-- 2 chart -->
     <div class="d-flex pt-10" style="border-radius: 20px">
-        <!-- Gauge Chart -->
-        <div class="gauge mr-2" style="flex:1; background-color: white; margin-right: 20px; border-radius: 20px;">
-          <div class="p-1 pb-10">
-            <div class="fs-1 fw-500 fw-bold hcs-text p-3 ps-1 pt-2">
-              <span>Thống kê nhân viên</span>
-            </div>
-            <div class="fs-3 fw-bold p-1" style="color: gray">
-              <span>229 nhân viên</span>
-            </div>
+      <!-- Gauge Chart -->
+      <div class="gauge mr-2" style="flex:1; background-color: white; margin-right: 20px; border-radius: 20px;">
+        <div class="p-1">
+          <div class="fs-1 fw-500 fw-bold hcs-text p-3 ps-1 pt-2">
+            <span>Thống kê nhân viên</span>
           </div>
-            <lib-dashboard-gauge-chart></lib-dashboard-gauge-chart>
+          <div class="fs-3 fw-bold p-1" style="color: gray">
+            <span>229 nhân viên</span>
+          </div>
         </div>
-              
-        <!-- Column chart -->
-        <div class="p-2" style="flex:1; background-color: white; border-radius: 20px">
-            <lib-dashboard-age-chart></lib-dashboard-age-chart>
-          </div>
-    </div>
+          <lib-dashboard-gauge-chart></lib-dashboard-gauge-chart>
+      </div>
+            
+      <!-- Column chart -->
+      <div class="p-2" style="flex:1; background-color: white; border-radius: 20px">
+          <lib-dashboard-age-chart></lib-dashboard-age-chart>
+        </div>
+  </div>
 
     <!-- Total Employee -->
-    <div class="mt-5 pt-5" style="background-color:white; padding-left: 10px; border-radius: 20px">
-      <div class="p-2" style="background-color: white; border-radius: 20px">
-        <div class="fs-1 fw-500 fw-bold hcs-text p-3 pb-10 ps-1 pt-2">Thống kê theo phòng ban</div>
-        <lib-dashboard-totalemployee-chart></lib-dashboard-totalemployee-chart>
-      </div>
-  </div>
+    <lib-dashboard-totalemployee-chart></lib-dashboard-totalemployee-chart>
 </div>

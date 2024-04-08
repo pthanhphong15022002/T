@@ -1,24 +1,61 @@
-<ejs-grid [dataSource]="gridData">
-    <e-columns>
-      <e-column field="department" headerText="Phòng ban" width="120"></e-column>
-      <e-column field="total" headerText="Tất cả" width="120"></e-column>
-      <e-column field="malePercentage" headerText="Nam" width="120"></e-column>
-      <e-column field="femalePercentage" headerText="Nữ" width="120"></e-column>
-    </e-columns>
-    <ng-template #detailTemplate let-data>
-      <ejs-accordion>
-        <e-accordion-items>
-          <e-accordion-item *ngFor="let dept of data.departments">
-            <e-accordion-header>{{ dept.department }}</e-accordion-header>
-            <ng-container *ngIf="data.expanded">
-              <div>
-                <p>Tổng: {{ dept.total }}</p>
-                <p>Nam: {{ dept.malePercentage }}</p>
-                <p>Nữ: {{ dept.femalePercentage }}</p>
+<div
+    class="mt-5 pb-15 pt-5"
+    style="background-color: white; padding-left: 10px; border-radius: 20px"
+  >
+    <div class="p-2" style="background-color: white; border-radius: 20px">
+      <div class="fs-1 fw-500 fw-bold hcs-text p-3 pb-10 ps-1 pt-2">
+        Thống kê theo phòng ban
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-header">
+          <span class="department">Phòng ban</span>
+          <div class="header-number">
+            <span class="total">Tất cả</span>
+            <span class="male">Nam</span>
+            <span class="female">Nữ</span>
+          </div>
+        </div>
+        <div
+          *ngFor="let employee of employees"
+          class="bar parent-bar"
+        >
+          <div class="bar-container">
+            <div class="bar-info" (click)="toggleChildren($event)">
+              <div class="bar-label">{{ employee.department }}</div>
+              <div class="bar-fill-container">
+                <div class="bar-fill" [style.width.%]="employee.total"></div>
               </div>
-            </ng-container>
-          </e-accordion-item>
-        </e-accordion-items>
-      </ejs-accordion>
-    </ng-template>
-  </ejs-grid>
+            </div>
+            <div class="bar-number">
+              <div>{{ employee.total }}</div>
+              <div>{{ employee.male }}</div>
+              <div>{{ employee.female }}</div>
+            </div>
+          </div>
+          <div
+            *ngFor="let childEmployee of employee.children"
+            class="bar children-bar"
+          >
+            <div class="bar-container">
+              <div class="bar-info">
+                <div class="bar-label">{{ childEmployee.department }}</div>
+                <div class="bar-fill-container">
+                  <div
+                    class="bar-fill"
+                    [style.width.%]="childEmployee.total"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="bar-number">
+                <div>{{ childEmployee.total }}</div>
+                <div>{{ childEmployee.male }}</div>
+                <div>{{ childEmployee.female }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

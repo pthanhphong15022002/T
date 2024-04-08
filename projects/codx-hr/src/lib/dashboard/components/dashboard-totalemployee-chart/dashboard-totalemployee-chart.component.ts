@@ -1,41 +1,58 @@
 import { Component } from '@angular/core';
 
+interface Employee {
+  department: string;
+  total: number;
+  male: number;
+  female: number;
+  children?: Employee[];
+}
+
 @Component({
   selector: 'lib-dashboard-totalemployee-chart',
   templateUrl: './dashboard-totalemployee-chart.component.html',
   styleUrls: ['./dashboard-totalemployee-chart.component.css']
 })
 export class DashboardTotalemployeeChartComponent {
-  public gridData: any[];
+  employees: Employee[] = [
+    {
+      department: 'BACK OFFICE',
+      total: 100,
+      male: 60,
+      female: 40,
+      children: [
+        { department: 'BOD', total: 40, male: 30, female: 10 },
+        { department: 'DC2', total: 40, male: 20, female: 20 },
+        { department: 'KTC', total: 20, male: 10, female: 10 },
+      ],
+    },
+    {
+      department: 'Phần mềm DX',
+      total: 100,
+      male: 60,
+      female: 40,
+      children: [
+        { department: 'DXC', total: 40, male: 30, female: 10 },
+        { department: 'DXS', total: 50, male: 30, female: 20 },
+      ],
+    },
+    {
+      department: 'Trung tâm CDC',
+      total: 100,
+      male: 60,
+      female: 40,
+      children: [
+        { department: 'HCS', total: 50, male: 30, female: 20 },
+        { department: 'ERP', total: 40, male: 30, female: 20 },
+      ],
+    },
+  ];
 
-  constructor() {
-    this.gridData = [
-      {
-        department: 'A',
-        total: 180,
-        malePercentage: '20%',
-        femalePercentage: '80%',
-        expanded: false, // Set initial accordion state
-        departments: [
-          { department: 'XYZ', total: 60, malePercentage: '20%', femalePercentage: '80%' },
-          { department: 'PQR', total: 120, malePercentage: '30%', femalePercentage: '70%' }
-        ]
-      },
-      {
-        department: 'B',
-        total: 150,
-        malePercentage: '30%',
-        femalePercentage: '70%',
-        expanded: false, // Set initial accordion state
-        departments: [
-          { department: 'LMN', total: 50, malePercentage: '40%', femalePercentage: '60%' },
-          { department: 'UVW', total: 100, malePercentage: '25%', femalePercentage: '75%' }
-        ]
-      }
-    ];
-  }
-
-  toggleAccordion(row: any) {
-    row.expanded = !row.expanded;
+  toggleChildren(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const parentBar = target.closest('.parent-bar');
+    if (parentBar) {
+      parentBar.classList.toggle('hiden-children');
+    }
   }
 }

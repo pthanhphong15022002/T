@@ -1,88 +1,101 @@
-<ejs-circulargauge class="d-block">
-    <e-axes>
-      <e-axis
-        [lineStyle]="lineStyle"
-        radius="100%"
-        startAngle="230"
-        endAngle="130"
-        minimum="0"
-        maximum="100"
-        [labelStyle]="labelStyle1"
-        [majorTicks]="majorTicks1"
-        [minorTicks]="minorTicks"
+<div class="w-100 h-100" id="11">
+  <div
+    class="d-flex justify-content-center align-items-center w-100"
+    style="height: 60%"
+  >
+    <div style="position: relative" class="w-100 h-100">
+      <ejs-circulargauge class="d-block" style="width: 100%; height: 100%">
+        <e-axes>
+          <e-axis
+            [lineStyle]="lineStyle"
+            radius="100%"
+            startAngle="230"
+            endAngle="130"
+            minimum="0"
+            maximum="100"
+            [majorTicks]="majorTicks1"
+            [minorTicks]="minorTicks"
+            labelFormat="hide"
+          >
+
+            <e-ranges>
+              <e-range
+                start="0"
+                end="70"
+                radius="100%"
+                roundedCornerRadius="15"
+                color="#17BB45"
+                [linearGradient]="rangeLinearGradient2"
+                startWidth="15"
+                endWidth="15"
+              >
+              </e-range>
+              <e-range
+                start="70"
+                end="100"
+                radius="100%"
+                roundedCornerRadius="15"
+                color="#F64E60"
+                [linearGradient]="rangeLinearGradient2"
+                startWidth="15"
+                endWidth="15"
+              >
+              </e-range>
+            </e-ranges>
+            <e-pointers>
+              <e-pointer
+                type="Marker"
+                [value]="70"
+                markerShape="Image"
+                imageUrl="./assets/themes/tm/default/img/Button.svg"
+                radius="90%"
+                markerWidth="60"
+                markerHeight="60"
+              >
+              </e-pointer>
+            </e-pointers>
+          </e-axis>
+        </e-axes>
+      </ejs-circulargauge>
+      <div class="w-100" style="height: 40%">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="w-100 h-100 d-flex flex-column justify-content-center">
+            <div class="fw-bold text-center" style="font-size: 1vw">
+              70%
+            </div>
+            <div class="d-flex justify-content-center align-items-center">
+              <div class="fw-bold" style="font-size: 1.5vw">
+                <span class="bullet" style="background-color: #17BB45;"></span>
+                Nam
+              </div>
+            </div>
+          </div>
+          <div class="w-100 h-100 d-flex flex-column justify-content-center">
+            <div class="fw-bold text-center" style="font-size: 1vw">
+              30%
+            </div>
+            <div class="d-flex justify-content-center align-items-center">
+              <div class="fw-bold" style="font-size: 1.5vw">
+                <span class="bullet" style="background-color: #F64E60;"></span>
+                Nữ
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        style="
+          position: absolute;
+          top: 50%;
+          right: 50%;
+          transform: translate(50%, -50%);
+        "
       >
-        <e-ranges>
-          <e-range
-            start="0"
-            end="70"
-            radius="100%"
-            roundedCornerRadius="15"
-            color="#17BB45"
-            [linearGradient]="rangeLinearGradient2"
-            startWidth="15"
-            endWidth="15"
-          >
-          </e-range>
-          <e-range
-            start="70"
-            end="100"
-            radius="100%"
-            roundedCornerRadius="15"
-            color="#F64E60"
-            [linearGradient]="rangeLinearGradient2"
-            startWidth="15"
-            endWidth="15"
-          >
-          </e-range>
-        </e-ranges>
-        <e-pointers>
-          <e-pointer
-            type="Marker"
-            [value]= "70"
-            markerShape="Image"
-            imageUrl="./assets/themes/tm/default/img/Button.svg"
-            radius="90%"
-            markerWidth="60"
-            markerHeight="60"
-          >
-          </e-pointer>
-        </e-pointers>
-      </e-axis>
-    </e-axes>
-    <!-- <div
-  style="
-    position: absolute;
-    top: 50%;
-    right: 50%;
-    transform: translate(50%, -50%);
-  "
->
-  <p class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
-    100 %
-  </p>
-</div>
-<div class="w-100" style="height: 30%">
-    <div class="d-flex justify-content-between align-items-center">
-      <div class="w-100 h-100 d-flex flex-column justify-content-center">
-        <div class="fw-bold text-center" style="font-size: 0.75vw">
-          Nam
-        </div>
-        <div class="d-flex justify-content-center align-items-center">
-          <div class="fw-bold" style="font-size: 1.75vw">
-            70%
-          </div>
-        </div>
+        <p class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">Tổng cộng
+          <br>100%
+        </p>
       </div>
-      <div class="w-100 h-100 d-flex flex-column justify-content-center">
-        <div class="fw-bold text-center" style="font-size: 0.75vw">
-          Nữ
-        </div>
-        <div class="d-flex justify-content-center align-items-center">
-          <div class="fw-bold" style="font-size: 1.75vw">
-            30%
-          </div>
-        </div>
-      </div>
+    </div>
+  </div>
+  
 </div>
-</div> -->
-  </ejs-circulargauge>
