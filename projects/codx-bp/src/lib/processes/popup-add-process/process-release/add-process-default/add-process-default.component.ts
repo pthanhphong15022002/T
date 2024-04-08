@@ -187,6 +187,10 @@ export class AddProcessDefaultComponent implements OnInit {
           if (element.dependences)
             validate = this.customeValidatorDate(element);
         }
+        else if(element.fieldType == "Text" && element.defaultValue == 'User')
+        {
+          element.defaultValue = this.user?.userName
+        }
 
         if (this.type == 'add' && !this.taskID) {
         
