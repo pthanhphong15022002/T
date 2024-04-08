@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import {
   CodxGridviewComponent,
+  CodxGridviewV2Component,
   CRUDService,
   SidebarModel,
   UIComponent,
@@ -29,7 +30,7 @@ export class FAPostingAccountsComponent
   //#region Constructor
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
-  @ViewChild('grid') grid: CodxGridviewComponent;
+  @ViewChild('grid') grid: CodxGridviewV2Component;
 
   views: Array<ViewModel> = [];
   menuActive = 1; // = ModuleID
@@ -47,6 +48,11 @@ export class FAPostingAccountsComponent
 
   constructor(inject: Injector) {
     super(inject);
+    this.router.params.subscribe((res:any)=>{
+      if(res){
+        if(res['funcID']) this.funcID = res['funcID']
+      }
+    })
     this.router.data.subscribe((res) => {
       if (res && res['isSubView']) this.isSubView = res.isSubView;
     });
@@ -56,14 +62,20 @@ export class FAPostingAccountsComponent
   //#region Init
   onInit(): void {
     this.cache.valueList('AC060').subscribe((res) => {
-      console.log(res);
-      this.menuItems = res?.datas;
-      this.defaultPostType = res?.datas[0].value;
+      if(res){
+        console.log(res);
+        this.menuItems = res?.datas;
+        this.defaultPostType = res?.datas[0].value;
+      }
+
     });
 
     this.cache.valueList('AC059').subscribe((res) => {
-      console.log(res);
+      if(res){
+        console.log(res);
       this.menuNavs = res?.datas;
+      }
+
     });
   }
 
@@ -82,7 +94,6 @@ export class FAPostingAccountsComponent
     ];
 
     this.cache.functionList(this.view.funcID).subscribe((res) => {
-      console.log(res);
       this.functionName =
         res.defaultName.charAt(0).toLowerCase() + res.defaultName.slice(1);
     });
@@ -110,7 +121,7 @@ export class FAPostingAccountsComponent
       options.DataService = this.grid.dataService;
       options.FormModel = this.grid.formModel;
       options.Width = '550px';
-      this.callfc.openSide(
+     let dialog = this.callfc.openSide(
         PopupAddFAPostingAccountComponent,
         {
           formType: 'add',
@@ -124,11 +135,15 @@ export class FAPostingAccountsComponent
         options,
         this.view.funcID
       );
+      dialog.closed.subscribe((res:any)=>{
+        if(res.event){
+          this.grid.addRow(res.event,0,true);
+        }
+      })
     });
   }
 
   edit(e, data): void {
-    console.log(data);
 
     this.grid.dataService.dataSelected = data;
     (this.grid.dataService as CRUDService).edit(data).subscribe((res) => {
@@ -137,7 +152,7 @@ export class FAPostingAccountsComponent
       options.FormModel = this.grid.formModel;
       options.Width = '550px';
 
-      this.callfc.openSide(
+      let dialog = this.callfc.openSide(
         PopupAddFAPostingAccountComponent,
         {
           formType: 'edit',
@@ -149,11 +164,15 @@ export class FAPostingAccountsComponent
         options,
         this.view.funcID
       );
+      dialog.closed.subscribe((res:any)=>{
+        if(res.event){
+          this.grid.updateRow(this.grid.rowIndex,res.event);
+        }
+      })
     });
   }
 
   copy(e, data): void {
-    console.log(data);
 
     const { diM1, diM2, diM3, buid, ...rest1 } = data;
     this.grid.dataService.dataSelected = {
@@ -180,7 +199,7 @@ export class FAPostingAccountsComponent
       options.FormModel = this.grid.formModel;
       options.Width = '550px';
 
-      this.callfc.openSide(
+      let dialog = this.callfc.openSide(
         PopupAddFAPostingAccountComponent,
         {
           formType: 'add',
@@ -192,17 +211,25 @@ export class FAPostingAccountsComponent
         options,
         this.view.funcID
       );
+      dialog.closed.subscribe((res:any)=>{
+        if(res.event){
+          this.grid.addRow(res.event,0,true);
+        }
+      })
     });
   }
   //#endregion
 
   //#region Method
   delete(data): void {
-    console.log(data);
 
     (this.grid.dataService as CRUDService)
       .delete([data], true)
-      .subscribe((res) => console.log(res));
+      .subscribe((res:any) =>{
+        if(!res.error && res.data){
+          this.grid.deleteRow(res.data,true);
+        }
+      });
   }
   //#endregion
 
@@ -218,6 +245,11 @@ export class FAPostingAccountsComponent
       ' > ' +
       this.menuItems.find((m) => m.value == postType)?.text
     );
+  }
+
+  onSelected(e:any){
+    if(e)
+      this.view.dataService.dataSelected = e;
   }
   //#endregion
 }
