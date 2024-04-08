@@ -55,6 +55,7 @@ export class AddProcessDefaultComponent implements OnInit {
   @Input() privileged = true;
   @Output() dataChange = new EventEmitter<any>();
   @Output() dataTaskChange = new EventEmitter<any>();
+
   formModel = {
     funcID: '',
     formName: 'DynamicForms',
@@ -74,8 +75,7 @@ export class AddProcessDefaultComponent implements OnInit {
   user: any;
   isAttach = false;
   vllBP022: any;
-  urlDefault =
-    '../../../../../src/assets/themes/sys/default/img/Avatar_Default.svg';
+  urlDefault = '../../../../../src/assets/themes/sys/default/img/Avatar_Default.svg';
   listFileUserInfo = {};
   indexUploadUserInfo = {};
   defaultFieldName = '';
@@ -83,6 +83,8 @@ export class AddProcessDefaultComponent implements OnInit {
   listFieldAuto = [];
   gridViewSetup = [];
   listFieldDecimal = [];
+  f_Visible = {};
+  f_ParaVisible = [];
   constructor(
     private notifySvr: NotificationsService,
     private shareService: CodxShareService,
@@ -155,10 +157,13 @@ export class AddProcessDefaultComponent implements OnInit {
       let field = element.fieldName.toLowerCase();
       this.gridViewSetup[field] = element;
       if (element.fieldType == 'Attachment')
-      element.documentControl =
+      {
+        element.documentControl =
         typeof element.documentControl == 'string'
           ? JSON.parse(element.documentControl)
           : element.documentControl;
+      }
+     
       if (element.fieldType != 'Title') {
         let validate = element.isRequired ? Validators.required : null;
 
@@ -286,6 +291,22 @@ export class AddProcessDefaultComponent implements OnInit {
           autoNumberNo: element.autoNumber?.autoNumberNo,
         };
         this.listFieldAuto.push(objAuto);
+      }
+
+      //Kiem tra xem field co visiable khong?
+      if(element.visibleControl)
+      {
+        element.visibleControl = typeof element?.visibleControl == 'string' ? JSON.parse(element?.visibleControl) : element?.visibleControl
+        this.f_Visible[element.fieldName] = element?.visibleControl?.visibleControl
+        if(element?.visibleControl?.visibleControl)
+        {
+          var obj3 = 
+          {
+            fieldName : element.fieldName,
+            paraValues: element?.visibleControl?.paraValues
+          }
+          this.f_ParaVisible.push(obj3);
+        }
       }
       var index = list.findIndex((x) => x.columnOrder == element.columnOrder);
       if (index >= 0) {
@@ -425,7 +446,6 @@ export class AddProcessDefaultComponent implements OnInit {
             if(this.listFieldDecimal.some(x=>x.includes(k)))
             {
               keysChildTable.forEach(kc=>{
-                debugger
                 let fieldDecimal = k + '_sum_' + kc;
                 if(this.listFieldDecimal.includes(fieldDecimal))
                   valueForm[fieldDecimal] = this.dataTable[k].reduce((a, b) => +a + +b[kc], 0);
@@ -982,6 +1002,8 @@ export class AddProcessDefaultComponent implements OnInit {
     if (!this.dynamicFormsForm.get(e?.field).value)
       this.dynamicFormsForm.controls[e?.field].setValue(e?.data);
     else this.dynamicFormsForm.value[e?.field] = e?.data;
+
+    this.checkVisisable(e);
   }
 
   getUrl(field: any, index: any) {
@@ -1016,5 +1038,111 @@ export class AddProcessDefaultComponent implements OnInit {
           // this.dialog && this.dialog.close(res);
         }
       });
+  }
+
+  valueChangeInput(e:any)
+  {
+    this.checkVisisable(e)
+  }
+
+  checkVisisable(e)
+  {
+    this.f_ParaVisible.forEach(elm=>{
+      for(var i = 0 ; i < elm.paraValues.filters.length ; i++)
+      {
+        let elm2 = elm.paraValues.filters[i];
+        this.f_Visible[elm.fieldName] = this.resultVisiable(elm2,e);
+        
+        if((elm.paraValues.logic == 'and' && this.f_Visible[elm.fieldName]) ||
+        (elm.paraValues.logic == 'or' && !this.f_Visible[elm.fieldName])
+        )
+        {
+          elm2.filters.forEach(elm3=>{
+            if(this.f_Visible[elm3.field]) this.hideVisiableChild(elm3.field)
+          })
+          
+          break;
+        }
+      }
+    })
+  }
+
+  resultVisiable(data:any,e:any)
+  {
+    let result = false;
+    data.filters.forEach((elm:any)=>{
+      result = !this.convertOperator(elm.field,elm.operator,elm.value,e);
+      if((!result && data.logic == 'and') || (result && data.logic == 'or')) return;
+    });
+    return result;
+  }
+
+  convertOperator(field,operator,value,e)
+  {
+    let comp = this.dynamicFormsForm.value[field];
+    if(field == e?.field) comp = e?.data;
+    if(!comp) return false;
+    switch(operator.toLowerCase())
+    {
+      case 'eq' : case '=' : {
+        return comp == value;
+      }
+      case 'neq' : case '<>' : case '!=' : {
+        return comp != value;
+      }
+      case 'contains': {
+        return comp.includes(value);
+      }
+      case 'nocontains': {
+        return !comp.includes(value);
+      }
+      case 'startswitch': {
+        return comp.startsWith(value);
+      }
+      case 'empty':
+      {
+        if(!comp) return true;
+        return false;
+      }
+      case 'noempty': 
+      {
+        if(comp) return true;
+        return false;
+      }
+      case 'gte' : case '>=' : {
+        return comp >= value;
+      }
+      case 'lte' : case '<=' : {
+        return comp <= value;
+      }
+      case '<' : {
+        return comp < value;
+      }
+      case '>' : {
+        return comp > value;
+      }
+    }
+    return false;
+  }
+
+  hideVisiableChild(e:any)
+  {
+    let arr = [];
+    this.f_ParaVisible.forEach(elm=>{
+      elm.paraValues.filters.forEach(elm2=>{
+        let check = elm2.filters.some(x=>x.field == e);
+        if(check)
+        {
+          if(!arr.includes(elm.fieldName)) arr.push(elm.fieldName);
+        }
+      })
+    })
+    if(arr.length>0)
+    {
+      arr.forEach(elm=>{
+        this.f_Visible[elm] = true;
+        this.hideVisiableChild(elm);
+      })
+    }
   }
 }

@@ -369,7 +369,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
               this.dmSV.breadcumb.next(breadcumb);
             }
           });
-        } else if (this.funcID.includes('DMT05')) 
+        } else if (this.funcID.includes('DMT05'))
         {
           this.dmSV.getRight(res);
           this.refeshData();
@@ -578,7 +578,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
       this.submenu = res;
       this.changeDetectorRef.detectChanges();
     });
-    
+
   }
 
   disableMark() {
@@ -694,23 +694,23 @@ export class HomeComponent extends UIComponent implements OnDestroy {
     this.dmSV.formModel = this.view?.formModel;
     this.dmSV.dataService = this.view?.currentView?.dataService;
 
-  
+
     //event.view.model.template2
     this.route.params.subscribe(item=>{
-      this.funcID = this.route.snapshot.params.funcID; 
+      this.funcID = this.route.snapshot.params.funcID;
       let type = "" ;
       this.idQueryParams = ""
-      if(this.route.snapshot.queryParams?._fo) 
+      if(this.route.snapshot.queryParams?._fo)
       {
         type = 'folder';
         this.idQueryParams = this.route.snapshot.queryParams?._fo;
       }
-      if(this.route.snapshot.queryParams?._f) 
+      if(this.route.snapshot.queryParams?._f)
       {
         type = 'file';
         this.idQueryParams = this.route.snapshot.queryParams?._f;
       }
-      if (this.funcID) 
+      if (this.funcID)
       {
         this.refeshData();
         this.loaded = false;
@@ -739,7 +739,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
           }
         }
         else this.selectedFirst = false;
-        
+
         if (
           this.funcID.includes('DMT06') ||
           this.funcID.includes('DMT05') ||
@@ -763,7 +763,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
           this.views[2].model.panelLeftHide = true;
           if(this.view?.viewChange) this.view.viewChange(this.views[2]);
         } else if(this.view?.viewChange) this.view.viewChange(this.viewActive);
-  
+
         if (this.funcID.includes('DMT08')) {
           this.titleCreatedBy = 'Người xóa thư mục / tệp tin';
           this.titleCreatedOn = 'Ngày xóa thư mục / tệp tin';
@@ -778,7 +778,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         //if(this.funcID == "DMT00")
       }
     })
-   
+
   }
 
   //An cac mode view khac khi search
@@ -917,12 +917,12 @@ export class HomeComponent extends UIComponent implements OnDestroy {
       }
       return;
     }
-    if (this.isScrollFolder) 
+    if (this.isScrollFolder)
     {
       this.folderService.options.page++;
       this.getDataFolder(this.dmSV.folderID);
-    } 
-    else if (this.isScrollFile) 
+    }
+    else if (this.isScrollFile)
     {
       this.fileService.options.page++;
       this.fileService.options.funcID = this.funcID;
@@ -1160,7 +1160,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
   // }
   onSelectionChanged($data, noTree = false) {
     if(this.view.dataService.dataSelected?.recID == $data.data.recID) return;
-    
+
     if(this.funcID.includes('DMT00') && $data.data.folderId == 'DM')
     {
       var treeView = this.codxview?.currentView?.currentComponent?.treeView;
@@ -1175,10 +1175,10 @@ export class HomeComponent extends UIComponent implements OnDestroy {
             this.getDataFolder(treeView.dataTree[0].recID,true,true);
           }
         }
-        
+
       }
       return;
-    
+
     }
     ScrollComponent.reinitialization();
     this.scrollTop();
@@ -1262,7 +1262,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
   loading() {}
 
   setBreadCumb() {
-    this.cache.functionList(this.funcID).subscribe((item) => 
+    this.cache.functionList(this.funcID).subscribe((item) =>
     {
       if (item) {
         var breadcumb = [];
@@ -1472,7 +1472,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         if (
           this.view.funcID.includes('DMT02') ||
           this.view.funcID.includes('DMT03') ||
-          this.view.funcID.includes('DMT00') 
+          this.view.funcID.includes('DMT00')
         ) {
           this.dmSV.isSearchView = false;
           this.setHideModeView();
@@ -1639,8 +1639,8 @@ export class HomeComponent extends UIComponent implements OnDestroy {
               treeView.addChildNodes2ParentId(id,res[0]);
               let index = treeView.dataTree.findIndex(x=>x.recID == id);
               if(index>=0) treeView.dataTree[index].items = res[0];
-  
-              
+
+
               var fields = document.getElementsByClassName('menu-sub');
               for (var i = 0; i < fields.length; i ++) {
                 if(fields[i].getAttribute('data-id') == id)
@@ -1726,7 +1726,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         this.currView = this.templateList;
       this.setHeight();
 
-     
+
     }
   }
   clickMoreFunction(e: any, data: any) {
@@ -1832,7 +1832,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         formName: 'System',
         hasSet: true,
       }
-      
+
       this.isSelectMulti = true;
       this.button[indexCreatFolder].disabled = true;
       this.button[indexUpload].disabled = true;
@@ -1892,7 +1892,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
       name += ' không có quyền, bạn có muốn bỏ qua và tiếp tục thao tác không?';
       var config = new AlertConfirmInputConfig();
       config.type = 'YesNo' /* "checkBox" */;
-      
+
       this.notificationsService
         .alert("Thông báo", name, config)
         .closed.subscribe((x) => {
