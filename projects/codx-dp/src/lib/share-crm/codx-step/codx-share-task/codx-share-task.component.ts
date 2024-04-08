@@ -13,6 +13,10 @@ import {
 import { CM_Permissions } from 'projects/codx-cm/src/lib/models/cm_model';
 import { CodxCmService } from 'projects/codx-cm/src/projects';
 import { Observable } from 'rxjs';
+import {
+  DP_Instances_Steps_Tasks,
+  DP_Instances_Steps_Tasks_Roles,
+} from '../../../models/models';
 
 @Component({
   selector: 'codx-share-task',
@@ -21,7 +25,7 @@ import { Observable } from 'rxjs';
 })
 export class CodxShareTaskComponent implements OnInit {
   dialog!: DialogRef;
-  data: any;
+  task: any;
   title = '';
   entityName: string;
   lstPermissions: CM_Permissions[] = [];
@@ -40,7 +44,7 @@ export class CodxShareTaskComponent implements OnInit {
   delete: boolean;
   allowPermit: boolean;
   allowUpdateStatus: boolean;
-  config = "";
+  config = '';
   //#endregion
   showInput = false;
   isAdd = true;
@@ -48,14 +52,13 @@ export class CodxShareTaskComponent implements OnInit {
   objectIDSelect: any;
   user: any;
   isAdmin: boolean = false;
-  allTabId = {
-    CM_Contracts: "1,5,7,8,9",
-    CM_Customers: "1,2,3,4,5",
-    CM_Deals: "1,2,5,6,7",
-    CM_Cases: "1,4,6"
-  }
+
   listDataTabView;
   vllData;
+
+  listRoleShare: DP_Instances_Steps_Tasks_Roles[];
+  roleSelect = new DP_Instances_Steps_Tasks_Roles;
+  typeChange = "";
   constructor(
     private cache: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -67,58 +70,38 @@ export class CodxShareTaskComponent implements OnInit {
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
-    this.data = JSON.parse(JSON.stringify(dt?.data?.data));
+    this.task = JSON.parse(JSON.stringify(dt?.data?.data));
     this.title = dt?.data?.title;
     this.user = this.auth.get();
     this.entityName = dt?.data?.entityName;
     this.vllData = dt?.data?.vllData;
-    if (this.data?.permissions != null && this.data?.permissions?.length > 0) {
-      this.lstPermissions = this.sortOrGroup(this.data?.permissions);
+    if (this.task?.permissions != null && this.task?.permissions?.length > 0) {
+      this.lstPermissions = this.sortOrGroup(this.task?.permissions);
     }
   }
 
   async ngOnInit(): Promise<void> {
-    this.checkAdminUpdate();
-    this.checkAddUser();
-    this.cache.valueList('CRM051').subscribe((res) => {
-      if (res && res?.datas.length > 0) {
-        this.listRoles = res.datas;
-      }
-    });
-    this.setTab();
-    if (
-      this.lstPermissions.filter((x) => x.memberType == '1') != null &&
-      this.lstPermissions.filter((x) => x.memberType == '1').length > 0
-    ) {
-      this.currentPemission = this.lstPermissions.findIndex(
-        (inline) => inline.memberType === '1'
-      );
-      this.changePermissions(this.currentPemission);
-    }
-  }
-
-  setTab(){
-    let tabEntity = this.allTabId[this.entityName];
-    if(!tabEntity) return;
-    if(!this.vllData){
-      this.cache.valueList("CRM086").subscribe(res => {
-        if(res?.datas){
-          this.vllData = res?.datas;
-          let listDataTabView = this.vllData.filter(x => tabEntity?.includes(x?.value));
-          if(listDataTabView){
-            this.listDataTabView = listDataTabView?.map((x) => {return {...x, isCheck: false}});
-            this.config = this.lstPermissions[this.currentPemission]?.config;
-            this.setConfig(this.config);
-            this.changeDetectorRef.markForCheck();
-          }
-        }
-      })
-    }
-    if(this.vllData){
-      let listDataTabView = this.vllData.filter(x => tabEntity?.includes(x?.value));
-      if(listDataTabView){
-        this.listDataTabView = listDataTabView?.map((x) => {return {...x, isCheck: false}});
-        this.changeDetectorRef.markForCheck();
+    // this.checkAdminUpdate();
+    // this.checkAddUser();
+    // this.cache.valueList('CRM051').subscribe((res) => {
+    //   if (res && res?.datas.length > 0) {
+    //     this.listRoles = res.datas;
+    //   }
+    // });
+    // if (
+    //   this.lstPermissions.filter((x) => x.memberType == '1') != null &&
+    //   this.lstPermissions.filter((x) => x.memberType == '1').length > 0
+    // ) {
+    //   this.currentPemission = this.lstPermissions.findIndex(
+    //     (inline) => inline.memberType === '1'
+    //   );
+    //   this.changePermissions(this.currentPemission);
+    // }
+    if (this.task && this.task?.roles?.length > 0) {
+      let roles = this.task?.roles as DP_Instances_Steps_Tasks_Roles[];
+      this.listRoleShare = roles.filter((x) => x.roleType == 'S') || [];
+      if(this.listRoleShare?.length > 0){
+        this.roleSelect = this.listRoleShare[0];
       }
     }
   }
@@ -153,56 +136,11 @@ export class CodxShareTaskComponent implements OnInit {
   //#endregion
 
   //#region ChangePermisson
-  changePermissions(index) {
-    if (this.currentPemission > -1) {
-      let oldIndex = this.currentPemission;
-      if (
-        oldIndex != index &&
-        oldIndex > -1 &&
-        this.lstPermissions[oldIndex] != null
-      ) {
-        this.lstPermissions[oldIndex].full = this.full;
-        this.lstPermissions[oldIndex].read = this.read;
-        this.lstPermissions[oldIndex].update = this.update;
-        this.lstPermissions[oldIndex].assign = this.assign;
-        this.lstPermissions[oldIndex].delete = this.delete;
-        this.lstPermissions[oldIndex].upload = this.upload;
-        this.lstPermissions[oldIndex].download = this.download;
-        this.lstPermissions[oldIndex].allowPermit = this.allowPermit;
-        this.lstPermissions[oldIndex].allowUpdateStatus = this.allowUpdateStatus
-          ? '1'
-          : '0';
-        this.lstPermissions[oldIndex].config = this.getConfig();
-      }
+  changePermissions(role) {
+    if(role){
+      this.roleSelect = role;
+      this.changeDetectorRef.markForCheck();
     }
-    if (this.lstPermissions[index] != null) {
-      this.full = this.lstPermissions[index].full;
-      this.read = this.lstPermissions[index].read;
-      this.update = this.lstPermissions[index].update;
-      this.assign = this.lstPermissions[index].assign;
-      this.delete = this.lstPermissions[index].delete;
-      this.upload = this.lstPermissions[index].upload;
-      this.download = this.lstPermissions[index].download;
-      this.allowPermit = this.lstPermissions[index].allowPermit;
-      this.allowUpdateStatus =
-        this.lstPermissions[index].allowUpdateStatus == '1' ? true : false;
-      this.currentPemission = index;
-      this.config = this.lstPermissions[index]?.config;
-      this.setConfig(this.config);
-    } else {
-      this.full = false;
-      this.read = true;
-      this.update = false;
-      this.assign = false;
-      this.delete = false;
-      this.upload = false;
-      this.download = false;
-      this.allowPermit = false;
-      this.allowUpdateStatus = false;
-      this.setConfig('');
-      this.currentPemission = index;
-    }
-    this.changeDetectorRef.detectChanges();
   }
 
   changUsers(e) {
@@ -211,22 +149,29 @@ export class CodxShareTaskComponent implements OnInit {
       let lst = [];
       for (var i = 0; i < value.length; i++) {
         var data = value[i];
-        var perm = new CM_Permissions();
-        perm.recID = Util.uid();
-        perm.objectName = data.text != null ? data.text : data.objectName;
-        perm.objectID = data.id != null ? data.id : null;
-        perm.roleType = 'S';
-        perm.isActive = true;
-        perm.objectType = data.objectType;
-        perm.memberType = '1';
-        lst = this.checkUserPermission(this.lstPermissions, perm);
-
-        // this.groupBy(this.process.permissions);
+        if(data && this.listRoleShare.some(x => x.objectID == data.id)) continue;
+        var role = new DP_Instances_Steps_Tasks_Roles();
+        role.recID = Util.uid();
+        role.taskID = this.task?.recID;
+        role.roleType = "S";
+        role.objectName = data.text != null ? data.text : data.objectName;
+        role.objectID = data.id != null ? data.id : null;
+        role.roleType = 'S';
+        role.objectType = data.objectType;
+        role.read = true;
+        role.update = false;
+        role.assign = false;
+        role.delete = false;
+        role.upload = false;
+        role.download = false;
+        role.updateProgress = false;
+        role.share = false;
+        this.listRoleShare.push(role);
+        if(i== 0){
+          this.roleSelect = role;
+        }
       }
-      this.lstPermissions = this.sortOrGroup(lst);
-      this.currentPemission = this.lstPermissions.length - 1;
-      this.changePermissions(this.currentPemission);
-      this.changeDetectorRef.detectChanges();
+      this.changeDetectorRef.markForCheck();
     }
   }
 
@@ -303,84 +248,76 @@ export class CodxShareTaskComponent implements OnInit {
 
   //#region value change permissons
   valueChange($event, type) {
+    if(type != this.typeChange) return;
     var data = $event.data;
-    switch (type) {
-      case 'full':
-        this.full = data;
-        if (this.isSetFull) {
-          this.read = data;
-          this.update = data;
-          this.assign = data;
-          this.delete = data;
-          this.upload = data;
-          this.download = data;
-          this.allowPermit = data;
-          this.allowUpdateStatus = data;
-          this.config = data ? this.allTabId[this.entityName] : "";
-          this.setConfig(this.config);
-        }
-
-        break;
-      default:
-        this.isSetFull = false;
-        this[type] = data;
-        break;
-    }
-    if (type != 'full' && data == false) this.full = false;
-
-    if (
-      this.read &&
-      this.update &&
-      this.assign &&
-      this.delete &&
-      this.upload &&
-      this.download &&
-      this.allowPermit &&
-      this.allowUpdateStatus
-    )
-      this.full = true;
-
-    this.changeDetectorRef.detectChanges();
+    this.roleSelect[type] = data;
+    this.setFull(type,data);
+    this.changeDetectorRef.markForCheck();
   }
 
-  controlFocus(isFull) {
-    this.isSetFull = isFull;
-    this.changeDetectorRef.detectChanges();
+  setFull(type, data) {
+    if (type == 'full') {
+      this.roleSelect.read = data;
+      this.roleSelect.update = data;
+      this.roleSelect.assign = data;
+      this.roleSelect.delete = data;
+      this.roleSelect.upload = data;
+      this.roleSelect.download = data;
+      this.roleSelect.updateProgress = data;
+      this.roleSelect.share = data;
+    }else{
+      this.roleSelect.full =
+      this.roleSelect?.read &&
+      this.roleSelect?.update &&
+      this.roleSelect?.assign &&
+      this.roleSelect?.delete &&
+      this.roleSelect?.upload &&
+      this.roleSelect?.download &&
+      this.roleSelect?.updateProgress
+    }
+  }
+
+  controlFocus(type) {
+    this.typeChange = type;
   }
   //#endregion
 
-  valueChangeTab(event,tab) {
+  valueChangeTab(event, tab) {
     tab.isCheck = event?.data;
   }
 
-  getConfig(){
-    let tabCheck = this.listDataTabView?.filter(x => x.isCheck)?.map(x => x.value);
-    this.config = tabCheck?.join(";") ?? "";
+  getConfig() {
+    let tabCheck = this.listDataTabView
+      ?.filter((x) => x.isCheck)
+      ?.map((x) => x.value);
+    this.config = tabCheck?.join(';') ?? '';
     return this.config;
   }
-  setConfig(config:string){
-    if(config){
-      this.listDataTabView?.forEach(element => {
-        if(config.includes(element?.value)){
+  setConfig(config: string) {
+    if (config) {
+      this.listDataTabView?.forEach((element) => {
+        if (config.includes(element?.value)) {
           element.isCheck = true;
-        }else{
+        } else {
           element.isCheck = false;
         }
       });
-    }else{
-      this.listDataTabView = this.listDataTabView?.map(element => {return {...element, isCheck: false}});
+    } else {
+      this.listDataTabView = this.listDataTabView?.map((element) => {
+        return { ...element, isCheck: false };
+      });
     }
   }
 
   //#region  check Permission
   checkAdminUpdate() {
-    if (!this.isAdmin && this.user?.userID != this.data.owner) {
+    if (!this.isAdmin && this.user?.userID != this.task.owner) {
       if (this.lstPermissions != null && this.lstPermissions.length > 0) {
         if (
           (this.lstPermissions[this.currentPemission]?.roleType == 'O' &&
             this.lstPermissions[this.currentPemission]?.objectID ==
-              this.data?.owner) ||
-          (!this.data?.allowPermit && this.entityName != 'CM_Customers') ||
+              this.task?.owner) ||
+          (!this.task?.allowPermit && this.entityName != 'CM_Customers') ||
           this.lstPermissions[this.currentPemission]?.memberType == '0'
         ) {
           return true;
@@ -393,9 +330,9 @@ export class CodxShareTaskComponent implements OnInit {
 
   checkAddUser() {
     if (
-      this.data?.assign ||
+      this.task?.assign ||
       this.isAdmin ||
-      this.user?.userID == this.data?.owner
+      this.user?.userID == this.task?.owner
     ) {
       this.isAdd = true;
     } else {
@@ -404,12 +341,12 @@ export class CodxShareTaskComponent implements OnInit {
   }
 
   checkRemove(index) {
-    if (!this.isAdmin && this.user?.userID != this.data.owner) {
+    if (!this.isAdmin && this.user?.userID != this.task.owner) {
       if (this.lstPermissions != null && this.lstPermissions.length > 0) {
         if (
           (this.lstPermissions[index]?.roleType == 'O' &&
-            this.lstPermissions[index]?.objectID == this.data?.owner) ||
-          !this.data?.assign ||
+            this.lstPermissions[index]?.objectID == this.task?.owner) ||
+          !this.task?.assign ||
           this.lstPermissions[index]?.memberType == '0' ||
           this.lstPermissions[index]?.memberType == '2'
         )
@@ -451,11 +388,11 @@ export class CodxShareTaskComponent implements OnInit {
   setPermissionsToData() {
     if (this.lstPermissions != null && this.lstPermissions.length > 0) {
       if (
-        this.data?.permissions != null &&
-        this.data?.permissions?.length > 0
+        this.task?.permissions != null &&
+        this.task?.permissions?.length > 0
       ) {
         var lst = [];
-        for (var item of this.data?.permissions) {
+        for (var item of this.task?.permissions) {
           for (var inline of this.lstPermissions) {
             if (
               inline.memberType == '1' &&
@@ -468,13 +405,13 @@ export class CodxShareTaskComponent implements OnInit {
           }
         }
       } else {
-        this.data.permissions = this.lstPermissions;
+        this.task.permissions = this.lstPermissions;
       }
     }
   }
 
   onSave() {
-    this.data.permissions = this.lstPermissions ?? [];
+    this.task.permissions = this.lstPermissions ?? [];
     if (
       this.currentPemission > -1 &&
       this.lstPermissions[this.currentPemission] != null &&
@@ -494,33 +431,32 @@ export class CodxShareTaskComponent implements OnInit {
         : '0';
       this.lstPermissions[this.currentPemission].config = this.getConfig();
     }
-    const service = this.entityName == "DP_Instances" ? "DP" : "CM";
-    const assemply = this.entityName == "DP_Instances" ? "ERM.Business.DP" : "ERM.Business.CM";
-    const className = this.entityName == "DP_Instances" ? "InstancesBusiness" : "LeadsBusiness";
+    const service = this.entityName == 'DP_Instances' ? 'DP' : 'CM';
+    const assemply =
+      this.entityName == 'DP_Instances' ? 'ERM.Business.DP' : 'ERM.Business.CM';
+    const className =
+      this.entityName == 'DP_Instances' ? 'InstancesBusiness' : 'LeadsBusiness';
     this.api
-      .execSv<any>(
-        service,
-        assemply,
-        className,
-        'UpdatePermissionsAsync',
-        [this.data, this.entityName]
-      )
+      .execSv<any>(service, assemply, className, 'UpdatePermissionsAsync', [
+        this.task,
+        this.entityName,
+      ])
       .subscribe((res) => {
         if (res) {
-          if(this.entityName != "DP_Instances"){
-            this.data.full = res.full;
-            this.data.write = res.write;
-            this.data.assign = res.assign;
-            this.data.delete = res.delete;
-            this.data.upload = res.upload;
-            this.data.download =
+          if (this.entityName != 'DP_Instances') {
+            this.task.full = res.full;
+            this.task.write = res.write;
+            this.task.assign = res.assign;
+            this.task.delete = res.delete;
+            this.task.upload = res.upload;
+            this.task.download =
               res.download =
-              this.data.allowPermit =
+              this.task.allowPermit =
                 res.allowPermit;
-            this.data.alloweStatus = res.alloweStatus;
+            this.task.alloweStatus = res.alloweStatus;
           }
           this.notiService.notifyCode('SYS034');
-          this.dialog.close(this.data);
+          this.dialog.close(this.task);
         }
       });
   }
