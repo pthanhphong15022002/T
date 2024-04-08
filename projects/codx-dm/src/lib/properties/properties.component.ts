@@ -418,7 +418,7 @@ export class PropertiesComponent implements OnInit {
     else return 'icon-star text-muted icon-16 mr-1';
   }
   getInformation(id: any) {
-    // this.api.execSv("HR","HR","EmployeesBusiness","GetEmpUsers",id).subscribe(item=>{
+    // this.api.execSv("HR","HR","EmployeesBusiness_Old","GetEmpUsers",id).subscribe(item=>{
     // })
   }
 }

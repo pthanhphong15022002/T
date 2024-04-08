@@ -143,7 +143,7 @@ export class MyTeamComponent implements OnInit {
     this.api
     .execSv("HR",
     "ERM.Business.HR",
-    "EmployeesBusiness",
+    "EmployeesBusiness_Old",
     "LoadBirthDayEmpsAsync",
     [])
     .subscribe((res:any) => {
@@ -160,7 +160,7 @@ export class MyTeamComponent implements OnInit {
     this.api
     .execSv("HR",
     "ERM.Business.HR",
-    "EmployeesBusiness",
+    "EmployeesBusiness_Old",
     "GetMyTeamAsync",
     [this.user.userID,this.pageIndex])
     .subscribe((res:any[]) => {
@@ -199,7 +199,7 @@ export class MyTeamComponent implements OnInit {
   }
 
   loadEmployInfo(employeeID): Observable<any> {
-    return this.api.call('ERM.Business.HR', 'EmployeesBusiness', 'GetByUserAsync', [employeeID, "", "0"]).pipe(
+    return this.api.call('ERM.Business.HR', 'EmployeesBusiness_Old', 'GetByUserAsync', [employeeID, "", "0"]).pipe(
       map((data) => {
         if (data.error) return;
         return data.msgBodyData[0];

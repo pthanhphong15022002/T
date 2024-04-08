@@ -29,7 +29,7 @@ export class AchievementsComponent extends UIComponent{
   gridViewName = 'grvEmployeeInfomation';
   service = 'HR';
   assemblyName = 'ERM.Business.HR';
-  className = 'EmployeesBusiness';
+  className = 'EmployeesBusiness_Old';
   method = 'GetListEmployeeAsync';
   /* #endregion */
 
@@ -57,7 +57,7 @@ export class AchievementsComponent extends UIComponent{
     this.request = new ResourceModel();
     this.request.service = 'HR';
     this.request.assemblyName = 'ERM.Business.HR';
-    this.request.className = 'EmployeesBusiness';
+    this.request.className = 'EmployeesBusiness_Old';
     this.request.method = 'GetListEmployeeAsync';
     this.request.autoLoad = false;
     this.request.parentIDField = 'ParentID';

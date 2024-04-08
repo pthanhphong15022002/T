@@ -619,7 +619,7 @@ export class CodxShareService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'HRBusiness',
+      'HRBusiness_Old',
       'GetInfoApproverAsync',
       [lstAprrover]
     );
@@ -1498,7 +1498,7 @@ export class CodxShareService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetEmployeesByPositionsAsync',
       listPositionID
     );
@@ -1507,7 +1507,7 @@ export class CodxShareService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetCompanyApproverAsync',
       [companyID, roleType]
     );
@@ -1650,7 +1650,7 @@ export class CodxShareService {
         .execSv<any>(
           'HR',
           'ERM.Business.HR',
-          'EmployeesBusiness',
+          'EmployeesBusiness_Old',
           'GetByDomainUserAsync',
           [userID]
         )
@@ -1775,7 +1775,7 @@ export class CodxShareService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetStepApproverAsync',
       [approvers, isSettingMode, trueUser]
     );

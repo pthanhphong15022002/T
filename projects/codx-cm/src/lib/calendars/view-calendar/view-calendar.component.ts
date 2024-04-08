@@ -295,13 +295,13 @@ export class ViewCalendarComponent
     this.modelResource = new ResourceModel();
     if (this.funcID == 'CM0702') {
       this.modelResource.assemblyName = 'HR';
-      this.modelResource.className = 'OrganizationUnitsBusiness';
+      this.modelResource.className = 'OrganizationUnitsBusiness_Old';
       this.modelResource.service = 'HR';
       this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
     } else {
       //truyen lay resourse
       this.modelResource.assemblyName = 'HR';
-      this.modelResource.className = 'OrganizationUnitsBusiness';
+      this.modelResource.className = 'OrganizationUnitsBusiness_Old';
       this.modelResource.service = 'HR';
       this.modelResource.method = 'GetListUserByResourceAsync';
       this.modelResource.dataValue = this.user.userID;

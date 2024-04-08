@@ -97,7 +97,7 @@ export class ViewDetailRequestKowDsComponent extends UIDetailComponent implement
     if(funcID && recID)
     {
       this.api
-      .execSv('HR', 'ERM.Business.HR', 'RequestBusiness', 'GetByIDAsync', [funcID,recID])
+      .execSv('HR', 'ERM.Business.HR', 'RequestBusiness_Old', 'GetByIDAsync', [funcID,recID])
       .subscribe((res: any) => {
         this.data = res;
         this.detectorRef.detectChanges();
@@ -121,7 +121,7 @@ export class ViewDetailRequestKowDsComponent extends UIDetailComponent implement
       template: this.tmpCellEmp,
       field: 'employeeID'
     });
-    this.api.execSv("HR","HR","KOWsBusiness","GetAsync")
+    this.api.execSv("HR","HR","KOWsBusiness_Old","GetAsync")
     .subscribe((res:any) => {
         if (res && res?.length > 0) 
         {

@@ -818,7 +818,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       .execSv<any>(
         'HR',
         'ERM.Business.HR',
-        'EmployeesBusiness',
+        'EmployeesBusiness_Old',
         'GetListEmployeesByUserIDAsync',
         JSON.stringify(resource.split(';'))
       )

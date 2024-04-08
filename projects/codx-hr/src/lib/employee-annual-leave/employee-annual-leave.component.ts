@@ -19,7 +19,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   service = 'HR';
   assemblyName = 'ERM.Business.HR';
   entityName = 'HR_EAnnualLeave';
-  className = 'EAnnualLeavesBusiness';
+  className = 'EAnnualLeavesBusiness_Old';
   method = 'GetListEmployeeAnnualLeaveAsync';
   idField = 'recID';
 
@@ -96,7 +96,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     this.request = new ResourceModel();
     this.request.service = 'HR';
     this.request.assemblyName = 'ERM.Business.HR';
-    this.request.className = 'EAnnualLeavesBusiness';
+    this.request.className = 'EAnnualLeavesBusiness_Old';
     this.request.method = 'GetListEmployeeAnnualLeaveAsync';
     this.request.autoLoad = false;
     this.request.parentIDField = 'ParentID';

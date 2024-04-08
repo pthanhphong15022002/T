@@ -110,7 +110,7 @@ export class SendEmailComponent implements OnInit {
       .execSv(
         'HR',
         'ERM.Business.HR',
-        'HRBusiness',
+        'HRBusiness_Old',
         'GetDataJoinUserAsync',
         this.user?.userID
       )
