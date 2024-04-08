@@ -1,0 +1,8 @@
+.bullet {
+    display: inline-block;
+    width: 20px; /* Điều chỉnh kích thước của dấu chấm */
+    height: 20px; /* Điều chỉnh kích thước của dấu chấm */
+    border-radius: 50%; /* Tạo hình dạng hình tròn */
+    margin-right: 5px; /* Khoảng cách giữa dấu chấm và văn bản */
+  }
+  

@@ -6,7 +6,9 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./dashboard-card.component.css']
 })
 export class DashboardCardComponent {
-  @Input() title: string = 'Card title';
+  @Input() iconClass: string = "icon-attach_money"; 
+  @Input() iconColor: string = "#000"; 
+  @Input() backgroundColor: string = '#000'
   @Input() subtitle: string = '';
   @Input() number: string = '0';
   @Input() percent: string = '+0%';

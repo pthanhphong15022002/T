@@ -1,7 +1,10 @@
 .card {
     border-radius: 10px;
-    width: 230px;
-    margin-right: 10px;
+    width: 205px;
+}
+
+.card-body {
+    padding: 1rem 1rem;
 }
 
 .card-title {
@@ -17,4 +20,14 @@
 .card-percent {
     font-size: 14px;
     font-weight: bold;
+}
+
+.icon-circle {
+    width: 40px;  
+    height: 40px;
+    border-radius: 50%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
 }

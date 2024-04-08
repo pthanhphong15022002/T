@@ -1,6 +1,6 @@
 <div class="card" [style.borderBottom]="borderBottom">
     <div class="card-body">
-      <h3 class="card-icon">{{ title }}</h3>
+      <div class="icon-circle" [style.backgroundColor]="backgroundColor"><i [ngClass]="iconClass" [style.color]="iconColor"></i></div>
       <p class="card-title">{{ subtitle }}</p>
       <span class="card-number"><b>{{ number }}</b></span>
       <div class="card-percent"><span [style.color]="percentColor">{{ percent }}</span></div>

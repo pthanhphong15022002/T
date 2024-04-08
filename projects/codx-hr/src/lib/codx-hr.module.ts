@@ -163,6 +163,7 @@ import { DashboardAgeChartComponent } from './dashboard/components/dashboard-age
 import { DashboardCardComponent } from './dashboard/components/dashboard-card/dashboard-card.component';
 import { DashboardGaugeChartComponent } from './dashboard/components/dashboard-gauge-chart/dashboard-gauge-chart.component';
 import { DashboardTotalemployeeChartComponent } from './dashboard/components/dashboard-totalemployee-chart/dashboard-totalemployee-chart.component';
+import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { DialogDetailRegisterApproveComponent } from './dashboard/components/dialog-detail-register-approve/dialog-detail-register-approve.component';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { DialogRegisterApproveComponent } from './dashboard/components/dialog-register-approve/dialog-register-approve.component';
@@ -533,7 +534,8 @@ const T_Component = [
     DirectivesModule,
     DashboardModule,
     DialogDetailRegisterApproveComponent,
-    HistoryLevelComponent
+    HistoryLevelComponent,
+    CircularGaugeModule
   ],
   exports: [T_Component],
   declarations: [T_Component,T_Pipe],
