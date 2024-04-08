@@ -972,7 +972,7 @@ export class OrganizationOrgchartComponent {
         .execSv(
           'HR',
           'ERM.Business.HR',
-          'OrganizationUnitsBusiness',
+          'OrganizationUnitsBusiness_Old',
           'GetOrgEmployeeAsync',
           userID
         )
@@ -999,7 +999,7 @@ export class OrganizationOrgchartComponent {
         .execSv(
           'HR',
           'ERM.Business.HR',
-          'OrganizationUnitsBusiness',
+          'OrganizationUnitsBusiness_Old',
           'GetDataOrgChartAsync',
           [orgUnitID, getManager, level]
         )
@@ -1153,7 +1153,7 @@ export class OrganizationOrgchartComponent {
             .execSv(
               'HR',
               'ERM.Business.HR',
-              'OrganizationUnitsBusiness',
+              'OrganizationUnitsBusiness_Old',
               'GetChildChartAsync',
               [data.parentID, this.selectedTeam.includes('No') ? false : true]
             )
@@ -1290,7 +1290,7 @@ export class OrganizationOrgchartComponent {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'OrganizationUnitsBusiness',
+      'OrganizationUnitsBusiness_Old',
       'DeleteEOrgChartAsync',
       id
     );
@@ -1445,7 +1445,7 @@ export class OrganizationOrgchartComponent {
                       .execSv(
                         'HR',
                         'ERM.Business.HR',
-                        'OrganizationUnitsBusiness',
+                        'OrganizationUnitsBusiness_Old',
                         'GetChildChartAsync',
                         [
                           data.parentID,
@@ -1531,7 +1531,7 @@ export class OrganizationOrgchartComponent {
                   //       .execSv(
                   //         'HR',
                   //         'ERM.Business.HR',
-                  //         'OrganizationUnitsBusiness',
+                  //         'OrganizationUnitsBusiness_Old',
                   //         'GetChildChartAsync',
                   //         [
                   //           data.parentID,
@@ -1837,7 +1837,7 @@ export class OrganizationOrgchartComponent {
           .execSv(
             'HR',
             'ERM.Business.HR',
-            'OrganizationUnitsBusiness',
+            'OrganizationUnitsBusiness_Old',
             'GetChildChartAsync',
             [node.id, this.selectedTeam.includes('No') ? false : true]
           )

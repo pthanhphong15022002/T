@@ -81,7 +81,7 @@ export class PopupIncludeExcludeObjComponent extends UIComponent {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetEmpFullInfoAsync',
       empID
     )
@@ -91,7 +91,7 @@ export class PopupIncludeExcludeObjComponent extends UIComponent {
   //   return this.api.execSv<any>(
   //     'HR',
   //     'HR',
-  //     'PolicyALBusiness',
+  //     'PolicyALBusiness_Old',
   //     'GetApplyObjsAsync',
   //     ['AL', this.policyObj.policyID, 0]
   //   );
@@ -101,7 +101,7 @@ export class PopupIncludeExcludeObjComponent extends UIComponent {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyBeneficiariesBusiness',
+      'PolicyBeneficiariesBusiness_Old',
       'GetBeneficiariesAsync',
       policyID
     );

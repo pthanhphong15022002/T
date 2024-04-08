@@ -52,7 +52,7 @@ export class EmployeeListByOrgComponent {
   service = 'HR';
   entityName = 'HR_Employees';
   assemblyName = 'ERM.Business.HR';
-  className = 'EmployeesBusiness';
+  className = 'EmployeesBusiness_Old';
   method = 'GetEmployeeListByOrgUnitIDGridView';
   idField = 'employeeID';
   predicates = '@0.Contains(OrgUnitID)';
@@ -187,7 +187,7 @@ export class EmployeeListByOrgComponent {
   }
   getManager(orgUnitID: string) {
     if (orgUnitID) {
-      this.api.execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'GetOrgManager', [orgUnitID])
+      this.api.execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness_Old', 'GetOrgManager', [orgUnitID])
         .subscribe((res: any) => {
           if (res) {
             this.manager = JSON.parse(JSON.stringify(res));
@@ -249,7 +249,7 @@ export class EmployeeListByOrgComponent {
   beforDelete(option: RequestOption, employee: any) {
     option.service = 'HR';
     option.assemblyName = 'ERM.Business.HR';
-    option.className = 'EmployeesBusiness';
+    option.className = 'EmployeesBusiness_Old';
     option.methodName = 'DeleteAsync';
     option.data = employee;
     return true;
@@ -260,7 +260,7 @@ export class EmployeeListByOrgComponent {
       if (!moreFunc)
         moreFunc = this.sysMoreFunc.find((x) => x.functionID == 'SYS04');
       this.api
-        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'GetEmployeeInfoByIDAsync', [data.employeeID]).subscribe(res => {
+        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness_Old', 'GetEmployeeInfoByIDAsync', [data.employeeID]).subscribe(res => {
           (this.grid.dataService as CRUDService).dataSelected = res ? res : this.itemSelected;
           (this.grid.dataService as CRUDService).copy().subscribe((res: any) => {
             let option = new SidebarModel();
@@ -348,7 +348,7 @@ export class EmployeeListByOrgComponent {
   }
   clickViewEmpInfo(data: any) {
     this.cache.functionList(this.funcIDEmpInfor).subscribe((func) => {
-      this.api.execSv('HR', 'ERM.Business.HR', 'OrganizationUnitsBusiness', 'GetOrgUnitChild', [this.orgUnitID])
+      this.api.execSv('HR', 'ERM.Business.HR', 'OrganizationUnitsBusiness_Old', 'GetOrgUnitChild', [this.orgUnitID])
       .subscribe(res => {
         if (res){
           let dataValue = Array(res).join();

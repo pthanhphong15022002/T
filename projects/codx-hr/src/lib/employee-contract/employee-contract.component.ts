@@ -218,7 +218,7 @@ export class EmployeeContractComponent extends UIComponent {
             .execSv(
               'HR',
               'ERM.Business.HR',
-              'EContractsBusiness',
+              'EContractsBusiness_Old',
               'UpdateRenewStatusAsync',
               [data]
             )
@@ -251,7 +251,7 @@ export class EmployeeContractComponent extends UIComponent {
             this.view.formModel.entityName,
             'C1',
             null,
-            'EContractsBusiness'
+            'EContractsBusiness_Old'
           )
           .subscribe();
         this.dialogEditStatus && this.dialogEditStatus.close(res);
@@ -310,7 +310,7 @@ export class EmployeeContractComponent extends UIComponent {
   //Call api delete
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteEContractAsync';
-    opt.className = 'EContractsBusiness';
+    opt.className = 'EContractsBusiness_Old';
     opt.assemblyName = 'HR';
     opt.service = 'HR';
     opt.data = data;
@@ -448,7 +448,7 @@ export class EmployeeContractComponent extends UIComponent {
     //   .execSv(
     //     'HR',
     //     'ERM.Business.HR',
-    //     'EContractsBusiness',
+    //     'EContractsBusiness_Old',
     //     'AutoResignEContractAsync'
     //   )
     //   .subscribe();
@@ -644,7 +644,7 @@ export class EmployeeContractComponent extends UIComponent {
             this.view.formModel.entityName,
             'C1',
             null,
-            'EContractsBusiness'
+            'EContractsBusiness_Old'
           )
           .subscribe();
 
@@ -658,7 +658,7 @@ export class EmployeeContractComponent extends UIComponent {
             .execSv(
               'HR',
               'ERM.Business.HR',
-              'EContractsBusiness',
+              'EContractsBusiness_Old',
               'UpdateRenewStatusAsync',
               [data]
             )

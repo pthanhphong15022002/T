@@ -876,7 +876,7 @@ export class CodxEsService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'HRBusiness',
+      'HRBusiness_Old',
       'GetInfoApproverAsync',
       [lstAprrover]
     );
@@ -1619,7 +1619,7 @@ export class CodxEsService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetEmpUsers',
       userID
     );

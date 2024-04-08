@@ -353,7 +353,35 @@
                   </codx-input>
                 </td>
               </tr>
-              <!-- <tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label
+                    [default]="'Cập nhật file'"
+                    [formModel]="dialog.formModel"
+                    [fiedName]="'Upload'"
+                  ></codx-label>
+                </td>
+                <td>
+                  <codx-label
+                    [default]="'Cho phép cập nhật file'"
+                    [formModel]="dialog.formModel"
+                    [name]="'lblDescriptionUpload'"
+                  ></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input
+                    class="test-check"
+                    type="switch"
+                    style="width: 100%"
+                    [crrValue]="upload"
+                    field="upload"
+                    (valueChange)="valueChange($event, 'upload')"
+                    [disabled]="checkAdminUpdate()"
+                  >
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label
                     [default]="'Tải file'"
@@ -380,7 +408,7 @@
                   >
                   </codx-input>
                 </td>
-              </tr> -->
+              </tr>
               <!-- <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label

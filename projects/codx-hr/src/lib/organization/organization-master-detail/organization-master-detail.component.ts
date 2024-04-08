@@ -129,7 +129,7 @@ export class OrganizationMasterDetailComponent {
         .execSv(
           'HR',
           'ERM.Business.HR',
-          'OrganizationUnitsBusiness',
+          'OrganizationUnitsBusiness_Old',
           'GetManagerAsync',
           [orgUnitID]
         )

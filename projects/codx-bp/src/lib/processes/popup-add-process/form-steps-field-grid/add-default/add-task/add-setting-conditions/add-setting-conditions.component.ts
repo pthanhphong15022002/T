@@ -393,7 +393,7 @@ export class AddSettingConditionsComponent {
     var obj = 
     {
       predicateName: this.predicateName,
-      paraValues: this.filters,
+      paraValues: this.advFilters,
       predicate: this.predicateV,
       dataValue: this.dataValueV,
       nextStepID: this.nextStepDefault?.recID

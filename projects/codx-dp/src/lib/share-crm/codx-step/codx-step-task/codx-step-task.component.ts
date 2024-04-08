@@ -2559,7 +2559,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetListUserIDByListODPIDAsync',
       [lstId, type]
     );
@@ -3471,15 +3471,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   popupPermissions(data) {
     let dialogModel = new DialogModel();
     let formModel = new FormModel();
-    formModel.formName = 'CMPermissions';
-    formModel.gridViewName = 'grvCMPermissions';
-    formModel.entityName = 'CM_Permissions';
+    formModel.formName = 'DPInstancesStepsTasksRoles';
+    formModel.gridViewName = 'grvDPInstancesStepsTasksRoles';
+    formModel.entityName = 'DP_Instances_Steps_Tasks_Roles';
     dialogModel.zIndex = 999;
     dialogModel.FormModel = formModel;
     let obj = {
       data: data,
       title: "Chia sẻ",
-      entityName: "CM_Permissions",
+      entityName: "DP_Instances_Steps_Tasks_Roles",
     };
     this.callfc
       .openForm(

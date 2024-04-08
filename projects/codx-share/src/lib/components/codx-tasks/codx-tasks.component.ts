@@ -336,13 +336,13 @@ export class CodxTasksComponent
     } else {
       if (this.funcID != 'TMT03011' && this.funcID != 'TMT05011') {
         this.modelResource.assemblyName = 'HR';
-        this.modelResource.className = 'OrganizationUnitsBusiness';
+        this.modelResource.className = 'OrganizationUnitsBusiness_Old';
         this.modelResource.service = 'HR';
         this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
       } else {
         //request a list resource
         this.modelResource.assemblyName = 'HR';
-        this.modelResource.className = 'OrganizationUnitsBusiness';
+        this.modelResource.className = 'OrganizationUnitsBusiness_Old';
         this.modelResource.service = 'HR';
         this.modelResource.method = 'GetListUserByResourceAsync';
         this.modelResource.dataValue = this.dataObj?.resources;

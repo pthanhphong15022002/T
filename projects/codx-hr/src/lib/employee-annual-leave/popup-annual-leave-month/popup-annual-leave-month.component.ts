@@ -31,7 +31,7 @@ export class PopupAnnualLeaveMonthComponent implements OnInit, AfterViewInit {
   service = 'HR';
   entityName = 'HR_EAnnualLeave';
   assemblyName = 'ERM.Business.HR';
-  className = 'EAnnualLeavesBusiness';
+  className = 'EAnnualLeavesBusiness_Old';
   method = 'GetListEmployeeAnnualLeaveMonthGrvV2Async';
   idField = 'recID';
   predicates = '@0 = EmployeeID && @1 = ALYear && ALYear != ALYearMonth';

@@ -556,7 +556,7 @@ export class AddTaskComponent
             if(elm3.controlType == "Number")
             {
               elm3.title = "Tổng của cột " + elm3.title
-              elm3.fieldName = elm3.fieldName + "_sum_" + elm3.fieldName;
+              elm3.fieldName = elm2.fieldName + "_sum_" + elm3.fieldName;
               dt = dt.concat(elm3)
             }
           })

@@ -336,7 +336,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   }
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteEmployeeBasicSalariesInfoAsync';
-    opt.className = 'EBasicSalariesBusiness';
+    opt.className = 'EBasicSalariesBusiness_Old';
     opt.assemblyName = 'HR';
     opt.service = 'HR';
     opt.data = data;
@@ -380,7 +380,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
               this.view.formModel.entityName,
               'C1',
               null,
-              'EBasicSalariesBusiness'
+              'EBasicSalariesBusiness_Old'
             )
             .subscribe();
           this.dialogEditStatus && this.dialogEditStatus.close(res);
@@ -552,7 +552,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
             this.view.formModel.entityName,
             'C1',
             null,
-            'EBasicSalariesBusiness'
+            'EBasicSalariesBusiness_Old'
           )
           .subscribe();
 
