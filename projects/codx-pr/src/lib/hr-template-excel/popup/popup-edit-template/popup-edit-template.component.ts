@@ -102,7 +102,7 @@ export class PopupEditTemplateComponent implements OnInit,AfterViewInit {
       if(this.rpReportList) this.data.templateID = this.rpReportList.templateID;
       data.createdBy = this.user.userID;
       data.createdOn = new Date();
-      this.api.execSv("HR","HR","TemplateExcelBusiness","SaveAsync",[data])
+      this.api.execSv("HR","HR","TemplateExcelBusiness_Old","SaveAsync",[data])
       .subscribe((res:boolean) => {
         if(res)
         {
@@ -118,7 +118,7 @@ export class PopupEditTemplateComponent implements OnInit,AfterViewInit {
   edit(data:any){
     if(data)
     {
-      this.api.execSv("HR","HR","TemplateExcelBusiness","UpdateAsync",[data,this.isUpdateFileTemplate])
+      this.api.execSv("HR","HR","TemplateExcelBusiness_Old","UpdateAsync",[data,this.isUpdateFileTemplate])
       .subscribe((res:boolean) => {
         if(res)
         {

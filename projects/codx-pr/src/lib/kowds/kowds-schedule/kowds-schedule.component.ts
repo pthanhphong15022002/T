@@ -71,7 +71,7 @@ export class KowdsScheduleComponent extends UIComponent implements AfterViewInit
     //lấy list resource vẽ header schedule
     this.scheduleHeader = new ResourceModel();
     this.scheduleHeader.assemblyName = 'HR';
-    this.scheduleHeader.className = 'EmployeesBusiness';
+    this.scheduleHeader.className = 'EmployeesBusiness_Old';
     this.scheduleHeader.service = 'HR';
     this.scheduleHeader.method = 'LoadDataForKowAsync';
     this.scheduleHeader.predicate = strPredicate;
@@ -182,7 +182,7 @@ export class KowdsScheduleComponent extends UIComponent implements AfterViewInit
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetEmpByOrgUnitIDAsync',
       [this.filterOrg, this.filterMonth, this.filterYear]
     );

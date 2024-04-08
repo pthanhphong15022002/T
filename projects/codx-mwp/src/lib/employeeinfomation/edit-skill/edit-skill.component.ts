@@ -77,7 +77,7 @@ export class EditSkillComponent implements OnInit {
     this.api
       .exec(
         'ERM.Business.HR',
-        'EmployeesBusiness',
+        'EmployeesBusiness_Old',
         'UpdateSkillAsync',
         [this.employeeID, this.skillEmployee]
       )

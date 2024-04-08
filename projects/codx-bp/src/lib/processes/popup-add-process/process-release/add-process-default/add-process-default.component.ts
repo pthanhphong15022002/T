@@ -364,7 +364,7 @@ export class AddProcessDefaultComponent implements OnInit {
       keyRoot,
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetTmpEmployeeAsync'
     );
     if (isObservable(this.infoUser)) {
@@ -1002,6 +1002,8 @@ export class AddProcessDefaultComponent implements OnInit {
     if (!this.dynamicFormsForm.get(e?.field).value)
       this.dynamicFormsForm.controls[e?.field].setValue(e?.data);
     else this.dynamicFormsForm.value[e?.field] = e?.data;
+
+    this.checkVisisable(e);
   }
 
   getUrl(field: any, index: any) {

@@ -59,7 +59,7 @@ export class PreviousExperienceComponent implements OnInit,AfterViewInit {
   getData(employeeID:string){
     if(employeeID)
     {
-      this.api.execSv("HR","HR","EExperiencesBusiness","GetByEmployeeIDAsync",[employeeID])
+      this.api.execSv("HR","HR","EExperiencesBusiness_Old","GetByEmployeeIDAsync",[employeeID])
       .subscribe((res:any) => {
         if(res && res.length > 0)
         {

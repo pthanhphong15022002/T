@@ -443,7 +443,7 @@ export class CodxEpService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'PositionsBusiness',
+      'PositionsBusiness_Old',
       'GetTotalFilledCountsByOrgUnitIDAsync',
       [orgID]
     );
@@ -713,7 +713,7 @@ export class CodxEpService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'OrganizationUnitsBusiness',
+      'OrganizationUnitsBusiness_Old',
       'GetListUserIDByListOrgIDAsync',
       data
     );
@@ -725,7 +725,7 @@ export class CodxEpService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'OrganizationUnitsBusiness',
+      'OrganizationUnitsBusiness_Old',
       'GetUserByListDepartmentIDAsync',
       listDepID
     );
@@ -734,7 +734,7 @@ export class CodxEpService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetListUserIDByListPositionsIDAsync',
       listPositionID
     );
@@ -743,7 +743,7 @@ export class CodxEpService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetListUserIDbyListEmployeeIDAsync',
       listEmployeeID
     );

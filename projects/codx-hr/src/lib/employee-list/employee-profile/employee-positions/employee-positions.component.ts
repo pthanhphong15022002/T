@@ -61,7 +61,7 @@ export class EmployeePositionsComponent extends UIComponent {
   service = 'HR';
   assemblyName = 'HR';
   entity = 'HR_EAppointions';
-  className = 'EAppointionsBusiness';
+  className = 'EAppointionsBusiness_Old';
   method = 'GetLstAppointionByEIDAsync';
   idField = 'employeeID';
   predicate = '@EmployeeID=@0';

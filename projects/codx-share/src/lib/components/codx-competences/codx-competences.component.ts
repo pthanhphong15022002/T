@@ -110,7 +110,7 @@ export class CodxCompetencesComponent implements OnInit {
       this.api.execSv(
         "HR",
         "ERM.Business.HR",
-        "PositionsBusiness",
+        "PositionsBusiness_Old",
         "UpdateCompetencesAsync",
         [this.positionID,this.competences]
         ).subscribe((res:any) => {

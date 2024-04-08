@@ -173,7 +173,7 @@ export class PopupAddEmployeesComponent implements OnInit {
       console.log('data chuan bi update', employee);
       
       this.api
-        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'UpdateAsync', [
+        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness_Old', 'UpdateAsync', [
           employee,
           this.funcID,
         ])
@@ -188,7 +188,7 @@ export class PopupAddEmployeesComponent implements OnInit {
   // add employee
   addEmployeeAsync(employee: any, funcID: string) {
     this.api
-      .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'SaveAsync', [
+      .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness_Old', 'SaveAsync', [
         employee,
         funcID,
       ])

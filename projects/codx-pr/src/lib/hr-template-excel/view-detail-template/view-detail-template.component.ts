@@ -110,7 +110,7 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
   }
 
   loadData(hrTemplateID:string){
-    this.api.execSv("HR","HR","TemplateExcelBusiness","GetByIDAsync",hrTemplateID)
+    this.api.execSv("HR","HR","TemplateExcelBusiness_Old","GetByIDAsync",hrTemplateID)
     .subscribe((res:any) => {
       if(!this.loaded) this.loaded = true;
       this.data = res;
@@ -236,7 +236,7 @@ export class ViewDetailTemplateComponent extends UIDetailComponent implements On
     .subscribe((confirm:any) => {
       if(confirm && confirm?.event?.status === "Y")
       {
-        this.api.execSv("HR","HR","TemplateExcelBusiness","UpdateGroupSalCodeAsync",[this.groupSalCode,this.departmentIDs,this.skipGroupSalCode])
+        this.api.execSv("HR","HR","TemplateExcelBusiness_Old","UpdateGroupSalCodeAsync",[this.groupSalCode,this.departmentIDs,this.skipGroupSalCode])
         .subscribe((res:boolean) => {
           if(res)
           {
