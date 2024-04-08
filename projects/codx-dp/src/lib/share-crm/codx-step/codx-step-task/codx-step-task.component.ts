@@ -3492,10 +3492,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         '',
         dialogModel
       )
-      .closed.subscribe((e) => {
-        if (e?.event && e?.event != null) {
+      // .closed.subscribe((e) => {
+      //   if (e?.event && e?.event != null) {
           
-        }
-      });
+      //   }
+      // });
   }
 }
