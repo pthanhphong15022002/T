@@ -38,7 +38,7 @@ export class EmployeeAnnualLeaveByOrgComponent {
   service = 'HR';
   entityName = 'HR_EAnnualLeave';
   assemblyName = 'ERM.Business.HR';
-  className = 'EAnnualLeavesBusiness';
+  className = 'EAnnualLeavesBusiness_Old';
   method = 'GetListEmployeeAnnualLeaveGrvV2Async';
   idField = 'recID';
   predicates = '@0.Contains(EmployeeID) && @1 == ALYear';
@@ -143,7 +143,7 @@ export class EmployeeAnnualLeaveByOrgComponent {
     if (this.listDaysOff?.length <= 0)
       this.popupLoading = true;
 
-    this.api.execSv('HR', 'ERM.Business.HR', 'EAnnualLeavesBusiness', 'GetDaysOffByEAnnualLeaveAsync',
+    this.api.execSv('HR', 'ERM.Business.HR', 'EAnnualLeavesBusiness_Old', 'GetDaysOffByEAnnualLeaveAsync',
       [data.employeeID, data.alYear, data.alYearMonth, data.isMonth, this.pageIndex, this.pageSize]).subscribe((res: any) => {
         if (res && res?.length > 0) {
           this.listDaysOff = this.listDaysOff.concat(res);

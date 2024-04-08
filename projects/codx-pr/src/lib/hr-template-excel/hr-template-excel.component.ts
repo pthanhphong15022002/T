@@ -134,7 +134,7 @@ export class HrTemplateExcelComponent extends UIComponent implements AfterViewIn
       .subscribe((confirm:any) => {
         if(confirm && confirm?.event?.status === "Y")
         {
-          this.api.execSv("HR","HR","TemplateExcelBusiness","DeleteAsync",data)
+          this.api.execSv("HR","HR","TemplateExcelBusiness_Old","DeleteAsync",data)
           .subscribe((res:any) => {
             if(res)
             {

@@ -3867,7 +3867,7 @@ export class EmployeeDetailComponent extends UIComponent {
 
   HandleBebefitInfo(actionType, s) {
     this.api
-      .execSv('HR', 'ERM.Business.HR', 'EBenefitsBusiness', 'AddAsync', null)
+      .execSv('HR', 'ERM.Business.HR', 'EBenefitsBusiness_Old', 'AddAsync', null)
       .subscribe((res) => {});
   }
 

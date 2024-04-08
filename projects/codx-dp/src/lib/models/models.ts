@@ -1,3 +1,4 @@
+import { update } from '@syncfusion/ej2-angular-inplace-editor';
 import { Util } from 'codx-core';
 
 export class DP_ProcessGroups {
@@ -533,6 +534,15 @@ export class DP_Instances_Steps_Tasks_Roles {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  full: boolean;
+  read: boolean;
+  update: boolean; 
+  updateProgress: boolean; 
+  assign: boolean; 
+  share: boolean; 
+  upload: boolean; 
+  download: boolean; 
+  delete: boolean; 
 }
 
 export class DP_Instance_Steps_Fields {

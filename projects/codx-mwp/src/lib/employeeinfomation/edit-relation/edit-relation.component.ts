@@ -61,7 +61,7 @@ export class EditRelationComponent implements OnInit {
   avatar: FileUpload = null;
 
   OnSaveForm() {
-    this.api.exec("ERM.Business.HR", "EmployeesBusiness", "UpdateEmployeeRelationAsync", [this.dataBind, this.isAdd]).subscribe((res: any) => {
+    this.api.exec("ERM.Business.HR", "EmployeesBusiness_Old", "UpdateEmployeeRelationAsync", [this.dataBind, this.isAdd]).subscribe((res: any) => {
       if (res) {
         if (this.avatar) {
           var objRes = res;

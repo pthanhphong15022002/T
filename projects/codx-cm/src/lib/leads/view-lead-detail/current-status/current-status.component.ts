@@ -179,7 +179,7 @@ export class CurrentStatusComponent implements OnInit, OnChanges {
     ]);
 
     // this.api
-    // .exec<any>('HR', 'EmployeesBusiness', 'GetListEmployeesByUserIDAsync', [listUserID])
+    // .exec<any>('HR', 'EmployeesBusiness_Old', 'GetListEmployeesByUserIDAsync', [listUserID])
     // .subscribe((res) => {
     //   if(res){
     //     this.consultant = res.find(x => x.userID == this.deal?.consultantID);
