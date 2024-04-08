@@ -170,14 +170,14 @@ export class AddProcessDefaultComponent implements OnInit {
           ? JSON.parse(element.documentControl)
           : element.documentControl;
       }
-     
+
       if (element.fieldType != 'Title') {
         let validate = element.isRequired ? Validators.required : null;
 
         if (element.fieldType == 'Email') validate = Validators.email;
         else if (element.fieldType == 'Phone')
           validate = Validators.pattern('[0-9 ]{11}');
-        else if (element.fieldType == 'DateTime') 
+        else if (element.fieldType == 'DateTime')
         {
           if (element.defaultValue == 'Now')
             element.defaultValue = new Date();
@@ -193,13 +193,13 @@ export class AddProcessDefaultComponent implements OnInit {
         }
 
         if (this.type == 'add' && !this.taskID) {
-        
+
           this.dynamicFormsForm.addControl(
             field,
             new FormControl(element.defaultValue, validate)
           );
-        } 
-        else 
+        }
+        else
         {
           if (element.fieldType == 'Attachment') {
             if (element.documentControl)
@@ -238,7 +238,8 @@ export class AddProcessDefaultComponent implements OnInit {
             headerText: elm2.title,
             controlType: elm2.controlType,
             field: elm2.fieldName,
-            dataType: elm2.dataType
+            dataType: elm2.dataType,
+            allowEdit:true
           };
           element.columnsGrid.push(obj);
 
@@ -313,7 +314,7 @@ export class AddProcessDefaultComponent implements OnInit {
         this.f_Visible[element.fieldName] = element?.visibleControl?.visibleControl
         if(element?.visibleControl?.visibleControl)
         {
-          var obj3 = 
+          var obj3 =
           {
             fieldName : element.fieldName,
             paraValues: element?.visibleControl?.paraValues
@@ -439,7 +440,7 @@ export class AddProcessDefaultComponent implements OnInit {
       if (flag){
         this.isSaving(false);
         return;
-      }; 
+      };
     }
 
     if (!this.checkAttachment()) {
@@ -449,7 +450,7 @@ export class AddProcessDefaultComponent implements OnInit {
     if (this.dynamicFormsForm.invalid) this.findInvalidControls();
     else {
       var keysTable = Object.keys(this.dataTable);
-      
+
       if (keysTable.length > 0) {
         keysTable.forEach((k) => {
           valueForm[k] = this.dataTable[k];
@@ -611,8 +612,8 @@ export class AddProcessDefaultComponent implements OnInit {
             //addFile nếu có
             this.addFileAttach(type);
           });
-      } 
-      else if (this.type == 'edit') 
+      }
+      else if (this.type == 'edit')
       {
         if(!this.taskID) this.dataIns.title = valueForm[this.subTitle];
         (this.dataIns.modifiedOn = new Date()),
@@ -628,11 +629,11 @@ export class AddProcessDefaultComponent implements OnInit {
 
           this.dataIns.datas = JSON.stringify(this.dataIns.datas);
         } else this.dataIns.datas = JSON.stringify(valueForm);
-        
+
         if (
           this.attachment?.fileUploadList &&
           this.attachment?.fileUploadList?.length > 0
-        ) 
+        )
         {
           this.addFileAttach(type);
         }
@@ -651,10 +652,10 @@ export class AddProcessDefaultComponent implements OnInit {
       (await this.attachment.saveFilesObservable()).subscribe((item2) => {
         if (item2) {
           let arr = [];
-          if (!Array.isArray(item2)) 
+          if (!Array.isArray(item2))
           {
             arr.push(item2);
-          } 
+          }
           else arr = item2;
           arr.forEach((elm) => {
             var obj = {
@@ -700,9 +701,9 @@ export class AddProcessDefaultComponent implements OnInit {
           //this.dataIns.documentControl.
         }
       });
-    } else 
+    } else
     {
-      if (this.type == 'add') 
+      if (this.type == 'add')
       {
         this.bpService
           .createTaskOnSaveInstance(this.dataIns.recID)
@@ -713,14 +714,14 @@ export class AddProcessDefaultComponent implements OnInit {
               this.startInstance(this.dataIns.recID);
             }
           });
-      } 
-      else 
+      }
+      else
       {
-        if (type == 1) 
+        if (type == 1)
         {
           this.dialog.close(this.dataIns);
-        } 
-        else 
+        }
+        else
         {
           this.startInstance(this.dataIns.recID);
         }
@@ -1079,7 +1080,7 @@ export class AddProcessDefaultComponent implements OnInit {
       {
         let elm2 = elm.paraValues.filters[i];
         this.f_Visible[elm.fieldName] = this.resultVisiable(elm2,e);
-        
+
         if((elm.paraValues.logic == 'and' && this.f_Visible[elm.fieldName]) ||
         (elm.paraValues.logic == 'or' && !this.f_Visible[elm.fieldName])
         )
@@ -1087,7 +1088,7 @@ export class AddProcessDefaultComponent implements OnInit {
           elm2.filters.forEach(elm3=>{
             if(this.f_Visible[elm3.field]) this.hideVisiableChild(elm3.field)
           })
-          
+
           break;
         }
       }
@@ -1131,7 +1132,7 @@ export class AddProcessDefaultComponent implements OnInit {
         if(!comp) return true;
         return false;
       }
-      case 'noempty': 
+      case 'noempty':
       {
         if(comp) return true;
         return false;
