@@ -11,7 +11,7 @@
           <div *ngIf="listRoleShare != null && listRoleShare.length > 0">
             <ng-container *ngFor="let role of listRoleShare; index as i">
               <div
-                (click)="changePermissions(role)"
+                (click)="changeRole(role)"
                 class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item p-2"
                 [ngClass]="roleSelect.objectID == role.objectID ? 'chosse':'no-chosse'"
               >
@@ -30,13 +30,6 @@
                           class="d-flex align-items-center position-relative me-4"
                           style="position: relative"
                           popoverClass="popoverClass"
-                          [ngbPopover]="
-                            role.roleType != 'O' ? popupRoleType : null
-                          "
-                          placement="right auto"
-                          #p="ngbPopover"
-                          (mouseenter)="showPopover(p, role.objectID)"
-                          autoClose="outside"
                         >
                           <img
                             src="../../../assets/codx/user/user-admin.svg"
@@ -77,13 +70,6 @@
                           class="d-flex align-items-center position-relative me-4"
                           style="position: relative"
                           popoverClass="popoverClass"
-                          [ngbPopover]="
-                            role.roleType != 'O' ? popupRoleType : null
-                          "
-                          placement="right top"
-                          #p="ngbPopover"
-                          (mouseenter)="showPopover(p, role.objectID)"
-                          autoClose="outside"
                         >
                           <codx-img
                             class=""
@@ -122,14 +108,14 @@
                     </ng-template>
                   </div>
                 </div>
-                <ng-container *ngIf="!checkRemove(i)">
+                <!-- <ng-container *ngIf="!checkRemove(i)">
                   <div
                     class="action-menu-od ms-0 d-flex justify-content-center align-items-center cursor-pointer"
                     (click)="removeUser(i)"
                   >
                     <i class="icon-close text-danger icon-16"></i>
                   </div>
-                </ng-container>
+                </ng-container> -->
               </div>
             </ng-container>
           </div>
@@ -203,7 +189,6 @@
                     field="full"
                     (valueChange)="valueChange($event, 'full')"
                     (focus)="controlFocus('full')"
-                    [disabled]="checkAdminUpdate()"
                   >
                   </codx-input>
                 </td>
@@ -232,7 +217,6 @@
                     [crrValue]="roleSelect.read"
                     field="read"
                     (valueChange)="valueChange($event, 'read')"
-                    [disabled]="checkAdminUpdate()"
                     (focus)="controlFocus('read')"
                   >
                   </codx-input>
@@ -262,7 +246,6 @@
                     field="update"
                     (valueChange)="valueChange($event, 'update')"
                     (focus)="controlFocus('update')"
-                    [disabled]="checkAdminUpdate()"
                   >
                   </codx-input>
                 </td>
@@ -319,7 +302,6 @@
                     field="delete"
                     (valueChange)="valueChange($event, 'delete')"
                     (focus)="controlFocus('delete')"
-                    [disabled]="checkAdminUpdate()"
                   >
                   </codx-input>
                 </td>
@@ -347,7 +329,6 @@
                     field="updateProgress"
                     (valueChange)="valueChange($event, 'updateProgress')"
                     (focus)="controlFocus('updateProgress')"
-                    [disabled]="checkAdminUpdate()"
                   >
                   </codx-input>
                 </td>
@@ -376,7 +357,6 @@
                     field="upload"
                     (valueChange)="valueChange($event, 'upload')"
                     (focus)="controlFocus('upload')"
-                    [disabled]="checkAdminUpdate()"
                   >
                   </codx-input>
                 </td>
@@ -405,7 +385,6 @@
                     field="download"
                     (valueChange)="valueChange($event, 'download')"
                     (focus)="controlFocus('download')"
-                    [disabled]="checkAdminUpdate()"
                   >
                   </codx-input>
                 </td>
@@ -454,24 +433,6 @@
           default="Lưu"
         ></codx-label>
       </button>
-    </div>
-  </ng-template>
-
-  <ng-template #popupRoleType>
-    <div class="d-flex flex-column">
-      <ng-container *ngFor="let item of listRoles">
-        <div
-          *ngIf="item.value != 'O'"
-          class="d-flex align-items-center btn btn-sm btn-white mb-1"
-          (click)="selectRoleType(objectIDSelect, item.value)"
-          style="cursor: pointer"
-        >
-          <span
-            inlineSVG="./assets/themes/cm/default/img/{{ item.icon }}"
-          ></span>
-          <div class="fs-7 text-gray-800 ms-2">{{ item.text }}</div>
-        </div>
-      </ng-container>
     </div>
   </ng-template>
 </codx-form>
