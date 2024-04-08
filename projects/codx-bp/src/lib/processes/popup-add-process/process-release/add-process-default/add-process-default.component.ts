@@ -37,6 +37,7 @@ import { AddTableRowComponent } from './add-table-row/add-table-row.component';
 import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 import { environment } from 'src/environments/environment';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 
 @Component({
   selector: 'lib-add-process-default',
@@ -85,6 +86,12 @@ export class AddProcessDefaultComponent implements OnInit {
   listFieldDecimal = [];
   f_Visible = {};
   f_ParaVisible = [];
+  editSettings: EditSettingsModel = {
+    allowEditing: true,
+    allowAdding: true,
+    allowDeleting: true,
+    mode: 'Normal',
+  };
   constructor(
     private notifySvr: NotificationsService,
     private shareService: CodxShareService,
@@ -227,6 +234,7 @@ export class AddProcessDefaultComponent implements OnInit {
             headerText: elm2.title,
             controlType: elm2.controlType,
             field: elm2.fieldName,
+            dataType: elm2.dataType
           };
           element.columnsGrid.push(obj);
 
@@ -242,6 +250,7 @@ export class AddProcessDefaultComponent implements OnInit {
             headerText: 'STT',
             controlType: 'Numberic',
             field: 'indexNo',
+            dataType: 'Number'
           };
           element.columnsGrid.unshift(obj2);
         }
@@ -922,6 +931,20 @@ export class AddProcessDefaultComponent implements OnInit {
         grid.refresh();
       }
     });
+  }
+
+  gridDs:any=[];
+  addRow2(index = 0)
+  {
+    var grid = this.gridView.find((_, i) => i == index);
+    var data = {
+      'cot_1': '',
+      'cot_2': '',
+      'cot_3': ''
+    };
+    //if(!grid.dataSource) grid.dataSource = [];
+    grid.addRow(data,grid.dataSource.length);
+    //grid.refresh();
   }
   deleteRow(data: any, fieldName: any, index = 0, hasIndexNo = false) {
     this.dataTable[fieldName.toLowerCase()].splice(data.index, 1);
