@@ -355,7 +355,7 @@ export class IncommingAddComponent implements OnInit {
       .execSv(
         'HR',
         'ERM.Business.HR',
-        'OrganizationUnitsBusiness',
+        'OrganizationUnitsBusiness_Old',
         'GetUserByDept',
         [data, null, null]
       )
@@ -387,7 +387,7 @@ export class IncommingAddComponent implements OnInit {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetOneByDomainUserAsync',
       id
     );

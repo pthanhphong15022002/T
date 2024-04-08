@@ -189,7 +189,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
   //Call api delete
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteEmployeeAppointionsInfoAsync';
-    opt.className = 'EAppointionsBusiness';
+    opt.className = 'EAppointionsBusiness_Old';
     opt.assemblyName = 'HR';
     opt.service = 'HR';
     opt.data = data;
@@ -215,7 +215,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
               this.view.formModel.entityName,
               'C1',
               null,
-              'EAppointionsBusiness'
+              'EAppointionsBusiness_Old'
             )
             .subscribe();
           this.dialogEditStatus && this.dialogEditStatus.close(data);
@@ -539,7 +539,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
             this.view.formModel.entityName,
             'C1',
             null,
-            'EAppointionsBusiness'
+            'EAppointionsBusiness_Old'
           )
           .subscribe();
 

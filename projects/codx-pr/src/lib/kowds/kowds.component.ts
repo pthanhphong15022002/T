@@ -550,7 +550,7 @@ export class KowdsComponent extends UIComponent {
       template: this.tempEmployee,
       field: 'employeeID'
     });
-    this.api.execSv("HR","HR","KOWsBusiness","GetAsync")
+    this.api.execSv("HR","HR","KOWsBusiness_Old","GetAsync")
     .subscribe((res:any) => {
         if (res && res?.length > 0) 
         {

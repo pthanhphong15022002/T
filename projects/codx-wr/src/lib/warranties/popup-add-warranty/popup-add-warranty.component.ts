@@ -82,7 +82,7 @@ export class PopupAddWarrantyComponent implements OnInit {
         .execSv<any>(
           'HR',
           'ERM.Business.HR',
-          'OrganizationUnitsBusiness',
+          'OrganizationUnitsBusiness_Old',
           'GetUserManagerByUserIDAsync',
           [this.data.owner]
         )

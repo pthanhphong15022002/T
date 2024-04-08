@@ -114,7 +114,7 @@ export class EmployeePolicyalComponent extends UIComponent {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
+      'PolicyALBusiness_Old',
       'AddPolicyALAsync',
       null
     );
@@ -135,7 +135,7 @@ export class EmployeePolicyalComponent extends UIComponent {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyBeneficiariesBusiness',
+      'PolicyBeneficiariesBusiness_Old',
       'DeletePolicyBeneficiariesAsync',
       policyID
     );
@@ -145,7 +145,7 @@ export class EmployeePolicyalComponent extends UIComponent {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
+      'PolicyALBusiness_Old',
       'DeletePolicyDetailByPolicyIDAsync',
       data
     );

@@ -440,7 +440,7 @@ export class PopupAddTargetComponent {
       .execSv<any>(
         'HR',
         'ERM.Business.HR',
-        'EmployeesBusiness',
+        'EmployeesBusiness_Old',
         'GetListEmployeesByUserIDAsync',
         JSON.stringify(lstIDs.split(';'))
       )

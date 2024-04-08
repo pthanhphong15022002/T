@@ -148,7 +148,7 @@ export class PopupEquitComponent extends UIComponent {
       .execSv(
         'HR',
         'ERM.Business.HR',
-        'EQuitBusiness',
+        'EQuitBusiness_Old',
         'GetContractCurrentAsync',
         id
       )
