@@ -1,5 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { DialogDetailRegisterApproveComponent } from '../dialog-detail-register-approve/dialog-detail-register-approve.component';
+import { Thickness } from 'ngx-basic-primitives';
 
 @Component({
   selector: 'lib-dashboard-register-aprrove',
@@ -8,6 +9,8 @@ import { DialogDetailRegisterApproveComponent } from '../dialog-detail-register-
 })
 export class DashboardRegisterAprroveComponent {
   @ViewChild('dialog') dialog: DialogDetailRegisterApproveComponent;
+
+  @Output() handleRegisterApprove = new EventEmitter();
 
   public primaryXAxis?: Object;
   public chartData?: Object[];
@@ -29,6 +32,7 @@ export class DashboardRegisterAprroveComponent {
     { date: '29/02', In: 10, Out: 7 },
   ];
   ngOnInit(): void {
+    console.log(this.handleRegisterApprove)
     this.chartData = this.columnData;
     this.primaryXAxis = {
        valueType: 'Category',
@@ -46,9 +50,13 @@ export class DashboardRegisterAprroveComponent {
     };
   }
 
-  open(event:any){
-
-    console.log("clicked")
+  open(){
+    this.handleRegisterApprove.emit(null)
     //this.dialog.onOpenDialog(event);
   }
+
+  open2(event){
+    this.dialog.onOpenDialog(event);
+  }
+
 }

@@ -10,9 +10,7 @@ export class SwiperClickingDirective {
   @Input() scrollSpeed:number = 100;
   constructor(private elementRef: ElementRef,private renderer: Renderer2) { }
   @HostListener('document:click', ['$event.target'])
-  onClick(target: any): void {
-    console.log('hi')
-  
+  onClick(target: any): void {  
       if(this.elementRef.nativeElement.contains(target)){
           this.swiperMain = document.getElementById(this.ContainerID) as HTMLDivElement;
           this.swiperMain.style.scrollBehavior = 'smooth';
@@ -28,3 +26,6 @@ export class SwiperClickingDirective {
   }
 
 }
+
+
+

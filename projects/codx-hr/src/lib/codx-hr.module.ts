@@ -163,6 +163,11 @@ import { DashboardAgeChartComponent } from './dashboard/components/dashboard-age
 import { DashboardCardComponent } from './dashboard/components/dashboard-card/dashboard-card.component';
 import { DashboardGaugeChartComponent } from './dashboard/components/dashboard-gauge-chart/dashboard-gauge-chart.component';
 import { DashboardTotalemployeeChartComponent } from './dashboard/components/dashboard-totalemployee-chart/dashboard-totalemployee-chart.component';
+import { DialogDetailRegisterApproveComponent } from './dashboard/components/dialog-detail-register-approve/dialog-detail-register-approve.component';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { DialogRegisterApproveComponent } from './dashboard/components/dialog-register-approve/dialog-register-approve.component';
+import { HistoryLevelComponent } from './dashboard/components/dialog-detail-register-approve/components/history-level/history-level.component';
+import { DialogReviewLeaveApproveComponent } from './employee-list/employee-info-profile/components/dialog-review-leave-approve/dialog-review-leave-approve.component';
 export const routes: Routes = [
   {
     path: '',
@@ -505,7 +510,9 @@ const T_Component = [
   DashboardCardComponent,
   DashboardGaugeChartComponent,
   DashboardTotalemployeeChartComponent,
-  DashboardComponent
+  DashboardComponent,
+  DialogRegisterApproveComponent,
+  DialogReviewLeaveApproveComponent
 ];
 @NgModule({
   imports: [
@@ -523,7 +530,10 @@ const T_Component = [
     NgbModule,
     BasicPrimitivesModule,
     SpeedDialModule,
-    DirectivesModule
+    DirectivesModule,
+    DashboardModule,
+    DialogDetailRegisterApproveComponent,
+    HistoryLevelComponent
   ],
   exports: [T_Component],
   declarations: [T_Component,T_Pipe],

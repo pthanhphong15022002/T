@@ -129,8 +129,9 @@
 }
 
 .profile-info .position-absolute.dropdown.start-0 {
-    left: 100% !important;
+    left: 30% !important;
     margin-left: -30px;
+    top: 68px;
 }
 
 .user-family .bg-white {
@@ -169,8 +170,8 @@
     gap: 31px;
     border-radius: 20px;
     opacity: 0px;
-    min-width: 184px;
-    min-height: 90px;
+    /* min-width: 184px;
+    min-height: 90px; */
     width: 24%;
 
     color: var(--primary-inverse);
@@ -323,3 +324,35 @@ p {
 
     color: #005DC7;
 }
+
+/* sidebar my-team */
+.fab-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: right 0.3s ease;
+    display: none;
+}
+
+.fab-open {
+    right: calc(20px + 400px);
+}
+
+/* reponsive */
+
+@media (max-width: 990px) {
+    .fab-container {
+        display: inline-flex;
+    }
+}
+  
+  

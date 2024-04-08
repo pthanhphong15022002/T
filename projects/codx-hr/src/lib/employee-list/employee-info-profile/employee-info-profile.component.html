@@ -401,6 +401,7 @@
               >
             </div>
             <div>
+              <span class=" icon-pin_drop icon-16 me-2"></span>
               <span>HCM</span>
             </div>
             <!-- <div class="d-flex flex-column flex-center">
@@ -567,7 +568,10 @@
           </div>
         </div>
 
-        <div class="w-100 user-right overflow-hidden flex-grow-1">
+        <div
+          class="w-100 user-right overflow-hidden flex-grow-1"
+          id="maincontent"
+        >
           <div class="tab-content">
             <!-- Pane 0: Sơ yếu lí lịch -->
             <div class="tab-pane fade show active" id="pane_100">
@@ -646,8 +650,21 @@
           </div>
         </div>
 
-        <div class="user-left w-350px min-w-300px">
-          <lib-my-tem></lib-my-tem>
+        <!-- <div >
+          <span libSidebarToggle [toggleSpeed]="300" sidebarID="myteambar" mainContentID="maincontent">
+            Menu
+          </span>
+        </div> -->
+        <div class="user-left" id="myteambar">
+          <lib-my-tem class="w-25" id="sidebar"></lib-my-tem>
+        </div>
+        <div
+          class="fab-container"
+          libSidebarToggle
+          sidebarID="sidebar"
+          mainContentID="mainContent"
+        >
+          <i class="icon-36 icon-group me-1 text-body"></i>
         </div>
       </div>
     </div>
@@ -673,7 +690,11 @@
           </div>
           <!-- selected box -->
           <div>
-            <codx-valuelist mode="box"></codx-valuelist>
+            <codx-dropdown-calendar 
+            cssPopup="h-350px w-550px"
+            [selectedType]="'m'"
+            [displayOption]="ops"
+            cssClass="w-100" ></codx-dropdown-calendar>
           </div>
         </div>
 
@@ -686,7 +707,7 @@
             [ngTemplateOutletContext]="{
               $implicit: 'Remove',
               color: '#17BB45',
-              icon: 'graph_up'
+              icon: 'icon-bar_chart'
             }"
           ></ng-container>
           <ng-container
@@ -716,26 +737,32 @@
         </div>
       </div>
     </div>
-    <div class="d-flex justify-content-between lex-row w-100">
-      <div class="bg-white mt-3 w-50 me-1 rounded border">
-        <lib-profile-last7day class="w-50"></lib-profile-last7day>
+    <div class="d-flex justify-content-between w-100 row">
+      <div class="bg-white mt-3 w-100 me-1 rounded border col-xxl-6 col-6">
+        <lib-profile-last7day></lib-profile-last7day>
       </div>
-      <div class="bg-white mt-3 w-50 rounded border">
+      <div class="bg-white mt-3 w-100 rounded border col-xxl-6 col-6">
         <lib-profile-dashboard-leave class="w-50"></lib-profile-dashboard-leave>
       </div>
     </div>
     <div class="bg-white border mt-3 rounded border">
-      <lib-dashboard-register-aprrove></lib-dashboard-register-aprrove>
+      <lib-dashboard-register-aprrove
+        (handleRegisterApprove)="registerApprove($event)"
+      ></lib-dashboard-register-aprrove>
     </div>
     <div class="d-flex justify-content-between w-100">
       <div class="bg-white border mt-3 p-3 rounded w-60">
         <div class="d-flex flex-cloumn justify-content-between">
           <span class="fw-bold">Nhân viên mới vô làm trong tháng (4)</span>
           <div>
-            <codx-valuelist></codx-valuelist>
+            <codx-dropdown-calendar 
+            cssPopup="h-350px w-550px"
+            [selectedType]="'m'"
+            [displayOption]="ops"
+            cssClass="w-100" ></codx-dropdown-calendar>
           </div>
         </div>
-        <div >
+        <div>
           <lib-table-grip
             [data]="listThanNhan"
             [listFields]="listField"
@@ -745,7 +772,15 @@
             <ng-template #Employeeinfo let-item>
               <div class="d-flex flex-row align-items-start gap-2">
                 <div class="d-flex flex-column align-items-center">
-                  <img class="emp-img" [src]="item.img" alt="dfvbgvdfgv" />
+                  <codx-imgs
+                    [isToolTip]="true"
+                    [objectId]=""
+                    [objectName]=""
+                    [objectType]="'AD_Users'"
+                    [width]="30"
+                    [numberImages]="1"
+                  >
+                  </codx-imgs>
                 </div>
                 <div class="d-flex flex-column justify-content-start">
                   <div class="info-emp">
@@ -782,7 +817,7 @@
         </div>
       </div>
       <div class="mt-3 flex-grow-1 ms-1 mt-3">
-          <lib-age-statistic></lib-age-statistic>
+        <lib-age-statistic></lib-age-statistic>
       </div>
     </div>
   </div>
@@ -1020,7 +1055,7 @@
               <span class="icon-i-filter-right icon-20 me-2"></span>
               <div class="fw-bold text-uppercase fs-5-sm text-gray-600">
                 <codx-label
-                  name="lblEmployeeInfo"
+                  name="lblEmqployeeInfo"
                   [formModel]="eInfoFormModel"
                   default="Mã số thuế thu nhập cá nhân"
                 >
@@ -8011,12 +8046,12 @@
     [ngStyle]="{ background: color }"
     class="info-item d-flex align-items-center justify-content-around p-3 rounded gap-2 w-25"
   >
-    <div class="text-white d-flex flex-column">
-      <div class="text fs-13 fw-400 p-3">Công làm việc</div>
+    <div class="text-white d-flex flex-column p-3">
+      <div class="text fs-13 fw-400  ">Công làm việc</div>
       <div class="text fs-3 fw-500">15/24</div>
     </div>
     <div>
-      <span class="text-white">ICON</span>
+      <span [ngClass]="icon" ></span>
     </div>
   </div>
 </ng-template>

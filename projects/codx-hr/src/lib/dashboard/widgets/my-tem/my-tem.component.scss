@@ -1,0 +1,124 @@
+// .myTeamContainer {
+//     position: relative;
+// }
+
+// .toogleIcon {
+//     position: absolute;
+//     width: 50px;
+//     background-color: red;
+//     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+//     height: 44.19px;
+//     top: 10px;
+//     right: 180px;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     cursor: pointer;
+//     z-index: 99;
+// }
+
+.all-container {
+
+    /* delete soon */
+    margin-top: 200px;
+}
+
+
+/* css cho card user */
+
+.view-all{
+    color: #007bff;
+}
+
+.user-avatar {
+    position: relative;
+    display: inline-block;
+}
+
+.user-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--primary);
+}
+
+.user-status {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    background-color: green;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ffff;
+}
+
+.YOW.fw-bold {
+    color: #007bff;
+    font-weight: 500;
+}
+
+.e-tab .e-tab-header .e-indicator {
+    background: blue;
+}
+
+.e-tab .e-tab-text {
+    color: blue !important;
+    font-weight: 600 !important;
+}
+
+.e-tab .e-toolbar-item.e-active .e-tab-text {
+    color: blue !important;
+    font-weight: 600 !important;
+}
+
+.e-toolbar-item.e-icon.e-template .e-tab-wrap {
+    padding: 0 8px !important;
+}
+
+.e-hscroll_0_nav.e-scroll-nav.e-scroll-right-nav.e-lib.e-touch {
+    display: none !important;
+}
+
+.e-hscroll .e-scroll-nav {
+    background: white !important;
+}
+
+.all-container {
+
+    margin-top: 300px;
+}
+
+
+
+.fab-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    // display: none;
+    transition: right 0.3s ease;
+}
+
+.fab-open {
+    right: calc(20px + 400px);
+}
+
+@media (max-width: 990px) {
+    .fab-container {
+        display: inline-flex; 
+    }
+}

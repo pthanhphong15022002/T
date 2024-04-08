@@ -1,35 +1,163 @@
-<div class="border p-3 rounded bg-white">
-    <div class="d-flex justify-content-between pb-3 pt-1 align-items-center">
-      <div class="hcs-text fw-500">My team</div>
-      <div class="hcs-text pointer fs-12 text-primary">Xem tất cả</div>
+<!-- <div class="border p-3 rounded bg-white myTeamContainer" id="myTeamSideBar">
+  <div class="d-flex justify-content-between pb-3 pt-1 align-items-center">
+    <div class="hcs-text fw-500">Nhóm của tôi</div>
+    <div class="hcs-text pointer fs-12 text-primary">Xem tất cả</div>
+  </div>
+  <codx-searchbar></codx-searchbar>
+  <div class="d-flex justify-content-around py-2">
+    <div
+      (click)="selectedTabs = 0"
+      [ngClass]="{ 'tab-active': selectedTabs == 0 }"
+      class="hcs-text text-grey fs-13 pointer fw-500 p-2"
+    >
+      Quản lý trực tiếp
     </div>
-    <!-- <hcs-input-search [height]="'34px'"></hcs-input-search> -->
-    <div class="d-flex justify-content-around py-2">
-      <div (click)="selectedTabs=0" [ngClass]="{'tab-active': selectedTabs == 0}" class="hcs-text text-grey fs-13 pointer fw-500 p-2">Quản lý trực tiếp</div>
-      <div (click)="selectedTabs=1" [ngClass]="{'tab-active': selectedTabs == 1}" class="hcs-text text-grey fs-13 pointer fw-500 p-2">Quản lý gián tiếp</div>
+    <div
+      (click)="selectedTabs = 1"
+      [ngClass]="{ 'tab-active': selectedTabs == 1 }"
+      class="hcs-text text-grey fs-13 pointer fw-500 p-2"
+    >
+      Quản lý gián tiếp
     </div>
-  
-    <div [ngSwitch]="selectedTabs">
-      <div *ngSwitchCase="0">
-        <div class="d-flex gap-3 align-items-start pointer py-2">
-          <img class="rounded-circle" width="40" height="40" src="/assets/images/avar.png" alt="" srcset="">
-          <div class="d-flex flex-column align-items-start gap-1">
-            <div class="hcs-text fs-12 text-black fw-500">Huỳnh Phước Hòa</div>
-            <div class="hcs-text sub-1 text-grey">Phát triển phần mềm</div>
-            <div class="hcs-text sub-2 fw-500">20 năm 9 tháng 0 ngày</div>
-          </div>
+    <div
+      (click)="selectedTabs = 1"
+      [ngClass]="{ 'tab-active': selectedTabs == 1 }"
+      class="hcs-text text-grey fs-13 pointer fw-500 p-2"
+    >
+      Nhóm của tôi
+    </div>
+  </div>
+
+  <div [ngSwitch]="selectedTabs">
+    <div *ngSwitchCase="0">
+      <div class="d-flex gap-3 align-items-start pointer py-2">
+        <img
+          class="rounded-circle"
+          width="40"
+          height="40"
+          src="/assets/images/avar.png"
+          alt=""
+          srcset=""
+        />
+        <div class="d-flex flex-column align-items-start gap-1">
+          <div class="hcs-text fs-12 text-black fw-500">Huỳnh Phước Hòa</div>
+          <div class="hcs-text sub-1 text-grey">Phát triển phần mềm</div>
+          <div class="hcs-text sub-2 fw-500">20 năm 9 tháng 0 ngày</div>
         </div>
       </div>
-      <div *ngSwitchCase="1">
-        <div class="d-flex gap-3 align-items-start pointer py-2">
-          <img class="rounded-circle" width="40" height="40" src="/assets/images/avar.png" alt="" srcset="">
-          <div class="d-flex flex-column align-items-start gap-1">
-            <div class="hcs-text fs-12 text-black fw-500">Huỳnh Phước Hòa</div>
-            <div class="hcs-text sub-1 text-grey">Phát triển phần mềm</div>
-            <div class="hcs-text sub-2 fw-500">20 năm 9 tháng 0 ngày</div>
-          </div>
+    </div>
+    <div *ngSwitchCase="1">
+      <div class="d-flex gap-3 align-items-start pointer py-2">
+        <img
+          class="rounded-circle"
+          width="40"
+          height="40"
+          src="/assets/images/avar.png"
+          alt=""
+          srcset=""
+        />
+        <div class="d-flex flex-column align-items-start gap-1">
+          <div class="hcs-text fs-12 text-black fw-500">Huỳnh Phước Hòa</div>
+          <div class="hcs-text sub-1 text-grey">Phát triển phần mềm</div>
+          <div class="hcs-text sub-2 fw-500">20 năm 9 tháng 0 ngày</div>
         </div>
       </div>
     </div>
   </div>
-  
+</div> -->
+
+<div class="myteam-sidebar rounded border bg-white h-100 p-3">
+  <div class="wrapper d-flex justify-content-center flex-column py-3">
+    <div class="header-myteam">
+      <div class="d-flex justify-content-between pb-3 pt-1 align-items-center">
+        <div class="fs-2 fw-bold">Nhóm của tôi</div>
+        <div class="view-all fs-6">Xem tất cả</div>
+      </div>
+      <div>
+        <codx-searchbar></codx-searchbar>
+      </div>
+    </div>
+    <div class="body-myteam w-100 text-align-center">
+      <ejs-tab id="element">
+        <e-tabitems>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div>Quản lý trực tiếp</div>
+            </ng-template>
+            <ng-template #content>
+              <div class="d-flex flex-row gap-3 align-items-start pointer py-3">
+                <div class="user-avatar">
+                  <img class="user-img" />
+                  <div class="user-status"></div>
+                </div>
+                <div class="d-flex flex-column align-items-start gap-1">
+                  <div class="name fs-6 fw-bold">Huỳnh Phước Hòa</div>
+                  <div class="text-gray-500">Phát triển phần mềm</div>
+                  <div class="YOW fw-bold">20 năm 9 tháng 0 ngày</div>
+                </div>
+              </div>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div>Quản lý gián tiếp</div>
+            </ng-template>
+            <ng-template #content>
+              <div class="d-flex flex-row gap-3 align-items-start pointer py-3">
+                <div class="user-avatar">
+                  <img class="user-img" />
+                  <div class="user-status"></div>
+                </div>
+                <div class="d-flex flex-column align-items-start gap-1">
+                  <div class="fs-5 fw-bold">Huỳnh Phước Hòa</div>
+                  <div class="text-gray-700">Phát triển phần mềm</div>
+                  <div class="YOW fw-bold">20 năm 9 tháng 0 ngày</div>
+                </div>
+              </div>
+              <div class="d-flex flex-row gap-3 align-items-start pointer py-3">
+                <div class="user-avatar">
+                  <img class="user-img" />
+                  <div class="user-status"></div>
+                </div>
+                <div class="d-flex flex-column align-items-start gap-1">
+                  <div class="fs-5 fw-bold">Huỳnh Phước Hòa</div>
+                  <div class="text-gray-700">Phát triển phần mềm</div>
+                  <div class="YOW fw-bold">20 năm 9 tháng 0 ngày</div>
+                </div>
+              </div>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div>Nhóm của tôi</div>
+            </ng-template>
+            <ng-template #content>
+              <div class="d-flex flex-row gap-3 align-items-start pointer py-3">
+                <div class="user-avatar">
+                  <img class="user-img" />
+                  <div class="user-status"></div>
+                </div>
+                <div class="d-flex flex-column align-items-start gap-1">
+                  <div class="fs-5 fw-bold">Huỳnh Phước Hòa</div>
+                  <div class="text-gray-700">Phát triển phần mềm</div>
+                  <div class="YOW fw-bold">20 năm 9 tháng 0 ngày</div>
+                </div>
+              </div>
+              <div class="d-flex flex-row gap-3 align-items-start pointer py-3">
+                <div class="user-avatar">
+                  <img class="user-img" />
+                  <div class="user-status"></div>
+                </div>
+                <div class="d-flex flex-column align-items-start gap-1">
+                  <div class="fs-5 fw-bold">Huỳnh Phước Hòa</div>
+                  <div class="text-gray-700">Phát triển phần mềm</div>
+                  <div class="YOW fw-bold">20 năm 9 tháng 0 ngày</div>
+                </div>
+              </div>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+    </div>
+  </div>
+</div>

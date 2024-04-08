@@ -53,13 +53,18 @@ import { PopupEdocumentsComponent } from '../../employee-profile/popup-edocument
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupEBasicSalariesComponent } from '../../employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
 import { PopupViewAllComponent } from '../employee-info-detail/pop-up/popup-view-all/popup-view-all.component';
+import { MyTeamComponent } from 'projects/codx-wp/src/lib/dashboard/home/my-team/my-team.component';
+import { MyTemComponent } from '../../dashboard/widgets/my-tem/my-tem.component';
+import { DialogDetailRegisterApproveComponent } from '../../dashboard/components/dialog-detail-register-approve/dialog-detail-register-approve.component';
+import { DialogRegisterApproveComponent } from '../../dashboard/components/dialog-register-approve/dialog-register-approve.component';
+import { DialogReviewLeaveApproveComponent } from './components/dialog-review-leave-approve/dialog-review-leave-approve.component';
 
 @Component({
   selector: 'lib-employee-info-profile',
   templateUrl: './employee-info-profile.component.html',
-  styleUrls: ['./employee-info-profile.component.css']
+  styleUrls: ['./employee-info-profile.component.css'],
 })
-export class EmployeeInfoProfileComponent  extends UIComponent {
+export class EmployeeInfoProfileComponent extends UIComponent {
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
   @ViewChild('button') button: TemplateRef<any>;
   @ViewChild('itemTemplate') template: TemplateRef<any>;
@@ -1033,7 +1038,7 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
   headTempDiseases3: TemplateRef<any>;
 
   // hãy code vào đây nếu bạn là người fix bug - chứ ở trên tui không biết họ đang code cái gì
-  payrollFM:FormModel = null;  // THÔNG TIN TÍNH LƯƠNG
+  payrollFM: FormModel = null; // THÔNG TIN TÍNH LƯƠNG
 
   constructor(
     private inject: Injector,
@@ -1068,7 +1073,7 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
     if (this.funcID) {
       this.hrService.getFunctionList(this.funcID).subscribe((res) => {
         this.lstTab = res;
-        console.log('lstTab',this.lstTab);
+        console.log(this.lstTab);
         for (let i = 0; i < res.length; i++) {
           switch (res[i].url) {
             case this.curriculumVitaeURL:
@@ -1185,8 +1190,6 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
     this.initHeaderText();
   }
 
-
-
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -1230,7 +1233,10 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
     this.hrService.getFormModel(this.eAssetFuncID).then((res) => {
       this.eAssetFormModel = res;
       this.cache
-        .gridViewSetup(this.eAssetFormModel.formName,this.eAssetFormModel.gridViewName)
+        .gridViewSetup(
+          this.eAssetFormModel.formName,
+          this.eAssetFormModel.gridViewName
+        )
         .subscribe((res) => {
           this.eAssetGrvSetup = res;
           let dataRequest = new DataRequest();
@@ -1537,8 +1543,7 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
       this.df.detectChanges();
     }
 
-    if (!this.eCertificateColumnGrid) 
-    {
+    if (!this.eCertificateColumnGrid) {
       this.hrService.getHeaderText(this.eCertificateFuncID).then((res) => {
         this.eCertificateHeaderText = res;
         this.eCertificateColumnGrid = [
@@ -1862,7 +1867,7 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
     }
   }
 
-  UpdateDataOnGrid(gridView:  CodxGridviewV2Component, lst, prdc, dtvl) {
+  UpdateDataOnGrid(gridView: CodxGridviewV2Component, lst, prdc, dtvl) {
     (gridView.predicates = prdc),
       (gridView.dataValues = dtvl),
       (gridView.dataSource = lst);
@@ -2588,7 +2593,7 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
   }
 
   popupViewAllContract() {
-    debugger
+    debugger;
     let opt = new DialogModel();
     opt.zIndex = 999;
     let popup = this.callfunc.openForm(
@@ -2623,7 +2628,6 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
       }
     });
   }
-  
 
   popupViewAllWorkPermit() {
     let opt = new DialogModel();
@@ -2756,8 +2760,7 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
 
   clickTab(funcList: any) {
     this.crrFuncTab = funcList.functionID;
-    this.hrService.getFunctionList(this.crrFuncTab)
-    .subscribe((res) => {
+    this.hrService.getFunctionList(this.crrFuncTab).subscribe((res) => {
       switch (this.crrFuncTab) {
         case this.curriculumVitaeFuncID:
           for (let i = 0; i < res.length; i++) {
@@ -2830,6 +2833,7 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
             this.active[0] = this.eInfoFuncID;
           }
           this.lstFuncCurriculumVitae = res;
+          console.log(this.lstFuncCurriculumVitae);
           this.lstBtnAdd = [];
           for (let i = 0; i < res.length; i++) {
             switch (res[i].functionID) {
@@ -3817,6 +3821,7 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
 
     dataService.updateDatas.set(tempData.recID, tempData);
     this.hrService.getFormModel(this.eAssurFunc.functionID).then((res) => {
+      console.log('in');
       let formM = res;
       this.openFormEditAssure(
         actionHeaderText,
@@ -3958,6 +3963,37 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
     });
   }
 
+  //fake
+  HandleEmployeeJobGeneralInfo2() {
+    console.log(0);
+
+    let tempData = JSON.parse(JSON.stringify(this.infoPersonal));
+    var dataService = new CRUDService(this.inject);
+    let request = new DataRequest(
+      this.jobGeneralFunc?.formName,
+      this.jobGeneralFunc?.gridViewName,
+      this.jobGeneralFunc?.entityName
+    );
+    request.funcID = this.jobGeneralFunc?.functionID;
+    dataService.service = 'HR';
+    dataService.request = request;
+    dataService.updateDatas.set(tempData.recID, tempData);
+    this.hrService.getFormModel(this.jobGeneralFunc.functionID).then((res) => {
+      let formM = res;
+      console.log('in rui');
+      this.openFormJobInfo(
+        'IS ME',
+        'edit',
+        dataService,
+        tempData,
+        this.infoPersonal,
+        formM
+      );
+    });
+
+    console.log(123);
+  }
+
   openFormJobInfo(
     actionHeaderText,
     actionType,
@@ -4023,7 +4059,7 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
     request.funcID = this.eTimeCardFunc?.functionID;
     dataService.service = 'HR';
     dataService.request = request;
-    
+
     this.hrService.getFormModel(this.eTimeCardFunc.functionID).then((res) => {
       dataService.dataSelected = tempData;
       let option = new SidebarModel();
@@ -4226,41 +4262,38 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
   // open popup Kinh nghiệm
   openFormExperiences(option, actionHeaderText, actionType, data) {
     data.employeeID = this.employeeID;
-    this.callfunc.openSide(
-      CodxFormDynamicComponent,
-      {
-        formModel: option.FormModel,
-        data: data,
-        function: null,
-        dataService: option.DataService,
-        isView: actionType == false,
-        headerText:
-          actionHeaderText +
-          ' ' +
-          this.transText(this.eExperienceFuncID, this.lstFuncCurriculumVitae),
-      },
-      option
-    ).closed.subscribe((res) => {
-      if (res && res?.event) 
-      {
-        if(actionType === "add" || actionType === "copy")
+    this.callfunc
+      .openSide(
+        CodxFormDynamicComponent,
         {
-          let data = res.event.save.data;
-          if(!this.lstExperiences) this.lstExperiences = [];
-          this.lstExperiences.push(data);
-        }
-        else if (actionType == 'edit') 
-        {
-          let data = res.event.update.data;
-          let idx = this.lstExperiences.indexOf(data);
-          if(idx < -1)
-          {
-            this.lstExperiences[idx] = data;
+          formModel: option.FormModel,
+          data: data,
+          function: null,
+          dataService: option.DataService,
+          isView: actionType == false,
+          headerText:
+            actionHeaderText +
+            ' ' +
+            this.transText(this.eExperienceFuncID, this.lstFuncCurriculumVitae),
+        },
+        option
+      )
+      .closed.subscribe((res) => {
+        if (res && res?.event) {
+          if (actionType === 'add' || actionType === 'copy') {
+            let data = res.event.save.data;
+            if (!this.lstExperiences) this.lstExperiences = [];
+            this.lstExperiences.push(data);
+          } else if (actionType == 'edit') {
+            let data = res.event.update.data;
+            let idx = this.lstExperiences.indexOf(data);
+            if (idx < -1) {
+              this.lstExperiences[idx] = data;
+            }
           }
         }
-      }
-      this.df.detectChanges();
-    });
+        this.df.detectChanges();
+      });
   }
 
   HandleEmployeeJobSalariesInfo(
@@ -5460,8 +5493,6 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
         data
       );
     }
-
-    
   }
 
   openFormEVaccine(actionHeaderText, actionType, dataService, tempData, data) {
@@ -5611,27 +5642,20 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
   loadDataWhenChangeEmp() {
     switch (this.crrFuncTab) {
       case this.curriculumVitaeFuncID:
-        
         break;
       case this.jobInfoFuncID:
-      
         break;
       case this.salaryBenefitInfoFuncID:
-        
         this.initEmpSalary();
         break;
       case this.workingProcessInfoFuncID:
-     
         this.initEmpProcess();
         break;
       case this.knowledgeInfoFuncID:
-       
         this.initEmpKnowledge();
         break;
       case this.healthInfoFuncID:
-     
         break;
-
     }
   }
 
@@ -5723,8 +5747,6 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
       this.refreshGridViews();
     }
   }
-
-  
 
   valueChangeFilterBenefit(evt) {
     this.filterByBenefitIDArr = evt.data;
@@ -5844,8 +5866,6 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
         }
       });
     });
-
-    
   }
 
   valueChangeViewAllEBenefit(evt) {
@@ -5857,6 +5877,7 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
   }
 
   popupUpdateEBasicSalaryStatus() {
+    console.log('hihi');
     let opt = new DialogModel();
     opt.zIndex = 999;
     let popup = this.callfunc.openForm(
@@ -7104,100 +7125,125 @@ export class EmployeeInfoProfileComponent  extends UIComponent {
   }
   //#endregion
 
-
   // get formModel
-  getFormModelByFuncID(funcID:string){
-    if(funcID)
-    {
-      switch(funcID)
-      {
-        case "": //TAB SƠ YẾU LÍ LỊCH
-        break;
-        case "": //TAB THÔNG TIN NHÂN VIÊN
-        break;
-        case "": //TAB LƯƠNG PHÚC LỢI
-        break;
-        case "": //TAB QUÁ TRÌNH NHÂN SỰ
-        break;
-        case "": //TAB KIẾN THỨC
-        break;
-        case "": //TAB SỨC KHỎE
-        break;
-        case "": //TAB THÔI VIỆC
-        break;
+  getFormModelByFuncID(funcID: string) {
+    if (funcID) {
+      switch (funcID) {
+        case '': //TAB SƠ YẾU LÍ LỊCH
+          break;
+        case '': //TAB THÔNG TIN NHÂN VIÊN
+          break;
+        case '': //TAB LƯƠNG PHÚC LỢI
+          break;
+        case '': //TAB QUÁ TRÌNH NHÂN SỰ
+          break;
+        case '': //TAB KIẾN THỨC
+          break;
+        case '': //TAB SỨC KHỎE
+          break;
+        case '': //TAB THÔI VIỆC
+          break;
       }
     }
   }
 
   //get child function by parent functionID
-  getChildFunction(parentFuncID:string){
-    if(parentFuncID)
-    {
-      this.api.execSv('SYS','SYS','FunctionListBusiness','GetByParentAsync',[parentFuncID, true])
-      .subscribe((res:any) => {
-        if(res && res.length > 0)
-        {
-
-        }
-      });
+  getChildFunction(parentFuncID: string) {
+    if (parentFuncID) {
+      this.api
+        .execSv('SYS', 'SYS', 'FunctionListBusiness', 'GetByParentAsync', [
+          parentFuncID,
+          true,
+        ])
+        .subscribe((res: any) => {
+          if (res && res.length > 0) {
+          }
+        });
     }
   }
 
-  listField:any = [
-    { id: "Employeeinfo", name: 'Nhân viên', field: "FullName", width:200 , textAlign: 'Left',type:'text'},
-    { id: "StartWorkingDate", name:'Tình trạng', field: "StartWorkingDate", width: 100 ,textAlign: 'Left', type:'combobox'},
-    { id: "Hotline", name: 'Liên hệ', field: "Phone", width: 100, textAlign: 'Left', type:'datetime' },
-]
+  listField: any = [
+    {
+      id: 'Employeeinfo',
+      name: 'Nhân viên',
+      field: 'FullName',
+      width: 200,
+      textAlign: 'Left',
+      type: 'text',
+    },
+    {
+      id: 'StartWorkingDate',
+      name: 'Tình trạng',
+      field: 'StartWorkingDate',
+      width: 100,
+      textAlign: 'Left',
+      type: 'combobox',
+    },
+    {
+      id: 'Hotline',
+      name: 'Liên hệ',
+      field: 'Phone',
+      width: 100,
+      textAlign: 'Left',
+      type: 'datetime',
+    },
+  ];
 
-  listThanNhan:any[] = [
+  listThanNhan: any[] = [
     {
-      FullName:'Vũ Đại Kỳ',
-      Gender:1,
-      img:'assets/images/avar.png',
+      FullName: 'Vũ Đại Kỳ',
+      Gender: 1,
+      img: 'assets/images/avar.png',
       EmployeeCode: 'ELV02269',
       JobWorking: 'Kiểm thử chất lượng phần mềm',
       TT: 'Trung tâm CDC',
       WorkingType: 'Thử việc',
-      StartWorkingDate:new Date().toISOString(),
-      Email:'nnpvi@lacviet.com.vn',
-      Phone:'(+84) 39-1234-5678'
+      StartWorkingDate: new Date().toISOString(),
+      Email: 'nnpvi@lacviet.com.vn',
+      Phone: '(+84) 39-1234-5678',
     },
     {
-      FullName:'Vũ Đại Kỳ',
-      Gender:1,
-      img:'assets/images/avar.png',
+      FullName: 'Vũ Đại Kỳ',
+      Gender: 1,
+      img: 'assets/images/avar.png',
       EmployeeCode: 'ELV02269',
       JobWorking: 'Kiểm thử chất lượng phần mềm',
       TT: 'Trung tâm CDC',
       WorkingType: 'Thử việc',
-      StartWorkingDate:new Date().toISOString(),
-      Email:'nnpvi@lacviet.com.vn',
-      Phone:'(+84) 39-1234-5678'
+      StartWorkingDate: new Date().toISOString(),
+      Email: 'nnpvi@lacviet.com.vn',
+      Phone: '(+84) 39-1234-5678',
     },
     {
-      FullName:'Vũ Đại Kỳ',
-      Gender:1,
-      img:'assets/images/avar.png',
+      FullName: 'Vũ Đại Kỳ',
+      Gender: 1,
+      img: 'assets/images/avar.png',
       EmployeeCode: 'ELV02269',
       JobWorking: 'Kiểm thử chất lượng phần mềm',
       TT: 'Trung tâm CDC',
       WorkingType: 'Thử việc',
-      StartWorkingDate:new Date().toISOString(),
-      Email:'nnpvi@lacviet.com.vn',
-      Phone:'(+84) 39-1234-5678'
+      StartWorkingDate: new Date().toISOString(),
+      Email: 'nnpvi@lacviet.com.vn',
+      Phone: '(+84) 39-1234-5678',
     },
     {
-      FullName:'Vũ Đại Kỳ',
-      Gender:1,
-      img:'assets/images/avar.png',
+      FullName: 'Vũ Đại Kỳ',
+      Gender: 1,
+      img: 'assets/images/avar.png',
       EmployeeCode: 'ELV02269',
       JobWorking: 'Kiểm thử chất lượng phần mềm',
       TT: 'Trung tâm CDC',
       WorkingType: 'Thử việc',
-      StartWorkingDate:new Date().toISOString(),
-      Email:'nnpvi@lacviet.com.vn',
-      Phone:'(+84) 39-1234-5678'
+      StartWorkingDate: new Date().toISOString(),
+      Email: 'nnpvi@lacviet.com.vn',
+      Phone: '(+84) 39-1234-5678',
     },
-  ]
+  ];
 
+  registerApprove(event: any) {
+    let options = new SidebarModel();
+
+    options.Width = 'Auto';
+    this.callfunc.openSide(DialogReviewLeaveApproveComponent, [], options);
+  }
 }

@@ -9,9 +9,10 @@
       class="swiper-btn previous"
       libSwiperClicking
       type="previous"
+      [scrollSpeed]="300"
       ContainerID="grid-element"
     >
-      <i class="hcs-icon vector-icon fs-12"></i>
+      <i class="icon-arrow_back_ios icon-18 me-1 "></i>
     </div>
     <div id="grid-element" class="grid">
       <ng-container
@@ -76,6 +77,7 @@
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#323232',
+          
         }"
       ></ng-container>
       <ng-container
@@ -179,15 +181,16 @@
       class="swiper-btn next"
       libSwiperClicking
       type="next"
+      [scrollSpeed]="300"
       ContainerID="grid-element"
     >
-      <i class="hcs-icon vector-icon fs-12"></i>
+      <i class="icon-arrow_forward_ios icon-18 me-1"></i>
     </div>
   </div>
 </div>
 <!-- col-xxl-3 col-lg-4 col-sm-4 col-md-4 -->
 <ng-template #item let-color="color" class="register-approve-item">
-  <div class="p-0 pointer" (click)="open($event)">
+  <div class="p-0 pointer" >
     <div
       class="d-flex flex-column border rounded container-item"
       [ngStyle]="{
@@ -196,31 +199,33 @@
       }"
     >
       <div
-        class="d-flex gap-2 align-items-center justify-content-between m-2 py-2 pb-3 border-bottom"
+        class="d-flex gap-2  justify-content-between m-2 py-2 pb-3 border-bottom"
       >
         <div
           class="d-flex  align-items-center justify-content-start"
         >
           <div
             style="width: 35px; height: 35px"
-            class="border rounded-circle d-flex align-items-center justify-content-center text-white"
+            class="border rounded-circle d-flex justify-content-center text-white"
             [ngStyle]="{ background: color }"
           >
-            <span class="fs-18"></span>
+            <span class="fs-18" [ngStyle]="{ background: color}"></span>
           </div>
           <div class="d-flex align-items-baseline gap-1 flex-column ms-3">
             <div class="fw-500 fs-2 fw-bold">20</div>
             <div class="fs-12 fw-400 text-grey">Ngoài nước</div>
           </div>
         </div>
-        <div>ICON</div>
+        <div (click)="open()">
+          <span class=" icon-i-plus icon-18 me-1"></span>
+        </div>
       </div>
       <div
         class="d-flex align-items-start justify-content-around gap-2 p-2 pt-1"
       >
-        <div class="d-flex flex-column align-items-center gap-1">
+        <div class="d-flex flex-column align-items-center gap-1" (click)="open2($event)">
           <div class="fw-500 fs-3 fw-bold">09</div>
-          <div class="text-gray-400">Chờ xét duyệt</div>
+          <div class="text-gray-400" >Chờ xét duyệt</div>
         </div>
         <div class="d-flex flex-column align-items-center gap-1">
           <div class="fw-500 fs-3 fw-bold">11</div>
@@ -232,4 +237,9 @@
     </div>
   </div>
 </ng-template>
-<dialog-register-approve #dialog></dialog-register-approve>
+
+<lib-dialog-detail-register-approve #dialog></lib-dialog-detail-register-approve>
+
+
+
+

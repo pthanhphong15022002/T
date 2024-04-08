@@ -1,0 +1,142 @@
+.container-dialog {
+  display: grid;
+  grid-template-columns: 412px auto;
+}
+
+
+
+.dialog-left::-webkit-scrollbar {
+  height: 10px;
+  width: 5px;
+
+}
+
+.dialog-left::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 5px;
+}
+
+.dialog-left::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.dialog-left {
+  height: calc(100vh);
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  &:hover {
+    &::-webkit-scrollbar-thumb {
+      background-color: #ccc !important;
+    }
+  }
+
+  .sticky-top {
+    padding-top: 30px;
+  }
+}
+
+.dialog-right {
+  padding-top: 30px !important;
+}
+
+.e-dlg-header-content {
+  display: none;
+}
+
+// .checkbox-item {
+//   position: absolute;
+//   top: 16px;
+//   left: 6px;
+// }
+
+.status {
+  min-width: 15px;
+  height: 15px;
+  border-radius: 50%;
+}
+
+.status1 {
+  background-color: #FFA800;
+}
+
+.ticket:hover {
+  background-color: #E5FFFE;
+  cursor: pointer;
+  ;
+}
+
+.ticket.active {
+  background-color: #E5FFFE;
+}
+
+.button-approve:hover {
+  background-color: #E5FFFE;
+  cursor: pointer;
+}
+
+.level-aprrove {
+  border: 1px solid #0078FF;
+  padding: 10px;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.line-status {
+  width: 162px;
+  height: 3px;
+  border-radius: 10px;
+}
+
+.block-status {
+  display: flex;
+  width: 309px;
+  padding: 10px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  background: var(--Background-BG-ReadOnly, #F0F2F5);
+
+  color: #000;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-top: 10px;
+}
+
+.history {
+  height: calc(100vh - 340px);
+  overflow-y: scroll;
+  overflow-x: hidden;
+  min-width: 660px;
+  padding-right: 1rem;
+
+  &:hover {
+    &::-webkit-scrollbar-thumb {
+      background-color: #ccc !important;
+    }
+  }
+}
+
+.history::-webkit-scrollbar {
+  height: 10px;
+  width: 5px;
+}
+
+.history::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 5px;
+}
+
+.history::-webkit-scrollbar-track {
+  background-color: transparent;
+}
