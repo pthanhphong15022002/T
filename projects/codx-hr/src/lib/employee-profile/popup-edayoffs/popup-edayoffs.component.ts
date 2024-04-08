@@ -304,7 +304,7 @@ export class PopupEdayoffsComponent implements OnInit {
 
   // call HR_fnCalculateDayOff
   calculateDayOff(fromDate:Date,toDate:Date,employeeID:string,kowID:string,periodType:string){
-    this.api.execSv("HR","HR","EDayOffsBusiness","CalculateDayOffAsync",[fromDate,toDate,employeeID,kowID,periodType])
+    this.api.execSv("HR","HR","EDayOffsBusiness_Old","CalculateDayOffAsync",[fromDate,toDate,employeeID,kowID,periodType])
     .subscribe((res:any) => {
       this.dayoffObj["totalDaysOff"] = res ?? 0;
       this.form.formGroup.patchValue({totalDaysOff: this.dayoffObj["totalDaysOff"]});

@@ -72,7 +72,7 @@ export class InformationComponent implements OnInit{
   {
     let paras = [this.user?.userID];
     let keyRoot = "WSHREmloyee" + this.user?.userID;
-    var info = this.wsService.loadData(paras,keyRoot,"HR","HR","EmployeesBusiness","GetByDomainUserAsync") as any;
+    var info = this.wsService.loadData(paras,keyRoot,"HR","HR","EmployeesBusiness_Old","GetByDomainUserAsync") as any;
     if(isObservable(info))
     {
       info.subscribe((item:any)=>{

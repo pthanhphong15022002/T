@@ -90,7 +90,7 @@ export class CodxHrService {
     return this.api
       .call(
         'ERM.Business.HR',
-        'PositionsBusiness',
+        'PositionsBusiness_Old',
         'GetEmployeeListByPositionAsync',
         [positionID, _status]
       )
@@ -110,11 +110,11 @@ export class CodxHrService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'PositionsBusiness',
+      'PositionsBusiness_Old',
       'GetEmployeeListByPosAsync',
       [positionID, _status]
     );
-    // return this.api.call('ERM.Business.HR', 'PositionsBusiness', 'GetEmployeeListByPosAsync', [positionID, _status]).pipe(
+    // return this.api.call('ERM.Business.HR', 'PositionsBusiness_Old', 'GetEmployeeListByPosAsync', [positionID, _status]).pipe(
     //   map((data) => {
     //     if (data.error) return;
     //     return data.msgBodyData[0];
@@ -130,7 +130,7 @@ export class CodxHrService {
     return this.api
       .call(
         'ERM.Business.HR',
-        'PositionsBusiness',
+        'PositionsBusiness_Old',
         'GetPosInfoAsync',
         positionID
       )
@@ -157,7 +157,7 @@ export class CodxHrService {
       .callSv(
         'HR',
         'ERM.Business.HR',
-        'OrganizationUnitsBusiness',
+        'OrganizationUnitsBusiness_Old',
         'GetDataDiagramAsync',
         [orgUnitID, numberLV, parentID, onlyDepartment]
       )
@@ -210,7 +210,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetEmployeeByEmployeeIDAsync',
       [employeeID]
     );
@@ -220,7 +220,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'UpdateEmployeeAssurTaxBankInfoAsync',
       data
     );
@@ -230,7 +230,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'UpdateEmployeeSelfInfoAsync',
       data
     );
@@ -240,7 +240,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'UpdateEmployeeQuitJobInfoAsync',
       data
     );
@@ -250,7 +250,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'UpdateEmployeeUnionAndPartyInfoAsync',
       data
     );
@@ -260,7 +260,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'UpdateEmployeeAssurTaxBankInfoAsync',
       data
     );
@@ -270,7 +270,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'ESkillsBusiness',
+      'ESkillsBusiness_Old',
       'AddEmployeeSkillInfoAsync',
       data
     );
@@ -282,7 +282,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetModelFormEmployAsync',
       dataRequest
     );
@@ -292,7 +292,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'LoadGrossSalaryAsync',
       data
     );
@@ -300,12 +300,12 @@ export class CodxHrService {
 
   //#endregion
 
-  //#region EPassportsBusiness
+  //#region EPassportsBusiness_Old
   getEmployeePassportModel() {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EPassportsBusiness',
+      'EPassportsBusiness_Old',
       'GetEmployeePassportModelAsync'
     );
   }
@@ -314,7 +314,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EPassportsBusiness',
+      'EPassportsBusiness_Old',
       'GetEmpCrrPassportAsync',
       [empID]
     );
@@ -326,7 +326,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDegreesBusiness',
+      'EDegreesBusiness_Old',
       'GetEmployeeDegreesModelAsync'
     );
   }
@@ -335,7 +335,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDegreesBusiness',
+      'EDegreesBusiness_Old',
       'UpdateEmployeeDegreeInfoAsync',
       data
     );
@@ -345,7 +345,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDegreesBusiness',
+      'EDegreesBusiness_Old',
       'AddEmployeeDegreeInfoAsync',
       data
     );
@@ -355,7 +355,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDegreesBusiness',
+      'EDegreesBusiness_Old',
       'DeleteEmployeeDegreeInfoAsync',
       data
     );
@@ -365,20 +365,20 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDegreesBusiness',
+      'EDegreesBusiness_Old',
       'LoadEDegreesAsync',
       data
     );
   }
   //#endregion
 
-  //#region EVisasBusiness
+  //#region EVisasBusiness_Old
 
   getEmployeeVisaModel() {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EVisasBusiness',
+      'EVisasBusiness_Old',
       'GetEmployeeVisaModelAsync'
     );
   }
@@ -387,7 +387,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EVisasBusiness',
+      'EVisasBusiness_Old',
       'UpdateEmployeeVisasInfoAsync',
       data
     );
@@ -397,7 +397,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EVisasBusiness',
+      'EVisasBusiness_Old',
       'AddEmployeeVisasInfoAsync',
       data
     );
@@ -407,7 +407,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EVisasBusiness',
+      'EVisasBusiness_Old',
       'DeleteEmployeeVisaInfoAsync',
       data
     );
@@ -417,7 +417,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EVisasBusiness',
+      'EVisasBusiness_Old',
       'GetEmpCrrVisaAsync',
       [empID]
     );
@@ -429,7 +429,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'ESkillsBusiness',
+      'ESkillsBusiness_Old',
       'GetEmployeeSkillInfoAsync',
       data
     );
@@ -439,7 +439,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDegreesBusiness',
+      'EDegreesBusiness_Old',
       'LoadEDegreesAsync',
       data
     );
@@ -451,7 +451,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'ETrainCoursesBusiness',
+      'ETrainCoursesBusiness_Old',
       'GetDataETrainDefaultAsync',
       null
     );
@@ -461,7 +461,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'ETrainCoursesBusiness',
+      'ETrainCoursesBusiness_Old',
       'GetETrainCoursesByEmpIDAsync',
       data
     );
@@ -471,7 +471,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'ETrainCoursesBusiness',
+      'ETrainCoursesBusiness_Old',
       'EditETraincourseAsync',
       [data, functionID]
     );
@@ -481,7 +481,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'ETrainCoursesBusiness',
+      'ETrainCoursesBusiness_Old',
       'DeleteETraincourseAsync',
       data
     );
@@ -491,7 +491,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'ETrainCoursesBusiness',
+      'ETrainCoursesBusiness_Old',
       'AddETraincourseAsync',
       [data, functionID]
     );
@@ -501,7 +501,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EWorkPermitsBusiness',
+      'EWorkPermitsBusiness_Old',
       'GetEmpCrrWorkPermitAsync',
       [empID]
     );
@@ -511,7 +511,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EWorkPermitsBusiness',
+      'EWorkPermitsBusiness_Old',
       'GetListWorkPermitsByEmployeeIDAsync',
       data
     );
@@ -520,7 +520,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EPassportsBusiness',
+      'EPassportsBusiness_Old',
       'UpdateEmployeePassportInfoAsync',
       data
     );
@@ -529,7 +529,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EPassportsBusiness',
+      'EPassportsBusiness_Old',
       'AddEmployeePassportInfoAsync',
       data
     );
@@ -538,7 +538,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EPassportsBusiness',
+      'EPassportsBusiness_Old',
       'DeleteEmployeePassportInfoAsync',
       data
     );
@@ -547,7 +547,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EWorkPermitsBusiness',
+      'EWorkPermitsBusiness_Old',
       'UpdateEmployeeWorkPermitInfoAsync',
       data
     );
@@ -557,7 +557,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EWorkPermitsBusiness',
+      'EWorkPermitsBusiness_Old',
       'AddEmployeeWorkPermitInfoAsync',
       data
     );
@@ -567,7 +567,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EWorkPermitsBusiness',
+      'EWorkPermitsBusiness_Old',
       'DeleteEmployeeWorkPermitInfoAsync',
       data
     );
@@ -579,7 +579,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAwardsBusiness',
+      'EAwardsBusiness_Old',
       'GetEmployeeAwardModelAsync'
     );
   }
@@ -588,7 +588,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAwardsBusiness',
+      'EAwardsBusiness_Old',
       'UpdateEmployeeAwardInfoAsync',
       data
     );
@@ -598,7 +598,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAwardsBusiness',
+      'EAwardsBusiness_Old',
       'AddMultiEmployeeEAwardAsync',
       data
     );
@@ -608,7 +608,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAwardsBusiness',
+      'EAwardsBusiness_Old',
       'AddEmployeeAwardInfoAsync',
       data
     );
@@ -618,7 +618,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAwardsBusiness',
+      'EAwardsBusiness_Old',
       'DeleteEmployeeAwardInfoAsync',
       data
     );
@@ -628,7 +628,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAwardsBusiness',
+      'EAwardsBusiness_Old',
       'GetListAwardByDataRequestAsyncLogic',
       data
     );
@@ -638,19 +638,19 @@ export class CodxHrService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'EAwardsBusiness',
+      'EAwardsBusiness_Old',
       'ValidateBeforeReleaseAsync',
       recID
     );
   }
   //#endregion
 
-  //#region EDisciplinesBusiness
+  //#region EDisciplinesBusiness_Old
   getEmployeeDisciplineModel() {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDisciplinesBusiness',
+      'EDisciplinesBusiness_Old',
       'GetEmployeeDisciplineModelAsync'
     );
   }
@@ -659,7 +659,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDisciplinesBusiness',
+      'EDisciplinesBusiness_Old',
       'UpdateEmployeeDisciplineInfoAsync',
       data
     );
@@ -669,7 +669,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDisciplinesBusiness',
+      'EDisciplinesBusiness_Old',
       'AddMultiEmployeeEDisciplineAsync',
       data
     );
@@ -679,7 +679,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDisciplinesBusiness',
+      'EDisciplinesBusiness_Old',
       'AddEmployeeDisciplineInfoAsync',
       data
     );
@@ -689,7 +689,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDisciplinesBusiness',
+      'EDisciplinesBusiness_Old',
       'DeleteEmployeeDisciplineInfoAsync',
       data
     );
@@ -699,7 +699,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDisciplinesBusiness',
+      'EDisciplinesBusiness_Old',
       'GetListDisciplineByDataRequestAsync',
       data
     );
@@ -709,7 +709,7 @@ export class CodxHrService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'EDisciplinesBusiness',
+      'EDisciplinesBusiness_Old',
       'ValidateBeforeReleaseAsync',
       recID
     );
@@ -721,7 +721,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAccidentsBusiness',
+      'EAccidentsBusiness_Old',
       'GetEmployeeAccidentsModelAsync'
     );
   }
@@ -730,7 +730,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAccidentsBusiness',
+      'EAccidentsBusiness_Old',
       'EditEAccidentAsync',
       data
     );
@@ -740,7 +740,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAccidentsBusiness',
+      'EAccidentsBusiness_Old',
       'AddEAccidentAsync',
       data
     );
@@ -750,7 +750,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAccidentsBusiness',
+      'EAccidentsBusiness_Old',
       'DeleteEAccidentAsync',
       data
     );
@@ -760,7 +760,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAccidentsBusiness',
+      'EAccidentsBusiness_Old',
       'LoadDataEAccidentAsync',
       data
     );
@@ -773,7 +773,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDayOffsBusiness',
+      'EDayOffsBusiness_Old',
       'GetEmployeeDayOffModelAsync'
     );
   }
@@ -782,7 +782,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDayOffsBusiness',
+      'EDayOffsBusiness_Old',
       'UpdateEmployeeDayOffInfoAsync',
       data
     );
@@ -792,7 +792,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDayOffsBusiness',
+      'EDayOffsBusiness_Old',
       'AddEmployeeDayOffInfoAsync',
       data
     );
@@ -802,7 +802,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDayOffsBusiness',
+      'EDayOffsBusiness_Old',
       'DeleteEmployeeDayOffInfoAsync',
       data
     );
@@ -812,7 +812,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDayOffsBusiness',
+      'EDayOffsBusiness_Old',
       'GetListDayOffByDataRequestAsync',
       data
     );
@@ -822,7 +822,7 @@ export class CodxHrService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'EDayOffsBusiness',
+      'EDayOffsBusiness_Old',
       'ValidateBeforeReleaseAsync',
       recID
     );
@@ -834,7 +834,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAssetsBusiness',
+      'EAssetsBusiness_Old',
       'GetEAssetsModelAsync'
     );
   }
@@ -843,7 +843,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAssetsBusiness',
+      'EAssetsBusiness_Old',
       'UpdateEAssetsInfoAsync',
       data
     );
@@ -853,7 +853,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAssetsBusiness',
+      'EAssetsBusiness_Old',
       'AddEAssetsInfoAsync',
       data
     );
@@ -863,7 +863,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAssetsBusiness',
+      'EAssetsBusiness_Old',
       'DeleteEAssetsInfoAsync',
       data
     );
@@ -873,7 +873,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAssetsBusiness',
+      'EAssetsBusiness_Old',
       'GetListAssetsByDataRequestAsync',
       data
     );
@@ -883,7 +883,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAssetsBusiness',
+      'EAssetsBusiness_Old',
       'LoadDataEAssetAsync',
       data
     );
@@ -893,19 +893,19 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAssetsBusiness',
+      'EAssetsBusiness_Old',
       'LoadListEAssetAsync',
       data
     );
   }
   //#endregion
 
-  //#region EAppointionsBusiness
+  //#region EAppointionsBusiness_Old
   getEmployeeAppointionsInfoById(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAppointionsBusiness',
+      'EAppointionsBusiness_Old',
       'GetOneEmployeeCertificateByEmployeeId',
       data
     );
@@ -915,7 +915,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAppointionsBusiness',
+      'EAppointionsBusiness_Old',
       'GetListAppointionsByDataRequestAsync',
       data
     );
@@ -925,7 +925,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAppointionsBusiness',
+      'EAppointionsBusiness_Old',
       'GetEmployeeAppointionsModelAsync'
     );
   }
@@ -934,7 +934,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAppointionsBusiness',
+      'EAppointionsBusiness_Old',
       'AddMultiEmployeeEAppointionAsync',
       data
     );
@@ -944,7 +944,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAppointionsBusiness',
+      'EAppointionsBusiness_Old',
       'AddEmployeeAppointionsInfoAsync',
       data
     );
@@ -954,7 +954,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAppointionsBusiness',
+      'EAppointionsBusiness_Old',
       'UpdateEmployeeAppointionsInfoAsync',
       data
     );
@@ -968,7 +968,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAppointionsBusiness',
+      'EAppointionsBusiness_Old',
       'DeleteEmployeeAppointionsInfoAsync',
       data
     );
@@ -978,7 +978,7 @@ export class CodxHrService {
   //   return this.api.execSv<any>(
   //     'HR',
   //     'ERM.Business.HR',
-  //     'EAppointionsBusiness',
+  //     'EAppointionsBusiness_Old',
   //     'EditEAppointionsMoreFuncAsync',
   //     data
   //   );
@@ -988,7 +988,7 @@ export class CodxHrService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'EAppointionsBusiness',
+      'EAppointionsBusiness_Old',
       'ValidateBeforeReleaseAsync',
       recID
     );
@@ -1001,7 +1001,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'ECertificatesBusiness',
+      'ECertificatesBusiness_Old',
       'GetOneEmployeeCertificateByEmployeeId',
       data
     );
@@ -1011,7 +1011,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'ECertificatesBusiness',
+      'ECertificatesBusiness_Old',
       'GetListCertificatesByDataRequestAsync',
       data
     );
@@ -1021,7 +1021,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'ECertificatesBusiness',
+      'ECertificatesBusiness_Old',
       'GetEmployeeCertificatesModelAsync'
     );
   }
@@ -1030,7 +1030,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'ECertificatesBusiness',
+      'ECertificatesBusiness_Old',
       'AddECertificatesAsync',
       data
     );
@@ -1040,7 +1040,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'ECertificatesBusiness',
+      'ECertificatesBusiness_Old',
       'UpdateECertificatesAsync',
       data
     );
@@ -1050,7 +1050,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'ECertificatesBusiness',
+      'ECertificatesBusiness_Old',
       'DeleteECertificatesAsync',
       recID
     );
@@ -1063,7 +1063,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDiseasesBusiness',
+      'EDiseasesBusiness_Old',
       'GetEmployeeEdiseasesModelAsync'
     );
   }
@@ -1072,7 +1072,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDiseasesBusiness',
+      'EDiseasesBusiness_Old',
       'EditEDiseaseAsync',
       data
     );
@@ -1082,7 +1082,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDiseasesBusiness',
+      'EDiseasesBusiness_Old',
       'AddEDiseaseAsync',
       data
     );
@@ -1092,7 +1092,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDiseasesBusiness',
+      'EDiseasesBusiness_Old',
       'DeleteEmployeeDiseaseInfoAsync',
       data
     );
@@ -1102,19 +1102,19 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDiseasesBusiness',
+      'EDiseasesBusiness_Old',
       'LoadDataEDiseasesAsync',
       data
     );
   }
   //#endregion
 
-  //#region EFamiliesBusiness
+  //#region EFamiliesBusiness_Old
   getFamilyByEmployeeID(empID: string) {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EFamiliesBusiness',
+      'EFamiliesBusiness_Old',
       'GetByEmployeeIDAsync',
       [empID]
     );
@@ -1124,7 +1124,7 @@ export class CodxHrService {
   //   return this.api.execSv<any>(
   //     'HR',
   //     'HR',
-  //     'EFamiliesBusiness',
+  //     'EFamiliesBusiness_Old',
   //     'CountEmpFamilyMemberAsync',
   //     [empID]
   //   );
@@ -1134,7 +1134,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EFamiliesBusiness',
+      'EFamiliesBusiness_Old',
       'GetListEFamiliesInfoByDataRequestAsync',
       data
     );
@@ -1144,7 +1144,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EFamiliesBusiness',
+      'EFamiliesBusiness_Old',
       'GetEmployeeFamilyModelAsync'
     );
   }
@@ -1153,7 +1153,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EFamiliesBusiness',
+      'EFamiliesBusiness_Old',
       'AddEmployeeFamilyInfoAsync',
       data
     );
@@ -1163,7 +1163,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EFamiliesBusiness',
+      'EFamiliesBusiness_Old',
       'UpdateEmployeeFamilyInfoAsync',
       data
     );
@@ -1173,7 +1173,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EFamiliesBusiness',
+      'EFamiliesBusiness_Old',
       'DeleteEmployeeFamilyInfoAsync',
       data
     );
@@ -1186,7 +1186,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'UpdateEmployeeForeignWorkerInfoAsync',
       data
     );
@@ -1198,7 +1198,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EJobSalariesBusiness',
+      'EJobSalariesBusiness_Old',
       'GetCurrentJobSalariesByEmployeeIDAsync',
       data
     );
@@ -1208,7 +1208,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EJobSalariesBusiness',
+      'EJobSalariesBusiness_Old',
       'GetListJobSalariesByEmployeeIDAsync',
       data
     );
@@ -1218,7 +1218,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EJobSalariesBusiness',
+      'EJobSalariesBusiness_Old',
       'DeleteEmployeeJobsalaryInfoAsync',
       data
     );
@@ -1228,7 +1228,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EJobSalariesBusiness',
+      'EJobSalariesBusiness_Old',
       'GetEmployeeJobSalaryModelAsync'
     );
   }
@@ -1237,7 +1237,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EJobSalariesBusiness',
+      'EJobSalariesBusiness_Old',
       'AddEmployeeJobSalaryInfoAsync',
       data
     );
@@ -1247,7 +1247,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EJobSalariesBusiness',
+      'EJobSalariesBusiness_Old',
       'UpdateEmployeeJobSalaryInfoAsync',
       data
     );
@@ -1257,7 +1257,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EJobSalariesBusiness',
+      'EJobSalariesBusiness_Old',
       'EditEJobSalaryMoreFuncAsync',
       data
     );
@@ -1267,7 +1267,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EJobSalariesBusiness',
+      'EJobSalariesBusiness_Old',
       'GetOldSalariesAsync',
       data
     );
@@ -1279,7 +1279,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EExperiencesBusiness',
+      'EExperiencesBusiness_Old',
       'GetExperiencesByEmpIDAsync',
       data
     );
@@ -1289,7 +1289,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EExperiencesBusiness',
+      'EExperiencesBusiness_Old',
       'GetEmployeeExperienceModel'
     );
   }
@@ -1298,7 +1298,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EExperiencesBusiness',
+      'EExperiencesBusiness_Old',
       'AddEmployeeExperienceInfoAsync',
       data
     );
@@ -1308,7 +1308,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EExperiencesBusiness',
+      'EExperiencesBusiness_Old',
       'UpdateEmployeeExperienceInfoAsync',
       data
     );
@@ -1318,7 +1318,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EExperiencesBusiness',
+      'EExperiencesBusiness_Old',
       'DeleteEmployeeExperienceInfoAsync',
       data
     );
@@ -1330,7 +1330,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EBasicSalariesBusiness',
+      'EBasicSalariesBusiness_Old',
       'GetEmpCurrentSalariesAsync',
       [empID]
     );
@@ -1340,7 +1340,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EBasicSalariesBusiness',
+      'EBasicSalariesBusiness_Old',
       'GetListEBasicSalariesAsync',
       data
     );
@@ -1350,7 +1350,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EBasicSalariesBusiness',
+      'EBasicSalariesBusiness_Old',
       'DeleteEmployeeBasicSalariesInfoAsync',
       data
     );
@@ -1360,7 +1360,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EBasicSalariesBusiness',
+      'EBasicSalariesBusiness_Old',
       'GetEmployeeBasicSalariesModelAsync'
     );
   }
@@ -1369,7 +1369,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EBasicSalariesBusiness',
+      'EBasicSalariesBusiness_Old',
       'AddMultiEmployeeBasicSalariesInfoAsync',
       data
     );
@@ -1379,7 +1379,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EBasicSalariesBusiness',
+      'EBasicSalariesBusiness_Old',
       'AddEmployeeBasicSalariesInfoAsync',
       data
     );
@@ -1389,7 +1389,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EBasicSalariesBusiness',
+      'EBasicSalariesBusiness_Old',
       'UpdateEmployeeBasicSalariesInfoAsync',
       data
     );
@@ -1398,7 +1398,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EBasicSalariesBusiness',
+      'EBasicSalariesBusiness_Old',
       'GetOldBasicSalaryAsync',
       data
     );
@@ -1408,7 +1408,7 @@ export class CodxHrService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'EBasicSalariesBusiness',
+      'EBasicSalariesBusiness_Old',
       'ValidateBeforeReleaseAsync',
       recID
     );
@@ -1421,7 +1421,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EHealthsBusiness',
+      'EHealthsBusiness_Old',
       'LoadDataEHealthsAsync',
       dataRequest
     );
@@ -1431,7 +1431,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EHealthsBusiness',
+      'EHealthsBusiness_Old',
       'AddEHealthAsync',
       [data]
     );
@@ -1441,7 +1441,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EHealthsBusiness',
+      'EHealthsBusiness_Old',
       'EditEHealthAsync',
       data
     );
@@ -1451,7 +1451,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EHealthsBusiness',
+      'EHealthsBusiness_Old',
       'DeleteEmployeEHealthInfoAsync',
       data
     );
@@ -1464,7 +1464,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EVaccinesBusiness',
+      'EVaccinesBusiness_Old',
       'LoadDataEVaccineAsync',
       dataRequest
     );
@@ -1474,7 +1474,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EVaccinesBusiness',
+      'EVaccinesBusiness_Old',
       'AddEVaccineAsync',
       [data]
     );
@@ -1484,7 +1484,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EVaccinesBusiness',
+      'EVaccinesBusiness_Old',
       'EditEVaccineAsync',
       data
     );
@@ -1494,7 +1494,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EVaccinesBusiness',
+      'EVaccinesBusiness_Old',
       'DeleteEVaccineAsync',
       data
     );
@@ -1506,7 +1506,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EDiseasesBusiness',
+      'EDiseasesBusiness_Old',
       'LoadDataEDiseaseAsync',
       dataRequest
     );
@@ -1516,7 +1516,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EDiseasesBusiness',
+      'EDiseasesBusiness_Old',
       'AddEDiseaseAsync',
       [data]
     );
@@ -1526,7 +1526,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EDiseasesBusiness',
+      'EDiseasesBusiness_Old',
       'EditEDiseaseAsync',
       data
     );
@@ -1536,7 +1536,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EDiseasesBusiness',
+      'EDiseasesBusiness_Old',
       'DeleteEDiseaseAsync',
       data
     );
@@ -1548,7 +1548,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'SkillsBusiness',
+      'SkillsBusiness_Old',
       'LoadDataSkillAsync',
       dataRequest
     );
@@ -1558,7 +1558,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'SkillsBusiness',
+      'SkillsBusiness_Old',
       'AddSkillAsync',
       [data]
     );
@@ -1568,7 +1568,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'SkillsBusiness',
+      'SkillsBusiness_Old',
       'EditSkillAsync',
       data
     );
@@ -1578,7 +1578,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'SkillsBusiness',
+      'SkillsBusiness_Old',
       'DeleteSkillAsync',
       data
     );
@@ -1590,7 +1590,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'SkillGradesBusiness',
+      'SkillGradesBusiness_Old',
       'getEmployeeSkillModelAsync'
     );
   }
@@ -1599,7 +1599,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'SkillGradesBusiness',
+      'SkillGradesBusiness_Old',
       'LoadDataSkillGradeAsync',
       dataRequest
     );
@@ -1609,7 +1609,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'SkillGradesBusiness',
+      'SkillGradesBusiness_Old',
       'AddSkillGradeAsync',
       [data]
     );
@@ -1619,7 +1619,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'SkillGradesBusiness',
+      'SkillGradesBusiness_Old',
       'EditSkillGradeAsync',
       data
     );
@@ -1629,7 +1629,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'SkillGradesBusiness',
+      'SkillGradesBusiness_Old',
       'DeleteSkillGradeAsync',
       data
     );
@@ -1641,7 +1641,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'ESkillsBusiness',
+      'ESkillsBusiness_Old',
       'GetViewSkillAsync',
       dataRequest
     );
@@ -1651,7 +1651,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'ESkillsBusiness',
+      'ESkillsBusiness_Old',
       'AddEmployeeSkillInfoAsync',
       [data]
     );
@@ -1661,7 +1661,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'ESkillsBusiness',
+      'ESkillsBusiness_Old',
       'UpdateEmployeeSkillInfoAsync',
       data
     );
@@ -1671,7 +1671,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'ESkillsBusiness',
+      'ESkillsBusiness_Old',
       'DeleteESkillAsync',
       recID
     );
@@ -1692,7 +1692,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EAccidentsBusiness',
+      'EAccidentsBusiness_Old',
       'LoadDataEAccidentAsync',
       dataRequest
     );
@@ -1702,7 +1702,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EAccidentsBusiness',
+      'EAccidentsBusiness_Old',
       'AddEAccidentAsync',
       [data]
     );
@@ -1712,7 +1712,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EAccidentsBusiness',
+      'EAccidentsBusiness_Old',
       'EditEAccidentAsync',
       data
     );
@@ -1722,7 +1722,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EAccidentsBusiness',
+      'EAccidentsBusiness_Old',
       'DeleteEAccidentAsync',
       data
     );
@@ -1734,7 +1734,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EContractsBusiness',
+      'EContractsBusiness_Old',
       'GetEmpContractQuitFortelDaysAsync',
       data
     );
@@ -1744,7 +1744,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EContractsBusiness',
+      'EContractsBusiness_Old',
       'GetEContractDefaultAsync',
       null
     );
@@ -1754,7 +1754,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EContractsBusiness',
+      'EContractsBusiness_Old',
       'GetCrrEContractAsync',
       dataRequest
     );
@@ -1764,7 +1764,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EContractsBusiness',
+      'EContractsBusiness_Old',
       'LoadDataEContractAsync',
       data
     );
@@ -1774,7 +1774,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EContractsBusiness',
+      'EContractsBusiness_Old',
       'AddEContractAsync',
       data
     );
@@ -1784,7 +1784,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EContractsBusiness',
+      'EContractsBusiness_Old',
       'ValidateBeforeSaveAsync',
       [data, isAddNew]
     );
@@ -1796,7 +1796,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EContractsBusiness',
+      'EContractsBusiness_Old',
       'EditEContractAsync',
       data
     );
@@ -1806,7 +1806,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EContractsBusiness',
+      'EContractsBusiness_Old',
       'DeleteEContractAsync',
       data
     );
@@ -1816,7 +1816,7 @@ export class CodxHrService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'EContractsBusiness',
+      'EContractsBusiness_Old',
       'ValidateBeforeReleaseAsync',
       recID
     );
@@ -1829,7 +1829,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EBenefitsBusiness',
+      'EBenefitsBusiness_Old',
       'GetEmpCurrentBenefitAsync',
       empID
     );
@@ -1839,7 +1839,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EBenefitsBusiness',
+      'EBenefitsBusiness_Old',
       'GetIsCurrentValDueToBenefitIdAsync',
       [employeeID, benefitID]
     );
@@ -1849,7 +1849,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EBenefitsBusiness',
+      'EBenefitsBusiness_Old',
       'AddMultiEmployeeEBenefitAsync',
       data
     );
@@ -1859,7 +1859,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EBenefitsBusiness',
+      'EBenefitsBusiness_Old',
       'AddEBenefitAsync',
       data
     );
@@ -1869,7 +1869,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EBenefitsBusiness',
+      'EBenefitsBusiness_Old',
       'EditEBenefitAsync',
       data
     );
@@ -1879,7 +1879,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EBenefitsBusiness',
+      'EBenefitsBusiness_Old',
       'DeleteEBenefitAsync',
       data
     );
@@ -1889,7 +1889,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EBenefitsBusiness',
+      'EBenefitsBusiness_Old',
       'EditEmployeeBenefitMoreFunc',
       data
     );
@@ -1899,7 +1899,7 @@ export class CodxHrService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'EBenefitsBusiness',
+      'EBenefitsBusiness_Old',
       'ValidateBeforeReleaseAsync',
       recID
     );
@@ -1912,7 +1912,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EBusinessTravelsBusiness',
+      'EBusinessTravelsBusiness_Old',
       'GetEBTravelDefaultAsync',
       null
     );
@@ -1922,7 +1922,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EBusinessTravelsBusiness',
+      'EBusinessTravelsBusiness_Old',
       'AddMultiEmployeeBusinessTravelAsync',
       data
     );
@@ -1932,7 +1932,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EBusinessTravelsBusiness',
+      'EBusinessTravelsBusiness_Old',
       'AddEBusinessTravelsAsync',
       data
     );
@@ -1942,7 +1942,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EBusinessTravelsBusiness',
+      'EBusinessTravelsBusiness_Old',
       'EditEBusinessTravelsAsync',
       data
     );
@@ -1952,7 +1952,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EBusinessTravelsBusiness',
+      'EBusinessTravelsBusiness_Old',
       'DeleteEBusinessTravelsAsync',
       data
     );
@@ -1962,7 +1962,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
-      'EBusinessTravelsBusiness',
+      'EBusinessTravelsBusiness_Old',
       'EditEBusinessTravelMoreFuncAsync',
       data
     );
@@ -1972,7 +1972,7 @@ export class CodxHrService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'EBusinessTravelsBusiness',
+      'EBusinessTravelsBusiness_Old',
       'ValidateBeforeReleaseAsync',
       recID
     );
@@ -1982,7 +1982,7 @@ export class CodxHrService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'EQuitBusiness',
+      'EQuitBusiness_Old',
       'AddAsync',
       data
     );
@@ -1991,7 +1991,7 @@ export class CodxHrService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'EQuitBusiness',
+      'EQuitBusiness_Old',
       'EditAsync',
       data
     );
@@ -2000,7 +2000,7 @@ export class CodxHrService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'EQuitBusiness',
+      'EQuitBusiness_Old',
       'DeleteAsync',
       recID
     );
@@ -2010,7 +2010,7 @@ export class CodxHrService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'EQuitBusiness',
+      'EQuitBusiness_Old',
       'ValidateBeforeReleaseAsync',
       recID
     );
@@ -2473,7 +2473,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'OrganizationUnitsBusiness',
+      'OrganizationUnitsBusiness_Old',
       'GetOrgTreeByOrgIDAsync',
       [orgID, level]
     );
@@ -2484,7 +2484,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PositionsBusiness',
+      'PositionsBusiness_Old',
       'GetAsync',
       positionID
     );
@@ -2495,7 +2495,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'OrganizationUnitsBusiness',
+      'OrganizationUnitsBusiness_Old',
       'GetOrgUnitID',
       orgID
     );
@@ -2614,7 +2614,7 @@ export class CodxHrService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'EAnnualLeavesBusiness',
+      'EAnnualLeavesBusiness_Old',
       'GetDaysOffByEAnnualLeaveAsync',
       [employeeID, alYear, alYearMonth, isMonth, pageIndex, pageSize]
     );
@@ -2631,7 +2631,7 @@ export class CodxHrService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'EAnnualLeavesBusiness',
+      'EAnnualLeavesBusiness_Old',
       'GetEmployeeListByPopupCalculateAnnualLeaveAsync',
       [
         alYear,
@@ -2656,7 +2656,7 @@ export class CodxHrService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'EAnnualLeavesBusiness',
+      'EAnnualLeavesBusiness_Old',
       'CalculateAnnualLeaveAsync',
       [
         alYear,
@@ -2676,7 +2676,7 @@ export class CodxHrService {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'EAnnualLeavesBusiness',
+      'EAnnualLeavesBusiness_Old',
       'GetListEmployeeAnnualLeaveMonthAsync',
       [employeeID, alYear]
     );

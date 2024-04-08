@@ -61,7 +61,7 @@ export class EmployeeAwardsComponent extends UIComponent {
   service = 'HR';
   assemblyName = 'ERM.Business.HR';
   entityName = 'HR_EAwards';
-  className = 'EAwardsBusiness';
+  className = 'EAwardsBusiness_Old';
   method = 'GetListAwardByDataRequestAsync';
 
   actionCancelSubmit = 'HRTPro06A00';
@@ -315,7 +315,7 @@ export class EmployeeAwardsComponent extends UIComponent {
 
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteEmployeeAwardInfoAsync';
-    opt.className = 'EAwardsBusiness';
+    opt.className = 'EAwardsBusiness_Old';
     opt.assemblyName = 'HR';
     opt.service = 'HR';
     opt.data = data;
@@ -391,7 +391,7 @@ export class EmployeeAwardsComponent extends UIComponent {
               this.view.formModel.entityName,
               'C1',
               null,
-              'EAwardsBusiness'
+              'EAwardsBusiness_Old'
             )
             .subscribe();
           this.dialogEditStatus && this.dialogEditStatus.close(res);
@@ -537,7 +537,7 @@ export class EmployeeAwardsComponent extends UIComponent {
             this.view.formModel.entityName,
             'C1',
             null,
-            'EAwardsBusiness'
+            'EAwardsBusiness_Old'
           )
           .subscribe();
 

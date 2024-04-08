@@ -50,7 +50,7 @@ export class PersonalInfoComponent implements OnInit,AfterViewInit {
   // get personal and contact information
   getDataEmployee(employeeID:string){
     if(employeeID){
-      this.api.execSv("HR","HR","EmployeesBusiness","GetPersonalAndContactAsync",[employeeID])
+      this.api.execSv("HR","HR","EmployeesBusiness_Old","GetPersonalAndContactAsync",[employeeID])
       .subscribe((res:any) => {
         if(res)
         {

@@ -409,7 +409,7 @@ export class CodxDpService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetListUserByListOrgUnitIDAsync',
       [lstId, type]
     );
@@ -419,7 +419,7 @@ export class CodxDpService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetListUserIDByListPositionsIDAsync',
       listPositionID
     );
@@ -449,7 +449,7 @@ export class CodxDpService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetPositionByUserIDAsync',
       id
     );

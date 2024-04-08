@@ -38,6 +38,7 @@ import { CashreceiptsAddComponent } from './cashreceipts-add/cashreceipts-add.co
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
 import { JournalsAddComponent } from '../../journals/journals-add/journals-add.component';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'lib-cashreceipts',
@@ -82,7 +83,7 @@ export class CashreceiptsComponent extends UIComponent {
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private codxCommonService: CodxCommonService,
-    private tenant: TenantStore
+    private ngxLoader: NgxUiLoaderService,
   ) {
     super(inject);
     this.cache
@@ -93,7 +94,7 @@ export class CashreceiptsComponent extends UIComponent {
         this.baseCurr = dataValue?.BaseCurr || '';
       })
       
-    this.router.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+    this.router.params.subscribe((params) => {
       this.journalNo = params?.journalNo; //? get số journal từ router
     });
 
@@ -122,7 +123,6 @@ export class CashreceiptsComponent extends UIComponent {
   ngAfterViewInit() {
     this.cache
       .functionList(this.view.funcID)
-      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
           this.headerText = res?.defaultName || res?.customName;
