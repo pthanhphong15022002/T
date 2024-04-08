@@ -81,22 +81,6 @@ export class CodxShareTaskComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    // this.checkAdminUpdate();
-    // this.checkAddUser();
-    // this.cache.valueList('CRM051').subscribe((res) => {
-    //   if (res && res?.datas.length > 0) {
-    //     this.listRoles = res.datas;
-    //   }
-    // });
-    // if (
-    //   this.lstPermissions.filter((x) => x.memberType == '1') != null &&
-    //   this.lstPermissions.filter((x) => x.memberType == '1').length > 0
-    // ) {
-    //   this.currentPemission = this.lstPermissions.findIndex(
-    //     (inline) => inline.memberType === '1'
-    //   );
-    //   this.changePermissions(this.currentPemission);
-    // }
     if (this.task && this.task?.roles?.length > 0) {
       let roles = this.task?.roles as DP_Instances_Steps_Tasks_Roles[];
       this.listRoleShare = roles.filter((x) => x.roleType == 'S') || [];
@@ -360,22 +344,10 @@ export class CodxShareTaskComponent implements OnInit {
   removeUser(index) {
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
-    var tmps = [];
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x?.event?.status == 'Y') {
-        if (this.lstPermissions && this.lstPermissions.length > 0) {
-          var tmp = this.lstPermissions[index];
-          var check = this.lstDeletePermissions?.some(
-            (x) => x.objectID == tmp.objectID
-          );
-          if (!check) {
-            this.lstDeletePermissions.push(tmp);
-          }
-          this.lstPermissions.splice(index, 1);
-          if (this.lstPermissions != null && this.lstPermissions.length > 0)
-            this.currentPemission = this.lstPermissions.findIndex(
-              (inline) => inline.memberType === '1'
-            );
+        if (this.listRoleShare?.length > 0 && index >= 0) {
+          this.listRoleShare.splice(index,1);
           this.changePermissions(this.currentPemission);
         }
       }
@@ -411,50 +383,19 @@ export class CodxShareTaskComponent implements OnInit {
   }
 
   onSave() {
-    this.task.permissions = this.lstPermissions ?? [];
-    if (
-      this.currentPemission > -1 &&
-      this.lstPermissions[this.currentPemission] != null &&
-      this.lstPermissions[this.currentPemission].objectType != '7'
-    ) {
-      this.lstPermissions[this.currentPemission].full = this.full;
-      this.lstPermissions[this.currentPemission].read = this.read;
-      this.lstPermissions[this.currentPemission].update = this.update;
-      this.lstPermissions[this.currentPemission].assign = this.assign;
-      this.lstPermissions[this.currentPemission].delete = this.delete;
-      this.lstPermissions[this.currentPemission].upload = this.upload;
-      this.lstPermissions[this.currentPemission].download = this.download;
-      this.lstPermissions[this.currentPemission].allowPermit = this.allowPermit;
-      this.lstPermissions[this.currentPemission].allowUpdateStatus = this
-        .allowUpdateStatus
-        ? '1'
-        : '0';
-      this.lstPermissions[this.currentPemission].config = this.getConfig();
-    }
+
     const service = this.entityName == 'DP_Instances' ? 'DP' : 'CM';
-    const assemply =
-      this.entityName == 'DP_Instances' ? 'ERM.Business.DP' : 'ERM.Business.CM';
-    const className =
-      this.entityName == 'DP_Instances' ? 'InstancesBusiness' : 'LeadsBusiness';
+    const assemply = this.entityName == 'DP_Instances' ? 'ERM.Business.DP' : 'ERM.Business.CM';
+    const className = this.entityName == 'DP_Instances' ? 'InstancesBusiness' : 'LeadsBusiness';
     this.api
-      .execSv<any>(service, assemply, className, 'UpdatePermissionsAsync', [
-        this.task,
-        this.entityName,
+      .execSv<any>("DP", "ERM.Business.DP", "InstancesStepsTasksBusiness", 'UpdataRoleShareAsync', [
+        this.task.stepID,
+        this.task.recID,
+        this.listRoleShare,
       ])
       .subscribe((res) => {
         if (res) {
-          if (this.entityName != 'DP_Instances') {
-            this.task.full = res.full;
-            this.task.write = res.write;
-            this.task.assign = res.assign;
-            this.task.delete = res.delete;
-            this.task.upload = res.upload;
-            this.task.download =
-              res.download =
-              this.task.allowPermit =
-                res.allowPermit;
-            this.task.alloweStatus = res.alloweStatus;
-          }
+         
           this.notiService.notifyCode('SYS034');
           this.dialog.close(this.task);
         }
