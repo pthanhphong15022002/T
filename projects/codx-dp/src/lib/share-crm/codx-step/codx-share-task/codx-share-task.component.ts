@@ -12,7 +12,7 @@ import {
 } from 'codx-core';
 import { CM_Permissions } from 'projects/codx-cm/src/lib/models/cm_model';
 import { CodxCmService } from 'projects/codx-cm/src/projects';
-
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'codx-share-task',
@@ -34,6 +34,7 @@ export class CodxShareTaskComponent implements OnInit {
   read: boolean = true;
   update: boolean;
   assign: boolean;
+  updateProgress: boolean;
   upload: boolean;
   download: boolean;
   delete: boolean;
@@ -55,7 +56,6 @@ export class CodxShareTaskComponent implements OnInit {
   }
   listDataTabView;
   vllData;
-
   constructor(
     private cache: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
