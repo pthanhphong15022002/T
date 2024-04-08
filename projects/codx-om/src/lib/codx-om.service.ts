@@ -361,7 +361,7 @@ export class CodxOmService {
     return this.api.execSv(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetEmployeeInforAsync',
       [empID]
     );
@@ -778,7 +778,7 @@ export class CodxOmService {
     return this.api.execSv(
       'HR',
       'HR',
-      'OrganizationUnitsBusiness',
+      'OrganizationUnitsBusiness_Old',
       'GetOrgIDHierarchyByOrgIDAsync',
       [orgID]
     );
@@ -787,7 +787,7 @@ export class CodxOmService {
     return this.api.execSv(
       'HR',
       'HR',
-      'OrganizationUnitsBusiness',
+      'OrganizationUnitsBusiness_Old',
       'GetManagerByOrgUnitIDAsync',
       [orgID]
     );
@@ -796,7 +796,7 @@ export class CodxOmService {
     return this.api.execSv(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetEmployeeInforAsync',
       [employeeID]
     );
@@ -805,7 +805,7 @@ export class CodxOmService {
     return this.api.execSv(
       'HR',
       'HR',
-      'PositionsBusiness',
+      'PositionsBusiness_Old',
       'GetEmployeeListByPositionAsync',
       [positionID]
     );

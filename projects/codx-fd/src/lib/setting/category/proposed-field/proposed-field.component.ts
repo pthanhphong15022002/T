@@ -151,7 +151,7 @@ export class ProposedFieldComponent extends UIComponent implements OnInit {
     this.api
       .call(
         'ERM.Business.HR',
-        'EmployeesBusiness',
+        'EmployeesBusiness_Old',
         'GetListEmployeesByUserIDAsync',
         [JSON.stringify([employeeID])]
       )

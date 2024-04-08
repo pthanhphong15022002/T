@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  HostListener,
   Injector,
   OnInit,
   TemplateRef,
@@ -35,8 +36,8 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 })
 export class HomeComponent extends UIComponent implements OnInit {
   @ViewChild('listViewSurveys') listViewSurveys: CodxListviewComponent;
-  @ViewChild('listViewSurveysSystem')
-  listViewSurveysSystem: CodxListviewComponent;
+  @ViewChild('listViewRepondent')
+  listViewRepondent: CodxListviewComponent;
 
   views: Array<ViewModel> = [];
   viewList: Array<ViewModel> = [];
@@ -81,17 +82,18 @@ export class HomeComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.user = this.authStore.get();
-    var dataSv = new CRUDService(injector);
-    this.dtService = dataSv;
+    this.dtService = new CRUDService(injector);
 
-    dataSv.idField = 'recID';
+    this.dtService.idField = 'recID';
     this.getVll();
   }
 
   onInit(): void {
-    this.api.execSv<any>('SV','SV','SurveysBusiness','CountSurveySysAsync').subscribe(res => {
-      this.countSys = res ?? 0;
-    })
+    this.api
+      .execSv<any>('SV', 'SV', 'SurveysBusiness', 'CountSurveySysAsync')
+      .subscribe((res) => {
+        this.countSys = res ?? 0;
+      });
     this.router.params.subscribe((params) => {
       if (params) {
         this.funcID = params['funcID'];
@@ -171,6 +173,30 @@ export class HomeComponent extends UIComponent implements OnInit {
   readMoreSys() {
     this.dataModel.pageLoading = false;
     this.getData();
+  }
+  isLoad = true;
+  @HostListener('scroll', ['$event'])
+  onScroll(event): void {
+    const element = event.target as HTMLElement;
+    let dcScroll = event.srcElement;
+    if ( dcScroll.scrollTop + 16 < dcScroll.scrollHeight - dcScroll.clientHeight ||
+      dcScroll.scrollTop == 0)
+      return;
+    this.isLoad = true;
+    switch (this.tabIndex) {
+      case 'SVT01':
+        this.listViewSurveys.dataService.page++;
+        this.listViewSurveys.dataService.load().subscribe((res) => {
+          this.isLoad = true;
+        });
+        break;
+      case 'SVT02':
+        this.listViewRepondent.dataService.page++;
+        this.listViewRepondent.dataService.load().subscribe((res) => {
+          this.isLoad = true;
+        });
+        break;
+    }
   }
 
   ngAfterViewInit() {

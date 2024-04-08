@@ -224,7 +224,7 @@ export class ContractsViewDetailComponent
     }
     if (this.contract?.owner) {
       this.api
-        .exec<any>('HR', 'EmployeesBusiness', 'GetListEmployeesByUserIDAsync', [this.contract?.owner])
+        .exec<any>('HR', 'EmployeesBusiness_Old', 'GetListEmployeesByUserIDAsync', [this.contract?.owner])
         .subscribe((res) => {
           if (res) {
             this.userOwner = res[0];

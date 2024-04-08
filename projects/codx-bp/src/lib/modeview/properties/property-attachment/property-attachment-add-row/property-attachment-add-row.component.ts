@@ -40,7 +40,6 @@ export class PropertyAttachmentAddRowComponent  implements OnInit{
     else if(Array.isArray(this.data?.files) && this.data?.files.length>0)
     {
       var ids = this.data.files.map((u)=> {return u.fileID});
-      debugger
       this.getFile(ids)
     }
   }
@@ -88,7 +87,7 @@ export class PropertyAttachmentAddRowComponent  implements OnInit{
   changeEsign(index:any)
   {
     this.listFileAttach[index].eSign = !this.listFileAttach[index].eSign
-    if(Array.isArray(this.data.files))
+    if(Array.isArray(this.data.files) && this.data.files.length>0)
     {
       this.data.files[index].eSign = !this.data.files[index].eSign;
     }
@@ -132,14 +131,15 @@ export class PropertyAttachmentAddRowComponent  implements OnInit{
         if(item)
         {
           let dt = item;
-          if(!Array.isArray(dt)) dt = [dt]
+          if(!Array.isArray(dt)) dt = [dt];
+          let stt = this.data.files.length;
           for(let i = 0 ; i < dt.length ; i++)
           {
             var obj = 
             {
               fileID : dt[i].data.recID,
               type: '1',
-              eSign: this.listFileAttach[this.data.files.length + i].eSign
+              eSign: this.listFileAttach[stt + i].eSign
             }
             this.data.files.push(obj);
           }
