@@ -63,9 +63,10 @@ export class FAPostingAccountsComponent
   onInit(): void {
     this.cache.valueList('AC060').subscribe((res) => {
       if(res){
-        console.log(res);
         this.menuItems = res?.datas;
         this.defaultPostType = res?.datas[0].value;
+        this.selectedValue = res?.datas[0].value;
+        this.filter('PostType',this.defaultPostType);
       }
 
     });
@@ -85,6 +86,7 @@ export class FAPostingAccountsComponent
         type: ViewType.content,
         sameData: false,
         active: true,
+        showFilter:false,
         model: {
           panelLeftRef: this.templateLeft,
           widthLeft: '21%',
@@ -250,6 +252,13 @@ export class FAPostingAccountsComponent
   onSelected(e:any){
     if(e)
       this.view.dataService.dataSelected = e;
+  }
+
+  viewActions(e:any){
+    if(e.type == 'search'){
+      this.grid.searchText = e.data;
+      this.grid.refresh()
+    }
   }
   //#endregion
 }
