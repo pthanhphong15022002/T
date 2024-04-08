@@ -226,7 +226,7 @@ this.cache
   //Call api delete
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteEmployeeJobsalaryInfoAsync';
-    opt.className = 'EJobSalariesBusiness';
+    opt.className = 'EJobSalariesBusiness_Old';
     opt.assemblyName = 'HR';
     opt.service = 'HR';
     opt.data = data;
@@ -265,7 +265,7 @@ this.cache
               this.view.formModel.entityName,
               'C1',
               null,
-              'EJobSalariesBusiness'
+              'EJobSalariesBusiness_Old'
             )
             .subscribe((res) => {
               console.log('kq luu track log', res);

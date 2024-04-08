@@ -45,7 +45,7 @@ export class EditExperenceComponent implements OnInit {
     this.codxMwp.experienceChange.subscribe((data: any) => {
       if (data) {
         this.dataBind = {};
-        this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'GetEmployeeExperiences', data.recID)
+        this.api.exec('ERM.Business.HR', 'EmployeesBusiness_Old', 'GetEmployeeExperiences', data.recID)
           .subscribe((o: any) => {
             if (!o) return;
 
@@ -84,7 +84,7 @@ export class EditExperenceComponent implements OnInit {
   }
 
   OnSaveForm() {
-    this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeExperiencesAsync', [this.dataBind, this.isAdd])
+    this.api.exec('ERM.Business.HR', 'EmployeesBusiness_Old', 'UpdateEmployeeExperiencesAsync', [this.dataBind, this.isAdd])
       .subscribe((res: any) => {
         if (res) {
           if (res.WorkedCompany.fromDate == null && res.WorkedCompany.toDate == null) {

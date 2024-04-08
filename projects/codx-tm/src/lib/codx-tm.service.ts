@@ -332,7 +332,7 @@ export class CodxTMService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'OrganizationUnitsBusiness',
+      'OrganizationUnitsBusiness_Old',
       'GetUserByListDepartmentIDAsync',
       listDepID
     );
@@ -342,7 +342,7 @@ export class CodxTMService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'OrganizationUnitsBusiness',
+      'OrganizationUnitsBusiness_Old',
       'GetListUserIDByListOrgIDAsync',
       data
     );
@@ -351,7 +351,7 @@ export class CodxTMService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetListUserIDByListPositionsIDAsync',
       listPositionID
     );
@@ -380,7 +380,7 @@ export class CodxTMService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetListUserIDbyListEmployeeIDAsync',
       listEmployeeID
     );

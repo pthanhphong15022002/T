@@ -87,7 +87,7 @@ export class PayrollDetailComponent extends UIComponent implements AfterViewInit
   getColumnGrid(hrTemplateID){
     if(hrTemplateID)
     {
-      this.api.execSv("HR","HR","TemplateExcelBusiness","GetTemplateFieldByIDAsync",hrTemplateID)
+      this.api.execSv("HR","HR","TemplateExcelBusiness_Old","GetTemplateFieldByIDAsync",hrTemplateID)
       .subscribe((res:any) => {
         if(res && res.length > 0)
         {

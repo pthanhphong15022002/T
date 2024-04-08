@@ -417,7 +417,7 @@ export class CodxFdService {
     return this.api.execSv(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetEmpByUserIDAsync',
       data
     );
@@ -498,7 +498,7 @@ export class CodxFdService {
     return this.api.execSv(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetReportUserByEmployeeIDAsync',
       [employeeID]
     );

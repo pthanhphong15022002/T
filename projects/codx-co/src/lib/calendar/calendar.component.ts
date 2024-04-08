@@ -715,7 +715,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
 
   // get Employee by OrgUnitID
   getEmployeeByOrgUnit(orgUnitID:string){
-    this.api.execSv("HR","ERM.Business.HR","HRBusiness","GetEmployeeByCOAsync",orgUnitID)
+    this.api.execSv("HR","ERM.Business.HR","HRBusiness_Old","GetEmployeeByCOAsync",orgUnitID)
     .subscribe((res:any) => {
       if(res)
       {

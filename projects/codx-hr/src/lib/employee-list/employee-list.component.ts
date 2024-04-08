@@ -49,7 +49,7 @@ export class EmployeeListComponent extends UIComponent {
   service = 'HR';
   assemblyName = 'ERM.Business.HR';
   entityName = 'HR_Employees';
-  className = 'EmployeesBusiness';
+  className = 'EmployeesBusiness_Old';
   method = 'GetListEmployeeAsync';
   idField = 'employeeID';
 
@@ -88,7 +88,7 @@ export class EmployeeListComponent extends UIComponent {
     this.request = new ResourceModel();
     this.request.service = 'HR';
     this.request.assemblyName = 'ERM.Business.HR';
-    this.request.className = 'EmployeesBusiness';
+    this.request.className = 'EmployeesBusiness_Old';
     this.request.method = 'GetListEmployeeAsync';
     this.request.autoLoad = false;
     this.request.parentIDField = 'ParentID';
@@ -272,7 +272,7 @@ export class EmployeeListComponent extends UIComponent {
         .execSv(
           'HR',
           'ERM.Business.HR',
-          'EmployeesBusiness',
+          'EmployeesBusiness_Old',
           'GetEmployeeInfoByIDAsync',
           [data.employeeID]
         )
@@ -306,7 +306,7 @@ export class EmployeeListComponent extends UIComponent {
   //delete Employee
   delete(data: any) {
     if (data) {
-      this.api.execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'CheckIfDeleteEmployeeAsync', [data])
+      this.api.execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness_Old', 'CheckIfDeleteEmployeeAsync', [data])
         .subscribe(res => {
           if (res) {
             this.view.dataService
@@ -323,7 +323,7 @@ export class EmployeeListComponent extends UIComponent {
   beforDelete(option: RequestOption, employee: any) {
     option.service = 'HR';
     option.assemblyName = 'ERM.Business.HR';
-    option.className = 'EmployeesBusiness';
+    option.className = 'EmployeesBusiness_Old';
     option.methodName = 'DeleteAsync';
     option.data = employee;
     return true;

@@ -137,7 +137,7 @@ export class EmployeePolicygenernalComponent extends UIComponent {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyGeneralBusiness',
+      'PolicyGeneralBusiness_Old',
       'DeletePolicyGeneralAsync',
       data.policyID
     );

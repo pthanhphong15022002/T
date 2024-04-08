@@ -79,7 +79,7 @@ implements AfterViewInit, OnChanges{
   {
     let paras = [this.user?.userID];
     let keyRoot = "FDImforUser" + this.user?.userID;
-    var data = this.fdService.loadData(paras,keyRoot,"HR","HR",'EmployeesBusiness','GetOneByDomainUserAsync');
+    var data = this.fdService.loadData(paras,keyRoot,"HR","HR",'EmployeesBusiness_Old','GetOneByDomainUserAsync');
 
     if(isObservable(data)) data.subscribe(item=>{if(item) this.infoPersonal = item});
     else this.infoPersonal = data

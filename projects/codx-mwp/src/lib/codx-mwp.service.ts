@@ -70,7 +70,7 @@ export class CodxMwpService {
 
   LoadData(employeeID = "", userID = "", type = ""): Observable<any> {
     return this.api
-      .call("ERM.Business.HR", "EmployeesBusiness", "GetByUserAsync", [
+      .call("ERM.Business.HR", "EmployeesBusiness_Old", "GetByUserAsync", [
         employeeID,
         userID,
         type,

@@ -73,7 +73,7 @@ export class PopupAddEducationsComponent implements OnInit {
   // btn save click
   clickSave(){
     if(this.isAdd){
-      this.api.execSv("HR","ERM.Business.HR","EducationsBusiness","InsertAsync",[this.data])
+      this.api.execSv("HR","ERM.Business.HR","EducationsBusiness_Old","InsertAsync",[this.data])
       .subscribe((res:any) => {
         if(res){
           this.notifySV.notifyCode("SYS006");
@@ -86,7 +86,7 @@ export class PopupAddEducationsComponent implements OnInit {
       });
     }
     else{  //edit
-      this.api.execSv("HR","ERM.Business.HR","EducationsBusiness","UpdateAsync",[this.data])
+      this.api.execSv("HR","ERM.Business.HR","EducationsBusiness_Old","UpdateAsync",[this.data])
       .subscribe((res:any) => {
         if(res){
           this.notifySV.notifyCode("SYS007");
