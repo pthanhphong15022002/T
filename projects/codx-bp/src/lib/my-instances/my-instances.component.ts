@@ -57,9 +57,9 @@ export class MyInstancesComponent
   onInit(): void {
 
     this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'SYS';
-    this.resourceKanban.assemblyName = 'SYS';
-    this.resourceKanban.className = 'CommonBusiness';
+    this.resourceKanban.service = 'BP';
+    this.resourceKanban.assemblyName = 'BP';
+    this.resourceKanban.className = 'ProcessInstancesBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
   }
 
@@ -78,6 +78,7 @@ export class MyInstancesComponent
         type: ViewType.kanban,
         active: false,
         sameData: false,
+        request: this.request,
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
