@@ -42,10 +42,12 @@ export class EmployeeListByOrgComponent {
 
   @ViewChild('colEmployeeHeader') colEmployeeHeader: TemplateRef<any>;
   @ViewChild('colContactHeader') colContactHeader: TemplateRef<any>;
+  @ViewChild('colInfoTimeKeepingHeader') colInfoTimeKeepingHeader: TemplateRef<any>;
   @ViewChild('colPersonalHeader') colPersonalHeader: TemplateRef<any>;
   @ViewChild('colStatusHeader') colStatusHeader: TemplateRef<any>;
   @ViewChild('colEmployee') colEmployee: TemplateRef<any>;
   @ViewChild('colContact') colContact: TemplateRef<any>;
+  @ViewChild('colInfoTimeKeeping') colInfoTimeKeeping: TemplateRef<any>;
   @ViewChild('colPersonal') colPersonal: TemplateRef<any>;
   @ViewChild('colStatus') colStatus: TemplateRef<any>;
 
@@ -137,22 +139,27 @@ export class EmployeeListByOrgComponent {
           {
             headerTemplate: this.colEmployeeHeader,
             template: this.colEmployee,
+            width: '300',
+          },
+          {
+            headerTemplate: this.colStatusHeader,
+            template: this.colStatus,
+            width: '200',
+          },
+          {
+            headerTemplate: this.colInfoTimeKeepingHeader,
+            template: this.colInfoTimeKeeping,
+            width: '250',
+          },
+          {
+            headerTemplate: this.colPersonalHeader,
+            template: this.colPersonal,
             width: '200',
           },
           {
             headerTemplate: this.colContactHeader,
             template: this.colContact,
-            width: '150',
-          },
-          {
-            headerTemplate: this.colPersonalHeader,
-            template: this.colPersonal,
-            width: '150',
-          },
-          {
-            headerTemplate: this.colStatusHeader,
-            template: this.colStatus,
-            width: '150',
+            width: '200',
           },
         ];
         break;

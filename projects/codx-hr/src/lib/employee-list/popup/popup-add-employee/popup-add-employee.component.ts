@@ -62,7 +62,42 @@ export class PopupAddEmployeeComponent implements OnInit {
       icon: 'icon-folder_special',
       text: 'Pháp lý',
       name: 'lblLegalInfo',
-    }
+    },
+    {
+      icon: 'icon-family_restroom',
+      text: 'Thân nhân',
+      name: 'tab1',
+    },
+    {
+      icon: 'icon-business_center',
+      text: 'Hộ chiếu',
+      name: 'tab2',
+    },
+    {
+      icon: 'icon-receipt_long',
+      text: 'Hợp đồng lao đông',
+      name: 'tab3',
+    },
+    {
+      icon: 'icon-attach_money',
+      text: 'Lương cơ bản',
+      name: 'tab4',
+    },
+    {
+      icon: 'icon-card_travel',
+      text: 'Lương chức danh công việc',
+      name: 'tab5',
+    },
+    {
+      icon: 'icon-card_giftcard',
+      text: 'Phụ cấp',
+      name: 'tab6',
+    },
+    {
+      icon: 'icon-book',
+      text: 'Thông tin văn bằng',
+      name: 'tab7',
+    },
   ];
   trainFieldID: string = '';
   trainLevel: string = '';

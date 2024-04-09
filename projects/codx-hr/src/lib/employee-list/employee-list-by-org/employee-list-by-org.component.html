@@ -151,26 +151,41 @@
 
 <!-- emplist -->
 <!-- header template -->
+<!-- Header Nhân viên -->
 <ng-template #colEmployeeHeader>
     <div class="text-dark fw-bold p-3 fw-500">
         <codx-label fiedName="lblEmployeeName" [setRequire]="false" [formModel]="view.formModel" [default]="'Nhân viên'"></codx-label>
     </div>
 </ng-template>
-<ng-template #colContactHeader>
-    <div class="text-dark fw-bold p-3 fw-500">
-        <codx-label fiedName="lblEmployeeContact" [setRequire]="false" [formModel]="view.formModel" [default]="'Liên hệ'"></codx-label>
-    </div>
-</ng-template>
-<ng-template #colPersonalHeader>
-    <div class="text-dark fw-bold p-3 fw-500">
-        <codx-label fiedName="lblEmployeeInfo" [setRequire]="false" [formModel]="view.formModel" [default]="'Thông tin cá nhân'"></codx-label>
-    </div>
-</ng-template>
+
+<!-- Header Tình trạng -->
 <ng-template #colStatusHeader>
     <div class="text-dark fw-bold p-3 fw-500">
         <codx-label fiedName="lblEmployeeStatus" [setRequire]="false" [formModel]="view.formModel" [default]="'Tình Trạng'"></codx-label>
     </div>
 </ng-template>
+
+<!-- Header Thông tin chấm công -->
+<ng-template #colInfoTimeKeepingHeader>
+    <div class="text-dark fw-bold p-3 fw-500">
+        <codx-label fiedName="lblShiftWorking" [setRequire]="false" [formModel]="view.formModel" [default]="'Thông tin chấm công'"></codx-label>
+    </div>
+</ng-template>
+
+<!-- Header Thông tin cá nhân -->
+<ng-template #colPersonalHeader>
+    <div class="text-dark fw-bold p-3 fw-500">
+        <codx-label fiedName="lblEmployeeInfo" [setRequire]="false" [formModel]="view.formModel" [default]="'Thông tin cá nhân'"></codx-label>
+    </div>
+</ng-template>
+
+<!-- Header Liên hệ -->
+<ng-template #colContactHeader>
+    <div class="text-dark fw-bold p-3 fw-500">
+        <codx-label fiedName="lblEmployeeContact" [setRequire]="false" [formModel]="view.formModel" [default]="'Liên hệ'"></codx-label>
+    </div>
+</ng-template>
+
 <!--column Nhân viên -->
 <ng-template #colEmployee let-data>
     <div class="d-flex align-items-center cursor-pointer hover-active" (dblclick)="clickViewEmpInfo(data)">
@@ -244,32 +259,84 @@
         </div>
     </div>
 </ng-template>
-<!-- columns Liên hệ -->
-<ng-template #colContact let-data>
-    <div (dblclick)="clickViewEmpInfo(data)">
+<!-- columns Tình trạng-->
+<ng-template #colStatus let-data>
+    <div (dblclick)="clickViewEmpInfo(data)" class="d-flex has-action-menu justify-content-between w-100">
         <div class="d-flex flex-column">
-            <div class="d-flex align-items-center">
-                <span class="data-text-color" [ngbTooltip]="emailTooltip"
-                    [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async">
-                </span>
-                <ng-template #emailTooltip>
-                    <span>{{grvSetup['Email']?.headerText}}</span>
-                    <!-- <span>{{data.email}}</span> -->
+            <div class="d-flex mb-1">
+                <codx-vll [name]="'HR003'" [value]="data.status" [showBgColor]="true" [showText]="true"
+                    [className]="'badge badge-sm badge-inline min-w-50px'">
+                </codx-vll>
+            </div>
+            <div class="align-items-center fs-7">
+                <codx-label class="label-colon text-gray-700" [setRequire]="false" [fiedName]="'JoinedOn'"
+                    [formModel]="view.formModel" default="Ngày vào làm">
+                </codx-label>
+                <ng-container *ngIf="data.joinedOn; else noJoinedOn">
+                    <span class="text-gray-700">{{data.joinedOn | fmDT}}</span>
+                </ng-container>
+                <ng-template #noJoinedOn>
+                    <span class="place-holder">{{grvSetup['JoinedOn']?.headerText}}</span>
                 </ng-template>
             </div>
-            <div class="d-flex align-items-center">
-                <span class="data-text-color" [ngbTooltip]="data.phone? grvSetup?.Phone?.headerText : null"
-                    [innerHTML]="data.phone | formatvalue : view.formModel : 'phone' | async">
-                </span>
+            <div class="align-items-center">
+                <codx-label class="label-colon text-gray-700" name="lblHR_SenioritydateCal" [setRequire]="false"
+                    [formModel]="view.formModel" default="Thâm niên">
+                </codx-label>
+                <ng-container *ngIf="data.senioritydate; else noSeniorityDate">
+                    <span class="text-gray-700">{{ data.senioritydate | timeAgo }}</span>
+                </ng-container>
+                <ng-template #noSeniorityDate>
+                    <span class="place-holder">{{grvSetup['Senioritydate']?.headerText}}</span>
+                </ng-template>
             </div>
-            <div class="d-flex align-items-center">
-                <span class="data-text-color" [ngbTooltip]="data.mobile? grvSetup?.Mobile?.headerText : null"
-                    [innerHTML]="data.mobile | formatvalue : view.formModel : 'mobile' | async">
-                </span>
+        </div>
+        <div class="align-self-center">
+            <div style="height: 35px" class="has-action-menu">
+                <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)"
+                    (changeDataMF)="clickMF($event, data)" [dataItem]="data" type="hover">
+                </codx-mfunc>
             </div>
         </div>
     </div>
 </ng-template>
+
+<!-- column Thông tin chấm công -->
+<ng-template #colInfoTimeKeeping let-data>
+    <div (dblclick)="clickViewEmpInfo(data)" class="d-flex has-action-menu justify-content-between w-100">
+        <div class="d-flex flex-column">
+            <div class="d-flex align-items-center">
+                <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'ShiftWorking'"
+                    [formModel]="view.formModel" default="Ca làm việc"></codx-label>
+                <ng-container *ngIf="data.ShiftWorking; else noShiftWorking">
+                    <span class="data-text-color">{{ data.ShiftWorking123 }}</span>
+                </ng-container>
+                <ng-template #noShiftWorking>
+                    <span class="place-holder">{{grvSetup?.ShiftWorking?.headerText}}</span>
+                </ng-template>
+            </div>
+            <div class="d-flex align-items-center">
+                <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'ShiftCalendarID'"
+                    [formModel]="view.formModel" default="Nhóm ngày nghỉ tuần"></codx-label>
+                <span class="data-text-color"
+                    [innerHTML]="data?.shiftCalendarID | formatvalue : view.formModel : 'shiftCalendarID'| async">
+                </span>
+            </div>
+            <div class="d-flex align-items-center">
+                <!-- <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'DegreeName'" [formModel]="view.formModel"
+                  default="Chuyên môn"></codx-label> -->
+                  <div class="align-items-center mb-1">
+                    <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'ALObjectID'"
+                      [formModel]="view.formModel" default="Đối tượng tính phép"></codx-label>
+                    <span class="data-text-color"
+                      [innerHTML]="data?.alObjectID | formatvalue : view.formModel : 'alObjectID'| async">
+                    </span>
+                  </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
 <!-- columns Thông tin cá nhân -->
 <ng-template #colPersonal let-data>
     <div (dblclick)="clickViewEmpInfo(data)" class="d-flex has-action-menu justify-content-between w-100">
@@ -314,42 +381,28 @@
     </div>
 </ng-template>
 
-<ng-template #colStatus let-data>
-    <div (dblclick)="clickViewEmpInfo(data)" class="d-flex has-action-menu justify-content-between w-100">
+<!-- columns Liên hệ -->
+<ng-template #colContact let-data>
+    <div (dblclick)="clickViewEmpInfo(data)">
         <div class="d-flex flex-column">
-            <div class="d-flex mb-1">
-                <codx-vll [name]="'HR003'" [value]="data.status" [showBgColor]="true" [showText]="true"
-                    [className]="'badge badge-sm badge-inline min-w-50px'">
-                </codx-vll>
-            </div>
-            <div class="align-items-center fs-7">
-                <codx-label class="label-colon text-gray-700" [setRequire]="false" [fiedName]="'JoinedOn'"
-                    [formModel]="view.formModel" default="Ngày vào làm">
-                </codx-label>
-                <ng-container *ngIf="data.joinedOn; else noJoinedOn">
-                    <span class="text-gray-700">{{data.joinedOn | fmDT}}</span>
-                </ng-container>
-                <ng-template #noJoinedOn>
-                    <span class="place-holder">{{grvSetup['JoinedOn']?.headerText}}</span>
+            <div class="d-flex align-items-center">
+                <span class="data-text-color" [ngbTooltip]="emailTooltip"
+                    [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async">
+                </span>
+                <ng-template #emailTooltip>
+                    <span>{{grvSetup['Email']?.headerText}}</span>
+                    <!-- <span>{{data.email}}</span> -->
                 </ng-template>
             </div>
-            <div class="align-items-center">
-                <codx-label class="label-colon text-gray-700" name="lblHR_SenioritydateCal" [setRequire]="false"
-                    [formModel]="view.formModel" default="Thâm niên">
-                </codx-label>
-                <ng-container *ngIf="data.senioritydate; else noSeniorityDate">
-                    <span class="text-gray-700">{{ data.senioritydate | timeAgo }}</span>
-                </ng-container>
-                <ng-template #noSeniorityDate>
-                    <span class="place-holder">{{grvSetup['Senioritydate']?.headerText}}</span>
-                </ng-template>
+            <div class="d-flex align-items-center">
+                <span class="data-text-color" [ngbTooltip]="data.phone? grvSetup?.Phone?.headerText : null"
+                    [innerHTML]="data.phone | formatvalue : view.formModel : 'phone' | async">
+                </span>
             </div>
-        </div>
-        <div class="align-self-center">
-            <div style="height: 35px" class="has-action-menu">
-                <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)"
-                    (changeDataMF)="clickMF($event, data)" [dataItem]="data" type="hover">
-                </codx-mfunc>
+            <div class="d-flex align-items-center">
+                <span class="data-text-color" [ngbTooltip]="data.mobile? grvSetup?.Mobile?.headerText : null"
+                    [innerHTML]="data.mobile | formatvalue : view.formModel : 'mobile' | async">
+                </span>
             </div>
         </div>
     </div>

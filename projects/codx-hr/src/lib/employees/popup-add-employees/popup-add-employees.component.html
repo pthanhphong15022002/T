@@ -6,22 +6,15 @@
   [footer]="footer"
   [dialog]="dialogRef"
   [openMore]="true"
-  [tabContent]="[tabInfoPersonal, tabInfoEmploy]"
+  [tabContent]="[tabInfoPersonal, tabInfoEmploy, tab1, tab2, tab3, tab4, tab5, tab6, tab7]"
   [data]="employee"
 >
-</codx-layout-add>
+</codx-layout-add> 
 
 <ng-template #tabInfoPersonal>
   <ng-container *ngIf="form.formGroup">
     <div id="InfoPersonal">
-      <div class="text-primary mb-3 fw-bold">
-        <codx-label
-          [formModel]="form.formModel"
-          name="lblGeneralInfo"
-          default="Thông tin chung"
-        >
-        </codx-label>
-      </div>
+
     </div>
     <div class="row-group">
       <div>
@@ -589,4 +582,32 @@
       </codx-label>
     </button>
   </div>
+</ng-template>
+
+<ng-template #tab1>
+
+</ng-template>
+
+<ng-template #tab2>
+
+</ng-template>
+
+<ng-template #tab3>
+
+</ng-template>
+
+<ng-template #tab4>
+
+</ng-template>
+
+<ng-template #tab5>
+
+</ng-template>
+
+<ng-template #tab6>
+
+</ng-template>
+
+<ng-template #tab7>
+
 </ng-template>
