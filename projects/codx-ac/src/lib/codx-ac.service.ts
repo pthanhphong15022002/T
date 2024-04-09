@@ -589,7 +589,7 @@ export class CodxAcService {
   }
 
   changeMFCashPayment(event, data, type: any = '', journal, formModel) {
-    event.reduce((pre, element) => {
+    event.forEach(element => {
       if (
         !Object.values(MorfuncCash).includes(element.functionID) &&
         !Object.values(MorfuncDefault).includes(element.functionID)
@@ -730,12 +730,12 @@ export class CodxAcService {
         if (MorfuncCash.ChuyenTienDienTu == element.functionID)
           element.disabled = false;
       }
-      event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
-    }, {});
+      //event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
+    });
   }
 
   changeMFCashReceipt(event, data, type: any = '', journal, formModel) {
-    event.reduce((pre, element) => {
+    event.forEach(element => {
       if (
         !Object.values(MorfuncCashReceipt).includes(element.functionID) &&
         !Object.values(MorfuncDefault).includes(element.functionID)
@@ -845,12 +845,11 @@ export class CodxAcService {
             break;
         }
       }
-      //event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
-    }, {});
+    });
   }
 
   changeMFGeneralJournal(event, data, type: any = '', journal, formModel) {
-    event.reduce((pre, element) => {
+    event.forEach(element => {
       if (
         !Object.values(MorfuncGeneralJournals).includes(element.functionID) &&
         !Object.values(MorfuncDefault).includes(element.functionID)
@@ -946,12 +945,11 @@ export class CodxAcService {
             break;
         }
       }
-      //event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
-    }, {});
+    });
   }
 
   changeMFCashTranfers(event, data, type: any = '', journal, formModel) {
-    event.reduce((pre, element) => {
+    event.forEach(element => {
       if (
         !Object.values(MorfuncCashTranfers).includes(element.functionID) &&
         !Object.values(MorfuncDefault).includes(element.functionID)
@@ -1043,8 +1041,7 @@ export class CodxAcService {
             break;
         }
       }
-      //event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
-    }, {});
+    });
   }
 
   changeMFPur(event, data, type: any = '', journal, formModel) {
@@ -1246,7 +1243,7 @@ export class CodxAcService {
   }
 
   changeMFVoucher(event, data, type: any = '', journal, formModel) {
-    event.reduce((pre, element) => {
+    event.forEach(element => {
       if (
         !Object.values(MorfuncVoucher).includes(element.functionID) &&
         !Object.values(MorfuncDefault).includes(element.functionID)
@@ -1356,8 +1353,7 @@ export class CodxAcService {
             break;
         }
       }
-      //event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
-    }, {});
+    });
   }
 
   changeMFTranfers(event, data, type: any = '', journal, formModel) {

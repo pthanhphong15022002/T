@@ -553,8 +553,6 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
           this.eleGridCashReceipt.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') {
               this.saveVoucher(type);
-            }else{
-              this.ngxLoader.stop();
             }
           })
           return;
@@ -563,8 +561,6 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
           this.eleGridSettledInvoices.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') {
               this.saveVoucher(type);
-            }else{
-              this.ngxLoader.stop();
             }
           })
           return;
@@ -582,37 +578,42 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         this.journal,
       ])
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res?.update) {
-          this.dialog.dataService.update(res.data).subscribe();
-          if (type == 'save') {
-            this.dialog.close();
-          }else{
-            this.api
-            .exec('AC', 'CashReceiptsBusiness', 'SetDefaultAsync', [
-              null,
-              this.journal,
-            ])
-            .subscribe((res: any) => {
-              if (res) {
-                res.data.isAdd = true;
-                this.master.refreshData({...res.data});
-                setTimeout(() => {
-                  this.refreshGrid();
-                }, 100);
-                this.detectorRef.detectChanges();
-              }
-            });
+      .subscribe({
+        next:(res:any)=>{
+          if (res?.update) {
+            this.dialog.dataService.update(res.data,true).subscribe();
+            if (type == 'save') {
+              this.dialog.close();
+            }else{
+              this.api
+              .exec('AC', 'CashReceiptsBusiness', 'SetDefaultAsync', [
+                null,
+                this.journal,
+              ])
+              .subscribe((res: any) => {
+                if (res) {
+                  res.data.isAdd = true;
+                  this.master.refreshData({...res.data});
+                  setTimeout(() => {
+                    this.refreshGrid();
+                  }, 100);
+                  this.detectorRef.detectChanges();
+                }
+              });
+            }
+            if (this.master.data.isAdd || this.master.data.isCopy)
+              this.notification.notifyCode('SYS006');
+            else 
+              this.notification.notifyCode('SYS007');
+            
           }
-          if (this.master.data.isAdd || this.master.data.isCopy)
-            this.notification.notifyCode('SYS006');
-          else 
-            this.notification.notifyCode('SYS007');
-          
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          if(this.eleGridCashReceipt && this.eleGridCashReceipt?.isSaveOnClick) this.eleGridCashReceipt.isSaveOnClick = false;
+          if(this.eleGridSettledInvoices && this.eleGridSettledInvoices.isSaveOnClick) this.eleGridSettledInvoices.isSaveOnClick = false;
+          this.onDestroy();
         }
-        if(this.eleGridCashReceipt && this.eleGridCashReceipt?.isSaveOnClick) this.eleGridCashReceipt.isSaveOnClick = false;
-        if(this.eleGridSettledInvoices && this.eleGridSettledInvoices.isSaveOnClick) this.eleGridSettledInvoices.isSaveOnClick = false;
-        this.ngxLoader.stop();
       });
   }
 
