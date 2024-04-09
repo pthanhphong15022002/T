@@ -1,6 +1,9 @@
-<div class="d-flex flex-column w-100 h-100 " [ngClass]="!right ? 'bg-light py-4 px-8': ''">
-  <ng-container *ngTemplateOutlet="header"></ng-container> 
-  <ng-container *ngTemplateOutlet="body"></ng-container>  
+<div
+  class="d-flex flex-column w-100 h-100"
+  [ngClass]="!right ? 'bg-light py-4 px-8' : ''"
+>
+  <ng-container *ngTemplateOutlet="header"></ng-container>
+  <ng-container *ngTemplateOutlet="body"></ng-container>
 </div>
 
 <ng-template #header>
@@ -10,10 +13,11 @@
   >
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center">
-        <i class="icon-arrow_back cursor-pointer icon-22 text-black" (click)="close()"></i>
-        <codx-label
-          default="Chi tiết quy trình"
-          class="ms-4 fs-2 fw-bold">
+        <i
+          class="icon-arrow_back cursor-pointer icon-22 text-black"
+          (click)="close()"
+        ></i>
+        <codx-label default="Chi tiết quy trình" class="ms-4 fs-2 fw-bold">
         </codx-label>
       </div>
       <div class="d-flex align-items-center mt-2 ms-11">
@@ -83,14 +87,28 @@
         </div>
       </div>
       <div class="d-flex justify-content-center mt-2 ms-2">
-        <ejs-progressbar #circular1 id='circular2' [type]='type1' [maximum]='max1' [minimum]='min1'
-        [value]='value1' [width]='width' [height]='height'
-        [animation]='animation' (load)='load($event)' progressColor='#0078FF' trackColor='#F0F2F5'
-        [secondaryProgress]='secondaryProgress1'  [trackThickness]='trackThickness' [progressThickness]='progressThickness' >
-        <e-progressbar-annotations>
-          <e-progressbar-annotation
-              content='<div id="point1" style="font-size:20px;font-weight:bold;color:#0078FF;fill:#F0F2F5"><span>80%</span></div>'>
-          </e-progressbar-annotation>
+        <ejs-progressbar
+          #circular1
+          id="circular2"
+          [type]="type1"
+          [maximum]="max1"
+          [minimum]="min1"
+          [value]="value1"
+          [width]="width"
+          [height]="height"
+          [animation]="animation"
+          (load)="load($event)"
+          progressColor="#0078FF"
+          trackColor="#F0F2F5"
+          [secondaryProgress]="secondaryProgress1"
+          [trackThickness]="trackThickness"
+          [progressThickness]="progressThickness"
+        >
+          <e-progressbar-annotations>
+            <e-progressbar-annotation
+              content='<div id="point1" style="font-size:20px;font-weight:bold;color:#0078FF;fill:#F0F2F5"><span>80%</span></div>'
+            >
+            </e-progressbar-annotation>
           </e-progressbar-annotations>
         </ejs-progressbar>
       </div>
@@ -101,9 +119,13 @@
   <div class="w-100 h-100 position-relative">
     <div class="position-absolute top-0 end-0" *ngIf="!right">
       <div class="d-flex align-items-center">
-        <div class="d-flex align-items-center me-2 py-2 px-4 border-radius-4px text-white cursor-pointer" [style.backgroundColor]="item?.color" *ngFor="let item of listMF">
+        <div
+          class="d-flex align-items-center me-2 py-2 px-4 border-radius-4px text-white cursor-pointer"
+          [style.backgroundColor]="item?.color"
+          *ngFor="let item of listMF"
+        >
           <i [ngClass]="item?.largeIcon" class="me-2 text-white"></i>
-          <span>{{item?.customName}}</span>
+          <span>{{ item?.customName }}</span>
         </div>
       </div>
     </div>
@@ -145,9 +167,14 @@
             </div>
             <div class="row py-2" *ngFor="let item of listDocument">
               <div class="col-12 d-flex align-items-center py-2 ps-6">
-                <img class="bp-img-folder" src="../../../../../../../../assets/themes/dm/default/img/icon-folder.svg" /> 
+                <img
+                  class="bp-img-folder"
+                  src="../../../../../../../../assets/themes/dm/default/img/icon-folder.svg"
+                />
                 <span class="mx-2 fw-bold pt-1px">{{ item?.title }}</span>
-                <span class="fw-bold">({{ item.filess ? item.filess.length : 0 }})</span>
+                <span class="fw-bold"
+                  >({{ item.filess ? item.filess.length : 0 }})</span
+                >
               </div>
               <div class="row d-flex align-items-center px-4">
                 <ng-container *ngFor="let file of item.filess">
@@ -162,18 +189,30 @@
                     </codx-thumbnail>
                   </div>
                   <div class="col-2 text-center ms-4">
-                    {{file?.createdOn | fmDT: 'dmy' : true}}
+                    {{ file?.createdOn | fmDT : "dmy" : true }}
                   </div>
                   <div class="col-1 text-center">
-                    {{dmSV.getSizeKB(file)}}
+                    {{ dmSV.getSizeKB(file) }}
                   </div>
                   <div class="col-2 text-center">
+                    <img
+                      [src]="dmSV.getImage(file.extension)"
+                      class="me-2"
+                      [ngbTooltip]="file.extension"
+                    />
                   </div>
                   <div class="col-1">
-                    <i class="icon-gesture" [class.text-primary]="file?.eSign"></i>
+                    <i
+                      class="icon-gesture"
+                      [class.text-primary]="file?.eSign"
+                    ></i>
                   </div>
                   <div class="col-2">
-                    {{file?.createdBy}}
+                    <span
+                      [innerHTML]="
+                        file?.createdBy | formatValueCombobox : 'Users' | async
+                      "
+                    ></span>
                   </div>
                 </ng-container>
               </div>
@@ -187,41 +226,41 @@
         </div>
         <ng-template ngbNavContent>
           <div
-          class="d-flex flex-column w-100 field-grid-collapse pt-6 ps-8 pe-7 overflow-auto"
-        >
-          <div
-            class="grid-collapse"
-            ngbAccordion
-            *ngIf="listStage.length > 0"
+            class="d-flex flex-column w-100 field-grid-collapse pt-6 ps-8 pe-7 overflow-auto"
           >
             <div
-              ngbAccordionItem
-              [collapsed]="item?.statusStage == '3' ? false: true"
-              [style.border-left-color]="item?.colorStatus || '#DBDCE6'"
-              *ngFor="let item of listStage"
+              class="grid-collapse"
+              ngbAccordion
+              *ngIf="listStage.length > 0"
             >
               <div
-                class="d-flex align-items-center justify-content-between p-4 bg-bp-tb-header "
-                ngbAccordionHeader
+                ngbAccordionItem
+                [collapsed]="item?.statusStage == '3' ? false : true"
+                [style.border-left-color]="item?.colorStatus || '#DBDCE6'"
+                *ngFor="let item of listStage"
               >
-                <div class="d-flex flex-column">
-                  <div class="d-flex align-items-center">
-                    <span class="mx-2 fs-5 bp-stepName">{{item.stepName}}</span>
+                <div
+                  class="d-flex align-items-center justify-content-between p-4 bg-bp-tb-header"
+                  ngbAccordionHeader
+                >
+                  <div class="d-flex flex-column">
+                    <div class="d-flex align-items-center">
+                      <span class="mx-2 fs-5 bp-stepName">{{
+                        item.stepName
+                      }}</span>
+                    </div>
                   </div>
+                  <button ngbAccordionButton></button>
                 </div>
-                <button ngbAccordionButton></button>
-              </div>
-              <div ngbAccordionCollapse>
-                <div ngbAccordionBody>
-                  <ng-template>
-                    <ul class="bp-tree mb-3 pe-6">
-                      <!-- Root node (Category) -->
-                        <ul >
+                <div ngbAccordionCollapse>
+                  <div ngbAccordionBody>
+                    <ng-template>
+                      <ul class="bp-tree mb-3 pe-6">
+                        <!-- Root node (Category) -->
+                        <ul>
                           <!-- Sub category -->
                           <li *ngFor="let item2 of item.child">
-                            <div
-                              class="d-flex flex-column ps-2"
-                            >
+                            <div class="d-flex flex-column ps-2">
                               <div class="d-flex flex-column">
                                 <ng-container
                                   *ngTemplateOutlet="
@@ -233,28 +272,28 @@
                                   *ngIf="item2.activityType == 'Conditions'"
                                 >
                                   <!-- Root node (Category) -->
-                                    <ul class="mt-1 ms-5">
-                                      <li *ngFor="let item3 of item2.child">
-                                        <ng-container
+                                  <ul class="mt-1 ms-5">
+                                    <li *ngFor="let item3 of item2.child">
+                                      <ng-container
                                         *ngTemplateOutlet="
                                           tmpRow;
                                           context: { $implicit: item3, b: true }
                                         "
                                       ></ng-container>
-                                      </li>
-                                    </ul>
+                                    </li>
+                                  </ul>
                                 </ng-container>
                               </div>
                             </div>
                           </li>
                         </ul>
-                    </ul>
-                  </ng-template>
+                      </ul>
+                    </ng-template>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
         </ng-template>
       </li>
       <li [ngbNavItem]="3">
@@ -262,49 +301,57 @@
           <codx-label default="Lịch sử xử lý"></codx-label>
         </div>
         <ng-template ngbNavContent>
-          <div class="w-100 h-100">
-           
-          </div>
+          <div class="w-100 h-100"></div>
         </ng-template>
       </li>
     </ul>
     <div [ngbNavOutlet]="nav" class="bp-ngbTab-content bg-white"></div>
-    
   </div>
 </ng-template>
 
 <ng-template #tmpRow let-data>
-  <div *ngIf="!(data?.dataTask?.canceled ==true)"
+  <div
+    *ngIf="!(data?.dataTask?.canceled == true)"
     class="row d-flex align-items-center cursor-pointer w-100"
     (dblclick)="openForm(data?.dataTask)"
   >
     <div class="col-1 d-flex align-items-center">
-      <i
-        [class]="data?.settings?.icon"
-        [style.color]="data?.settings?.color"
-      >
+      <i [class]="data?.settings?.icon" [style.color]="data?.settings?.color">
       </i>
       <span class="mx-2">{{ data.activityType }}</span>
     </div>
     <div class="col-7 d-flex flex-column">
       <span class="fw-bold">{{ data.stepName }}</span>
       <span class="text-gray-500" *ngIf="data?.memo">{{ data.memo }}</span>
-      <div class="d-flex align-items-center" *ngIf="data?.activityType != 'Conditions'">
-        <codx-label default="Kế hoạch" class="me-2 w-60px label-colon"></codx-label>
-        <span class="">{{ data?.startDate | fmDT: 'dmy' }}</span>
+      <div
+        class="d-flex align-items-center"
+        *ngIf="data?.activityType != 'Conditions'"
+      >
+        <codx-label
+          default="Kế hoạch"
+          class="me-2 w-60px label-colon"
+        ></codx-label>
+        <span class="">{{ data?.startDate | fmDT : "dmy" }}</span>
         <span class="mx-1">-</span>
-        <span class="">{{ data?.endDate | fmDT: 'dmy' }}</span>
+        <span class="">{{ data?.endDate | fmDT : "dmy" }}</span>
         <span class="mx-1">|</span>
-        <span>{{data?.duration}}</span>
-        <span class="mx-1">{{data?.interval | vll : "VL004" : "text" | async}}</span>
-        <codx-label default="Thực tế" class="me-2 ms-10 w-50px label-colon"></codx-label>
-        <span class="">{{ data?.actualStart | fmDT: 'dmy' }}</span>
+        <span>{{ data?.duration }}</span>
+        <span class="mx-1">{{
+          data?.interval | vll : "VL004" : "text" | async
+        }}</span>
+        <codx-label
+          default="Thực tế"
+          class="me-2 ms-10 w-50px label-colon"
+        ></codx-label>
+        <span class="">{{ data?.actualStart | fmDT : "dmy" }}</span>
         <span class="mx-1">-</span>
-        <span class="">{{ data?.actualEnd | fmDT: 'dmy' }}</span>
+        <span class="">{{ data?.actualEnd | fmDT : "dmy" }}</span>
         <ng-container *ngIf="data?.actualHours">
           <span class="mx-1">|</span>
-          <span>{{data?.actualHours}}</span>
-          <span class="mx-1">{{data?.interval | vll : "VL004" : "text" | async}}</span>
+          <span>{{ data?.actualHours }}</span>
+          <span class="mx-1">{{
+            data?.interval | vll : "VL004" : "text" | async
+          }}</span>
         </ng-container>
       </div>
     </div>
@@ -349,4 +396,3 @@
     name="lbltempDueDateIns"
   ></codx-label>
 </ng-template>
-

@@ -616,6 +616,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             }
           });
           this.getAutoNumberSetting(funcID);
+          // if(res?.createAutoNumberWhen == "1"){
+            
+          // }else{
+
+          // }
+          
         } else {
           this.planceHolderAutoNumber = '';
           this.contracts.contractID = null;

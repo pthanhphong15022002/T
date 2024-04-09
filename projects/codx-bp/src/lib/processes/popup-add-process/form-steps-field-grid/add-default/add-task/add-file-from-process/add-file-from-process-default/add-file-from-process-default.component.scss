@@ -67,3 +67,37 @@
         padding: 0 17px;
     }
 }
+
+.bg-bp-tb-header
+{
+  background-color: white;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  .bp-stepName
+  {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+}
+.bg-bp-tb-header.collapsed
+{
+  background-color: var(--gray-150);
+  .bp-stepName
+  {
+    color: black;
+    font-weight: normal;
+  }
+}
+.bp-img-folder
+{
+  width: 22px;
+}
+.pt-1px
+{
+  padding-top: 1px;
+}
+.bp-ins-sta-cl
+{
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}

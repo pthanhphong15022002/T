@@ -10,6 +10,7 @@ import {
   AuthStore,
   DialogModel,
   NotificationsService,
+  ResourceModel,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -29,6 +30,8 @@ export class MyInstancesComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
+  @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
+  @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('templateList') templateList?: TemplateRef<any>;
   @ViewChild('headerTemplateList') headerTemplateList?: TemplateRef<any>;
   views: Array<ViewModel> = [];
@@ -36,6 +39,9 @@ export class MyInstancesComponent
   dataValues = '';
   dataSelected: any;
   user: any;
+  resourceKanban?: ResourceModel;
+  request?: ResourceModel;
+
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -48,7 +54,14 @@ export class MyInstancesComponent
     this.dataValues = this.user?.userID;
   }
 
-  onInit(): void {}
+  onInit(): void {
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'BP';
+    this.resourceKanban.assemblyName = 'BP';
+    this.resourceKanban.className = 'ProcessInstancesBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+  }
 
   ngAfterViewInit(): void {
     this.views = [
@@ -59,6 +72,17 @@ export class MyInstancesComponent
         model: {
           template: this.templateList,
           headerTemplate: this.headerTemplateList,
+        },
+      },
+      {
+        type: ViewType.kanban,
+        active: false,
+        sameData: false,
+        request: this.request,
+        request2: this.resourceKanban,
+        model: {
+          template: this.cardKanban,
+          template2: this.viewColumKaban,
         },
       },
     ];

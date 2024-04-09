@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Injector,
@@ -18,6 +19,7 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/t
   selector: 'asset-journals-detail',
   templateUrl: './asset-journals-detail.component.html',
   styleUrls: ['./asset-journals-detail.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AssetJournalsDetailComponent extends UIDetailComponent {
   //#region Constructor
@@ -27,7 +29,6 @@ export class AssetJournalsDetailComponent extends UIDetailComponent {
   @Input() baseCurr: any;
   @Input() journal: any;
   @Input() headerText: any;
-  @Input() legalName: any;
   @Input() dataDefault: any;
   @Input() gridViewSetup: any;
   @ViewChild('elementTabDetail') elementTabDetail: TabComponent; //? element object các tab detail (hạch toán,thông tin hóa đơn,hóa đơn GTGT)
