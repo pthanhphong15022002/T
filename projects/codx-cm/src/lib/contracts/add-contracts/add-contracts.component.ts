@@ -610,16 +610,17 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       .getFieldAutoNoDefault(funcID, this.dialog.formModel.entityName)
       .subscribe((res) => {
         if (res && !res.stop) {
-          if(res?.createAutoNumberWhen == "1"){
-            this.cache.message('AD019').subscribe((mes) => {
-              if (mes) {
-                this.planceHolderAutoNumber = mes?.customName || mes?.description;
-              }
-            });
-            this.getAutoNumberSetting(funcID);
-          }else{
+          this.cache.message('AD019').subscribe((mes) => {
+            if (mes) {
+              this.planceHolderAutoNumber = mes?.customName || mes?.description;
+            }
+          });
+          this.getAutoNumberSetting(funcID);
+          // if(res?.createAutoNumberWhen == "1"){
+            
+          // }else{
 
-          }
+          // }
           
         } else {
           this.planceHolderAutoNumber = '';
