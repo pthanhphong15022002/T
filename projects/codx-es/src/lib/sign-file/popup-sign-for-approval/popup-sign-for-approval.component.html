@@ -191,8 +191,12 @@
   </div>
   <div class="modal-body pt-0 overflow-auto h-150px">
     <div class="mb-1 px-5" >
-      <div>
+      <div *ngIf="selectedSupplier=='4'">
         <codx-label name="lblViettelWait" default="Vui lòng tiếp tục thao tác trên phần mềm MySign của nhà cung cấp Viettel ">
+        </codx-label>
+      </div>
+      <div *ngIf="selectedSupplier=='6'">
+        <codx-label name="lblVNPTWait" default="Vui lòng tiếp tục thao tác trên phần mềm của nhà cung cấp VNPT ">
         </codx-label>
       </div>
     </div>
