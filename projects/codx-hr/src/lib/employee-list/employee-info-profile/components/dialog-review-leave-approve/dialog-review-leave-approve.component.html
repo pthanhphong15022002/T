@@ -1,4 +1,4 @@
-<codx-form #form [dialog]="dialog" [body]="body" > </codx-form>
+<!-- <codx-form #form [dialog]="dialog" [body]="body" > </codx-form>
 
 <ng-template #body>
   <div class="h-100 container-dialog">
@@ -35,7 +35,6 @@
           <div
             class=""
           >
-            <!-- <span class="hcs-icon filter-icon fs-16"></span> -->
             <codx-dropdown-select
               #eleCbxSubType
               [showFooter]="false"
@@ -46,7 +45,6 @@
               type="valuelist"
               field="Trạng thái"
             ></codx-dropdown-select>
-            <!-- <span class="hcs-icon arrow-down-icon fs-20"></span> -->
           </div>
           <div
             class=""
@@ -137,7 +135,6 @@
           class="d-flex align-content-center justify-content-between position-relative fs-6"
         >
           <div class="d-flex gap-3 align-items-center">
-            <!-- <img width="60" height="60" class="rounded-circle" src="" alt="" /> -->
             <codx-img
               class="col-4"
               [funcId]="dialog.formModel?.funcID"
@@ -152,22 +149,12 @@
               <div class="d-flex gap-3 align-items-center">
                 <div class="fs-6 fw-400">Phân tích nghiệp vụ</div>
                 <div class="d-flex align-items-center gap-1">
-                  <!-- <i class="hcs-icon wpt04-icon fs-16 text-grey"></i> -->
                   <span>SureHCS</span>
                 </div>
               </div>
             </div>
           </div>
-          <!-- <div>
-            <codx-vll
-              [formModel]="view.formModel"
-              [field]="'Status'"
-              [value]="'Chưa duyệt'"
-              [showText]="true"
-              [showBgColor]="true"
-              class="badge badge-light badge-sm border-0 me-2"
-            ></codx-vll>
-          </div> -->
+          
         </div>
         <div class="d-flex gap-2 mt-3">
           <div class="fw-bold">Ngày đăng ký:</div>
@@ -201,7 +188,6 @@
           <div class="fw-bold">Lý do nghỉ</div>
           <div class="text-gray-500">Bận việc gia đình</div>
         </div>
-        <!-- History -->
         <div class="mt-3 border-top history">
           <codx-view-approval-step> </codx-view-approval-step>
         </div>
@@ -239,11 +225,260 @@
     <div class="pe-2 pt-1">
       <input type="checkbox" name="" id="" class="pointer checkbox-item" />
     </div>
-    <!-- <codx-searchbar></codx-searchbar> -->
     <div class="d-flex gap-2">
-      <!-- <codx-imgs [isToolTip]="true" [objectId]="" [objectName]=""
-            [objectType]="'AD_Users'" [width]="30" [numberImages]="1">
-          </codx-imgs> -->
+      
+      <div class="d-flex flex-column gap-2">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="fw-bold line-clamp fs-5 line-clamp-1">Trần Thế Vinh</div>
+          <div class="fs-7 fw-500 text-gray-600">21/01/2024 - 22/01/2024</div>
+        </div>
+        <div class="fs-6 fw-bold">Nghỉ chế độ</div>
+        <div class="d-flex justify-content-between align-items-end">
+          <div class="fs-6 text-gray-600">
+            Bận việc gia đình nên xin nghỉ phép 1 ngày, sẽ cố gắng hoàn thành
+            task đầy đủ cố gắng hoàn thành task đầy đủ cố gắng hoàn thành task
+            đầy đủcố gắng hoàn thành task đầy đủ
+          </div>
+          <div class="status status1"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template> -->
+
+<codx-form #form  [body]="body"> </codx-form>
+
+<ng-template #body>
+  <div class="h-100 container-dialog">
+    <div class="dialog-left border-end pe-2 ps-6">
+      <div class="sticky-top bg-white">
+        <div class="d-flex gap-2">
+          <div class="flex-grow-1">
+            <codx-searchbar
+              [iconPos]="'left'"
+              [type]="'full'"
+              class=""
+            ></codx-searchbar>
+          </div>
+          <div>
+            <svg
+              xmlns=""
+              width="35"
+              height="36"
+              viewBox="0 0 35 36"
+              fill="none"
+            >
+              <g clip-path="url(#clip0_4_22165)">
+                <rect width="35" height="36" rx="6" fill="#F8F8F9" />
+                <path
+                  d="M12.5275 14L17.5 18.9447L22.4725 14L24 15.5223L17.5 22L11 15.5223L12.5275 14Z"
+                  fill="#91919F"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_4_22165">
+                  <rect width="35" height="36" rx="6" fill="white" />
+                </clipPath>
+              </defs>
+            </svg>
+          </div>
+        </div>
+        <div class="d-flex gap-2 mt-2 pb-6">
+          <div class="">
+            <codx-dropdown-select
+              #eleCbxSubType
+              [showFooter]="false"
+              [isToolbar]="false"
+              [cssClass]="'rounded-pill border-1 mt-1'"
+              cssPopup="h-350px w-400px"
+              [isMulti]="false"
+              type="valuelist"
+              field="Trạng thái"
+            ></codx-dropdown-select>
+          </div>
+          <div class="">
+            <codx-dropdown-calendar
+              [cssClass]="'rounded-pill border-1 mt-1'"
+              cssPopup="h-350px w-400px"
+              emptyText="Từ ngày"
+            ></codx-dropdown-calendar>
+          </div>
+          <div class="">
+            <codx-dropdown-calendar
+              cssPopup="h-350px w-550px"
+              [cssClass]="'rounded-pill border-1 mt-1'"
+              cssPopup="h-350px w-400px"
+              cssClass="w-100"
+              emptyText="Đến ngày"
+            ></codx-dropdown-calendar>
+          </div>
+        </div>
+      </div>
+      <div>
+        <ng-container [ngTemplateOutlet]="item"></ng-container>
+        <ng-container [ngTemplateOutlet]="item"></ng-container>
+        <ng-container [ngTemplateOutlet]="item"></ng-container>
+        <ng-container [ngTemplateOutlet]="item"></ng-container>
+        <ng-container [ngTemplateOutlet]="item"></ng-container>
+        <ng-container [ngTemplateOutlet]="item"></ng-container>
+        <ng-container [ngTemplateOutlet]="item"></ng-container>
+        <ng-container [ngTemplateOutlet]="item"></ng-container>
+        <ng-container [ngTemplateOutlet]="item"></ng-container>
+      </div>
+    </div>
+    <div class="border-bottom dialog-left pe-2 ps-6">
+      <div class="d-flex justify-content-between" >
+        <div class="fs-1 fw-400 fw-bold">Chờ duyệt nghỉ phép</div>
+        <span class="icon-edit icon-18 me-1"></span>
+      </div>
+      <div class="d-flex gap-4 align-items-center py-2">
+        <div class="d-flex align-items-center gap-2 button-approve p-2">
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+            >
+              <g clip-path="url(#clip0_4_21870)">
+                <path
+                  d="M4.91537 11.6562L0.690373 7.4312C0.436542 7.17737 0.436542 6.76581 0.690373 6.51195L1.60959 5.59271C1.86342 5.33886 2.275 5.33886 2.52883 5.59271L5.37499 8.43885L11.4712 2.34272C11.725 2.08889 12.1366 2.08889 12.3904 2.34272L13.3096 3.26196C13.5634 3.51579 13.5634 3.92734 13.3096 4.1812L5.83462 11.6562C5.58076 11.91 5.1692 11.91 4.91537 11.6562Z"
+                  fill="#1BC5BD"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_4_21870">
+                  <rect
+                    width="13"
+                    height="13"
+                    fill="white"
+                    transform="translate(0.5 0.5)"
+                  />
+                </clipPath>
+              </defs>
+            </svg>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 button-approve p-2">
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+            >
+              <path
+                d="M8.82883 7L11.3697 4.45916C11.6815 4.14736 11.6815 3.64184 11.3697 3.32979L10.805 2.7651C10.4932 2.4533 9.98766 2.4533 9.67561 2.7651L7.13477 5.30594L4.59393 2.7651C4.28213 2.4533 3.7766 2.4533 3.46455 2.7651L2.89986 3.32979C2.58807 3.64158 2.58807 4.14711 2.89986 4.45916L5.4407 7L2.89986 9.54084C2.58807 9.85264 2.58807 10.3582 2.89986 10.6702L3.46455 11.2349C3.77635 11.5467 4.28213 11.5467 4.59393 11.2349L7.13477 8.69406L9.67561 11.2349C9.9874 11.5467 10.4932 11.5467 10.805 11.2349L11.3697 10.6702C11.6815 10.3584 11.6815 9.85289 11.3697 9.54084L8.82883 7Z"
+                fill="#F64E60"
+              />
+            </svg>
+          </div>
+          <div class="text-gray-600">Hủy</div>
+        </div>
+      </div>
+      <div class="w-650px">
+        <div>
+          <div class="form-group row mt-5">
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label fiedName="Ngày Đăng ký"></codx-label>
+              <span>26/03/2024</span>
+            </div>
+
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label fiedName="Người Đăng Ký" class="w-100"></codx-label>
+              <span>Võ Ngọc Kim Trang</span>
+            </div>
+          </div>
+          <div class="form-group row mt-5">
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label fiedName="Từ ngày"></codx-label>
+              <span>26/03/2023</span>
+            </div>
+
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label fiedName="Đến ngày" class="w-100"></codx-label>
+              <span>26/03/2023</span>
+            </div>
+          </div>
+          <div class="form-group row mt-5">
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label fiedName="Loại nghỉ"></codx-label>
+              <span>Nghỉ phép</span>
+            </div>
+
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label fiedName="Buổi bắt đầu nghỉ"></codx-label>
+              <span>Cả ngày</span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label fiedName="Trừ ngày nghỉ lễ"></codx-label>
+              <codx-input
+                field="contractNo"
+                type="checkbox"
+                labelPosition="after"
+              ></codx-input>
+            </div>
+
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label
+                fiedName="Trừ ngày nghỉ tuần"
+                class="w-100"
+              ></codx-label>
+              <codx-input field="contractNo" type="checkbox"></codx-input>
+            </div>
+          </div>
+
+          <div class="form-group row mt-5">
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label fiedName="Tổng ngày nghỉ"></codx-label>
+              <span>1.00</span>
+            </div>
+
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label fiedName="Lý do"></codx-label>
+              <span>Bận Việc gia đình</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-between" >
+    <button
+      class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
+    >
+      <span class="icon-cloud_upload btn-text-primary me-2"></span>
+      <codx-label
+        fiedName="lblUploadFile"
+        default="Đính kèm"
+        [formModel]="form.formModel"
+      ></codx-label>
+    </button>
+
+    <button class="btn btn-primary">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="form.formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #item>
+  <div class="d-flex fs-6 fw-500 border-bottom py-3">
+    <div class="pe-2 pt-1">
+      <input type="checkbox" name="" id="" class="pointer checkbox-item" />
+    </div>
+    <div class="d-flex gap-2">
       <div class="d-flex flex-column gap-2">
         <div class="d-flex align-items-center justify-content-between">
           <div class="fw-bold line-clamp fs-5 line-clamp-1">Trần Thế Vinh</div>

@@ -11,6 +11,8 @@ export class DashboardRegisterAprroveComponent {
   @ViewChild('dialog') dialog: DialogDetailRegisterApproveComponent;
 
   @Output() handleRegisterApprove = new EventEmitter();
+  @Output() handleReviewRegisterApprove = new EventEmitter();
+  @Output() handleWaitingRegisterApprove = new EventEmitter();
 
   public primaryXAxis?: Object;
   public chartData?: Object[];
@@ -55,8 +57,12 @@ export class DashboardRegisterAprroveComponent {
     //this.dialog.onOpenDialog(event);
   }
 
-  open2(event){
-    this.dialog.onOpenDialog(event);
+  open2(){
+    this.handleReviewRegisterApprove.emit(null)
+  }
+
+  open3(){
+    this.handleWaitingRegisterApprove.emit(null)
   }
 
 }

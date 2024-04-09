@@ -1,0 +1,821 @@
+<!-- <codx-form #form  [body]="body"> </codx-form>
+
+<ng-template #body>
+  <div class="h-100 container-dialog">
+    <div class="dialog-left border-end pe-2 ps-6">
+      <div class="sticky-top bg-white">
+        <div class="d-flex gap-2">
+          <div class="flex-grow-1">
+            <codx-searchbar
+              [iconPos]="'left'"
+              [type]="'full'"
+              class=""
+            ></codx-searchbar>
+          </div>
+          <div>
+            <svg
+              xmlns=""
+              width="35"
+              height="36"
+              viewBox="0 0 35 36"
+              fill="none"
+            >
+              <g clip-path="url(#clip0_4_22165)">
+                <rect width="35" height="36" rx="6" fill="#F8F8F9" />
+                <path
+                  d="M12.5275 14L17.5 18.9447L22.4725 14L24 15.5223L17.5 22L11 15.5223L12.5275 14Z"
+                  fill="#91919F"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_4_22165">
+                  <rect width="35" height="36" rx="6" fill="white" />
+                </clipPath>
+              </defs>
+            </svg>
+          </div>
+        </div>
+        <div class="d-flex gap-2 mt-2 pb-6">
+          <div class="">
+            <codx-dropdown-select
+              #eleCbxSubType
+              [showFooter]="false"
+              [isToolbar]="false"
+              [cssClass]="'rounded-pill border-1 mt-1'"
+              cssPopup="h-350px w-400px"
+              [isMulti]="false"
+              type="valuelist"
+              field="Trạng thái"
+            ></codx-dropdown-select>
+          </div>
+          <div class="">
+            <codx-dropdown-calendar
+              [cssClass]="'rounded-pill border-1 mt-1'"
+              cssPopup="h-350px w-400px"
+              emptyText="Từ ngày"
+            ></codx-dropdown-calendar>
+          </div>
+          <div class="">
+            <codx-dropdown-calendar
+              cssPopup="h-350px w-550px"
+              [cssClass]="'rounded-pill border-1 mt-1'"
+              cssPopup="h-350px w-400px"
+              cssClass="w-100"
+              emptyText="Đến ngày"
+            ></codx-dropdown-calendar>
+          </div>
+        </div>
+      </div>
+      <div>
+        <ng-container [ngTemplateOutlet]="item"></ng-container>
+        <ng-container [ngTemplateOutlet]="item"></ng-container>
+        <ng-container [ngTemplateOutlet]="item"></ng-container>
+        <ng-container [ngTemplateOutlet]="item"></ng-container>
+        <ng-container [ngTemplateOutlet]="item"></ng-container>
+        <ng-container [ngTemplateOutlet]="item"></ng-container>
+        <ng-container [ngTemplateOutlet]="item"></ng-container>
+        <ng-container [ngTemplateOutlet]="item"></ng-container>
+        <ng-container [ngTemplateOutlet]="item"></ng-container>
+      </div>
+    </div>
+    <div class="border-bottom dialog-left pe-2 ps-6">
+      <div class="d-flex justify-content-between" >
+        <div class="fs-1 fw-400 fw-bold">Chờ duyệt nghỉ phép</div>
+        <span class="icon-edit icon-18 me-1"></span>
+      </div>
+      <div class="d-flex gap-4 align-items-center py-2">
+        <div class="d-flex align-items-center gap-2 button-approve p-2">
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+            >
+              <g clip-path="url(#clip0_4_21870)">
+                <path
+                  d="M4.91537 11.6562L0.690373 7.4312C0.436542 7.17737 0.436542 6.76581 0.690373 6.51195L1.60959 5.59271C1.86342 5.33886 2.275 5.33886 2.52883 5.59271L5.37499 8.43885L11.4712 2.34272C11.725 2.08889 12.1366 2.08889 12.3904 2.34272L13.3096 3.26196C13.5634 3.51579 13.5634 3.92734 13.3096 4.1812L5.83462 11.6562C5.58076 11.91 5.1692 11.91 4.91537 11.6562Z"
+                  fill="#1BC5BD"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_4_21870">
+                  <rect
+                    width="13"
+                    height="13"
+                    fill="white"
+                    transform="translate(0.5 0.5)"
+                  />
+                </clipPath>
+              </defs>
+            </svg>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 button-approve p-2">
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+            >
+              <path
+                d="M8.82883 7L11.3697 4.45916C11.6815 4.14736 11.6815 3.64184 11.3697 3.32979L10.805 2.7651C10.4932 2.4533 9.98766 2.4533 9.67561 2.7651L7.13477 5.30594L4.59393 2.7651C4.28213 2.4533 3.7766 2.4533 3.46455 2.7651L2.89986 3.32979C2.58807 3.64158 2.58807 4.14711 2.89986 4.45916L5.4407 7L2.89986 9.54084C2.58807 9.85264 2.58807 10.3582 2.89986 10.6702L3.46455 11.2349C3.77635 11.5467 4.28213 11.5467 4.59393 11.2349L7.13477 8.69406L9.67561 11.2349C9.9874 11.5467 10.4932 11.5467 10.805 11.2349L11.3697 10.6702C11.6815 10.3584 11.6815 9.85289 11.3697 9.54084L8.82883 7Z"
+                fill="#F64E60"
+              />
+            </svg>
+          </div>
+          <div class="text-gray-600">Hủy</div>
+        </div>
+      </div>
+      <div class="w-650px">
+        <div>
+          <div class="form-group row mt-5">
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label fiedName="Ngày Đăng ký"></codx-label>
+              <span>26/03/2024</span>
+            </div>
+
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label fiedName="Người Đăng Ký" class="w-100"></codx-label>
+              <span>Võ Ngọc Kim Trang</span>
+            </div>
+          </div>
+          <div class="form-group row mt-5">
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label fiedName="Từ ngày"></codx-label>
+              <span>26/03/2023</span>
+            </div>
+
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label fiedName="Đến ngày" class="w-100"></codx-label>
+              <span>26/03/2023</span>
+            </div>
+          </div>
+          <div class="form-group row mt-5">
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label fiedName="Loại nghỉ"></codx-label>
+              <span>Nghỉ phép</span>
+            </div>
+
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label fiedName="Buổi bắt đầu nghỉ"></codx-label>
+              <span>Cả ngày</span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label fiedName="Trừ ngày nghỉ lễ"></codx-label>
+              <codx-input
+                field="contractNo"
+                type="checkbox"
+                labelPosition="after"
+              ></codx-input>
+            </div>
+
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label
+                fiedName="Trừ ngày nghỉ tuần"
+                class="w-100"
+              ></codx-label>
+              <codx-input field="contractNo" type="checkbox"></codx-input>
+            </div>
+          </div>
+
+          <div class="form-group row mt-5">
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label fiedName="Tổng ngày nghỉ"></codx-label>
+              <span>1.00</span>
+            </div>
+
+            <div class="d-flex flex-column justify-content-between col-6">
+              <codx-label fiedName="Lý do"></codx-label>
+              <span>Bận Việc gia đình</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-between" >
+    <button
+      class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
+    >
+      <span class="icon-cloud_upload btn-text-primary me-2"></span>
+      <codx-label
+        fiedName="lblUploadFile"
+        default="Đính kèm"
+        [formModel]="form.formModel"
+      ></codx-label>
+    </button>
+
+    <button class="btn btn-primary">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="form.formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #item>
+  <div class="d-flex fs-6 fw-500 border-bottom py-3">
+    <div class="pe-2 pt-1">
+      <input type="checkbox" name="" id="" class="pointer checkbox-item" />
+    </div>
+    <div class="d-flex gap-2">
+      <div class="d-flex flex-column gap-2">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="fw-bold line-clamp fs-5 line-clamp-1">Trần Thế Vinh</div>
+          <div class="fs-7 fw-500 text-gray-600">21/01/2024 - 22/01/2024</div>
+        </div>
+        <div class="fs-6 fw-bold">Nghỉ chế độ</div>
+        <div class="d-flex justify-content-between align-items-end">
+          <div class="fs-6 text-gray-600">
+            Bận việc gia đình nên xin nghỉ phép 1 ngày, sẽ cố gắng hoàn thành
+            task đầy đủ cố gắng hoàn thành task đầy đủ cố gắng hoàn thành task
+            đầy đủcố gắng hoàn thành task đầy đủ
+          </div>
+          <div class="status status1"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template> -->
+
+
+<codx-views
+  #view
+  service="HR"
+  assemblyName="ERM.Business.HR"
+  entityName="HR_EBasicSalaries"
+  className="EBasicSalariesBusiness"
+  method="GetListEBasicSalariesAsync"
+  [views]="views"
+  [autoLoad]="true"
+  [selectedFirst]="true"
+  idField="recID"
+>
+</codx-views>
+
+<ng-template #headerTemplate>
+  <div>Header nè</div>
+</ng-template>
+
+<!-- <ng-template #headerTemplate let-data>
+  <div class="d-flex w-100 p-4">
+    <div class="w-30 text-dark fw-bold">
+      <span>Tức</span>
+      <codx-label
+        fiedName="lblEmployeeID"
+        [formModel]="view.formModel"
+        [default]="grvSetup?.EmployeeID?.description"
+      ></codx-label>
+      <div>HIHI</div>
+    </div>
+    <div class="w-40 text-dark fw-bold">
+      <codx-label
+        fiedName="lblDecisionNo"
+        [formModel]="view.formModel"
+        [default]="grvSetup?.DecisionNo?.description"
+      ></codx-label>
+    </div>
+    <div class="w-30 text-dark fw-bold">
+      <codx-label
+        fiedName="lblStatus"
+        [formModel]="view.formModel"
+        [default]="grvSetup?.Status?.description"
+      ></codx-label>
+    </div>
+  </div>
+</ng-template> -->
+
+<!-- list view -->
+<ng-template #templateList let-data>
+  <div class="d-flex align-items-center p-4 border-bottom w-100 c-detail">
+    <!-- emp info -->
+    <div class="w-30">
+      <div class="d-flex align-items-start">
+        <div class="d-flex flex-column">
+          <codx-img
+            [width]="35"
+            class="me-3"
+            [objectId]="data?.emp?.employeeID"
+            [referType]="'avt'"
+            [objectName]="data?.emp?.employeeName"
+            [objectType]="'HR_Employees'"
+          >
+          </codx-img>
+        </div>
+        <div class="d-flex flex-column">
+          <span class="fs-6 fw-bold mb-1 c-active" (click)="viewDetail(data)">{{
+            data?.emp?.employeeName
+          }}</span>
+          <span
+            [innerHTML]="
+              data?.positionID
+                | formatvalue : view.formModel : 'positionID'
+                | async
+            "
+          ></span>
+          <span
+            *ngIf="
+              data.orgUnitName || data?.emp?.orgUnitName;
+              else noOrgUnitName
+            "
+            >{{ data.orgUnitName || data.emp.orgUnitName }}</span
+          >
+          <ng-template #noOrgUnitName>
+            <span class="place-holder">{{
+              grvSetup["OrgUnitID"].headerText
+            }}</span>
+          </ng-template>
+          <!-- <span
+            class="mt-1"
+            [innerHTML]="
+              data?.orgUnitID
+                | formatvalue : view.formModel : 'orgUnitID'
+                | async
+            "
+          ></span> -->
+        </div>
+      </div>
+    </div>
+    <!-- end emp info -->
+    <!-- Decision -->
+    <div class="w-40">
+      <div class="d-flex flex-column">
+        <div class="d-flex align-items-center mb-1">
+          <span class="icon-event_notes icon-16 me-1"></span>
+          <div class="fw-bold me-4">
+            <span
+              [ngbTooltip]="grvSetup?.DecisionNo?.headerText"
+              [innerHTML]="
+                data?.decisionNo
+                  | formatvalue : view.formModel : 'decisionNo'
+                  | async
+              "
+            >
+            </span>
+          </div>
+          <div class="me-2">
+            <codx-attachment-temp
+              [objectID]="data.recID"
+              [formModel]="view.formModel"
+            ></codx-attachment-temp>
+          </div>
+        </div>
+        <div class="d-flex align-items-center">
+          <span class="icon-calendar_today icon-14 me-1"></span>
+          <span
+            [ngbTooltip]="grvSetup?.EffectedDate?.headerText"
+            [innerHTML]="
+              data?.effectedDate
+                | formatvalue : view.formModel : 'effectedDate'
+                | async
+            "
+          >
+          </span>
+          <ng-container *ngIf="data?.expiredDate">
+            <span class="px-1"> - </span>
+            <span
+              [ngbTooltip]="grvSetup?.ExpiredDate?.headerText"
+              [innerHTML]="
+                data?.expiredDate
+                  | formatvalue : view.formModel : 'expiredDate'
+                  | async
+              "
+            >
+            </span>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <!-- end decision -->
+    <!-- satus -->
+    <div class="w-30">
+      <div class="d-flex flex-column">
+        <div class="d-flex flex-row mb-2">
+          <div class="me-2">
+            <ng-container *ngIf="flagChangeMF">
+              <ng-container *ngIf="runModeCheck; else elseVll">
+                <codx-vll
+                  [showText]="true"
+                  [showBgColor]="true"
+                  [name]="'ES030'"
+                  [value]="
+                    data?.unbounds?.statusApproval + data?.unbounds?.stepType
+                  "
+                  class="badge badge-sm"
+                >
+                </codx-vll>
+              </ng-container>
+              <ng-template #elseVll>
+                <codx-vll
+                  [formModel]="view.formModel"
+                  [field]="'Status'"
+                  [value]="data?.status"
+                  [showText]="true"
+                  [showIcon]="false"
+                  [showBgColor]="true"
+                  ngClass="badge badge-sm"
+                >
+                </codx-vll>
+              </ng-template>
+            </ng-container>
+          </div>
+          <span
+            *ngIf="
+              data?.status === '5' &&
+              dateNow >= moment(data.effectedDate).format('YYYY-MM-DD') &&
+              (dateNow <= moment(data.expiredDate).format('YYYY-MM-DD') ||
+                data.expiredDate === null)
+            "
+            [style.color]="'#0078FF'"
+            class="icon-bookmark icon-18"
+            [ngbPopover]="popIsNewest"
+            #popOver="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="popOver.open()"
+            (mouseleave)="popOver.close()"
+            placement="left"
+          >
+          </span>
+
+          <span
+            *ngIf="
+              data?.isCurrent &&
+              dateNow > moment(data.expiredDate).format('YYYY-MM-DD')
+            "
+            #popOver="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="popOver.open()"
+            (mouseleave)="popOver.close()"
+            placement="left"
+            [ngbPopover]="popOverDue"
+            [style.color]="'#F64E60'"
+            class="icon-notifications icon-18"
+          ></span>
+
+          <span
+            *ngIf="
+              data?.isCurrent &&
+              dateNow < moment(data.effectedDate).format('YYYY-MM-DD') &&
+              data?.status === '5'
+            "
+            #popOver="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="popOver.open()"
+            (mouseleave)="popOver.close()"
+            placement="left"
+            [ngbPopover]="popIsNotNewsest"
+            [style.color]="'#FFA800'"
+            class="icon-queue_play_next icon-18"
+          ></span>
+        </div>
+        <span
+          *ngIf="data?.signedDate"
+          class="text-gray-600"
+          [innerHTML]="
+            data?.signedDate
+              | formatvalue : view.formModel : 'signedDate'
+              | async
+          "
+        >
+        </span>
+      </div>
+    </div>
+    <!-- end status -->
+
+    <!-- moreMF -->
+    <div class="align-self-center">
+      <div style="height: 35px" class="has-action-menu">
+        <codx-mfunc
+          [formModel]="view.formModel"
+          (clickMF)="clickMF($event, data)"
+          (changeDataMF)="changeDataMF($event, data)"
+          [dataItem]="data"
+          type="view"
+        >
+        </codx-mfunc>
+      </div>
+    </div>
+    <!-- end moreMF -->
+  </div>
+
+
+  
+</ng-template>
+<!-- end list view -->
+
+<!-- list & detail view -->
+<ng-template #templateListDetail let-data>
+  <div>HIHIHI</div>
+  <codx-temp-full
+    [imgCss]="'me-3'"
+    cardCss="card-template border-bottom p-3 when-hover-box"
+    (clickMF)="clickMF($event, data)"
+    [moreFuncCss]="'me-5'"
+    [imageId]="data.emp?.employeeID"
+    [imageObjType]="'HR_Employees'"
+    [imageObjName]="data?.emp?.employeeName"
+    [imageWidth]="35"
+    [formModel]="view.formModel"
+    [dataItem]="data"
+    [imgOn]="data?.modifiedOn"
+    [typeMF]="'view'"
+    [titleTmp]="titleTmp"
+    [titleCss]="'fs-6 mb-1 then-text-primary'"
+    [subTitle]="
+      data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
+    "
+    [subTitleCss]="'fs-7 text-gray-600'"
+    [descTmp]="descTmp"
+    [desc2Tmp]="desc2Tmp"
+    (changeDataMF)="changeDataMF($event, data)"
+  >
+  </codx-temp-full>
+
+  <ng-template #titleTmp>
+    <span
+      class="fw-bold fs-6 mb-1 then-text-primary"
+      (click)="viewDetail(data)"
+    >
+      {{ data.emp?.employeeName }}
+    </span>
+
+    <div
+      *ngIf="
+        data?.status === '5' &&
+        dateNow >= moment(data.effectedDate).format('YYYY-MM-DD') &&
+        (dateNow <= moment(data.expiredDate).format('YYYY-MM-DD') ||
+          data.expiredDate === null)
+      "
+      #popOver="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="popOver.open()"
+      (mouseleave)="popOver.close()"
+      placement="left"
+      [ngbPopover]="popIsNewest"
+      [style.color]="'#0078FF'"
+      class="icon-bookmark icon-18 ms-auto"
+    ></div>
+
+    <div
+      *ngIf="
+        data?.isCurrent &&
+        dateNow > moment(data.expiredDate).format('YYYY-MM-DD')
+      "
+      #popOver="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="popOver.open()"
+      (mouseleave)="popOver.close()"
+      placement="left"
+      [ngbPopover]="popOverDue"
+      [style.color]="'#F64E60'"
+      class="icon-notifications icon-18"
+    ></div>
+
+    <div
+      *ngIf="
+        data?.isCurrent &&
+        dateNow < moment(data.effectedDate).format('YYYY-MM-DD') &&
+        data?.status === '5'
+      "
+      #popOver="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="popOver.open()"
+      (mouseleave)="popOver.close()"
+      placement="left"
+      [ngbPopover]="popIsNotNewsest"
+      [style.color]="'#FFA800'"
+      class="icon-queue_play_next icon-18"
+    ></div>
+  </ng-template>
+
+  <ng-template #descTmp>
+    <div class="d-flex align-items-center mt-1 flex-wrap flex-wrap">
+      <div class="d-flex align-items-center me-4">
+        <span class="icon-description icon-14 me-1"></span>
+        <span [ngbTooltip]="grvSetup?.DecisionNo?.headerText">
+          {{ data?.decisionNo }}
+        </span>
+      </div>
+      <div class="d-flex align-items-center me-4">
+        <span class="icon-calendar_today icon-14 me-1"></span>
+        <span
+          [ngbTooltip]="grvSetup?.EffectedDate?.headerText"
+          [innerHTML]="
+            data?.effectedDate
+              | formatvalue : view.formModel : 'effectedDate'
+              | async
+          "
+        >
+        </span>
+        <span class="mx-1" *ngIf="data?.expiredDate"> - </span>
+        <span
+          *ngIf="data?.expiredDate"
+          [ngbTooltip]="grvSetup?.ExpiredDate?.headerText"
+          [innerHTML]="
+            data?.expiredDate
+              | formatvalue : view.formModel : 'expiredDate'
+              | async
+          "
+        >
+        </span>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #desc2Tmp>
+    <div class="d-flex align-items-center text-dark mt-1">
+      <ng-container *ngIf="flagChangeMF">
+        <ng-container *ngIf="runModeCheck; else elseVll">
+          <codx-vll
+            [showText]="true"
+            [showBgColor]="true"
+            [name]="'ES030'"
+            [value]="data?.unbounds?.statusApproval + data?.unbounds?.stepType"
+            class="badge badge-sm"
+          >
+          </codx-vll>
+        </ng-container>
+        <ng-template #elseVll>
+          <codx-vll
+            [formModel]="view.formModel"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showIcon]="false"
+            [showBgColor]="true"
+            ngClass="badge badge-sm"
+          >
+          </codx-vll>
+        </ng-template>
+      </ng-container>
+      <!-- <codx-vll
+        class="badge fw-bold me-4"
+        [name]="'HRS102'"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+      >
+      </codx-vll> -->
+      <span
+        *ngIf="data?.signedDate"
+        [ngbTooltip]="grvSetup?.SignedDate?.headerText"
+        [ngbTooltip]="grvSetup?.SignedDate?.headerText"
+        [innerHTML]="
+          data?.signedDate | formatvalue : view.formModel : 'signedDate' | async
+        "
+      >
+      </span>
+    </div>
+  </ng-template>
+  <!-- <div class="d-flex flex-center vll-badge">
+      <codx-vll class="badge badge-sm me-0 badge-light" [name]="genderGrvSetup?.referedValue"
+        [value]="data?.emp?.gender" [showText]="true" [showIcon]="false" [showBgColor]="false">
+      </codx-vll>
+    </div> -->
+</ng-template>
+
+<!-- info view -->
+
+<!-- end -->
+
+<ng-template #templateItemDetailRight let-data>
+  <lib-view-basic-salary-detail
+    #viewdetail
+    [itemDetail]="itemDetail"
+    [formModel]="view?.formModel"
+    [view]="view"
+    [grvSetup]="grvSetup"
+    (clickMF)="clickEvent($event)"
+  >
+  </lib-view-basic-salary-detail>
+</ng-template>
+<!-- end list & detail view -->
+
+<!-- update status -->
+
+<ng-template #templateUpdateStatus let-dialog1>
+  <div class="codx-form card w-100 h-100 rounded-0 border-0">
+    <div class="card-header flex-column">
+      <div class="d-flex align-items-center justify-content-between w-100">
+        <div class="card-title">
+          <div class="d-flex flex-column">
+            <codx-label
+              class="dialog-title line-clamp line-clamp-1"
+              name="lblEquipment"
+              default="Cập nhật trạng thái"
+              [formModel]="view.formModel"
+            ></codx-label>
+          </div>
+        </div>
+        <div class="card-toolbar">
+          <button
+            type="button"
+            class="btn btn-flex text-dark-75 text-hover-primary px-0"
+            (click)="closeUpdateStatusForm(dialog1)"
+          >
+            <span class="icon-close icon-18"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="align-items-center me-3 mt-10">
+        <div class="form-group">
+          <label>
+            <codx-label fiedName="status" [formModel]="view.formModel">
+            </codx-label>
+          </label>
+          <div class="p-disabled">
+            <codx-input
+              field="status"
+              [formModel]="view.formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+          <!-- <codx-input [disabled]="true" field="status" [formModel]="view.formModel" [Group]="formGroup"></codx-input> -->
+        </div>
+        <div class="form-group">
+          <label>
+            <codx-label
+              [default]="'Bình luận'"
+              [name]="'lblComment'"
+            ></codx-label>
+          </label>
+          <codx-input
+            type="text"
+            [formModel]="view.formModel"
+            (valueChange)="valueChangeComment($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer border-0">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSaveUpdateForm()">
+          <i class="icon-save"></i>
+          <codx-label
+            default="Lưu"
+            name="lblSave"
+            [formModel]="view.formModel"
+          ></codx-label>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!-- end update status -->
+
+<!-- <ng-template #baseHeaderRightTmp let-data>
+  <div>
+    <ng-container *ngIf="data?.isCurrent">
+      <span [style.color]="'#0078FF'" class="icon-bookmark icon-18" [ngbPopover]="popIsNewest" #popOver="ngbPopover"
+        [openDelay]="500" (mouseenter)="popOver.open()" (mouseleave)="popOver.close()" placement="left">
+      </span>
+    </ng-container>
+  </div>
+</ng-template> -->
+
+<ng-template #popIsNewest>
+  <span>
+    <codx-label
+      name="lblIsCurrent"
+      [formModel]="view.formModel"
+      default="Đang hiệu lực"
+    ></codx-label>
+  </span>
+</ng-template>
+
+<ng-template #popOverDue>
+  <span>
+    <codx-label
+      name="lblOverDue"
+      [formModel]="view.formModel"
+      default="Quá hạn"
+    ></codx-label>
+  </span>
+</ng-template>
+
+<ng-template #popIsNotNewsest>
+  <span>
+    <codx-label
+      name="lblIsNotCurrent"
+      [formModel]="view.formModel"
+      default="Chưa hiệu lực"
+    ></codx-label>
+  </span>
+</ng-template>
+
+
