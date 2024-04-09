@@ -1,5 +1,5 @@
 <codx-views #view [funcID]="funcID" [views]="views" [button]="btnAdd" [autoLoad]="true" [isSubView]="isSubView"
-  entityName="AC_FAPostingAccounts" service="AC" (buttonClick)="handleClickAdd($event)" (clickMF)="handleClickMoreFuncs($event, $event?.data)" (onActions)="viewActions($event)">
+  entityName="AC_FAPostingAccounts" service="AC" (buttonClick)="handleClickAdd($event)" (clickMF)="handleClickMoreFuncs($event, view.dataService.dataSelected)" (onActions)="viewActions($event)">
 </codx-views>
 
 <ng-template #templateLeft>
