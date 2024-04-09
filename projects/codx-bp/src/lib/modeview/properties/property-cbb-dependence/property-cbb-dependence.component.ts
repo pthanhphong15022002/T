@@ -46,14 +46,12 @@ export class PropertyCbbDependenceComponent
     }
 
     if (changes?.listCbx?.currentValue != changes?.listCbx?.previousValue) {
-      debugger
       this.listCbx = changes?.listCbx?.currentValue;
       this.formatListCbb();
     }
   }
 
   getDataDependenceCBB() {
-    debugger
     if (!this.dataTable) return;
     this.dependenceCBBData = [];
     let dtTable = JSON.parse(JSON.stringify(this.dataTable));
@@ -85,7 +83,7 @@ export class PropertyCbbDependenceComponent
       if (this.combobox.value) this.changeValueCBB(this.combobox.value);
     }
 
-    if (this.combobox) {
+    if (this.combobox2) {
       this.cbbData = [];
       this.combobox2.dataSource = [];
       this.combobox2.value = this.vaidateControl?.dependenceValue || '';
@@ -95,9 +93,25 @@ export class PropertyCbbDependenceComponent
     if(this.comboboxReferSource)
     {
       this.comboboxReferSource.dataSource = this.dependenceCBBData;
+      this.comboboxReferSource.value = this.vaidateControl?.refersouce || '';
       this.comboboxReferSource.refresh();
+
+      if (this.comboboxReferSource.value) this.changeValueCBB(this.comboboxReferSource.value,2);
     }
 
+    if (this.combobox3) {
+      this.combobox3.dataSource = [];
+      this.combobox3.value = this.vaidateControl?.refersouce1 || '';
+      this.combobox3.refresh();
+    }
+
+    if(this.combobox4)
+    {
+      this.combobox4.dataSource = [];
+      this.combobox4.value = this.vaidateControl?.refersouce2 || '';
+      this.combobox4.refresh();
+    }
+  
     this.ref.detectChanges();
   }
 
@@ -110,12 +124,14 @@ export class PropertyCbbDependenceComponent
     });
 
     this.combobox4.dataSource = arrCbx;
+    this.combobox4.value = this.vaidateControl?.refersouce2 || '';
     this.combobox4.refresh();
   }
 
   changeValueCBB(refValue: any , index = 0) {
     if (!refValue) return;
-    this.vaidateControl.dependenceID = refValue;
+    if(index == 0) this.vaidateControl.dependenceID = refValue;
+    else if(index == 2) this.vaidateControl.refersouce = refValue;
     this.dtCbb = this.dependenceCBBData.filter((x) => x.id == refValue)[0];
     let cbb = this.shareService.loadCombobox(refValue);
     if (isObservable(cbb)) {
@@ -151,6 +167,46 @@ export class PropertyCbbDependenceComponent
     this.data.validateControl = JSON.stringify(this.vaidateControl);
     this.dataChange.emit(this.data);
     this.dataChangeTableEmit.emit(this.dataTable);
+  }
+
+  changeValueCCBB2(e: any , field:any) {
+    this.vaidateControl[field] = e;
+
+    if(this.vaidateControl?.refersouce2 && this.vaidateControl?.refersouce1)
+    {
+      let referSource = this.vaidateControl?.refersouce2 + "=[" + this.vaidateControl?.refersouce1 + "]";
+      this.getCbb(referSource);
+    }
+  
+    this.data.validateControl = JSON.stringify(this.vaidateControl);
+    this.dataChange.emit(this.data);
+  }
+
+  getCbb(referSource:any)
+  {
+    let cbb = this.shareService.loadCombobox(this.data.refValue) as any;
+    if(isObservable(cbb))
+    {
+      cbb.subscribe((item:any)=>{
+        item.referedSources = referSource;
+        this.updateCombobox(item);
+      })
+    }
+    else {
+      cbb.referedSources = referSource;
+      this.updateCombobox(cbb);
+    }
+  }
+
+  updateCombobox(data:any)
+  {
+    this.api
+    .execSv('SYS', 'SYS', 'ComboboxListBusiness', 'UpdateComboboxAsync' , data)
+    .subscribe((item) => {
+      if (item) {
+        this.cache.setCombobox(this.data.refValue, data);
+      }
+    });
   }
 
   replaceBetween(origin: any, startIndex: any, endIndex: any, insertion: any) {

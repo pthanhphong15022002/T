@@ -12,8 +12,8 @@
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'refersouce'" default="Lọc dữ liệu từ" class="fw-bold"></codx-label>
             <ejs-combobox #cbbDependence2 [fields]="fields" [allowCustom]="true" placeholder='Từ' (valueChange)="changeValueCBB($event,2)"></ejs-combobox>
         </div>
-        <ejs-combobox #cbb3  [fields]="fields" [allowCustom]="true" placeholder='Từ' (valueChange)="changeValueCCBB($event)" class="mx-2"></ejs-combobox>
-        <ejs-combobox #cbb4  [fields]="fields" [allowCustom]="true" placeholder='Từ' (valueChange)="changeValueCCBB($event)"></ejs-combobox>
+        <ejs-combobox #cbb3  [fields]="fields" [allowCustom]="true" placeholder='Từ' (valueChange)="changeValueCCBB2($event,'refersouce1')" class="mx-2"></ejs-combobox>
+        <ejs-combobox #cbb4  [fields]="fields" [allowCustom]="true" placeholder='Từ' (valueChange)="changeValueCCBB2($event,'refersouce2')"></ejs-combobox>
     </div>
 </div>
  
