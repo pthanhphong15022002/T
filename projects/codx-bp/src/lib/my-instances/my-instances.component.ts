@@ -5,6 +5,7 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   AuthStore,
@@ -24,7 +25,8 @@ import { PopupBpTasksComponent } from '../bp-tasks/popup-bp-tasks/popup-bp-tasks
 @Component({
   selector: 'lib-my-instances',
   templateUrl: './my-instances.component.html',
-  styleUrls: ['./my-instances.component.css'],
+  styleUrls: ['./my-instances.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class MyInstancesComponent
   extends UIComponent
@@ -55,7 +57,12 @@ export class MyInstancesComponent
   }
 
   onInit(): void {
-
+    this.request = new ResourceModel();
+    this.request.service = 'BP';
+    this.request.assemblyName = 'BP';
+    this.request.className = 'ProcessInstancesBusiness';
+    this.request.method = 'GetListInstancesByTaskAsync';
+    this.request.idField ='recID';
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'BP';
     this.resourceKanban.assemblyName = 'BP';
