@@ -239,6 +239,8 @@ export class AddProcessDefaultComponent implements OnInit {
             controlType: elm2.controlType,
             field: elm2.fieldName,
             dataType: elm2.dataType,
+            refType: elm2?.refType,
+            refValue: elm2?.refValue,
             allowEdit:true
           };
           element.columnsGrid.push(obj);
@@ -249,7 +251,7 @@ export class AddProcessDefaultComponent implements OnInit {
             this.listFieldDecimal.push(field);
           }
         });
-
+        this.dataTable[field] = [];
         if (element?.tableFormat?.hasIndexNo) {
           var obj2 = {
             headerText: 'STT',

@@ -85,7 +85,7 @@
                                         #gridView
                                         [outputMoreFunc]="true"
                                         [columnsGrid]="child.columnsGrid"
-                                        [dataSource]="dataTable[child.fieldName] || gridDs"
+                                        [dataSource]="dataTable[child.fieldName]"
                                         (clickMF)="clickMFGrid($event,child)"
                                         [editSettings]="editSettings"
                                     >
