@@ -9,6 +9,7 @@ import { FormGroup } from '@angular/forms';
 import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { JournalsAddComponent } from '../../journals/journals-add/journals-add.component';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'lib-cashtransfers',
@@ -51,6 +52,7 @@ export class CashtransfersComponent extends UIComponent {
     private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
+    private ngxLoader: NgxUiLoaderService,
   ) {
     super(inject);
     this.cache
@@ -247,44 +249,51 @@ export class CashtransfersComponent extends UIComponent {
    * *Hàm thêm mới chứng từ
    */
   addNewVoucher() {
+    this.ngxLoader.start();
     this.view.dataService
       .addNew((o) => this.setDefault(this.dataDefault))
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res != null) {
-          res.isAdd = true;
-          if (this.dataDefault == null) this.dataDefault = { ...res };
-          let data = {
-            headerText: this.headerText,
-            journal: { ...this.journal },
-            oData: { ...this.dataDefault }, 
-            hideFields: [...this.hideFields],
-            baseCurr: this.baseCurr,
-            fgVATInvoice : this.fgVATInvoice,
-            fmVATInvoice : this.fmVATInvoice,
-            VATInvoiceSV: this.VATInvoiceSV
-          };
-          let optionSidebar = new SidebarModel();
-          optionSidebar.DataService = this.view?.dataService;
-          optionSidebar.FormModel = this.view?.formModel;
-          let dialog = this.callfc.openSide(
-            CashtransfersAddComponent,
-            data,
-            optionSidebar,
-            this.view.funcID
-          );
-          dialog.closed.subscribe((res) => {
-            if (res && res?.event) {
-              if (res?.event?.type === 'discard') {
-                if(this.view.dataService.data.length == 0){
-                  this.itemSelected = undefined;
-                  this.detectorRef.detectChanges();
-                } 
+      .subscribe({
+        next:(res:any)=>{
+          if (res != null) {
+            res.isAdd = true;
+            if (this.dataDefault == null) this.dataDefault = { ...res };
+            let data = {
+              headerText: this.headerText,
+              journal: { ...this.journal },
+              oData: { ...this.dataDefault }, 
+              hideFields: [...this.hideFields],
+              baseCurr: this.baseCurr,
+              fgVATInvoice : this.fgVATInvoice,
+              fmVATInvoice : this.fmVATInvoice,
+              VATInvoiceSV: this.VATInvoiceSV
+            };
+            let optionSidebar = new SidebarModel();
+            optionSidebar.DataService = this.view?.dataService;
+            optionSidebar.FormModel = this.view?.formModel;
+            let dialog = this.callfc.openSide(
+              CashtransfersAddComponent,
+              data,
+              optionSidebar,
+              this.view.funcID
+            );
+            dialog.closed.subscribe((res) => {
+              if (res && res?.event) {
+                if (res?.event?.type === 'discard') {
+                  if(this.view.dataService.data.length == 0){
+                    this.itemSelected = undefined;
+                    this.detectorRef.detectChanges();
+                  } 
+                }
               }
-            }
-          })
+            })
+          }
+          
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          this.onDestroy();
         }
-        this.onDestroy();
       });
   }
 
@@ -294,43 +303,49 @@ export class CashtransfersComponent extends UIComponent {
    */
   editVoucher(dataEdit) {
     this.view.dataService.dataSelected = dataEdit;
+    this.ngxLoader.start();
     this.view.dataService
       .edit(dataEdit)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if(res){
-          res.isEdit = true;
-          let data = {
-            headerText: this.headerText,
-            journal: { ...this.journal },
-            oData: { ...res }, 
-            hideFields: [...this.hideFields],
-            baseCurr: this.baseCurr,
-            fgVATInvoice : this.fgVATInvoice,
-            fmVATInvoice : this.fmVATInvoice,
-            VATInvoiceSV: this.VATInvoiceSV
-          };
-          let optionSidebar = new SidebarModel();
-          optionSidebar.DataService = this.view?.dataService;
-          optionSidebar.FormModel = this.view?.formModel;
-          let dialog = this.callfc.openSide(
-            CashtransfersAddComponent,
-            data,
-            optionSidebar,
-            this.view.funcID
-          );
-          dialog.closed.subscribe((res) => {
-            if (res && res?.event) {
-              if (res?.event?.type === 'discard') {
-                if(this.view.dataService.data.length == 0){
-                  this.itemSelected = undefined;
-                  this.detectorRef.detectChanges();
-                } 
+      .subscribe({
+        next:(res:any)=>{
+          if(res){
+            res.isEdit = true;
+            let data = {
+              headerText: this.headerText,
+              journal: { ...this.journal },
+              oData: { ...res }, 
+              hideFields: [...this.hideFields],
+              baseCurr: this.baseCurr,
+              fgVATInvoice : this.fgVATInvoice,
+              fmVATInvoice : this.fmVATInvoice,
+              VATInvoiceSV: this.VATInvoiceSV
+            };
+            let optionSidebar = new SidebarModel();
+            optionSidebar.DataService = this.view?.dataService;
+            optionSidebar.FormModel = this.view?.formModel;
+            let dialog = this.callfc.openSide(
+              CashtransfersAddComponent,
+              data,
+              optionSidebar,
+              this.view.funcID
+            );
+            dialog.closed.subscribe((res) => {
+              if (res && res?.event) {
+                if (res?.event?.type === 'discard') {
+                  if(this.view.dataService.data.length == 0){
+                    this.itemSelected = undefined;
+                    this.detectorRef.detectChanges();
+                  } 
+                }
               }
-            }
-          })
+            })
+          }
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          this.onDestroy();
         }
-        this.onDestroy();
       });
   }
 
@@ -362,84 +377,96 @@ export class CashtransfersComponent extends UIComponent {
         if (res && res?.event) {
           let newvoucherNo = res?.event;
           newdataCopy.voucherNo = newvoucherNo;
+          this.ngxLoader.start();
           this.view.dataService
             .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
             .pipe(takeUntil(this.destroy$))
-            .subscribe((res: any) => {
-              if (res != null) {
-                res.isCopy = true;
-                let data = {
-                  headerText: this.headerText,
-                  journal: { ...this.journal },
-                  oData: { ...res }, 
-                  hideFields: [...this.hideFields],
-                  baseCurr: this.baseCurr,
-                  fgVATInvoice : this.fgVATInvoice,
-                  fmVATInvoice : this.fmVATInvoice,
-                  VATInvoiceSV: this.VATInvoiceSV
-                };
-                let optionSidebar = new SidebarModel();
-                optionSidebar.DataService = this.view?.dataService;
-                optionSidebar.FormModel = this.view?.formModel;
-                let dialog = this.callfc.openSide(
-                  CashtransfersAddComponent,
-                  data,
-                  optionSidebar,
-                  this.view.funcID
-                );
-                dialog.closed.subscribe((res) => {
-                  if (res && res?.event) {
-                    if (res?.event?.type === 'discard') {
-                      if(this.view.dataService.data.length == 0){
-                        this.itemSelected = undefined;
-                        this.detectorRef.detectChanges();
-                      } 
+            .subscribe({
+              next:(res:any)=>{
+                if (res != null) {
+                  res.isCopy = true;
+                  let data = {
+                    headerText: this.headerText,
+                    journal: { ...this.journal },
+                    oData: { ...res }, 
+                    hideFields: [...this.hideFields],
+                    baseCurr: this.baseCurr,
+                    fgVATInvoice : this.fgVATInvoice,
+                    fmVATInvoice : this.fmVATInvoice,
+                    VATInvoiceSV: this.VATInvoiceSV
+                  };
+                  let optionSidebar = new SidebarModel();
+                  optionSidebar.DataService = this.view?.dataService;
+                  optionSidebar.FormModel = this.view?.formModel;
+                  let dialog = this.callfc.openSide(
+                    CashtransfersAddComponent,
+                    data,
+                    optionSidebar,
+                    this.view.funcID
+                  );
+                  dialog.closed.subscribe((res) => {
+                    if (res && res?.event) {
+                      if (res?.event?.type === 'discard') {
+                        if(this.view.dataService.data.length == 0){
+                          this.itemSelected = undefined;
+                          this.detectorRef.detectChanges();
+                        } 
+                      }
                     }
-                  }
-                })
+                  })
+                }
+              },
+              complete:()=>{
+                this.ngxLoader.stop();
+                this.onDestroy();
               }
-              this.onDestroy();
             });
         }
       });
     } else {
+      this.ngxLoader.start();
       this.view.dataService
         .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
         .pipe(takeUntil(this.destroy$))
-        .subscribe((res: any) => {
-          if (res != null) {
-            res.isCopy = true;
-            let data = {
-              headerText: this.headerText,
-              journal: { ...this.journal },
-              oData: { ...res }, 
-              hideFields: [...this.hideFields],
-              baseCurr: this.baseCurr,
-              fgVATInvoice : this.fgVATInvoice,
-              fmVATInvoice : this.fmVATInvoice,
-              VATInvoiceSV: this.VATInvoiceSV
-            };
-            let optionSidebar = new SidebarModel();
-            optionSidebar.DataService = this.view?.dataService;
-            optionSidebar.FormModel = this.view?.formModel;
-            let dialog = this.callfc.openSide(
-              CashtransfersAddComponent,
-              data,
-              optionSidebar,
-              this.view.funcID
-            );
-            dialog.closed.subscribe((res) => {
-              if (res && res?.event) {
-                if (res?.event?.type === 'discard') {
-                  if(this.view.dataService.data.length == 0){
-                    this.itemSelected = undefined;
-                    this.detectorRef.detectChanges();
-                  } 
+        .subscribe({
+          next:(res:any)=>{
+            if (res != null) {
+              res.isCopy = true;
+              let data = {
+                headerText: this.headerText,
+                journal: { ...this.journal },
+                oData: { ...res }, 
+                hideFields: [...this.hideFields],
+                baseCurr: this.baseCurr,
+                fgVATInvoice : this.fgVATInvoice,
+                fmVATInvoice : this.fmVATInvoice,
+                VATInvoiceSV: this.VATInvoiceSV
+              };
+              let optionSidebar = new SidebarModel();
+              optionSidebar.DataService = this.view?.dataService;
+              optionSidebar.FormModel = this.view?.formModel;
+              let dialog = this.callfc.openSide(
+                CashtransfersAddComponent,
+                data,
+                optionSidebar,
+                this.view.funcID
+              );
+              dialog.closed.subscribe((res) => {
+                if (res && res?.event) {
+                  if (res?.event?.type === 'discard') {
+                    if(this.view.dataService.data.length == 0){
+                      this.itemSelected = undefined;
+                      this.detectorRef.detectChanges();
+                    } 
+                  }
                 }
-              }
-            })
+              })
+            }
+          },
+          complete:()=>{
+            this.ngxLoader.stop();
+            this.onDestroy();
           }
-          this.onDestroy();
         });
     }
   }
@@ -498,27 +525,75 @@ export class CashtransfersComponent extends UIComponent {
    * @param data
    */
   releaseVoucher(text: any, data: any) {
-    this.acService
-      .getCategoryByEntityName(this.view.formModel.entityName)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        this.dataCategory = res;
-        this.codxCommonService
-          .codxRelease(
-            'AC',
-            data.recID,
-            this.dataCategory.processID,
-            this.view.formModel.entityName,
-            this.view.formModel.funcID,
-            '',
-            '',
-            '',
-            null,
-            JSON.stringify({ ParentID: data.journalNo })
-          )
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((result: any) => {
-            if (result?.msgCodeError == null && result?.rowCount) {
+    data = {...this.itemSelected};
+    if (data) {
+      this.ngxLoader.start();
+      this.acService
+        .getCategoryByEntityName(this.view.formModel.entityName)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          if (res) {
+            this.dataCategory = res;
+            this.codxCommonService
+              .codxRelease(
+                'AC',
+                data.recID,
+                this.dataCategory.processID,
+                this.view.formModel.entityName,
+                this.view.formModel.funcID,
+                '',
+                '',
+                '',
+                null,
+                JSON.stringify({ ParentID: data.journalNo })
+              )
+              .pipe(takeUntil(this.destroy$))
+              .subscribe({
+                next: (result: any) => {
+                  if (result?.msgCodeError == null && result?.rowCount) {
+                    data.status = result?.returnStatus;
+                    this.view.dataService.updateDatas.set(data['_uuid'], data);
+                    this.view.dataService
+                      .save(null, 0, '', '', false)
+                      .pipe(takeUntil(this.destroy$))
+                      .subscribe((res: any) => {
+                        if (res && !res.update.error) {
+                          this.notification.notifyCode('AC0029', 0, text);
+                        }
+                        this.onDestroy();
+                      });
+                  } else {
+                    this.notification.notifyCode(result?.msgCodeError);
+                    this.onDestroy();
+                  }
+                },
+                complete: () => {
+                  this.ngxLoader.stop();
+                  this.onDestroy();
+                }
+              });
+          } else {
+            this.ngxLoader.stop();
+            this.onDestroy();
+          }
+        }); 
+    }
+  }
+
+  /**
+   * *Hàm hủy gửi duyệt chứng từ (xử lí cho MF hủy yêu cầu duyệt)
+   * @param data
+   */
+  cancelReleaseVoucher(text: any, data: any) {
+    data = {...this.itemSelected};
+    if (data) {
+      this.ngxLoader.start();
+      this.codxCommonService
+        .codxCancel('AC', data?.recID, this.view.formModel.entityName, null, null)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (result: any) => {
+            if (result && result?.msgCodeError == null) {
               data.status = result?.returnStatus;
               this.view.dataService.updateDatas.set(data['_uuid'], data);
               this.view.dataService
@@ -528,39 +603,18 @@ export class CashtransfersComponent extends UIComponent {
                   if (res && !res.update.error) {
                     this.notification.notifyCode('AC0029', 0, text);
                   }
-                });
-            } else this.notification.notifyCode(result?.msgCodeError);
-            this.onDestroy();
-          });
-      });
-  }
 
-  /**
-   * *Hàm hủy gửi duyệt chứng từ (xử lí cho MF hủy yêu cầu duyệt)
-   * @param data
-   */
-  cancelReleaseVoucher(text: any, data: any) {
-    this.codxCommonService
-      .codxCancel('AC', data?.recID, this.view.formModel.entityName, null, null)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((result: any) => {
-        if (result && result?.msgCodeError == null) {
-          data.status = result?.returnStatus;
-          this.view.dataService.updateDatas.set(data['_uuid'], data);
-          this.view.dataService
-            .save(null, 0, '', '', false)
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((res: any) => {
-              if (res && !res.update.error) {
-                this.notification.notifyCode('AC0029', 0, text);
-              }
-              this.onDestroy();
-            });
-        } else{
-          this.notification.notifyCode(result?.msgCodeError);
-          this.onDestroy();
-        } 
-      });
+                });
+            } else {
+              this.notification.notifyCode(result?.msgCodeError);
+            }
+          },
+          complete: () => {
+            this.ngxLoader.stop();
+            this.onDestroy();
+          }
+        }); 
+    }
   }
 
   /**
@@ -568,18 +622,27 @@ export class CashtransfersComponent extends UIComponent {
    * @param data
    */
   validateVourcher(text: any, data: any) {
-    this.api
+    data = {...this.itemSelected};
+    if (data) {
+      this.ngxLoader.start();
+      this.api
       .exec('AC', 'CashTranfersBusiness', 'ValidateVourcherAsync', [data, text])
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res[1]) {
-          this.itemSelected = res[0];
-          this.view.dataService.update(this.itemSelected).subscribe();
-          this.notification.notifyCode('AC0029', 0, text);
-          this.detectorRef.detectChanges();
+      .subscribe({
+        next:(res:any)=>{
+          if (res[1]) {
+            this.itemSelected = res[0];
+            this.view.dataService.update(this.itemSelected).subscribe();
+            this.notification.notifyCode('AC0029', 0, text);
+            this.detectorRef.detectChanges();
+          }
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          this.onDestroy();
         }
-        this.onDestroy();
       });
+    }
   }
 
   /**
@@ -587,18 +650,28 @@ export class CashtransfersComponent extends UIComponent {
    * @param data
    */
   postVoucher(text: any, data: any) {
-    this.api
+    data = {...this.itemSelected};
+    if (data) {
+      this.ngxLoader.start();
+      this.api
       .exec('AC', 'CashTranfersBusiness', 'PostVourcherAsync', [data, text])
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res[1]) {
-          this.itemSelected = res[0];
-          this.view.dataService.update(this.itemSelected).subscribe();
-          this.notification.notifyCode('AC0029', 0, text);
-          this.detectorRef.detectChanges();
+      .subscribe({
+        next:(res:any)=>{
+          if (res[1]) {
+            this.itemSelected = res[0];
+            this.view.dataService.update(this.itemSelected).subscribe();
+            this.notification.notifyCode('AC0029', 0, text);
+            this.detectorRef.detectChanges();
+          }
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          this.onDestroy();
         }
-        this.onDestroy();
       });
+    }
+    
   }
 
   /**
@@ -606,18 +679,27 @@ export class CashtransfersComponent extends UIComponent {
    * @param data
    */
   unPostVoucher(text: any, data: any) {
-    this.api
+    data = {...this.itemSelected};
+    if (data) {
+      this.ngxLoader.start();
+      this.api
       .exec('AC', 'CashTranfersBusiness', 'UnPostVourcherAsync', [data, text])
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res[1]) {
-          this.itemSelected = res[0];
-          this.view.dataService.update(this.itemSelected).subscribe();
-          this.notification.notifyCode('AC0029', 0, text);
-          this.detectorRef.detectChanges();
+      .subscribe({
+        next:(res:any)=>{
+          if (res[1]) {
+            this.itemSelected = res[0];
+            this.view.dataService.update(this.itemSelected).subscribe();
+            this.notification.notifyCode('AC0029', 0, text);
+            this.detectorRef.detectChanges();
+          }
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          this.onDestroy();
         }
-        this.onDestroy();
       });
+    }
   }
 
   /**
@@ -692,13 +774,16 @@ export class CashtransfersComponent extends UIComponent {
     if (this.runmode == '1') {
       this.shareService.changeMFApproval(event, data.unbounds);
     } else {
-      this.acService.changeMFCashTranfers(
-        event,
-        data,
-        type,
-        this.journal,
-        this.view.formModel
-      );
+      this.acService.changeMFCashTranfers(event,data,type,this.journal,this.view.formModel);
+    }
+  }
+
+  changeMFGrid(event: any, type: any,data:any) {
+    if (this.runmode == '1') {
+      this.shareService.changeMFApproval(event, data.unbounds);
+    } else {
+      this.acService.changeMFCashTranfers(event,data,type,this.journal,this.view.formModel);
+      this.detectorRef.detectChanges();
     }
   }
 

@@ -182,7 +182,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
               this.view.formModel.entityName,
               'C1',
               null,
-              'EDisciplinesBusiness'
+              'EDisciplinesBusiness_Old'
             )
             .subscribe();
           this.dialogEditStatus && this.dialogEditStatus.close(res);
@@ -503,7 +503,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
             this.view.formModel.entityName,
             'C1',
             null,
-            'EDisciplinesBusiness'
+            'EDisciplinesBusiness_Old'
           )
           .subscribe();
 

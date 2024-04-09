@@ -144,7 +144,7 @@ export class PopupAddPositionsComponent implements OnInit {
 
     let _method = this.isAdd ? 'SaveAsync' : 'UpdateAsync';
     this.api
-      .execSv('HR', 'ERM.Business.HR', 'PositionsBusiness', _method, [
+      .execSv('HR', 'ERM.Business.HR', 'PositionsBusiness_Old', _method, [
         this.data,
         this.functionID,
       ])

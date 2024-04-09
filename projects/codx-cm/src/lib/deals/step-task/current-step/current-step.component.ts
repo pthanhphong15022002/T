@@ -179,7 +179,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
     ]);
 
     this.api
-      .exec<any>('HR', 'EmployeesBusiness', 'GetListEmployeesByUserIDAsync', [
+      .exec<any>('HR', 'EmployeesBusiness_Old', 'GetListEmployeesByUserIDAsync', [
         listUserID,
       ])
       .subscribe((res) => {

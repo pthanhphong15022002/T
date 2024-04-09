@@ -109,7 +109,7 @@ export class EmployeeQuitComponent extends UIComponent {
         .execSv(
           'HR',
           'ERM.Business.HR',
-          'EmployeesBusiness',
+          'EmployeesBusiness_Old',
           'GetEmployeeByUserIDAsync',
           this.user.userID
         )
@@ -270,7 +270,7 @@ export class EmployeeQuitComponent extends UIComponent {
             this.view.formModel.entityName,
             'C1',
             null,
-            'EQuitBusiness'
+            'EQuitBusiness_Old'
           )
           .subscribe();
         this.dialogEditStatus && this.dialogEditStatus.close(data);
@@ -413,7 +413,7 @@ export class EmployeeQuitComponent extends UIComponent {
   //Call api delete
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
-    opt.className = 'EQuitBusiness';
+    opt.className = 'EQuitBusiness_Old';
     opt.assemblyName = 'HR';
     opt.service = 'HR';
     opt.data = data;
@@ -437,7 +437,7 @@ export class EmployeeQuitComponent extends UIComponent {
             this.view.formModel.entityName,
             'C1',
             null,
-            'EQuitBusiness'
+            'EQuitBusiness_Old'
           )
           .subscribe();
 

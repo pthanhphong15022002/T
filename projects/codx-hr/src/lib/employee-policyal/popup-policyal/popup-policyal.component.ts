@@ -275,7 +275,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
+      'PolicyALBusiness_Old',
       'GetApplyObjsAsync',
       ['AL', this.alpolicyObj.policyID, 0]
     );
@@ -287,7 +287,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetEmpFullInfoAsync',
       empID
     );
@@ -887,7 +887,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
+      'PolicyALBusiness_Old',
       'CheckPolicyALIDExisted',
       id
     );
@@ -897,7 +897,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
+      'PolicyALBusiness_Old',
       'GetPolicyDetailByPredicateAsync',
       ['AL', this.alpolicyObj.policyID, 'ALFirstMonthType', data]
     );
@@ -907,7 +907,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
+      'PolicyALBusiness_Old',
       'GetPolicyDetailByPredicateAsync',
       ['AL', this.alpolicyObj.policyID, 'ALSeniorityType', '1']
     );
@@ -917,7 +917,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
+      'PolicyALBusiness_Old',
       'UpdatePolicyALPolicyIDChangedAsync',
       [this.alpolicyObj, this.form.form.preData.policyID]
     );
@@ -927,7 +927,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
+      'PolicyALBusiness_Old',
       'UpdatePolicyALAsync',
       data
     );
@@ -937,7 +937,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
+      'PolicyALBusiness_Old',
       'AddPolicyALAsync',
       data
     );
@@ -947,7 +947,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyBeneficiariesBusiness',
+      'PolicyBeneficiariesBusiness_Old',
       'DeletePolicyBeneficiariesAsync',
       policyID
     );
@@ -957,7 +957,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyBeneficiariesBusiness',
+      'PolicyBeneficiariesBusiness_Old',
       'AddPolicyBeneficiariesAsync',
       obj
     );
@@ -968,7 +968,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
+      'PolicyALBusiness_Old',
       'AddPolicyDetailAsync',
       data
     );
@@ -978,7 +978,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyBeneficiariesBusiness',
+      'PolicyBeneficiariesBusiness_Old',
       'GetBeneficiariesAsync',
       policyID
     );
@@ -988,7 +988,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
+      'PolicyALBusiness_Old',
       'UpdatePolicyDetailAsync',
       data
     );
@@ -998,7 +998,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
+      'PolicyALBusiness_Old',
       'DeletePolicyDetailAsync',
       data
     );
@@ -1008,7 +1008,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
+      'PolicyALBusiness_Old',
       'DeleteListPolicyDetailAsync',
       this.lstPolicyDetailRecID
     );
@@ -1206,7 +1206,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
+      'PolicyALBusiness_Old',
       'DeletePolicyALAsync',
       [data]
     );

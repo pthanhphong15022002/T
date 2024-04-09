@@ -27,25 +27,51 @@ import { HR_Employees } from '../../model/HR_Employees.model';
 export class PopupAddEmployeesComponent implements OnInit {
   tabInfo: any[] = [
     {
-      icon: 'icon-info',
-      text: 'Thông tin chung',
+      icon: 'icon-person',
+      text: 'Thông tin nhân viên',
       name: 'tabInfoPersonal',
     },
     {
-      icon: 'icon-person',
-      text: 'Nhân viên',
+      icon: 'icon-payment',
+      text: 'Lý lịch cá nhân',
       name: 'tabInfoEmploy',
     },
-    // {
-    //   icon: 'icon-receipt_long',
-    //   text: 'Thông tin cá nhân',
-    //   name: 'tabInfoPrivate',
-    // },
-    // {
-    //   icon: 'icon-business_center',
-    //   text: 'Pháp lý',
-    //   name: 'tabInfoLaw',
-    // },
+    // Them tab o day
+    {
+      icon: 'icon-family_restroom',
+      text: 'Thân nhân',
+      name: 'tab1',
+    },
+    {
+      icon: 'icon-business_center',
+      text: 'Hộ chiếu',
+      name: 'tab2',
+    },
+    {
+      icon: 'icon-receipt_long',
+      text: 'Hợp đồng lao đông',
+      name: 'tab3',
+    },
+    {
+      icon: 'icon-attach_money',
+      text: 'Lương cơ bản',
+      name: 'tab4',
+    },
+    {
+      icon: 'icon-card_travel',
+      text: 'Lương chức danh công việc',
+      name: 'tab5',
+    },
+    {
+      icon: 'icon-card_giftcard',
+      text: 'Phụ cấp',
+      name: 'tab6',
+    },
+    {
+      icon: 'icon-book',
+      text: 'Thông tin văn bằng',
+      name: 'tab7',
+    },
   ];
   isCorporation = false;
   dialogRef: any;
@@ -173,7 +199,7 @@ export class PopupAddEmployeesComponent implements OnInit {
       console.log('data chuan bi update', employee);
       
       this.api
-        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'UpdateAsync', [
+        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness_Old', 'UpdateAsync', [
           employee,
           this.funcID,
         ])
@@ -188,7 +214,7 @@ export class PopupAddEmployeesComponent implements OnInit {
   // add employee
   addEmployeeAsync(employee: any, funcID: string) {
     this.api
-      .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'SaveAsync', [
+      .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness_Old', 'SaveAsync', [
         employee,
         funcID,
       ])

@@ -207,7 +207,7 @@ body.tailwind #selected {
   display: block;
 }
 .cal-main{
-  height: calc(100vh - 365px);
+  height: calc(100vh - 345px);
   overflow: auto;
   .card-body.p-0{
     height: 100%!important;
@@ -218,5 +218,5 @@ body.tailwind #selected {
   overflow: auto;
 }
 .cal-footer{
-  height: 56px;
+  height: 50px;
 }

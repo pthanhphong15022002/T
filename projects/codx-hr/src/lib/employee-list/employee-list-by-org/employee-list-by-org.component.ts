@@ -42,17 +42,19 @@ export class EmployeeListByOrgComponent {
 
   @ViewChild('colEmployeeHeader') colEmployeeHeader: TemplateRef<any>;
   @ViewChild('colContactHeader') colContactHeader: TemplateRef<any>;
+  @ViewChild('colInfoTimeKeepingHeader') colInfoTimeKeepingHeader: TemplateRef<any>;
   @ViewChild('colPersonalHeader') colPersonalHeader: TemplateRef<any>;
   @ViewChild('colStatusHeader') colStatusHeader: TemplateRef<any>;
   @ViewChild('colEmployee') colEmployee: TemplateRef<any>;
   @ViewChild('colContact') colContact: TemplateRef<any>;
+  @ViewChild('colInfoTimeKeeping') colInfoTimeKeeping: TemplateRef<any>;
   @ViewChild('colPersonal') colPersonal: TemplateRef<any>;
   @ViewChild('colStatus') colStatus: TemplateRef<any>;
 
   service = 'HR';
   entityName = 'HR_Employees';
   assemblyName = 'ERM.Business.HR';
-  className = 'EmployeesBusiness';
+  className = 'EmployeesBusiness_Old';
   method = 'GetEmployeeListByOrgUnitIDGridView';
   idField = 'employeeID';
   predicates = '@0.Contains(OrgUnitID)';
@@ -137,22 +139,27 @@ export class EmployeeListByOrgComponent {
           {
             headerTemplate: this.colEmployeeHeader,
             template: this.colEmployee,
+            width: '300',
+          },
+          {
+            headerTemplate: this.colStatusHeader,
+            template: this.colStatus,
+            width: '200',
+          },
+          {
+            headerTemplate: this.colInfoTimeKeepingHeader,
+            template: this.colInfoTimeKeeping,
+            width: '250',
+          },
+          {
+            headerTemplate: this.colPersonalHeader,
+            template: this.colPersonal,
             width: '200',
           },
           {
             headerTemplate: this.colContactHeader,
             template: this.colContact,
-            width: '150',
-          },
-          {
-            headerTemplate: this.colPersonalHeader,
-            template: this.colPersonal,
-            width: '150',
-          },
-          {
-            headerTemplate: this.colStatusHeader,
-            template: this.colStatus,
-            width: '150',
+            width: '200',
           },
         ];
         break;
@@ -187,7 +194,7 @@ export class EmployeeListByOrgComponent {
   }
   getManager(orgUnitID: string) {
     if (orgUnitID) {
-      this.api.execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'GetOrgManager', [orgUnitID])
+      this.api.execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness_Old', 'GetOrgManager', [orgUnitID])
         .subscribe((res: any) => {
           if (res) {
             this.manager = JSON.parse(JSON.stringify(res));
@@ -249,7 +256,7 @@ export class EmployeeListByOrgComponent {
   beforDelete(option: RequestOption, employee: any) {
     option.service = 'HR';
     option.assemblyName = 'ERM.Business.HR';
-    option.className = 'EmployeesBusiness';
+    option.className = 'EmployeesBusiness_Old';
     option.methodName = 'DeleteAsync';
     option.data = employee;
     return true;
@@ -260,7 +267,7 @@ export class EmployeeListByOrgComponent {
       if (!moreFunc)
         moreFunc = this.sysMoreFunc.find((x) => x.functionID == 'SYS04');
       this.api
-        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'GetEmployeeInfoByIDAsync', [data.employeeID]).subscribe(res => {
+        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness_Old', 'GetEmployeeInfoByIDAsync', [data.employeeID]).subscribe(res => {
           (this.grid.dataService as CRUDService).dataSelected = res ? res : this.itemSelected;
           (this.grid.dataService as CRUDService).copy().subscribe((res: any) => {
             let option = new SidebarModel();
@@ -348,7 +355,7 @@ export class EmployeeListByOrgComponent {
   }
   clickViewEmpInfo(data: any) {
     this.cache.functionList(this.funcIDEmpInfor).subscribe((func) => {
-      this.api.execSv('HR', 'ERM.Business.HR', 'OrganizationUnitsBusiness', 'GetOrgUnitChild', [this.orgUnitID])
+      this.api.execSv('HR', 'ERM.Business.HR', 'OrganizationUnitsBusiness_Old', 'GetOrgUnitChild', [this.orgUnitID])
       .subscribe(res => {
         if (res){
           let dataValue = Array(res).join();

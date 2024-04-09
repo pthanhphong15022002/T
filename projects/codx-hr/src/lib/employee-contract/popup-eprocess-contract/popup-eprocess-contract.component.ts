@@ -400,7 +400,7 @@ export class PopupEProcessContractComponent
                 .execSv<any>(
                   'HR',
                   'HR',
-                  'ContractTypesBusiness',
+                  'ContractTypesBusiness_Old',
                   'GetContractAsync',
                   this.data.contractTypeID
                 )

@@ -154,7 +154,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDocumentsBusiness',
+      'EDocumentsBusiness_Old',
       'GetDocumentByDocumentTypeIDAsync',
       [data]
     );
@@ -164,7 +164,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDocumentsBusiness',
+      'EDocumentsBusiness_Old',
       'AddEDocumentsAsync',
       [this.documentObj]
     );
@@ -174,7 +174,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDocumentsBusiness',
+      'EDocumentsBusiness_Old',
       'UpdateEDocumentsAsync',
       data
     );
@@ -184,7 +184,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDocumentsBusiness',
+      'EDocumentsBusiness_Old',
       'UpdateEDocumentsIdEditedAsync',
       data
     );
@@ -194,7 +194,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDocumentsBusiness',
+      'EDocumentsBusiness_Old',
       'DeleteEDocumentsAsync',
       recId
     );
