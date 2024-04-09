@@ -368,7 +368,7 @@ export class EmployeesComponent extends UIComponent {
     return this.api
       .call(
         'ERM.Business.HR',
-        'OrganizationUnitsBusiness',
+        'OrganizationUnitsBusiness_Old',
         'GetOrgChartListChildAsync',
         orgUnitID
       )
@@ -387,7 +387,7 @@ export class EmployeesComponent extends UIComponent {
   beforeDel(opt: RequestOption) {
     opt.service = 'HR';
     opt.assemblyName = 'ERM.Business.HR';
-    opt.className = 'EmployeesBusiness';
+    opt.className = 'EmployeesBusiness_Old';
     opt.methodName = 'DeleteAsync';
     opt.data = this.view.dataService.dataSelected;
     return true;

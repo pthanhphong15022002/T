@@ -103,21 +103,59 @@
                     </div>
                     <div class="d-flex flex-column align-items-end w-100">
                         <div class="d-flex text-dark pt-1 ps-4 mb-2 border-top border-light border-2">
-                            <div class="me-6">Tổng cộng:</div>
+                            <div class="text-left me-6">
+                                <div class="d-flex mb-2">
+                                    <codx-label [formModel]="dialog.formModel" name="lblLabel2" [default]="'Tổng cộng'"></codx-label>
+                                    <span>:</span>
+                                </div>
+                                <div class="d-flex mb-2">
+                                    <codx-label [formModel]="dialog.formModel" name="lblLabel3" [default]="'Đã tạm ứng'"></codx-label>
+                                    <span>:</span>
+                                </div>
+                                <div class="d-flex mb-2">
+                                    <codx-label [formModel]="dialog.formModel" name="lblLabel4" [default]="'Còn phải chi'"></codx-label>
+                                    <span>:</span>
+                                </div>
+                                <div class="d-flex mb-2">
+                                    <codx-label [formModel]="dialog.formModel" name="lblLabel5" [default]="'Thanh toán bằng'"></codx-label>
+                                    <span>:</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="mb-2" [innerHTML]="data.totalAmount | formatvalue : dialog.formModel : 'requestAmt' | async"></div>
+                                <div class="mb-2" [innerHTML]="RefEPRequest?.requestAmt | formatvalue : dialog.formModel : 'requestAmt' | async"></div>
+                                <div class="mb-2" [innerHTML]="(data.totalAmount - (RefEPRequest ? RefEPRequest.requestAmt : 0)) | formatvalue : dialog.formModel : 'requestAmt' | async"></div>
+                                <div class="mb-2" [innerHTML]="RefEPRequest?.pmtMethodID | formatvalue : dialog.formModel : 'pmtMethodID' | async"></div>
+                            </div>
+                        </div>
+                        <!-- <div class="d-flex text-dark pt-1 ps-4 mb-2 border-top border-light border-2">
+                            <div class="d-flex me-6">
+                                <codx-label [formModel]="dialog.formModel" name="lblLabel2" [default]="'Tổng cộng'"></codx-label>
+                                <span>:</span>
+                            </div>
                             <div *ngIf="data?.totalAmount" [innerHTML]="data.totalAmount | formatvalue : dialog.formModel : 'requestAmt' | async"></div>
                         </div>
                         <div class="d-flex text-warning mb-2">
-                            <div class="me-6">Đã tạm ứng:</div>
-                            <div *ngIf="data?.refRequestAmt" [innerHTML]="data.refRequestAmt | formatvalue : dialog.formModel : 'requestAmt' | async"></div>
+                            <div class="d-flex me-6">
+                                <codx-label [formModel]="dialog.formModel" name="lblLabel3" [default]="'Đã tạm ứng'"></codx-label>
+                                <span>:</span>
+                            </div>
+                            <div [innerHTML]="RefEPRequest?.requestAmt | formatvalue : dialog.formModel : 'requestAmt' | async"></div>
                         </div>
                         <div class="d-flex fw-bold mb-2">
-                            <div class="me-6">Còn phải chi:</div>
-                            <div *ngIf="data?.totalAmount && data?.refRequestAmt" [innerHTML]="(data.totalAmount - data.refRequestAmt) | formatvalue : dialog.formModel : 'requestAmt' | async"></div>
+                            <div class="d-flex me-6">
+                                <codx-label [formModel]="dialog.formModel" name="lblLabel4" [default]="'Còn phải chi'"></codx-label>
+                                <span>:</span>
+                            </div>
+                            <div *ngIf="data?.totalAmount" [innerHTML]="(data.totalAmount - (RefEPRequest ? RefEPRequest.requestAmt : 0)) | formatvalue : dialog.formModel : 'requestAmt' | async"></div>
                         </div>
                         <div class="d-flex text-gray-600">
-                            <div class="me-6">Thanh toán bằng:</div>
-                            <div [innerHTML]="data?.refPmtMethodID | formatvalue : dialog.formModel : 'pmtMethodID' | async"></div>
-                        </div>
+                            <div class="d-flex me-6">
+                                <codx-label [formModel]="dialog.formModel" name="lblLabel5" [default]="'Thanh toán bằng'"></codx-label>
+                                <span>:</span>
+                            </div>
+                            <div [innerHTML]="RefEPRequest?.pmtMethodID | formatvalue : dialog.formModel : 'pmtMethodID' | async"></div>
+                        </div> -->
                     </div>
                 </div>
             </div>

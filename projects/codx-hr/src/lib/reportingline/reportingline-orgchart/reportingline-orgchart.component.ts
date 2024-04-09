@@ -202,7 +202,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
 
   getDataPositionByID(positionID: string) {
     if (positionID) {
-      this.api.execSv("HR", "ERM.Business.HR", "PositionsBusiness", "GetDataOrgChartAsync", [positionID])
+      this.api.execSv("HR", "ERM.Business.HR", "PositionsBusiness_Old", "GetDataOrgChartAsync", [positionID])
         .subscribe((res: any) => {
           if (res) {
             let index = res.findIndex(x => x.positionID === positionID);
@@ -252,7 +252,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
           var posID = object.positionID;
           listPos.push(posID);
         });
-        this.api.execSv("HR", "ERM.Business.HR", "PositionsBusiness", "GetChildOrgChartAsync", [node.positionID, listPos])
+        this.api.execSv("HR", "ERM.Business.HR", "PositionsBusiness_Old", "GetChildOrgChartAsync", [node.positionID, listPos])
           .subscribe((res: any) => {
             if (res) {
               if (res.length > 0) {
@@ -402,7 +402,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'Delete';
-    opt.className = 'PositionsBusiness';
+    opt.className = 'PositionsBusiness_Old';
     opt.assemblyName = 'ERM.Business.HR';
     opt.data = itemSelected.positionID;
     return true;
@@ -455,7 +455,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       this.currentViewPosEmp = { countEmp: 0, employees: [] }
       this.posEmpPageIndex = 0;
       this.scrolling = true;
-      this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionId, this.posEmpPageSize, 0, this.searchText])
+      this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness_Old', 'GetListEmpPositionsAsync', [positionId, this.posEmpPageSize, 0, this.searchText])
         .subscribe(res => {
           if (res) {
             if (index >= 0) {
@@ -489,7 +489,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     if (this.scrolling) {
       if (this.searchText.length > 0) {
         if (this.currentViewPosEmp.countEmp > this.currentViewPosEmp.employees.length) {
-          this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionID, this.posEmpPageSize, this.posEmpPageIndex, this.searchText])
+          this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness_Old', 'GetListEmpPositionsAsync', [positionID, this.posEmpPageSize, this.posEmpPageIndex, this.searchText])
             .subscribe(res => {
               if (res) {
                 if (index >= 0) {
@@ -511,7 +511,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
         }
       } else {
         if (this.data[index]?.countEmp > this.data[index].employees.length) {
-          this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionID, this.posEmpPageSize, this.posEmpPageIndex, this.searchText])
+          this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness_Old', 'GetListEmpPositionsAsync', [positionID, this.posEmpPageSize, this.posEmpPageIndex, this.searchText])
             .subscribe(res => {
               if (res) {
                 if (index >= 0) {

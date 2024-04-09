@@ -111,14 +111,6 @@ export class AdvanceComponent extends UIComponent implements AfterViewInit,OnDes
         if(!data) data = this.view.dataService.dataSelected;
         this.viewDetail(data);
         break;
-      case"WSCO0411":
-        if(!data) data = this.view.dataService.dataSelected;
-        this.openPopupAdvance(data);
-        break;
-      case"WSCO0412":
-        if(!data) data = this.view.dataService.dataSelected;
-        this.openPopupPayment(data);
-        break;
       case"WSCO0413":
         if(!data) data = this.view.dataService.dataSelected;
         this.release(data);
@@ -231,68 +223,6 @@ export class AdvanceComponent extends UIComponent implements AfterViewInit,OnDes
         actionType: "view"
       }
       this.callfc.openSide(PopupAddAdvanceComponent,obj,dialog,this.view.funcID);
-    }
-  }
-
-  openPopupAdvance(data:any){
-    if(data)
-    {
-      let subscribe = this.api.execSv("EP","Core","DataBusiness","GetDefaultAsync",["WSCO042","EP_Requests"])
-      .subscribe((model:any) => {
-        if(model && model?.data)
-        {
-          model.data.refID = data.recID;
-          model.data.requestType = "AD";
-          let obj = {
-            data : model.data,
-            actionType: "add"
-          }
-          let dataService = new CRUDService(this.injector);
-          dataService.request.entityName = "EP_Requests";
-          dataService.request.funcID = "WSCO042";
-          dataService.service = "EP";
-          dataService.request.formName = "AdvanceRequests";
-          dataService.request.gridViewName = "grvAdvanceRequests";
-          dataService.dataSelected = model.data;
-          let dialog = new SidebarModel();
-          dialog.Width = '550px';
-          dialog.FormModel = this.view.formModel;
-          dialog.DataService = dataService;
-          this.callfc.openSide(PopupAddAdvanceComponent,obj,dialog,this.view.funcID);
-        }
-      });
-      this.subcriptions.add(subscribe);
-    }
-  }
-
-  openPopupPayment(data:any){
-    if(data)
-    {
-      let subscribe = this.api.execSv("EP","Core","DataBusiness","GetDefaultAsync",["WSCO043","EP_Requests"])
-      .subscribe((model:any) => {
-        if(model && model?.data)
-        {
-          model.data.refID = data.recID;
-          model.data.requestType = "PA";
-          let obj = {
-            data : model.data,
-            actionType: "add"
-          }
-          let dataService = new CRUDService(this.injector);
-          dataService.request.entityName = "EP_Requests";
-          dataService.request.funcID = "WSCO042";
-          dataService.service = "EP";
-          dataService.request.formName = "AdvanceRequests";
-          dataService.request.gridViewName = "grvAdvanceRequests";
-          dataService.dataSelected = model.data;
-          let dialog = new SidebarModel();
-          dialog.Width = '550px';
-          dialog.FormModel = this.view.formModel;
-          dialog.DataService = dataService;
-          this.callfc.openSide(PopupAddPaymentComponent,obj,dialog,this.view.funcID);
-        }
-      });
-      this.subcriptions.add(subscribe);
     }
   }
 

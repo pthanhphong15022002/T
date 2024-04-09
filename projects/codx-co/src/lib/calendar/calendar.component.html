@@ -38,7 +38,7 @@
                     class="fw-bold">
                   </codx-label>
                 </div>
-                <div class="w-100 h-100 py-2 overflow-auto">
+                <div class="w-100 h-100 py-1 overflow-auto">
                   <ng-container *ngIf="loadUserGroup">
                     <ng-container *ngIf="lstUserGroups?.length > 0; else dataEmpty">
                       <div class="list-group" #eleListGroup>
@@ -121,7 +121,7 @@
       </div>
       <div class="w-100 cal-footer border-top">
         <div class="row mx-0 nav">
-          <div class="col-4 py-2 nav-item d-flex flex-column align-items-center"
+          <div class="col-4 py-1 nav-item d-flex flex-column align-items-center"
             [ngClass]="{ active: calendarID == 'COT03' }"
             (click)="changeCalendarType('COT03')">
             <span class="text-center">
@@ -136,7 +136,7 @@
             </div>
           </div>
 
-          <div class="col-4 py-2 nav-item d-flex flex-column align-items-center"
+          <div class="col-4 py-1 nav-item d-flex flex-column align-items-center"
             [ngClass]="{ active: calendarID == 'COT02' }"
             (click)="changeCalendarType('COT02')">
             <span class="text-center">
@@ -150,7 +150,7 @@
               </codx-label>
             </div>
           </div>
-          <div class="col-4 py-2 nav-item d-flex flex-column align-items-center"
+          <div class="col-4 py-1 nav-item d-flex flex-column align-items-center"
             [ngClass]="{ active: calendarID == 'COT01' }"
             (click)="changeCalendarType('COT01')">
             <span class="text-center">

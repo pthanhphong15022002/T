@@ -123,15 +123,11 @@ export class ModeviewComponent implements OnInit {
       
       var indexs = vlls.findIndex(x=>x.value == elm.fieldType);
       elm.value = vlls[indexs].value;
-      if(elm.fieldType == "Title") 
+     
+      if(elm.fieldType == "SubTitle")
       {
-        elm.columnOrder = 0;
-        elm.columnNo = 0;
-      }
-      else if(elm.fieldType == "SubTitle")
-      {
-        elm.columnOrder = 1;
-        elm.columnNo = 0;
+        // elm.columnOrder = 1;
+        // elm.columnNo = 0;
         elm.text = vlls[indexs].text;
         elm.icon = vlls[indexs].icon;
         elm.textColor = vlls[indexs].textColor;
@@ -140,7 +136,7 @@ export class ModeviewComponent implements OnInit {
       {
         if(elm.fieldType == "Table" || elm.fieldType == "Note")
         {
-          elm.dataFormat = typeof elm.dataFormat == 'string' ? JSON.parse(elm.dataFormat) :  elm.dataFormat;
+          elm.dataFormat = (typeof elm.dataFormat == 'string' && elm.dataFormat) ? JSON.parse(elm.dataFormat) :  elm.dataFormat;
         }
         else if(elm.fieldType == "Attachment")
         {

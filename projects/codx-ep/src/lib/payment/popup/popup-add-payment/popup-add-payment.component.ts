@@ -48,28 +48,27 @@ export class PopupAddPaymentComponent implements OnInit,AfterViewInit,OnDestroy 
       this.actionType = obj.actionType;
       if(this.actionType == "add")
       {
-        this.data.lines = [];
-        this.data.totalAmount = 0;
-        this.data.refRequestAmt = 0;
-        this.subcriptions.add(this.cache.companySetting()
-        .subscribe((res:any) => {
-          if(res)
-          {
-            this.data.currencyID = res[0]["baseCurr"] || "";
-          }
-        }));
-        this.subcriptions.add(this.api.execSv(
-        'ES',
-        'ERM.Business.ES',
-        'CategoriesBusiness',
-        'GetCategoryByEntityNameAsync',
-        [this.dialog.formModel.entityName])
-        .subscribe((res:any) => 
+        if(!this.data.currencyID)
         {
-          this.releaseCategory = res;
-        }));
+          this.subcriptions.add(this.cache.companySetting()
+          .subscribe((res:any) => {
+            if(res)
+              this.data.currencyID = res[0]["baseCurr"] || "";
+          }));
+        }
         if(this.data.refID)
-          this.getRefRequest(this.data.refID,true);
+          this.getAdvanceRequest(this.data.refID,"AD");
+
+        this.subcriptions.add(this.api.execSv(
+          'ES',
+          'ERM.Business.ES',
+          'CategoriesBusiness',
+          'GetCategoryByEntityNameAsync',
+          [this.dialog.formModel.entityName])
+          .subscribe((res:any) => 
+          {
+            this.releaseCategory = res;
+          }));
       }
       else if(this.actionType == "edit")
       {
@@ -110,7 +109,9 @@ export class PopupAddPaymentComponent implements OnInit,AfterViewInit,OnDestroy 
       if(res)
       {
         this.data = res;
-        if(this.data.refID)
+        if(res.lines)
+          this.data.totalAmount = res.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
+        if(res.refID)
           this.getRefRequest(this.data.refID);
         this.detectorChange.detectChanges();
       }
@@ -138,8 +139,6 @@ export class PopupAddPaymentComponent implements OnInit,AfterViewInit,OnDestroy 
         this.data.refID = res.refID;
         this.data.refType = res.refType;
         this.data.refNo = res.refNo;
-        if(this.data.refID)
-          this.getRefRequest(this.data.refID);
         if(this.data.lines)
           this.data.totalAmount = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
         else
@@ -147,42 +146,40 @@ export class PopupAddPaymentComponent implements OnInit,AfterViewInit,OnDestroy 
           this.data.lines = [];
           this.data.totalAmount = 0;
         }
+        if(this.data.refID)
+          this.getRefRequest(this.data.refID);
         this.detectorChange.detectChanges();
       }
     });
     this.subcriptions.add(subcribeApi);
   }
 
-  getRefRequest(recID:string, isCoppy:boolean = false){
+  getRefRequest(recID:string){
     let subcribe = this.api.execSv("EP","EP","RequestsBusiness","GetByIDAsync",recID)
     .subscribe((res:any) => {
       if(res)
       {
-        if(isCoppy)
-        {
-          this.data.employeeID = res.employeeID;
-          this.data.positionID = res.positionID;
-          this.data.requester = res.requester;
-          this.data.requesterName = res.requesterName;
-          this.data.reasonID = res.reasonID;
-          this.data.memo = res.memo;
-          this.data.lines = res.lines;
-          if(this.data.lines)
-            this.data.totalAmount = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
-          else
-          {
-            this.data.lines = [];
-            this.data.totalAmount = 0;
-          }
-        }
         this.RefEPRequest = res;
-        this.data.refID = res.recID;
-        this.data.refType = res.requestType;
-        this.data.refNo = res.requestNo;
-        this.data.refRequestAmt = res.requestAmt;
-        this.data.refPmtMethodID = res.pmtMethodID;
+        this.data.pmtMethodID = res.pmtMethodID;
+        if(res.status > 5)
+          this.data.requestAmt = this.data.requestAmt - this.RefEPRequest.requestAmt;
         this.detectorChange.detectChanges();
       }
+    });
+    this.subcriptions.add(subcribe);
+  }
+
+  getAdvanceRequest(refID:string,requestType:string){
+    let subcribe = this.api.execSv("EP","EP","RequestsBusiness","GetRequestByIDTypeAsync",[refID,requestType])
+    .subscribe((res:any) => {
+      if(res)
+      {
+        this.RefEPRequest = res;
+        this.data.pmtMethodID = res.pmtMethodID;
+        if(res.status > 5)
+          this.data.requestAmt = this.data.requestAmt - this.RefEPRequest.requestAmt;
+      }
+      this.detectorChange.detectChanges();
     });
     this.subcriptions.add(subcribe);
   }
@@ -223,8 +220,6 @@ export class PopupAddPaymentComponent implements OnInit,AfterViewInit,OnDestroy 
           this.data.refID = value.RecID;
           this.data.refType = value.RequestType;
           this.data.refNo = value.RequestNo;
-          this.data.refRequestAmt = value.RequestAmt;
-          this.data.refPmtMethodID = value.PmtMethodID;
           this.getRefRequest(this.data.refID);
         }
         else
@@ -232,8 +227,6 @@ export class PopupAddPaymentComponent implements OnInit,AfterViewInit,OnDestroy 
           this.data.refID = "";
           this.data.refType = "";
           this.data.refNo = "";
-          this.data.refRequestAmt = 0;
-          this.data.refPmtMethodID = "";
           this.RefEPRequest = null;
         }
         break;
@@ -257,9 +250,13 @@ export class PopupAddPaymentComponent implements OnInit,AfterViewInit,OnDestroy 
     if(idx > -1)
       this.data.lines[idx] = EPRequestsLine;
     else this.data.lines.push(EPRequestsLine);
+
     if(field == "amount")
     {
       this.data.totalAmount = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
+      this.data.requestAmt = this.data.totalAmount;
+      if(this.RefEPRequest?.status > 5)
+        this.data.requestAmt = this.data.requestAmt - this.RefEPRequest.requestAmt;
     }
     this.detectorChange.detectChanges();
   }

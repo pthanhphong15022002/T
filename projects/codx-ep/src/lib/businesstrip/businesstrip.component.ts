@@ -91,7 +91,6 @@ export class BusinesstripComponent extends UIComponent implements AfterViewInit,
   }
 
   clickMF(event:any, data = null){
-    debugger
     switch(event?.functionID)
     {
       case"SYS01":
@@ -270,14 +269,16 @@ export class BusinesstripComponent extends UIComponent implements AfterViewInit,
   openPopupPayment(data:any){
     if(data)
     {
-      let subscribe = this.api.execSv("EP","Core","DataBusiness","GetDefaultAsync",["WSCO043","EP_Requests"])
+      let subscribe = this.api.execSv("EP","EP","RequestsBusiness","CoppyRequestAsync",["WSCO043","EP_Requests",data.recID])
       .subscribe((model:any) => {
-        if(model && model?.data)
+        if(model)
         {
-          model.data.refID = data.recID;
-          model.data.requestType = "PA";
+          model.refID = data.recID;
+          model.requestType = "PA";
+          if(model.lines)
+            model.totalAmount = model.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
           let obj = {
-            data : model.data,
+            data : model,
             actionType: "add"
           }
           let dataService = new CRUDService(this.injector);
@@ -286,7 +287,7 @@ export class BusinesstripComponent extends UIComponent implements AfterViewInit,
           dataService.service = "EP";
           dataService.request.formName = "AdvanceRequests";
           dataService.request.gridViewName = "grvAdvanceRequests";
-          dataService.dataSelected = model.data;
+          dataService.dataSelected = model;
           let dialog = new SidebarModel();
           dialog.Width = '550px';
           dialog.FormModel = this.view.formModel;

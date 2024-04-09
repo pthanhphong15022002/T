@@ -131,7 +131,7 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
   //     .callSv(
   //       'HR',
   //       'ERM.Business.HR',
-  //       'OrganizationUnitsBusiness',
+  //       'OrganizationUnitsBusiness_Old',
   //       'GetDataDiagramAsync',
   //       [
   //         this.orgUnitID,
@@ -263,7 +263,7 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
 
   showEmploy(p: any, emp) {
     this.api
-      .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'GetByUserAsync', [
+      .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness_Old', 'GetByUserAsync', [
         emp.employeeID,
         '',
         '0',
@@ -310,7 +310,7 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
       .execSv(
         'HR',
         'ERM.Business.HR',
-        'OrganizationUnitsBusiness',
+        'OrganizationUnitsBusiness_Old',
         'GetEmployeeListByOrgAsync',
         [orgid, status, '', this.onlyDepartment, 0]
       )

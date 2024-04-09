@@ -149,7 +149,7 @@ export class EmployeeBenefitComponent extends UIComponent {
   //Call api delete
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteEBenefitAsync';
-    opt.className = 'EBenefitsBusiness';
+    opt.className = 'EBenefitsBusiness_Old';
     opt.assemblyName = 'HR';
     opt.service = 'HR';
     opt.data = data;
@@ -173,7 +173,7 @@ export class EmployeeBenefitComponent extends UIComponent {
             this.view.formModel.entityName,
             'C1',
             null,
-            'EBenefitsBusiness'
+            'EBenefitsBusiness_Old'
           )
           .subscribe((res) => {
             //console.log('kq luu track log', res);
@@ -559,7 +559,7 @@ export class EmployeeBenefitComponent extends UIComponent {
             this.view.formModel.entityName,
             'C1',
             null,
-            'EBenefitsBusiness'
+            'EBenefitsBusiness_Old'
           )
           .subscribe();
 

@@ -2559,7 +2559,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetListUserIDByListODPIDAsync',
       [lstId, type]
     );
@@ -3492,10 +3492,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         '',
         dialogModel
       )
-      .closed.subscribe((e) => {
-        if (e?.event && e?.event != null) {
+      // .closed.subscribe((e) => {
+      //   if (e?.event && e?.event != null) {
           
-        }
-      });
+      //   }
+      // });
   }
 }

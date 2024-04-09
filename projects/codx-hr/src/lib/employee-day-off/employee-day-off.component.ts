@@ -64,7 +64,7 @@ export class EmployeeDayOffComponent extends UIComponent {
   service = 'HR';
   assemblyName = 'ERM.Business.HR';
   entityName = 'HR_EDayOffs';
-  className = 'EDayOffsBusiness';
+  className = 'EDayOffsBusiness_Old';
   method = 'GetListDayOffByDataRequestAsync';
 
   //add = 'SYS03';
@@ -123,7 +123,7 @@ export class EmployeeDayOffComponent extends UIComponent {
         .execSv(
           'HR',
           'ERM.Business.HR',
-          'EmployeesBusiness',
+          'EmployeesBusiness_Old',
           'GetEmployeeByUserIDAsync',
           this.user.userID
         )
@@ -356,7 +356,7 @@ export class EmployeeDayOffComponent extends UIComponent {
   }
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteEmployeeDayOffInfoAsync';
-    opt.className = 'EDayOffsBusiness';
+    opt.className = 'EDayOffsBusiness_Old';
     opt.assemblyName = 'HR';
     opt.service = 'HR';
     opt.data = data;
@@ -425,7 +425,7 @@ export class EmployeeDayOffComponent extends UIComponent {
               this.view.formModel.entityName,
               'C1',
               null,
-              'EDayOffsBusiness'
+              'EDayOffsBusiness_Old'
             )
             .subscribe();
           this.dialogEditStatus && this.dialogEditStatus.close(res);
@@ -565,7 +565,7 @@ export class EmployeeDayOffComponent extends UIComponent {
             this.view.formModel.entityName,
             'C1',
             null,
-            'EDayOffsBusiness'
+            'EDayOffsBusiness_Old'
           )
           .subscribe();
 

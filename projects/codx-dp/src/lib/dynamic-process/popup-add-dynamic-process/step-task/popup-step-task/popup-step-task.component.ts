@@ -32,10 +32,13 @@ import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { Subject, takeUntil, filter, firstValueFrom } from 'rxjs';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
-import { PopupSettingReferenceComponent } from '../../popup-add-custom-field/popup-setting-reference/popup-setting-reference.component';
 import { PopupMapContractComponent } from './popup-map-contract/popup-map-contract.component';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-
+//role: roleType
+// O: owner
+// P: người tham gia
+// R: thiết lập default
+// S: shale
 @Component({
   selector: 'lib-popup-job',
   templateUrl: './popup-step-task.component.html',

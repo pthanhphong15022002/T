@@ -268,7 +268,7 @@ export class PopupPolicygeneralComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyGeneralBusiness',
+      'PolicyGeneralBusiness_Old',
       'UpdatePolicyGeneralIDChangedAsync',
       [this.policyGeneralObj, this.form.preData.policyID]
     );
@@ -278,7 +278,7 @@ export class PopupPolicygeneralComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyGeneralBusiness',
+      'PolicyGeneralBusiness_Old',
       'DeletePolicyGeneralAsync',
       [data]
     );
@@ -300,7 +300,7 @@ export class PopupPolicygeneralComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyGeneralBusiness',
+      'PolicyGeneralBusiness_Old',
       'AddPolicyGeneralAsync',
       this.formModel.currentData
     );
@@ -310,7 +310,7 @@ export class PopupPolicygeneralComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyGeneralBusiness',
+      'PolicyGeneralBusiness_Old',
       'UpdatePolicyGeneralAsync',
       this.formModel.currentData
     );

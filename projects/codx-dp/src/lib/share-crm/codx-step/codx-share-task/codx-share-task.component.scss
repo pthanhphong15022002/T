@@ -80,3 +80,9 @@ th {
 ::ng-deep .icon-connection-point{
   font-size: 22px !important;
 }
+.chosse{
+  background-color: var(--border-light);
+}
+.no-chosse:hover{
+  background-color: var(--primary-lightest);
+}

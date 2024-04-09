@@ -12,22 +12,22 @@
         <div class="d-flex flex-column w-100">
             <div class="d-flex align-items-center">
                 <i *ngIf="table[0].child[0].fieldType == 'Title'" class="icon-22 me-2" [ngClass]="data?.settings?.icon" [style.color]="data?.settings?.color"></i>
-                <codx-label 
-                    [formName]="formModel.formName" 
-                    [gridViewName]="formModel.gridViewName + table[0].child[0].fieldType" 
-                    [fieldName]="table[0].child[0].fieldName" 
-                    [default]="table[0].child[0].title" 
+                <codx-label
+                    [formName]="formModel.formName"
+                    [gridViewName]="formModel.gridViewName + table[0].child[0].fieldType"
+                    [fieldName]="table[0].child[0].fieldName"
+                    [default]="table[0].child[0].title"
                     [ngClass]="'fw-bold fs-3 mt-1'">
-                </codx-label> 
+                </codx-label>
             </div>
-            <codx-label 
-                [formName]="formModel.formName" 
-                [gridViewName]="formModel.gridViewName + table[0].child[0].fieldType" 
-                [fieldName]="table[0].child[0].fieldName + 'description'" 
-                [default]="table[0].child[0].description" 
+            <codx-label
+                [formName]="formModel.formName"
+                [gridViewName]="formModel.gridViewName + table[0].child[0].fieldType"
+                [fieldName]="table[0].child[0].fieldName + 'description'"
+                [default]="table[0].child[0].description"
                 [ngClass]="'text-gray-500 fw-bold'"
             >
-            </codx-label> 
+            </codx-label>
         </div>
         <div class="cursor-pointer" (click)="dialog.close()">
             <i class="icon-close"></i>
@@ -42,28 +42,28 @@
                     <ng-container  *ngFor="let child of item.child">
                         <div class="d-flex flex-column w-100 p-2" [class.pb-2]="child.fieldType == 'Title'"  *ngIf="!f_Visible[child.fieldName]">
                             <div class="d-flex align-items-center" *ngIf="child?.fieldType != 'Note'">
-                                <codx-label 
-                                    [formName]="formModel.formName" 
-                                    [gridViewName]="formModel.gridViewName + child.fieldType" 
-                                    [fieldName]="child.fieldName" 
-                                    [default]="child.title" 
+                                <codx-label
+                                    [formName]="formModel.formName"
+                                    [gridViewName]="formModel.gridViewName + child.fieldType"
+                                    [fieldName]="child.fieldName"
+                                    [default]="child.title"
                                     [ngClass]="child.fieldType == 'Title' ? 'fw-bold fs-3 mt-1': 'fw-bold'">
-                                </codx-label> 
+                                </codx-label>
                                 <span *ngIf="child.isRequired" class="text-danger mx-2">(*)</span>
 
-                                <i class="icon-add_box ms-2 text-primary cursor-pointer" *ngIf="child.fieldType == 'Table'" (click)="addRow(child.dataFormat,child.fieldName,child.indexTable,null,child?.tableFormat?.hasIndexNo)"></i>
+                                <i class="icon-add_box ms-2 text-primary cursor-pointer" *ngIf="child.fieldType == 'Table'" (click)="addRow2(child.indexTable)"></i>
                             </div>
                             <ng-container [ngSwitch]="child?.fieldType">
                                 <ng-container *ngSwitchCase="'Attachment'">
                                     <ng-container *ngIf="!child.documentControl || child?.documentControl.length==0">
-                                        <codx-attachment 
+                                        <codx-attachment
                                             #attachment
                                             [hideDes]="'1'"
                                             hideImageUpload="0"
                                             [formModel]="formModel"
-                                            [objectId]="child.recID" 
+                                            [objectId]="child.recID"
                                             [objectType]="formModel?.entityName"
-                                            hideBtnSave="1" 
+                                            hideBtnSave="1"
                                             hideFolder="1"
                                             [referType]="'attach' + dataIns?.recID"
                                         >
@@ -73,8 +73,8 @@
                                         <div class="">
                                             <lib-attachment-grid [data]="child.documentControl" [dataIns]="dataIns" [formModel]="formModel" (dataChange)="dataChangeAttachmentGrid($event)" (dataUploadAttachment)="dataUploadAttachment($event)"></lib-attachment-grid>
                                             <codx-attachment #attachment hideImageThumb="1" hideImageUpload="1" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-                                                hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel" 
-                                                [idField]="'RecID'"  
+                                                hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel"
+                                                [idField]="'RecID'"
                                             >
                                             </codx-attachment>
                                         </div>
@@ -87,6 +87,7 @@
                                         [columnsGrid]="child.columnsGrid"
                                         [dataSource]="dataTable[child.fieldName]"
                                         (clickMF)="clickMFGrid($event,child)"
+                                        [editSettings]="editSettings"
                                     >
                                     </codx-gridview-v2>
                                 </ng-container>
@@ -101,12 +102,12 @@
                                 </ng-container>
                                 <ng-container *ngSwitchDefault>
                                     <codx-input
-                                        [formName]="formModel.formName" 
+                                        [formName]="formModel.formName"
                                         [gridViewName]="formModel.gridViewName + child.fieldType"
                                         [formModel]="form.formModel"
                                         [type]="(child?.controlType | addProcessDefaultPrice : child?.controlType : child?.dataType : child?.dataFormat: child?.refType)"
                                         [refValue]="child.refValue"
-                                        [refType]="child.refType" 
+                                        [refType]="child.refType"
                                         [field]="getField(child?.fieldName)"
                                         [placeholder]="child?.autoNumber?.autoNumberControl ? 'Số tự động' :child?.description"
                                         [Group]="dynamicFormsForm"
@@ -140,7 +141,7 @@
             <codx-input type="switch" [field]="data.fieldName" [crrValue]="false" (valueChange)="valueChange($event)"></codx-input>
         </ng-container>
     </ng-template>
-    
+
     <ng-template #note let-data let-id="b">
         <div class="py-2">
             <span [class.fw-bold]="data?.dataFormat?.bold" [class.fst-italic]="data?.dataFormat?.italic" [class.text-decoration-underline]="data?.dataFormat?.underlined" [style.color]="data?.dataFormat?.color" [ngClass]="data?.dataFormat?.size">{{data?.defaultValue}}</span>
@@ -174,7 +175,7 @@
                 <codx-label default="Ảnh chụp hai mặt của giấy tờ" class="w-100"></codx-label>
                 <div class="d-flex align-items-center justify-content-between w-100">
                     <ng-container *ngFor="let item of vllBP022?.datas">
-                        <codx-input 
+                        <codx-input
                             type="radio"
                             name="ipCCCD"
                             field="idCardType"

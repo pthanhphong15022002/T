@@ -166,7 +166,7 @@ export class EmployeeInfomationComponent extends UIComponent {
   geteEmployeeInfor(employeeID: string) {
     if (employeeID) {
       this.api
-        .execSv("HR", "ERM.Business.HR", "EmployeesBusiness", "GetByUserAsync", [employeeID])
+        .execSv("HR", "ERM.Business.HR", "EmployeesBusiness_Old", "GetByUserAsync", [employeeID])
         .subscribe((res: any) => {
           if (res) {
 
@@ -518,7 +518,7 @@ export class EmployeeInfomationComponent extends UIComponent {
 
 
   deleteSkill(data) {
-    this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'DeleteEmployeeSkill', data.recID)
+    this.api.exec('ERM.Business.HR', 'EmployeesBusiness_Old', 'DeleteEmployeeSkill', data.recID)
       .subscribe((o: any) => {
         var index = this.skillChartEmployee.indexOf(data);
         if (index > -1) {
@@ -536,7 +536,7 @@ export class EmployeeInfomationComponent extends UIComponent {
   beforeDelHobby(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeleteEmployeeHobby';
-    opt.className = 'EmployeesBusiness';
+    opt.className = 'EmployeesBusiness_Old';
     opt.assemblyName = 'ERM.Business.HR';
     opt.data = itemSelected.recID;
     return true;
@@ -568,7 +568,7 @@ export class EmployeeInfomationComponent extends UIComponent {
   beforeDelExperences(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeleteEmployeeExperiences';
-    opt.className = 'EmployeesBusiness';
+    opt.className = 'EmployeesBusiness_Old';
     opt.assemblyName = 'ERM.Business.HR';
     opt.data = itemSelected.recID;
     return true;
@@ -593,7 +593,7 @@ export class EmployeeInfomationComponent extends UIComponent {
   beforeDelRelation(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeleteEmployeeRelation';
-    opt.className = 'EmployeesBusiness';
+    opt.className = 'EmployeesBusiness_Old';
     opt.assemblyName = 'ERM.Business.HR';
     opt.data = itemSelected.recID;
     return true;
@@ -616,7 +616,7 @@ export class EmployeeInfomationComponent extends UIComponent {
   beforeDelEducation(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeleteEmployeeEducation';
-    opt.className = 'EmployeesBusiness';
+    opt.className = 'EmployeesBusiness_Old';
     opt.assemblyName = 'ERM.Business.HR';
     opt.data = itemSelected.recID;
     return true;
@@ -660,7 +660,7 @@ export class EmployeeInfomationComponent extends UIComponent {
         this.api.execSv(
           "HR",
           "ERM.Business.HR",
-          "EmployeesBusiness",
+          "EmployeesBusiness_Old",
           "AddSkillsEmployeeAsync",
           [this.employee.employeeID, skills]
         ).subscribe((res: any) => {
@@ -693,7 +693,7 @@ export class EmployeeInfomationComponent extends UIComponent {
     this.api.execSv(
       "HR",
       "ERM.Business.HR",
-      "EmployeesBusiness",
+      "EmployeesBusiness_Old",
       "GetEmployeeInforAsync",
       [employeeID])
       .subscribe((res:any) => {
@@ -787,7 +787,7 @@ export class EmployeeInfomationComponent extends UIComponent {
       this.notifiSV.alertCode("SYS030").subscribe(res => {
         debugger
         if(res.event.status == "Y"){
-        this.api.execSv("HR","ERM.Business.HR","EducationsBusiness","DeleteAsync",[item])
+        this.api.execSv("HR","ERM.Business.HR","EducationsBusiness_Old","DeleteAsync",[item])
         .subscribe((res:any) => {
           if(res){
             this.notifiSV.notifyCode("SYS008");

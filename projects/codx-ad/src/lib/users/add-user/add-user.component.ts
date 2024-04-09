@@ -517,7 +517,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   getEmployee(employeeID: string) {
     this.api
-      .exec<any>('ERM.Business.HR', 'HRBusiness', 'GetModelEmp', [employeeID])
+      .exec<any>('ERM.Business.HR', 'HRBusiness_Old', 'GetModelEmp', [employeeID])
       .subscribe((employee) => {
         if (employee) {
           // this.adUser.employeeID = employeeID;

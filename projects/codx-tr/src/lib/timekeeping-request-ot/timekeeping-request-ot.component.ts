@@ -136,7 +136,7 @@ export class TimeKeepingRequestOT extends UIComponent {
         .execSv(
           'HR',
           'ERM.Business.HR',
-          'EmployeesBusiness',
+          'EmployeesBusiness_Old',
           'GetEmployeeByUserIDAsync',
           this.user.userID
         )
