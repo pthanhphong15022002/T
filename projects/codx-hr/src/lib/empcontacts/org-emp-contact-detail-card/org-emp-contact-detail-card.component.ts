@@ -46,7 +46,7 @@ export class OrgEmpContactDetailCardComponent {
   getListDataEmpByOrgUnitID() {
     if (this.orgUnitID) {
       this.api
-        .execSv<any>('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'GetEmployeeListByOrgUnitID', [this.orgUnitID, this.pageSize, this.pageIndex]).subscribe((res) => {
+        .execSv<any>('HR', 'ERM.Business.HR', 'EmployeesBusiness_Old', 'GetEmployeeListByOrgUnitID', [this.orgUnitID, this.pageSize, this.pageIndex]).subscribe((res) => {
           if (res) {
             if (res[0])
               this.lstData = this.lstData.concat(res[0]);

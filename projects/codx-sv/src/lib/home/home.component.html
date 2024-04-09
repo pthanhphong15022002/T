@@ -60,7 +60,11 @@
             </div>
           </div>
         </ng-container>
-        <div class="mx-2 cursor-pointer" (click)="readMoreSys()" *ngIf="dataModel.pageLoading == true && countSys > 5">
+        <div
+          class="mx-2 cursor-pointer"
+          (click)="readMoreSys()"
+          *ngIf="dataModel.pageLoading == true && countSys > 5"
+        >
           <codx-label
             default="Xem thêm"
             [fiedName]="'lblSVMoreTemp'"
@@ -91,7 +95,9 @@
               </ng-template>
               <ng-template #content>
                 <ng-container *ngIf="tabIndex == 'SVT01'">
-                  <ng-container *ngTemplateOutlet="tabCreate"></ng-container>
+                  <div>
+                    <ng-container *ngTemplateOutlet="tabCreate"></ng-container>
+                  </div>
                 </ng-container>
                 <ng-container *ngIf="tabIndex == 'SVT02'">
                   <ng-container *ngTemplateOutlet="tabRepondent"></ng-container>
@@ -124,14 +130,18 @@
 </ng-template>
 
 <ng-template #tabCreate>
-  <div class="d-flex flex-wrap w-100 overflow-auto h-dataSurvey">
+  <div
+    class="d-flex flex-wrap w-100 overflow-auto h-dataSurvey"
+    (scroll)="onScroll($event)"
+
+  >
     <codx-listview
       #listViewSurveys
       entityName="SV_Surveys"
       [predicate]="'!IsTemplate'"
       [dataValue]="''"
       [assemblyName]="'SV'"
-      [isScrolling]="true"
+      [selectFirst]="true"
       [funcId]="tabIndex"
       idField="recID"
       [className]="'SurveysBusiness'"
@@ -139,18 +149,14 @@
       [itemTemplate]="templateListCard"
       type="cardView"
       service="SV"
+      [dataService]="dtService"
     >
     </codx-listview>
-    <!-- <div class="px-2 mt-2" *ngFor="let item of dataSurveys">
-      <ng-container
-        *ngTemplateOutlet="templateListCard; context: { $implicit: item }"
-      ></ng-container>
-    </div> -->
   </div>
 </ng-template>
 
 <ng-template #tabRepondent>
-  <div class="d-flex flex-wrap w-100">
+  <div class="d-flex flex-wrap w-100 overflow-auto h-dataSurvey">
     <codx-listview
       #listViewRepondent
       entityName="SV_Respondents"
@@ -164,6 +170,7 @@
       idField="recID"
       [method]="'GetAsync'"
       [itemTemplate]="templateListCardRepondent"
+      [dataService]="dtService"
       type="cardView"
       service="SV"
     >

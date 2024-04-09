@@ -1552,7 +1552,7 @@ export class PopupPolicybenefitsComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetEmpFullInfoAsync',
       empID
     );
@@ -2114,7 +2114,7 @@ export class PopupPolicybenefitsComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyBenefitsBusiness',
+      'PolicyBenefitsBusiness_Old',
       'DeleteBenefitPolicyAsync',
       [data]
     );
@@ -2143,7 +2143,7 @@ export class PopupPolicybenefitsComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyBenefitsBusiness',
+      'PolicyBenefitsBusiness_Old',
       'AddPolicyConstraintsAsync',
       data
     );
@@ -2153,7 +2153,7 @@ export class PopupPolicybenefitsComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyBenefitsBusiness',
+      'PolicyBenefitsBusiness_Old',
       'GetPolicyConstraintsByPolicyIDAsync',
       policyID
     );
@@ -2163,7 +2163,7 @@ export class PopupPolicybenefitsComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyBenefitsBusiness',
+      'PolicyBenefitsBusiness_Old',
       'DeletePolicyConstraintsByPolicyIDAsync',
       policyID
     );
@@ -2173,7 +2173,7 @@ export class PopupPolicybenefitsComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyBeneficiariesBusiness',
+      'PolicyBeneficiariesBusiness_Old',
       'GetBeneficiariesAsync',
       policyID
     );
@@ -2183,7 +2183,7 @@ export class PopupPolicybenefitsComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
+      'PolicyALBusiness_Old',
       'UpdatePolicyDetailAsync',
       data
     );
@@ -2193,7 +2193,7 @@ export class PopupPolicybenefitsComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyBenefitsBusiness',
+      'PolicyBenefitsBusiness_Old',
       'CheckPolicyALIDExisted',
       id
     );
@@ -2203,7 +2203,7 @@ export class PopupPolicybenefitsComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
+      'PolicyALBusiness_Old',
       'AddPolicyDetailAsync',
       data
     );
@@ -2213,7 +2213,7 @@ export class PopupPolicybenefitsComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
+      'PolicyALBusiness_Old',
       'GetPolicyDetailByPredicateAsync',
       ['Benefit', policyID, 'BenefitAdjustBy', data]
     );
@@ -2223,7 +2223,7 @@ export class PopupPolicybenefitsComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyALBusiness',
+      'PolicyALBusiness_Old',
       'DeletePolicyDetailAsync',
       data
     );
@@ -2233,7 +2233,7 @@ export class PopupPolicybenefitsComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyBeneficiariesBusiness',
+      'PolicyBeneficiariesBusiness_Old',
       'AddPolicyBeneficiariesAsync',
       obj
     );
@@ -2243,7 +2243,7 @@ export class PopupPolicybenefitsComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyBeneficiariesBusiness',
+      'PolicyBeneficiariesBusiness_Old',
       'DeletePolicyBeneficiariesAsync',
       policyID
     );
@@ -2253,7 +2253,7 @@ export class PopupPolicybenefitsComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyBenefitsBusiness',
+      'PolicyBenefitsBusiness_Old',
       'AddPolicyBenefitsAsync',
       data
     );
@@ -2263,7 +2263,7 @@ export class PopupPolicybenefitsComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyBenefitsBusiness',
+      'PolicyBenefitsBusiness_Old',
       'UpdateBenefitPolicyAsync',
       data
     );
@@ -2273,7 +2273,7 @@ export class PopupPolicybenefitsComponent
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'PolicyBenefitsBusiness',
+      'PolicyBenefitsBusiness_Old',
       'UpdatePolicyBenefitPolicyIDChangedAsync',
       [this.benefitPolicyObj, this.form.form.preData.policyID]
     );

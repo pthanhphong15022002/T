@@ -28,11 +28,12 @@ import {
   fmVATInvoices,
 } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, catchError, map, takeUntil, throwError } from 'rxjs';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
 import { JournalsAddComponent } from '../../journals/journals-add/journals-add.component';
 import { PopupInfoTransferComponent } from '../../share/popup-info-transfer/popup-info-transfer.component';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 declare var jsBh: any;
 @Component({
   selector: 'lib-cashpayments',
@@ -83,7 +84,8 @@ export class CashPaymentsComponent extends UIComponent {
     private acService: CodxAcService,
     private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
-    private notification: NotificationsService
+    private notification: NotificationsService,
+    private ngxLoader: NgxUiLoaderService,
   ) {
     super(inject);
     if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
@@ -299,19 +301,71 @@ export class CashPaymentsComponent extends UIComponent {
    * *Hàm thêm mới chứng từ
    */
   addNewVoucher() {
+    this.ngxLoader.start();
     this.view.dataService
       .addNew((o) => this.setDefault(this.dataDefault))
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res != null) {
-          res.isAdd = true;
-          if (this.dataDefault == null) this.dataDefault = { ...res };
+      .subscribe({
+        next: (res:any)=>{
+          if (res != null) {
+            res.isAdd = true;
+            if (this.dataDefault == null) this.dataDefault = { ...res };
+            let data = {
+              headerText: this.headerText, //? tiêu đề voucher
+              journal: { ...this.journal }, //?  data journal
+              oData: { ...res }, //?  data của cashpayment
+              baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+              legalName: this.legalName, //? tên company
+            };
+            let optionSidebar = new SidebarModel();
+            optionSidebar.DataService = this.view?.dataService;
+            optionSidebar.FormModel = this.view?.formModel;
+            let dialog = this.callfc.openSide(
+              CashPaymentAddComponent,
+              data,
+              optionSidebar,
+              this.view.funcID
+            );
+            dialog.closed.subscribe((res) => {
+              if (res && res?.event) {
+                if (res?.event?.type === 'discard') {
+                  if (this.view.dataService.data.length == 0) {
+                    this.itemSelected = undefined;
+                    this.detectorRef.detectChanges();
+                  }
+                }
+              }
+            });
+          }
+        },
+        complete : ()=>{
+          this.ngxLoader.stop();
+          this.onDestroy();
+        }
+      })
+  }
+
+  /**
+   * *Hàm chỉnh sửa chứng từ
+   * @param dataEdit : data chứng từ chỉnh sửa
+   */
+  editVoucher(dataEdit) {
+    delete dataEdit.isReadOnly;
+    this.view.dataService.dataSelected = { ...dataEdit };
+    this.ngxLoader.start();
+    this.view.dataService
+      .edit(dataEdit)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res: any) => {
+          res.isEdit = true;
           let data = {
-            headerText: this.headerText, //? tiêu đề voucher
-            journal: { ...this.journal }, //?  data journal
-            oData: { ...res }, //?  data của cashpayment
-            baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-            legalName: this.legalName, //? tên company
+            headerText: this.headerText,
+            journal: { ...this.journal },
+            oData: { ...res },
+            hideFields: [...this.hideFields],
+            baseCurr: this.baseCurr,
+            legalName: this.legalName,
           };
           let optionSidebar = new SidebarModel();
           optionSidebar.DataService = this.view?.dataService;
@@ -332,51 +386,11 @@ export class CashPaymentsComponent extends UIComponent {
               }
             }
           });
+        },
+        complete:()=>{
+          this.onDestroy();
+          this.ngxLoader.stop();
         }
-        this.onDestroy();
-      });
-  }
-
-  /**
-   * *Hàm chỉnh sửa chứng từ
-   * @param dataEdit : data chứng từ chỉnh sửa
-   */
-  editVoucher(dataEdit) {
-    delete dataEdit.isReadOnly;
-    this.view.dataService.dataSelected = { ...dataEdit };
-    this.view.dataService
-      .edit(dataEdit)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        res.isEdit = true;
-        let data = {
-          headerText: this.headerText,
-          journal: { ...this.journal },
-          oData: { ...res },
-          hideFields: [...this.hideFields],
-          baseCurr: this.baseCurr,
-          legalName: this.legalName,
-        };
-        let optionSidebar = new SidebarModel();
-        optionSidebar.DataService = this.view?.dataService;
-        optionSidebar.FormModel = this.view?.formModel;
-        let dialog = this.callfc.openSide(
-          CashPaymentAddComponent,
-          data,
-          optionSidebar,
-          this.view.funcID
-        );
-        dialog.closed.subscribe((res) => {
-          if (res && res?.event) {
-            if (res?.event?.type === 'discard') {
-              if (this.view.dataService.data.length == 0) {
-                this.itemSelected = undefined;
-                this.detectorRef.detectChanges();
-              }
-            }
-          }
-        });
-        this.onDestroy();
       });
   }
 
@@ -408,6 +422,7 @@ export class CashPaymentsComponent extends UIComponent {
         if (res && res?.event) {
           let newvoucherNo = res?.event;
           newdataCopy.voucherNo = newvoucherNo;
+          this.ngxLoader.start();
           this.view.dataService
             .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
             .pipe(takeUntil(this.destroy$))
@@ -418,43 +433,51 @@ export class CashPaymentsComponent extends UIComponent {
                 this.view.dataService
                   .saveAs(datas)
                   .pipe(takeUntil(this.destroy$))
-                  .subscribe((res) => {
-                    if (res) {
-                      let data = {
-                        headerText: this.headerText,
-                        journal: { ...this.journal },
-                        oData: { ...datas },
-                        hideFields: [...this.hideFields],
-                        baseCurr: this.baseCurr,
-                        legalName: this.legalName,
-                      };
-                      let optionSidebar = new SidebarModel();
-                      optionSidebar.DataService = this.view?.dataService;
-                      optionSidebar.FormModel = this.view?.formModel;
-                      let dialog2 = this.callfc.openSide(
-                        CashPaymentAddComponent,
-                        data,
-                        optionSidebar,
-                        this.view.funcID
-                      );
-                      dialog2.closed.subscribe((res) => {
-                        if (res && res?.event) {
-                          if (res?.event?.type === 'discard') {
-                            if (this.view.dataService.data.length == 0) {
-                              this.itemSelected = undefined;
-                              this.detectorRef.detectChanges();
+                  .subscribe({
+                    next:(res:any)=>{
+                      if (res) {
+                        let data = {
+                          headerText: this.headerText,
+                          journal: { ...this.journal },
+                          oData: { ...datas },
+                          hideFields: [...this.hideFields],
+                          baseCurr: this.baseCurr,
+                          legalName: this.legalName,
+                        };
+                        let optionSidebar = new SidebarModel();
+                        optionSidebar.DataService = this.view?.dataService;
+                        optionSidebar.FormModel = this.view?.formModel;
+                        let dialog2 = this.callfc.openSide(
+                          CashPaymentAddComponent,
+                          data,
+                          optionSidebar,
+                          this.view.funcID
+                        );
+                        dialog2.closed.subscribe((res) => {
+                          if (res && res?.event) {
+                            if (res?.event?.type === 'discard') {
+                              if (this.view.dataService.data.length == 0) {
+                                this.itemSelected = undefined;
+                                this.detectorRef.detectChanges();
+                              }
                             }
                           }
-                        }
-                      });
-                      this.view.dataService
-                        .add(datas)
-                        .pipe(takeUntil(this.destroy$))
-                        .subscribe();
+                        });
+                        this.view.dataService
+                          .add(datas)
+                          .pipe(takeUntil(this.destroy$))
+                          .subscribe();
+                      }
+                    },
+                    complete:()=>{
+                      this.onDestroy();
+                      this.ngxLoader.stop();
                     }
                   });
+              }else{
+                this.onDestroy();
+                this.ngxLoader.stop();
               }
-              this.onDestroy();
             });
         }
       });
@@ -623,8 +646,7 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    * @returns
    */
-  changeMFDetail(event: any, type: any = '') {
-    let data = this.view?.dataService?.dataSelected;
+  changeMFDetail(event: any, type: any = '',data:any) {
     if (this.runmode == '1') {
       this.shareService.changeMFApproval(event, data.unbounds);
     } else {
@@ -643,43 +665,55 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    */
   releaseVoucher(text: any, data: any) {
+    this.ngxLoader.start();
     this.acService
       .getCategoryByEntityName(this.view.formModel.entityName)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.dataCategory = res;
-        this.codxCommonService
-          .codxRelease(
-            'AC',
-            data.recID,
-            this.dataCategory.processID,
-            this.view.formModel.entityName,
-            this.view.formModel.funcID,
-            '',
-            '',
-            '',
-            null,
-            JSON.stringify({ ParentID: data.journalNo })
-          )
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((result: any) => {
-            if (result?.msgCodeError == null && result?.rowCount) {
-              data.status = result?.returnStatus;
-              this.view.dataService.updateDatas.set(data['_uuid'], data);
-              this.view.dataService
-                .save(null, 0, '', '', false)
-                .pipe(takeUntil(this.destroy$))
-                .subscribe((res: any) => {
-                  if (res && !res.update.error) {
-                    this.notification.notifyCode('AC0029', 0, text);
-                  }
+        if (res) {
+          this.dataCategory = res;
+          this.codxCommonService
+            .codxRelease(
+              'AC',
+              data.recID,
+              this.dataCategory.processID,
+              this.view.formModel.entityName,
+              this.view.formModel.funcID,
+              '',
+              '',
+              '',
+              null,
+              JSON.stringify({ ParentID: data.journalNo })
+            )
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next:(result:any)=>{
+                if (result?.msgCodeError == null && result?.rowCount) {
+                  data.status = result?.returnStatus;
+                  this.view.dataService.updateDatas.set(data['_uuid'], data);
+                  this.view.dataService
+                    .save(null, 0, '', '', false)
+                    .pipe(takeUntil(this.destroy$))
+                    .subscribe((res: any) => {
+                      if (res && !res.update.error) {
+                        this.notification.notifyCode('AC0029', 0, text);
+                      }
+                      this.onDestroy();
+                    });
+                } else {
+                  this.notification.notifyCode(result?.msgCodeError);
                   this.onDestroy();
-                });
-            } else {
-              this.notification.notifyCode(result?.msgCodeError);
-              this.onDestroy();
-            }
-          });
+                }
+              },
+              complete:()=>{
+                this.ngxLoader.stop();
+                this.onDestroy();
+              }
+            });
+        }else{
+          this.ngxLoader.stop();
+          this.onDestroy();
+        }
       });
   }
 
@@ -688,24 +722,30 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    */
   cancelReleaseVoucher(text: any, data: any) {
+    this.ngxLoader.start();
     this.codxCommonService
       .codxCancel('AC', data?.recID, this.view.formModel.entityName, null, null)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((result: any) => {
-        if (result && result?.msgCodeError == null) {
-          data.status = result?.returnStatus;
-          this.view.dataService.updateDatas.set(data['_uuid'], data);
-          this.view.dataService
-            .save(null, 0, '', '', false)
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((res: any) => {
-              if (res && !res.update.error) {
-                this.notification.notifyCode('AC0029', 0, text);
-              }
-              this.onDestroy();
-            });
-        } else {
-          this.notification.notifyCode(result?.msgCodeError);
+      .subscribe({
+        next:(result:any)=>{
+          if (result && result?.msgCodeError == null) {
+            data.status = result?.returnStatus;
+            this.view.dataService.updateDatas.set(data['_uuid'], data);
+            this.view.dataService
+              .save(null, 0, '', '', false)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((res: any) => {
+                if (res && !res.update.error) {
+                  this.notification.notifyCode('AC0029', 0, text);
+                }
+                
+              });
+          } else {
+            this.notification.notifyCode(result?.msgCodeError);
+          }
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
           this.onDestroy();
         }
       });
@@ -716,17 +756,23 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    */
   validateVourcher(text: any, data: any) {
+    this.ngxLoader.start();
     this.api
       .exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data, text])
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res[1]) {
-          this.itemSelected = res[0];
-          this.view.dataService.update(this.itemSelected).subscribe();
-          this.notification.notifyCode('AC0029', 0, text);
-          this.detectorRef.detectChanges();
+      .subscribe({
+        next:(res:any)=>{
+          if (res[1]) {
+            this.itemSelected = {...res[0]};
+            this.view.dataService.update({...res[0]},true).subscribe();
+            this.notification.notifyCode('AC0029', 0, text);
+            this.detectorRef.detectChanges();
+          }
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          this.onDestroy();
         }
-        this.onDestroy();
       });
   }
 
@@ -735,17 +781,23 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    */
   postVoucher(text: any, data: any) {
+    this.ngxLoader.start();
     this.api
       .exec('AC', 'CashPaymentsBusiness', 'PostVourcherAsync', [data, text])
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res[1]) {
-          this.itemSelected = res[0];
-          this.view.dataService.update(this.itemSelected).subscribe();
-          this.notification.notifyCode('AC0029', 0, text);
-          this.detectorRef.detectChanges();
+      .subscribe({
+        next:(res:any)=>{
+          if (res[1]) {
+            this.itemSelected = {...res[0]};
+            this.view.dataService.update({...res[0]},true).subscribe();
+            this.notification.notifyCode('AC0029', 0, text);
+            this.detectorRef.detectChanges();
+          }
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          this.onDestroy();
         }
-        this.onDestroy();
       });
   }
 
@@ -754,17 +806,23 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    */
   unPostVoucher(text: any, data: any) {
+    this.ngxLoader.start();
     this.api
       .exec('AC', 'CashPaymentsBusiness', 'UnPostVourcherAsync', [data, text])
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res[1]) {
-          this.itemSelected = res[0];
-          this.view.dataService.update(this.itemSelected).subscribe();
-          this.notification.notifyCode('AC0029', 0, text);
-          this.detectorRef.detectChanges();
+      .subscribe({
+        next:(res:any)=>{
+          if (res[1]) {
+            this.itemSelected = {...res[0]};
+            this.view.dataService.update({...res[0]},true).subscribe();
+            this.notification.notifyCode('AC0029', 0, text);
+            this.detectorRef.detectChanges();
+          }
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          this.onDestroy();
         }
-        this.onDestroy();
       });
   }
 
@@ -832,6 +890,7 @@ export class CashPaymentsComponent extends UIComponent {
           t.checkLogin(res.bankCode, 'test', data, (o) => {
             if (o) {
               let tk = jsBh.decodeCookie('bankhub');
+              this.ngxLoader.start();
               this.api
                 .execSv<any>(
                   'AC',
@@ -841,21 +900,24 @@ export class CashPaymentsComponent extends UIComponent {
                   [data.recID, tk, 'test']
                 )
                 .pipe(takeUntil(this.destroy$))
-                .subscribe((res) => {
-                  if (res && !res?.error) {
-                    data.status = '8';
-                    this.view.dataService.update(res.data).subscribe();
-                    // this.notification.notifyCode('AC0029', 0, text);
-                    this.notification.notify('Chuyển lệnh thành công !');
-                  } else {
-                    this.notification.notify(
-                      res?.data?.data?.result?.message ||
-                        res?.data?.description ||
-                        res?.msg,
-                      '2'
-                    );
+                .subscribe({
+                  next:(res:any)=>{
+                    if (res && !res?.error) {
+                      this.view.dataService.update(res.data).subscribe();
+                      this.notification.notifyCode('AC0029', 0, text);
+                    } else {
+                      this.notification.notify(
+                        res?.data?.data?.result?.message ||
+                          res?.data?.description ||
+                          res?.msg,
+                        '2'
+                      );
+                    }
+                  },
+                  complete:()=>{
+                    this.ngxLoader.stop();
+                    this.onDestroy();
                   }
-                  this.onDestroy();
                 });
             }
           });
@@ -874,6 +936,7 @@ export class CashPaymentsComponent extends UIComponent {
           t.checkLogin(res.bankCode, 'test', data, (o) => {
             if (o) {
               let tk = jsBh.decodeCookie('bankhub');
+              this.ngxLoader.start();
               this.api
                 .execSv<any>(
                   'AC',
@@ -883,31 +946,36 @@ export class CashPaymentsComponent extends UIComponent {
                   [data.recID, tk, 'test']
                 )
                 .pipe(takeUntil(this.destroy$))
-                .subscribe((res) => {
-                  if (res && !res?.error) {
-                    data.status = '8';
-                    this.view.dataService.update(data).subscribe();
-                    let opt = new DialogModel();
-                    opt.FormModel = this.view.formModel;
-                    let dialog = this.callfc.openForm(
-                      PopupInfoTransferComponent,
-                      'Thông tin lệnh chuyển',
-                      null,
-                      null,
-                      '',
-                      res.data.data,
-                      '',
-                      opt
-                    );
-                  } else {
-                    this.notification.notify(
-                      res?.data?.data?.result?.message ||
-                        res?.data?.description ||
-                        res?.error,
-                      '2'
-                    );
+                .subscribe({
+                  next:(res:any)=>{
+                    if (res && !res?.error) {
+                      data.status = '8';
+                      this.view.dataService.update(data).subscribe();
+                      let opt = new DialogModel();
+                      opt.FormModel = this.view.formModel;
+                      let dialog = this.callfc.openForm(
+                        PopupInfoTransferComponent,
+                        'Thông tin lệnh chuyển',
+                        null,
+                        null,
+                        '',
+                        res.data.data,
+                        '',
+                        opt
+                      );
+                    } else {
+                      this.notification.notify(
+                        res?.data?.data?.result?.message ||
+                          res?.data?.description ||
+                          res?.error,
+                        '2'
+                      );
+                    }
+                  },
+                  complete:()=>{
+                    this.ngxLoader.stop();
+                    this.onDestroy();
                   }
-                  this.onDestroy();
                 });
             }
           });

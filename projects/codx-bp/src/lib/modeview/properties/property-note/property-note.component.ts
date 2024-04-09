@@ -10,7 +10,7 @@ export class PropertyNoteComponent extends BasePropertyComponent implements OnIn
   
   ngOnInit(): void {
     if(!this.data.dataFormat) this.data.dataFormat = {};
-    else if(typeof this.data.dataFormat == 'string') this.data.dataFormat = JSON.parse(this.data.dataFormat) 
+    else if(typeof this.data.dataFormat == 'string' && this.data?.dataFormat) this.data.dataFormat = JSON.parse(this.data.dataFormat) 
   }
 
   changeValueFormat(e:any,data:any=null)

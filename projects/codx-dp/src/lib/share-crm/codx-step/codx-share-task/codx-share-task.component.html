@@ -1,0 +1,438 @@
+<codx-form
+  headerText="{{ title }}"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+>
+  <ng-template #body>
+    <div class="row" style="height: 100% !important">
+      <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 border-right role-left">
+        <div class="h-100 scroll-y">
+          <div *ngIf="listRoleShare != null && listRoleShare.length > 0">
+            <ng-container *ngFor="let role of listRoleShare; index as i">
+              <div
+                (click)="changeRole(role)"
+                class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item p-2"
+                [ngClass]="roleSelect.objectID == role.objectID ? 'chosse':'no-chosse'"
+              >
+                <div class="d-flex justify-content-between list-title w-100">
+                  <div class="d-flex align-items-top">
+                    <div
+                      *ngIf="
+                        role.objectType != '1' && role.objectType != 'U';
+                        then thenAvatar1;
+                        else elsethenAvatar1
+                      "
+                    ></div>
+                    <ng-template #thenAvatar1>
+                      <div class="d-flex align-items-center">
+                        <div
+                          class="d-flex align-items-center position-relative me-4"
+                          style="position: relative"
+                          popoverClass="popoverClass"
+                        >
+                          <img
+                            src="../../../assets/codx/user/user-admin.svg"
+                            alt=""
+                            style="width: 25px; border-radius: 50%"
+                          />
+                          <div
+                            style="position: absolute; right: 0; bottom: -5px"
+                          >
+                            <ng-container *ngFor="let role of listRoles">
+                              <ng-container *ngIf="role.value == role.roleType">
+                                <span
+                                  inlineSVG="./assets/themes/cm/default/img/{{
+                                    role.icon
+                                  }}"
+                                ></span>
+                              </ng-container>
+                            </ng-container>
+                          </div>
+                        </div>
+                        <div class="d-flex flex-column">
+                          <div class="text-dark fw-bold">
+                            {{ role.objectName }}
+                          </div>
+                          <ng-container *ngFor="let role of listRoles">
+                            <ng-container *ngIf="role.value == role.roleType">
+                              <div class="text-gray-500 fs-7">
+                                {{ role.text }}
+                              </div>
+                            </ng-container>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </ng-template>
+                    <ng-template #elsethenAvatar1>
+                      <div class="me-4 d-flex align-items-center">
+                        <div
+                          class="d-flex align-items-center position-relative me-4"
+                          style="position: relative"
+                          popoverClass="popoverClass"
+                        >
+                          <codx-img
+                            class=""
+                            [width]="25"
+                            [objectId]="role.objectID"
+                            objectType="AD_Users"
+                          >
+                          </codx-img>
+                          <div
+                            style="position: absolute; right: 0; bottom: -5px"
+                          >
+                            <ng-container *ngFor="let role of listRoles">
+                              <ng-container *ngIf="role.value == role.roleType">
+                                <span
+                                  inlineSVG="./assets/themes/cm/default/img/{{
+                                    role.icon
+                                  }}"
+                                ></span>
+                              </ng-container>
+                            </ng-container>
+                          </div>
+                        </div>
+                        <div class="d-flex flex-column">
+                          <div class="text-dark fw-bold">
+                            {{ role.objectName }}
+                          </div>
+                          <ng-container *ngFor="let role of listRoles">
+                            <ng-container *ngIf="role.value == role.roleType">
+                              <div class="text-gray-500 fs-7">
+                                {{ role.text }}
+                              </div>
+                            </ng-container>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </div>
+                </div>
+                <!-- <ng-container *ngIf="!checkRemove(i)">
+                  <div
+                    class="action-menu-od ms-0 d-flex justify-content-center align-items-center cursor-pointer"
+                    (click)="removeUser(i)"
+                  >
+                    <i class="icon-close text-danger icon-16"></i>
+                  </div>
+                </ng-container> -->
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <div class="add-user" *ngIf="isAdd">
+          <div class="d-flex justify-content-end">
+            <codx-input
+              type="share"
+              field="addUser"
+              refValue="CRM052"
+              [showInput]="showInput"
+              (valueChange)="changUsers($event)"
+              [ngbTooltip]="'Chia sẻ'"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 ps-6 role-right">
+        <div class="list-role">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">
+                  <codx-label
+                    [default]="'Chức năng'"
+                    [formModel]="dialog.formModel"
+                    [fiedName]="'titleFunction'"
+                  ></codx-label>
+                </th>
+                <th scope="col">
+                  <codx-label
+                    [default]="'Mô tả'"
+                    [formModel]="dialog.formModel"
+                    [fiedName]="'titleDescription'"
+                  ></codx-label>
+                </th>
+                <th scope="col">
+                  <codx-label
+                    [default]="'Cho phép'"
+                    [formModel]="dialog.formModel"
+                    [fiedName]="'titleAllow'"
+                  ></codx-label>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label
+                    [default]="'Toàn quyền'"
+                    [formModel]="dialog.formModel"
+                    [fiedName]="'Full'"
+                  ></codx-label>
+                </td>
+                <td>
+                  <codx-label
+                    [default]="'Người dùng có tất cả quyền trên quy trình'"
+                    [formModel]="dialog.formModel"
+                    [name]="'lblDescriptionFull'"
+                  >
+                  </codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input
+                    class="test-check"
+                    type="switch"
+                    style="width: 100%"
+                    [crrValue]="roleSelect.full"
+                    field="full"
+                    (valueChange)="valueChange($event, 'full')"
+                    (focus)="controlFocus('full')"
+                  >
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label
+                    [default]="'Xem'"
+                    [formModel]="dialog.formModel"
+                    [fiedName]="'Read'"
+                  ></codx-label>
+                </td>
+                <td>
+                  <codx-label
+                    [default]="'Người dùng có quyền xem'"
+                    [formModel]="dialog.formModel"
+                    [name]="'lblDescriptionRead'"
+                  >
+                  </codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input
+                    class="test-check"
+                    type="switch"
+                    style="width: 100%"
+                    [crrValue]="roleSelect.read"
+                    field="read"
+                    (valueChange)="valueChange($event, 'read')"
+                    (focus)="controlFocus('read')"
+                  >
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label
+                    [default]="'Chỉnh sửa'"
+                    [formModel]="dialog.formModel"
+                    [fiedName]="'Update'"
+                  ></codx-label>
+                </td>
+                <td>
+                  <codx-label
+                    [default]="'Cho phép chỉnh sửa'"
+                    [formModel]="dialog.formModel"
+                    [name]="'lblDescriptionUpdate'"
+                  ></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input
+                    class="test-check"
+                    type="switch"
+                    style="width: 100%"
+                    [crrValue]="roleSelect.update"
+                    field="update"
+                    (valueChange)="valueChange($event, 'update')"
+                    (focus)="controlFocus('update')"
+                  >
+                  </codx-input>
+                </td>
+              </tr>
+              <!-- <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label
+                    [default]="'Phân công'"
+                    [formModel]="dialog.formModel"
+                    [fiedName]="'Assign'"
+                  ></codx-label>
+                </td>
+                <td>
+                  <codx-label
+                    [default]="'Cho phép phân công'"
+                    [formModel]="dialog.formModel"
+                    [name]="'lblDesAssign'"
+                  ></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input
+                    class="test-check"
+                    type="switch"
+                    style="width: 100%"
+                    [crrValue]="assign"
+                    field="assign"
+                    (valueChange)="valueChange($event, 'assign')"
+                    [disabled]="checkAdminUpdate()"
+                  >
+                  </codx-input>
+                </td>
+              </tr> -->
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label
+                    [default]="'Xóa'"
+                    [formModel]="dialog.formModel"
+                    [fiedName]="'Delete'"
+                  ></codx-label>
+                </td>
+                <td>
+                  <codx-label
+                    [default]="'Cho phép xóa'"
+                    [formModel]="dialog.formModel"
+                    [name]="'lblDescriptionDelete'"
+                  ></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input
+                    class="test-check"
+                    type="switch"
+                    style="width: 100%"
+                    [crrValue]="roleSelect.delete"
+                    field="delete"
+                    (valueChange)="valueChange($event, 'delete')"
+                    (focus)="controlFocus('delete')"
+                  >
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label
+                    [default]="'Tiến độ'"
+                    [formModel]="dialog.formModel"
+                    [fiedName]="'UpdateProgress'"
+                  ></codx-label>
+                </td>
+                <td>
+                  <codx-label
+                    [default]="'Cho phép cập nhật tiến độ'"
+                    [name]="'lblDescriptionsUpdateProgress'"
+                  ></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input
+                    class="test-check"
+                    type="switch"
+                    style="width: 100%"
+                    [crrValue]="roleSelect.updateProgress"
+                    field="updateProgress"
+                    (valueChange)="valueChange($event, 'updateProgress')"
+                    (focus)="controlFocus('updateProgress')"
+                  >
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label
+                    [default]="'Cập nhật file'"
+                    [formModel]="dialog.formModel"
+                    [fiedName]="'Upload'"
+                  ></codx-label>
+                </td>
+                <td>
+                  <codx-label
+                    [default]="'Cho phép cập nhật file'"
+                    [formModel]="dialog.formModel"
+                    [name]="'lblDescriptionUpload'"
+                  ></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input
+                    class="test-check"
+                    type="switch"
+                    style="width: 100%"
+                    [crrValue]="roleSelect.upload"
+                    field="upload"
+                    (valueChange)="valueChange($event, 'upload')"
+                    (focus)="controlFocus('upload')"
+                  >
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label
+                    [default]="'Tải file'"
+                    [formModel]="dialog.formModel"
+                    [fiedName]="'Download'"
+                  ></codx-label>
+                </td>
+                <td>
+                  <codx-label
+                    [default]="'Cho phép tải file'"
+                    [formModel]="dialog.formModel"
+                    [name]="'lblDescriptionDownload'"
+                  ></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input
+                    class="test-check"
+                    type="switch"
+                    style="width: 100%"
+                    [crrValue]="roleSelect.download"
+                    field="download"
+                    (valueChange)="valueChange($event, 'download')"
+                    (focus)="controlFocus('download')"
+                  >
+                  </codx-input>
+                </td>
+              </tr>
+              <!-- <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label
+                    [default]="'Phân quyền'"
+                    [formModel]="dialog.formModel"
+                    [fiedName]="'AllowPermit'"
+                  ></codx-label>
+                </td>
+                <td>
+                  <codx-label
+                    [default]="'Cho phép chỉnh sửa quyền'"
+                    [formModel]="dialog.formModel"
+                    [name]="'lblDescriptionAssign'"
+                  >
+                  </codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input
+                    class="test-check"
+                    type="switch"
+                    style="width: 100%"
+                    [crrValue]="allowPermit"
+                    field="allowPermit"
+                    (valueChange)="valueChange($event, 'allowPermit')"
+                    [disabled]="checkAdminUpdate()"
+                  >
+                  </codx-input>
+                </td>
+              </tr> -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="onSave()">
+        <codx-label
+          name="lblSave"
+          [formModel]="dialog.formModel"
+          default="Lưu"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

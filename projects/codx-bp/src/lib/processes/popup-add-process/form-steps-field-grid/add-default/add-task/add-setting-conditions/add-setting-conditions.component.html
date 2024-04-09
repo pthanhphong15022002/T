@@ -9,7 +9,7 @@
 </codx-form>
 <ng-template popup adde #body>
     <div class="d-flex flex-column container non-padding h-100" id="queryBuilderEle">
-        <div class="d-flex flex-column mt-4">
+        <div class="d-flex flex-column mt-4" *ngIf="!listExtendInfo">
             <codx-label formName="fmBPFieldGrid" fiedName="lblTaskName" default="Tên điều kiện" class="fw-bold"></codx-label>
             <codx-input type="text" field="stepName" [crrValue]="predicateName" (valueChange)="changeName($event)"></codx-input>
         </div>
@@ -331,7 +331,7 @@
     </div>
 </ng-template>
 <ng-template #footer>
-<div class="d-flex align-items-end w-100">
+<div class="d-flex align-items-center justify-content-end w-100">
     <div class="d-flex align-items-center float-start w-100" *ngIf="listSteps && listSteps.length>0">
         <codx-label formName="fmBPFieldGrid" fiedName="lblTaskNextSteps" default="Hành động xử lý tiếp theo" class="fw-bold me-2"></codx-label>
         <div ngbDropdown #myDrop2="ngbDropdown" class="d-inline-block bp-ffg-dropdown">

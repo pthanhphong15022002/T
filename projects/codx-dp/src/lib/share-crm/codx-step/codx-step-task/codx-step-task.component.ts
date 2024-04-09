@@ -67,6 +67,7 @@ import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assi
 import { PopupAddMeetingComponent } from 'projects/codx-share/src/lib/components/codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
 import { CodxAddBookingCarComponent } from 'projects/codx-share/src/lib/components/codx-booking/codx-add-booking-car/codx-add-booking-car.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { CodxShareTaskComponent } from '../codx-share-task/codx-share-task.component';
 @Component({
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
@@ -897,6 +898,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         break;
       case 'DP33':
         this.cancelApprover(task);
+        break;
+      case 'DP35':
+        this.popupPermissions(task);
         break;
       case 'SYS002':
         this.exportTemplet(e, task);
@@ -2555,7 +2559,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetListUserIDByListODPIDAsync',
       [lstId, type]
     );
@@ -3462,5 +3466,36 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
     });
     return fields;
+  }
+
+  popupPermissions(data) {
+    let dialogModel = new DialogModel();
+    let formModel = new FormModel();
+    formModel.formName = 'DPInstancesStepsTasksRoles';
+    formModel.gridViewName = 'grvDPInstancesStepsTasksRoles';
+    formModel.entityName = 'DP_Instances_Steps_Tasks_Roles';
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
+    let obj = {
+      data: data,
+      title: "Chia sẻ",
+      entityName: "DP_Instances_Steps_Tasks_Roles",
+    };
+    this.callfc
+      .openForm(
+        CodxShareTaskComponent,
+        '',
+        950,
+        650,
+        '',
+        obj,
+        '',
+        dialogModel
+      )
+      // .closed.subscribe((e) => {
+      //   if (e?.event && e?.event != null) {
+          
+      //   }
+      // });
   }
 }

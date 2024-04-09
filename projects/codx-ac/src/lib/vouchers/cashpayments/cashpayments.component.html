@@ -1,7 +1,7 @@
 <codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
   (buttonClick)="toolbarClick($event)" [predicates]="predicate" assemblyName="AC" className="CashPaymentsBusiness"
   service="AC" method="GetDataAsync" [hideMoreFuncs]="!itemSelected" [titleToolBarTmp]="titleToolBarTmp"
-  (changeDataMF)="changeMFDetail($event,'viewdetail')" (clickMF)="clickMoreFunction($event, itemSelected)"
+  (changeDataMF)="changeMFDetail($event,'viewdetail',itemSelected)" (clickMF)="clickMoreFunction($event, itemSelected)"
   [dataValues]="journalNo" (selectedChange)="onSelectedItem($event)" [isSubView]="true"
   (viewChanged)="viewChanged($event)" [funcID]="funcID">
 </codx-views>
@@ -22,7 +22,7 @@
 
 <!-- Start: templateGrid -->
 <ng-template #templateGrid let-data>
-  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFDetail($event, 'viewgrid')" [formModel]="view.formModel"
+  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFDetail($event, 'viewgrid',data)" [formModel]="view.formModel"
     (clickMF)="clickMoreFunction($event, data)" type="view"></codx-mfunc>
 </ng-template>
 <!-- End: templateGrid -->

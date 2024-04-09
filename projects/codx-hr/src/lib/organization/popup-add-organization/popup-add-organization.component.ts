@@ -142,7 +142,7 @@ export class PopupAddOrganizationComponent implements OnInit {
         .execSv(
           'HR',
           'ERM.Business.HR',
-          'OrganizationUnitsBusiness',
+          'OrganizationUnitsBusiness_Old',
           'SaveAsync',
           [data, this.funcID]
         )
@@ -160,7 +160,7 @@ export class PopupAddOrganizationComponent implements OnInit {
         .execSv(
           'HR',
           'ERM.Business.HR',
-          'OrganizationUnitsBusiness',
+          'OrganizationUnitsBusiness_Old',
           'UpdateAsync',
           [data]
         )
