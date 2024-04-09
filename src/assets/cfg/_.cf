@@ -5,7 +5,8 @@
   "urlUpload": "http://172.16.7.34:8011/lvfile",
   "bankhubUrl": "http://172.16.7.34:8999",
   "isUserBankHub": true,
-  "office365": "",
+  "office36
+  5": "",
   "saas": 1,
   "asideMode": "all",
   "layoutCZ": "lacviet",
