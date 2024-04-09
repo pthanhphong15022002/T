@@ -22,8 +22,8 @@
 
 <!-- Start: templateGrid -->
 <ng-template #templateGrid let-data>
-  <!-- <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFDetail($event, 'viewgrid')" [formModel]="view.formModel"
-    (clickMF)="clickMoreFunction($event, data)" type="view"></codx-mfunc> -->
+  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFGrid($event, 'viewgrid',data)" [formModel]="view.formModel"
+    (clickMF)="clickMoreFunction($event, data)" type="view"></codx-mfunc>
 </ng-template>
 <!-- End: templateGrid -->
 
