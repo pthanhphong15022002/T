@@ -277,8 +277,6 @@ export class WarehouseTransfersAddComponent extends UIComponent {
           this.eleGridIssue.saveRow((res: any) => {
             if (res && res.type != 'error') {
               this.saveVoucher(type);
-            }else{
-              this.ngxLoader.stop();
             }
           })
           return;
@@ -287,8 +285,6 @@ export class WarehouseTransfersAddComponent extends UIComponent {
           this.eleGridReceipt.saveRow((res: any) => {
             if (res && res.type != 'error') {
               this.saveVoucher(type);
-            }else{
-              this.ngxLoader.stop();
             }
           })
           return;
@@ -306,41 +302,46 @@ export class WarehouseTransfersAddComponent extends UIComponent {
         this.journal,
       ])
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res?.update) {
-          this.dialog.dataService.update(res.data).subscribe();
-          if (type == 'save') {
-            this.onDestroy();
-            this.dialog.close();
-          }else{
-            this.api
-            .exec('IV', 'TransfersBusiness', 'SetDefaultAsync', [
-              this.dialogData.data?.oData,
-              this.journal,
-            ])
-            .subscribe((res: any) => {
-              if (res) {
-                res.data.isAdd = true;
-                this.master.refreshData({...res.data});
-                setTimeout(() => {
-                  this.eleGridIssue.dataSource = [];
-                  this.eleGridIssue.refresh();
-                  this.eleGridReceipt.dataSource = [];
-                  this.eleGridReceipt.refresh();
-                }, 100);
-                this.detectorRef.detectChanges();
-              }
-            });
+      .subscribe({
+        next:(res: any) => {
+          if (res?.update) {
+            this.dialog.dataService.update(res.data).subscribe();
+            if (type == 'save') {
+              this.onDestroy();
+              this.dialog.close();
+            }else{
+              this.api
+              .exec('IV', 'TransfersBusiness', 'SetDefaultAsync', [
+                this.dialogData.data?.oData,
+                this.journal,
+              ])
+              .subscribe((res: any) => {
+                if (res) {
+                  res.data.isAdd = true;
+                  this.master.refreshData({...res.data});
+                  setTimeout(() => {
+                    this.eleGridIssue.dataSource = [];
+                    this.eleGridIssue.refresh();
+                    this.eleGridReceipt.dataSource = [];
+                    this.eleGridReceipt.refresh();
+                  }, 100);
+                  this.detectorRef.detectChanges();
+                }
+              });
+            }
+            if (this.master.data.isAdd || this.master.data.isCopy)
+              this.notification.notifyCode('SYS006');
+            else 
+              this.notification.notifyCode('SYS007');
+  
           }
-          if (this.master.data.isAdd || this.master.data.isCopy)
-            this.notification.notifyCode('SYS006');
-          else 
-            this.notification.notifyCode('SYS007');
-
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          if(this.eleGridIssue && this.eleGridIssue?.isSaveOnClick) this.eleGridIssue.isSaveOnClick = false;
+          if(this.eleGridReceipt && this.eleGridReceipt?.isSaveOnClick) this.eleGridReceipt.isSaveOnClick = false;
+          this.onDestroy();
         }
-        if(this.eleGridIssue && this.eleGridIssue?.isSaveOnClick) this.eleGridIssue.isSaveOnClick = false;
-        if(this.eleGridReceipt && this.eleGridReceipt?.isSaveOnClick) this.eleGridReceipt.isSaveOnClick = false;
-        this.ngxLoader.stop();
       });
   }
   //#endregion Method

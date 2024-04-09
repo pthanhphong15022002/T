@@ -137,7 +137,7 @@ export class CashCountingsAddComponent extends UIComponent {
     this.master.setValue('updateColumns', '', {});
     switch (field.toLowerCase()) {
       case 'objectid':
-        this.cashBookIDChange(field);
+        this.objectIDChange(field);
         break;
     }
   }
@@ -400,7 +400,7 @@ export class CashCountingsAddComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res?.update) {
-          this.dialog.dataService.update(res.data).subscribe();
+          this.dialog.dataService.update(res.data,true).subscribe();
           if (type == 'save') {
             this.onDestroy();
             this.dialog.close();
@@ -452,10 +452,13 @@ export class CashCountingsAddComponent extends UIComponent {
       case 'add':
       case 'update':
       case 'delete':
-        let total = this?.eleGridCounting.dataSource.reduce((sum, data: any) => sum + data?.amount, 0);
-        this.master.setValue('countValue', total, {});
-        let value = this.master.data.actualValue - this.master.data?.countValue;
-        this.master.setValue('diffValue', value, {});
+        // let total = this?.eleGridCounting.dataSource.reduce((sum, data: any) => sum + data?.amount, 0);
+        // this.master.setValue('countValue', total, {});
+        // let value = this.master.data.actualValue - this.master.data?.countValue;
+        // this.master.setValue('diffValue', value, {});
+        // this.master.save(null, 0, '', '', false, { allowCompare: false })
+        //   .pipe(takeUntil(this.destroy$))
+        //   .subscribe((res: any) => { })
         break;
       case 'closeEdit':
         if (this.eleGridCounting && this.eleGridCounting.rowDataSelected) {
@@ -490,7 +493,7 @@ export class CashCountingsAddComponent extends UIComponent {
     }
   }
 
-  cashBookIDChange(field: any) {
+  objectIDChange(field: any) {
     this.api.exec('AC', 'CountingsBusiness', 'ValueChangedAsync', [
       field,
       this.master.data,
@@ -500,10 +503,11 @@ export class CashCountingsAddComponent extends UIComponent {
         if (res) {
           this.isPreventChange = true;
           this.master.setValue('actualValue', res?.data?.actualValue, {});
-          let total = this?.eleGridCounting.dataSource.reduce((sum, data: any) => sum + data?.amount, 0);
-          this.master.setValue('countValue', total, {});
-          let value = this.master.data.actualValue - this.master.data?.countValue;
-          this.master.setValue('diffValue', value, {});
+          if (res.isUpdate) {
+            this.master.setValue('countValue', res?.data?.countValue, {});
+            this.master.setValue('diffValue', res?.data?.diffValue, {});
+            this.dialog.dataService.update(res.data,true).subscribe();
+          }
           this.isPreventChange = false;
           this.detectorRef.detectChanges();
         }

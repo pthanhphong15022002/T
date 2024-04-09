@@ -30,7 +30,6 @@ import { JournalViewsettingComponent } from './journals-viewsetting/journal-view
   selector: 'lib-test-journal',
   templateUrl: './journal-v2.component.html',
   styleUrls: ['./journal-v2.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JournalV2Component extends UIComponent {
   //#region Contrucstor
@@ -80,7 +79,6 @@ export class JournalV2Component extends UIComponent {
 
   //#region Init
   onInit() {
-    
     this.cache.valueList('AC177').subscribe((func) => {
       if(func){
         this.lstGroup = func.datas;
@@ -88,6 +86,7 @@ export class JournalV2Component extends UIComponent {
       }else{
         this.lstGroup = [];
       }
+      this.detectorRef.detectChanges();
     });
 
     if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
@@ -128,9 +127,9 @@ export class JournalV2Component extends UIComponent {
     ];
   }
 
-  ngDoCheck() {
-    this.detectorRef.detectChanges();
-  }
+  // ngDoCheck() {
+  //   this.detectorRef.detectChanges();
+  // }
 
   ngOnDestroy() {
     this.onDestroy();
