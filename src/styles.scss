@@ -4686,3 +4686,9 @@ codx-view-kanban .e-kanban .e-kanban-table {
 .news-detail-content *{
   max-width: 100%!important;
 }
+codx-page-title{
+.list-group.list-group-flush{
+  max-height: 500px;
+  overflow: auto;
+}
+}

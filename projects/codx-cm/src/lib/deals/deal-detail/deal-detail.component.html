@@ -570,7 +570,7 @@
                   </div>
 
                   <div class="row">
-                    <div class="col-6">
+                    <!-- <div class="col-6">
                       <div class="mb-1 d-flex align-items-top">
                         <div
                           class="w-150px min-w-150px text-gray-600 codx-textlabel"
@@ -599,40 +599,12 @@
                           ></span>
                         </div>
                       </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="mb-1 d-flex align-items-top">
-                        <div
-                          class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                        >
-                          <codx-label
-                            fiedName="CampaignID"
-                            class="me-2 label-colon"
-                            [setRequire]="false"
-                            [formModel]="formModel"
-                          ></codx-label>
-                        </div>
-                        <div class="text-dark fw-bold codx-textcontent">
-                          <span
-                            #campaignID
-                            [innerHTML]="
-                              dataSelected?.campaignID
-                                | formatvalue
-                                  : formModel
-                                  : 'campaignID'
-                                  : campaignID
-                                  : 'CMDeals'
-                                  : 'grvCMDeals'
-                                | async
-                            "
-                          ></span>
-                        </div>
-                      </div>
-                    </div>
+                    </div> -->
+                    
                   </div>
 
                   <div class="row">
-                    <div class="col-6">
+                    <!-- <div class="col-6">
                       <div class="mb-1 d-flex align-items-top">
                         <div
                           class="w-150px min-w-150px text-gray-600 codx-textlabel"
@@ -653,6 +625,33 @@
                                   : formModel
                                   : 'expectedClosed'
                                   : expectedClosed
+                                | async
+                            "
+                          ></span>
+                        </div>
+                      </div>
+                    </div> -->
+                    <div class="col-6">
+                      <div class="mb-1 d-flex align-items-top">
+                        <div
+                          class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                        >
+                          <codx-label
+                            class="me-2 label-colon"
+                            [setRequire]="false"
+                            [formModel]="formModel"
+                            fiedName="SalespersonID"
+                          ></codx-label>
+                        </div>
+                        <div class="text-dark fw-bold codx-textcontent">
+                          <span
+                            #salespersonID
+                            [innerHTML]="
+                              dataSelected?.salespersonID
+                                | formatvalue
+                                  : formModel
+                                  : 'salespersonID'
+                                  : salespersonID
                                 | async
                             "
                           ></span>
@@ -697,21 +696,23 @@
                           class="w-150px min-w-150px text-gray-600 codx-textlabel"
                         >
                           <codx-label
+                            fiedName="CampaignID"
                             class="me-2 label-colon"
                             [setRequire]="false"
                             [formModel]="formModel"
-                            fiedName="SalespersonID"
                           ></codx-label>
                         </div>
                         <div class="text-dark fw-bold codx-textcontent">
                           <span
-                            #salespersonID
+                            #campaignID
                             [innerHTML]="
-                              dataSelected?.salespersonID
+                              dataSelected?.campaignID
                                 | formatvalue
                                   : formModel
-                                  : 'salespersonID'
-                                  : salespersonID
+                                  : 'campaignID'
+                                  : campaignID
+                                  : 'CMDeals'
+                                  : 'grvCMDeals'
                                 | async
                             "
                           ></span>

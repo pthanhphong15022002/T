@@ -126,18 +126,18 @@ export class AssetJournalsComponent extends UIComponent {
 
   ngAfterViewInit() {
     this.views = [
-      // {
-      //   type: ViewType.listdetail,
-      //   active: true,
-      //   sameData: true,
-      //   model: {
-      //     template: this.templateDetailLeft,
-      //     panelRightRef: this.templateDetailRight,
-      //     collapsed: true,
-      //     widthLeft: '23%',
-      //     //separatorSize:3
-      //   },
-      // },
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.templateDetailLeft,
+          panelRightRef: this.templateDetailRight,
+          collapsed: true,
+          widthLeft: '23%',
+          //separatorSize:3
+        },
+      },
       // {
       //   type: ViewType.list,
       //   active: false,
