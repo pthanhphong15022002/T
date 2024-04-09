@@ -1279,7 +1279,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     permission.isActive = true;
     return permission;
   }
-
   //#endregion
 
   getSettingMail(processID) {
