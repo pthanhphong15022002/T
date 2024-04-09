@@ -1003,7 +1003,6 @@ export class CatagoryComponent implements OnInit {
 
   //hàm dùng để custom xử lý sau khi lưu setting value cho các trường hợp đặc thù.
   updateCustom(dataVale: any, setting: any) {
-    debugger;
     if (!dataVale || !setting) return;
     switch (setting.reference.toLowerCase()) {
       case 'updatecompanysettings':
