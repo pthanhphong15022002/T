@@ -87,6 +87,7 @@ export class FAPostingAccountsComponent
         sameData: false,
         active: true,
         showFilter:false,
+        showSort:false,
         model: {
           panelLeftRef: this.templateLeft,
           widthLeft: '21%',

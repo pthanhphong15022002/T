@@ -57,7 +57,7 @@
 
 <ng-template #templateRight>
   <div class="tabline-content ms-5 h-100">
-    <codx-gridview-v2 #grid [funcId]="funcID" [dataService]="view.dataService"
+    <codx-gridview-v2 #grid [funcId]="funcID" [dataService]="view.dataService" [sameData]="true"
       entityName="AC_FAPostingAccounts" idField="recID" [templateMore]="templateMore" (onSelected)="onSelected($event)"></codx-gridview-v2>
   </div>
 </ng-template>
