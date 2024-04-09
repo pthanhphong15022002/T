@@ -198,11 +198,6 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'assetcountings/:funcID/:journalNo',
-        component: AssetJournalsComponent,
-        data: { noReuse: true },
-      },
-      {
         path: 'generaljournals/:funcID/:journalNo',
         component: GeneralJournalComponent,
         data: { noReuse: true },

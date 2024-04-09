@@ -67,11 +67,11 @@
   padding: 5px 15px;
   .e-content
   {
-    height: calc(100% - 275px)!important;
+    // height: calc(100% - 275px)!important;
     width: calc(100% - 20px);
     text-align: left !important;
     position: fixed;
-    overflow: auto;
+    overflow: hidden;
     .e-item , .e-item > div
     {
       height: 100% !important;
@@ -86,10 +86,15 @@
 {
   color: #7248B9;
 }
-// .h-dataSurvey
-// {
-//   height: calc(100% - 5px); //van tam xoa
-// }
+.h-dataSurvey
+{
+  height: calc(100vh - 320px); //van tam xoa
+  overflow: auto !important;
+  .card-body{
+    height: 100% !important;
+    overflow: hidden !important;
+  }
+}
 
 .div-title{
   overflow-x: auto;

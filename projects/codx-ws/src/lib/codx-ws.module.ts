@@ -80,9 +80,9 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { DetailNotebookComponent } from './personal/master-detail/my-page/detail-notebook/detail-notebook.component';
 import { EPDashboardComponent } from 'projects/codx-ep/src/lib/dashboard/dashboard.component';
 import { CmDashboardComponent } from 'projects/codx-cm/src/lib/cm-dashboard/cm-dashboard.component';
-import { RequestsComponent } from 'projects/codx-ep/src/lib/requests/requests.component';
-import { AdvanceRequestsComponent } from 'projects/codx-ep/src/lib/advance-requests/advance-requests.component';
-import { PaymentRequestsComponent } from 'projects/codx-ep/src/lib/payment-requests/payment-requests.component';
+import { BusinesstripComponent } from 'projects/codx-ep/src/lib/businesstrip/businesstrip.component';
+import { AdvanceComponent } from 'projects/codx-ep/src/lib/advance/advance.component';
+import { PaymentComponent } from 'projects/codx-ep/src/lib/payment/payment.component';
 const routes: Routes = [
   {
     path: '',
@@ -339,15 +339,15 @@ const routes: Routes = [
           },
           {
             path: 'businesstrip/:funcID',
-            component: RequestsComponent,
+            component: BusinesstripComponent,
           },
           {
             path: 'advancerequests/:funcID',
-            component: AdvanceRequestsComponent,
+            component: AdvanceComponent,
           },
           {
             path: 'paymentrequests/:funcID',
-            component: PaymentRequestsComponent,
+            component: PaymentComponent,
           }
           // //Tìm kiếm
           // {

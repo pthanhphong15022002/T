@@ -1496,7 +1496,7 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetEmpCurrentInfoAsync',
       this.employeeID
     );
@@ -1506,7 +1506,7 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetEmpFullInfoAsync',
       empID
     );
@@ -7046,7 +7046,7 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDocumentsBusiness',
+      'EDocumentsBusiness_Old',
       'GetDocumentByEmployeeIdAsync',
       [empID]
     );
@@ -7056,7 +7056,7 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDocumentsBusiness',
+      'EDocumentsBusiness_Old',
       'GetDocumentByDocumentTypeIDAsync',
       [data]
     );
@@ -7076,7 +7076,7 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDocumentsBusiness',
+      'EDocumentsBusiness_Old',
       'AddEDocumentsAsync',
       data
     );
@@ -7086,7 +7086,7 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EDocumentsBusiness',
+      'EDocumentsBusiness_Old',
       'DeleteEDocumentsAsync',
       recId
     );

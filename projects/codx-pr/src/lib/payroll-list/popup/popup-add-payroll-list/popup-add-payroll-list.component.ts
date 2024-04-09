@@ -98,7 +98,7 @@ export class PopupAddPayrollListComponent implements OnInit,AfterContentInit{
 
   hrTemplate:any;
   getHRTemplate(hrTemplateID:string){
-    this.api.execSv("HR","HR","TemplateExcelBusiness","GetByIDAsync",hrTemplateID)
+    this.api.execSv("HR","HR","TemplateExcelBusiness_Old","GetByIDAsync",hrTemplateID)
     .subscribe((res:any) => {
       this.hrTemplate = res;
       this.data.templateID = res.templateID;

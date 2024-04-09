@@ -161,7 +161,7 @@ export class EmployeeProfileComponent extends UIComponent {
   formModel;
   itemDetail;
   EExperienceColumnsGrid: any;
-  className = 'EExperiencesBusiness';
+  className = 'EExperiencesBusiness_Old';
 
   employeeID;
   hrEContract;
@@ -2572,7 +2572,7 @@ export class EmployeeProfileComponent extends UIComponent {
 
   HandleBebefitInfo(actionType, s) {
     this.api
-      .execSv('HR', 'ERM.Business.HR', 'EBenefitsBusiness', 'AddAsync', null)
+      .execSv('HR', 'ERM.Business.HR', 'EBenefitsBusiness_Old', 'AddAsync', null)
       .subscribe((res) => {
         console.log(res);
       });

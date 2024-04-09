@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./approval-hrcontract.component.css']
 })
 export class ApprovalHRContractComponent {
-  className = 'EContractsBusiness';
+  className = 'EContractsBusiness_Old';
   method = 'GetListApprovalAsync';
   idField = 'recID';
   data: any;

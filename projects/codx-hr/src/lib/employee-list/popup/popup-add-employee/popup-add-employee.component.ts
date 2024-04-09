@@ -144,7 +144,7 @@ export class PopupAddEmployeeComponent implements OnInit {
       //   .execSv(
       //     'HR',
       //     'ERM.Business.HR',
-      //     'EmployeesBusiness',
+      //     'EmployeesBusiness_Old',
       //     'GetEmployeeInfoByIDAsync',
       //     [this.data.employeeID]
       //   ).subscribe(res => {
@@ -192,7 +192,7 @@ export class PopupAddEmployeeComponent implements OnInit {
               this.notifySV.notifyCode('HR022', 0, this.grvSetUp['PositionID']['headerText']);
               return;
             }
-            this.api.execSv('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetPosInfoAsync', [value])
+            this.api.execSv('HR', 'ERM.Business.HR', 'PositionsBusiness_Old', 'GetPosInfoAsync', [value])
               .subscribe((posInfo: any) => {
                 if (posInfo) {
                   if (posInfo.jobLevel) {
@@ -571,7 +571,7 @@ export class PopupAddEmployeeComponent implements OnInit {
         .execSv(
           'HR',
           'ERM.Business.HR',
-          'EmployeesBusiness',
+          'EmployeesBusiness_Old',
           'SaveWithOrgFieldAsync',
           [data, funcID]
         )
@@ -601,7 +601,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           .execSv(
             'HR',
             'ERM.Business.HR',
-            'EmployeesBusiness',
+            'EmployeesBusiness_Old',
             'UpdateWithOrgFieldAsync',
             // [data, this.oldEmployeeID]
             [data]
@@ -629,7 +629,7 @@ export class PopupAddEmployeeComponent implements OnInit {
 
 
   getHRParameters() {
-    this.api.execSv("HR", "ERM.Business.HR", "EmployeesBusiness", "GetHRParameterSetting")
+    this.api.execSv("HR", "ERM.Business.HR", "EmployeesBusiness_Old", "GetHRParameterSetting")
       .subscribe(res => {
         if (res) this.settingValues = JSON.parse(res.toString())
       });
@@ -638,7 +638,7 @@ export class PopupAddEmployeeComponent implements OnInit {
   // getOrgNote() {
   //   if (this.data['orgUnitID']) {
   //     this.orgNote = '';
-  //     this.api.execSv<any>('HR', 'HR', 'OrganizationUnitsBusiness', 'GetOrgTreeByOrgIDAsync', [this.data['orgUnitID'], 9])
+  //     this.api.execSv<any>('HR', 'HR', 'OrganizationUnitsBusiness_Old', 'GetOrgTreeByOrgIDAsync', [this.data['orgUnitID'], 9])
   //       .subscribe(res => {
   //         let resLength = res.length;
   //         if (res) {

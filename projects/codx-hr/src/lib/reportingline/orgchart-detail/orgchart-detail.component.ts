@@ -69,7 +69,7 @@ export class OrgchartDetailComponent implements OnInit, AfterViewInit {
       .execSv(
         'HR',
         'ERM.Business.HR',
-        'OrganizationUnitsBusiness',
+        'OrganizationUnitsBusiness_Old',
         'GetEmployeeListByOrgAsync',
         [orgid, status, '', this.onlyDepartment, 0]
       )

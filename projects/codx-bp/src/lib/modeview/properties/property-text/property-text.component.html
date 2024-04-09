@@ -8,6 +8,10 @@
     <div class="mt-4">
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'defaultValue'" default="Giá trị mặc định khi thêm mới biểu mẫu" class="fw-bold"></codx-label>
         <codx-input type="text" [crrValue]="data.defaultValue " field="defaultValue" (valueChange)="changeValue($event)" placeholder="Nhập giá trị mặc định"></codx-input>
+        <div class="d-flex align-items-center mt-2">
+            <codx-input type="switch" [crrValue]="data?.defaultValue == 'User'? true : false" field="defaultValue" label="Bắt buộc"  (valueChange)="changeValueUser($event)" class="mt-2"></codx-input>
+            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'defaultValue'" default="Người thực hiện hiện tại" class="fw-bold ms-2"></codx-label>
+        </div>
     </div>
     <div class="mt-4">
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'description'" default="Hiển thị chuỗi gợi ý khi chưa có dữ liệu" class="fw-bold"></codx-label>

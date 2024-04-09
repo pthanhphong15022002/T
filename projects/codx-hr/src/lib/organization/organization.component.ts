@@ -97,7 +97,7 @@ export class OrgorganizationComponent extends UIComponent {
     var objectRequest = {
       service: 'HR',
       assemblyName: 'ERM.Business.HR',
-      className: 'OrganizationUnitsBusiness',
+      className: 'OrganizationUnitsBusiness_Old',
       method: 'GetDataOrgAsync',
       autoLoad: false,
       parentIDField: 'ParentID',
@@ -194,7 +194,7 @@ export class OrgorganizationComponent extends UIComponent {
   //Call api delete
   beforeDelete(opt: RequestOption, id) {
     opt.methodName = 'DeleteEOrgChartAsync';
-    opt.className = 'OrganizationUnitsBusiness';
+    opt.className = 'OrganizationUnitsBusiness_Old';
     opt.assemblyName = 'HR';
     opt.service = 'HR';
     opt.data = id;
@@ -395,7 +395,7 @@ export class OrgorganizationComponent extends UIComponent {
   //     .execSv(
   //       'HR',
   //       'ERM.Business.HR',
-  //       'OrganizationUnitsBusiness',
+  //       'OrganizationUnitsBusiness_Old',
   //       'GetOrgInforAsync',
   //       [data.orgUnitID]
   //     )
@@ -438,7 +438,7 @@ export class OrgorganizationComponent extends UIComponent {
       .execSv(
         'HR',
         'ERM.Business.HR',
-        'OrganizationUnitsBusiness',
+        'OrganizationUnitsBusiness_Old',
         'GetTreeEmployeeAsync',
         [this.orgId, this.pageIndex, this.searchText]
       )

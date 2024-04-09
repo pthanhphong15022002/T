@@ -1,0 +1,63 @@
+<codx-views #view 
+    [views]="views" 
+    [idField]="'recID'" 
+    [service]="'EP'" 
+    [assemblyName]="'ERM.Business.EP'" 
+    [className]="'RequestsBusiness'"
+    [methodName]="'LoadDataAsync'"
+    [selectedFirst]="true"
+    [button]="btnAdd" 
+    (buttonClick)="add()"
+    (selectedChange)="selectedChange($event)"
+    (clickMF)="clickMF($event)"
+    (changeDataMF)="changeDataMF($event,view?.dataService?.dataSelected)">
+</codx-views>
+<ng-template #itemTemplate let-data>
+    <div class="d-flex flex-column p-2">
+        <codx-temp-full 
+            [dataItem]="data" 
+            [title]="data.employeeName" 
+            [contentTmp]="contentTmp" 
+            [imageId]="data.employeeID" 
+            [imageObjType]="'HR_Employees'" 
+            [imageObjName]="data.employeeName" 
+            [imageWidth]="40"
+            [formModel]="view.formModel"
+            [hideMF]="true">
+        </codx-temp-full>
+    </div>
+</ng-template>
+
+<ng-template #contentTmp let-data>
+    <div class="d-flex flex-column w-100">
+        <div class="text-dark"><span>{{data.memo}}</span></div>
+        <div class="d-flex align-items-center" *ngIf="data.fromDate || data.toDate">
+            <div class="me-2"><i class="icon-customize"></i></div>
+            <div *ngIf="data.fromDate" [innerHTML]="data.fromDate | formatvalue : view?.formModel : 'fromDate' | async"></div>
+            <div *ngIf="data.fromDate && data.toDate" class="mx-1">-</div>
+            <div *ngIf="data.toDate" [innerHTML]="data.toDate | formatvalue : view?.formModel : 'toDate' | async"></div>
+        </div>
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <codx-vll [name]="'EP033'" [value]="data.status" [showText]="true" [showBgColor]="true" [classList]="'badge rounded-pill'"></codx-vll>
+            <div class="d-flex" *ngIf="data.resources">
+                <ng-container *ngFor="let item of data.resources;let idx = index">
+                    <ng-container *ngIf="idx <= 3">
+                        <ng-container *ngIf="idx < 3;else tmpMoreResouces">
+                            <div class="me-1 position-relative">
+                                <codx-img [objectId]="item.userID" [objectType]="item.roleType == '2' ? 'EP_Resources' : 'AD_Users'" [width]="30"></codx-img>
+                            </div>
+                        </ng-container>
+                        <ng-template #tmpMoreResouces>
+                            <div class="symbol symbol-30px symbol-circle">
+                                <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">+{{data.resources.length - 3}}</span>
+                            </div>
+                        </ng-template>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #detailTemplate>
+    <ep-businesstrip-detail #businestripDetail [view]="view" [recID]="selectedID"></ep-businesstrip-detail>
+</ng-template>

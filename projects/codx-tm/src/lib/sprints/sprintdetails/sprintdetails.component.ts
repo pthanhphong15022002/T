@@ -228,7 +228,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
       .execSv<any>(
         'HR',
         'ERM.Business.HR',
-        'EmployeesBusiness',
+        'EmployeesBusiness_Old',
         'GetListEmployeesByUserIDAsync',
         JSON.stringify(resources.split(';'))
       )

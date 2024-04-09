@@ -19,7 +19,7 @@
       field="title"
       (valueChange)="changeValue($event)"
     ></codx-input>
-    <span class="fst-italic fw-light">ID: {{data?.fieldName}}</span>
+    <span class="fst-italic fw-light">ID: {{ data?.fieldName }}</span>
   </div>
   <div class="mt-4">
     <codx-label
@@ -62,6 +62,19 @@
         default="Danh sách giá trị"
         class="fw-bold"
       ></codx-label>
+
+      <button
+        type="button"
+        class="btn btn-light w-100"
+        (click)="openSettingVLL()"
+      >
+        <i class="icon-i-plus"></i>
+        <codx-label
+          formName="DynamicForms"
+          fiedName="lblSettingValuelist"
+          default="Thiết lập danh sách"
+        ></codx-label>
+      </button>
     </div>
     <div
       class="d-flex align-items-center mt-2"
@@ -113,7 +126,7 @@
         (valueChange)="valueChangeVll($event, i)"
       >
       </codx-input>
-     
+
       <div
         class="mx-2 cursor-pointer"
         (click)="item.customValues ? deleteValues(i) : undefined"
@@ -122,7 +135,12 @@
       </div>
     </div>
   </div>
-  <lib-property-cbb-dependence [data]="data" [dataTable]="dataTable" (dataChange)="valueChangeData($event)" (dataChangeTableEmit)="valueChangeTableEmit($event)"></lib-property-cbb-dependence>
+  <lib-property-cbb-dependence
+    [data]="data"
+    [dataTable]="dataTable"
+    (dataChange)="valueChangeData($event)"
+    (dataChangeTableEmit)="valueChangeTableEmit($event)"
+  ></lib-property-cbb-dependence>
   <div class="border-top mt-8">
     <div class="d-flex align-items-center mt-4">
       <codx-input
@@ -177,20 +195,12 @@
         class="fw-bold ms-2"
       ></codx-label>
     </div>
-    <div class="d-flex align-items-center mt-1">
-      <codx-input
-        type="switch"
-        field="isRequired"
-        label="Bắt buộc"
-        class="mt-2"
-      ></codx-input>
-      <codx-label
-        formName="DynamicForms"
-        [gridViewName]="'grvDynamicForms' + data.controlType"
-        [fiedName]="'IsRequired'"
-        default="Điều kiện hiển thị"
-        class="fw-bold ms-2"
-      ></codx-label>
-    </div>
+    <div class="d-flex align-items-center justify-content-between mt-2">
+      <div class="d-flex align-items-center">
+          <codx-input type="switch" [crrValue]="data?.visibleControl?.visibleControl" field="visibleControl" label="Điều kiện hiện thị"  (valueChange)="changeValueVisibleControl($event)" class="mt-2"></codx-input>
+          <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'VisibleControl'" default="Điều kiện hiện thị" class="fw-bold ms-2"></codx-label>
+      </div>
+      <i class="icon-edit-one cursor-pointer" [class.text-primary]="data?.visibleControl?.visibleControl" (click)="data?.visibleControl?.visibleControl? openVisibleControlForm(): undefined"></i>
+  </div>
   </div>
 </div>
