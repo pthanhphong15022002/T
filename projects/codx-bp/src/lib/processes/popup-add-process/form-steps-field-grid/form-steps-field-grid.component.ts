@@ -55,7 +55,7 @@ export class FormStepsFieldGridComponent
   count = 0;
   listIds = [];
   tempPermission = [];
-  user:any;
+  user: any;
   constructor(
     private authStore: AuthStore,
     private shareService: CodxShareService,
@@ -82,7 +82,7 @@ export class FormStepsFieldGridComponent
     // } else {
     //   this.formatData();
     // }
-    
+
     this.formatData();
   }
   getPermission() {
@@ -139,32 +139,30 @@ export class FormStepsFieldGridComponent
     }
   }
 
-  formatData()
-  {
-    this.data = JSON.parse(JSON.stringify(this.data))
-    if(this.data && this.data.steps)
-    {    
-
+  formatData() {
+    this.data = JSON.parse(JSON.stringify(this.data));
+    if (this.data && this.data.steps) {
       this.count = this.data.steps.length;
       this.listStage = this.data.steps.filter((x) => !x.parentID);
       this.count -= this.listStage.length;
       this.listStage.forEach((elm) => {
         elm.child = this.getListChild(elm) || [];
-        if(typeof elm.settings == 'string') elm.settings = JSON.parse(elm.settings);
-        if(elm.child && elm.child.length>0) elm.child.sort((a, b) => a.stepNo - b.stepNo);
+        if (typeof elm.settings == 'string')
+          elm.settings = JSON.parse(elm.settings);
+        if (elm.child && elm.child.length > 0)
+          elm.child.sort((a, b) => a.stepNo - b.stepNo);
       });
 
       let a = 0;
       let i = 0;
-      this.listStage.forEach(elm3=>{
-        this.listIds.push('stage'+a+'_'+elm3.recID)
+      this.listStage.forEach((elm3) => {
+        this.listIds.push('stage' + a + '_' + elm3.recID);
         elm3.stepNo = i;
         i++;
-        if(elm3.child && elm3.child.length>0)
-        {
-          elm3.child.forEach(elm4 => {
+        if (elm3.child && elm3.child.length > 0) {
+          elm3.child.forEach((elm4) => {
             elm4.stepNo = i;
-            i++
+            i++;
           });
         }
         a++;
@@ -174,11 +172,10 @@ export class FormStepsFieldGridComponent
   distinctArray(arr) {
     return [...new Map(arr.map((item) => [item['recID'], item])).values()];
   }
-  getListChild(elm:any)
-  {
-    if(this.count == 0) return;
+  getListChild(elm: any) {
+    if (this.count == 0) return;
     let j = 0;
-    let list = this.data.steps.filter(x=>x.parentID == elm.recID);
+    let list = this.data.steps.filter((x) => x.parentID == elm.recID);
     list = this.distinctArray(list);
     this.count -= list.length;
     list.forEach((elm2) => {
@@ -220,10 +217,10 @@ export class FormStepsFieldGridComponent
     });
 
     list = list.sort((a, b) => a.stepNo - b.stepNo);
-    list.forEach(elm3=>{
+    list.forEach((elm3) => {
       elm3.stepNo = j;
       j++;
-    })
+    });
     return list;
   }
 
@@ -234,7 +231,7 @@ export class FormStepsFieldGridComponent
     parent: any = null,
     stage: any = null,
     isCondistion = false,
-    hideDelete = false,
+    hideDelete = false
   ) {
     let lstParent = JSON.parse(JSON.stringify(this.listStage));
     lstParent.forEach((elm) => {
@@ -249,124 +246,125 @@ export class FormStepsFieldGridComponent
       stage: stage,
       listStage: lstParent,
       hideDelete: hideDelete,
-      formModel: this.formModel
+      formModel: this.formModel,
     };
     let option = new SidebarModel();
     option.Width = 'Auto';
     option.FormModel = this.formModel;
-    let popup = this.callFunc.openSide(AddDefaultComponent,obj,option);
-    popup.closed.subscribe(res=>
-      {
-        if(res?.event)
-        {
-          if(res?.event?.delete)
-          {
-            this.data = res?.event?.process || this.data;
-            let deleteDt = res?.event?.delete;
-            if(deleteDt)
-            {
-              //debugger
-              // if(indexDelete>=0)
-              // {
-              //   if(deleteDt?.child && deleteDt.child.length>0)
-              //   {
-              //     deleteDt.child.forEach(element => {
-              //       this.data.steps.splice(indexDelete,0,element)
-              //     });
-              //   }
-              // }
+    let popup = this.callFunc.openSide(AddDefaultComponent, obj, option);
+    popup.closed.subscribe((res) => {
+      if (res?.event) {
+        if (res?.event?.delete) {
+          this.data = res?.event?.process || this.data;
+          let deleteDt = res?.event?.delete;
+          if (deleteDt) {
+            //debugger
+            // if(indexDelete>=0)
+            // {
+            //   if(deleteDt?.child && deleteDt.child.length>0)
+            //   {
+            //     deleteDt.child.forEach(element => {
+            //       this.data.steps.splice(indexDelete,0,element)
+            //     });
+            //   }
+            // }
 
-              let indexParent2 = this.listStage.findIndex(x=>x.recID == deleteDt.parentID);
-              if(indexParent2>=0)
-              {
-                var indexC = this.listStage[indexParent2].child.findIndex(x=>x.recID == deleteDt.recID);
-                
-                if(deleteDt.child && deleteDt.child.length>0)
-                {
-                  deleteDt.child.forEach(element => {
-                    element.parentID = this.listStage[indexParent2].recID;
-                    this.listStage[indexParent2].child.splice(indexC,0,element);
-                  });
-                }
-                
-                this.listStage[indexParent2].child = this.listStage[indexParent2].child.filter(x=>x.recID != deleteDt.recID);
+            let indexParent2 = this.listStage.findIndex(
+              (x) => x.recID == deleteDt.parentID
+            );
+            if (indexParent2 >= 0) {
+              var indexC = this.listStage[indexParent2].child.findIndex(
+                (x) => x.recID == deleteDt.recID
+              );
 
-                let ind = 0;
-                this.listStage[indexParent2].child.forEach(element => {
-                  element.stepNo = ind;
-                  ind ++;
+              if (deleteDt.child && deleteDt.child.length > 0) {
+                deleteDt.child.forEach((element) => {
+                  element.parentID = this.listStage[indexParent2].recID;
+                  this.listStage[indexParent2].child.splice(indexC, 0, element);
                 });
               }
 
-              let indexParent = this.data.steps.findIndex(x=>x.recID == deleteDt.parentID);
-              let indexDelete = this.data.steps.findIndex(x=>x.recID == deleteDt.recID);
-              if(indexParent>=0)
-              {
-                this.data.steps[indexParent].child = this.data.steps[indexParent].child.filter(x=>x.recID != deleteDt.recID);
-              }
+              this.listStage[indexParent2].child = this.listStage[
+                indexParent2
+              ].child.filter((x) => x.recID != deleteDt.recID);
 
-              this.data.steps = this.data.steps.filter(x=>x.recID != deleteDt.recID);
-
-            }
-            this.dataChange.emit(this.data);
-          }
-          else
-          {
-            this.data = res?.event?.process || this.data;
-            let dt = res?.event?.data;
-            if(dt.activityType == "Stage")
-            {
-                var index = this.listStage.findIndex(x=>x.recID == dt.recID);
-                var indexP = this.data.steps.findIndex(x=>x.recID == dt.recID);
-                if(index >= 0) this.listStage[index] = dt;
-                else this.listStage.push(dt);
-                if(indexP >= 0) this.data.steps[indexP] = dt;
-                else this.data.steps.push(dt);
-
-              var name = 'stage' + (this.listIds.length - 1) + '_' + dt.recID;
-              this.listIds.push(name);
-            } 
-            else 
-            {
-              var index = this.listStage.findIndex((x) => x.recID == dt.parentID);
-              dt = this.setDataCondition(dt);
-
-              if (type == 'add') {
-                this.listStage[index].child.push(dt);
-                this.data.steps.push(dt);
-              } else {
-                
-                if(isCondistion)
-                {
-                  index = this.listStage.findIndex(x=>x.recID == dt?.stageID);
-                  var indexP = this.listStage[index].child.findIndex(x=>x.recID == dt.parentID);
-                  var indexC = this.listStage[index].child[indexP].child.findIndex(x=>x.recID == dt.recID);
-                  this.listStage[index].child[indexP].child[indexC] = dt;
-                }
-              
-                var index2 = this.listStage[index].child.findIndex(
-                  (x) => x.recID == dt.recID
-                );
-                var indexP = this.data.steps.findIndex(
-                  (x) => x.recID == dt.recID
-                );
-                
-                if (index2 >= 0) 
-                {
-                
-                  this.listStage[index].child[index2] = dt;
-                  this.listStage = JSON.parse(JSON.stringify(this.listStage));
-                }
-                if (indexP >= 0) this.data.steps[indexP] = dt;
-              }
+              let ind = 0;
+              this.listStage[indexParent2].child.forEach((element) => {
+                element.stepNo = ind;
+                ind++;
+              });
             }
 
-            if(res?.event?.process) this.data = Object.assign({},  this.data);
-            this.ref.detectChanges();
-            this.dataChange.emit(this.data);
+            let indexParent = this.data.steps.findIndex(
+              (x) => x.recID == deleteDt.parentID
+            );
+            let indexDelete = this.data.steps.findIndex(
+              (x) => x.recID == deleteDt.recID
+            );
+            if (indexParent >= 0) {
+              this.data.steps[indexParent].child = this.data.steps[
+                indexParent
+              ].child.filter((x) => x.recID != deleteDt.recID);
+            }
+
+            this.data.steps = this.data.steps.filter(
+              (x) => x.recID != deleteDt.recID
+            );
           }
+          this.dataChange.emit(this.data);
+        } else {
+          this.data = res?.event?.process || this.data;
+          let dt = res?.event?.data;
+          if (dt.activityType == 'Stage') {
+            var index = this.listStage.findIndex((x) => x.recID == dt.recID);
+            var indexP = this.data.steps.findIndex((x) => x.recID == dt.recID);
+            if (index >= 0) this.listStage[index] = dt;
+            else this.listStage.push(dt);
+            if (indexP >= 0) this.data.steps[indexP] = dt;
+            else this.data.steps.push(dt);
+
+            var name = 'stage' + (this.listIds.length - 1) + '_' + dt.recID;
+            this.listIds.push(name);
+          } else {
+            var index = this.listStage.findIndex((x) => x.recID == dt.parentID);
+            dt = this.setDataCondition(dt);
+
+            if (type == 'add') {
+              this.listStage[index].child.push(dt);
+              this.data.steps.push(dt);
+            } else {
+              if (isCondistion) {
+                index = this.listStage.findIndex((x) => x.recID == dt?.stageID);
+                var indexP = this.listStage[index].child.findIndex(
+                  (x) => x.recID == dt.parentID
+                );
+                var indexC = this.listStage[index].child[
+                  indexP
+                ].child.findIndex((x) => x.recID == dt.recID);
+                this.listStage[index].child[indexP].child[indexC] = dt;
+              }
+
+              var index2 = this.listStage[index].child.findIndex(
+                (x) => x.recID == dt.recID
+              );
+              var indexP = this.data.steps.findIndex(
+                (x) => x.recID == dt.recID
+              );
+
+              if (index2 >= 0) {
+                this.listStage[index].child[index2] = dt;
+                this.listStage = JSON.parse(JSON.stringify(this.listStage));
+              }
+              if (indexP >= 0) this.data.steps[indexP] = dt;
+            }
+          }
+
+          if (res?.event?.process) this.data = Object.assign({}, this.data);
+          this.ref.detectChanges();
+          this.dataChange.emit(this.data);
         }
-      });
+      }
+    });
   }
 
   setDataCondition(dt: any) {
@@ -397,20 +395,19 @@ export class FormStepsFieldGridComponent
         dt.permissionsName = this.getImg(dt?.permissions);
       }
     }
-    if(!dt?.extendInfo) return dt;
-    
-    dt.extendInfo.forEach((element) => {
+    if (!dt?.extendInfo) return dt;
 
+    dt.extendInfo.forEach((element) => {
       if (typeof element.documentControl != 'string') {
-        element.documentControl = JSON.stringify(element.documentControl)
+        element.documentControl = JSON.stringify(element.documentControl);
       }
-      
+
       if (typeof element.dataFormat != 'string') {
-        element.dataFormat = JSON.stringify(element.dataFormat)
+        element.dataFormat = JSON.stringify(element.dataFormat);
       }
 
       if (typeof element.tableFormat != 'string') {
-        element.tableFormat = JSON.stringify(element.tableFormat) 
+        element.tableFormat = JSON.stringify(element.tableFormat);
       }
     });
     return dt;
@@ -514,7 +511,11 @@ export class FormStepsFieldGridComponent
       null,
       null,
       '',
-      { extendInfo: data.extendInfo, stepNo: data.stepNo, formModel:this.formModel},
+      {
+        extendInfo: data.extendInfo,
+        stepNo: data.stepNo,
+        formModel: this.formModel,
+      },
       '',
       option
     );
@@ -526,9 +527,11 @@ export class FormStepsFieldGridComponent
           if (this.data?.steps[indexP]?.extendInfo) {
             this.data?.steps[indexP]?.extendInfo.forEach((element) => {
               if (element.controlType == 'Attachment') {
-                if (!element?.documentControl || element?.documentControl.length == 0) {
-                  var obj = 
-                  {
+                if (
+                  !element?.documentControl ||
+                  element?.documentControl.length == 0
+                ) {
+                  var obj = {
                     recID: Util.uid(),
                     title: element.title,
                     isRequired: false,
@@ -538,39 +541,39 @@ export class FormStepsFieldGridComponent
                     stepNo: this.data?.steps[1].stepNo,
                     fieldID: element.recID,
                     memo: this.data?.steps[1].memo,
-                    permissions: 
-                    [
+                    permissions: [
                       {
                         objectID: this.user?.userID,
-                        objectType: "U",
+                        objectType: 'U',
                         read: true,
                         update: true,
-                        delete: true
-                      }
-                    ]
+                        delete: true,
+                      },
+                    ],
                   };
                   this.data.documentControl = [obj];
                 } else if (
                   element.documentControl &&
                   element.documentControl.length > 0
                 ) {
-                  var doc = JSON.parse(JSON.stringify(this.data.documentControl));
+                  var doc = JSON.parse(
+                    JSON.stringify(this.data.documentControl)
+                  );
                   if (!doc) doc = [];
                   element.documentControl.forEach((docu) => {
                     docu.stepID = this.data?.steps[indexP].recID;
                     docu.stepNo = this.data?.steps[indexP].stepNo;
                     docu.fieldID = element.recID;
                     docu.memo = this.data?.steps[indexP].memo;
-                    docu.permissions =
-                    [
+                    docu.permissions = [
                       {
                         objectID: this.user?.userID,
-                        objectType: "U",
+                        objectType: 'U',
                         read: true,
                         update: true,
-                        delete: true
-                      }
-                    ]
+                        delete: true,
+                      },
+                    ];
                     var index = doc.findIndex((x) => x.recID == docu.recID);
                     if (index >= 0) doc[index] = docu;
                     else doc.push(docu);
@@ -578,7 +581,7 @@ export class FormStepsFieldGridComponent
                   this.data.documentControl = doc;
                 }
               }
-  
+
               if (typeof element.documentControl != 'string') {
                 element.documentControl =
                   element.documentControl?.length > 0
@@ -586,13 +589,13 @@ export class FormStepsFieldGridComponent
                     : null;
               }
               if (typeof element.visibleControl != 'string') {
-                element.visibleControl = JSON.stringify(element.visibleControl)
+                element.visibleControl = JSON.stringify(element.visibleControl);
               }
               if (typeof element.dataFormat != 'string') {
-                element.dataFormat = JSON.stringify(element.dataFormat)
+                element.dataFormat = JSON.stringify(element.dataFormat);
               }
               if (typeof element.tableFormat != 'string') {
-                element.tableFormat = JSON.stringify(element.tableFormat) 
+                element.tableFormat = JSON.stringify(element.tableFormat);
               }
               if (typeof element.validateControl != 'string') {
                 element.validateControl = JSON.stringify(element.validateControl);
@@ -603,5 +606,12 @@ export class FormStepsFieldGridComponent
         this.dataChange.emit(this.data);
       }
     });
+  }
+
+  dataPermsPopover = [];
+  openPopover(permissions) {
+    this.dataPermsPopover = [];
+    if (permissions)
+      this.dataPermsPopover = JSON.parse(JSON.stringify(permissions));
   }
 }
