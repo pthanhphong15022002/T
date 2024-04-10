@@ -10,3 +10,14 @@
   height: 170px;
   background-size: 100%;
 }
+.dropzone.dropzone-default {
+  padding: 0 !important;
+  text-align: center;
+  cursor: pointer;
+  border: 0.5px dashed #6c757d;
+  border-radius: 0.42rem;
+  height: 120px;
+  width: 100%;
+  background: #f5f8fa;
+  overflow: hidden;
+}

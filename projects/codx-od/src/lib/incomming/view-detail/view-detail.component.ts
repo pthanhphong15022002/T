@@ -640,6 +640,8 @@ export class ViewDetailComponent
     delete datas.isNew;
     delete datas.hasChildren;
     delete datas.includeTables;
+
+    debugger
     switch (funcID) {
       case 'ODT116': {
         this.dataService = new CRUDService(this.inject);
@@ -723,7 +725,9 @@ export class ViewDetailComponent
           });
         break;
       }
-      case 'ODT117': {
+      case 'ODT117':
+      case 'ODT213': {
+       
         let option = new DialogModel();
         option.IsFull = true;
         this.callfc
