@@ -110,6 +110,11 @@ export class PopupAddAdvanceComponent implements OnInit,AfterViewInit,OnDestroy 
       if(res)
       {
         this.data = res;
+        if(this.data.lines)
+        {
+          let total = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
+          this.data.totalAmount = total;
+        }
         if(this.data.refID)
           this.getRefRequest(this.data.refID);
         this.detectorChange.detectChanges();
@@ -127,13 +132,16 @@ export class PopupAddAdvanceComponent implements OnInit,AfterViewInit,OnDestroy 
         {
           this.data.employeeID = res.employeeID;
           this.data.positionID = res.positionID;
-          this.data.requester = res.requester;
-          this.data.requesterName = res.requesterName;
           this.data.toDate = res.toDate;
           this.data.reasonID = res.reasonID;
           this.data.memo = res.memo;
           this.data.lines = res.lines;
           this.data.requestAmt = res.requestAmt;
+          if(this.data.lines)
+          {
+            let total = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
+            this.data.totalAmount = total;
+          }
         }
         this.data.refID = res.recID;
         this.data.refType = res.requestType;
@@ -186,11 +194,11 @@ export class PopupAddAdvanceComponent implements OnInit,AfterViewInit,OnDestroy 
         this.data.employeeName = value.EmployeeName;
         this.data.phone = value.Mobile;
         this.data.email = value.Email;
-        this.data.requester = value.UserID;
-        this.data.requesterName = value.UserName;
-        this.data.positionID = value.PositionID;
-        this.data.bUID = value.BUID;
-        this.data.owner = value.UserID;
+        // this.data.requester = value.UserID;
+        // this.data.requesterName = value.UserName;
+        // this.data.positionID = value.PositionID;
+        // this.data.bUID = value.BUID;
+        // this.data.owner = value.UserID;
         break;
       case "requestAmt":
           value = event.data;
@@ -260,7 +268,11 @@ export class PopupAddAdvanceComponent implements OnInit,AfterViewInit,OnDestroy 
     else 
       this.data.lines.push(EPRequestsLine);
     if(field == "amount")
-      this.data.totalAmount = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
+    {
+      let total = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
+      this.data.requestAmt = total;
+      this.data.totalAmount = total;
+    }
     this.detectorChange.detectChanges();
   }
 
@@ -283,8 +295,16 @@ export class PopupAddAdvanceComponent implements OnInit,AfterViewInit,OnDestroy 
       {
         this.data.lines = this.data.lines.filter(x => x.itemID != data.itemID);
         if(this.data.lines.length > 0)
-          this.data.totalAmount = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
-        else this.data.totalAmount = 0;
+        {
+          let total = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
+          this.data.requestAmt = total;
+          this.data.totalAmount = total;
+        }
+        else
+        {
+          this.data.requestAmt = 0;
+          this.data.totalAmount = 0;
+        }
         this.detectorChange.detectChanges();
       }
     }
@@ -314,7 +334,7 @@ export class PopupAddAdvanceComponent implements OnInit,AfterViewInit,OnDestroy 
       t.data.status = res.returnStatus;
       t.dialog.close(t.data);
     }
-    else t.notiSV.notify("Gửi duyệt không thành công");
+    else t.notiSV.notify("Gửi duyệt không thành công","2");
   }
 
 }
