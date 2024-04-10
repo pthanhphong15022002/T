@@ -43,7 +43,7 @@
                                     </div>
                                 </div>
                                 <div *ngIf="listExtendInfo" ngbDropdownMenu aria-labelledby="dropdownBasic1" class="add-s-con-dropdown w-500px rounded-0">
-                                  <div class="d-flex h-100" ngbDropdownItem *ngFor="let item of listExtendInfo" (click)="fieldChange(child,item)">
+                                  <div class="d-flex d-flex h-300px overflow-auto" ngbDropdownItem *ngFor="let item of listExtendInfo" (click)="fieldChange(child,item)">
                                     <span>{{item?.title}}</span>
                                       <!-- <div ngbNav #nav="ngbNav" [(activeId)]="activeNav" class="nav-pills flex-column h-100" orientation="vertical">
                                           <ng-container [ngbNavItem]="'top'+i" *ngFor="let item of listExtendInfo , let i = index">

@@ -1,13 +1,13 @@
-<div class="d-flex flex-column w-100 h-100 px-4 py-6">
+<div class="d-flex flex-column w-100 h-100 px-4 py-6 overflow-auto">
     <lib-property-default-title [data]="data" [isBack]="isBack" (dataChange)="changeValue($event)" (back)="backDefault()"></lib-property-default-title>
     <div class="mt-4">
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'defaultValue'" default="Giá trị mặc định khi thêm mới biểu mẫu" class="fw-bold"></codx-label>
         <div class="d-flex align-items-center justify-content-between ">
             <codx-input type="text" [crrValue]="data.defaultValue " field="defaultValue" (valueChange)="changeValue($event)" placeholder="Nhập giá trị mặc định" ngClass="w-100"></codx-input>
             <div class="d-flex align-items-center ms-2">
-                <i class="icon-format_bold cursor-pointer" [class.text-primary]="data?.dataFormat?.bold" (click)="changeValueFormat('bold')"></i>
-                <i class="icon-format_italic cursor-pointer mx-2" [class.text-primary]="data?.dataFormat?.italic" (click)="changeValueFormat('italic')"></i>
-                <i class="icon-format_underlined cursor-pointer" [class.text-primary]="data?.dataFormat?.underlined" (click)="changeValueFormat('underlined')"></i>
+                <i class="icon-format_bold cursor-pointer" [class.text-primary]="data?.validateControl?.bold" (click)="changeValueFormat('bold')"></i>
+                <i class="icon-format_italic cursor-pointer mx-2" [class.text-primary]="data?.validateControl?.italic" (click)="changeValueFormat('italic')"></i>
+                <i class="icon-format_underlined cursor-pointer" [class.text-primary]="data?.validateControl?.underlined" (click)="changeValueFormat('underlined')"></i>
             </div>
         </div>
     </div>
@@ -23,20 +23,21 @@
                 placeholder="A"
                 [showText]="false"
                 [modeSwitcher]="false"
-                [crrValue]="data?.dataFormat?.color || '#000000'"
+                [crrValue]="data?.validateControl?.color || '#000000'"
                 (valueChange)="changeValueFormatColor($event)"
             >
             </codx-input>
         </div>
     </div>
-    <div class="d-flex align-items-start justify-content-between mt-4">
+    <div class="d-flex align-items-start justify-content-between my-4">
         <div class="d-flex flex-column">
             <codx-label formName="DynamicForms" fiedName="lblNoteSize" default="Cỡ chữ" class="fw-bold"></codx-label>
             <div class="d-flex align-items-end ms-2">
-                <i class="icon-format_size icon-18 cursor-pointer" [class.text-primary]="data?.dataFormat?.size == 'fs-6' || !data?.dataFormat?.size"  (click)="changeValueFormat('size','fs-6')"></i>
-                <i class="icon-format_size icon-20 cursor-pointer mx-2" [class.text-primary]="data?.dataFormat?.size == 'fs-5-sm'" (click)="changeValueFormat('size','fs-5-sm')"></i>
-                <i class="icon-format_size icon-22 cursor-pointer" [class.text-primary]="data?.dataFormat?.size == 'fs-5'" (click)="changeValueFormat('size','fs-5')"></i>
+                <i class="icon-format_size icon-18 cursor-pointer" [class.text-primary]="data?.validateControl?.size == 'fs-6' || !data?.validateControl?.size"  (click)="changeValueFormat('size','fs-6')"></i>
+                <i class="icon-format_size icon-20 cursor-pointer mx-2" [class.text-primary]="data?.validateControl?.size == 'fs-5-sm'" (click)="changeValueFormat('size','fs-5-sm')"></i>
+                <i class="icon-format_size icon-22 cursor-pointer" [class.text-primary]="data?.validateControl?.size == 'fs-5'" (click)="changeValueFormat('size','fs-5')"></i>
             </div>
         </div>
     </div>
+    <lib-property-border [data]="data" (dataChange)="valueChangeData($event)"></lib-property-border>
 </div>

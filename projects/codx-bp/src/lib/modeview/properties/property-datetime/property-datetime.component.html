@@ -1,4 +1,4 @@
-<div class="d-flex flex-column w-100 h-100 px-4 py-6">
+<div class="d-flex flex-column w-100 h-100 px-4 py-6 overflow-auto">
     <lib-property-default-title [data]="data" [isBack]="isBack" (dataChange)="changeValue($event)" (back)="backDefault()"></lib-property-default-title>
     <div class="mt-4">
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'title'" default="Tên ô nhập liệu" class="fw-bold"></codx-label>
