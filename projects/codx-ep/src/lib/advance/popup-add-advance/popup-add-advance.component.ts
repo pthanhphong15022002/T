@@ -133,6 +133,13 @@ export class PopupAddAdvanceComponent
       .subscribe((res: any) => {
         if (res) {
           this.data = res;
+          if (this.data.lines) {
+            let total = this.data.lines.reduce(
+              (accumulator, currentValue) => accumulator + currentValue.amount,
+              0
+            );
+            this.data.totalAmount = total;
+          }
           if (this.data.refID) this.getRefRequest(this.data.refID);
           this.detectorChange.detectChanges();
         }
@@ -173,22 +180,18 @@ export class PopupAddAdvanceComponent
         if (res) {
           this.data.employeeID = res.employeeID;
           this.data.positionID = res.positionID;
-          this.data.requester = res.requester;
-          this.data.requesterName = res.requesterName;
-          this.data.requestType = res.requestType;
           this.data.toDate = res.toDate;
           this.data.reasonID = res.reasonID;
           this.data.memo = res.memo;
           this.data.lines = res.lines;
           this.data.requestAmt = res.requestAmt;
-          this.data.pmtMethodID = res.pmtMethodID;
-          this.data.currencyID = res.currencyID;
-          this.data.refID = res.refID;
-          this.data.refType = res.refType;
-          this.data.refNo = res.refNo;
-          if (this.data.refID) this.getRefRequest(this.data.refID);
-          if (!this.data.lines) this.data.lines = [];
-          this.detectorChange.detectChanges();
+          if (this.data.lines) {
+            let total = this.data.lines.reduce(
+              (accumulator, currentValue) => accumulator + currentValue.amount,
+              0
+            );
+            this.data.totalAmount = total;
+          }
         }
       });
     this.subcriptions.add(subcribeApi);
@@ -204,11 +207,11 @@ export class PopupAddAdvanceComponent
         this.data.employeeName = value.EmployeeName;
         this.data.phone = value.Mobile;
         this.data.email = value.Email;
-        this.data.requester = value.UserID;
-        this.data.requesterName = value.UserName;
-        this.data.positionID = value.PositionID;
-        this.data.bUID = value.BUID;
-        this.data.owner = value.UserID;
+        // this.data.requester = value.UserID;
+        // this.data.requesterName = value.UserName;
+        // this.data.positionID = value.PositionID;
+        // this.data.bUID = value.BUID;
+        // this.data.owner = value.UserID;
         break;
       case 'requestAmt':
         value = event.data;
@@ -273,11 +276,14 @@ export class PopupAddAdvanceComponent
     );
     if (idx > -1) this.data.lines[idx] = EPRequestsLine;
     else this.data.lines.push(EPRequestsLine);
-    if (field == 'amount')
-      this.data.totalAmount = this.data.lines.reduce(
+    if (field == 'amount') {
+      let total = this.data.lines.reduce(
         (accumulator, currentValue) => accumulator + currentValue.amount,
         0
       );
+      this.data.requestAmt = total;
+      this.data.totalAmount = total;
+    }
     this.detectorChange.detectChanges();
   }
 
@@ -304,12 +310,17 @@ export class PopupAddAdvanceComponent
         this.data.lines = this.data.lines.filter(
           (x) => x.itemID != data.itemID
         );
-        if (this.data.lines.length > 0)
-          this.data.totalAmount = this.data.lines.reduce(
+        if (this.data.lines.length > 0) {
+          let total = this.data.lines.reduce(
             (accumulator, currentValue) => accumulator + currentValue.amount,
             0
           );
-        else this.data.totalAmount = 0;
+          this.data.requestAmt = total;
+          this.data.totalAmount = total;
+        } else {
+          this.data.requestAmt = 0;
+          this.data.totalAmount = 0;
+        }
         this.detectorChange.detectChanges();
       }
     }
@@ -345,7 +356,7 @@ export class PopupAddAdvanceComponent
     if (res?.rowCount > 0) {
       t.data.status = res.returnStatus;
       t.dialog.close(t.data);
-    } else t.notiSV.notify('Gửi duyệt không thành công');
+    } else t.notiSV.notify('Gửi duyệt không thành công', '2');
   }
 
   showAttachment(evt: any) {}

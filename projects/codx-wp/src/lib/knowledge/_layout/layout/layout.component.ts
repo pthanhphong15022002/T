@@ -1,24 +1,16 @@
-import { Component, OnInit, Injector } from '@angular/core';
-import {
-  ApiHttpService,
-  CacheService,
-  CallFuncService,
-  DialogRef,
-  LayoutBaseComponent,
-  SidebarModel,
-} from 'codx-core';
+import { Component, Injector } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CacheService, CallFuncService, LayoutBaseComponent } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'lib-layout-portal',
-  templateUrl: './layout-portal.component.html',
-  styleUrls: ['./layout-portal.component.scss'],
+  selector: 'wp-knowledge-layout',
+  templateUrl: './layout.component.html',
+  styleUrls: ['./layout.component.css']
 })
-export class LayoutPortalComponent extends LayoutBaseComponent {
+export class LayoutComponent extends LayoutBaseComponent {
   funcID: string = '';
-  dialog!: DialogRef;
   constructor(
     inject: Injector,
     private route: ActivatedRoute,
@@ -38,17 +30,6 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
   }
 
   onInit() {
-  }
-
-  asideClick(evt: any) {
-    if (evt?.function?.assemblyName == 'HCS') {
-      evt.cancel = true;
-      this.shareService.redirect(
-        'HCS',
-        evt.function.url,
-        evt?.function.displayMode
-      );
-    }
   }
   onAfterViewInit(): void {}
   
