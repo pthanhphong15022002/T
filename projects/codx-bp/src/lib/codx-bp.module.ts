@@ -93,6 +93,7 @@ import { PropertyNoteComponent } from './modeview/properties/property-note/prope
 import { FormSettingValueListComponent } from './processes/popup-add-process/form-properties-fields/setting-fields/form-setting-valuelist/form-setting-valuelist.component';
 import { FormatValueComboboxPipe } from './pipes/format-value-combobox.pipe';
 import { PropertyBorderComponent } from './modeview/properties/property-border/property-border.component';
+import { AddCustomActionComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-custom-action/add-custom-action.component';
 
 export const routes: Routes = [
   {
@@ -194,7 +195,8 @@ export const routes: Routes = [
     AddTableRowComponent,
 
     AddStageComponent,
-    AddTaskComponent,
+    AddTaskComponent,    
+    AddCustomActionComponent,
     AddSettingConditionsComponent,
     AddProcessDefaultPrice,
     AddFileFromProcessComponent,

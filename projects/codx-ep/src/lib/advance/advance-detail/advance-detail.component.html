@@ -70,8 +70,10 @@
         <div *ngIf="data?.refID" class="form-group">
             <div class="d-flex align-items-center">
                 <codx-img [objectId]="data.refID" [objectName]="data?.refType" [objectType]="'EP_Requests'" [width]="30" class="me-4"></codx-img>
-                <div class="text-dark" *ngIf="data?.refRequestMemo">
-                    <span>{{data.refRequestMemo}}</span>
+                <div class="d-flex" *ngIf="data?.refRequestMemo">
+                    <span *ngIf="data.refRequestMemo" class="fw-bold">{{data.refRequestMemo}}</span>
+                    <span *ngIf="data.refRequestMemo && data.refRequestNo" class="mx-1">-</span>
+                    <span *ngIf="data.refRequestNo" class="text-gray-600">{{data.refRequestNo}}</span>
                 </div>
             </div>
         </div>

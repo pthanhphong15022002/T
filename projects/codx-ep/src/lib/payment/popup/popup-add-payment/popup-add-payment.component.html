@@ -66,8 +66,10 @@
                     </div>
                     <div class="d-flex align-items-center" *ngIf="data?.refID">
                         <codx-img [objectId]="data.refID" [objectName]="data?.refType" [objectType]="'EP_Requests'" [width]="30" class="me-4"></codx-img>
-                        <div *ngIf="RefEPRequest" class="text-dark">
-                            <span>{{RefEPRequest.memo}}</span>
+                        <div *ngIf="RefEPRequest" class="d-flex">
+                            <span *ngIf="RefEPRequest.memo" class="fw-bold">{{RefEPRequest.memo}}</span>
+                            <span *ngIf="RefEPRequest.memo && data.requestNo" class="mx-1">-</span>
+                            <span *ngIf="RefEPRequest.requestNo" class="text-gray-600">{{RefEPRequest.requestNo}}</span>
                         </div>
                     </div>
                 </div>
@@ -93,6 +95,7 @@
                             [autoAddRow]="false"
                             [showEmptyRecord]="false"
                             [autoLoad]="false"
+                            [rowHeight]="40"
                             [hideMoreFunc]="hideFooter"
                             [templateMore]="tmpMoreFunc"
                             [editSettings]="editSettings"
@@ -108,7 +111,7 @@
                                     <codx-label [formModel]="dialog.formModel" name="lblLabel2" [default]="'Tổng cộng'"></codx-label>
                                     <span>:</span>
                                 </div>
-                                <div class="d-flex mb-2">
+                                <div class="d-flex text-warning mb-2">
                                     <codx-label [formModel]="dialog.formModel" name="lblLabel3" [default]="'Đã tạm ứng'"></codx-label>
                                     <span>:</span>
                                 </div>
@@ -125,7 +128,7 @@
                                 <div class="mb-2" [innerHTML]="data.totalAmount | formatvalue : dialog.formModel : 'requestAmt' | async"></div>
                                 <div class="mb-2" [innerHTML]="RefEPRequest?.requestAmt | formatvalue : dialog.formModel : 'requestAmt' | async"></div>
                                 <div class="mb-2" [innerHTML]="(data.totalAmount - (RefEPRequest ? RefEPRequest.requestAmt : 0)) | formatvalue : dialog.formModel : 'requestAmt' | async"></div>
-                                <div class="mb-2" [innerHTML]="RefEPRequest?.pmtMethodID | formatvalue : dialog.formModel : 'pmtMethodID' | async"></div>
+                                <div class="mb-2" [innerHTML]="data?.pmtMethodID | formatvalue : dialog.formModel : 'pmtMethodID' | async"></div>
                             </div>
                         </div>
                         <!-- <div class="d-flex text-dark pt-1 ps-4 mb-2 border-top border-light border-2">
