@@ -3492,10 +3492,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         '',
         dialogModel
       )
-      // .closed.subscribe((e) => {
-      //   if (e?.event && e?.event != null) {
-          
-      //   }
-      // });
+      .closed.subscribe((e) => {
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+  checkShare(roles: DP_Instances_Steps_Tasks_Roles[]){
+    return roles.some(x => x.roleType == "S")
   }
 }

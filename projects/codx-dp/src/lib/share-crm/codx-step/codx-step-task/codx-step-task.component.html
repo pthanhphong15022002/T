@@ -516,6 +516,16 @@
       </span>
     </div>
     <span class="d-flex align-items-center me-1">
+      <span 
+        *ngIf="data?.value?.roles | checkRoleShare" 
+        class="icon-i-share icon-12 me-1" 
+        #popoverDetails="ngbPopover"
+        [ngbPopover]="tooltipRolesShare"
+        [placement]="'top-left'"
+        (mouseenter)="popoverDetails.open()"
+        (mouseleave)="popoverDetails.close()"
+        [container]="'body'"
+      ></span>
       <codx-imgs
         class="me-2 d-flex align-items-center"
         [width]="25"
@@ -840,6 +850,14 @@
         default="Đặt xe"
       ></codx-label>
     </button>
+  </div>
+</ng-template>
+
+<ng-template #tooltipRolesShare>
+  <div class="d-flex flex-column">
+    <span><b>Chia sẻ:</b></span>
+    <span class="ms-2">Nguyễn Văn Thuận</span>
+    <span class="ms-2">Nguyễn Văn Huy</span>
   </div>
 </ng-template>
 
