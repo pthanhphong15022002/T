@@ -1,10 +1,12 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Input,
   OnChanges,
   OnInit,
   Optional,
+  Renderer2,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -26,7 +28,12 @@ import { isObservable } from 'rxjs';
 import { AddDefaultComponent } from '../../form-steps-field-grid/add-default/add-default.component';
 import { BPPopupChangePermissionComponent } from '../../form-steps-field-grid/bp-popup-change-permission/bp-popup-change-permission.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
-import { AnimationModel, ILoadedEventArgs, ProgressBar, ProgressTheme } from '@syncfusion/ej2-angular-progressbar';
+import {
+  AnimationModel,
+  ILoadedEventArgs,
+  ProgressBar,
+  ProgressTheme,
+} from '@syncfusion/ej2-angular-progressbar';
 import { X } from '@angular/cdk/keycodes';
 import { BPCONST } from 'projects/codx-bp/src/lib/models/BP_Const.model';
 
@@ -37,6 +44,7 @@ import { BPCONST } from 'projects/codx-bp/src/lib/models/BP_Const.model';
 })
 export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   @ViewChild('circular1') public circular1: ProgressBar;
+  @ViewChild('accordion') accordion: ElementRef;
   @Input() data: any;
   @Input() process: any;
   @Input() formModel: any;
@@ -69,7 +77,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     '#FFD939',
   ];
   listMF = [];
-  listButtonMF= [];
+  listButtonMF = [];
   listButtonMF1 = [
     //Task;Check;Approve;Sign;Release;Stamp;Email;
     //Task: Thực hiện,Giao việc;
@@ -167,6 +175,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     private dtc: ChangeDetectorRef,
     private auth: AuthStore,
     public dmSV: CodxDMService,
+    private renderer: Renderer2,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -198,21 +207,20 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   onNavChange(e: any) {
     this.active = e;
   }
-  getCache(){
-    this.cache.moreFunction('MyBPTasks','grvMyBPTasks').subscribe(res=>{
-      if(res){
-        Array.from(res)?.forEach((mf:any)=>{
+  getCache() {
+    this.cache.moreFunction('MyBPTasks', 'grvMyBPTasks').subscribe((res) => {
+      if (res) {
+        Array.from(res)?.forEach((mf: any) => {
           this.listButtonMF.push({
             functionID: mf?.functionID,
-            customName:  mf?.customName,
+            customName: mf?.customName,
             functionType: mf?.functionType,
-            largeIcon:  mf?.largeIcon,
+            largeIcon: mf?.largeIcon,
             color: mf?.color,
           });
-
         });
       }
-    })
+    });
   }
   getVll() {
     this.VllBP014 = this.shareService.loadValueList('BP014');
@@ -252,7 +260,8 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
         if (item) {
           this.listTask = item;
           this.activeTask = this.listTask.find(
-            (x) => x.status == '3' && x.canceled != true && x.activityType != 'Stage'
+            (x) =>
+              x.status == '3' && x.canceled != true && x.activityType != 'Stage'
           );
           this.changeMF();
           this.getPermission();
@@ -266,25 +275,35 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       switch (this.activeTask.activityType) {
         //Task;Check;Approve;Sign;Release;Stamp;Email;
         case 'Task': {
-          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Task);
+          this.listMF = this.listButtonMF.filter(
+            (x) => x?.functionID == BPCONST.TASKMF.Task
+          );
           break;
         }
         case 'Check': {
-          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Check);
+          this.listMF = this.listButtonMF.filter(
+            (x) => x?.functionID == BPCONST.TASKMF.Check
+          );
           break;
         }
         case 'Approve': {
-          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Approve ||
-             x?.functionID ==BPCONST.TASKMF.Reject||
-             x?.functionID ==BPCONST.TASKMF.Redo||
-             x?.functionID ==BPCONST.TASKMF.Authority);            
+          this.listMF = this.listButtonMF.filter(
+            (x) =>
+              x?.functionID == BPCONST.TASKMF.Approve ||
+              x?.functionID == BPCONST.TASKMF.Reject ||
+              x?.functionID == BPCONST.TASKMF.Redo ||
+              x?.functionID == BPCONST.TASKMF.Authority
+          );
           break;
         }
         case 'Sign': {
-          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Sign ||
-             x?.functionID ==BPCONST.TASKMF.Reject||
-             x?.functionID ==BPCONST.TASKMF.Redo||
-             x?.functionID ==BPCONST.TASKMF.Authority);  
+          this.listMF = this.listButtonMF.filter(
+            (x) =>
+              x?.functionID == BPCONST.TASKMF.Sign ||
+              x?.functionID == BPCONST.TASKMF.Reject ||
+              x?.functionID == BPCONST.TASKMF.Redo ||
+              x?.functionID == BPCONST.TASKMF.Authority
+          );
           break;
         }
         case 'Release': {
@@ -301,11 +320,15 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
           break;
         }
         case 'Stamp': {
-          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Stamp);
+          this.listMF = this.listButtonMF.filter(
+            (x) => x?.functionID == BPCONST.TASKMF.Stamp
+          );
           break;
         }
-        case 'Email': {         
-          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Email);
+        case 'Email': {
+          this.listMF = this.listButtonMF.filter(
+            (x) => x?.functionID == BPCONST.TASKMF.Email
+          );
           break;
         }
       }
@@ -503,13 +526,11 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
           elm2.actualEnd = this.listTask[index].actualEnd;
 
           elm2.status = this.listTask[index].status;
-          
+
           elm2.dataTask = this.listTask[index];
 
           elm2.taskID = this.listTask[index].recID;
-        
-        } 
-        else elm2.permissions = null;
+        } else elm2.permissions = null;
 
         if (elm2?.pers == null && this.tempPermission?.length > 0) {
           let pers = this.tempPermission.filter((x) => x.refID == elm2.recID);
@@ -587,78 +608,91 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     );
     popup.closed.subscribe((res) => {
       if (res && res?.event) {
-       
         this.formatDataTask(res);
         //this.data = res?.event;
       }
     });
   }
 
-  formatDataTask(res:any)
-  {
-    debugger
-    if(res?.event?.ins) this.data = res?.event?.ins;
-    let index = this.listStage.findIndex(x=>x.recID == res?.event?.task?.stageID);
-    if(index >= 0)
-    {
+  formatDataTask(res: any) {
+    debugger;
+    if (res?.event?.ins) this.data = res?.event?.ins;
+    let index = this.listStage.findIndex(
+      (x) => x.recID == res?.event?.task?.stageID
+    );
+    if (index >= 0) {
       let nextStepID = null;
       let crrStage = this.listStage[index];
       let crrNextStage = null;
-      let index2 = this.listStage[index].child.findIndex(x=>x.taskID == res?.event?.task?.recID);
-      if(index2>=0) 
-      {
+      let index2 = this.listStage[index].child.findIndex(
+        (x) => x.taskID == res?.event?.task?.recID
+      );
+      if (index2 >= 0) {
         let crrStep = this.listStage[index].child[index2];
-        if(crrStep?.settings?.nextSteps && crrStep?.settings?.nextSteps.length>0)
-        {
-          let idNextStep = crrStep.settings?.nextSteps[0].nextStepID; 
-          if(idNextStep)
-          {
-            let index3 = this.process.steps.findIndex(x=>x.recID == idNextStep);
-            if(index3>=0)
-            {
+        if (
+          crrStep?.settings?.nextSteps &&
+          crrStep?.settings?.nextSteps.length > 0
+        ) {
+          let idNextStep = crrStep.settings?.nextSteps[0].nextStepID;
+          if (idNextStep) {
+            let index3 = this.process.steps.findIndex(
+              (x) => x.recID == idNextStep
+            );
+            if (index3 >= 0) {
               nextStepID = this.process.steps[index3].recID;
-              if(this.process.steps[index3].activityType != "Stage") nextStepID = this.process.steps[index3].settings?.nextSteps[0].nextStepID;
-              let index4 = this.listStage.findIndex(x=>x.recID == nextStepID);
-              if(index4 >= 0) crrNextStage = this.listStage[index4];
+              if (this.process.steps[index3].activityType != 'Stage')
+                nextStepID =
+                  this.process.steps[index3].settings?.nextSteps[0].nextStepID;
+              let index4 = this.listStage.findIndex(
+                (x) => x.recID == nextStepID
+              );
+              if (index4 >= 0) crrNextStage = this.listStage[index4];
             }
           }
         }
         this.listStage[index].child[index2].status = res?.event?.task?.status;
-        this.listStage[index].child[index2].statusStage = res?.event?.task?.status;
-        this.listStage[index].child[index2].colorStatus = this.VllBP014.datas.filter(x=>x.value == res?.event?.task?.status)[0].textColor;
+        this.listStage[index].child[index2].statusStage =
+          res?.event?.task?.status;
+        this.listStage[index].child[index2].colorStatus =
+          this.VllBP014.datas.filter(
+            (x) => x.value == res?.event?.task?.status
+          )[0].textColor;
       }
-     
-      if(crrStage?.recID != crrNextStage?.recID)
-      {
+
+      if (crrStage?.recID != crrNextStage?.recID) {
         this.data.currentStage = crrNextStage?.recID || crrStage?.recID;
-        
+
         let recID = crrNextStage?.recID || crrStage?.recID;
-        let index = this.listStage.findIndex(x=>x.recID == recID);
-        if(index>=0) 
-        {
-          if(crrNextStage)
-          {
-            nextStepID = this.listStage[index].settings?.nextSteps[0]?.nextStepID;
-            let index2 = this.listStage[index].child.findIndex(x=>x.recID == nextStepID);
-            if(index2 >=0) this.listStage[index].child[index2].status = '3';
+        let index = this.listStage.findIndex((x) => x.recID == recID);
+        if (index >= 0) {
+          if (crrNextStage) {
+            nextStepID =
+              this.listStage[index].settings?.nextSteps[0]?.nextStepID;
+            let index2 = this.listStage[index].child.findIndex(
+              (x) => x.recID == nextStepID
+            );
+            if (index2 >= 0) this.listStage[index].child[index2].status = '3';
             this.listStage[index].statusStage = '3';
-            this.listStage[index].colorStatus = this.VllBP014.datas.filter(x=>x.value == crrNextStage.statusStage)[0].textColor;
+            this.listStage[index].colorStatus = this.VllBP014.datas.filter(
+              (x) => x.value == crrNextStage.statusStage
+            )[0].textColor;
           }
         }
-      
-        let indexCrr = this.listStage.findIndex(x=>x.recID == crrStage?.recID);
-        if(indexCrr>=0 )
-        {
+
+        let indexCrr = this.listStage.findIndex(
+          (x) => x.recID == crrStage?.recID
+        );
+        if (indexCrr >= 0) {
           this.listStage[indexCrr].statusStage = '5';
-          this.listStage[indexCrr].colorStatus = this.VllBP014.datas.filter(x=>x.value == crrStage.statusStage)[0].textColor;
+          this.listStage[indexCrr].colorStatus = this.VllBP014.datas.filter(
+            (x) => x.value == crrStage.statusStage
+          )[0].textColor;
         }
-        
-      }
-      else if(nextStepID) 
-      {
-        let index2 =  this.listStage[index].child.findIndex(x=>x.recID == nextStepID);
-        if(index2 >= 0 ) 
-        {
+      } else if (nextStepID) {
+        let index2 = this.listStage[index].child.findIndex(
+          (x) => x.recID == nextStepID
+        );
+        if (index2 >= 0) {
           this.listStage[index].child[index2].status = '3';
         }
       }
@@ -670,21 +704,18 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
           elm.countTask = elm.child.length;
           elm.countCompleted = 0;
           elm.child.forEach((element) => {
-            if (element.activityType != 'Conditions' && element.status == '5')
-            {
+            if (element.activityType != 'Conditions' && element.status == '5') {
               elm.countCompleted++;
-              countTaskCompletedSum ++;
-            }  
-            else if (element.activityType == 'Conditions') {
+              countTaskCompletedSum++;
+            } else if (element.activityType == 'Conditions') {
               if (element.child && element.child.length > 0) {
-                if (element.child.some((x) => x.status == '5'))
-                {
+                if (element.child.some((x) => x.status == '5')) {
                   elm.countCompleted++;
                   countTaskCompletedSum++;
                 }
               }
             }
-            countTaskSum ++;
+            countTaskSum++;
           });
 
           elm.percentCompleted = (elm.countCompleted / elm.countTask) * 100;
@@ -700,12 +731,11 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
         // }
       });
       this.value1 = (countTaskCompletedSum / countTaskSum) * 100;
-      this.circular1.value= this.value1;
+      this.circular1.value = this.value1;
       this.circular1.refresh();
     }
-
   }
-  addNewTask(oldTask){
+  addNewTask(oldTask) {
     let lstParent = JSON.parse(JSON.stringify(this.listStage));
     lstParent.forEach((elm) => {
       delete elm.child;
@@ -748,8 +778,36 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   }
   public load(args: ILoadedEventArgs): void {}
 
-  close()
-  {
-    this.dialog.close(this.data)
+  close() {
+    this.dialog.close(this.data);
+  }
+
+  collapsed: boolean = false;
+  toggleAccordion($event, id, isClick = true) {
+    if (isClick) {
+      $event.stopPropagation();
+
+      const accordionHeader = $event.currentTarget as HTMLElement;
+      let chilren = document.getElementById(id);
+
+      if (accordionHeader) {
+        const isCollapsed = accordionHeader.classList.contains('collapsed');
+
+        if (isCollapsed) {
+          ($event.currentTarget as HTMLElement).children[1].classList.remove(
+            'collapsed'
+          );
+          ($event.currentTarget as HTMLElement).classList.remove('collapsed');
+          chilren.classList.add('show');
+        } else {
+          ($event.currentTarget as HTMLElement).children[1].classList.add(
+            'collapsed'
+          );
+          ($event.currentTarget as HTMLElement).classList.add('collapsed');
+          chilren.classList.remove('show');
+        }
+      }
+      this.dtc.detectChanges();
+    }
   }
 }
