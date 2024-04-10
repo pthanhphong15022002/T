@@ -143,6 +143,8 @@ export class ModeviewComponent implements OnInit {
           elm.documentControl = typeof elm.documentControl == 'string' ? JSON.parse(elm.documentControl) :  elm.documentControl;
           this.formatAttachment(elm)
         }
+
+        elm.validateControl = (typeof elm.validateControl == 'string' && elm.validateControl) ? JSON.parse(elm.validateControl) :  elm.validateControl;
         elm.text = vlls[indexs].text;
         elm.icon = vlls[indexs].icon;
         elm.textColor = vlls[indexs].textColor;
