@@ -263,7 +263,7 @@ export class PopupAddAdvanceComponent
 
   valueCellChange(event: any) {
     let field = event.field;
-    if (field == 'itemID') event.data.itemName = event.itemData.CostItemName;
+    if (field == 'itemID') event.data.itemName = event.itemData?.CostItemName;
     let EPRequestsLine = {
       recID: event.data.recID,
       transID: this.data.recID,
@@ -359,5 +359,14 @@ export class PopupAddAdvanceComponent
     } else t.notiSV.notify('Gửi duyệt không thành công', '2');
   }
 
-  showAttachment(evt: any) {}
+  atmReturnedFile(evt: any, dataLine: any) {
+    if (evt) {
+      if (!dataLine.attachments) dataLine.attachments = 0;
+      dataLine.attachments += 1;
+    }
+  }
+
+  showAttachment(evt: any, atm: any) {
+    if (atm && atm.uploadFile) atm.uploadFile();
+  }
 }
