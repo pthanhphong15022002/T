@@ -80,7 +80,6 @@ export class JournalV2Component extends UIComponent {
 
   //#region Init
   onInit() {
-    
     this.cache.valueList('AC177').subscribe((func) => {
       if(func){
         this.lstGroup = func.datas;
@@ -88,6 +87,7 @@ export class JournalV2Component extends UIComponent {
       }else{
         this.lstGroup = [];
       }
+      this.detectorRef.detectChanges();
     });
 
     if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
@@ -164,7 +164,7 @@ export class JournalV2Component extends UIComponent {
   selectedChangeToolBar(data:any){
     this.selectedToolBar = data.value;
     this.view.dataService.setPredicates(['Category=@0'],[data.value]);
-    //this.detectorRef.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   changeMF(event) {

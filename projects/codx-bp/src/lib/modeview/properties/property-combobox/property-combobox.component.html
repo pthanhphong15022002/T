@@ -48,7 +48,7 @@
       <i
         class="icon-edit_square cursor-pointer"
         (click)="openSettingCbx()"
-        *ngIf="data.dataFormat"
+        *ngIf="listCbx && listCbx.length>0"
       ></i>
     </div>
     <div
@@ -93,7 +93,7 @@
       </button>
     </div>
     <ng-template #tmpData>
-      <table class="table cursor-pointer mt-2" (click)="openSettingCbx()">
+      <table class="table cursor-pointer mt-2" >
         <thead class="thead-light">
           <tr class="fw-bold">
             <th scope="col-4 d-flex justify-content-center align-items-center">
@@ -167,6 +167,7 @@
   <lib-property-cbb-dependence
     [data]="data"
     [dataTable]="dataTable"
+    [listCbx]="listCbx"
     (dataChange)="valueChangeData($event)"
     (dataChangeTableEmit)="valueChangeTableEmit($event)"
   ></lib-property-cbb-dependence>

@@ -85,7 +85,7 @@
                                         #gridView
                                         [outputMoreFunc]="true"
                                         [columnsGrid]="child.columnsGrid"
-                                        [dataSource]="dataTable[child.fieldName] || gridDs"
+                                        [dataSource]="dataTable[child.fieldName]"
                                         (clickMF)="clickMFGrid($event,child)"
                                         [editSettings]="editSettings"
                                     >
@@ -102,6 +102,7 @@
                                 </ng-container>
                                 <ng-container *ngSwitchDefault>
                                     <codx-input
+                                        #input
                                         [formName]="formModel.formName"
                                         [gridViewName]="formModel.gridViewName + child.fieldType"
                                         [formModel]="form.formModel"
@@ -116,6 +117,7 @@
                                         [disabled]="child?.autoNumber?.autoNumberControl "
                                         [gridViewSetup]="gridViewSetup"
                                         (valueChange)="valueChangeInput($event)"
+                                        (beforeOpen)="afterRender($event, input, child?.validateControl?.refersouce)"
                                         >
                                     </codx-input>
                                 </ng-container>

@@ -1,0 +1,15 @@
+<codx-form #formCashPayment [headerText]="'Chọn sổ nhật ký'" [body]="TmpBody" [footer]="TmpFooter" [formModel]="dialog.formModel" [dialog]="dialog" [openMore]="false">
+</codx-form>
+<ng-template #TmpBody>
+    <codx-input type="combobox" [model]="model" refType="3" refValue="JournalsTemplates2"  field="journalNo" (valueChange)="valueChange($event)">
+    </codx-input>
+</ng-template>
+<ng-template #TmpFooter>
+    <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
+      <button [disabled]="!isNext" id="btnsave" type="button" tab-index=""
+        class="btn btn-md btn-primary" style="border: 1px solid var(--primary-dark) !important"
+        (click)="onSave()">
+        <codx-label class="fw-normal" fiedName="lblSave" default="Tiếp tục"></codx-label>
+      </button>
+    </div>
+  </ng-template>

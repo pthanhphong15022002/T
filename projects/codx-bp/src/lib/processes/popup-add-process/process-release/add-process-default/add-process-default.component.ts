@@ -28,6 +28,7 @@ import {
   DialogModel,
   DialogRef,
   NotificationsService,
+  UrlUtil,
   Util,
 } from 'codx-core';
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
@@ -171,6 +172,15 @@ export class AddProcessDefaultComponent implements OnInit {
           : element.documentControl;
       }
 
+      if (element.fieldType  == 'ComboBox')
+      {
+        element.validateControl =
+        typeof element.validateControl == 'string'
+          ? JSON.parse(element.validateControl)
+          : element.validateControl;
+      }
+
+        
       if (element.fieldType != 'Title') {
         let validate = element.isRequired ? Validators.required : null;
 
@@ -239,6 +249,8 @@ export class AddProcessDefaultComponent implements OnInit {
             controlType: elm2.controlType,
             field: elm2.fieldName,
             dataType: elm2.dataType,
+            refType: elm2?.refType,
+            refValue: elm2?.refValue,
             allowEdit:true
           };
           element.columnsGrid.push(obj);
@@ -249,7 +261,7 @@ export class AddProcessDefaultComponent implements OnInit {
             this.listFieldDecimal.push(field);
           }
         });
-
+        this.dataTable[field] = [];
         if (element?.tableFormat?.hasIndexNo) {
           var obj2 = {
             headerText: 'STT',
@@ -1071,6 +1083,43 @@ export class AddProcessDefaultComponent implements OnInit {
   valueChangeInput(e:any)
   {
     this.checkVisisable(e)
+  }
+
+  afterRender(evt:any, input:any , refersouce:any){
+    if(!refersouce) return;
+    if(input.typecheck == "combobox"){
+      let predicate = this.buildReferedsource(refersouce);
+    if(evt.predicates){
+      evt.dataService.predicates += " and " + predicate;
+    }else evt.dataService.predicates = predicate;
+    }
+  }
+
+  private buildReferedsource(referedSources: string): string {
+    var refSources = referedSources.split(',');
+    let pre = '';
+    for (var i = 0; i < refSources.length; i++) {
+      var refSource = refSources[i];
+      var refValue = null;
+      var referPredicate = '';
+
+      if (refSource.indexOf('[') > 0) {
+        referPredicate = UrlUtil.modifiedUrlByObj(refSource, this.dataIns, '"');
+      } else {
+        refValue = this.dataIns[refSource];
+        if (refValue) {
+          var arrRefValue = refValue.split(';');
+          arrRefValue.forEach((element: any, index: number) => {
+            if (index == 0) referPredicate = refSource + '=="' + element + '"';
+            else referPredicate += ' or ' + refSource + '=="' + element + '"';
+          });
+        }
+      }
+
+      pre = referPredicate;
+    }
+
+    return pre;
   }
 
   checkVisisable(e)
