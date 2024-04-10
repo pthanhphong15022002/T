@@ -1,158 +1,348 @@
-<codx-form #form 
-    [data]="data" 
-    [dialog]="dialog" 
-    [subHeader]="subHeader" 
-    [body]="body" 
-    [footer]="footer" 
-    [headerText]="'Đề nghị tạm ứng'">
+<codx-form
+  #form
+  [data]="data"
+  [dialog]="dialog"
+  [subHeader]="subHeader"
+  [body]="body"
+  [footer]="footer"
+  [headerText]="'Đề nghị tạm ứng'"
+>
 </codx-form>
 <ng-template #subHeader>
-    <div class="sub-header">
-    </div>
+  <div class="sub-header"></div>
 </ng-template>
 <ng-template #body>
-    <div class="container p-4">
-        <div class="row mb-4">
-            <div class="col-10">
-                <div class="d-flex flex-column">
-                    <codx-label [formModel]="dialog.formModel" [name]="'EmployeeID'" [default]="'Người đề nghị'" class="fw-bold mb-2"></codx-label>
-                    <div class="d-flex">
-                        <div class="me-6">
-                            <codx-img [objectId]="data?.employeeID" [objectType]="'HR_Employees'" [objectName]="data?.employeeName" [width]="50"></codx-img>
-                        </div>
-                        <div class="d-flex flex-column">
-                            <div class="text-dark" *ngIf="data?.employeeID" [innerHTML]="data.employeeID | formatvalue : dialog.formModel : 'employeeID' | async"></div>
-                            <div class="text-dark" *ngIf="data?.positionID" [innerHTML]="data.positionID | formatvalue : dialog.formModel : 'positionID' | async"></div>
-                            <div class="d-flex align-items-center text-gray-600">
-                                <div *ngIf="data?.phone" class="d-flex me-4">
-                                    <i class="icon-phone_android me-2"></i>
-                                    <div  class="me-2" [innerHTML]="data.phone | formatvalue : dialog.formModel : 'phone' | async"></div>
-                                </div>
-                                <div *ngIf="data?.email" class="d-flex me-4">
-                                    <i class="icon-email text-warning me-2"></i>
-                                    <div [innerHTML]="data.email | formatvalue : dialog.formModel : 'email' | async"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  <div class="container p-4">
+    <div class="row mb-4">
+      <div class="col-10">
+        <div class="d-flex flex-column">
+          <codx-label
+            [formModel]="dialog.formModel"
+            [name]="'EmployeeID'"
+            [default]="'Người đề nghị'"
+            class="fw-bold mb-2"
+          ></codx-label>
+          <div class="d-flex">
+            <div class="me-6">
+              <codx-img
+                [objectId]="data?.employeeID"
+                [objectType]="'HR_Employees'"
+                [objectName]="data?.employeeName"
+                [width]="50"
+              ></codx-img>
+            </div>
+            <div class="d-flex flex-column">
+              <div
+                class="text-dark"
+                *ngIf="data?.employeeID"
+                [innerHTML]="
+                  data.employeeID
+                    | formatvalue : dialog.formModel : 'employeeID'
+                    | async
+                "
+              ></div>
+              <div
+                class="text-dark"
+                *ngIf="data?.positionID"
+                [innerHTML]="
+                  data.positionID
+                    | formatvalue : dialog.formModel : 'positionID'
+                    | async
+                "
+              ></div>
+              <div class="d-flex align-items-center text-gray-600">
+                <div *ngIf="data?.phone" class="d-flex me-4">
+                  <i class="icon-phone_android me-2"></i>
+                  <div
+                    class="me-2"
+                    [innerHTML]="
+                      data.phone
+                        | formatvalue : dialog.formModel : 'phone'
+                        | async
+                    "
+                  ></div>
                 </div>
+                <div *ngIf="data?.email" class="d-flex me-4">
+                  <i class="icon-email text-warning me-2"></i>
+                  <div
+                    [innerHTML]="
+                      data.email
+                        | formatvalue : dialog.formModel : 'email'
+                        | async
+                    "
+                  ></div>
+                </div>
+              </div>
             </div>
-            <div class="col-2 col-2 d-flex justify-content-end">
-                <codx-input [field]="'employeeID'" [refType]="'P'" [refValue]="'Employees'" [type]="'combobox'" [crrValue]="data?.employeeID" [showInput]="false" (valueChange)="valueChange($event)"></codx-input>
-            </div>
+          </div>
         </div>
-        <div class="row mb-4">
-            <div class="col-4">
-                <div class="d-flex flex-column">
-                    <codx-label [formModel]="dialog.formModel" [name]="'RequestAmt'" [default]="'Số tiền'" class="fw-bold mb-2"></codx-label>
-                    <codx-input [formModel]="dialog.formModel" [field]="'requestAmt'" [crrValue]="data.requestAmt" (valueChange)="valueChange($event)"></codx-input>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="d-flex flex-column">
-                    <codx-label [formModel]="dialog.formModel" [name]="'ToDate'" [default]="'Ngày cần chi'" class="fw-bold mb-2"></codx-label>
-                    <codx-input [formModel]="dialog.formModel" [field]="'toDate'" [crrValue]="data.toDate" (valueChange)="valueChange($event)"></codx-input>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="d-flex flex-column">
-                    <codx-label [formModel]="dialog.formModel" [name]="'PmtMethodID'" [default]="'Hình thức thanh toán'" class="fw-bold mb-2"></codx-label>
-                    <codx-input [formModel]="dialog.formModel" [field]="'pmtMethodID'" [crrValue]="data.pmtMethodID" (valueChange)="valueChange($event)"></codx-input>
-                </div>
-            </div>
-        </div>
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="d-flex flex-column">
-                    <codx-label [formModel]="dialog.formModel" [name]="'ReasonID'" [default]="'Lý do'" class="fw-bold mb-2"></codx-label>
-                    <codx-input [formModel]="dialog.formModel" [field]="'reasonID'" [crrValue]="data.reasonID" (valueChange)="valueChange($event)"></codx-input>
-                </div>
-            </div>
-        </div>
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="d-flex flex-column">
-                    <codx-label [formModel]="dialog.formModel" [name]="'Memo'" [default]="'Lý do'" class="fw-bold mb-2"></codx-label>
-                    <codx-input [formModel]="dialog.formModel" [field]="'memo'" [crrValue]="data.memo" (valueChange)="valueChange($event)"></codx-input>
-                </div>
-            </div>
-        </div>
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="d-flex flex-column">
-                    <div class="d-flex align-items-center justify-content-between mb-2 w-100 ">
-                        <codx-label [formModel]="dialog.formModel" [name]="'RefID'" [default]="'Kế hoạch công tác'" class="fw-bold mb-2"></codx-label>
-                        <codx-input [refType]="'P'" [refValue]="'EPRequests'" type="combobox" [field]="'refID'" [crrValue]="data.refID" [showInput]="false" (valueChange)="valueChange($event)"></codx-input>
-                    </div>
-                    <div class="d-flex align-items-center" *ngIf="data?.refID">
-                        <codx-img [objectId]="data.refID" [objectName]="data?.refType" [objectType]="'EP_Requests'" [width]="30" class="me-4"></codx-img>
-                        <div *ngIf="RefEPRequest" class="text-dark">
-                            <span>{{RefEPRequest.memo}}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="d-flex flex-column">
-                    <div class="d-flex align-items-center justify-content-between mb-2 w-100">
-                        <codx-label [formModel]="dialog.formModel" [name]="'lblLabel1'" [default]="'Khoản mục chi phí'" class="fw-bold"></codx-label>
-                        <button *ngIf="!hideFooter" class="btn" (click)="addNewRow()">
-                            <i class="icon-add_circle_outline text-primary"></i>
-                        </button>
-                    </div>
-                    <div class="d-flex flex-column mb-2 w-100">
-                        <codx-gridview-v2
-                            #codxGridViewV2
-                            calss="mb-2"
-                            [gridViewName]="'grvRequests_Lines'"
-                            [formName]="'Requests_Lines'"
-                            [autoFitColumns]="false"
-                            [editOnClick]="true"
-                            [autoAddRow]="false"
-                            [showEmptyRecord]="false"
-                            [autoLoad]="false"
-                            [hideMoreFunc]="hideFooter"
-                            [templateMore]="tmpMoreFunc"
-                            [editSettings]="editSettings"
-                            [dataSource]="data.lines"
-                            [idField]="'recID'"
-                            (cellChanged)="valueCellChange($event)">
-                        </codx-gridview-v2>
-                    </div>
-                    <div class="d-flex justify-content-end w-100" *ngIf="data.totalAmount > 0">
-                        <div class="d-flex fw-bold pt-1 ps-4 border-top border-light border-2">
-                            <div class="me-6">
-                                <codx-label [formModel]="dialog.formModel" name="lblTotal" [default]="'Tổng cộng'"></codx-label>
-                                <span>:</span>
-                            </div>
-                            <div [innerHTML]="data.totalAmount | formatvalue : dialog.formModel : 'requestAmt' | async"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
+      <div class="col-2 col-2 d-flex justify-content-end">
+        <codx-input
+          [field]="'employeeID'"
+          [refType]="'P'"
+          [refValue]="'Employees'"
+          [type]="'combobox'"
+          [crrValue]="data?.employeeID"
+          [showInput]="false"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
     </div>
+    <div class="row mb-4">
+      <div class="col-4">
+        <div class="d-flex flex-column">
+          <codx-label
+            [formModel]="dialog.formModel"
+            [name]="'RequestAmt'"
+            [default]="'Số tiền'"
+            class="fw-bold mb-2"
+          ></codx-label>
+          <codx-input
+            [formModel]="dialog.formModel"
+            [field]="'requestAmt'"
+            [crrValue]="data.requestAmt"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="d-flex flex-column">
+          <codx-label
+            [formModel]="dialog.formModel"
+            [name]="'ToDate'"
+            [default]="'Ngày cần chi'"
+            class="fw-bold mb-2"
+          ></codx-label>
+          <codx-input
+            [formModel]="dialog.formModel"
+            [field]="'toDate'"
+            [crrValue]="data.toDate"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="d-flex flex-column">
+          <codx-label
+            [formModel]="dialog.formModel"
+            [name]="'PmtMethodID'"
+            [default]="'Hình thức thanh toán'"
+            class="fw-bold mb-2"
+          ></codx-label>
+          <codx-input
+            [formModel]="dialog.formModel"
+            [field]="'pmtMethodID'"
+            [crrValue]="data.pmtMethodID"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex flex-column">
+          <codx-label
+            [formModel]="dialog.formModel"
+            [name]="'ReasonID'"
+            [default]="'Lý do'"
+            class="fw-bold mb-2"
+          ></codx-label>
+          <codx-input
+            [formModel]="dialog.formModel"
+            [field]="'reasonID'"
+            [crrValue]="data.reasonID"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex flex-column">
+          <codx-label
+            [formModel]="dialog.formModel"
+            [name]="'Memo'"
+            [default]="'Lý do'"
+            class="fw-bold mb-2"
+          ></codx-label>
+          <codx-input
+            [formModel]="dialog.formModel"
+            [field]="'memo'"
+            [crrValue]="data.memo"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex flex-column">
+          <div
+            class="d-flex align-items-center justify-content-between mb-2 w-100"
+          >
+            <codx-label
+              [formModel]="dialog.formModel"
+              [name]="'RefID'"
+              [default]="'Kế hoạch công tác'"
+              class="fw-bold mb-2"
+            ></codx-label>
+            <codx-input
+              [refType]="'P'"
+              [refValue]="'EPRequests'"
+              type="combobox"
+              [field]="'refID'"
+              [crrValue]="data.refID"
+              [showInput]="false"
+              (valueChange)="valueChange($event)"
+            ></codx-input>
+          </div>
+          <div class="d-flex align-items-center" *ngIf="data?.refID">
+            <codx-img
+              [objectId]="data.refID"
+              [objectName]="data?.refType"
+              [objectType]="'EP_Requests'"
+              [width]="30"
+              class="me-4"
+            ></codx-img>
+            <div *ngIf="RefEPRequest" class="d-flex">
+              <span *ngIf="RefEPRequest.memo" class="fw-bold">{{
+                RefEPRequest.memo
+              }}</span>
+              <span *ngIf="RefEPRequest.memo && data.requestNo" class="mx-1"
+                >-</span
+              >
+              <span *ngIf="RefEPRequest.requestNo" class="text-gray-600">{{
+                RefEPRequest.requestNo
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex flex-column">
+          <div
+            class="d-flex align-items-center justify-content-between mb-2 w-100"
+          >
+            <codx-label
+              [formModel]="dialog.formModel"
+              [name]="'lblLabel1'"
+              [default]="'Khoản mục chi phí'"
+              class="fw-bold"
+            ></codx-label>
+            <button *ngIf="!hideFooter" class="btn" (click)="addNewRow()">
+              <i class="icon-add_circle_outline text-primary"></i>
+            </button>
+          </div>
+          <div class="d-flex flex-column mb-2 w-100">
+            <codx-gridview-v2
+              *ngIf="columnsGrid.length > 0"
+              #codxGridViewV2
+              calss="mb-2"
+              [gridViewName]="'grvRequests_Lines'"
+              [formName]="'Requests_Lines'"
+              [autoFitColumns]="false"
+              [editOnClick]="true"
+              [autoAddRow]="false"
+              [showEmptyRecord]="false"
+              [autoLoad]="false"
+              [hideMoreFunc]="hideFooter"
+              [templateMore]="tmpMoreFunc"
+              [editSettings]="editSettings"
+              [dataSource]="data.lines"
+              [columnsGrid]="columnsGrid"
+              [idField]="'recID'"
+              (cellChanged)="valueCellChange($event)"
+            >
+            </codx-gridview-v2>
+          </div>
+          <div
+            class="d-flex justify-content-end w-100"
+            *ngIf="data.totalAmount > 0"
+          >
+            <div
+              class="d-flex fw-bold pt-1 ps-4 border-top border-light border-2"
+            >
+              <div class="me-6">
+                <codx-label
+                  [formModel]="dialog.formModel"
+                  name="lblTotal"
+                  [default]="'Tổng cộng'"
+                ></codx-label>
+                <span>:</span>
+              </div>
+              <div
+                [innerHTML]="
+                  data.totalAmount
+                    | formatvalue : dialog.formModel : 'requestAmt'
+                    | async
+                "
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>
 <ng-template #footer>
-    <div *ngIf="!hideFooter" class="d-flex align-items-center justify-content-end">
-        <button type="btn" class="btn btn-outline-primary me-2" (click)="onSave(true)">
-            <i class="icon-near_me me-1"></i>
-            <codx-label [formModel]="dialog.formModel" name="lblRelase" default="Gửi duyệt"></codx-label>
-        </button>
-        <button type="btn" class="btn btn-primary" (click)="onSave()">
-            <codx-label [formModel]="dialog.formModel" name="lblSubmit" default="Lưu"></codx-label>
-        </button>
-    </div>
+  <div
+    *ngIf="!hideFooter"
+    class="d-flex align-items-center justify-content-end"
+  >
+    <button
+      type="btn"
+      class="btn btn-outline-primary me-2"
+      (click)="onSave(true)"
+    >
+      <i class="icon-near_me me-1"></i>
+      <codx-label
+        [formModel]="dialog.formModel"
+        name="lblRelase"
+        default="Gửi duyệt"
+      ></codx-label>
+    </button>
+    <button type="btn" class="btn btn-primary" (click)="onSave()">
+      <codx-label
+        [formModel]="dialog.formModel"
+        name="lblSubmit"
+        default="Lưu"
+      ></codx-label>
+    </button>
+  </div>
 </ng-template>
 
 <ng-template #tmpMoreFunc let-data>
-    <codx-mfunc
-        [dataItem]="data"
-        [formModel]="dialog.formModel"
-        (clickMF)="clicGridViewkMF($event, data)"
-        (changeDataMF)="changeDataGridMF($event)"
-        type="hover"
-    ></codx-mfunc>
+  <codx-mfunc
+    [dataItem]="data"
+    [formModel]="dialog.formModel"
+    (clickMF)="clicGridViewkMF($event, data)"
+    (changeDataMF)="changeDataGridMF($event)"
+    type="hover"
+  ></codx-mfunc>
+</ng-template>
+<ng-template #attachment let-dataLine>
+  <span
+    class="me-1 icon-14 icon-i-paperclip ddd"
+    (click)="showAttachment($event, codxATM)"
+  ></span>
+  <div class="d-none">
+    <codx-attachment
+      #codxATM
+      [functionID]="dialog.formModel.funcID"
+      [objectId]="dataLine['recID']"
+      [objectType]="dialog.formModel.entityName"
+      [parentID]="data['recID']"
+      hideFolder="1"
+      hideUploadBtn="1"
+      hideDes="1"
+      type="inline"
+      isSaveSelected="1"
+      [showMessage]="0"
+      (fileSave)="atmReturnedFile($event, dataLine)"
+    >
+    </codx-attachment>
+  </div>
 </ng-template>

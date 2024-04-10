@@ -305,6 +305,11 @@ export class PopupBpTasksComponent implements OnInit {
       '',
       opt
     );
+    popEmail.closed.subscribe(sendMail=>{
+      if(sendMail?.event?.isSendMail){
+        this.onSave('5');
+      }
+    })
   }
 
   valueChange(e) {

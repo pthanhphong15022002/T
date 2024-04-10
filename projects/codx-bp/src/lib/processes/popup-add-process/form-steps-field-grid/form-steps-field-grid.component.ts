@@ -597,6 +597,9 @@ export class FormStepsFieldGridComponent
               if (typeof element.tableFormat != 'string') {
                 element.tableFormat = JSON.stringify(element.tableFormat);
               }
+              if (typeof element.validateControl != 'string') {
+                element.validateControl = JSON.stringify(element.validateControl);
+              }
             });
           }
         }
