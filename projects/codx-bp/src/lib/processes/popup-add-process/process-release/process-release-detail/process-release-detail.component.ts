@@ -1,3 +1,4 @@
+import { CodxBpService } from 'projects/codx-bp/src/public-api';
 import {
   ChangeDetectorRef,
   Component,
@@ -14,7 +15,9 @@ import {
   CacheService,
   CallFuncService,
   DialogData,
+  DialogModel,
   DialogRef,
+  NotificationsService,
   SidebarModel,
 } from 'codx-core';
 import moment from 'moment';
@@ -29,6 +32,9 @@ import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AnimationModel, ILoadedEventArgs, ProgressBar, ProgressTheme } from '@syncfusion/ej2-angular-progressbar';
 import { X } from '@angular/cdk/keycodes';
 import { BPCONST } from 'projects/codx-bp/src/lib/models/BP_Const.model';
+import { CoDxAddApproversComponent } from 'projects/codx-common/src/lib/component/codx-approval-procress/codx-add-approvers/codx-add-approvers.component';
+import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
+import { AddCustomActionComponent } from '../../form-steps-field-grid/add-default/add-custom-action/add-custom-action.component';
 
 @Component({
   selector: 'lib-process-release-detail',
@@ -167,6 +173,8 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     private dtc: ChangeDetectorRef,
     private auth: AuthStore,
     public dmSV: CodxDMService,
+    public bpSV: CodxBpService,
+    public notiSV: NotificationsService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -251,22 +259,71 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       .subscribe((item) => {
         if (item) {
           this.listTask = item;
-          this.activeTask = this.listTask.find(
-            (x) => x.status == '3' && x.canceled != true && x.activityType != 'Stage'
-          );
+          
           this.changeMF();
           this.getPermission();
           this.dtc.detectChanges();
         }
       });
   }
+  clickMF(mfuncID){
+    if(this.activeTask!=null){
+      switch (mfuncID){
+        
+        case BPCONST.TASKMF.Task:
+        case BPCONST.TASKMF.Check:
+        case BPCONST.TASKMF.Approve:
+        case BPCONST.TASKMF.Redo:
+        case BPCONST.TASKMF.Reject:
+        {
+          let status = mfuncID == BPCONST.TASKMF.Redo ? '2':mfuncID == BPCONST.TASKMF.Reject ? '4' :'5';
+          this.updateTask(this.activeTask,status);
+          break
+        }
+        case BPCONST.TASKMF.Email:
+        {
+          this.sendMail(this.activeTask);
+          break
+        }
+        case BPCONST.TASKMF.Sign:
+        case BPCONST.TASKMF.Stamp:
+        {
+          this.eSign(this.activeTask)
+          break
+        }
+        case BPCONST.TASKMF.Tranfer:
+        {
 
+          break
+        }
+        case BPCONST.TASKMF.Authority:
+        {
+          this.authority(this.activeTask);
+          break
+        }
+        case BPCONST.TASKMF.Assign:
+        {
+          this.assignAction(this.activeTask)
+          break
+        }
+        case BPCONST.TASKMF.Attach:
+        {
+
+          break
+        }
+      }
+    }
+  }
+  
   changeMF() {
+    this.activeTask = this.listTask.find(
+      (x) => x.status == '3' && x.canceled != true && x.activityType != 'Stage' && x?.permissions?.find(p=>p?.objectID == this.user?.userID) !=null
+    );
     if (this.activeTask != null) {
       switch (this.activeTask.activityType) {
         //Task;Check;Approve;Sign;Release;Stamp;Email;
         case 'Task': {
-          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Task);
+          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Task||x?.functionID ==BPCONST.TASKMF.Assign);
           break;
         }
         case 'Check': {
@@ -747,7 +804,101 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     });
   }
   public load(args: ILoadedEventArgs): void {}
+  assignAction(data){
+    var input = {
+      refTask: data,
+      formModel: this.formModel
+    };
+    let option = new SidebarModel();
+    option.Width = 'Auto';
+    option.FormModel = this.formModel;
+    let popup = this.callFc.openSide(AddCustomActionComponent,input,option);
+  }
+  authority(data){
+    let dialogAuthority = this.callFc.openForm(CoDxAddApproversComponent,'',500,250,'',{mode:'1'});
+    dialogAuthority.closed.subscribe(res=>{
+      if(res?.event){
+        this.bpSV.authorityTask(data.recID,res?.event).subscribe(res=>{
+          if(res){
+            this.notiSV.notifyCode('SYS034');
+          }
+        })
+      }
+    })
+  }
+  updateTask(data,status){
+    this.bpSV.updateStatusTask(data.recID, status,null).subscribe((res) => {
+      if (res) {
+        this.notiSV.notifyCode('SYS034');
+        this.formatDataTask({event:{task:res}});
+        this.changeMF();
+      }
+    });
+  }
+  sendMail(data) {
+    let input = {
+      dialog: this.dialog,
+      formGroup: null,
+      templateID: '',
+      showIsTemplate: true,
+      showIsPublish: true,
+      showSendLater: true,
+      files: null,
+      isAddNew: false,
+      notSendMail: false,
+      saveIsTemplate: false,
+    };
+    let opt = new DialogModel();
+    opt.zIndex = 20000;
+    let popEmail = this.callFc.openForm(
+      CodxEmailComponent,
+      '',
+      800,
+      screen.height,
+      '',
+      input,
+      '',
+      opt
+    );
+    popEmail.closed.subscribe(sendMail=>{
+      if(sendMail?.event?.isSendMail){
+        this.updateTask(data,'5');
+      }
+    })
+  }
+  eSign(data) {
+    if (data?.recID) {
+      // gọi hàm xử lý xem trình ký
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+      var listApproveMF = this.shareService.getMoreFunction(null, 'S1');
 
+      let dialogApprove = this.callFc.openForm(
+        PopupSignForApprovalComponent,
+        'Thêm mới',
+        700,
+        650,
+        'EST021',
+        {
+          funcID: 'EST021',
+          sfRecID: data?.recID,
+          title: data?.taskName,
+          status: '3',
+          stepType: 'S1',
+          stepNo: '0',
+          modeView: '2',
+          lstMF: listApproveMF,
+        },
+        '',
+        dialogModel
+      );
+      dialogApprove.closed.subscribe((res) => {
+        if (res?.event?.msgCodeError == null && res?.event?.rowCount > 0) {
+          this.updateTask(data,res?.event?.returnStatus);
+        }
+      });
+    }
+  }
   close()
   {
     this.dialog.close(this.data)
