@@ -98,7 +98,7 @@ export class FixedAssetAddComponent extends UIComponent {
     this.api.exec('AM','AssetsBusiness','ValueChangedAsync',[this.form.form.data,field]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if(res){
         this.isPreventChange = true;
-        this.form.formGroup.patchValue(res);
+        this.form.form.setObjValue(res,{});
         this.isPreventChange = false;
       }
     })

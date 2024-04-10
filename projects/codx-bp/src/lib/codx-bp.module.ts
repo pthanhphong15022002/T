@@ -90,6 +90,8 @@ import { TramTestDiagramComponent } from './tram-test-diagram/test-diagram.compo
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
 import { PropertyAttachmentAddRowComponent } from './modeview/properties/property-attachment/property-attachment-add-row/property-attachment-add-row.component';
 import { PropertyNoteComponent } from './modeview/properties/property-note/property-note.component';
+import { FormSettingValueListComponent } from './processes/popup-add-process/form-properties-fields/setting-fields/form-setting-valuelist/form-setting-valuelist.component';
+import { FormatValueComboboxPipe } from './pipes/format-value-combobox.pipe';
 
 export const routes: Routes = [
   {
@@ -179,7 +181,7 @@ export const routes: Routes = [
     PropertyCbbDependenceComponent,
     PropertyAttachmentAddRowComponent,
     PropertyNoteComponent,
-    
+
     FormSettingComboboxComponent,
     FormAdvancedSettingsComponent,
     PopupPermissionsProcessesComponent,
@@ -214,7 +216,9 @@ export const routes: Routes = [
     SettingMailComponent,
     BPPopupChangePermissionComponent,
     ViewListProcessesComponent,
-    TramTestDiagramComponent
+    TramTestDiagramComponent,
+    FormSettingValueListComponent,
+    FormatValueComboboxPipe
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
@@ -240,7 +244,7 @@ export const routes: Routes = [
     DynamicSettingModule,
     NgbAccordionModule,
     ShareCrmModule,
-    ProgressBarAllModule 
+    ProgressBarAllModule,
     // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],

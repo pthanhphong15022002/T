@@ -616,6 +616,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             }
           });
           this.getAutoNumberSetting(funcID);
+          // if(res?.createAutoNumberWhen == "1"){
+            
+          // }else{
+
+          // }
+          
         } else {
           this.planceHolderAutoNumber = '';
           this.contracts.contractID = null;
@@ -633,9 +639,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         'ContractID'
       )
       .subscribe((autoNum) => {
-        this.contracts.contractID = autoNum;
-        this.autoNumber = autoNum;
-        this.disabledShowInput = true;
+        if(autoNum){
+          this.contracts.contractID = autoNum;
+          this.autoNumber = autoNum;
+          this.disabledShowInput = true;
+        }else {
+          this.disabledShowInput = false;
+        }
       });
   }
 
@@ -1275,7 +1285,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     permission.isActive = true;
     return permission;
   }
-
   //#endregion
 
   getSettingMail(processID) {

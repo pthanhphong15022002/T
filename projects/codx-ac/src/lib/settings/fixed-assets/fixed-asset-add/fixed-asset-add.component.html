@@ -52,7 +52,7 @@
       <div class="col-4">
         <div class="form-group">
           <codx-label fiedName="PurcAmount" [formModel]="form.formModel"></codx-label>
-          <codx-input field="purcAmount" [formModel]="form.formModel" [Group]="form.formGroup" (valueChange)="valueChange($event)"></codx-input>
+          <codx-input field="purcAmount" [formModel]="form.formModel" [Group]="form.formGroup" (controlBlur)="valueChange($event)"></codx-input>
         </div>
       </div>
     </div>

@@ -8,23 +8,18 @@
     <div class="row" style="height: 100% !important">
       <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 border-right role-left">
         <div class="h-100 scroll-y">
-          <div *ngIf="lstPermissions != null && lstPermissions.length > 0">
-            <ng-container *ngFor="let perm of lstPermissions; index as i">
+          <div *ngIf="listRoleShare != null && listRoleShare.length > 0">
+            <ng-container *ngFor="let role of listRoleShare; index as i">
               <div
-                (click)="changePermissions(i)"
-                [ngClass]="
-                  i == this.currentPemission.toString()
-                    ? 'user-nav-active'
-                    : null
-                "
-                *ngIf="perm?.memberType == '1'"
+                (click)="changeRole(role)"
                 class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item p-2"
+                [ngClass]="roleSelect.objectID == role.objectID ? 'chosse':'no-chosse'"
               >
                 <div class="d-flex justify-content-between list-title w-100">
                   <div class="d-flex align-items-top">
                     <div
                       *ngIf="
-                        perm.objectType != '1' && perm.objectType != 'U';
+                        role.objectType != '1' && role.objectType != 'U';
                         then thenAvatar1;
                         else elsethenAvatar1
                       "
@@ -35,13 +30,6 @@
                           class="d-flex align-items-center position-relative me-4"
                           style="position: relative"
                           popoverClass="popoverClass"
-                          [ngbPopover]="
-                            perm.roleType != 'O' ? popupRoleType : null
-                          "
-                          placement="right auto"
-                          #p="ngbPopover"
-                          (mouseenter)="showPopover(p, perm.objectID)"
-                          autoClose="outside"
                         >
                           <img
                             src="../../../assets/codx/user/user-admin.svg"
@@ -52,7 +40,7 @@
                             style="position: absolute; right: 0; bottom: -5px"
                           >
                             <ng-container *ngFor="let role of listRoles">
-                              <ng-container *ngIf="role.value == perm.roleType">
+                              <ng-container *ngIf="role.value == role.roleType">
                                 <span
                                   inlineSVG="./assets/themes/cm/default/img/{{
                                     role.icon
@@ -64,10 +52,10 @@
                         </div>
                         <div class="d-flex flex-column">
                           <div class="text-dark fw-bold">
-                            {{ perm.objectName }}
+                            {{ role.objectName }}
                           </div>
                           <ng-container *ngFor="let role of listRoles">
-                            <ng-container *ngIf="role.value == perm.roleType">
+                            <ng-container *ngIf="role.value == role.roleType">
                               <div class="text-gray-500 fs-7">
                                 {{ role.text }}
                               </div>
@@ -82,18 +70,11 @@
                           class="d-flex align-items-center position-relative me-4"
                           style="position: relative"
                           popoverClass="popoverClass"
-                          [ngbPopover]="
-                            perm.roleType != 'O' ? popupRoleType : null
-                          "
-                          placement="right top"
-                          #p="ngbPopover"
-                          (mouseenter)="showPopover(p, perm.objectID)"
-                          autoClose="outside"
                         >
                           <codx-img
                             class=""
                             [width]="25"
-                            [objectId]="perm.objectID"
+                            [objectId]="role.objectID"
                             objectType="AD_Users"
                           >
                           </codx-img>
@@ -101,7 +82,7 @@
                             style="position: absolute; right: 0; bottom: -5px"
                           >
                             <ng-container *ngFor="let role of listRoles">
-                              <ng-container *ngIf="role.value == perm.roleType">
+                              <ng-container *ngIf="role.value == role.roleType">
                                 <span
                                   inlineSVG="./assets/themes/cm/default/img/{{
                                     role.icon
@@ -113,10 +94,10 @@
                         </div>
                         <div class="d-flex flex-column">
                           <div class="text-dark fw-bold">
-                            {{ perm.objectName }}
+                            {{ role.objectName }}
                           </div>
                           <ng-container *ngFor="let role of listRoles">
-                            <ng-container *ngIf="role.value == perm.roleType">
+                            <ng-container *ngIf="role.value == role.roleType">
                               <div class="text-gray-500 fs-7">
                                 {{ role.text }}
                               </div>
@@ -127,14 +108,14 @@
                     </ng-template>
                   </div>
                 </div>
-                <ng-container *ngIf="!checkRemove(i)">
+                <!-- <ng-container *ngIf="!checkRemove(i)">
                   <div
                     class="action-menu-od ms-0 d-flex justify-content-center align-items-center cursor-pointer"
                     (click)="removeUser(i)"
                   >
                     <i class="icon-close text-danger icon-16"></i>
                   </div>
-                </ng-container>
+                </ng-container> -->
               </div>
             </ng-container>
           </div>
@@ -204,11 +185,10 @@
                     class="test-check"
                     type="switch"
                     style="width: 100%"
-                    [crrValue]="full"
+                    [crrValue]="roleSelect.full"
                     field="full"
                     (valueChange)="valueChange($event, 'full')"
-                    (focus)="controlFocus(true)"
-                    [disabled]="checkAdminUpdate()"
+                    (focus)="controlFocus('full')"
                   >
                   </codx-input>
                 </td>
@@ -234,10 +214,10 @@
                     class="test-check"
                     type="switch"
                     style="width: 100%"
-                    [crrValue]="read"
+                    [crrValue]="roleSelect.read"
                     field="read"
                     (valueChange)="valueChange($event, 'read')"
-                    [disabled]="checkAdminUpdate()"
+                    (focus)="controlFocus('read')"
                   >
                   </codx-input>
                 </td>
@@ -262,10 +242,10 @@
                     class="test-check"
                     type="switch"
                     style="width: 100%"
-                    [crrValue]="update"
+                    [crrValue]="roleSelect.update"
                     field="update"
                     (valueChange)="valueChange($event, 'update')"
-                    [disabled]="checkAdminUpdate()"
+                    (focus)="controlFocus('update')"
                   >
                   </codx-input>
                 </td>
@@ -318,10 +298,10 @@
                     class="test-check"
                     type="switch"
                     style="width: 100%"
-                    [crrValue]="delete"
+                    [crrValue]="roleSelect.delete"
                     field="delete"
                     (valueChange)="valueChange($event, 'delete')"
-                    [disabled]="checkAdminUpdate()"
+                    (focus)="controlFocus('delete')"
                   >
                   </codx-input>
                 </td>
@@ -345,10 +325,10 @@
                     class="test-check"
                     type="switch"
                     style="width: 100%"
-                    [crrValue]="updateProgress"
+                    [crrValue]="roleSelect.updateProgress"
                     field="updateProgress"
                     (valueChange)="valueChange($event, 'updateProgress')"
-                    [disabled]="checkAdminUpdate()"
+                    (focus)="controlFocus('updateProgress')"
                   >
                   </codx-input>
                 </td>
@@ -373,10 +353,10 @@
                     class="test-check"
                     type="switch"
                     style="width: 100%"
-                    [crrValue]="upload"
+                    [crrValue]="roleSelect.upload"
                     field="upload"
                     (valueChange)="valueChange($event, 'upload')"
-                    [disabled]="checkAdminUpdate()"
+                    (focus)="controlFocus('upload')"
                   >
                   </codx-input>
                 </td>
@@ -401,10 +381,10 @@
                     class="test-check"
                     type="switch"
                     style="width: 100%"
-                    [crrValue]="download"
+                    [crrValue]="roleSelect.download"
                     field="download"
                     (valueChange)="valueChange($event, 'download')"
-                    [disabled]="checkAdminUpdate()"
+                    (focus)="controlFocus('download')"
                   >
                   </codx-input>
                 </td>
@@ -453,24 +433,6 @@
           default="Lưu"
         ></codx-label>
       </button>
-    </div>
-  </ng-template>
-
-  <ng-template #popupRoleType>
-    <div class="d-flex flex-column">
-      <ng-container *ngFor="let item of listRoles">
-        <div
-          *ngIf="item.value != 'O'"
-          class="d-flex align-items-center btn btn-sm btn-white mb-1"
-          (click)="selectRoleType(objectIDSelect, item.value)"
-          style="cursor: pointer"
-        >
-          <span
-            inlineSVG="./assets/themes/cm/default/img/{{ item.icon }}"
-          ></span>
-          <div class="fs-7 text-gray-800 ms-2">{{ item.text }}</div>
-        </div>
-      </ng-container>
     </div>
   </ng-template>
 </codx-form>
