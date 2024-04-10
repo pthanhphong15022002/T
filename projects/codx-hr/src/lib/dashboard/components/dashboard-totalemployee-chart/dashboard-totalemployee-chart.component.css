@@ -78,6 +78,7 @@
   .children-bar .bar-label{
    padding-left: 10px;
     box-sizing: border-box;
+    margin-left: 17px;
   }
   
   .bar-fill-container{

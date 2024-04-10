@@ -23,6 +23,11 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { log } from 'console';
 
+interface headerTab {
+  text: string;
+  name: string;
+}
+
 @Component({
   selector: 'hr-popup-add-employee',
   templateUrl: './popup-add-employee.component.html',
@@ -47,6 +52,16 @@ export class PopupAddEmployeeComponent implements OnInit {
   grvSetUp: any[] = [];
   codxModifiedOn = new Date();
   employeeIDDisable: boolean = false;
+  headerTabs: headerTab[] = [
+    { text: 'Thông tin cơ bản',
+      name: 'tabInfo'
+    }, 
+    { text: 'Bộ phận làm việc',
+      name: 'tabDepartment'
+    },
+    { text: 'Chức vụ - Chức danh công việc',
+      name: 'tabJobPosition'
+    }];
   tabInfo: any[] = [
     {
       icon: 'icon-assignment_ind',
@@ -63,41 +78,7 @@ export class PopupAddEmployeeComponent implements OnInit {
       text: 'Pháp lý',
       name: 'lblLegalInfo',
     },
-    {
-      icon: 'icon-family_restroom',
-      text: 'Thân nhân',
-      name: 'tab1',
-    },
-    {
-      icon: 'icon-business_center',
-      text: 'Hộ chiếu',
-      name: 'tab2',
-    },
-    {
-      icon: 'icon-receipt_long',
-      text: 'Hợp đồng lao đông',
-      name: 'tab3',
-    },
-    {
-      icon: 'icon-attach_money',
-      text: 'Lương cơ bản',
-      name: 'tab4',
-    },
-    {
-      icon: 'icon-card_travel',
-      text: 'Lương chức danh công việc',
-      name: 'tab5',
-    },
-    {
-      icon: 'icon-card_giftcard',
-      text: 'Phụ cấp',
-      name: 'tab6',
-    },
-    {
-      icon: 'icon-book',
-      text: 'Thông tin văn bằng',
-      name: 'tab7',
-    },
+    
   ];
   trainFieldID: string = '';
   trainLevel: string = '';

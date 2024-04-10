@@ -21,7 +21,8 @@
           class="bar parent-bar"
         >
           <div class="bar-container">
-            <div class="bar-info" (click)="toggleChildren($event)">
+            <div class="bar-info" >
+              <i class="icon-arrow_drop_down" (click)="toggleChildren($event)"></i>
               <div class="bar-label">{{ employee.department }}</div>
               <div class="bar-fill-container">
                 <div class="bar-fill" [style.width.%]="employee.total"></div>

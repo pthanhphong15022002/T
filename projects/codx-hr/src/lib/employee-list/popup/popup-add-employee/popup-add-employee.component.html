@@ -2,304 +2,312 @@
 
 <codx-layout-add #form [formModel]="formModel" [subHeader]="" [footer]="footer" [dialog]="dialogRef" [openMore]="true"
   [tabInfo]="tabInfo" 
-  [tabContent]="[employeeInfo, personalInfo, legalInfo, tab1, tab2, tab3, tab4, tab5, tab6, tab7]" 
+  [tabContent]="[employeeInfo, personalInfo, legalInfo]" 
   [title]="headerText"
+  [subHeader]="subheaderTab"
   [headerPosition]="'Right'"
-  (setTitle)="setTitle($event)" [data]="data">
+  (setTitle)="setTitle($event)" 
+  [data]="data">
 </codx-layout-add>
 
+<!-- Header Tab -->
+<ng-template #subheaderTab>
+</ng-template>
 <!-- tab Employee -->
 <ng-template #employeeInfo>
   <ng-container *ngIf="form?.formGroup">
-    <div>
-      <div class="align-items-center form-group">
+    <ejs-tab id="element" style="margin-left: 220px">
+      <e-tabitems>
+          <e-tabitem [header]='headerTabs[0]'>
+          </e-tabitem>
+          <e-tabitem [header]='headerTabs[1]'></e-tabitem>
+          <e-tabitem [header]='headerTabs[2]'></e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+    <!-- Mã NV -->
+    <div class="row form-group">
+        <codx-label [formModel]="form.formModel" fiedName="EmployeeID">
+        </codx-label>
+        <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="employeeID" [disabled]="employeeIDDisable"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+    </div>
+    <!-- Họ tên -->
+    <div class="row form-group">
+      <div class="col-6">
+        <codx-label [formModel]="form.formModel" fiedName="EmployeeName">
+        </codx-label>
+        <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="employeeName"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label [formModel]="form.formModel" fiedName="EmployeeName">
+        </codx-label>
+        <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="employeeName"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+    </div>
+    <!-- Bí danh - Ngày sinh -->
+    <div class="row form-group">
+      <div class="col-6">
         <div>
-          <codx-label [formModel]="form.formModel" fiedName="EmployeeID">
+          <codx-label [formModel]="form.formModel" fiedName="Bí danh">
           </codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="employeeID" [disabled]="employeeIDDisable"
+          <codx-input field="nickName" [formModel]="form.formModel" [Group]="form.formGroup"
             (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
-<!-- Họ tên -->
-      <div class="row form-group">
-        <div class="col-6">
-          <codx-label [formModel]="form.formModel" fiedName="EmployeeName">
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="EmployeeTypeID">
           </codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="employeeName"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-        <div class="col-6">
-          <codx-label [formModel]="form.formModel" fiedName="EmployeeName">
-          </codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="employeeName"
+          <codx-input field="employeeTypeID" [formModel]="form.formModel" [Group]="form.formGroup"
             (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
-<!-- Bí danh - Ngày sinh -->
-<div class="row form-group">
-  <div class="col-6">
-    <div id="nickName">
-      <codx-label [formModel]="form.formModel" fiedName="Bí danh">
-      </codx-label>
-      <codx-input field="nickName" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
     </div>
-  </div>
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="EmployeeTypeID">
-      </codx-label>
-      <codx-input field="employeeTypeID" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
+    <!-- Email/ Email cá nhân -->
+    <div id="email" class="row form-group">
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
+          <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
+          <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-<!-- Email/ Email cá nhân -->
-<div id="email" class="row form-group">
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
-      <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
+    <!-- Mobile Phone/ Phone -->
+    <div id="phone" class="row form-group">
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
+          <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
+          <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
-      <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
+    <!-- Checkbox CMND/ Số CMND -->
+    <div id="phone" class="row form-group">
+      <div class="col-6">
+        <div class="d-flex flex-md-column">
+          <codx-label [formModel]="form.formModel" fiedName="Checkbox" class="mb-3"> </codx-label>
+          <codx-input type="Checkbox" field="phone" 
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
+          <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-<!-- Mobile Phone/ Phone -->
-<div id="phone" class="row form-group">
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
-      <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
+    <!-- Ngày cấp/ Ngày hết hạn -->
+    <div id="email-phone" class="row form-group">
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
+          <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
+          <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
-      <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
+    <!-- Nơi cấp/ Địa chỉ trong CMND -->
+    <div id="email-phone" class="row form-group">
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
+          <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
+          <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-<!-- Checkbox CMND/ Số CMND -->
-<div id="phone" class="row form-group">
-  <div class="col-6">
-    <div class="d-flex flex-md-column">
-      <codx-label [formModel]="form.formModel" fiedName="Checkbox" class="mb-3"> </codx-label>
-      <codx-input type="Checkbox" field="phone" 
-        (valueChange)="valueChange($event)">
-      </codx-input>
+    <!-- Số lưu hồ sơ/ Ngày vào làm -->
+    <div id="email-phone" class="row form-group">
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
+          <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
+          <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
-      <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
+    <!-- Phụ cấp 1/ 2 -->
+    <div id="email-phone" class="row form-group">
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
+          <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
+          <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-<!-- Ngày cấp/ Ngày hết hạn -->
-<div id="email-phone" class="row form-group">
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
-      <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
+    <!-- Loại lao động -->
+    <div id="email-phone" class="row form-group">
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
+          <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
+          <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
-      <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
+    <!-- Nơi làm việc -->
+    <div id="email-phone" class="row form-group">
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
+          <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
+          <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-<!-- Nơi cấp/ Địa chỉ trong CMND -->
-<div id="email-phone" class="row form-group">
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
-      <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
+    <!-- Người nước ngoài/ Route -->
+    <div id="phone" class="row form-group">
+      <div class="col-6">
+        <div class="d-flex flex-md-column">
+          <codx-label [formModel]="form.formModel" fiedName="Là người nước ngoài" class="mb-3"> </codx-label>
+          <codx-input type="Checkbox" field="phone" 
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
+          <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
-      <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
+    <!-- Mã chấm công/ Đối tượng tính phép -->
+    <div id="email-phone" class="row form-group">
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
+          <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
+          <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-<!-- Số lưu hồ sơ/ Ngày vào làm -->
-<div id="email-phone" class="row form-group">
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
-      <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
+    <!-- Nhóm ngày nghỉ tuần/ Ca làm việc -->
+    <div id="email-phone" class="row form-group">
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
+          <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div>
+          <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
+          <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
-      <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-</div>
-<!-- Phụ cấp 1/ 2 -->
-<div id="email-phone" class="row form-group">
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
-      <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
-      <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-</div>
-<!-- Loại lao động -->
-<div id="email-phone" class="row form-group">
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
-      <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
-      <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-</div>
-<!-- Nơi làm việc -->
-<div id="email-phone" class="row form-group">
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
-      <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
-      <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-</div>
-<!-- Người nước ngoài/ Route -->
-<div id="phone" class="row form-group">
-  <div class="col-6">
-    <div class="d-flex flex-md-column">
-      <codx-label [formModel]="form.formModel" fiedName="Là người nước ngoài" class="mb-3"> </codx-label>
-      <codx-input type="Checkbox" field="phone" 
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
-      <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-</div>
-<!-- Mã chấm công/ Đối tượng tính phép -->
-<div id="email-phone" class="row form-group">
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
-      <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
-      <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-</div>
-<!-- Nhóm ngày nghỉ tuần/ Ca làm việc -->
-<div id="email-phone" class="row form-group">
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
-      <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
-      <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-</div>
-<!-- Ca làm việc thay đổi -->
-<div id="phone" class="row form-group">
-    <div class="d-flex flex-md-column">
-      <codx-label [formModel]="form.formModel" fiedName="Ca làm việc thay đổi" class="mb-3"> </codx-label>
-      <codx-input type="Checkbox" field="phone" 
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-
-<!-- 1 -->
-    </div>
-  </ng-container>
+    <!-- Ca làm việc thay đổi -->
+    <div id="phone" class="row form-group">
+        <div class="d-flex flex-md-column">
+          <codx-label [formModel]="form.formModel" fiedName="Ca làm việc thay đổi" class="mb-3"> </codx-label>
+          <codx-input type="Checkbox" field="phone" 
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+    </ng-container>
 </ng-template>
 
 <!-- tab  PersonalInfo-->
@@ -663,7 +671,7 @@
 </ng-container>
 
 
-<ng-template #tab1>
+<!-- <ng-template #tab1>
 
 </ng-template>
 
@@ -689,147 +697,4 @@
 
 <ng-template #tab7>
 
-</ng-template>
-
-<!-- 1 -->
-<!-- <div class="row form-group">
-  <div class="col-6">
-    <div id="joinedOn">
-      <codx-label [formModel]="form.formModel" fiedName="JoinedOn">
-      </codx-label>
-      <codx-input field="joinedOn" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="EmployeeTypeID">
-      </codx-label>
-      <codx-input field="employeeTypeID" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-</div>
-
-<div id="email-phone" class="row form-group">
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
-      <codx-input field="email" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
-      <codx-input field="phone" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-</div>
-
-<div id="positionID-jobLevel" class="row form-group">
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="PositionID">
-      </codx-label>
-      <codx-input #cbxPosition field="positionID" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)" (controlBlur)="blurInput($event)">
-      </codx-input>
-    </div>
-  </div>
-
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="JobLevel">
-      </codx-label>
-      <codx-input #cbxJobLevel field="jobLevel" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)" (controlBlur)="blurInput($event)">
-      </codx-input>
-    </div>
-  </div>
-</div>
-
-<div class="form-group border-bottom pb-1">
-  <div class="mb-2">
-    <codx-label [formModel]="form.formModel" fiedName="orgUnitID"> </codx-label>
-  </div>
-  <codx-input field="orgUnitID" [formModel]="form.formModel" [Group]="form.formGroup"
-    (valueChange)="valueChange($event)">
-  </codx-input>
-  <!-- <span class="fst-italic"> {{orgNote}} </span> -->
-<!-- </div>
-
-<div class="form-group">
-  <codx-label [formModel]="form.formModel" fiedName="LocationID"> </codx-label>
-  <codx-input field="locationID" [formModel]="form.formModel" [Group]="form.formGroup"
-    (valueChange)="valueChange($event)">
-  </codx-input>
-</div>
-
-<div class="row form-group">
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="TimeCardNo">
-      </codx-label>
-      <codx-input field="timeCardNo" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="UserID"> </codx-label>
-      <codx-input field="userID" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-</div>
-
-<div class="row form-group">
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="ShiftCalendarID">
-      </codx-label>
-      <codx-input field="shiftCalendarID" [Group]="form.formGroup" [formModel]="form.formModel"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="ALObjectID">
-      </codx-label>
-      <codx-input field="ALObjectID" [Group]="form.formGroup" [formModel]="form.formModel"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-</div>
-
-<div class="row form-group">
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="PayrollGroupID">
-      </codx-label>
-      <codx-input field="payrollGroupID" [Group]="form.formGroup" [formModel]="form.formModel"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-  <div class="col-6">
-    <div>
-      <codx-label [formModel]="form.formModel" fiedName="CurrencyID">
-      </codx-label>
-      <codx-input field="currencyID" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-  </div>
-</div> --> 
+</ng-template> -->
