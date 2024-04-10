@@ -1,26 +1,11 @@
-import { Component, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 
 @Component({
   selector: 'lib-dashboard-gauge-chart',
   templateUrl: './dashboard-gauge-chart.component.html',
   styleUrls: ['./dashboard-gauge-chart.component.css']
 })
-export class DashboardGaugeChartComponent {
-  tooltip: Object = {
-    enable: true,
-  };
-
-  font1: Object = {
-    size: '15px',
-    color: '#00CC66',
-  };
-  rangeWidth: number = 10;
-  //Initializing titleStyle
-  titleStyle: Object = { size: '18px' };
-  font2: Object = {
-    size: '15px',
-    color: '#fcde0b',
-  };
+export class DashboardGaugeChartComponent implements OnInit {
   rangeLinearGradient1: Object = {
     startValue: '0%',
     endValue: '100%',
@@ -41,22 +26,33 @@ export class DashboardGaugeChartComponent {
 
   minorTicks: Object = {
     position: 'Inside',
-    height: 1,
+    height: 0,
     width: 1,
-    offset: 15,
+    offset: 20,
+    labelStyle: { font: '0px' },
+    interval: 20,
   };
 
-  majorTicks1: Object = {
+  majorTicks: Object = {
     position: 'Outside',
     height: 10,
     width: 1,
     offset: 10,
     interval: 10,
+    labelStyle: { font: '0px' }
   };
-
 
   lineStyle: Object = {
     width: 0,
   };
+  
+  public labelStyle?: Object;
 
+  ngOnInit(): void {
+    this.labelStyle = {
+      font: {
+        size: '0px',
+      }
+    };
+  }
 }

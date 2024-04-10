@@ -2,9 +2,9 @@
             <div class="pt-2">
               <div class="d-flex justify-content-between px-1">
               </div>
-              <ejs-chart [chartArea]="chartArea" id="chart-container" height="350" [primaryXAxis]='primaryXAxis' [primaryYAxis]='primaryYAxis' [title]='title'>
+              <ejs-chart [chartArea]="chartArea" id="chart-container" height="350" [primaryXAxis]='primaryXAxis' [primaryYAxis]='primaryYAxis' [title]='title' [tooltip]='tooltip'>
                 <e-series-collection >
-                    <e-series [dataSource]='chartData' fill="#0078FF" type='Column' columnSpacing="0.5" columnWidth='0.25' xName='date' yName='In' [cornerRadius]="cornerRadius" [enableTooltip]="true"></e-series>
+                    <e-series [dataSource]='chartData' fill="#0078FF" type='Column' columnSpacing="0.5" columnWidth='0.75' xName='date' yName='In' [cornerRadius]="cornerRadius" [enableTooltip]="true"></e-series>
                 </e-series-collection>
               </ejs-chart>
             </div>
