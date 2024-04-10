@@ -715,7 +715,7 @@
             [ngTemplateOutletContext]="{
               $implicit: 'Remove',
               color: '#FFA800',
-              icon: 'bar_chart'
+              icon: 'icon-bar_chart'
             }"
           ></ng-container>
           <ng-container
@@ -723,7 +723,7 @@
             [ngTemplateOutletContext]="{
               $implicit: 'Remove',
               color: '#F64E60',
-              icon: 'graph_up'
+              icon: 'icon-i-graph-up'
             }"
           ></ng-container>
           <ng-container
@@ -731,7 +731,7 @@
             [ngTemplateOutletContext]="{
               $implicit: 'Remove',
               color: '#6C757D',
-              icon: 'bar_chart'
+              icon: 'icon-i-graph-down'
             }"
           ></ng-container>
         </div>
@@ -748,6 +748,8 @@
     <div class="bg-white border mt-3 rounded border">
       <lib-dashboard-register-aprrove
         (handleRegisterApprove)="registerApprove($event)"
+        (handleReviewRegisterApprove) ="reviewRegisterApprove($event)"
+        (handleWaitingRegisterApprove) = "waitingRegisterApprove($event)"
       ></lib-dashboard-register-aprrove>
     </div>
     <div class="d-flex justify-content-between w-100">
@@ -8051,7 +8053,7 @@
       <div class="text fs-3 fw-500">15/24</div>
     </div>
     <div>
-      <span [ngClass]="icon" ></span>
+      <span [ngClass]="icon" class="icon-56"></span>
     </div>
   </div>
 </ng-template>

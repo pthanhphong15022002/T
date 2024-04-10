@@ -319,33 +319,37 @@ export class CashtransfersAddComponent extends UIComponent {
         this.master.data.vatControl ? this.fmVATInvoice.currentData : null,
       ])
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res?.update) {
-          this.dialog.dataService.update(res.data).subscribe();
-          if (type == 'save') {
-            this.onDestroy();
-            this.dialog.close();
-          } else {
-            this.api
-              .exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
-                null,
-                this.journal.journalNo,
-                ""
-              ])
-              .subscribe((res: any) => {
-                if (res) {
-                  res.data.isAdd = true;
-                  this.master.refreshData({ ...res.data });
-                  this.detectorRef.detectChanges();
-                }
-              });
+      .subscribe({
+        next:(res:any)=>{
+          if (res?.update) {
+            this.dialog.dataService.update(res.data,true).subscribe();
+            if (type == 'save') {
+              this.onDestroy();
+              this.dialog.close();
+            } else {
+              this.api
+                .exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
+                  null,
+                  this.journal.journalNo,
+                  ""
+                ])
+                .subscribe((res: any) => {
+                  if (res) {
+                    res.data.isAdd = true;
+                    this.master.refreshData({ ...res.data });
+                    this.detectorRef.detectChanges();
+                  }
+                });
+            }
+            if (this.master.data.isAdd || this.master.data.isCopy)
+              this.notification.notifyCode('SYS006');
+            else 
+              this.notification.notifyCode('SYS007');
           }
-          if (this.master.data.isAdd || this.master.data.isCopy)
-            this.notification.notifyCode('SYS006');
-          else 
-            this.notification.notifyCode('SYS007');
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
         }
-        this.ngxLoader.stop();
       });
   }
   //#endregion Method

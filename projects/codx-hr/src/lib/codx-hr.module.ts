@@ -169,6 +169,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { DialogRegisterApproveComponent } from './dashboard/components/dialog-register-approve/dialog-register-approve.component';
 import { HistoryLevelComponent } from './dashboard/components/dialog-detail-register-approve/components/history-level/history-level.component';
 import { DialogReviewLeaveApproveComponent } from './employee-list/employee-info-profile/components/dialog-review-leave-approve/dialog-review-leave-approve.component';
+import { DialogWaitingLeavingApproveComponent } from './employee-list/employee-info-profile/components/dialog-waiting-leaving-approve/dialog-waiting-leaving-approve.component';
 export const routes: Routes = [
   {
     path: '',
@@ -195,6 +196,10 @@ export const routes: Routes = [
       {
         path: 'employeeprofile/:funcID',
         component: EmployeeInfoProfileComponent
+      }, 
+      {
+        path: 'test/:funcID',
+        component: DialogWaitingLeavingApproveComponent
       }
     ],
   },
@@ -513,7 +518,9 @@ const T_Component = [
   DashboardTotalemployeeChartComponent,
   DashboardComponent,
   DialogRegisterApproveComponent,
-  DialogReviewLeaveApproveComponent
+  DialogReviewLeaveApproveComponent,
+  DialogWaitingLeavingApproveComponent
+
 ];
 @NgModule({
   imports: [

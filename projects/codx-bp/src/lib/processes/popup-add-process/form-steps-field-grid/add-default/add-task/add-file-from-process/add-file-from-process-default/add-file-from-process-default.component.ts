@@ -1,24 +1,27 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ApiHttpService } from 'codx-core';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 
 @Component({
   selector: 'lib-add-file-from-process-default',
   templateUrl: './add-file-from-process-default.component.html',
-  styleUrls: ['./add-file-from-process-default.component.css']
+  styleUrls: ['./add-file-from-process-default.component.scss']
 })
 export class AddFileFromProcessDefaultComponent implements OnInit,OnChanges{
   @Input() data:any;
   @Input() formModel:any;
   @Input() step:any;
   @Output() selectedChange = new EventEmitter<any>();
-  
+
   documentControl:any;
   dataList:any = [];
   countOb = 0;
   @Input() selected = [];
   constructor(
     private api: ApiHttpService,
-  ) 
+    public dmSV: CodxDMService,
+
+  )
   {
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -100,7 +103,7 @@ export class AddFileFromProcessDefaultComponent implements OnInit,OnChanges{
                 this.getFile(fieldID,entityName,i);
               }
             }
-            
+
             i++;
           }
         });
@@ -118,12 +121,12 @@ export class AddFileFromProcessDefaultComponent implements OnInit,OnChanges{
       if(doc?.refStepID == '00000000-0000-0000-0000-000000000000' || !doc?.refStepID)
       {
         return this.documentControl.findIndex(x=>x.recID == refStepID);
-      } 
-      else 
+      }
+      else
       {
         return this.getDocRef(doc.refStepID)
       }
-    } 
+    }
     index = this.documentControl.findIndex(x=>x.recID == refStepID);
     return index;
   }
@@ -139,9 +142,9 @@ export class AddFileFromProcessDefaultComponent implements OnInit,OnChanges{
         {
           this.dataList[index].child[index2].child.push(element);
         }
-        else 
+        else
         {
-          var obj2 = 
+          var obj2 =
           {
             stepName: element.stepName,
             child: [element]
@@ -149,14 +152,14 @@ export class AddFileFromProcessDefaultComponent implements OnInit,OnChanges{
           this.dataList[index].child.push(obj2);
         }
       }
-      else 
+      else
       {
-        var obj2 = 
+        var obj2 =
         {
           stepName: element.stepName,
           child: [element]
         }
-        var obj = 
+        var obj =
         {
           stageName : element.stageName,
           child : [obj2]

@@ -1,0 +1,115 @@
+<div class="table-responsive table-ac">
+    <table class="table mb-0">
+      <thead class="border-gray-200 table-thead-ac">
+        <tr class="border-bottom">
+          <th class="border-bottom" style="width: 15em;min-width: 10em;">
+            <span class="fw-bold">Nhóm tài sản</span>
+          </th>
+          <th class="border-bottom" style="width: 15em;min-width: 10em;">
+            <span class="fw-bold">Mã tài sản</span>
+          </th>
+          <th class="border-bottom" style="width: 15em;min-width: 10em;">
+            <span class="fw-bold">Tên tài sản</span>
+          </th>
+          <th class="border-bottom" style="width: 15em;min-width: 10em;">
+            <span class="fw-bold">ĐVT</span>
+          </th>
+          <th class="border-bottom" style="width: 15em;min-width: 10em;">
+            <span class="fw-bold">Số lượng</span>
+          </th>
+          <th class="border-bottom text-end" style="width: 15em;min-width: 10em;">
+            <span class="fw-bold">Nguyên giá</span>
+          </th>
+          <th class="border-bottom" style="width: 30em;min-width: 25em;">
+            <span class="fw-bold">Phòng ban</span>
+          </th>
+          <th class="border-bottom" style="width: 30em;min-width: 25em;">
+            <span class="fw-bold">TTCP</span>
+          </th>
+          <th class="border-bottom" style="width: 30em;min-width: 25em;">
+            <span class="fw-bold">Mục phí</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody *ngIf="listAsset && listAsset.length" class="table-body-ac">
+        <tr *ngFor="let item of listAsset;trackBy: trackByFn" style="border-bottom: 1px solid var(--bs-border-color) !important">
+          <td style="width: 15em;min-width: 10em;">
+            <ng-container *ngIf="(item.assetGroupID != null && item.assetGroupID != '')">
+              <span class="fw-bold line-clamp line-clamp-1">{{item.assetGroupID}}</span>
+            </ng-container>
+          </td>
+          <td style="width: 15em;min-width: 10em;">
+            <ng-container *ngIf="(item.assetID != null && item.assetID != '')">
+              <span class="fw-bold line-clamp line-clamp-1">{{item.assetID}}</span>
+            </ng-container>
+          </td>
+          <td style="width: 15em;min-width: 10em;">
+            <ng-container *ngIf="(item.assetName != null && item.assetName != '')">
+              <span class="fw-bold line-clamp line-clamp-1">{{item.assetName}}</span>
+            </ng-container>
+          </td>
+          <td style="width: 15em;min-width: 10em;">
+            <ng-container *ngIf="(item.umid != null && item.umid != '')">
+              <span class="fw-bold line-clamp line-clamp-1">{{item.umid}}</span>
+            </ng-container>
+          </td>
+          <td style="width: 15em;min-width: 10em;">
+            <ng-container *ngIf="(item.quantity != null && item.quantity != '')">
+              <span class="fw-bold line-clamp line-clamp-1">{{item.quantity}}</span>
+            </ng-container>
+          </td>
+          <td class="text-end" style="width: 15em;min-width: 10em;">
+            <ng-container *ngIf="(item.costAmt != null && item.costAmt != '')">
+              <span class="fw-bold line-clamp line-clamp-1">{{item.costAmt}}</span>
+            </ng-container>
+          </td>
+          <td style="width: 30em;min-width: 25em;">
+            <ng-container *ngIf="(item.diM1 != null && item.diM1 != '')">
+              <span class="fw-bold line-clamp line-clamp-1">{{item.diM1}}</span>
+            </ng-container>
+          </td>
+          <td style="width: 30em;min-width: 25em;">
+            <ng-container *ngIf="(item.diM2 != null && item.diM2 != '')">
+              <span class="fw-bold line-clamp line-clamp-1">{{item.diM2}}</span>
+            </ng-container>
+          </td>
+          <td style="width: 30em;min-width: 25em;">
+            <ng-container *ngIf="(item.diM3 != null && item.diM3 != '')">
+              <span class="fw-bold line-clamp line-clamp-1">{{item.diM3}}</span>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+      <div *ngIf="listAsset && listAsset.length == 0" class="ac-empty">
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" />
+                  <div class="fs-6 text-dark mt-2 text-center">
+                      {{ "SYS011" | mssg | async }}
+                  </div>
+      </div>
+    </table>
+    <!-- <table *ngIf="listAsset && listAsset.length" class="table mb-0 table-footer-ac">
+        <thead class="border-gray-200 bg-gray-100">
+          <tr>
+            <th class="text-end" style="width: 15em;min-width: 10em;">
+              <codx-label *ngIf="listAsset && listAsset.length > 0" class="fw-bold line-clamp line-clamp-1" fiedName="lblTotal"
+                default="Tổng cộng">
+            </codx-label>
+            </th>
+            <th class="border-bottom" style="width: 15em;min-width: 10em;">
+            </th>
+            <th class="border-bottom" style="width: 15em;min-width: 10em;">
+            </th>
+            <th class="border-bottom" style="width: 15em;min-width: 10em;">
+            </th>
+            <th class="border-bottom" style="width: 15em;min-width: 10em;">
+            </th>
+            <th class="border-bottom" style="width: 30em;min-width: 25em;">
+            </th>
+            <th class="border-bottom" style="width: 30em;min-width: 25em;">
+            </th>
+            <th class="border-bottom" style="width: 30em;min-width: 25em;">
+            </th>
+          </tr>
+        </thead>
+      </table> -->
+</div>

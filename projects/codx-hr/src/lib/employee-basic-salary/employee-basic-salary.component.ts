@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   Injector,
@@ -31,7 +32,7 @@ import moment from 'moment';
   templateUrl: './employee-basic-salary.component.html',
   styleUrls: ['./employee-basic-salary.component.css'],
 })
-export class EmployeeBasicSalaryComponent extends UIComponent {
+export class EmployeeBasicSalaryComponent  extends UIComponent implements AfterViewInit {
   //#region view
   @ViewChild('templateList') templateList?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;

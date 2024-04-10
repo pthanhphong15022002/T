@@ -58,6 +58,7 @@ import { MyTemComponent } from '../../dashboard/widgets/my-tem/my-tem.component'
 import { DialogDetailRegisterApproveComponent } from '../../dashboard/components/dialog-detail-register-approve/dialog-detail-register-approve.component';
 import { DialogRegisterApproveComponent } from '../../dashboard/components/dialog-register-approve/dialog-register-approve.component';
 import { DialogReviewLeaveApproveComponent } from './components/dialog-review-leave-approve/dialog-review-leave-approve.component';
+import { DialogWaitingLeavingApproveComponent } from './components/dialog-waiting-leaving-approve/dialog-waiting-leaving-approve.component';
 
 @Component({
   selector: 'lib-employee-info-profile',
@@ -70,6 +71,8 @@ export class EmployeeInfoProfileComponent extends UIComponent {
   @ViewChild('itemTemplate') template: TemplateRef<any>;
   @ViewChild('paneRight') panelRight: TemplateRef<any>;
   @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
+
+  
 
   views: Array<ViewModel> | any = [];
   minType = 'MinRange';
@@ -1055,7 +1058,7 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     private notifySvr: NotificationsService
   ) {
     super(inject);
-    this.funcID = this.routeActive.snapshot.params['funcID'];
+    this.funcID = 'HRT03b';
     this.user = this.auth.get();
   }
 
@@ -1073,7 +1076,7 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     if (this.funcID) {
       this.hrService.getFunctionList(this.funcID).subscribe((res) => {
         this.lstTab = res;
-        console.log(this.lstTab);
+        console.log('lstTab', this.lstTab);
         for (let i = 0; i < res.length; i++) {
           switch (res[i].url) {
             case this.curriculumVitaeURL:
@@ -7244,6 +7247,24 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     let options = new SidebarModel();
 
     options.Width = 'Auto';
-    this.callfunc.openSide(DialogReviewLeaveApproveComponent, [], options);
+    // this.callfunc.openSide(DialogReviewLeaveApproveComponent, [], options);
+    this.callfunc.openSide(DialogRegisterApproveComponent);
+
+  }
+
+  reviewRegisterApprove(event: any) {
+    let options = new SidebarModel();
+
+    options.Width = 'Auto';
+    this.callfunc.openSide(DialogReviewLeaveApproveComponent, options);
+
+  }
+
+  waitingRegisterApprove(event: any) {
+    console.log('clicked')
+    let options = new SidebarModel();
+
+    options.Width = 'Auto';
+    this.callfunc.openSide(DialogWaitingLeavingApproveComponent, [], options);
   }
 }
