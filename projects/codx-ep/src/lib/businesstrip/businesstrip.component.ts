@@ -151,7 +151,7 @@ export class BusinesstripComponent extends UIComponent implements AfterViewInit,
         }
         let popup = this.callfc.openSide(PopupAddBusinesstripComponent,obj,dialog,this.view.funcID);
         this.subcriptions.add(popup.closed.subscribe((res:any) => {
-          if(res && res.event)
+          if(res.event)
           {
             let subcribeAdd = this.view.dataService.update(res.event).subscribe();
             this.subcriptions.add(subcribeAdd);
@@ -178,14 +178,14 @@ export class BusinesstripComponent extends UIComponent implements AfterViewInit,
       dialog.FormModel = this.view.formModel;
       dialog.DataService = this.view.dataService;
       let obj = {
-        data : data,
+        data : JSON.parse(JSON.stringify(data)),
         actionType: "edit"
       }
       let popup = this.callfc.openSide(PopupAddBusinesstripComponent,obj,dialog,this.view.funcID);
       this.subcriptions.add(popup.closed.subscribe((res:any) => {
-        if(res?.event?.recID)
+        if(res?.event)
         {
-          this.businestripDetail.loadRequestDetail(res.event.recID);
+          this.view.dataService.update(res.event).subscribe();
         }
       }));
     }
@@ -209,9 +209,9 @@ export class BusinesstripComponent extends UIComponent implements AfterViewInit,
           }
           let popup = this.callfc.openSide(PopupAddBusinesstripComponent,obj,dialog,this.view.funcID);
           this.subcriptions.add(popup.closed.subscribe((res:any) => {
-            if(res?.event?.recID)
+            if(res?.event)
             {
-              this.businestripDetail.loadRequestDetail(res.event.recID);
+              this.view.dataService.update(res.event).subscribe();
             }
           }));
         }
@@ -315,4 +315,18 @@ export class BusinesstripComponent extends UIComponent implements AfterViewInit,
     else t.notiSV.notify("Gửi duyệt không thành công",2);
   }
 
+  getRequestItem(recID:string){
+    if(recID)
+    {
+      let subcribeApi =  this.api.execSv("EP","EP","RequestsBusiness","GetRequestDetailAsync",[recID,this.view.funcID])
+      .subscribe((res:any) => {
+        if(res)
+        {
+          this.view.dataService
+          this.detectorRef.detectChanges();
+        }
+      });
+      this.subcriptions.add(subcribeApi);
+    }
+  }
 }

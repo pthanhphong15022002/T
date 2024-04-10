@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, Injector, Optional, ViewChild } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
-import { CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, NotificationsService, UIComponent } from 'codx-core';
+import { CodxFormComponent, CodxGridviewV2Component, DataRequest, DialogData, DialogModel, DialogRef, NotificationsService, UIComponent } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { RoundService } from '../../../round.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { ChooseJournalComponent } from '../../../share/choose-journal/choose-journal.component';
 
 @Component({
   selector: 'lib-cash-countings-add',
@@ -359,8 +360,6 @@ export class CashCountingsAddComponent extends UIComponent {
           this.eleGridCounting.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') {
               this.saveVoucher(type);
-            }else{
-              this.ngxLoader.stop();
             }
           })
           return;
@@ -369,8 +368,6 @@ export class CashCountingsAddComponent extends UIComponent {
           this.eleGridItems.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') {
               this.saveVoucher(type);
-            }else{
-              this.ngxLoader.stop();
             }
           })
           return;
@@ -379,8 +376,6 @@ export class CashCountingsAddComponent extends UIComponent {
           this.eleGridAsset.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') {
               this.saveVoucher(type);
-            }else{
-              this.ngxLoader.stop();
             }
           })
           return;
@@ -398,40 +393,45 @@ export class CashCountingsAddComponent extends UIComponent {
         this.journal,
       ])
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res?.update) {
-          this.dialog.dataService.update(res.data,true).subscribe();
-          if (type == 'save') {
-            this.onDestroy();
-            this.dialog.close();
-          } else {
-            this.api
-              .exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
-                null,
-                this.journal.journalNo,
-                ""
-              ])
-              .subscribe((res: any) => {
-                if (res) {
-                  res.data.isAdd = true;
-                  this.master.refreshData({ ...res.data });
-                  setTimeout(() => {
-                    this.refreshGrid();
-                  }, 100);
-                  this.detectorRef.detectChanges();
-                }
-              });
+      .subscribe({
+        next:(res: any) => {
+          if (res?.update) {
+            this.dialog.dataService.update(res.data,true).subscribe();
+            if (type == 'save') {
+              this.onDestroy();
+              this.dialog.close();
+            } else {
+              this.api
+                .exec('AC', 'CountingsBusiness', 'SetDefaultAsync', [
+                  null,
+                  this.journal.journalNo,
+                  ""
+                ])
+                .subscribe((res: any) => {
+                  if (res) {
+                    res.data.isAdd = true;
+                    this.master.refreshData({ ...res.data });
+                    setTimeout(() => {
+                      this.refreshGrid();
+                    }, 100);
+                    this.detectorRef.detectChanges();
+                  }
+                });
+            }
+            if (this.master.data.isAdd || this.master.data.isCopy)
+              this.notification.notifyCode('SYS006');
+            else
+              this.notification.notifyCode('SYS007');
+  
           }
-          if (this.master.data.isAdd || this.master.data.isCopy)
-            this.notification.notifyCode('SYS006');
-          else
-            this.notification.notifyCode('SYS007');
-
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          if (this.eleGridCounting && this.eleGridCounting?.isSaveOnClick) this.eleGridCounting.isSaveOnClick = false;
+          if (this.eleGridItems && this.eleGridItems.isSaveOnClick) this.eleGridItems.isSaveOnClick = false;
+          if (this.eleGridAsset && this.eleGridAsset.isSaveOnClick) this.eleGridAsset.isSaveOnClick = false;
+          this.onDestroy();
         }
-        if (this.eleGridCounting && this.eleGridCounting?.isSaveOnClick) this.eleGridCounting.isSaveOnClick = false;
-        if (this.eleGridItems && this.eleGridItems.isSaveOnClick) this.eleGridItems.isSaveOnClick = false;
-        if (this.eleGridAsset && this.eleGridAsset.isSaveOnClick) this.eleGridAsset.isSaveOnClick = false;
-        this.ngxLoader.stop();
       });
   }
 
@@ -439,7 +439,107 @@ export class CashCountingsAddComponent extends UIComponent {
    * *Hàm hủy bỏ chứng từ
    */
   onDiscardVoucher() {
+    if (this.master && this.master.data._isEdit) {
+      this.notification.alertCode('AC0010', null).subscribe((res) => {
+        if (res.event.status === 'Y') {
+          this.ngxLoader.start();
+          this.detectorRef.detectChanges();
+          this.dialog.dataService
+            .delete([this.master.data], false, null, '', '', null, null, false)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next:(res:any)=>{
+                if (res.data != null) {
+                  this.notification.notifyCode('E0860');
+                  this.api
+                    .exec('AC', 'CountingsBusiness', 'SetDefaultAsync', [
+                      null,
+                      this.journal.journalNo,
+                      ""
+                    ])
+                    .subscribe((res: any) => {
+                      if (res) {
+                        res.data.isAdd = true;
+                        this.master.refreshData({ ...res.data });
+                        setTimeout(() => {
+                          this.refreshGrid();
+                        }, 100);
+                      }
+                      this.ngxLoader.stop();
+                      this.detectorRef.detectChanges();
+                    });
+                }
+              },
+              complete:()=>{
+                this.ngxLoader.stop();
+                this.onDestroy();
+              }
+            });
+        }
+      });
+    }
+  }
 
+  /**
+   * Xu li chenh lech
+   */
+  onHandle(){
+    this.master.save(null, 0, '', '', false, { allowCompare: false })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        let isError = false;
+        if (!res) isError = true;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) isError = true;
+        }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) isError = true;
+        }
+        if(isError){
+          return;
+        }
+        if(this.master.data?.diffValue == 0){
+          this.notification.notify('Không có chênh lệch để xử lý','2');
+          return;
+        }
+        let type = '';
+        let totalAmt = 0;
+        if(this.master.data?.diffValue < 0){
+          type = 'CR';
+          totalAmt = -(this.master.data?.diffValue);
+        } 
+        if(this.master.data?.diffValue > 0){
+          type = 'CP';
+          totalAmt = this.master.data?.diffValue;
+        }
+        let data = {
+          type: type,
+          totalAmt:totalAmt,
+          refID:this.master.data.recID,
+          refType:this.journal.journalType,
+          refNo:this.master.data.voucherNo
+        };
+        let opt = new DialogModel();
+        let dialog = this.callfc.openForm(
+          ChooseJournalComponent,
+          '',
+          null,
+          null,
+          '',
+          data,
+          '',
+          opt
+        );
+        dialog.closed.subscribe((res) => {
+          if (res && res?.event.data && res?.event.data?.unbounds) {
+            if (res?.event.data?.unbounds['oCouting']) {
+              this.master.setValue('status',res?.event.data?.unbounds['oCouting'].status,{});
+              this.dialog.dataService.update(res?.event.data?.unbounds['oCouting'],true).subscribe();
+              this.detectorRef.detectChanges();
+            }
+          }
+        });
+      })
   }
   //#endregion
 
@@ -452,13 +552,12 @@ export class CashCountingsAddComponent extends UIComponent {
       case 'add':
       case 'update':
       case 'delete':
-        // let total = this?.eleGridCounting.dataSource.reduce((sum, data: any) => sum + data?.amount, 0);
-        // this.master.setValue('countValue', total, {});
-        // let value = this.master.data.actualValue - this.master.data?.countValue;
-        // this.master.setValue('diffValue', value, {});
-        // this.master.save(null, 0, '', '', false, { allowCompare: false })
-        //   .pipe(takeUntil(this.destroy$))
-        //   .subscribe((res: any) => { })
+        if(event.data.unbounds['master']){
+          this.master.setValue('countValue',event.data.unbounds['master']?.countValue,{});
+          this.master.setValue('diffValue',event.data.unbounds['master']?.diffValue,{});
+          this.dialog.dataService.update(event.data.unbounds['master'],true).subscribe();
+          this.detectorRef.detectChanges();
+        }
         break;
       case 'closeEdit':
         if (this.eleGridCounting && this.eleGridCounting.rowDataSelected) {

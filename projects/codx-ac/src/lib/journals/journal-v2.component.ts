@@ -30,6 +30,7 @@ import { JournalViewsettingComponent } from './journals-viewsetting/journal-view
   selector: 'lib-test-journal',
   templateUrl: './journal-v2.component.html',
   styleUrls: ['./journal-v2.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JournalV2Component extends UIComponent {
   //#region Contrucstor
@@ -127,9 +128,9 @@ export class JournalV2Component extends UIComponent {
     ];
   }
 
-  // ngDoCheck() {
-  //   this.detectorRef.detectChanges();
-  // }
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
+  }
 
   ngOnDestroy() {
     this.onDestroy();
@@ -163,7 +164,7 @@ export class JournalV2Component extends UIComponent {
   selectedChangeToolBar(data:any){
     this.selectedToolBar = data.value;
     this.view.dataService.setPredicates(['Category=@0'],[data.value]);
-    //this.detectorRef.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   changeMF(event) {

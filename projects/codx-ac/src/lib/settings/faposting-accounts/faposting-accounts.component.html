@@ -1,5 +1,5 @@
 <codx-views #view [funcID]="funcID" [views]="views" [button]="btnAdd" [autoLoad]="true" [isSubView]="isSubView"
-  entityName="AC_FAPostingAccounts" service="AC" (buttonClick)="handleClickAdd($event)" (clickMF)="handleClickMoreFuncs($event, $event?.data)" (onActions)="viewActions($event)">
+  entityName="AC_FAPostingAccounts" service="AC" (buttonClick)="handleClickAdd($event)" (clickMF)="handleClickMoreFuncs($event, view.dataService.dataSelected)" (onActions)="viewActions($event)">
 </codx-views>
 
 <ng-template #templateLeft>
@@ -57,7 +57,7 @@
 
 <ng-template #templateRight>
   <div class="tabline-content ms-5 h-100">
-    <codx-gridview-v2 #grid [funcId]="funcID" [dataService]="view.dataService"
+    <codx-gridview-v2 #grid [funcId]="funcID" [dataService]="view.dataService" [sameData]="true"
       entityName="AC_FAPostingAccounts" idField="recID" [templateMore]="templateMore" (onSelected)="onSelected($event)"></codx-gridview-v2>
   </div>
 </ng-template>
