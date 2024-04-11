@@ -173,6 +173,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     },
   ];
   activeTask: any;
+  permFormTask: any;
   constructor(
     private shareService: CodxShareService,
     private cache: CacheService,
@@ -360,8 +361,6 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
           this.listMF = this.listButtonMF.filter(
             (x) =>
               x?.functionID == BPCONST.TASKMF.Sign ||
-              x?.functionID == BPCONST.TASKMF.Reject ||
-              x?.functionID == BPCONST.TASKMF.Redo ||
               x?.functionID == BPCONST.TASKMF.Authority
           );
           break;
@@ -409,6 +408,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       )
       .subscribe((item: any) => {
         if (item) {
+          this.permFormTask = item.createdBy;
           if (item?.documentControl && item.documentControl.length > 0) {
             item.documentControl.forEach((element) => {
               if (element.files && element.files.length > 0) {
