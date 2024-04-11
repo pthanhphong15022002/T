@@ -36,8 +36,8 @@
   
 .h-employee {
   .pic-emloyee .top-100.start-100 {
-    left: 15px!important;
-    margin-top: -12px;
+    left: 0px!important;
+    margin-top: -10px;
   }
 
 
@@ -128,4 +128,13 @@
       color: var(--primary);
       font-weight: bold;
   }
+}
+
+.icon-qr_code_scanner {
+  color: #FF001B;
+}
+
+.info-card-header {
+  border-radius: 10px;
+  background: var(--Linear-Linear-4, linear-gradient(104deg, #006FED 6.02%, #07F 23.58%, #00F0FF 99.68%));
 }

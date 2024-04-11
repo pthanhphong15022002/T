@@ -1,6 +1,7 @@
 .card {
     border-radius: 10px;
-    width: 200px;
+    width: 173px;
+    height: 144px;
 }
 
 .card-body {
@@ -8,7 +9,7 @@
 }
 
 .card-title {
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 500;
     color: gray;
 }
@@ -20,16 +21,17 @@
 .card-percent {
     font-size: 14px;
     font-weight: bold;
+    margin-top: 5px;
 }
 
 .icon-circle {
-    width: 40px;  
-    height: 40px;
+    width: 35px;  
+    height: 35px;
     border-radius: 50%; 
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 5px;
+    margin-bottom: 9px;
 }
 
 

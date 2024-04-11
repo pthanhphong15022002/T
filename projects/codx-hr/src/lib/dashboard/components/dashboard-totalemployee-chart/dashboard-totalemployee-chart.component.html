@@ -1,6 +1,6 @@
 <div
     class="mt-5 pb-5 pt-5"
-    style="background-color: white; padding-left: 10px; border-radius: 20px"
+    style="background-color: white; padding-left: 10px; border-radius: 20px; min-height: 650px"
   >
     <div class="p-2" style="background-color: white; border-radius: 20px">
       <div class="fs-1 fw-500 fw-bold hcs-text p-3 pb-10 ps-1 pt-2">
@@ -20,9 +20,9 @@
           *ngFor="let employee of employees"
           class="bar parent-bar"
         >
-          <div class="bar-container">
+          <div class="bar-container" (click)="toggleChildren($event)">
             <div class="bar-info" >
-              <i class="icon-arrow_drop_down" (click)="toggleChildren($event)"></i>
+              <i class="icon-arrow_drop_down" ></i>
               <div class="bar-label">{{ employee.department }}</div>
               <div class="bar-fill-container">
                 <div class="bar-fill" [style.width.%]="employee.total"></div>

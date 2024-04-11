@@ -5,25 +5,25 @@
   [tabContent]="[employeeInfo, personalInfo, legalInfo]" 
   [title]="headerText"
   [subHeader]="subheaderTab"
-  [headerPosition]="'Right'"
   (setTitle)="setTitle($event)" 
   [data]="data">
 </codx-layout-add>
 
 <!-- Header Tab -->
 <ng-template #subheaderTab>
+  <ejs-tab id="element" style="margin-left: 220px">
+    <e-tabitems>
+        <e-tabitem [header]='headerTabs[0]'>
+        </e-tabitem>
+        <e-tabitem [header]='headerTabs[1]'></e-tabitem>
+        <e-tabitem [header]='headerTabs[2]'></e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
 </ng-template>
 <!-- tab Employee -->
 <ng-template #employeeInfo>
   <ng-container *ngIf="form?.formGroup">
-    <ejs-tab id="element" style="margin-left: 220px">
-      <e-tabitems>
-          <e-tabitem [header]='headerTabs[0]'>
-          </e-tabitem>
-          <e-tabitem [header]='headerTabs[1]'></e-tabitem>
-          <e-tabitem [header]='headerTabs[2]'></e-tabitem>
-        </e-tabitems>
-      </ejs-tab>
+   
     <!-- Mã NV -->
     <div class="row form-group">
         <codx-label [formModel]="form.formModel" fiedName="EmployeeID">
