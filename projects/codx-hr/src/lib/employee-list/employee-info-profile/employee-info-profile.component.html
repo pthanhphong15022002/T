@@ -7,11 +7,12 @@
 >
 </codx-views>
 <ng-template #panelContent>
-  <div class="page-pw h-employee pb-0 w-100">
+  <div class="page-pw h-employee pb-0">
     <div class="page-profile w-100">
-      <div class="d-flex">
-        <div class="user-left me-4 border w-350px min-w-300px bg-white">
-          <div class="profile-bg"></div>
+      <div class="d-flex justify-content-between">
+        <div class="user-left me-4 border bg-white">
+          <div class="profile-bg" style="
+          width: 273px;"></div>
           <div class="d-flex flex-column text-center mx-4 profile-info">
             <div
               class="mb-3 mt-4 d-flex justify-content-center align-items-top"
@@ -569,10 +570,11 @@
         </div>
 
         <div
-          class="w-100 user-right overflow-hidden flex-grow-1"
+          class="d-flex justify-content-center main-content"
           id="maincontent"
         >
-          <div class="tab-content">
+          <div class="tab-content" style="
+          max-width: 830px">
             <!-- Pane 0: Sơ yếu lí lịch -->
             <div class="tab-pane fade show active" id="pane_100">
               <ng-container [ngTemplateOutlet]="dashboard"></ng-container>
@@ -655,8 +657,8 @@
             Menu
           </span>
         </div> -->
-        <div class="user-left" id="myteambar">
-          <lib-my-tem class="w-25" id="sidebar"></lib-my-tem>
+        <div class="user-right ms-4" id="myteambar">
+          <lib-my-tem class="w-280px" id="sidebar" ></lib-my-tem>
         </div>
         <div
           class="fab-container"
@@ -674,11 +676,10 @@
 <!-- panel DASH BOARD -->
 <ng-template #dashboard>
   <div class="d-flex flex-column">
-    <div class="profile-wrapper w-100 rounded border">
-      <div class="profile-filed w-100 p-3">
+    <div class="profile-wrapper w-100">
+      <div class="profile-filed w-100 p-3 bg-white rounded border">
         <!-- Header Content -->
-        <div class="d-flex justify-content-between">
-          <!--  -->
+        <div class="profile-filed-header d-flex justify-content-between">
           <div>
             <div class="fs-3 text fw-bold pb-2">
               <span>Xin chào, </span>
@@ -691,7 +692,7 @@
           <!-- selected box -->
           <div>
             <codx-dropdown-calendar 
-            cssPopup="h-350px w-550px"
+            cssPopup="h-41px w-155px"
             [selectedType]="'m'"
             [displayOption]="ops"
             cssClass="w-100" ></codx-dropdown-calendar>
@@ -700,7 +701,7 @@
 
         <!-- Componet -->
         <div
-          class="d-flex align-items-center justify-content-sm-start pt-4 gap-3"
+          class="info-card-list d-flex align-items-center justify-content-center gap-9 w-100"
         >
           <ng-container
             [ngTemplateOutlet]="item"
@@ -723,7 +724,7 @@
             [ngTemplateOutletContext]="{
               $implicit: 'Remove',
               color: '#F64E60',
-              icon: 'icon-i-graph-up'
+              icon: 'icon-trending_up'
             }"
           ></ng-container>
           <ng-container
@@ -731,29 +732,29 @@
             [ngTemplateOutletContext]="{
               $implicit: 'Remove',
               color: '#6C757D',
-              icon: 'icon-i-graph-down'
+              icon: 'icon-trending_down'
             }"
           ></ng-container>
         </div>
       </div>
     </div>
-    <div class="d-flex justify-content-between w-100 row">
-      <div class="bg-white mt-3 w-100 me-1 rounded border col-xxl-6 col-6">
+    <div class="profile-leave d-flex justify-content-between gap-4">
+      <div class="bg-white rounded border w-50 mt-4">
         <lib-profile-last7day></lib-profile-last7day>
       </div>
-      <div class="bg-white mt-3 w-100 rounded border col-xxl-6 col-6">
-        <lib-profile-dashboard-leave class="w-50"></lib-profile-dashboard-leave>
+      <div class="bg-white rounded border w-50 mt-4">
+        <lib-profile-dashboard-leave></lib-profile-dashboard-leave>
       </div>
     </div>
-    <div class="bg-white border mt-3 rounded border">
+    <div class="bg-white border mt-3 rounded border ">
       <lib-dashboard-register-aprrove
         (handleRegisterApprove)="registerApprove($event)"
         (handleReviewRegisterApprove) ="reviewRegisterApprove($event)"
         (handleWaitingRegisterApprove) = "waitingRegisterApprove($event)"
       ></lib-dashboard-register-aprrove>
     </div>
-    <div class="d-flex justify-content-between w-100">
-      <div class="bg-white border mt-3 p-3 rounded w-60">
+    <div class="defaut-chart d-flex justify-content-between w-100 gap-4">
+      <div class="newEmployee-table bg-white border h-375px mt-4 p-3 rounded">
         <div class="d-flex flex-cloumn justify-content-between">
           <span class="fw-bold">Nhân viên mới vô làm trong tháng (4)</span>
           <div>
@@ -765,7 +766,7 @@
           </div>
         </div>
         <div>
-          <lib-table-grip
+          <!-- <lib-table-grip
             [data]="listThanNhan"
             [listFields]="listField"
             [isShowHeader]="false"
@@ -815,10 +816,15 @@
                 </div>
               </div>
             </ng-template>
-          </lib-table-grip>
+          </lib-table-grip> -->
+          
+         <hr-table-newemployee></hr-table-newemployee>
         </div>
       </div>
-      <div class="mt-3 flex-grow-1 ms-1 mt-3">
+      <!-- <div>
+        <lib-dialog-waiting-leaving-approve></lib-dialog-waiting-leaving-approve>
+      </div> -->
+      <div class="bg-white border flex-grow-1 h-175px mt-4 rounded w-80">
         <lib-age-statistic></lib-age-statistic>
       </div>
     </div>
@@ -8046,14 +8052,14 @@
 <ng-template #item let-item let-icon="icon" let-color="color">
   <div
     [ngStyle]="{ background: color }"
-    class="info-item d-flex align-items-center justify-content-around p-3 rounded gap-2 w-25"
+    class="info-item d-flex align-items-center justify-content-around p-3 rounded"
   >
-    <div class="text-white d-flex flex-column p-3">
-      <div class="text fs-13 fw-400  ">Công làm việc</div>
+    <div class="content-profile-info text-white d-flex flex-column p-3">
+      <div class="text fs-13 fw-400">Công làm việc</div>
       <div class="text fs-3 fw-500">15/24</div>
     </div>
     <div>
-      <span [ngClass]="icon" class="icon-56"></span>
+      <span [ngClass]="icon" class="icon-profile-info"></span>
     </div>
   </div>
 </ng-template>

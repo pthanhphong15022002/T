@@ -27,7 +27,7 @@
 
 /* css cho card user */
 
-.view-all{
+.view-all {
     color: #007bff;
 }
 
@@ -63,20 +63,79 @@
     font-weight: 500;
 }
 
+.my-team-searchbar{
+    padding: 17px 0;
+}
+
 .e-tab .e-tab-header .e-indicator {
     background: blue;
 }
 
 .e-tab .e-tab-text {
-    color: blue !important;}
-
-.e-tab .e-toolbar-item.e-active .e-tab-text {
-    color: blue !important;
-    font-weight: 600 !important;
+    font-size: 11px !important;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px !important;
+    line-height: 13px;
+    color: #6C757D !important;
 }
 
+.e-toolbar-item.e-icon.e-template {
+    padding: 0 !important;
+}
+
+.e-hscroll_0_nav.e-scroll-nav {
+    display: none;
+}
+
+.e-tab-wrap {
+    padding: 0 !important;
+}
+
+.e-hscroll:not(.e-scroll-device) {
+    padding: 0 !important;
+}
+
+.e-tab .e-toolbar-item.e-active .e-tab-text {
+    color:  #005DC7 !important;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.e-tab .e-tab-text {
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    color: #6C757D !important;
+    padding-bottom: 12px;
+}
+
+.e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
+    margin-right: 12px!important;
+}
+
+.e-tab .e-tab-header:not(.e-vertical)::before{
+    border-width: 0 !important;
+}
+
+.e-tab-header.e-control.e-toolbar.e-lib.e-keyboard {
+    padding-bottom: 17px !important;
+}
+
+div#e-item-element_2 {
+    margin-right: 0px !important;
+}
+
+// .e-tab .e-tab-header .e-toolbar-items{
+//     display: none;
+// }
+
+
 .e-toolbar-item.e-icon.e-template .e-tab-wrap {
-    padding: 0 8px !important;
+    // padding: 0 8px !important;
 }
 
 .e-hscroll_0_nav.e-scroll-nav.e-scroll-right-nav.e-lib.e-touch {
@@ -85,6 +144,18 @@
 
 .e-hscroll .e-scroll-nav {
     background: white !important;
+}
+
+div#hscroll_0_nav_right {
+    display: none !important;
+}
+
+.e-hscroll .e-scroll-nav {
+    background-color: transparent !important;
+}
+
+.e-tab .e-tab-header .e-scroll-nav, .e-tab .e-tab-header .e-hscroll:not(.e-scroll-device) .e-scroll-nav{
+    display: none !important;
 }
 
 .all-container {
@@ -115,8 +186,26 @@
     right: calc(20px + 400px);
 }
 
-@media (max-width: 990px) {
+.user-status.active {
+    color: #08AD36;
+}
+
+.user-status.off {
+    color: #FFA800;
+}
+
+.user-status.busy {
+    color: #F64E60;
+}
+
+@media (max-width: 99px) {
     .fab-container {
-        display: inline-flex; 
+        display: inline-flex;
     }
+
+    .myteam-sidebar {
+        display: none !important;
+    }
+
+
 }

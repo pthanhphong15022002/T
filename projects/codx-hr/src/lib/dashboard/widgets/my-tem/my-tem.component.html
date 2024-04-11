@@ -67,13 +67,13 @@
 </div> -->
 
 <div class="myteam-sidebar rounded border bg-white h-100 p-3">
-  <div class="wrapper d-flex justify-content-center flex-column py-3">
+  <div class="wrapper d-flex justify-content-center flex-column py-3 pt-0 pb-0">
     <div class="header-myteam">
-      <div class="d-flex justify-content-between pb-3 pt-1 align-items-center">
+      <div class="d-flex justify-content-between align-items-center">
         <div class="fs-2 fw-bold">Nhóm của tôi</div>
         <div class="view-all fs-6">Xem tất cả</div>
       </div>
-      <div>
+      <div class="my-team-searchbar">
         <codx-searchbar></codx-searchbar>
       </div>
     </div>
@@ -85,17 +85,19 @@
               <div>Quản lý trực tiếp</div>
             </ng-template>
             <ng-template #content>
-              <div class="d-flex flex-row gap-3 align-items-start pointer py-3">
-                <div class="user-avatar">
-                  <img class="user-img" />
-                  <div class="user-status"></div>
+              <ng-container *ngFor = "let person of dataMyTeam; index as i;" >
+                <div class="d-flex flex-row gap-3 align-items-start pointer py-3">
+                  <div class="user-avatar">
+                    <img class="user-img" />
+                    <div class="user-status " [ngClass]="{}"></div>
+                  </div>
+                  <div class="d-flex flex-column align-items-start gap-1">
+                    <div class="name fs-6 fw-bold">{{person.name}}</div>
+                    <div class="text-gray-500">{{person.job}}</div>
+                    <div class="YOW fw-bold">{{person.yow}}</div>
+                  </div>
                 </div>
-                <div class="d-flex flex-column align-items-start gap-1">
-                  <div class="name fs-6 fw-bold">Huỳnh Phước Hòa</div>
-                  <div class="text-gray-500">Phát triển phần mềm</div>
-                  <div class="YOW fw-bold">20 năm 9 tháng 0 ngày</div>
-                </div>
-              </div>
+              </ng-container>
             </ng-template>
           </e-tabitem>
           <e-tabitem>
@@ -109,8 +111,8 @@
                   <div class="user-status"></div>
                 </div>
                 <div class="d-flex flex-column align-items-start gap-1">
-                  <div class="fs-5 fw-bold">Huỳnh Phước Hòa</div>
-                  <div class="text-gray-700">Phát triển phần mềm</div>
+                  <div class="name fs-6 fw-bold">Huỳnh Phước Hòa</div>
+                  <div class="text-gray-500">Phát triển phần mềm</div>
                   <div class="YOW fw-bold">20 năm 9 tháng 0 ngày</div>
                 </div>
               </div>
@@ -120,8 +122,8 @@
                   <div class="user-status"></div>
                 </div>
                 <div class="d-flex flex-column align-items-start gap-1">
-                  <div class="fs-5 fw-bold">Huỳnh Phước Hòa</div>
-                  <div class="text-gray-700">Phát triển phần mềm</div>
+                  <div class="name fs-6 fw-bold">Huỳnh Phước Hòa</div>
+                  <div class="text-gray-500">Phát triển phần mềm</div>
                   <div class="YOW fw-bold">20 năm 9 tháng 0 ngày</div>
                 </div>
               </div>
@@ -138,8 +140,8 @@
                   <div class="user-status"></div>
                 </div>
                 <div class="d-flex flex-column align-items-start gap-1">
-                  <div class="fs-5 fw-bold">Huỳnh Phước Hòa</div>
-                  <div class="text-gray-700">Phát triển phần mềm</div>
+                  <div class="name fs-6 fw-bold">Huỳnh Phước Hòa</div>
+                  <div class="text-gray-500">Phát triển phần mềm</div>
                   <div class="YOW fw-bold">20 năm 9 tháng 0 ngày</div>
                 </div>
               </div>
@@ -149,8 +151,19 @@
                   <div class="user-status"></div>
                 </div>
                 <div class="d-flex flex-column align-items-start gap-1">
-                  <div class="fs-5 fw-bold">Huỳnh Phước Hòa</div>
-                  <div class="text-gray-700">Phát triển phần mềm</div>
+                  <div class="name fs-6 fw-bold">Huỳnh Phước Hòa</div>
+                  <div class="text-gray-500">Phát triển phần mềm</div>
+                  <div class="YOW fw-bold">20 năm 9 tháng 0 ngày</div>
+                </div>
+              </div>
+              <div class="d-flex flex-row gap-3 align-items-start pointer py-3">
+                <div class="user-avatar">
+                  <img class="user-img" />
+                  <div class="user-status"></div>
+                </div>
+                <div class="d-flex flex-column align-items-start gap-1">
+                  <div class="name fs-6 fw-bold">Huỳnh Phước Hòa</div>
+                  <div class="text-gray-500">Phát triển phần mềm</div>
                   <div class="YOW fw-bold">20 năm 9 tháng 0 ngày</div>
                 </div>
               </div>
