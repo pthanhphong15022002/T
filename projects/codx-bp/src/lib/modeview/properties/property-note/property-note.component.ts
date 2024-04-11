@@ -15,6 +15,7 @@ export class PropertyNoteComponent extends BasePropertyComponent implements OnIn
 
   changeValueFormat(e:any,data:any=null)
   {
+    if(!this.data.validateControl) this.data.validateControl = {}
     if(data)
     {
       this.data.validateControl[e] = data;
@@ -30,6 +31,7 @@ export class PropertyNoteComponent extends BasePropertyComponent implements OnIn
   
   changeValueFormatColor(e:any)
   {
+    if(!this.data.validateControl) this.data.validateControl = {}
     this.data.validateControl[e?.field] = e?.data
   }
 }

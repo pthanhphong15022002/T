@@ -306,10 +306,10 @@ export class AddProcessDefaultComponent implements OnInit {
       }
       if(element.fieldType == "Note")
       {
-        element.dataFormat =
-        typeof element.dataFormat == 'string'
-          ? JSON.parse(element.dataFormat)
-          : element.dataFormat;
+        element.validateControl =
+        typeof element.validateControl == 'string'
+          ? JSON.parse(element.validateControl)
+          : element.validateControl;
       }
       if (element.autoNumber?.autoNumberControl) {
         var objAuto = {
@@ -502,7 +502,7 @@ export class AddProcessDefaultComponent implements OnInit {
         if (this.listFieldAuto.length > 0) {
           this.listFieldAuto.forEach(async (item) => {
             valueForm[item.field] = await firstValueFrom(
-              this.bpService.getAutoNumber(item.autoNumberNo)
+              this.bpService.createAutoNumberByNo(item.autoNumberNo)
             );
           });
         }

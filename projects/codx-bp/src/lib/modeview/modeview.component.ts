@@ -191,7 +191,6 @@ export class ModeviewComponent implements OnInit {
       if(elm.extendInfo && elm.extendInfo.length>0)
       {
         elm.extendInfo.forEach(item=>{
-          debugger
           let indexIcon = this.vllBP002.datas.findIndex(x=>x.value == item.fieldType);
           if(indexIcon>=0)
           {
@@ -634,19 +633,23 @@ export class ModeviewComponent implements OnInit {
   dataChange(e:any)
   {
     if(e?.isDelete == true) {
-      this.table[e?.columnOrder].children = this.table[e?.columnOrder].children.filter(x=>x.columnNo != e.columnNo);
+
+      let index = this.table.findIndex(x=>x.columnOrder == e?.columnOrder);
+
+      this.table[index].children = this.table[index].children.filter(x=>x.columnNo != e.columnNo);
       this.table = this.table.filter(x=>x.children != null && x.children.length>0);
       this.resetIndex();
-      if(this.table[e?.columnOrder]?.children && this.table[e?.columnOrder].children.length > 0)
+      this.dataSelected = null;
+      if(this.table[index]?.children && this.table[index].children.length > 0)
       {
         var stt = e.columnNo - 1;
         if(stt < 0) stt = 0;
-        this.selectedItem(this.table[e?.columnOrder].children[stt]);
+        this.selectedItem(this.table[index].children[stt]);
       }
       else {
-        var stt = (this.table[e?.columnOrder - 1].children.length) - 1;
+        var stt = (this.table[index - 1].children.length) - 1;
         if(stt < 0) stt = 0;
-        this.selectedItem(this.table[e?.columnOrder - 1].children[stt]);
+        this.selectedItem(this.table[index - 1].children[stt]);
       }
     }
     else {
