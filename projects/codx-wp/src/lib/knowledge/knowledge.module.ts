@@ -11,6 +11,7 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { LayoutComponent } from './_layout/layout/layout.component';
 import { KnowledgeComponent } from './knowledge.component';
 import { NewComponent } from './new/new.component';
+import { PopupAddKnowledgeComponent } from './popup/popup-add-knowledge/popup-add-knowledge.component';
 
 const routes:Routes = [
   {
@@ -18,7 +19,7 @@ const routes:Routes = [
     component: LayoutComponent,
     children:[
       {
-        path: 'knowledge/:funcID',
+        path: 'knowledge/:funcID/:category',
         component: KnowledgeComponent
       },
       {
@@ -37,7 +38,8 @@ const routes:Routes = [
 const Component: Type<any>[] = [
   LayoutComponent,
   KnowledgeComponent,
-  NewComponent
+  PopupAddKnowledgeComponent,
+  NewComponent,
 ];
 
 @NgModule({

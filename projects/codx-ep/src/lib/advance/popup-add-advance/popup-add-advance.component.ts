@@ -363,6 +363,12 @@ export class PopupAddAdvanceComponent
     if (evt) {
       if (!dataLine.attachments) dataLine.attachments = 0;
       dataLine.attachments += 1;
+      if (this.data?.lines) {
+        var index = (this.data.lines as any[]).findIndex(
+          (x) => x.recID == dataLine.recID
+        );
+        this.data.lines[index] = dataLine;
+      }
     }
   }
 

@@ -23,11 +23,11 @@
                         <div class="col-3">
                             <div #myDrop="ngbDropdown" ngbDropdown container="boby" class="d-inline-block w-100">
                                 <div class="d-flex align-items-center cursor-pointer justify-content-between w-100 border p-2 bg-white" ngbDropdownToggle>
-                                    <span class="mx-2">{{child?.item?.defaultValue || child?.field || 'Điều kiện lọc'}}</span>
+                                    <span class="mx-2 text-truncate">{{child?.item?.defaultValue || child?.field || 'Điều kiện lọc'}}</span>
                                     <i class="icon-16" [ngClass]="!myDrop.isOpen() ? 'icon-i-chevron-down' : 'icon-i-chevron-up' "></i>
                                 </div>
                                 <div *ngIf="listForm" ngbDropdownMenu aria-labelledby="dropdownBasic1" class="add-s-con-dropdown w-500px rounded-0">
-                                    <div class="d-flex h-100">
+                                    <div class="d-flex h-300px overflow-auto">
                                         <div ngbNav #nav="ngbNav" [(activeId)]="activeNav" class="nav-pills flex-column h-100" orientation="vertical">
                                             <ng-container [ngbNavItem]="'top'+i" *ngFor="let item of listForm , let i = index">
                                                 <button class="w-200px border-0 rounded-0 text-start" ngbNavLink>{{item.stepName}}</button>
@@ -43,8 +43,8 @@
                                     </div>
                                 </div>
                                 <div *ngIf="listExtendInfo" ngbDropdownMenu aria-labelledby="dropdownBasic1" class="add-s-con-dropdown w-500px rounded-0">
-                                  <div class="d-flex d-flex h-300px overflow-auto" ngbDropdownItem *ngFor="let item of listExtendInfo" (click)="fieldChange(child,item)">
-                                    <span>{{item?.title}}</span>
+                                  <div class="d-flex h-300px overflow-auto" ngbDropdownItem *ngFor="let item of listExtendInfo" (click)="fieldChange(child,item)">
+                                    <span >{{item?.title}}</span>
                                       <!-- <div ngbNav #nav="ngbNav" [(activeId)]="activeNav" class="nav-pills flex-column h-100" orientation="vertical">
                                           <ng-container [ngbNavItem]="'top'+i" *ngFor="let item of listExtendInfo , let i = index">
                                               <button class="w-200px border-0 rounded-0 text-start" ngbNavLink>{{item.stepName}}</button>

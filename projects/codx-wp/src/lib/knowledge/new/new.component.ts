@@ -20,7 +20,7 @@ export const CATEGORY =
 };
 
 @Component({
-  selector: 'wp-knowledge-new',
+  selector: 'wp4-new',
   templateUrl: './new.component.html',
   styleUrls: ['./new.component.css']
 })
