@@ -35,6 +35,7 @@ export class KnowledgeComponent extends UIComponent implements AfterViewInit,OnD
   NEWSTYPE_VIDEO = NEWSTYPE.VIDEO;
   posts:any[] = [];
   videos:any[] = [];
+  mssgNoData:string = "SYS011";
   private destroy$ = new Subject<void>();
 
   @ViewChild('tmpContent') tmpContent: TemplateRef<any>;
@@ -51,10 +52,8 @@ export class KnowledgeComponent extends UIComponent implements AfterViewInit,OnD
 
   onInit(): void {
     this.router.params
-    .subscribe((params) => 
-    {
-      if(params)
-      {
+    .subscribe((params:any) => {
+      if(params) {
         this.funcID = params['funcID'];
         this.category = params['category'];
         this.getUserPermission(this.funcID);
@@ -62,6 +61,9 @@ export class KnowledgeComponent extends UIComponent implements AfterViewInit,OnD
         this.getVideos(this.category);
       }
     });
+    this.router.queryParams.subscribe((params:any) => {
+      debugger
+    })
   }
 
   ngAfterViewInit(): void {
@@ -122,7 +124,7 @@ export class KnowledgeComponent extends UIComponent implements AfterViewInit,OnD
     });
   }
 
-  slides:any[];
+  slides:any[] = [];
   slidesPage:number = 0;
   slidesIsFull:boolean = false;
   slidesShowNavigation:boolean = false;
@@ -157,6 +159,7 @@ export class KnowledgeComponent extends UIComponent implements AfterViewInit,OnD
             this.videos = videos;
             slideIndex = 0;
           }
+          if(!this.slides) this.slides = [];
           for (let index = 0; index < videos.length; index += 3) 
           {
             this.slides[slideIndex] = videos.slice(index, index + 3);
