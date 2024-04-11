@@ -944,11 +944,10 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   }
 
   collapsed: boolean = false;
-  toggleAccordion($event, id, id2, isClick = true) {
+  toggleAccordion($event, isClick = true) {
     if (isClick) {
       $event.stopPropagation();
       const accordionHeader = $event.currentTarget as HTMLElement;
-      let childrenBody = document.getElementById(id2);
       if (accordionHeader) {
         const isCollapsed = accordionHeader.classList.contains('collapsed');
 
@@ -957,15 +956,13 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
             'collapsed'
           );
           ($event.currentTarget as HTMLElement).classList.remove('collapsed');
-          childrenBody.classList.add('show');
         } else {
           ($event.currentTarget as HTMLElement).children[1].classList.add(
             'collapsed'
           );
           ($event.currentTarget as HTMLElement).classList.add('collapsed');
-          childrenBody.classList.remove('show');
         }
-        let childrenButton = document.getElementById(id);
+        let childrenButton = document.getElementById(accordionHeader.children[1].id);
         childrenButton.click();
       }
       this.dtc.detectChanges();

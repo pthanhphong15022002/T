@@ -247,8 +247,6 @@
                   (click)="
                     toggleAccordion(
                       $event,
-                      'ngb-accordion-item-' + i + '-toggle',
-                      'ngb-accordion-item-' + i + '-collapse',
                       true
                     )
                   "
@@ -266,8 +264,6 @@
                       $event.stopPropagation();
                       toggleAccordion(
                         $event,
-                        'ngb-accordion-item-' + i + '-toggle',
-                        'ngb-accordion-item-' + i + '-collapse',
                         false
                       )
                     "
