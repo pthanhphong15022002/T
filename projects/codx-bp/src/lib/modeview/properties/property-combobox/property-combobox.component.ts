@@ -29,7 +29,7 @@ export class PropertyComboboxComponent
   getCombobox() {
     this.cache.combobox(this.data.refValue).subscribe((item) => {
       if (item) {
-        this.listCbx = item.displayMembers.split(';');
+        this.listCbx = item.entityAttributes.split(';');
         this.listCbx = this.listCbx.filter((x) => x != '');
       }
     });

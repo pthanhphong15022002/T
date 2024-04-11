@@ -372,7 +372,6 @@ export class PopupAddProcessComponent {
     let lst = [];
     if (this.extendInfos?.length > 0) 
     {
-      debugger
       this.extendInfos.forEach((res) => {
         let count = 1;
         let tmp = {};
