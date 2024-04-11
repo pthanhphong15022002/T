@@ -468,10 +468,44 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
             lg2FADialog.closed.subscribe((lg2FAEvt) => {
               if (!lg2FAEvt.event || lg2FAEvt.event?.data?.error) return;
               this.authService.setLogin(data.data);
+              let employee = data.data.employee;
+              if (employee && employee.employeeID && !employee.positionID) {
+                this.api
+                  .execSv(
+                    'HR',
+                    'ERM.Business.HR',
+                    'EmployeesBusiness_Old',
+                    'GetByDomainUserAsync',
+                    [data.data.userID]
+                  )
+                  .subscribe((res: any) => {
+                    if (res) {
+                      data.data.employee = res;
+                      this.authService.setLogin(data.data);
+                    }
+                  });
+              }
               this.loginService.loginAfter(lg2FAEvt.event.data, true);
             });
           } else {
             this.authService.setLogin(data.data);
+            let employee = data.data.employee;
+            if (employee && employee.employeeID && !employee.positionID) {
+              this.api
+                .execSv(
+                  'HR',
+                  'ERM.Business.HR',
+                  'EmployeesBusiness_Old',
+                  'GetByDomainUserAsync',
+                  [data.data.userID]
+                )
+                .subscribe((res: any) => {
+                  if (res) {
+                    data.data.employee = res;
+                    this.authService.setLogin(data.data);
+                  }
+                });
+            }
             this.loginService.loginAfter(data, type == 'otp');
           }
         } else {
