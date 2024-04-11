@@ -19,19 +19,28 @@ const routes:Routes = [
     component: LayoutComponent,
     children:[
       {
+        path: 'knowledge/:funcID',
+        component: KnowledgeComponent
+      },
+      {
         path: 'knowledge/:funcID/:category',
         component: KnowledgeComponent
       },
       {
         path: 'news/:funcID/:category',
         component: NewComponent
+      },
+      {
+        path: '**',
+        redirectTo: 'wp4/knowledge/WP401/home',
+        pathMatch: 'full'
       }
     ]
   },
   {
     path: '**',
-    redirectTo: 'wp4/knowledge/WP401',
-    pathMatch: 'full',
+    redirectTo: 'wp4/knowledge/WP401/home',
+    pathMatch: 'full'
   }
 ]
 
