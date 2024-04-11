@@ -361,8 +361,6 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
           this.listMF = this.listButtonMF.filter(
             (x) =>
               x?.functionID == BPCONST.TASKMF.Sign ||
-              x?.functionID == BPCONST.TASKMF.Reject ||
-              x?.functionID == BPCONST.TASKMF.Redo ||
               x?.functionID == BPCONST.TASKMF.Authority
           );
           break;
