@@ -21,7 +21,7 @@
         <img
           src="../assets/themes/sys/default/img/DataEmpty.svg"
           width="300px"/>
-        <div class="fw-bold mt-1 text-center">Chưa có dữ liệu phát sinh</div>
+        <div class="fw-bold mt-1 text-center">{{mssgNoData | mssg | async}}</div>
       </div>
       <ng-container *ngIf="posts?.length > 0">
         <div class="d-flex flex-column fw-bold fs-2 mb-5 border-bottom border-gray">
@@ -33,7 +33,7 @@
         </div>
         <div class="row">
           <div class="col-6" (click)="clickViewDetail(posts[0])">
-            <div class="w-100 h-100 pe-2 cursor-pointer">
+            <div class="w-100 h-100 pe-2 cursor-pointer post">
               <div class="position-relative w-100 h-480">
                 <codx-img *ngIf="(posts[0]?.image | assetURL : true) == true"
                   imageType="square"
@@ -63,16 +63,17 @@
                 </div>
               </div>
               <div class="d-flex flex-column w-100">
-                <div class="fs-4 fw-bold mb-2">
+                <div class="fs-4 fw-bold mb-2 news-title">
                   <span class="line-clamp line-clamp-2">{{posts[0].subject}}</span>
                 </div>
                 <div class="text-dark mb-2">
                   <span class="line-clamp line-clamp-4">{{posts[0].subContent | maxlenght : 500}}</span>
                 </div>
                 <div class="d-flex justify-content-between">
-                  <div class="text-gray-600"
+                  <!-- <div class="text-gray-600"
                     [innerHTML]="posts[0].createdOn | formatvalue : view.formModel : 'createdOn' | async">
-                  </div>
+                  </div> -->
+                  <div class="text-gray-600"><span>{{posts[0].createdOn | date: 'dd/MM/YYYY hh:mm'}}</span></div>
                   <div *ngIf="posts[0].approveControl == '1' && posts[0].approveStatus == '3'">
                     <codx-vll
                       [name]="'WP007'"
@@ -165,7 +166,7 @@
           [selectFirst]="false"
           [dataValue]="category"
           [itemTemplate]="itemTemplate"
-          [emptyTemplate]="null"
+          [emptyTemplate]="emptyData"
           [formModel]="view.formModel">
         </codx-listview>
       </diV>
@@ -174,8 +175,8 @@
 </ng-template>
 
 <ng-template #tmpPost let-data="data">
-  <div class="d-flex h-200 cursor-pointer mb-2" (click)="clickViewDetail(data)">
-    <div class="w-200 h-100 me-2 position-relative">
+  <div class="d-flex h-200 cursor-pointer mb-2 post" (click)="clickViewDetail(data)">
+    <div class="w-200 h-200 me-2 position-relative">
       <codx-img
         *ngIf="(data?.image | assetURL : true) == true"
         imageType="square"
@@ -201,15 +202,16 @@
         </codx-vll>
       </div>
     </div>
-    <div class="d-flex flex-column h-100 poition-relative">
+    <div class="d-flex flex-column w-100 h-100 position-relative">
       <div class="fs-5 fw-bold cursor-pointer line-clamp line-clamp-2">
-        <span>{{data?.subject}}</span>
+        <span class="news-title">{{data?.subject}}</span>
       </div>
       <div class="text-gray-600 line-clamp line-clamp-3">
         <span>{{data?.subContent}}</span>
       </div>
       <div class="d-flex justify-content-between position-absolute bottom-0 w-100">
-        <div class="text-gray-400" [innerHTML]="data?.createdOn | formatvalue : view.formModel : 'createdOn' | async"></div>
+        <!-- <div class="text-gray-400" [innerHTML]="data?.createdOn | formatvalue : view.formModel : 'createdOn' | async"></div> -->
+        <div *ngIf="data?.createdOn" class="text-gray-400"><span>{{data.createdOn | date: 'dd/MM/YYYY hh:mm'}}</span></div>
         <div *ngIf="data?.approveControl == '1' && data?.approveStatus == '3'">
           <codx-vll
             [name]="'WP007'"
@@ -228,7 +230,7 @@
     <ng-container *ngIf="item.type == 'text';else tmpData">
       <div class="d-flex flex-column">
         <div *ngIf="!category || category == 'home';else oldNews" class="fw-bolder fs-2 d-block ps-3 h-30px mt-3">
-          <span>{{item?.subject}}</span>
+          <span class="news-title">{{item?.subject}}</span>
         </div>
         <ng-template #oldNews>
           <codx-label [classList]="'fw-bolder fs-2 d-block h-30px ps-3 mt-3'" [formModel]="view.formModel" name="lblLabel2" default="Tin cũ hơn"></codx-label>
@@ -246,7 +248,7 @@
           </codx-img>
         </div>
         <div class="w-100 d-flex flex-column">
-          <div class="text-dark news-title fs-5 fw-bold">{{item?.subject}}</div>
+          <div class="text-dark news-title fs-5 fw-bold"><span class="news-title">{{item?.subject}}</span></div>
           <div class="w-100 mt-1 text-gray-400">{{ item?.createdOn | fmDT }}</div>
           <div class="text-gray-700 mt-1 line-clamp line-clamp-3" *ngIf="item?.subContent">
             {{item?.subContent | maxlenght:500}}
@@ -255,4 +257,7 @@
   
       </div>
     </ng-template>
-  </ng-template>
+</ng-template>
+
+
+  <ng-template #emptyData></ng-template>

@@ -526,19 +526,27 @@ export class ContentEmailComponent {
             lst.push(appr);
           }
         } else if (element.objectType.length == 1) {
-          let lstID = element?.id.split(';');
-          let lstUserName = element?.text.split(';');
-
-          for (let i = 0; i < lstID?.length; i++) {
-            let isExist = this.isExist(element?.objectType, sendType);
-            if (lstID[i].toString() != '' && isExist == false) {
-              let appr = new EmailSendTo();
-              appr.objectType = element.objectType;
-              appr.text = lstUserName[i];
-              appr.objectID = lstID[i];
-              appr.sendType = sendType.toString();
-              lst.push(appr);
+          let lstID = element?.id?.split(';') ?? [];
+          let lstUserName = element?.text?.split(';') ?? [];
+          if (lstID?.length > 0) {
+            for (let i = 0; i < lstID?.length; i++) {
+              let isExist = this.isExist(element?.objectType, sendType);
+              if (lstID[i].toString() != '' && isExist == false) {
+                let appr = new EmailSendTo();
+                appr.objectType = element.objectType;
+                appr.text = lstUserName?.length > 0 ? lstUserName[i] : null;
+                appr.objectID = lstID[i];
+                appr.sendType = sendType.toString();
+                lst.push(appr);
+              }
             }
+          } else {
+            let appr = new EmailSendTo();
+            appr.objectType = element.objectType;
+            appr.text = element?.text ?? element?.objectName;
+            appr.objectID = element?.objectID;
+            appr.sendType = sendType.toString();
+            lst.push(appr);
           }
         } else {
           let isExist = this.isExist(element?.objectType, sendType);
