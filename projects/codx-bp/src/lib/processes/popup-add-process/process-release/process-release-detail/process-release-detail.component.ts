@@ -268,7 +268,8 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
         if (item) {
           this.listTask = item;
           this.activeTask = this.listTask.find(
-            (x) => x.status == '3' && x.canceled != true && x.activityType != 'Stage'
+            (x) =>
+              x.status == '3' && x.canceled != true && x.activityType != 'Stage'
           );
           this.changeMF();
           this.getPermission();
@@ -276,50 +277,45 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
         }
       });
   }
-  clickMF(mfuncID){
-    if(this.activeTask!=null){
-      switch (mfuncID){
-
+  clickMF(mfuncID) {
+    if (this.activeTask != null) {
+      switch (mfuncID) {
         case BPCONST.TASKMF.Task:
         case BPCONST.TASKMF.Check:
         case BPCONST.TASKMF.Approve:
         case BPCONST.TASKMF.Redo:
-        case BPCONST.TASKMF.Reject:
-        {
-          let status = mfuncID == BPCONST.TASKMF.Redo ? '2':mfuncID == BPCONST.TASKMF.Reject ? '4' :'5';
-          this.updateTask(this.activeTask,status);
-          break
+        case BPCONST.TASKMF.Reject: {
+          let status =
+            mfuncID == BPCONST.TASKMF.Redo
+              ? '2'
+              : mfuncID == BPCONST.TASKMF.Reject
+              ? '4'
+              : '5';
+          this.updateTask(this.activeTask, status);
+          break;
         }
-        case BPCONST.TASKMF.Email:
-        {
+        case BPCONST.TASKMF.Email: {
           this.sendMail(this.activeTask);
-          break
+          break;
         }
         case BPCONST.TASKMF.Sign:
-        case BPCONST.TASKMF.Stamp:
-        {
-          this.eSign(this.activeTask)
-          break
+        case BPCONST.TASKMF.Stamp: {
+          this.eSign(this.activeTask);
+          break;
         }
-        case BPCONST.TASKMF.Tranfer:
-        {
-
-          break
+        case BPCONST.TASKMF.Tranfer: {
+          break;
         }
-        case BPCONST.TASKMF.Authority:
-        {
+        case BPCONST.TASKMF.Authority: {
           this.authority(this.activeTask);
-          break
+          break;
         }
-        case BPCONST.TASKMF.Assign:
-        {
-          this.assignAction(this.activeTask)
-          break
+        case BPCONST.TASKMF.Assign: {
+          this.assignAction(this.activeTask);
+          break;
         }
-        case BPCONST.TASKMF.Attach:
-        {
-
-          break
+        case BPCONST.TASKMF.Attach: {
+          break;
         }
       }
     }
@@ -327,13 +323,21 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
 
   changeMF() {
     this.activeTask = this.listTask.find(
-      (x) => x.status == '3' && x.canceled != true && x.activityType != 'Stage' && x?.permissions?.find(p=>p?.objectID == this.user?.userID) !=null
+      (x) =>
+        x.status == '3' &&
+        x.canceled != true &&
+        x.activityType != 'Stage' &&
+        x?.permissions?.find((p) => p?.objectID == this.user?.userID) != null
     );
     if (this.activeTask != null) {
       switch (this.activeTask.activityType) {
         //Task;Check;Approve;Sign;Release;Stamp;Email;
         case 'Task': {
-          this.listMF = this.listButtonMF.filter(x=>x?.functionID ==BPCONST.TASKMF.Task||x?.functionID ==BPCONST.TASKMF.Assign);
+          this.listMF = this.listButtonMF.filter(
+            (x) =>
+              x?.functionID == BPCONST.TASKMF.Task ||
+              x?.functionID == BPCONST.TASKMF.Assign
+          );
           break;
         }
         case 'Check': {
@@ -833,33 +837,40 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     });
   }
   public load(args: ILoadedEventArgs): void {}
-  assignAction(data){
+  assignAction(data) {
     var input = {
       refTask: data,
-      formModel: this.formModel
+      formModel: this.formModel,
     };
     let option = new SidebarModel();
     option.Width = 'Auto';
     option.FormModel = this.formModel;
-    let popup = this.callFc.openSide(AddCustomActionComponent,input,option);
+    let popup = this.callFc.openSide(AddCustomActionComponent, input, option);
   }
-  authority(data){
-    let dialogAuthority = this.callFc.openForm(CoDxAddApproversComponent,'',500,250,'',{mode:'1'});
-    dialogAuthority.closed.subscribe(res=>{
-      if(res?.event){
-        this.bpSV.authorityTask(data.recID,res?.event).subscribe(res=>{
-          if(res){
+  authority(data) {
+    let dialogAuthority = this.callFc.openForm(
+      CoDxAddApproversComponent,
+      '',
+      500,
+      250,
+      '',
+      { mode: '1' }
+    );
+    dialogAuthority.closed.subscribe((res) => {
+      if (res?.event) {
+        this.bpSV.authorityTask(data.recID, res?.event).subscribe((res) => {
+          if (res) {
             this.notiSV.notifyCode('SYS034');
           }
-        })
+        });
       }
-    })
+    });
   }
-  updateTask(data,status){
-    this.bpSV.updateStatusTask(data.recID, status,null).subscribe((res) => {
+  updateTask(data, status) {
+    this.bpSV.updateStatusTask(data.recID, status, null).subscribe((res) => {
       if (res) {
         this.notiSV.notifyCode('SYS034');
-        this.formatDataTask({event:{task:res}});
+        this.formatDataTask({ event: { task: res } });
         this.changeMF();
       }
     });
@@ -889,11 +900,11 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       '',
       opt
     );
-    popEmail.closed.subscribe(sendMail=>{
-      if(sendMail?.event?.isSendMail){
-        this.updateTask(data,'5');
+    popEmail.closed.subscribe((sendMail) => {
+      if (sendMail?.event?.isSendMail) {
+        this.updateTask(data, '5');
       }
-    })
+    });
   }
   eSign(data) {
     if (data?.recID) {
@@ -923,25 +934,21 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       );
       dialogApprove.closed.subscribe((res) => {
         if (res?.event?.msgCodeError == null && res?.event?.rowCount > 0) {
-          this.updateTask(data,res?.event?.returnStatus);
+          this.updateTask(data, res?.event?.returnStatus);
         }
       });
     }
   }
-  close()
-  {
-    this.dialog.close(this.data)
-
+  close() {
+    this.dialog.close(this.data);
   }
 
   collapsed: boolean = false;
-  toggleAccordion($event, id, isClick = true) {
+  toggleAccordion($event, id, id2, isClick = true) {
     if (isClick) {
       $event.stopPropagation();
-
       const accordionHeader = $event.currentTarget as HTMLElement;
-      let chilren = document.getElementById(id);
-
+      let childrenBody = document.getElementById(id2);
       if (accordionHeader) {
         const isCollapsed = accordionHeader.classList.contains('collapsed');
 
@@ -950,14 +957,16 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
             'collapsed'
           );
           ($event.currentTarget as HTMLElement).classList.remove('collapsed');
-          chilren.classList.add('show');
+          childrenBody.classList.add('show');
         } else {
           ($event.currentTarget as HTMLElement).children[1].classList.add(
             'collapsed'
           );
           ($event.currentTarget as HTMLElement).classList.add('collapsed');
-          chilren.classList.remove('show');
+          childrenBody.classList.remove('show');
         }
+        let childrenButton = document.getElementById(id);
+        childrenButton.click();
       }
       this.dtc.detectChanges();
     }
