@@ -98,9 +98,11 @@
                 (cdkDropListDropped)="drop2($event)"
                 [cdkDropListEnterPredicate]="evenPredicate(item.name)"
               >
-                <div class="d-flex align-items-center p-2 w-100 cursor-pointer"
-                  *ngFor="let subItem of item.children;let j = index "
+                <div 
                   cdkDrag
+                  *ngFor="let subItem of item.children;let j = index "
+                  class="d-flex align-items-center p-2 cursor-pointer"
+                  [style.width.%]="100 / item.children.length"
                   [cdkDragDisabled]="subItem.controlType == 'Title' || viewType == 2"
                   [cdkDragData]="item.name"
                   [ngClass]="(dataSelected.columnOrder == subItem.columnOrder &&  dataSelected.columnNo == subItem.columnNo) ? 'active':''"

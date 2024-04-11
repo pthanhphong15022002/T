@@ -207,6 +207,7 @@ export class PopupAddAdvanceComponent
         this.data.employeeName = value.EmployeeName;
         this.data.phone = value.Mobile;
         this.data.email = value.Email;
+        this.getEmployeeInfo(this.data.employeeID);
         // this.data.requester = value.UserID;
         // this.data.requesterName = value.UserName;
         // this.data.positionID = value.PositionID;
@@ -374,5 +375,22 @@ export class PopupAddAdvanceComponent
 
   showAttachment(evt: any, atm: any) {
     if (atm && atm.uploadFile) atm.uploadFile();
+  }
+
+  getEmployeeInfo(employeeID: string) {
+    if (!employeeID) return;
+    this.api
+      .execSv('HR', 'ERM.Business.HR', 'HRBusiness_Old', 'GetModelEmp', [
+        employeeID,
+      ])
+      .subscribe((res: any) => {
+        if (res) {
+          this.data.positionName = res.positionName;
+          this.data.organizationName = res.organizationName;
+          this.data.departmentName = res.departmentName;
+          this.data.divisionName = res.divisionName;
+          this.data.companyName = res.companyName;
+        }
+      });
   }
 }

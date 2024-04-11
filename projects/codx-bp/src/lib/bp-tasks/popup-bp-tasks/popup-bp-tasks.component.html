@@ -477,7 +477,7 @@
         </ng-template>
 
         <ng-template #buttonTask>
-          <div class="d-flex justify-content-between">
+          <!-- <div class="d-flex justify-content-between"> -->
             <!-- <div class="d-flex justify-content-start">
               <button type="button" class="btn btn-light-primary">
                 <codx-label
@@ -517,7 +517,7 @@
                 ></codx-label>
               </button>
             </div>
-          </div>
+          <!-- </div> -->
         </ng-template>
 
         <ng-template #buttonSign>
@@ -606,7 +606,7 @@
               <button
                 type="button"
                 class="btn btn-primary"
-                (click)="sendMail()"
+                (click)="sendMail(data)"
               >
                 <codx-label
                   [name]="'lblbt2' + data?.activityType"
