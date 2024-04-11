@@ -33,7 +33,62 @@
 </ng-template>
 
 <ng-template #itemTemplate let-data>
-  <div>View list small</div>
+  <codx-temp-full
+    cardCss="card-template border-bottom p-3"
+    (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeDataMF($event, data)"
+    [typeMF]="'hover'"
+    [imageId]="data?.refID"
+    [imageObjType]="'CM_Customers'"
+    [imgOn]="data?.modifiedOn"
+    [imageReferType]="'avt'"
+    [imageWidth]="35"
+    imgCss="me-3"
+    [title]="data.assetName"
+    [descTmp]="descTmp"
+    [formModel]="view.formModel"
+    [titleCss]="'fw-bold fs-6 mb-1'"
+    [dataItem]="data"
+  >
+  </codx-temp-full>
+</ng-template>
+<ng-template #descTmp let-data>
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-top mb-1">
+      <span
+        class="text-gray-600"
+        [innerHTML]="
+          data?.refID | formatvalue : view.formModel : 'refID' | async
+        "
+      ></span>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center"></div>
+      <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center me-2">
+          <span class="icon-16 text-gray-600 icon-av_timer me-1"></span>
+          <span
+            class="text-gray-600"
+            [innerHTML]="
+              data.createdOn
+                | formatvalue : view.formModel : 'createdOn'
+                | async
+            "
+          ></span>
+        </div>
+        <div class="h-25px">
+          <codx-imgs
+            [width]="25"
+            [objectId]="data.createdBy"
+            ojectType="AD_Users"
+            [numberImages]="1"
+          >
+          </codx-imgs>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #templateDetail let-data>
