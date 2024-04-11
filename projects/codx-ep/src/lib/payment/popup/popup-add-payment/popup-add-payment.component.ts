@@ -43,10 +43,11 @@ export class PopupAddPaymentComponent
   };
   @ViewChild('codxGridViewV2') codxGridViewV2: CodxGridviewV2Component;
   @ViewChild('form') form: CodxFormComponent;
-
+  @ViewChild('attachment') attachment: any;
   releaseCategory: any;
   RefEPRequest: any;
   hideFooter = false;
+  columnsGrid = [];
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -110,7 +111,9 @@ export class PopupAddPaymentComponent
     );
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.columnsGrid = [{ field: 'attachments', template: this.attachment }];
+  }
 
   ngOnDestroy(): void {
     this.subcriptions.unsubscribe();
@@ -358,7 +361,37 @@ export class PopupAddPaymentComponent
     } else t.notiSV.notify('Gửi duyệt không thành công', '2');
   }
 
+  atmReturnedFile(evt: any, dataLine: any) {
+    if (evt) {
+      if (!dataLine.attachments) dataLine.attachments = 0;
+      dataLine.attachments += 1;
+      if (this.data?.lines) {
+        var index = (this.data.lines as any[]).findIndex(
+          (x) => x.recID == dataLine.recID
+        );
+        this.data.lines[index] = dataLine;
+      }
+    }
+  }
+
   showAttachment(evt: any, atm: any) {
     if (atm && atm.uploadFile) atm.uploadFile();
+  }
+
+  getEmployeeInfo(employeeID: string) {
+    if (!employeeID) return;
+    this.api
+      .execSv('HR', 'ERM.Business.HR', 'HRBusiness_Old', 'GetModelEmp', [
+        employeeID,
+      ])
+      .subscribe((res: any) => {
+        if (res) {
+          this.data.positionName = res.positionName;
+          this.data.organizationName = res.organizationName;
+          this.data.departmentName = res.departmentName;
+          this.data.divisionName = res.divisionName;
+          this.data.companyName = res.companyName;
+        }
+      });
   }
 }
