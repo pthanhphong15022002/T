@@ -77,7 +77,8 @@ export class AddProcessDefaultComponent implements OnInit {
   user: any;
   isAttach = false;
   vllBP022: any;
-  urlDefault = '../../../../../src/assets/themes/sys/default/img/Avatar_Default.svg';
+  urlDefault =
+    '../../../../../src/assets/themes/sys/default/img/Avatar_Default.svg';
   listFileUserInfo = {};
   indexUploadUserInfo = {};
   defaultFieldName = '';
@@ -164,70 +165,64 @@ export class AddProcessDefaultComponent implements OnInit {
     extendInfo.forEach((element) => {
       let field = element.fieldName.toLowerCase();
       this.gridViewSetup[field] = element;
-      if (element.fieldType == 'Attachment')
-      {
+      if (element.fieldType == 'Attachment') {
         element.documentControl =
-        typeof element.documentControl == 'string'
-          ? JSON.parse(element.documentControl)
-          : element.documentControl;
+          typeof element.documentControl == 'string'
+            ? JSON.parse(element.documentControl)
+            : element.documentControl;
       }
 
-      if (element.fieldType  == 'ComboBox')
-      {
+      if (element.fieldType == 'ComboBox') {
         element.validateControl =
-        typeof element.validateControl == 'string'
-          ? JSON.parse(element.validateControl)
-          : element.validateControl;
+          typeof element.validateControl == 'string'
+            ? JSON.parse(element.validateControl)
+            : element.validateControl;
       }
 
-        
       if (element.fieldType != 'Title') {
         let validate = element.isRequired ? Validators.required : null;
 
         if (element.fieldType == 'Email') validate = Validators.email;
         else if (element.fieldType == 'Phone')
           validate = Validators.pattern('[0-9 ]{11}');
-        else if (element.fieldType == 'DateTime')
-        {
-          if (element.defaultValue == 'Now')
-            element.defaultValue = new Date();
+        else if (element.fieldType == 'DateTime') {
+          if (element.defaultValue == 'Now') element.defaultValue = new Date();
           //Ngày không được bé hơn ngày hiện tại
           if (element.validateControl == '1')
             validate = this.customeValidatorDateValiControl(element);
           if (element.dependences)
             validate = this.customeValidatorDate(element);
-        }
-        else if(element.fieldType == "Text" && element.defaultValue == 'User')
-        {
-          element.defaultValue = this.user?.userName
+        } else if (
+          element.fieldType == 'Text' &&
+          element.defaultValue == 'User'
+        ) {
+          element.defaultValue = this.user?.userName;
         }
 
         if (this.type == 'add' && !this.taskID) {
-
           this.dynamicFormsForm.addControl(
             field,
             new FormControl(element.defaultValue, validate)
           );
-        }
-        else
-        {
+        } else {
           if (element.fieldType == 'Attachment') {
-            if (element.documentControl)
-            {
-              this.dataIns.documentControl.forEach(x=>{
-                let index =  element.documentControl.findIndex(y=>y.recID == x.recID);
-                if(index >= 0) element.documentControl[index] = x;
-              })
+            if (element.documentControl) {
+              this.dataIns.documentControl.forEach((x) => {
+                let index = element.documentControl.findIndex(
+                  (y) => y.recID == x.recID
+                );
+                if (index >= 0) element.documentControl[index] = x;
+              });
             }
           }
-          this.dataIns.datas = typeof this.dataIns.datas === 'string' ? JSON.parse(this.dataIns.datas) : this.dataIns.datas;
+          this.dataIns.datas =
+            typeof this.dataIns.datas === 'string'
+              ? JSON.parse(this.dataIns.datas)
+              : this.dataIns.datas;
           let dataEdit = this.dataIns.datas;
           this.dynamicFormsForm.addControl(
             field,
-            new FormControl(
-              dataEdit[field],
-              validate
-            )
+            new FormControl(dataEdit[field], validate)
           );
         }
       }
@@ -251,13 +246,12 @@ export class AddProcessDefaultComponent implements OnInit {
             dataType: elm2.dataType,
             refType: elm2?.refType,
             refValue: elm2?.refValue,
-            allowEdit:true
+            allowEdit: true,
           };
           element.columnsGrid.push(obj);
 
-          if(elm2.dataType == 'Decimal')
-          {
-            let field = element.fieldName + "_sum_" + elm2.fieldName;
+          if (elm2.dataType == 'Decimal') {
+            let field = element.fieldName + '_sum_' + elm2.fieldName;
             this.listFieldDecimal.push(field);
           }
         });
@@ -267,7 +261,7 @@ export class AddProcessDefaultComponent implements OnInit {
             headerText: 'STT',
             controlType: 'Numberic',
             field: 'indexNo',
-            dataType: 'Number'
+            dataType: 'Number',
           };
           element.columnsGrid.unshift(obj2);
         }
@@ -320,17 +314,18 @@ export class AddProcessDefaultComponent implements OnInit {
       }
 
       //Kiem tra xem field co visiable khong?
-      if(element.visibleControl)
-      {
-        element.visibleControl = typeof element?.visibleControl == 'string' ? JSON.parse(element?.visibleControl) : element?.visibleControl
-        this.f_Visible[element.fieldName] = element?.visibleControl?.visibleControl
-        if(element?.visibleControl?.visibleControl)
-        {
-          var obj3 =
-          {
-            fieldName : element.fieldName,
-            paraValues: element?.visibleControl?.paraValues
-          }
+      if (element.visibleControl) {
+        element.visibleControl =
+          typeof element?.visibleControl == 'string'
+            ? JSON.parse(element?.visibleControl)
+            : element?.visibleControl;
+        this.f_Visible[element.fieldName] =
+          element?.visibleControl?.visibleControl;
+        if (element?.visibleControl?.visibleControl) {
+          var obj3 = {
+            fieldName: element.fieldName,
+            paraValues: element?.visibleControl?.paraValues,
+          };
           this.f_ParaVisible.push(obj3);
         }
       }
@@ -430,9 +425,8 @@ export class AddProcessDefaultComponent implements OnInit {
         }
       });
   }
-  dataUploadAttachment(e:any)
-  {
-    if(!e || e.length <=0) return;
+  dataUploadAttachment(e: any) {
+    if (!e || e.length <= 0) return;
     this.attachment.fileUploadList = this.attachment.fileUploadList.concat(e);
   }
   async onSave(type = 1) {
@@ -449,16 +443,16 @@ export class AddProcessDefaultComponent implements OnInit {
         valueForm[k] = this.dataUserInfo[k];
       });
 
-      if (flag){
+      if (flag) {
         this.isSaving(false);
         return;
-      };
+      }
     }
 
     if (!this.checkAttachment()) {
       this.isSaving(false);
       return;
-    };
+    }
     if (this.dynamicFormsForm.invalid) this.findInvalidControls();
     else {
       var keysTable = Object.keys(this.dataTable);
@@ -466,16 +460,20 @@ export class AddProcessDefaultComponent implements OnInit {
       if (keysTable.length > 0) {
         keysTable.forEach((k) => {
           valueForm[k] = this.dataTable[k];
-          let keysChildTable = Object.keys(this.dataTable[k][0]);
-          if(keysChildTable.length>0)
-          {
-            if(this.listFieldDecimal.some(x=>x.includes(k)))
-            {
-              keysChildTable.forEach(kc=>{
+          let keysChildTable =
+            this.dataTable[k] && this.dataTable[k][0]
+              ? Object.keys(this.dataTable[k][0])
+              : [];
+          if (keysChildTable.length > 0) {
+            if (this.listFieldDecimal.some((x) => x.includes(k))) {
+              keysChildTable.forEach((kc) => {
                 let fieldDecimal = k + '_sum_' + kc;
-                if(this.listFieldDecimal.includes(fieldDecimal))
-                  valueForm[fieldDecimal] = this.dataTable[k].reduce((a, b) => +a + +b[kc], 0);
-              })
+                if (this.listFieldDecimal.includes(fieldDecimal))
+                  valueForm[fieldDecimal] = this.dataTable[k].reduce(
+                    (a, b) => +a + +b[kc],
+                    0
+                  );
+              });
             }
           }
         });
@@ -561,7 +559,14 @@ export class AddProcessDefaultComponent implements OnInit {
           comments: this.data?.comments,
           isOverDue: this.data?.isOverDue,
           owners: this.data?.owners,
-          permissions: this.data?.permissions,
+          permissions: [
+            {
+              objectID: this.user?.userID,
+              objectName: this.user?.userName,
+              objectType: 'U',
+            },
+          ],
+          createdBy: this.user.userID,
           indexNo: 1,
         };
         let fieldName = 'f' + this.data.stepNo + '_owner';
@@ -624,10 +629,8 @@ export class AddProcessDefaultComponent implements OnInit {
             //addFile nếu có
             this.addFileAttach(type);
           });
-      }
-      else if (this.type == 'edit')
-      {
-        if(!this.taskID) this.dataIns.title = valueForm[this.subTitle];
+      } else if (this.type == 'edit') {
+        if (!this.taskID) this.dataIns.title = valueForm[this.subTitle];
         (this.dataIns.modifiedOn = new Date()),
           (this.dataIns.modifiedBy = this.user?.userID);
         if (this.dataIns.datas) {
@@ -645,11 +648,9 @@ export class AddProcessDefaultComponent implements OnInit {
         if (
           this.attachment?.fileUploadList &&
           this.attachment?.fileUploadList?.length > 0
-        )
-        {
+        ) {
           this.addFileAttach(type);
-        }
-        else {
+        } else {
           this.updateIns();
         }
       }
@@ -664,11 +665,9 @@ export class AddProcessDefaultComponent implements OnInit {
       (await this.attachment.saveFilesObservable()).subscribe((item2) => {
         if (item2) {
           let arr = [];
-          if (!Array.isArray(item2))
-          {
+          if (!Array.isArray(item2)) {
             arr.push(item2);
-          }
-          else arr = item2;
+          } else arr = item2;
           arr.forEach((elm) => {
             var obj = {
               fileID: elm.data.recID,
@@ -713,10 +712,8 @@ export class AddProcessDefaultComponent implements OnInit {
           //this.dataIns.documentControl.
         }
       });
-    } else
-    {
-      if (this.type == 'add')
-      {
+    } else {
+      if (this.type == 'add') {
         this.bpService
           .createTaskOnSaveInstance(this.dataIns.recID)
           .subscribe((res) => {
@@ -726,15 +723,10 @@ export class AddProcessDefaultComponent implements OnInit {
               this.startInstance(this.dataIns.recID);
             }
           });
-      }
-      else
-      {
-        if (type == 1)
-        {
+      } else {
+        if (type == 1) {
           this.dialog.close(this.dataIns);
-        }
-        else
-        {
+        } else {
           this.startInstance(this.dataIns.recID);
         }
       }
@@ -775,8 +767,7 @@ export class AddProcessDefaultComponent implements OnInit {
       .subscribe((item) => {
         this.dialog.close(this.dataIns);
         this.dataChange.emit(this.dataIns);
-        if(this.taskID)
-        {
+        if (this.taskID) {
           this.updateTaskStatus('5');
         }
       });
@@ -846,7 +837,7 @@ export class AddProcessDefaultComponent implements OnInit {
   }
 
   dataChangeAttachmentGrid(e: any) {
-    if(!this.dataIns.documentControl) this.dataIns.documentControl = [];
+    if (!this.dataIns.documentControl) this.dataIns.documentControl = [];
     if (Array.isArray(e)) {
       e.forEach((elm) => {
         var dt = JSON.parse(JSON.stringify(elm));
@@ -854,7 +845,7 @@ export class AddProcessDefaultComponent implements OnInit {
           (x) => x.recID == elm.recID
         );
         if (index >= 0) this.dataIns.documentControl[index] = dt;
-        else this.dataIns.documentControl.push(dt)
+        else this.dataIns.documentControl.push(dt);
       });
       //this.api.execSv("BP","BP","ProcessInstancesBusiness","UpdateInsAsync",this.dataIns).subscribe();
     }
@@ -897,11 +888,10 @@ export class AddProcessDefaultComponent implements OnInit {
           this.dataIns.status = '3';
         }
         this.dialog.close(this.dataIns);
-      }
-      else{
+      } else {
         this.isSaving(false);
         return;
-      };
+      }
     });
   }
   dataChangeAttachment(e: any) {
@@ -950,17 +940,16 @@ export class AddProcessDefaultComponent implements OnInit {
     });
   }
 
-  gridDs:any=[];
-  addRow2(index = 0)
-  {
+  gridDs: any = [];
+  addRow2(index = 0) {
     var grid = this.gridView.find((_, i) => i == index);
     var data = {
-      'cot_1': '',
-      'cot_2': '',
-      'cot_3': ''
+      cot_1: '',
+      cot_2: '',
+      cot_3: '',
     };
     //if(!grid.dataSource) grid.dataSource = [];
-    grid.addRow(data,grid.dataSource.length);
+    grid.addRow(data, grid.dataSource.length);
     //grid.refresh();
   }
   deleteRow(data: any, fieldName: any, index = 0, hasIndexNo = false) {
@@ -1060,7 +1049,7 @@ export class AddProcessDefaultComponent implements OnInit {
     );
   };
 
-  updateTaskStatus(status){
+  updateTaskStatus(status) {
     //Update Task Status test
     this.api
       .execSv(
@@ -1072,7 +1061,7 @@ export class AddProcessDefaultComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
-          this.dataTaskChange.emit([res,this.dataIns]);
+          this.dataTaskChange.emit([res, this.dataIns]);
           // if (this.data.activityType != 'Sign')
           //   this.notifySvr.notifyCode('SYS034');
           // this.dialog && this.dialog.close(res);
@@ -1080,18 +1069,17 @@ export class AddProcessDefaultComponent implements OnInit {
       });
   }
 
-  valueChangeInput(e:any)
-  {
-    this.checkVisisable(e)
+  valueChangeInput(e: any) {
+    this.checkVisisable(e);
   }
 
-  afterRender(evt:any, input:any , refersouce:any){
-    if(!refersouce) return;
-    if(input.typecheck == "combobox"){
+  afterRender(evt: any, input: any, refersouce: any) {
+    if (!refersouce) return;
+    if (input.typecheck == 'combobox') {
       let predicate = this.buildReferedsource(refersouce);
-    if(evt.predicates){
-      evt.dataService.predicates += " and " + predicate;
-    }else evt.dataService.predicates = predicate;
+      if (evt.predicates) {
+        evt.dataService.predicates += ' and ' + predicate;
+      } else evt.dataService.predicates = predicate;
     }
   }
 
@@ -1122,49 +1110,48 @@ export class AddProcessDefaultComponent implements OnInit {
     return pre;
   }
 
-  checkVisisable(e)
-  {
-    this.f_ParaVisible.forEach(elm=>{
-      for(var i = 0 ; i < elm.paraValues.filters.length ; i++)
-      {
+  checkVisisable(e) {
+    this.f_ParaVisible.forEach((elm) => {
+      for (var i = 0; i < elm.paraValues.filters.length; i++) {
         let elm2 = elm.paraValues.filters[i];
-        this.f_Visible[elm.fieldName] = this.resultVisiable(elm2,e);
+        this.f_Visible[elm.fieldName] = this.resultVisiable(elm2, e);
 
-        if((elm.paraValues.logic == 'and' && this.f_Visible[elm.fieldName]) ||
-        (elm.paraValues.logic == 'or' && !this.f_Visible[elm.fieldName])
-        )
-        {
-          elm2.filters.forEach(elm3=>{
-            if(this.f_Visible[elm3.field]) this.hideVisiableChild(elm3.field)
-          })
+        if (
+          (elm.paraValues.logic == 'and' && this.f_Visible[elm.fieldName]) ||
+          (elm.paraValues.logic == 'or' && !this.f_Visible[elm.fieldName])
+        ) {
+          elm2.filters.forEach((elm3) => {
+            if (this.f_Visible[elm3.field]) this.hideVisiableChild(elm3.field);
+          });
 
           break;
         }
       }
-    })
+    });
   }
 
-  resultVisiable(data:any,e:any)
-  {
+  resultVisiable(data: any, e: any) {
     let result = false;
-    data.filters.forEach((elm:any)=>{
-      result = !this.convertOperator(elm.field,elm.operator,elm.value,e);
-      if((!result && data.logic == 'and') || (result && data.logic == 'or')) return;
+    data.filters.forEach((elm: any) => {
+      result = !this.convertOperator(elm.field, elm.operator, elm.value, e);
+      if ((!result && data.logic == 'and') || (result && data.logic == 'or'))
+        return;
     });
     return result;
   }
 
-  convertOperator(field,operator,value,e)
-  {
+  convertOperator(field, operator, value, e) {
     let comp = this.dynamicFormsForm.value[field];
-    if(field == e?.field) comp = e?.data;
-    if(!comp) return false;
-    switch(operator.toLowerCase())
-    {
-      case 'eq' : case '=' : {
+    if (field == e?.field) comp = e?.data;
+    if (!comp) return false;
+    switch (operator.toLowerCase()) {
+      case 'eq':
+      case '=': {
         return comp == value;
       }
-      case 'neq' : case '<>' : case '!=' : {
+      case 'neq':
+      case '<>':
+      case '!=': {
         return comp != value;
       }
       case 'contains': {
@@ -1176,50 +1163,47 @@ export class AddProcessDefaultComponent implements OnInit {
       case 'startswitch': {
         return comp.startsWith(value);
       }
-      case 'empty':
-      {
-        if(!comp) return true;
+      case 'empty': {
+        if (!comp) return true;
         return false;
       }
-      case 'noempty':
-      {
-        if(comp) return true;
+      case 'noempty': {
+        if (comp) return true;
         return false;
       }
-      case 'gte' : case '>=' : {
+      case 'gte':
+      case '>=': {
         return comp >= value;
       }
-      case 'lte' : case '<=' : {
+      case 'lte':
+      case '<=': {
         return comp <= value;
       }
-      case '<' : {
+      case '<': {
         return comp < value;
       }
-      case '>' : {
+      case '>': {
         return comp > value;
       }
     }
     return false;
   }
 
-  hideVisiableChild(e:any)
-  {
+  hideVisiableChild(e: any) {
     let arr = [];
-    this.f_ParaVisible.forEach(elm=>{
-      elm.paraValues.filters.forEach(elm2=>{
-        let check = elm2.filters.some(x=>x.field == e);
-        if(check)
-        {
-          if(!arr.includes(elm.fieldName)) arr.push(elm.fieldName);
+    this.f_ParaVisible.forEach((elm) => {
+      elm.paraValues.filters.forEach((elm2) => {
+        let check = elm2.filters.some((x) => x.field == e);
+        if (check) {
+          if (!arr.includes(elm.fieldName)) arr.push(elm.fieldName);
         }
-      })
-    })
-    if(arr.length>0)
-    {
-      arr.forEach(elm=>{
+      });
+    });
+    if (arr.length > 0) {
+      arr.forEach((elm) => {
         this.f_Visible[elm] = true;
         this.hideVisiableChild(elm);
-      })
+      });
     }
   }
 }
