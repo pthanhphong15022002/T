@@ -160,7 +160,7 @@ export class PropertyCbbDependenceComponent
         ].dependences = de;
       }
   
-      this.data.validateControl = JSON.stringify(this.vaidateControl);
+      this.data.validateControl = this.vaidateControl;
       this.dataChange.emit(this.data);
       this.dataChangeTableEmit.emit(this.dataTable);
     } 
@@ -175,7 +175,7 @@ export class PropertyCbbDependenceComponent
       //this.getCbb(referSource);
     }
   
-    this.data.validateControl = JSON.stringify(this.vaidateControl);
+    this.data.validateControl = this.vaidateControl;
     this.dataChange.emit(this.data);
   }
 

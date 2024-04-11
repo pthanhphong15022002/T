@@ -122,7 +122,7 @@ export class EditFileComponent implements OnInit{
 
   loadContentWord(url: any, uploadId: any = null) {
     let http: XMLHttpRequest = new XMLHttpRequest();
-    let content = { fileUrl: environment.urlUpload + '/' + url };
+    let content = { fileUrl: url };
     http.withCredentials = true;
     http.open('Post', this.serviceUrl, true);
     http.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
