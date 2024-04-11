@@ -40,19 +40,18 @@ export class CodxHelpComponent implements OnInit, AfterViewInit, OnDestroy {
     this.realHub.start("dm")
     .then((res:RealHub) => {
       if(res) {
-        this.subcriptions.add(res.$subjectReal.asObservable()
+        res.$subjectReal.asObservable()
         .subscribe((z):any => 
         {
           if(z && z?.event == 'OpenChatDoc' && z?.message == this.session) 
           {
-            debugger
             let respone = z.data;
             if(respone && respone?.status && respone?.docID)
             {
               this.openTabGPT(respone.docID);
             }
           }
-        }));
+        })
       }
     });
   }
@@ -67,14 +66,20 @@ export class CodxHelpComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subcriptions.add(this.api.execSv("DM","DM","FileBussiness","GetFileDocAsync",[objectID,referType])
     .subscribe((res:any) => {
       if(res)
-        this.session = res;
+      {
+        let type = res.split(":");
+        if(type[0] == "id")
+          this.openTabGPT(type[1]);
+        else  
+          this.session = res;
+      }
       else 
         this.notiSV.notify("Không tim thấy tài liệu","2");
     }));
   }
 
   openTabGPT(docID:string){
-    window.open(`https://console.trogiupluat.vn/Chatbox/Document?k=${environment.lvai.API_KEY}&docIds=${docID}`);
+    window.open(`${environment.lvai.Url}?k=${environment.lvai.API_KEY}&docIds=${docID}`);
   }
 
 }

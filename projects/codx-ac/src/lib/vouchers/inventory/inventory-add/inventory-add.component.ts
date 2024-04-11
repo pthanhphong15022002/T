@@ -50,6 +50,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
     allowEditOnDblClick:false,
     allowNextRowEdit:false
   }
+  isActive:any = true;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   constructor(
@@ -67,6 +68,9 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
     this.dataDefault = { ...dialogData.data?.oData };
     this.journal = { ...dialogData.data?.journal };
     this.baseCurr = dialogData.data?.baseCurr;
+    if (dialogData.data.hasOwnProperty('isActive')){
+      this.isActive = dialogData.data?.isActive; 
+    } 
   }
 
   //#endregion Constructor
@@ -330,8 +334,6 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
           this.eleGridVouchers.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') {
               this.saveVoucher(type);
-            }else{
-              this.ngxLoader.stop();
             }
           })
           return;
@@ -349,40 +351,43 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
         this.journal,
       ])
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res?.update) {
-          this.dialog.dataService.update(res.data).subscribe();
-          if (type == 'save') {
-            this.onDestroy();
-            this.dialog.close();
-          }else{
-            this.api
-            .exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
-              this.dialogData.data?.oData,
-              this.journal,
-            ])
-            .subscribe((res: any) => {
-              if (res) {
-                res.data.isAdd = true;
-                this.master.refreshData({...res.data});
-                setTimeout(() => {
-                  this.eleGridVouchers.dataSource = [];
-                  this.eleGridVouchers.refresh();
-                }, 100);
-                this.detectorRef.detectChanges();
-              }
-            });
+      .subscribe({
+        next:(res: any) => {
+          if (res?.update) {
+            this.dialog.dataService.update(res.data).subscribe();
+            if (type == 'save') {
+              this.onDestroy();
+              this.dialog.close();
+            }else{
+              this.api
+              .exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
+                this.dialogData.data?.oData,
+                this.journal,
+              ])
+              .subscribe((res: any) => {
+                if (res) {
+                  res.data.isAdd = true;
+                  this.master.refreshData({...res.data});
+                  setTimeout(() => {
+                    this.eleGridVouchers.dataSource = [];
+                    this.eleGridVouchers.refresh();
+                  }, 100);
+                  this.detectorRef.detectChanges();
+                }
+              });
+            }
+            if (this.master.data.isAdd || this.master.data.isCopy)
+              this.notification.notifyCode('SYS006');
+            else 
+              this.notification.notifyCode('SYS007');
           }
-          if (this.master.data.isAdd || this.master.data.isCopy)
-            this.notification.notifyCode('SYS006');
-          else 
-            this.notification.notifyCode('SYS007');
-          
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          if(this.eleGridVouchers && this.eleGridVouchers?.isSaveOnClick) this.eleGridVouchers.isSaveOnClick = false;
+          if(this.eleGridVouchers && this.eleGridVouchers?.isSaveOnClick) this.eleGridVouchers.isSaveOnClick = false;
+          this.onDestroy();
         }
-        if(this.eleGridVouchers && this.eleGridVouchers?.isSaveOnClick) this.eleGridVouchers.isSaveOnClick = false;
-        if(this.eleGridVouchers && this.eleGridVouchers?.isSaveOnClick) this.eleGridVouchers.isSaveOnClick = false;
-        this.ngxLoader.stop();
-        this.onDestroy();
       });
   }
   //#endregion Method

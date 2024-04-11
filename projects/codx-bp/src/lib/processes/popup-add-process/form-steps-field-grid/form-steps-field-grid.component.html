@@ -29,9 +29,9 @@
                         <div class="d-flex flex-column ps-14 pt-4" cdkDrag [cdkDragDisabled]="item2?.stepType == '1'" (click)="addEditStages(item2.activityType,'edit',item2,null,null,false,(i==0 && y == 0 ? true : false))">
                             <div class="d-flex flex-column">
                                 <div class="row d-flex align-items-center cursor-pointer w-100" >
-                                    <div class="col-3 d-flex align-items-center"><div class="w-25px"><i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="item2?.stepType != '1'"></i> <i class="icon-drag_indicator me-2 text-gray-300" *ngIf="item2?.stepType == '1'"></i></div><div class="d-flex align-items-center ms-2 w-100px"><i [class]="item2?.settings?.icon" [style.color]="item2?.settings?.color"></i><span class="mx-2">{{item2.activityType}}</span></div><span [class.me-2]="item2?.reasonCon">{{item2?.reasonCon ? (item2?.reasonCon + " : ") : ""}}</span><span>{{item2?.stepName}}</span></div>
+                                    <div class="col-2 d-flex align-items-center"><div class="w-25px"><i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="item2?.stepType != '1'"></i> <i class="icon-drag_indicator me-2 text-gray-300" *ngIf="item2?.stepType == '1'"></i></div><div class="d-flex align-items-center ms-2 w-100px"><i [class]="item2?.settings?.icon" [style.color]="item2?.settings?.color"></i><span class="mx-2">{{item2.activityType}}</span></div><span [class.me-2]="item2?.reasonCon">{{item2?.reasonCon ? (item2?.reasonCon + " : ") : ""}}</span></div>
                                     <ng-container *ngIf="item2?.activityType != 'Conditions'">
-                                        <div class="col-4"><span>{{item2?.memo}}</span></div>
+                                        <div class="col-5 d-flex flex-column"><span>{{item2?.stepName}}</span><span class="text-gray-500">{{item2?.memo}}</span></div>
                                         <div class="col-1"><span>{{item2?.duration}}</span><span class="mx-1">{{item2?.interval | vll : 'VL004' : 'text' | async}}</span></div>
                                         <div class="col-3">
                                             <ng-container *ngIf="item2?.permissions">
@@ -42,37 +42,43 @@
                                                         <!-- <codx-imgs [objectId]="item2.pers" [objectType]="'AD_Users'" [numberImages]="3" width="30" [referType]="'avt'"></codx-imgs> -->
                                                         <div *ngIf="item2?.permissions?.length==1">
                                                             <codx-temp-full
-                                                            [imageId]="item2?.permissions[0]?.objectType =='U' ? item2?.permissions[0]?.objectID : null" 
+                                                            [imageId]="item2?.permissions[0]?.objectType =='U' ? item2?.permissions[0]?.objectID : null"
                                                             [desc]="item2?.permissions[0]?.objectName"
-                                                            [imageObjType]="'AD_Users'" [imageWidth]="30" 
+                                                            [imageObjType]="'AD_Users'" [imageWidth]="30"
                                                             [imageSrc]="item2?.permissions[0]?.objectType =='U' ? null : item2?.permissions[0]?.objectID?.length>0 ? './assets/themes/sys/default/img/' + (item2?.permissions[0]?.objectType | vll : 'BP017' : 'icon' | async ) :
                                                             './assets/themes/sys/default/img/' + ('SYS061' | vll : 'BP017' : 'icon' | async )"
                                                             [imgCss]="item2?.permissions[0]?.objectType !='U'? 'w-30px p-1 me-3 bg-light-secondary rounded-circle' :'w-30px me-3'"
                                                             [hideMF]="true"></codx-temp-full>
                                                         </div>
-                                                        <div *ngIf="item2?.permissions?.length>1" class="d-flex flex-row">                                                            
+                                                        <div *ngIf="item2?.permissions?.length>1" class="d-flex flex-row">
                                                             <codx-temp-full
-                                                            [imageId]="item2?.permissions[0]?.objectType =='U' ? item2?.permissions[0]?.objectID : null" 
-                                                            [imageObjType]="'AD_Users'" [imageWidth]="30" 
+                                                            [imageId]="item2?.permissions[0]?.objectType =='U' ? item2?.permissions[0]?.objectID : null"
+                                                            [imageObjType]="'AD_Users'" [imageWidth]="30"
                                                             [imageSrc]="item2?.permissions[0]?.objectType =='U' ? null : item2?.permissions[0]?.objectID?.length>0 ? './assets/themes/sys/default/img/' + (item2?.permissions[0]?.objectType | vll : 'BP017' : 'icon' | async ) :
                                                             './assets/themes/sys/default/img/' + ('SYS061' | vll : 'BP017' : 'icon' | async )"
-                                                            [imgCss]="item2?.permissions[0]?.objectType !='U'? 'w-30px p-1 bg-light-secondary rounded-circle' :'w-30px'"
+                                                            [imgCss]="item2?.permissions[0]?.objectType !='U'? 'w-30px p-1 bg-light-secondary rounded-circle' :'w-30px'" [ngbTooltip]="item2?.permissions[0]?.objectName"
                                                             [hideMF]="true"></codx-temp-full>
                                                             <codx-temp-full
-                                                            [imageId]="item2?.permissions[1]?.objectType =='U' ? item2?.permissions[1]?.objectID : null" 
-                                                            [imageObjType]="'AD_Users'" [imageWidth]="30" 
+                                                            [imageId]="item2?.permissions[1]?.objectType =='U' ? item2?.permissions[1]?.objectID : null"
+                                                            [imageObjType]="'AD_Users'" [imageWidth]="30"
                                                             [imageSrc]="item2?.permissions[1]?.objectType =='U' ? null : item2?.permissions[1]?.objectID?.length>0 ? './assets/themes/sys/default/img/' + (item2?.permissions[1]?.objectType | vll : 'BP017' : 'icon' | async ) :
-                                                            './assets/themes/sys/default/img/' + ('SYS061' | vll : 'BP017' : 'icon' | async )"
+                                                            './assets/themes/sys/default/img/' + ('SYS061' | vll : 'BP017' : 'icon' | async )" [ngbTooltip]="item2?.permissions[1]?.objectName"
                                                             [imgCss]="item2?.permissions[1]?.objectType !='U'? 'w-30px p-1  bg-light-secondary rounded-circle' :'w-30px'"
                                                             [hideMF]="true"></codx-temp-full>
 
                                                             <span class="symbol-group-badge" *ngIf="item2?.permissions?.length>=3">
-                                                                <span class="symbol symbol-30px symbol-circle" >
+                                                                <span class="symbol symbol-30px symbol-circle"  (click)="$event.stopPropagation(); openPopover(item2?.permissions)"
+                                                                popoverClass="processPopoverClass"
+                                                                [ngbPopover]="popEmpList"
+                                                                #popoverCategory2="ngbPopover"
+                                                                placement="right bottom top"
+                                                                container="body"
+                                                                autoClose="outside">
                                                                   <span class="symbol-label bg-light-secondary fs-8 fw-bolder">+{{ item2?.permissions?.length - 2 }}</span>
                                                                 </span>
                                                               </span>
                                                         </div>
-                                                        
+
                                                 </ng-template>
                                         </ng-container>
                                         </div>
@@ -104,35 +110,35 @@
 </div>
 <ng-template #tmpRow let-data let-isCon="b" let-index="c">
     <div class="row d-flex align-items-center cursor-pointer w-100" (click)="$event.stopPropagation();addEditStages(data.activityType,'edit',data,null,null,true)">
-        <div class="col-3 d-flex align-items-center ps-8"><div class="w-30px"><i *ngIf="isCon" class="icon-arrow_right_alt"></i><i *ngIf="data?.activityType == 'Conditions'" [class]="data?.settings?.icon" [style.color]="data?.settings?.color"></i></div><span [class.me-2]="data?.reasonCon">{{data?.reasonCon ? (data?.reasonCon + " : ") : ""}}</span><span>{{data?.stepName}}</span></div>
+        <div class="col-2 d-flex align-items-center ps-8"><div class="w-30px"><i *ngIf="isCon" class="icon-arrow_right_alt"></i><i *ngIf="data?.activityType == 'Conditions'" [class]="data?.settings?.icon" [style.color]="data?.settings?.color"></i></div><span [class.me-2]="data?.reasonCon">{{data?.reasonCon ? (data?.reasonCon + " : ") : ""}}</span></div>
         <ng-container *ngIf="data?.activityType != 'Conditions'">
             <div class="col-1 d-flex align-items-center"><i [class]="data?.settings?.icon" [style.color]="data?.settings?.color"></i><span class="mx-2">{{data.activityType}}</span></div>
-            <div class="col-3"><span>{{data?.memo}}</span></div>
+            <div class="col-4 d-flex flex-column"><span>{{data?.stepName}}</span><span class="text-gray-500">{{data?.memo}}</span></div>
             <div class="col-1"><span>{{data?.duration}}</span><span class="mx-1">{{data?.interval | vll : 'VL004' : 'text' | async}}</span></div>
             <div class="col-3">
                 <ng-container *ngIf="data?.permissions && data?.permissions.length>0">
                     <!-- <codx-imgs [objectId]="data.pers" [objectType]="'AD_Users'" [numberImages]="3" width="30" [referType]="'avt'"></codx-imgs> -->
                     <div *ngIf="data?.permissions?.length==1">
                         <codx-temp-full
-                        [imageId]="data?.permissions[0]?.objectType =='U' ? data?.permissions[0]?.objectID : null" 
+                        [imageId]="data?.permissions[0]?.objectType =='U' ? data?.permissions[0]?.objectID : null"
                         [desc]="data?.permissions[0]?.objectName" titleCss="fw-normal"
-                        [imageObjType]="'AD_Users'" [imageWidth]="30" 
+                        [imageObjType]="'AD_Users'" [imageWidth]="30"
                         [imageSrc]="data?.permissions[0]?.objectType =='U' ? null : data?.permissions[0]?.objectID?.length>0 ? './assets/themes/sys/default/img/' + (data?.permissions[0]?.objectType | vll : 'BP017' : 'icon' | async ) :
                         './assets/themes/sys/default/img/' + ('SYS061' | vll : 'BP017' : 'icon' | async )"
                         [imgCss]="data?.permissions[0]?.objectType !='U'? 'w-30px p-1 me-3 bg-light-secondary rounded-circle' :'w-30px me-3'"
                         [hideMF]="true"></codx-temp-full>
                     </div>
-                    <div *ngIf="data?.permissions?.length>1" class="d-flex flex-row">                                                            
+                    <div *ngIf="data?.permissions?.length>1" class="d-flex flex-row">
                         <codx-temp-full
-                        [imageId]="data?.permissions[0]?.objectType =='U' ? data?.permissions[0]?.objectID : null" 
-                        [imageObjType]="'AD_Users'" [imageWidth]="30" 
+                        [imageId]="data?.permissions[0]?.objectType =='U' ? data?.permissions[0]?.objectID : null"
+                        [imageObjType]="'AD_Users'" [imageWidth]="30"
                         [imageSrc]="data?.permissions[0]?.objectType =='U' ? null : data?.permissions[0]?.objectID?.length>0 ? './assets/themes/sys/default/img/' + (data?.permissions[0]?.objectType | vll : 'BP017' : 'icon' | async ) :
                         './assets/themes/sys/default/img/' + ('SYS061' | vll : 'BP017' : 'icon' | async )"
                         [imgCss]="data?.permissions[0]?.objectType !='U'? 'w-30px p-1 bg-light-secondary rounded-circle' :'w-30px'"
                         [hideMF]="true"></codx-temp-full>
                         <codx-temp-full
-                        [imageId]="data?.permissions[1]?.objectType =='U' ? data?.permissions[1]?.objectID : null" 
-                        [imageObjType]="'AD_Users'" [imageWidth]="30" 
+                        [imageId]="data?.permissions[1]?.objectType =='U' ? data?.permissions[1]?.objectID : null"
+                        [imageObjType]="'AD_Users'" [imageWidth]="30"
                         [imageSrc]="data?.permissions[1]?.objectType =='U' ? null : data?.permissions[1]?.objectID?.length>0 ? './assets/themes/sys/default/img/' + (data?.permissions[1]?.objectType | vll : 'BP017' : 'icon' | async ) :
                         './assets/themes/sys/default/img/' + ('SYS061' | vll : 'BP017' : 'icon' | async )"
                         [imgCss]="data?.permissions[1]?.objectType !='U'? 'w-30px p-1  bg-light-secondary rounded-circle' :'w-30px'"
@@ -165,4 +171,36 @@
         <i class="icon-i-plus icon-16"></i>
         <codx-label default="Thêm công đoạn" class="mx-1"></codx-label>
     </div>
+</ng-template>
+
+<ng-template #popEmpList>
+  <div class="fw-bold mb-1">
+    <codx-label
+      name="lblPermissionsList"
+    formName="sys"
+      default="Danh sách vai trò"
+    ></codx-label>
+    <span>{{ "(" + dataPermsPopover?.length + ")" }}</span>
+  </div>
+  <!-- <div class="mb-1">
+    <codx-searchbar
+      *ngIf="dataPermsPopover.length > 0"
+      (searchEvent)="searchName($event)"
+    ></codx-searchbar>
+  </div> -->
+  <div class="listuser-box">
+    <div
+      class="d-flex align-items-start user-card py-2"
+      *ngFor="let item of dataPermsPopover"
+    >
+    <codx-temp-full
+    [imageId]="item?.objectType =='U' ? item?.objectID : null"
+    [desc]="item?.objectName"
+    [imageObjType]="'AD_Users'" [imageWidth]="30"
+    [imageSrc]="item?.objectType =='U' ? null : item?.objectID?.length>0 ? './assets/themes/sys/default/img/' + (item?.objectType | vll : 'BP017' : 'icon' | async ) :
+    './assets/themes/sys/default/img/' + ('SYS061' | vll : 'BP017' : 'icon' | async )"
+    [imgCss]="item?.objectType !='U'? 'w-30px p-1 me-3 bg-light-secondary rounded-circle' :'w-30px me-3'"
+    [hideMF]="true"></codx-temp-full>
+    </div>
+  </div>
 </ng-template>

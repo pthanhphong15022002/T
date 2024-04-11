@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Injector,
   OnInit,
   Optional,
@@ -56,6 +57,7 @@ export class CatagoryComponent implements OnInit {
   settingFull = [];
   setting = [];
   settingValue = [];
+  orgGroupSetting:any=[];
   groupSetting = [];
   alertRules = [];
   schedules = [];
@@ -85,9 +87,11 @@ export class CatagoryComponent implements OnInit {
     private inject: Injector,
     private activatedRoute: ActivatedRoute,
     private formatDes: FormatPipe,
+    private elementRef: ElementRef,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
+    this.elementRef.nativeElement.style.height = screen.height-250 +'px'
     this.dialog = dialog;
     if (data) {
       this.settingFull = (data.data?.settingFull as []) || [];
@@ -181,7 +185,7 @@ export class CatagoryComponent implements OnInit {
           }
         });
     }
-
+    this.orgGroupSetting = JSON.parse(JSON.stringify(this.groupSetting));
     this.loadSettingValue();
   }
 
@@ -1003,7 +1007,6 @@ export class CatagoryComponent implements OnInit {
 
   //hàm dùng để custom xử lý sau khi lưu setting value cho các trường hợp đặc thù.
   updateCustom(dataVale: any, setting: any) {
-    debugger;
     if (!dataVale || !setting) return;
     switch (setting.reference.toLowerCase()) {
       case 'updatecompanysettings':
@@ -1164,4 +1167,12 @@ export class CatagoryComponent implements OnInit {
   }
 
   //end CRM
+  onSearch(e:any){
+    if(e){
+      this.groupSetting = this.groupSetting.filter((x:any)=>x.title?.toLowerCase().includes(e) || x.description?.toLowerCase().includes(e) )
+    }
+    else{
+      this.groupSetting = this.orgGroupSetting;
+    }
+  }
 }

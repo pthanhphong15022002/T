@@ -50,7 +50,7 @@ export class ReportinglineDetailComponent implements OnInit {
     if(positionID){
       this.api.execSv("HR",
       "ERM.Business.HR",
-      "PositionsBusiness",
+      "PositionsBusiness_Old",
       "GetPositionByIDAsync",
       [positionID])
       .subscribe((res:any) =>{
@@ -67,7 +67,7 @@ export class ReportinglineDetailComponent implements OnInit {
       this.api.execSv(
         "HR",
         "ERM.Business.HR",
-        "JobsBusiness",
+        "JobsBusiness_Old",
         "GetJobCompetencesByPositionIDAsync",
         [positionID,parentName])
         .subscribe((res:any) => {
@@ -188,7 +188,7 @@ export class ReportinglineDetailComponent implements OnInit {
         this.api.execSv(
           "HR",
           "ERM.Business.HR",
-          "PositionsBusiness",
+          "PositionsBusiness_Old",
           "InsertCompetencesAsync",
           [this.data.positionID,dataInsert]
         ).subscribe((res:any) =>{

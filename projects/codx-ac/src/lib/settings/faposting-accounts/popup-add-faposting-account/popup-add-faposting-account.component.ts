@@ -111,7 +111,7 @@ export class PopupAddFAPostingAccountComponent extends UIComponent {
 
         if (res.save || res.update) {
           if (closeAfterSave) {
-            this.dialogRef.close();
+            this.dialogRef.close(res.save || res.update);
           } else {
             this.form.formGroup.reset();
             this.faPostingAccount.note = '';

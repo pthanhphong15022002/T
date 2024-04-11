@@ -1,9 +1,18 @@
 <div class="border-top mt-8" *ngIf="dataTable">
     <div class="mt-4 pb-2 d-flex align-items-end justify-content-between">
         <div class="d-flex flex-column justify-content-end pe-2 w-100">
-            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'dependences'" default="Liên kết" class="fw-bold"></codx-label>
+            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'dependences'" default="Tham chiếu đến" class="fw-bold"></codx-label>
             <ejs-combobox #cbbDependence [fields]="fields" [allowCustom]="true" placeholder='Liên kết' (valueChange)="changeValueCBB($event)"></ejs-combobox>
         </div>
         <ejs-combobox #cbb2  [fields]="fields" [allowCustom]="true" placeholder='Liên kết' (valueChange)="changeValueCCBB($event)"></ejs-combobox>
     </div>
+
+    <div class="mt-4 pb-2 d-flex align-items-end justify-content-between">
+        <div class="d-flex flex-column justify-content-end w-100">
+            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'refersouce'" default="Lọc dữ liệu từ" class="fw-bold"></codx-label>
+            <ejs-combobox #cbbDependence2 [fields]="fields" [allowCustom]="true" placeholder='Từ' (valueChange)="changeValueCBB($event,2)"></ejs-combobox>
+        </div>
+        <ejs-combobox #cbb4  [fields]="fields" [allowCustom]="true" placeholder='Từ' (valueChange)="changeValueCCBB2($event,'refersouce2')"></ejs-combobox>
+    </div>
 </div>
+ 

@@ -9,20 +9,20 @@ import { BasePropertyComponent } from '../base.component';
 export class PropertyNoteComponent extends BasePropertyComponent implements OnInit{
   
   ngOnInit(): void {
-    if(!this.data.dataFormat) this.data.dataFormat = {};
-    else if(typeof this.data.dataFormat == 'string') this.data.dataFormat = JSON.parse(this.data.dataFormat) 
+    if(!this.data.validateControl) this.data.dataFormat = {};
+    else if(typeof this.data.validateControl == 'string' && this.data?.validateControl) this.data.validateControl = JSON.parse(this.data.validateControl) 
   }
 
   changeValueFormat(e:any,data:any=null)
   {
     if(data)
     {
-      this.data.dataFormat[e] = data;
+      this.data.validateControl[e] = data;
     }
     else
     {
-      if(!this.data.dataFormat[e]) this.data.dataFormat[e] = true;
-      else this.data.dataFormat[e] = !this.data.dataFormat[e];
+      if(!this.data.validateControl[e]) this.data.validateControl[e] = true;
+      else this.data.validateControl[e] = !this.data.validateControl[e];
     }
     
     this.dataChange.emit(this.data)
@@ -30,6 +30,6 @@ export class PropertyNoteComponent extends BasePropertyComponent implements OnIn
   
   changeValueFormatColor(e:any)
   {
-    this.data.dataFormat[e?.field] = e?.data
+    this.data.validateControl[e?.field] = e?.data
   }
 }

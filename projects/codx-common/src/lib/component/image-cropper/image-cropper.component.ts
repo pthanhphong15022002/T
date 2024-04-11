@@ -1,4 +1,4 @@
-import { Component, Optional } from '@angular/core';
+import { Component, Input, Optional } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DialogData, DialogRef } from 'codx-core';
 import { ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
@@ -9,6 +9,8 @@ import { ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
   styleUrls: ['./image-cropper.component.css']
 })
 export class CodxImageCropperComponent {
+  @Input() heightCropper: number = 200;
+  @Input() widthCropper: number = 200;
   dialog: any;
   imageBase64: any = '';
   croppedImage: any = '';
@@ -27,6 +29,12 @@ export class CodxImageCropperComponent {
     }
     reader.onerror = (error) => {
       console.log('Error: ', error);
+    }
+    if(dt.data.heightCropper) {
+      this.heightCropper = dt.data.heightCropper;
+    }
+    if(dt.data.widthCropper) {
+      this.widthCropper = dt.data.widthCropper;
     }
   }
   ngOnInit(): void {}

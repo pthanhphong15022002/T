@@ -1,0 +1,913 @@
+<div id="container-step" *ngIf="applyProcess">
+  <header class="d-flex align-items-center justify-content-between search p-2">
+    <div class="left d-flex align-items-center">
+      <div>
+        <codx-dropdown-select
+          cssPopup="h-300px w-300px"
+          [isMulti]="true"
+          type="valuelist"
+          [emptyText]="'Tình trạng'"
+          field="status"
+          [dataSource]="status"
+          (valueChange)="changeValueDropdownSelect($event)"
+        ></codx-dropdown-select>
+      </div>
+      <ng-container [ngTemplateOutlet]="toggleStep"></ng-container>
+      <div
+        class="ms-3 d-flex align-items-center"
+        #popoverDetails="ngbPopover"
+        [ngbPopover]="'Hướng dẫn'"
+        [placement]="'top-left'"
+        placement="top bottom"
+        (mouseenter)="popoverDetails.open()"
+        (mouseleave)="popoverDetails.close()"
+        (click)="showGuide()"
+      >
+        <span
+          class="icon-i-info-circle icon-20 text-hover-primary cursor-pointer text-gray-500"
+        ></span>
+      </div>
+    </div>
+    <div class="right d-flex align-items-center">
+      <div
+        *ngIf="!isView"
+        (click)="addTask()"
+        class="d-flex align-items-center me-3 cursor-pointer"
+        ngbTooltip="Thêm công việc tại giai đoạn hiện tại"
+        placement="top"
+      >
+        <i class="icon-20 icon-add_task text-primary"></i>
+      </div>
+      <div *ngIf="isMoveStage">
+        <div
+          *ngIf="dataCM?.status != '1'"
+          class="d-flex align-items-center mx-2 bg-primary rounded-pill btn-next-step px-2 py-1"
+          (click)="nextStep()"
+        >
+          <span class="icon-16 icon-play_arrow me-1"></span>
+          <span class="line-clamp line-clamp-1">Chuyển giai đoạn</span>
+        </div>
+        <div
+          *ngIf="dataCM?.status == '1'"
+          class="d-flex align-items-center mx-2 bg-primary rounded-pill btn-next-step px-2 py-1"
+          (click)="startStepFunction()"
+        >
+          <span class="icon-16 icon-play_circle_outline me-1"></span>
+          <span>Bắt đầu ngay</span>
+        </div>
+      </div>
+      <div *ngIf="type == 'G'" class="me-3 value-30px">
+        <codx-input
+          type="valuelist"
+          [crrValue]="crrViewGant"
+          [refValue]="vllViewGannt"
+          (valueChange)="changeViewTimeGant($event)"
+        ></codx-input>
+      </div>
+      <div class="value-30px">
+        <codx-input
+          field="viewModeDetail"
+          type="valuelist"
+          [crrValue]="type"
+          [refValue]="'DP047'"
+          (valueChange)="changeValue($event)"
+        ></codx-input>
+      </div>
+    </div>
+  </header>
+  <main
+    class="main-step"
+    [ngStyle]="{ height: taskHeight }"
+    [ngClass]="isHeightAuto ? 'overflow-hidden' : ''"
+  >
+    <ng-container
+      *ngIf="type == 'S'"
+      [ngTemplateOutlet]="taskTem"
+    ></ng-container>
+    <ng-container
+      *ngIf="type == 'G'"
+      [ngTemplateOutlet]="ganttChart"
+    ></ng-container>
+    <ng-container
+      *ngIf="type == 'K'"
+      [ngTemplateOutlet]="kanban"
+    ></ng-container>
+  </main>
+</div>
+
+<div *ngIf="!applyProcess">
+  <activities
+    [objectID]="dataCM?.recID"
+    [isPause]="isPause"
+    [entityName]="entityName"
+    [isAdmin]="isRoleFullStep"
+    (saveAssign)="handelSaveAssignTask($event)"
+    [leadName]="leadName"
+    [contractName]="contractName"
+    [dealName]="dealName"
+    [customerName]="customerName"
+    [ownerInstance]="owner"
+    [activitiAdd]="isAddTask ? taskAdd : null"
+    [applyFor]="applyFor"
+  ></activities>
+</div>
+
+<ng-template #taskTem>
+  <div *ngIf="isDataLoading || !type">
+    <div *ngFor="let step of [1, 2]" class="mt-5">
+      <div class="d-flex align-items-center w-100">
+        <ngx-skeleton-loader
+          appearance="circle"
+          [theme]="{ width: '50px', height: '50px', 'margin-right': '10px' }"
+        >
+        </ngx-skeleton-loader>
+        <ngx-skeleton-loader
+          style="width: 100%"
+          [theme]="{
+            width: '100%',
+            'border-radius': '5px',
+            height: '50px',
+            margin: '0px'
+          }"
+        ></ngx-skeleton-loader>
+      </div>
+      <div style="width: 100%">
+        <ngx-skeleton-loader
+          style="width: 100%"
+          [theme]="{
+            width: '100%',
+            'border-radius': '5px',
+            height: '50px',
+            margin: '0px'
+          }"
+        ></ngx-skeleton-loader>
+        <ngx-skeleton-loader
+          style="width: 100%"
+          [theme]="{
+            width: '100%',
+            'border-radius': '5px',
+            height: '50px',
+            margin: '0px'
+          }"
+        ></ngx-skeleton-loader>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!isDataLoading && listInstanceStepShow?.length > 0 && type">
+    <div
+      *ngFor="let instanceStep of listInstanceStepShow; let i = index"
+      class="list-step mt-3"
+    >
+      <codx-step-task
+        *ngIf="!instanceStep?.isSuccessStep && !instanceStep?.isFailStep"
+        [instanceStep]="instanceStep"
+        [isShowBtnAddTask]="false"
+        [isShowStep]="true"
+        [isStart]="dataCM?.status != '1' && dataCM?.status != '15'"
+        [isRoleAll]="isRoleFullStep"
+        [isShowElement]="isShowElement"
+        [isAddTask]="i == indexAddTask"
+        [isTaskFirst]="i == 0 ? true : false"
+        [sessionID]="dataCM?.recID"
+        [formModelAssign]="formModel"
+        [isChangeOwner]="isChangeOwner"
+        [ownerInstance]="owner"
+        [taskAdd]="setTask(instanceStep?.recID)"
+        [isView]="isView"
+        [entityName]="entityName"
+        [recIDParent]="dataCM?.recID"
+        [applyFor]="applyFor"
+        [businessLineID]="dataCM?.businessLineID || ''"
+        [processID]="dataCM?.processID"
+        [leadName]="leadName"
+        [contractName]="contractName"
+        [dealName]="dealName"
+        [customerName]="customerName"
+        (continueStep)="handelContinueStep($event, instanceStep)"
+        (saveAssign)="handelSaveAssignTask($event)"
+        (changeProgress)="autoStart($event)"
+        (isSuccessStep)="susscessStepEnd($event, instanceStep)"
+      ></codx-step-task>
+      <div
+        *ngIf="
+          (instanceStep?.isFailStep || instanceStep?.isSuccessStep) &&
+          !['0', '1', '2', '15', '17'].includes(dataCM?.status)
+        "
+      >
+        <div>
+          <div class="d-flex justify-content-between">
+            <div class="d-flex align-items-center text-primary">
+              <div
+                (click)="toggleReason()"
+                class="d-flex align-items-center show-step ms-2 me-3"
+              >
+                <i
+                  *ngIf="isShowSuccess"
+                  class="icon-22 icon-expand_less text-primary"
+                  [ngbTooltip]="'Thu gọn'"
+                ></i>
+                <i
+                  *ngIf="!isShowSuccess"
+                  class="icon-22 icon-expand_more text-primary"
+                  [ngbTooltip]="'Mở rộng'"
+                ></i>
+              </div>
+              <span class="w-20px me-2">
+                <span
+                  [class]="getReasonValue(instanceStep?.isSuccessStep)?.icon"
+                  class="icon-20"
+                >
+                </span>
+              </span>
+              <span class="line-clamp line-clamp-1 fs-6 fw-bold">
+                {{ instanceStep?.stepName || "" }}
+              </span>
+            </div>
+            <div class="ms-6">
+              <div class="group-button">
+                <button class="button-custom" (click)="openPopupReason()">
+                  <span
+                    [ngClass]="
+                      dataCM?.closed
+                        ? ''
+                        : 'icon-edit icon-20 text-primary-600 py-2'
+                    "
+                    style="font-weight: 500"
+                  ></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div [ngClass]="isShowSuccess ? 'd-block' : 'd-none'">
+            <div class="mt-3 ms-9">
+              <div class="mb-3">
+                <codx-label
+                  class="fs-6 fw-bold"
+                  fiedName="titleReason"
+                  [default]="getNameReason(instanceStep?.isSuccessStep)"
+                ></codx-label>
+              </div>
+              <ng-container
+                *ngFor="let item of listStepReasonValue"
+                class="pb-2"
+              >
+                <ul class="text-left drap-drop mb-1 has-action-menu">
+                  <li>
+                    {{ item.reasonName }}
+                    <codx-mfunc
+                      [formModel]="formModel"
+                      [dataItem]="moreDefaut"
+                      (changeDataMF)="changeReasonMF($event)"
+                      (clickMF)="clickMFReason($event, item)"
+                      [type]="'hover'"
+                    >
+                    </codx-mfunc>
+                  </li>
+                </ul>
+              </ng-container>
+            </div>
+            <div class="mt-3 ms-9">
+              <div class="mb-3 d-flex align-items-center">
+                <codx-label
+                  class="fs-6 fw-bold label-colon mb-5"
+                  fiedName="memo"
+                  [formModel]="formModel"
+                  [default]="'Ghi chú'"
+                ></codx-label>
+                <span
+                  class="text-dark fw-bold codx-textcontent p-0 m-0 reason"
+                  [innerHTML]="
+                    instanceStep?.memo
+                      | formatvalue : formModel : 'Memo'
+                      | async
+                  "
+                ></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    *ngIf="
+      !isDataLoading &&
+      (!listInstanceStepShow || listInstanceStepShow?.length == 0)
+    "
+    class="no-data"
+  >
+    <codx-no-data></codx-no-data>
+  </div>
+</ng-template>
+
+<ng-template #ganttChart>
+  <div class="w-100 h-100" id="tabGantt">
+    <codx-step-chart
+      [listInstanceStep]="listInstanceStep"
+      [isShowTypeTime]="false"
+      [typeTime]="typeTime"
+      [instance]="dataCM"
+      [listSteps]="listInstanceStepShow"
+      [isRoleAll]="dataCM?.alloweStatus || dataCM?.full"
+      [type]="'CM'"
+    ></codx-step-chart>
+  </div>
+</ng-template>
+
+<ng-template #viewReason let-dialog="dialogPopupReason">
+  <codx-form
+    [headerText]="titleReason"
+    [body]="bodyFormReName"
+    [footer]="footerFormReName"
+    [dialog]="dialogPopupReason"
+  >
+  </codx-form>
+</ng-template>
+<ng-template #bodyFormReName>
+  <div
+    class="form-group mt-3"
+    *ngIf="
+      listStepReason?.length > 0 && listStepReason !== null;
+      else dataIsEmpty
+    "
+  >
+    <div *ngFor="let item of listStepReason">
+      <div class="form-check py-2">
+        <input
+          class="form-check-input rounded-circle"
+          type="checkbox"
+          (change)="checkValue($event, item)"
+        />
+        <span class="form-check-label">
+          {{ item?.reasonName }}
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footerFormReName>
+  <button
+    type="button"
+    class="btn btn-primary"
+    (click)="onSaveReason()"
+    [disabled]="listStepReason?.length < 0 && !listStepReason"
+  >
+    <codx-label fiedName="lblSave" default="Lưu"></codx-label>
+  </button>
+</ng-template>
+
+<ng-template #dataIsEmpty>
+  <codx-no-data></codx-no-data>
+</ng-template>
+
+<ng-template #popupGuide>
+  <div class="d-flex justify-content-between">
+    <span class="text-dark fw-bold fs-3 me-6 ps-7 pt-4">
+      <codx-label
+        name="lblGuide"
+        [formName]="'DPProcesses'"
+        [gridViewName]="'grvDPProcesses'"
+        default="Các bước hướng dẫn thực hiện quy trình"
+      ></codx-label>
+    </span>
+    <div>
+      <button
+        *ngIf="isZoomOut"
+        type="button"
+        class="btn btn-icon background-gray"
+        (click)="showGuide()"
+      >
+        <span class="icon-filter_none icon-16"></span>
+      </button>
+
+      <button
+        *ngIf="isZoomIn"
+        type="button"
+        class="btn btn-icon background-gray"
+        (click)="zoomGuide()"
+      >
+        <span class="icon-crop_square icon-18"></span>
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-icon background-red"
+        (click)="closeGuide()"
+      >
+        <span class="icon-close icon-18"></span>
+      </button>
+    </div>
+  </div>
+  <div
+    class="pb-2 px-7"
+    style="max-height: 400px; overflow: auto"
+    *ngIf="stepViews?.length > 0"
+  >
+    <ng-container *ngFor="let item of stepViews; let i = index">
+      <div class="d-flex text-gray-700 pb-1 pt-2">
+        <span class="me-2 fw-bold">
+          <codx-label
+            name="lblPhase"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
+            default="Bước"
+          ></codx-label>
+          {{ i + 1 + ":" }}
+        </span>
+        <span>{{ item.stepName }}</span>
+      </div>
+    </ng-container>
+    <div>
+      <span class="text-dark fw-bold fs-4 me-6">
+        <codx-label
+          name="lblMemoDetail"
+          [formName]="'DPProcesses'"
+          [gridViewName]="'grvDPProcesses'"
+          default="Hướng dẫn chi tiết các giai đoạn"
+        ></codx-label>
+      </span>
+    </div>
+    <ng-container *ngFor="let item of stepViews">
+      <div class="text-dark fw-bold fs-6 me-6">
+        <span>{{ item.stepName }}</span>
+      </div>
+      <div
+        *ngIf="item?.memo"
+        [innerHTML]="item?.memo | formatvalue : formModel : 'Memo' | async"
+      ></div>
+    </ng-container>
+  </div>
+</ng-template>
+<ng-template #toggleStep>
+  <div class="ms-2" (click)="handelToggleStep()" style="height: 28px">
+    <div
+      role="button"
+      class="d-flex align-items-center border px-2 rounded-1 w-100px bg-gray-100 h-100"
+      *ngIf="isShow == true"
+    >
+      <i class="icon-i-arrows-collapse me-2"></i>
+      <codx-label
+        default="Thu gọn"
+        [formModel]="formModel"
+        fiedName="lblCollapse"
+      ></codx-label>
+    </div>
+    <div
+      role="button"
+      class="d-flex align-items-center border px-2 rounded-1 w-100px h-100"
+      *ngIf="isShow == false"
+    >
+      <i class="icon-i-arrows-expand me-2"></i>
+      <codx-label
+        default="Mở rộng"
+        [formModel]="formModel"
+        fiedName="lblExpand"
+      ></codx-label>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #cardKanban let-data let-setting="setting">
+  <codx-card-img
+    cardCss="border h-100"
+    [hideMF]="true"
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    [typeMF]="'hover'"
+    [titleTmp]="cardTitleTmp"
+    [formModel]="formModel"
+    [setting]="setting"
+    [footer]="footerKanban"
+    [dataItem]="data"
+    [rootData]="data"
+  >
+  </codx-card-img>
+
+  <ng-template #cardTitleTmp let-data>
+    <div
+      [class]="
+        data.type != 'G' && data.taskGroupID
+          ? 'tmp-item-kanban p-2 mb-2 '
+          : 'w-100'
+      "
+    >
+      <codx-temp-full
+        style="width: 100%"
+        [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
+        [titleTmp]="tempTitle"
+        [descTmp]="descTmp"
+        [footer]="data.type != 'G' && data.taskGroupID ? footerKanban : null"
+        [dataItem]="data"
+        [rootData]="data"
+      >
+      </codx-temp-full>
+    </div>
+  </ng-template>
+
+  <ng-template #tempTitle let-data>
+    <div class="d-flex flex-column w-100">
+      <div class="d-flex align-items-center mb-2">
+        <codx-icon-step
+          *ngIf="data.type"
+          [typeTask]="data.type"
+          [isStep]="false"
+          [listTypeTask]="listType"
+          [size]="20"
+        ></codx-icon-step>
+        <span
+          class="ms-1 line-clamp-name"
+          [ngbTooltip]="data?.name"
+          container="body"
+        >
+          {{ data?.name }}
+        </span>
+      </div>
+      <div
+        *ngIf="data.type && data.type != 'G' && data?.recID"
+        ng
+        class="flex-body d-flex align-items-center justify-content-between w-100"
+      >
+        <codx-attachment
+          #attachment
+          hideMoreF="0"
+          hideDelete="1"
+          [objectType]="'DP_Steps_Tasks'"
+          [objectId]="data.recID"
+          hideFolder="1"
+          hideImageUpload="0"
+          hideImageThumb="0"
+          hideUploadBtn="1"
+          hideDes="1"
+          type="inline"
+          allowMultiFile="1"
+          referType="source"
+          displayThumb="full"
+        >
+        </codx-attachment>
+      </div>
+      <!-- <div
+        *ngIf="data.type && data.type != 'G' && data.taskGroupID"
+        class="flex-body d-flex align-items-center justify-content-between w-100"
+      >
+        <div class="text-danger">
+          <span>{{ data?.durationDay }}</span>
+          <codx-label
+            class="mx-1"
+            [name]="'lblDays'"
+            [formName]="'DPSteps'"
+            [gridViewName]="'grvDPSteps'"
+            default="ngày"
+          ></codx-label>
+          <span>{{ data?.durationHour }}</span>
+          <codx-label
+            class="mx-1"
+            [name]="'lblHours'"
+            [formName]="'DPSteps'"
+            [gridViewName]="'grvDPSteps'"
+            default="giờ"
+          ></codx-label>
+        </div>
+        <div
+          class="d-flex justify-content-end"
+          [ngbTooltip]="getObjectName(data)"
+          container="body"
+        >
+          <codx-img
+            [width]="25"
+            [objectId]="getObjectID(data)"
+            objectType="AD_Users"
+          >
+          </codx-img>
+        </div>
+      </div> -->
+    </div>
+  </ng-template>
+
+  <ng-template #descTmp let-data>
+    <!-- reason -->
+    <div *ngIf="!data.type">
+      <ng-container *ngFor="let item of data?.items">
+        <ul>
+          <li>
+            {{ item.name }}
+          </li>
+        </ul>
+      </ng-container>
+    </div>
+    <!-- content -->
+    <div *ngIf="data.type == 'G'" class="ms-1 me-1 w-100">
+      <ng-container *ngFor="let item of data?.items">
+        <ng-container
+          [ngTemplateOutlet]="cardTitleTmp"
+          [ngTemplateOutletContext]="{ $implicit: item }"
+        ></ng-container>
+      </ng-container>
+    </div>
+  </ng-template>
+  <ng-template #footerKanban let-data>
+    <div
+      *ngIf="data.type"
+      class="d-flex bg-footer {{ data?.color ? '' : 'bg-light-warning' }}"
+      [style.background]="data?.color"
+    >
+      <div class="d-flex flex-column w-100 p-3">
+        <div class="d-flex align-items-center">
+          <div class="d-flex align-items-center card-icon-nowrap me-1">
+            <span class="me-1 icon-16 icon-access_alarm"></span
+            ><span class="fw-bolb ms-1">
+              <codx-label name="lblTime" default="Thời gian:"></codx-label>
+            </span>
+            <div class="badge badge-white text-danger my-1 ms-3">
+              <span>{{ data?.durationDay }}</span>
+              <codx-label
+                class="mx-1"
+                [name]="'lblDays'"
+                [formName]="'DPSteps'"
+                [gridViewName]="'grvDPSteps'"
+                default="ngày"
+              ></codx-label>
+              <span>{{ data?.durationHour }}</span>
+              <codx-label
+                class="mx-1"
+                [name]="'lblHours'"
+                [formName]="'DPSteps'"
+                [gridViewName]="'grvDPSteps'"
+                default="giờ"
+              ></codx-label>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex align-items-center">
+          <ng-container *ngIf="data.roles?.length > 0">
+            <codx-img
+              [width]="25"
+              [objectId]="data?.owner"
+              objectType="AD_Users"
+            >
+            </codx-img>
+            <div
+              class="ms-1 text-dark fw-bold"
+              [innerHTML]="getObjectName(data)"
+            ></div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #kanban>
+  <codx-views
+    #view
+    [funcID]="funcID"
+    [service]="service"
+    [assemblyName]="assemblyName"
+    [entityName]="entityName2"
+    [className]="className"
+    [method]="method"
+    [views]="views"
+    [idField]="idField"
+    [autoLoad]="false"
+    [viewActiveType]="'6'"
+    [toolbarDisplay]="false"
+  ></codx-views>
+  <!-- <div class="control-section">
+    <div class="content-wrapper">
+      <ejs-kanban
+        #kanbanObj
+        cssClass="kanban-overview"
+        keyField="stepID"
+        [dataSource]="listTask"
+        [cardSettings]="cardSettings"
+        [dialogSettings]="dialogSettings"
+        (cardRendered)="cardRendered($event)"
+      >
+        <e-columns>
+          <e-column
+            *ngFor="let column of listInstanceStepShow"
+            [headerText]="column.stepName"
+            [keyField]="column.recID"
+            [allowToggle]="true"
+            
+          >
+            <ng-template #template let-data>
+              <div class="header-template-wrap d-flex align-items-center" [ngStyle]="{ 'background-color:': column?.backgroundColor }">
+                <div
+                  class="header-icon e-icons me-1"
+                  [ngClass]="column.icon"
+                  [ngStyle]="{ color: column?.iconColor }"
+                ></div>
+                <div
+                  class="header-text"
+                  [ngStyle]="{ color: column?.iconColor }"
+                >
+                  {{ column.stepName }}
+                </div>
+              </div>
+            </ng-template>
+          </e-column>
+        </e-columns>
+        <ng-template #cardSettingsTemplate let-data>
+          <div class="card-template">
+            <div class="e-card-header">
+              <div class="e-card-header-caption">
+                <div class="e-card-header-title e-tooltip-text">
+                  {{data?.taskName }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </ejs-kanban>
+    </div>
+  </div> -->
+</ng-template>
+
+<ng-template #cardKanban let-data let-setting="setting">
+  <codx-card-img
+    cardCss="border h-100"
+    [hideMF]="true"
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    [typeMF]="'hover'"
+    [titleTmp]="cardTitleTmp"
+    [formModel]="formModel"
+    [setting]="setting"
+    [footer]="footerKanban"
+    [dataItem]="data"
+    [rootData]="data"
+  >
+  </codx-card-img>
+
+  <ng-template #cardTitleTmp let-data>
+    <div
+      [class]="
+        data.type != 'G' && data.taskGroupID
+          ? 'tmp-item-kanban p-2 mb-2 '
+          : 'w-100'
+      "
+    >
+      <codx-temp-full
+        style="width: 100%"
+        [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
+        [titleTmp]="tempTitle"
+        [descTmp]="descTmp"
+        [footer]="data.type != 'G' && data.taskGroupID ? footerKanban : null"
+        [dataItem]="data"
+        [rootData]="data"
+      >
+      </codx-temp-full>
+    </div>
+  </ng-template>
+
+  <ng-template #tempTitle let-data>
+    <div class="d-flex flex-column w-100">
+      <div class="d-flex align-items-center mb-2">
+        <codx-icon-step
+          *ngIf="data.type"
+          [typeTask]="data.type"
+          [isStep]="false"
+          [listTypeTask]="listType"
+          [size]="20"
+        ></codx-icon-step>
+        <span
+          class="ms-1 line-clamp-name"
+          [ngbTooltip]="data?.name"
+          container="body"
+        >
+          {{ data?.name }}
+        </span>
+      </div>
+      <div
+        *ngIf="data.type && data.type != 'G' && data?.recID"
+        ng
+        class="flex-body d-flex align-items-center justify-content-between w-100"
+      >
+        <codx-attachment
+          #attachment
+          hideMoreF="0"
+          hideDelete="1"
+          [objectType]="'DP_Steps_Tasks'"
+          [objectId]="data.recID"
+          hideFolder="1"
+          hideImageUpload="0"
+          hideImageThumb="0"
+          hideUploadBtn="1"
+          hideDes="1"
+          type="inline"
+          allowMultiFile="1"
+          referType="source"
+          displayThumb="full"
+        >
+        </codx-attachment>
+      </div>
+      <!-- <div
+        *ngIf="data.type && data.type != 'G' && data.taskGroupID"
+        class="flex-body d-flex align-items-center justify-content-between w-100"
+      >
+        <div class="text-danger">
+          <span>{{ data?.durationDay }}</span>
+          <codx-label
+            class="mx-1"
+            [name]="'lblDays'"
+            [formName]="'DPSteps'"
+            [gridViewName]="'grvDPSteps'"
+            default="ngày"
+          ></codx-label>
+          <span>{{ data?.durationHour }}</span>
+          <codx-label
+            class="mx-1"
+            [name]="'lblHours'"
+            [formName]="'DPSteps'"
+            [gridViewName]="'grvDPSteps'"
+            default="giờ"
+          ></codx-label>
+        </div>
+        <div
+          class="d-flex justify-content-end"
+          [ngbTooltip]="getObjectName(data)"
+          container="body"
+        >
+          <codx-img
+            [width]="25"
+            [objectId]="getObjectID(data)"
+            objectType="AD_Users"
+          >
+          </codx-img>
+        </div>
+      </div> -->
+    </div>
+  </ng-template>
+
+  <ng-template #descTmp let-data>
+    <!-- reason -->
+    <div *ngIf="!data.type">
+      <ng-container *ngFor="let item of data?.items">
+        <ul>
+          <li>
+            {{ item.name }}
+          </li>
+        </ul>
+      </ng-container>
+    </div>
+    <!-- content -->
+    <div *ngIf="data.type == 'G'" class="ms-1 me-1 w-100">
+      <ng-container *ngFor="let item of data?.items">
+        <ng-container
+          [ngTemplateOutlet]="cardTitleTmp"
+          [ngTemplateOutletContext]="{ $implicit: item }"
+        ></ng-container>
+      </ng-container>
+    </div>
+  </ng-template>
+  <ng-template #footerKanban let-data>
+    <div
+      *ngIf="data.type"
+      class="d-flex bg-footer {{ data?.color ? '' : 'bg-light-warning' }} footer-cald"
+      [style.background]="data?.color"
+    >
+      <div class="d-flex flex-column w-100 p-3">
+        <div class="d-flex align-items-center">
+          <div class="d-flex align-items-center card-icon-nowrap me-1">
+            <span class="me-1 icon-16 icon-access_alarm"></span
+            ><span class="fw-bolb ms-1">
+              <codx-label name="lblTime" default="Thời gian:"></codx-label>
+            </span>
+            <div class="badge badge-white text-danger my-1 ms-3">
+              <span>{{ data?.durationDay }}</span>
+              <codx-label
+                class="mx-1"
+                [name]="'lblDays'"
+                [formName]="'DPSteps'"
+                [gridViewName]="'grvDPSteps'"
+                default="ngày"
+              ></codx-label>
+              <span>{{ data?.durationHour }}</span>
+              <codx-label
+                class="mx-1"
+                [name]="'lblHours'"
+                [formName]="'DPSteps'"
+                [gridViewName]="'grvDPSteps'"
+                default="giờ"
+              ></codx-label>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex align-items-center">
+          <ng-container *ngIf="data.roles?.length > 0">
+            <codx-img
+              [width]="25"
+              [objectId]="data?.owner"
+              objectType="AD_Users"
+            >
+            </codx-img>
+            <div
+              class="ms-1 text-dark fw-bold"
+              [innerHTML]="getObjectName(data)"
+            ></div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>

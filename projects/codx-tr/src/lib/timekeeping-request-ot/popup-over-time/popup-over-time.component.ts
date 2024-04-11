@@ -157,7 +157,7 @@ export class PopupOverTimeComponent extends UIComponent {
       .execSv<any>(
         'HR',
         'HR',
-        'EmployeesBusiness',
+        'EmployeesBusiness_Old',
         'GetEmployeeByUserIDAsync',
         [empId, 'getEmployee']
       )

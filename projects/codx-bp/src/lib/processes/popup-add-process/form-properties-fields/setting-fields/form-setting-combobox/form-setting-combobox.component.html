@@ -6,7 +6,7 @@
   [dialog]="dialog"
 ></codx-form>
 <ng-template #body>
-  <div class="form-group">
+  <!-- <div class="form-group">
     <codx-label
       [default]="
         data?.fieldType == 'Title' ? 'Tên biểu mẫu' : 'Tên ô nhập liệu'
@@ -36,7 +36,7 @@
       [crrValue]="data?.description ?? ''"
       [disabled]="true"
     ></codx-input>
-  </div>
+  </div> -->
   <div class="form-group row">
     <div class="col-4" *ngIf="comboboxType == '3'">
       <codx-label
@@ -206,7 +206,7 @@
         </div>
       </div>
       <ng-container *ngIf="lstGrids?.length > 0 || comboboxType != '3'">
-        <div class="d-flex flex-column w-100 overflow-auto h-265px">
+        <div class="d-flex flex-column w-100 overflow-auto h-390px">
           <div
             class="row w-100 py-2 border-bottom"
             *ngFor="let item of lstGrids; index as i"

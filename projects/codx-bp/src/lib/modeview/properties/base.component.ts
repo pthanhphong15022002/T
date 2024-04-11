@@ -4,6 +4,7 @@ import { CodxShareService } from "projects/codx-share/src/public-api";
 import { CodxBpService } from "../../codx-bp.service";
 import { PopupAddAutoNumberComponent } from "projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component";
 import { CodxDMService } from "projects/codx-dm/src/lib/codx-dm.service";
+import { AddSettingConditionsComponent } from "../../processes/popup-add-process/form-steps-field-grid/add-default/add-task/add-setting-conditions/add-setting-conditions.component";
 
 @Component({ template: '' })
 export abstract class BasePropertyComponent
@@ -36,6 +37,13 @@ export abstract class BasePropertyComponent
       this.dataChange.emit(this.data);
     }
 
+    changeValueValidateControl(e:any)
+    {
+      if(!this.data.validateControl) this.data.validateControl = {};
+      this.data.validateControl[e?.field] = e?.data;
+      this.dataChange.emit(this.data);
+    }
+
     deleteValue()
     {
       this.data.isDelete = true;
@@ -51,6 +59,13 @@ export abstract class BasePropertyComponent
     {
       if(!this.data.autoNumber) this.data.autoNumber = {};
       this.data.autoNumber[e?.field] = e?.data;
+      this.dataChange.emit(this.data);
+    }
+    
+    changeValueVisibleControl(e:any)
+    {
+      if(!this.data.visibleControl) this.data.visibleControl = {};
+      this.data.visibleControl[e?.field] = e?.data;
       this.dataChange.emit(this.data);
     }
 
@@ -88,6 +103,47 @@ export abstract class BasePropertyComponent
           });
         }
       });
+    }
+
+    openVisibleControlForm()
+    {
+      let option = new DialogModel();
+      option.FormModel = this.formModel;
+
+      let data = [];
+      this.dataTable.forEach(elm=>{
+        if(elm.columnOrder < this.data.columnOrder) data = data.concat(elm.children)
+        else if(elm.columnOrder == this.data.columnOrder)
+        {
+          elm.children.forEach(elm2=>{
+            if(elm2.columnNo < this.data.columnNo)
+            {
+              data.push(elm2);
+            }
+          })
+        }
+      })
+
+      let popupDialog = this.callFuc.openForm(
+        AddSettingConditionsComponent,
+        '',
+        700,
+        700,
+        '',
+        { extendInfo: data , dataStep: this.data.visibleControl},
+        '',
+        option
+      );
+      popupDialog.closed.subscribe((res) => {
+        if (res?.event) {
+          this.data.visibleControl.paraValues = res?.event?.paraValues
+          this.dataChange.emit(this.data);
+          // if (typeof index === 'number')
+          //   this.data.settings.nextSteps[index] = res?.event;
+          // else this.data.settings.nextSteps.push(res?.event);
+          // this.dataChange.emit(this.data);
+        }
+      });  
     }
 
     valueChangeData(e:any)

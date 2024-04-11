@@ -35,6 +35,7 @@ import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
 import { JournalsAddComponent } from '../../journals/journals-add/journals-add.component';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'lib-salesinvoices',
@@ -78,7 +79,8 @@ export class SalesinvoicesComponent extends UIComponent {
     private acService: CodxAcService,
     private shareService: CodxShareService,
     private codxCommonService: CodxCommonService,
-    private notification: NotificationsService
+    private notification: NotificationsService,
+    private ngxLoader: NgxUiLoaderService,
   ) {
     super(inject);
     this.cache
@@ -88,7 +90,7 @@ export class SalesinvoicesComponent extends UIComponent {
         let dataValue = JSON.parse(res.dataValue);
         this.baseCurr = dataValue?.BaseCurr || '';
       });
-    this.router.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+    this.router.params.subscribe((params) => {
       this.journalNo = params?.journalNo; //? get số journal từ router
     });
     this.journalSV = this.acService.createCRUDService(
@@ -107,7 +109,6 @@ export class SalesinvoicesComponent extends UIComponent {
   ngAfterViewInit(): void {
     this.cache
       .functionList(this.view.funcID)
-      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
           this.headerText = res?.defaultName; //? lấy tên chứng từ (Phiếu chi)
@@ -255,13 +256,21 @@ export class SalesinvoicesComponent extends UIComponent {
    */
   changeMFDetail(event: any, type: any = '') {
     let data = this.view.dataService.dataSelected;
-    this.acService.changeMFSale(
-      event,
-      data,
-      type,
-      this.journal,
-      this.view.formModel
-    );
+    if (this.runmode == '1') {
+      this.shareService.changeMFApproval(event, data.unbounds);
+    } else {
+      event = this.acService.changeMFSale(event,data,type,this.journal,this.view.formModel);
+      this.detectorRef.detectChanges();
+    }
+  }
+
+  changeMFGrid(event: any, type: any,data:any) {
+    if (this.runmode == '1') {
+      this.shareService.changeMFApproval(event, data.unbounds);
+    } else {
+      this.acService.changeMFSale(event,data,type,this.journal,this.view.formModel);
+      this.detectorRef.detectChanges();
+    }
   }
 
   /**
@@ -272,18 +281,6 @@ export class SalesinvoicesComponent extends UIComponent {
   onSelectedItem(event) {
     this.itemSelected = event;
     this.detectorRef.detectChanges();
-    // if(this.view?.views){
-    //   let view = this.view?.views.find(x => x.type == 1);
-    //   if (view && view.active == true) return;
-    // }
-    // if (typeof event.data !== 'undefined') {
-    //   if (event?.data.data || event?.data.error) {
-    //     return;
-    //   } else {
-    //     this.itemSelected = event?.data;
-    //     this.detectorRef.detectChanges();
-    //   }
-    // }
   }
 
   viewChanged(view) {
@@ -300,13 +297,64 @@ export class SalesinvoicesComponent extends UIComponent {
    * *Hàm thêm mới chứng từ
    */
   addNewVoucher() {
+    this.ngxLoader.start();
     this.view.dataService
       .addNew((o) => this.setDefault(this.dataDefault))
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res != null) {
-          res.isAdd = true;
-          if (this.dataDefault == null) this.dataDefault = { ...res };
+      .subscribe({
+        next:(res:any) => {
+          if (res != null) {
+            res.isAdd = true;
+            if (this.dataDefault == null) this.dataDefault = { ...res };
+            let data = {
+              headerText: this.headerText, //? tiêu đề voucher
+              journal: { ...this.journal }, //?  data journal
+              oData: { ...res }, //?  data của cashpayment
+              hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+              baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+            };
+            let optionSidebar = new SidebarModel();
+            optionSidebar.DataService = this.view?.dataService;
+            optionSidebar.FormModel = this.view?.formModel;
+            let dialog = this.callfc.openSide(
+              SalesinvoicesAddComponent,
+              data,
+              optionSidebar,
+              this.view.funcID
+            );
+            dialog.closed.subscribe((res) => {
+              if (res && res?.event) {
+                if (res?.event?.type === 'discard') {
+                  if (this.view.dataService.data.length == 0) {
+                    this.itemSelected = undefined;
+                    this.detectorRef.detectChanges();
+                  }
+                }
+              }
+            });
+          }
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          this.onDestroy();
+        }
+      });
+  }
+
+  /**
+   * *Hàm chỉnh sửa chứng từ
+   * @param dataEdit : data chứng từ chỉnh sửa
+   */
+  editVoucher(dataEdit) {
+    delete dataEdit.isReadOnly;
+    this.view.dataService.dataSelected = { ...dataEdit };
+    this.ngxLoader.start();
+    this.view.dataService
+      .edit(dataEdit)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next:(res: any) => {
+          res.isEdit = true;
           let data = {
             headerText: this.headerText, //? tiêu đề voucher
             journal: { ...this.journal }, //?  data journal
@@ -333,51 +381,11 @@ export class SalesinvoicesComponent extends UIComponent {
               }
             }
           });
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          this.onDestroy();
         }
-        this.onDestroy();
-      });
-  }
-
-  /**
-   * *Hàm chỉnh sửa chứng từ
-   * @param dataEdit : data chứng từ chỉnh sửa
-   */
-  editVoucher(dataEdit) {
-    delete dataEdit.isReadOnly;
-    this.view.dataService.dataSelected = { ...dataEdit };
-    this.view.dataService.dataSelected = dataEdit;
-    this.view.dataService
-      .edit(dataEdit)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        res.isEdit = true;
-        let data = {
-          headerText: this.headerText, //? tiêu đề voucher
-          journal: { ...this.journal }, //?  data journal
-          oData: { ...res }, //?  data của cashpayment
-          hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-          baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-        };
-        let optionSidebar = new SidebarModel();
-        optionSidebar.DataService = this.view?.dataService;
-        optionSidebar.FormModel = this.view?.formModel;
-        let dialog = this.callfc.openSide(
-          SalesinvoicesAddComponent,
-          data,
-          optionSidebar,
-          this.view.funcID
-        );
-        dialog.closed.subscribe((res) => {
-          if (res && res?.event) {
-            if (res?.event?.type === 'discard') {
-              if (this.view.dataService.data.length == 0) {
-                this.itemSelected = undefined;
-                this.detectorRef.detectChanges();
-              }
-            }
-          }
-        });
-        this.onDestroy();
       });
   }
 
@@ -409,6 +417,7 @@ export class SalesinvoicesComponent extends UIComponent {
         if (res && res?.event) {
           let newvoucherNo = res?.event;
           newdataCopy.voucherNo = newvoucherNo;
+          this.ngxLoader.start();
           this.view.dataService
             .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
             .pipe(takeUntil(this.destroy$))
@@ -419,91 +428,105 @@ export class SalesinvoicesComponent extends UIComponent {
                 this.view.dataService
                   .saveAs(datas)
                   .pipe(takeUntil(this.destroy$))
-                  .subscribe((res) => {
-                    if (res) {
-                      let data = {
-                        headerText: this.headerText,
-                        journal: { ...this.journal },
-                        oData: { ...datas },
-                        hideFields: [...this.hideFields],
-                        baseCurr: this.baseCurr,
-                      };
-                      let optionSidebar = new SidebarModel();
-                      optionSidebar.DataService = this.view?.dataService;
-                      optionSidebar.FormModel = this.view?.formModel;
-                      let dialog2 = this.callfc.openSide(
-                        SalesinvoicesAddComponent,
-                        data,
-                        optionSidebar,
-                        this.view.funcID
-                      );
-                      dialog2.closed.subscribe((res) => {
-                        if (res && res?.event) {
-                          if (res?.event?.type === 'discard') {
-                            if (this.view.dataService.data.length == 0) {
-                              this.itemSelected = undefined;
-                              this.detectorRef.detectChanges();
+                  .subscribe({
+                    next:(res:any) => {
+                      if (res) {
+                        let data = {
+                          headerText: this.headerText,
+                          journal: { ...this.journal },
+                          oData: { ...datas },
+                          hideFields: [...this.hideFields],
+                          baseCurr: this.baseCurr,
+                        };
+                        let optionSidebar = new SidebarModel();
+                        optionSidebar.DataService = this.view?.dataService;
+                        optionSidebar.FormModel = this.view?.formModel;
+                        let dialog2 = this.callfc.openSide(
+                          SalesinvoicesAddComponent,
+                          data,
+                          optionSidebar,
+                          this.view.funcID
+                        );
+                        dialog2.closed.subscribe((res) => {
+                          if (res && res?.event) {
+                            if (res?.event?.type === 'discard') {
+                              if (this.view.dataService.data.length == 0) {
+                                this.itemSelected = undefined;
+                                this.detectorRef.detectChanges();
+                              }
                             }
                           }
-                        }
-                      });
-                      this.view.dataService
-                        .add(datas)
-                        .pipe(takeUntil(this.destroy$))
-                        .subscribe();
+                        });
+                        this.view.dataService
+                          .add(datas)
+                          .pipe(takeUntil(this.destroy$))
+                          .subscribe();
+                      }
+                    },
+                    complete:()=>{
+                      this.ngxLoader.stop();
+                      this.onDestroy();
                     }
-                    this.onDestroy();
                   });
+              }else{
+                this.ngxLoader.stop();
+                this.onDestroy();
               }
             });
         }
       });
     } else {
+      this.ngxLoader.start();
       this.view.dataService
         .copy((o) => this.setDefault({ ...newdataCopy }, 'copy'))
         .pipe(takeUntil(this.destroy$))
-        .subscribe((res: any) => {
-          if (res != null) {
-            res.isCopy = true;
-            let datas = { ...res };
-            this.view.dataService
-              .saveAs(datas)
-              .pipe(takeUntil(this.destroy$))
-              .subscribe((res) => {
-                if (res) {
-                  let data = {
-                    headerText: this.headerText,
-                    journal: { ...this.journal },
-                    oData: { ...datas },
-                    hideFields: [...this.hideFields],
-                    baseCurr: this.baseCurr,
-                  };
-                  let optionSidebar = new SidebarModel();
-                  optionSidebar.DataService = this.view?.dataService;
-                  optionSidebar.FormModel = this.view?.formModel;
-                  let dialog2 = this.callfc.openSide(
-                    SalesinvoicesAddComponent,
-                    data,
-                    optionSidebar,
-                    this.view.funcID
-                  );
-                  dialog2.closed.subscribe((res) => {
-                    if (res && res?.event) {
-                      if (res?.event?.type === 'discard') {
-                        if (this.view.dataService.data.length == 0) {
-                          this.itemSelected = undefined;
-                          this.detectorRef.detectChanges();
+        .subscribe({
+          next:(res: any) => {
+            if (res != null) {
+              res.isCopy = true;
+              let datas = { ...res };
+              this.view.dataService
+                .saveAs(datas)
+                .pipe(takeUntil(this.destroy$))
+                .subscribe((res) => {
+                  if (res) {
+                    let data = {
+                      headerText: this.headerText,
+                      journal: { ...this.journal },
+                      oData: { ...datas },
+                      hideFields: [...this.hideFields],
+                      baseCurr: this.baseCurr,
+                    };
+                    let optionSidebar = new SidebarModel();
+                    optionSidebar.DataService = this.view?.dataService;
+                    optionSidebar.FormModel = this.view?.formModel;
+                    let dialog2 = this.callfc.openSide(
+                      SalesinvoicesAddComponent,
+                      data,
+                      optionSidebar,
+                      this.view.funcID
+                    );
+                    dialog2.closed.subscribe((res) => {
+                      if (res && res?.event) {
+                        if (res?.event?.type === 'discard') {
+                          if (this.view.dataService.data.length == 0) {
+                            this.itemSelected = undefined;
+                            this.detectorRef.detectChanges();
+                          }
                         }
                       }
-                    }
-                  });
-                  this.view.dataService
-                    .add(datas)
-                    .pipe(takeUntil(this.destroy$))
-                    .subscribe();
-                }
-                this.onDestroy();
-              });
+                    });
+                    this.view.dataService
+                      .add(datas)
+                      .pipe(takeUntil(this.destroy$))
+                      .subscribe();
+                  }
+                });
+            }
+          },
+          complete:()=>{
+            this.ngxLoader.stop();
+            this.onDestroy();
           }
         });
     }
@@ -592,20 +615,30 @@ export class SalesinvoicesComponent extends UIComponent {
    * @param data
    */
   validateVourcher(text: any, data: any) {
-    this.api
+    data = {...this.itemSelected};
+    if (data) {
+      this.ngxLoader.start();
+      this.api
       .exec('AC', 'SalesInvoicesBusiness', 'ValidateVourcherAsync', [
         data,
         text,
       ])
-      .subscribe((res: any) => {
-        if (res[1]) {
-          this.itemSelected = res[0];
-          this.view.dataService.update(this.itemSelected).subscribe();
-          this.notification.notifyCode('AC0029', 0, text);
-          this.detectorRef.detectChanges();
+      .subscribe({
+        next:(res: any) => {
+          if (res[1]) {
+            this.itemSelected = res[0];
+            this.view.dataService.update(this.itemSelected).subscribe();
+            this.notification.notifyCode('AC0029', 0, text);
+            this.detectorRef.detectChanges();
+          }
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          this.onDestroy();
         }
-        this.onDestroy();
       });
+    }
+    
   }
 
   /**
@@ -613,17 +646,25 @@ export class SalesinvoicesComponent extends UIComponent {
    * @param data
    */
   postVoucher(text: any, data: any) {
-    this.api
+    data = {...this.itemSelected};
+    if (data) {
+      this.api
       .exec('AC', 'SalesInvoicesBusiness', 'PostVourcherAsync', [data, text])
-      .subscribe((res: any) => {
-        if (res[1]) {
-          this.itemSelected = res[0];
-          this.view.dataService.update(this.itemSelected).subscribe();
-          this.notification.notifyCode('AC0029', 0, text);
-          this.detectorRef.detectChanges();
+      .subscribe({
+        next:(res: any) => {
+          if (res[1]) {
+            this.itemSelected = res[0];
+            this.view.dataService.update(this.itemSelected).subscribe();
+            this.notification.notifyCode('AC0029', 0, text);
+            this.detectorRef.detectChanges();
+          }
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          this.onDestroy();
         }
-        this.onDestroy();
       });
+    }
   }
 
   /**
@@ -631,17 +672,26 @@ export class SalesinvoicesComponent extends UIComponent {
    * @param data
    */
   unPostVoucher(text: any, data: any) {
-    this.api
+    data = {...this.itemSelected};
+    if (data) {
+      this.api
       .exec('AC', 'SalesInvoicesBusiness', 'UnPostVourcherAsync', [data, text])
-      .subscribe((res: any) => {
-        if (res[1]) {
-          this.itemSelected = res[0];
-          this.view.dataService.update(this.itemSelected).subscribe();
-          this.notification.notifyCode('AC0029', 0, text);
-          this.detectorRef.detectChanges();
+      .subscribe({
+        next:(res: any) => {
+          if (res[1]) {
+            this.itemSelected = res[0];
+            this.view.dataService.update(this.itemSelected).subscribe();
+            this.notification.notifyCode('AC0029', 0, text);
+            this.detectorRef.detectChanges();
+          }
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          this.onDestroy();
         }
-        this.onDestroy();
       });
+    }
+    
   }
 
   /**
@@ -649,25 +699,75 @@ export class SalesinvoicesComponent extends UIComponent {
    * @param data
    */
   releaseVoucher(text: any, data: any) {
-    this.acService
-      .getCategoryByEntityName(this.view.formModel.entityName)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        this.dataCategory = res;
-        this.codxCommonService
-          .codxRelease(
-            'AC',
-            data.recID,
-            this.dataCategory.processID,
-            this.view.formModel.entityName,
-            this.view.formModel.funcID,
-            '',
-            '',
-            ''
-          )
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((result: any) => {
-            if (result?.msgCodeError == null && result?.rowCount) {
+    data = {...this.itemSelected};
+    if (data) {
+      this.ngxLoader.start();
+      this.acService
+        .getCategoryByEntityName(this.view.formModel.entityName)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          if (res) {
+            this.dataCategory = res;
+            this.codxCommonService
+              .codxRelease(
+                'AC',
+                data.recID,
+                this.dataCategory.processID,
+                this.view.formModel.entityName,
+                this.view.formModel.funcID,
+                '',
+                '',
+                '',
+                null,
+                JSON.stringify({ ParentID: data.journalNo })
+              )
+              .pipe(takeUntil(this.destroy$))
+              .subscribe({
+                next: (result: any) => {
+                  if (result?.msgCodeError == null && result?.rowCount) {
+                    data.status = result?.returnStatus;
+                    this.view.dataService.updateDatas.set(data['_uuid'], data);
+                    this.view.dataService
+                      .save(null, 0, '', '', false)
+                      .pipe(takeUntil(this.destroy$))
+                      .subscribe((res: any) => {
+                        if (res && !res.update.error) {
+                          this.notification.notifyCode('AC0029', 0, text);
+                        }
+                        this.onDestroy();
+                      });
+                  } else {
+                    this.notification.notifyCode(result?.msgCodeError);
+                    this.onDestroy();
+                  }
+                },
+                complete: () => {
+                  this.ngxLoader.stop();
+                  this.onDestroy();
+                }
+              });
+          } else {
+            this.ngxLoader.stop();
+            this.onDestroy();
+          }
+        }); 
+    }
+  }
+
+  /**
+   * *Hàm hủy gửi duyệt chứng từ (xử lí cho MF hủy yêu cầu duyệt)
+   * @param data
+   */
+  cancelReleaseVoucher(text: any, data: any) {
+    data = {...this.itemSelected};
+    if (data) {
+      this.ngxLoader.start();
+      this.codxCommonService
+        .codxCancel('AC', data?.recID, this.view.formModel.entityName, null, null)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (result: any) => {
+            if (result && result?.msgCodeError == null) {
               data.status = result?.returnStatus;
               this.view.dataService.updateDatas.set(data['_uuid'], data);
               this.view.dataService
@@ -677,42 +777,18 @@ export class SalesinvoicesComponent extends UIComponent {
                   if (res && !res.update.error) {
                     this.notification.notifyCode('AC0029', 0, text);
                   }
-                  this.onDestroy();
+
                 });
             } else {
               this.notification.notifyCode(result?.msgCodeError);
-              this.onDestroy();
             }
-          });
-      });
-  }
-
-  /**
-   * *Hàm hủy gửi duyệt chứng từ (xử lí cho MF hủy yêu cầu duyệt)
-   * @param data
-   */
-  cancelReleaseVoucher(text: any, data: any) {
-    this.codxCommonService
-      .codxCancel('AC', data?.recID, this.view.formModel.entityName, null, null)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((result: any) => {
-        if (result && result?.msgCodeError == null) {
-          data.status = result?.returnStatus;
-          this.view.dataService.updateDatas.set(data['_uuid'], data);
-          this.view.dataService
-            .save(null, 0, '', '', false)
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((res: any) => {
-              if (res && !res.update.error) {
-                this.notification.notifyCode('AC0029', 0, text);
-              }
-              this.onDestroy();
-            });
-        } else {
-          this.notification.notifyCode(result?.msgCodeError);
-          this.onDestroy();
-        }
-      });
+          },
+          complete: () => {
+            this.ngxLoader.stop();
+            this.onDestroy();
+          }
+        }); 
+    }
   }
 
   /**
@@ -763,6 +839,7 @@ export class SalesinvoicesComponent extends UIComponent {
 
   EInvoices(data: any, functionID: string, text: string) {
     var lstID = [data.recID];
+    this.ngxLoader.start();
     this.api
       .execSv(
         'AC',
@@ -771,20 +848,21 @@ export class SalesinvoicesComponent extends UIComponent {
         'GetDataInvoiceAsync',
         [lstID, true, true]
       )
-      .subscribe((res: any) => {
-        if (res && res.length > 0) {
-          //debugger;
-          this.notification.notifyCode('AC0029', 0, text);
-          if (Array.isArray(res)) {
-            res.forEach((element) => {
-              this.itemSelected = element;
-              this.view.dataService.update(element).subscribe();
-            });
+      .subscribe({
+        next:(res: any) => {
+          if (res && res.length > 0) {
+            this.notification.notifyCode('AC0029', 0, text);
+            if (Array.isArray(res)) {
+              res.forEach((element) => {
+                this.itemSelected = element;
+                this.view.dataService.update(element).subscribe();
+              });
+            }
           }
-          // this.itemSelected = res;
-          //this.view.dataService.update(this.itemSelected).subscribe();
-          // this.journal = res[0]; // data journal
-          // this.hideFields = res[1]; // array field ẩn từ sổ nhật kí
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          this.onDestroy();
         }
       });
   }

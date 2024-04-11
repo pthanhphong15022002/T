@@ -101,7 +101,7 @@ export class ViewDetailEquitComponent {
       .execSv(
         'HR',
         'ERM.Business.HR',
-        'EQuitBusiness',
+        'EQuitBusiness_Old',
         'GetContractCurrentAsync',
         id
       )

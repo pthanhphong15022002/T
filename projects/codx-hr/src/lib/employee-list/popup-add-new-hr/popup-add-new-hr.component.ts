@@ -111,7 +111,7 @@ export class PopupAddNewHRComponent implements OnInit, AfterViewInit{
   {
     debugger
     if(data){
-      this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","SaveAsync",[data,funcID])
+      this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness_Old","SaveAsync",[data,funcID])
       .subscribe((res:any) => {
         let mssg = res ? "SYS006" : "SYS023";
         this.notify.notifyCode(mssg);
@@ -123,7 +123,7 @@ export class PopupAddNewHRComponent implements OnInit, AfterViewInit{
   update(data:any){
     debugger
     if(data){
-      this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","SaveAsync",[data])
+      this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness_Old","SaveAsync",[data])
       .subscribe((res:any) => {
         let mssg = res ? "SYS006" : "SYS023";
         this.notify.notifyCode(mssg);

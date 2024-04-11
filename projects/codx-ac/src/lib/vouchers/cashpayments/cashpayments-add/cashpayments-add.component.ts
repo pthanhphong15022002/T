@@ -111,6 +111,7 @@ export class CashPaymentAddComponent extends UIComponent {
   nextTabIndex: number;
   preData: any;
   totalAmount:any = 0;
+  isActive:any = true;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
@@ -130,6 +131,7 @@ export class CashPaymentAddComponent extends UIComponent {
     this.journal = { ...dialogData.data?.journal };
     this.baseCurr = dialogData.data?.baseCurr;
     this.legalName = this.dialogData.data?.legalName;
+    this.isActive = dialogData.data?.isActive; 
   }
   //#endregion
 
@@ -139,7 +141,6 @@ export class CashPaymentAddComponent extends UIComponent {
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(
-        takeUntil(this.destroy$),
         map((arr: any[]) => arr.find((a) => a.category === '1')),
         map((data) => JSON.parse(data.dataValue))
       ).subscribe((res: any) => {
@@ -697,8 +698,6 @@ export class CashPaymentAddComponent extends UIComponent {
           this.eleGridCashPayment.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') {
               this.saveVoucher(type);
-            }else{
-              this.ngxLoader.stop();
             }
           })
           return;
@@ -707,8 +706,6 @@ export class CashPaymentAddComponent extends UIComponent {
           this.eleGridSettledInvoices.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') {
               this.saveVoucher(type);
-            }else{
-              this.ngxLoader.stop();
             }
           })
           return;
@@ -717,8 +714,6 @@ export class CashPaymentAddComponent extends UIComponent {
           this.eleGridVatInvoices.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') {
               this.saveVoucher(type);
-            }else{
-              this.ngxLoader.stop();
             }
           })
           return;
@@ -736,40 +731,44 @@ export class CashPaymentAddComponent extends UIComponent {
         this.journal,
       ])
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res?.update) {
-          this.dialog.dataService.update(res.data).subscribe();
-          if (type == 'save') {
-            this.onDestroy();
-            this.dialog.close();
-          } else {
-            this.api
-              .exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
-                null,
-                this.journal.journalNo,
-                ""
-              ])
-              .subscribe((res: any) => {
-                if (res) {
-                  res.data.isAdd = true;
-                  this.master.refreshData({ ...res.data });
-                  setTimeout(() => {
-                    this.refreshGrid();
-                  }, 100);
-                  this.detectorRef.detectChanges();
-                }
-              });
+      .subscribe({
+        next:(res:any)=>{
+          if (res?.update) {
+            this.dialog.dataService.update(res.data,true).subscribe();
+            if (type == 'save') {
+              this.onDestroy();
+              this.dialog.close(res);
+            } else {
+              this.api
+                .exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
+                  null,
+                  this.journal.journalNo,
+                  ""
+                ])
+                .subscribe((res: any) => {
+                  if (res) {
+                    res.data.isAdd = true;
+                    this.master.refreshData({ ...res.data });
+                    setTimeout(() => {
+                      this.refreshGrid();
+                    }, 100);
+                    this.detectorRef.detectChanges();
+                  }
+                });
+            }
+            if (this.master.data.isAdd || this.master.data.isCopy)
+              this.notification.notifyCode('SYS006');
+            else
+              this.notification.notifyCode('SYS007');
+  
           }
-          if (this.master.data.isAdd || this.master.data.isCopy)
-            this.notification.notifyCode('SYS006');
-          else
-            this.notification.notifyCode('SYS007');
-
+        },
+        complete:()=>{
+          if (this.eleGridCashPayment && this.eleGridCashPayment?.isSaveOnClick) this.eleGridCashPayment.isSaveOnClick = false;
+          if (this.eleGridSettledInvoices && this.eleGridSettledInvoices.isSaveOnClick) this.eleGridSettledInvoices.isSaveOnClick = false;
+          if (this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false;
+          this.ngxLoader.stop();
         }
-        if (this.eleGridCashPayment && this.eleGridCashPayment?.isSaveOnClick) this.eleGridCashPayment.isSaveOnClick = false;
-        if (this.eleGridSettledInvoices && this.eleGridSettledInvoices.isSaveOnClick) this.eleGridSettledInvoices.isSaveOnClick = false;
-        if (this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false;
-        this.ngxLoader.stop();
       });
   }
 
@@ -785,28 +784,32 @@ export class CashPaymentAddComponent extends UIComponent {
           this.dialog.dataService
             .delete([this.master.data], false, null, '', '', null, null, false)
             .pipe(takeUntil(this.destroy$))
-            .subscribe((res) => {
-              if (res.data != null) {
-                this.notification.notifyCode('E0860');
-                this.api
-                  .exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
-                    null,
-                    this.journal.journalNo,
-                    ""
-                  ])
-                  .subscribe((res: any) => {
-                    if (res) {
-                      res.data.isAdd = true;
-                      this.master.refreshData({ ...res.data });
-                      setTimeout(() => {
-                        this.refreshGrid();
-                      }, 100);
-                    }
-                    this.ngxLoader.stop();
-                    this.detectorRef.detectChanges();
-                  });
-              }else{
+            .subscribe({
+              next:(res:any)=>{
+                if (res.data != null) {
+                  this.notification.notifyCode('E0860');
+                  this.api
+                    .exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
+                      null,
+                      this.journal.journalNo,
+                      ""
+                    ])
+                    .subscribe((res: any) => {
+                      if (res) {
+                        res.data.isAdd = true;
+                        this.master.refreshData({ ...res.data });
+                        setTimeout(() => {
+                          this.refreshGrid();
+                        }, 100);
+                      }
+                      this.ngxLoader.stop();
+                      this.detectorRef.detectChanges();
+                    });
+                }
+              },
+              complete:()=>{
                 this.ngxLoader.stop();
+                this.onDestroy();
               }
             });
         }

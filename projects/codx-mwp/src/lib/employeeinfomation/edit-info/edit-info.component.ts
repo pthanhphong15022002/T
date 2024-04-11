@@ -88,7 +88,7 @@ export class EditInfoComponent implements OnInit {
   beforeSave(op: any) {
     var data = [];
     op.methodName = 'UpdateAsync';
-    op.className = 'EmployeesBusiness';
+    op.className = 'EmployeesBusiness_Old';
     data = [
       this.employee,
     ];
@@ -103,7 +103,7 @@ export class EditInfoComponent implements OnInit {
     // this.detectorRef.detectChanges();
     // this.dialog.close();
 
-    this.api.execSv<any>("HR","ERM.Business.HR", "EmployeesBusiness", "UpdateAsync", [this.employee]).subscribe(res => {
+    this.api.execSv<any>("HR","ERM.Business.HR", "EmployeesBusiness_Old", "UpdateAsync", [this.employee]).subscribe(res => {
       // if (res && res.msgBodyData[0]) {
         if (res) {
           // this.codxMwp.EmployeeInfomation.loadEmployee(res);

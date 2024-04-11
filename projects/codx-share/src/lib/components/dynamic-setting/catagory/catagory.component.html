@@ -1,4 +1,5 @@
-<codx-form
+<div class="container p-0">
+  <codx-form
   headerText=""
   #form
   [body]="body"
@@ -8,16 +9,30 @@
   [autoFocus]="false"
 >
 </codx-form>
+</div>
+
 
 <ng-template #body>
   <div class="list-group">
     <div class="d-flex">
-      <a *ngIf="isOpenSub" href="#" (click)="backSub($event)"
+      <div class="w-50 d-flex align-items-center justify-content-start">
+        <a *ngIf="isOpenSub" href="#" (click)="backSub($event)"
         ><span
           class="logo justify-content-start svg-icon svg-icon-1 icon-arrow_back"
         ></span
       ></a>
       <h3 class="list-header ms-3">{{ title[title.length - 1] }}</h3>
+      </div>
+      <div class="w-50 d-flex align-items-center justify-content-end">
+        <div class="d-flex w-350px p-0 h-35px ">
+          <codx-searchbar
+            class="me-1 w-100"
+            [type]="'full'"
+            (searchEvent)="onSearch($event)"
+          ></codx-searchbar>
+        </div>
+      </div>
+
     </div>
     <div class="list-content">
       <ng-container *ngFor="let item of groupSetting">
@@ -34,7 +49,7 @@
         >
         </ng-container>
       </ng-container>
-      <!-- 
+      <!--
       <ng-container
         *ngIf="groupSetting && groupSetting.length > 0; else noGroup"
       >
@@ -126,7 +141,7 @@
           <!-- <ng-container
           *ngIf="data.controlType && data.controlType != 'GroupControl'"
         >
-         
+
         </ng-container> -->
           <ng-container [ngSwitch]="data.category">
             <ng-container *ngSwitchDefault>
@@ -417,7 +432,7 @@
             ></a>
             <!-- <ng-container *ngIf="data.displayMode === '6'">
 
-             
+
 
               <codx-img
               [updateDirect]="true"

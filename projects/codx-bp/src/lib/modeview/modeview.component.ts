@@ -31,6 +31,7 @@ export class ModeviewComponent implements OnInit {
   viewType = 1;
   formModel:any;
   listInfoFile = [];
+  listForm = [];
   constructor(
     public dmSV: CodxDMService,
     private api: ApiHttpService,
@@ -42,6 +43,7 @@ export class ModeviewComponent implements OnInit {
     this.data = this.data || dt?.data?.extendInfo;
     this.stepNo = this.stepNo || dt?.data?.stepNo;
     this.formModel = dt?.data?.formModel
+    this.listForm =  dt?.data?.listForm ? JSON.parse(JSON.stringify(dt?.data?.listForm)) : null;
     this.dialog = dialog;
   }
 
@@ -96,23 +98,27 @@ export class ModeviewComponent implements OnInit {
     let data2 =[];
     let data3 =[];
     item.datas.forEach(elm => {
-      if(this.basic.includes(elm.value)) {
-        elm.groupType = 0;
-        data1.push(elm);
-      }
-      else if(elm.value != 'Title' && elm.value != 'SubTitle') {
-        elm.groupType = 1;
-        data2.push(elm);
-      }
-      else 
+      if(elm.value != 'User' &&  elm.value != 'Share')
       {
-        data3.push(elm);
+        if(this.basic.includes(elm.value)) { 
+          elm.groupType = 0;
+          data1.push(elm);
+        }
+        else if(elm.value != 'Title' && elm.value != 'SubTitle') {
+          elm.groupType = 1;
+          data2.push(elm);
+        }
+        else 
+        {
+          data3.push(elm);
+        }
       }
     }); 
     item.datas = data1.concat(data2.concat(data3));
     this.vllBP002 = item;
     if(!this.data) this.default();
     else this.formatData(this.data);
+    this.formatPrevForm();
   }
 
   formatData(data:any)
@@ -123,15 +129,11 @@ export class ModeviewComponent implements OnInit {
       
       var indexs = vlls.findIndex(x=>x.value == elm.fieldType);
       elm.value = vlls[indexs].value;
-      if(elm.fieldType == "Title") 
+     
+      if(elm.fieldType == "SubTitle")
       {
-        elm.columnOrder = 0;
-        elm.columnNo = 0;
-      }
-      else if(elm.fieldType == "SubTitle")
-      {
-        elm.columnOrder = 1;
-        elm.columnNo = 0;
+        // elm.columnOrder = 1;
+        // elm.columnNo = 0;
         elm.text = vlls[indexs].text;
         elm.icon = vlls[indexs].icon;
         elm.textColor = vlls[indexs].textColor;
@@ -140,16 +142,23 @@ export class ModeviewComponent implements OnInit {
       {
         if(elm.fieldType == "Table" || elm.fieldType == "Note")
         {
-          elm.dataFormat = typeof elm.dataFormat == 'string' ? JSON.parse(elm.dataFormat) :  elm.dataFormat;
+          elm.dataFormat = (typeof elm.dataFormat == 'string' && elm.dataFormat) ? JSON.parse(elm.dataFormat) :  elm.dataFormat;
         }
         else if(elm.fieldType == "Attachment")
         {
           elm.documentControl = typeof elm.documentControl == 'string' ? JSON.parse(elm.documentControl) :  elm.documentControl;
           this.formatAttachment(elm)
         }
+
+        elm.validateControl = (typeof elm.validateControl == 'string' && elm.validateControl) ? JSON.parse(elm.validateControl) :  elm.validateControl;
         elm.text = vlls[indexs].text;
         elm.icon = vlls[indexs].icon;
         elm.textColor = vlls[indexs].textColor;
+      }
+      
+      if(elm.visibleControl)
+      {
+        elm.visibleControl = typeof elm.visibleControl == 'string' ? JSON.parse(elm.visibleControl) :  elm.visibleControl;
       }
 
       if(!this.table.some(x=>x.columnOrder == elm.columnOrder))
@@ -173,6 +182,24 @@ export class ModeviewComponent implements OnInit {
     });
     this.table.sort((a,b) => a.columnOrder - b.columnOrder);
     this.selectedItem(this.table[0].children[0])
+  }
+
+  formatPrevForm()
+  {
+    if(!this.listForm || this.listForm.length == 0) return;
+    this.listForm.forEach(elm=>{
+      if(elm.extendInfo && elm.extendInfo.length>0)
+      {
+        elm.extendInfo.forEach(item=>{
+          debugger
+          let indexIcon = this.vllBP002.datas.findIndex(x=>x.value == item.fieldType);
+          if(indexIcon>=0)
+          {
+            item.icon = this.vllBP002.datas[indexIcon].icon;
+          }
+        })
+      }
+    }) 
   }
 
   default()
@@ -285,6 +312,7 @@ export class ModeviewComponent implements OnInit {
         this.count.text ++;
         data.controlType = "TextBox";
         data.title += " " + this.count.text;
+        data.dataType = "String";
         break
       }
       case "ValueList":
@@ -546,11 +574,18 @@ export class ModeviewComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
-      
-      for(var i = 0 ; i < this.table[event.container.data[0].columnOrder].children.length ; i++)
-      {
-        this.table[event.container.data[0].columnOrder].children[i].columnNo = i;
-      }
+      let arr = [];
+      if(event.container.data.length>0) arr.push(event.container.data[0].columnOrder)
+      if(event.previousContainer.data.length>0) arr.push(event.previousContainer.data[0].columnOrder)
+      arr.forEach(elm=>{
+        let index = this.table.findIndex(x=>x.columnOrder == elm);
+        if(index>=0)
+        {
+          this.table[index].children.forEach((elm2,i)=>{
+            elm2.columnNo = i
+          });
+        }
+      })
     }
 
     this.table = this.table.filter(x=>x.children != null && x.children.length>0);
@@ -616,7 +651,12 @@ export class ModeviewComponent implements OnInit {
     }
     else {
       e.fieldName = this.formatTitle(e.title,e.columnOrder,e.columnNo);
-      this.table[e?.columnOrder].children[e.columnNo] = e;
+
+      let index = this.table.findIndex(x=>x.columnOrder == e?.columnOrder);
+      if(index>=0)
+      {
+        this.table[index].children[e.columnNo] = e;
+      }
       if(e?.fieldType == "Attachment")
       {
         if(Array.isArray(e.documentControl) && e.documentControl.length>0)

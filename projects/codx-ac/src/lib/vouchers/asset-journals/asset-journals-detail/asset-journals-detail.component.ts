@@ -1,75 +1,85 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Injector,
   Input,
   Output,
+  SimpleChange,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { CodxGridviewV2Component, CodxService, FormModel, UIDetailComponent } from 'codx-core';
 import { fmAssetAcquisitionsLines, fmAssetDepreciationsLines, fmAssetLiquidationsLines, fmAssetRevaluationsLines, fmAssetTransfersLines } from '../../../codx-ac.service';
+import { Subject, takeUntil } from 'rxjs';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
 
 @Component({
-  selector: 'lib-asset-journals-detail',
+  selector: 'asset-journals-detail',
   templateUrl: './asset-journals-detail.component.html',
   styleUrls: ['./asset-journals-detail.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AssetJournalsDetailComponent extends UIDetailComponent {
-  @ViewChild('elementTabDetail') elementTabDetail: TabComponent;
-  @ViewChild('grid') grid: CodxGridviewV2Component;
-
-  @Input() dataSelected: any;
+  //#region Constructor
+  @Input() dataItem: any;
+  @Input() dataService: any;
   @Input() formModel: any;
+  @Input() baseCurr: any;
+  @Input() journal: any;
+  @Input() headerText: any;
+  @Input() dataDefault: any;
   @Input() gridViewSetup: any;
-  @Output() changeMoreMF = new EventEmitter<any>();
-  @Output() clickMoreFunc = new EventEmitter<any>();
-  id: any;
-  isShow = false;
-  fmAssetJournalsLines: FormModel;
-  loaded: boolean;
-  constructor(private inject: Injector, public codxService: CodxService) {
+  @ViewChild('elementTabDetail') elementTabDetail: TabComponent; //? element object các tab detail (hạch toán,thông tin hóa đơn,hóa đơn GTGT)
+  itemSelected: any;
+  dataCategory: any; //? data của category
+  bhLogin: boolean = false;
+  tabInfo: TabModel[] = [
+    //? danh sách các tab footer
+    { name: 'History', textDefault: 'Lịch sử', isActive: false },
+    { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    { name: 'References', textDefault: 'Liên kết', isActive: false },
+  ];
+  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
+  isShowLess: any = false;
+  isShowMore:any = true;
+  isReadMore:any = false;
+  constructor(
+    private inject: Injector,
+    public codxService: CodxService
+  ) {
     super(inject);
   }
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['dataSelected']) {
-      if (
-        changes['dataSelected'].currentValue != null &&
-        changes['dataSelected'].currentValue?.recID
-      ) {
-        if (changes['dataSelected'].currentValue?.recID == this.id) return;
-        this.loaded = false;
+  //#endregion Constructor
 
-        this.dataSelected = JSON.parse(JSON.stringify(changes['dataSelected'].currentValue));
-        this.id = changes['dataSelected'].currentValue?.recID;
-        setTimeout(() => {
-          this.loaded = true;
-        }, 0);
-      }
-    }
-  }
+  //#region Init
   onInit(): void {
-    switch (this.formModel?.funcID) {
-      case 'ACT811':
-        this.fmAssetJournalsLines = fmAssetAcquisitionsLines;
-        break;
-      case 'ACT821':
-        this.fmAssetJournalsLines = fmAssetRevaluationsLines;
-        break;
-      case 'ACT871':
-        this.fmAssetJournalsLines = fmAssetLiquidationsLines;
-        break;
-      case 'ACT831':
-        this.fmAssetJournalsLines = fmAssetTransfersLines;
-        break;
-      case 'ACT841':
-        this.fmAssetJournalsLines = fmAssetDepreciationsLines;
-        break;
-      case 'ACT881':
-        this.fmAssetJournalsLines = fmAssetLiquidationsLines; // Chưa có
-        break;
-    }
+    if(this.recID) this.getDataDetail(this.dataItem,this.recID);
+    if(!this.formModel) this.getFormModel();
+  }
+
+  ngAfterViewInit() {
+    
+  }
+
+  ngOnChanges(value: SimpleChange) {
+    this.getDataDetail(this.dataItem, this.recID);
+  }
+
+  ngOnDestroy() {
+    this.onDestroy();
+  }
+
+  onDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  ngDoCheck() {
+    this.onReadMore();
+    this.detectorRef.detectChanges();
   }
 
   /**
@@ -78,49 +88,121 @@ export class AssetJournalsDetailComponent extends UIDetailComponent {
    * @param ele
    */
   createTab(e: any, ele: TabComponent) {
-    this.showHideTab(this.dataSelected?.subType, ele);
+    this.showHideTab(this.itemSelected?.subType, ele);
   }
 
-  selecting(event) {
+  selecting(event){
     if (event.isSwiped) {
       event.cancel = true;
     }
   }
 
-  showHideTab(type: any, ele?: TabComponent) {
-    ele = this.elementTabDetail;
-    if (ele) {
-      ele.hideTab(0, false);
-      ele.select(0);
-      // switch (type) {
-      //   case '1':
-      //   case '3':
-      //   case '4':
-      //     ele.hideTab(1, true);
-      //     ele.hideTab(2, true);
-      //     break;
-      //   case '2':
-      //     ele.hideTab(1, false);
-      //     ele.hideTab(2, true);
-      //     break;
-      //   case '9':
-      //     ele.hideTab(1, false);
-      //     ele.hideTab(2, false);
-      //     break;
-      // }
+  //#endregion Init
+
+  //#region Event
+  //#endregion Event
+
+  //#region Function
+
+  /**
+   * *Hàm get data chi tiết
+   * @param data
+   */
+  getDataDetail(dataItem, recID) {
+    if (dataItem) {
+      this.itemSelected = dataItem;
+      this.isReadMore = false;
+      this.isShowMore = true;
+      this.isShowLess = false;
+      this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
+      this.detectorRef.detectChanges();
+    } else {
+      this.api
+        .exec('AC', 'CashPaymentsBusiness', 'GetDataDetailAsync', [recID])
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res: any) => {
+          this.itemSelected = res;
+          this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
+          this.detectorRef.detectChanges();
+          this.onDestroy();
+        });
     }
   }
 
-  clickShowTab(isShow) {
-    this.isShow = isShow;
+  /**
+   * *Hàm ẩn hiện các tab khi thay đổi chứng từ theo loại chứng từ
+   * @param event
+   * @param ele
+   */
+  showHideTab(type: any, ele?: TabComponent) {
+    // ele = this.elementTabDetail;
+    // if (ele) {
+    //   ele.hideTab(0, false);
+    //   ele.select(0);
+    //   switch (type) {
+    //     case '1':
+    //     case '3':
+    //     case '4':
+    //       ele.hideTab(1, true);
+    //       ele.hideTab(2, true);
+    //       break;
+    //     case '2':
+    //       ele.hideTab(1, false);
+    //       ele.hideTab(2, true);
+    //       break;
+    //     case '9':
+    //       ele.hideTab(1, false);
+    //       ele.hideTab(2, false);
+    //       break;
+    //   }
+    // }
+  }
+
+  /**
+   * *Hàm hỗ trợ ngFor không render lại toàn bộ data
+   */
+  trackByFn(index, item) {
+    return item.recID;
+  }
+
+  /**
+   * *Ham xem them & an bot dien giai
+   * @param type 
+   */
+  onShowMoreLess(type){
+    if(type === 'showmore'){
+      this.isShowMore = false;
+      this.isShowLess = true;
+    }else{
+      this.isShowMore = true;
+      this.isShowLess = false;
+    }
     this.detectorRef.detectChanges();
   }
 
-  clickMF(e, data) {
-    this.clickMoreFunc.emit({ e: e, data: data });
+  /**
+   * *Ham kiem tra dien giai khi vuot qua 2 dong
+   */
+  onReadMore(){
+    let ele = document.getElementById('eleMemo');
+    if (ele) {
+      if (ele.offsetHeight < ele.scrollHeight || ele.offsetWidth < ele.scrollWidth){
+        this.isReadMore = true;
+      }else{
+        this.isReadMore = false;
+      }
+      this.detectorRef.detectChanges();
+    }
   }
 
-  changeDataMF(e, data) {
-    this.changeMoreMF.emit({ e: e, data: data });
+  getFormModel()
+  {
+    this.cache.functionList(this.funcID).subscribe(item=>{
+      this.formModel = new FormModel();
+      this.formModel.entityName = item?.entityName;
+      this.formModel.formName = item?.formName;
+      this.formModel.gridViewName = item?.gridViewName;
+    })
   }
+  //#endregion Function
 }

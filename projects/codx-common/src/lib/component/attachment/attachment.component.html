@@ -51,9 +51,9 @@
                                                 </span>
                                             </div>
                                             <!-- Select Folder directoryUpload='true' -->
-                                            <div class="dropzone-panel">
+                                            <div class="dropzone-panel d-flex align-items-center">
                                                 <div class="btn-attachment d-flex align-items-center py-3 px-6" (click)="uploadFile()">
-                                                    <codx-label [formName]="'lblSeletedAttachment'" fiedName="SeletedAttachment" default="Chọn tệp tin"></codx-label>
+                                                    <codx-label [formName]="'lblSeletedAttachment'" fiedName="SeletedAttachment" default="Chọn tệp tin" ngClass="text-nowrap"></codx-label>
                                                     <img src="../../assets/themes/sys/default/img/BrowseLocal.svg" class="text-white ms-6" title="Tải lên từ máy tính"/>
                                                     <img src="../../assets/themes/sys/default/img/BrowseCoDX.svg" class="img-attachment-codx ms-3" title="Tải lên từ phần mềm" (click)="openUploadForm()"/>
                                                 </div>
@@ -194,9 +194,9 @@
                                         hoặc</span>
                                 </div> -->
                                 <!--begin::Controls-->
-                                <div class="dropzone-panel">
+                                <div class="dropzone-panel d-flex align-items-center">
                                     <div class="btn-attachment d-flex align-items-center py-3 px-6" (click)="uploadFile()">
-                                        <codx-label [formName]="'lblSeletedAttachment'" fiedName="SeletedAttachment" default="Chọn tệp tin"></codx-label>
+                                        <codx-label [formName]="'lblSeletedAttachment'" fiedName="SeletedAttachment" default="Chọn tệp tin" ngClass="text-nowrap"></codx-label>
                                         <img src="../../assets/themes/sys/default/img/BrowseLocal.svg" class="text-white ms-6" title="Tải lên từ máy tính"/>
                                         <img src="../../assets/themes/sys/default/img/BrowseCoDX.svg" class="img-attachment-codx ms-3" title="Tải lên từ phần mềm" (click)="openUploadForm()"/>
                                     </div>

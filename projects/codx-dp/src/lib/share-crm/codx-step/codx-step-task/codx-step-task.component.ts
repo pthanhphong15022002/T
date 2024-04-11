@@ -67,6 +67,7 @@ import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assi
 import { PopupAddMeetingComponent } from 'projects/codx-share/src/lib/components/codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
 import { CodxAddBookingCarComponent } from 'projects/codx-share/src/lib/components/codx-booking/codx-add-booking-car/codx-add-booking-car.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { CodxShareTaskComponent } from '../codx-share-task/codx-share-task.component';
 @Component({
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
@@ -87,7 +88,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   @Input() isTaskFirst = false; // giai đoạn đầu tiên
   @Input() isStart = true; // bắt đầu ngay
-  @Input() isClose = false; // đóng nhiệm vụ
   @Input() isRoleAll = true;
   @Input() isOnlyView = true; // đang ở giai đoạn nào
   @Input() isShowFile = true;
@@ -101,7 +101,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() askUpdateProgressStep = false; // lưu progress vào db
   @Input() ownerInstance; // lưu progress vào db
 
-  @Input() isViewStep = false; // chỉ xem
+  @Input() isView = false; // chỉ xem
   @Input() isMoveStage = false; // chuyển giai đoạn
   @Input() isLockSuccess = false; // lọc cái task 100%
 
@@ -204,6 +204,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   isFirstTime = true;
   transferControl = '0';
   maxWidth = 0;
+  roleShare;
   //#endregion
   constructor(
     private cache: CacheService,
@@ -817,14 +818,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             break;
           case 'DP20': // tiến độ
             res.isbookmark = false;
-            if (
-              !(
-                this.isRoleAll &&
-                this.isOnlyView &&
-                this.isUpdateProgressStep
-              ) ||
-              this.isClose
-            ) {
+            if (!(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)) {
               res.disabled = true;
             }
 
@@ -905,6 +899,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         break;
       case 'DP33':
         this.cancelApprover(task);
+        break;
+      case 'DP35':
+        this.popupPermissions(task);
         break;
       case 'SYS002':
         this.exportTemplet(e, task);
@@ -1587,21 +1584,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       dataInput,
       'right'
     );
-    // let frmModel: FormModel = {
-    //   entityName: 'DP_Instances_Steps_Tasks',
-    //   formName: 'DPInstancesStepsTasks',
-    //   gridViewName: 'grvDPInstancesStepsTasks',
-    // };
-    // let option = new SidebarModel();
-    // option.Width = '550px';
-    // option.zIndex = 1011;
-    // option.FormModel = frmModel;
-    // let popupTask = this.callfc.openSide(
-    //   CodxAddTaskComponent,
-    //   dataInput,
-    //   option
-    // );
-    // let dataPopupOutput = await firstValueFrom(popupTask.closed);
     return dataPopupOutput;
   }
   //#endregion
@@ -1867,7 +1849,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (this.isMoveStage) {
       return type !== 'G';
     }
-    if (this.isClose || this.isViewStep) {
+    if (this.isView) {
       return false;
     }
     if (this.isOnlyView && this.isStart) {
@@ -2578,7 +2560,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmployeesBusiness',
+      'EmployeesBusiness_Old',
       'GetListUserIDByListODPIDAsync',
       [lstId, type]
     );
@@ -3132,7 +3114,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       isAdd: true, ///là add form để lấy giá trị mặc định gán vào
       taskID: task.recID,
       fieldOther: this.getFieldsOther(this.currentStep?.fields, task?.fieldID),
-      isView: this.isViewStep,
+      isView: this.isView,
     };
     let formModel: FormModel = {
       entityName: 'DP_Instances_Steps_Fields',
@@ -3485,5 +3467,41 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
     });
     return fields;
+  }
+
+  popupPermissions(data) {
+    let dialogModel = new DialogModel();
+    let formModel = new FormModel();
+    formModel.formName = 'DPInstancesStepsTasksRoles';
+    formModel.gridViewName = 'grvDPInstancesStepsTasksRoles';
+    formModel.entityName = 'DP_Instances_Steps_Tasks_Roles';
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
+    let obj = {
+      data: data,
+      title: "Chia sẻ",
+      entityName: "DP_Instances_Steps_Tasks_Roles",
+    };
+    this.callfc
+      .openForm(
+        CodxShareTaskComponent,
+        '',
+        950,
+        650,
+        '',
+        obj,
+        '',
+        dialogModel
+      )
+      .closed.subscribe((e) => {
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+  checkShare(roles: DP_Instances_Steps_Tasks_Roles[]){
+    return roles.some(x => x.roleType == "S")
+  }
+  mouseenterShareRole(temp, roles){
+    temp.open();
+    this.roleShare = roles?.filter(x => x.roleType == "S");
   }
 }

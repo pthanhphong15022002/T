@@ -22,7 +22,7 @@
 
 <!-- Start: templateGrid -->
 <ng-template #templateGrid let-data>
-  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFDetail($event, 'viewgrid')" [formModel]="view.formModel"
+  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFGrid($event, 'viewgrid',data)" [formModel]="view.formModel"
     (clickMF)="clickMoreFunction($event, data)" type="view"></codx-mfunc>
 </ng-template>
 <!-- End: templateGrid -->
@@ -36,7 +36,7 @@
 </ng-template>
 
 <ng-template #templateDetailRight>
-  <ng-container *ngIf="itemSelected && viewActive == ViewType.listdetail">
+  <ng-container *ngIf="itemSelected && viewActive == ViewType.listdetail && view?.gridViewSetup">
     <receipt-transactions-detail [formModel]="view.formModel" [dataService]="this.view.dataService"
       [dataItem]="itemSelected" [recID]="itemSelected?.recID" [baseCurr]="baseCurr" [journal]="journal"
       [headerText]="headerText" [gridViewSetup]="view?.gridViewSetup" [hideFields]="hideFields"

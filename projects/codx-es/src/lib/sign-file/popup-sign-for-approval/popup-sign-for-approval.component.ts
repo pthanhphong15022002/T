@@ -525,11 +525,10 @@ export class PopupSignForApprovalComponent extends UIComponent {
                     .getVNPTCer(this.signerInfo.thirdPartyID)
                     .subscribe((cers) => {
                       if (cers) {
-                        this.lstCert = cers?.filter((x) => x?.error == null);                        
-                        this.lstCert.push(this.lstCert[0]);                       
+                        this.lstCert = cers?.filter((x) => x?.error == null);                      
                         this.detectorRef.detectChanges();
                         if (this.lstCert?.length == 1) {
-                          //this.viettelESign(mode, comment, this.lstCert[0]?.cert_data);
+                          this.vnptSmartESign(mode, comment, this.lstCert[0]);
                         } else if (this.lstCert?.length > 1) {
                           let dialogVNPTCers = this.callfc.openForm(
                             this.viettelCers,

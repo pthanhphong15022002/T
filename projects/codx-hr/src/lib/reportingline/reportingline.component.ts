@@ -104,7 +104,7 @@ export class ReportinglineComponent extends UIComponent {
     this.request = new ResourceModel();
     this.request.service = 'HR';
     this.request.assemblyName = 'ERM.Business.HR';
-    this.request.className = 'PositionsBusiness';
+    this.request.className = 'PositionsBusiness_Old';
     this.request.method = 'GetPositionsAsync';
     this.request.autoLoad = false;
     this.request.parentIDField = 'ReportTo';
@@ -311,7 +311,7 @@ export class ReportinglineComponent extends UIComponent {
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'Delete';
-    opt.className = 'PositionsBusiness';
+    opt.className = 'PositionsBusiness_Old';
     opt.assemblyName = 'ERM.Business.HR';
     opt.data = itemSelected.positionID;
     return true;
@@ -384,7 +384,7 @@ export class ReportinglineComponent extends UIComponent {
     this.posEmpPageIndex = 0;
     this.scrolling = true;
     if (this.searchText.length <= 0) {
-      this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionId, this.posEmpPageSize, 0, ''])
+      this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness_Old', 'GetListEmpPositionsAsync', [positionId, this.posEmpPageSize, 0, ''])
         .subscribe(res => {
           if (res) {
             if (index >= 0) {
@@ -404,7 +404,7 @@ export class ReportinglineComponent extends UIComponent {
       this.view.dataService.data[index].staffEmp = [];
       this.posEmpPageIndex = 0;
       this.scrolling = true;
-      this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionId, this.posEmpPageSize, 0, this.searchText])
+      this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness_Old', 'GetListEmpPositionsAsync', [positionId, this.posEmpPageSize, 0, this.searchText])
         .subscribe(res => {
           if (res) {
             if (index >= 0) {
@@ -436,7 +436,7 @@ export class ReportinglineComponent extends UIComponent {
   getEmpListPaging(positionID: string) {
     var index = this.view.dataService.data.findIndex(x => x.positionID == positionID)
     if (this.scrolling && this.view.dataService.data[index]?.staff > this.view.dataService.data[index].staffEmp.length) {
-      this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionID, this.posEmpPageSize, this.posEmpPageIndex, this.searchText])
+      this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness_Old', 'GetListEmpPositionsAsync', [positionID, this.posEmpPageSize, this.posEmpPageIndex, this.searchText])
         .subscribe(res => {
           if (res) {
             if (index >= 0) {

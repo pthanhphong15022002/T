@@ -1,0 +1,302 @@
+<div class="list-contracts h-100" *ngIf="!isLoad">
+  <div class="cm-list-task" *ngIf="!isNoData">
+    <ng-container *ngFor="let task of listActivitie; let i = index">
+      <div
+        cdkDrag
+        [cdkDragStartDelay]="100"
+        [cdkDragData]="task"
+        [cdkDragDisabled]="true"
+        class="drap-drop my-2"
+      >
+        <div
+          class="d-flex align-items-center justify-content-between"
+          (dblclick)="viewTask(task, task?.taskType || 'T')"
+        >
+          <div style="flex-grow: 1" class="has-action-menu ps-2">
+            <ng-container
+              [ngTemplateOutlet]="taskTemplate"
+              [ngTemplateOutletContext]="{
+                value: { task: task, group: null, index: i }
+              }"
+            ></ng-container>
+          </div>
+          <div class="d-flex align-items-center">
+            <ng-container *ngIf="task?.approveRule && task.approveStatus && task.approveStatus != '1'">
+              <codx-vll
+                [name]="'DP043'"
+                [field]="'ApproveStatus'"
+                [value]="task?.approveStatus"
+                [showText]="true"
+                [showBgColor]="true"
+                class="badge badge-light badge-sm line-clamp-vll"
+              >
+              </codx-vll>
+            </ng-container>
+            <ng-container
+              [ngTemplateOutlet]="timeAndProgress"
+              [ngTemplateOutletContext]="{
+                value: { value: task, group: null, type: 'T' }
+              }"
+            ></ng-container>
+            <div class="model-func">
+                <codx-mfunc
+                [formModel]="grvMoreFunction"
+                [isBookMark]="false"
+                [dataItem]="moreDefaut"
+                [type]="'view'"
+                (clickMF)="clickMFTask($event, task)"
+                (changeDataMF)="changeDataMFTask($event, task)"
+              >
+              </codx-mfunc>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-left: 45px">
+          <div
+            *ngIf="task?.approveRule"
+            class="d-flex align-items-center cursor-pointer me-4"
+            (click)="openFormApprover(task)"
+          >
+            <span
+              class="icon-check-correct text-primary icon-18 me-1"
+            ></span>
+            <codx-label
+              class="text-gray-500 popup-hover "
+              name="progressDefault2"
+              [formModel]="grvMoreFunction"
+              default="Các bước duyệt"
+            ></codx-label>
+          </div>
+          <!-- <codx-view-approve *ngIf="task?.approveRule" [categoryID]="task?.recID" [change]="task"></codx-view-approve> -->
+          <ng-container
+            [ngTemplateOutlet]="fileTemplate"
+            [ngTemplateOutletContext]="{ value: task }"
+          ></ng-container>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="cm-list-task-nodate" *ngIf="isNoData || listActivitie?.length <= 0">
+    <div class="mb-2 mt-3">
+      <codx-no-data [mesCode]="isAdmin ? 'SYS011' : 'SYS032'" [mould]="'2'"></codx-no-data>
+    </div>
+  </div>
+  <div class="d-flex justify-content-center add-contract add-tasks">
+    <button
+      *ngIf="!isPause && isAdmin"
+      type="button"
+      class="btn btn-sm btn btn-primary add-contract d-flex align-items-center"
+      (click)="chooseTypeTask()"
+    >
+      <i class="icon-18 icon-more text-light"></i>
+      <codx-label
+        class=""
+        [formModel]=""
+        fiedName="btnAddContract"
+        [default]="'Thêm công việc'"
+      ></codx-label>
+    </button>
+  </div>
+</div>
+
+<ng-template #taskTemplate let-data="value">
+  <div
+    class="d-flex justify-content-start align-items-center has-action-menu task-hover cursor-pointer"
+    #popoverDetails="ngbPopover"
+    [ngbPopover]="setNameTypeTask(data?.task?.taskType)"
+    [placement]="data?.index == 0 ? 'bottom-left' : 'top-left'"
+    (mouseenter)="popoverDetails.open()"
+    (mouseleave)="popoverDetails.close()"
+  >
+    <codx-icon-step
+      [typeTask]="data?.task?.taskType"
+      [listTypeTask]="listTaskType"
+      [isStep]="false"
+      [size]="30"
+    ></codx-icon-step>
+    <div class="steplist-hearder ms-1">
+      <div class="text-dark fw-bold fs-6 line-clamp line-clamp-1 task-name">
+        {{ data?.task?.taskName }}
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #timeAndProgress let-data="value">
+  <div class="d-flex align-items-center justify-content-end me-3 time-progress">
+    <div
+      class="date text-nowrap mx-2 cursor-pointer"
+      #popoverTooltip="ngbPopover"
+      [ngbPopover]="tooltipDate"
+      [placement]="'top-left'"
+      (mouseenter)="openTooltip(popoverTooltip, data?.value)"
+      (mouseleave)="popoverTooltip.close()"
+    >
+      <div
+        class="date text-nowrap mx-2"
+        *ngIf="
+          data?.value?.startDate &&
+          data?.value?.endDate &&
+          data?.value?.status != '3'
+        "
+      >
+        <span
+          [innerHTML]="
+            data?.value?.startDate
+              | formatvalue : grvMoreFunction : 'StartDate'
+              | async
+          "
+        ></span>
+        <span class="mx-1">-</span>
+        <span
+          [innerHTML]="
+            data?.value?.endDate
+              | formatvalue : grvMoreFunction : 'EndDate'
+              | async
+          "
+        ></span>
+      </div>
+
+      <div
+        class="date text-nowrap mx-2 cursor-pointer"
+        #popoverTooltip="ngbPopover"
+        [ngbPopover]="tooltipDate"
+        [placement]="'top-left'"
+        (mouseenter)="openTooltip(popoverTooltip, data?.value)"
+        (mouseleave)="popoverTooltip.close()"
+      >
+        <span
+          *ngIf="data?.value?.actualEnd && data?.value?.status == '3'"
+          [innerHTML]="
+            data?.value?.actualEnd
+              | formatvalue : grvMoreFunction : 'StartDate'
+              | async
+          "
+        ></span>
+      </div>
+    </div>
+
+    <span class="d-flex align-items-center">
+      <codx-imgs
+        class="me-2 d-flex align-items-center"
+        [width]="25"
+        ojectType="AD_Users"
+        [numberImages]="1"
+        [isToolTip]="true"
+        [objectId]="data?.value?.owner"
+        [objectName]="getRoleName(data?.value)"
+      >
+      </codx-imgs>
+    </span>
+    <div
+      class="disabled-inline ms-2"
+      (click)="openPopupUpdateProgress(data?.value, 'T')"
+      [ngStyle]="data?.value?.startDate && data?.value?.endDate ? {cursor: 'pointer'} : {cursor: 'not-allowed'}"
+    >
+      <codx-progressbar
+        [progress]="data?.value?.progress"
+        [stype]="3"
+        [vllData]="vllData"
+        [status]="data?.value?.status"
+        [isStep]="false"
+        #p="ngbPopover"
+        [ngbPopover]="'Cập nhật tiến độ'"
+        (mouseenter)="p.open()"
+        (mouseleave)="p.close()"
+      ></codx-progressbar>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #fileTemplate let-data="value">
+  <codx-attachment
+    #attachment
+    [objectType]="'DP_Instances_Steps_Tasks'"
+    [objectId]="data?.recID"
+    hideFolder="1"
+    hideImageUpload="0"
+    hideImageThumb="0"
+    hideUploadBtn="1"
+    [showMessage]="0"
+    hideDes="1"
+    type="inline"
+    allowMultiFile="1"
+    referType="source"
+    displayThumb="full"
+  >
+  </codx-attachment>
+</ng-template>
+
+<ng-template #tooltipDate let-data="value">
+  <div>
+    <div *ngIf="dataTooltipDay?.startDate && dataTooltipDay?.endDate">
+      <div>
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="startDate"
+          [formModel]="grvMoreFunction"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          [innerHTML]="
+            dataTooltipDay?.startDate
+              | formatvalue : grvMoreFunction : 'StartDate'
+              | async
+          "
+        ></span>
+      </div>
+      <div>
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="endDate"
+          [formModel]="grvMoreFunction"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          [innerHTML]="
+            dataTooltipDay?.endDate
+              | formatvalue : grvMoreFunction : 'EndDate'
+              | async
+          "
+        ></span>
+      </div>
+    </div>
+    <div>
+      <div>
+        <codx-label
+          *ngIf="dataTooltipDay?.actualStart"
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="actualStart"
+          [formModel]="grvMoreFunction"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          *ngIf="dataTooltipDay?.actualStart"
+          [innerHTML]="
+            dataTooltipDay?.actualStart
+              | formatvalue : grvMoreFunction : 'StartDate'
+              | async
+          "
+        ></span>
+      </div>
+      <div>
+        <codx-label
+          *ngIf="dataTooltipDay?.actualEnd"
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="actualEnd"
+          [formModel]="grvMoreFunction"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          *ngIf="dataTooltipDay?.actualEnd"
+          [innerHTML]="
+            dataTooltipDay?.actualEnd
+              | formatvalue : grvMoreFunction : 'StartDate'
+              | async
+          "
+        ></span>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -173,7 +173,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
   //Call api delete
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteEBusinessTravelsAsync';
-    opt.className = 'EBusinessTravelsBusiness';
+    opt.className = 'EBusinessTravelsBusiness_Old';
     opt.assemblyName = 'HR';
     opt.service = 'HR';
     opt.data = data;
@@ -211,7 +211,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
               this.view.formModel.entityName,
               'C1',
               null,
-              'EBusinessTravelsBusiness'
+              'EBusinessTravelsBusiness_Old'
             )
             .subscribe();
           this.dialogEditStatus && this.dialogEditStatus.close(res);
@@ -542,7 +542,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
             this.view.formModel.entityName,
             'C1',
             null,
-            'EBusinessTravelsBusiness'
+            'EBusinessTravelsBusiness_Old'
           )
           .subscribe();
 

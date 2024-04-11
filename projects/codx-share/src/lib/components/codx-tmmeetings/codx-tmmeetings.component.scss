@@ -76,6 +76,10 @@
     border-color: rgb(212, 216, 221);
   }
 
+  .e-kanban-content{
+    height: calc(100% - 220px) !important;
+  }
+
   codx-view-kanban .e-card .border {
     border: 0 !important;
   }

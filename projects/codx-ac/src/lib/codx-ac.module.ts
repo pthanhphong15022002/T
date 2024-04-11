@@ -125,6 +125,9 @@ import { CashtransfersDetailComponent } from './vouchers/cashtransfers/cashtrans
 import { AssetAcquisitionsComponent } from './vouchers/asset-acquisitions/asset-acquisitions.component';
 import { PopupInfoTransferComponent } from './share/popup-info-transfer/popup-info-transfer.component';
 import { AssetJournalsDetailComponent } from './vouchers/asset-journals/asset-journals-detail/asset-journals-detail.component';
+import { AssetsLineTableComponent } from './share/ac-tableview/assets-line-table/assets-line-table.component';
+import { AssetsTableComponent } from './share/ac-tableview/assets-table/assets-table.component';
+import { ChooseJournalComponent } from './share/choose-journal/choose-journal.component';
 
 export const routes: Routes = [
   {
@@ -198,11 +201,6 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'assetcountings/:funcID/:journalNo',
-        component: AssetJournalsComponent,
-        data: { noReuse: true },
-      },
-      {
         path: 'generaljournals/:funcID/:journalNo',
         component: GeneralJournalComponent,
         data: { noReuse: true },
@@ -260,11 +258,6 @@ export const routes: Routes = [
       },
       {
         path: 'assetdepreciations/:funcID',
-        component: AssetJournalsComponent,
-        data: { noReuse: true, runMode: 1 },
-      },
-      {
-        path: 'assetcountings/:funcID',
         component: AssetJournalsComponent,
         data: { noReuse: true, runMode: 1 },
       },
@@ -568,7 +561,10 @@ export const routes: Routes = [
     AssetCountingsComponent,
     CashtransfersDetailComponent,
     AssetAcquisitionsComponent,
-    AssetJournalsDetailComponent
+    AssetJournalsDetailComponent,
+    AssetsLineTableComponent,
+    AssetsTableComponent,
+    ChooseJournalComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
