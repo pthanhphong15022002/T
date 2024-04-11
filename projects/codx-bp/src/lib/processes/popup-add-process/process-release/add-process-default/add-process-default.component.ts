@@ -247,7 +247,9 @@ export class AddProcessDefaultComponent implements OnInit {
             refType: elm2?.refType,
             refValue: elm2?.refValue,
             allowEdit: true,
+            width: this.get_tex_width(elm2.title)
           };
+          debugger
           element.columnsGrid.push(obj);
 
           if (elm2.dataType == 'Decimal') {
@@ -1225,5 +1227,11 @@ export class AddProcessDefaultComponent implements OnInit {
         this.hideVisiableChild(elm);
       });
     }
+  }
+
+  get_tex_width(txt) {
+    var l = txt.length * 10;
+    if(l < 100)  l = 100;
+    return l ;
   }
 }
