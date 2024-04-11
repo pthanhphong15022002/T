@@ -236,7 +236,7 @@ export class PopupBpTasksComponent implements OnInit {
               {
                 arrFile=uploaded;
               }
-              else{ 
+              else{
                 arrFile =[uploaded]
               }
               Array.from(arrFile).forEach((f:any)=>{
@@ -245,16 +245,16 @@ export class PopupBpTasksComponent implements OnInit {
                   docFile.fileID = f?.data?.recID;
                   docFile.fileName = f?.data?.fileName;
                   docFile.esign = false;
-                  docFile.type="1";      
+                  docFile.type="1";
                   this.attDoc.files.push(docFile);
                 }
               });
             }
-            
+
             this.bpSv.addDocControl(this.dataIns?.recID,this.data?.recID, [this.attDoc]).subscribe(added=>{
               if(added ==null){
-                
-              }              
+
+              }
               this.updateTaskStatus(status);
             })
 
@@ -266,7 +266,7 @@ export class PopupBpTasksComponent implements OnInit {
       this.updateTaskStatus(status);
     }
 
-    
+
   }
   updateTaskStatus(status){
     //Update Task Status test
@@ -278,7 +278,7 @@ export class PopupBpTasksComponent implements OnInit {
         }
       });
   }
-  
+
 
   sendMail() {
     let data = {
@@ -319,7 +319,7 @@ export class PopupBpTasksComponent implements OnInit {
 
   //#region ActivityType = 'Task'
   addCheckList() {
-    if (!this.privileged) return;
+    if (!this.privileged || this.data.status == '5') return;
     let obj = {
       recID: Util.uid(),
       taskName: '',
@@ -352,7 +352,7 @@ export class PopupBpTasksComponent implements OnInit {
     this.attachment.uploadFile();
   }
   fileAdded(e) {
-    
+
 
   }
   getfileCount(e) {
