@@ -44,8 +44,6 @@ export class PaymentDetailComponent extends UIDetailComponent implements AfterVi
       if(res)
       {
         this.data = res;
-        let subcribeUpdate = this.view.dataService.update(res).subscribe();
-        this.subcriptions.add(subcribeUpdate);
         this.detectorRef.detectChanges();
       }
     });

@@ -30,7 +30,7 @@
 <ng-template #titleTmp let-data>
     <div class="d-flex align-items-center justify-content-between fw-bold w-100">
         <div *ngIf="data.employeeName">{{data.employeeName}}</div>
-        <div *ngIf="data.totalAmount" [innerHTML]="data.totalAmount | formatvalue : view.formModel : 'requestAmt' | async"></div>
+        <div *ngIf="data.requestAmt" [innerHTML]="data.totalAmount | formatvalue : view.formModel : 'requestAmt' | async"></div>
     </div>
 </ng-template>
 <ng-template #contentTmp let-data>

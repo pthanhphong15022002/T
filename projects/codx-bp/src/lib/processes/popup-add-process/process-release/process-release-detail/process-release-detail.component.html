@@ -121,6 +121,7 @@
       <div class="d-flex align-items-center">
         <div
           class="d-flex align-items-center me-2 py-2 px-4 border-radius-4px text-white cursor-pointer"
+          (click)="clickMF(item?.functionID)"
           [style.backgroundColor]="item?.color"
           *ngFor="let item of listMF"
         >
@@ -194,12 +195,14 @@
                   <div class="col-1 text-center">
                     {{ dmSV.getSizeKB(file) }}
                   </div>
-                  <div class="col-2 text-center">
-                    <img
-                      [src]="dmSV.getImage(file.extension)"
-                      class="me-2"
+                  <div class="col-2 text-center d-flex justify-content-center">
+                    <codx-temp-full
+                      imageSrc="{{ dmSV.getImage(file) }}"
+                      imgCss="w-30px me-2 cursor-pointer"
                       [ngbTooltip]="file.extension"
-                    />
+                      [descLine]="1"
+                    >
+                    </codx-temp-full>
                   </div>
                   <div class="col-1">
                     <i
@@ -237,10 +240,16 @@
                 ngbAccordionItem
                 [collapsed]="item?.statusStage == '3' ? false : true"
                 [style.border-left-color]="item?.colorStatus || '#DBDCE6'"
-                *ngFor="let item of listStage"
+                *ngFor="let item of listStage; index as i"
               >
                 <div
                   class="d-flex align-items-center justify-content-between p-4 bg-bp-tb-header"
+                  (click)="
+                    toggleAccordion(
+                      $event,
+                      true
+                    )
+                  "
                   ngbAccordionHeader
                 >
                   <div class="d-flex flex-column">
@@ -250,9 +259,18 @@
                       }}</span>
                     </div>
                   </div>
-                  <button ngbAccordionButton></button>
+                  <button
+                    (click)="
+                      $event.stopPropagation();
+                      toggleAccordion(
+                        $event,
+                        false
+                      )
+                    "
+                    ngbAccordionButton
+                  ></button>
                 </div>
-                <div ngbAccordionCollapse>
+                <div ngbAccordionCollapse #accordion id="{{ item?.recID }}">
                   <div ngbAccordionBody>
                     <ng-template>
                       <ul class="bp-tree mb-3 pe-6">
@@ -331,9 +349,9 @@
           default="Kế hoạch"
           class="me-2 w-60px label-colon"
         ></codx-label>
-        <span class="">{{ data?.startDate | fmDT : "dmy" }}</span>
+        <span class="">{{ data?.startDate | fmDT : "dmy" : true }}</span>
         <span class="mx-1">-</span>
-        <span class="">{{ data?.endDate | fmDT : "dmy" }}</span>
+        <span class="">{{ data?.endDate | fmDT : "dmy" : true }}</span>
         <span class="mx-1">|</span>
         <span>{{ data?.duration }}</span>
         <span class="mx-1">{{
@@ -343,9 +361,9 @@
           default="Thực tế"
           class="me-2 ms-10 w-50px label-colon"
         ></codx-label>
-        <span class="">{{ data?.actualStart | fmDT : "dmy" }}</span>
+        <span class="">{{ data?.actualStart | fmDT : "dmy" : true }}</span>
         <span class="mx-1">-</span>
-        <span class="">{{ data?.actualEnd | fmDT : "dmy" }}</span>
+        <span class="">{{ data?.actualEnd | fmDT : "dmy" : true }}</span>
         <ng-container *ngIf="data?.actualHours">
           <span class="mx-1">|</span>
           <span>{{ data?.actualHours }}</span>

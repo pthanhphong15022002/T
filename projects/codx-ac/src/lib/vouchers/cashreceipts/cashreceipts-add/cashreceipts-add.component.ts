@@ -54,6 +54,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     allowEditOnDblClick:false,
     allowNextRowEdit:false
   }
+  isActive:any = true;
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
@@ -71,6 +72,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     this.dataDefault = { ...dialogData.data?.oData }; 
     this.journal = { ...dialogData.data?.journal }; 
     this.baseCurr = dialogData.data?.baseCurr;
+    this.isActive = dialogData.data?.isActive; 
   }
   //#endregion Contructor
 
@@ -583,7 +585,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
           if (res?.update) {
             this.dialog.dataService.update(res.data,true).subscribe();
             if (type == 'save') {
-              this.dialog.close();
+              this.dialog.close(res);
             }else{
               this.api
               .exec('AC', 'CashReceiptsBusiness', 'SetDefaultAsync', [

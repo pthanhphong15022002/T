@@ -149,19 +149,47 @@
           <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
         </div>
       </button>
-      <!-- <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" [disabled]="isload" type="button"
+      <button *ngIf="master.data?.status == '1' && dialog.formModel.funcID === 'ACT281'" id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" [disabled]="isload" type="button"
+        class="btn btn-md btn-primary me-2" (click)="onHandle()">
+        <div class="d-flex align-items-center">
+          <i class="icon-download_done icon-16"></i>
+          <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Xử lí chệnh lệch"></codx-label>
+        </div>
+      </button>
+      <button *ngIf="dialog.formModel.funcID === 'ACT581'" id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" [disabled]="isload" type="button"
+        class="btn btn-md btn-primary me-2" (click)="onHandle()">
+        <div class="d-flex align-items-center">
+          <i class="icon-add_box icon-16"></i>
+          <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Tạo phiếu nhập kho"></codx-label>
+        </div>
+      </button>
+      <button *ngIf="dialog.formModel.funcID === 'ACT581'" id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" [disabled]="isload" type="button"
+        class="btn btn-md btn-primary me-2">
+        <div class="d-flex align-items-center">
+          <i class="icon-add_box icon-16"></i>
+          <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Tạo phiếu xuất kho"></codx-label>
+        </div>
+      </button>
+      <button *ngIf="dialog.formModel.funcID === 'ACT881'" id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" [disabled]="isload" type="button"
+        class="btn btn-md btn-primary me-2">
+        <div class="d-flex align-items-center">
+          <i class="icon-download_done icon-16"></i>
+          <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Điều chỉnh"></codx-label>
+        </div>
+      </button>
+      <button *ngIf="dialog.formModel.funcID === 'ACT881'" id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" [disabled]="isload" type="button"
+        class="btn btn-md btn-primary me-2">
+        <div class="d-flex align-items-center">
+          <i class="icon-download_done icon-16"></i>
+          <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Thanh lý"></codx-label>
+        </div>
+      </button>
+      <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" [disabled]="isload" type="button"
         class="btn btn-md btn-primary me-2" (keydown.enter)="onSaveVoucher('saveadd'); $event.preventDefault()"
         (click)="onSaveVoucher('saveadd')">
         <div class="d-flex align-items-center">
           <i class="icon-add_to_photos icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
-        </div>
-      </button> -->
-      <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" [disabled]="isload" type="button"
-        class="btn btn-md btn-primary me-2">
-        <div class="d-flex align-items-center">
-          <i class="icon-download_done icon-16"></i>
-          <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Xử lí chệnh lệch"></codx-label>
         </div>
       </button>
       <button [shortcut]="'alt+s'" [autoClick]="true" tab-index="16" id="btnsave" type="button" [disabled]="isload"
