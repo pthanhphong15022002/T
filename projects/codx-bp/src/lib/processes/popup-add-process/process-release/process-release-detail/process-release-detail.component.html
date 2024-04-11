@@ -120,7 +120,8 @@
     <div class="position-absolute top-0 end-0" *ngIf="!right">
       <div class="d-flex align-items-center">
         <div
-          class="d-flex align-items-center me-2 py-2 px-4 border-radius-4px text-white cursor-pointer" (click)="clickMF(item?.functionID)"
+          class="d-flex align-items-center me-2 py-2 px-4 border-radius-4px text-white cursor-pointer"
+          (click)="clickMF(item?.functionID)"
           [style.backgroundColor]="item?.color"
           *ngFor="let item of listMF"
         >
@@ -246,7 +247,7 @@
                   (click)="
                     toggleAccordion(
                       $event,
-                      'ngb-accordion-item-' + i + '-collapse', true
+                      true
                     )
                   "
                   ngbAccordionHeader
@@ -258,10 +259,16 @@
                       }}</span>
                     </div>
                   </div>
-                  <button (click)="$event.stopPropagation(); toggleAccordion(
-                    $event,
-                    'ngb-accordion-item-' + i + '-collapse', false
-                  )" ngbAccordionButton></button>
+                  <button
+                    (click)="
+                      $event.stopPropagation();
+                      toggleAccordion(
+                        $event,
+                        false
+                      )
+                    "
+                    ngbAccordionButton
+                  ></button>
                 </div>
                 <div ngbAccordionCollapse #accordion id="{{ item?.recID }}">
                   <div ngbAccordionBody>

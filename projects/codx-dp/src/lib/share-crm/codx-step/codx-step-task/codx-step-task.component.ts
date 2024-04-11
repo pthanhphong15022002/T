@@ -204,6 +204,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   isFirstTime = true;
   transferControl = '0';
   maxWidth = 0;
+  roleShare;
   //#endregion
   constructor(
     private cache: CacheService,
@@ -3498,5 +3499,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
   checkShare(roles: DP_Instances_Steps_Tasks_Roles[]){
     return roles.some(x => x.roleType == "S")
+  }
+  mouseenterShareRole(temp, roles){
+    temp.open();
+    this.roleShare = roles?.filter(x => x.roleType == "S");
   }
 }

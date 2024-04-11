@@ -522,20 +522,19 @@
         #popoverDetails="ngbPopover"
         [ngbPopover]="tooltipRolesShare"
         [placement]="'top-left'"
-        (mouseenter)="popoverDetails.open()"
+        (mouseenter)="mouseenterShareRole(popoverDetails, data?.value?.roles)"
         (mouseleave)="popoverDetails.close()"
         [container]="'body'"
+        
       ></span>
       <codx-imgs
         class="me-2 d-flex align-items-center"
         [width]="25"
-        ojectType="AD_Users"progressbarmain-body
+        ojectType="AD_Users"
         [numberImages]="1"
         [isToolTip]="true"
         [objectId]="data?.value?.owner"
-      >
-        <!-- [objectName]="getRole(data?.value)" -->
-      </codx-imgs>
+      ></codx-imgs>
     </span>
     <div
       class="disabled-inline position-relative"
@@ -853,11 +852,22 @@
   </div>
 </ng-template>
 
-<ng-template #tooltipRolesShare>
+<ng-template #tooltipRolesShare let-data="data">
   <div class="d-flex flex-column">
     <span><b>Chia sẻ:</b></span>
-    <span class="ms-2">Nguyễn Văn Thuận</span>
-    <span class="ms-2">Nguyễn Văn Huy</span>
+    <ng-container *ngFor="let role of roleShare">
+      <div class="m-2 d-flex">
+        <codx-imgs
+          class="d-flex align-items-center"
+          [width]="25"
+          ojectType="AD_Users"
+          [numberImages]="1"
+          [isToolTip]="true"
+          [objectId]="role?.objectID"
+        ></codx-imgs>
+        <span class="ms-2">{{role?.objectName}}</span>
+      </div>
+    </ng-container>
   </div>
 </ng-template>
 
