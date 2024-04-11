@@ -302,7 +302,7 @@ export class PopupAddProcessComponent {
     stage.reminder = this.data.reminder;
     stage.eventControl = null;
     stage.stepType = '1';
-    stage.permissions = [{ objectID: this.user?.userID, objectType: 'U' }];
+    stage.permissions = [];
     var processallowDrag = null;
     var processDefaultProcess = null;
     var processCompleteControl = null;
@@ -355,7 +355,7 @@ export class PopupAddProcessComponent {
       totalControl: null,
       allowEdit: allowEdit?.fieldValue,
     });
-    form.permissions = [{ objectID: this.user?.userID, objectType: 'U' }];
+    form.permissions = [];
     stage.child = [form];
     lstStep.push(stage, form);
     this.data.steps = lstStep;
@@ -370,7 +370,7 @@ export class PopupAddProcessComponent {
 
   setLstExtends() {
     let lst = [];
-    if (this.extendInfos?.length > 0) 
+    if (this.extendInfos?.length > 0)
     {
       this.extendInfos.forEach((res) => {
         let count = 1;

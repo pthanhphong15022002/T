@@ -374,12 +374,20 @@
       </div>
     </div>
     <div class="col-2">
-      <ng-container *ngIf="data?.pers && data?.activityType != 'Conditions'">
+      <ng-container *ngIf="(data?.pers && data?.activityType != 'Conditions' && data?.activityType != 'Form') || (data?.activityType == 'Form' && data?.stepNo > 1)">
         <codx-imgs
           [objectId]="data?.pers"
           [objectType]="'AD_Users'"
           [width]="30"
           [numberImages]="4"
+        ></codx-imgs>
+      </ng-container>
+      <ng-container *ngIf="(data?.activityType == 'Form' && data?.stepNo <= 1)">
+        <codx-imgs
+          [objectId]="permFormTask"
+          [objectType]="'AD_Users'"
+          [width]="30"
+          [numberImages]="1"
         ></codx-imgs>
       </ng-container>
     </div>

@@ -173,6 +173,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     },
   ];
   activeTask: any;
+  permFormTask: any;
   constructor(
     private shareService: CodxShareService,
     private cache: CacheService,
@@ -409,6 +410,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       )
       .subscribe((item: any) => {
         if (item) {
+          this.permFormTask = item.createdBy;
           if (item?.documentControl && item.documentControl.length > 0) {
             item.documentControl.forEach((element) => {
               if (element.files && element.files.length > 0) {
