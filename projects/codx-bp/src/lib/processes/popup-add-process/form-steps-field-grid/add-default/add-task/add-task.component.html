@@ -1,5 +1,5 @@
 <div class="d-flex flex-column w-100 h-100 bg-step-f-add-task">
-    <!-- <div class="d-flex flex-column mt-4">
+  <!-- <div class="d-flex flex-column mt-4">
         <codx-label formName="fmBPFieldGrid" fiedName="lblTaskTitle" default="Giai đoạn thực hiện" class="fw-bold"></codx-label>
         <div ngbDropdown #myDrop="ngbDropdown" class="d-inline-block bp-ffg-dropdown">
             <div class="d-flex align-items-center justify-content-between border p-2 w-100 rounder cursor-pointer" ngbDropdownToggle>
@@ -11,365 +11,821 @@
 			</div>
 		</div>
     </div> -->
-    <div class="d-flex flex-column mt-4" *ngIf="activityType == 'Event'">
-        <codx-label formName="fmBPFieldGrid" fiedName="lblTaskEventTitle" default="Loai sự kiện" class="fw-bold"></codx-label>
-        <codx-input type="valuelist" [refValue]="'BP009'" [crrValue]="data?.settings?.eventType"  field="eventType" (valueChange)="valueChangeSetting($event)"></codx-input>
+  <div class="d-flex flex-column mt-4" *ngIf="activityType == 'Event'">
+    <codx-label
+      formName="fmBPFieldGrid"
+      fiedName="lblTaskEventTitle"
+      default="Loai sự kiện"
+      class="fw-bold"
+    ></codx-label>
+    <codx-input
+      type="valuelist"
+      [refValue]="'BP009'"
+      [crrValue]="data?.settings?.eventType"
+      field="eventType"
+      (valueChange)="valueChangeSetting($event)"
+    ></codx-input>
+  </div>
+  <ng-container *ngIf="activityType == 'Conditions'">
+    <div class="d-flex flex-column mt-4">
+      <codx-label
+        formName="fmBPFieldGrid"
+        fiedName="lblTaskName"
+        default="Tên điều kiện"
+        class="fw-bold"
+      ></codx-label>
+      <codx-input
+        type="text"
+        field="stepName"
+        [crrValue]="data?.stepName"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
     </div>
-    <ng-container *ngIf="activityType == 'Conditions'">
-        <div class="d-flex flex-column mt-4">
-            <codx-label formName="fmBPFieldGrid" fiedName="lblTaskName" default="Tên điều kiện" class="fw-bold"></codx-label>
-            <codx-input type="text" field="stepName" [crrValue]="data?.stepName" (valueChange)="valueChange($event)"></codx-input>
+    <div class="d-flex flex-column border-top mt-4 pt-4">
+      <codx-label
+        formName="fmBPFieldGrid"
+        fiedName="lblTaskPerdicate"
+        default="Điều kiện"
+        class="fw-bold"
+      ></codx-label>
+      <div
+        class="d-flex flex-column border border-dotted py-2 px-4 my-4 border-w-2px"
+        *ngFor="let item of data?.settings?.nextSteps; let idnext = index"
+      >
+        <div
+          class="d-flex align-items-center justify-content-between border-bottom pb-2"
+        >
+          <span class="fw-bold">{{ item?.predicateName }}</span>
+          <i
+            class="icon-edit_square cursor-pointer"
+            (click)="openFormSetting(item, idnext)"
+          ></i>
         </div>
-        <div class="d-flex flex-column border-top mt-4 pt-4">
-            <codx-label formName="fmBPFieldGrid" fiedName="lblTaskPerdicate" default="Điều kiện" class="fw-bold"></codx-label>
-            <div class="d-flex flex-column border border-dotted py-2 px-4 my-4 border-w-2px" *ngFor="let item of data?.settings?.nextSteps , let idnext = index">
-                <div class="d-flex align-items-center justify-content-between border-bottom pb-2">
-                    <span class="fw-bold">{{item?.predicateName}}</span>
-                    <i class="icon-edit_square cursor-pointer"  (click)="openFormSetting(item,idnext)"></i>
-                </div>
-                <div class="d-flex flex-column pt-2">
-                    <ng-container *ngIf="item?.nextStepID , else elsNextStep">
-                        <codx-label formName="fmBPFieldGrid" fiedName="lblTaskPerdicateNextStep" default="Xử lý tiếp theo"></codx-label>
-                        <div class="d-flex align-items-center pt-2" [innerHTML]="getNextStepHTML(item?.nextStepID)">
-                        </div>
-                    </ng-container>
-                </div>
-            </div>
-            <button type="button" class="btn btn-light w-100 mt-4" (click)="openFormSetting()"><i class="icon-i-plus"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAddPerdicate" default="Thêm điều kiện xử lý"></codx-label></button>
+        <div class="d-flex flex-column pt-2">
+          <ng-container *ngIf="item?.nextStepID; else elsNextStep">
+            <codx-label
+              formName="fmBPFieldGrid"
+              fiedName="lblTaskPerdicateNextStep"
+              default="Xử lý tiếp theo"
+            ></codx-label>
+            <div
+              class="d-flex align-items-center pt-2"
+              [innerHTML]="getNextStepHTML(item?.nextStepID)"
+            ></div>
+          </ng-container>
         </div>
-    </ng-container>
-    <ng-container *ngIf="activityType != 'Conditions'">
-        <div class="d-flex flex-column mt-4">
-            <codx-label formName="fmBPFieldGrid" fiedName="lblTaskName" default="Tên công việc" class="fw-bold"></codx-label>
-            <codx-input type="text" field="stepName" [crrValue]="data?.stepName" (valueChange)="valueChange($event)"></codx-input>
+      </div>
+      <button
+        type="button"
+        class="btn btn-light w-100 mt-4"
+        (click)="openFormSetting()"
+      >
+        <i class="icon-i-plus"></i>
+        <codx-label
+          formName="fmBPFieldGrid"
+          fiedName="lblTaskAddPerdicate"
+          default="Thêm điều kiện xử lý"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="activityType != 'Conditions'">
+    <div class="d-flex flex-column mt-4">
+      <codx-label
+        formName="fmBPFieldGrid"
+        fiedName="lblTaskName"
+        default="Tên công việc"
+        class="fw-bold"
+      ></codx-label>
+      <codx-input
+        type="text"
+        field="stepName"
+        [crrValue]="data?.stepName"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+    <div class="d-flex flex-column mt-4" *ngIf="activityType != 'Email'">
+      <codx-label
+        formName="fmBPFieldGrid"
+        fiedName="lblTaskDes"
+        default="Diễn giải"
+        class="fw-bold"
+      ></codx-label>
+      <codx-input
+        type="textarea"
+        format="ed2"
+        field="memo"
+        [crrValue]="data?.memo"
+        (valueChange)="valueChange($event)"
+        [ngClass]="'w-100'"
+      ></codx-input>
+    </div>
+    <div class="d-flex flex-column mt-4" *ngIf="activityType == 'Event'">
+      <codx-label
+        formName="fmBPFieldGrid"
+        fiedName="lblTaskSettingEmail"
+        default="Mẫu biên bản"
+        class="fw-bold"
+      ></codx-label>
+      <button
+        type="button"
+        class="btn btn-light w-100 mt-4 cursor-pointer"
+        (click)="settingEmail()"
+      >
+        <i class="icon-i-plus"></i>
+        <codx-label
+          formName="fmBPFieldGrid"
+          fiedName="lblTaskSettingsEditEmail"
+          default="Thêm mới hoặc chọn mẫu biên bản"
+        ></codx-label>
+      </button>
+    </div>
+    <div class="d-flex flex-column mt-4">
+      <div class="d-flex align-items-center">
+        <codx-label
+          formName="fmBPFieldGrid"
+          fiedName="lblTaskDuration"
+          default="Thời gian thực hiện"
+          class="fw-bold"
+        ></codx-label>
+        <span class="text-danger ms-2">(*)</span>
+      </div>
+      <div class="d-flex align-items-center">
+        <codx-input
+          type="number"
+          field="duration"
+          [crrValue]="data?.duration"
+          (valueChange)="valueChange($event)"
+          [ngClass]="'w-80px'"
+        ></codx-input>
+        <codx-input
+          type="valuelist"
+          [refValue]="'BP019'"
+          [crrValue]="data?.interval"
+          field="interval"
+          (valueChange)="valueChange($event)"
+          [ngClass]="'mx-2 w-80px'"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="d-flex flex-column mt-4" *ngIf="activityType == 'Event'">
+      <codx-label
+        formName="fmBPFieldGrid"
+        fiedName="lblTaskLocation"
+        default="Địa điểm"
+        class="fw-bold"
+      ></codx-label>
+      <codx-input
+        type="text"
+        field="location"
+        [crrValue]="data?.location"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+    <div
+      class="d-flex flex-column border-top mt-4 pt-4"
+      *ngIf="
+        activityType != 'Form' || (activityType == 'Form' && data?.stepNo > 1)
+      "
+    >
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+          <codx-label
+            formName="fmBPFieldGrid"
+            fiedName="lblTaskOwners"
+            default="Người thực hiện"
+            class="fw-bold"
+          ></codx-label>
+          <span class="text-danger ms-2">(*)</span>
         </div>
-        <div class="d-flex flex-column mt-4" *ngIf="activityType != 'Email'">
-            <codx-label formName="fmBPFieldGrid" fiedName="lblTaskDes" default="Diễn giải" class="fw-bold"></codx-label>
-            <codx-input type="textarea" format="ed2" field="memo" [crrValue]="data?.memo" (valueChange)="valueChange($event)" [ngClass]="'w-100'"></codx-input>
-        </div>
-        <div class="d-flex flex-column mt-4" *ngIf="activityType == 'Event'">
-            <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSettingEmail" default="Mẫu biên bản" class="fw-bold"></codx-label>
-            <button type="button" class="btn btn-light w-100 mt-4 cursor-pointer" (click)="settingEmail()"><i class="icon-i-plus"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSettingsEditEmail" default="Thêm mới hoặc chọn mẫu biên bản"></codx-label></button>
-        </div>
-        <div class="d-flex flex-column mt-4">
-            <div class="d-flex align-items-center"><codx-label formName="fmBPFieldGrid" fiedName="lblTaskDuration" default="Thời gian thực hiện" class="fw-bold"></codx-label> <span class="text-danger ms-2">(*)</span></div>
-            <div class="d-flex align-items-center">
-                <codx-input type="number"  field="duration" [crrValue]="data?.duration" (valueChange)="valueChange($event)" [ngClass]="'w-80px'"></codx-input>
-                <codx-input type="valuelist" [refValue]="'BP019'" [crrValue]="data?.interval"  field="interval" (valueChange)="valueChange($event)" [ngClass]="'mx-2 w-80px'"></codx-input>
-            </div>
-        </div>
-        <div class="d-flex flex-column mt-4" *ngIf="activityType == 'Event'">
-            <codx-label formName="fmBPFieldGrid" fiedName="lblTaskLocation" default="Địa điểm" class="fw-bold"></codx-label>
-            <codx-input type="text" field="location" [crrValue]="data?.location" (valueChange)="valueChange($event)"></codx-input>
-        </div>
-        <div class="d-flex flex-column border-top mt-4 pt-4" *ngIf="activityType != 'Form' || (activityType == 'Form' && data?.stepNo > 1)">
-            <div class="d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center"><codx-label formName="fmBPFieldGrid" fiedName="lblTaskOwners" default="Người thực hiện" class="fw-bold"></codx-label> <span class="text-danger ms-2">(*)</span></div>
-                <button
-                    type="button"
-                    class="btn btn-icon btn-sm btn-light-primary me-2"
-                    (click)="sharePerm(controlShare)"
-                >
-                    <i class="icon-person_add_alt_1 icon-16"></i>
-              </button>
-            </div>
+        <button
+          type="button"
+          class="btn btn-icon btn-sm btn-light-primary me-2"
+          (click)="sharePerm(controlShare)"
+        >
+          <i class="icon-person_add_alt_1 icon-16"></i>
+        </button>
+      </div>
 
-            <div class="d-flex flex-column">
-                <div class="d-flex align-items-center justify-content-between mt-2" *ngFor="let item of listUses , let i = index">
-                    <div class="d-flex align-items-center">
-                        <!-- <codx-img [objectId]="item?.objectID" [objectType]="'AD_Users'" [referType]="'avt'" [width]="30"></codx-img>
+      <div class="d-flex flex-column">
+        <div
+          class="d-flex align-items-center justify-content-between mt-2"
+          *ngFor="let item of listUses; let i = index"
+        >
+          <div class="d-flex align-items-center">
+            <!-- <codx-img [objectId]="item?.objectID" [objectType]="'AD_Users'" [referType]="'avt'" [width]="30"></codx-img>
                         <div class="d-flex flex-column ms-2">
                             <span>{{item.objectName}}</span>
                         </div> -->
-                        <codx-temp-full
-                        [imageId]="item?.objectType =='U' ? item?.objectID : null" 
-                        [desc]="item?.objectName" 
-                        [imageObjType]="'AD_Users'" [imageWidth]="30" [titleLine]="2"
-                        [imageSrc]="item?.objectType =='U' ? null : item?.objectID?.length>0 ? './assets/themes/sys/default/img/' + (item?.objectType | vll : 'BP017' : 'icon' | async ) :
-                        './assets/themes/sys/default/img/' + ('SYS061' | vll : 'BP017' : 'icon' | async )"
-                        [imgCss]="item?.objectType !='U'? 'w-30px p-1 me-3 bg-light-secondary rounded-circle' :'w-30px me-3'"
-                        [hideMF]="true"></codx-temp-full>
-                    </div>
-                    <div class="cursor-pointer" (click)="deleteUser(i)">
-                        <i class="icon-close"></i>
-                    </div>
-                </div>
-
-                <ng-container *ngIf="(activityType == 'Approve' || activityType == 'Check' || activityType == 'Sign') && listUses?.length > 1">
-                    <div class="d-flex align-items-center justify-content-between mt-4" >
-                        
-                        <div class="d-flex align-items-center mt-4" *ngFor="let item of vllBP013?.datas , let i = index">
-                            <input class="form-check-input" [id]="'radioAttachApprovel' + i" type="radio" name="radioAttachApprovel" [value]="item.value" [checked]="item.value == data?.settings?.approveMode" (change)="valueChangeRadio($event)">
-                            <label class="form-check-label ms-2 fw-normal" [for]="'radioAttachApprovel' + i">
-                                {{item.text}}
-                            </label>
-                        </div>
-                    </div>
-                </ng-container>
-            </div>
+            <codx-temp-full
+              [imageId]="item?.objectType == 'U' ? item?.objectID : null"
+              [desc]="item?.objectName"
+              [imageObjType]="'AD_Users'"
+              [imageWidth]="30"
+              [titleLine]="2"
+              [imageSrc]="
+                item?.objectType == 'U'
+                  ? null
+                  : item?.objectID?.length > 0
+                  ? './assets/themes/sys/default/img/' +
+                    (item?.objectType | vll : 'BP017' : 'icon' | async)
+                  : './assets/themes/sys/default/img/' +
+                    ('SYS061' | vll : 'BP017' : 'icon' | async)
+              "
+              [imgCss]="
+                item?.objectType != 'U'
+                  ? 'w-30px p-1 me-3 bg-light-secondary rounded-circle'
+                  : 'w-30px me-3'
+              "
+              [hideMF]="true"
+            ></codx-temp-full>
+          </div>
+          <div class="cursor-pointer" (click)="deleteUser(i)">
+            <i class="icon-close"></i>
+          </div>
         </div>
-        <div class="d-flex align-items-center justify-content-between mt-4 border-top py-4" *ngIf="isAllowEdit == '1'">
-            <codx-label formName="fmBPFieldGrid" fiedName="lblStageAllowEdit" default="Chỉnh sửa khi chạy quy trình" class="fw-bold"></codx-label>
-            <codx-input type="switch"  field="allowEdit" [crrValue]="data?.settings?.allowEdit"  (valueChange)="valueChangeSetting($event)"></codx-input>
-        </div>
-        <div class="d-flex flex-column border-top mt-4 pt-4" *ngIf="activityType == 'Event'">
-            <div class="d-flex align-items-center justify-content-between">
-                <codx-label formName="fmBPFieldGrid" fiedName="lblTaskOwners2" default="Người tham gia" class="fw-bold"></codx-label>
-                <button
-                    type="button"
-                    class="btn btn-icon btn-sm btn-light-primary me-2"
-                    (click)="sharePerm(controlShare)"
-                >
-                    <i class="icon-person_add_alt_1 icon-16"></i>
-                </button>
-            </div>
 
-            <div class="d-flex align-items-center justify-content-between mt-2" *ngFor="let item of listUses2 , let i = index">
-                <div class="d-flex align-items-center">
-                    <codx-img [objectId]="item?.objectID" [objectType]="'AD_Users'" [referType]="'avt'" [width]="30"></codx-img>
-                    <div class="d-flex flex-column ms-2">
-                        <span>{{item.objectName}}</span>
-                    </div> 
-                    
-                </div>
-                <div class="cursor-pointer" (click)="deleteUser2(i)">
-                    <i class="icon-close"></i>
-                </div>
+        <ng-container
+          *ngIf="
+            (activityType == 'Approve' ||
+              activityType == 'Check' ||
+              activityType == 'Sign') &&
+            listUses?.length > 1
+          "
+        >
+          <div class="d-flex align-items-center justify-content-between mt-4">
+            <div
+              class="d-flex align-items-center mt-4"
+              *ngFor="let item of vllBP013?.datas; let i = index"
+            >
+              <input
+                class="form-check-input"
+                [id]="'radioAttachApprovel' + i"
+                type="radio"
+                name="radioAttachApprovel"
+                [value]="item.value"
+                [checked]="item.value == data?.settings?.approveMode"
+                (change)="valueChangeRadio($event)"
+              />
+              <label
+                class="form-check-label ms-2 fw-normal"
+                [for]="'radioAttachApprovel' + i"
+              >
+                {{ item.text }}
+              </label>
             </div>
-        </div>
-        <ng-container *ngIf="activityType == 'Form'">
-            <div class="d-flex flex-column border-top mt-4 pt-4">
-                <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSettingForm" default="Thiết lập Form" class="fw-bold"></codx-label>
-                <ng-container *ngIf="isNewForm">
-                    <button type="button" class="btn btn-light w-100 mt-4 cursor-pointer" (click)="openFormModeView()"><i class="icon-i-plus"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSettings" default="Thiết lập form nhập liệu"></codx-label></button>
-                </ng-container>
-                <ng-container *ngIf="!isNewForm">
-                    <div class="d-flex align-items-center justify-content-between cursor-pointer bg-light px-4 py-3 mt-4" (click)="openFormModeView()">
-                        <div class="d-flex align-items-center">
-                            <i class="icon-i-file-earmark-text"></i>
-                            <span class="ms-2">{{data?.extendInfo[0]?.title}}</span>
-                        </div>
-                        <i class="icon-i-link-45deg"></i>
-                    </div>
-                </ng-container>
-            </div>
-            <div class="d-flex flex-column border-top mt-4 pt-4">
-                <div class="d-flex align-items-center justify-content-between">
-                    <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSettingFormEsign" default="Qua ký số" class="fw-bold"></codx-label>
-                    <codx-input type="switch" field="esign" [crrValue]="data?.settings?.esign" (valueChange)="valueChangeSetting($event)"></codx-input>
-                </div>
-            </div>
-            <div class="d-flex flex-column border-top mt-4 pt-4 ">
-                <div class="d-flex align-items-center justify-content-between mt-2 pb-2">
-                    <codx-label formName="fmBPFieldGrid" fiedName="lblTaskExport" default="Biểu mẫu" class="fw-bold"></codx-label>
-                    <codx-input type="switch" field="isTemplate" [crrValue]="data?.settings?.isTemplate" (valueChange)="valueChangeSetting($event)"></codx-input>
-                </div>
-                <ng-container *ngIf="data?.settings?.template?.templateID , else tmpTemplate">
-                    <div class="d-flex align-items-center justify-content-between cursor-pointer py-2">
-                        <div class="d-flex align-items-center w-100" (click)="addTemplate('edit',data?.settings?.template?.templateType)">
-                            <i
-                                *ngIf="data?.settings?.template?.templateType == 'excel'"
-                                class="fa-solid fa-file-excel fs-2 me-3"
-                                style="color: #347442"
-                            >
-                            </i>
-                            <i
-                                *ngIf="data?.settings?.template?.templateType == 'word'"
-                                class="fa-solid fa-file-word fs-2 me-3"
-                                style="color: #005dc7"
-                            >
-                            </i>
-                            <span>{{data?.settings?.template?.templateName}}</span>
-                        </div>
-                        <i class="icon-close" (click)="deleteTemplate()"></i>
-                    </div>
-                </ng-container>
-                <ng-template #tmpTemplate>
-                    <div ngbDropdown class="d-inline-block">
-                        <button ngbDropdownToggle [disabled]="data?.settings?.isTemplate ? false : true" type="button" class="btn btn-light w-100 mt-4"><i class="icon-i-plus"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSelectFile" default="Chọn file template"></codx-label></button>
-                        <div class="w-100" ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                           <div ngbDropdownItem class="d-flex align-items-center cursor-pointer" (click)="addTemplate('add','excel')">
-                                <i
-                                    class="fa-solid fa-file-excel fs-2 me-3"
-                                    style="color: #347442"
-                                >
-                                </i>
-                                <span>Excel</span>
-                            </div>
-                            <div ngbDropdownItem class="d-flex align-items-center cursor-pointer" (click)="addTemplate('add','word')">
-                                <i
-                                class="fa-solid fa-file-word fs-2 me-3"
-                                style="color: #005dc7"
-                              ></i>
-                                <span>Word</span>
-                            </div>
-                        </div>
-                    </div>
-                </ng-template>
-
-            </div>
+          </div>
         </ng-container>
-        <ng-container *ngIf="activityType == 'Task' || activityType == 'Event' || activityType == 'Stamp'">
-            <div class="d-flex flex-column border-top mt-4 pt-4">
-                <div class="d-flex align-items-center justify-content-between">
-                    <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment" default="Tài liệu đính kèm" class="fw-bold"></codx-label>
-                    <button type="button" class="btn btn-outline-secondary" (click)="openAttach1()"><i class="icon-attach_file"></i></button>
-                </div>
-                <!-- <div class="d-flex align-items-center justify-content-between px-4">
+      </div>
+    </div>
+    <div
+      class="d-flex align-items-center justify-content-between mt-4 border-top py-4"
+      *ngIf="isAllowEdit == '1'"
+    >
+      <codx-label
+        formName="fmBPFieldGrid"
+        fiedName="lblStageAllowEdit"
+        default="Chỉnh sửa khi chạy quy trình"
+        class="fw-bold"
+      ></codx-label>
+      <codx-input
+        type="switch"
+        field="allowEdit"
+        [crrValue]="data?.settings?.allowEdit"
+        (valueChange)="valueChangeSetting($event)"
+      ></codx-input>
+    </div>
+    <div
+      class="d-flex flex-column border-top mt-4 pt-4"
+      *ngIf="activityType == 'Event'"
+    >
+      <div class="d-flex align-items-center justify-content-between">
+        <codx-label
+          formName="fmBPFieldGrid"
+          fiedName="lblTaskOwners2"
+          default="Người tham gia"
+          class="fw-bold"
+        ></codx-label>
+        <button
+          type="button"
+          class="btn btn-icon btn-sm btn-light-primary me-2"
+          (click)="sharePerm(controlShare)"
+        >
+          <i class="icon-person_add_alt_1 icon-16"></i>
+        </button>
+      </div>
+
+      <div
+        class="d-flex align-items-center justify-content-between mt-2"
+        *ngFor="let item of listUses2; let i = index"
+      >
+        <div class="d-flex align-items-center">
+          <codx-img
+            [objectId]="item?.objectID"
+            [objectType]="'AD_Users'"
+            [referType]="'avt'"
+            [width]="30"
+          ></codx-img>
+          <div class="d-flex flex-column ms-2">
+            <span>{{ item.objectName }}</span>
+          </div>
+        </div>
+        <div class="cursor-pointer" (click)="deleteUser2(i)">
+          <i class="icon-close"></i>
+        </div>
+      </div>
+    </div>
+    <ng-container *ngIf="activityType == 'Form'">
+      <div class="d-flex flex-column border-top mt-4 pt-4">
+        <codx-label
+          formName="fmBPFieldGrid"
+          fiedName="lblTaskSettingForm"
+          default="Thiết lập Form"
+          class="fw-bold"
+        ></codx-label>
+        <ng-container *ngIf="isNewForm">
+          <button
+            type="button"
+            class="btn btn-light w-100 mt-4 cursor-pointer"
+            (click)="openFormModeView()"
+          >
+            <i class="icon-i-plus"></i>
+            <codx-label
+              formName="fmBPFieldGrid"
+              fiedName="lblTaskSettings"
+              default="Thiết lập form nhập liệu"
+            ></codx-label>
+          </button>
+        </ng-container>
+        <ng-container *ngIf="!isNewForm">
+          <div
+            class="d-flex align-items-center justify-content-between cursor-pointer bg-light px-4 py-3 mt-4"
+            (click)="openFormModeView()"
+          >
+            <div class="d-flex align-items-center">
+              <i class="icon-i-file-earmark-text"></i>
+              <span class="ms-2">{{ data?.extendInfo[0]?.title }}</span>
+            </div>
+            <i class="icon-i-link-45deg"></i>
+          </div>
+        </ng-container>
+      </div>
+      <div class="d-flex flex-column border-top mt-4 pt-4">
+        <div class="d-flex align-items-center justify-content-between">
+          <codx-label
+            formName="fmBPFieldGrid"
+            fiedName="lblTaskSettingFormEsign"
+            default="Qua ký số"
+            class="fw-bold"
+          ></codx-label>
+          <codx-input
+            type="switch"
+            field="esign"
+            [crrValue]="data?.settings?.esign"
+            (valueChange)="valueChangeSetting($event)"
+          ></codx-input>
+        </div>
+      </div>
+      <div class="d-flex flex-column border-top mt-4 pt-4">
+        <div
+          class="d-flex align-items-center justify-content-between mt-2 pb-2"
+        >
+          <codx-label
+            formName="fmBPFieldGrid"
+            fiedName="lblTaskExport"
+            default="Biểu mẫu"
+            class="fw-bold"
+          ></codx-label>
+          <codx-input
+            type="switch"
+            field="isTemplate"
+            [crrValue]="data?.settings?.isTemplate"
+            (valueChange)="valueChangeSetting($event)"
+          ></codx-input>
+        </div>
+        <ng-container
+          *ngIf="data?.settings?.template?.templateID; else tmpTemplate"
+        >
+          <div
+            class="d-flex align-items-center justify-content-between cursor-pointer py-2"
+          >
+            <div
+              class="d-flex align-items-center w-100"
+              (click)="
+                addTemplate('edit', data?.settings?.template?.templateType)
+              "
+            >
+              <i
+                *ngIf="data?.settings?.template?.templateType == 'excel'"
+                class="fa-solid fa-file-excel fs-2 me-3"
+                style="color: #347442"
+              >
+              </i>
+              <i
+                *ngIf="data?.settings?.template?.templateType == 'word'"
+                class="fa-solid fa-file-word fs-2 me-3"
+                style="color: #005dc7"
+              >
+              </i>
+              <span>{{ data?.settings?.template?.templateName }}</span>
+            </div>
+            <i class="icon-close" (click)="deleteTemplate()"></i>
+          </div>
+        </ng-container>
+        <ng-template #tmpTemplate>
+          <div ngbDropdown class="d-inline-block">
+            <button
+              ngbDropdownToggle
+              [disabled]="data?.settings?.isTemplate ? false : true"
+              type="button"
+              class="btn btn-light w-100 mt-4"
+            >
+              <i class="icon-i-plus"></i>
+              <codx-label
+                formName="fmBPFieldGrid"
+                fiedName="lblTaskSelectFile"
+                default="Chọn file template"
+              ></codx-label>
+            </button>
+            <div class="w-100" ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <div
+                ngbDropdownItem
+                class="d-flex align-items-center cursor-pointer"
+                (click)="addTemplate('add', 'excel')"
+              >
+                <i
+                  class="fa-solid fa-file-excel fs-2 me-3"
+                  style="color: #347442"
+                >
+                </i>
+                <span>Excel</span>
+              </div>
+              <div
+                ngbDropdownItem
+                class="d-flex align-items-center cursor-pointer"
+                (click)="addTemplate('add', 'word')"
+              >
+                <i
+                  class="fa-solid fa-file-word fs-2 me-3"
+                  style="color: #005dc7"
+                ></i>
+                <span>Word</span>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </ng-container>
+    <ng-container
+      *ngIf="
+        activityType == 'Task' ||
+        activityType == 'Event' ||
+        activityType == 'Stamp'
+      "
+    >
+      <div class="d-flex flex-column border-top mt-4 pt-4">
+        <div class="d-flex align-items-center justify-content-between">
+          <codx-label
+            formName="fmBPFieldGrid"
+            fiedName="lblTaskAttachment"
+            default="Tài liệu đính kèm"
+            class="fw-bold"
+          ></codx-label>
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="openAttach1()"
+          >
+            <i class="icon-attach_file"></i>
+          </button>
+        </div>
+        <!-- <div class="d-flex align-items-center justify-content-between px-4">
                     <button type="button" class="btn btn-light w-100 mt-4 me-1" (click)="openFormFileProcess()"><i class="icon-i-file-earmark-text"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment1" default="Chọn từ quy trình"></codx-label></button>
                     <button type="button" class="btn btn-light w-100 mt-4 ms-1" (click)="openAttach1()"><i class="icon-attach_file"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment2" default="Đính kèm mới"></codx-label></button>
                 </div> -->
-                <div class="mt-2">
-                    <div class="d-flex flex-column py-2" *ngFor="let item of listDocument , let i = index">
-                        <codx-thumbnail
-                            [files]="item?.filess"
-                            displayThumb="simple"
-                            [hideDelete]="'1'"
-                            [hideMoreF]="'0'"
-                            [isClick]="false"
-                        >
-                        </codx-thumbnail>
-                        <span class="text-gray-500">{{item.title}}</span>
-                    </div>
-                </div>
-                <div class="mt-6">
-                    <codx-attachment #attachment hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-                    hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel"
-                    [idField]="'RecID'" [hideImageThumb]="'1'" [isSaveSelected]="'1'" [objectId]="data?.recID" [objectType]="formModel?.entityName" (fileSave)="fileSave($event)" (fileDelete)="fileDelete($event)">
-                    </codx-attachment>
-                </div>
-            </div>
-            <div class="d-flex flex-column border-top mt-4 pt-4" *ngIf="activityType == 'Task'">
-                <codx-label formName="fmBPFieldGrid" fiedName="lblTaskCheckList" default="CheckList" class="fw-bold"></codx-label>
-                <ng-container *ngFor="let cl of checkList , let indexC = index ">
-                    <div class="d-flex align-items-center mt-4">
-                        <input class="form-check-input" type="checkbox" disabled>
-                        <input class="mx-2 form-control" [value]="cl" placeholder="Thêm mục" (change)="valueChangeCheckList($event,indexC)" />
-                    </div>
-                </ng-container>
-                <div class="d-flex align-items-center mt-4 cursor-pointer">
-                    <input class="form-check-input" type="checkbox" disabled>
-                    <codx-label [default]="'Thêm mục'"  class="mx-2" (click)="addCheckList()"></codx-label>
-                </div>
-            </div>
+        <div class="mt-2">
+          <div
+            class="d-flex flex-column py-2"
+            *ngFor="let item of listDocument; let i = index"
+          >
+            <codx-thumbnail
+              [files]="item?.filess"
+              displayThumb="simple"
+              [hideDelete]="'1'"
+              [hideMoreF]="'0'"
+              [isClick]="false"
+            >
+            </codx-thumbnail>
+            <span class="text-gray-500">{{ item.title }}</span>
+          </div>
+        </div>
+        <div class="mt-6">
+          <codx-attachment
+            #attachment
+            hideImageUpload="0"
+            showMessage="0"
+            hideBtnSave="1"
+            hideFolder="1"
+            hideUploadBtn="1"
+            hideDes="1"
+            [allowMultiFile]="1"
+            [idBrowse]="'add'"
+            [hideDelete]="'0'"
+            hideMoreF="0"
+            [formModel]="formModel"
+            [idField]="'RecID'"
+            [hideImageThumb]="'1'"
+            [isSaveSelected]="'1'"
+            [objectId]="data?.recID"
+            [objectType]="formModel?.entityName"
+            (fileSave)="fileSave($event)"
+            (fileDelete)="fileDelete($event)"
+          >
+          </codx-attachment>
+        </div>
+      </div>
+      <div
+        class="d-flex flex-column border-top mt-4 pt-4"
+        *ngIf="activityType == 'Task'"
+      >
+        <codx-label
+          formName="fmBPFieldGrid"
+          fiedName="lblTaskCheckList"
+          default="CheckList"
+          class="fw-bold"
+        ></codx-label>
+        <ng-container *ngFor="let cl of checkList; let indexC = index">
+          <div class="d-flex align-items-center mt-4">
+            <input class="form-check-input" type="checkbox" disabled />
+            <input
+              class="mx-2 form-control"
+              [value]="cl"
+              placeholder="Thêm mục"
+              (change)="valueChangeCheckList($event, indexC)"
+            />
+          </div>
         </ng-container>
-        <ng-container *ngIf="activityType == 'Approve' || activityType == 'Check' || activityType == 'Sign'">
-            <div class="d-flex flex-column border-top mt-4 pt-4">
-                <div class="d-flex align-items-center justify-content-between">
-                    <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentApproval'" [default]="'Tài liệu duyệt'" class="fw-bold" *ngIf="activityType == 'Approve'"></codx-label>
-                    <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentCheck'" [default]="'Tài liệu kiểm tra'" class="fw-bold" *ngIf="activityType == 'Check'"></codx-label>
-                    <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentSign'" [default]="'Tài liệu ký số'" class="fw-bold" *ngIf="activityType == 'Sign'"></codx-label>
-                    <button type="button" class="btn btn-outline-secondary" (click)="openAttach2()"><i class="icon-attach_file"></i></button>
-                </div>
-                <div class="mt-2">
-                    <div class="d-flex flex-column w-100" *ngFor="let item of listDocument">
-                        <div class="d-flex align-items-center w-100 justify-content-between">
-                            <div class="d-flex flex-column w-100">
-                                <ng-container *ngFor="let f of item?.filess , let i = index">
-                                    <codx-thumbnail
-                                        [files]="[f]"
-                                        displayThumb="simple"
-                                        [hideDelete]="'1'"
-                                        [hideMoreF]="'0'"
-                                        [isClick]="false"
-                                        [tmpRight]="this.activityType == 'Sign' ? tmpEsign: null"
-                                    >
-                                    </codx-thumbnail>
-                                    <ng-template #tmpEsign>
-                                        <i class="icon-gesture cursor-pointer" [id]="'esign'+f.recID" [ngClass]="item?.files[i]?.eSign == true ? 'text-primary' : ''" (click)="selectEsign(f.recID , item.recID)"></i>
-                                    </ng-template>
-                                </ng-container>
-                                <span class="text-gray-500 mb-2">{{item.title}}</span>
-                            </div>
-                           
-                        </div>
-                        <ng-template #tmpRightAttach let-file>
-                            <div >
-                              <codx-input type="checkbox" [checked]="true"
-                                (valueChange)="fileCheckChange($event,file)"></codx-input>
-                            </div>
-                          </ng-template>
-                    </div>
-                    <button *ngIf="this.activityType=='Sign'" (click)="esign()" 
-                        class="pt-3 mt-4 btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
-                        <span class="icon-design_services btn-text-primary me-2"></span>
-                        <codx-label name="lblUploadFile" default="Thiết lập vùng ký"></codx-label>
-                    </button>
-                </div>
-                <div class="mt-6">
-                   <codx-attachment #attachment2 hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-                    hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel"
-                    [idField]="'RecID'" [hideImageThumb]="'1'" [isSaveSelected]="'1'" [objectId]="data?.recID" [objectType]="formModel?.entityName" (fileSave)="fileSave($event)" (fileDelete)="fileDelete($event)">
-                    </codx-attachment>
-                </div> 
-            </div>
-        </ng-container>
-        <ng-container *ngIf="activityType == 'Email'">
-            <div class="d-flex flex-column border-top mt-4 pt-4">
-                <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSettingEmail" default="Mẫu email" class="fw-bold"></codx-label>
-                <button type="button" class="btn btn-light w-100 mt-4 cursor-pointer" (click)="settingEmail()"><i class="icon-email"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSettingsEditEmail" default="Thiết lập/chỉnh sửa mẫu email"></codx-label></button>
-            </div>
-
-            <div class="d-flex flex-column mt-2" [ngClass]="showEmail ? 'visible' : 'invisible h-0px'">
-                <div class="d-flex align-items-center">
-                    <codx-label default="To:"></codx-label>
-                    <div class="w-100 ms-2 py-2 border-bottom d-flex align-items-center justify-content-between">
-                        <div class="d-flex flex-wrap align-items-center w-100">
-                            <div class="d-flex align-items-center badge badge-light fs-base p-1 mx-2 my-1" *ngFor="let item of listTo">
-                                <codx-img [objectId]="item.objectID" [objectType]="'AD_Users'" [width]="20"></codx-img>
-                                <span class="mx-2">{{item.objectName}}</span>
-                                <i class="icon-close cursor-pointer"></i>
-                            </div>
-                        </div>
-                        <codx-input type="Combobox" [refValue]="'Share_Users'" [showInput]="false"
-                            refType="P" field="popup"
-                            (valueChange)="valueChangeEmail($event,'to')"
-                        >
-                        </codx-input>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mt-2">
-                    <codx-label default="CC:"></codx-label>
-                    <div class="w-100 ms-2 py-2 border-bottom d-flex align-items-center justify-content-between">
-                        <div class="d-flex flex-wrap align-items-center w-100">
-                            <div class="d-flex align-items-center badge badge-light fs-base mx-2 p-1 my-1" *ngFor="let item of listCC">
-                                <codx-img [objectId]="item.objectID"  [objectType]="'AD_Users'"></codx-img>
-                                <span class="mx-2">{{item.objectName}}</span>
-                                <i class="icon-close cursor-pointer"></i>
-                            </div>
-                        </div>
-                        <codx-input type="Combobox" [refValue]="'Share_Users'" [showInput]="false"
-                            refType="P" field="popup"
-                            (valueChange)="valueChangeEmail($event,'cc')"
-                        >
-                        </codx-input>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mt-4">
-                    <codx-label default="Tiêu đề:" class="w-60px"></codx-label>
-                    <codx-input type="text" field="subject" ngClass="ms-2 w-100" (valueChange)="valueChangeTextEmail($event)"></codx-input>
-                </div>
-                <div class="d-flex flex-column mt-4">
-                    <codx-label default="Nội dung:"></codx-label>
-                    <codx-input type="textarea" field="message" (valueChange)="valueChangeTextEmail($event)"></codx-input>
-                </div>
-            </div>
-        </ng-container>
-       
+        <div class="d-flex align-items-center mt-4 cursor-pointer">
+          <input class="form-check-input" type="checkbox" disabled />
+          <codx-label
+            [default]="'Thêm mục'"
+            class="mx-2"
+            (click)="addCheckList()"
+          ></codx-label>
+        </div>
+      </div>
     </ng-container>
+    <ng-container
+      *ngIf="
+        activityType == 'Approve' ||
+        activityType == 'Check' ||
+        activityType == 'Sign'
+      "
+    >
+      <div class="d-flex flex-column border-top mt-4 pt-4">
+        <div class="d-flex align-items-center justify-content-between">
+          <codx-label
+            formName="fmBPFieldGrid"
+            [fiedName]="'lblTaskAttachmentApproval'"
+            [default]="'Tài liệu duyệt'"
+            class="fw-bold"
+            *ngIf="activityType == 'Approve'"
+          ></codx-label>
+          <codx-label
+            formName="fmBPFieldGrid"
+            [fiedName]="'lblTaskAttachmentCheck'"
+            [default]="'Tài liệu kiểm tra'"
+            class="fw-bold"
+            *ngIf="activityType == 'Check'"
+          ></codx-label>
+          <codx-label
+            formName="fmBPFieldGrid"
+            [fiedName]="'lblTaskAttachmentSign'"
+            [default]="'Tài liệu ký số'"
+            class="fw-bold"
+            *ngIf="activityType == 'Sign'"
+          ></codx-label>
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="openAttach2()"
+          >
+            <i class="icon-attach_file"></i>
+          </button>
+        </div>
+        <div class="mt-2">
+          <div
+            class="d-flex flex-column w-100"
+            *ngFor="let item of listDocument"
+          >
+            <div
+              class="d-flex align-items-center w-100 justify-content-between"
+            >
+              <div class="d-flex flex-column w-100">
+                <ng-container *ngFor="let f of item?.filess; let i = index">
+                  <codx-thumbnail
+                    [files]="[f]"
+                    displayThumb="simple"
+                    [hideDelete]="'1'"
+                    [hideMoreF]="'0'"
+                    [isClick]="false"
+                    [tmpRight]="this.activityType == 'Sign' ? tmpEsign : null"
+                  >
+                  </codx-thumbnail>
+                  <ng-template #tmpEsign>
+                    <i
+                      class="icon-gesture cursor-pointer"
+                      [id]="'esign' + f.recID"
+                      [ngClass]="
+                        item?.files[i]?.eSign == true ? 'text-primary' : ''
+                      "
+                      (click)="selectEsign(f.recID, item.recID)"
+                    ></i>
+                  </ng-template>
+                </ng-container>
+                <span class="text-gray-500 mb-2">{{ item.title }}</span>
+              </div>
+            </div>
+            <ng-template #tmpRightAttach let-file>
+              <div>
+                <codx-input
+                  type="checkbox"
+                  [checked]="true"
+                  (valueChange)="fileCheckChange($event, file)"
+                ></codx-input>
+              </div>
+            </ng-template>
+          </div>
+          <button
+            *ngIf="this.activityType == 'Sign'"
+            (click)="esign()"
+            class="pt-3 mt-4 btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
+          >
+            <span class="icon-design_services btn-text-primary me-2"></span>
+            <codx-label
+              name="lblUploadFile"
+              default="Thiết lập vùng ký"
+            ></codx-label>
+          </button>
+        </div>
+        <div class="mt-6">
+          <codx-attachment
+            #attachment2
+            hideImageUpload="0"
+            showMessage="0"
+            hideBtnSave="1"
+            hideFolder="1"
+            hideUploadBtn="1"
+            hideDes="1"
+            [allowMultiFile]="1"
+            [idBrowse]="'add'"
+            [hideDelete]="'0'"
+            hideMoreF="0"
+            [formModel]="formModel"
+            [idField]="'RecID'"
+            [hideImageThumb]="'1'"
+            [isSaveSelected]="'1'"
+            [objectId]="data?.recID"
+            [objectType]="formModel?.entityName"
+            (fileSave)="fileSave($event)"
+            (fileDelete)="fileDelete($event)"
+          >
+          </codx-attachment>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="activityType == 'Email'">
+      <div class="d-flex flex-column border-top mt-4 pt-4">
+        <codx-label
+          formName="fmBPFieldGrid"
+          fiedName="lblTaskSettingEmail"
+          default="Mẫu email"
+          class="fw-bold"
+        ></codx-label>
+        <button
+          type="button"
+          class="btn btn-light w-100 mt-4 cursor-pointer"
+          (click)="settingEmail()"
+        >
+          <i class="icon-email"></i>
+          <codx-label
+            formName="fmBPFieldGrid"
+            fiedName="lblTaskSettingsEditEmail"
+            default="Thiết lập/chỉnh sửa mẫu email"
+          ></codx-label>
+        </button>
+      </div>
+
+      <div
+        class="d-flex flex-column mt-2"
+        [ngClass]="showEmail ? 'visible' : 'invisible h-0px'"
+      >
+        <div class="d-flex align-items-center">
+          <codx-label default="To:"></codx-label>
+          <div
+            class="w-100 ms-2 py-2 border-bottom d-flex align-items-center justify-content-between"
+          >
+            <div class="d-flex flex-wrap align-items-center w-100">
+              <div
+                class="d-flex align-items-center badge badge-light fs-base p-1 mx-2 my-1"
+                *ngFor="let item of listTo"
+              >
+                <codx-img
+                  [objectId]="item.objectID"
+                  [objectType]="'AD_Users'"
+                  [width]="20"
+                ></codx-img>
+                <span class="mx-2">
+                  {{
+                    item.objectName != null && item.objectName != ""
+                      ? item.objectName
+                      : (item.objectID | formatCombobox : "Users" | async)
+                  }}</span
+                >
+                <i class="icon-close cursor-pointer"></i>
+              </div>
+            </div>
+            <codx-input
+              type="Combobox"
+              [refValue]="'Share_Users'"
+              [showInput]="false"
+              refType="P"
+              field="popup"
+              (valueChange)="valueChangeEmail($event, 'to')"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="d-flex align-items-center mt-2">
+          <codx-label default="CC:"></codx-label>
+          <div
+            class="w-100 ms-2 py-2 border-bottom d-flex align-items-center justify-content-between"
+          >
+            <div class="d-flex flex-wrap align-items-center w-100">
+              <div
+                class="d-flex align-items-center badge badge-light fs-base mx-2 p-1 my-1"
+                *ngFor="let item of listCC"
+              >
+                <codx-img
+                  [objectId]="item.objectID"
+                  [objectType]="'AD_Users'"
+                ></codx-img>
+                <span class="mx-2">{{
+                  item.objectName != null && item.objectName != ""
+                    ? item.objectName
+                    : (item.objectID | formatCombobox : "Users" | async)
+                }}</span>
+                <i class="icon-close cursor-pointer"></i>
+              </div>
+            </div>
+            <codx-input
+              type="Combobox"
+              [refValue]="'Share_Users'"
+              [showInput]="false"
+              refType="P"
+              field="popup"
+              (valueChange)="valueChangeEmail($event, 'cc')"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="d-flex align-items-center mt-4">
+          <codx-label default="Tiêu đề:" class="w-60px"></codx-label>
+          <codx-input
+            type="text"
+            field="subject"
+            ngClass="ms-2 w-100"
+            (valueChange)="valueChangeTextEmail($event)"
+          ></codx-input>
+        </div>
+        <div class="d-flex flex-column mt-4">
+          <codx-label default="Nội dung:"></codx-label>
+          <codx-input
+            type="textarea"
+            field="message"
+            (valueChange)="valueChangeTextEmail($event)"
+          ></codx-input>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
 </div>
 <ng-template #elsNextStep>
-    <codx-label formName="fmBPFieldGrid" fiedName="lblTaskPerdicateNoNextStep" default="Chưa chọn hành động xử lý tiếp theo"></codx-label>
+  <codx-label
+    formName="fmBPFieldGrid"
+    fiedName="lblTaskPerdicateNoNextStep"
+    default="Chưa chọn hành động xử lý tiếp theo"
+  ></codx-label>
 </ng-template>
 <ng-template #controlShare let-dialogControl>
-    <codx-share
-      [dialog]="dialogControl"
-      [multiple]="multiple"
-      [listCombobox]="listCombobox"
-      (eventApply)="valueChangeUser($event)"
-      (showCheck)="showCheck($event)"
-      [chkParent]="'P'"
-      [listName]="vllShare"
-    >
-    </codx-share>
-  </ng-template>
+  <codx-share
+    [dialog]="dialogControl"
+    [multiple]="multiple"
+    [listCombobox]="listCombobox"
+    (eventApply)="valueChangeUser($event)"
+    (showCheck)="showCheck($event)"
+    [chkParent]="'P'"
+    [listName]="vllShare"
+  >
+  </codx-share>
+</ng-template>

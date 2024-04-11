@@ -18,6 +18,7 @@ import { NewsTagComponent } from './news-tag/view-tag.component';
 import { ViewVideoComponent } from './view-video/view-video.component';
 import { PopupAddCommentComponent } from './popup/popup-add-comment/popup-add-comment.component';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { LayoutComponent } from '../knowledge/_layout/layout/layout.component';
 export const routes: Routes = [
   {
     path: 'news',
@@ -70,7 +71,7 @@ export const routes: Routes = [
     path: '**',
     redirectTo: 'news/WPT02/home',
     pathMatch: 'full',
-},
+  },
 ];
 
 const Component: Type<any>[] = [
@@ -84,7 +85,6 @@ const Component: Type<any>[] = [
   AppropvalNewsComponent,
   AppropvalNewsDetailComponent,
   PopupAddCommentComponent,
-  
 ];
 
 @NgModule({

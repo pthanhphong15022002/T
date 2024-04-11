@@ -88,7 +88,6 @@ export class Post {
     this.allowShare = false;
     this.createPost = false;
     this.contents = "";
-    this.permissions = [];
     this.startDate = new Date();
     this.endDate = null;
     this.views = 0;

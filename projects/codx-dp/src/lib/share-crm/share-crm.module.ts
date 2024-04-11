@@ -44,6 +44,7 @@ import { RouterModule } from '@angular/router';
 import { CodxListStepComponent} from './codx-list-step/codx-list-step.component';
 import { ActivitiesComponent} from './codx-list-step/activities/activities.component';
 import { CodxShareTaskComponent } from './codx-step/codx-share-task/codx-share-task.component';
+import { checkRoleShare } from './codx-step/pipes/check-role-share.pipe';
 
 const T_Component: Type<any>[] = [
   CodxStepTaskComponent,
@@ -75,6 +76,7 @@ const T_Pipe: Type<any>[] = [
   ChangeMemoryCellsPipe,
   CheckRoleStepPipe,
   SetColorTaskPipe,
+  checkRoleShare
 ];
 
 @NgModule({
