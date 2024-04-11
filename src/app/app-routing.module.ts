@@ -77,6 +77,15 @@ var childAuthRoutes: Routes = [
       ),
   },
   {
+    path: 'wp4',
+    canActivate: [AuthGuard],
+    data: { noReuse: true },
+    loadChildren: () =>
+      import('projects/codx-wp/src/lib/knowledge/knowledge.module').then(
+        (m) => m.CodxKnowledgeModule
+      ),
+  },
+  {
     path: 'dm',
     canActivate: [AuthGuard],
     loadChildren: () =>

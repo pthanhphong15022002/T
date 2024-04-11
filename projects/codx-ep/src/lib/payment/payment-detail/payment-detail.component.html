@@ -52,8 +52,10 @@
         <div *ngIf="data?.refID" class="form-group">
             <div class="d-flex align-items-center">
                 <codx-img [objectId]="data.refID" [objectName]="data?.refType" [objectType]="'EP_Requests'" [width]="30" class="me-4"></codx-img>
-                <div class="text-dark" *ngIf="data?.refRequestMemo">
-                    <span>{{data.refRequestMemo}}</span>
+                <div class="d-flex" *ngIf="data?.refRequestMemo">
+                    <span *ngIf="data.refRequestMemo" class="fw-bold">{{data.refRequestMemo}}</span>
+                    <span *ngIf="data.refRequestMemo && data.refRequestNo" class="mx-1">-</span>
+                    <span *ngIf="data.refRequestNo" class="text-gray-600">{{data.refRequestNo}}</span>
                 </div>
             </div>
         </div>
@@ -78,22 +80,30 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-flex flex-column align-items-end w-100">
-                    <div class="d-flex text-dark pt-1 ps-4 mb-2 border-top border-light border-2">
-                        <div class="me-6">Tổng cộng:</div>
-                        <div *ngIf="data?.totalAmount" [innerHTML]="data.totalAmount | formatvalue : view.formModel : 'requestAmt' | async"></div>
+                <div class="d-flex justify-content-end text-dark pt-1 ps-4 mb-2 border-top border-light border-2">
+                    <div class="text-left me-6">
+                        <div class="d-flex mb-2">
+                            <codx-label [formModel]="view.formModel" name="lblLabel2" [default]="'Tổng cộng'"></codx-label>
+                            <span>:</span>
+                        </div>
+                        <div class="d-flex text-warning mb-2">
+                            <codx-label [formModel]="view.formModel" name="lblLabel3" [default]="'Đã tạm ứng'"></codx-label>
+                            <span>:</span>
+                        </div>
+                        <div class="d-flex mb-2">
+                            <codx-label [formModel]="view.formModel" name="lblLabel4" [default]="'Còn phải chi'"></codx-label>
+                            <span>:</span>
+                        </div>
+                        <div class="d-flex mb-2">
+                            <codx-label [formModel]="view.formModel" name="lblLabel5" [default]="'Thanh toán bằng'"></codx-label>
+                            <span>:</span>
+                        </div>
                     </div>
-                    <div class="d-flex text-warning mb-2">
-                        <div class="me-6">Đã tạm ứng:</div>
-                        <div *ngIf="data?.refRequestAmt" [innerHTML]="data.refRequestAmt | formatvalue : view.formModel : 'requestAmt' | async"></div>
-                    </div>
-                    <div class="d-flex fw-bold mb-2">
-                        <div class="me-6">Còn phải chi:</div>
-                        <div *ngIf="data?.totalAmount && data?.refRequestAmt" [innerHTML]="(data.totalAmount - data.refRequestAmt) | formatvalue : view.formModel : 'requestAmt' | async"></div>
-                    </div>
-                    <div class="d-flex text-gray-600">
-                        <div class="me-6">Thanh toán bằng:</div>
-                        <div [innerHTML]="data?.refPmtMethodID | formatvalue : view.formModel : 'pmtMethodID' | async"></div>
+                    <div class="text-right">
+                        <div class="mb-2" [innerHTML]="data?.totalAmount | formatvalue : view.formModel : 'requestAmt' | async"></div>
+                        <div class="mb-2" [innerHTML]="data?.refRequestAmt | formatvalue : view.formModel : 'requestAmt' | async"></div>
+                        <div class="mb-2" [innerHTML]="(data?.totalAmount - data?.requestAmt) | formatvalue : view.formModel : 'requestAmt' | async"></div>
+                        <div class="mb-2" [innerHTML]="data?.pmtMethodID | formatvalue : view.formModel : 'pmtMethodID' | async"></div>
                     </div>
                 </div>
             </div>

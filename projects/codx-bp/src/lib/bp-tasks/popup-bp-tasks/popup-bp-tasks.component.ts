@@ -22,10 +22,13 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { isObservable } from 'rxjs';
+import { firstValueFrom, isObservable } from 'rxjs';
 import { CodxBpService } from '../../codx-bp.service';
 import { CoDxAddApproversComponent } from 'projects/codx-common/src/lib/component/codx-approval-procress/codx-add-approvers/codx-add-approvers.component';
-import { BP_DocumentControl, BP_Files } from '../../models/BP_DocumentControl.model';
+import {
+  BP_DocumentControl,
+  BP_Files,
+} from '../../models/BP_DocumentControl.model';
 
 @Component({
   selector: 'lib-popup-bp-tasks',
@@ -198,25 +201,31 @@ export class PopupBpTasksComponent implements OnInit {
     } else this.info = info;
   }
 
-  onSaveTask(){
+  onSaveTask() {
     if (this.checkList?.length > 0) {
-      this.checkList=this.checkList.filter(x=>x.taskName?.trim()?.length>0)
+      this.checkList = this.checkList.filter(
+        (x) => x.taskName?.trim()?.length > 0
+      );
     }
-    this.bpSv.checkListTask(this.data?.recID, this.checkList).subscribe(res=>{
-      if(res){
-        this.dialog && this.dialog.close();
-      }
-    })
+    this.bpSv
+      .checkListTask(this.data?.recID, this.checkList)
+      .subscribe((res) => {
+        if (res) {
+          this.dialog && this.dialog.close();
+        }
+      });
   }
 
   async onSave(status = '5') {
     if (this.checkList?.length > 0) {
       if (this.checkList?.length > 0) {
-        this.checkList=this.checkList.filter(x=>x.taskName?.trim()?.length>0)
+        this.checkList = this.checkList.filter(
+          (x) => x.taskName?.trim()?.length > 0
+        );
       }
     }
 
-    if(this.attachment?.fileUploadList?.length>0){
+    if (this.attachment?.fileUploadList?.length > 0) {
       if (
         this.attachment.fileUploadList &&
         this.attachment.fileUploadList.length > 0
@@ -227,64 +236,83 @@ export class PopupBpTasksComponent implements OnInit {
           (uploaded: any) => {
             if (uploaded) {
               this.attDoc.stepID = this.data?.stepID;
-              this.attDoc.stepNo =this.data?.indexNo;
-              this.attDoc.title=this.data?.taskName;
-              this.attDoc.permissions=this.data?.permissions;
-              this.attDoc.files=[];
-              let arrFile=[]
-              if(uploaded?.length>1)
-              {
-                arrFile=uploaded;
+              this.attDoc.stepNo = this.data?.indexNo;
+              this.attDoc.title = this.data?.taskName;
+              this.attDoc.permissions = this.data?.permissions;
+              this.attDoc.files = [];
+              let arrFile = [];
+              if (uploaded?.length > 1) {
+                arrFile = uploaded;
+              } else {
+                arrFile = [uploaded];
               }
-              else{ 
-                arrFile =[uploaded]
-              }
-              Array.from(arrFile).forEach((f:any)=>{
-                if(f?.data){
+              Array.from(arrFile).forEach((f: any) => {
+                if (f?.data) {
                   let docFile = new BP_Files();
                   docFile.fileID = f?.data?.recID;
                   docFile.fileName = f?.data?.fileName;
                   docFile.esign = false;
-                  docFile.type="1";      
+                  docFile.type = '1';
                   this.attDoc.files.push(docFile);
                 }
               });
             }
-            
-            this.bpSv.addDocControl(this.dataIns?.recID,this.data?.recID, [this.attDoc]).subscribe(added=>{
-              if(added ==null){
-                
-              }              
-              this.updateTaskStatus(status);
-            })
 
+            this.bpSv
+              .addDocControl(this.dataIns?.recID, this.data?.recID, [
+                this.attDoc,
+              ])
+              .subscribe((added) => {
+                if (added == null) {
+                }
+                this.updateTaskStatus(status);
+              });
           }
         );
       }
-    }
-    else{
+    } else {
       this.updateTaskStatus(status);
     }
-
-    
   }
-  updateTaskStatus(status){
+  updateTaskStatus(status) {
     //Update Task Status test
-    this.bpSv.updateStatusTask(this.data.recID, status,this.checkList).subscribe((res) => {
+    this.bpSv
+      .updateStatusTask(this.data.recID, status, this.checkList)
+      .subscribe((res) => {
         if (res) {
           if (this.data.activityType != 'Sign')
             this.notiService.notifyCode('SYS034');
-          this.dialog && this.dialog.close({task:res});
+          this.dialog && this.dialog.close({ task: res });
         }
       });
   }
-  
 
-  sendMail() {
+  async sendMail(item) {
+    let tempID = '';
+    if (item && item.settings) {
+      const settings = JSON.parse(item.settings);
+      tempID = settings?.templateID;
+    }
+    let result = await firstValueFrom(
+      this.api.execSv<any>(
+        'BG',
+        'BG',
+        'EmailsBusiness',
+        'GetItemByRecIDToEmailTemplateAsync',
+        tempID
+      )
+    );
+
+    let dataMail = result && result[0] ? result[0] : null;
+    let lstUser = result && result[1] ? result[1] : [];
+    let email = {
+      subject: dataMail?.subject,
+      message: dataMail?.message
+    }
     let data = {
       dialog: this.dialog,
       formGroup: null,
-      templateID: '',
+      templateID: null,
       showIsTemplate: true,
       showIsPublish: true,
       showSendLater: true,
@@ -292,6 +320,9 @@ export class PopupBpTasksComponent implements OnInit {
       isAddNew: false,
       notSendMail: false,
       saveIsTemplate: false,
+      dataMail: dataMail,
+      lstUser: lstUser,
+      email: email
     };
     let opt = new DialogModel();
     opt.zIndex = 20000;
@@ -305,6 +336,11 @@ export class PopupBpTasksComponent implements OnInit {
       '',
       opt
     );
+    popEmail.closed.subscribe((sendMail) => {
+      if (sendMail?.event?.isSendMail) {
+        this.onSave('5');
+      }
+    });
   }
 
   valueChange(e) {
@@ -314,7 +350,7 @@ export class PopupBpTasksComponent implements OnInit {
 
   //#region ActivityType = 'Task'
   addCheckList() {
-    if (!this.privileged) return;
+    if (!this.privileged || this.data.status == '5') return;
     let obj = {
       recID: Util.uid(),
       taskName: '',
@@ -346,10 +382,7 @@ export class PopupBpTasksComponent implements OnInit {
   addFile(evt: any) {
     this.attachment.uploadFile();
   }
-  fileAdded(e) {
-    
-
-  }
+  fileAdded(e) {}
   getfileCount(e) {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
@@ -358,20 +391,29 @@ export class PopupBpTasksComponent implements OnInit {
   dataChange(e: any) {
     this.data = e[0];
     this.dataIns = e[1];
-    this.dialog.close({task:this.data,ins:this.dataIns});
+    this.dialog.close({ task: this.data, ins: this.dataIns });
   }
-  authority(){
-    let dialogAuthority = this.callfc.openForm(CoDxAddApproversComponent,'',500,250,'',{mode:'1'});
-    dialogAuthority.closed.subscribe(res=>{
-      if(res?.event){
-        this.bpSv.authorityTask(this.data.recID,res?.event).subscribe(res=>{
-          if(res){
-            this.notiService.notifyCode('SYS034');
-            this.dialog && this.dialog.close();
-          }
-        })
+  authority() {
+    let dialogAuthority = this.callfc.openForm(
+      CoDxAddApproversComponent,
+      '',
+      500,
+      250,
+      '',
+      { mode: '1' }
+    );
+    dialogAuthority.closed.subscribe((res) => {
+      if (res?.event) {
+        this.bpSv
+          .authorityTask(this.data.recID, res?.event)
+          .subscribe((res) => {
+            if (res) {
+              this.notiService.notifyCode('SYS034');
+              this.dialog && this.dialog.close();
+            }
+          });
       }
-    })
+    });
   }
 
   return() {

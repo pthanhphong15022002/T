@@ -245,7 +245,10 @@ export class PopupAddBusinesstripComponent implements OnInit,AfterViewInit,OnDes
         if(event.component.itemsSelected.length > 0)
         {
           this.BSReason = event.component.itemsSelected[0];
-          this.data.memo =  this.BSReason.ReasonName + " " + this.data.memo;
+          if(this.data.memo)
+            this.data.memo =  this.BSReason.ReasonName + " " + this.data.memo;
+          else 
+            this.data.memo =  this.BSReason.ReasonName;
         }
         else this.BSReason = null;
         break;
@@ -378,7 +381,6 @@ export class PopupAddBusinesstripComponent implements OnInit,AfterViewInit,OnDes
   }
 
   onSave(isRelease:boolean = false){
-    debugger
     if(this.actionType == "edit")
     {
       this.data._isEdit = true;
