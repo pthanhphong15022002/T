@@ -112,6 +112,8 @@ export class PaymentComponent extends UIComponent implements AfterViewInit,OnDes
         this.viewDetail(data);
         break;
       case"WSCO0413":
+      case"WSCO0431":
+
         if(!data) data = this.view.dataService.dataSelected;
         this.release(data);
         break;
@@ -226,7 +228,6 @@ export class PaymentComponent extends UIComponent implements AfterViewInit,OnDes
     }
   }
 
-
   release(data:any){
     if(data)
     {
@@ -237,9 +238,32 @@ export class PaymentComponent extends UIComponent implements AfterViewInit,OnDes
   callBackRelease(res:any,t:any){
     if(res?.rowCount > 0)
     {
-      t.notiSV.notify("Gửi duyệt thành công"); // chưa có mssgCode
+      t.notiSV.notify("SYS019");
+      t.view.dataService.dataSelected.status =  res.returnStatus;
+      t.view.dataService.update(t.view.dataService.dataSelected).subscribe();
       t.detectorRef.detectChanges();
     }
-    else t.notiSV.notify("Gửi duyệt không thành công",2);
+    else if(res.msgCodeError == "ES028")
+    {
+      this.updateStatus(t.view.dataService.dataSelected);
+    }
+    else t.notiSV.notify("Gửi duyệt không thành công","2");
+  }
+
+  updateStatus(data:any){
+    if(data)
+    {
+      let subcribeApi =  this.api.execSv("EP","EP","RequestsBusiness","UpdateStatusAsync",data.recID)
+      .subscribe((res:any) => {
+        if(res)
+        {
+          this.view.dataService.dataSelected.status = "5";
+          this.paymentDetail.loadRequestDetail(this.view.dataService.dataSelected.recID);
+          this.notiSV.notifyCode("SYS019"); 
+        }
+        else this.notiSV.notify("Gửi duyệt không thành công","2");
+      });
+      this.subcriptions.add(subcribeApi);
+    }
   }
 }

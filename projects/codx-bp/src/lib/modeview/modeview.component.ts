@@ -96,17 +96,20 @@ export class ModeviewComponent implements OnInit {
     let data2 =[];
     let data3 =[];
     item.datas.forEach(elm => {
-      if(this.basic.includes(elm.value)) {
-        elm.groupType = 0;
-        data1.push(elm);
-      }
-      else if(elm.value != 'Title' && elm.value != 'SubTitle') {
-        elm.groupType = 1;
-        data2.push(elm);
-      }
-      else 
+      if(elm.value != 'User' &&  elm.value != 'Share')
       {
-        data3.push(elm);
+        if(this.basic.includes(elm.value)) {
+          elm.groupType = 0;
+          data1.push(elm);
+        }
+        else if(elm.value != 'Title' && elm.value != 'SubTitle') {
+          elm.groupType = 1;
+          data2.push(elm);
+        }
+        else 
+        {
+          data3.push(elm);
+        }
       }
     }); 
     item.datas = data1.concat(data2.concat(data3));
@@ -143,6 +146,8 @@ export class ModeviewComponent implements OnInit {
           elm.documentControl = typeof elm.documentControl == 'string' ? JSON.parse(elm.documentControl) :  elm.documentControl;
           this.formatAttachment(elm)
         }
+
+        elm.validateControl = (typeof elm.validateControl == 'string' && elm.validateControl) ? JSON.parse(elm.validateControl) :  elm.validateControl;
         elm.text = vlls[indexs].text;
         elm.icon = vlls[indexs].icon;
         elm.textColor = vlls[indexs].textColor;
@@ -548,13 +553,17 @@ export class ModeviewComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
-     
-      this.table[event.container.data[0].columnOrder].children.forEach((elm,i)=>{
-        elm.columnNo = i
-      });
-      
-      this.table[event.previousContainer.data[0].columnOrder].children.forEach((elm,i)=>{
-        elm.columnNo = i
+      let arr = [];
+      if(event.container.data.length>0) arr.push(event.container.data[0].columnOrder)
+      if(event.previousContainer.data.length>0) arr.push(event.previousContainer.data[0].columnOrder)
+      arr.forEach(elm=>{
+        let index = this.table.findIndex(x=>x.columnOrder == elm);
+        if(index>=0)
+        {
+          this.table[index].children.forEach((elm2,i)=>{
+            elm2.columnNo = i
+          });
+        }
       })
     }
 
@@ -621,7 +630,12 @@ export class ModeviewComponent implements OnInit {
     }
     else {
       e.fieldName = this.formatTitle(e.title,e.columnOrder,e.columnNo);
-      this.table[e?.columnOrder].children[e.columnNo] = e;
+
+      let index = this.table.findIndex(x=>x.columnOrder == e?.columnOrder);
+      if(index>=0)
+      {
+        this.table[index].children[e.columnNo] = e;
+      }
       if(e?.fieldType == "Attachment")
       {
         if(Array.isArray(e.documentControl) && e.documentControl.length>0)

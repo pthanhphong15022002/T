@@ -57,12 +57,12 @@ export class MyInstancesComponent
   }
 
   onInit(): void {
-    this.request = new ResourceModel();
-    this.request.service = 'BP';
-    this.request.assemblyName = 'BP';
-    this.request.className = 'ProcessInstancesBusiness';
-    this.request.method = 'GetListInstancesByTaskAsync';
-    this.request.idField ='recID';
+    // this.request = new ResourceModel();
+    // this.request.service = 'BP';
+    // this.request.assemblyName = 'BP';
+    // this.request.className = 'ProcessInstancesBusiness';
+    // this.request.method = 'GetListInstancesByTaskAsync';
+    // this.request.idField ='recID';
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'BP';
     this.resourceKanban.assemblyName = 'BP';

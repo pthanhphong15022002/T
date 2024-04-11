@@ -6,6 +6,7 @@ import {
   Optional,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -33,7 +34,8 @@ import { ProcessReleaseDetailComponent } from './process-release-detail/process-
 @Component({
   selector: 'lib-process-release',
   templateUrl: './process-release.component.html',
-  styleUrls: ['./process-release.component.css'],
+  styleUrls: ['./process-release.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ProcessReleaseComponent implements OnInit, AfterViewInit {
   @ViewChild('view') view: ViewsComponent;
@@ -271,7 +273,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         data
       )
       .subscribe((item) => {
-       
+
       });
   }
   clickMF(e: any) {
@@ -314,13 +316,13 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     if(e?.length>0){
       e.forEach((mf:any)=>{
         if(this.dataSelected?.status =='1'){
-             
+
           if(mf?.functionID =='BPT01011' || mf?.functionID =='SYS02' || mf?.functionID =='SYS03'){
             mf.disabled=true;
           }
           if((mf?.functionID =='BPT01011' || mf?.functionID =='SYS02' || mf?.functionID =='SYS03') && (this.user?.userID == this.dataSelected?.createdBy || this.user.administrator)){
             mf.disabled=false;
-          }  
+          }
         }
         if(this.dataSelected?.status !='1' && this.dataSelected?.status !='5'){
           if(mf?.functionID =='BPT01011'|| mf?.functionID =='SYS02' || mf?.functionID =='SYS03'){
@@ -352,7 +354,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
           this.notifiSer.notifyCode('SYS034');
           (this.view.currentView as any).kanban.updateCard(data);
           this.view.dataService.update(data).subscribe();
-          
+
         }
       });
   }

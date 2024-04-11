@@ -110,7 +110,11 @@ export class PopupAddPaymentComponent implements OnInit,AfterViewInit,OnDestroy 
       {
         this.data = res;
         if(res.lines)
-          this.data.totalAmount = res.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
+        {
+          let total = res.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
+          this.data.totalAmount = total;
+          this.data.requestAmt = total;
+        }
         if(res.refID)
           this.getRefRequest(this.data.refID);
         this.detectorChange.detectChanges();
@@ -126,8 +130,6 @@ export class PopupAddPaymentComponent implements OnInit,AfterViewInit,OnDestroy 
       {
         this.data.employeeID = res.employeeID;
         this.data.positionID = res.positionID;
-        this.data.requester = res.requester;
-        this.data.requesterName = res.requesterName;
         this.data.requestType = res.requestType;
         this.data.toDate = res.toDate;
         this.data.reasonID = res.reasonID;
@@ -161,8 +163,8 @@ export class PopupAddPaymentComponent implements OnInit,AfterViewInit,OnDestroy 
       {
         this.RefEPRequest = res;
         this.data.pmtMethodID = res.pmtMethodID;
-        if(res.status > 5)
-          this.data.requestAmt = this.data.requestAmt - this.RefEPRequest.requestAmt;
+        if(this.RefEPRequest.status <= 5)
+          this.RefEPRequest.requestAmt = 0;
         this.detectorChange.detectChanges();
       }
     });
@@ -176,8 +178,10 @@ export class PopupAddPaymentComponent implements OnInit,AfterViewInit,OnDestroy 
       {
         this.RefEPRequest = res;
         this.data.pmtMethodID = res.pmtMethodID;
-        if(res.status > 5)
-          this.data.requestAmt = this.data.requestAmt - this.RefEPRequest.requestAmt;
+        if(res.status <= 5)
+        {
+          this.RefEPRequest.requestAmt = 0;
+        }
       }
       this.detectorChange.detectChanges();
     });
@@ -195,11 +199,6 @@ export class PopupAddPaymentComponent implements OnInit,AfterViewInit,OnDestroy 
         this.data.employeeName = value.EmployeeName;
         this.data.phone = value.Mobile;
         this.data.email = value.Email;
-        this.data.requester = value.UserID;
-        this.data.requesterName = value.UserName;
-        this.data.positionID = value.PositionID;
-        this.data.bUID = value.BUID;
-        this.data.owner = value.UserID;
         break;
       case "reasonID":
         value = event.data;
@@ -220,6 +219,7 @@ export class PopupAddPaymentComponent implements OnInit,AfterViewInit,OnDestroy 
           this.data.refID = value.RecID;
           this.data.refType = value.RequestType;
           this.data.refNo = value.RequestNo;
+          this.data.pmtMethodID = value.PmtMethodID;
           this.getRefRequest(this.data.refID);
         }
         else
@@ -253,9 +253,10 @@ export class PopupAddPaymentComponent implements OnInit,AfterViewInit,OnDestroy 
 
     if(field == "amount")
     {
-      this.data.totalAmount = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
-      this.data.requestAmt = this.data.totalAmount;
-      if(this.RefEPRequest?.status > 5)
+      let total = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
+      this.data.totalAmount = total
+      this.data.requestAmt = total;
+      if(this.RefEPRequest)
         this.data.requestAmt = this.data.requestAmt - this.RefEPRequest.requestAmt;
     }
     this.detectorChange.detectChanges();
@@ -280,8 +281,18 @@ export class PopupAddPaymentComponent implements OnInit,AfterViewInit,OnDestroy 
       {
         this.data.lines = this.data.lines.filter(x => x.itemID != data.itemID);
         if(this.data.lines.length > 0)
-          this.data.totalAmount = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
-        else this.data.totalAmount = 0;
+        {
+          let total = this.data.lines.reduce((accumulator, currentValue) => accumulator + currentValue.amount,0);
+          this.data.totalAmount = total;
+          this.data.requestAmt = total;
+        }
+        else
+        {
+          this.data.requestAmt = 0;
+          this.data.totalAmount = 0;
+        }
+        if(this.RefEPRequest)
+          this.data.requestAmt = this.data.requestAmt - this.RefEPRequest.requestAmt;
         this.detectorChange.detectChanges();
       }
     }
@@ -311,7 +322,7 @@ export class PopupAddPaymentComponent implements OnInit,AfterViewInit,OnDestroy 
       t.data.status = res.returnStatus;
       t.dialog.close(t.data);
     }
-    else t.notiSV.notify("Gửi duyệt không thành công");
+    else t.notiSV.notify("Gửi duyệt không thành công","2");
   }
 
 }

@@ -6,10 +6,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./dashboard-age-chart.component.css']
 })
 export class DashboardAgeChartComponent {
-  cornerRadius: any = { topLeft: 10, topRight: 10};
+  cornerRadius: any = { topLeft: 5, topRight: 5};
   public primaryXAxis?: Object;
   public chartData?: Object[];
   public title?: string;
+  public tooltip?: Object;
   primaryYAxis: any;
   public chartArea: Object = {
     border: {
@@ -40,5 +41,6 @@ export class DashboardAgeChartComponent {
         majorTickLines: { width: 0 },
         lineStyle: {width: 0}
     };
+    this.tooltip = { enable: true };
   }
 }
