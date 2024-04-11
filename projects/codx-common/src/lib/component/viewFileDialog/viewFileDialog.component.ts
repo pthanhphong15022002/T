@@ -325,7 +325,7 @@ export class ViewFileDialogComponent implements OnInit, OnChanges {
     if (this.data?.extension.includes('doc')) {
       this.isShow = true;
       let http: XMLHttpRequest = new XMLHttpRequest();
-      let content = { fileUrl: this.linkFile };
+      let content = { fileUrl: this.data?.pathDisk };
       http.withCredentials = true;
       http.open('Post', this.serviceUrl, true);
       http.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');

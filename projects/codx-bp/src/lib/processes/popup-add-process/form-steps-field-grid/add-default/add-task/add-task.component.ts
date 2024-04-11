@@ -125,9 +125,9 @@ export class AddTaskComponent
   }
   ngOnInit(): void {    
     
-    if (this.process.settings && this.process.settings.length > 0) 
+    if (this.process?.settings && this.process?.settings.length > 0) 
     {
-      this.isAllowEdit = this.process.settings.filter(
+      this.isAllowEdit = this.process?.settings.filter(
         (x) => x.fieldName == 'AllowEdit'
       )[0]?.fieldValue;
     }
@@ -154,7 +154,7 @@ export class AddTaskComponent
   }
 
   formatDocument() {
-    this.listDocument = JSON.parse(JSON.stringify(this.process.documentControl));
+    this.listDocument = JSON.parse(JSON.stringify(this.process?.documentControl));
     let ids = [];
     this.listDocument.forEach((elm) => {
       if (elm.files && elm.files.length > 0) 
@@ -175,21 +175,21 @@ export class AddTaskComponent
   getDocRef(refStepID: any) {
     var index = null;
     if (refStepID) {
-      var doc = this.process.documentControl.filter(
+      var doc = this.process?.documentControl.filter(
         (x) => x.recID == refStepID
       )[0];
       if (
         doc?.refStepID == '00000000-0000-0000-0000-000000000000' ||
         !doc?.refStepID
       ) {
-        return this.process.documentControl.findIndex(
+        return this.process?.documentControl.findIndex(
           (x) => x.recID == refStepID
         );
       } else {
         return this.getDocRef(doc.refStepID);
       }
     }
-    index = this.process.documentControl.findIndex((x) => x.recID == refStepID);
+    index = this.process?.documentControl?.findIndex((x) => x.recID == refStepID);
     return index;
   }
 
@@ -506,7 +506,7 @@ export class AddTaskComponent
     this.listDocument.forEach((elm) => {
       if(!elm.permissions.some(x=>x.objectID == this.user.userID))
       {
-        this.process.documentControl[i].permissions.push(
+        this.process?.documentControl[i].permissions.push(
           {
             objectID: this.user?.userID,
             objectType: "U",
@@ -519,7 +519,7 @@ export class AddTaskComponent
       }
       i++;
     });
-    this.process.documentControl.push(documentControl);
+    this.process?.documentControl.push(documentControl);
     this.listDocument.push(documentControl);
     this.dataChangeProcess.emit(this.process);
     this.formatDocument();
@@ -535,12 +535,12 @@ export class AddTaskComponent
   }
   openFormSetting(val: any = null, index = null) {
     
-    this.process.steps = this.distinctArray(this.process.steps);
+    this.process.steps = this.distinctArray(this.process?.steps);
 
     let option = new DialogModel();
     option.FormModel = this.formModel;
 
-    let listSteps = JSON.parse(JSON.stringify(this.process.steps));
+    let listSteps = JSON.parse(JSON.stringify(this.process?.steps));
     let listForm = listSteps.filter(
       (x) => x.stepNo < this.data.stepNo && x.activityType == 'Form'
     );
@@ -571,7 +571,7 @@ export class AddTaskComponent
       elm.extendInfo = elm.extendInfo.concat(data);
     });
 
-    let dataSteps = this.process.steps.filter(
+    let dataSteps = this.process?.steps.filter(
       (x) =>
         x.activityType != 'Stage' &&
         x.activityType != 'Conditions' &&
@@ -617,7 +617,7 @@ export class AddTaskComponent
         this.data.extendInfo =
           res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
 
-        var index = this.process.steps.findIndex(x=>x.recID == this.data.recID);
+        var index = this.process?.steps.findIndex(x=>x.recID == this.data.recID);
         if(index >=0) 
         {
           if (this.data?.extendInfo) {
@@ -699,7 +699,7 @@ export class AddTaskComponent
     });
   }
   getNextStepHTML(id: any) {
-    let data = this.process.steps.filter((x) => x.recID == id)[0];
+    let data = this.process?.steps.filter((x) => x.recID == id)[0];
     if (data) {
       return this.sanitizer.bypassSecurityTrustHtml(
         '<i class="' +
@@ -742,7 +742,7 @@ export class AddTaskComponent
   }
 
   getFieldExport() {
-    let arr = this.process.steps.filter(
+    let arr = this.process?.steps.filter(
       (x) => x.activityType == 'Form' && x.stepNo <= this.data.stepNo
     );
     if(this.data.activityType == 'Form' && !arr.some(x=>x.recID == this.data.recID)) arr.push(this.data);
@@ -813,11 +813,11 @@ export class AddTaskComponent
               }
             ]
           };
-          this.process.documentControl.push(documentControl);
+          this.process?.documentControl.push(documentControl);
         }
         else
         {
-          let indexP = this.process.documentControl.findIndex(x=>x.templateID == res?.event[0].recID)
+          let indexP = this.process?.documentControl.findIndex(x=>x.templateID == res?.event[0].recID)
           if(res?.event[3] && indexP >= 0 && res?.event[3]?.recID) this.process.documentControl[indexP].files[0].fileID = res?.event[3].recID
         }
         this.dataChangeProcess.emit(this.process);
@@ -906,7 +906,7 @@ export class AddTaskComponent
             refStepID: element?.recID,
             refID: element?.refID,
           };
-          this.process.documentControl.push(documentControl);
+          this.process?.documentControl.push(documentControl);
         });
 
         this.dataChangeProcess.emit(this.process);
@@ -1063,7 +1063,7 @@ export class AddTaskComponent
         }
 
         this.dataChangeAttach.emit(true);
-        this.api.execSv("BP","BP","ProcessesBusiness","GetAsync",this.process.recID).subscribe((item:any)=>{
+        this.api.execSv("BP","BP","ProcessesBusiness","GetAsync",this.process?.recID).subscribe((item:any)=>{
           if(item){
             this.process.steps=item?.steps;            
             this.process.documentControl=item?.documentControl;
@@ -1075,17 +1075,17 @@ export class AddTaskComponent
             // if(listF && listF.length>0)
             // {
             //   listF.forEach(element => {
-            //     let index = this.process.documentControl.findIndex(x=>x.recID == element.recID);
+            //     let index = this.process?.documentControl.findIndex(x=>x.recID == element.recID);
             //     if(index >= 0)
             //     {
-            //       this.process.documentControl[index]= element;
+            //       this.process?.documentControl[index]= element;
             //       if(element?.refID)
             //       {
             //         var indexRef = item.documentControl.findIndex(x=>x.recID == element.refID);
             //         if(indexRef >= 0)
             //         {
-            //           var indexP = this.process.documentControl.findIndex(x=>x.recID == item.documentControl[indexRef].recID)
-            //           if(indexP >= 0) this.process.documentControl[indexP] = item.documentControl[indexRef];
+            //           var indexP = this.process?.documentControl.findIndex(x=>x.recID == item.documentControl[indexRef].recID)
+            //           if(indexP >= 0) this.process?.documentControl[indexP] = item.documentControl[indexRef];
             //         }
             //       }
             //     }
@@ -1116,26 +1116,26 @@ export class AddTaskComponent
   //Xóa documentcontrol bỏi templateID
   deleteDocByTemplateID(tmpID:any)
   {
-    var index = this.process.documentControl.findIndex(x=>x.templateID == tmpID);
+    var index = this.process?.documentControl.findIndex(x=>x.templateID == tmpID);
 
     if(index>=0)
     {
-      var id = this.process.documentControl[index].recID;
-      this.process.documentControl = this.process.documentControl.filter(x=>x.refID != id);
+      var id = this.process?.documentControl[index].recID;
+      this.process.documentControl = this.process?.documentControl.filter(x=>x.refID != id);
     }
   }
 
   selectEsign(id:any , recID:any)
   {
-    var indexP = this.process.documentControl.findIndex(x=>x.recID == recID)
+    var indexP = this.process?.documentControl.findIndex(x=>x.recID == recID)
     if(indexP >= 0)
     {
-      if(this.process.documentControl[indexP]?.files && this.process.documentControl[indexP]?.files.length>0)
+      if(this.process?.documentControl[indexP]?.files && this.process?.documentControl[indexP]?.files.length>0)
       {
-        var index2 = this.process.documentControl[indexP].files.findIndex(x=>x.fileID == id);
+        var index2 = this.process?.documentControl[indexP].files.findIndex(x=>x.fileID == id);
         if(index2>=0) 
         {
-          this.process.documentControl[indexP].files[index2].eSign = !this.process.documentControl[indexP].files[index2].eSign;
+          this.process.documentControl[indexP].files[index2].eSign = !this.process?.documentControl[indexP].files[index2].eSign;
           this.listDocument[indexP].files[index2].eSign = !this.listDocument[indexP].files[index2].eSign;
 
           var mySelected = document.getElementById("esign"+id);

@@ -98,9 +98,11 @@
                 (cdkDropListDropped)="drop2($event)"
                 [cdkDropListEnterPredicate]="evenPredicate(item.name)"
               >
-                <div class="d-flex align-items-center p-2 w-100 cursor-pointer"
-                  *ngFor="let subItem of item.children;let j = index "
+                <div 
                   cdkDrag
+                  *ngFor="let subItem of item.children;let j = index "
+                  class="d-flex align-items-center p-2 cursor-pointer"
+                  [style.width.%]="100 / item.children.length"
                   [cdkDragDisabled]="subItem.controlType == 'Title' || viewType == 2"
                   [cdkDragData]="item.name"
                   [ngClass]="(dataSelected.columnOrder == subItem.columnOrder &&  dataSelected.columnNo == subItem.columnNo) ? 'active':''"
@@ -179,7 +181,7 @@
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
                       <div class="w-100 border mt-2 px-4 py-2 rd-3px" *ngIf="viewType == 1">
-                        <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
+                        <span class="text-muted text-truncate">{{data.defaultValue || data.description}}</span>
                       </div>
 
                       <ng-container *ngIf="viewType == 2">
@@ -197,7 +199,7 @@
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-2 rd-3px" *ngIf="viewType == 1">
-                        <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
+                        <span class="text-muted text-truncate">{{data.defaultValue || data.description}}</span>
                         <i [ngClass]="data.refType == '3P' ? 'icon-person_add_alt_1 text-primary' :'icon-keyboard_arrow_down text-dark' "></i>
                       </div>
 
@@ -216,7 +218,7 @@
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-2 rd-3px" *ngIf="viewType == 1">
-                        <span class="text-muted text-truncate mw-55px">{{data.description}}</span>
+                        <span class="text-muted text-truncate">{{data.description}}</span>
                         <i class="icon-keyboard_arrow_down text-dark"></i>
                       </div>
 
@@ -235,7 +237,7 @@
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-2 rd-3px" *ngIf="viewType == 1">
-                        <span class="text-muted text-truncate mw-55px">{{data?.defaultValue && data?.defaultValue != 'Now' ? (data.defaultValue | date: 'dd/MM/yyyy HH:mm:ss') : (data?.defaultValue ? data?.defaultValue : data.description)}}</span>
+                        <span class="text-muted text-truncate">{{data?.defaultValue && data?.defaultValue != 'Now' ? (data.defaultValue | date: 'dd/MM/yyyy HH:mm:ss') : (data?.defaultValue ? data?.defaultValue : data.description)}}</span>
                         <div class="d-flex align-items-center">
                           <i class="icon-i-calendar text-dark"></i>
                           <i class="icon-i-clock ms-3 text-dark"></i>
@@ -335,7 +337,7 @@
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
-                        <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
+                        <span class="text-muted text-truncate">{{data.defaultValue || data.description}}</span>
                         <i class="icon-person_add_alt_1 text-primary"></i>
                       </div>
                     </div>
@@ -420,7 +422,7 @@
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
-                        <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
+                        <span class="text-muted text-truncate">{{data.defaultValue || data.description}}</span>
                         <i class="icon-email text-dark"></i>
                       </div>
                     </div>
@@ -435,7 +437,7 @@
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
-                        <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
+                        <span class="text-muted text-truncate">{{data.defaultValue || data.description}}</span>
                         <i class="icon-location_on text-dark"></i>
                       </div>
                     </div>
@@ -450,7 +452,7 @@
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
-                        <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
+                        <span class="text-muted text-truncate">{{data.defaultValue || data.description}}</span>
                         <i class="icon-calculate text-dark"></i>
                       </div>
                     </div>
@@ -465,7 +467,7 @@
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
-                        <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
+                        <span class="text-muted text-truncate">{{data.defaultValue || data.description}}</span>
                         <i class="icon-settings_phone text-dark"></i>
                       </div>
                     </div>
@@ -473,12 +475,12 @@
 
                   <!-- Phone -->
                   <ng-template #note let-data>
-                    <div class="d-flex flex-column w-100">
+                    <div class="d-flex flex-column w-100 border-2-px" [ngClass]="data?.validateControl?.border == 1 ? 'border-top' : (data?.validateControl?.border == 2) ? 'border-bottom' : ''" [attr.style]="(data?.validateControl?.borderStyle == 1 && data?.validateControl?.border && data?.validateControl?.border != 0) ? 'border-'+(data?.validateControl?.border == 2 ? 'bottom' : 'top')+'-style :dotted !important' : ''">
                       <div class="d-flex align-items-center">
                         <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 my-2 rd-3px">
-                        <span [class.fw-bold]="data?.dataFormat?.bold" [class.fst-italic]="data?.dataFormat?.italic" [class.text-decoration-underline]="data?.dataFormat?.underlined" [style.color]="data?.dataFormat?.color" [ngClass]="data?.dataFormat?.size">{{data.defaultValue}}</span>
+                        <span [class.fw-bold]="data?.validateControl?.bold" [class.fst-italic]="data?.validateControl?.italic" [class.text-decoration-underline]="data?.validateControl?.underlined" [style.color]="data?.validateControl?.color" [ngClass]="data?.validateControl?.size">{{data.defaultValue}}</span>
                       </div>
                     </div>
                   </ng-template>

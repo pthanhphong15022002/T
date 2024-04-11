@@ -127,6 +127,15 @@ export class CodxBpService {
       [recID]
     );
   }
+  cancelInstance(recID) {
+    return this.api.execSv<any>(
+      "BP",
+      "ERM.Business.BP",
+      'ProcessesBusiness',
+      'CancelInstanceAsync',
+      [recID]
+    );
+  }
 
   addDocControl(insID,taskID,docs) {
     return this.api.execSv<any>(

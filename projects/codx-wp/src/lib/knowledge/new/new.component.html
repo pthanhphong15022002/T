@@ -1,0 +1,307 @@
+<codx-views #view [views]="views" idField="recID"> </codx-views>
+
+<ng-template #tmpContent>
+  <div class="w-100 h-100 bg-body position-relative">
+    <div
+      *ngIf="userPermission?.create"
+      class="position-absolute end-0 bottom-15"
+    >
+      <div class="d-flex align-items-center">
+        <button
+          (click)="openPopupAdd(NEWSTYPE_POST)"
+          class="btn btn-icon btn-primary me-4"
+        >
+          <i class="icon-video_call fs-1"></i>
+        </button>
+        <button
+          (click)="openPopupAdd(NEWSTYPE_VIDEO)"
+          class="btn btn-icon btn-primary"
+        >
+          <i class="icon-post_add fs-1"></i>
+        </button>
+      </div>
+    </div>
+    <div class="container h-100 overflow-auto">
+      <div
+        *ngIf="!posts && !videos"
+        class="d-flex flex-column align-items-center justify-content-center h-100"
+      >
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          width="300px"
+        />
+        <div class="fw-bold mt-1 text-center">Chưa có dữ liệu phát sinh</div>
+      </div>
+      <ng-container *ngIf="posts?.length > 0">
+        <div
+          class="d-flex flex-column fw-bold fs-2 mb-5 border-bottom border-gray"
+        >
+          <codx-label
+            [formModel]="view.formModel"
+            name="lblLabel1"
+            [default]="'Tin mới nhất'"
+          ></codx-label>
+        </div>
+        <div class="row">
+          <div class="col-6 cursor-pointer" (click)="clickViewDetail(posts[0])">
+            <div class="w-100">
+              <div class="position-relative">
+                <codx-img
+                  *ngIf="(posts[0]?.image | assetURL : true) == true"
+                  imageType="square"
+                  [isDefaulImg]="true"
+                  [imgClass]="'w-100'"
+                  [width]="480"
+                  [imgSource]="posts[0]?.image | assetURL"
+                >
+                </codx-img>
+                <codx-img
+                  *ngIf="(posts[0]?.image | assetURL : true) == false"
+                  imageType="square"
+                  [isDefaulImg]="true"
+                  [imgClass]="'w-100'"
+                  [width]="480"
+                  [objectId]="posts[0].recID"
+                  [objectType]="'WP_News'"
+                  [referType]="'image'"
+                >
+                </codx-img>
+                <div
+                  *ngIf="posts[0].category"
+                  class="position-absolute bottom-0 end-0 mb-1"
+                >
+                  <codx-vll
+                    [name]="'WP002'"
+                    [value]="posts[0].category"
+                    [showText]="true"
+                    [classList]="
+                      'badge badge-dark bg-badge-75 p-2 px-4 text-center'
+                    "
+                  >
+                  </codx-vll>
+                </div>
+              </div>
+              <div class="fs-4 fw-bold mt-2">
+                <span class="line-clamp line-clamp-2">{{
+                  posts[0].subject
+                }}</span>
+              </div>
+            </div>
+            <div class="text-gray-600 mt-1">
+              <span class="line-clamp line-clamp-4">{{
+                posts[0].subContent | maxlenght : 500
+              }}</span>
+            </div>
+            <div class="d-flex justify-content-between fs-7 mt-3">
+              <div
+                class="text-gray-500"
+                [innerHTML]="
+                  posts[0].createdOn
+                    | formatvalue : view.formModel : 'CreatedOn'
+                    | async
+                "
+              ></div>
+              <div
+                *ngIf="
+                  posts[0].approveControl == '1' &&
+                  posts[0].approveStatus == '3'
+                "
+              >
+                <codx-vll
+                  [name]="'WP007'"
+                  [classList]="'rounded-pill p-2 px-4 text-center'"
+                  [value]="posts[0].approveStatus"
+                  [showText]="true"
+                  [showBgColor]="true"
+                >
+                </codx-vll>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="d-flex flex-column">
+              <ng-container
+                *ngIf="posts[1]"
+                [ngTemplateOutlet]="tmpPost"
+                [ngTemplateOutletContext]="{ data: posts[1] }"
+              ></ng-container>
+              <ng-container
+                *ngIf="posts[2]"
+                [ngTemplateOutlet]="tmpPost"
+                [ngTemplateOutletContext]="{ data: posts[2] }"
+              ></ng-container>
+              <ng-container
+                *ngIf="posts[3]"
+                [ngTemplateOutlet]="tmpPost"
+                [ngTemplateOutletContext]="{ data: posts[3] }"
+              ></ng-container>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <div *ngIf="videos.length > 0" class="row my-8" style="height: 300px">
+        <ng-container *ngIf="slides.length > 0">
+          <ngb-carousel
+            #carousel
+            (slide)="slideChange($event)"
+            [pauseOnFocus]="true"
+            [pauseOnHover]="true"
+            [wrap]="false"
+            [keyboard]="false"
+            [showNavigationIndicators]="false"
+            [showNavigationArrows]="slidesShowNavigation"
+          >
+            <ng-template ngbSlide *ngFor="let slide of slides">
+              <div class="slide-item">
+                <div class="silde-item-block">
+                  <ng-container *ngFor="let item of slide">
+                    <ng-container *ngIf="item; emptyVideo">
+                      <div (click)="clickViewDetail(item)" class="video">
+                        <div class="video-block">
+                          <codx-img
+                            *ngIf="(item?.image | assetURL : true) == true"
+                            [isDefaulImg]="true"
+                            [width]="250"
+                            imageType="square"
+                            [imgSource]="item?.image | assetURL"
+                          >
+                          </codx-img>
+                          <codx-img
+                            *ngIf="(item?.image | assetURL : true) == false"
+                            [isDefaulImg]="true"
+                            [width]="250"
+                            imageType="square"
+                            [objectId]="item?.recID"
+                            objectType="WP_News"
+                            [referType]="'image'"
+                          >
+                          </codx-img>
+                          <span class="video-title">{{
+                            item?.subject | maxlenght : 200
+                          }}</span>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-carousel>
+        </ng-container>
+      </div>
+      <div div class="row">
+        <codx-listview
+          #listview
+          [service]="'WP'"
+          [assemblyName]="'ERM.Business.WP'"
+          [className]="'NewsBusiness'"
+          [method]="'GetPostByCategoryAsync'"
+          entityName="WP_News"
+          [selectFirst]="false"
+          [dataValue]="category"
+          [itemTemplate]="itemTemplate"
+          [formModel]="view.formModel"
+        >
+        </codx-listview>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #tmpPost let-data="data">
+  <div class="row mb-5 post" (click)="clickViewDetail(data)">
+    <div class="col-4">
+      <div class="w-100 position-relative cursor-pointer">
+        <codx-img
+          *ngIf="(data?.image | assetURL : true) == true"
+          imageType="square"
+          [isDefaulImg]="true"
+          [width]="180"
+          [cssClass]="'image w-100'"
+          [imgSource]="data?.image | assetURL"
+        >
+        </codx-img>
+        <codx-img
+          *ngIf="(data?.image | assetURL : true) == false"
+          imageType="square"
+          [isDefaulImg]="true"
+          [width]="180"
+          [cssClass]="'image w-100'"
+          [objectId]="data?.recID"
+          [objectType]="'WP_News'"
+          [referType]="'image'"
+        >
+        </codx-img>
+        <div *ngIf="data?.category" class="position-absolute bottom-0 end-0">
+          <codx-vll
+            [name]="'WP002'"
+            [classList]="'badge badge-dark bg-badge-75 p-2 px-4 text-center'"
+            [value]="data?.category"
+            [showText]="true"
+          >
+          </codx-vll>
+        </div>
+      </div>
+    </div>
+    <div class="col-8">
+      <div class="fs-5 fw-bold news-title cursor-pointer">
+        {{ data?.subject | maxlenght : 100 }}
+      </div>
+      <div class="text-gray-700 news-des line-clamp line-clamp-3">
+        {{ data?.subContent | maxlenght : 300 }}
+      </div>
+      <div class="d-flex justify-content-between fs-7 mt-3">
+        <span
+          class="text-gray-400"
+          [innerHTML]="
+            data?.createdOn | formatvalue : view.formModel : 'CreatedOn' | async
+          "
+        >
+        </span>
+        <span *ngIf="data?.approveControl == '1' && data?.approveStatus == '3'">
+          <codx-vll
+            [name]="'WP007'"
+            [classList]="'rounded-pill p-2 px-4 text-center'"
+            [value]="data?.approveStatus"
+            [showText]="true"
+            [showBgColor]="true"
+          >
+          </codx-vll>
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #itemTemplate let-item>
+    <ng-container *ngIf="item?.type == 'text';else tmpData">
+      <div>
+        <div *ngIf="category == 'home';else oldNews" class="fw-bolder fs-2 d-block ps-3 h-30px mt-3">{{item?.subject}}
+        </div>
+        <ng-template #oldNews>
+          <codx-label [classList]="'fw-bolder fs-2 d-block h-30px ps-3 mt-3'" [formModel]="view.formModel"
+            name="lblOldNews" default="Tin cũ hơn"></codx-label>
+        </ng-template>
+      </div>
+    </ng-container>
+    <ng-template #tmpData>
+      <div (click)="clickViewDetail(item)" class="d-flex mb-1 p-3 post news-listpost rounded-2">
+        <div class="w-250px h-150px me-4" style="overflow: hidden;">
+          <codx-img *ngIf="(item?.image | assetURL :true ) == true" [width]="250" [isDefaulImg]="true" [cssClass]="'w-100 h-auto'" imageType="square"
+          [imgSource]="item?.image | assetURL">
+          </codx-img>
+          <codx-img *ngIf="(item?.image | assetURL :true ) == false" [width]="250" [isDefaulImg]="true" [cssClass]="'w-100 h-auto'" imageType="square"
+            [objectId]="item?.recID" objectType="WP_News" [referType]="'image'">
+          </codx-img>
+        </div>
+        <div class="w-100 d-flex flex-column">
+          <div class="text-dark news-title fs-5 fw-bold">{{item?.subject}}</div>
+          <div class="w-100 mt-1 text-gray-400">{{ item?.createdOn | fmDT }}</div>
+          <div class="text-gray-700 mt-1 line-clamp line-clamp-3" *ngIf="item?.subContent">
+            {{item?.subContent | maxlenght:500}}
+          </div>
+        </div>
+  
+      </div>
+    </ng-template>
+  </ng-template>

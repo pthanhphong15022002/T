@@ -68,7 +68,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   @ViewChild('comboboxContractType') comboboxContractType: CodxInputComponent;
 
   REQUIRE = [
-    'contractID',
     'customerID',
     'pmtMethodID',
     'pmtMethodID',
@@ -249,6 +248,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   tenant = '';
   isShowMore: boolean;
   widthDefault: string | number;
+  isNewAutoNumber = false;
   //#endregion
 
   constructor(
@@ -610,19 +610,21 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       .getFieldAutoNoDefault(funcID, this.dialog.formModel.entityName)
       .subscribe((res) => {
         if (res && !res.stop) {
-          this.cache.message('AD019').subscribe((mes) => {
-            if (mes) {
-              this.planceHolderAutoNumber = mes?.customName || mes?.description;
-            }
-          });
-          this.getAutoNumberSetting(funcID);
-          // if(res?.createAutoNumberWhen == "1"){
-            
-          // }else{
-
-          // }
-          
+          if(res?.autoAssignRule == "1"){
+            this.isNewAutoNumber = true;
+            this.getAutoNumberSetting(funcID);
+          }else{
+            this.cache.message('AD019').subscribe((mes) => {
+              if (mes) {
+                this.planceHolderAutoNumber = mes?.customName || mes?.description;
+                this.contracts.contractID = null;
+                this.disabledShowInput = true;
+              }
+            });
+            this.isNewAutoNumber = false;
+          }
         } else {
+          this.isNewAutoNumber = true;
           this.planceHolderAutoNumber = '';
           this.contracts.contractID = null;
           this.disabledShowInput = false;
@@ -1262,7 +1264,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   //#endregion
 
   //#region seve Instance
-
   copyPermission(permissionDP: any) {
     let permission = new CM_Permissions();
     permission.objectID = permissionDP.objectID;
@@ -1553,7 +1554,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   //#region CRUD
-
   checkFormat(field) {
     if (field.dataType == 'T') {
       if (field.dataFormat == 'E') {
@@ -1759,8 +1759,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('RS030');
       return false;
     }
-
-    if (this.contracts.contractID && this.contracts.contractID.includes(' ')) {
+    if (this.contracts.contractID && this.contracts.contractID.includes(' ')&& this.isNewAutoNumber) {
       this.notiService.notifyCode(
         'CM026',
         0,

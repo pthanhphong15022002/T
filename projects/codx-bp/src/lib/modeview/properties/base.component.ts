@@ -37,6 +37,13 @@ export abstract class BasePropertyComponent
       this.dataChange.emit(this.data);
     }
 
+    changeValueValidateControl(e:any)
+    {
+      if(!this.data.validateControl) this.data.validateControl = {};
+      this.data.validateControl[e?.field] = e?.data;
+      this.dataChange.emit(this.data);
+    }
+
     deleteValue()
     {
       this.data.isDelete = true;
