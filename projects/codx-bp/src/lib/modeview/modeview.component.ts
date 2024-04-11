@@ -31,6 +31,7 @@ export class ModeviewComponent implements OnInit {
   viewType = 1;
   formModel:any;
   listInfoFile = [];
+  listForm = [];
   constructor(
     public dmSV: CodxDMService,
     private api: ApiHttpService,
@@ -42,6 +43,7 @@ export class ModeviewComponent implements OnInit {
     this.data = this.data || dt?.data?.extendInfo;
     this.stepNo = this.stepNo || dt?.data?.stepNo;
     this.formModel = dt?.data?.formModel
+    this.listForm =  dt?.data?.listForm ? JSON.parse(JSON.stringify(dt?.data?.listForm)) : null;
     this.dialog = dialog;
   }
 
@@ -98,7 +100,7 @@ export class ModeviewComponent implements OnInit {
     item.datas.forEach(elm => {
       if(elm.value != 'User' &&  elm.value != 'Share')
       {
-        if(this.basic.includes(elm.value)) {
+        if(this.basic.includes(elm.value)) { 
           elm.groupType = 0;
           data1.push(elm);
         }
@@ -116,6 +118,7 @@ export class ModeviewComponent implements OnInit {
     this.vllBP002 = item;
     if(!this.data) this.default();
     else this.formatData(this.data);
+    this.formatPrevForm();
   }
 
   formatData(data:any)
@@ -179,6 +182,24 @@ export class ModeviewComponent implements OnInit {
     });
     this.table.sort((a,b) => a.columnOrder - b.columnOrder);
     this.selectedItem(this.table[0].children[0])
+  }
+
+  formatPrevForm()
+  {
+    if(!this.listForm || this.listForm.length == 0) return;
+    this.listForm.forEach(elm=>{
+      if(elm.extendInfo && elm.extendInfo.length>0)
+      {
+        elm.extendInfo.forEach(item=>{
+          debugger
+          let indexIcon = this.vllBP002.datas.findIndex(x=>x.value == item.fieldType);
+          if(indexIcon>=0)
+          {
+            item.icon = this.vllBP002.datas[indexIcon].icon;
+          }
+        })
+      }
+    }) 
   }
 
   default()
