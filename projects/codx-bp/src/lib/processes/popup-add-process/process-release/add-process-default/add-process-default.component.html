@@ -145,8 +145,8 @@
     </ng-template>
 
     <ng-template #note let-data let-id="b">
-        <div class="py-2">
-            <span [class.fw-bold]="data?.dataFormat?.bold" [class.fst-italic]="data?.dataFormat?.italic" [class.text-decoration-underline]="data?.dataFormat?.underlined" [style.color]="data?.dataFormat?.color" [ngClass]="data?.dataFormat?.size">{{data?.defaultValue}}</span>
+        <div class="py-2" [ngClass]="data?.validateControl?.border == 1 ? 'border-top' : (data?.validateControl?.border == 2) ? 'border-bottom' : ''" [attr.style]="(data?.validateControl?.borderStyle == 1 && data?.validateControl?.border && data?.validateControl?.border != 0) ? 'border-'+(data?.validateControl?.border == 2 ? 'bottom' : 'top')+'-style :dotted !important' : ''">
+            <span [class.fw-bold]="data?.validateControl?.bold" [class.fst-italic]="data?.validateControl?.italic" [class.text-decoration-underline]="data?.validateControl?.underlined" [style.color]="data?.validateControl?.color" [ngClass]="data?.validateControl?.size">{{data?.defaultValue}}</span>
         </div>
     </ng-template>
 

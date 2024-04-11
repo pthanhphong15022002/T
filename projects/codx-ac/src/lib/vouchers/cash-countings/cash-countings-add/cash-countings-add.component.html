@@ -95,7 +95,7 @@
   </div>
   <!-- End: Tab Detail -->
   <div class="row ac-empty-record mb-5"></div>
-  <div class="row">
+  <div *ngIf="dialog.formModel.funcID === 'ACT281'" class="row">
     <div class="col-2">
       <div class="form-group">
         <codx-label style="white-space: nowrap !important" fiedName="ActualValue" [formModel]="dialog?.formModel">
@@ -157,14 +157,14 @@
         </div>
       </button>
       <button *ngIf="dialog.formModel.funcID === 'ACT581'" id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" [disabled]="isload" type="button"
-        class="btn btn-md btn-primary me-2" (click)="onHandle()">
+        class="btn btn-md btn-primary me-2" (click)="onCreateVoucher('IR')">
         <div class="d-flex align-items-center">
           <i class="icon-add_box icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Tạo phiếu nhập kho"></codx-label>
         </div>
       </button>
       <button *ngIf="dialog.formModel.funcID === 'ACT581'" id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" [disabled]="isload" type="button"
-        class="btn btn-md btn-primary me-2">
+        class="btn btn-md btn-primary me-2" (click)="onCreateVoucher('II')">
         <div class="d-flex align-items-center">
           <i class="icon-add_box icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Tạo phiếu xuất kho"></codx-label>
@@ -178,7 +178,7 @@
         </div>
       </button>
       <button *ngIf="dialog.formModel.funcID === 'ACT881'" id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" [disabled]="isload" type="button"
-        class="btn btn-md btn-primary me-2">
+        class="btn btn-md btn-primary me-2" (click)="onCreateAssetLiquidations()">
         <div class="d-flex align-items-center">
           <i class="icon-download_done icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Thanh lý"></codx-label>
@@ -575,16 +575,24 @@
         [hideMoreFunc]="true" [moreFcItems]="'SYS104;SYS102'" [moreFcModel]="dialog.formModel" (clickMF)="clickMF($event)"
         [gridViewName]="'grvCountingAssets'" [entityName]="'AC_CountingAssets'" predicates="TransID=@0" rowHeight="35"
         [dataValues]="master?.data?.recID" service="AC" [editOnClick]="master.data?.isReadOnly ? false : true"
-        ></codx-gridview-v2>
+        (cellChanged)="valueChangeLineAsset($event)"></codx-gridview-v2>
       <ng-container *ngIf="!master.data?.isReadOnly">
         <div #btnRef class="btn-addline">
           <div class="d-flex align-items-center">
-            <div>
+            <div class="me-2">
               <button style="border: 1px solid !important" tab-index="11" id="btnAddCash"
                 class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="onAddLine('3'); $event.preventDefault()"
                 (click)="onAddLine('3')">
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
+              </button>
+            </div>
+            <div>
+              <button style="border: 1px solid !important" tab-index="11" id="btnAddCash"
+                class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="onAddLine('4'); $event.preventDefault()"
+                (click)="onAddLine('5')">
+                <i class="icon-playlist_add icon-16"></i>
+                <codx-label fiedName="lblSaveAndClear" default="Đề xuất kiểm kê tài sản"></codx-label>
               </button>
             </div>
           </div>

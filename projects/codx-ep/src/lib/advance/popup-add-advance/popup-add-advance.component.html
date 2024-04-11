@@ -34,24 +34,22 @@
             <div class="d-flex flex-column">
               <div
                 class="text-dark"
-                *ngIf="data?.employeeID"
                 [innerHTML]="
-                  data.employeeID
-                    | formatvalue : dialog.formModel : 'employeeID'
+                  data.employeeName
+                    | formatvalue : dialog.formModel : 'employeeName'
                     | async
                 "
               ></div>
               <div
                 class="text-dark"
-                *ngIf="data?.positionID"
                 [innerHTML]="
-                  data.positionID
-                    | formatvalue : dialog.formModel : 'positionID'
+                  data.positionName
+                    | formatvalue : dialog.formModel : 'positionName'
                     | async
                 "
               ></div>
               <div class="d-flex align-items-center text-gray-600">
-                <div *ngIf="data?.phone" class="d-flex me-4">
+                <div class="d-flex me-4">
                   <i class="icon-phone_android me-2"></i>
                   <div
                     class="me-2"
@@ -62,7 +60,7 @@
                     "
                   ></div>
                 </div>
-                <div *ngIf="data?.email" class="d-flex me-4">
+                <div class="d-flex me-4">
                   <i class="icon-email text-warning me-2"></i>
                   <div
                     [innerHTML]="
