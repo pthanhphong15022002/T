@@ -144,7 +144,6 @@ export class PopupAddKnowledgeComponent implements OnInit {
   }
 
   clickInsert() {
-    debugger
     if (this.checkValidate()) return;
     this.loading = true;
     this.codxATMImage.fileUploadList = Array.from<any>(this.fileUpload);

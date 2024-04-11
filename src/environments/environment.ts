@@ -47,7 +47,7 @@ export const environment = {
     app_secret: '123456',
   },
   lvai: {
-    Url: 'https://api.trogiupluat.vn/api/Chat/v1/document/upload?api-version=1.0',
+    Url: 'https://console.trogiupluat.vn/Chatbox/Document',
     API_KEY:
       'NDgyMTEzZTcOGVjZGEMjVmNmVlNzVjMDBjMUwYTUNmMyZWExZGRiNQNGJiNTAwMjcMTdiMjNiYWIYQ',
     AgentDocumentId: '65ee834213439ba7df12c269',
