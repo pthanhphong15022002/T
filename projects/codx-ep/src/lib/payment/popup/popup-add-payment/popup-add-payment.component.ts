@@ -48,6 +48,7 @@ export class PopupAddPaymentComponent
   RefEPRequest: any;
   hideFooter = false;
   columnsGrid = [];
+  requester = '';
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -96,6 +97,7 @@ export class PopupAddPaymentComponent
       }
     }
     this.user = this.auth.get();
+    this.requester = this.user.userID;
   }
 
   ngOnInit(): void {
@@ -223,6 +225,7 @@ export class PopupAddPaymentComponent
         this.data.employeeName = value.EmployeeName;
         this.data.phone = value.Mobile;
         this.data.email = value.Email;
+        this.requester = value.domainUser;
         break;
       case 'reasonID':
         value = event.data;
