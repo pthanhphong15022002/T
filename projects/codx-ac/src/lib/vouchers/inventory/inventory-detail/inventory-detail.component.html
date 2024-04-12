@@ -64,45 +64,45 @@
 
 <!-- Start: template listdetail Body-->
 <ng-template #TmpBodyDetail>
-  <ng-container *ngIf="itemSelected">
+  <ng-container *ngIf="itemSelected && gridViewSetup">
     <div class="d-flex justify-content-between flex-grow-1 mb-1">
       <div class="float-left">
-        <div [style]="itemSelected.data.subType == (journal.journalType + '1') ? '' : 'display:none !important'"
+        <div [style]="itemSelected.subType == (journal.journalType + '1') ? '' : 'display:none !important'"
           class="d-flex align-items-center">
           <codx-label class="fw-bold label-colon text-nowrap" fiedName="DIM1" [formModel]="formModel">
           </codx-label>
           <span *ngIf="itemSelected?.diM1Name" class="text-gray-600">{{itemSelected?.diM1Name}}</span>
           <span *ngIf="(itemSelected?.diM1Name == '' || itemSelected?.diM1Name == null) && gridViewSetup"
-            class="place-holder text-gray-600">{{gridViewSetup['DIM1'].headerText}}</span>
+            class="place-holder text-gray-600">{{gridViewSetup['DIM1']?.headerText}}</span>
         </div>
-        <div [style]="itemSelected.data.subType == (journal.journalType + '2') ? '' : 'display:none !important'"
+        <div [style]="itemSelected.subType == (journal.journalType + '2') ? '' : 'display:none !important'"
           class="d-flex align-items-center me-6">
           <codx-label class="fw-bold label-colon text-nowrap" fiedName="ObjectID" [formModel]="formModel">
           </codx-label>
           <span *ngIf="itemSelected?.objectName" class="text-gray-600">{{itemSelected?.objectName}}</span>
           <span *ngIf="(itemSelected?.objectName == '' || itemSelected?.objectName == null) && gridViewSetup"
-            class="place-holder text-gray-600">{{gridViewSetup['ObjectID'].headerText}}</span>
+            class="place-holder text-gray-600">{{gridViewSetup['ObjectID']?.headerText}}</span>
         </div>
-        <div [style]="itemSelected.data.subType == (journal.journalType + '2') ? '' : 'display:none !important'"
+        <div [style]="itemSelected.subType == (journal.journalType + '2') ? '' : 'display:none !important'"
           class="d-flex align-items-center me-6">
           <codx-label class="fw-bold label-colon text-nowrap" fiedName="Requester" [formModel]="formModel">
           </codx-label>
           <span *ngIf="itemSelected?.requesterName" class="text-gray-600">{{itemSelected?.requesterName}}</span>
           <span *ngIf="(itemSelected?.requesterName == '' || itemSelected?.requesterName == null) && gridViewSetup"
-            class="place-holder text-gray-600">{{gridViewSetup['Requester'].headerText}}</span>
+            class="place-holder text-gray-600">{{gridViewSetup['Requester']?.headerText}}</span>
         </div>
       </div>
     </div>
     <div class="d-flex justify-content-between flex-grow-1 mb-1">
-      <div [style]="itemSelected.data.subType == (journal.journalType + '1') ? '' : 'display:none !important'"
+      <div [style]="itemSelected.subType == (journal.journalType + '1') ? '' : 'display:none !important'"
         class="d-flex align-items-top">
         <codx-label class="fw-bold label-colon text-nowrap" fiedName="DIM2" [formModel]="formModel">
         </codx-label>
         <span *ngIf="itemSelected?.diM2Name" class="text-gray-600">{{itemSelected?.diM2Name}}</span>
         <span *ngIf="(itemSelected?.diM2Name == '' || itemSelected?.diM2Name == null) && gridViewSetup"
-          class="place-holder text-gray-600">{{gridViewSetup['DIM2'].headerText}}</span>
+          class="place-holder text-gray-600">{{gridViewSetup['DIM2']?.headerText}}</span>
       </div>
-      <div [style]="itemSelected.data.subType == (journal.journalType + '2') ? '' : 'display:none !important'"
+      <div [style]="itemSelected.subType == (journal.journalType + '2') ? '' : 'display:none !important'"
         class="d-flex align-items-top">
         <codx-label class="fw-bold label-colon text-nowrap" fiedName="RequestDate" [formModel]="formModel">
         </codx-label>
@@ -119,7 +119,7 @@
         </codx-label>
         <span *ngIf="itemSelected?.reasonName" class="text-gray-600">{{itemSelected?.reasonName}}</span>
         <span *ngIf="(itemSelected?.reasonName == '' || itemSelected?.reasonName == null) && gridViewSetup"
-          class="place-holder text-gray-600">{{gridViewSetup['ReasonID'].headerText}}</span>
+          class="place-holder text-gray-600">{{gridViewSetup['ReasonID']?.headerText}}</span>
       </div>
     </div>
     <div class="d-flex justify-content-between flex-grow-1 mb-1">
@@ -130,7 +130,7 @@
           <span *ngIf="isShowMore" id="eleMemo" class="text-gray-600 line-clamp line-clamp-2">{{itemSelected?.memo}}</span>
           <span *ngIf="isShowLess" class="text-gray-600 me-3">{{itemSelected?.memo}}</span>
           <span *ngIf="(itemSelected?.memo == '' || itemSelected?.memo == null) && gridViewSetup"
-            class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{gridViewSetup['Memo'].headerText}}</span>
+            class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{gridViewSetup['Memo']?.headerText}}</span>
           <div *ngIf="isReadMore" class="align-items-top cursor-pointer">
             <span *ngIf="isShowMore" (click)="onShowMoreLess('showmore')" class="text-primary fw-bold text-underline">Xem Thêm</span>
             <span *ngIf="isShowLess" (click)="onShowMoreLess('showless')" class="text-primary fw-bold text-underline">Ẩn bớt</span>

@@ -100,6 +100,9 @@
                   width="20"
                 ></codx-img>
               </div>
+              <div class="text-gray-600 flex-grow-1 me-2">
+                {{ item.text }}
+              </div>
               <div
                 class="d-flex justify-content-between user-mini-nav-custom align-items-center"
                 *ngIf="item.objectType != 'U'"
@@ -229,7 +232,11 @@
                 ></codx-img>
               </div>
               <div class="text-gray-600 flex-grow-1 me-2">
-                {{ item.text }}
+                {{
+                  item.text != null
+                    ? item.text
+                    : (item.objectID | formatCombobox : "Users" | async)
+                }}
               </div>
               <a
                 class="text-hover-danger d-flex align-items-center"
@@ -262,7 +269,11 @@
               </ng-container>
               <ng-container *ngIf="item.objectType == 'Email'">
                 <div class="text-gray-600 flex-grow-1 me-2">
-                  {{ item.objectID }}
+                  {{
+                    item.text != null
+                      ? item.text
+                      : (item.objectID | formatCombobox : "Users" | async)
+                  }}
                 </div>
               </ng-container>
               <a
@@ -317,7 +328,11 @@
                 ></codx-img>
               </div>
               <div class="text-gray-600 flex-grow-1 me-2">
-                {{ item.text }}
+                {{
+                  item.text != null
+                    ? item.text
+                    : (item.objectID | formatCombobox : "Users" | async)
+                }}
               </div>
               <a
                 class="text-hover-danger d-flex align-items-center"
@@ -351,7 +366,13 @@
               </ng-container>
               <ng-container *ngIf="item.objectType == 'Email'">
                 <div class="text-gray-600 flex-grow-1 me-2">
-                  {{ item.objectID }}
+                  <div class="text-gray-600 flex-grow-1 me-2">
+                    {{
+                      item.text != null
+                        ? item.text
+                        : (item.objectID | formatCombobox : "Users" | async)
+                    }}
+                  </div>
                 </div>
               </ng-container>
               <a

@@ -171,7 +171,7 @@ import { HistoryLevelComponent } from './dashboard/components/dialog-detail-regi
 import { DialogReviewLeaveApproveComponent } from './employee-list/employee-info-profile/components/dialog-review-leave-approve/dialog-review-leave-approve.component';
 import { DialogWaitingLeavingApproveComponent } from './employee-list/employee-info-profile/components/dialog-waiting-leaving-approve/dialog-waiting-leaving-approve.component';
 import { HrTableNewemployeeComponent } from './dashboard/widgets/hr-table-newemployee/hr-table-newemployee.component';
-import { HrTableEmployeeFamilyComponent } from './common/components/hr-table-employeeprofile/hr-table-employee-family/hr-table-employee-family.component';
+import { SidebarTreeviewComponent } from './employee-list/employee-info-detail/component/sidebar-treeview/sidebar-treeview.component';
 export const routes: Routes = [
   {
     path: '',
@@ -522,8 +522,8 @@ const T_Component = [
   DialogRegisterApproveComponent,
   DialogReviewLeaveApproveComponent,
   DialogWaitingLeavingApproveComponent,
-  HrTableNewemployeeComponent, 
-  HrTableEmployeeFamilyComponent
+  HrTableNewemployeeComponent,
+  SidebarTreeviewComponent
 
 ];
 @NgModule({

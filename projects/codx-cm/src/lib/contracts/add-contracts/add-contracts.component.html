@@ -304,24 +304,24 @@
   </div>
 
   <div class="row form-group">
-    <!-- <div class="col-6">
+    <div class="col-6">
       <codx-label
         [formModel]="form?.formModel"
-        fiedName="contractType"
-        default="Loại hợp đồng"
+        fiedName="contractNoRef"
+        default="Số hợp đồng"
       ></codx-label>
       <codx-input
         #comboboxContractType
-        field="contractType"
+        field="contractNoRef"
         [formModel]="form?.formModel"
         [Group]="form.formGroup"
-        [crrValue]="contracts?.contractType"
-        (valueChange)="valueChangeCombobox($event)"
+        [crrValue]="contracts?.contractNoRef"
+        (valueChange)="valueChangeText($event)"
         [disabled]="action == 'view'"
       >
       </codx-input>
-    </div> -->
-    <div class="col-12">
+    </div>
+    <div class="col-6">
       <codx-label
         [formModel]="dialog?.formModel"
         fiedName="useType"

@@ -27,8 +27,10 @@ export class LayoutComponent extends LayoutBaseComponent {
     if(event)
     {
       event.cancel = true;
-      let category = event.function.recID;
-      this.codxService.navigate('', `wp4/knowledge/WP401/${category}`);
+      if(event.function.functionType == "U")
+        this.codxService.navigate("", `wp4/knowledge/WP401/${event.function.recID}`);
+      else
+          this.codxService.navigate("", "wp4/knowledge/WP401");
     }
   }
 }

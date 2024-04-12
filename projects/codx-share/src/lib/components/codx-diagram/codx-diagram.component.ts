@@ -2,6 +2,7 @@ import { P } from "@angular/cdk/keycodes";
 import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ViewEncapsulation, TemplateRef, ViewChild, ChangeDetectorRef, ElementRef, Optional, Input, OnChanges, SimpleChanges, OnDestroy } from "@angular/core";
 import { HierarchicalTreeService, MindMapService, RadialTreeService, ComplexHierarchicalTreeService, DataBindingService, SnappingService, PrintAndExportService, BpmnDiagramsService, SymmetricLayoutService, ConnectorBridgingService, UndoRedoService, LayoutAnimationService, DiagramContextMenuService, ConnectorEditingService, DiagramComponent, SymbolPaletteComponent, BpmnShapeModel, ConnectorModel, ContextMenuSettingsModel, DiagramBeforeMenuOpenEventArgs, DiagramTools, HeaderModel, LaneModel, NodeModel, PaletteModel, PortConstraints, PortVisibility, RulerSettingsModel, SelectorConstraints, SelectorModel, ShapeStyleModel, SnapConstraints, SnapSettingsModel, SwimLaneModel, UserHandleModel, cloneObject, ScrollSettingsModel } from "@syncfusion/ej2-angular-diagrams";
 import { shadowProperty } from "@syncfusion/ej2-angular-documenteditor";
+import { modulesList } from "@syncfusion/ej2-angular-inplace-editor";
 import { ExpandMode, MenuEventArgs } from "@syncfusion/ej2-angular-navigations";
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel, UrlUtil, Util } from "codx-core";
 import { BP_Processes_Steps } from "projects/codx-bp/src/lib/models/BP_Processes.model";
@@ -272,7 +273,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
     //{ id: 'connector', text: 'Connector', icon: 'icon-timeline' },
     { value: 'start', text: 'Bắt đầu', icon: 'icon-i-circle' },
     { value: 'end', text: 'Kết thúc', icon: 'icon-i-circle fw-bold' },
-    { value: 'swimlane', text: 'SwimLane', icon: 'icon-view_quilt' },
+    { value: 'swimlane', text: 'Quy trình', icon: 'icon-view_quilt' },
 
   ];
   documentClick(args: MouseEvent): void {
@@ -814,6 +815,8 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
     }
   }
 
+
+  objNodes:any;
   dragEnter(e: any) {
     let ele = this.elementRef.nativeElement.querySelector('.diagramzone');
     //console.log(e);
@@ -840,7 +843,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
       // Size of the node
       width: 100,
       height: 100,
-      margin: { left: 100, top: 100 },
+      margin: { left: 0, top: 100 },
       style: { strokeColor: '#000' },
     };
 
@@ -848,7 +851,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
     //model.offsetY = model.offsetY -  this.diagram.diagramLayer?.getBoundingClientRect().y
     //model.offsetY = e.event.target.getBoundingClientRect().y - model.offsetY +  e.event.target.getBoundingClientRect().height;
     model.margin.left =
-      model.offsetX - e.event.target.getBoundingClientRect().x;
+      model.offsetX - e.event.target.getBoundingClientRect().x ;
     model.margin.top = model.offsetY - e.event.target.getBoundingClientRect().y;
     switch (e.item?.element?.nativeElement?.id) {
       case 'start':
@@ -887,6 +890,8 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
           shape: 'Decision',
         };
         model.offsetY = model.offsetY - 100;
+        model.data = this.generateStep(e.item?.element?.nativeElement?.id,this.targetItem.refID)
+        this.process.steps.push(model.data);
         if (this.targetItem && this.targetItem.isLane && swimlane && laneID)
           this.diagram.addNodeToLane(model, swimlane, laneID);
         else this.diagram.add(model);
@@ -901,54 +906,96 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
             style: { strokeColor: '#757575', fill: '#757575' },
           },
           style: { strokeWidth: 3, strokeColor: '#757575' },
-          type: 'Bezier',
+          type: 'Orthogonal',
         };
         this.diagram.addConnector(connector);
         break;
       case 'swimlane':
-        // let height = 500;
-        // if(ele) height = ele.offsetHeight
-        // let swimLane: NodeModel = {
-        //   id: this.makeid(10),
-        //   shape: {
-        //     type: 'SwimLane',
-        //     header: {
-        //       height: 30,
-        //       style: { fill: '#fff', textAlign: 'Left' },
-        //       annotation: { content: 'Quy trình động' },
-        //     },
-        //     lanes: [
-        //       {
-        //         id: this.makeid(10),
-        //         canMove: true,
-        //         height: height,
-        //         width: 800,
-        //         header: {
-        //           height: 30,
-        //           style: { fontSize: 14, fill: '#fff' },
-        //           annotation: { content: 'Bước quy trình' },
-        //         },
-        //       },
-        //     ],
-        //     phases: [
-        //       {
-        //         id: this.makeid(10),
-        //         offset: 170,
-        //         header: { annotation: { content: '' } },
-        //       },
-        //     ],
-        //     phaseSize: 0.5,
-        //     orientation: 'Vertical',
-        //     isLane: true,
-        //   },
-        //   height: height,
-        //   width: 800,
-        //   style: { strokeColor: '#ffffff', fill: '#ffffff' },
-        //   offsetX: model.offsetX,
-        //   offsetY: model.offsetY + 100,
-        // };
-        // this.diagram.add(swimLane);
+        let height = 500;
+        if(ele) height = ele.offsetHeight
+
         this.generateProcess();
+        if(this.process && Object.keys(this.process)){
+          let objDiagram: NodeModel | any = {
+            id: this.makeid(10),
+            isProcess:true,
+
+            shape: {
+              id: this.makeid(10),
+              type: 'SwimLane',
+              hasHeader:true,
+              header: {
+                height: 30,
+                id: this.makeid(5),
+                annotation: { content: 'Quy trình động',style: { fontSize: 16, color: '#0099ff', bold: true } },
+              },
+              lanes: [
+                {
+                  id: this.makeid(10),
+                  canMove: true,
+                  height: height,
+                  width: 600,
+                  header: {
+                    height: 30,
+                    id:this.makeid(5),
+                    annotation: {
+                      content: 'Bước quy trình',
+                      style: { fontSize: 10,bold:true },
+                      refID:undefined,
+                    },
+                  },
+                  refID:undefined,
+                  data:undefined,
+                  isStage:true
+                },
+              ],
+              // phases: [
+              //   {
+              //     id: this.makeid(10),
+              //     offset: 170,
+              //     header: { annotation: { content: '' } },
+              //   },
+              // ],
+              // phaseSize: 0.5,
+              isLane:true,
+              orientation: 'Vertical',
+
+            },
+            height: height,
+            width: 800,
+            style: { strokeColor: '#ffffff', fill: '#ffffff' },
+            offsetX: model.offsetX,
+            offsetY: model.offsetY + 100,
+
+          };
+          objDiagram.isProcess=true;
+          objDiagram.data=this.process;
+          objDiagram.processID=this.process.recID
+          objDiagram.shape.header.annotation.content = this.process.processName;
+          if(this.process.steps.length){
+            let stage = this.process.steps.findLast((x:any)=>x.activityType=='Stage');
+            if(stage){
+              objDiagram.shape.lanes[0].refID = stage.recID;
+              //objDiagram.shape.lanes[0].content = stage.stepName;
+              objDiagram.shape.lanes[0].style={bold:true};
+              objDiagram.shape.lanes[0].data=stage;
+              objDiagram.shape.lanes[0].header.annotation.content = stage.stepName;
+              objDiagram.shape.lanes[0].header.annotation.refID = stage.recID;
+              objDiagram.shape.lanes[0].isStage = true;
+
+            }
+
+          }
+          setTimeout(()=>{
+            this.objNodes = objDiagram;
+            console.log(objDiagram);
+
+            this.diagram.addNode(objDiagram);
+          },100)
+        }
+
+
+        //this.generateProcess();
         break;
       case 'Form':
       case 'Sign':
@@ -956,15 +1003,18 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
       case 'Task':
       case 'Event':
       case 'Email':
-      case 'Appove':
+      case 'Approve':
       case 'Check':
         model.id = this.makeid(10);
         model.shape = {
           type: 'HTML',
-          version: e.item?.element?.nativeElement?.id,
+          version: 'step',
         };
         model.width = 300;
-        model.height = 200;
+        model.height = 150;
+        //model.margin.left =  model.margin.left + model.width/2;
+        model.data = this.generateStep(e.item?.element?.nativeElement?.id,this.targetItem?.refID)
+        if(this.process && this.process.steps)this.process.steps.push(model.data);
         // if(swimlane)this.diagram.addNodeToLane(model,swimlane,laneID)
         // else this.diagram.add(model);
         this.diagram.add(model);
@@ -998,9 +1048,29 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
 
   deleteNode(node: any) {
     if (node && this.diagram) {
+      if(node.data){
+        if(this.process && this.process.steps?.length){
+          this.process.steps = this.process.steps.filter((step:any)=>{
+            if(step.settings){
+              let settings:any;
+              if(typeof step.settings=='string'){
+                 settings = JSON.parse(step.settings);
+              }
+              else settings = step.settings;
+              if(settings && settings.nextSteps?.length){
+                settings.nextSteps = settings.nextSteps.filter((x:any)=>x.nextStepID != node.data.recID);
+                step.settings = JSON.stringify(settings)
+              }
+
+            }
+            return step.recID !=node.data.recID;
+          })
+        }
+      }
       this.diagram.remove(node);
       let connector = this.diagram.getConnectorObject(node.id);
       if (connector) this.diagram.removeData(connector as any);
+
     }
   }
 
@@ -1026,7 +1096,6 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
     if (e.newValue && e.newValue.length == 1) {
       this.nodeSelected = e.newValue[0];
     }
-    console.log('chọn nè', e);
   }
 
   defaultData: any = JSON.parse(
@@ -1213,7 +1282,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
           (this.diagram.selectedItems.nodes[0] as any).parentId
         );
         let shape: SwimLaneModel = swimlane.shape as SwimLaneModel;
-        let existingLane: LaneModel = cloneObject(shape.lanes[0]);
+        let existingLane: any = cloneObject(shape.lanes[0]);
         let newLane = existingLane;
         newLane.id = this.makeid(10);
         newLane.children = [];
@@ -1236,12 +1305,18 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
           newLane.header.width = existingLane.width;
           newLane.header.height = existingLane.header.height;
         }
+        newLane.data = this.generateStep('Stage');
+        newLane.refID = newLane.data.recID;
+        newLane.header.annotation.content = newLane.data.stepName;
+        this.process.steps.push(newLane.data);
         if (args.item.id === 'InsertLaneBefore') {
+          //this.defaultStep(index)
           this.diagram.addLanes(swimlane, [newLane], index);
         } else {
+          this.defaultStep(index+1)
           this.diagram.addLanes(swimlane, [newLane], index + 1);
         }
-        this.diagram.refreshDiagramLayer();
+        //this.diagram.refreshDiagramLayer();
         //this.diagram.clearSelection();
       }
     } else if (args.item.id === 'Cut') {
@@ -1460,9 +1535,11 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
 
       }
       objDiagram.shape=shape;
+      this.diagram.clear();
       // objDiagram.isPhase=false;
       // objDiagram.isLane=false;
       setTimeout(()=>{
+
         this.diagram.addNode(objDiagram);
         this.process.steps.forEach((x:any)=>{
           if(x.settings){
@@ -1535,6 +1612,16 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
   mouseEnter(e: any) {
     if (this.isDragging) {
       if (e.actualObject) {
+        let id = e.actualObject.id.split(e.actualObject.parentId)[1];
+        if(id){
+          let objRoot = this.diagram.nodes.find((x:any)=>x.id == e.actualObject.parentId);
+          if(objRoot && objRoot.shape && (objRoot.shape as any).lanes?.length){
+            let objLane = (objRoot.shape as any).lanes.find((x:any)=>id.includes(x.id));
+            if(objLane){
+              e.actualObject.refID = objLane.refID;
+            }
+          }
+        }
         this.targetItem = e.actualObject;
         console.log(this.targetItem);
       }
@@ -1549,7 +1636,32 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
     if (e.state == 'Completed') {
       //this.isDragging = false;
       //console.log('ta gét',this.targetItem);
-      console.log('vẽ cục:   ', e);
+      if(e.objectType == 'Connector'){
+        let source = this.diagram.nodes.find((x:any)=>x.id==e.source.sourceID)?.data;
+        let target = this.diagram.nodes.find((x:any)=>x.id==e.source.targetID)?.data;
+        if(source && target){
+          let sourceSetting:any={};
+          if(typeof (source as any).settings == 'string'){
+              sourceSetting = JSON.parse((source as any).settings);
+          }
+          else sourceSetting = (source as any).settings;
+          if(sourceSetting){
+            if(sourceSetting.nextSteps && sourceSetting.nextSteps.length){
+              sourceSetting.nextSteps.push({nextStepID: (target as any).recID})
+            }
+            else{
+              sourceSetting.nextSteps = [];
+              sourceSetting.nextSteps.push({nextStepID: (target as any).recID})
+            }
+          }
+          (source as any).settings = JSON.stringify(sourceSetting);
+          let step = this.process.steps.find((x:any)=>x.recID== (source as any).recID);
+          if(step) step.settings = JSON.stringify(sourceSetting);
+          console.log(this.process);
+
+        }
+      }
+      //console.log('vẽ cục:   ', e);
       // setTimeout(() => {
       //   this.diagram && this.diagram.refresh();
       // }, 100);
@@ -1605,7 +1717,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
    collectionChange(e:any){
     if(this.diagram && this.viewOnly) this.diagram.fitToPage();
     else{
-      this.diagram.bringIntoView({x:600,y:200,width:1024,height:768} as any);
+      //this.diagram.bringIntoView({x:600,y:200,width:1024,height:768} as any);
     }
    }
 
@@ -1623,8 +1735,9 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
    }
 
    dataValueSettings:any;
-   genData() {
+   genData(isGenForm:boolean=true) {
     this.process.category = '';
+    this.process.settings = [];
     this.api
       .execSv<any>(
         'SYS',
@@ -1636,13 +1749,13 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
       .subscribe((st) => {
         if (st && st['1']) {
           this.dataValueSettings = JSON.stringify(st['1']);
-          this.process.settings = st['1'];
+          if(this.process)this.process.settings = st['1'];
         } else {
-          this.process.settings = [];
+          if(this.process) this.process.settings = [];
         }
       });
       this.defaultAdminPermission();
-      this.defaultStep();
+      this.defaultStep(0,isGenForm);
     }
     defaultAdminPermission() {
       let perm :any={};
@@ -1671,67 +1784,24 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
       this.process.recID=Util.uid();
       this.process.steps=[];
       this.process.processName="Quy trình mới";
-      this.genData();
+      this.genData(false);
     }
 
-    generateStep(type:string ='Form'){
-      let stage=new BP_Processes_Steps();;
-      stage.recID=Util.uid();
-      stage.activityType=type;
-    }
-    defaultStep() {
-      let lstStep = [];
-      var stage = new BP_Processes_Steps();
-      var form = new BP_Processes_Steps();
-      var vllStage = this.vllStepType.filter((x) => x.value == 'Stage')[0];
-      var vllForm = this.vllStepType.filter((x) => x.value == 'Form')[0];
-
-      stage.recID = Util.uid();
-      stage.stepNo = 0;
-      stage.activityType = 'Stage';
-      stage.stepName = vllStage.text + ' 1';
-      stage.reminder = this.process.reminder;
-      stage.eventControl = null;
-      stage.stepType = '1';
-      stage.permissions = [{ objectID: this.user?.userID, objectType: 'U' }];
-      var processallowDrag = null;
-      var processDefaultProcess = null;
-      var processCompleteControl = null;
-      var allowEdit = null;
-      if (this.process.settings && this.process.settings.length > 0) {
-        processallowDrag = this.process.settings.filter(
-          (x) => x.fieldName == 'AllowDrag'
-        )[0];
-        processDefaultProcess = this.process.settings.filter(
-          (x) => x.fieldName == 'DefaultProcess'
-        )[0];
-        processCompleteControl = this.process.settings.filter(
-          (x) => x.fieldName == 'CompleteControl'
-        )[0];
-        allowEdit = this.process.settings.filter(
-          (x) => x.fieldName == 'AllowEdit'
-        )[0];
-      }
-      form.recID = Util.uid();
-
-      stage.settings = JSON.stringify({
-        icon: 'icon-i-bar-chart-steps',
-        color: '#0078FF',
-        backGround: '#EAF0FF',
-        allowDrag: processallowDrag?.fieldValue || null,
-        defaultProcess: processDefaultProcess?.defaultProcess || null,
-        completeControl: processCompleteControl?.completeControl || null,
-        nextSteps: [{ nextStepID: form.recID }],
-        sortBy: null,
-        totalControl: null,
-        allowEdit: allowEdit?.fieldValue,
-      });
-
-      form.stepNo = 1;
-      form.stepName = vllForm.text + ' 1';
-      form.activityType = 'Form';
-      form.stageID = stage.recID;
-      form.parentID = stage.recID;
+    generateStep(type:string ='Form',parentID:any=undefined){
+      if(!this.process || !Object.keys(this.process).length) return null;
+      let vllStage = this.vllStepType.filter((x) => x.value == 'Stage')[0];
+      let vllForm = this.vllStepType.filter((x) => x.value == 'Form')[0];
+      let form=new BP_Processes_Steps();
+      form.recID=Util.uid();
+      form.activityType=type;
+      form.stepNo = this.process.steps.length ? this.process.steps.length+1 : 1;
+      form.stepName = type;
+      form.activityType = type;
+      let allowEdit = this.process?.settings ?  this.process.settings.filter(
+        (x) => x.fieldName == 'AllowEdit'
+      )[0] : null;
+      form.stageID = parentID;
+      form.parentID = parentID;
       form.extendInfo = this.extendInfos;
       form.memo = '';
       form.duration = 1;
@@ -1747,17 +1817,93 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
         allowEdit: allowEdit?.fieldValue,
       });
       form.permissions = [{ objectID: this.user?.userID, objectType: 'U' }];
-      stage.child = [form];
-      lstStep.push(stage, form);
+      return form;
+    }
+    defaultStep(stepNo:number=0, isGenForm:boolean=true) {
+      let lstStep = [];
+      if(this.process.steps){
+        lstStep = this.process.steps;
+      }
+      let stage = new BP_Processes_Steps();
+      let form = new BP_Processes_Steps();
+      let vllStage = this.vllStepType.filter((x) => x.value == 'Stage')[0];
+      let vllForm = this.vllStepType.filter((x) => x.value == 'Form')[0];
+
+      stage.recID = Util.uid();
+      stage.stepNo = stepNo;
+      stage.activityType = 'Stage';
+      stage.stepName = vllStage.text + ' 1';
+      stage.reminder = this.process.reminder;
+      stage.eventControl = null;
+      stage.stepType = '1';
+      stage.permissions = [{ objectID: this.user?.userID, objectType: 'U' }];
+      let processallowDrag = null;
+      let processDefaultProcess = null;
+      let processCompleteControl = null;
+      let allowEdit = null;
+      if (this.process.settings && this.process.settings.length > 0) {
+        processallowDrag = this.process.settings.filter(
+          (x) => x.fieldName == 'AllowDrag'
+        )[0];
+        processDefaultProcess = this.process.settings.filter(
+          (x) => x.fieldName == 'DefaultProcess'
+        )[0];
+        processCompleteControl = this.process.settings.filter(
+          (x) => x.fieldName == 'CompleteControl'
+        )[0];
+        allowEdit = this.process.settings.filter(
+          (x) => x.fieldName == 'AllowEdit'
+        )[0];
+      }
+
+      stage.settings = JSON.stringify({
+        icon: 'icon-i-bar-chart-steps',
+        color: '#0078FF',
+        backGround: '#EAF0FF',
+        allowDrag: processallowDrag?.fieldValue || null,
+        defaultProcess: processDefaultProcess?.defaultProcess || null,
+        completeControl: processCompleteControl?.completeControl || null,
+        nextSteps: [{ nextStepID: form.recID }],
+        sortBy: null,
+        totalControl: null,
+        allowEdit: allowEdit?.fieldValue,
+      });
+      lstStep.push(stage);
+      if(isGenForm){
+        form.recID = Util.uid();
+        form.stepNo = stepNo+1;
+        form.stepName = vllForm.text + ' 1';
+        form.activityType = 'Form';
+        form.stageID = stage.recID;
+        form.parentID = stage.recID;
+        form.extendInfo = this.extendInfos;
+        form.memo = '';
+        form.duration = 1;
+        form.interval = '1';
+        form.stepType = '1';
+        form.settings = JSON.stringify({
+          icon: vllForm.icon,
+          color: vllForm.color,
+          backGround: vllForm.textColor,
+          nextSteps: null,
+          sortBy: null,
+          totalControl: null,
+          allowEdit: allowEdit?.fieldValue,
+        });
+        form.permissions = [{ objectID: this.user?.userID, objectType: 'U' }];
+        stage.child = [form];
+        lstStep.push(form);
+      }
+
       this.process.steps = lstStep;
-      this.cache.message('BP001').subscribe((item) => {
-        this.process.steps[0].stepName = item?.customName;
-      });
-      this.cache.message('BP002').subscribe((item) => {
-        this.process.steps[1].stepName = item?.customName;
-      });
-      this.setLstExtends()
-      this.initProcess();
+      // this.cache.message('BP001').subscribe((item) => {
+      //   this.process.steps[0].stepName = item?.customName;
+      // });
+      // this.cache.message('BP002').subscribe((item) => {
+      //   if(this.process.steps[1])this.process.steps[1].stepName = item?.customName;
+      // });
+      this.setLstExtends();
+      //this.initProcess();
     }
     lstShowExtends:any=[];
     extendInfos:any=[];
@@ -1804,6 +1950,10 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
           e.element.data.stepName=e.newValue;
         }
       }
+    }
+
+    sizeChanged(e:any){
+      debugger
     }
   //===========
 }

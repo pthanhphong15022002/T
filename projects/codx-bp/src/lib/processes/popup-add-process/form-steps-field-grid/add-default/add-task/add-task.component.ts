@@ -110,9 +110,9 @@ export class AddTaskComponent
       dataType : "String"
     },
   ];
-  isAllowEdit = "0"; 
+  isAllowEdit = "0";
   vllBP017: any;
-  
+
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes?.activityType &&
@@ -123,9 +123,9 @@ export class AddTaskComponent
       if (this.data) this.changeActivity();
     }
   }
-  ngOnInit(): void {    
-    
-    if (this.process?.settings && this.process?.settings.length > 0) 
+  ngOnInit(): void {
+
+    if (this.process?.settings && this.process?.settings.length > 0)
     {
       this.isAllowEdit = this.process?.settings.filter(
         (x) => x.fieldName == 'AllowEdit'
@@ -157,7 +157,7 @@ export class AddTaskComponent
     this.listDocument = JSON.parse(JSON.stringify(this.process?.documentControl));
     let ids = [];
     this.listDocument.forEach((elm) => {
-      if (elm.files && elm.files.length > 0) 
+      if (elm.files && elm.files.length > 0)
       {
         elm.files.forEach(element => {
           ids.push(element.fileID || element?.recID);
@@ -206,7 +206,7 @@ export class AddTaskComponent
               this.listDocument[index].filess.push(ix);
             }
           });
-          
+
           //this.listDocument[i].filess = item;
         }
       });
@@ -239,7 +239,7 @@ export class AddTaskComponent
       backGround: vllStage?.textColor,
       checkList: '',
       nextSteps: '',
-      allowEdit: allowEdit 
+      allowEdit: allowEdit
     };
     if (!this.process?.documentControl) this.process.documentControl = [];
     this.dataChange.emit(this.data);
@@ -405,7 +405,7 @@ export class AddTaskComponent
     // } else {
     //   this.dataChange.emit(this.data);
     // }
-    
+
     this.dataChange.emit(this.data);
   }
 
@@ -490,7 +490,7 @@ export class AddTaskComponent
       memo: this.data?.memo,
       refID: '',
       files: files,
-      permissions: 
+      permissions:
       [
         {
           objectID: this.user?.userID,
@@ -534,7 +534,7 @@ export class AddTaskComponent
     return [...new Map(arr.map((item) => [item['recID'], item])).values()];
   }
   openFormSetting(val: any = null, index = null) {
-    
+
     this.process.steps = this.distinctArray(this.process?.steps);
 
     let option = new DialogModel();
@@ -577,7 +577,7 @@ export class AddTaskComponent
         x.activityType != 'Conditions' &&
         x.activityType != 'StartEnd'
     );
-    
+
     let popupDialog = this.callFuc.openForm(
       AddSettingConditionsComponent,
       '',
@@ -601,13 +601,16 @@ export class AddTaskComponent
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 1010;
+
+    let listForm = this.process.steps.filter(x=>x.stepNo < this.data.stepNo && x.activityType == "Form");
+    
     let popupDialog = this.callFuc.openForm(
       ModeviewComponent,
       '',
       null,
       null,
       '',
-      { extendInfo: this.data.extendInfo, stepNo: this.data.stepNo , formModel: this.formModel},
+      { extendInfo: this.data.extendInfo, stepNo: this.data.stepNo , formModel: this.formModel , listForm: listForm},
       '',
       option
     );
@@ -618,13 +621,13 @@ export class AddTaskComponent
           res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
 
         var index = this.process?.steps.findIndex(x=>x.recID == this.data.recID);
-        if(index >=0) 
+        if(index >=0)
         {
           if (this.data?.extendInfo) {
             this.data.extendInfo.forEach((element) => {
               if (element.controlType == 'Attachment') {
                 if (!element?.documentControl || element?.documentControl.length == 0) {
-                  var obj = 
+                  var obj =
                   {
                     recID: Util.uid(),
                     title: element.title,
@@ -635,7 +638,7 @@ export class AddTaskComponent
                     stepNo: this.data?.steps[1].stepNo,
                     fieldID: element.recID,
                     memo: this.data?.steps[1].memo,
-                    permissions: 
+                    permissions:
                     [
                       {
                         objectID: this.user?.userID,
@@ -675,7 +678,7 @@ export class AddTaskComponent
                   this.data.documentControl = doc;
                 }
               }
-  
+
               if (typeof element.documentControl != 'string') {
                 element.documentControl = JSON.stringify(element.documentControl)
               }
@@ -687,7 +690,7 @@ export class AddTaskComponent
               }
 
               if (typeof element.tableFormat != 'string') {
-                element.tableFormat = JSON.stringify(element.tableFormat) 
+                element.tableFormat = JSON.stringify(element.tableFormat)
               }
             });
           }
@@ -802,7 +805,7 @@ export class AddTaskComponent
             templateType: type,
             refID: '',
             files: [files],
-            permissions: 
+            permissions:
             [
               {
                 objectID: this.user?.userID,
@@ -921,6 +924,7 @@ export class AddTaskComponent
         var obj = {
           objectID: elm.id,
           objectType: elm.objectType || 'U',
+          objectName: elm.objectName ?? elm.text,
           sendType: '2',
         };
         if (type == 'to') {
@@ -1003,10 +1007,10 @@ export class AddTaskComponent
       if (typeof elm.documentControl != 'string')
         elm.documentControl = JSON.stringify(elm.documentControl);
     });
-    
+
 
     if(!this.data.permissions || this.data.permissions.length <=0) this.notifySvr.notify("Vui lòng chọn người thực hiện.");
-    else 
+    else
     {
       this.api.execSv("BP","BP","ProcessesBusiness","UpdateProcessAsync",result).subscribe((item:any)=>{
       if(item?.steps){
@@ -1023,21 +1027,21 @@ export class AddTaskComponent
   {
     let fileIDs="";
     let dynamicApprovers=[];
-    
+
     this.listDocument.forEach(doc=>{
       if(doc?.files?.length>0){
         var l = doc?.files?.filter(x=>x.eSign)
-        if(l && l.length>0) fileIDs+= ";" + l.map(x=>x?.fileID)?.join(";");        
+        if(l && l.length>0) fileIDs+= ";" + l.map(x=>x?.fileID)?.join(";");
       }
     });
 
     this.data.permissions.forEach(per=>{
       if(per?.objectType!=null){
         let tempPer ={approver:per?.objectID,
-        roleType:per?.objectType,  
-        userName:per?.objectName,  
-        signer:per?.recID  } 
-        dynamicApprovers.push(tempPer);   
+        roleType:per?.objectType,
+        userName:per?.objectName,
+        signer:per?.recID  }
+        dynamicApprovers.push(tempPer);
       }
     });
     if(fileIDs?.length>0 && dynamicApprovers?.length>0){
@@ -1065,7 +1069,7 @@ export class AddTaskComponent
         this.dataChangeAttach.emit(true);
         this.api.execSv("BP","BP","ProcessesBusiness","GetAsync",this.process?.recID).subscribe((item:any)=>{
           if(item){
-            this.process.steps=item?.steps;            
+            this.process.steps=item?.steps;
             this.process.documentControl=item?.documentControl;
             this.dataChangeProcess.emit(this.process);
           }
@@ -1105,10 +1109,10 @@ export class AddTaskComponent
   fileCheckChange(evt: any, file: any) {
     this.listDocument.forEach(doc=>{
       if(doc?.filess?.length>0){
-        let f= doc?.filess?.find(x=>x?.recID==file?.recID);       
+        let f= doc?.filess?.find(x=>x?.recID==file?.recID);
         if(f!=null){
           f.esign =!f.esign;
-        } 
+        }
       }
     });
   }
@@ -1133,7 +1137,7 @@ export class AddTaskComponent
       if(this.process?.documentControl[indexP]?.files && this.process?.documentControl[indexP]?.files.length>0)
       {
         var index2 = this.process?.documentControl[indexP].files.findIndex(x=>x.fileID == id);
-        if(index2>=0) 
+        if(index2>=0)
         {
           this.process.documentControl[indexP].files[index2].eSign = !this.process?.documentControl[indexP].files[index2].eSign;
           this.listDocument[indexP].files[index2].eSign = !this.listDocument[indexP].files[index2].eSign;

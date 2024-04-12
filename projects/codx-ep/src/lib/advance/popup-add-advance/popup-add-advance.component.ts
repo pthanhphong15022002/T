@@ -48,6 +48,7 @@ export class PopupAddAdvanceComponent
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('attachment') attachment: any;
   columnsGrid = [];
+  requester = '';
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -59,6 +60,7 @@ export class PopupAddAdvanceComponent
     @Optional() dialogData: DialogData
   ) {
     this.user = this.auth.get();
+    this.requester = this.user.userID;
     this.dialog = dialogRef;
     if (dialogData?.data) {
       let obj = dialogData.data;
@@ -207,6 +209,8 @@ export class PopupAddAdvanceComponent
         this.data.employeeName = value.EmployeeName;
         this.data.phone = value.Mobile;
         this.data.email = value.Email;
+        this.requester = value.domainUser;
+        this.getEmployeeInfo(this.data.employeeID);
         // this.data.requester = value.UserID;
         // this.data.requesterName = value.UserName;
         // this.data.positionID = value.PositionID;
@@ -374,5 +378,22 @@ export class PopupAddAdvanceComponent
 
   showAttachment(evt: any, atm: any) {
     if (atm && atm.uploadFile) atm.uploadFile();
+  }
+
+  getEmployeeInfo(employeeID: string) {
+    if (!employeeID) return;
+    this.api
+      .execSv('HR', 'ERM.Business.HR', 'HRBusiness_Old', 'GetModelEmp', [
+        employeeID,
+      ])
+      .subscribe((res: any) => {
+        if (res) {
+          this.data.positionName = res.positionName;
+          this.data.organizationName = res.organizationName;
+          this.data.departmentName = res.departmentName;
+          this.data.divisionName = res.divisionName;
+          this.data.companyName = res.companyName;
+        }
+      });
   }
 }

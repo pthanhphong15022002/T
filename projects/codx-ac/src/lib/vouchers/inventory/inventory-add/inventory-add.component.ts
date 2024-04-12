@@ -50,6 +50,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
     allowEditOnDblClick:false,
     allowNextRowEdit:false
   }
+  isActive:any = true;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   constructor(
@@ -67,6 +68,9 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
     this.dataDefault = { ...dialogData.data?.oData };
     this.journal = { ...dialogData.data?.journal };
     this.baseCurr = dialogData.data?.baseCurr;
+    if (dialogData.data.hasOwnProperty('isActive')){
+      this.isActive = dialogData.data?.isActive; 
+    } 
   }
 
   //#endregion Constructor
@@ -353,7 +357,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
             this.dialog.dataService.update(res.data).subscribe();
             if (type == 'save') {
               this.onDestroy();
-              this.dialog.close();
+              this.dialog.close(res);
             }else{
               this.api
               .exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [

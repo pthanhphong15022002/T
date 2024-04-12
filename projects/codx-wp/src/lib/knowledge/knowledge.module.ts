@@ -10,8 +10,8 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { LayoutComponent } from './_layout/layout/layout.component';
 import { KnowledgeComponent } from './knowledge.component';
-import { NewComponent } from './new/new.component';
 import { PopupAddKnowledgeComponent } from './popup/popup-add-knowledge/popup-add-knowledge.component';
+import { KnowledgeViewDetailComponent } from './knowledge-view-detail/knowledge-view-detail.component';
 
 const routes:Routes = [
   {
@@ -19,19 +19,23 @@ const routes:Routes = [
     component: LayoutComponent,
     children:[
       {
+        path: 'knowledge/:funcID',
+        component: KnowledgeComponent
+      },
+      {
         path: 'knowledge/:funcID/:category',
         component: KnowledgeComponent
       },
       {
-        path: 'news/:funcID/:category',
-        component: NewComponent
+        path: 'knowledge/:funcID/:category/:recID',
+        component: KnowledgeViewDetailComponent
+      },
+      {
+        path: '**',
+        redirectTo: 'wp4/knowledge/WP401',
+        pathMatch: 'full'
       }
     ]
-  },
-  {
-    path: '**',
-    redirectTo: 'wp4/knowledge/WP401',
-    pathMatch: 'full',
   }
 ]
 
@@ -39,7 +43,7 @@ const Component: Type<any>[] = [
   LayoutComponent,
   KnowledgeComponent,
   PopupAddKnowledgeComponent,
-  NewComponent,
+  KnowledgeViewDetailComponent,
 ];
 
 @NgModule({

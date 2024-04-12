@@ -88,8 +88,6 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   // }
 
   saveData() {
-    if(this.isSave) return ;
-    this.isSave=true ;
     switch (this.action) {
       case 'confirm':
         this.saveConfirmStatus();
@@ -116,6 +114,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
         this.task.confirmComment.trim() == '')
     ) {
       this.notiService.notifyCode('TM019');
+      this.isSave=false;
       return;
     }
     ///xu ly save
@@ -128,6 +127,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
       ])
       .subscribe((res) => {
         if (res) {
+          this.isSave=false;
           this.dialog.close(res);
           this.notiService.notifyCode('SYS007');
           //send mail FE
@@ -157,6 +157,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
           this.taskExtends.taskID
         )
         .subscribe((res) => {
+
           if (res) {
             if (res.dueDate < this.taskExtends.extendDate) {
               this.notiService.alertCode('TM059').subscribe((confirm) => {
@@ -182,7 +183,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
         if (res) {
           this.dialog.close(res);
           this.notiService.notifyCode('SYS007');
-          // send mail FE        
+          // send mail FE
           // this.tmSv
           //   .getRecIDTaskByIdAsync(this.taskExtends.taskID)
           //   .subscribe((data) => {

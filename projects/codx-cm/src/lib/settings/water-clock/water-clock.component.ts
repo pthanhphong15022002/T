@@ -130,6 +130,7 @@ export class WaterClockComponent
 
   selectedChange(data) {
     if (data || data?.data) this.itemSelected = data?.data ? data?.data : data;
+    this.detectorRef.detectChanges();
   }
   changeDataMF(e: any, data: any) { }
 
@@ -446,5 +447,13 @@ export class WaterClockComponent
         },
       },
     ];
+
+  }
+
+  clickMoreFunction(e) {
+    this.clickMF(e.e, e.data);
+  }
+  eventChangeMF(e) {
+    this.changeDataMF(e.e, e.data);
   }
 }

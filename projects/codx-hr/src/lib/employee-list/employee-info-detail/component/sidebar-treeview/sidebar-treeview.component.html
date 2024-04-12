@@ -1,0 +1,50 @@
+<codx-views #view
+    [views]="views"
+    idField="recID"
+    [service]="'HR'"
+    [autoLoad]="false"
+    [hideMoreFuncs]="false"
+    [autoSearch]="false"
+    (onActions)="onAction($event)"
+    (searchChanged)="searchChanged($event)">
+</codx-views>
+
+<ng-template #tmpLeft>
+    <codx-listview
+        class="h-100"
+        [itemTemplate]="itemTemplateTree"
+        [entityName]="'HR_OrganizationUnits'"
+        [service]="'HR'"
+        type="treeView"
+        textField="orgUnitName"
+        [gridViewName]="'grvOrganizationUnits'"
+        [formName]="'OrganizationUnits'"
+        [idField]="'orgUnitID'"
+        [parentIdField]="'ParentID'"
+        [dataService]="dtServiceOrgUnit"
+        [enableCheck]="false"
+        [data]="null"
+        [selectFirst]="true"
+        (onSelectionChanged)="onSelectionChange($event)">
+    </codx-listview>
+</ng-template> 
+
+<codx-listview #listView
+    entityName="HR_OrganizationUnits"
+    gridViewName="grvOrganizationUnits"
+    formName="OrganizationUnits"
+    service="HR"
+    [parentIdField]="'ParentID'"
+    [idField]="'orgUnitID'"
+    [itemTemplate]="itemTemplateTree"
+    >
+</codx-listview> 
+
+<ng-template #itemTemplateTree let-data>
+    <div class="d-flex align-items-center">
+        <div *ngIf="data.orgUnitName" style="margin-right: 5px;">
+            <i class="icon-home"></i>
+        </div>
+        <span>{{data.orgUnitName}}</span>
+    </div>
+</ng-template>
