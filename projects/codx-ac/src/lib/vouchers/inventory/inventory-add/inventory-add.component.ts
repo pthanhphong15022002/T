@@ -357,7 +357,7 @@ export class InventoryAddComponent extends UIComponent implements OnInit {
             this.dialog.dataService.update(res.data).subscribe();
             if (type == 'save') {
               this.onDestroy();
-              this.dialog.close();
+              this.dialog.close(res);
             }else{
               this.api
               .exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [

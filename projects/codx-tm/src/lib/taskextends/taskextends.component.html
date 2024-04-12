@@ -64,16 +64,8 @@
         >
         </codx-vll>
       </span>
-      <span>
-        <span
-          class="fs-7 text-gray-600"
-          #createdOn
-          [innerHTML]="
-            data.createdOn
-              | formatvalue : view.formModel : 'createdOn' : createdOn
-              | async
-          "
-        ></span>
+      <span class="fs-7 text-gray-600">
+        {{ data.createdOn | fmDT : "dmy" }}
       </span>
     </div>
   </div>

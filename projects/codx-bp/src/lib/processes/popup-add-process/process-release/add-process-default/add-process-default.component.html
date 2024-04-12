@@ -83,6 +83,7 @@
                                 <ng-container *ngSwitchCase="'Table'">
                                     <codx-gridview-v2
                                         #gridView
+                                        [witdh]="'100%'"
                                         [outputMoreFunc]="true"
                                         [columnsGrid]="child.columnsGrid"
                                         [dataSource]="dataTable[child.fieldName]"

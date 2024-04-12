@@ -869,11 +869,55 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   updateTask(data, status) {
     this.bpSV.updateStatusTask(data.recID, status, null).subscribe((res) => {
       if (res) {
-        this.notiSV.notifyCode('SYS034');
-        this.formatDataTask({ event: { task: res } });
-        this.changeMF();
+        if(data?.activityType!="Sign"){
+          this.notiSV.notifyCode('SYS034');
+        }
+        this.updateView(res);
       }
     });
+  }
+
+  updateView(viewData) {
+    if (viewData?.length == 2) {
+      let ins = viewData[0];
+      if(ins!=null){
+        // this.data.status = ins?.status ?? this.data.status;
+        // this.data.currentStage = ins?.currentStage ?? this.data?.currentStage;
+        // this.data.currentStep = ins?.currentStep ?? this.data?.currentStep;
+        // this.data.actualStart = ins?.actualStart ?? this.data?.actualStart;
+        // this.data.actualEnd = ins?.actualEnd ?? this.data?.actualEnd;
+        // this.data.actualHours = ins?.actualHours ?? this.data?.actualHours;
+        this.data = ins;
+      }
+      let task = viewData[1];
+      if(task?.length>0){
+        // this.listStage?.forEach((stage) => {
+        //   let nStage = task?.find(x=>x?.stepID == stage?.recID);
+        //   stage.statusStage = nStage?.status ?? stage?.statusStage;
+        //   if (stage?.child?.length > 0) {
+        //     stage?.child?.forEach((child1) => {            
+        //       let nChild = task?.find(x=>x?.taskID == child1?.recID);
+        //       child1.status = nChild?.status ?? child1?.status;
+        //       child1.dataTask = nChild ??child1.dataTask;
+        //       if (child1?.child?.length > 0) {
+        //         child1?.child?.forEach((child2) => {
+        //           let nChild2 = task?.find(x=>x?.taskID == child2?.recID);
+        //           child2.status = nChild2?.status ?? child2?.status;
+        //           child2.dataTask = nChild ??child2.dataTask;
+        //         });
+        //       }
+        //     });
+        //   }
+        // });
+        // this.listTask?.forEach((t)=>{
+        //   let nTask = task?.find(x=>x?.recID==t?.recID);
+        //   t.status =nTask?.status ?? t.status;
+        // });
+        this.listTask = task;
+        this.formatData();
+      }
+      this.changeMF();
+    }
   }
   sendMail(data) {
     let input = {

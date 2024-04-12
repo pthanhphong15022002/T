@@ -131,10 +131,8 @@
             <div class="w-100 me-2">
               <codx-input [ngStyle]="formJournal?.form?.data?.assignRule === '0' ? '' :{display:'none'}" type="text"
                 [disabled]="true"></codx-input>
-              <!-- <codx-input [ngStyle]="formJournal?.form?.data?.assignRule != '0' ? '' :{display:'none'}" field="voucherFormat" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input> -->
-              <ejs-combobox [ngStyle]="formJournal?.form?.data?.assignRule != '0' ? '' :{display:'none'}"
-                [dataSource]="oAutoNumber" (beforeOpen)="beforeOpenCbxAutoNumber($event)">
-              </ejs-combobox>
+              <codx-input [ngStyle]="formJournal?.form?.data?.assignRule != '0' ? '' :{display:'none'}" field="voucherFormat"
+                [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
             </div>
             <button (click)="openAutoNumberForm()" [disabled]="formJournal?.form?.data?.assignRule === '0'"
               type="button" class="btn btn-icon btn-light-primary" role="button">
