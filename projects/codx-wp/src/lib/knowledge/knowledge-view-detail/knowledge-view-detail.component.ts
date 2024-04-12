@@ -5,9 +5,9 @@ import { WP_Comments } from '../../models/WP_Comments.model';
 import { PopupAddCommentComponent } from '../../news/popup/popup-add-comment/popup-add-comment.component';
 import { PopupAddComponent } from '../../news/popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from '../../news/popup/popup-search/popup-search.component';
-import { NEWSTYPE } from '../knowledge.component';
 import { Subject, takeUntil } from 'rxjs';
 import { PopupAddKnowledgeComponent } from '../popup/popup-add-knowledge/popup-add-knowledge.component';
+import { NEWSTYPE } from '../models/Knowledge.model';
 
 @Component({
   selector: 'wp4-knowledge-view-detail',
@@ -33,7 +33,7 @@ export class KnowledgeViewDetailComponent extends UIComponent implements AfterVi
   @ViewChild('tmpContent') tmpContent: TemplateRef<any>;
   constructor
   (
-    private injector: Injector
+    injector: Injector
   ) 
   {
     super(injector);

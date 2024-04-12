@@ -169,9 +169,17 @@
 // .pic-newshot {
 //     border: 1px aqua solid;
 // }
-
+.carousel-control-next-icon 
+{
+    --bs-bg-opacity: 1;
+    background-color: rgba(194, 200, 202, 1) !important;
+}
+.carousel-control-prev-icon {
+    --bs-bg-opacity: 1;
+    background-color: rgba(194, 200, 202, 1) !important;
+}
 .slide-item{
-    padding:0px 50px ;
+    // padding:0px 50px ;
     width: 100%;
 }
 .silde-item-block{
