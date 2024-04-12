@@ -32,6 +32,7 @@ export class PopupAddHistoryWaterClockComponent implements OnInit, AfterViewInit
   oldRef = '';
   siteIDOld = '';
   isWaterClock = false;
+  parent: any
 
   constructor(
     private cache: CacheService,
@@ -43,9 +44,9 @@ export class PopupAddHistoryWaterClockComponent implements OnInit, AfterViewInit
   ) {
     this.dialog = dialog;
     this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
-    // this.headerText = dt?.data?.headerText;
+    this.headerText = dt?.data?.headerText;
     this.action = dt?.data?.action;
-    this.action = dt?.data?.action;
+    this.parent = dt?.data?.parent;
     this.gridViewSetup = dt?.data?.gridViewSetup;
 
     this.viewOnly = this.action == 'view';
@@ -59,5 +60,34 @@ export class PopupAddHistoryWaterClockComponent implements OnInit, AfterViewInit
 
   onSave() {
 
+  }
+  valueChange(e) {
+    if (e.field) {
+      this.data[e.field] = e.data;
+    }
+    switch (e.field) {
+      case 'quantity':
+        this.data['cumulatedDepr'] = this.data['quantity'] - this.parent['quantity'];
+        this.data['costAmt'] = this.data['cumulatedDepr'] * 1000;//this.data['purcAmount'] //test
+        // if (this.data['deprRate'] && this.data['cumulatedDepr']) {
+        //   this.data['estimatedCapacity'] = this.data['cumulatedDepr'] / 100 * this.data['deprRate'];
+        //   this.data['capacityPrice'] = this.data['estimatedCapacity'] * this.data['capacityUsed']
+        // } else {
+        //   this.data['estimatedCapacity'] = 0;
+        //   this.data['capacityPrice'] = 0
+        // }
+        break;
+      case 'deprRate':
+
+        break;
+    }
+    if (this.data['deprRate'] && this.data['cumulatedDepr']) {
+      this.data['estimatedCapacity'] = this.data['cumulatedDepr'] / 100 * this.data['deprRate'];
+      this.data['capacityPrice'] = this.data['estimatedCapacity'] * 1000 // this.data['capacityUsed'] //test
+    } else {
+      this.data['estimatedCapacity'] = 0;
+      this.data['capacityPrice'] = 0
+    }
+    this.form.formGroup.patchValue(this.data)
   }
 }

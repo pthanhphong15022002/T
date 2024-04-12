@@ -58,7 +58,7 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
 
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.itemSelected && this.idCrr != this.itemSelected.assetID) {
+    if (changes?.itemSelected && this.itemSelected && this.idCrr != this.itemSelected.assetID) {
       if (this.gridHistory) {
         setTimeout(() => {
           this.gridHistory.refresh();
