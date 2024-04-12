@@ -484,8 +484,8 @@ codx-page-title.page-title.d-flex.ms-0.align-items-center.flex-wrap.ms-3 {
     right: 0;
     top: 0;
     height: calc(100vh - 100px);
-    overflow: auto;
-    width: 300px;
+    overflow: scroll;
+    min-width: 300px;
 }
 
 .main-content{
@@ -493,6 +493,16 @@ codx-page-title.page-title.d-flex.ms-0.align-items-center.flex-wrap.ms-3 {
     right: 0;
     top: 0;
     height: calc(100vh - 100px);
-    overflow: auto;
+    overflow: scroll;
     width: 830px !important;
+}
+
+@media (max-width: 1050px) {
+   .user-right{
+    display: none !important;
+   }
+}
+
+.page-title.d-flex.ms-0.align-items-center.flex-wrap.ms-3 {
+    max-width: 0 !important;
 }

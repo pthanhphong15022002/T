@@ -7266,4 +7266,11 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     options.Width = 'Auto';
     this.callfunc.openSide(DialogWaitingLeavingApproveComponent, options);
   }
+
+  openMyReamSide() {
+    let options = new SidebarModel();
+
+    options.Width = 'Auto';
+    this.callfunc.openSide(MyTemComponent, options);
+  }
 }
