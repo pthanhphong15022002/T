@@ -86,8 +86,9 @@
               <ng-container *ngSwitchCase="'connector'">
                 <span class="icon-35" [ngClass]="item.icon"></span>
               </ng-container>
+
               <ng-container *ngSwitchCase="'swimlane'">
-                <span class="icon-35" [ngClass]="item.icon"></span>
+                <div class="w-600px h-700px border border-2"></div>
               </ng-container>
               <ng-container *ngSwitchCase="'Form'">
                 <ng-container
@@ -627,7 +628,8 @@
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
           <div class="border rounded bg-warning px-1 me-3 fs-7">{{data.data?.duration +' '+ getIntervalObject(data.data?.interval).text}}</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
-          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"
+          (click)="deleteNode(data)"></i>
         </div>
       </div>
       <div
