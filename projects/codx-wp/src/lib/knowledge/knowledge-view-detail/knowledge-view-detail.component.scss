@@ -1,0 +1,26 @@
+.more-function {
+    position: fixed;
+    right: 40px;
+    bottom: 20px;
+}
+
+.bottom-15{
+    bottom: 15px !important;
+}
+
+
+.h-70px{
+    height: 70px !important;
+}   
+.min-w-350px{
+    min-width: 350px;
+}
+
+.fix-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.post:hover  .news-title{
+    cursor: pointer;
+    color: var(--text-primary);
+}

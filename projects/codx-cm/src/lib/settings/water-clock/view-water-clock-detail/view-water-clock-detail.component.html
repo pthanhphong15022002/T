@@ -1,0 +1,253 @@
+<div class="empty-data" *ngIf="!itemSelected?.assetID">
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-200px"
+        />
+        <div class="fs-5 text-dark fw-bold mt-2 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="itemSelected?.assetID">
+  <codx-detail-tmp
+    [header]="header"
+    [formModel]="formModel"
+    [body]="body"
+    [footer]="footer"
+    [hideMF]="hideMF"
+    (clickMF)="clickMF($event, itemSelected)"
+    (changeDataMF)="changeDataMF($event, itemSelected)"
+    [dataItem]="itemSelected"
+  >
+    <ng-template #header>
+      <div class="container_detail mt-1">
+        <div class="d-flex justify-content-between mb-2">
+          <div class="d-flex flex-column w-100">
+            <div class="d-flex align-items-start">
+              <div class="me-4">
+                <codx-img
+                  [objectId]="itemSelected?.refID"
+                  [imgOn]="itemSelected?.modifiedOn"
+                  [objectType]="'CM_Customers'"
+                  [referType]="'avt'"
+                  [width]="40"
+                >
+                </codx-img>
+              </div>
+              <div class="d-flex flex-column">
+                <div class="fw-bold text-dark fs-5-sm mb-1">
+                  <span
+                    [ngbTooltip]="itemSelected?.assetName"
+                    [innerHTML]="
+                      itemSelected?.assetName
+                        | formatvalue : formModel : 'assetName'
+                        | async
+                    "
+                  ></span>
+                </div>
+                <div class="d-flex align-items-center mb-1">
+                  <span
+                    [innerHTML]="
+                      itemSelected?.refID
+                        | formatvalue : formModel : 'refID'
+                        | async
+                    "
+                  ></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ms-5 d-flex justify-content-between">
+            <!-- <div class="d-flex flex-column">
+              <div class="d-flex align-items-center justify-content-end">
+                <span
+                  class="icon-monetization_on pe-1 text-warning icon-16 me-1"
+                ></span>
+              </div>
+              <div
+                class="d-flex align-items-top justify-content-end mt-1"
+              ></div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #body>
+      <div>
+        <codx-label
+          class="label-colon"
+          fiedName="AssetID"
+          [formModel]="formModel"
+          [setRequire]="false"
+        ></codx-label>
+
+        <span
+          class="text-gray-600"
+          [innerHTML]="
+            itemSelected.assetID | formatvalue : formModel : 'assetID' | async
+          "
+        ></span>
+      </div>
+      <div>
+        <codx-label
+          class="label-colon"
+          fiedName="DIM1"
+          [formModel]="formModel"
+          [setRequire]="false"
+        ></codx-label>
+
+        <span
+          class="text-gray-600"
+          [innerHTML]="
+            itemSelected.dim1 | formatvalue : formModel : 'dIM1' | async
+          "
+        ></span>
+      </div>
+      <div>
+        <codx-label
+          class="label-colon"
+          fiedName="Manufacturer"
+          [formModel]="formModel"
+          [setRequire]="false"
+        ></codx-label>
+
+        <span
+          class="text-gray-600"
+          [innerHTML]="
+            itemSelected.manufacturer
+              | formatvalue : formModel : 'manufacturer'
+              | async
+          "
+        ></span>
+      </div>
+      <div>
+        <codx-label
+          class="label-colon"
+          fiedName="MadeIn"
+          [formModel]="formModel"
+          [setRequire]="false"
+        ></codx-label>
+
+        <span
+          class="text-gray-600"
+          [innerHTML]="
+            itemSelected.madeIn | formatvalue : formModel : 'madeIn' | async
+          "
+        ></span>
+      </div>
+      <!-- RIGHT -->
+      <div class="cm-scroll" [ngClass]="isShow ? 'cm-full' : ''">
+        <div
+          class="btn btn-white btn-icon tab-action"
+          (click)="clickShowTab(!isShow)"
+        >
+          <span class="icon-unfold_more icon-20"></span>
+        </div>
+        <div class="instance-select">
+          <ejs-tab #tabObj>
+            <e-tabitems>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <div class="d-flex align-items-top">
+                    <span class="icon-info icon-16 me-2"></span>
+                    <span>
+                      <codx-label
+                        class="fw-bold"
+                        default="Lịch sử chốt ĐHN"
+                        [formModel]="formModel"
+                        name="lblHistoryWaterClock"
+                      ></codx-label>
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-template #content>
+                  <div
+                    class="mt-5 p-2"
+                    [ngClass]="isShow ? '' : 'croll-m-5'"
+                    style="overflow-x: hidden !important"
+                  >
+                    <div class="h-100">
+                      <codx-gridview-v2
+                        #gridHistory
+                        [showEmptyRecord]="false"
+                        [autoFitColumns]="false"
+                        [formName]="formModelHistory"
+                        [templateMore]="templateMoreHis"
+                        [formName]="formModelHistory.formName"
+                        [gridViewName]="formModelHistory.gridViewName"
+                        [entityName]="formModelHistory.entityName"
+                        [service]="serviceHistory"
+                        [assemblyName]="assemblyNameHisttory"
+                        [className]="classNameHisttory"
+                        [method]="methodHisttory"
+                        [predicates]="predicatesHis"
+                        [dataValues]="itemSelected.assetID"
+                        rowHeight="40"
+                        [height]="'100%'"
+                        [autoLoad]="true"
+                      ></codx-gridview-v2>
+                    </div>
+                    <ng-template #templateMoreHis let-data>
+                      <div class="d-flex float-end" style="height: 30px">
+                        <codx-mfunc
+                          [dataItem]="data"
+                          [formModel]="templateMoreHis"
+                          (clickMF)="clickMFHis($event, data)"
+                          (changeDataMF)="changeDataMFHis($event, data)"
+                          type="grid"
+                        >
+                        </codx-mfunc>
+                      </div>
+                    </ng-template>
+                  </div>
+                </ng-template>
+              </e-tabitem>
+
+              <e-tabitem>
+                <ng-template #headerText>
+                  <div class="d-flex align-items-top">
+                    <span class="icon-monetization_on icon-16 me-1"></span>
+                    <codx-label
+                      class="fw-bold"
+                      default="Bảng giá cấp nước"
+                      [formModel]="formModel"
+                      name="lblTablePrice"
+                    ></codx-label>
+                  </div>
+                </ng-template>
+                <ng-template #content>
+                  <div
+                    class="mt-5 p-2"
+                    [ngClass]="isShow ? '' : 'croll-m-5'"
+                    style="overflow-x: hidden !important"
+                  >
+                    Bảng giá cấp nuoc
+                  </div>
+                </ng-template>
+              </e-tabitem>
+            </e-tabitems>
+          </ejs-tab>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #footer>
+      <codx-tabs
+        [entityName]="formModel.entityName"
+        [formModel]="formModel"
+        [TabControl]="tabControl"
+        [objectID]="itemSelected.recID"
+        [funcID]="formModel.funcID"
+        [transID]="itemSelected.recID"
+        [approveStatus]="itemSelected.approveStatus"
+        [data]="itemSelected"
+        [keyField]="'recID'"
+      ></codx-tabs>
+    </ng-template>
+  </codx-detail-tmp>
+</ng-container>

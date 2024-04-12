@@ -71,6 +71,36 @@
               </div>
             </ng-template>
           </e-accordionitem>
+          <e-accordionitem expanded='true' *ngIf="listForm && listForm.length>0">
+            <ng-template #header>
+              <div class="fw-bold">Form nhập liệu</div>
+            </ng-template>
+            <ng-template #content>
+              <div class="d-flex flex-column bp-mw-accordion-2">
+                <ng-container *ngFor="let item of listForm">
+                  <ejs-accordion>
+                    <e-accordionitems>
+                      <e-accordionitem >
+                        <ng-template #header>
+                          <div class="fw-bold text-gray-600">{{item.stepName}}</div>
+                        </ng-template>
+                        <ng-template #content>
+                          <div class="d-flex flex-column">
+                            <ng-container *ngFor="let item2 of item.extendInfo">
+                              <div class="w-100 py-3 px-4 mb-3 bg-item-lightest rd-3px cursor-move mw-300px d-flex align-items-center" cdkDrag  [cdkDragDisabled]="viewType == 2" [cdkDragData]="item2" >
+                                <i [ngClass]="item2.icon" class="icon-22"></i>
+                                <span class="fw-bold ms-4 mt-1">{{item2.title}}</span>
+                              </div>
+                            </ng-container>
+                          </div>
+                        </ng-template>
+                      </e-accordionitem>
+                    </e-accordionitems>
+                  </ejs-accordion>
+                </ng-container>
+              </div>
+            </ng-template>
+          </e-accordionitem>
         </e-accordionitems>
       </ejs-accordion>
     </div>
