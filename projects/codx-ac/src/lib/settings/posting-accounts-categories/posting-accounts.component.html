@@ -15,17 +15,17 @@
                   <span class="menu-icon">
                     <span [class]="'1' | vll : 'AC058' : 'icon' | async"></span>
                   </span>
-                  <span class="menu-title fw-bold">{{'1' | vll : 'AC058' : 'text' | async}}</span>
+                  <span class="menu-title fw-bold"style="display: flex !important;height: 100%;">{{'1' | vll : 'AC058' : 'text' | async}}</span>
                   <span class="menu-arrow"></span>
                 </span>
                 <div class="menu-sub menu-sub-accordion">
-                  <div class="menu-item" *ngFor="let item of menuInventory">
+                  <div class="menu-item h-35px" *ngFor="let item of menuInventory">
                     <a class="menu-link without-sub" [ngClass]="{active:item.value === postType}"
                       (click)="clickMenuItem(item.value)">
                       <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                       </span>
-                      <span class="menu-title">
+                      <span class="menu-title "style="display: flex !important;height: 100%;">
                         {{ item.text }}
                       </span>
                     </a>
@@ -37,17 +37,17 @@
                   <span class="menu-icon">
                     <span [class]="'2' | vll : 'AC058' : 'icon' | async"></span>
                   </span>
-                  <span class="menu-title fw-bold">{{'2' | vll : 'AC058' : 'text' | async}}</span>
+                  <span class="menu-title fw-bold"style="display: flex !important;height: 100%;">{{'2' | vll : 'AC058' : 'text' | async}}</span>
                   <span class="menu-arrow"></span>
                 </span>
                 <div class="menu-sub menu-sub-accordion">
-                  <div class="menu-item" *ngFor="let item of menuPurchase">
+                  <div class="menu-item h-35px" *ngFor="let item of menuPurchase">
                     <a class="menu-link without-sub" [ngClass]="{active:item.value === postType}"
                       (click)="clickMenuItem(item.value)">
                       <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                       </span>
-                      <span class="menu-title">
+                      <span class="menu-title"style="display: flex !important;height: 100%;">
                         {{ item.text }}
                       </span>
                     </a>
@@ -59,17 +59,17 @@
                   <span class="menu-icon">
                     <span [class]="'3' | vll : 'AC058' : 'icon' | async"></span>
                   </span>
-                  <span class="menu-title fw-bold">{{'3' | vll : 'AC058' : 'text' | async}}</span>
+                  <span class="menu-title fw-bold "style="display: flex !important;height: 100%;">{{'3' | vll : 'AC058' : 'text' | async}}</span>
                   <span class="menu-arrow"></span>
                 </span>
                 <div class="menu-sub menu-sub-accordion">
-                  <div class="menu-item" *ngFor="let item of menuSell">
+                  <div class="menu-item h-35px" *ngFor="let item of menuSell">
                     <a class="menu-link without-sub" [ngClass]="{active:item.value === postType}"
                       (click)="clickMenuItem(item.value)">
                       <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                       </span>
-                      <span class="menu-title">
+                      <span class="menu-title "style="display: flex !important;height: 100%;">
                         {{ item.text }}
                       </span>
                     </a>
@@ -81,7 +81,7 @@
                   <span class="menu-icon">
                     <span [class]="'4' | vll : 'AC058' : 'icon' | async"></span>
                   </span>
-                  <span class="menu-title fw-bold">{{'4' | vll : 'AC058' : 'text' | async}}</span>
+                  <span class="menu-title fw-bold" style="display: flex !important;height: 100%;">{{'4' | vll : 'AC058' : 'text' | async}}</span>
                   <span class="menu-arrow"></span>
                 </span>
                 <div class="menu-sub menu-sub-accordion">
@@ -91,7 +91,7 @@
                       <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
                       </span>
-                      <span class="menu-title">
+                      <span class="menu-title"style="display: flex !important;height: 100%;">
                         {{ item.text }}
                       </span>
                     </a>
@@ -111,9 +111,9 @@
 <ng-template #templateRight>
   <ng-container *ngIf="view.formModel">
     <div class="tabposting-content w-100 overflow-scroll">
-      <codx-gridview-v2 #eleGrid class="tabLine" [formName]="view.formModel.formName" [editOnClick]="true"
-        [gridViewName]="view.formModel.gridViewName" [entityName]="view.formModel.entityName" predicates="PostType=@0"
-        [dataValues]="postType" [hideMoreFunc]="true" [rowHeight]="42"></codx-gridview-v2>
+      <codx-gridview-v2 #eleGrid class="tabLine" [formName]="view.formModel.formName"
+        [gridViewName]="view.formModel.gridViewName" [entityName]="view.formModel.entityName" predicates="PostType=@0" (clickMF)="clickMF($event.event,$event.data)"
+        [dataValues]="postType" [hideMoreFunc]="true" [rowHeight]="42"  [moreFcItems]="'SYS104;SYS102'" [moreFcModel]="view.formModel" [editOnClick]="true"></codx-gridview-v2>
     </div>
   </ng-container>
 </ng-template>

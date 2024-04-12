@@ -4,20 +4,8 @@ import { AuthStore, DialogModel, UIComponent, UserModel, ViewModel, ViewType } f
 import { Subject, takeUntil } from 'rxjs';
 import { Post } from '@shared/models/post';
 import { PopupAddKnowledgeComponent } from './popup/popup-add-knowledge/popup-add-knowledge.component';
-export const NEWSTYPE = 
-{
-  POST: '1',
-  VIDEO: '2',
-};
-export const CATEGORY = 
-{
-  HOME: 'home',
-  COMPANYINFO: '0',
-  EVENTS: '1',
-  INTERNAL: '2',
-  POLICY: '3',
-  ORTHERS: '4',
-};
+import { NEWSTYPE } from './models/Knowledge.model';
+
 @Component({
   selector: 'wp4-knowledge',
   templateUrl: './knowledge.component.html',
@@ -61,9 +49,6 @@ export class KnowledgeComponent extends UIComponent implements AfterViewInit,OnD
         this.getVideos(this.category);
       }
     });
-    this.router.queryParams.subscribe((params:any) => {
-      debugger
-    })
   }
 
   ngAfterViewInit(): void {
@@ -181,26 +166,24 @@ export class KnowledgeComponent extends UIComponent implements AfterViewInit,OnD
   }
 
   clickViewDetail(data: any) {
-    if (data?.recID) 
-    {
+    if (data){
       this.api
       .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'UpdateViewAsync', [data.recID])
       .pipe(takeUntil(this.destroy$))
       .subscribe();
-      this.codxService.navigate('',`wp2/news/${this.funcID}/${data.category}/${data.recID}`);
+      this.codxService.navigate('',`${this.view.function.url}/${data.category}/${data.recID}`);
     }
   }
 
   openPopupAdd(newType:string) {
-    let option = new DialogModel();
+    let dialogModel = new DialogModel();
     let action = "Thêm";
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    option.IsFull = true;
-    option.zIndex = 100;
+    dialogModel.DataService = this.view.dataService;
+    dialogModel.FormModel = this.view.formModel;
+    dialogModel.IsFull = true;
+    dialogModel.zIndex = 100;
     let post = new Post();
-    if(this.category && this.category != "home")
-      post.category = this.category;
+    if(this.category && this.category != "home") post.category = this.category;
     post.newsType = newType;
     let data = {
       action: action,
@@ -215,7 +198,7 @@ export class KnowledgeComponent extends UIComponent implements AfterViewInit,OnD
       '',
       data,
       '',
-      option)
+      dialogModel)
     popup.closed
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
