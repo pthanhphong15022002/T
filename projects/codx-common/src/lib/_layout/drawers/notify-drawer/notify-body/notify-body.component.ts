@@ -148,7 +148,11 @@ export class NotifyBodyComponent implements OnInit, OnDestroy {
       var queryParam = { predicate:"RecID=@0",dataValue:item.transID};
       if(item.view)
         Object.assign(queryParam, {view: item.view});
-      if(item?.parentID)
+      if(item?.subUrl)
+        {
+          this.codxService.openUrlNewTab(null,item?.subUrl);          
+        }
+      else if(item?.parentID)
       {
         let subscribe = this.cache.functionList(item.function).subscribe(func=>{
           if(func && func?.url){

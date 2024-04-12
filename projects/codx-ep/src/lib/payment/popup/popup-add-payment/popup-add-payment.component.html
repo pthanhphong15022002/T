@@ -142,6 +142,7 @@
               type="combobox"
               [field]="'refID'"
               [crrValue]="data?.refID"
+              [model]="{ Requester: this.requester }"
               [showInput]="false"
               (valueChange)="valueChange($event)"
             ></codx-input>
