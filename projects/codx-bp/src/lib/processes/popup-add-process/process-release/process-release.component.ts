@@ -70,8 +70,8 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
   codxService: CodxService;
   user: import('codx-core').UserModel;
   taskID: any;
-  mode='1';
-  isFirstLoad=true;
+  mode = '1';
+  isFirstLoad = true;
   constructor(
     private api: ApiHttpService,
     private callFunc: CallFuncService,
@@ -88,10 +88,10 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     this.codxService = this.codxSv;
     this.router.params.subscribe((param) => {
       if (!this.funcID) this.funcID = param['funcID'];
-      if (param['subUrl'] !=null && param['subUrl']?.length>0) {
+      if (param['subUrl'] != null && param['subUrl']?.length > 0) {
         this.taskID = param['subUrl'];
         this.recID = param['id'];
-        this.mode='2';
+        this.mode = '2';
         if (this.view) {
           this.onInits();
           (this.view.currentView as any).request2.dataObj = this.recID;
@@ -136,92 +136,46 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         id: 'btnAdd',
       },
     ];
-    if(this.mode=='2'){
-      this.views = [
-        
-        {
-          type: ViewType.list,
-          sameData: true,
-          active: true,
-          model: {
-            template: this.templateList,
-            headerTemplate: this.headerTemplateList,
-          },
+    this.views = [
+      {
+        type: ViewType.kanban,
+        active: true,
+        sameData: false,
+        request: this.request,
+        request2: this.resourceKanban,
+        model: {
+          template: this.cardKanban,
+          template2: this.viewColumKaban,
         },
-        // {
-        //   type: ViewType.kanban,
-        //   active: false,
-        //   sameData: false,
-        //   request: this.request,
-        //   request2: this.resourceKanban,
-        //   model: {
-        //     template: this.cardKanban,
-        //     template2: this.viewColumKaban,
-        //   },
-        // },
-        {
-          type: ViewType.listdetail,
-          active: true,
-          sameData: true,
-          // toolbarTemplate: this.footerButton,
-          model: {
-            template: this.itemTemplate,
-            panelRightRef: this.templateDetail,
-          },
+      },
+      {
+        type: ViewType.list,
+        sameData: true,
+        active: false,
+        model: {
+          template: this.templateList,
+          headerTemplate: this.headerTemplateList,
         },
-        // request: this.request,
-        // request2: this.resourceKanban,
-        // // toolbarTemplate: this.footerButton,
-        // model: {
-        //   template: this.cardKanban,
-        //   template2: this.viewColumKaban,
-        //   setColorHeader: true,
-        // },
-      ];
-    }
-    else{
-      this.views = [
-        {
-          type: ViewType.kanban,
-          active: false,
-          sameData: false,
-          request: this.request,
-          request2: this.resourceKanban,
-          model: {
-            template: this.cardKanban,
-            template2: this.viewColumKaban,
-          },
+      },
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        // toolbarTemplate: this.footerButton,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
         },
-        {
-          type: ViewType.list,
-          sameData: true,
-          active: true,
-          model: {
-            template: this.templateList,
-            headerTemplate: this.headerTemplateList,
-          },
-        },
-        {
-          type: ViewType.listdetail,
-          active: true,
-          sameData: true,
-          // toolbarTemplate: this.footerButton,
-          model: {
-            template: this.itemTemplate,
-            panelRightRef: this.templateDetail,
-          },
-        },
-        // request: this.request,
-        // request2: this.resourceKanban,
-        // // toolbarTemplate: this.footerButton,
-        // model: {
-        //   template: this.cardKanban,
-        //   template2: this.viewColumKaban,
-        //   setColorHeader: true,
-        // },
-      ];
-    }
-    
+      },
+      // request: this.request,
+      // request2: this.resourceKanban,
+      // // toolbarTemplate: this.footerButton,
+      // model: {
+      //   template: this.cardKanban,
+      //   template2: this.viewColumKaban,
+      //   setColorHeader: true,
+      // },
+    ];
 
     this.getFunc();
   }
@@ -240,7 +194,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
 
   getProcess() {
     //if(this.mode=='1'){
-      this.api
+    this.api
       .execSv('BP', 'BP', 'ProcessesBusiness', 'GetAsync', this.recID)
       .subscribe((item) => {
         if (item) {
@@ -262,7 +216,6 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     //     }
     //   });
     // }
-    
   }
 
   ngOnInit(): void {
@@ -272,16 +225,16 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
   onInits() {
     this.dataObj = {
       processID: this.recID,
-      taskID:this.taskID,
+      taskID: this.taskID,
     };
 
-    // this.request = new ResourceModel();
-    // this.request.service = 'BP';
-    // this.request.assemblyName = 'BP';
-    // this.request.className = 'ProcessInstancesBusiness';
-    // this.request.method = 'GetListInstancesAsync';
-    // this.request.idField = 'recID';
-    // this.request.dataObj = this.dataObj;
+    this.request = new ResourceModel();
+    this.request.service = 'BP';
+    this.request.assemblyName = 'BP';
+    this.request.className = 'ProcessInstancesBusiness';
+    this.request.method = 'GetListInstancesAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = this.dataObj;
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'BP';
@@ -295,9 +248,9 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
   selectedChange(data) {
     this.dataSelected = data?.data ? data?.data : data;
     this.detectorRef.detectChanges();
-    if(this.mode=='2' && this.isFirstLoad){
-      this.isFirstLoad=false;
-      this.openFormDetail(this.dataSelected)
+    if (this.mode == '2' && this.isFirstLoad) {
+      this.isFirstLoad = false;
+      this.openFormDetail(this.dataSelected);
     }
   }
 

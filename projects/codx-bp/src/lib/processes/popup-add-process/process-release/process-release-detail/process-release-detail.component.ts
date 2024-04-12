@@ -869,7 +869,9 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   updateTask(data, status) {
     this.bpSV.updateStatusTask(data.recID, status, null).subscribe((res) => {
       if (res) {
-        this.notiSV.notifyCode('SYS034');
+        if(data?.activityType!="Sign"){
+          this.notiSV.notifyCode('SYS034');
+        }
         this.updateView(res);
       }
     });
