@@ -274,51 +274,15 @@
 
           <div class="bg-white border-bottom d-flex flex-column mt-5 pb-3 ps-4 pt-3 rounded" *ngIf="infoPersonal && LoadedEInfo == true">
             <div class="d-flex flex-wrap mb-1">
-              <div class="d-flex align-items-center text-gray-700 me-5">
-                <span class="icon-date_range icon-16 me-2"></span>
-                <span placement="bottom" [title]="eInfoHeaderText?.JoinedOn" #joinedOn *ngIf="eInfoFormModel"
-                  [innerHTML]="
-                infoPersonal?.joinedOn
-                  | formatvalue : eInfoFormModel : 'joinedOn'
-                  | async
-              "></span>
+              <div style="min-height: 300px">
+                <lib-sidebar-treeview></lib-sidebar-treeview>
               </div>
-              <div *ngIf="eInfoFormModel" placement="bottom" [title]="eInfoHeaderText?.Status">
-                <codx-vll class="badge" [field]="'Status'" [value]="infoPersonal?.status"
-                  [formModel]="eInfoFormModel" [showText]="true" [showBgColor]="true"></codx-vll>
+              <div>
+                Thu gọn
               </div>
-            </div>
-            <div class="d-flex align-items-center mb-1">
-              <span class=""></span>
-              <span class="text-dark" placement="bottom" [title]="eInfoHeaderText?.Email">
-                <span #email *ngIf="eInfoFormModel" [innerHTML]="
-                infoPersonal?.email
-                  | formatvalue : eInfoFormModel : 'email'
-                  | async
-              "></span>
-              </span>
-            </div>
-            <div class="d-flex align-items-center mb-1">
-              <span class=""></span>
-              <span placement="bottom" [title]="eInfoHeaderText?.Phone" class="text-dark me-3" [innerHTML]="
-              infoPersonal?.phone
-                | formatvalue : eInfoFormModel : 'phone'
-                | async
-            "></span>
-              <span class=""></span>
-              <span class="text-dark">
-                <span placement="bottom" [title]="eInfoHeaderText?.Mobile" *ngIf="eInfoFormModel" [innerHTML]="
-                infoPersonal?.mobile
-                  | formatvalue : eInfoFormModel : 'mobile'
-                  | async
-              "></span>
-              </span>
             </div>
           </div>
-<!-- 
-          <codx-treeview class="p-3" [selectFirst]="true" type="cardView" [funcId]="'HRT03a1'"
-            service="AC" [entityName]="view.entityName" [dataService]="view.dataService">
-          </codx-treeview> -->
+          
           <!-- End TreeView -->
           <!-- Employee -->
           <div class="user-left border bg-white">

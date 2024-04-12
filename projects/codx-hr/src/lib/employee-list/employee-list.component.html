@@ -282,7 +282,7 @@
 <ng-template #tmpMasterDetail>
   <lib-employee-list-by-org [showManager]="true" [formModel]="view.formModel" [grvSetup]="grvSetup" [editable]="true"
     [funcID]="funcID" [rowHeight]="100" modeView="employee" [orgUnitID]="itemSelected?.orgUnitID" [view]="view"
-    [showRowNumber]="false" (dataChange)="dataChange($event)" (gridViewDataService)="getGridViewDataService($event)">
+    [showRowNumber]="false" (dataChange)="dataChange($event)"  (gridViewDataService)="getGridViewDataService($event)">
   </lib-employee-list-by-org>
 </ng-template>
 <!-- end tree_masterDetail -->
