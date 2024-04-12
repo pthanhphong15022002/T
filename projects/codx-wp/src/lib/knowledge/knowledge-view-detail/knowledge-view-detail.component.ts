@@ -1,23 +1,30 @@
-import { AfterViewInit, Component, Injector, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Injector,
+  OnDestroy,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { Post } from '@shared/models/post';
 import { DialogModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { WP_Comments } from '../../models/WP_Comments.model';
 import { PopupAddCommentComponent } from '../../news/popup/popup-add-comment/popup-add-comment.component';
 import { PopupAddComponent } from '../../news/popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from '../../news/popup/popup-search/popup-search.component';
-import { NEWSTYPE } from '../knowledge.component';
 import { Subject, takeUntil } from 'rxjs';
 import { PopupAddKnowledgeComponent } from '../popup/popup-add-knowledge/popup-add-knowledge.component';
+import { NEWSTYPE } from '../models/Knowledge.model';
 
 @Component({
   selector: 'wp4-knowledge-view-detail',
   templateUrl: './knowledge-view-detail.component.html',
-  styleUrls: ['./knowledge-view-detail.component.scss']
+  styleUrls: ['./knowledge-view-detail.component.scss'],
 })
-export class KnowledgeViewDetailComponent extends UIComponent implements AfterViewInit,OnDestroy {
-
-
-
+export class KnowledgeViewDetailComponent
+  extends UIComponent
+  implements AfterViewInit, OnDestroy
+{
   NEWSTYPE_POST = NEWSTYPE.POST;
   NEWSTYPE_VIDEO = NEWSTYPE.VIDEO;
   entityName: string = 'WP_News';
@@ -31,19 +38,13 @@ export class KnowledgeViewDetailComponent extends UIComponent implements AfterVi
   private destroy$ = new Subject<void>();
 
   @ViewChild('tmpContent') tmpContent: TemplateRef<any>;
-  constructor
-  (
-    private injector: Injector
-  ) 
-  {
+  constructor(private injector: Injector) {
     super(injector);
   }
-  
+
   onInit(): void {
-    this.router.params
-    .subscribe((params:any) => {
-      if(params)
-      {
+    this.router.params.subscribe((params: any) => {
+      if (params) {
         this.recID = params['recID'];
         this.category = params['category'];
         this.funcID = params['funcID'];
@@ -52,19 +53,20 @@ export class KnowledgeViewDetailComponent extends UIComponent implements AfterVi
         this.getDataTagAsync('WP_News');
       }
     });
-    this.cache.moreFunction('CoDXSystem', '')
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((mFuc: any) => {
-      this.moreFunction = mFuc;
-    });
+    this.cache
+      .moreFunction('CoDXSystem', '')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((mFuc: any) => {
+        this.moreFunction = mFuc;
+      });
   }
   ngAfterViewInit(): void {
     this.views = [
       {
         id: '1',
         type: ViewType.content,
-        showFilter:false,
-        sameData:false,
+        showFilter: false,
+        sameData: false,
         model: {
           panelLeftRef: this.tmpContent,
         },
@@ -78,15 +80,16 @@ export class KnowledgeViewDetailComponent extends UIComponent implements AfterVi
     this.destroy$.complete();
   }
 
-  dataByViews:any[] = [];
-  dataByCategorys:any[] = [];
+  dataByViews: any[] = [];
+  dataByCategorys: any[] = [];
   load(recID: string) {
     this.api
-      .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'GetDetailPostAsync', [recID])
+      .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'GetDetailPostAsync', [
+        recID,
+      ])
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res:any) => {
-        if(res.length > 0) 
-        {
+      .subscribe((res: any) => {
+        if (res.length > 0) {
           this.data = res[0];
           this.dataByViews = res[1];
           this.dataByCategorys = res[2];
@@ -96,31 +99,30 @@ export class KnowledgeViewDetailComponent extends UIComponent implements AfterVi
   }
 
   getUserPermission(funcID: string) {
-    if (funcID && !this.userPermission) 
-    {
+    if (funcID && !this.userPermission) {
       funcID = funcID + 'P';
       this.api
-      .execSv(
-        'SYS',
-        'ERM.Business.SYS',
-        'CommonBusiness',
-        'GetUserPermissionsAsync',
-        [funcID])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res) 
-        {
-          this.userPermission = res;
-          this.detectorRef.detectChanges();
-        }
-      });
+        .execSv(
+          'SYS',
+          'ERM.Business.SYS',
+          'CommonBusiness',
+          'GetUserPermissionsAsync',
+          [funcID]
+        )
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res: any) => {
+          if (res) {
+            this.userPermission = res;
+            this.detectorRef.detectChanges();
+          }
+        });
     }
   }
 
   getDataTagAsync(entityName: string) {
     if (entityName) {
       this.api
-        .execSv("BS","BS" ,"TagsBusiness", "GetModelDataAsync", [entityName])
+        .execSv('BS', 'BS', 'TagsBusiness', 'GetModelDataAsync', [entityName])
         .pipe(takeUntil(this.destroy$))
         .subscribe((res: any) => {
           if (res) {
@@ -138,13 +140,17 @@ export class KnowledgeViewDetailComponent extends UIComponent implements AfterVi
         'ERM.Business.WP',
         'NewsBusiness',
         'UpdateViewAsync',
-        data.recID)
+        data.recID
+      )
       .pipe(takeUntil(this.destroy$))
       .subscribe();
-      this.codxService.navigate('',`${this.view.function.url}/${data.category}/${data.recID}`);
+    this.codxService.navigate(
+      '',
+      `${this.view.function.url}/${data.category}/${data.recID}`
+    );
   }
 
-  clickTag(tag: any){
+  clickTag(tag: any) {
     this.codxService.navigate('', `wp2/news/${this.funcID}/tag/${tag.value}`);
   }
 
@@ -155,15 +161,24 @@ export class KnowledgeViewDetailComponent extends UIComponent implements AfterVi
       option.FormModel = this.view.formModel;
       option.IsFull = true;
       let post = new Post();
-      if(this.category && this.category != "home")
+      if (this.category && this.category != 'home')
         post.category = this.category;
       post.newsType = type;
       let data = {
-        action: "Thêm",
+        action: 'Thêm',
         type: type,
-        data : post
+        data: post,
       };
-      this.callfc.openForm(PopupAddKnowledgeComponent, '', 0, 0, '', data, '', option);
+      this.callfc.openForm(
+        PopupAddKnowledgeComponent,
+        '',
+        0,
+        0,
+        '',
+        data,
+        '',
+        option
+      );
     }
   }
 
@@ -193,7 +208,7 @@ export class KnowledgeViewDetailComponent extends UIComponent implements AfterVi
         data: post,
         refType: 'WP_News',
         status: 'share',
-        headerText: "Thêm",
+        headerText: 'Thêm',
       };
       let option = new DialogModel();
       option.DataService = this.view.dataService;
