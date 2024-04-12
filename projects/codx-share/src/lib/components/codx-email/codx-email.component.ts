@@ -94,7 +94,7 @@ export class CodxEmailComponent implements OnInit {
   lstBcc = [];
 
   dataSource: any;
-
+  dataMailBG: any;
   width: any = 'auto';
 
   files: any; //param list file
@@ -115,6 +115,7 @@ export class CodxEmailComponent implements OnInit {
   showAI = false;
   isLoadingAI = false;
   idAlert: any = null;
+  lstUser = [];
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -139,6 +140,10 @@ export class CodxEmailComponent implements OnInit {
       this.email = data.data.email as email;
       this.option = data.data.option as option;
       this.functionID = data.data.functionID;
+      this.dataMailBG = data?.data?.dataMail
+        ? JSON.parse(JSON.stringify(data.data.dataMail))
+        : null;
+      this.lstUser = data?.data?.lstUser ?? [];
     }
 
     if (!this.functionID) {
@@ -189,9 +194,8 @@ export class CodxEmailComponent implements OnInit {
     this.formModel = new FormModel();
     this.formModel.entityName = 'AD_EmailTemplates';
     this.formModel.formName = 'EmailTemplates';
-    this.formModel.gridViewName = 'grvEmailTemplates';
+    this.formModel.gridViewName = 'grvEmailTe7mplates';
     this.formModel.funcID = '';
-
     this.cache.gridView(this.formModel.gridViewName).subscribe((gridView) => {
       // this.cache.setGridView(this.formModel.gridViewName, gridView);
       this.cache
@@ -208,88 +212,118 @@ export class CodxEmailComponent implements OnInit {
             ''
           );
 
-          if (this.templateID) {
-            this.codxService
-              .getEmailTemplate(this.templateID)
-              .subscribe((res1) => {
-                if (res1 != null) {
-
-                  console.log('getEmailTemplate', res1);
-                  this.data = res1[0];
-                  if (!this.data.createdBy)  //?? createdBy bằng Null =>Bắt invalid =>lỗi
-                    this.data.createdBy = this.auth.get().userID;
-                  this.dialogETemplate.patchValue(this.data);
-                  if (this.data?.gridviewName) {
-                    //Load field theo cubeID của EmailTemplate
-                    this.loadListFieldByGridViewName(
-                      this.data?.gridviewName,
-                      this.data?.formName
-                    );
-                  } else {
-                    this.loadListFieldByFuntion();
-                  }
-                  // this.setViewBody();
-                  this.dialogETemplate.addControl(
-                    'recID',
-                    new FormControl(res1[0].recID)
-                  );
-                  // if (res[0].isTemplate) {
-                  //   this.methodEdit = true;
-                  // }
-                  let lstUser = res1[1];
-                  if (lstUser && lstUser.length > 0) {
-                    console.log(lstUser);
-                    lstUser.forEach((element) => {
-                      switch (element.sendType) {
-                        case '1':
-                          this.lstFrom.push(element);
-                          break;
-                        case '2':
-                          this.lstTo.push(element);
-                          break;
-                        case '3':
-                          this.lstCc.push(element);
-                          break;
-                        case '4':
-                          this.lstBcc.push(element);
-                          break;
-                      }
-                    });
-                  }
-
-                  if (res1.length > 1 && res1[2]) {
-                    let lstCube = res1[2] as any[];
-                    this.dataSource = [...this.dataSource, ...lstCube];
-                  }
-
-                  this.formModel.currentData = this.data =
-                    this.dialogETemplate.value;
-                  this.isAfterRender = true;
+          if (this.dataMailBG) {
+            this.data = JSON.parse(JSON.stringify(this.dataMailBG));
+            this.dialogETemplate.patchValue(this.data);
+            if (this.email) this.dialogETemplate.patchValue(this.email);
+            this.dialogETemplate.addControl(
+              'recID',
+              new FormControl(this.data.recID)
+            );
+            this.loadListFieldByFuntion();
+            this.isAfterRender = true;
+            if (this.lstUser && this.lstUser.length > 0) {
+              this.lstUser.forEach((element) => {
+                switch (element.sendType) {
+                  case '1':
+                    this.lstFrom.push(element);
+                    break;
+                  case '2':
+                    this.lstTo.push(element);
+                    break;
+                  case '3':
+                    this.lstCc.push(element);
+                    break;
+                  case '4':
+                    this.lstBcc.push(element);
+                    break;
                 }
-                //this.cr.detectChanges();
               });
-          } else if (this.templateType) {
+            }
           } else {
-            this.codxService
-              .getDataDefault(this.functionID)
-              .subscribe((res) => {
-                if (res) {
-                  //this.setViewBody();
+            if (this.templateID) {
+              this.codxService
+                .getEmailTemplate(this.templateID)
+                .subscribe((res1) => {
+                  if (res1 != null) {
+                    console.log('getEmailTemplate', res1);
+                    this.data = res1[0];
+                    if (!this.data.createdBy)
+                      //?? createdBy bằng Null =>Bắt invalid =>lỗi
+                      this.data.createdBy = this.auth.get().userID;
+                    this.dialogETemplate.patchValue(this.data);
+                    if (this.data?.gridviewName) {
+                      //Load field theo cubeID của EmailTemplate
+                      this.loadListFieldByGridViewName(
+                        this.data?.gridviewName,
+                        this.data?.formName
+                      );
+                    } else {
+                      this.loadListFieldByFuntion();
+                    }
+                    // this.setViewBody();
+                    this.dialogETemplate.addControl(
+                      'recID',
+                      new FormControl(res1[0].recID)
+                    );
+                    // if (res[0].isTemplate) {
+                    //   this.methodEdit = true;
+                    // }
+                    let lstUser = res1[1];
+                    if (lstUser && lstUser.length > 0) {
+                      console.log(lstUser);
+                      lstUser.forEach((element) => {
+                        switch (element.sendType) {
+                          case '1':
+                            this.lstFrom.push(element);
+                            break;
+                          case '2':
+                            this.lstTo.push(element);
+                            break;
+                          case '3':
+                            this.lstCc.push(element);
+                            break;
+                          case '4':
+                            this.lstBcc.push(element);
+                            break;
+                        }
+                      });
+                    }
 
-                  this.data = res;
-                  this.dialogETemplate.patchValue(this.data);
-                  if (this.email) this.dialogETemplate.patchValue(this.email);
-                  this.dialogETemplate.addControl(
-                    'recID',
-                    new FormControl(this.data.recID)
-                  );
-                  this.loadListFieldByFuntion();
-                  this.formModel.currentData = this.data =
-                    this.dialogETemplate.value;
-                  this.isAfterRender = true;
+                    if (res1.length > 1 && res1[2]) {
+                      let lstCube = res1[2] as any[];
+                      this.dataSource = [...this.dataSource, ...lstCube];
+                    }
+
+                    this.formModel.currentData = this.data =
+                      this.dialogETemplate.value;
+                    this.isAfterRender = true;
+                  }
                   //this.cr.detectChanges();
-                }
-              });
+                });
+            } else if (this.templateType) {
+            } else {
+              this.codxService
+                .getDataDefault(this.functionID)
+                .subscribe((res) => {
+                  if (res) {
+                    //this.setViewBody();
+
+                    this.data = res;
+                    this.dialogETemplate.patchValue(this.data);
+                    if (this.email) this.dialogETemplate.patchValue(this.email);
+                    this.dialogETemplate.addControl(
+                      'recID',
+                      new FormControl(this.data.recID)
+                    );
+                    this.loadListFieldByFuntion();
+                    this.formModel.currentData = this.data =
+                      this.dialogETemplate.value;
+                    this.isAfterRender = true;
+                    //this.cr.detectChanges();
+                  }
+                });
+            }
           }
         });
     });
@@ -781,13 +815,13 @@ export class CodxEmailComponent implements OnInit {
     else return true;
   }
 
-  fileAdded(event) { }
+  fileAdded(event) {}
 
   openFormUploadFile() {
     this.ContentEmail.attachment.uploadFile();
   }
 
-  getfileCount(e: any) { }
+  getfileCount(e: any) {}
 
   public selection: NodeSelection = new NodeSelection();
   //public range: Range;
@@ -867,7 +901,7 @@ export class CodxEmailComponent implements OnInit {
     this.listviewInstance.dataBind();
   }
 
-  onActionComplete(args: any): void { }
+  onActionComplete(args: any): void {}
 
   valueChangeContentEmail(e: any) {
     this.dataAI = {
@@ -883,7 +917,7 @@ export class CodxEmailComponent implements OnInit {
         this.data.message = res.data.Data;
         this.isLoadingAI = false;
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }
 
   fetch(data: any, prompt: any) {

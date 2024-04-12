@@ -215,3 +215,20 @@
 {
   border-width: 2px !important;
 }
+.bp-mw-accordion-2
+{
+  .e-acrdn-header
+  {
+    padding: 0 4px !important;
+    .e-toggle-icon
+    {
+      height: 25px !important;
+      min-height: 25px !important;
+      right: 4px;
+    }
+  }
+  .e-accordion .e-acrdn-item .e-acrdn-panel .e-acrdn-content
+  {
+    padding: 0 !important;
+  }
+}

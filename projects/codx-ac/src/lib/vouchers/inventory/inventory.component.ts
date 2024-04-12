@@ -709,14 +709,13 @@ export class InventoryComponent extends UIComponent {
         next:(res: any) => {
           if (res[1]) {
             this.itemSelected = res[0];
-            this.view.dataService.update(this.itemSelected).subscribe();
+            this.view.dataService.update(this.itemSelected,true).subscribe();
             this.notification.notifyCode('AC0029', 0, text);
             this.detectorRef.detectChanges();
           }
         },
         complete:()=>{
           this.ngxLoader.stop();
-          this.onDestroy();
         }
       });
     }
@@ -737,14 +736,13 @@ export class InventoryComponent extends UIComponent {
         next:(res: any) => {
           if (res[1]) {
             this.itemSelected = res[0];
-            this.view.dataService.update(this.itemSelected).subscribe();
+            this.view.dataService.update(this.itemSelected,true).subscribe();
             this.notification.notifyCode('AC0029', 0, text);
             this.detectorRef.detectChanges();
           }
         },
         complete:()=>{
           this.ngxLoader.stop();
-          this.onDestroy();
         }
       });
     }
@@ -766,14 +764,13 @@ export class InventoryComponent extends UIComponent {
         next:(res: any) => {
           if (res[1]) {
             this.itemSelected = res[0];
-            this.view.dataService.update(this.itemSelected).subscribe();
+            this.view.dataService.update(this.itemSelected,true).subscribe();
             this.notification.notifyCode('AC0029', 0, text);
             this.detectorRef.detectChanges();
           }
         },
         complete:()=>{
           this.ngxLoader.stop();
-          this.onDestroy();
         }
       });
     }

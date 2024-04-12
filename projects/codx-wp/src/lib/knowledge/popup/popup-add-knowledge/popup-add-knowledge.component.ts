@@ -1,9 +1,11 @@
-import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Permission } from '@shared/models/file.model';
 import { DialogRef, ApiHttpService, AuthStore, NotificationsService, CallFuncService, CacheService, DialogData, Util } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { environment } from 'src/environments/environment';
+import { FILE_REFERTYPE, MEMBERTYPE, NEWSTYPE, SHARECONTROLS } from '../../models/Knowledge.model';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'wp4-popup-add-knowledge',
@@ -12,14 +14,15 @@ import { environment } from 'src/environments/environment';
   encapsulation: ViewEncapsulation.None,
 
 })
-export class PopupAddKnowledgeComponent implements OnInit {
+export class PopupAddKnowledgeComponent implements OnInit, AfterViewInit,OnDestroy  {
+
   user: any = null;
   dialogData: any;
-  dialogRef: DialogRef = null;
+  dialogRef: DialogRef;
   fileUpload: any[] = [];
   fileImage: any = null;
   fileVideo: any = null;
-  messageImage: string = '';
+  mssgWP017: string = "WP017";
   data: any = null;
   function: any = null;
   grvSetup: any = null;
@@ -27,47 +30,11 @@ export class PopupAddKnowledgeComponent implements OnInit {
   headerText: string = '';
   loading: boolean = false;
   isAdd: boolean = true;
-  allowExtensions: string = '.png, .jpg, .jpeg';
-  defaultCategory: string = '';
+  actionType: "add" | "edit" = "add";
   defaultImgSrc: string = '../assets/themes/wp/default/img/upload_image.svg';
-  NEWSTYPE = {
-    POST: '1',
-    VIDEO: '2',
-  };
-  SHARECONTROLS = {
-    OWNER: '1',
-    MYGROUP: '2',
-    MYTEAM: '3',
-    MYDEPARMENTS: '4',
-    MYDIVISION: '5',
-    MYCOMPANY: '6',
-    ADMINISTRATOR: '7',
-    EVERYONE: '9',
-    OGRHIERACHY: 'O',
-    DEPARMENTS: 'D',
-    POSITIONS: 'P',
-    ROLES: 'R',
-    GROUPS: 'G',
-    USER: 'U',
-  };
-  MEMBERTYPE = {
-    CREATED: '1',
-    SHARE: '2',
-    TAGS: '3',
-  };
-  FILE_REFERTYPE = {
-    IMAGE: 'image',
-    VIDEO: 'video',
-    APPLICATION: 'application',
-  };
-  APPROVE_STATUS = {
-    NEW: '1',
-    REDO: '2',
-    SUBMITED: '3',
-    REJECTED: '4',
-    APPROVETED: '5',
-    CANCELLED: '6',
-  };
+  NEWTYPE_POST = NEWSTYPE.POST;
+  private destroy$ = new Subject<void>();
+
   @ViewChild('codxATMImage') codxATMImage: AttachmentComponent;
   @ViewChild('codxATMVideo') codxATMVideo: AttachmentComponent;
   constructor(
@@ -81,44 +48,36 @@ export class PopupAddKnowledgeComponent implements OnInit {
 
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
-  ) {
+  ) 
+  {
+    this.user = auth.get();
     this.dialogRef = dialogRef;
     this.headerText = dialogData.data.action;
     this.isAdd = dialogData.data.isAdd;
     this.data = JSON.parse(JSON.stringify(dialogData.data.data));
-    this.user = auth.get();
-  }
-  ngOnInit(): void {
-    if (this.isAdd) {
+    if (this.isAdd) 
+    {
       this.data.createdBy = this.user.userID;
       this.data.createdName = this.user.userName;
-    } else {
+    } 
+    else 
+    {
       this.getPostInfo(this.data.recID);
       this.getFileByObjectID(this.data.recID);
     }
-    this.getValue();
   }
-  ngAfterViewInit(): void {}
-
-  getPostInfo(recID: string) {
-    if (recID) {
-      this.api
-        .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'GetPostByIDAsync', [
-          recID,
-        ])
-        .subscribe((res: any) => {
-          this.data = JSON.parse(JSON.stringify(res));
-          this.detectorRef.detectChanges();
-        });
-    }
-  }
-  getValue() {
-    this.cache.functionList('WPT02').subscribe((func: any) => {
-      if (func) {
+ 
+  ngOnInit(): void {
+    this.cache.functionList('WPT02')
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((func: any) => {
+      if (func) 
+      {
         this.function = func;
         this.headerText += ' ' + func.customName;
         this.cache
           .gridViewSetup(func.formName, func.gridViewName)
+          .pipe(takeUntil(this.destroy$))
           .subscribe((grv: any) => {
             if (grv) {
               this.grvSetup = grv;
@@ -130,12 +89,26 @@ export class PopupAddKnowledgeComponent implements OnInit {
           });
       }
     });
-    this.cache.message('WP017').subscribe((mssg: any) => {
-      if (mssg) {
-        this.messageImage = mssg.customName;
-      }
-    });
   }
+
+  ngAfterViewInit(): void {}
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  getPostInfo(recID: string) {
+    if (recID) {
+      this.api
+        .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'GetPostByIDAsync', [recID])
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res: any) => {
+          this.data = JSON.parse(JSON.stringify(res));
+          this.detectorRef.detectChanges();
+        });
+    }
+  }
+  
   clickClosePopup() {
     this.dialogRef.close();
   }
@@ -144,30 +117,27 @@ export class PopupAddKnowledgeComponent implements OnInit {
   }
 
   clickInsert() {
-    debugger
     if (this.checkValidate()) return;
     this.loading = true;
     this.codxATMImage.fileUploadList = Array.from<any>(this.fileUpload);
-    this.codxATMImage.saveFilesMulObservable().subscribe((res1: any) => {
-      if (
-        res1 &&
-        ((typeof res1 == 'object' && res1.status == 0) ||
-          (Array.isArray(res1) && res1[0].status == 0))
-      ) {
+    this.codxATMImage.saveFilesMulObservable()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res1: any) => {
+      if(res1 && ((typeof res1 == 'object' && res1.status == 0) || (Array.isArray(res1) && res1[0].status == 0))) {
         this.api
-          .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'InsertAsync', [
-            this.data,
-          ])
+          .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'InsertAsync', [this.data])
+          .pipe(takeUntil(this.destroy$))
           .subscribe((res2: boolean) => {
             this.notifSV.notifyCode(res2 ? 'WP024' : 'WP013');
             this.dialogRef.close(res2);
           });
-      } else {
+      } 
+      else 
+      {
         let arrFields = this.fileUpload.map((x) => x.fileName);
         let fileNames =
           arrFields.length > 1 ? arrFields.join(';') : arrFields.pop();
         this.notifSV.notifyCode('DM006', 0, fileNames);
-        this.dialogRef.close();
         this.dialogRef.close();
         return;
       }
@@ -179,14 +149,15 @@ export class PopupAddKnowledgeComponent implements OnInit {
     this.loading = true;
     if (this.fileUpload.length > 0) {
       this.codxATMImage.fileUploadList = [...this.fileUpload];
-      this.codxATMImage.saveFilesMulObservable().subscribe((res: any) => {
-        if (
-          res &&
-          ((typeof res == 'object' && res.status == 0) ||
-            (Array.isArray(res) && res[0].status == 0))
-        ) {
+      this.codxATMImage.saveFilesMulObservable()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if(res && ((typeof res == 'object' && res.status == 0) || (Array.isArray(res) && res[0].status == 0))) 
+        {
           this.releasePost(this.data);
-        } else {
+        } 
+        else 
+        {
           let arrFields = this.fileUpload.map((x) => x.fileName);
           let fileNames =
             arrFields.length > 1 ? arrFields.join(';') : arrFields.pop();
@@ -203,9 +174,8 @@ export class PopupAddKnowledgeComponent implements OnInit {
 
   releasePost(post: any) {
     this.api
-      .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'ReleaseNewsAsync', [
-        post,
-      ])
+      .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'ReleaseNewsAsync', [post])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         this.loading = false;
         this.notifSV.notifyCode(res ? 'WP024' : 'WP013');
@@ -215,19 +185,15 @@ export class PopupAddKnowledgeComponent implements OnInit {
 
   checkValidate() {
     if (this.arrFieldRequire.length > 0) {
-      let arrFieldUnValid = this.arrFieldRequire.filter(
-        (key) => !this.data[Util.camelize(key)]
-      );
-      if (arrFieldUnValid.length > 0) {
+      let arrFieldUnValid = this.arrFieldRequire.filter(key => !this.data[Util.camelize(key)]);
+      if (arrFieldUnValid.length > 0)
+      {
         this.notifSV.notifyCode('SYS009', 0, arrFieldUnValid.join(';'));
         return true;
       }
-      if (this.data.newsType == 2 && this.fileImage == null) {
-        this.notifSV.notifyCode(
-          'SYS009',
-          0,
-          this.grvSetup['Image']['headerText']
-        );
+      if (this.data.newsType == 2 && this.fileImage == null)
+      {
+        this.notifSV.notifyCode('SYS009',0,this.grvSetup['Image']['headerText']);
         return true;
       }
     }
@@ -272,19 +238,19 @@ export class PopupAddKnowledgeComponent implements OnInit {
       if (!Array.isArray(this.data.permissions)) this.data.permissions = [];
       else
         this.data.permissions = this.data.permissions.filter(
-          (e: any) => e.memberType != this.MEMBERTYPE.SHARE
+          (e: any) => e.memberType != MEMBERTYPE.SHARE
         );
       switch (shareControl) {
-        case this.SHARECONTROLS.OWNER:
+        case SHARECONTROLS.OWNER:
           break;
-        case this.SHARECONTROLS.EVERYONE:
-        case this.SHARECONTROLS.MYGROUP:
-        case this.SHARECONTROLS.MYTEAM:
-        case this.SHARECONTROLS.MYDEPARMENTS:
-        case this.SHARECONTROLS.MYDIVISION:
-        case this.SHARECONTROLS.MYCOMPANY:
+        case SHARECONTROLS.EVERYONE:
+        case SHARECONTROLS.MYGROUP:
+        case SHARECONTROLS.MYTEAM:
+        case SHARECONTROLS.MYDEPARMENTS:
+        case SHARECONTROLS.MYDIVISION:
+        case SHARECONTROLS.MYCOMPANY:
           let permission = new Permission();
-          permission.memberType = this.MEMBERTYPE.SHARE;
+          permission.memberType = MEMBERTYPE.SHARE;
           permission.objectID = '';
           permission.objectName = '';
           permission.objectType = this.data.shareControl;
@@ -292,32 +258,31 @@ export class PopupAddKnowledgeComponent implements OnInit {
           this.data.permissions = lstPermision;
           this.data.shareName = '';
           break;
-        case this.SHARECONTROLS.OGRHIERACHY:
-        case this.SHARECONTROLS.DEPARMENTS:
-        case this.SHARECONTROLS.POSITIONS:
-        case this.SHARECONTROLS.ROLES:
-        case this.SHARECONTROLS.GROUPS:
-        case this.SHARECONTROLS.USER:
+        case SHARECONTROLS.OGRHIERACHY:
+        case SHARECONTROLS.DEPARMENTS:
+        case SHARECONTROLS.POSITIONS:
+        case SHARECONTROLS.ROLES:
+        case SHARECONTROLS.GROUPS:
+        case SHARECONTROLS.USER:
           dataSeleted.forEach((x) => {
             let p = new Permission();
-            p.memberType = this.MEMBERTYPE.SHARE;
+            p.memberType = MEMBERTYPE.SHARE;
             p.objectID = x.id;
             p.objectName = x.text;
             p.objectType = x.objectType;
             this.data.permissions.push(p);
           });
-          // WP001 chia sẻ 1 - WP002 chia sẻ nhiều người
           let mssgCodeShare = dataSeleted.length == 1 ? 'WP001' : 'WP002';
           this.cache.message(mssgCodeShare).subscribe((mssg: any) => {
             if (mssg) {
               if (dataSeleted.length == 1) {
-                // chia sẻ 1 người
                 this.data.shareName = Util.stringFormat(
                   mssg.defaultName,
                   `<b>${fisrtPermission.text}</b>`
                 );
-              } else {
-                // chia sẻ nhiều người
+              } 
+              else 
+              {
                 let count = dataSeleted.length - 1;
                 let type = fisrtPermission.objectName;
                 this.data.shareName = Util.stringFormat(
@@ -342,12 +307,12 @@ export class PopupAddKnowledgeComponent implements OnInit {
       let file = files.data[0];
       file['id'] = Util.uid();
       if (file.mimeType.includes('image')) {
-        file['referType'] = this.FILE_REFERTYPE.IMAGE;
+        file['referType'] = FILE_REFERTYPE.IMAGE;
         file['source'] = file.avatar;
         if (this.fileImage) this.removeImage();
         this.fileImage = JSON.parse(JSON.stringify(file));
       } else if (file.mimeType.includes('video')) {
-        file['referType'] = this.FILE_REFERTYPE.VIDEO;
+        file['referType'] = FILE_REFERTYPE.VIDEO;
         file['source'] = file.data.changingThisBreaksApplicationSecurity;
         this.fileVideo = JSON.parse(JSON.stringify(file));
       }
@@ -412,6 +377,7 @@ export class PopupAddKnowledgeComponent implements OnInit {
   updatePost(post: any) {
     this.api
       .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'UpdateAsync', [post])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         this.loading = false;
         this.notifSV.notifyCode(res ? 'SYS007' : 'SYS021');
@@ -425,19 +391,19 @@ export class PopupAddKnowledgeComponent implements OnInit {
         'ERM.Business.DM',
         'FileBussiness',
         'GetFilesByIbjectIDAsync',
-        [objectID]
-      )
+        [objectID])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any[]) => {
         if (res?.length > 0) {
           res.forEach((f: any) => {
-            if (f.referType == this.FILE_REFERTYPE.IMAGE) {
+            if (f.referType == FILE_REFERTYPE.IMAGE) {
               this.fileImage = f;
               this.fileImage['source'] = this.codxShareSV.getThumbByUrl(
                 f.url,
                 300
               );
               this.fileImage['id'] = f.recID;
-            } else if (f.referType == this.FILE_REFERTYPE.VIDEO) {
+            } else if (f.referType == FILE_REFERTYPE.VIDEO) {
               this.fileVideo = f;
               this.fileVideo['source'] =
                 `${environment.urlUpload}` + '/' + f.url;
@@ -451,9 +417,7 @@ export class PopupAddKnowledgeComponent implements OnInit {
 
   fileDelete: any[] = [];
   removeImage() {
-    if (!this.fileDelete) {
-      this.fileDelete = [];
-    }
+    if (!this.fileDelete)  this.fileDelete = [];
     this.fileDelete.push(this.fileImage);
     this.fileUpload = this.fileUpload.filter((x) => x.id != this.fileImage.id);
     this.fileImage = null;
