@@ -61,8 +61,7 @@ export class SidebarTreeviewComponent extends UIComponent implements AfterViewIn
         sameData:false,
         model:{
           panelLeftRef: this.tmpLeft,
-          panelRightRef: this.tmpRight,
-          collapsed: true,
+          collapsed: false,
           resizable: true
         }
       }

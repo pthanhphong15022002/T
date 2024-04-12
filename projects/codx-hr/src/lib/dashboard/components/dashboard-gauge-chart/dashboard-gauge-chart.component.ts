@@ -1,4 +1,4 @@
-import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
 
 @Component({
   selector: 'lib-dashboard-gauge-chart',
@@ -6,53 +6,54 @@ import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
   styleUrls: ['./dashboard-gauge-chart.component.css']
 })
 export class DashboardGaugeChartComponent implements OnInit {
-  rangeLinearGradient1: Object = {
-    startValue: '0%',
-    endValue: '100%',
-    colorStop: [
-      { color: '#5465FF', offset: '0%', opacity: 0.9 },
-      { color: '#04DEB7', offset: '90%', opacity: 0.9 },
-    ],
-  };
-
-  rangeLinearGradient2: Object = {
-    startValue: '0%',
-    endValue: '100%',
-    colorStop: [
-      { color: '#FF8008', offset: '0%', opacity: 0.9 },
-      { color: '#FFC837', offset: '90%', opacity: 0.9 },
-    ],
-  };
-
-  minorTicks: Object = {
-    position: 'Inside',
-    height: 0,
-    width: 1,
-    offset: 20,
-    labelStyle: { font: '0px' },
-    interval: 20,
-  };
-
-  majorTicks: Object = {
-    position: 'Outside',
-    height: 10,
-    width: 1,
-    offset: 10,
-    interval: 10,
-    labelStyle: { font: '0px' }
-  };
-
-  lineStyle: Object = {
+  @Input() value:any = '70';
+  content:string="<div class='text-incycle' style='font-size:12px;text-align:center;color:#505D6F'>   Tổng Cộng  </div>"
+  +"<div style='font-size:18px;text-align:center;color:#505D6F;font-weight: bold;'> 100% </div>"
+  public ticks: Object = {
     width: 0,
   };
-  
-  public labelStyle?: Object;
+  public genderMale: string = '<div style="color: #505D6F;font-weight: 700;font-size: 15px;position: absolute;top:1px;left:-50px">30%</div>';
+  public genderFemale: string = '<div style="color: #505D6F;font-weight: 700;font-size: 15px;position: absolute;top:7px;right:-40px " >70%</div>';
+  public labelstyle: Object = {
+    font: { fontFamily: 'inherit', size: '0px', fontWeight: 'Regular' },
+  };
+  pointersGaugeFour: Object[] = [];
+  rangesGaugeFour: Object[] = [
+    {
+      start: 0,
+      end: 100,
+      radius: '100%',
+      startWidth: 20,
+      endWidth: 20,
+      color: '#F64E60',
+      roundedCornerRadius:10,
+    }, 
+  ];
+  constructor() { }
 
-  ngOnInit(): void {
-    this.labelStyle = {
-      font: {
-        size: '0px',
-      }
-    };
+  ngOnInit() {
+    this.pointersGaugeFour = [
+      {
+        type: 'RangeBar',
+        radius: '100%',
+        value: this.value,
+        roundedCornerRadius: 10,
+        color: '#17BB45',
+        pointerWidth: 20,
+        border: {
+          color: '#17BB45',
+          width: 1,
+        },
+      },
+      {
+        type: 'Marker',
+        markerShape: 'Image',
+        markerWidth: 60,
+        markerHeight: 60,
+        radius: '90%',
+        value: this.value,
+        imageUrl: './assets/themes/tm/default/img/Button.svg'
+      },
+    ]
   }
 }

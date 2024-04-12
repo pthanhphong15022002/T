@@ -29,6 +29,17 @@
     </codx-listview>
 </ng-template> 
 
+<codx-listview #listView
+    entityName="HR_OrganizationUnits"
+    gridViewName="grvOrganizationUnits"
+    formName="OrganizationUnits"
+    service="HR"
+    [parentIdField]="'ParentID'"
+    [idField]="'orgUnitID'"
+    [itemTemplate]="itemTemplateTree"
+    >
+</codx-listview> 
+
 <ng-template #itemTemplateTree let-data>
     <div class="d-flex align-items-center">
         <div *ngIf="data.orgUnitName" style="margin-right: 5px;">
