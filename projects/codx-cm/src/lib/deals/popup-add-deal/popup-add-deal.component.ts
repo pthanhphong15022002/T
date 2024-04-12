@@ -411,7 +411,7 @@ export class PopupAddDealComponent
               (this.shortNameTmp ? this.shortNameTmp : this.customerNameTmp) +
               ' mua ' +
               this.bussineLineNameTmp?.trim();
-          } else if (!this.deal.dealName?.trim()) {
+          } else {
             this.deal.dealName = this.customerNameTmp;
           }
           this.getListContactByObjectID(this.customerID);

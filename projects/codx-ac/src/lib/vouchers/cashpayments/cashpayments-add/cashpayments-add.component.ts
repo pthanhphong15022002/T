@@ -111,6 +111,7 @@ export class CashPaymentAddComponent extends UIComponent {
   nextTabIndex: number;
   preData: any;
   totalAmount:any = 0;
+  isActive:any = true;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
@@ -130,6 +131,7 @@ export class CashPaymentAddComponent extends UIComponent {
     this.journal = { ...dialogData.data?.journal };
     this.baseCurr = dialogData.data?.baseCurr;
     this.legalName = this.dialogData.data?.legalName;
+    this.isActive = dialogData.data?.isActive; 
   }
   //#endregion
 
@@ -735,7 +737,7 @@ export class CashPaymentAddComponent extends UIComponent {
             this.dialog.dataService.update(res.data,true).subscribe();
             if (type == 'save') {
               this.onDestroy();
-              this.dialog.close();
+              this.dialog.close(res);
             } else {
               this.api
                 .exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [

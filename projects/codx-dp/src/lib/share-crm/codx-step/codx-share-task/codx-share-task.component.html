@@ -17,105 +17,55 @@
               >
                 <div class="d-flex justify-content-between list-title w-100">
                   <div class="d-flex align-items-top">
-                    <div
-                      *ngIf="
-                        role.objectType != '1' && role.objectType != 'U';
-                        then thenAvatar1;
-                        else elsethenAvatar1
-                      "
-                    ></div>
-                    <ng-template #thenAvatar1>
-                      <div class="d-flex align-items-center">
-                        <div
-                          class="d-flex align-items-center position-relative me-4"
-                          style="position: relative"
-                          popoverClass="popoverClass"
+                    <div class="me-4 d-flex align-items-center">
+                      <div
+                        class="d-flex align-items-center position-relative me-4"
+                        style="position: relative"
+                        popoverClass="popoverClass"
+                      >
+                        <codx-img
+                          class=""
+                          [width]="25"
+                          [objectId]="role.objectID"
+                          objectType="AD_Users"
                         >
-                          <img
-                            src="../../../assets/codx/user/user-admin.svg"
-                            alt=""
-                            style="width: 25px; border-radius: 50%"
-                          />
-                          <div
-                            style="position: absolute; right: 0; bottom: -5px"
-                          >
-                            <ng-container *ngFor="let role of listRoles">
-                              <ng-container *ngIf="role.value == role.roleType">
-                                <span
-                                  inlineSVG="./assets/themes/cm/default/img/{{
-                                    role.icon
-                                  }}"
-                                ></span>
-                              </ng-container>
-                            </ng-container>
-                          </div>
-                        </div>
-                        <div class="d-flex flex-column">
-                          <div class="text-dark fw-bold">
-                            {{ role.objectName }}
-                          </div>
+                        </codx-img>
+                        <div
+                          style="position: absolute; right: 0; bottom: -5px"
+                        >
                           <ng-container *ngFor="let role of listRoles">
                             <ng-container *ngIf="role.value == role.roleType">
-                              <div class="text-gray-500 fs-7">
-                                {{ role.text }}
-                              </div>
+                              <span
+                                inlineSVG="./assets/themes/cm/default/img/{{
+                                  role.icon
+                                }}"
+                              ></span>
                             </ng-container>
                           </ng-container>
                         </div>
                       </div>
-                    </ng-template>
-                    <ng-template #elsethenAvatar1>
-                      <div class="me-4 d-flex align-items-center">
-                        <div
-                          class="d-flex align-items-center position-relative me-4"
-                          style="position: relative"
-                          popoverClass="popoverClass"
-                        >
-                          <codx-img
-                            class=""
-                            [width]="25"
-                            [objectId]="role.objectID"
-                            objectType="AD_Users"
-                          >
-                          </codx-img>
-                          <div
-                            style="position: absolute; right: 0; bottom: -5px"
-                          >
-                            <ng-container *ngFor="let role of listRoles">
-                              <ng-container *ngIf="role.value == role.roleType">
-                                <span
-                                  inlineSVG="./assets/themes/cm/default/img/{{
-                                    role.icon
-                                  }}"
-                                ></span>
-                              </ng-container>
-                            </ng-container>
-                          </div>
+                      <div class="d-flex flex-column">
+                        <div class="text-dark fw-bold">
+                          {{ role.objectName }}
                         </div>
-                        <div class="d-flex flex-column">
-                          <div class="text-dark fw-bold">
-                            {{ role.objectName }}
-                          </div>
-                          <ng-container *ngFor="let role of listRoles">
-                            <ng-container *ngIf="role.value == role.roleType">
-                              <div class="text-gray-500 fs-7">
-                                {{ role.text }}
-                              </div>
-                            </ng-container>
+                        <ng-container *ngFor="let role of listRoles">
+                          <ng-container *ngIf="role.value == role.roleType">
+                            <div class="text-gray-500 fs-7">
+                              {{ role.text }}
+                            </div>
                           </ng-container>
-                        </div>
+                        </ng-container>
                       </div>
-                    </ng-template>
+                    </div>
+
                   </div>
                 </div>
-                <!-- <ng-container *ngIf="!checkRemove(i)">
                   <div
                     class="action-menu-od ms-0 d-flex justify-content-center align-items-center cursor-pointer"
                     (click)="removeUser(i)"
                   >
                     <i class="icon-close text-danger icon-16"></i>
                   </div>
-                </ng-container> -->
               </div>
             </ng-container>
           </div>

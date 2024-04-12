@@ -100,6 +100,17 @@ export class CodxBpService {
       [recID,checkList]
     );
   }
+  
+  createAutoNumberByNo(autoNumberNo: any) {
+    return this.api.execSv<any>(
+      APICONSTANT.SERVICES.SYS,
+      APICONSTANT.ASSEMBLY.AD,
+      'AutoNumbersBusiness',
+      'CreateAutoNumberAsync',
+      [autoNumberNo]
+    );
+  }
+
   updateStatusTask(recID,status,checkList) {
     return this.api.execSv<any>(
       "BP",
@@ -124,6 +135,15 @@ export class CodxBpService {
       "ERM.Business.BP",
       'ProcessesBusiness',
       'StartInstanceAsync',
+      [recID]
+    );
+  }
+  cancelInstance(recID) {
+    return this.api.execSv<any>(
+      "BP",
+      "ERM.Business.BP",
+      'ProcessesBusiness',
+      'CancelInstanceAsync',
       [recID]
     );
   }

@@ -190,6 +190,7 @@ import { ViewContentScheduleMeetingsComponent } from './components/codx-tmmeetin
 import { ContentEmailComponent } from './components/codx-email/content-email/content-email.component';
 import { CodxMentionComponent } from '../../../codx-common/src/lib/component/codx-mention/codx-mention.component';
 import { MentionModule } from '@syncfusion/ej2-angular-dropdowns';
+import { FormatComboboxPipe } from './components/codx-email/pipes/format-combobox.pipe';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -366,7 +367,9 @@ const T_Component: Type<any>[] = [
   ContentEmailComponent,
 ];
 
-const T_Pipe: Type<any>[] = [];
+const T_Pipe: Type<any>[] = [
+  FormatComboboxPipe
+];
 
 @NgModule({
   declarations: [
@@ -425,6 +428,7 @@ const T_Pipe: Type<any>[] = [];
     TooltipModule,
     TreeViewModule,
     DiagramModule,
+
   ],
 })
 export class CodxShareModule {

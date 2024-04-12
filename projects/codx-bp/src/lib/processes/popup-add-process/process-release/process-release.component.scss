@@ -17,3 +17,12 @@
 .w-5 {
   width: 5% !important;
 }
+.e-header-cells{
+  width: 300px !important;
+  min-width: 300px !important;
+}
+
+.e-kanban-content{
+  height: calc(100vh - 180px);
+}
+

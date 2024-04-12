@@ -28,6 +28,8 @@ import { PopupAddWaterClockComponent } from './popup-add-water-clock/popup-add-w
 export class WaterClockComponent
   extends UIComponent
   implements OnInit, AfterViewInit {
+  @ViewChild('templateDetail') templateDetail: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('morefunction') morefunction: TemplateRef<any>;
   @ViewChild('templetOldMonthHeader') templetOldMonthHeader: TemplateRef<any>;
 
@@ -85,24 +87,50 @@ export class WaterClockComponent
   onInit(): void { }
 
   ngAfterViewInit(): void {
-    this.views = [
-      {
-        type: ViewType.grid,
-        sameData: true,
-        active: true,
-        model: {
-          //resources: this.columnsGrid,
-          template2: this.morefunction,
-          //frozenColumns: 1,
+    if (this.funcID == 'CMS0129')
+      this.views = [
+        {
+          type: ViewType.grid,
+          sameData: true,
+          active: true,
+          model: {
+            //resources: this.columnsGrid,
+            template2: this.morefunction,
+            //frozenColumns: 1,
+          },
         },
-      },
-    ];
+        //view thêm
+        {
+          type: ViewType.listdetail,
+          active: false,
+          sameData: true,
+          model: {
+            template: this.itemTemplate,
+            panelRightRef: this.templateDetail,
+          },
+        },
+      ]; else
+      if (this.funcID == 'CMS0128')
+        this.views = [
+          {
+            type: ViewType.grid,
+            sameData: true,
+            active: true,
+            model: {
+              //resources: this.columnsGrid,
+              template2: this.morefunction,
+              //frozenColumns: 1,
+            },
+          },
+        ];
+
 
     this.detectorRef.detectChanges();
   }
 
   selectedChange(data) {
     if (data || data?.data) this.itemSelected = data?.data ? data?.data : data;
+    this.detectorRef.detectChanges();
   }
   changeDataMF(e: any, data: any) { }
 
@@ -419,5 +447,13 @@ export class WaterClockComponent
         },
       },
     ];
+
+  }
+
+  clickMoreFunction(e) {
+    this.clickMF(e.e, e.data);
+  }
+  eventChangeMF(e) {
+    this.changeDataMF(e.e, e.data);
   }
 }

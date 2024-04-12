@@ -383,7 +383,7 @@
       >
       </ejs-documenteditorcontainer>
     </div>
-    <div class="col-lg-2 p-0 border-top border-right border-bottom" [style.visibility]="showInsert?'visible':'hidden'" [style.height]="showInsert?'auto':'0px'">
+    <div class="col-lg-2 p-0 border-top border-right border-bottom overflow-auto" [style.visibility]="showInsert?'visible':'hidden'" [style.height]="showInsert?'100%':'0px'">
       <ng-container *ngIf="!isGroup">
         <ng-container *ngFor="let item of listFeild , let i = index">
           <div (click)="onSelect(item.text)" [id]="item.key" (dragstart)="dragStart($event)" draggable="true" [class.border-top]="i>0" class="p-2 bg-export-hover cursor-move" title="Kéo và thả vào văn bản">

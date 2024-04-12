@@ -155,7 +155,7 @@
           <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
         </div>
       </button>
-      <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" type="button"
+      <button *ngIf="isActive" id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" type="button"
         class="btn btn-md btn-primary me-2" (keydown.enter)="onSaveVoucher('saveadd'); $event.preventDefault()"
         (click)="onSaveVoucher('saveadd')">
         <div class="d-flex align-items-center">
