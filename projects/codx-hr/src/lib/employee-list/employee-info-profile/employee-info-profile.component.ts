@@ -7261,10 +7261,16 @@ export class EmployeeInfoProfileComponent extends UIComponent {
   }
 
   waitingRegisterApprove(event: any) {
-    console.log('clicked')
     let options = new SidebarModel();
 
     options.Width = 'Auto';
-    this.callfunc.openSide(DialogWaitingLeavingApproveComponent, [], options);
+    this.callfunc.openSide(DialogWaitingLeavingApproveComponent, options);
+  }
+
+  openMyReamSide() {
+    let options = new SidebarModel();
+
+    options.Width = 'Auto';
+    this.callfunc.openSide(MyTemComponent, options);
   }
 }

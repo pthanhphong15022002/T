@@ -2,3 +2,7 @@ codx-view-tree-detail .e-pane.e-static-pane {
     flex-basis: 24% !important;
     min-width: 220px;
   }
+
+.page-title.d-flex.ms-0.align-items-center.flex-wrap.ms-3 {
+    max-width: 0 !important;
+}

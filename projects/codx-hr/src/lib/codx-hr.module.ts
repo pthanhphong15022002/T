@@ -170,7 +170,6 @@ import { DialogRegisterApproveComponent } from './dashboard/components/dialog-re
 import { HistoryLevelComponent } from './dashboard/components/dialog-detail-register-approve/components/history-level/history-level.component';
 import { DialogReviewLeaveApproveComponent } from './employee-list/employee-info-profile/components/dialog-review-leave-approve/dialog-review-leave-approve.component';
 import { DialogWaitingLeavingApproveComponent } from './employee-list/employee-info-profile/components/dialog-waiting-leaving-approve/dialog-waiting-leaving-approve.component';
-import { SidebarTreeviewComponent } from './employee-list/employee-info-detail/component/sidebar-treeview/sidebar-treeview.component';
 export const routes: Routes = [
   {
     path: '',
@@ -520,8 +519,7 @@ const T_Component = [
   DashboardComponent,
   DialogRegisterApproveComponent,
   DialogReviewLeaveApproveComponent,
-  DialogWaitingLeavingApproveComponent,
-  SidebarTreeviewComponent
+  DialogWaitingLeavingApproveComponent
 
 ];
 @NgModule({

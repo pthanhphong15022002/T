@@ -1,0 +1,104 @@
+<codx-views #view [views]="views" [funcID]="funcID" [service]="service" [assemblyName]="assemblyName"
+    [entityName]="entityName" [className]="className" [method]="method" [button]="button" (buttonClick)="add()"
+    [idField]="idField" [selectedFirst]="true" (selectedChange)="selectedChange($event)"
+    (viewChanging)="viewChanging($event)" (viewChanged)="viewChanged($event)" (clickMF)="clickMF($event, itemSelected)">
+</codx-views>
+
+<!-- #region ListView-Mode -->
+<!-- header -->
+<ng-template #headerTemplate let-data>
+    <div class="d-flex w-100 ps-2 pe-4">
+        <div class="w-50 text-dark fw-bold p-3 fw-500">
+            <codx-label fiedName="lblEmployeeName" [setRequire]="false" [formModel]="view.formModel"
+                [default]="'Họ và tên'"></codx-label>
+        </div>
+        <div class="w-25 text-dark fw-bold p-3 fw-500">
+            <codx-label fiedName="lblEmployeeStatus" [setRequire]="false" [formModel]="view.formModel"
+                [default]="'Giới tính'"></codx-label>
+        </div>
+        <div class="w-25 text-dark fw-bold p-3 fw-500">
+            <codx-label fiedName="lblShiftWorking" [setRequire]="false" [formModel]="view.formModel"
+                [default]="'Ngày sinh'"></codx-label>
+        </div>
+        <div class="w-25 text-dark fw-bold p-3 fw-500">
+            <codx-label fiedName="lblEmployeeInfo" [setRequire]="false" [formModel]="view.formModel"
+                [default]="'Quan hệ gia đình'"></codx-label>
+        </div>
+        <div class="w-25 text-dark fw-bold p-3 fw-500">
+            <codx-label fiedName="lblEmployeeContact" [setRequire]="false" [formModel]="view.formModel"
+                [default]="'Số điện thoại'"></codx-label>
+        </div>
+    </div>
+</ng-template>
+<!-- end header -->
+<!-- template list -->
+<ng-template #templateList let-data>
+    <div class="d-flex align-items-center border-bottom" (dblclick)="clickViewEmpInfo(data)">
+        <!-- Nhân viên -->
+        <div class="w-50 p-3 ps-5">
+            <div class="d-flex align-items-center cursor-pointer hover-active" (dblclick)="clickViewEmpInfo(data)">
+                <div class="d-flex flex-column me-4">
+                    <codx-img [funcId]="funcID" [objectId]="data.employeeID" [objectName]="data.employeeName"
+                        objectType="HR_Employees" [width]="40">
+                    </codx-img>
+                </div>
+                <div class="d-flex flex-column">
+                    <div #nameField 
+                        class="align-items-center line-clamp line-clamp-1 mb-1">
+                        <span class="fw-bold fs-6 me-3 text-nowrap item-active" (click)="clickViewEmpInfo(data)">
+                            {{data.employeeName}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Giới tính -->
+        <div class="w-25 p-3">
+            <div class="d-flex has-action-menu justify-content-between w-100">
+                <div class="d-flex flex-column">
+                    <div class="d-flex mb-1">
+                        <codx-vll [name]="grvSetup['Status']?.referedValue" [value]="data.status" [showBgColor]="true"
+                            [showText]="true" [className]="'badge badge-sm badge-inline'">
+                        </codx-vll>
+                    </div>
+                </div>
+                <!-- <div class="align-self-center">
+          <div style="height: 35px" class="has-action-menu" *ngIf="codxService.asideMode == '1'">
+            <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)"
+              (changeDataMF)="clickMF($event, data)" [dataItem]="data" type="hover">
+            </codx-mfunc>
+          </div>
+        </div> -->
+            </div>
+
+
+        </div>
+        <!-- Ngày sinh -->
+        <div class="w-25 p-3">
+            <div class="d-flex flex-column">
+                <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                    16/10/1964
+                </div>
+            </div>
+        </div>
+
+        <!-- Quan hệ gia đình -->
+        <div class="w-25 p-3">
+            <div class="d-flex flex-column">
+                <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                    cha
+                </div>
+            </div>
+        </div>
+
+        <!-- Số điện thoại -->
+        <div class="w-25 p-3">
+            <div class="d-flex flex-column">
+                <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                    039 326 7994
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- end template list -->
+<!-- #endregion ListView-Mode -->
