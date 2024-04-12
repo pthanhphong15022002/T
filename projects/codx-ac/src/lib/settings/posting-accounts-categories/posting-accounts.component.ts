@@ -162,12 +162,14 @@ export class ItempostingaccountsComponent extends UIComponent {
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
+      case 'SYS102':
         this.delete(data); //? xóa tài khoản hạch toán
         break;
       case 'SYS03':
         this.edit(e, data); //? chỉnh sửa tài khoản hạch toán
         break;
       case 'SYS04':
+      case 'SYS104':
         this.copy(e, data); //? sao chép tài khoản hạch toán
         break;
     }
@@ -306,6 +308,12 @@ export class ItempostingaccountsComponent extends UIComponent {
    * @param dataCopy
    */
   copy(e, dataCopy) {
+    this.view.dataService.dataSelected = dataCopy;
+    this.view.dataService.copy().subscribe((res: any) => {
+      res.moduleID = this.menuActive;
+      res.postType = this.postType;
+      this.eleGrid.addRow(res, this.eleGrid.dataSource.length);
+    });
     // this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
     // this.subheaderText = this.getSubHeader(this.menuActive,this.postType);
     // if (dataCopy) this.view.dataService.dataSelected = dataCopy;
