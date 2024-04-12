@@ -406,26 +406,26 @@
           <div class="tab-content" style="
             max-width: 830px; width: 100%">
             <!-- Pane 0: Sơ yếu lí lịch -->
-            <!-- <div class="tab-pane fade show active" id="pane_100">
+            <div class="tab-pane fade show active" id="pane_100">
               <ng-container [ngTemplateOutlet]="dashboard"></ng-container>
-            </div> -->
+            </div>
             <!-- Pane 1: Sơ yếu lí lịch -->
-            <div *ngIf="
+            <!-- <div *ngIf="
                 curriculumVitaeFunc && curriculumVitaeFunc.isActive == true
               " class="tab-pane fade show" id="pane_1" [class]="crrFuncTab == curriculumVitaeFuncID ? 'active' : ''">
               <ng-container [ngTemplateOutlet]="curriculumVitae"></ng-container>
-            </div>
+            </div> -->
             <!-- Pane 2: Thông tin công việc-->
-            <div *ngIf="jobInfoFunc && jobInfoFunc.isActive == true" class="tab-pane fade show" id="pane_2"
+            <!-- <div *ngIf="jobInfoFunc && jobInfoFunc.isActive == true" class="tab-pane fade show" id="pane_2"
               [class]="crrFuncTab == jobInfoFuncID ? 'active' : ''">
               <ng-container [ngTemplateOutlet]="jobProgress"></ng-container>
-            </div>
+            </div> -->
             <!-- Pane 3: Lương phúc lợi-->
-            <div *ngIf="
+            <!-- <div *ngIf="
                 salaryBenefitInfoFunc && salaryBenefitInfoFunc.isActive == true
               " class="tab-pane fade show" id="pane_3" [class]="crrFuncTab == salaryBenefitInfoFuncID ? 'active' : ''">
               <ng-container [ngTemplateOutlet]="benefit"></ng-container>
-            </div>
+            </div> -->
             <!-- Pane 4: Quá trình làm việc-->
             <!-- <div
               *ngIf="
@@ -547,8 +547,8 @@
         (handleWaitingRegisterApprove)="waitingRegisterApprove($event)"></lib-dashboard-register-aprrove>
     </div>
     <div class="defaut-chart d-flex justify-content-between w-100 gap-4">
-      <div class="newEmployee-table bg-white border h-375px mt-4 p-3 rounded">
-        <div class="d-flex flex-cloumn justify-content-between">
+      <div class="newEmployee-table bg-white border mt-4 p-3 rounded">
+        <div class="d-flex flex-cloumn justify-content-between pb-4">
           <span class="fw-bold">Nhân viên mới vô làm trong tháng (4)</span>
           <div>
             <codx-dropdown-calendar cssPopup="h-350px w-550px" [selectedType]="'m'" [displayOption]="ops"
@@ -608,7 +608,215 @@
             </ng-template>
           </lib-table-grip> -->
 
-          <hr-table-newemployee></hr-table-newemployee>
+          <!-- <hr-table-newemployee></hr-table-newemployee> -->
+          <!-- <codx-listview         class="h-100"         [itemTemplate]="itemTemplateTree"      
+              [entityName]="'HR_OrganizationUnits'"         [service]="'HR'"         type="treeView"      
+              textField="orgUnitName"         [gridViewName]="'grvOrganizationUnits'"      
+              [formName]="'OrganizationUnits'"         [idField]="'orgUnitID'"         [parentIdField]="'ParentID'"    
+                [dataService]="dtServiceOrgUnit"         [enableCheck]="false"         [data]="null"      
+              [selectFirst]="true" >
+                </codx-listview> -->
+
+          <!-- <codx-listview #listView [service]="'HR'" [assemblyName]="'HR_Employees'" [entityName]="'ERM.Business.HR'"
+            [className]="'EmployeesBusiness_Old'" [method]="'GetEmployeeListByOrgUnitIDGridView'" [funcId]="'HRT03b'"
+            [type]="'listView'" [formModel]="formModel">
+          </codx-listview>
+
+          <ng-template #templateListCard>
+            <div>
+              HIHIHI
+            </div>
+          </ng-template> -->
+
+          <codx-listview  entityName="DM_FileInfo"
+            gridViewName="grvFileInfo" formName="FileInfo" [itemTemplate]="templateNewEmployee"
+            [headerTemplate]="headerNewEmployeeTemplate" service="DM" height="400px" class="newemployee-listview">
+          </codx-listview>
+
+
+
+          <ng-template #headerNewEmployeeTemplate let-data>
+            <div class="table-header d-flex w-100 ps-2 pe-4">
+              <div class="w-50 text-dark fw-bold p-3 fw-500">
+                <codx-label fiedName="lblEmployeeName" [setRequire]="false" [formModel]="view.formModel"
+                  [default]="'Nhân viên'"></codx-label>
+              </div>
+              <div class="w-25 text-dark fw-bold p-3 fw-500">
+                <codx-label fiedName="lblEmployeeStatus" [setRequire]="false" [formModel]="view.formModel"
+                  [default]="'Tình Trạng'"></codx-label>
+              </div>
+              <!-- <div class="w-25 text-dark fw-bold p-3 fw-500">
+                <codx-label fiedName="lblShiftWorking" [setRequire]="false" [formModel]="view.formModel"
+                  [default]="'Thông tin chấm công'"></codx-label>
+              </div>
+              <div class="w-25 text-dark fw-bold p-3 fw-500">
+                <codx-label fiedName="lblEmployeeInfo" [setRequire]="false" [formModel]="view.formModel"
+                  [default]="'Thông tin cá nhân'"></codx-label>
+              </div> -->
+              <div class="w-25 text-dark fw-bold p-3 fw-500">
+                <codx-label fiedName="lblEmployeeContact" [setRequire]="false" [formModel]="view.formModel"
+                  [default]="'Liên hệ'"></codx-label>
+              </div>
+            </div>
+          </ng-template>
+          <!-- end header -->
+
+          <!-- template list -->
+          <ng-template #templateNewEmployee let-data>
+            <div class="d-flex align-items-center border-bottom">
+              <!-- Nhân viên -->
+              <div class="w-50 p-3 ps-5">
+                <div class="d-flex align-items-center cursor-pointer hover-active">
+                  <div class="d-flex flex-column me-4">
+                    <!-- <codx-img [funcId]="funcID" [objectId]="data.employeeID" [objectName]="data.employeeName"
+                      objectType="HR_Employees" [width]="40">
+                    </codx-img> -->
+                    <codx-img [funcId]="funcID" [objectId]="infoPersonal?.employeeID"
+                      [objectName]="infoPersonal?.employeeName" [objectType]="'HR_Employees'" [imageType]="'circle'"
+                      class="pic-emloyee" [width]="30">
+                    </codx-img>
+                    <ng-container >
+                      <div class="mt-1 mx-auto">
+                        <!-- <codx-vll [name]="1" [value]="Nữ" [showText]="true"
+                          [showBgColor]="true" [classList]="'badge badge-sm badge-inline flex-wrap me-0'"></codx-vll> -->
+                      </div>
+                    </ng-container>
+                  </div>
+                  <div class="d-flex flex-column">
+                    <div #nameField [ngbTooltip]="nameField.scrollHeight > nameField.clientHeight? nameTooltip :null"
+                      class="align-items-center line-clamp line-clamp-1 mb-1">
+                      <span class="fw-bold fs-6 me-3 text-nowrap item-active" >
+                        Nguyễn Hoàng Trung</span>
+                      <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
+                      <span class="text-danger">123456789</span>
+                      <ng-template #nameTooltip>
+                        <div class="inline-tooltip">
+                          <span class="fw-bold fs-6 me-3 text-nowrap">
+                            Nguyễn Hoàng Trung</span>
+                          <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
+                          <span class="text-danger">123456789</span>
+                        </div>
+                      </ng-template>
+                    </div>
+                    <div #positionField  class="text-gray-600 mb-1 fs-7 line-clamp line-clamp-1">
+                      <span [ngbTooltip]="positionTooltip">Kiểm thử chất lượng phần mềm</span>
+                      <ng-template #positionTooltip>
+                        <div class="d-flex flex-column">
+                          <span class="label-text-color">Vai trò</span>
+                          <span *ngIf="positionField.scrollHeight > positionField.clientHeight"
+                            class="text-gray-600">Kiểm thử chất lượng phần mềm</span>
+                        </div>
+                      </ng-template>
+                    </div>
+                    <div #orgUnitField  class="text-gray-700 mb-1 line-clamp line-clamp-1">
+                      <span [ngbTooltip]="orgUnitTooltip">Trung tâm CDC</span>
+                      <ng-template #orgUnitTooltip>
+                        <div class="d-flex flex-column">
+                          <span class="label-text-color">Trung Tâm</span>
+                          <span *ngIf="orgUnitField.scrollHeight > orgUnitField.clientHeight"
+                            class="text-gray-600">Trung tâm CDC</span>
+                        </div>
+                      </ng-template>
+                    </div>
+                    <!-- <div #departmentField [ngbTooltip]="departmentTooltip"
+                      class="text-gray-600 align-items-center line-clamp line-clamp-1">
+                      <span *ngIf="data.departmentID != data.orgUnitID">
+                        {{data.departmentName? data.departmentName :data.departmentID}}</span>
+                      <span *ngIf="data?.departmentID && data.divisionID" class="text-gray-400 mx-1">,</span>
+                      <span *ngIf="data.divisionID">{{data.divisionName? data.divisionName: data.divisionID }}</span>
+                      <ng-template #departmentTooltip>
+                        <div class="d-flex flex-column">
+                          <span class="label-text-color">{{grvSetup['DepartmentID']?.headerText}}</span>
+                          <span *ngIf="data.departmentID != data.orgUnitID 
+                            && departmentField.scrollHeight > departmentField.clientHeight">
+                            {{data.departmentName? data.departmentName :
+                            data.departmentID}}</span>
+                          <span *ngIf="data.divisionID && departmentField.scrollHeight > departmentField.clientHeight">
+                            {{data.divisionName? data.divisionName: data.divisionID }}</span>
+                        </div>
+                      </ng-template>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+              <!-- Tình trạng -->
+              <div class="w-25 p-3">
+                <div class="d-flex has-action-menu justify-content-between w-100">
+                  <div class="d-flex flex-column">
+                    <div class="d-flex mb-1">
+                      <!-- <codx-vll [name]="grvSetup['Status']?.referedValue" [value]="data.status" [showBgColor]="true"
+                        [showText]="true" [className]="'badge badge-sm badge-inline'">
+                      </codx-vll> -->
+                    </div>
+                    <div #joinedOn class="line-clamp line-clamp-1 mb-1"
+                      [ngbTooltip]=" joinedOnTooltip">
+                      <codx-label class="label-colon label-text-color text-gray-500" [setRequire]="false" [fiedName]="'JoinedOn'"
+                          [formModel]="view.formModel" default="Ngày vào làm" >
+                      </codx-label>
+                      <ng-container >
+                        <span class="data-text-color">  12/12/2012</span>
+                      </ng-container>
+                      <!-- <ng-template #noJoinedOn>
+                        <span class="place-holder">{{grvSetup['JoinedOn']?.headerText}}</span>
+                      </ng-template> -->
+                      <ng-template #joinedOnTooltip>
+                        <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'JoinedOn'"
+                          [formModel]="view.formModel" default="Ngày vào làm">
+                        </codx-label>
+                        <span class="data-text-color">12/12/2012</span>
+                      </ng-template>
+                    </div>
+                    <!-- <div #seniorityDate class="line-clamp line-clamp-1"
+                      [ngbTooltip]="(seniorityDate.scrollHeight > seniorityDate.clientHeight && data.senioritydate)? seniorityDateTooltip : null">
+                      <codx-label class="label-colon label-text-color" name="lblHR_SenioritydateCal"
+                        [setRequire]="false" [formModel]="view.formModel" default="Thâm niên">
+                      </codx-label>
+                      <ng-container *ngIf="data.senioritydate; else noSeniorityDate">
+                        <span class="data-text-color">{{ data.senioritydate | timeAgo }}</span>
+                      </ng-container>
+                      <ng-template #noSeniorityDate>
+                        <codx-label class="place-holder" name="lblHR_SenioritydatePlaceHolder" [setRequire]="false"
+                          [formModel]="view.formModel" default="Thâm niên">
+                        </codx-label>
+                      </ng-template>
+                      <ng-template #seniorityDateTooltip>
+
+                      </ng-template>
+                    </div> -->
+                  </div>
+                  <div class="align-self-center">
+                    <div style="height: 35px" class="has-action-menu" *ngIf="codxService.asideMode == '1'">
+                      <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)"
+                        (changeDataMF)="clickMF($event, data)" [dataItem]="data" type="hover">
+                      </codx-mfunc>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+              <!-- Liên hệ -->
+              <div class="w-25 p-3">
+                <div class="info-contact d-flex flex-column">
+                  <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                    <span #emailField class="data-text-color text-primary" [ngbTooltip]="emailTooltip"
+                      >nnpvi@lacviet.com.vn
+                    </span>
+                    <ng-template #emailTooltip>
+                      <span>nnpvi@lacviet.com.vn</span>
+                    </ng-template>
+                  </div>
+                  <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                    <span class="data-text-color text-primary" 
+                      >(+84) 39-1234-5678
+                    </span>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </ng-template>
+
         </div>
       </div>
       <!-- <div>
@@ -1278,7 +1486,115 @@
           <div #insurance class="mb-1" *ngIf="eInfoFormModel">
 
             <div class="row mb-3 py-4">
-              <hr-table-employee-family></hr-table-employee-family>
+              <!-- <hr-table-employee-family></hr-table-employee-family> -->
+              <!-- <codx-listview #listView [service]="'HR'" [assemblyName]="'HR_Employees'" [entityName]="'ERM.Business.HR'"
+                [className]="'EmployeesBusiness_Old'" [method]="'GetEmployeeListByOrgUnitIDGridView'"
+                [funcId]="'HRT03b'" [type]="'listView'" [formModel]="formModel" [itemTemplate]="templateListCard"> 
+              </codx-listview> -->
+
+              <codx-listview #listView  entityName="DM_FileInfo"
+                gridViewName="grvFileInfo" formName="FileInfo" [itemTemplate]="templateList"
+                [headerTemplate]="headerTemplate" service="DM">
+              </codx-listview>
+
+              <!-- <codx-listview class="h-100 overflow-auto" type="listView" funcId="ACT" service="AC"
+                [entityName]="view.entityName" [dataService]="view.dataService" [itemTemplate]="listItemTemplate"
+                (onSelectionChanged)="onSelectedViewList($event)">
+              </codx-listview> -->
+
+              <!-- start header -->
+              <ng-template #headerTemplate>
+                <div class="table-header d-flex w-100 ps-2 pe-4">
+                  <div class="w-50 text-gray-500 p-3 fw-500">
+                    <codx-label fiedName="lblEmployeeName" [setRequire]="false" [formModel]="view.formModel"
+                      [default]="'Họ và tên'"></codx-label>
+                  </div>
+                  <div class="w-25 text-gray-500 p-3 fw-500">
+                    <codx-label fiedName="lblEmployeeStatus" [setRequire]="false" [formModel]="view.formModel"
+                      [default]="'Giới tính'"></codx-label>
+                  </div>
+                  <div class="w-25 text-gray-500 p-3 fw-500">
+                    <codx-label fiedName="lblShiftWorking" [setRequire]="false" [formModel]="view.formModel"
+                      [default]="'Ngày sinh'"></codx-label>
+                  </div>
+                  <div class="w-25 text-gray-500 p-3 fw-500">
+                    <codx-label fiedName="lblEmployeeInfo" [setRequire]="false" [formModel]="view.formModel"
+                      [default]="'Quan hệ gia đình'"></codx-label>
+                  </div>
+                  <div class="w-25 text-gray-500 p-3 fw-500">
+                    <codx-label fiedName="lblEmployeeContact" [setRequire]="false" [formModel]="view.formModel"
+                      [default]="'Giảm trừ gia cảnh'"></codx-label>
+                  </div>
+                </div>
+              </ng-template>
+              <!-- end header -->
+              <!-- template list -->
+              <ng-template #templateList>
+                <div class="d-flex align-items-center border-bottom py-4" >
+                  <!-- Nhân viên -->
+                  <div class="w-50 p-3 ps-5">
+                    <div class="d-flex align-items-center cursor-pointer hover-active"
+                      >
+                      <div class="d-flex flex-column me-4">
+                        <!-- <codx-img [isToolTip]="true" [objectId]="2308070001" [objectType]="'AD_Users'" [width]="30">
+                        </codx-img> -->
+
+                        <codx-img [funcId]="funcID" [objectId]="infoPersonal?.employeeID"
+                          [objectName]="infoPersonal?.employeeName" [objectType]="'HR_Employees'" [imageType]="'circle'"
+                          class="pic-emloyee" [width]="30">
+                        </codx-img>
+                      </div>
+                      <div class="d-flex flex-column">
+                        <div #nameField class="align-items-center line-clamp line-clamp-1 mb-1">
+                          <span class="fw-bold fs-6 me-3 text-nowrap item-active" >
+                            Nguyễn Thị Trang</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Giới tính -->
+                  <div class="w-25 p-3">
+                    <div class="d-flex has-action-menu justify-content-between w-100">
+                      <div class="d-flex flex-column">
+                        <div class="d-flex mb-1">
+                          <!-- <codx-vll [name]="1" [value]="Nữ" [showBgColor]="true"
+                            [showText]="true" [className]="'badge badge-sm badge-inline'">
+                          </codx-vll> -->
+                        </div>
+                      </div>
+
+                    </div>
+
+
+                  </div>
+                  <!-- Ngày sinh -->
+                  <div class="w-25 p-3">
+                    <div class="d-flex flex-column">
+                      <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                        16/10/1964
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Quan hệ gia đình -->
+                  <div class="w-25 p-3">
+                    <div class="d-flex flex-column">
+                      <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                        cha
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Giam trừ gia cảnh -->
+                  <div class="w-25 p-3">
+                    <div class="d-flex flex-column">
+                      <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                        <codx-input type="checkbox"></codx-input>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
             </div>
           </div>
         </div>
@@ -5113,9 +5429,9 @@
 </ng-template>
 
 <ng-template #item let-item let-icon="icon" let-color="color">
-  <div [ngStyle]="{ background: color }" class="info-item d-flex align-items-center justify-content-around p-3 rounded">
+  <div [ngStyle]="{ background: color }" class="info-item d-flex align-items-center justify-content-around p-3">
     <div class="content-profile-info text-white d-flex flex-column p-3">
-      <div class="text fs-13 fw-400">Công làm việc</div>
+      <div class="text fs-13 fw-400 pb-3">Công làm việc</div>
       <div class="text fs-3 fw-500">15/24</div>
     </div>
     <div>
