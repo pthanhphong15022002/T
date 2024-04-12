@@ -273,7 +273,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
     //{ id: 'connector', text: 'Connector', icon: 'icon-timeline' },
     { value: 'start', text: 'Bắt đầu', icon: 'icon-i-circle' },
     { value: 'end', text: 'Kết thúc', icon: 'icon-i-circle fw-bold' },
-    { value: 'swimlane', text: 'SwimLane', icon: 'icon-view_quilt' },
+    { value: 'swimlane', text: 'Quy trình', icon: 'icon-view_quilt' },
 
   ];
   documentClick(args: MouseEvent): void {
@@ -1048,9 +1048,29 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
 
   deleteNode(node: any) {
     if (node && this.diagram) {
+      if(node.data){
+        if(this.process && this.process.steps?.length){
+          this.process.steps = this.process.steps.filter((step:any)=>{
+            if(step.settings){
+              let settings:any;
+              if(typeof step.settings=='string'){
+                 settings = JSON.parse(step.settings);
+              }
+              else settings = step.settings;
+              if(settings && settings.nextSteps?.length){
+                settings.nextSteps = settings.nextSteps.filter((x:any)=>x.nextStepID != node.data.recID);
+                step.settings = JSON.stringify(settings)
+              }
+
+            }
+            return step.recID !=node.data.recID;
+          })
+        }
+      }
       this.diagram.remove(node);
       let connector = this.diagram.getConnectorObject(node.id);
       if (connector) this.diagram.removeData(connector as any);
+
     }
   }
 

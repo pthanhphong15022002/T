@@ -650,33 +650,6 @@ export class JournalsAddComponent extends UIComponent {
       });
   }
 
-  beforeOpenCbxAutoNumber(event) {
-    this.cache
-      .valueList('AC159')
-      .pipe(
-        map((d) =>
-          d.datas.filter(
-            (d) => d.value === this.formJournal.form.data.journalType
-          )
-        )
-      )
-      .subscribe((res) => {
-        if (res && res.length > 0) {
-          this.api
-            .exec(
-              'AC',
-              'ACBusiness',
-              'LoadDataOrderPaymentLogicAsync',
-              res[0].text
-            )
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((res: any) => {
-              console.log(res);
-            });
-        }
-      });
-  }
-
   compareDataArray(str1: string, str2: string) {
     if (!str1 && !str2) return false;
     if (!str1 && str2) return true;

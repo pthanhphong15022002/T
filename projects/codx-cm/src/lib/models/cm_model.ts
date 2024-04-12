@@ -921,4 +921,5 @@ export class CM_Contracts {
   disposalEmail: string; 
   disposalPhone: string;
   approveRule: string;
+  contractNoRef: string;
 }
