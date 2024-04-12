@@ -1,0 +1,28 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [body]="body"
+  [showHeader]="dialog"
+  [dialog]="dialog!"
+  [footer]="footer"
+  [formModel]="dialog.formModel"
+  [autoFocus]="false"
+  [data]="data"
+>
+</codx-form>
+<ng-template #body> </ng-template>
+<ng-template #footer>
+  <div class="d-flex flex-stack justify-content-end" *ngIf="dialog">
+    <div class="right">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="onSave()"
+        [disabled]="viewOnly"
+      >
+        <codx-label name="lblSave" formName="Settings" default="Lưu">
+        </codx-label>
+      </button>
+    </div>
+  </div>
+</ng-template>

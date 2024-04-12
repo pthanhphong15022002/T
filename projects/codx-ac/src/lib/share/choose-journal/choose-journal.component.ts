@@ -16,24 +16,6 @@ export class ChooseJournalComponent extends UIComponent {
   type:any;
   model:any;
   journalNo:any;
-  refID:any;
-  refType:any;
-  refNo:any;
-  totalAmt:any = 0;
-  cashRecieptSV:CRUDService;
-  cashPaymentSV:CRUDService;
-  fmcashReciept:FormModel={
-    formName:'CashReceipts',
-    gridViewName:'grvCashReceipts',
-    entityName:'AC_CashReceipts',
-    funcID:'ACT211'
-  }
-  fmcashPayment:FormModel={
-    formName:'CashPayments',
-    gridViewName:'grvCashPayments',
-    entityName:'AC_CashPayments',
-    funcID:'ACT213'
-  }
   headerText:any;
   journal:any;
   baseCurr: any;
@@ -49,33 +31,13 @@ export class ChooseJournalComponent extends UIComponent {
     super(inject);
     this.dialog = dialog;
     this.type = dialogData.data.type;
-    this.refID = dialogData.data.refID;
-    this.refType = dialogData.data.refType;
-    this.refNo = dialogData.data.refNo;
-    this.totalAmt = dialogData.data.totalAmt;
     this.model = {
       journalType:this.type
     }
-    this.cashRecieptSV = this.acService.createCRUDService(
-      inject,
-      this.fmcashReciept,
-      'AC'
-    );
-    this.cashPaymentSV = this.acService.createCRUDService(
-      inject,
-      this.fmcashPayment,
-      'AC'
-    );
   }
   onInit(): void {
     this.acService.setPopupSize(this.dialog, '350px', '150px');
     (this.dialog.dialog as any).properties.minHeight = 0;
-    let funcID = this.type == 'CP' ? this.fmcashPayment.funcID : this.fmcashReciept.funcID;
-    this.cache.functionList(funcID).subscribe((res) => {
-      if (res) {
-        this.headerText = res?.defaultName || res?.customName;
-      }
-    });
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(map((data) => data.filter((f) => f.category === '1')?.[0]))
@@ -86,113 +48,17 @@ export class ChooseJournalComponent extends UIComponent {
   }
 
   valueChange(event: any) {
-    this.journalNo = event?.data;
-    this.getJournal();
+    if(event?.data == null){
+      this.isNext = false;
+      this.detectorRef.detectChanges();
+    }else{
+      this.journalNo = event?.data;
+      this.getJournal();
+    }
   }
 
   onSave() { 
-    if(this.type == 'CR'){
-      this.cashRecieptSV
-        .addNew((o) => this.setDefault())
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next:(res:any)=>{
-            if (res) {
-              res.isAdd = true;
-              res.totalAmt = this.totalAmt;
-              res.refID = this.refID;
-              res.refType = this.refType;
-              res.refNo = this.refNo;
-              let data = {
-                headerText: this.headerText, //? tiêu đề voucher
-                journal: { ...this.journal }, //?  data journal
-                oData: { ...res }, //?  data của cashpayment
-                baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-                isActive:false
-              };
-              let opt = new DialogModel();
-              opt.DataService = this.cashRecieptSV;
-              opt.FormModel = this.fmcashReciept;
-              opt.IsFull = true;
-              this.cache.gridViewSetup(this.fmcashReciept.formName,this.fmcashReciept.gridViewName).subscribe((res:any)=>{
-                if (res) {
-                  let dialog = this.callfc.openForm(
-                    CashreceiptsAddComponent,
-                    '',
-                    null,
-                    null,
-                    this.fmcashReciept.funcID,
-                    data,
-                    '',
-                    opt
-                  );
-                  dialog.closed.subscribe((res) => {
-                    if (res && res?.event?.data) {
-                      this.dialog.close(res.event);
-                    }
-                  });
-                }
-              })
-            }
-          },
-        })
-    }else{
-      this.cashPaymentSV
-        .addNew((o) => this.setDefault())
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next:(res:any)=>{
-            if (res) {
-              res.isAdd = true;
-              res.totalAmt = this.totalAmt;
-              res.refID = this.refID;
-              res.refType = this.refType;
-              res.refNo = this.refNo;
-              let data = {
-                headerText: this.headerText, //? tiêu đề voucher
-                journal: { ...this.journal }, //?  data journal
-                oData: { ...res }, //?  data của cashpayment
-                baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-                isActive:false
-              };
-              let opt = new DialogModel();
-              opt.DataService = this.cashPaymentSV;
-              opt.FormModel = this.fmcashPayment;
-              opt.IsFull = true;
-              this.cache.gridViewSetup(this.fmcashPayment.formName,this.fmcashPayment.gridViewName).subscribe((res:any)=>{
-                if (res) {
-                  let dialog = this.callfc.openForm(
-                    CashPaymentAddComponent,
-                    '',
-                    null,
-                    null,
-                    this.fmcashPayment.funcID,
-                    data,
-                    '',
-                    opt
-                  );
-                  dialog.closed.subscribe((res) => {
-                    if (res && res?.event?.data) {
-                      this.dialog.close(res.event);
-                    }
-                  });
-                }
-              })
-            }
-          },
-          complete:()=>{}
-        })
-    } 
-
-  }
-
-  setDefault() {
-    let className = this.type == 'CP' ? 'CashPaymentsBusiness' : 'CashReceiptsBusiness';
-    return this.api.exec('AC', className, 'SetDefaultAsync', [
-      null,
-      this.journalNo,
-      "",
-    ]);
+    this.dialog.close({journalNo:this.journalNo,journal:this.journal});
   }
 
   getJournal() {

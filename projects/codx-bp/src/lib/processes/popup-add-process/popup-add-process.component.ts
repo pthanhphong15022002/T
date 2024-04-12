@@ -302,7 +302,7 @@ export class PopupAddProcessComponent {
     stage.reminder = this.data.reminder;
     stage.eventControl = null;
     stage.stepType = '1';
-    stage.permissions = [{ objectID: this.user?.userID, objectType: 'U' }];
+    stage.permissions = [];
     var processallowDrag = null;
     var processDefaultProcess = null;
     var processCompleteControl = null;
@@ -355,7 +355,7 @@ export class PopupAddProcessComponent {
       totalControl: null,
       allowEdit: allowEdit?.fieldValue,
     });
-    form.permissions = [{ objectID: this.user?.userID, objectType: 'U' }];
+    form.permissions = [];
     stage.child = [form];
     lstStep.push(stage, form);
     this.data.steps = lstStep;
@@ -370,7 +370,7 @@ export class PopupAddProcessComponent {
 
   setLstExtends() {
     let lst = [];
-    if (this.extendInfos?.length > 0) 
+    if (this.extendInfos?.length > 0)
     {
       this.extendInfos.forEach((res) => {
         let count = 1;
@@ -962,16 +962,16 @@ export class PopupAddProcessComponent {
     let result = JSON.parse(JSON.stringify(this.data));
     let count = result.steps.length;
     let result_1 = result.steps.filter((x) => x.activityType == 'Stage');
-
+    let sttR = 0;
     result_1.forEach((elm: any) => {
       elm.stepNo = i;
       i++;
       result2.push(elm);
-      if (elm.child && elm.child.length > 0) {
+      if (elm.child && elm.child.length > 0) 
+        {
         let stt = 0;
         elm.child.forEach((elm2) => {
-          if (typeof elm2.settings === 'string')
-            elm2.settings = JSON.parse(elm2.settings);
+          if (typeof elm2.settings === 'string') elm2.settings = JSON.parse(elm2.settings);
           elm2.stepNo = i;
           result2.push(elm2);
           i++;
@@ -980,11 +980,15 @@ export class PopupAddProcessComponent {
               elm2.child.forEach((elm3) => {
                 elm3.stepNo = i;
                 let nextStepsID = null;
-                if (elm.child[stt + 1]) nextStepsID = elm.child[stt + 1].recID;
+                if((stt + 1) >= elm.child.length) nextStepsID = result_1[sttR + 1].recID;
+                else if (elm.child[stt + 1]) nextStepsID = elm.child[stt + 1].recID;
+
                 elm3.settings.nextSteps = [{ nextStepID: nextStepsID }];
-                if (typeof elm3.settings === 'object')
-                  elm3.settings = JSON.stringify(elm3.settings);
+                
+                if (typeof elm3.settings === 'object') elm3.settings = JSON.stringify(elm3.settings);
+                
                 result2.push(elm3);
+                
                 i++;
               });
             }
@@ -993,8 +997,9 @@ export class PopupAddProcessComponent {
           result.steps = result.steps.filter((x) => x.recID != elm2.recID);
         });
       }
-      if (typeof elm.settings === 'object')
-        elm.settings = JSON.stringify(elm.settings);
+      if (typeof elm.settings === 'object') elm.settings = JSON.stringify(elm.settings);
+
+      sttR ++;
     });
 
     if (result2.length < count) {
@@ -1023,15 +1028,15 @@ export class PopupAddProcessComponent {
           }
         }
 
-        if (typeof result2[x].settings == 'string')
-          result2[x].settings = JSON.parse(result2[x].settings);
+        if (typeof result2[x].settings == 'string') result2[x].settings = JSON.parse(result2[x].settings);
+
         if (result2[x + 1]?.recID && result2[x].activityType != 'Conditions') {
           if (!result2[x]?.settings?.nextSteps)
             result2[x].settings.nextSteps = [
               { nextStepID: result2[x + 1]?.recID },
             ];
-        } else if (result2[x].activityType != 'Conditions')
-          result2[x].settings.nextSteps = null;
+        } 
+        else if (result2[x].activityType != 'Conditions') result2[x].settings.nextSteps = null;
 
         result2[x].settings = JSON.stringify(result2[x].settings);
 
