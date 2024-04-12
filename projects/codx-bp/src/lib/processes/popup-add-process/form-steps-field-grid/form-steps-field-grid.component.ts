@@ -85,6 +85,7 @@ export class FormStepsFieldGridComponent
 
     this.formatData();
   }
+  
   getPermission() {
     let approvers = [];
     this.data?.steps?.forEach((step) => {
