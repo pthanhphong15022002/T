@@ -601,13 +601,16 @@ export class AddTaskComponent
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 1010;
+
+    let listForm = this.process.steps.filter(x=>x.stepNo < this.data.stepNo && x.activityType == "Form");
+    
     let popupDialog = this.callFuc.openForm(
       ModeviewComponent,
       '',
       null,
       null,
       '',
-      { extendInfo: this.data.extendInfo, stepNo: this.data.stepNo , formModel: this.formModel},
+      { extendInfo: this.data.extendInfo, stepNo: this.data.stepNo , formModel: this.formModel , listForm: listForm},
       '',
       option
     );
