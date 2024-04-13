@@ -1,4 +1,4 @@
-<div class="d-flex flex-column mt-4" *ngFor="let item of data, let i = index">
+<div class="d-flex flex-column mt-4" *ngFor="let item of documentControl, let i = index">
   <div class="d-flex align-items-center justify-content-between">
     <div class="d-flex flex-column">
       <span>{{item.title}} <span class="text-danger ms-1" *ngIf="item.isRequired">(*)</span></span>
