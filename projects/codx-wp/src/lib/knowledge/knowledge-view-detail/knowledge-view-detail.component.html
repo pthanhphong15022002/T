@@ -26,7 +26,7 @@
                     </div>
                     <div class="form-group mb-2">
                         <div class="d-flex align-items-center justify-content-between w-100">
-                            <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center overflow-hidden">
                                 <div class="badge badge-secondary img-14 me-4" *ngIf="data?.shareControl">
                                     <codx-vll
                                       [name]="'WP001'"
@@ -37,8 +37,8 @@
                                       [showIcon]="true">
                                     </codx-vll>
                                 </div>
-                                <div *ngIf="data?.shareName" ngbDropdown class="me-4" [container]="'body'">
-                                    <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" [innerHTML]="data.shareName"></div>
+                                <div *ngIf="data?.shareName" ngbDropdown class="cursor-pointer me-4" [container]="'body'">
+                                    <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" [innerHTML]="data.shareName" class="line-clamp line-clamp-1"></div>
                                     <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
                                         <div class="d-flex flex-column py-2">
                                             <codx-label [formModel]="view.formModel" name="Label1" [default]="'Danh sách người được chia sẻ'" class="fw-bold"></codx-label>
@@ -63,15 +63,15 @@
                                 </div>
                                 <div class="d-flex align-items-center me-4" *ngIf="data?.createdName">
                                     <span class="icon-account_circle me-1"></span>
-                                    <span>{{data.createdName}}</span>
+                                    <span class="line-clamp line-clamp-1">{{data.createdName}}</span>
                                 </div>
                                 <div class="d-flex align-items-center me-4" *ngIf="data?.createdOn">
                                     <span class="icon-date_range me-1"></span>
-                                    <span >{{data.createdOn | date: 'dd/MM/yyyy'}}</span>
+                                    <span class="line-clamp line-clamp-1">{{data.createdOn | date: 'dd/MM/yyyy'}}</span>
                                 </div>
                                 <div class="d-flex align-items-center" *ngIf="data?.views">
                                     <span class="icon-visibility me-1"></span>
-                                    <span>{{data.views}}</span>
+                                    <span class="line-clamp line-clamp-1">{{data.views}}</span>
                                 </div>
                             </div>
                             <!-- <div *ngIf="data?.allowShare">
@@ -95,7 +95,7 @@
                         <div class="d-flex flex-column w-100" *ngIf="dataByCategorys?.length > 0" >
                             <ul>
                                 <li  *ngFor="let item of dataByCategorys" class="mt-2" (click)="clickViewDeital(item)">
-                                    <div class="cursor-pointer post">
+                                    <div class="d-flex align-items-center cursor-pointer post">
                                         <span class="fw-bold fs-6 news-title me-4">{{item.subject}}</span>
                                         <span class="text-muted fs-7">({{item.createdOn | date:'dd/MM/yyyy'}})</span>
                                     </div>
@@ -125,7 +125,7 @@
                                         </codx-img>
                                     </div>
                                     <div class="d-flex flex-column w-100 h-70px position-relative">
-                                        <div class="fs-6 fw-bold news-title" *ngIf="item?.subject"><span>{{item.subject | maxlenght : 75 }}</span></div>
+                                        <div class="fs-6 fw-bold news-title line-clamp line-clamp-3" *ngIf="item?.subject"><span>{{item.subject}}</span></div>
                                         <div class="d-flex justify-content-between w-100 position-absolute bottom-0 text-gray-500">
                                             <div class="d-flex flex-center" *ngIf="item?.views">
                                                 <span class="icon-visibility icon-18 me-1"></span>

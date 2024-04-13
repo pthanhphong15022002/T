@@ -36,9 +36,6 @@ export class KnowledgeComponent extends UIComponent implements AfterViewInit,OnD
   {
     super(injector);
     this.user = this.auth.get();
-  }
-
-  onInit(): void {
     this.router.params
     .subscribe((params:any) => {
       if(params) {
@@ -49,6 +46,22 @@ export class KnowledgeComponent extends UIComponent implements AfterViewInit,OnD
         this.getVideos(this.category);
       }
     });
+  }
+
+  onInit(): void {
+    if(this.funcID)
+    {
+      this.cache.functionList(this.funcID)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((func:any) => {
+        if(func)
+        {
+          this.cache.gridViewSetup(func.formName,func.gridViewName)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe();
+        }
+      });
+    }
   }
 
   ngAfterViewInit(): void {
@@ -175,67 +188,63 @@ export class KnowledgeComponent extends UIComponent implements AfterViewInit,OnD
     }
   }
 
-  openPopupAdd(newType:string) {
-    let dialogModel = new DialogModel();
-    let action = "Thêm";
-    dialogModel.DataService = this.view.dataService;
-    dialogModel.FormModel = this.view.formModel;
-    dialogModel.IsFull = true;
-    dialogModel.zIndex = 100;
-    let post = new Post();
-    if(this.category && this.category != "home") post.category = this.category;
-    post.newsType = newType;
-    let data = {
-      action: action,
-      isAdd: true,
-      data: post,
-    };
-    let popup = this.callfc.openForm(
-      PopupAddKnowledgeComponent,
-      '',
-      0,
-      0,
-      '',
-      data,
-      '',
-      dialogModel)
-    popup.closed
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res?.event) {
-        let data = res.event;
-        if (data.newsType == NEWSTYPE.POST) 
-        {
-          this.posts.unshift(data);
-          if (this.posts.length > 4) this.posts.pop();
-        }
-        else if (data.newsType == NEWSTYPE.VIDEO) 
-        {
-          if (this.videos.length == 0) 
-            this.videos.push(data);
-          else 
-            this.videos.unshift(data);
-          let slideIndex = 0;
-          for (let idx = 0; idx < this.videos.length; idx += 3) {
-            this.slides[slideIndex] = [];
-            this.slides[slideIndex] = this.videos.slice(idx, idx + 3);
-            slideIndex++;
-          }
-          let ins = setInterval(() => {
-            if (this.carousel) {
-              this.carousel.pause();
-              this.detectorRef.detectChanges();
-              clearInterval(ins);
-            }
-          }, 100);
-        }
-        this.detectorRef.detectChanges();
-      }
-    });
-  }
-
   openPopupSearch() {
     
   }
 
+
+  openPopupAdd(newType:string){
+    this.api.execSv("WP","Core","DataBusiness","GetDefaultAsync",["WPT02","WP_News"])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res:any) => {
+      if(res?.data)
+      {
+        let dialogModel = new DialogModel();
+        dialogModel.DataService = this.view.dataService;
+        dialogModel.FormModel = this.view.formModel;
+        dialogModel.IsFull = true;
+        let post = res.data;
+        if(this.category) post.category = this.category;
+        post.newsType = newType;
+        post.shareControl = "9";
+        post.createdBy = this.user.userID;
+        post.createdName = this.user.userName;
+        let data = {
+          actionType: "add",
+          data: post
+        };
+        let popup = this.callfc.openForm(PopupAddKnowledgeComponent,"",0,0,"",data,"",dialogModel)
+        popup.closed
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res:any) => {
+          if(res?.event)
+          {
+            let data = res.event;
+            if (data.newsType == NEWSTYPE.POST) 
+            {
+              if(!this.posts) this.posts = [];
+              this.posts.unshift(data);
+              if(this.posts.length > 4) this.posts.pop();
+            }
+            else if (data.newsType == NEWSTYPE.VIDEO) 
+            {
+              if(!this.videos) this.videos = [];
+              this.videos.unshift(data);
+              if(this.videos.length > 3)
+                this.slidesShowNavigation = true;
+              let slideIndex = 0;
+              for (let idx = 0; idx < this.videos.length; idx += 3) 
+              {
+                this.slides[slideIndex] = [];
+                this.slides[slideIndex] = this.videos.slice(idx, idx + 3);
+                slideIndex++;
+              }
+            }
+            this.detectorRef.detectChanges();
+          }
+        });
+      }
+    });
+    
+  }
 }
