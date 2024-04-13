@@ -115,7 +115,6 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
   }
   clickMFHis(e, data) {
     if (!data) return;
-    this.itemSelected = data;
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
