@@ -110,6 +110,11 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
+        path: 'instances/:funcID/:id/:subUrl',
+        component: ProcessReleaseComponent,
+        data: { noReuse: true },
+      },
+      {
         path: 'myinstances/:funcID',
         component: MyInstancesComponent,
         data: { noReuse: true },

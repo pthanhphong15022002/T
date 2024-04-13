@@ -1,0 +1,156 @@
+<codx-views #view [views]="views"> </codx-views>
+<ng-template #tmpContent>
+  <div class="w-100 h-100 p-4 bg-body position-relative">
+    <div *ngIf="userPermission?.create" class="position-absolute end-0 bottom-15">
+      <div class="d-flex align-items-center">
+        <button
+          (click)="openPopupAdd(NEWSTYPE_VIDEO)"
+          class="btn btn-icon btn-primary me-4"
+        >
+          <i class="icon-video_call fs-1"></i>
+        </button>
+        <button
+          (click)="openPopupAdd(NEWSTYPE_POST)"
+          class="btn btn-icon btn-primary"
+        >
+          <i class="icon-post_add fs-1"></i>
+        </button>
+      </div>
+    </div>
+    <div class="container h-100 overflow-auto">
+        <div class="row">
+            <div class="col-8 pe-4">
+                <div class="d-flex flex-column">
+                    <div class="form-group mb-2">
+                        <div class="fw-bolder fs-2" [innerHTML]="data?.subject"></div>
+                    </div>
+                    <div class="form-group mb-2">
+                        <div class="d-flex align-items-center justify-content-between w-100">
+                            <div class="d-flex align-items-center overflow-hidden">
+                                <div class="badge badge-secondary img-14 me-4" *ngIf="data?.shareControl">
+                                    <codx-vll
+                                      [name]="'WP001'"
+                                      [value]="data.shareControl"
+                                      [path]="'assets/themes/sys/default/img/'"
+                                      [icoCss]="'symbol-12px symbol-circle'"
+                                      [showText]="true"
+                                      [showIcon]="true">
+                                    </codx-vll>
+                                </div>
+                                <div *ngIf="data?.shareName" ngbDropdown class="cursor-pointer me-4" [container]="'body'">
+                                    <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" [innerHTML]="data.shareName" class="line-clamp line-clamp-1"></div>
+                                    <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+                                        <div class="d-flex flex-column py-2">
+                                            <codx-label [formModel]="view.formModel" name="Label1" [default]="'Danh sách người được chia sẻ'" class="fw-bold"></codx-label>
+                                        </div>
+                                        <div class="d-flex flex-column w-100">
+                                            <ng-container *ngFor="let item of data.permissions">
+                                                <ng-container *ngIf="item.memberType == '2'">
+                                                    <div class="d-flex align-items-center py-2">
+                                                        <codx-img
+                                                            [objectId]="item.objectID"
+                                                            [objectName]="item.objectName"
+                                                            [objectType]="'AD_Users'"
+                                                            [cssClass]="'me-2'"
+                                                            [width]="30">
+                                                        </codx-img>
+                                                        <div class="text-dark"><span>{{item.objectName}}</span></div>
+                                                    </div>
+                                                </ng-container>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center me-4" *ngIf="data?.createdName">
+                                    <span class="icon-account_circle me-1"></span>
+                                    <span class="line-clamp line-clamp-1">{{data.createdName}}</span>
+                                </div>
+                                <div class="d-flex align-items-center me-4" *ngIf="data?.createdOn">
+                                    <span class="icon-date_range me-1"></span>
+                                    <span class="line-clamp line-clamp-1">{{data.createdOn | date: 'dd/MM/yyyy'}}</span>
+                                </div>
+                                <div class="d-flex align-items-center" *ngIf="data?.views">
+                                    <span class="icon-visibility me-1"></span>
+                                    <span class="line-clamp line-clamp-1">{{data.views}}</span>
+                                </div>
+                            </div>
+                            <!-- <div *ngIf="data?.allowShare">
+                                <button
+                                    (click)="openPopupShare(data)"
+                                    class="btn btn-icon btn-sm btn-light-primary">
+                                    <span class="icon-share"> </span>
+                                </button>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="form-group border-top border-bottom py-4">
+                        <div class="d-flex flex-column mb-2" *ngIf="data?.subContent" [innerHTML]="data.subContent"></div>
+                        <div class="d-flex flex-column" *ngIf="data?.newsType == NEWSTYPE_POST && data?.contents" [innerHTML]="data.contents | safe : 'html'"></div>
+                        <wp-view-video *ngIf="data?.newsType == NEWSTYPE_VIDEO" [objectID]="data.recID" [objectType]="'WP_News'"></wp-view-video>
+                    </div>
+                    <div class="form-group">
+                        <div class="d-flex flex-column mb-2">
+                            <codx-label [formModel]="view.formModel" name="Label2" [default]="'Xem thêm'" [classList]="'fw-bold text-primary'"></codx-label>
+                        </div>
+                        <div class="d-flex flex-column w-100" *ngIf="dataByCategorys?.length > 0" >
+                            <ul>
+                                <li  *ngFor="let item of dataByCategorys" class="mt-2" (click)="clickViewDeital(item)">
+                                    <div class="d-flex align-items-center cursor-pointer post">
+                                        <span class="fw-bold fs-6 news-title me-4">{{item.subject}}</span>
+                                        <span class="text-muted fs-7">({{item.createdOn | date:'dd/MM/yyyy'}})</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            <div class="col-4">
+                <div class="d-flex flex-column w-100 h-100">
+                    <div class="form-group">
+                        <div class="d-flex flex-column w-100 pb-2 mb-2 border-bottom">
+                            <codx-label [formModel]="view.formModel" name="Label3" [default]="'Xem nhiều nhất'" [classList]="'fw-bold text-primary'"></codx-label>
+                        </div>
+                        <ng-container *ngIf="dataByViews?.length > 0">
+                            <ng-container *ngFor="let item of dataByViews; index as idx">
+                                <div class="d-flex align-items-top post p-2 w-100" [ngClass]="idx < dataByViews.length - 1  ? 'border-bottom' : ''" (click)="clickViewDeital(item)">
+                                    <div class="me-4">
+                                        <codx-img
+                                        [width]="70"
+                                        imageType="square"
+                                        [cssClass]="'img'"
+                                        [objectId]="item?.recID"
+                                        [objectType]="'WP_News'"
+                                        [referType]="'image'">
+                                        </codx-img>
+                                    </div>
+                                    <div class="d-flex flex-column w-100 h-70px position-relative">
+                                        <div class="fs-6 fw-bold news-title line-clamp line-clamp-3" *ngIf="item?.subject"><span>{{item.subject}}</span></div>
+                                        <div class="d-flex justify-content-between w-100 position-absolute bottom-0 text-gray-500">
+                                            <div class="d-flex flex-center" *ngIf="item?.views">
+                                                <span class="icon-visibility icon-18 me-1"></span>
+                                                <span>{{item.views}}</span>
+                                            </div>
+                                            <div *ngIf="item?.createdOn"><span>{{item.createdOn | date:'dd/MM/yyyy'}}</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                    <div class="form-group" >
+                        <div class="d-flex flex-column w-100 pb-2 border-bottom">
+                            <codx-label [formModel]="view.formModel" name="Label4" [default]="'Tag#'" [classList]="'fw-bold text-primary'"></codx-label>
+                        </div>
+                        <div class="badge-group" *ngIf="listTags?.length > 0">
+                            <ng-container *ngFor="let item of listTags">
+                                <span class="badge badge-danger" [style.background]="item.color" (click)="clickTag(item)">{{ item.text }}</span>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</ng-template>

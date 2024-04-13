@@ -633,7 +633,8 @@ export class PopupAddDealComponent
       );
       return;
     }
-
+    this.deal.owner = this.owner;
+    this.deal.salespersonID = this.owner;
     if (!this.deal?.businessLineID) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -668,6 +669,22 @@ export class PopupAddDealComponent
       );
       return;
     }
+    if (!this.deal?.salespersonID) {
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['SalespersonID']?.headerText + '"'
+      );
+      return;
+    }
+    if (!this.deal?.channelID) {
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['ChannelID']?.headerText + '"'
+      );
+      return;
+    }
     if (this.deal.applyProcess) {
       let ischeck = true;
       let ischeckFormat = true;
@@ -697,8 +714,6 @@ export class PopupAddDealComponent
         return;
       }
     }
-    this.deal.owner = this.owner;
-    this.deal.salespersonID = this.owner;
     this.deal.applyProcess &&
       this.convertDataInstance(this.deal, this.instance);
     this.deal.applyProcess && this.updateDateDeal(this.instance, this.deal);

@@ -66,9 +66,12 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
   //#endregion
   dataSelected: any;
   lstSteps = [];
-  parentFunc:any;
+  parentFunc: any;
   codxService: CodxService;
-  user: import("codx-core").UserModel;
+  user: import('codx-core').UserModel;
+  taskID: any;
+  mode = '1';
+  isFirstLoad = true;
   constructor(
     private api: ApiHttpService,
     private callFunc: CallFuncService,
@@ -81,15 +84,24 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
-    this.user = auth.get()
+    this.user = auth.get();
     this.codxService = this.codxSv;
     this.router.params.subscribe((param) => {
       if (!this.funcID) this.funcID = param['funcID'];
-      if (param['id'])
-      {
+      if (param['subUrl'] != null && param['subUrl']?.length > 0) {
+        this.taskID = param['subUrl'];
         this.recID = param['id'];
-        if(this.view)
-        {
+        this.mode = '2';
+        if (this.view) {
+          this.onInits();
+          (this.view.currentView as any).request2.dataObj = this.recID;
+          (this.view.currentView as any).loadResource();
+          this.refesh(this.funcID);
+          this.getProcess();
+        }
+      } else if (param['id']) {
+        this.recID = param['id'];
+        if (this.view) {
           this.onInits();
           (this.view.currentView as any).request2.dataObj = this.recID;
           (this.view.currentView as any).loadResource();
@@ -100,8 +112,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     });
   }
 
-  refesh(funcId:any)
-  {
+  refesh(funcId: any) {
     this.view.dataService.data = [];
     this.view.dataService.page = 0;
     this.view.dataService.pageCount = 0;
@@ -125,11 +136,10 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         id: 'btnAdd',
       },
     ];
-
     this.views = [
       {
         type: ViewType.kanban,
-        active: false,
+        active: true,
         sameData: false,
         request: this.request,
         request2: this.resourceKanban,
@@ -170,21 +180,20 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     this.getFunc();
   }
 
-  getFunc()
-  {
-    this.cache.functionList(this.funcID).subscribe(item=>{
-      if(item)
-      {
-        this.cache.functionList(item.parentID).subscribe(item2=>{
-           if(item2) {
+  getFunc() {
+    this.cache.functionList(this.funcID).subscribe((item) => {
+      if (item) {
+        this.cache.functionList(item.parentID).subscribe((item2) => {
+          if (item2) {
             this.parentFunc = item2;
-           }
-        })
+          }
+        });
       }
-    })
+    });
   }
 
   getProcess() {
+    //if(this.mode=='1'){
     this.api
       .execSv('BP', 'BP', 'ProcessesBusiness', 'GetAsync', this.recID)
       .subscribe((item) => {
@@ -195,25 +204,37 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
           );
         }
       });
+    // } else if(this.mode=='2'){
+    //   this.api
+    //   .execSv('BP', 'BP', 'ProcessesBusiness', 'GetProIDByTaskIDAsync', this.taskID)
+    //   .subscribe((item) => {
+    //     if (item) {
+    //       this.process = item;
+    //       this.lstSteps = this.process?.steps?.filter(
+    //         (x) => x.activityType == 'Stage'
+    //       );
+    //     }
+    //   });
+    // }
   }
 
   ngOnInit(): void {
-   this.onInits();
+    this.onInits();
   }
 
-  onInits()
-  {
+  onInits() {
     this.dataObj = {
       processID: this.recID,
+      taskID: this.taskID,
     };
 
-    // this.request = new ResourceModel();
-    // this.request.service = 'BP';
-    // this.request.assemblyName = 'BP';
-    // this.request.className = 'ProcessInstancesBusiness';
-    // this.request.method = 'GetListInstancesAsync';
-    // this.request.idField = 'recID';
-    // this.request.dataObj = this.dataObj;
+    this.request = new ResourceModel();
+    this.request.service = 'BP';
+    this.request.assemblyName = 'BP';
+    this.request.className = 'ProcessInstancesBusiness';
+    this.request.method = 'GetListInstancesAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = this.dataObj;
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'BP';
@@ -226,8 +247,11 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
   }
   selectedChange(data) {
     this.dataSelected = data?.data ? data?.data : data;
-
     this.detectorRef.detectChanges();
+    if (this.mode == '2' && this.isFirstLoad) {
+      this.isFirstLoad = false;
+      this.openFormDetail(this.dataSelected);
+    }
   }
 
   click(evt: ButtonModel) {
@@ -253,28 +277,19 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
       '',
       option
     );
-    popup.closed.subscribe(res=>{
-      if(res?.event)
-      {
+    popup.closed.subscribe((res) => {
+      if (res?.event) {
         (this.view.currentView as any).kanban.updateCard(res?.event);
         (this.view.dataService as CRUDService).update(res?.event).subscribe();
         this.view.dataService.update(res?.event).subscribe();
         (this.view.currentView as any).kanban.refresh();
       }
-    })
+    });
   }
   updateIns(data) {
     this.api
-      .execSv(
-        'BP',
-        'BP',
-        'ProcessInstancesBusiness',
-        'UpdateInsAsync',
-        data
-      )
-      .subscribe((item) => {
-
-      });
+      .execSv('BP', 'BP', 'ProcessInstancesBusiness', 'UpdateInsAsync', data)
+      .subscribe((item) => {});
   }
   clickMF(e: any) {
     var funcID = e?.functionID;
@@ -285,8 +300,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         break;
       }
       //Delete
-      case 'SYS02':
-      {
+      case 'SYS02': {
         this.deleteItem();
         break;
       }
@@ -297,39 +311,53 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
       }
       //Xem chi tiết quy trình
       case 'BPT01012':
-      case 'SYS05':
-      {
-        this.openFormDetail(this.view?.dataService?.dataSelected)
+      case 'SYS05': {
+        this.openFormDetail(this.view?.dataService?.dataSelected);
         break;
       }
     }
   }
 
-  changeDataMF(e:any)
-  {
+  changeDataMF(e: any) {
     // var approvelCL = e.filter(
     //   (x: { functionID: string }) =>
     //     x.functionID == 'BPT01011'
     // );
     // if (approvelCL[0] && this.view?.dataService?.dataSelected?.status == "2") approvelCL[0].disabled = true;
 
-    if(e?.length>0){
-      e.forEach((mf:any)=>{
-        if(this.dataSelected?.status =='1'){
-
-          if(mf?.functionID =='BPT01011' || mf?.functionID =='SYS02' || mf?.functionID =='SYS03'){
-            mf.disabled=true;
+    if (e?.length > 0) {
+      e.forEach((mf: any) => {
+        if (this.dataSelected?.status == '1') {
+          if (
+            mf?.functionID == 'BPT01011' ||
+            mf?.functionID == 'SYS02' ||
+            mf?.functionID == 'SYS03'
+          ) {
+            mf.disabled = true;
           }
-          if((mf?.functionID =='BPT01011' || mf?.functionID =='SYS02' || mf?.functionID =='SYS03') && (this.user?.userID == this.dataSelected?.createdBy || this.user.administrator)){
-            mf.disabled=false;
+          if (
+            (mf?.functionID == 'BPT01011' ||
+              mf?.functionID == 'SYS02' ||
+              mf?.functionID == 'SYS03') &&
+            (this.user?.userID == this.dataSelected?.createdBy ||
+              this.user.administrator)
+          ) {
+            mf.disabled = false;
           }
         }
-        if(this.dataSelected?.status !='1' && this.dataSelected?.status !='5'){
-          if(mf?.functionID =='BPT01011'|| mf?.functionID =='SYS02' || mf?.functionID =='SYS03'){
-            mf.disabled=true;
+        if (
+          this.dataSelected?.status != '1' &&
+          this.dataSelected?.status != '5'
+        ) {
+          if (
+            mf?.functionID == 'BPT01011' ||
+            mf?.functionID == 'SYS02' ||
+            mf?.functionID == 'SYS03'
+          ) {
+            mf.disabled = true;
           }
         }
-      })
+      });
     }
   }
 
@@ -342,64 +370,58 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         'StartInstanceAsync',
         [this.view?.dataService?.dataSelected?.recID]
       )
-      .subscribe((res:any) => {
+      .subscribe((res: any) => {
         if (res) {
           let data = this.view?.dataService?.dataSelected;
-          if(res?.recID){
-            data = res
-          }
-          else{
+          if (res?.recID) {
+            data = res;
+          } else {
             data.status = '2';
           }
           this.notifiSer.notifyCode('SYS034');
           (this.view.currentView as any).kanban.updateCard(data);
           this.view.dataService.update(data).subscribe();
-
         }
       });
   }
 
   addItem() {
-    if(this.process?.status == '5')
-    {
+    if (this.process?.status == '5') {
       this.view?.dataService?.addNew().subscribe((item) => {
         this.popUpAddEdit(item, 'add');
       });
-    }
-    else this.notifiSer.notifyCode('BP003');
+    } else this.notifiSer.notifyCode('BP003');
   }
 
   editItem() {
     this.popUpAddEdit(this.view.dataService.dataSelected, 'edit');
   }
 
-  deleteItem()
-  {
+  deleteItem() {
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notifiSer
       .alert('Thông báo', 'Bạn có chắc chắn muốn xóa?', config)
       .closed.subscribe((x) => {
-        if (x.event.status == 'Y')
-        {
+        if (x.event.status == 'Y') {
           this.api
-          .execSv(
-            'BP',
-            'ERM.Business.BP',
-            'ProcessInstancesBusiness',
-            'DeleteInsAsync',
-            this.view?.dataService?.dataSelected?.recID
-          )
-          .subscribe((res) => {
-            if (res) {
-              (this.view.currentView as any).kanban.removeCard(this.view?.dataService?.dataSelected);
-              this.notifiSer.notifyCode('SYS008');
-            }
-            else this.notifiSer.notifyCode('SYS022');
-          });
+            .execSv(
+              'BP',
+              'ERM.Business.BP',
+              'ProcessInstancesBusiness',
+              'DeleteInsAsync',
+              this.view?.dataService?.dataSelected?.recID
+            )
+            .subscribe((res) => {
+              if (res) {
+                (this.view.currentView as any).kanban.removeCard(
+                  this.view?.dataService?.dataSelected
+                );
+                this.notifiSer.notifyCode('SYS008');
+              } else this.notifiSer.notifyCode('SYS022');
+            });
         }
       });
-
   }
   popUpAddEdit(item: any, type: any) {
     var option = new SidebarModel();
@@ -413,19 +435,21 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     );
     popup.closed.subscribe((res) => {
       if (res?.event) {
-        if (type == 'add')
-        {
+        if (type == 'add') {
           (this.view.dataService as CRUDService).add(res.event).subscribe();
           // (this.view.currentView as any).kanban.addCard(res?.event);
           (this.view.currentView as any).kanban.refresh();
-        }
-        else {
+        } else {
           (this.view.currentView as any).kanban.updateCard(res?.event);
           (this.view.dataService as CRUDService).update(res.event).subscribe();
           this.view.dataService.update(res?.event).subscribe();
           this.view.dataService.dataSelected = res?.event;
-          var index = (this.view.currentView as any).kanban.dataSource.findIndex(x=>x.recID == res?.event?.recID);
-          if(index>=0)(this.view.currentView as any).kanban.dataSource[index] = res?.event
+          var index = (
+            this.view.currentView as any
+          ).kanban.dataSource.findIndex((x) => x.recID == res?.event?.recID);
+          if (index >= 0)
+            (this.view.currentView as any).kanban.dataSource[index] =
+              res?.event;
         }
       }
     });
@@ -434,8 +458,8 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
   viewChange(e: any) {}
 
   //#region event view list
-  dbClickEvent(e){
-    if(e && e?.data){
+  dbClickEvent(e) {
+    if (e && e?.data) {
       this.openFormDetail(e?.data);
     }
   }

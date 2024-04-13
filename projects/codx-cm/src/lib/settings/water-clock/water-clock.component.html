@@ -106,10 +106,12 @@
 
 <ng-template #templateDetail let-data>
   <lib-view-water-clock-detail
+    #viewDetails
     [itemSelected]="itemSelected"
     [formModel]="view.formModel"
     (clickMoreFunction)="clickMoreFunction($event)"
     (eventChangeMF)="eventChangeMF($event)"
+    (updateParent)="updateParent($event)"
   >
   </lib-view-water-clock-detail>
 </ng-template>
