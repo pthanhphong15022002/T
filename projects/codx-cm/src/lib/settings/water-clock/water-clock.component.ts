@@ -406,14 +406,20 @@ export class WaterClockComponent
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected])
-      .subscribe((res) => {
-        this.view.dataService.onAction.next({
-          type: 'delete',
-          data: data,
-        });
+    this.api.exec<any>("AM", "AssetsBusiness", "DeletedWaterClockAsync", data.assetID).subscribe(res => {
+      if (res) this.view.dataService.onAction.next({
+        type: 'delete',
+        data: data,
       });
+    })
+    // this.view.dataService
+    //   .delete([this.view.dataService.dataSelected])
+    //   .subscribe((res) => {
+    //     this.view.dataService.onAction.next({
+    //       type: 'delete',
+    //       data: data,
+    //     });
+    //   });
   }
 
   onLoading(e) { }
