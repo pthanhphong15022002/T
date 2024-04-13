@@ -203,8 +203,21 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
 
   delete(data: any) {
     this.api.exec<any>("AM", "AssetsBusiness", "DeletedWaterClockAsync", data.assetID).subscribe(res => {
-      if (res) this.gridHistory.deleteRow(data, true);
-      this.updateParent.emit(this.itemSelected);
+      if (res) {
+        this.gridHistory.deleteRow(data, true);
+        let dataLast = this.gridHistory.dataService.data?.length > 0 ? this.gridHistory.dataService.data[0] : null;
+
+        this.itemSelected.indexLastMonth = dataLast?.quantity;
+        this.itemSelected.quantity = dataLast?.quantity;
+        this.itemSelected.lastChangedDate = dataLast?.lastChangedDate;
+        this.itemSelected.cumulatedDepr = dataLast?.cumulatedDepr;
+        this.itemSelected.costAmt = dataLast?.costAmt;
+        this.itemSelected.estimatedCapacity = dataLast?.estimatedCapacity;
+        this.itemSelected.capacityPrice = dataLast?.capacityPrice;
+        this.itemSelected.note = dataLast?.note;
+        this.updateParent.emit(this.itemSelected);
+      }
+
     })
 
     // (this.gridHistory.dataService as CRUDService).onAction.next({
