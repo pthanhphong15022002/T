@@ -37,9 +37,11 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
     if(dt?.data?.formModel) this.formModel = dt?.data?.formModel
 
     if(this.type == 'add') this.hideDelete = true;
+
+    this.getVll();
   }
   ngOnInit(): void {
-    this.getVll();
+  
   }
 
   getVll()

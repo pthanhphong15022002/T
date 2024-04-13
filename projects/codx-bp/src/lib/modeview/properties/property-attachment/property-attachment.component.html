@@ -8,7 +8,7 @@
     <div class="d-flex flex-column mt-4 border-top pt-4">
         <div class="d-flex align-items-center justify-content-between mb-2">
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'documentControl'" default="Danh sách mẫu" class="fw-bold"></codx-label>
-            <i class="icon-i-plus-square cursor-pointer" (click)="addRow()"></i>
+            <i class="icon-i-plus-square cursor-pointer" (click)="!data?.refField ? addRow(): undefined"></i>
         </div>
         <div class="d-flex flex-column py-2" *ngFor="let item of data?.documentControl , let i = index">
             <div class="d-flex align-items-start justify-content-between">
@@ -17,28 +17,31 @@
                     <span class="text-gray-500">{{item?.memo}}</span>
                 </div>
                 <div>
-                    <i class="icon-create cursor-pointer" (click)="addRow(item)"></i>
+                    <i class="icon-create cursor-pointer" (click)="!data?.refField ? addRow(item): undefined"></i>
                 </div>
             </div>
             <ng-container *ngFor="let f of item?.files">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center mt-2">
-                        <i class="icon-gesture me-2 cursor-pointer" [title]="'mẫu ký số'" [class.text-primary]="f.eSign" (click)="eSign(f,i)"></i>
+                        <i class="icon-gesture me-2 cursor-pointer" [title]="'mẫu ký số'" [class.text-primary]="f.eSign" (click)="!data?.refField ? eSign(f,i) : undefined"></i>
                         <span [innerHTML]="genHTML(f.fileID)"></span>
                     </div>
-                    <i class="icon-close cursor-pointer" (click)="deleteRow(f,i)"></i>
+                    <i class="icon-close cursor-pointer" (click)="!data?.refField ? deleteRow(f,i) : undefined"></i>
                 </div>
             </ng-container>
         </div>
     </div>
     <div class="border-top mt-8">
         <div class="d-flex align-items-center mt-4">
-            <codx-input type="switch" [crrValue]="data.isRequired" field="isRequired" label="Bắt buộc" (valueChange)="changeValue($event)" class="mt-2"></codx-input>
+            <codx-input type="switch" [disabled]="data?.refField" [crrValue]="data.isRequired" field="isRequired" label="Bắt buộc" (valueChange)="changeValue($event)" class="mt-2"></codx-input>
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Bắt buộc" class="fw-bold ms-2"></codx-label>
         </div>
-        <div class="d-flex align-items-center mt-1">
-            <codx-input type="switch"  field="isRequired" label="Bắt buộc"  class="mt-2"></codx-input>
-            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Điều kiện hiển thị" class="fw-bold ms-2"></codx-label>
+        <div class="d-flex align-items-center justify-content-between mt-1">
+            <div class="d-flex align-items-center">
+                <codx-input type="switch" [disabled]="data?.refField" [crrValue]="data?.visibleControl?.visibleControl" field="visibleControl" label="Điều kiện hiện thị"  (valueChange)="changeValueVisibleControl($event)" class="mt-2"></codx-input>
+                <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'VisibleControl'" default="Điều kiện hiện thị" class="fw-bold ms-2"></codx-label>
+            </div>
+            <i class="icon-edit-one cursor-pointer" [class.text-primary]="data?.visibleControl?.visibleControl" (click)="data?.visibleControl?.visibleControl? openVisibleControlForm(): undefined"></i>
         </div>
     </div>
 </div>
