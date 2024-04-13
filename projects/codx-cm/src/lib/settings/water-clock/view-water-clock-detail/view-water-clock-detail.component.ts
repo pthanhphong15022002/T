@@ -16,6 +16,7 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
 
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() eventChangeMF = new EventEmitter<any>();
+  @Output() updateParent = new EventEmitter<any>();
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
     {
@@ -203,6 +204,7 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
   delete(data: any) {
     this.api.exec<any>("AM", "AssetsBusiness", "DeletedWaterClockAsync", data.assetID).subscribe(res => {
       if (res) this.gridHistory.deleteRow(data, true);
+      this.updateParent.emit(this.itemSelected);
     })
 
     // (this.gridHistory.dataService as CRUDService).onAction.next({

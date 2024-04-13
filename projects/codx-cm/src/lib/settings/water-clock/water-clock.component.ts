@@ -537,6 +537,10 @@ export class WaterClockComponent
         }
       });
   }
+  updateParent(e) {
+    this.itemSelected = e;
+    this.view.dataService.update(this.itemSelected).subscribe();
+  }
   /**
    * update Price Water
    */
