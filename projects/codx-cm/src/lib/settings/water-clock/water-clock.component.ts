@@ -22,6 +22,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupAddAssetsComponent } from '../assets/popup-add-assets/popup-add-assets.component';
 import { PopupAddWaterClockComponent } from './popup-add-water-clock/popup-add-water-clock.component';
 import { PopupAddHistoryWaterClockComponent } from './popup-add-history-water-clock/popup-add-history-water-clock.component';
+import { ViewWaterClockDetailComponent } from './view-water-clock-detail/view-water-clock-detail.component';
 
 @Component({
   selector: 'lib-water-clock',
@@ -34,6 +35,7 @@ export class WaterClockComponent
   @ViewChild('templateDetail') templateDetail: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('morefunction') morefunction: TemplateRef<any>;
+  @ViewChild('viewDetails') viewDetails: ViewWaterClockDetailComponent;
   @ViewChild('templetOldMonthHeader') templetOldMonthHeader: TemplateRef<any>;
 
   // config BE
@@ -499,6 +501,7 @@ export class WaterClockComponent
               option.DataService = this.view.dataService;
               option.FormModel = this.formModelHistory;
               let obj = {
+                data: data,
                 action: 'add',
                 headerText: title,
                 gridViewSetup: grv,
@@ -516,7 +519,7 @@ export class WaterClockComponent
               );
               dialogHis.closed.subscribe(res => {
                 if (res && res.event) {
-
+                  if (this.viewDetails) this.viewDetails.loadGridHis(res.event);
                 }
               })
             })

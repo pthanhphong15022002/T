@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, Optional, ViewChild } from '@angular/core';
-import { ApiHttpService, CacheService, CodxFormComponent, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { ApiHttpService, CRUDService, CacheService, CodxFormComponent, DialogData, DialogRef, NotificationsService, RequestOption } from 'codx-core';
 import { CodxCmService } from '../../../codx-cm.service';
 
 @Component({
@@ -33,7 +33,6 @@ export class PopupAddHistoryWaterClockComponent implements OnInit, AfterViewInit
   siteIDOld = '';
   isWaterClock = false;
   parent: any
-
   constructor(
     private cache: CacheService,
     private notiService: NotificationsService,
@@ -43,7 +42,7 @@ export class PopupAddHistoryWaterClockComponent implements OnInit, AfterViewInit
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
-    this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
+    this.data = JSON.parse(JSON.stringify(dt?.data.data));
     this.headerText = dt?.data?.headerText;
     this.action = dt?.data?.action;
     this.parent = dt?.data?.parent;
@@ -58,9 +57,6 @@ export class PopupAddHistoryWaterClockComponent implements OnInit, AfterViewInit
 
   }
 
-  onSave() {
-
-  }
   valueChange(e) {
     if (e.field) {
       this.data[e.field] = e.data;
@@ -89,5 +85,78 @@ export class PopupAddHistoryWaterClockComponent implements OnInit, AfterViewInit
       this.data['capacityPrice'] = 0
     }
     this.form.formGroup.patchValue(this.data)
+  }
+
+  onSave() {
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
+      return;
+    }
+    if (this.action == 'add' || this.action == 'copy') {
+      this.onAdd();
+    } else {
+      this.onUpdate();
+    }
+  }
+
+  onAdd() {
+    this.api.exec<any>("AM", "AssetsBusiness", "SaveWaterClockAsync", this.data)
+      .subscribe((res) => {
+        if (res) {
+
+          this.parent.indexLastMonth = this.parent.quantity;
+          this.parent.quantity = res.quantity;
+          this.parent.lastChangedDate = res.lastChangedDate;
+          this.parent.cumulatedDepr = res.cumulatedDepr;
+          this.parent.costAmt = res.costAmt;
+          this.parent.estimatedCapacity = res.estimatedCapacity;
+          this.parent.capacityPrice = res.capacityPrice;
+          this.parent.note = res.note;
+          (this.dialog.dataService as CRUDService).update(this.parent).subscribe();
+
+          this.dialog.close(res);
+        }
+      });
+  }
+
+  onUpdate() {
+    this.api.exec<any>("AM", "AssetsBusiness", "UpdateWaterClockAsync", this.data)
+      .subscribe((res) => {
+        if (res) {
+
+          this.parent.indexLastMonth = this.parent.quantity;
+          this.parent.quantity = res.quantity;
+          this.parent.lastChangedDate = res.lastChangedDate;
+          this.parent.cumulatedDepr = res.cumulatedDepr;
+          this.parent.costAmt = res.costAmt;
+          this.parent.estimatedCapacity = res.estimatedCapacity;
+          this.parent.capacityPrice = res.capacityPrice;
+          this.parent.note = res.note;
+          (this.dialog.dataService as CRUDService)
+            .update(this.parent)
+            .subscribe();
+          this.dialog.close(res);
+        }
+      });
+  }
+  // beforeSave(op: RequestOption) {
+  //   op.service = 'AM';
+  //   op.assemblyName = 'ERM.Business.AM';
+  //   op.className = 'AssetsBusiness';
+  //   let data = [];
+  //   if (this.action == 'add' || this.action == 'copy') {
+  //     op.methodName = 'SaveWaterClockAsync';
+  //     data = [this.data];
+  //   } else if (this.action == 'edit') {
+  //     op.methodName = 'UpdateWaterClockAsync';
+  //     data = [this.data, this.oldAssetId];
+  //   }
+  //   op.data = data;
+  //   return true;
+  // }
+  checkValidate() {
+    //check điều kiện gì đây Khanh
+    return true;
   }
 }

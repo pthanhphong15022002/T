@@ -99,4 +99,8 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
   changeDataMFHis(e, data) {
 
   }
+
+  loadGridHis(data) {
+    if (this.gridHistory) this.gridHistory.addRow(data, 0, true);
+  }
 }
