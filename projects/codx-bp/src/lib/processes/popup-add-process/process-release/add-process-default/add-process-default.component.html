@@ -41,20 +41,18 @@
                 <div class="d-flex align-items-center justify-content-between" *ngIf="i>0">
                     <ng-container  *ngFor="let child of item.child">
                         <div class="d-flex flex-column w-100 p-2" [class.pb-2]="child.fieldType == 'Title'"  *ngIf="!f_Visible[child.fieldName]">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center" *ngIf="child?.fieldType != 'Note'">
-                                    <codx-label
-                                        [formName]="formModel.formName"
-                                        [gridViewName]="formModel.gridViewName + child.fieldType"
-                                        [fieldName]="child.fieldName"
-                                        [default]="child.title"
-                                        [ngClass]="child.fieldType == 'Title' ? 'fw-bold fs-3 mt-1': 'fw-bold'">
-                                    </codx-label>
-                                    <span *ngIf="child.isRequired" class="text-danger mx-2">(*)</span>
-                                </div>
+                            <div class="d-flex align-items-center" *ngIf="child?.fieldType != 'Note'">
+                                <codx-label
+                                    [formName]="formModel.formName"
+                                    [gridViewName]="formModel.gridViewName + child.fieldType"
+                                    [fieldName]="child.fieldName"
+                                    [default]="child.title"
+                                    [ngClass]="child.fieldType == 'Title' ? 'fw-bold fs-3 mt-1': 'fw-bold'">
+                                </codx-label>
+                                <span *ngIf="child.isRequired" class="text-danger mx-2">(*)</span>
                                 <div class="d-flex align-items-center" *ngIf="child.fieldType == 'Table'">
-                                    <i class="icon-add_box ms-2 text-primary cursor-pointer"  (click)="addRow2(child.indexTable)"></i>
-                                    <i class="icon-i-arrows-angle-expand icon-14 cursor-pointer ms-2"></i>
+                                    <i class="icon-add_box ms-2 text-primary cursor-pointer mx-2"  (click)="addRow2(child.indexTable)"></i>
+                                    <i class="icon-i-arrows-fullscreen icon-14 cursor-pointer" (click)="expandTable(child)"></i>
                                 </div>
                             </div>
                             <ng-container [ngSwitch]="child?.fieldType">

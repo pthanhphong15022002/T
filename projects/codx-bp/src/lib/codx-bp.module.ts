@@ -93,6 +93,7 @@ import { FormSettingValueListComponent } from './processes/popup-add-process/for
 import { FormatValueComboboxPipe } from './pipes/format-value-combobox.pipe';
 import { PropertyBorderComponent } from './modeview/properties/property-border/property-border.component';
 import { AddCustomActionComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-custom-action/add-custom-action.component';
+import { ProcessTableExpandComponent } from './processes/popup-add-process/process-release/add-process-default/process-table-expand/process-table-expand.component';
 
 export const routes: Routes = [
   {
@@ -196,7 +197,8 @@ export const routes: Routes = [
     FormTestDiagramComponent,
     AddDefaultComponent,
     AddProcessDefaultComponent,
-
+    ProcessTableExpandComponent,
+    
     AddStageComponent,
     AddTaskComponent,    
     AddCustomActionComponent,

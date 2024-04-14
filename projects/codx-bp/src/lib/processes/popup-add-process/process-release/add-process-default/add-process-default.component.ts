@@ -37,6 +37,7 @@ import { Subject, elementAt, firstValueFrom, forkJoin, isObservable } from 'rxjs
 import { environment } from 'src/environments/environment';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
+import { ProcessTableExpandComponent } from './process-table-expand/process-table-expand.component';
 
 @Component({
   selector: 'lib-add-process-default',
@@ -927,9 +928,7 @@ export class AddProcessDefaultComponent implements OnInit {
   addRow2(index = 0) {
     var grid = this.gridView.find((_, i) => i == index);
     var data = {
-      cot_1: '',
-      cot_2: '',
-      cot_3: '',
+      delete : true
     };
     //if(!grid.dataSource) grid.dataSource = [];
     grid.addRow(data, grid.dataSource.length);
@@ -1194,5 +1193,27 @@ export class AddProcessDefaultComponent implements OnInit {
     var l = txt.length * 10;
     if(l < 100)  l = 100;
     return l ;
+  }
+
+  //Mở rộng table nhập liệu
+  expandTable(dt:any)
+  {
+    let data = 
+    {
+      headerText: dt?.title,
+      columnsGrid: dt?.columnsGrid,
+      dataSource: this.dataTable[dt?.fieldName],
+      editSettings: this.editSettings,
+      indexTable: dt?.indexTable,
+      hasIndexNo: dt?.tableFormat?.hasIndexNo
+    }
+    let popup = this.callFuc.openForm(ProcessTableExpandComponent,"",1200,900,"",data);
+    popup.closed.subscribe(res=>{
+      if(res?.event) {
+        this.dataTable[dt?.fieldName] = res?.event;
+        var grid = this.gridView.find((_, i) => i == dt?.indexTable);
+        grid.refresh();
+      }
+    })
   }
 }

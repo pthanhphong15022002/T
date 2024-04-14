@@ -1,0 +1,35 @@
+<codx-form
+    [dialog]="dialog"
+    [body]="body"
+    [customToolbar]="header"
+    [footer]="footer"
+>
+</codx-form>
+<ng-template #header>
+    <div class="d-flex align-items-center justify-content-between w-100">
+        <span class="fs-2">{{headerText}}</span>
+        <div class="d-flex align-items-center">
+            <i class="icon-add_box me-4 icon-24 text-primary cursor-pointer" (click)="addRow()"></i>
+            <i class="icon-close cursor-pointer" (click)="dialog.close()"></i>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #body>
+    <codx-gridview-v2
+        #gridView
+        [witdh]="'100%'"
+        [height]="'100%'"
+        [outputMoreFunc]="true"
+        [columnsGrid]="columnsGrid"
+        [dataSource]="dataSource"
+        [editSettings]="editSettings"
+        (clickMF)="clickMFGrid($event)"
+    >
+</codx-gridview-v2>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSave()"><codx-label [formName]="'fmProcessTableEp'" fiedName="lblSave" default="Lưu"></codx-label></button>
+    </div>
+</ng-template>
