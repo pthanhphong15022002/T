@@ -12,6 +12,7 @@ import {
   CodxFormDynamicComponent,
   DialogModel,
   FormModel,
+  NotificationsService,
   SidebarModel,
   UIComponent,
   Util,
@@ -74,7 +75,7 @@ export class WaterClockComponent
     entityName: 'AM_Assets',
     funcID: 'CMS0130'
   };
-  constructor(inject: Injector, private shareService: CodxShareService) {
+  constructor(inject: Injector, private shareService: CodxShareService, private notiService: NotificationsService) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID']; //CMS0128
     this.cache.functionList(this.funcID).subscribe((f) => {
@@ -151,134 +152,6 @@ export class WaterClockComponent
     this.detectorRef.detectChanges();
   }
   changeDataMF(e: any, data: any) { }
-
-  //CRUD-CORE
-  // click(evt) {
-  //   this.titleAction = evt.text;
-  //   switch (evt.id) {
-  //     case 'btnAdd':
-  //       this.add(evt);
-  //       break;
-  //   }
-  // }
-
-  // clickMF(e, data) {
-  //   if (!data) return;
-  //   this.titleAction = e.text;
-  //   this.itemSelected = data;
-  //   switch (e.functionID) {
-  //     case 'SYS02':
-  //       this.delete(data);
-  //       break;
-  //     case 'SYS03':
-  //       this.edit(data, e);
-  //       break;
-  //     case 'SYS04':
-  //       this.copy(data, e);
-  //       break;
-  //     case 'SYS05':
-  //       this.viewDetail(data, e);
-  //       break;
-  //     default:
-  //       this.shareService.defaultMoreFunc(
-  //         e,
-  //         data,
-  //         null,
-  //         this.view.formModel,
-  //         this.view.dataService,
-  //         this
-  //       );
-  //       break;
-  //   }
-  // }
-
-  // add(mFunc?) {
-  //   this.view.dataService.addNew().subscribe((res) => {
-  //     this.itemSelected = this.view.dataService.dataSelected;
-  //     let option = new SidebarModel();
-  //     option.Width = '550px';
-  //     option.DataService = this.view?.dataService;
-  //     option.FormModel = this.view?.currentView?.formModel;
-
-  //     var dialog = this.callfc.openSide(
-  //       CodxFormDynamicComponent,
-  //       {
-  //         formModel: option.FormModel,
-  //         data: this.itemSelected,
-  //         function: mFunc,
-  //         dataService: this.view.dataService,
-  //         isAddMode: true,
-  //         titleMore: 'Thêm',
-  //       },
-  //       option
-  //     );
-  //   });
-  // }
-
-  // viewDetail(data: any, mFunc?) {
-  //   if (data) this.view.dataService.dataSelected = this.itemSelected = data;
-  //   let option = new SidebarModel();
-  //   option.Width = '550px';
-  //   option.DataService = this.view?.dataService;
-  //   option.FormModel = this.view?.currentView?.formModel;
-  //   this.callfc.openSide(
-  //     CodxFormDynamicComponent,
-  //     {
-  //       formModel: option.FormModel,
-  //       data: this.itemSelected,
-  //       function: mFunc,
-  //       dataService: this.view.dataService,
-  //       isAddMode: false,
-  //       titleMore: mFunc ? mFunc.text : '',
-  //       isView: true,
-  //     },
-  //     option
-  //   );
-  // }
-  // copy(evt: any, mFunc?) {
-  //   if (evt) {
-  //     this.view.dataService.dataSelected = this.itemSelected = evt;
-  //   }
-  //   this.view.dataService.copy().subscribe((res) => {
-  //     let option = new SidebarModel();
-  //     option.Width = '550px';
-  //     option.DataService = this.view.dataService;
-  //     option.FormModel = this.view?.currentView?.formModel;
-
-  //     this.callfc.openSide(
-  //       CodxFormDynamicComponent,
-  //       {
-  //         formModel: option.FormModel,
-  //         data: res,
-  //         function: mFunc,
-  //         dataService: this.view.dataService,
-  //         titleMore: mFunc ? mFunc.text : '',
-  //       },
-  //       option
-  //     );
-  //   });
-  // }
-  // edit(data: any, mFunc?) {
-  //   if (data) this.view.dataService.dataSelected = this.itemSelected = data;
-  //   this.view.dataService.edit(this.itemSelected).subscribe(() => {
-  //     let option = new SidebarModel();
-  //     option.Width = '550px';
-  //     option.DataService = this.view?.dataService;
-  //     option.FormModel = this.view?.currentView?.formModel;
-  //     this.callfc.openSide(
-  //       CodxFormDynamicComponent,
-  //       {
-  //         formModel: option.FormModel,
-  //         data: this.itemSelected,
-  //         function: mFunc,
-  //         dataService: this.view.dataService,
-  //         isAddMode: false,
-  //         titleMore: mFunc ? mFunc.text : '',
-  //       },
-  //       option
-  //     );
-  //   });
-  // }
 
   // //CRUD custorm
   click(evt) {
@@ -413,12 +286,17 @@ export class WaterClockComponent
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.api.exec<any>("AM", "AssetsBusiness", "DeletedWaterClockAsync", data.assetID).subscribe(res => {
-      if (res) this.view.dataService.onAction.next({
-        type: 'delete',
-        data: data,
-      });
+    this.notiService.alertCode('TM003').subscribe((confirm) => {
+      if (confirm?.event && confirm?.event?.status == 'Y') {
+        this.api.exec<any>("AM", "AssetsBusiness", "DeletedWaterClockAsync", data.assetID).subscribe(res => {
+          if (res) this.view.dataService.onAction.next({
+            type: 'delete',
+            data: data,
+          });
+        })
+      }
     })
+
     // this.view.dataService
     //   .delete([this.view.dataService.dataSelected])
     //   .subscribe((res) => {
@@ -494,12 +372,13 @@ export class WaterClockComponent
   }
 
   setDefault(title, parent, funcID) {
+    let service = 'AM';
+    let acembly = "AM";
+    let classMethol = 'AssetsBusiness';
+    let methol = 'GetDefaultWaterClockAsync';
+    let data = [funcID, parent.assetID]
     this.api
-      .execSv<any>('AM', 'Core', 'DataBusiness', 'GetDefaultAsync', [
-        funcID,
-        'AM_Assets',
-        'assetID',
-      ])
+      .execSv<any>(service, acembly, classMethol, methol, data)
       .subscribe((response: any) => {
         if (response) {
           let data = response.data;
@@ -522,7 +401,7 @@ export class WaterClockComponent
               gridViewSetup: grv,
               parent: parent
             };
-            let height = isClockHis ? 750 : 400
+            let height = isClockHis ? 750 : 450
             let dialogHis = this.callfc.openForm(
               PopupAddHistoryWaterClockComponent,
               null,
