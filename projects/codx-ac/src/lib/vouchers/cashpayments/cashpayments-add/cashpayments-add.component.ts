@@ -346,7 +346,7 @@ export class CashPaymentAddComponent extends UIComponent {
         }
       });
     } else {
-      this.master.setValue('subType', event.data[0], { onlySelf: true, emitEvent: false, });
+      this.master.setValue('subType', event.data[0], {});
       this.detectorRef.detectChanges();
       if (this.elementTabDetail) {
         this.showHideTabDetail(this.master?.data?.subType, this.elementTabDetail);
