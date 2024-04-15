@@ -18,6 +18,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
+  ElementRef,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -1449,51 +1450,51 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     }
   }
 
-  navChange(evt: any, index: number = -1, btnClick) {
-    let containerList = document.querySelectorAll('.pw-content');
-    let lastDivList = document.querySelectorAll('.div_final');
-    let lastDiv = lastDivList[index];
-    let container = containerList[index];
-    let containerHeight = (container as any).offsetHeight;
-    let contentHeight = 0;
-    for (let i = 0; i < container.children.length; i++) {
-      contentHeight += (container.children[i] as any).offsetHeight;
-    }
+  // navChange(evt: any, index: number = -1, btnClick) {
+  //   let containerList = document.querySelectorAll('.pw-content');
+  //   let lastDivList = document.querySelectorAll('.div_final');
+  //   let lastDiv = lastDivList[index];
+  //   let container = containerList[index];
+  //   let containerHeight = (container as any).offsetHeight;
+  //   let contentHeight = 0;
+  //   for (let i = 0; i < container.children.length; i++) {
+  //     contentHeight += (container.children[i] as any).offsetHeight;
+  //   }
 
-    if (!evt) return;
-    let element = document.getElementById(evt);
-    let distanceToBottom = contentHeight - element.offsetTop;
+  //   if (!evt) return;
+  //   let element = document.getElementById(evt);
+  //   let distanceToBottom = contentHeight - element.offsetTop;
 
-    if (distanceToBottom < containerHeight) {
-      (lastDiv as any).style.width = '200px';
-      (lastDiv as any).style.height = `${
-        containerHeight - distanceToBottom + 50
-      }px`;
-    }
+  //   if (distanceToBottom < containerHeight) {
+  //     (lastDiv as any).style.width = '200px';
+  //     (lastDiv as any).style.height = `${
+  //       containerHeight - distanceToBottom + 50
+  //     }px`;
+  //   }
 
-    if (index > -1) {
-      this.active[index] = evt;
-      this.detectorRef.detectChanges();
-    }
-    element.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-      inline: 'nearest',
-    });
-    this.isClick = true;
-    this.detectorRef.detectChanges();
-    setTimeout(() => {
-      this.isClick = false;
-      return;
-    }, 500);
-  }
+  //   if (index > -1) {
+  //     this.active[index] = evt;
+  //     this.detectorRef.detectChanges();
+  //   }
+  //   element.scrollIntoView({
+  //     behavior: 'smooth',
+  //     block: 'start',
+  //     inline: 'nearest',
+  //   });
+  //   this.isClick = true;
+  //   this.detectorRef.detectChanges();
+  //   setTimeout(() => {
+  //     this.isClick = false;
+  //     return;
+  //   }, 500);
+  // }
 
-  onSectionChange(data: any, index: number = -1) {
-    if (index > -1 && this.isClick == false) {
-      this.active[index] = data;
-      this.detectorRef.detectChanges();
-    }
-  }
+  // onSectionChange(data: any, index: number = -1) {
+  //   if (index > -1 && this.isClick == false) {
+  //     this.active[index] = data;
+  //     this.detectorRef.detectChanges();
+  //   }
+  // }
 
   getEmpCurrentData() {
     return this.api.execSv<any>(
@@ -2761,873 +2762,873 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     });
   }
 
-  clickTab(funcList: any) {
-    this.crrFuncTab = funcList.functionID;
-    this.hrService.getFunctionList(this.crrFuncTab).subscribe((res) => {
-      switch (this.crrFuncTab) {
-        case this.curriculumVitaeFuncID:
-          for (let i = 0; i < res.length; i++) {
-            if (res[i].url == this.eInfoURL) {
-              this.eInfoFuncID = res[i].functionID;
-              this.eInfoFunc = res[i];
-              if (!this.eInfoHeaderText || !this.eInfoFormModel) {
-                this.hrService
-                  .getHeaderText(this.eInfoFuncID)
-                  .then((headerText) => {
-                    this.eInfoHeaderText = headerText;
-                  });
-                this.hrService.getFormModel(this.eInfoFuncID).then((res) => {
-                  this.eInfoFormModel = res;
-                  this.hrService
-                    .getFormGroup(
-                      this.eInfoFormModel.formName,
-                      this.eInfoFormModel.gridViewName,
-                      this.eInfoFormModel
-                    )
-                    .then((fg) => {
-                      this.eInfoFormGroup = fg;
-                      this.eInfoFormGroup.patchValue(this.infoPersonal);
-                      this.eInfoFormModel.currentData = this.infoPersonal;
-                    });
-                });
-              }
-            } else if (res[i].url == this.legalInfoURL) {
-              this.legalInfoFuncID = res[i].functionID;
-              this.legalInfoFunc = res[i];
-            } else if (res[i].url == this.foreignWorkerURL) {
-              this.foreignWorkerFuncID = res[i].functionID;
-              this.foreignWorkerFunc = res[i];
-            } else if (res[i].url == this.ePartyURL) {
-              this.ePartyFuncID = res[i].functionID;
-              this.ePartyFunc = res[i];
-            } else if (res[i].url == this.eFamiliesURL) {
-              this.eFamiliesFuncID = res[i].functionID;
-              this.eFamiliesFunc = res[i];
+  // clickTab(funcList: any) {
+  //   this.crrFuncTab = funcList.functionID;
+  //   this.hrService.getFunctionList(this.crrFuncTab).subscribe((res) => {
+  //     switch (this.crrFuncTab) {
+  //       case this.curriculumVitaeFuncID:
+  //         for (let i = 0; i < res.length; i++) {
+  //           if (res[i].url == this.eInfoURL) {
+  //             this.eInfoFuncID = res[i].functionID;
+  //             this.eInfoFunc = res[i];
+  //             if (!this.eInfoHeaderText || !this.eInfoFormModel) {
+  //               this.hrService
+  //                 .getHeaderText(this.eInfoFuncID)
+  //                 .then((headerText) => {
+  //                   this.eInfoHeaderText = headerText;
+  //                 });
+  //               this.hrService.getFormModel(this.eInfoFuncID).then((res) => {
+  //                 this.eInfoFormModel = res;
+  //                 this.hrService
+  //                   .getFormGroup(
+  //                     this.eInfoFormModel.formName,
+  //                     this.eInfoFormModel.gridViewName,
+  //                     this.eInfoFormModel
+  //                   )
+  //                   .then((fg) => {
+  //                     this.eInfoFormGroup = fg;
+  //                     this.eInfoFormGroup.patchValue(this.infoPersonal);
+  //                     this.eInfoFormModel.currentData = this.infoPersonal;
+  //                   });
+  //               });
+  //             }
+  //           } else if (res[i].url == this.legalInfoURL) {
+  //             this.legalInfoFuncID = res[i].functionID;
+  //             this.legalInfoFunc = res[i];
+  //           } else if (res[i].url == this.foreignWorkerURL) {
+  //             this.foreignWorkerFuncID = res[i].functionID;
+  //             this.foreignWorkerFunc = res[i];
+  //           } else if (res[i].url == this.ePartyURL) {
+  //             this.ePartyFuncID = res[i].functionID;
+  //             this.ePartyFunc = res[i];
+  //           } else if (res[i].url == this.eFamiliesURL) {
+  //             this.eFamiliesFuncID = res[i].functionID;
+  //             this.eFamiliesFunc = res[i];
 
-              if (!this.eFamilyFormModel) {
-                this.hrService
-                  .getFormModel(this.eFamiliesFuncID)
-                  .then((res) => {
-                    this.eFamilyFormModel = res;
-                  });
-              }
+  //             if (!this.eFamilyFormModel) {
+  //               this.hrService
+  //                 .getFormModel(this.eFamiliesFuncID)
+  //                 .then((res) => {
+  //                   this.eFamilyFormModel = res;
+  //                 });
+  //             }
 
-              if (!this.eFamilyHeaderText) {
-                this.hrService
-                  .getHeaderText(this.eFamiliesFuncID)
-                  .then((res) => {
-                    this.eFamilyHeaderText = res;
-                  });
-              }
-            } else if (res[i].url == this.eExperienceURL) {
-              this.eExperienceFuncID = res[i].functionID;
-              this.eExperienceFunc = res[i];
+  //             if (!this.eFamilyHeaderText) {
+  //               this.hrService
+  //                 .getHeaderText(this.eFamiliesFuncID)
+  //                 .then((res) => {
+  //                   this.eFamilyHeaderText = res;
+  //                 });
+  //             }
+  //           } else if (res[i].url == this.eExperienceURL) {
+  //             this.eExperienceFuncID = res[i].functionID;
+  //             this.eExperienceFunc = res[i];
 
-              if (!this.eExperienceFormModel) {
-                this.hrService
-                  .getFormModel(this.eExperienceFuncID)
-                  .then((res) => {
-                    this.eExperienceFormModel = res;
-                  });
-              }
-            }
-          }
-          if (!this.active[0]) {
-            this.active[0] = this.eInfoFuncID;
-          }
-          this.lstFuncCurriculumVitae = res;
-          console.log(this.lstFuncCurriculumVitae);
-          this.lstBtnAdd = [];
-          for (let i = 0; i < res.length; i++) {
-            switch (res[i].functionID) {
-              case this.eInfoFuncID:
-                this.curriculumVitaePermission.eInfoFuncID.view = true;
-                this.curriculumVitaePermission.eInfoFuncID.write = res[i].write;
-                this.curriculumVitaePermission.eInfoFuncID.delete =
-                  res[i].delete;
-                break;
+  //             if (!this.eExperienceFormModel) {
+  //               this.hrService
+  //                 .getFormModel(this.eExperienceFuncID)
+  //                 .then((res) => {
+  //                   this.eExperienceFormModel = res;
+  //                 });
+  //             }
+  //           }
+  //         }
+  //         if (!this.active[0]) {
+  //           this.active[0] = this.eInfoFuncID;
+  //         }
+  //         this.lstFuncCurriculumVitae = res;
+  //         console.log(this.lstFuncCurriculumVitae);
+  //         this.lstBtnAdd = [];
+  //         for (let i = 0; i < res.length; i++) {
+  //           switch (res[i].functionID) {
+  //             case this.eInfoFuncID:
+  //               this.curriculumVitaePermission.eInfoFuncID.view = true;
+  //               this.curriculumVitaePermission.eInfoFuncID.write = res[i].write;
+  //               this.curriculumVitaePermission.eInfoFuncID.delete =
+  //                 res[i].delete;
+  //               break;
 
-              case this.legalInfoFuncID:
-                this.curriculumVitaePermission.legalInfoFuncID.view = true;
-                this.curriculumVitaePermission.legalInfoFuncID.write =
-                  res[i].write;
-                this.curriculumVitaePermission.legalInfoFuncID.delete =
-                  res[i].delete;
-                this.hrService
-                  .getFunctionList(this.legalInfoFuncID)
-                  .subscribe((res) => {
-                    this.lstFuncLegalInfo = res;
-                    for (let i = 0; i < res.length; i++) {
-                      if (res[i].url == this.eAssurURL) {
-                        this.eAssurFuncID = res[i].functionID;
-                        this.eAssurFunc = res[i];
-                      } else if (res[i].url == this.ePassportURL) {
-                        this.ePassportFuncID = res[i].functionID;
-                        this.ePassportFunc = res[i];
+  //             case this.legalInfoFuncID:
+  //               this.curriculumVitaePermission.legalInfoFuncID.view = true;
+  //               this.curriculumVitaePermission.legalInfoFuncID.write =
+  //                 res[i].write;
+  //               this.curriculumVitaePermission.legalInfoFuncID.delete =
+  //                 res[i].delete;
+  //               this.hrService
+  //                 .getFunctionList(this.legalInfoFuncID)
+  //                 .subscribe((res) => {
+  //                   this.lstFuncLegalInfo = res;
+  //                   for (let i = 0; i < res.length; i++) {
+  //                     if (res[i].url == this.eAssurURL) {
+  //                       this.eAssurFuncID = res[i].functionID;
+  //                       this.eAssurFunc = res[i];
+  //                     } else if (res[i].url == this.ePassportURL) {
+  //                       this.ePassportFuncID = res[i].functionID;
+  //                       this.ePassportFunc = res[i];
 
-                        if (!this.ePassportFormModel) {
-                          this.hrService
-                            .getFormModel(this.ePassportFuncID)
-                            .then((res) => {
-                              this.ePassportFormModel = res;
-                            });
-                        }
-                      } else if (res[i].url == this.eVisaURL) {
-                        this.eVisaFuncID = res[i].functionID;
-                        this.eVisaFunc = res[i];
+  //                       if (!this.ePassportFormModel) {
+  //                         this.hrService
+  //                           .getFormModel(this.ePassportFuncID)
+  //                           .then((res) => {
+  //                             this.ePassportFormModel = res;
+  //                           });
+  //                       }
+  //                     } else if (res[i].url == this.eVisaURL) {
+  //                       this.eVisaFuncID = res[i].functionID;
+  //                       this.eVisaFunc = res[i];
 
-                        if (!this.eVisaFormModel) {
-                          this.hrService
-                            .getFormModel(this.eVisaFuncID)
-                            .then((res) => {
-                              this.eVisaFormModel = res;
-                            });
-                        }
-                      }
-                    }
+  //                       if (!this.eVisaFormModel) {
+  //                         this.hrService
+  //                           .getFormModel(this.eVisaFuncID)
+  //                           .then((res) => {
+  //                             this.eVisaFormModel = res;
+  //                           });
+  //                       }
+  //                     }
+  //                   }
 
-                    for (let i = 0; i < res.length; i++) {
-                      if (res[i].functionID == this.ePassportFuncID) {
-                        this.curriculumVitaePermission.legalInfoFuncID.passportFuncID.view =
-                          true;
-                        this.curriculumVitaePermission.legalInfoFuncID.passportFuncID.write =
-                          res[i].write;
-                        this.curriculumVitaePermission.legalInfoFuncID.passportFuncID.delete =
-                          res[i].delete;
-                        this.curriculumVitaePermission.legalInfoFuncID.passportFuncID.isPortal =
-                          res[i].isPortal;
-                        if (
-                          res[i].write == true &&
-                          (this.fromWS == false || res[i].isPortal == false)
-                        ) {
-                          this.lstBtnAdd.push(res[i]);
-                        }
-                      } else if (res[i].functionID == this.eVisaFuncID) {
-                        this.curriculumVitaePermission.legalInfoFuncID.visaFuncID.view =
-                          true;
-                        this.curriculumVitaePermission.legalInfoFuncID.visaFuncID.write =
-                          res[i].write;
-                        this.curriculumVitaePermission.legalInfoFuncID.visaFuncID.delete =
-                          res[i].delete;
-                        this.curriculumVitaePermission.legalInfoFuncID.visaFuncID.isPortal =
-                          res[i].isPortal;
-                        if (
-                          res[i].write == true &&
-                          (this.fromWS == false || res[i].isPortal == false)
-                        ) {
-                          this.lstBtnAdd.push(res[i]);
-                        }
-                      }
-                    }
-                  });
-                break;
+  //                   for (let i = 0; i < res.length; i++) {
+  //                     if (res[i].functionID == this.ePassportFuncID) {
+  //                       this.curriculumVitaePermission.legalInfoFuncID.passportFuncID.view =
+  //                         true;
+  //                       this.curriculumVitaePermission.legalInfoFuncID.passportFuncID.write =
+  //                         res[i].write;
+  //                       this.curriculumVitaePermission.legalInfoFuncID.passportFuncID.delete =
+  //                         res[i].delete;
+  //                       this.curriculumVitaePermission.legalInfoFuncID.passportFuncID.isPortal =
+  //                         res[i].isPortal;
+  //                       if (
+  //                         res[i].write == true &&
+  //                         (this.fromWS == false || res[i].isPortal == false)
+  //                       ) {
+  //                         this.lstBtnAdd.push(res[i]);
+  //                       }
+  //                     } else if (res[i].functionID == this.eVisaFuncID) {
+  //                       this.curriculumVitaePermission.legalInfoFuncID.visaFuncID.view =
+  //                         true;
+  //                       this.curriculumVitaePermission.legalInfoFuncID.visaFuncID.write =
+  //                         res[i].write;
+  //                       this.curriculumVitaePermission.legalInfoFuncID.visaFuncID.delete =
+  //                         res[i].delete;
+  //                       this.curriculumVitaePermission.legalInfoFuncID.visaFuncID.isPortal =
+  //                         res[i].isPortal;
+  //                       if (
+  //                         res[i].write == true &&
+  //                         (this.fromWS == false || res[i].isPortal == false)
+  //                       ) {
+  //                         this.lstBtnAdd.push(res[i]);
+  //                       }
+  //                     }
+  //                   }
+  //                 });
+  //               break;
 
-              case this.foreignWorkerFuncID:
-                this.curriculumVitaePermission.foreignWorkerFuncID.view = true;
-                this.curriculumVitaePermission.foreignWorkerFuncID.write =
-                  res[i].write;
-                this.curriculumVitaePermission.foreignWorkerFuncID.delete =
-                  res[i].delete;
-                this.hrService
-                  .getFunctionList(this.foreignWorkerFuncID)
-                  .subscribe((res) => {
-                    this.lstFuncForeignWorkerInfo = res;
-                    for (let i = 0; i < res.length; i++) {
-                      if (res[i].url == this.eWorkPermitURL) {
-                        this.eWorkPermitFuncID = res[i].functionID;
-                        this.eWorkPermitFunc = res[i];
+  //             case this.foreignWorkerFuncID:
+  //               this.curriculumVitaePermission.foreignWorkerFuncID.view = true;
+  //               this.curriculumVitaePermission.foreignWorkerFuncID.write =
+  //                 res[i].write;
+  //               this.curriculumVitaePermission.foreignWorkerFuncID.delete =
+  //                 res[i].delete;
+  //               this.hrService
+  //                 .getFunctionList(this.foreignWorkerFuncID)
+  //                 .subscribe((res) => {
+  //                   this.lstFuncForeignWorkerInfo = res;
+  //                   for (let i = 0; i < res.length; i++) {
+  //                     if (res[i].url == this.eWorkPermitURL) {
+  //                       this.eWorkPermitFuncID = res[i].functionID;
+  //                       this.eWorkPermitFunc = res[i];
 
-                        if (!this.eWorkPermitFormModel) {
-                          this.hrService
-                            .getFormModel(this.eWorkPermitFuncID)
-                            .then((res) => {
-                              this.eWorkPermitFormModel = res;
-                            });
-                        }
-                      }
-                    }
-                    for (let i = 0; i < res.length; i++) {
-                      if (res[i].functionID == this.eWorkPermitFuncID) {
-                        this.curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.view =
-                          true;
-                        this.curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.write =
-                          res[i].write;
-                        this.curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.delete =
-                          res[i].delete;
-                        this.curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.isPortal =
-                          res[i].isPortal;
-                        if (
-                          res[i].write == true &&
-                          (this.fromWS == false || res[i].isPortal == false)
-                        ) {
-                          this.lstBtnAdd.push(res[i]);
-                        }
-                      }
-                    }
-                  });
-                break;
+  //                       if (!this.eWorkPermitFormModel) {
+  //                         this.hrService
+  //                           .getFormModel(this.eWorkPermitFuncID)
+  //                           .then((res) => {
+  //                             this.eWorkPermitFormModel = res;
+  //                           });
+  //                       }
+  //                     }
+  //                   }
+  //                   for (let i = 0; i < res.length; i++) {
+  //                     if (res[i].functionID == this.eWorkPermitFuncID) {
+  //                       this.curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.view =
+  //                         true;
+  //                       this.curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.write =
+  //                         res[i].write;
+  //                       this.curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.delete =
+  //                         res[i].delete;
+  //                       this.curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.isPortal =
+  //                         res[i].isPortal;
+  //                       if (
+  //                         res[i].write == true &&
+  //                         (this.fromWS == false || res[i].isPortal == false)
+  //                       ) {
+  //                         this.lstBtnAdd.push(res[i]);
+  //                       }
+  //                     }
+  //                   }
+  //                 });
+  //               break;
 
-              case this.ePartyFuncID:
-                this.curriculumVitaePermission.ePartyFuncID.view = true;
-                this.curriculumVitaePermission.ePartyFuncID.write =
-                  res[i].write;
-                this.curriculumVitaePermission.ePartyFuncID.delete =
-                  res[i].delete;
-                break;
+  //             case this.ePartyFuncID:
+  //               this.curriculumVitaePermission.ePartyFuncID.view = true;
+  //               this.curriculumVitaePermission.ePartyFuncID.write =
+  //                 res[i].write;
+  //               this.curriculumVitaePermission.ePartyFuncID.delete =
+  //                 res[i].delete;
+  //               break;
 
-              case this.eFamiliesFuncID:
-                this.curriculumVitaePermission.eFamiliesFuncID.view = true;
-                this.curriculumVitaePermission.eFamiliesFuncID.write =
-                  res[i].write;
-                this.curriculumVitaePermission.eFamiliesFuncID.delete =
-                  res[i].delete;
-                this.curriculumVitaePermission.eFamiliesFuncID.isPortal =
-                  res[i].isPortal;
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
+  //             case this.eFamiliesFuncID:
+  //               this.curriculumVitaePermission.eFamiliesFuncID.view = true;
+  //               this.curriculumVitaePermission.eFamiliesFuncID.write =
+  //                 res[i].write;
+  //               this.curriculumVitaePermission.eFamiliesFuncID.delete =
+  //                 res[i].delete;
+  //               this.curriculumVitaePermission.eFamiliesFuncID.isPortal =
+  //                 res[i].isPortal;
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
 
-              case this.eExperienceFuncID:
-                this.curriculumVitaePermission.eExperienceFuncID.view = true;
-                this.curriculumVitaePermission.eExperienceFuncID.write =
-                  res[i].write;
-                this.curriculumVitaePermission.eExperienceFuncID.delete =
-                  res[i].delete;
-                this.curriculumVitaePermission.eExperienceFuncID.isPortal =
-                  res[i].isPortal;
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
-            }
-          }
-          break;
-        case this.jobInfoFuncID:
-          for (let i = 0; i < res.length; i++) {
-            if (res[i].url == this.jobGeneralURL) {
-              this.jobGeneralFuncID = res[i].functionID;
-              this.jobGeneralFunc = res[i];
-            } else if (res[i].url == this.eTimeCardURL) {
-              this.eTimeCardFuncID = res[i].functionID;
-              this.eTimeCardFunc = res[i];
-            } else if (res[i].url == this.eCalSalaryURL) {
-              this.eCalSalaryFuncID = res[i].functionID;
-              this.eCalSalaryFunc = res[i];
-            } else if (res[i].url == this.eNeedToSubmitProfileURL) {
-              this.eNeedToSubmitProfileFuncID = res[i].functionID;
-              this.eNeedToSubmitProfileFunc = res[i];
-              if (!this.edocumentFormModel) {
-                this.hrService
-                  .getFormModel(this.eNeedToSubmitProfileFuncID)
-                  .then((res) => {
-                    this.edocumentFormModel = res;
-                    this.cache
-                      .gridViewSetup(
-                        this.edocumentFormModel.formName,
-                        this.edocumentFormModel.gridViewName
-                      )
-                      .subscribe((res) => {
-                        this.eDocumentGrvSetup = res;
-                      });
-                  });
-              }
-            }
-          }
-          if (!this.active[1]) {
-            this.active[1] = this.jobGeneralFuncID;
-          }
-          this.lineManager = null;
-          this.indirectManager = null;
-          this.loadedLineManager = false;
-          this.loadedIndirectManager = false;
-          this.getManagerEmployeeInfoById();
-          this.lstBtnAdd = [];
-          this.lstFuncJobInfo = res;
-          for (let i = 0; i < res.length; i++) {
-            switch (res[i].functionID) {
-              case this.jobGeneralFuncID:
-                this.jobInfoPer.jobGeneralFuncID.view = true;
-                this.jobInfoPer.jobGeneralFuncID.write = res[i].write;
-                this.jobInfoPer.jobGeneralFuncID.delete = res[i].delete;
-                break;
-              case this.eTimeCardFuncID:
-                this.jobInfoPer.eTimeCardFuncID.view = true;
-                this.jobInfoPer.eTimeCardFuncID.write = res[i].write;
-                this.jobInfoPer.eTimeCardFuncID.delete = res[i].delete;
-                break;
-              case this.eCalSalaryFuncID:
-                this.jobInfoPer.eCalSalaryFuncID.view = true;
-                this.jobInfoPer.eCalSalaryFuncID.write = res[i].write;
-                this.jobInfoPer.eCalSalaryFuncID.delete = res[i].delete;
-                break;
-              case this.eNeedToSubmitProfileFuncID:
-                this.jobInfoPer.eNeedToSubmitProfileFuncID.view = true;
-                this.jobInfoPer.eNeedToSubmitProfileFuncID.write = res[i].write;
-                this.jobInfoPer.eNeedToSubmitProfileFuncID.delete =
-                  res[i].delete;
-                this.jobInfoPer.eNeedToSubmitProfileFuncID.isPortal =
-                  res[i].isPortal;
-                this.GetEmpDocument(this.infoPersonal.employeeID).subscribe(
-                  (res) => {
-                    this.lstEmpDocument = res;
-                    for (let i = 0; i < this.lstEmpDocument.length; i++) {
-                      this.getFileDataAsync(
-                        this.lstEmpDocument[i].recID
-                      ).subscribe((res) => {
-                        this.lstEmpDocument[i].lstFile = res;
-                      });
-                    }
-                  }
-                );
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
-            }
-          }
-          break;
-        case this.salaryBenefitInfoFuncID:
-          for (let i = 0; i < res.length; i++) {
-            if (res[i].url == this.eBasicSalaryURL) {
-              this.eBasicSalaryFuncID = res[i].functionID;
-              this.eBasicSalaryFunc = res[i];
-              if (!this.eBasicSalaryFormmodel) {
-                this.hrService
-                  .getFormModel(this.eBasicSalaryFuncID)
-                  .then((res) => {
-                    this.eBasicSalaryFormmodel = res;
-                  });
-              }
-            } else if (res[i].url == this.benefitURL) {
-              this.benefitFuncID = res[i].functionID;
-              this.benefitFunc = res[i];
-              if (!this.benefitFormodel) {
-                this.hrService.getFormModel(this.benefitFuncID).then((res) => {
-                  this.benefitFormodel = res;
-                  this.cache
-                    .gridViewSetup(
-                      this.benefitFormodel.formName,
-                      this.benefitFormodel.gridViewName
-                    )
-                    .subscribe((res) => {
-                      this.eBenefitGrvSetup = res;
-                      let dataRequest = new DataRequest();
+  //             case this.eExperienceFuncID:
+  //               this.curriculumVitaePermission.eExperienceFuncID.view = true;
+  //               this.curriculumVitaePermission.eExperienceFuncID.write =
+  //                 res[i].write;
+  //               this.curriculumVitaePermission.eExperienceFuncID.delete =
+  //                 res[i].delete;
+  //               this.curriculumVitaePermission.eExperienceFuncID.isPortal =
+  //                 res[i].isPortal;
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
+  //           }
+  //         }
+  //         break;
+  //       case this.jobInfoFuncID:
+  //         for (let i = 0; i < res.length; i++) {
+  //           if (res[i].url == this.jobGeneralURL) {
+  //             this.jobGeneralFuncID = res[i].functionID;
+  //             this.jobGeneralFunc = res[i];
+  //           } else if (res[i].url == this.eTimeCardURL) {
+  //             this.eTimeCardFuncID = res[i].functionID;
+  //             this.eTimeCardFunc = res[i];
+  //           } else if (res[i].url == this.eCalSalaryURL) {
+  //             this.eCalSalaryFuncID = res[i].functionID;
+  //             this.eCalSalaryFunc = res[i];
+  //           } else if (res[i].url == this.eNeedToSubmitProfileURL) {
+  //             this.eNeedToSubmitProfileFuncID = res[i].functionID;
+  //             this.eNeedToSubmitProfileFunc = res[i];
+  //             if (!this.edocumentFormModel) {
+  //               this.hrService
+  //                 .getFormModel(this.eNeedToSubmitProfileFuncID)
+  //                 .then((res) => {
+  //                   this.edocumentFormModel = res;
+  //                   this.cache
+  //                     .gridViewSetup(
+  //                       this.edocumentFormModel.formName,
+  //                       this.edocumentFormModel.gridViewName
+  //                     )
+  //                     .subscribe((res) => {
+  //                       this.eDocumentGrvSetup = res;
+  //                     });
+  //                 });
+  //             }
+  //           }
+  //         }
+  //         if (!this.active[1]) {
+  //           this.active[1] = this.jobGeneralFuncID;
+  //         }
+  //         this.lineManager = null;
+  //         this.indirectManager = null;
+  //         this.loadedLineManager = false;
+  //         this.loadedIndirectManager = false;
+  //         this.getManagerEmployeeInfoById();
+  //         this.lstBtnAdd = [];
+  //         this.lstFuncJobInfo = res;
+  //         for (let i = 0; i < res.length; i++) {
+  //           switch (res[i].functionID) {
+  //             case this.jobGeneralFuncID:
+  //               this.jobInfoPer.jobGeneralFuncID.view = true;
+  //               this.jobInfoPer.jobGeneralFuncID.write = res[i].write;
+  //               this.jobInfoPer.jobGeneralFuncID.delete = res[i].delete;
+  //               break;
+  //             case this.eTimeCardFuncID:
+  //               this.jobInfoPer.eTimeCardFuncID.view = true;
+  //               this.jobInfoPer.eTimeCardFuncID.write = res[i].write;
+  //               this.jobInfoPer.eTimeCardFuncID.delete = res[i].delete;
+  //               break;
+  //             case this.eCalSalaryFuncID:
+  //               this.jobInfoPer.eCalSalaryFuncID.view = true;
+  //               this.jobInfoPer.eCalSalaryFuncID.write = res[i].write;
+  //               this.jobInfoPer.eCalSalaryFuncID.delete = res[i].delete;
+  //               break;
+  //             case this.eNeedToSubmitProfileFuncID:
+  //               this.jobInfoPer.eNeedToSubmitProfileFuncID.view = true;
+  //               this.jobInfoPer.eNeedToSubmitProfileFuncID.write = res[i].write;
+  //               this.jobInfoPer.eNeedToSubmitProfileFuncID.delete =
+  //                 res[i].delete;
+  //               this.jobInfoPer.eNeedToSubmitProfileFuncID.isPortal =
+  //                 res[i].isPortal;
+  //               this.GetEmpDocument(this.infoPersonal.employeeID).subscribe(
+  //                 (res) => {
+  //                   this.lstEmpDocument = res;
+  //                   for (let i = 0; i < this.lstEmpDocument.length; i++) {
+  //                     this.getFileDataAsync(
+  //                       this.lstEmpDocument[i].recID
+  //                     ).subscribe((res) => {
+  //                       this.lstEmpDocument[i].lstFile = res;
+  //                     });
+  //                   }
+  //                 }
+  //               );
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
+  //           }
+  //         }
+  //         break;
+  //       case this.salaryBenefitInfoFuncID:
+  //         for (let i = 0; i < res.length; i++) {
+  //           if (res[i].url == this.eBasicSalaryURL) {
+  //             this.eBasicSalaryFuncID = res[i].functionID;
+  //             this.eBasicSalaryFunc = res[i];
+  //             if (!this.eBasicSalaryFormmodel) {
+  //               this.hrService
+  //                 .getFormModel(this.eBasicSalaryFuncID)
+  //                 .then((res) => {
+  //                   this.eBasicSalaryFormmodel = res;
+  //                 });
+  //             }
+  //           } else if (res[i].url == this.benefitURL) {
+  //             this.benefitFuncID = res[i].functionID;
+  //             this.benefitFunc = res[i];
+  //             if (!this.benefitFormodel) {
+  //               this.hrService.getFormModel(this.benefitFuncID).then((res) => {
+  //                 this.benefitFormodel = res;
+  //                 this.cache
+  //                   .gridViewSetup(
+  //                     this.benefitFormodel.formName,
+  //                     this.benefitFormodel.gridViewName
+  //                   )
+  //                   .subscribe((res) => {
+  //                     this.eBenefitGrvSetup = res;
+  //                     let dataRequest = new DataRequest();
 
-                      dataRequest.comboboxName = res.BenefitID.referedValue;
-                      dataRequest.pageLoading = false;
+  //                     dataRequest.comboboxName = res.BenefitID.referedValue;
+  //                     dataRequest.pageLoading = false;
 
-                      this.hrService
-                        .loadDataCbx('HR', dataRequest)
-                        .subscribe((data) => {
-                          this.BeneFitColorValArr = JSON.parse(data[0]);
-                        });
-                    });
-                });
-              }
-            }
-          }
-          if (!this.active[2]) {
-            this.active[2] = this.eBasicSalaryFuncID;
-          }
-          this.lstBtnAdd = [];
-          this.lstFuncSalaryBenefit = res;
-          for (let i = 0; i < res.length; i++) {
-            switch (res[i].functionID) {
-              case this.eBasicSalaryFuncID:
-                this.salaryBenefitInfoPer.eBasicSalaryFuncID.view = true;
-                this.salaryBenefitInfoPer.eBasicSalaryFuncID.write =
-                  res[i].write;
-                this.salaryBenefitInfoPer.eBasicSalaryFuncID.delete =
-                  res[i].delete;
-                this.salaryBenefitInfoPer.eBasicSalaryFuncID.isPortal =
-                  res[i].isPortal;
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
-              case this.benefitFuncID:
-                this.salaryBenefitInfoPer.benefitFuncID.view = true;
-                this.salaryBenefitInfoPer.benefitFuncID.write = res[i].write;
-                this.salaryBenefitInfoPer.benefitFuncID.delete = res[i].delete;
-                this.salaryBenefitInfoPer.benefitFuncID.isPortal =
-                  res[i].isPortal;
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
-            }
-          }
-          this.initEmpSalary();
-          break;
-        case this.workingProcessInfoFuncID:
-          for (let i = 0; i < res.length; i++) {
-            if (res[i].url == this.eContractURL) {
-              this.eContractFuncID = res[i].functionID;
-              this.eContractFunc = res[i];
+  //                     this.hrService
+  //                       .loadDataCbx('HR', dataRequest)
+  //                       .subscribe((data) => {
+  //                         this.BeneFitColorValArr = JSON.parse(data[0]);
+  //                       });
+  //                   });
+  //               });
+  //             }
+  //           }
+  //         }
+  //         if (!this.active[2]) {
+  //           this.active[2] = this.eBasicSalaryFuncID;
+  //         }
+  //         this.lstBtnAdd = [];
+  //         this.lstFuncSalaryBenefit = res;
+  //         for (let i = 0; i < res.length; i++) {
+  //           switch (res[i].functionID) {
+  //             case this.eBasicSalaryFuncID:
+  //               this.salaryBenefitInfoPer.eBasicSalaryFuncID.view = true;
+  //               this.salaryBenefitInfoPer.eBasicSalaryFuncID.write =
+  //                 res[i].write;
+  //               this.salaryBenefitInfoPer.eBasicSalaryFuncID.delete =
+  //                 res[i].delete;
+  //               this.salaryBenefitInfoPer.eBasicSalaryFuncID.isPortal =
+  //                 res[i].isPortal;
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
+  //             case this.benefitFuncID:
+  //               this.salaryBenefitInfoPer.benefitFuncID.view = true;
+  //               this.salaryBenefitInfoPer.benefitFuncID.write = res[i].write;
+  //               this.salaryBenefitInfoPer.benefitFuncID.delete = res[i].delete;
+  //               this.salaryBenefitInfoPer.benefitFuncID.isPortal =
+  //                 res[i].isPortal;
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
+  //           }
+  //         }
+  //         this.initEmpSalary();
+  //         break;
+  //       case this.workingProcessInfoFuncID:
+  //         for (let i = 0; i < res.length; i++) {
+  //           if (res[i].url == this.eContractURL) {
+  //             this.eContractFuncID = res[i].functionID;
+  //             this.eContractFunc = res[i];
 
-              if (!this.eContractFormModel) {
-                this.hrService
-                  .getFormModel(this.eContractFuncID)
-                  .then((res) => {
-                    this.eContractFormModel = res;
-                  });
-              }
-            } else if (res[i].url == this.appointionURL) {
-              this.appointionFuncID = res[i].functionID;
-              this.appointionFunc = res[i];
+  //             if (!this.eContractFormModel) {
+  //               this.hrService
+  //                 .getFormModel(this.eContractFuncID)
+  //                 .then((res) => {
+  //                   this.eContractFormModel = res;
+  //                 });
+  //             }
+  //           } else if (res[i].url == this.appointionURL) {
+  //             this.appointionFuncID = res[i].functionID;
+  //             this.appointionFunc = res[i];
 
-              if (!this.appointionFormModel) {
-                this.hrService
-                  .getFormModel(this.appointionFuncID)
-                  .then((res) => {
-                    this.appointionFormModel = res;
-                  });
-              }
-            } else if (res[i].url == this.dayoffURL) {
-              this.dayoffFuncID = res[i].functionID;
-              this.dayoffFunc = res[i];
+  //             if (!this.appointionFormModel) {
+  //               this.hrService
+  //                 .getFormModel(this.appointionFuncID)
+  //                 .then((res) => {
+  //                   this.appointionFormModel = res;
+  //                 });
+  //             }
+  //           } else if (res[i].url == this.dayoffURL) {
+  //             this.dayoffFuncID = res[i].functionID;
+  //             this.dayoffFunc = res[i];
 
-              if (!this.dayoffFormModel) {
-                this.hrService.getFormModel(this.dayoffFuncID).then((res) => {
-                  this.dayoffFormModel = res;
-                  this.cache
-                    .gridViewSetup(
-                      this.dayoffFormModel.formName,
-                      this.dayoffFormModel.gridViewName
-                    )
-                    .subscribe((res) => {
-                      this.eDayOffGrvSetup = res;
-                    });
-                });
-              }
-            } else if (res[i].url == this.eBusinessTravelURL) {
-              this.eBusinessTravelFuncID = res[i].functionID;
-              this.eBusinessTravelFunc = res[i];
+  //             if (!this.dayoffFormModel) {
+  //               this.hrService.getFormModel(this.dayoffFuncID).then((res) => {
+  //                 this.dayoffFormModel = res;
+  //                 this.cache
+  //                   .gridViewSetup(
+  //                     this.dayoffFormModel.formName,
+  //                     this.dayoffFormModel.gridViewName
+  //                   )
+  //                   .subscribe((res) => {
+  //                     this.eDayOffGrvSetup = res;
+  //                   });
+  //               });
+  //             }
+  //           } else if (res[i].url == this.eBusinessTravelURL) {
+  //             this.eBusinessTravelFuncID = res[i].functionID;
+  //             this.eBusinessTravelFunc = res[i];
 
-              if (!this.EBusinessTravelFormodel) {
-                this.hrService
-                  .getFormModel(this.eBusinessTravelFuncID)
-                  .then((res) => {
-                    this.EBusinessTravelFormodel = res;
-                  });
-              }
-            } else if (res[i].url == this.awardURL) {
-              this.awardFuncID = res[i].functionID;
-              this.awardFunc = res[i];
-              if (!this.awardFormModel) {
-                this.hrService.getFormModel(this.awardFuncID).then((res) => {
-                  this.awardFormModel = res;
-                });
-              }
-            } else if (res[i].url == this.eDisciplineURL) {
-              this.eDisciplineFuncID = res[i].functionID;
-              this.eDisciplineFunc = res[i];
-              if (!this.eDisciplineFormModel) {
-                this.hrService
-                  .getFormModel(this.eDisciplineFuncID)
-                  .then((res) => {
-                    this.eDisciplineFormModel = res;
-                  });
-              }
-            }
-          }
-          if (!this.active[3]) {
-            this.active[3] = this.eContractFuncID;
-          }
-          this.lstBtnAdd = [];
-          this.lstFuncHRProcess = res;
-          for (let i = 0; i < res.length; i++) {
-            switch (res[i].functionID) {
-              case this.eContractFuncID:
-                this.workingProcessInfoPer.eContractFuncID.view = true;
-                this.workingProcessInfoPer.eContractFuncID.write = res[i].write;
-                this.workingProcessInfoPer.eContractFuncID.delete =
-                  res[i].delete;
-                this.workingProcessInfoPer.eContractFuncID.isPortal =
-                  res[i].isPortal;
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
-              case this.appointionFuncID:
-                this.workingProcessInfoPer.appointionFuncID.view = true;
-                this.workingProcessInfoPer.appointionFuncID.write =
-                  res[i].write;
-                this.workingProcessInfoPer.appointionFuncID.delete =
-                  res[i].delete;
-                this.workingProcessInfoPer.appointionFuncID.isPortal =
-                  res[i].isPortal;
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
-              case this.dayoffFuncID:
-                this.workingProcessInfoPer.dayoffFuncID.view = true;
-                this.workingProcessInfoPer.dayoffFuncID.write = res[i].write;
-                this.workingProcessInfoPer.dayoffFuncID.delete = res[i].delete;
-                this.workingProcessInfoPer.dayoffFuncID.isPortal =
-                  res[i].isPortal;
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
-              case this.eBusinessTravelFuncID:
-                this.workingProcessInfoPer.eBusinessTravelFuncID.view = true;
-                this.workingProcessInfoPer.eBusinessTravelFuncID.write =
-                  res[i].write;
-                this.workingProcessInfoPer.eBusinessTravelFuncID.delete =
-                  res[i].delete;
-                this.workingProcessInfoPer.eBusinessTravelFuncID.isPortal =
-                  res[i].isPortal;
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
-              case this.awardFuncID:
-                this.workingProcessInfoPer.awardFuncID.view = true;
-                this.workingProcessInfoPer.awardFuncID.write = res[i].write;
-                this.workingProcessInfoPer.awardFuncID.delete = res[i].delete;
-                this.workingProcessInfoPer.awardFuncID.isPortal =
-                  res[i].isPortal;
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
-              case this.eDisciplineFuncID:
-                this.workingProcessInfoPer.eDisciplineFuncID.view = true;
-                this.workingProcessInfoPer.eDisciplineFuncID.write =
-                  res[i].write;
-                this.workingProcessInfoPer.eDisciplineFuncID.delete =
-                  res[i].delete;
-                this.workingProcessInfoPer.eDisciplineFuncID.isPortal =
-                  res[i].isPortal;
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
-            }
-          }
-          // this.lstBtnAdd = this.hrService.sortAscByProperty(this.lstBtnAdd, 'sorting');
-          this.initEmpProcess();
-          break;
-        case this.knowledgeInfoFuncID:
-          for (let i = 0; i < res.length; i++) {
-            if (res[i].url == this.eDegreeURL) {
-              this.eDegreeFuncID = res[i].functionID;
-              this.eDegreeFunc = res[i];
-              if (!this.eDegreeFormModel) {
-                this.hrService.getFormModel(this.eDegreeFuncID).then((res) => {
-                  this.eDegreeFormModel = res;
-                });
-              }
-            } else if (res[i].url == this.eCertificateURL) {
-              this.eCertificateFuncID = res[i].functionID;
-              this.eCertificateFunc = res[i];
-              if (!this.eCertificateFormModel) {
-                this.hrService
-                  .getFormModel(this.eCertificateFuncID)
-                  .then((res) => {
-                    this.eCertificateFormModel = res;
-                  });
-              }
-            } else if (res[i].url == this.eSkillURL) {
-              this.eSkillFuncID = res[i].functionID;
-              this.eSkillFunc = res[i];
-              if (!this.eSkillFormmodel) {
-                this.hrService.getFormModel(this.eSkillFuncID).then((res) => {
-                  this.eSkillFormmodel = res;
-                  this.cache
-                    .gridViewSetup(
-                      this.eSkillFormmodel.formName,
-                      this.eSkillFormmodel.gridViewName
-                    )
-                    .subscribe((res) => {
-                      this.eSkillgrvSetup = res;
-                    });
-                });
-              }
-            } else if (res[i].url == this.eTrainCourseURL) {
-              this.eTrainCourseFuncID = res[i].functionID;
-              this.eTrainCourseFunc = res[i];
-              if (!this.eTrainCourseFormModel) {
-                this.hrService
-                  .getFormModel(this.eTrainCourseFuncID)
-                  .then((res) => {
-                    this.eTrainCourseFormModel = res;
-                    this.cache
-                      .gridViewSetup(
-                        this.eTrainCourseFormModel.formName,
-                        this.eTrainCourseFormModel.gridViewName
-                      )
-                      .subscribe((res) => {
-                        this.eTrainCourseGrvSetup = res;
-                      });
-                  });
-              }
-            }
-          }
-          if (!this.active[4]) {
-            this.active[4] = this.eDegreeFuncID;
-          }
-          this.lstBtnAdd = [];
-          this.lstFuncKnowledge = res;
-          for (let i = 0; i < res.length; i++) {
-            switch (res[i].functionID) {
-              case this.eDegreeFuncID:
-                this.knowledgeInfoPer.eDegreeFuncID.view = true;
-                this.knowledgeInfoPer.eDegreeFuncID.write = res[i].write;
-                this.knowledgeInfoPer.eDegreeFuncID.delete = res[i].delete;
-                this.knowledgeInfoPer.eDegreeFuncID.isPortal = res[i].isPortal;
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
-              case this.eCertificateFuncID:
-                this.knowledgeInfoPer.eCertificateFuncID.view = true;
-                this.knowledgeInfoPer.eCertificateFuncID.write = res[i].write;
-                this.knowledgeInfoPer.eCertificateFuncID.delete = res[i].delete;
-                this.knowledgeInfoPer.eCertificateFuncID.isPortal =
-                  res[i].isPortal;
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
-              case this.eSkillFuncID:
-                this.knowledgeInfoPer.eSkillFuncID.view = true;
-                this.knowledgeInfoPer.eSkillFuncID.write = res[i].write;
-                this.knowledgeInfoPer.eSkillFuncID.delete = res[i].delete;
-                this.knowledgeInfoPer.eSkillFuncID.isPortal = res[i].isPortal;
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
-              case this.eTrainCourseFuncID:
-                this.knowledgeInfoPer.eTrainCourseFuncID.view = true;
-                this.knowledgeInfoPer.eTrainCourseFuncID.write = res[i].write;
-                this.knowledgeInfoPer.eTrainCourseFuncID.delete = res[i].delete;
-                this.knowledgeInfoPer.eTrainCourseFuncID.isPortal =
-                  res[i].isPortal;
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
-            }
-          }
-          this.initEmpKnowledge();
-          break;
-        case this.healthInfoFuncID:
-          for (let i = 0; i < res.length; i++) {
-            if (res[i].url == this.eAccidentsURL) {
-              this.eAccidentsFuncID = res[i].functionID;
-              this.eAccidentsFunc = res[i];
-              if (!this.eAccidentsFormModel) {
-                this.hrService
-                  .getFormModel(this.eAccidentsFuncID)
-                  .then((res) => {
-                    this.eAccidentsFormModel = res;
-                    this.cache
-                      .gridViewSetup(
-                        this.eAccidentsFormModel.formName,
-                        this.eAccidentsFormModel.gridViewName
-                      )
-                      .subscribe((res) => {
-                        this.eAccidentsGrvSetup = res;
-                      });
-                  });
-              }
-            } else if (res[i].url == this.eDiseasesURL) {
-              this.eDiseasesFuncID = res[i].functionID;
-              this.eDiseasesFunc = res[i];
-              if (!this.eDiseasesFormModel) {
-                this.hrService
-                  .getFormModel(this.eDiseasesFuncID)
-                  .then((res) => {
-                    this.eDiseasesFormModel = res;
-                    this.cache
-                      .gridViewSetup(
-                        this.eDiseasesFormModel.formName,
-                        this.eDiseasesFormModel.gridViewName
-                      )
-                      .subscribe((res) => {
-                        this.eDiseasesGrvSetup = res;
-                      });
-                  });
-              }
-            } else if (res[i].url == this.eHealthURL) {
-              this.eHealthFuncID = res[i].functionID;
-              this.eHealthFunc = res[i];
-              if (!this.eHealthFormModel) {
-                this.hrService.getFormModel(this.eHealthFuncID).then((res) => {
-                  this.eHealthFormModel = res;
-                });
-              }
-            } else if (res[i].url == this.eVaccinesURL) {
-              this.eVaccinesFuncID = res[i].functionID;
-              this.eVaccinesFunc = res[i];
-              if (!this.eVaccineFormModel) {
-                this.hrService
-                  .getFormModel(this.eVaccinesFuncID)
-                  .then((res) => {
-                    this.eVaccineFormModel = res;
-                    this.cache
-                      .gridViewSetup(
-                        this.eVaccineFormModel.formName,
-                        this.eVaccineFormModel.gridViewName
-                      )
-                      .subscribe((res) => {
-                        this.eVaccineGrvSetup = res;
-                        let dataRequest = new DataRequest();
-                        dataRequest.comboboxName =
-                          res.VaccineTypeID.referedValue;
-                        dataRequest.pageLoading = false;
+  //             if (!this.EBusinessTravelFormodel) {
+  //               this.hrService
+  //                 .getFormModel(this.eBusinessTravelFuncID)
+  //                 .then((res) => {
+  //                   this.EBusinessTravelFormodel = res;
+  //                 });
+  //             }
+  //           } else if (res[i].url == this.awardURL) {
+  //             this.awardFuncID = res[i].functionID;
+  //             this.awardFunc = res[i];
+  //             if (!this.awardFormModel) {
+  //               this.hrService.getFormModel(this.awardFuncID).then((res) => {
+  //                 this.awardFormModel = res;
+  //               });
+  //             }
+  //           } else if (res[i].url == this.eDisciplineURL) {
+  //             this.eDisciplineFuncID = res[i].functionID;
+  //             this.eDisciplineFunc = res[i];
+  //             if (!this.eDisciplineFormModel) {
+  //               this.hrService
+  //                 .getFormModel(this.eDisciplineFuncID)
+  //                 .then((res) => {
+  //                   this.eDisciplineFormModel = res;
+  //                 });
+  //             }
+  //           }
+  //         }
+  //         if (!this.active[3]) {
+  //           this.active[3] = this.eContractFuncID;
+  //         }
+  //         this.lstBtnAdd = [];
+  //         this.lstFuncHRProcess = res;
+  //         for (let i = 0; i < res.length; i++) {
+  //           switch (res[i].functionID) {
+  //             case this.eContractFuncID:
+  //               this.workingProcessInfoPer.eContractFuncID.view = true;
+  //               this.workingProcessInfoPer.eContractFuncID.write = res[i].write;
+  //               this.workingProcessInfoPer.eContractFuncID.delete =
+  //                 res[i].delete;
+  //               this.workingProcessInfoPer.eContractFuncID.isPortal =
+  //                 res[i].isPortal;
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
+  //             case this.appointionFuncID:
+  //               this.workingProcessInfoPer.appointionFuncID.view = true;
+  //               this.workingProcessInfoPer.appointionFuncID.write =
+  //                 res[i].write;
+  //               this.workingProcessInfoPer.appointionFuncID.delete =
+  //                 res[i].delete;
+  //               this.workingProcessInfoPer.appointionFuncID.isPortal =
+  //                 res[i].isPortal;
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
+  //             case this.dayoffFuncID:
+  //               this.workingProcessInfoPer.dayoffFuncID.view = true;
+  //               this.workingProcessInfoPer.dayoffFuncID.write = res[i].write;
+  //               this.workingProcessInfoPer.dayoffFuncID.delete = res[i].delete;
+  //               this.workingProcessInfoPer.dayoffFuncID.isPortal =
+  //                 res[i].isPortal;
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
+  //             case this.eBusinessTravelFuncID:
+  //               this.workingProcessInfoPer.eBusinessTravelFuncID.view = true;
+  //               this.workingProcessInfoPer.eBusinessTravelFuncID.write =
+  //                 res[i].write;
+  //               this.workingProcessInfoPer.eBusinessTravelFuncID.delete =
+  //                 res[i].delete;
+  //               this.workingProcessInfoPer.eBusinessTravelFuncID.isPortal =
+  //                 res[i].isPortal;
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
+  //             case this.awardFuncID:
+  //               this.workingProcessInfoPer.awardFuncID.view = true;
+  //               this.workingProcessInfoPer.awardFuncID.write = res[i].write;
+  //               this.workingProcessInfoPer.awardFuncID.delete = res[i].delete;
+  //               this.workingProcessInfoPer.awardFuncID.isPortal =
+  //                 res[i].isPortal;
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
+  //             case this.eDisciplineFuncID:
+  //               this.workingProcessInfoPer.eDisciplineFuncID.view = true;
+  //               this.workingProcessInfoPer.eDisciplineFuncID.write =
+  //                 res[i].write;
+  //               this.workingProcessInfoPer.eDisciplineFuncID.delete =
+  //                 res[i].delete;
+  //               this.workingProcessInfoPer.eDisciplineFuncID.isPortal =
+  //                 res[i].isPortal;
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
+  //           }
+  //         }
+  //         // this.lstBtnAdd = this.hrService.sortAscByProperty(this.lstBtnAdd, 'sorting');
+  //         this.initEmpProcess();
+  //         break;
+  //       case this.knowledgeInfoFuncID:
+  //         for (let i = 0; i < res.length; i++) {
+  //           if (res[i].url == this.eDegreeURL) {
+  //             this.eDegreeFuncID = res[i].functionID;
+  //             this.eDegreeFunc = res[i];
+  //             if (!this.eDegreeFormModel) {
+  //               this.hrService.getFormModel(this.eDegreeFuncID).then((res) => {
+  //                 this.eDegreeFormModel = res;
+  //               });
+  //             }
+  //           } else if (res[i].url == this.eCertificateURL) {
+  //             this.eCertificateFuncID = res[i].functionID;
+  //             this.eCertificateFunc = res[i];
+  //             if (!this.eCertificateFormModel) {
+  //               this.hrService
+  //                 .getFormModel(this.eCertificateFuncID)
+  //                 .then((res) => {
+  //                   this.eCertificateFormModel = res;
+  //                 });
+  //             }
+  //           } else if (res[i].url == this.eSkillURL) {
+  //             this.eSkillFuncID = res[i].functionID;
+  //             this.eSkillFunc = res[i];
+  //             if (!this.eSkillFormmodel) {
+  //               this.hrService.getFormModel(this.eSkillFuncID).then((res) => {
+  //                 this.eSkillFormmodel = res;
+  //                 this.cache
+  //                   .gridViewSetup(
+  //                     this.eSkillFormmodel.formName,
+  //                     this.eSkillFormmodel.gridViewName
+  //                   )
+  //                   .subscribe((res) => {
+  //                     this.eSkillgrvSetup = res;
+  //                   });
+  //               });
+  //             }
+  //           } else if (res[i].url == this.eTrainCourseURL) {
+  //             this.eTrainCourseFuncID = res[i].functionID;
+  //             this.eTrainCourseFunc = res[i];
+  //             if (!this.eTrainCourseFormModel) {
+  //               this.hrService
+  //                 .getFormModel(this.eTrainCourseFuncID)
+  //                 .then((res) => {
+  //                   this.eTrainCourseFormModel = res;
+  //                   this.cache
+  //                     .gridViewSetup(
+  //                       this.eTrainCourseFormModel.formName,
+  //                       this.eTrainCourseFormModel.gridViewName
+  //                     )
+  //                     .subscribe((res) => {
+  //                       this.eTrainCourseGrvSetup = res;
+  //                     });
+  //                 });
+  //             }
+  //           }
+  //         }
+  //         if (!this.active[4]) {
+  //           this.active[4] = this.eDegreeFuncID;
+  //         }
+  //         this.lstBtnAdd = [];
+  //         this.lstFuncKnowledge = res;
+  //         for (let i = 0; i < res.length; i++) {
+  //           switch (res[i].functionID) {
+  //             case this.eDegreeFuncID:
+  //               this.knowledgeInfoPer.eDegreeFuncID.view = true;
+  //               this.knowledgeInfoPer.eDegreeFuncID.write = res[i].write;
+  //               this.knowledgeInfoPer.eDegreeFuncID.delete = res[i].delete;
+  //               this.knowledgeInfoPer.eDegreeFuncID.isPortal = res[i].isPortal;
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
+  //             case this.eCertificateFuncID:
+  //               this.knowledgeInfoPer.eCertificateFuncID.view = true;
+  //               this.knowledgeInfoPer.eCertificateFuncID.write = res[i].write;
+  //               this.knowledgeInfoPer.eCertificateFuncID.delete = res[i].delete;
+  //               this.knowledgeInfoPer.eCertificateFuncID.isPortal =
+  //                 res[i].isPortal;
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
+  //             case this.eSkillFuncID:
+  //               this.knowledgeInfoPer.eSkillFuncID.view = true;
+  //               this.knowledgeInfoPer.eSkillFuncID.write = res[i].write;
+  //               this.knowledgeInfoPer.eSkillFuncID.delete = res[i].delete;
+  //               this.knowledgeInfoPer.eSkillFuncID.isPortal = res[i].isPortal;
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
+  //             case this.eTrainCourseFuncID:
+  //               this.knowledgeInfoPer.eTrainCourseFuncID.view = true;
+  //               this.knowledgeInfoPer.eTrainCourseFuncID.write = res[i].write;
+  //               this.knowledgeInfoPer.eTrainCourseFuncID.delete = res[i].delete;
+  //               this.knowledgeInfoPer.eTrainCourseFuncID.isPortal =
+  //                 res[i].isPortal;
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
+  //           }
+  //         }
+  //         this.initEmpKnowledge();
+  //         break;
+  //       case this.healthInfoFuncID:
+  //         for (let i = 0; i < res.length; i++) {
+  //           if (res[i].url == this.eAccidentsURL) {
+  //             this.eAccidentsFuncID = res[i].functionID;
+  //             this.eAccidentsFunc = res[i];
+  //             if (!this.eAccidentsFormModel) {
+  //               this.hrService
+  //                 .getFormModel(this.eAccidentsFuncID)
+  //                 .then((res) => {
+  //                   this.eAccidentsFormModel = res;
+  //                   this.cache
+  //                     .gridViewSetup(
+  //                       this.eAccidentsFormModel.formName,
+  //                       this.eAccidentsFormModel.gridViewName
+  //                     )
+  //                     .subscribe((res) => {
+  //                       this.eAccidentsGrvSetup = res;
+  //                     });
+  //                 });
+  //             }
+  //           } else if (res[i].url == this.eDiseasesURL) {
+  //             this.eDiseasesFuncID = res[i].functionID;
+  //             this.eDiseasesFunc = res[i];
+  //             if (!this.eDiseasesFormModel) {
+  //               this.hrService
+  //                 .getFormModel(this.eDiseasesFuncID)
+  //                 .then((res) => {
+  //                   this.eDiseasesFormModel = res;
+  //                   this.cache
+  //                     .gridViewSetup(
+  //                       this.eDiseasesFormModel.formName,
+  //                       this.eDiseasesFormModel.gridViewName
+  //                     )
+  //                     .subscribe((res) => {
+  //                       this.eDiseasesGrvSetup = res;
+  //                     });
+  //                 });
+  //             }
+  //           } else if (res[i].url == this.eHealthURL) {
+  //             this.eHealthFuncID = res[i].functionID;
+  //             this.eHealthFunc = res[i];
+  //             if (!this.eHealthFormModel) {
+  //               this.hrService.getFormModel(this.eHealthFuncID).then((res) => {
+  //                 this.eHealthFormModel = res;
+  //               });
+  //             }
+  //           } else if (res[i].url == this.eVaccinesURL) {
+  //             this.eVaccinesFuncID = res[i].functionID;
+  //             this.eVaccinesFunc = res[i];
+  //             if (!this.eVaccineFormModel) {
+  //               this.hrService
+  //                 .getFormModel(this.eVaccinesFuncID)
+  //                 .then((res) => {
+  //                   this.eVaccineFormModel = res;
+  //                   this.cache
+  //                     .gridViewSetup(
+  //                       this.eVaccineFormModel.formName,
+  //                       this.eVaccineFormModel.gridViewName
+  //                     )
+  //                     .subscribe((res) => {
+  //                       this.eVaccineGrvSetup = res;
+  //                       let dataRequest = new DataRequest();
+  //                       dataRequest.comboboxName =
+  //                         res.VaccineTypeID.referedValue;
+  //                       dataRequest.pageLoading = false;
 
-                        this.hrService
-                          .loadDataCbx('HR', dataRequest)
-                          .subscribe((data) => {
-                            this.VaccineColorValArr = JSON.parse(data[0]);
-                          });
-                      });
-                  });
-              }
-            }
-          }
-          if (!this.active[5]) {
-            this.active[5] = this.eAccidentsFuncID;
-          }
-          this.lstBtnAdd = [];
-          this.lstFuncHealth = res;
-          for (let i = 0; i < res.length; i++) {
-            switch (res[i].functionID) {
-              case this.eHealthFuncID:
-                this.healthInfoPer.eHealthFuncID.view = true;
-                this.healthInfoPer.eHealthFuncID.write = res[i].write;
-                this.healthInfoPer.eHealthFuncID.delete = res[i].delete;
-                this.healthInfoPer.eHealthFuncID.isPortal = res[i].isPortal;
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
-              case this.eDiseasesFuncID:
-                this.healthInfoPer.eDiseasesFuncID.view = true;
-                this.healthInfoPer.eDiseasesFuncID.write = res[i].write;
-                this.healthInfoPer.eDiseasesFuncID.delete = res[i].delete;
-                this.healthInfoPer.eDiseasesFuncID.isPortal = res[i].isPortal;
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
-              case this.eVaccinesFuncID:
-                this.healthInfoPer.eVaccinesFuncID.view = true;
-                this.healthInfoPer.eVaccinesFuncID.write = res[i].write;
-                this.healthInfoPer.eVaccinesFuncID.delete = res[i].delete;
-                this.healthInfoPer.eVaccinesFuncID.isPortal = res[i].isPortal;
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
-              case this.eAccidentsFuncID:
-                this.healthInfoPer.eAccidentsFuncID.view = true;
-                this.healthInfoPer.eAccidentsFuncID.write = res[i].write;
-                this.healthInfoPer.eAccidentsFuncID.delete = res[i].delete;
-                this.healthInfoPer.eAccidentsFuncID.isPortal = res[i].isPortal;
-                if (
-                  res[i].write == true &&
-                  (this.fromWS == false || res[i].isPortal == false)
-                ) {
-                  this.lstBtnAdd.push(res[i]);
-                }
-                break;
-            }
-          }
-          this.initEmpHealth();
-          break;
-        case this.quitJobInfoFuncID:
-          this.lstFuncQuitJob = res;
-          for (let i = 0; i < res.length; i++) {
-            if (res[i].url == this.eQuitJobURL) {
-              this.eQuitJobFuncID = res[i].functionID;
-              this.eQuitJobFunc = res[i];
-              if (!this.eQuitJobFormModel) {
-                this.hrService
-                  .getFormModel(this.quitJobInfoFuncID)
-                  .then((res) => {
-                    this.eQuitJobFormModel = res;
-                  });
-              }
-            }
-          }
-          if (!this.active[6]) {
-            this.active[6] = this.eQuitJobFuncID;
-          }
-          for (let i = 0; i < res.length; i++) {
-            switch (res[i].functionID) {
-              case this.eQuitJobFuncID:
-                this.quitjobInfoPer.eQuitJobFuncID.view = true;
-                this.quitjobInfoPer.eQuitJobFuncID.write = res[i].write;
-                this.quitjobInfoPer.eQuitJobFuncID.delete = res[i].delete;
-                break;
-            }
-          }
-          this.lstBtnAdd = null;
-          break;
-      }
-    });
-  }
+  //                       this.hrService
+  //                         .loadDataCbx('HR', dataRequest)
+  //                         .subscribe((data) => {
+  //                           this.VaccineColorValArr = JSON.parse(data[0]);
+  //                         });
+  //                     });
+  //                 });
+  //             }
+  //           }
+  //         }
+  //         if (!this.active[5]) {
+  //           this.active[5] = this.eAccidentsFuncID;
+  //         }
+  //         this.lstBtnAdd = [];
+  //         this.lstFuncHealth = res;
+  //         for (let i = 0; i < res.length; i++) {
+  //           switch (res[i].functionID) {
+  //             case this.eHealthFuncID:
+  //               this.healthInfoPer.eHealthFuncID.view = true;
+  //               this.healthInfoPer.eHealthFuncID.write = res[i].write;
+  //               this.healthInfoPer.eHealthFuncID.delete = res[i].delete;
+  //               this.healthInfoPer.eHealthFuncID.isPortal = res[i].isPortal;
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
+  //             case this.eDiseasesFuncID:
+  //               this.healthInfoPer.eDiseasesFuncID.view = true;
+  //               this.healthInfoPer.eDiseasesFuncID.write = res[i].write;
+  //               this.healthInfoPer.eDiseasesFuncID.delete = res[i].delete;
+  //               this.healthInfoPer.eDiseasesFuncID.isPortal = res[i].isPortal;
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
+  //             case this.eVaccinesFuncID:
+  //               this.healthInfoPer.eVaccinesFuncID.view = true;
+  //               this.healthInfoPer.eVaccinesFuncID.write = res[i].write;
+  //               this.healthInfoPer.eVaccinesFuncID.delete = res[i].delete;
+  //               this.healthInfoPer.eVaccinesFuncID.isPortal = res[i].isPortal;
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
+  //             case this.eAccidentsFuncID:
+  //               this.healthInfoPer.eAccidentsFuncID.view = true;
+  //               this.healthInfoPer.eAccidentsFuncID.write = res[i].write;
+  //               this.healthInfoPer.eAccidentsFuncID.delete = res[i].delete;
+  //               this.healthInfoPer.eAccidentsFuncID.isPortal = res[i].isPortal;
+  //               if (
+  //                 res[i].write == true &&
+  //                 (this.fromWS == false || res[i].isPortal == false)
+  //               ) {
+  //                 this.lstBtnAdd.push(res[i]);
+  //               }
+  //               break;
+  //           }
+  //         }
+  //         this.initEmpHealth();
+  //         break;
+  //       case this.quitJobInfoFuncID:
+  //         this.lstFuncQuitJob = res;
+  //         for (let i = 0; i < res.length; i++) {
+  //           if (res[i].url == this.eQuitJobURL) {
+  //             this.eQuitJobFuncID = res[i].functionID;
+  //             this.eQuitJobFunc = res[i];
+  //             if (!this.eQuitJobFormModel) {
+  //               this.hrService
+  //                 .getFormModel(this.quitJobInfoFuncID)
+  //                 .then((res) => {
+  //                   this.eQuitJobFormModel = res;
+  //                 });
+  //             }
+  //           }
+  //         }
+  //         if (!this.active[6]) {
+  //           this.active[6] = this.eQuitJobFuncID;
+  //         }
+  //         for (let i = 0; i < res.length; i++) {
+  //           switch (res[i].functionID) {
+  //             case this.eQuitJobFuncID:
+  //               this.quitjobInfoPer.eQuitJobFuncID.view = true;
+  //               this.quitjobInfoPer.eQuitJobFuncID.write = res[i].write;
+  //               this.quitjobInfoPer.eQuitJobFuncID.delete = res[i].delete;
+  //               break;
+  //           }
+  //         }
+  //         this.lstBtnAdd = null;
+  //         break;
+  //     }
+  //   });
+  // }
 
   //form động evaccine
   editEmployeeQuitJobInfo(actionHeaderText) {
@@ -7165,6 +7166,289 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     }
   }
 
+  // Fake my data
+
+  lstTabFake: any[] = [
+    {
+      functionID: 1,
+      customName: "Dashboard",
+      largeIcon: "icon-columns_gap" // Fake icon class
+    },
+    {
+      functionID: 2,
+      customName: "Thông tin cá nhân",
+      largeIcon: "icon-assignment_ind" // Fake icon class
+    },
+    {
+      functionID: 3,
+      customName: "Quá trình làm việc",
+      largeIcon: "icon-timeline" // Fake icon class
+    },
+    {
+      functionID: 4,
+      customName: "Khen thưởng kỷ luật",
+      largeIcon: "icon-elevator" // Fake icon class
+    },
+    {
+      functionID: 5,
+      customName: "Thông tin phúc lợi",
+      largeIcon: "icon-redeem" // Fake icon class
+    },
+    
+    {
+      functionID: 6,
+      customName: "Thông tin pháp lý",
+      largeIcon: "icon-gavel" // Fake icon class
+    },
+    {
+      functionID: 7,
+      customName: "Thông tin kiến thức",
+      largeIcon: "icon-school" // Fake icon class
+    }
+    
+  ];
+
+  crrFuncTabNum: number = 1;
+  heightList = '50';
+
+  clickTab(item: any) {
+    console.log(item)
+    this.crrFuncTabNum = item.functionID;
+    this.detectorRef.detectChanges();
+
+  }
+
+
+  lstFuncCurriculumVitaeFake: any[]= [
+    {
+      functionID: 1,
+      customName: "Lý lịch cá nhân",
+      largeIcon: "icon-assignment_ind",
+      isActive: true
+    },
+    {
+      functionID: 2,
+      customName: "Liên hệ",
+      largeIcon: "icon-phone",
+      isActive: false
+
+    },
+    {
+      functionID: 3,
+      customName: "Công việc",
+      largeIcon: "icon-content_paste",
+      isActive: false
+
+    },
+    {
+      functionID: 4,
+      customName: "Bộ phận - chức danh",
+      largeIcon: "icon-content_paste",
+      isActive: false
+
+    },
+    {
+      functionID: 5,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    }
+  ]
+
+  lstrewardCatalog: any[]= [
+    {
+      functionID: 1,
+      customName: "Khen thưởng",
+      largeIcon: "icon-sentiment_satisfied" // Fake icon class
+    },
+    {
+      functionID: 2,
+      customName: "Kỷ luật",
+      largeIcon: "icon-sentiment_dissatisfied" // Fake icon class
+    }
+  ]
+
+  lstFuncBenefits: any[]= [
+    {
+      functionID: 1,
+      customName: "Nhóm lương",
+      largeIcon: "icon-attach_money" // Fake icon class
+    },
+    {
+      functionID: 2,
+      customName: "Lương cơ bản",
+      largeIcon: "icon-attach_money" // Fake icon class
+    },
+    {
+      functionID: 3,
+      customName: "Lương chức danh",
+      largeIcon: "icon-content_paste" // Fake icon class
+    },
+    {
+      functionID: 4,
+      customName: "Phụ cấp",
+      largeIcon: "icon-i-heart" // Fake icon class
+    },
+    {
+      functionID: 5,
+      customName: "Thu nhập khác",
+      largeIcon: "icon-attach_money" // Fake icon class
+    },
+    {
+      functionID: 6,
+      customName: "Khấu trừ khác",
+      largeIcon: "icon-attach_money" // Fake icon class
+    }
+  ]
+
+  lstFuncLegalFakeInfo: any[]= [
+    {
+      functionID: 1,
+      customName: "CMND - Mã số thuê",
+      largeIcon: "icon-assignment_ind" // Fake icon class
+    },
+    {
+      functionID: 2,
+      customName: "Bảo hiểm xã hội",
+      largeIcon: "icon-phone" // Fake icon class
+    },
+    {
+      functionID: 3,
+      customName: "Bảo hiểm y tế",
+      largeIcon: "icon-content_paste" // Fake icon class
+    },
+    {
+      functionID: 4,
+      customName: "Bảo hiểm thất nghiệp",
+      largeIcon: "icon-assignment_ind" // Fake icon class
+    },
+    {
+      functionID: 5,
+      customName: "Tài khoản cá nhân",
+      largeIcon: "icon-assignment_ind" // Fake icon class
+    },
+    {
+      functionID: 6,
+      customName: "Hợp đồng lao động",
+      largeIcon: "icon-assignment" // Fake icon class
+    }
+  ]
+
+  lstFuncJobFakeInfo: any[]= [
+    {
+      functionID: 1,
+      customName: "Bổ nhiệm - điều khiển",
+      largeIcon: "icon-compare_arrows" // Fake icon class
+    },
+    {
+      functionID: 2,
+      customName: "Nghỉ phép",
+      largeIcon: "icon-phone" // Fake icon class
+    }
+  ]
+
+  lstFuncEducationInfo: any[]= [
+    {
+      functionID: 1,
+      customName: "Chuyên nghành đào tạo",
+      largeIcon: "icon-school" // Fake icon class
+    },
+    {
+      functionID: 2,
+      customName: "Chứng chỉ",
+      largeIcon: "icon-book" // Fake icon class
+    },
+    {
+      functionID: 3,
+      customName: "Đào tạo",
+      largeIcon: "icon-local_library" // Fake icon class
+    },
+    {
+      functionID: 4,
+      customName: "Đánh giá",
+      largeIcon: "icon-edit" // Fake icon class
+    }
+  ]
+
+
+  // isClick: boolean = false;
+  // active = [null, null, null, null, null, null, null];
+
+
+
+  navChange(evt: any, index: number = -1, functionID:number = -1, btnClick:any) {
+    let containerList = document.querySelectorAll('.pw-content');
+    let lastDivList = document.querySelectorAll('.div_final');
+    console.log(containerList)
+    let lastDiv = lastDivList[index];
+    let container = containerList[index];
+    console.log('container', container )
+    let containerHeight = (container as any).offsetHeight;
+    let contentHeight = 0;
+    for (let i = 0; i < container.children.length; i++) {
+      contentHeight += (container.children[i] as any).offsetHeight;
+    }
+
+    if (!evt) return;
+    let element = document.getElementById(evt);
+    console.log(element)
+    if (!element) return;
+    let distanceToBottom = contentHeight - element.offsetTop;
+
+    if (distanceToBottom < containerHeight) {
+      (lastDiv as any).style.width = '200px';
+      (lastDiv as any).style.height = `${
+        containerHeight - distanceToBottom + 50
+      }px`;
+    }
+
+    if (index > -1) {
+      this.active[functionID] = evt;
+      console.log(this.active)
+      this.detectorRef.detectChanges();
+    }
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'nearest',
+    });
+
+    console.log('qua')
+    this.isClick = true;
+    this.detectorRef.detectChanges();
+    setTimeout(() => {
+      this.isClick = false;
+      return;
+    }, 500);
+  }
+
+  onSectionChange(data: any, index: number = -1) {
+    if (index > -1 && this.isClick == false) {
+      this.active[index] = data;
+      console.log(this.active)
+      this.detectorRef.detectChanges();
+    }
+  }
+
+
+  @ViewChild('navList') navList: ElementRef | undefined;
+  showLeftButton: boolean = true;
+  showRightButton: boolean = false;
+
+  scroll(direction: string): void {
+    const navListWidth = this.navList?.nativeElement.scrollWidth;
+    const containerWidth = this.navList?.nativeElement.offsetWidth;
+    const scrollPosition = this.navList?.nativeElement.scrollLeft;
+
+    if (direction === 'left') {
+      this.navList?.nativeElement.scrollTo({ left: scrollPosition - containerWidth, behavior: 'smooth' });
+    } else {
+      this.navList?.nativeElement.scrollTo({ left: scrollPosition + containerWidth, behavior: 'smooth' });
+    }
+  }
+
+
   listField: any = [
     {
       id: 'Employeeinfo',
@@ -7271,6 +7555,6 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     let options = new SidebarModel();
 
     options.Width = 'Auto';
-    this.callfunc.openSide(MyTemComponent, options);
+    this.callfunc.openSide(DialogReviewLeaveApproveComponent, options);
   }
 }
