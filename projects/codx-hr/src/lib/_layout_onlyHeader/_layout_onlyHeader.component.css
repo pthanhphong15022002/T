@@ -1,0 +1,12 @@
+:host::ng-deep codx-page-title.page-title{
+  margin: 0 !important;
+}
+
+
+::ng-deep codx-page-title.page-title{
+  margin: 0 !important;
+}
+
+:host codx-page-title.page-title{
+  margin: 0 !important;
+}
