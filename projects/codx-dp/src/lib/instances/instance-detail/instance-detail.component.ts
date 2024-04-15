@@ -33,6 +33,7 @@ import { StagesDetailComponent } from './stages-detail/stages-detail.component';
 import { ActivatedRoute } from '@angular/router';
 import { CodxTabsComponent } from 'projects/codx-share/src/lib/components/codx-tabs/codx-tabs.component';
 import { CodxViewTaskComponent } from '../../share-crm/codx-step/codx-view-task/codx-view-task.component';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -83,7 +84,7 @@ export class InstanceDetailComponent implements OnInit {
   @Output() move = new EventEmitter<any>();
 
   id: any;
-  isView = false;
+  isViewStep = false;
   totalInSteps: any;
   tmpDataSteps: DP_Instances_Steps;
   currentNameStep: Number;
@@ -120,7 +121,7 @@ export class InstanceDetailComponent implements OnInit {
   titleDefault = '';
 
   isHiddenReason: boolean = false;
-
+  isUpdateTask = false;
   instanceId: string;
   proccesNameMove: string;
   onwer: string;
@@ -345,7 +346,13 @@ export class InstanceDetailComponent implements OnInit {
       this.loadChangeData();
       this.listRecIDAddNew = [];
       this.isChangeData = false;
-      this.isView = ["3","4","5","6"].includes(instance?.status) || instance?.closed || instance?.approveStatus == "3";
+      this.isViewStep = ["3","4","5","6"].includes(instance?.status) || instance?.closed || instance?.approveStatus == "3";
+      const res = await firstValueFrom(this.api.exec<any>('DP','ProcessesBusiness','GetConfigurationProcessAsync',instance?.processID));
+      if(res && res[0] && res[0]?.allowTask){
+        this.isUpdateTask = (res[0]?.allowTask && instance?.approveStatus != '3' && (['3', '4', '5', '6',].includes(instance?.status) || 
+        instance.closed)) ;
+        this.changeDetec.markForCheck();
+      }
     }
   }
 

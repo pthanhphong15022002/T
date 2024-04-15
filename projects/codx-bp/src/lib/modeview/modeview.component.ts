@@ -143,6 +143,7 @@ export class ModeviewComponent implements OnInit {
       {
         if(elm.fieldType == "Table")
         {
+          elm.tableFormat = (typeof elm.tableFormat == 'string' && elm.tableFormat) ? JSON.parse(elm.tableFormat) :  elm.tableFormat;
           elm.dataFormat = (typeof elm.dataFormat == 'string' && elm.dataFormat) ? JSON.parse(elm.dataFormat) :  elm.dataFormat;
         }
         else if(elm.fieldType == "Attachment")
@@ -151,7 +152,7 @@ export class ModeviewComponent implements OnInit {
           this.formatAttachment(elm)
         }
 
-        elm.validateControl = (typeof elm.validateControl == 'string' && elm.validateControl) ? JSON.parse(elm.validateControl) :  elm.validateControl;
+        elm.validateControl = (typeof elm.validateControl == 'string' && elm.validateControl && elm.dataType != "String") ? JSON.parse(elm.validateControl) :  elm.validateControl;
         elm.text = vlls[indexs].text;
         elm.icon = vlls[indexs].icon;
         elm.textColor = vlls[indexs].textColor;

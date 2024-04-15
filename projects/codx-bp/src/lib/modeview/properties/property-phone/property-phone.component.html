@@ -19,6 +19,10 @@
             <codx-input type="switch" [disabled]="data?.refField" [crrValue]="data.isRequired" field="isRequired" label="Bắt buộc" (valueChange)="changeValue($event)" class="mt-2"></codx-input>
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Bắt buộc" class="fw-bold ms-2"></codx-label>
         </div>
+        <div class="d-flex align-items-center mt-1">
+            <codx-input type="switch" [crrValue]="data?.validateControl == 'AP'" [disabled]="data?.refField" field="validateControl" label="Bắt buộc"  (valueChange)="changeValueApprovalValidate($event)" class="mt-2"></codx-input>
+            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsValidateControl'" default="Xét duyệt" class="fw-bold ms-2"></codx-label>
+        </div>
         <div class="d-flex align-items-center justify-content-between mt-1">
             <div class="d-flex align-items-center">
                 <codx-input type="switch" [disabled]="data?.refField" [crrValue]="data?.visibleControl?.visibleControl" field="visibleControl" label="Điều kiện hiện thị"  (valueChange)="changeValueVisibleControl($event)" class="mt-2"></codx-input>

@@ -30,7 +30,7 @@
     </div>
     <div class="right d-flex align-items-center">
       <div
-        *ngIf="!isView"
+        *ngIf="!isViewStep"
         (click)="addTask()"
         class="d-flex align-items-center me-3 cursor-pointer"
         ngbTooltip="Thêm công việc tại giai đoạn hiện tại"
@@ -173,7 +173,8 @@
         [isChangeOwner]="isChangeOwner"
         [ownerInstance]="owner"
         [taskAdd]="setTask(instanceStep?.recID)"
-        [isView]="isView"
+        [isView]="isViewStep"
+        [isUpdateTask]="isUpdateTask"
         [entityName]="entityName"
         [recIDParent]="dataCM?.recID"
         [applyFor]="applyFor"
