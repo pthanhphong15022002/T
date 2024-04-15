@@ -11,6 +11,7 @@ import moment from 'moment';
 })
 export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild("gridHistory") gridHistory: CodxGridviewV2Component;
+  @ViewChild("gridPrice") gridPrice: CodxGridviewV2Component;
   @Input() itemSelected: any;
   @Input() hideMF: any = false;
   @Input() formModel: FormModel;
@@ -48,7 +49,7 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
   //Bảng giá => Đoi Khanh thiết lập
   formModelPrice: FormModel = {
     formName: 'CMWaterClockCost',
-    gridViewName: 'CMWaterClockCost',
+    gridViewName: 'grvCMWaterClockCost',
     entityName: 'AM_Assets',
     funcID: 'CMS0130'
   };
@@ -78,6 +79,11 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
       if (this.gridHistory) {
         setTimeout(() => {
           this.gridHistory.refresh();
+        }, 100);
+      }
+      if (this.gridPrice) {
+        setTimeout(() => {
+          this.gridPrice.refresh();
         }, 100);
       }
       this.idCrr = this.itemSelected.assetID
@@ -124,8 +130,11 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
     }
   }
 
-  loadGridHis(data) {
+  addGridHis(data) {
     if (this.gridHistory) this.gridHistory.addRow(data, 0, true);
+  }
+  addGridCost(data) {
+    if (this.gridPrice) this.gridPrice.addRow(data, 0, true);
   }
   clickMFHis(e, data) {
     if (!data) return;
@@ -180,7 +189,12 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
         );
         dialogHis.closed.subscribe(res => {
           if (res && res.event) {
-            this.loadGridHis(res.event);
+            //
+            if (res.event['assetCategory'] == "WaterClock" && this.gridHistory)
+              this.gridHistory.updateRow(this.gridHistory.rowIndex, res.event);
+            if (res.event['assetCategory'] == "WaterClockCost" && this.gridPrice)
+              this.gridPrice.updateRow(this.gridPrice.rowIndex, res.event);
+            //this.addGridHis(res.event);
           }
         })
       });
@@ -204,7 +218,7 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
           PopupAddHistoryWaterClockComponent,
           null,
           600,
-          600,
+          750,
           '',
           obj,
           "",
