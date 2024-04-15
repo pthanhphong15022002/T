@@ -1,16 +1,16 @@
-<codx-views #view idField="employeeID" [views]="views" [autoLoad]="false">
+<codx-views #view idField="employeeID" [views]="views" [autoLoad]="true">
 </codx-views>
 <ng-template #panelContent>
   <div class="page-pw h-employee pb-0">
     <div class="page-profile">
       <div class="d-flex" style="margin-top: 20px">
         <!-- Side Bar -->
-        <div class="min-w-400px me-4">
+        <div class="me-4" style="min-width: 345px !important">
           <!-- Card Info -->
-          <div class="d-flex flex-column text-center">
+          <div class="d-flex flex-column">
             <div class="info-card-header d-flex align-items-center">
               <!-- Image -->
-              <div class="d-flex justify-content-center mx-5" style="height: 77px">
+              <div class="d-flex justify-content-center mx-5 text-center" style="height: 77px">
                 <div class="position-relative" style="top: -15px">
                   <codx-img [funcId]="funcID" [objectId]="infoPersonal?.employeeID"
                     [objectName]="infoPersonal?.employeeName" [objectType]="'HR_Employees'" [imageType]="'circle'"
@@ -237,17 +237,18 @@
               </div>
               <!-- End Image -->
               <!-- Content -->
-              <div class="mx-2">
-                <div class="d-flex flex-center">
-                  <div class="fs-7 d-flex align-items-center fw-boldest">
+              <div class="mx-2" style="max-width: 170px">
+                <div class="d-flex flex-wrap">
+                  <div class="fs-7 d-flex flex-wrap align-items-center fw-boldest">
                     <span class="fw-bold" placement="bottom" [title]="eInfoHeaderText?.EmployeeName"
                       style="color: white">
                       {{ infoPersonal?.employeeName }}</span>
-                    <span class="icon-16 icon-qr_code_scanner mx-1"></span>
-                    <span style="margin-top: 2px; color: #FF001B" #id placement="bottom"
-                      [title]="eInfoHeaderText?.EmployeeID">
-                      {{ employeeID}}</span>
-
+                      <div class="d-flex">
+                        <span class="icon-16 icon-qr_code_scanner mx-1"></span>
+                        <span style="margin-top: 2px; color: #FF001B" #id placement="bottom"
+                          [title]="eInfoHeaderText?.EmployeeID">
+                          {{ employeeID}}</span>
+                      </div>
                   </div>
                 </div>
                 <div placement="bottom" [title]="eInfoHeaderText?.PositionID" class="d-flex" style="color: #F3F3F3"
@@ -264,6 +265,9 @@
               </div>
               <!-- End Content -->
               <!-- QR -->
+              <div>
+                <img src="..\src\assets\img\feedback\gift 1.png">
+              </div>
               <!-- End QR -->
             </div>
 
@@ -272,20 +276,26 @@
 
           <!-- Tree View -->
 
-          <div class="bg-white border-bottom d-flex flex-column mt-5 pb-3 ps-4 pt-3 rounded" *ngIf="infoPersonal && LoadedEInfo == true">
-            <div class="d-flex flex-wrap mb-1">
-              <div style="min-height: 300px">
+          <div class="bg-white border-bottom d-flex flex-column mt-5 rounded" *ngIf="infoPersonal && LoadedEInfo == true">
+            <div class="d-flex flex-column flex-wrap justify-content-center mb-1">
+              <div class="w-100" style="border-bottom: 1px lightgray solid">
                 <lib-sidebar-treeview></lib-sidebar-treeview>
               </div>
-              <div>
-                Thu gọn
-              </div>
+              <div style="text-align: center;">
+                <button class="border-0 bg-white pt-3" style="font-size: 13px; display: inline-flex; align-items: center; color: #005DC7;">
+                    <i class="icon-i-chevron-double-down" style="margin-right: 5px; color: #005DC7;"></i>
+                    Mở rộng
+                </button>
+            </div>
             </div>
           </div>
           
           <!-- End TreeView -->
           <!-- Employee -->
-          <div class="user-left border bg-white">
+          <div class="bg-white border mt-5 user-left">
+            <div>
+              List
+            </div>
             <div class="user-menu scroll-y w-100 border-top">
               
               <ul class="nav nav-tabs nav-pills flex-column border-0 p-3 pb-0 w-100">

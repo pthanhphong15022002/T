@@ -1,4 +1,4 @@
-<codx-views #view
+<!-- <codx-views #view
     [views]="views"
     idField="recID"
     [service]="'HR'"
@@ -7,9 +7,9 @@
     [autoSearch]="false"
     (onActions)="onAction($event)"
     (searchChanged)="searchChanged($event)">
-</codx-views>
+</codx-views> -->
 
-<ng-template #tmpLeft>
+<!-- <ng-template #tmpLeft>
     <codx-listview
         class="h-100"
         [itemTemplate]="itemTemplateTree"
@@ -27,8 +27,7 @@
         [selectFirst]="true"
         (onSelectionChanged)="onSelectionChange($event)">
     </codx-listview>
-</ng-template> 
-
+</ng-template>  -->
 <codx-listview #listView
     entityName="HR_OrganizationUnits"
     gridViewName="grvOrganizationUnits"
@@ -37,6 +36,13 @@
     [parentIdField]="'ParentID'"
     [idField]="'orgUnitID'"
     [itemTemplate]="itemTemplateTree"
+    type="treeView"
+    textField="orgUnitName"
+    [enableCheck]="false"
+    [data]="null"
+    [selectFirst]="false"
+    (onSelectionChanged)="onSelectionChange($event)"
+    [dataService]="dtServiceOrgUnit"
     >
 </codx-listview> 
 
