@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChange
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AuthStore, DataRequest, FormModel, NotificationsService, ViewsComponent } from 'codx-core';
-import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 
 

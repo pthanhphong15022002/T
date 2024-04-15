@@ -24,7 +24,7 @@ import {
 import { DataManager } from '@syncfusion/ej2-data';
 import { ApiHttpService, FormModel } from 'codx-core';
 import { map, Observable } from 'rxjs';
-import { CodxHrService } from '../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 @Component({
   selector: 'lib-organize-detail',
   templateUrl: './organize-detail.component.html',

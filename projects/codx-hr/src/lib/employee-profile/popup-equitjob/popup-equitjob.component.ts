@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { CodxFormComponent, DataRequest, DialogData, DialogRef, FormModel, LayoutAddComponent, NotificationsService, UIComponent } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({

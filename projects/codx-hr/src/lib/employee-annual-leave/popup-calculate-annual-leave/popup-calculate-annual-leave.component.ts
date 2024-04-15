@@ -1,8 +1,6 @@
-import { take, filter, concat } from 'rxjs';
 import { ChangeDetectorRef, Component, Input, OnInit, Optional, TemplateRef, ViewChild, ViewEncapsulation, OnDestroy } from '@angular/core';
-import { ApiHttpService, NotificationsService, DialogData, DialogRef, AuthStore, CodxFormComponent } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
-import { DateTime } from '@syncfusion/ej2-angular-charts';
+import { NotificationsService, DialogData, DialogRef, AuthStore, CodxFormComponent } from 'codx-core';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 
 @Component({
   selector: 'lib-popup-calculate-annual-leave',

@@ -25,11 +25,8 @@ import {
   RequestOption,
   ApiHttpService,
 } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
-import {
-  HR_Employees_Extend,
-  HR_Validator,
-} from '../../model/HR_Employees.model';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
+
 
 @Component({
   selector: 'lib-popup-add-new-hr',

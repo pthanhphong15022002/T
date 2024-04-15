@@ -6,7 +6,7 @@ import {
   Optional,
   ViewChild,
 } from '@angular/core';
-import { CodxHrService } from '../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { Injector, AfterViewInit } from '@angular/core';
 import {
   CodxFormComponent,

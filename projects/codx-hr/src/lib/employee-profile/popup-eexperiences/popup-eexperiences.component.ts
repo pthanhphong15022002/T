@@ -1,4 +1,4 @@
-import { CodxHrService } from './../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { Injector, ChangeDetectorRef } from '@angular/core';
 import { CalendarView } from '@syncfusion/ej2-calendars';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';

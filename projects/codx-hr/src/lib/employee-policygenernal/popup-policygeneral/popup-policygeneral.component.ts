@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild, inject } from '@angular/core';
 import { ApiHttpService, CallFuncService, CodxFormComponent, DialogData, DialogRef, NotificationsService, UIComponent } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 @Component({
   selector: 'lib-popup-policygeneral',
   templateUrl: './popup-policygeneral.component.html',

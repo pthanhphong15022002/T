@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LayoutModel } from '@shared/models/layout.model';
 import { ApiHttpService, CodxService, TenantStore, ViewModel, ViewsComponent } from 'codx-core';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { CodxHrService } from '../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 
 @Component({
   selector: 'lib-hrparameters',

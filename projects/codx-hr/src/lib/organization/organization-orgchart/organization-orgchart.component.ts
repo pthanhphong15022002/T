@@ -53,10 +53,11 @@ import {
   VerticalAlignmentType,
   Visibility,
 } from 'ngx-basic-primitives';
-import { CodxHrService } from '../../codx-hr.service';
-import { DataVll } from '../../model/HR_OrgChart.model';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
+
 import { PopupAddOrganizationComponent } from '../popup-add-organization/popup-add-organization.component';
 import { LCA, Tree } from 'basicprimitives';
+import { DataVll } from '../../codx-hr-common/model/HR_OrgChart.model';
 
 @Component({
   selector: 'hr-organization-orgchart',

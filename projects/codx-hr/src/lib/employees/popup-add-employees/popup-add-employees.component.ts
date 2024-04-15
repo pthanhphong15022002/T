@@ -17,7 +17,7 @@ import {
   Util,
 } from 'codx-core';
 import { CodxAdService } from 'projects/codx-ad/src/public-api';
-import { HR_Employees } from '../../model/HR_Employees.model';
+import { HR_Employees } from '../../codx-hr-common/model/HR_Employees.model';
 
 @Component({
   selector: 'lib-popup-add-employees',

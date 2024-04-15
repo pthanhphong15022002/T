@@ -6,7 +6,6 @@ import {
   Optional,
   ViewChild,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import {
   CodxFormComponent,
   DialogData,
@@ -15,7 +14,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 

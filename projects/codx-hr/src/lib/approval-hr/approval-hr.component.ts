@@ -19,7 +19,7 @@ import {
   formatDtDis,
 } from 'projects/codx-od/src/lib/function/default.function';
 import { DispatchService } from 'projects/codx-od/src/lib/services/dispatch.service';
-import { CodxHrService } from '../codx-hr.service';
+import { CodxHrService } from '../codx-hr-common/services/codx-hr.service';
 
 @Component({
   selector: 'lib-approval-hr',

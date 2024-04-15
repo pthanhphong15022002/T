@@ -21,7 +21,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { CodxHrService } from '../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { PopupSubEContractComponent } from '../popup-sub-econtract/popup-sub-econtract.component';
 
 @Component({

@@ -1,4 +1,3 @@
-import { CodxHrService } from '../../../codx-hr.service'; 
 import { Injector, ChangeDetectorRef } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
@@ -12,6 +11,7 @@ import {
 } from 'codx-core';
 import moment from 'moment';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 
 @Component({
   selector: 'lib-dialog-register-approve',

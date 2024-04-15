@@ -11,9 +11,9 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CodxHrService } from '../codx-hr.service';
 import { PopupAddOrganizationComponent } from './popup-add-organization/popup-add-organization.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 @Component({
   selector: 'lib-organization',
   templateUrl: './organization.component.html',

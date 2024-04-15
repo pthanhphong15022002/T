@@ -17,7 +17,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { ActivatedRoute } from '@angular/router';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupIncludeExcludeObjComponent } from '../popup-include-exclude-obj/popup-include-exclude-obj.component';

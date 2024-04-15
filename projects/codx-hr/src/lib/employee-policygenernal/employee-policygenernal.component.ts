@@ -1,10 +1,9 @@
 import { ChangeDetectorRef, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ButtonModel, CallFuncService, CodxService, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { CodxHrService } from '../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { ActivatedRoute } from '@angular/router';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { PopupPolicygeneralComponent } from './popup-policygeneral/popup-policygeneral.component';
 
 @Component({

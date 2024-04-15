@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { CallFuncService, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
-import { CodxHrService } from '../../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 
 @Component({
   selector: 'lib-popup-contractbenefit',

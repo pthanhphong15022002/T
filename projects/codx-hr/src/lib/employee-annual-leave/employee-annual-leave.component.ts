@@ -4,10 +4,10 @@ import { concat } from 'rxjs';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { AuthStore, ButtonModel, DialogModel, ResourceModel, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { CodxHrService } from '../codx-hr.service';
 import { PopupCalculateAnnualLeaveComponent } from './popup-calculate-annual-leave/popup-calculate-annual-leave.component';
 import { EmployeeAnnualLeaveByOrgComponent } from './employee-annual-leave-by-org/employee-annual-leave-by-org.component';
 import { PopupAnnualLeaveMonthComponent } from './popup-annual-leave-month/popup-annual-leave-month.component';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 
 @Component({
   selector: 'lib-employee-annual-leave',

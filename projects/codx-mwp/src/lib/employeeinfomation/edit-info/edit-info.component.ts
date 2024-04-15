@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
-import { HR_Employees } from 'projects/codx-hr/src/lib/model/HR_Employees.model';
 import { CodxMwpService } from '../../codx-mwp.service';
 
 @Component({
