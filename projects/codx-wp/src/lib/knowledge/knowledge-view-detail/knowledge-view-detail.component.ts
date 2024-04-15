@@ -38,7 +38,11 @@ export class KnowledgeViewDetailComponent
   private destroy$ = new Subject<void>();
 
   @ViewChild('tmpContent') tmpContent: TemplateRef<any>;
-  constructor(private injector: Injector) {
+  constructor
+  (
+    injector: Injector
+  ) 
+  {
     super(injector);
   }
 

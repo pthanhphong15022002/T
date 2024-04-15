@@ -181,10 +181,10 @@
                         [formName]="formModelHistory.formName"
                         [gridViewName]="formModelHistory.gridViewName"
                         [entityName]="formModelHistory.entityName"
-                        [service]="serviceHistory"
-                        [assemblyName]="assemblyNameHisttory"
-                        [className]="classNameHisttory"
-                        [method]="methodHisttory"
+                        [service]="serviceAM"
+                        [assemblyName]="assemblyNameAM"
+                        [className]="classNameAM"
+                        [method]="methodAM"
                         [predicates]="predicatesHis"
                         [dataValues]="itemSelected.assetID"
                         rowHeight="40"
@@ -227,6 +227,25 @@
                     style="overflow-x: hidden !important"
                   >
                     Bảng giá cấp nuoc
+                    <codx-gridview-v2
+                      #gridPrice
+                      [showEmptyRecord]="false"
+                      [autoFitColumns]="false"
+                      [formName]="formModelPrice"
+                      [templateMore]="formModelPrice"
+                      [formName]="formModelPrice.formName"
+                      [gridViewName]="formModelPrice.gridViewName"
+                      [entityName]="formModelPrice.entityName"
+                      [service]="serviceAM"
+                      [assemblyName]="assemblyNameAM"
+                      [className]="classNameAM"
+                      [method]="methodAM"
+                      [predicates]="predicatesHis"
+                      [dataValues]="itemSelected.assetID"
+                      rowHeight="40"
+                      [height]="'100%'"
+                      [autoLoad]="true"
+                    ></codx-gridview-v2>
                   </div>
                 </ng-template>
               </e-tabitem>

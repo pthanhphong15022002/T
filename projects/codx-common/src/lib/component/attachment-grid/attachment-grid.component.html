@@ -1,10 +1,10 @@
-<div class="d-flex flex-column mt-4" *ngFor="let item of data, let i = index">
+<div class="d-flex flex-column mt-4" *ngFor="let item of documentControl, let i = index">
   <div class="d-flex align-items-center justify-content-between">
     <div class="d-flex flex-column">
       <span>{{item.title}} <span class="text-danger ms-1" *ngIf="item.isRequired">(*)</span></span>
       <span class="text-gray-500">{{item.memo}}</span>
     </div>
-    <div class="position-relative cursor-pointer"><span class="rounder-attach rounded-circle" *ngIf="item?.countAttach" (click)="openFormDetail(item?.fileAttach,('attach' + dataIns.recID))">{{item.countAttach}}</span><i class="icon-attach_file" (click)="openAttach(item.recID,i)"></i></div>
+    <div class="position-relative cursor-pointer"><span class="rounder-attach rounded-circle" *ngIf="item?.countAttach" (click)="openFormDetail(item?.fileAttach,('attach' + dataIns.recID))">{{item.countAttach}}</span><i class="icon-attach_file" (click)="!data?.refField ? openAttach(item.recID,i): undefined"></i></div>
   </div>
   <div class="d-flex align-items-center justify-content-between mt-2" *ngFor="let item2 of item.files">
     <div class="d-flex align-items-center">
@@ -18,7 +18,7 @@
       </codx-thumbnail>
     </div>
     <div class="d-flex align-items-center">
-      <i class="icon-edit cursor-pointer" (click)="editFile(item2.fileID,i)"></i>
+      <i class="icon-edit cursor-pointer" (click)="!data?.refField ? editFile(item2.fileID,i): undefined"></i>
     </div>
   </div>
 </div>

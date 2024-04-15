@@ -34,11 +34,10 @@ import {
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { Subject, elementAt, firstValueFrom, forkJoin, isObservable } from 'rxjs';
-import { AddTableRowComponent } from './add-table-row/add-table-row.component';
-import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 import { environment } from 'src/environments/environment';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
+import { ProcessTableExpandComponent } from './process-table-expand/process-table-expand.component';
 
 @Component({
   selector: 'lib-add-process-default',
@@ -164,6 +163,7 @@ export class AddProcessDefaultComponent implements OnInit {
     );
     extendInfo.forEach((element) => {
       let field = element.fieldName.toLowerCase();
+
       this.gridViewSetup[field] = element;
       if (element.fieldType == 'Attachment') {
         element.documentControl =
@@ -249,7 +249,6 @@ export class AddProcessDefaultComponent implements OnInit {
             allowEdit: true,
             width: this.get_tex_width(elm2.title)
           };
-          debugger
           element.columnsGrid.push(obj);
 
           if (elm2.dataType == 'Decimal') {
@@ -924,51 +923,12 @@ export class AddProcessDefaultComponent implements OnInit {
     this.dChange.detectChanges();
   }
 
-  addRow(
-    data: any,
-    fieldName: any,
-    index = 0,
-    result: any = null,
-    hasIndexNo = false
-  ) {
-    if (!this.dataTable[fieldName.toLowerCase()])
-      this.dataTable[fieldName.toLowerCase()] = [];
-    var option = new DialogModel();
-    option.FormModel = this.formModel;
-    option.zIndex = 1000;
-    let popup = this.callFuc.openForm(
-      AddTableRowComponent,
-      '',
-      600,
-      750,
-      '',
-      { dataTable: data, result: result },
-      '',
-      option
-    );
-
-    popup.closed.subscribe((res) => {
-      if (res?.event) {
-        if (!result) {
-          if (hasIndexNo)
-            res.event.indexNo =
-              this.dataTable[fieldName.toLowerCase()].length + 1;
-          this.dataTable[fieldName.toLowerCase()].push(res?.event);
-        } else
-          this.dataTable[fieldName.toLowerCase()][result.index] = res.event;
-        var grid = this.gridView.find((_, i) => i == index);
-        grid.refresh();
-      }
-    });
-  }
 
   gridDs: any = [];
   addRow2(index = 0) {
     var grid = this.gridView.find((_, i) => i == index);
     var data = {
-      cot_1: '',
-      cot_2: '',
-      cot_3: '',
+      delete : true
     };
     //if(!grid.dataSource) grid.dataSource = [];
     grid.addRow(data, grid.dataSource.length);
@@ -990,11 +950,11 @@ export class AddProcessDefaultComponent implements OnInit {
   clickMFGrid(e: any, data: any) {
     let funcID = e?.event?.functionID;
     switch (funcID) {
-      //Chỉnh sửa
-      case 'SYS03': {
-        this.addRow(data.dataFormat, data.fieldName, data.indexTable, e.data);
-        break;
-      }
+      // //Chỉnh sửa
+      // case 'SYS03': {
+      //   this.addRow(data.dataFormat, data.fieldName, data.indexTable, e.data);
+      //   break;
+      // }
       //Xóa
       case 'SYS02': {
         var config = new AlertConfirmInputConfig();
@@ -1233,5 +1193,27 @@ export class AddProcessDefaultComponent implements OnInit {
     var l = txt.length * 10;
     if(l < 100)  l = 100;
     return l ;
+  }
+
+  //Mở rộng table nhập liệu
+  expandTable(dt:any)
+  {
+    let data = 
+    {
+      headerText: dt?.title,
+      columnsGrid: dt?.columnsGrid,
+      dataSource: this.dataTable[dt?.fieldName],
+      editSettings: this.editSettings,
+      indexTable: dt?.indexTable,
+      hasIndexNo: dt?.tableFormat?.hasIndexNo
+    }
+    let popup = this.callFuc.openForm(ProcessTableExpandComponent,"",1200,900,"",data);
+    popup.closed.subscribe(res=>{
+      if(res?.event) {
+        this.dataTable[dt?.fieldName] = res?.event;
+        var grid = this.gridView.find((_, i) => i == dt?.indexTable);
+        grid.refresh();
+      }
+    })
   }
 }
