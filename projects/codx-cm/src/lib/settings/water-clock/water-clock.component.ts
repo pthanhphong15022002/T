@@ -67,6 +67,13 @@ export class WaterClockComponent
     entityName: 'AM_Assets',
     funcID: 'CMS0129'
   };
+  //Bảng giá 
+  formModelPrice: FormModel = {
+    formName: 'CMWaterClockCost',
+    gridViewName: 'grvCMWaterClockCost',
+    entityName: 'AM_Assets',
+    funcID: 'CMS0130'
+  };
   constructor(inject: Injector, private shareService: CodxShareService) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID']; //CMS0128
@@ -304,7 +311,7 @@ export class WaterClockComponent
         this.addWaterClockHis(e.text, data);
         break;
       case 'CMS0129_2':
-        this.updatePrice(e.text, data);
+        this.addWaterClockCost(e.text, data);
         break;
       default:
         this.shareService.defaultMoreFunc(
@@ -501,42 +508,44 @@ export class WaterClockComponent
           data['parentID'] = parent.assetID;
           data['refID'] = parent.refID;
           data['siteID'] = parent.siteID;
-          if (data['assetCategory'] == "WaterClock") {
-            this.cache.gridViewSetup(this.formModelHistory.formName, this.formModelHistory.gridViewName).subscribe(grv => {
-              let option = new DialogModel();
-              option.DataService = this.view.dataService;
-              option.FormModel = this.formModelHistory;
-              let obj = {
-                data: data,
-                action: 'add',
-                headerText: title,
-                gridViewSetup: grv,
-                parent: parent
-              };
-              let dialogHis = this.callfc.openForm(
-                PopupAddHistoryWaterClockComponent,
-                null,
-                600,
-                600,
-                '',
-                obj,
-                "",
-                option
-              );
-              dialogHis.closed.subscribe(res => {
-                if (res && res.event) {
-                  if (this.viewDetails) this.viewDetails.loadGridHis(res.event);
+
+          let isClockHis = data['assetCategory'] == "WaterClock"
+          let formmodel = isClockHis ? this.formModelHistory : this.formModelPrice
+          this.cache.gridViewSetup(formmodel.formName, formmodel.gridViewName).subscribe(grv => {
+            let option = new DialogModel();
+            option.DataService = this.view.dataService;
+            option.FormModel = formmodel;
+            let obj = {
+              data: data,
+              action: 'add',
+              headerText: title,
+              gridViewSetup: grv,
+              parent: parent
+            };
+            let height = isClockHis ? 750 : 400
+            let dialogHis = this.callfc.openForm(
+              PopupAddHistoryWaterClockComponent,
+              null,
+              600,
+              height,
+              '',
+              obj,
+              "",
+              option
+            );
+            dialogHis.closed.subscribe(res => {
+              if (res && res.event) {
+                if (this.viewDetails) {
+                  if (isClockHis) this.viewDetails.addGridHis(res.event);
+                  else this.viewDetails.addGridCost(res.event);
                 }
-              })
+              }
             })
-
-          }
-          //else if (data['assetCategory'] == "WaterClockP") {
-
-          // }
+          })
         }
       });
   }
+
   updateParent(e) {
     this.itemSelected = e;
     this.view.dataService.update(this.itemSelected).subscribe();
@@ -544,7 +553,7 @@ export class WaterClockComponent
   /**
    * update Price Water
    */
-  updatePrice(title, data) {
-
+  addWaterClockCost(title, data) {
+    this.setDefault(title, data, "CMS0130")
   }
 }

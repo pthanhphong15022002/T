@@ -11,7 +11,10 @@
 >
 </codx-form>
 <ng-template #body>
-  <div class="w-100 border border-gray-300 rounded-2 py-3 px-4 mb-4">
+  <div
+    class="w-100 border border-gray-300 rounded-2 py-3 px-4 mb-4"
+    *ngIf="dialog.formModel.formName == 'CMWaterClock'"
+  >
     <div class="mb-2 text-primary fs-6 fw-bold">
       <codx-label
         name="lblIndexLastMonth"
@@ -110,69 +113,162 @@
         >
         </codx-input>
       </div>
-      <div class="row">
-        <div class="col-6">
-          <div class="form-group">
-            <codx-label
-              [formModel]="form.formModel"
-              fiedName="quantity"
-            ></codx-label>
-            <codx-input
-              field="quantity"
-              [formModel]="form.formModel"
-              [Group]="form?.formGroup"
-              (valueChange)="valueChange($event)"
-              [disabled]="viewOnly"
-            >
-            </codx-input>
+      <ng-container
+        *ngIf="
+          dialog.formModel.formName == 'CMWaterClock';
+          else tempWaterClockCost
+        "
+      >
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+              <codx-label
+                [formModel]="form.formModel"
+                fiedName="quantity"
+              ></codx-label>
+              <codx-input
+                field="quantity"
+                [formModel]="form.formModel"
+                [Group]="form?.formGroup"
+                (valueChange)="valueChange($event)"
+                [disabled]="viewOnly"
+              >
+              </codx-input>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <codx-label [formModel]="form.formModel" fiedName="deprRate">
+              </codx-label>
+              <codx-input
+                field="deprRate"
+                [formModel]="form.formModel"
+                [Group]="form?.formGroup"
+                (valueChange)="valueChange($event)"
+                [disabled]="viewOnly"
+              >
+              </codx-input>
+            </div>
           </div>
         </div>
-        <div class="col-6">
-          <div class="form-group">
-            <codx-label [formModel]="form.formModel" fiedName="deprRate">
-            </codx-label>
-            <codx-input
-              field="deprRate"
-              [formModel]="form.formModel"
-              [Group]="form?.formGroup"
-              (valueChange)="valueChange($event)"
-              [disabled]="viewOnly"
-            >
-            </codx-input>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+              <codx-label [formModel]="form.formModel" fiedName="cumulatedDepr">
+              </codx-label>
+              <codx-input
+                field="cumulatedDepr"
+                [formModel]="form.formModel"
+                [Group]="form?.formGroup"
+                [disabled]="true"
+              >
+              </codx-input>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <codx-label
+                [formModel]="form.formModel"
+                fiedName="estimatedCapacity"
+              >
+              </codx-label>
+              <codx-input
+                field="estimatedCapacity"
+                [formModel]="form.formModel"
+                [Group]="form?.formGroup"
+                [disabled]="true"
+              >
+              </codx-input>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-6">
-          <div class="form-group">
-            <codx-label [formModel]="form.formModel" fiedName="cumulatedDepr">
-            </codx-label>
-            <codx-input
-              field="cumulatedDepr"
-              [formModel]="form.formModel"
-              [Group]="form?.formGroup"
-              [disabled]="true"
-            >
-            </codx-input>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+              <codx-label [formModel]="form.formModel" fiedName="purcAmount">
+              </codx-label>
+              <codx-input
+                field="purcAmount"
+                [formModel]="form.formModel"
+                [Group]="form?.formGroup"
+                [disabled]="true"
+              >
+              </codx-input>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <codx-label [formModel]="form.formModel" fiedName="capacityUsed">
+              </codx-label>
+              <codx-input
+                field="capacityUsed"
+                [formModel]="form.formModel"
+                [Group]="form?.formGroup"
+                [disabled]="true"
+              >
+              </codx-input>
+            </div>
           </div>
         </div>
-        <div class="col-6">
-          <div class="form-group">
-            <codx-label
-              [formModel]="form.formModel"
-              fiedName="estimatedCapacity"
-            >
-            </codx-label>
-            <codx-input
-              field="estimatedCapacity"
-              [formModel]="form.formModel"
-              [Group]="form?.formGroup"
-              [disabled]="true"
-            >
-            </codx-input>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+              <codx-label [formModel]="form.formModel" fiedName="costAmt">
+              </codx-label>
+              <codx-input
+                field="costAmt"
+                [formModel]="form.formModel"
+                [Group]="form?.formGroup"
+                [disabled]="true"
+              >
+              </codx-input>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <codx-label [formModel]="form.formModel" fiedName="capacityPrice">
+              </codx-label>
+              <codx-input
+                field="capacityPrice"
+                [formModel]="form.formModel"
+                [Group]="form?.formGroup"
+                [disabled]="true"
+              >
+              </codx-input>
+            </div>
           </div>
         </div>
-      </div>
+      </ng-container>
+      <ng-template #tempWaterClockCost>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+              <codx-label [formModel]="form.formModel" fiedName="purcAmount">
+              </codx-label>
+              <codx-input
+                field="purcAmount"
+                [formModel]="form.formModel"
+                [Group]="form?.formGroup"
+                [disabled]="viewOnly"
+              >
+              </codx-input>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <codx-label [formModel]="form.formModel" fiedName="capacityUsed">
+              </codx-label>
+              <codx-input
+                field="capacityUsed"
+                [formModel]="form.formModel"
+                [Group]="form?.formGroup"
+                [disabled]="viewOnly"
+              >
+              </codx-input>
+            </div>
+          </div>
+        </div>
+      </ng-template>
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="note"> </codx-label>
         <codx-input

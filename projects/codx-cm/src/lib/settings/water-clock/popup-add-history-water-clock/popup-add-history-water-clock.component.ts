@@ -61,30 +61,26 @@ export class PopupAddHistoryWaterClockComponent implements OnInit, AfterViewInit
     if (e.field) {
       this.data[e.field] = e.data;
     }
-    switch (e.field) {
-      case 'quantity':
-        this.data['cumulatedDepr'] = this.data['quantity'] - this.parent['quantity'];
-        this.data['costAmt'] = this.data['cumulatedDepr'] * 1000;//this.data['purcAmount'] //test
-        // if (this.data['deprRate'] && this.data['cumulatedDepr']) {
-        //   this.data['estimatedCapacity'] = this.data['cumulatedDepr'] / 100 * this.data['deprRate'];
-        //   this.data['capacityPrice'] = this.data['estimatedCapacity'] * this.data['capacityUsed']
-        // } else {
-        //   this.data['estimatedCapacity'] = 0;
-        //   this.data['capacityPrice'] = 0
-        // }
-        break;
-      case 'deprRate':
+    if (e.field == 'quantity' || e.field == 'deprRate') {
+      switch (e.field) {
+        case 'quantity':
+          this.data['cumulatedDepr'] = this.data['quantity'] - this.parent['quantity'];
+          this.data['costAmt'] = this.data['cumulatedDepr'] * this.data['purcAmount']
+          break;
+        case 'deprRate':
 
-        break;
+          break;
+      }
+      if (this.data['deprRate'] && this.data['cumulatedDepr']) {
+        this.data['estimatedCapacity'] = this.data['cumulatedDepr'] / 100 * this.data['deprRate'];
+        this.data['capacityPrice'] = this.data['estimatedCapacity'] * this.data['capacityUsed']
+      } else {
+        this.data['estimatedCapacity'] = 0;
+        this.data['capacityPrice'] = 0
+      }
+      this.form.formGroup.patchValue(this.data)
     }
-    if (this.data['deprRate'] && this.data['cumulatedDepr']) {
-      this.data['estimatedCapacity'] = this.data['cumulatedDepr'] / 100 * this.data['deprRate'];
-      this.data['capacityPrice'] = this.data['estimatedCapacity'] * 1000 // this.data['capacityUsed'] //test
-    } else {
-      this.data['estimatedCapacity'] = 0;
-      this.data['capacityPrice'] = 0
-    }
-    this.form.formGroup.patchValue(this.data)
+
   }
 
   onSave() {
