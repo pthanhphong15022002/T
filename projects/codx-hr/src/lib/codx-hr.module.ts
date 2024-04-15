@@ -55,7 +55,7 @@ import { OrgorganizationComponent } from './organization/organization.component'
 import { OrganizeDetailComponent } from './organization/organize-detail/organize-detail.component';
 import { FilterPipe } from './organization/pipes/filterObject.pipe';
 import { PopupAddOrganizationComponent } from './organization/popup-add-organization/popup-add-organization.component';
-import { TimeAgoPipe } from './pipe/time-ago.pipe';
+import { TimeAgoPipe } from './codx-hr-common/pipes/time-ago.pipe';
 import { OrgchartDetailComponent } from './reportingline/orgchart-detail/orgchart-detail.component';
 import { PopupAddPositionsComponent } from './reportingline/popup-add-positions/popup-add-positions.component';
 import { ReportinglineDetailComponent } from './reportingline/reportingline-detail/reportingline-detail.component';
@@ -88,7 +88,7 @@ import { PopupJobGeneralInfoComponent } from './employee-profile/popup-job-gener
 import { EmployeeDetailComponent } from './employee-list/employee-detail/employee-detail.component';
 // import { LayoutComponent } from './_layout/layout.component';
 import { LayoutComponent } from 'projects/codx-hr/src/lib/_layout/layout.component';
-import { ScrollSpyDirective } from './scroll-spy.directive';
+import { ScrollSpyDirective } from './codx-hr-common/directives/scrollSpy/scroll-spy.directive';
 import { PopupEProcessContractComponent } from './employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 import { EmployeeBasicSalaryComponent } from './employee-basic-salary/employee-basic-salary.component';
 import { EmployeeJobSalaryComponent } from './employee-job-salary/employee-job-salary.component';
@@ -128,7 +128,7 @@ import { EmployeeListByOrgComponent } from './employee-list/employee-list-by-org
 import { PopupMultiselectvllComponent } from './employee-policyal/popup-multiselectvll/popup-multiselectvll.component';
 import { PopupUpdateStatusComponent } from './employee-list/popup/popup-update-status/popup-update-status.component';
 import { EmployeeAnnualLeaveComponent } from './employee-annual-leave/employee-annual-leave.component';
-import { DatePipe } from './pipe/date-time.pipe';
+import { DatePipe } from './codx-hr-common/pipes/date-time.pipe';
 import { EmployeeAnnualLeaveByOrgComponent } from './employee-annual-leave/employee-annual-leave-by-org/employee-annual-leave-by-org.component';
 import { PopupIncludeExcludeObjComponent } from './employee-policyal/popup-include-exclude-obj/popup-include-exclude-obj.component';
 import { PopupCalculateAnnualLeaveComponent } from './employee-annual-leave/popup-calculate-annual-leave/popup-calculate-annual-leave.component';
@@ -145,7 +145,7 @@ import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts.component';
-import { GetHeaderTextPipe } from './pipe/get-header-text.pipe';
+import { GetHeaderTextPipe } from './codx-hr-common/pipes/get-header-text.pipe';
 import { PersonalInfoComponent } from './employee-list/employee-info-detail/component/personal-info/personal-info.component';
 import { LegalInfoComponent } from './employee-list/employee-info-detail/component/legal-info/legal-info.component';
 import { ForeignWorkersComponent } from './employee-list/employee-info-detail/component/foreign-workers/foreign-workers.component';
@@ -157,7 +157,7 @@ import { ProfileLast7dayComponent } from './dashboard/components/profile-last7da
 import { DashboardRegisterAprroveComponent } from './dashboard/components/dashboard-register-aprrove/dashboard-register-aprrove.component';
 import { TableGripComponent } from './dashboard/components/table-grip/table-grip.component';
 import { AgeStatisticComponent } from './dashboard/widgets/age-statistic/age-statistic.component';
-import { DirectivesModule } from './common/directives/directives.module';
+import { DirectivesModule } from './codx-hr-common/directives/directives.module';
 import { MyTemComponent } from './dashboard/widgets/my-tem/my-tem.component';
 import { DashboardAgeChartComponent } from './dashboard/components/dashboard-age-chart/dashboard-age-chart.component';
 import { DashboardCardComponent } from './dashboard/components/dashboard-card/dashboard-card.component';
@@ -198,7 +198,7 @@ export const routes: Routes = [
       {
         path: 'employeeprofile/:funcID',
         component: EmployeeInfoProfileComponent
-      }, 
+      },
       {
         path: 'test/:funcID',
         component: DialogWaitingLeavingApproveComponent
@@ -508,10 +508,10 @@ const T_Component = [
   ForeignWorkersComponent,
   PreviousExperienceComponent,
   EmployeeInfoProfileComponent,
-  ProfileLast7dayComponent, 
+  ProfileLast7dayComponent,
   ProfileDashboardLeaveComponent,
   DashboardRegisterAprroveComponent,
-  TableGripComponent, 
+  TableGripComponent,
   AgeStatisticComponent,
   MyTemComponent,
   DashboardAgeChartComponent,

@@ -18,7 +18,7 @@ import {
   ViewsComponent,
 } from 'codx-core';
 import moment from 'moment';
-import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxShareService } from 'projects/codx-share/src/public-api';

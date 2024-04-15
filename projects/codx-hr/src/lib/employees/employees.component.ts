@@ -26,14 +26,14 @@ import {
   UIComponent,
 } from 'codx-core';
 import moment from 'moment';
-import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { catchError, map, finalize, Observable, of } from 'rxjs';
-import { CodxHrService } from '../codx-hr.service';
-import { HR_Employees } from '../model/HR_Employees.model';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
+
 import { PopupAddEmployeesComponent } from './popup-add-employees/popup-add-employees.component';
 import { UpdateStatusComponent } from './update-status/update-status.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { HR_Employees } from '../codx-hr-common/model/HR_Employees.model';
 
 @Component({
   selector: 'lib-employees',

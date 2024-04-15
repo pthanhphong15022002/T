@@ -52,7 +52,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 // import { EmployeeSelfInfoComponent } from '../../employee-profile/employee-self-info/employee-self-info.component';
 import { ActivatedRoute } from '@angular/router';
 // import { EmployeeFamilyRelationshipComponent } from '../../employee-profile/employee-family-relationship/employee-family-relationship.component';

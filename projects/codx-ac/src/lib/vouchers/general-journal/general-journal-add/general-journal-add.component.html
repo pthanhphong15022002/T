@@ -18,18 +18,26 @@
         <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
           {{ headerText }}
         </div>
-        <!-- <div class="input-circle input-sm" *ngIf="master?.formGroup">
-          <span class="me-2">
-            <codx-vll *ngIf="master.data?.status == '1'" [formModel]="dialog.formModel" [field]="'Status'"
-              [value]="master.data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
-              class="badge badge-light badge-sm">
-            </codx-vll>
-            <codx-vll *ngIf="master.data?.status != '1'" [formModel]="dialog.formModel" [field]="'Status'"
-              [value]="master.data?.status" [showText]="true" [showBgColor]="true"
-              class="badge badge-light badge-sm">
+        <ng-container>
+          <ng-container *ngIf="!master.data.isReadOnly">
+            <div *ngIf="(master && !master?.data?.validated)" class="d-flex align-items-center">
+              <i class="icon-arrow_drop_down_circle icon-16 mt-1"></i>
+              <div style="margin-left: -5px;" class="input-circle h-20px input-border-0 w-400px mb-1">
+                <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
+                  [cssClass]="'rounded-pill border-1 mt-1'" cssPopup="h-350px w-400px" [isMulti]="false"
+                  type="valuelist" field="subType" [refValue]="master?.gridviewSetup['SubType']?.referedValue"
+                  [value]="master?.data?.subType" [emptyText]="master?.gridviewSetup['SubType']?.headerText"
+                ></codx-dropdown-select>
+              </div>
+            </div>
+          </ng-container>
+          <span *ngIf="(master.data?.validated) || (master.data?.isReadOnly)">
+            <codx-vll [name]="master?.gridviewSetup['SubType']?.referedValue" [formModel]="dialog.formModel"
+              [field]="'SubType'" [value]="master?.data?.subType" [showText]="true" [showBgColor]="true"
+              class="badge badge-light-primary badge-sm mt-1">
             </codx-vll>
           </span>
-        </div> -->
+        </ng-container>
       </div>
       <div class="d-flex align-items-center me-3">
         <div class="ms-2">
@@ -67,7 +75,7 @@
   <!-- Start: Tab Detail -->
   <div class="mt-2" style="height: calc(100vh - 385px) !important">
     <!-- Start: Tab Detail -->
-    <ejs-tab #elementTabDetail (selecting)="onTabSelectedDetail($event)">
+    <ejs-tab #elementTabDetail (selecting)="onTabSelectedDetail($event)" (created)="createTabDetail($event, elementTabDetail)">
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>

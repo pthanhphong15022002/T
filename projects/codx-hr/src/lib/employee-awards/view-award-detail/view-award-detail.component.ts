@@ -15,7 +15,7 @@ import {
   CodxService,
   ViewsComponent,
 } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { CodxShareService } from 'projects/codx-share/src/public-api';

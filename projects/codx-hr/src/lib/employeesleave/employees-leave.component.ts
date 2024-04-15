@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { CacheService, CallFuncService, CodxService, DataRequest, DialogRef, NotificationsService, RequestOption, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { CodxHrService } from '../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { PopupAddEmployeesComponent } from '../employees/popup-add-employees/popup-add-employees.component';
 import { UpdateStatusComponent } from '../employees/update-status/update-status.component';
 

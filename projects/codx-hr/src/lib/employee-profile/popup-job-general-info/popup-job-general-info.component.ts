@@ -1,5 +1,5 @@
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
-import { CodxHrService } from './../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { ChangeDetectorRef, Injector } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {

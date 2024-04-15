@@ -14,6 +14,7 @@ export abstract class BasePropertyComponent
     @Input() data: any;
     @Input() dataTable: any;
     @Input() formModel: any;
+    @Input() stepNo: any;
     @Output() dataChange = new EventEmitter<any>();
     @Output() dataChangeTableEmit = new EventEmitter<any>();
     @Output() back = new EventEmitter<any>();
@@ -41,6 +42,13 @@ export abstract class BasePropertyComponent
     {
       if(!this.data.validateControl) this.data.validateControl = {};
       this.data.validateControl[e?.field] = e?.data;
+      this.dataChange.emit(this.data);
+    }
+    
+    changeValueApprovalValidate(e:any)
+    {
+      this.data.validateControl = "";
+      if(e?.data == true) this.data.validateControl = "AP";
       this.dataChange.emit(this.data);
     }
 

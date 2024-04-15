@@ -42,7 +42,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { ActivatedRoute } from '@angular/router';
 import { PopupEhealthsComponent } from '../../employee-profile/popup-ehealths/popup-ehealths.component';
 import { PopupEmpBusinessTravelsComponent } from '../../employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';

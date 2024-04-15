@@ -20,6 +20,7 @@ export class AttachmentGridComponent implements OnInit{
   @Output() dataUploadAttachment = new EventEmitter<any>();
   selectedIndex:any;
   listInfoFile = [];
+  documentControl: any;
   constructor(
     private notifv: NotificationsService,
     private callFuc: CallFuncService,
@@ -30,19 +31,21 @@ export class AttachmentGridComponent implements OnInit{
   {}
 
   ngOnInit(): void {
-    this.data = typeof this.data === 'string' ? JSON.parse(this.data) : this.data;
+    this.data = JSON.parse(JSON.stringify(this.data));
+    this.documentControl = this.data.documentControl;
+    this.documentControl = typeof this.documentControl === 'string' ? JSON.parse(this.documentControl) : this.documentControl;
     this.formatData();
-    this.formatAttachment(this.data);
+    this.formatAttachment(this.documentControl);
   }
  
 
   formatData()
   {
-    if(this.data && this.data.length > 0)
+    if(this.documentControl && this.documentControl.length > 0)
     {
       let index = 0;
       var ids = [];
-      this.data.forEach(element => {
+      this.documentControl.forEach(element => {
         ids.push(element.recID);
         // this.getFile(element?.recID,index);
         // index ++;
@@ -66,24 +69,24 @@ export class AttachmentGridComponent implements OnInit{
 
   valueChange(e:any,index:any)
   {
-    this.data[index][e?.field] = e?.data;
-    this.dataChange.emit(this.data);
+    this.documentControl[index][e?.field] = e?.data;
+    this.dataChange.emit(this.documentControl);
   }
 
   fileSave(e:any)
   {
-    if(!this.data[this.selectedIndex]?.countAttach) this.data[this.selectedIndex].countAttach = 0;
-    if(!this.data[this.selectedIndex].files) this.data[this.selectedIndex].files = [];
+    if(!this.documentControl[this.selectedIndex]?.countAttach) this.documentControl[this.selectedIndex].countAttach = 0;
+    if(!this.documentControl[this.selectedIndex].files) this.documentControl[this.selectedIndex].files = [];
     if(!Array.isArray(e)) 
     {
      
-      this.data[this.selectedIndex].countAttach ++;
+      this.documentControl[this.selectedIndex].countAttach ++;
       var obj = 
       {
         fileID: e.recID,
         type: '1'
       }
-      this.data[this.selectedIndex].files.push(obj);
+      this.documentControl[this.selectedIndex].files.push(obj);
     }
     else
     {
@@ -93,21 +96,21 @@ export class AttachmentGridComponent implements OnInit{
           fileID: elm.data.recID,
           type: '1'
         }
-        this.data[this.selectedIndex].files.push(obj);
+        this.documentControl[this.selectedIndex].files.push(obj);
       });
-      this.data[this.selectedIndex].countAttach += e.length;
+      this.documentControl[this.selectedIndex].countAttach += e.length;
     }
-    this.dataChange.emit(this.data);
+    this.dataChange.emit(this.documentControl);
     this.dataChangeAttachment.emit(false);
   }
   fileAdded(e:any)
   {
-    if(!this.data[this.selectedIndex]?.countAttach) this.data[this.selectedIndex].countAttach = 0;
+    if(!this.documentControl[this.selectedIndex]?.countAttach) this.documentControl[this.selectedIndex].countAttach = 0;
     if(e?.data)
     {
-      this.data[this.selectedIndex].countAttach  = e?.data.length;
-      this.data[this.selectedIndex].fileAttach = e?.data
-      this.dataChange.emit(this.data);
+      this.documentControl[this.selectedIndex].countAttach  = e?.data.length;
+      this.documentControl[this.selectedIndex].fileAttach = e?.data
+      this.dataChange.emit(this.documentControl);
       this.dataUploadAttachment.emit(this.attachment.fileUploadList);
     }
   }
@@ -122,7 +125,7 @@ export class AttachmentGridComponent implements OnInit{
     this.api.execSv("DM","DM","FileBussiness","GetFileByObjectIDAsync",[recID,'BP_Instances',('attach' + this.dataIns.recID)]).subscribe((item:any)=>{
       if(item)
       {
-        this.data.forEach(elm=>{
+        this.documentControl.forEach(elm=>{
           let dt = item.filter(x=>x.objectID == elm.recID);
           elm.countAttach = dt.length;
           elm.fileAttach = dt;
@@ -201,12 +204,12 @@ export class AttachmentGridComponent implements OnInit{
     );
     popup.closed.subscribe(res=>{
       if(res?.event) {
-        if(!this.data[this.selectedIndex].fileAttach) this.data[this.selectedIndex].fileAttach = [];
-        if(!this.data[this.selectedIndex]?.countAttach) this.data[this.selectedIndex].countAttach = 0;
-        this.data[this.selectedIndex].countAttach += res?.event.length;
-        this.data[this.selectedIndex].fileAttach = this.data[this.selectedIndex].fileAttach.concat(res?.event);
+        if(!this.documentControl[this.selectedIndex].fileAttach) this.documentControl[this.selectedIndex].fileAttach = [];
+        if(!this.documentControl[this.selectedIndex]?.countAttach) this.documentControl[this.selectedIndex].countAttach = 0;
+        this.documentControl[this.selectedIndex].countAttach += res?.event.length;
+        this.documentControl[this.selectedIndex].fileAttach = this.documentControl[this.selectedIndex].fileAttach.concat(res?.event);
         res?.event.forEach(element => {
-          element.objectID = this.data[this.selectedIndex].recID;
+          element.objectID = this.documentControl[this.selectedIndex].recID;
           element.objectType = this.formModel.entityName;
           element.referedType = 'attach' + this.dataIns.recID
         });

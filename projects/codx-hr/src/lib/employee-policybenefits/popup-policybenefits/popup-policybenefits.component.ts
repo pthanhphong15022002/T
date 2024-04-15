@@ -21,7 +21,7 @@ import {
   UIComponent,
   Util,
 } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { PopupMultiselectvllComponent } from '../../employee-policyal/popup-multiselectvll/popup-multiselectvll.component';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';

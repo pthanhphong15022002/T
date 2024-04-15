@@ -171,7 +171,7 @@
         </div>
       </button>
       <button *ngIf="dialog.formModel.funcID === 'ACT881'" id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" [disabled]="isload" type="button"
-        class="btn btn-md btn-primary me-2">
+        class="btn btn-md btn-primary me-2" (click)="onCreateAsset('AA')">
         <div class="d-flex align-items-center">
           <i class="icon-download_done icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Điều chỉnh"></codx-label>

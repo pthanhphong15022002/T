@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CacheService } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
 import { ActivatedRoute } from '@angular/router';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 
 @Component({
   selector: 'lib-approval-hrcontract',

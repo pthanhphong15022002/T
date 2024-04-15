@@ -26,7 +26,7 @@ import {
   SortModel,
   UIComponent,
 } from 'codx-core';
-import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { PopupEPassportsComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-epassports/popup-epassports.component';
 import { PopupEVisasComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-evisas/popup-evisas.component';
 import { PopupEWorkPermitsComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-ework-permits/popup-ework-permits.component';

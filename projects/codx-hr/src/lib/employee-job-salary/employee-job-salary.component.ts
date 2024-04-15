@@ -20,7 +20,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CodxHrService } from '../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { PopupEmployeeJobsalaryComponent } from './popup-employee-jobsalary/popup-employee-jobsalary.component';
 import { CodxEpService } from 'projects/codx-ep/src/public-api';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';

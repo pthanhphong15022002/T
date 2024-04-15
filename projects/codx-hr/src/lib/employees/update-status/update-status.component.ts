@@ -1,7 +1,5 @@
-import { I } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, Input, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, DialogData, DialogRef, NotificationsService } from 'codx-core';
-import { HR_Employees } from '../../model/HR_Employees.model';
 
 @Component({
   selector: 'lib-update-status',

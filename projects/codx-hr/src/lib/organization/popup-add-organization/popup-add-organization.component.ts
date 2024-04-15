@@ -9,7 +9,7 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'lib-popup-add-organization',

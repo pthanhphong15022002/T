@@ -16,7 +16,7 @@ import {
   NotificationsService,
   ViewsComponent,
 } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { ActivatedRoute } from '@angular/router';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { FormGroup } from '@angular/forms';

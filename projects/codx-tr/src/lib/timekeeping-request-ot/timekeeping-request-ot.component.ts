@@ -21,7 +21,6 @@ import {
 } from 'codx-core';
 import moment from 'moment';
 import { isObservable } from 'rxjs';
-import { DataVll } from 'projects/codx-hr/src/lib/model/HR_OrgChart.model';
 import { PopupOverTimeComponent } from './popup-over-time/popup-over-time.component';
 import { ViewDetailComponent } from './view-detail/view-detail.component';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
@@ -30,6 +29,7 @@ import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { FormGroup } from '@angular/forms';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { CodxPrService } from 'projects/codx-pr/src/public-api';
+import { DataVll } from 'projects/codx-hr/src/lib/codx-hr-common/model/HR_OrgChart.model';
 
 @Component({
   selector: 'pr-timekeeping-request-ot',

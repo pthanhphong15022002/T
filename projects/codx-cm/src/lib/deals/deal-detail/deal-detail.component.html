@@ -869,7 +869,8 @@
                   [taskAdd]="taskAdd"
                   (moveStage)="handelMoveStage($event)"
                   [isAdmin]="dataSelected?.isAdminAll"
-                  [isViewStep]="!(['1', '2', '15',].includes(dataSelected?.status) && !dataSelected?.closed && dataSelected?.approveStatus != '3')"
+                  [isViewStep]="isViewStep"
+                  [isUpdateTask]="isUpdateTask"
                 ></step-task>
               </div>
             </ng-template>

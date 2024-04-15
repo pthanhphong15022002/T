@@ -1,5 +1,5 @@
 import { extend } from '@syncfusion/ej2-base';
-import { CodxHrService } from './../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { ChangeDetectorRef, Injector } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {

@@ -27,7 +27,7 @@ import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
-import { CodxHrService } from './../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
 import { ViewDetailContractsComponent } from './popup-eprocess-contract/view-detail-contracts/view-detail-contracts/view-detail-contracts.component';
 import { PopupSubEContractComponent } from '../employee-profile/popup-sub-econtract/popup-sub-econtract.component';

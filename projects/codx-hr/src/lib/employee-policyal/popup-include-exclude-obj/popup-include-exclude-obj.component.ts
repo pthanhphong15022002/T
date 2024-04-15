@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, Optional } from '@angular/core';
 import { DialogData, DialogRef, FormModel, UIComponent } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 
 @Component({
   selector: 'lib-popup-include-exclude-obj',

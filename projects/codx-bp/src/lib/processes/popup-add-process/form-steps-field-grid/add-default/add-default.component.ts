@@ -37,9 +37,11 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
     if(dt?.data?.formModel) this.formModel = dt?.data?.formModel
 
     if(this.type == 'add') this.hideDelete = true;
+
+    this.getVll();
   }
   ngOnInit(): void {
-    this.getVll();
+  
   }
 
   getVll()
@@ -75,8 +77,8 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
   }
   close()
   {
-    var list = ["Stage","Group","StartEnd","Timer","Conditions","SubProcess","Form"];
-    if(!list.includes(this.data.activityType))
+    var list = ["Stage","Group","StartEnd","Timer","Conditions","SubProcess"];
+    if(!list.includes(this.data.activityType) || (this.data.activityType == "Form" && this.data.stepNo >= 1))
     {
       if(!this.data.permissions || this.data.permissions.length == 0)
       {

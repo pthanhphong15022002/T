@@ -11,7 +11,7 @@ import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { isObservable } from 'rxjs';
 import { AuthStore, CodxService, FormModel, ViewsComponent } from 'codx-core';
-import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxShareService } from 'projects/codx-share/src/public-api';

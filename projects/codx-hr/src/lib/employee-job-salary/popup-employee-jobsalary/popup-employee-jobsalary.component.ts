@@ -10,7 +10,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
-import { CodxHrService } from './../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 
 @Component({
   selector: 'lib-popup-employee-jobsalary',

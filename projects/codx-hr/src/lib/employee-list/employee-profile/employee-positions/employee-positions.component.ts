@@ -18,7 +18,7 @@ import {
   FormModel,
 } from 'codx-core';
 import { CodxEsService } from 'projects/codx-es/src/public-api';
-import { CodxHrService } from '../../../codx-hr.service';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 
 @Component({
   selector: 'lib-employee-positions',

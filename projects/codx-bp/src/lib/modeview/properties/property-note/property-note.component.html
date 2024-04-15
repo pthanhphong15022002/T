@@ -3,15 +3,15 @@
     <div class="mt-4">
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'defaultValue'" default="Giá trị mặc định khi thêm mới biểu mẫu" class="fw-bold"></codx-label>
         <div class="d-flex align-items-center justify-content-between ">
-            <codx-input type="text" [crrValue]="data.defaultValue " field="defaultValue" (valueChange)="changeValue($event)" placeholder="Nhập giá trị mặc định" ngClass="w-100"></codx-input>
+            <codx-input type="text" [disabled]="data?.refField" [crrValue]="data.defaultValue " field="defaultValue" (valueChange)="changeValue($event)" placeholder="Nhập giá trị mặc định" ngClass="w-100"></codx-input>
             <div class="d-flex align-items-center ms-2">
-                <i class="icon-format_bold cursor-pointer" [class.text-primary]="data?.validateControl?.bold" (click)="changeValueFormat('bold')"></i>
-                <i class="icon-format_italic cursor-pointer mx-2" [class.text-primary]="data?.validateControl?.italic" (click)="changeValueFormat('italic')"></i>
-                <i class="icon-format_underlined cursor-pointer" [class.text-primary]="data?.validateControl?.underlined" (click)="changeValueFormat('underlined')"></i>
+                <i class="icon-format_bold cursor-pointer" [class.text-primary]="data?.validateControl?.bold" (click)="!data?.refField ? changeValueFormat('bold'):undefined"></i>
+                <i class="icon-format_italic cursor-pointer mx-2" [class.text-primary]="data?.validateControl?.italic" (click)="!data?.refField ? changeValueFormat('italic'):undefined"></i>
+                <i class="icon-format_underlined cursor-pointer" [class.text-primary]="data?.validateControl?.underlined" (click)="!data?.refField ? changeValueFormat('underlined'):undefined"></i>
             </div>
         </div>
     </div>
-    <div class="d-flex align-items-start justify-content-between mt-4">
+    <div class="d-flex align-items-start justify-content-between border-top mt-4 pt-4">
         <div class="d-flex flex-column">
             <codx-label formName="DynamicForms" fiedName="lblNoteColor" default="Màu chữ" class="fw-bold"></codx-label>
             <codx-input
@@ -25,6 +25,7 @@
                 [modeSwitcher]="false"
                 [crrValue]="data?.validateControl?.color || '#000000'"
                 (valueChange)="changeValueFormatColor($event)"
+                [disabled]="data?.refField"
             >
             </codx-input>
         </div>
@@ -33,9 +34,9 @@
         <div class="d-flex flex-column">
             <codx-label formName="DynamicForms" fiedName="lblNoteSize" default="Cỡ chữ" class="fw-bold"></codx-label>
             <div class="d-flex align-items-end ms-2">
-                <i class="icon-format_size icon-18 cursor-pointer" [class.text-primary]="data?.validateControl?.size == 'fs-6' || !data?.validateControl?.size"  (click)="changeValueFormat('size','fs-6')"></i>
-                <i class="icon-format_size icon-20 cursor-pointer mx-2" [class.text-primary]="data?.validateControl?.size == 'fs-5-sm'" (click)="changeValueFormat('size','fs-5-sm')"></i>
-                <i class="icon-format_size icon-22 cursor-pointer" [class.text-primary]="data?.validateControl?.size == 'fs-5'" (click)="changeValueFormat('size','fs-5')"></i>
+                <i class="icon-format_size icon-18 cursor-pointer" [class.text-primary]="data?.validateControl?.size == 'fs-6' || !data?.validateControl?.size"  (click)="!data?.refField ?changeValueFormat('size','fs-6'):undefined"></i>
+                <i class="icon-format_size icon-20 cursor-pointer mx-2" [class.text-primary]="data?.validateControl?.size == 'fs-5-sm'" (click)="!data?.refField ?changeValueFormat('size','fs-5-sm'):undefined"></i>
+                <i class="icon-format_size icon-22 cursor-pointer" [class.text-primary]="data?.validateControl?.size == 'fs-5'" (click)="!data?.refField ?changeValueFormat('size','fs-5'):undefined"></i>
             </div>
         </div>
     </div>
