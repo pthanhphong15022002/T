@@ -346,7 +346,7 @@ export class CashPaymentAddComponent extends UIComponent {
         }
       });
     } else {
-      this.master.setValue('subType', event.data[0], { onlySelf: true, emitEvent: false, });
+      this.master.setValue('subType', event.data[0], {});
       this.detectorRef.detectChanges();
       if (this.elementTabDetail) {
         this.showHideTabDetail(this.master?.data?.subType, this.elementTabDetail);
@@ -501,7 +501,7 @@ export class CashPaymentAddComponent extends UIComponent {
       if (res) {
         Object.assign(oLine, res);
         this.vatAccount = res?.vatAccount;
-        oLine.entryMode = this.journal.entryMode;
+        //oLine.entryMode = this.journal.entryMode;
         oLine.updateColumns = '';
         this.detectorRef.detectChanges();
         this.eleGridVatInvoices.endProcess();
@@ -698,25 +698,31 @@ export class CashPaymentAddComponent extends UIComponent {
           this.eleGridCashPayment.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') {
               this.saveVoucher(type);
+            }else{
+              this.ngxLoader.stop();
+              return;
             }
           })
-          return;
         }
         if ((this.eleGridSettledInvoices || this.eleGridSettledInvoices?.isEdit) && this.elementTabDetail?.selectingID == '1') {
           this.eleGridSettledInvoices.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') {
               this.saveVoucher(type);
+            }else{
+              this.ngxLoader.stop();
+              return;
             }
           })
-          return;
         }
         if ((this.eleGridVatInvoices || this.eleGridVatInvoices?.isEdit) && this.elementTabDetail?.selectingID == '2') {
           this.eleGridVatInvoices.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') {
               this.saveVoucher(type);
+            }else{
+              this.ngxLoader.stop();
+              return;
             }
           })
-          return;
         }
       });
   }
@@ -764,10 +770,11 @@ export class CashPaymentAddComponent extends UIComponent {
           }
         },
         complete:()=>{
+          this.ngxLoader.stop();
           if (this.eleGridCashPayment && this.eleGridCashPayment?.isSaveOnClick) this.eleGridCashPayment.isSaveOnClick = false;
           if (this.eleGridSettledInvoices && this.eleGridSettledInvoices.isSaveOnClick) this.eleGridSettledInvoices.isSaveOnClick = false;
           if (this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false;
-          this.ngxLoader.stop();
+          this.onDestroy();
         }
       });
   }
@@ -1347,32 +1354,6 @@ export class CashPaymentAddComponent extends UIComponent {
   }
 
   /**
-   * *Hàm ẩn các morefunction trong lưới
-   * @param event
-   */
-  changeMF(event, type = '') {
-    if (type === 'gridcash') {
-      event.forEach((element) => {
-        if (element.functionID == 'SYS104' || element.functionID == 'SYS102') {
-          element.disabled = false;
-          element.isbookmark = false;
-        } else {
-          element.disabled = true;
-        }
-      });
-    } else {
-      event.forEach((element) => {
-        if (element.functionID == 'SYS102') {
-          element.disabled = false;
-          element.isbookmark = false;
-        } else {
-          element.disabled = true;
-        }
-      });
-    }
-  }
-
-  /**
    * *Hàm setting format tiền theo đồng tiền hạch toán
    * @param eleGrid
    */
@@ -1448,6 +1429,7 @@ export class CashPaymentAddComponent extends UIComponent {
         this.eleGridSettledInvoices.saveRow((res: any) => { //? save lưới trước
           if (res) {
             this.eleGridSettledInvoices.isSaveOnClick = false;
+            if (this.nextTabIndex) this.elementTabDetail.select(this.nextTabIndex);
             setTimeout(() => {
               if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
                 e.target.focus();
@@ -1461,6 +1443,7 @@ export class CashPaymentAddComponent extends UIComponent {
         this.eleGridVatInvoices.saveRow((res: any) => { //? save lưới trước
           if (res) {
             this.eleGridVatInvoices.isSaveOnClick = false;
+            if (this.nextTabIndex) this.elementTabDetail.select(this.nextTabIndex);
             setTimeout(() => {
               if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
                 e.target.focus();

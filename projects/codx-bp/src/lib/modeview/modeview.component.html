@@ -629,7 +629,7 @@
           <lib-property-share [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-share>
         </ng-container>
         <ng-container *ngSwitchCase="'SubTitle'">
-          <lib-property-text [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-text>
+          <lib-property-text [data]="dataSelected" [stepNo]="stepNo" (dataChange)="dataChange($event)"></lib-property-text>
         </ng-container>
         <ng-container *ngSwitchCase="'Text'">
           <lib-property-text [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)" (dataChangeTableEmit)="dataChangeTableEmit($event)"></lib-property-text>
