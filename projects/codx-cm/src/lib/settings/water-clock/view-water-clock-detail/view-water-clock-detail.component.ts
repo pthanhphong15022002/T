@@ -2,6 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnCha
 import { ApiHttpService, CRUDService, CacheService, CallFuncService, CodxGridviewV2Component, DialogModel, FormModel } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupAddHistoryWaterClockComponent } from '../popup-add-history-water-clock/popup-add-history-water-clock.component';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-view-water-clock-detail',
@@ -46,10 +47,10 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
   };
   //Bảng giá => Đoi Khanh thiết lập
   formModelPrice: FormModel = {
-    formName: 'CMWaterClock',
-    gridViewName: 'grvCMWaterClock',
+    formName: 'CMWaterClockCost',
+    gridViewName: 'CMWaterClockCost',
     entityName: 'AM_Assets',
-    funcID: 'CMS0129'
+    funcID: 'CMS0130'
   };
   serviceAM = "AM"
   assemblyNameAM = "ERM.Business.AM"
@@ -59,6 +60,7 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
   predicatesHis = 'ParentID=@0';
   dataValuesHis = '';
   idCrr: any
+  firstDateOfMonth: Date;
 
   constructor(
     private detectorRef: ChangeDetectorRef,
@@ -67,6 +69,8 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
     private api: ApiHttpService,
     private callfc: CallFuncService
   ) {
+    this.firstDateOfMonth = moment(new Date()).set({ date: 1, hour: 0, minute: 0, second: 0 })
+      .toDate();
 
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -107,7 +111,17 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
 
 
   changeDataMFHis(e, data) {
-
+    if (e && data) {
+      e.forEach((x) => {
+        switch (x.functionID) {
+          case 'SYS02':
+          case 'SYS03':
+          case 'SYS04':
+            x.disabled = data.lastChangedDate < this.firstDateOfMonth
+            break;
+        }
+      })
+    }
   }
 
   loadGridHis(data) {

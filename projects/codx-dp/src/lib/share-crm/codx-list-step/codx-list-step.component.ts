@@ -67,7 +67,8 @@ export class CodxListStepComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() leadName: string;
   @Input() isHeightAuto = true;
   @Input() taskAdd;
-  @Input() isView = false;
+  @Input() isViewStep = false;
+  @Input() isUpdateTask = false;
   @Input() isMoveStage = false;
 
   @Output() continueStep = new EventEmitter<any>();

@@ -4,7 +4,7 @@
         <i class="icon-24" [ngClass]="data?.icon" [style.color]="data?.textColor"></i>
         <codx-label formName="DynamicForms" [fiedName]="'titles'" [default]="data?.text" class="fw-bold fs-5-sm ms-2 mt-1"></codx-label>
     </div>
-    <div *ngIf="data?.fieldType != 'SubTitle'" class="cursor-pointer" (click)="deleteValue()">
+    <div *ngIf="data?.fieldType != 'SubTitle' || (data?.fieldType == 'SubTitle' && stepNo > 1)" class="cursor-pointer" (click)="deleteValue()">
         <i class="icon-delete_outline"></i>
     </div>
 </div>
