@@ -2,53 +2,53 @@
     <lib-property-default-title [data]="data" [isBack]="isBack" (dataChange)="changeValue($event)" (back)="backDefault()"></lib-property-default-title>
     <div class="mt-4">
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'title'" default="Tên ô nhập liệu" class="fw-bold"></codx-label>
-        <codx-input type="text" [crrValue]="data.title" field="title" (valueChange)="changeValue($event)"></codx-input>
+        <codx-input type="text" [disabled]="data?.refField" [crrValue]="data.title" field="title" (valueChange)="changeValue($event)"></codx-input>
         <span class="fst-italic fw-light">ID: {{data?.fieldName}}</span>
     </div>
     <div class="mt-4">
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'defaultValue'" default="Giá trị mặc định khi thêm mới biểu mẫu" class="fw-bold"></codx-label>
         <ng-container *ngIf="data?.defaultValue != 'Now'">
-            <codx-input type="datetime" format="F" [crrValue]="data.defaultValue" field="defaultValue" (valueChange)="changeValueDate($event)" placeholder="Nhập giá trị mặc định"></codx-input>
+            <codx-input type="datetime" format="F" [disabled]="data?.refField" [crrValue]="data.defaultValue" field="defaultValue" (valueChange)="changeValueDate($event)" placeholder="Nhập giá trị mặc định"></codx-input>
         </ng-container>
         <ng-container *ngIf="data?.defaultValue == 'Now'">
-            <codx-input type="text" crrValue="Now" [disabled]="true"></codx-input>
+            <codx-input type="text" crrValue="Now" [disabled]="data?.refField" [disabled]="true"></codx-input>
         </ng-container>
         <div class="d-flex align-items-center mt-2">
-            <codx-input type="switch" label="Now" [crrValue]="data?.defaultValue == 'Now'? true : false" field="defaultValue" (valueChange)="changeValueDateNow($event)" class="mt-2"></codx-input>
+            <codx-input type="switch" label="Now" [disabled]="data?.refField" [crrValue]="data?.defaultValue == 'Now'? true : false" field="defaultValue" (valueChange)="changeValueDateNow($event)" class="mt-2"></codx-input>
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'now'" default="Thời gian hiện tại" class="ms-2"></codx-label>    
         </div>
         <div class="d-flex align-items-center mt-2">
-            <codx-input type="switch" label="Now" [crrValue]="data?.validateControl == '1'? true : false" field="validateControl" (valueChange)="changeValueValiControl($event)" class="mt-2"></codx-input>
+            <codx-input type="switch" label="Now" [disabled]="data?.refField" [crrValue]="data?.validateControl == '1'? true : false" field="validateControl" (valueChange)="changeValueValiControl($event)" class="mt-2"></codx-input>
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'validateControl'" default="Không nhập ngày quá khứ" class="ms-2"></codx-label>    
         </div>
     </div>
     <div class="mt-4">
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'description'" default="Hiển thị chuỗi gợi ý khi chưa có dữ liệu" class="fw-bold"></codx-label>
-        <codx-input type="text" [crrValue]="data.description" field="description" placeholder="Nhập giá trị hiển thị" (valueChange)="changeValue($event)"></codx-input>
+        <codx-input type="text" [disabled]="data?.refField" [crrValue]="data.description" field="description" placeholder="Nhập giá trị hiển thị" (valueChange)="changeValue($event)"></codx-input>
     </div>
     <div class="mt-4">
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'dataFormat'" default="Định dạng ngày" class="fw-bold"></codx-label>
-        <codx-input type="valuelist" [crrValue]="data.dataFormat" field="dataFormat" [refValue]="'BP004'"  (valueChange)="changeValue($event)"></codx-input>
+        <codx-input type="valuelist" [disabled]="data?.refField" [crrValue]="data.dataFormat" field="dataFormat" [refValue]="'BP004'"  (valueChange)="changeValue($event)"></codx-input>
     </div>
     <div class="border-top mt-8">
         <div class="mt-4">
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'dependences'" default="Liên kết" class="fw-bold"></codx-label>
             <!-- <codx-input type="valuelist" [crrValue]="data.dataFormat" field="dataFormat" [refValue]="'BP004'"  (valueChange)="changeValue($event)"></codx-input> -->
             <div class="pb-2">
-                <ejs-combobox #cbbDependence  [fields]="fields" [allowCustom]="true" placeholder='Liên kết' (valueChange)="changeValue({field:'dependences',data: $event})"></ejs-combobox>
+                <ejs-combobox #cbbDependence [enabled]="data?.refField ? false : true"  [fields]="fields" [allowCustom]="true" placeholder='Liên kết' (valueChange)="changeValue({field:'dependences',data: $event})"></ejs-combobox>
             </div>
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'lbldependence'"  default="Hệ thống tự động kiểm tra ngày được nhập phải lớn hơn ngày của trường liên kết" ngClass="text-gray-500 fs-7"></codx-label>
         </div>
     </div>
     <div class="border-top mt-4">
         <div class="d-flex align-items-center mt-4">
-            <codx-input type="switch" [crrValue]="data.isRequired" field="isRequired" label="Bắt buộc"  (valueChange)="changeValue($event)" class="mt-2"></codx-input>
+            <codx-input type="switch" [disabled]="data?.refField" [crrValue]="data.isRequired" field="isRequired" label="Bắt buộc"  (valueChange)="changeValue($event)" class="mt-2"></codx-input>
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Bắt buộc" class="fw-bold ms-2"></codx-label>
         </div>
       
         <div class="d-flex align-items-center justify-content-between mt-1">
             <div class="d-flex align-items-center">
-                <codx-input type="switch" [crrValue]="data?.visibleControl?.visibleControl" field="visibleControl" label="Điều kiện hiện thị"  (valueChange)="changeValueVisibleControl($event)" class="mt-2"></codx-input>
+                <codx-input type="switch" [disabled]="data?.refField" [crrValue]="data?.visibleControl?.visibleControl" field="visibleControl" label="Điều kiện hiện thị"  (valueChange)="changeValueVisibleControl($event)" class="mt-2"></codx-input>
                 <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'VisibleControl'" default="Điều kiện hiện thị" class="fw-bold ms-2"></codx-label>
             </div>
             <i class="icon-edit-one cursor-pointer" [class.text-primary]="data?.visibleControl?.visibleControl" (click)="data?.visibleControl?.visibleControl? openVisibleControlForm(): undefined"></i>

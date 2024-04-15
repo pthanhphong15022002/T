@@ -242,6 +242,11 @@ export const routes: Routes = [
         data: { noReuse: true, runMode: 1 },
       },
       {
+        path: 'assetadjustments/:funcID',
+        component: AssetJournalsComponent,
+        data: { noReuse: true, runMode: 1 },
+      },
+      {
         path: 'assetrevaluations/:funcID',
         component: AssetJournalsComponent,
         data: { noReuse: true, runMode: 1 },

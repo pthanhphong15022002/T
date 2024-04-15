@@ -6,6 +6,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { environment } from 'src/environments/environment';
 import { FILE_REFERTYPE, MEMBERTYPE, NEWSTYPE, SHARECONTROLS } from '../../models/Knowledge.model';
 import { Subject, takeUntil } from 'rxjs';
+import { WP_TagObjects } from '../../models/WP_TagObjects.model';
 
 @Component({
   selector: 'wp4-popup-add-knowledge',
@@ -28,9 +29,8 @@ export class PopupAddKnowledgeComponent implements OnInit, AfterViewInit,OnDestr
   grvSetup: any = null;
   arrFieldRequire: any[] = [];
   headerText: string = '';
-  loading: boolean = false;
-  isAdd: boolean = true;
   actionType: "add" | "edit" = "add";
+  MEMPERTYPE_SHARE = MEMBERTYPE.SHARE;
   defaultImgSrc: string = '../assets/themes/wp/default/img/upload_image.svg';
   NEWTYPE_POST = NEWSTYPE.POST;
   private destroy$ = new Subject<void>();
@@ -52,29 +52,43 @@ export class PopupAddKnowledgeComponent implements OnInit, AfterViewInit,OnDestr
   {
     this.user = auth.get();
     this.dialogRef = dialogRef;
-    this.headerText = dialogData.data.action;
-    this.isAdd = dialogData.data.isAdd;
-    this.data = JSON.parse(JSON.stringify(dialogData.data.data));
-    if (this.isAdd) 
+    if(dialogData?.data)
     {
-      this.data.createdBy = this.user.userID;
-      this.data.createdName = this.user.userName;
-    } 
-    else 
-    {
-      this.getPostInfo(this.data.recID);
-      this.getFileByObjectID(this.data.recID);
+      this.actionType = dialogData.data.actionType;
+      this.data = JSON.parse(JSON.stringify(dialogData.data.data));
+      if (this.actionType == "add") 
+      {
+        this.data.permissions = [];
+        let owner = new WP_TagObjects();
+        owner.objectID = this.user.userID;
+        owner.objectName = this.user.userName;
+        owner.objectType = "U";
+        owner.memberType = MEMBERTYPE.CREATED;
+        this.data.permissions.push(owner);
+        if(this.data.shareControl == SHARECONTROLS.EVERYONE)
+        {
+          let erveryOne = new WP_TagObjects();
+          erveryOne.objectType = "9";
+          erveryOne.memberType = MEMBERTYPE.SHARE;
+          this.data.permissions.push(erveryOne);
+        }
+      } 
+      else if(this.actionType == "edit")
+      {
+        this.getPostByID(this.data.recID);
+        this.getFileByObjectID(this.data.recID);
+      }
     }
-  }
- 
-  ngOnInit(): void {
     this.cache.functionList('WPT02')
     .pipe(takeUntil(this.destroy$))
     .subscribe((func: any) => {
       if (func) 
       {
         this.function = func;
-        this.headerText += ' ' + func.customName;
+        if(this.actionType == "add")
+          this.headerText = "Thêm " + func.customName;
+        else if(this.actionType == "edit")
+          this.headerText = "Cập nhật " + func.customName;
         this.cache
           .gridViewSetup(func.formName, func.gridViewName)
           .pipe(takeUntil(this.destroy$))
@@ -90,6 +104,10 @@ export class PopupAddKnowledgeComponent implements OnInit, AfterViewInit,OnDestr
       }
     });
   }
+ 
+  ngOnInit(): void {
+    
+  }
 
   ngAfterViewInit(): void {}
 
@@ -97,93 +115,55 @@ export class PopupAddKnowledgeComponent implements OnInit, AfterViewInit,OnDestr
     this.destroy$.next();
     this.destroy$.complete();
   }
-  getPostInfo(recID: string) {
-    if (recID) {
-      this.api
-        .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'GetPostByIDAsync', [recID])
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res: any) => {
-          this.data = JSON.parse(JSON.stringify(res));
-          this.detectorRef.detectChanges();
-        });
-    }
-  }
-  
-  clickClosePopup() {
-    this.dialogRef.close();
-  }
-  openControlShare(content: any) {
-    this.callFunc.openForm(content, '', 420, window.innerHeight);
-  }
 
-  clickInsert() {
-    if (this.checkValidate()) return;
-    this.loading = true;
-    this.codxATMImage.fileUploadList = Array.from<any>(this.fileUpload);
-    this.codxATMImage.saveFilesMulObservable()
+  getPostByID(recID: string) {
+    this.api
+    .execSv('WP', 'WP', 'NewsBusiness', 'GetPostByIDAsync', [recID])
     .pipe(takeUntil(this.destroy$))
-    .subscribe((res1: any) => {
-      if(res1 && ((typeof res1 == 'object' && res1.status == 0) || (Array.isArray(res1) && res1[0].status == 0))) {
-        this.api
-          .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'InsertAsync', [this.data])
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res2: boolean) => {
-            this.notifSV.notifyCode(res2 ? 'WP024' : 'WP013');
-            this.dialogRef.close(res2);
-          });
-      } 
-      else 
-      {
-        let arrFields = this.fileUpload.map((x) => x.fileName);
-        let fileNames =
-          arrFields.length > 1 ? arrFields.join(';') : arrFields.pop();
-        this.notifSV.notifyCode('DM006', 0, fileNames);
-        this.dialogRef.close();
-        return;
-      }
+    .subscribe((res: any) => {
+      this.data = JSON.parse(JSON.stringify(res));
+      this.detectorRef.detectChanges();
     });
   }
 
-  clickRelease() {
-    if (this.checkValidate()) return;
-    this.loading = true;
-    if (this.fileUpload.length > 0) {
-      this.codxATMImage.fileUploadList = [...this.fileUpload];
-      this.codxATMImage.saveFilesMulObservable()
+  getFileByObjectID(objectID: string) {
+    this.api
+      .execSv(
+        'DM',
+        'ERM.Business.DM',
+        'FileBussiness',
+        'GetFilesByIbjectIDAsync',
+        [objectID])
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if(res && ((typeof res == 'object' && res.status == 0) || (Array.isArray(res) && res[0].status == 0))) 
-        {
-          this.releasePost(this.data);
-        } 
-        else 
-        {
-          let arrFields = this.fileUpload.map((x) => x.fileName);
-          let fileNames =
-            arrFields.length > 1 ? arrFields.join(';') : arrFields.pop();
-          this.notifSV.notifyCode('DM006', 0, fileNames);
-          this.dialogRef.close();
-          this.dialogRef.close();
-          return;
+      .subscribe((res: any[]) => {
+        if (res?.length > 0) {
+          res.forEach((file: any) => {
+            if (file?.referType == FILE_REFERTYPE.IMAGE) 
+            {
+              file['source'] = this.codxShareSV.getThumbByUrl(file.url,300);
+              file['id'] = file.recID;
+              this.fileImage = file;
+            } 
+            else if (file?.referType == FILE_REFERTYPE.VIDEO)
+            {
+              file['source'] = `${environment.urlUpload}/${file.url}`;
+              file['id'] = file.recID;
+              this.fileVideo = file;
+            }
+          });
+          this.detectorRef.detectChanges();
         }
       });
-    } else {
-      this.releasePost(this.data);
+  }
+
+  openControlShare(content: any) {
+    if(content)
+    {
+      this.callFunc.openForm(content, '', 420, window.innerHeight);
     }
   }
-
-  releasePost(post: any) {
-    this.api
-      .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'ReleaseNewsAsync', [post])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        this.loading = false;
-        this.notifSV.notifyCode(res ? 'WP024' : 'WP013');
-        this.dialogRef.close(res);
-      });
-  }
-
-  checkValidate() {
+  
+  validate() {
     if (this.arrFieldRequire.length > 0) {
       let arrFieldUnValid = this.arrFieldRequire.filter(key => !this.data[Util.camelize(key)]);
       if (arrFieldUnValid.length > 0)
@@ -204,11 +184,7 @@ export class PopupAddKnowledgeComponent implements OnInit, AfterViewInit,OnDestr
     if (event) {
       let field = Util.camelize(event.field);
       let value = event.data;
-      switch(field)
-      {
-        case "category":
-          this.data[field] = value;
-          break;
+      switch(field){
         case "startDate":
         case "endDate":
           value = value.fromDate;
@@ -228,20 +204,20 @@ export class PopupAddKnowledgeComponent implements OnInit, AfterViewInit,OnDestr
     }
   }
 
-  eventApply(event: any) {
-    if (Array.isArray(event)) {
-      let dataSeleted = Array.from<any>(event);
-      let lstPermision = [];
-      let fisrtPermission = dataSeleted[0];
-      let shareControl = dataSeleted[0].objectType;
-      this.data.shareControl = fisrtPermission.objectType;
-      if (!Array.isArray(this.data.permissions)) this.data.permissions = [];
+  shareWith:string = "";
+  cbbShareChange(event: any) {
+    if (event?.length > 0) 
+    {
+      let permissions = Array.from<any>(event);
+      this.data.shareControl = permissions[0].objectType;
+      if (!this.data.permissions) 
+        this.data.permissions = [];
       else
-        this.data.permissions = this.data.permissions.filter(
-          (e: any) => e.memberType != MEMBERTYPE.SHARE
-        );
-      switch (shareControl) {
+        this.data.permissions = this.data.permissions.filter((e: any) => e.memberType != MEMBERTYPE.SHARE);
+      switch (this.data.shareControl) {
         case SHARECONTROLS.OWNER:
+          this.data.shareName = "";
+          this.shareWith = "";
           break;
         case SHARECONTROLS.EVERYONE:
         case SHARECONTROLS.MYGROUP:
@@ -249,14 +225,12 @@ export class PopupAddKnowledgeComponent implements OnInit, AfterViewInit,OnDestr
         case SHARECONTROLS.MYDEPARMENTS:
         case SHARECONTROLS.MYDIVISION:
         case SHARECONTROLS.MYCOMPANY:
-          let permission = new Permission();
-          permission.memberType = MEMBERTYPE.SHARE;
-          permission.objectID = '';
-          permission.objectName = '';
+          let permission = new WP_TagObjects();
           permission.objectType = this.data.shareControl;
-          lstPermision.push(permission);
-          this.data.permissions = lstPermision;
-          this.data.shareName = '';
+          permission.memberType = MEMBERTYPE.SHARE;
+          this.data.permissions.push(permission);
+          this.data.shareName = "";
+          this.shareWith = "";
           break;
         case SHARECONTROLS.OGRHIERACHY:
         case SHARECONTROLS.DEPARMENTS:
@@ -264,33 +238,29 @@ export class PopupAddKnowledgeComponent implements OnInit, AfterViewInit,OnDestr
         case SHARECONTROLS.ROLES:
         case SHARECONTROLS.GROUPS:
         case SHARECONTROLS.USER:
-          dataSeleted.forEach((x) => {
-            let p = new Permission();
+          permissions.forEach(item => {
+            let p = new WP_TagObjects();
+            p.objectID = item.id;
+            p.objectName = item.text;
+            p.objectType = item.objectType;
             p.memberType = MEMBERTYPE.SHARE;
-            p.objectID = x.id;
-            p.objectName = x.text;
-            p.objectType = x.objectType;
             this.data.permissions.push(p);
           });
-          let mssgCodeShare = dataSeleted.length == 1 ? 'WP001' : 'WP002';
-          this.cache.message(mssgCodeShare).subscribe((mssg: any) => {
-            if (mssg) {
-              if (dataSeleted.length == 1) {
-                this.data.shareName = Util.stringFormat(
-                  mssg.defaultName,
-                  `<b>${fisrtPermission.text}</b>`
-                );
-              } 
+          let mssgCode = permissions.length == 1 ? 'WP001' : 'WP002';
+          this.cache.message(mssgCode)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((mssg: any) => {
+            if(mssg) 
+            {
+              if (permissions.length == 1) 
+              {
+                this.data.shareName = Util.stringFormat(mssg.defaultName,`<b>${permissions[0].text}</b>`);
+                this.shareWith = Util.stringFormat(mssg.defaultName,`<b>${permissions[0].text}</b>`);
+              }
               else 
               {
-                let count = dataSeleted.length - 1;
-                let type = fisrtPermission.objectName;
-                this.data.shareName = Util.stringFormat(
-                  mssg.defaultName,
-                  `<b>${fisrtPermission.text}</b>`,
-                  count,
-                  type
-                );
+                this.data.shareName = Util.stringFormat(mssg.defaultName,`<b>${permissions[0].text}</b>`,permissions.length - 1,permissions[0].objectName);
+                this.shareWith = Util.stringFormat(mssg.defaultName,`<b>${permissions[0].text}</b>`,permissions.length - 1,permissions[0].objectName);
               }
             }
           });
@@ -302,125 +272,224 @@ export class PopupAddKnowledgeComponent implements OnInit, AfterViewInit,OnDestr
     }
   }
 
-  addFiles(files: any) {
-    if (files?.data?.length > 0) {
-      let file = files.data[0];
+  clickUpload(type: string) {
+    if (type == 'image') 
+      this.codxATMImage.uploadFile();
+    else 
+      this.codxATMVideo.uploadFile();
+  }
+
+  selectedFile(event: any) {
+    if (event?.data?.length > 0) 
+    {
+      let file = event.data[0];
       file['id'] = Util.uid();
-      if (file.mimeType.includes('image')) {
+      if (file.mimeType.includes('image')) 
+      {
         file['referType'] = FILE_REFERTYPE.IMAGE;
         file['source'] = file.avatar;
         if (this.fileImage) this.removeImage();
         this.fileImage = JSON.parse(JSON.stringify(file));
-      } else if (file.mimeType.includes('video')) {
+      } 
+      else if (file.mimeType.includes('video')) 
+      {
         file['referType'] = FILE_REFERTYPE.VIDEO;
         file['source'] = file.data.changingThisBreaksApplicationSecurity;
         this.fileVideo = JSON.parse(JSON.stringify(file));
       }
-      if (this.fileUpload.length > 0) {
-        this.fileUpload = this.fileUpload.filter(
-          (x) => x['referType'] != file['referType']
-        );
-      }
+
+      if (this.fileUpload?.length > 0)
+        this.fileUpload = this.fileUpload.filter((x) => x['referType'] != file['referType']);
       this.fileUpload.push(file);
       this.data.image = this.fileUpload.length;
       this.detectorRef.detectChanges();
     }
   }
 
-  clickUpload(type: string) {
-    if (type == 'image') {
-      this.codxATMImage.uploadFile();
-    } else {
-      this.codxATMVideo.uploadFile();
-    }
-  }
-
-  clickUpdate() {
-    if (this.checkValidate()) return;
-    this.loading = true;
-    if (this.fileDelete.length > 0) {
-      let _fileIDs = this.fileDelete.map((x) => x.id);
-      this.api
-        .execSv<any>(
-          'DM',
-          'ERM.Business.DM',
-          'FileBussiness',
-          'DeleteFilesAsync',
-          [_fileIDs]
-        )
-        .subscribe();
-    }
-    if (this.fileUpload.length > 0) {
-      this.data.image = this.fileUpload.length;
-      this.codxATMImage.fileUploadList = [...this.fileUpload];
-      this.codxATMImage.saveFilesMulObservable().subscribe((res: any) => {
-        if (
-          res &&
-          ((typeof res == 'object' && res?.status == 0) ||
-            (Array.isArray(res) && res[0]?.status == 0))
-        ) {
-          this.updatePost(this.data);
-        } else {
-          let arrFields = this.fileUpload.map((x) => x.fileName);
-          let fileNames =
-            arrFields.length > 1 ? arrFields.join(';') : arrFields.pop();
-          this.notifSV.notifyCode('DM006', 0, fileNames);
-          this.dialogRef.close();
-          return;
-        }
-      });
-    } else {
-      this.updatePost(this.data);
-    }
-  }
-
-  updatePost(post: any) {
-    this.api
-      .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'UpdateAsync', [post])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        this.loading = false;
-        this.notifSV.notifyCode(res ? 'SYS007' : 'SYS021');
-        this.dialogRef.close(res);
-      });
-  }
-  getFileByObjectID(objectID: string) {
-    this.api
-      .execSv(
-        'DM',
-        'ERM.Business.DM',
-        'FileBussiness',
-        'GetFilesByIbjectIDAsync',
-        [objectID])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any[]) => {
-        if (res?.length > 0) {
-          res.forEach((f: any) => {
-            if (f.referType == FILE_REFERTYPE.IMAGE) {
-              this.fileImage = f;
-              this.fileImage['source'] = this.codxShareSV.getThumbByUrl(
-                f.url,
-                300
-              );
-              this.fileImage['id'] = f.recID;
-            } else if (f.referType == FILE_REFERTYPE.VIDEO) {
-              this.fileVideo = f;
-              this.fileVideo['source'] =
-                `${environment.urlUpload}` + '/' + f.url;
-              this.fileVideo['id'] = f.recID;
-            }
-          });
-          this.detectorRef.detectChanges();
-        }
-      });
-  }
-
   fileDelete: any[] = [];
   removeImage() {
-    if (!this.fileDelete)  this.fileDelete = [];
+    if(this.actionType == "add") return;
+    if (!this.fileDelete) this.fileDelete = [];
     this.fileDelete.push(this.fileImage);
     this.fileUpload = this.fileUpload.filter((x) => x.id != this.fileImage.id);
     this.fileImage = null;
-    this.data.image = this.data.image > 0 ? this.data.image - 1 : 0;
+    this.data.image = 0;
   }
+
+  getPermissionsFile(): Permission[]{
+    let permissions:Permission[] = [];
+    if(this.data.permissions?.length > 0)
+    {
+      this.data.permissions.forEach(x => {
+        let per = new Permission();
+        per.objectID = x.objectID;
+        per.objectName = x.objectName;
+        per.objectType = x.objectType;
+        per.read = true;
+        per.share = true;
+        per.download = true;
+        per.isActive = true;
+        permissions.push(per);
+      });
+    }
+    else 
+    {
+      let per = new Permission();
+      per.objectID = "";
+      per.objectName = this.data.shareControl == "9" ? "Mọi người" : "";
+      per.objectType = this.data.shareControl;
+      per.read = true;
+      per.share = true;
+      per.download = true;
+      per.isActive = true;
+      permissions.push(per);
+    }
+    return permissions;
+  }
+
+  isLoading:boolean = false;
+  onSave(){
+    if (this.validate()) return;
+    this.isLoading = true;
+    if(this.fileUpload.length > 0)
+    {
+      let permisisons = this.getPermissionsFile();
+      this.fileUpload.forEach(x => x.permissions = permisisons);
+    }
+    this.codxATMImage.fileUploadList = [...this.fileUpload];
+    this.codxATMImage.saveFilesMulObservable()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if(res) 
+        this.save();
+      else 
+      {
+        this.isLoading = false;
+        this.notifSV.notifyCode("WP013");
+      }
+    });
+  }
+
+  save(){
+    this.api
+    .execSv('WP', 'WP', 'NewsBusiness', 'SaveAsync', [this.data])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: boolean) => {
+      if(res)
+      {
+        this.notifSV.notifyCode("WP024");
+        this.dialogRef.close(this.data);
+      }
+      else
+      {
+        this.isLoading = false;
+        this.notifSV.notifyCode("SYS023");
+      }
+    });
+  }
+
+  onUpdate(){
+    debugger
+    if (this.validate()) return;
+    this.isLoading = true;
+    if (this.fileDelete?.length > 0) 
+    {
+      let _fileIDs = this.fileDelete.map((x) => x.id);
+      this.api
+      .execSv<any>(
+        'DM',
+        'ERM.Business.DM',
+        'FileBussiness',
+        'DeleteFilesAsync',
+        [_fileIDs]).pipe(takeUntil(this.destroy$)).subscribe();
+    }
+    if(this.fileUpload?.length > 0)
+    {
+      let permisisons = this.getPermissionsFile();
+      this.fileUpload.forEach(x => x.permissions = permisisons);
+    }
+    this.codxATMImage.fileUploadList = [...this.fileUpload];
+    this.codxATMImage.saveFilesMulObservable()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if(res) 
+        this.update();
+      else 
+      {
+        this.isLoading = false;
+        this.notifSV.notifyCode("WP013");
+      }
+    });
+  }
+
+  update(){
+    this.api
+    .execSv('WP', 'WP', 'NewsBusiness', 'UpdateAsync2', [this.data])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: boolean) => {
+      if(res)
+      {
+        this.notifSV.notifyCode("SYS007");
+        this.dialogRef.close(this.data);
+      }
+      else
+      {
+        this.isLoading = true;
+        this.notifSV.notifyCode("SYS021");
+      }
+    });
+  }
+
+  onRelease() {
+    if (this.validate()) return;
+    this.isLoading = true;
+    if (this.fileDelete?.length > 0) 
+    {
+      let _fileIDs = this.fileDelete.map((x) => x.id);
+      this.api
+      .execSv<any>(
+        'DM',
+        'ERM.Business.DM',
+        'FileBussiness',
+        'DeleteFilesAsync',
+        [_fileIDs]).pipe(takeUntil(this.destroy$)).subscribe();
+    }
+    if(this.fileUpload.length > 0) 
+    {
+      let permisisons = this.getPermissionsFile();
+      this.fileUpload.forEach(x => x.permissions = permisisons);
+      this.codxATMImage.fileUploadList = [...this.fileUpload];
+      this.codxATMImage.saveFilesMulObservable()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if(res) 
+          this.release(this.data);
+        else 
+        {
+          this.isLoading = false;
+          this.notifSV.notifyCode("Gửi duyệt không thành công",2); // chưa có mssgCode
+        }
+      });
+    } 
+    else this.release(this.data);
+  }
+
+  release(post: any) {
+    this.api
+    .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'SaveAndReleaseAsync', [post])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if(res)
+      {
+        this.notifSV.notifyCode("ES007");
+        this.dialogRef.close(res[1]);
+      }
+      else
+      {
+        this.isLoading = false;
+        this.notifSV.notifyCode("Gửi duyệt không thành công",2); // chưa có mssgCode
+      }
+    });
+  }
+
 }

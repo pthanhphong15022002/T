@@ -1,25 +1,25 @@
 <div class="border-top py-4 mt-2">
     <codx-label formName="DynamicForms" [fiedName]="'lblborder'" default="Viền" class="fw-bold"></codx-label>
     <div class="d-flex align-items-center justify-content-between mt-2 mb-4">
-        <div class="d-flex align-items-center cursor-pointer" (click)="changeValueValidateControl({field:'border',data:0})" [class.text-primary]="!data?.validateControl?.border || data?.validateControl?.border == 0">
+        <div class="d-flex align-items-center cursor-pointer" (click)="!data?.refField ? changeValueValidateControl({field:'border',data:0}): undefined" [class.text-primary]="!data?.validateControl?.border || data?.validateControl?.border == 0">
             <i class="icon-border_clear icon-22" ></i>
-            <codx-label formName="DynamicForms" [fiedName]="'lblborderNone'" default="Không" class="ms-2" ></codx-label>
+            <codx-label formName="DynamicForms" [fiedName]="'lblborderNone'" default="Không" class="ms-2 fw-bold" ></codx-label>
         </div>
-        <div class="d-flex align-items-center cursor-pointer" (click)="changeValueValidateControl({field:'border',data:1})" [class.text-primary]="data?.validateControl?.border == 1">
+        <div class="d-flex align-items-center cursor-pointer" (click)="!data?.refField ? changeValueValidateControl({field:'border',data:1}): undefined" [class.text-primary]="data?.validateControl?.border == 1">
             <i class="icon-border_top icon-22" ></i>
-            <codx-label formName="DynamicForms" [fiedName]="'lblborderNone'" default="Trên" class="ms-2" ></codx-label>
+            <codx-label formName="DynamicForms" [fiedName]="'lblborderNone'" default="Trên" class="ms-2 fw-bold" ></codx-label>
         </div>
-        <div class="d-flex align-items-center cursor-pointer" (click)="changeValueValidateControl({field:'border',data:2})" [class.text-primary]="data?.validateControl?.border == 2">
+        <div class="d-flex align-items-center cursor-pointer" (click)="!data?.refField ? changeValueValidateControl({field:'border',data:2}): undefined" [class.text-primary]="data?.validateControl?.border == 2">
             <i class="icon-border_bottom icon-22" ></i>
-            <codx-label formName="DynamicForms" [fiedName]="'lblborderNone'" default="Dưới" class="ms-2"></codx-label>
+            <codx-label formName="DynamicForms" [fiedName]="'lblborderNone'" default="Dưới" class="ms-2 fw-bold"></codx-label>
         </div>
     </div>
     <codx-label formName="DynamicForms" [fiedName]="'lblborderStyle'" default="Kiểu" class="fw-bold"></codx-label>
     <div class="d-flex align-items-center mt-2">
-        <div class="d-flex align-items-center cursor-pointer me-4" (click)="changeValueValidateControl({field:'borderStyle',data:0})">
+        <div class="d-flex align-items-center cursor-pointer me-4" (click)="!data?.refField ? changeValueValidateControl({field:'borderStyle',data:0}): undefined">
             <codx-label formName="DynamicForms" [fiedName]="'lblborderSolid'" default="Solid" class="badge py-2 px- fs-7" [ngClass]="(!data?.validateControl?.borderStyle || data?.validateControl?.borderStyle == 0) ? 'badge-light-primary' : 'badge-light'"></codx-label>
         </div>
-        <div class="d-flex align-items-center cursor-pointer" (click)="changeValueValidateControl({field:'borderStyle',data:1})">
+        <div class="d-flex align-items-center cursor-pointer" (click)="!data?.refField ? changeValueValidateControl({field:'borderStyle',data:1}) : undefined">
             <codx-label formName="DynamicForms" [fiedName]="'lblborderDotted'" default="Dotted" class="badge py-2 px-5 fs-7" [ngClass]="(data?.validateControl?.borderStyle == 1) ? 'badge-light-primary' : 'badge-light'"></codx-label>
         </div>
     </div>

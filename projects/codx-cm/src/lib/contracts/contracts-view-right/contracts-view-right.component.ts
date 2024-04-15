@@ -137,6 +137,7 @@ export class ContractsViewDetailComponent
   lstContacts: any;
   allowTask = false;
   isViewStep = false;
+  isUpdateTask = false;
   constructor(
     private inject: Injector,
     private location: Location,
@@ -604,14 +605,13 @@ export class ContractsViewDetailComponent
 
   async getConfigurationProcess(){
     if(this.contract?.processID){
+      this.isViewStep = !['1', '2', '15',].includes(this.contract?.status) || this.contract?.closed || this.contract?.approveStatus == '3';
       const res = await firstValueFrom(this.codxCmService.getConfigurationProcess(this.contract?.processID));
       if(res && res[0] && res[0]?.allowTask){
-        this.isViewStep = !(res[0]?.allowTask && this.contract?.approveStatus != '3' && !this.contract?.closed) ;
-      }else{
-        this.isViewStep = ['1', '2', '15',].includes(this.contract?.status) || this.contract?.closed || this.contract?.approveStatus == '3';
+        this.isUpdateTask = (res[0]?.allowTask && this.contract?.approveStatus != '3' && (['3', '4', '5', '6',].includes(this.contract?.status) || 
+        this.contract.closed)) ;
+        this.changeDetectorRef.markForCheck();
       }
-      this.changeDetectorRef.detectChanges();
     }
   }
-
 }

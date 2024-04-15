@@ -172,6 +172,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() tmpCustomMFc?: TemplateRef<any>;
   @Input() isScroll = true;
   @Input() isFristVer = false;
+  @Input() disabled: boolean = false;
+
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
@@ -2015,7 +2017,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   uploadFile() {
     var ctrl = this.uploadObj.element as HTMLElement;
-    //var ctrl = document.querySelector("[idbutton='" + this.idBrowse + "']") as HTMLElement;
     if (ctrl != null) ctrl.click();
   }
 

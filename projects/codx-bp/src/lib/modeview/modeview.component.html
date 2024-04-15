@@ -63,7 +63,7 @@
             <ng-template #content>
               <div class="d-flex flex-column">
                 <ng-container *ngFor="let item of vllBP002?.datas">
-                  <div class="w-100 py-3 px-4 mt-3 bg-item-lightest rd-3px cursor-move mw-300px d-flex align-items-center" cdkDrag [cdkDragDisabled]="viewType == 2" [cdkDragData]="item" *ngIf="item.groupType == 1">
+                  <div class="w-100 py-3 px-4 mt-3 bg-item-lightest rd-3px cursor-move mw-300px d-flex align-items-center" cdkDrag [cdkDragDisabled]="viewType == 2" [cdkDragData]="item" *ngIf="item?.groupType == 1">
                     <i [ngClass]="item.icon" class="icon-22"></i>
                     <span class="fw-bold ms-4 mt-1">{{item.text}}</span>
                   </div>
@@ -130,7 +130,7 @@
               >
                 <div 
                   cdkDrag
-                  *ngFor="let subItem of item.children;let j = index "
+                  *ngFor="let subItem of item.children ; let j = index "
                   class="d-flex align-items-center p-2 cursor-pointer"
                   [style.width.%]="100 / item.children.length"
                   [cdkDragDisabled]="subItem.controlType == 'Title' || viewType == 2"
@@ -629,7 +629,7 @@
           <lib-property-share [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-share>
         </ng-container>
         <ng-container *ngSwitchCase="'SubTitle'">
-          <lib-property-text [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-text>
+          <lib-property-text [data]="dataSelected" [stepNo]="stepNo" (dataChange)="dataChange($event)"></lib-property-text>
         </ng-container>
         <ng-container *ngSwitchCase="'Text'">
           <lib-property-text [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)" (dataChangeTableEmit)="dataChangeTableEmit($event)"></lib-property-text>

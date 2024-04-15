@@ -9,6 +9,7 @@ import { SettledInvoicesAdd } from '../../../share/settledinvoices-add/settledin
 import { AC_VATInvoices } from '../../../models/AC_VATInvoices.model';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 
 @Component({
   selector: 'lib-general-journal-add',
@@ -99,6 +100,15 @@ export class GeneralJournalAddComponent extends UIComponent {
   onAfterInitForm(event){
     this.setValidateForm();
     this.detectorRef.detectChanges();
+  }
+
+  /**
+   * *Hàm khởi tạo các tab detail khi mở form(ẩn hiện tab theo loại chứng từ)
+   * @param event
+   * @param eleTab
+   */
+  createTabDetail(event: any, eleTab: TabComponent) {
+    this.showHideTabDetail(this.master?.data?.subType, this.elementTabDetail);
   }
 
   initGridGeneral(eleGrid:CodxGridviewV2Component){
@@ -362,7 +372,7 @@ export class GeneralJournalAddComponent extends UIComponent {
     }
     this.eleGridVatInvoices.startProcess();
     this.api.exec('AC', 'VATInvoicesBusiness', 'ValueChangeAsync', [
-      'AC_CashPayments',
+      'AC_GeneralJournals',
       this.master.data,
       oLine,
       event.field
@@ -500,6 +510,9 @@ export class GeneralJournalAddComponent extends UIComponent {
           this.eleGridGeneral.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') {
               this.saveVoucher(type);
+            }else{
+              this.ngxLoader.stop();
+              return;
             }
           })
           return;
@@ -508,6 +521,9 @@ export class GeneralJournalAddComponent extends UIComponent {
           this.eleGridSettledInvoices.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') {
               this.saveVoucher(type);
+            }else{
+              this.ngxLoader.stop();
+              return;
             }
           })
           return;
@@ -516,6 +532,9 @@ export class GeneralJournalAddComponent extends UIComponent {
           this.eleGridVatInvoices.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') {
               this.saveVoucher(type);
+            }else{
+              this.ngxLoader.stop();
+              return;
             }
           })
           return;
@@ -879,32 +898,6 @@ export class GeneralJournalAddComponent extends UIComponent {
   }
 
   /**
-   * *Hàm ẩn các morefunction trong lưới
-   * @param event
-   */
-  changeMF(event,type = '') {
-    if (type === 'gridgeneral') {
-      event.forEach((element) => {
-        if (element.functionID == 'SYS104' || element.functionID == 'SYS102') {
-          element.disabled = false;
-          element.isbookmark = false;
-        }else{
-          element.disabled = true;
-        }
-      });
-    }else{
-      event.forEach((element) => {
-        if (element.functionID == 'SYS102') {
-          element.disabled = false;
-          element.isbookmark = false;
-        }else{
-          element.disabled = true;
-        }
-      });
-    }
-  }
-
-  /**
    * *Hàm xóa dòng trong lưới
    * @param data
    */
@@ -974,6 +967,37 @@ export class GeneralJournalAddComponent extends UIComponent {
       lstRequire.push({field : 'VoucherNo',isDisable : false,require:false});
     }
     this.master.setRequire(lstRequire);
+  }
+
+  /**
+   * *Hàm ẩn hiện các tab detail theo loại chứng từ
+   * @param type
+   * @param eleTab
+   */
+  showHideTabDetail(type, eleTab) {
+    if (eleTab) {
+      switch (type) {
+        case `${this.journal.journalType+'1'}`:
+          eleTab.hideTab(0, false);
+          eleTab.hideTab(1, false);
+          eleTab.hideTab(2, true);
+          eleTab.select(1);
+          break;
+
+        case `${this.journal.journalType+'9'}`:
+          eleTab.hideTab(0, false);
+          eleTab.hideTab(1, false);
+          eleTab.hideTab(2, false);
+          eleTab.select(0);
+          break;
+
+        default:
+          eleTab.hideTab(0, true);
+          eleTab.hideTab(1, true);
+          eleTab.hideTab(2, true);
+          break;
+      }
+    }
   }
 
   /**
