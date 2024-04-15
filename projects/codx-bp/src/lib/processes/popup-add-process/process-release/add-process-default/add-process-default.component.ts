@@ -33,12 +33,11 @@ import {
 } from 'codx-core';
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
-import { Subject, elementAt, firstValueFrom, isObservable } from 'rxjs';
-import { AddTableRowComponent } from './add-table-row/add-table-row.component';
-import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
+import { Subject, elementAt, firstValueFrom, forkJoin, isObservable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
+import { ProcessTableExpandComponent } from './process-table-expand/process-table-expand.component';
 
 @Component({
   selector: 'lib-add-process-default',
@@ -164,6 +163,7 @@ export class AddProcessDefaultComponent implements OnInit {
     );
     extendInfo.forEach((element) => {
       let field = element.fieldName.toLowerCase();
+
       this.gridViewSetup[field] = element;
       if (element.fieldType == 'Attachment') {
         element.documentControl =
@@ -247,6 +247,7 @@ export class AddProcessDefaultComponent implements OnInit {
             refType: elm2?.refType,
             refValue: elm2?.refValue,
             allowEdit: true,
+            width: this.get_tex_width(elm2.title)
           };
           element.columnsGrid.push(obj);
 
@@ -298,11 +299,12 @@ export class AddProcessDefaultComponent implements OnInit {
         }
         this.indexUploadUserInfo[field] = 0;
       }
-      if (element.fieldType == 'Note') {
-        element.dataFormat =
-          typeof element.dataFormat == 'string'
-            ? JSON.parse(element.dataFormat)
-            : element.dataFormat;
+      if(element.fieldType == "Note")
+      {
+        element.validateControl =
+        typeof element.validateControl == 'string'
+          ? JSON.parse(element.validateControl)
+          : element.validateControl;
       }
       if (element.autoNumber?.autoNumberControl) {
         var objAuto = {
@@ -496,138 +498,31 @@ export class AddProcessDefaultComponent implements OnInit {
             )
           );
         }
+        const observablesList = [];
         if (this.listFieldAuto.length > 0) {
           this.listFieldAuto.forEach(async (item) => {
-            valueForm[item.field] = await firstValueFrom(
-              this.bpService.getAutoNumber(item.autoNumberNo)
-            );
+            // valueForm[item.field] = await firstValueFrom(
+            //   this.bpService.createAutoNumberByNo(item.autoNumberNo)
+            // );
+            observablesList.push(this.bpService.createAutoNumberByNo(item.autoNumberNo));
           });
         }
 
-        var stageF = this.process.steps.filter(
-          (x) => x.activityType == 'Stage'
-        )[0];
-        var stage = {
-          recID: Util.uid(),
-          instanceID: this.dataIns.recID,
-          applyFor: this.process?.applyFor,
-          status: '1',
-          taskType: stageF?.activityType,
-          activityType: stageF?.activityType,
-          taskName: stageF?.stepName,
-          memo: stageF.memo,
-          location: stageF.location,
-          interval: stageF.interval,
-          duration: stageF.duration,
-          settings: stageF.settings,
-          stepID: stageF.recID,
-          eventControl: stageF?.eventControl,
-          extendInfo: stageF?.extendInfo,
-          documentControl: stageF?.documentControl,
-          reminder: stageF?.reminder,
-          checkList: stageF?.checkList,
-          note: stageF?.note,
-          attachments: stageF?.attachments,
-          comments: stageF?.comments,
-          isOverDue: stageF?.isOverDue,
-          owners: stageF?.owners,
-          permissions: stageF?.permissions,
-          indexNo: 0,
-        };
-        var step = {
-          recID: Util.uid(),
-          instanceID: this.dataIns.recID,
-          applyFor: this.process?.applyFor,
-          status: '1',
-          taskType: this.data?.activityType,
-          activityType: this.data?.activityType,
-          taskName: this.data?.stepName,
-          memo: this.data.memo,
-          location: this.data.location,
-          interval: this.data.interval,
-          duration: this.data.duration,
-          settings: JSON.stringify(this.data.settings),
-          stepID: this.data.recID,
-          eventControl: this.data?.eventControl,
-          extendInfo: this.data?.extendInfo,
-          documentControl: this.data?.documentControl,
-          reminder: this.data?.reminder,
-          checkList: this.data?.checkList,
-          note: this.data?.note,
-          attachments: this.data?.attachments,
-          comments: this.data?.comments,
-          isOverDue: this.data?.isOverDue,
-          owners: this.data?.owners,
-          permissions: [
+        if(observablesList.length>0)
+        {
+          forkJoin(observablesList).subscribe(response => {
+            for(let i = 0 ; i < this.listFieldAuto.length ; i++)
             {
-              objectID: this.user?.userID,
-              objectName: this.user?.userName,
-              objectType: 'U',
-            },
-          ],
-          createdBy: this.user.userID,
-          indexNo: 1,
-        };
-        let fieldName = 'f' + this.data.stepNo + '_owner';
-        valueForm[fieldName] = {
-          username: this.infoUser?.userName,
-          createdon: new Date(),
-          position: this.infoUser?.positionID,
-          orgunit: this.infoUser?.orgUnitID,
-          department: this.infoUser?.departmentID,
-          company: this.infoUser?.companyID,
-        };
-        (this.dataIns.processID = this.process?.recID),
-          (this.dataIns.instanceNo = instanceNo),
-          (this.dataIns.instanceID = this.dataIns.recID),
-          (this.dataIns.status = '1'),
-          (this.dataIns.currentStage = stageF.recID),
-          (this.dataIns.currentStep = step.recID),
-          (this.dataIns.lastUpdate = null),
-          (this.dataIns.closed = false),
-          (this.dataIns.closedOn = null),
-          (this.dataIns.startDate = null),
-          (this.dataIns.endDate = null),
-          (this.dataIns.progress = null),
-          (this.dataIns.actualStart = null),
-          (this.dataIns.actualEnd = null),
-          (this.dataIns.createdOn = new Date()),
-          (this.dataIns.createdBy = this.user?.userID),
-          (this.dataIns.duration = this.process?.duration),
-          (this.dataIns.datas = JSON.stringify(valueForm));
-        this.dataIns.employeeID = this.infoUser?.employeeID;
-        this.dataIns.positionID = this.infoUser?.positionID;
-        this.dataIns.orgUnitID = this.infoUser?.orgUnitID;
-        this.dataIns.departmentID = this.infoUser?.departmentID;
-        this.dataIns.divisionID = this.infoUser?.divisionID;
-        this.dataIns.buid = this.infoUser?.buid;
-        this.dataIns.companyID = this.infoUser?.companyID;
-        // if(!this.dataIns?.documentControl) this.dataIns.documentControl = [];
-        // this.dataIns.documentControl = this.data?.documentControl.concat(this.dataIns.documentControl);
-        var listTask = JSON.stringify([stage, step]);
-        //Luu process Task
-        this.api
-          .execSv(
-            'BP',
-            'BP',
-            'ProcessTasksBusiness',
-            'SaveListTaskAsync',
-            listTask
-          )
-          .subscribe();
-        //Luu Instanes
-        this.api
-          .execSv(
-            'BP',
-            'BP',
-            'ProcessInstancesBusiness',
-            'SaveInsAsync',
-            this.dataIns
-          )
-          .subscribe(async (item) => {
-            //addFile nếu có
-            this.addFileAttach(type);
-          });
+              valueForm[this.listFieldAuto[i].field] = response[i];
+            }
+            this.beforeSaveAdd(valueForm,instanceNo,type)
+          })
+        }
+        else
+        {
+          this.beforeSaveAdd(valueForm,instanceNo,type)
+        }
+        
       } else if (this.type == 'edit') {
         if (!this.taskID) this.dataIns.title = valueForm[this.subTitle];
         (this.dataIns.modifiedOn = new Date()),
@@ -656,6 +551,133 @@ export class AddProcessDefaultComponent implements OnInit {
     }
   }
 
+  beforeSaveAdd(valueForm,instanceNo,type)
+  {
+    var stageF = this.process.steps.filter(
+      (x) => x.activityType == 'Stage'
+    )[0];
+    var stage = {
+      recID: Util.uid(),
+      instanceID: this.dataIns.recID,
+      applyFor: this.process?.applyFor,
+      status: '1',
+      taskType: stageF?.activityType,
+      activityType: stageF?.activityType,
+      taskName: stageF?.stepName,
+      memo: stageF.memo,
+      location: stageF.location,
+      interval: stageF.interval,
+      duration: stageF.duration,
+      settings: stageF.settings,
+      stepID: stageF.recID,
+      eventControl: stageF?.eventControl,
+      extendInfo: stageF?.extendInfo,
+      documentControl: stageF?.documentControl,
+      reminder: stageF?.reminder,
+      checkList: stageF?.checkList,
+      note: stageF?.note,
+      attachments: stageF?.attachments,
+      comments: stageF?.comments,
+      isOverDue: stageF?.isOverDue,
+      owners: stageF?.owners,
+      permissions: stageF?.permissions,
+      indexNo: 0,
+    };
+    var step = {
+      recID: Util.uid(),
+      instanceID: this.dataIns.recID,
+      applyFor: this.process?.applyFor,
+      status: '1',
+      taskType: this.data?.activityType,
+      activityType: this.data?.activityType,
+      taskName: this.data?.stepName,
+      memo: this.data.memo,
+      location: this.data.location,
+      interval: this.data.interval,
+      duration: this.data.duration,
+      settings: JSON.stringify(this.data.settings),
+      stepID: this.data.recID,
+      eventControl: this.data?.eventControl,
+      extendInfo: this.data?.extendInfo,
+      documentControl: this.data?.documentControl,
+      reminder: this.data?.reminder,
+      checkList: this.data?.checkList,
+      note: this.data?.note,
+      attachments: this.data?.attachments,
+      comments: this.data?.comments,
+      isOverDue: this.data?.isOverDue,
+      owners: this.data?.owners,
+      permissions: [
+        {
+          objectID: this.user?.userID,
+          objectName: this.user?.userName,
+          objectType: 'U',
+        },
+      ],
+      createdBy: this.user.userID,
+      indexNo: 1,
+    };
+    let fieldName = 'f' + this.data.stepNo + '_owner';
+    valueForm[fieldName] = {
+      username: this.infoUser?.userName,
+      createdon: new Date(),
+      position: this.infoUser?.positionID,
+      orgunit: this.infoUser?.orgUnitID,
+      department: this.infoUser?.departmentID,
+      company: this.infoUser?.companyID,
+    };
+    (this.dataIns.processID = this.process?.recID),
+      (this.dataIns.instanceNo = instanceNo),
+      (this.dataIns.instanceID = this.dataIns.recID),
+      (this.dataIns.status = '1'),
+      (this.dataIns.currentStage = stageF.recID),
+      (this.dataIns.currentStep = step.recID),
+      (this.dataIns.lastUpdate = null),
+      (this.dataIns.closed = false),
+      (this.dataIns.closedOn = null),
+      (this.dataIns.startDate = null),
+      (this.dataIns.endDate = null),
+      (this.dataIns.progress = null),
+      (this.dataIns.actualStart = null),
+      (this.dataIns.actualEnd = null),
+      (this.dataIns.createdOn = new Date()),
+      (this.dataIns.createdBy = this.user?.userID),
+      (this.dataIns.duration = this.process?.duration),
+      (this.dataIns.datas = JSON.stringify(valueForm));
+    this.dataIns.employeeID = this.infoUser?.employeeID;
+    this.dataIns.positionID = this.infoUser?.positionID;
+    this.dataIns.orgUnitID = this.infoUser?.orgUnitID;
+    this.dataIns.departmentID = this.infoUser?.departmentID;
+    this.dataIns.divisionID = this.infoUser?.divisionID;
+    this.dataIns.buid = this.infoUser?.buid;
+    this.dataIns.companyID = this.infoUser?.companyID;
+    // if(!this.dataIns?.documentControl) this.dataIns.documentControl = [];
+    // this.dataIns.documentControl = this.data?.documentControl.concat(this.dataIns.documentControl);
+    var listTask = JSON.stringify([stage, step]);
+    //Luu process Task
+    this.api
+      .execSv(
+        'BP',
+        'BP',
+        'ProcessTasksBusiness',
+        'SaveListTaskAsync',
+        listTask
+      )
+      .subscribe();
+    //Luu Instanes
+    this.api
+      .execSv(
+        'BP',
+        'BP',
+        'ProcessInstancesBusiness',
+        'SaveInsAsync',
+        this.dataIns
+      )
+      .subscribe(async (item) => {
+        //addFile nếu có
+        this.addFileAttach(type);
+      });
+  }
   async addFileAttach(type: any) {
     if (
       this.attachment?.fileUploadList &&
@@ -901,51 +923,12 @@ export class AddProcessDefaultComponent implements OnInit {
     this.dChange.detectChanges();
   }
 
-  addRow(
-    data: any,
-    fieldName: any,
-    index = 0,
-    result: any = null,
-    hasIndexNo = false
-  ) {
-    if (!this.dataTable[fieldName.toLowerCase()])
-      this.dataTable[fieldName.toLowerCase()] = [];
-    var option = new DialogModel();
-    option.FormModel = this.formModel;
-    option.zIndex = 1000;
-    let popup = this.callFuc.openForm(
-      AddTableRowComponent,
-      '',
-      600,
-      750,
-      '',
-      { dataTable: data, result: result },
-      '',
-      option
-    );
-
-    popup.closed.subscribe((res) => {
-      if (res?.event) {
-        if (!result) {
-          if (hasIndexNo)
-            res.event.indexNo =
-              this.dataTable[fieldName.toLowerCase()].length + 1;
-          this.dataTable[fieldName.toLowerCase()].push(res?.event);
-        } else
-          this.dataTable[fieldName.toLowerCase()][result.index] = res.event;
-        var grid = this.gridView.find((_, i) => i == index);
-        grid.refresh();
-      }
-    });
-  }
 
   gridDs: any = [];
   addRow2(index = 0) {
     var grid = this.gridView.find((_, i) => i == index);
     var data = {
-      cot_1: '',
-      cot_2: '',
-      cot_3: '',
+      delete : true
     };
     //if(!grid.dataSource) grid.dataSource = [];
     grid.addRow(data, grid.dataSource.length);
@@ -967,11 +950,11 @@ export class AddProcessDefaultComponent implements OnInit {
   clickMFGrid(e: any, data: any) {
     let funcID = e?.event?.functionID;
     switch (funcID) {
-      //Chỉnh sửa
-      case 'SYS03': {
-        this.addRow(data.dataFormat, data.fieldName, data.indexTable, e.data);
-        break;
-      }
+      // //Chỉnh sửa
+      // case 'SYS03': {
+      //   this.addRow(data.dataFormat, data.fieldName, data.indexTable, e.data);
+      //   break;
+      // }
       //Xóa
       case 'SYS02': {
         var config = new AlertConfirmInputConfig();
@@ -1204,5 +1187,33 @@ export class AddProcessDefaultComponent implements OnInit {
         this.hideVisiableChild(elm);
       });
     }
+  }
+
+  get_tex_width(txt) {
+    var l = txt.length * 10;
+    if(l < 100)  l = 100;
+    return l ;
+  }
+
+  //Mở rộng table nhập liệu
+  expandTable(dt:any)
+  {
+    let data = 
+    {
+      headerText: dt?.title,
+      columnsGrid: dt?.columnsGrid,
+      dataSource: this.dataTable[dt?.fieldName],
+      editSettings: this.editSettings,
+      indexTable: dt?.indexTable,
+      hasIndexNo: dt?.tableFormat?.hasIndexNo
+    }
+    let popup = this.callFuc.openForm(ProcessTableExpandComponent,"",1200,900,"",data);
+    popup.closed.subscribe(res=>{
+      if(res?.event) {
+        this.dataTable[dt?.fieldName] = res?.event;
+        var grid = this.gridView.find((_, i) => i == dt?.indexTable);
+        grid.refresh();
+      }
+    })
   }
 }

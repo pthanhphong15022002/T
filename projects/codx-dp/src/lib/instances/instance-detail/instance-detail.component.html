@@ -151,27 +151,6 @@
                   </codx-vll>
                 </div>
                 <div class="d-flex flex-column">
-                  <!-- <div
-                    class="badge badge-sm d-flex align-items-center"
-                    [ngStyle]="{
-                      'background-color':
-                        dataSelect.status == '3' || dataSelect.status == '4'
-                          ? colorSuccesss
-                          : dataSelect.status == '5' || dataSelect.status == '6'
-                          ? colorFail
-                          : stepValue['backgroundColor']
-                    }"
-                  >
-                    <span
-                      [ngClass]="stepValue['icon']"
-                      [ngStyle]="{ color: stepValue['iconColor'] }"
-                      class="me-2"
-                    ></span>
-                    <span [ngStyle]="{ color: stepValue['textColor'] }">{{
-                      stepName
-                    }}</span>
-                  </div> -->
-
                   <div
                     class="badge badge-sm d-flex align-items-center"
                     [ngStyle]="{
@@ -237,15 +216,6 @@
             [hideMoreF]="'0'"
             (viewFile)="handleViewFile($event)"
           ></codx-attachment>
-          <!-- <codx-thumbnail
-            [files]="dataSelect?.files"
-            displayThumb="simple"
-            [hideDelete]="'1'"
-            [hideMoreF]="'0'"
-            (viewFile)="handleViewFile($event)"
-            [permissions]="dataSelect?.relations"
-          >
-          </codx-thumbnail> -->
         </ng-container>
       </ng-template>
       <ng-template #body>
@@ -287,13 +257,6 @@
             class="pt-1 {{ viewModelDetail == 'G' ? '' : 'view-step-box' }}"
           >
             <div>
-              <!-- <ng-container
-              *ngIf="viewModelDetail == 'G'"
-              [ngTemplateOutlet]="
-                dataSelect.status == 1 ? emptyTemplate : tempGanchart
-              "
-            >
-            </ng-container> -->
               <ng-container
                 *ngIf="viewModelDetail == 'G'"
                 [ngTemplateOutlet]="tempGanchart"
@@ -459,57 +422,8 @@
 </ng-template>
 
 <ng-template #tempGanchart>
-  <!-- <div class="d-flex justify-content-end mb-2">
-    <div>
-      <span>
-        <codx-label default="Tùy chọn thời gian"></codx-label>
-      </span>
-      <span class="input-sm">
-        <codx-input
-          type="valuelist"
-          [crrValue]="crrViewGant"
-          [refValue]="vllViewGannt"
-          (valueChange)="changeViewTimeGant($event)"
-        >
-        </codx-input>
-      </span>
-    </div>
-  </div> -->
   <div class="w-100 h-100" id="tabGantt">
-    <!-- <codx-step-chart
-        [instance]="this.dataSelect"
-        [type]="'DP'"
-      ></codx-step-chart> -->
     <div *ngIf="listSteps?.length > 0 && listSteps">
-      <!-- <step-task-instance
-        [entityName]="'DP_Instances'"
-        [isDataLoading]="false"
-        [instance]="dataSelect"
-        [listInstanceStep]="listSteps"
-        [formModel]="formModel"
-        [applyFor]="applyFor"
-        (saveAssignTask)="saveAssignTask($event)"
-        (changeProgress)="autoStartInstance.emit($event)"
-        [dealName]="dataSelect?.title"
-        [ownerInstance]="dataSelect?.owner"
-        [isChangeOwner]="isChangeOwner"
-        (addTaskHaveAssign)="addTaskHaveAssign($event)"
-        [isAdmin]="dataSelect?.isAdminAll"
-      >
-      </step-task-instance> -->
-      <!-- <step-task
-        [entityName]="'CM_Contracts'"
-        [listInstanceStep]="listInsStep"
-        [dataCM]="contract"
-        [applyFor]="'4'"
-        (saveAssignTask)="saveAssign($event)"
-        (changeProgress)="autoStart($event)"
-        (isSusscess)="checkSusscess($event)"
-        [taskAdd]="taskAdd"
-        (moveStage)="handelMoveStage($event)"
-        [isAdmin]="contract?.isAdminAll"
-        [isViewStep]="isViewStep"
-      ></step-task> -->
       <codx-list-step
         [entityName]="'DP_Instances'"
         [listInstanceStep]="listSteps"
@@ -521,45 +435,5 @@
         [isView]="isView"
       ></codx-list-step>
     </div>
-    <!-- <codx-gantt-chart
-      [dataSource]="ganttDs"
-      [taskFields]="taskFields"
-      [taskbarHeight]="60"
-      [rowHeight]="60"
-      [readOnly]="true"
-      [templateTaskbar]="ganttItems"
-      [timelineSettings]="timelineSettings"
-      [columns]="columns"
-      [toolbar]="[]"
-    ></codx-gantt-chart>
-    <ng-template #ganttItems let-data>
-      <div
-        class="d-flex justify-content-center align-items-center"
-        (click)="clickDetailGanchart(data.recID)"
-        [ngStyle]="{
-          'background-color': getColor(data.recID),
-          'border-radius': '3px'
-        }"
-      >
-        <span class="fw-bold text-dark line-clamp line-clamp-1 px-1">
-          {{ data.name }}
-        </span>
-      </div>
-    </ng-template> -->
   </div>
-
-  <!-- mô tả -->
-  <!-- <div class="d-flex flex-wrap pb-2 mt-2">
-    <div
-      *ngFor="let item of listTypeTask"
-      class="d-flex align-items-center me-6"
-    >
-      <div
-        class="me-2"
-        [ngStyle]="{ 'background-color': item?.color }"
-        style="height: 12px; width: 12px; border-radius: 2px"
-      ></div>
-      <span class="text-gray-700 fs-7">{{ item?.text }}</span>
-    </div>
-  </div> -->
 </ng-template>

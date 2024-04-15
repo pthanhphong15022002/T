@@ -1,0 +1,204 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [body]="body"
+  [showHeader]="dialog"
+  [dialog]="dialog!"
+  [footer]="footer"
+  [formModel]="dialog.formModel"
+  [autoFocus]="false"
+  [data]="data"
+>
+</codx-form>
+<ng-template #body>
+  <div class="w-100 border border-gray-300 rounded-2 py-3 px-4 mb-4">
+    <div class="mb-2 text-primary fs-6 fw-bold">
+      <codx-label
+        name="lblIndexLastMonth"
+        [formModel]="dialog.formModel"
+        default="Chỉ số chốt kì trước"
+      >
+      </codx-label>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <codx-label
+          class="label-colon"
+          fiedName="lastChangedDate"
+          [formModel]="dialog.formModel"
+        >
+        </codx-label>
+        <span
+          class="text-gray-600"
+          [innerHTML]="
+            parent.lastChangedDate
+              | formatvalue : dialog.formModel : 'LastChangedDate'
+              | async
+          "
+        ></span>
+      </div>
+      <div class="col-6">
+        <codx-label
+          class="label-colon"
+          fiedName="quantity"
+          [formModel]="dialog.formModel"
+        >
+        </codx-label>
+        <span
+          class="text-gray-600"
+          [innerHTML]="
+            parent.quality | formatvalue : dialog.formModel : 'quantity' | async
+          "
+        ></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <codx-label
+          class="label-colon"
+          fiedName="cumulatedDepr"
+          [formModel]="dialog.formModel"
+        >
+        </codx-label>
+        <span
+          class="text-gray-600"
+          [innerHTML]="
+            parent.cumulatedDepr
+              | formatvalue : dialog.formModel : 'cumulatedDepr'
+              | async
+          "
+        ></span>
+      </div>
+      <div class="col-6">
+        <codx-label
+          class="label-colon"
+          fiedName="estimatedCapacity"
+          [formModel]="dialog.formModel"
+        >
+        </codx-label>
+        <span
+          class="text-gray-600"
+          [innerHTML]="
+            parent.estimatedCapacity
+              | formatvalue : dialog.formModel : 'estimatedCapacity'
+              | async
+          "
+        ></span>
+      </div>
+    </div>
+  </div>
+  <div class="w-100 border border-gray-300 rounded-2 py-3 px-4 mb-4">
+    <div class="mb-2 text-primary fs-6 fw-bold">
+      <codx-label
+        name="lblLastChangedDate"
+        [formModel]="dialog.formModel"
+        default="Chỉ số chốt kì này"
+      >
+      </codx-label>
+    </div>
+    <div class="ms-3">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="lastChangedDate">
+        </codx-label>
+
+        <codx-input
+          field="lastChangedDate"
+          [formModel]="form.formModel"
+          [Group]="form?.formGroup"
+          (valueChange)="valueChange($event)"
+          [disabled]="viewOnly"
+        >
+        </codx-input>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="quantity"
+            ></codx-label>
+            <codx-input
+              field="quantity"
+              [formModel]="form.formModel"
+              [Group]="form?.formGroup"
+              (valueChange)="valueChange($event)"
+              [disabled]="viewOnly"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="deprRate">
+            </codx-label>
+            <codx-input
+              field="deprRate"
+              [formModel]="form.formModel"
+              [Group]="form?.formGroup"
+              (valueChange)="valueChange($event)"
+              [disabled]="viewOnly"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="cumulatedDepr">
+            </codx-label>
+            <codx-input
+              field="cumulatedDepr"
+              [formModel]="form.formModel"
+              [Group]="form?.formGroup"
+              [disabled]="true"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="estimatedCapacity"
+            >
+            </codx-label>
+            <codx-input
+              field="estimatedCapacity"
+              [formModel]="form.formModel"
+              [Group]="form?.formGroup"
+              [disabled]="true"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="note"> </codx-label>
+        <codx-input
+          field="note"
+          [formModel]="form.formModel"
+          [Group]="form?.formGroup"
+          (valueChange)="valueChange($event)"
+          [disabled]="viewOnly"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #footer>
+  <div class="d-flex flex-stack justify-content-end" *ngIf="dialog">
+    <div class="right">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="onSave()"
+        [disabled]="viewOnly"
+      >
+        <codx-label name="lblSave" formName="Settings" default="Lưu">
+        </codx-label>
+      </button>
+    </div>
+  </div>
+</ng-template>

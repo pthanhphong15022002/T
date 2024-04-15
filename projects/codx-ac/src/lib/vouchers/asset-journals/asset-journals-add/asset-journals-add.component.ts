@@ -375,7 +375,7 @@ export class AssetJournalsAddComponent extends UIComponent {
           this.dialog.dataService.update(res.data,true).subscribe();
           if (type == 'save') {
             this.onDestroy();
-            this.dialog.close();
+            this.dialog.close(res);
           } else {
             this.api
               .exec('AC', 'AssetJournalsBusiness', 'SetDefaultAsync', [

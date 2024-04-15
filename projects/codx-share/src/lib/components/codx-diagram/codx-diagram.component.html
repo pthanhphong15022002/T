@@ -48,15 +48,15 @@
           </div>
           <div
             *cdkDragPreview
-            class="border rounded d-flex align-items-center"
-            style="background-color: #fff; cursor: pointer"
+            class="d-flex align-items-center"
+            style="background-color: transparent; cursor: pointer"
           >
-            <ng-container [ngSwitch]="item.id">
-              <ng-container *ngSwitchCase="'start_end'">
-                <svg height="100" width="100">
+            <ng-container [ngSwitch]="item.value">
+              <ng-container *ngSwitchCase="'start'">
+                <svg height="150" width="150">
                   <circle
-                    cx="50"
-                    cy="50"
+                    cx="75"
+                    cy="75"
                     r="40"
                     stroke="black"
                     stroke-width="2"
@@ -64,17 +64,33 @@
                   />
                 </svg>
               </ng-container>
-              <ng-container *ngSwitchCase="'decision'">
-                <div class="box" style="width:150px;">
+              <ng-container *ngSwitchCase="'end'">
+                <svg height="150" width="150">
+                  <circle
+                    cx="75"
+                    cy="75"
+                    r="40"
+                    stroke="black"
+                    stroke-width="5"
+                    fill="#fff"
+                  />
+                </svg>
+              </ng-container>
+              <ng-container *ngSwitchCase="'Conditions'">
+                <div class="rhombus step4">
+
                 </div>
+
+
               </ng-container>
               <ng-container *ngSwitchCase="'connector'">
                 <span class="icon-35" [ngClass]="item.icon"></span>
               </ng-container>
+
               <ng-container *ngSwitchCase="'swimlane'">
-                <span class="icon-35" [ngClass]="item.icon"></span>
+                <div class="w-600px h-700px border border-2"></div>
               </ng-container>
-              <ng-container *ngSwitchCase="'form'">
+              <ng-container *ngSwitchCase="'Form'">
                 <ng-container
                   *ngTemplateOutlet="
                     formTemplate;
@@ -82,7 +98,7 @@
                   "
                 ></ng-container>
               </ng-container>
-              <ng-container *ngSwitchCase="'esign'">
+              <ng-container *ngSwitchCase="'Sign'">
                 <ng-container
                   *ngTemplateOutlet="
                     esignTemplate;
@@ -90,7 +106,7 @@
                   "
                 ></ng-container>
               </ng-container>
-              <ng-container *ngSwitchCase="'event'">
+              <ng-container *ngSwitchCase="'Event'">
                 <ng-container
                   *ngTemplateOutlet="
                     eventTemplate;
@@ -106,7 +122,7 @@
                   "
                 ></ng-container>
               </ng-container>
-              <ng-container *ngSwitchCase="'task'">
+              <ng-container *ngSwitchCase="'Task'">
                 <ng-container
                   *ngTemplateOutlet="
                     taskTemplate;
@@ -114,10 +130,26 @@
                   "
                 ></ng-container>
               </ng-container>
-              <ng-container *ngSwitchCase="'email'">
+              <ng-container *ngSwitchCase="'Email'">
                 <ng-container
                   *ngTemplateOutlet="
                     emailTemplate;
+                    context: { $implicit: data }
+                  "
+                ></ng-container>
+              </ng-container>
+              <ng-container *ngSwitchCase="'Approve'">
+                <ng-container
+                  *ngTemplateOutlet="
+                    approveTemplate;
+                    context: { $implicit: data }
+                  "
+                ></ng-container>
+              </ng-container>
+              <ng-container *ngSwitchCase="'Check'">
+                <ng-container
+                  *ngTemplateOutlet="
+                    checkTemplate;
                     context: { $implicit: data }
                   "
                 ></ng-container>
@@ -208,17 +240,13 @@
         [serializationSettings]="{preventDefaults: true}"
         (mouseEnter)="mouseEnter($event)"
         (textEdit)="textEdit($event)"
+        (selectionChange)="onSelect($event)"
+        (onUserHandleMouseDown)="userHandleClick($event)"
+        (sizeChange)="sizeChanged($event)"
       >
         <ng-template #nodeTemplate let-data>
           <ng-container [ngSwitch]="data?.shape?.version?.toLowerCase()">
-            <ng-container *ngSwitchCase="'form'">
-              <ng-container
-                *ngTemplateOutlet="
-                  formTemplate;
-                  context: { $implicit: data }
-                "
-              ></ng-container>
-            </ng-container>
+
             <ng-container *ngSwitchCase="'image'">
               <ng-container
                 *ngTemplateOutlet="
@@ -227,54 +255,7 @@
                 "
               ></ng-container>
             </ng-container>
-            <ng-container *ngSwitchCase="'task'">
-              <ng-container
-                *ngTemplateOutlet="
-                  taskTemplate;
-                  context: { $implicit: data }
-                "
-              ></ng-container>
-            </ng-container>
-            <ng-container *ngSwitchCase="'sign'">
-              <ng-container
-                *ngTemplateOutlet="
-                  esignTemplate;
-                  context: { $implicit: data }
-                "
-              ></ng-container>
-            </ng-container>
-            <ng-container *ngSwitchCase="'event'">
-              <ng-container
-                *ngTemplateOutlet="
-                  eventTemplate;
-                  context: { $implicit: data }
-                "
-              ></ng-container>
-            </ng-container>
-            <ng-container *ngSwitchCase="'email'">
-              <ng-container
-                *ngTemplateOutlet="
-                  emailTemplate;
-                  context: { $implicit: data }
-                "
-              ></ng-container>
-            </ng-container>
-            <ng-container *ngSwitchCase="'approve'">
-              <ng-container
-                *ngTemplateOutlet="
-                  approveTemplate;
-                  context: { $implicit: data }
-                "
-              ></ng-container>
-            </ng-container>
-            <ng-container *ngSwitchCase="'check'">
-              <ng-container
-                *ngTemplateOutlet="
-                  checkTemplate;
-                  context: { $implicit: data }
-                "
-              ></ng-container>
-            </ng-container>
+
             <ng-container *ngSwitchCase="'step'">
               <ng-container
                 *ngTemplateOutlet="
@@ -317,7 +298,7 @@
           </span>
         </div>
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
-          <div class="border rounded bg-warning px-1 me-3 fs-7">{{data.data?.duration+' '+ getIntervalObject(data.data?.interval).text}}</div>
+          <div class="border rounded bg-warning px-1 me-3 fs-7"></div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
           <i
             class="icon-close icon-16 text-danger"
@@ -327,15 +308,15 @@
         </div>
       </div>
       <div class="row h-70px d-flex align-items-center border rounded mx-3">
-        <h5 class="fw-bold">{{data.data?.stepName}}</h5>
-        <span class="text-truncate" title="{{data.data?.memo}}">{{data.data?.memo}}</span>
+        <h5 class="fw-bold"></h5>
+        <span class="text-truncate" title=""></span>
         <!-- <codx-input type="textarea" format="ed3" height="70px" field="memo" (valueChange)="valueDataChange($event,data)"  [crrValue]="data.data?.stepName" [disabled]="viewOnly"></codx-input> -->
 
       </div>
       <div class="row h-50px">
         <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
-          <codx-imgs  [objectId]="getUserPermission(data.data?.permissions)"
-            objectType="AD_Users" [width]="35"  [numberImages]="2" *ngIf="data.data?.permissions">
+          <codx-imgs  [objectId]=""
+            objectType="AD_Users" [width]="35"  [numberImages]="2" >
           </codx-imgs>
         </div>
       </div>
@@ -366,7 +347,7 @@
           </span>
         </div>
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
-          <div class="border rounded bg-warning px-1 me-3 fs-7">{{data.data?.duration  +' '+ getIntervalObject(data.data?.interval).text}}</div>
+          <div class="border rounded bg-warning px-1 me-3 fs-7"></div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
           <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
@@ -375,13 +356,13 @@
         class="row h-70px d-flex align-items-center border rounded mx-3"
         style="background-color: #fff"
       >
-        <h5 class="fw-bold">{{data.data?.stepName}}</h5>
-        <span class="text-truncate" title="{{data.data?.memo}}">{{data.data?.memo}}</span>
+        <h5 class="fw-bold"></h5>
+        <span class="text-truncate" title=""></span>
       </div>
       <div class="row h-50px">
         <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
-          <codx-imgs  [objectId]="getUserPermission(data.data?.permissions)"
-            objectType="AD_Users" [width]="35"  [numberImages]="2" *ngIf="data.data?.permissions">
+          <codx-imgs  [objectId]=""
+            objectType="AD_Users" [width]="35"  [numberImages]="2">
           </codx-imgs>
         </div>
       </div>
@@ -421,7 +402,7 @@
           </span>
         </div>
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
-          <div class="border rounded bg-warning px-1 me-3 fs-7">{{data.data?.duration +' '+ getIntervalObject(data.data?.interval).text}}</div>
+          <div class="border rounded bg-warning px-1 me-3 fs-7"></div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
           <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
@@ -430,13 +411,13 @@
         class="row h-70px d-flex align-items-center border rounded mx-3"
         style="background-color: #fff"
       >
-        <h5 class="fw-bold">{{data.data?.stepName}}</h5>
-        <span class="text-truncate" title="{{data.data?.memo}}">{{data.data?.memo}}</span>
+        <h5 class="fw-bold"></h5>
+        <span class="text-truncate" title=""></span>
       </div>
       <div class="row h-50px">
         <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
-          <codx-imgs  [objectId]="getUserPermission(data.data?.permissions)"
-            objectType="AD_Users" [width]="35"  [numberImages]="2" *ngIf="data.data?.permissions">
+          <codx-imgs  [objectId]=""
+            objectType="AD_Users" [width]="35"  [numberImages]="2" >
           </codx-imgs>
         </div>
       </div>
@@ -466,7 +447,7 @@
           </span>
         </div>
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
-          <div class="border rounded bg-warning px-1 me-3 fs-7">{{data.data?.duration +' '+ getIntervalObject(data.data?.interval).text}}</div>
+          <div class="border rounded bg-warning px-1 me-3 fs-7"></div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
           <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
@@ -475,13 +456,13 @@
         class="row h-70px d-flex align-items-center border rounded mx-3"
         style="background-color: #fff"
       >
-        <h5 class="fw-bold">{{data.data?.stepName}}</h5>
-        <span class="text-truncate" title="{{data.data?.memo}}">{{data.data?.memo}}</span>
+        <h5 class="fw-bold"></h5>
+        <span class="text-truncate" title=""></span>
       </div>
       <div class="row h-50px">
         <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
-          <codx-imgs  [objectId]="getUserPermission(data.data?.permissions)"
-            objectType="AD_Users" [width]="35"  [numberImages]="2" *ngIf="data.data?.permissions">
+          <codx-imgs  [objectId]=""
+            objectType="AD_Users" [width]="35"  [numberImages]="2" >
           </codx-imgs>
         </div>
       </div>
@@ -511,7 +492,7 @@
           </span>
         </div>
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
-          <div class="border rounded bg-warning px-1 me-3">{{data.data?.duration+' '+ getIntervalObject(data.data?.interval).text}}</div>
+          <div class="border rounded bg-warning px-1 me-3"></div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
           <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
@@ -520,13 +501,13 @@
         class="row h-70px d-flex align-items-center border rounded mx-3"
         style="background-color: #fff"
       >
-        <h5 class="fw-bold">{{data.data?.stepName}}</h5>
-        <span class="text-truncate" title="{{data.data?.memo}}">{{data.data?.memo}}</span>
+        <h5 class="fw-bold"></h5>
+        <span class="text-truncate" title=""></span>
       </div>
       <div class="row h-50px">
         <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
-          <codx-imgs  [objectId]="getUserPermission(data.data?.permissions)"
-            objectType="AD_Users" [width]="35"  [numberImages]="2" *ngIf="data.data?.permissions">
+          <codx-imgs  [objectId]=""
+            objectType="AD_Users" [width]="35"  [numberImages]="2">
           </codx-imgs>
         </div>
       </div>
@@ -558,7 +539,7 @@
           </span>
         </div>
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
-          <div class="border rounded bg-warning px-1 me-3 fs-7">{{data.data?.duration+' '+ getIntervalObject(data.data?.interval).text}}</div>
+          <div class="border rounded bg-warning px-1 me-3 fs-7"></div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
           <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
@@ -567,13 +548,13 @@
         class="row h-70px d-flex align-items-center border rounded mx-3"
         style="background-color: #fff"
       >
-        <h5 class="fw-bold">{{data.data?.stepName}}</h5>
-        <span class="text-truncate" title="{{data.data?.memo}}">{{data.data?.memo}}</span>
+        <h5 class="fw-bold"></h5>
+        <span class="text-truncate" title=""></span>
       </div>
       <div class="row h-50px">
         <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
-          <codx-imgs  [objectId]="getUserPermission(data.data?.permissions)"
-            objectType="AD_Users" [width]="35"  [numberImages]="2" *ngIf="data.data?.permissions">
+          <codx-imgs  [objectId]=""
+            objectType="AD_Users" [width]="35"  [numberImages]="2" >
           </codx-imgs>
         </div>
       </div>
@@ -604,7 +585,7 @@
           </span>
         </div>
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
-          <div class="border rounded bg-warning px-1 me-3 fs-7">{{data.data?.duration +' '+ getIntervalObject(data.data?.interval).text}}</div>
+          <div class="border rounded bg-warning px-1 me-3 fs-7"></div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
           <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
         </div>
@@ -613,13 +594,13 @@
         class="row h-70px d-flex align-items-center border rounded mx-3"
         style="background-color: #fff"
       >
-        <h5 class="fw-bold">{{data.data?.stepName}}</h5>
-        <span class="text-truncate" title="{{data.data?.memo}}">{{data.data?.memo}}</span>
+        <h5 class="fw-bold"></h5>
+        <span class="text-truncate" title=""></span>
       </div>
       <div class="row h-50px">
         <div class="col d-flex align-items-center justify-content-end p-1 pe-3">
-          <codx-imgs  [objectId]="getUserPermission(data.data?.permissions)"
-            objectType="AD_Users" [width]="35"  [numberImages]="2" *ngIf="data.data?.permissions">
+          <codx-imgs  [objectId]=""
+            objectType="AD_Users" [width]="35"  [numberImages]="2" >
           </codx-imgs>
         </div>
       </div>
@@ -647,7 +628,8 @@
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
           <div class="border rounded bg-warning px-1 me-3 fs-7">{{data.data?.duration +' '+ getIntervalObject(data.data?.interval).text}}</div>
           <i class="icon-i-three-dots icon-16 me-2"></i>
-          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"></i>
+          <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"
+          (click)="deleteNode(data)"></i>
         </div>
       </div>
       <div

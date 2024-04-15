@@ -64,7 +64,20 @@
     </div>
 
     <div class="d-flex justify-content-between align-items-center">
-      <div class="d-flex align-items-center"></div>
+      <div class="d-flex align-items-center">
+        <codx-label
+          class="label-colon"
+          fiedName="AssetID"
+          [formModel]="view.formModel"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          class="text-gray-600"
+          [innerHTML]="
+            data.assetID | formatvalue : view.formModel : 'assetID' | async
+          "
+        ></span>
+      </div>
       <div class="d-flex align-items-center">
         <div class="d-flex align-items-center me-2">
           <span class="icon-16 text-gray-600 icon-av_timer me-1"></span>
@@ -92,5 +105,13 @@
 </ng-template>
 
 <ng-template #templateDetail let-data>
-  <div>View detail</div>
+  <lib-view-water-clock-detail
+    #viewDetails
+    [itemSelected]="itemSelected"
+    [formModel]="view.formModel"
+    (clickMoreFunction)="clickMoreFunction($event)"
+    (eventChangeMF)="eventChangeMF($event)"
+    (updateParent)="updateParent($event)"
+  >
+  </lib-view-water-clock-detail>
 </ng-template>

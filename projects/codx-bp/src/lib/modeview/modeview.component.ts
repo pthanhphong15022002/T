@@ -1,5 +1,5 @@
 import { CDK_DRAG_CONFIG, CdkDrag, CdkDragDrop, copyArrayItem, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { Component, Input, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, CacheService, DialogData, DialogRef, Util } from 'codx-core';
 import { count } from './modeview.variable';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -36,6 +36,7 @@ export class ModeviewComponent implements OnInit {
     public dmSV: CodxDMService,
     private api: ApiHttpService,
     private shareService: CodxShareService,
+    private ref: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   )
@@ -109,13 +110,13 @@ export class ModeviewComponent implements OnInit {
           data2.push(elm);
         }
         else 
-        {
+        { 
           data3.push(elm);
         }
       }
     }); 
     item.datas = data1.concat(data2.concat(data3));
-    this.vllBP002 = item;
+    this.vllBP002 = JSON.parse(JSON.stringify(item));
     if(!this.data) this.default();
     else this.formatData(this.data);
     this.formatPrevForm();
@@ -140,7 +141,7 @@ export class ModeviewComponent implements OnInit {
       }
       else
       {
-        if(elm.fieldType == "Table" || elm.fieldType == "Note")
+        if(elm.fieldType == "Table")
         {
           elm.dataFormat = (typeof elm.dataFormat == 'string' && elm.dataFormat) ? JSON.parse(elm.dataFormat) :  elm.dataFormat;
         }
@@ -190,14 +191,16 @@ export class ModeviewComponent implements OnInit {
     this.listForm.forEach(elm=>{
       if(elm.extendInfo && elm.extendInfo.length>0)
       {
+        elm.extendInfo = elm.extendInfo.filter(x=>x.fieldType != 'Title' && x.fieldType != 'SubTitle')
         elm.extendInfo.forEach(item=>{
-          debugger
+          item.formID = elm.recID;
           let indexIcon = this.vllBP002.datas.findIndex(x=>x.value == item.fieldType);
           if(indexIcon>=0)
           {
             item.icon = this.vllBP002.datas[indexIcon].icon;
           }
         })
+        this.vllBP002.datas = this.vllBP002.datas.concat(elm.extendInfo);
       }
     }) 
   }
@@ -237,8 +240,26 @@ export class ModeviewComponent implements OnInit {
 
   drop(event: any) {
     if (event.previousContainer !== event.container) {
-      let data = JSON.parse(JSON.stringify(event.previousContainer.data[event.previousIndex]));
-      data = this.genData(data);
+      let data = event?.item?.data
+      if(!data?.recID) data = this.genData(data);
+      else
+      {
+        if(!data?.refField)
+        {
+          data.refField = 
+          {
+            formID: data.formID,
+            fieldID: data.recID
+          };
+        }
+        delete data.id;
+        data.recID = Util.uid();
+        data.value = data.fieldType;
+        data.documentControl = typeof data.documentControl == 'string' ? JSON.parse(data.documentControl) :  data.documentControl;
+        data.validateControl = typeof data.validateControl == 'string' ? JSON.parse(data.validateControl) :  data.validateControl;
+        var index = this.vllBP002.datas.findIndex(x=>x.value == data.fieldType);
+        if(index >=0) data.text = this.vllBP002.datas[index].text;
+      }
       //this.selectedItem(data);
       let object = 
       {
@@ -634,23 +655,27 @@ export class ModeviewComponent implements OnInit {
   dataChange(e:any)
   {
     if(e?.isDelete == true) {
-      this.table[e?.columnOrder].children = this.table[e?.columnOrder].children.filter(x=>x.columnNo != e.columnNo);
+
+      let index = this.table.findIndex(x=>x.columnOrder == e?.columnOrder);
+
+      this.table[index].children = this.table[index].children.filter(x=>x.columnNo != e.columnNo);
       this.table = this.table.filter(x=>x.children != null && x.children.length>0);
       this.resetIndex();
-      if(this.table[e?.columnOrder]?.children && this.table[e?.columnOrder].children.length > 0)
+      this.dataSelected = null;
+      if(this.table[index]?.children && this.table[index].children.length > 0)
       {
         var stt = e.columnNo - 1;
         if(stt < 0) stt = 0;
-        this.selectedItem(this.table[e?.columnOrder].children[stt]);
+        this.selectedItem(this.table[index].children[stt]);
       }
       else {
-        var stt = (this.table[e?.columnOrder - 1].children.length) - 1;
+        var stt = (this.table[index - 1].children.length) - 1;
         if(stt < 0) stt = 0;
-        this.selectedItem(this.table[e?.columnOrder - 1].children[stt]);
+        this.selectedItem(this.table[index - 1].children[stt]);
       }
     }
     else {
-      e.fieldName = this.formatTitle(e.title,e.columnOrder,e.columnNo);
+      if(!e?.refField) e.fieldName = this.formatTitle(e.title,e.columnOrder,e.columnNo);
 
       let index = this.table.findIndex(x=>x.columnOrder == e?.columnOrder);
       if(index>=0)

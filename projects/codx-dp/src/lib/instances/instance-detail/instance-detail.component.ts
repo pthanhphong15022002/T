@@ -42,6 +42,7 @@ import { CodxViewTaskComponent } from '../../share-crm/codx-step/codx-view-task/
 export class InstanceDetailComponent implements OnInit {
   @ViewChild('codxStage') codxStage: StagesDetailComponent;
   @ViewChild('tabFooter') tabFooter: CodxTabsComponent;
+  @ViewChild('viewDetail') viewDetail: CodxDetailTmpComponent;
   @Input() formModel: any;
   @Input() stepName: string;
   @Input() progress = '0';
@@ -53,15 +54,12 @@ export class InstanceDetailComponent implements OnInit {
   // @Input() viewType = 'd';
   @Input() listSteps: DP_Instances_Steps[] = []; //instanceStep
   @Input() tabInstances = [];
-  @ViewChild('viewDetail') viewDetail: CodxDetailTmpComponent;
   @Input() viewsCurrent = '';
   @Input() moreFunc: any;
   // @Input() reloadData = false;
   @Input() stepStart: any;
   @Input() vllApprover = 'DP043';
   @Input() reasonStepsObject: any;
-  @Output() clickStartInstances = new EventEmitter<any>();
-  @Output() saveDatasInstance = new EventEmitter<any>();
   @Input() lstStepProcess = [];
   @Input() colorFail: any;
   @Input() colorSuccesss: any;
@@ -72,13 +70,17 @@ export class InstanceDetailComponent implements OnInit {
   @Input() applyFor: any;
   @Input() isChangeOwner: any;
   @Input() progressControl: any;
+
   @Output() progressEvent = new EventEmitter<object>();
   @Output() moreFunctionEvent = new EventEmitter<any>();
+  @Output() clickStartInstances = new EventEmitter<any>();
+  @Output() saveDatasInstance = new EventEmitter<any>();
   @Output() outStepInstance = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @Output() autoStartInstance = new EventEmitter<any>();
 
   @Output() changeProgress = new EventEmitter<any>();
+  @Output() move = new EventEmitter<any>();
 
   id: any;
   isView = false;

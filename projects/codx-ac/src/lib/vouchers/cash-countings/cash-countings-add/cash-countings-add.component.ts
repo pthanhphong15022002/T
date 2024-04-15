@@ -10,6 +10,7 @@ import { ChooseJournalComponent } from '../../../share/choose-journal/choose-jou
 import { CashreceiptsAddComponent } from '../../cashreceipts/cashreceipts-add/cashreceipts-add.component';
 import { CashPaymentAddComponent } from '../../cashpayments/cashpayments-add/cashpayments-add.component';
 import { InventoryAddComponent } from '../../inventory/inventory-add/inventory-add.component';
+import { AssetJournalsAddComponent } from '../../asset-journals/asset-journals-add/asset-journals-add.component';
 
 @Component({
   selector: 'lib-cash-countings-add',
@@ -55,6 +56,8 @@ export class CashCountingsAddComponent extends UIComponent {
   cashPaymentSV:CRUDService;
   IRVoucherSV:CRUDService;
   IIVoucherSV:CRUDService;
+  AssetALSV:CRUDService;
+  AssetAASV:CRUDService;
   fmcashReciept:FormModel={
     formName:'CashReceipts',
     gridViewName:'grvCashReceipts',
@@ -70,14 +73,26 @@ export class CashCountingsAddComponent extends UIComponent {
   fmIRVoucher:FormModel={
     formName:'InventoryReceipts',
     gridViewName:'grvInventoryReceipts',
-    entityName:'IV_InventoryReceipts',
+    entityName:'IV_Vouchers',
     funcID:'ACT511'
   }
   fmIIVoucher:FormModel={
     formName:'InventoryIssues',
     gridViewName:'grvInventoryIssues',
-    entityName:'IV_InventoryIssues',
+    entityName:'IV_Vouchers',
     funcID:'ACT521'
+  }
+  fmAssetAL:FormModel={
+    formName:'AssetLiquidations',
+    gridViewName:'grvAssetLiquidations',
+    entityName:'AM_AssetJournals',
+    funcID:'ACT871'
+  }
+  fmAssetAA:FormModel={
+    formName:'AssetAdjustments',
+    gridViewName:'grvAssetAdjustments',
+    entityName:'AM_AssetJournals',
+    funcID:'ACT823'
   }
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
@@ -118,6 +133,18 @@ export class CashCountingsAddComponent extends UIComponent {
         inject,
         this.fmIIVoucher,
         'IV'
+      );
+    }
+    if (dialog.formModel.funcID === 'ACT881') {
+      this.AssetALSV = this.acService.createCRUDService(
+        inject,
+        this.fmAssetAL,
+        'AM'
+      );
+      this.AssetAASV = this.acService.createCRUDService(
+        inject,
+        this.fmAssetAA,
+        'AM'
       );
     }
   }
@@ -740,17 +767,29 @@ export class CashCountingsAddComponent extends UIComponent {
     let lstline:any = [];
     if (this.eleGridItems) {
       if (type == 'IR') {
-        lstline = this.eleGridItems.dataSource.filter(x => x.diffQty < 0);
-        if (lstline.length == 0) {
+        let array = this.eleGridItems.dataSource.filter(x => x.diffQty < 0);
+        if (array.length == 0) {
           this.notification.notify("Không có chênh lệch để tạo phiếu nhập kho", "2");
           return;
         }
+        let array2 = array.filter(x => x.lineStatus == '20');
+        if (array2.length == 0) {
+          this.notification.notify("Đã tạo phiếu nhập kho ", "2");
+          return;
+        }
+        lstline = array2;
       }else{
-        lstline = this.eleGridItems.dataSource.filter(x => x.diffQty > 0);
-        if (lstline.length == 0) {
+        let array = this.eleGridItems.dataSource.filter(x => x.diffQty > 0);
+        if (array.length == 0) {
           this.notification.notify("Không có chênh lệch để tạo phiếu xuất kho", "2");
           return;
         }
+        let array2 = array.filter(x => x.lineStatus == '20');
+        if (array2.length == 0) {
+          this.notification.notify("Đã tạo phiếu xuất kho ", "2");
+          return;
+        }
+        lstline = array2;
       }
       
       let data = {
@@ -808,14 +847,17 @@ export class CashCountingsAddComponent extends UIComponent {
                       opt
                     );
                     dialog.closed.subscribe((res) => {
-                      if (res && res?.event.data && res?.event.data?.unbounds) {
-                        if (res?.event.data?.unbounds['oCouting']) {
-                          this.master.setValue('status',res?.event.data?.unbounds['oCouting'].status,{});
-                          this.dialog.dataService.update(res?.event.data?.unbounds['oCouting'],true).subscribe();
-                          this.detectorRef.detectChanges();
-                        }
+                      if (res && res?.event.data) {
+                        this.api.exec('AC','CountingItemsBusiness','UpdateStatusLogicAsync',[this.master.data]).subscribe((res:any)=>{
+                          if (res) {
+                            this.master.setValue('status',res?.status,{});
+                            this.dialog.dataService.update(res,true).subscribe();
+                            this.detectorRef.detectChanges();
+                          }
+                        })
                       }
                     });
+                    this.eleGridItems.refresh();
                   })
                 })
               }
@@ -829,31 +871,156 @@ export class CashCountingsAddComponent extends UIComponent {
     }
   }
 
-  onCreateAssetLiquidations(){
+  onCreateAsset(type){
+    let lstline:any = [];
     if (this.eleGridAsset) {
-      let lstline = this.eleGridAsset.dataSource.filter(x => x.countedQty > 0);
-      if (lstline.length == 0) {
-        this.notification.notify("Không có chênh lệch để tạo phiếu thanh lý", "2");
-        return;
-      }
-      if (lstline.length > 0) {
+      if (type === 'AL') {
+        let array = this.eleGridAsset.dataSource.filter(x => x.diffQty > 0);
+        if (array.length == 0) {
+          this.notification.notify("Không có chênh lệch để tạo phiếu", "2");
+          return;
+        }
         let isError = false;
-        for (let index = 0; index < lstline.length; index++) {
-          let item = lstline[index];
+        for (let index = 0; index < array.length; index++) {
+          let item = array[index];
           if (item?.processMethod == '' || item?.processMethod == null) {
-            this.notification.notify(item?.assetID+' chưa có phương án xử lý', "2");
+            this.notification.notify(item?.assetID + ' chưa có phương án xử lý', "2");
             isError = true;
             break;
           }
         }
         if(isError) return;
-        let lstline2 = lstline.filter(x => x.processMethod === '1');
-        if (lstline2.length == 0) {
-          this.notification.notify("Không có tài sản cần thanh lý", "2");
+        let array2 = array.filter(x => x.lineStatus == '20');
+        if (array2.length == 0) {
+          this.notification.notify("Đã tạo phiếu ", "2");
           return;
         }
-        console.log(lstline2);
+        lstline = array2;
+      }else{
+        let array = this.eleGridAsset.dataSource.filter(x => x.diffQty < 0);
+        if (array.length == 0) {
+          this.notification.notify("Không có chênh lệch để tạo phiếu", "2");
+          return;
+        }
+        let array2 = array.filter(x => x.lineStatus == '20');
+        if (array2.length == 0) {
+          this.notification.notify("Đã tạo phiếu ", "2");
+          return;
+        }
+        lstline = array2;
       }
+      let data = {
+        type: type,
+      };
+      let opt = new DialogModel();
+      let dialog = this.callfc.openForm(
+        ChooseJournalComponent,
+        '',
+        null,
+        null,
+        '',
+        data,
+        '',
+        opt
+      );
+      dialog.closed.subscribe((res) => {
+        if (res && res?.event?.journalNo) {
+          let journal = res?.event?.journal;
+          this.ngxLoader.start();
+          this.api.exec('AM','AssetJournalsBusiness','CreateAssetAsync',[res?.event?.journalNo,this.master.data.recID,this.master.data.journalType,this.master.data.voucherNo,lstline]).subscribe({
+            next:(result:any)=>{
+              if (result) {
+                let headerText = '';
+                let oData = {...result};
+                oData.isAdd = true;
+                oData._isEdit = true;
+                let funcID = type == 'AL' ? this.fmAssetAL.funcID : this.fmAssetAA.funcID;
+                this.cache.functionList(funcID).subscribe((result2) => {
+                  if(result2){
+                    headerText = result2?.defaultName || result2?.customName;
+                  }
+                  let data = {
+                    headerText: headerText,
+                    journal: { ...journal },
+                    oData: { ...oData },
+                    baseCurr: this.baseCurr,
+                    isActive: false
+                  };
+                  let opt = new DialogModel();
+                  opt.DataService = type == 'AL' ? this.AssetALSV : this.AssetAASV;
+                  opt.FormModel = type == 'AL' ? this.fmAssetAL : this.fmAssetAA;
+                  opt.IsFull = true;
+                  let formName = type == 'AL' ? this.fmAssetAL.formName : this.fmAssetAA.formName;
+                  let gridViewName = type == 'AL' ? this.fmAssetAL.gridViewName : this.fmAssetAA.gridViewName;
+                  this.cache.gridViewSetup(formName, gridViewName).subscribe((res: any) => {
+                    let dialog = this.callfc.openForm(
+                      AssetJournalsAddComponent,
+                      '',
+                      null,
+                      null,
+                      type == 'AL' ? this.fmAssetAL.funcID : this.fmAssetAA.funcID,
+                      data,
+                      '',
+                      opt
+                    );
+                    dialog.closed.subscribe((res) => {
+                      if (res && res?.event.data) {
+                        this.api.exec('AC','CountingAssetsBusiness','UpdateStatusLogicAsync',[this.master.data]).subscribe((res:any)=>{
+                          if (res) {
+                            this.master.setValue('status',res?.status,{});
+                            this.dialog.dataService.update(res,true).subscribe();
+                            this.detectorRef.detectChanges();
+                          }
+                        })
+                      }
+                    });
+                    this.eleGridAsset.refresh();
+                  })
+                })
+              }
+            },
+            complete:()=>{
+              this.ngxLoader.stop();
+            }
+          })
+        }
+      })
+      // if (lstline.length == 0) {
+      //   this.notification.notify("Không có chênh lệch để tạo phiếu thanh lý", "2");
+      //   return;
+      // }
+      // if (lstline.length > 0) {
+      //   let isError = false;
+      //   for (let index = 0; index < lstline.length; index++) {
+      //     let item = lstline[index];
+      //     if (item?.processMethod == '' || item?.processMethod == null) {
+      //       this.notification.notify(item?.assetID+' chưa có phương án xử lý', "2");
+      //       isError = true;
+      //       break;
+      //     }
+      //   }
+      //   if(isError) return;
+      //   let lstline2 = lstline.filter(x => x.processMethod === '1');
+      //   if (lstline2.length == 0) {
+      //     this.notification.notify("Không có tài sản cần thanh lý", "2");
+      //     return;
+      //   }
+      //   let type = 'AL';
+      //   let data = {
+      //     type: type,
+      //   };
+      //   let opt = new DialogModel();
+      //   let dialog = this.callfc.openForm(
+      //     ChooseJournalComponent,
+      //     '',
+      //     null,
+      //     null,
+      //     '',
+      //     data,
+      //     '',
+      //     opt
+      //   );
+      // }
     }
   }
   //#endregion

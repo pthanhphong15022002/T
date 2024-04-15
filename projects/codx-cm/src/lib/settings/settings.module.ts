@@ -19,6 +19,8 @@ import { AssetsComponent } from './assets/assets.component';
 import { PopupAddAssetsComponent } from './assets/popup-add-assets/popup-add-assets.component';
 import { WaterClockComponent } from './water-clock/water-clock.component';
 import { PopupAddWaterClockComponent } from './water-clock/popup-add-water-clock/popup-add-water-clock.component';
+import { ViewWaterClockDetailComponent } from './water-clock/view-water-clock-detail/view-water-clock-detail.component';
+import { PopupAddHistoryWaterClockComponent } from './water-clock/popup-add-history-water-clock/popup-add-history-water-clock.component';
 
 const routes: Routes = [
   {
@@ -74,6 +76,8 @@ const routes: Routes = [
     PopupAddAssetsComponent,
     WaterClockComponent,
     PopupAddWaterClockComponent,
+    ViewWaterClockDetailComponent,
+    PopupAddHistoryWaterClockComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
