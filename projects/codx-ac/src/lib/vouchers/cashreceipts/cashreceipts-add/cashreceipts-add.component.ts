@@ -555,17 +555,21 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
           this.eleGridCashReceipt.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') {
               this.saveVoucher(type);
+            }else{
+              this.ngxLoader.stop();
+              return;
             }
           })
-          return;
         }
         if ((this.eleGridSettledInvoices || this.eleGridSettledInvoices?.isEdit) && this.elementTabDetail?.selectingID == '1') {
           this.eleGridSettledInvoices.saveRow((res: any) => { //? save lưới trước
             if (res && res.type != 'error') {
               this.saveVoucher(type);
+            }else{
+              this.ngxLoader.stop();
+              return;
             }
           })
-          return;
         }
       });
   }
@@ -1203,6 +1207,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         this.eleGridCashReceipt.saveRow((res:any)=>{ //? save lưới trước
           if(res){
             this.eleGridCashReceipt.isSaveOnClick = false;
+            if (this.nextTabIndex) this.elementTabDetail.select(this.nextTabIndex);
             setTimeout(() => {
               if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
                 e.target.focus();
@@ -1215,6 +1220,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         this.eleGridSettledInvoices.saveRow((res:any)=>{ //? save lưới trước
           if(res){
             this.eleGridSettledInvoices.isSaveOnClick = false;
+            if (this.nextTabIndex) this.elementTabDetail.select(this.nextTabIndex);
             setTimeout(() => {
               if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
                 e.target.focus();
