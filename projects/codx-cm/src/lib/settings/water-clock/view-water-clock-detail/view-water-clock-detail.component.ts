@@ -183,7 +183,7 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
           PopupAddHistoryWaterClockComponent,
           null,
           600,
-          600,
+          750,
           '',
           obj,
           "",
@@ -191,12 +191,9 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
         );
         dialogHis.closed.subscribe(res => {
           if (res && res.event) {
-            //
-            if (res.event['assetCategory'] == "WaterClock" && this.gridHistory)
-              this.gridHistory.updateRow(this.gridHistory.rowIndex, res.event);
-            if (res.event['assetCategory'] == "WaterClockCost" && this.gridPrice)
-              this.gridPrice.updateRow(this.gridPrice.rowIndex, res.event);
-            //this.addGridHis(res.event);
+
+            this.gridHistory.updateRow(this.gridHistory.rowIndex, res.event);
+
           }
         })
       });
@@ -226,6 +223,11 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
           "",
           option
         );
+        dialogHis.closed.subscribe(res => {
+          if (res && res.event) {
+            this.gridHistory.addRow(data, 0, true);
+          }
+        })
       })
     });
   }
@@ -325,10 +327,68 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
     })
   }
   editCost(data) {
+    (this.gridPrice.dataService as CRUDService).addNew().subscribe((res) => {
+      this.cache.gridViewSetup(this.formModelPrice.formName, this.formModelPrice.gridViewName).subscribe(grv => {
+        let option = new DialogModel();
+        option.DataService = this.gridPrice.dataService;
+        option.FormModel = this.formModelPrice;
+        let obj = {
+          data: data,
+          action: 'edit',
+          headerText: '',
+          gridViewSetup: grv,
+          parent: this.itemSelected
+        };
+        let dialogHis = this.callfc.openForm(
+          PopupAddHistoryWaterClockComponent,
+          null,
+          600,
+          450,
+          '',
+          obj,
+          "",
+          option
+        );
+        dialogHis.closed.subscribe(res => {
+          if (res && res.event) {
 
+            this.gridPrice.updateRow(this.gridPrice.rowIndex, res.event);
+
+          }
+        })
+      });
+    })
   }
   copyCost(data) {
-
+    (this.gridPrice.dataService as CRUDService).copy().subscribe((res) => {
+      this.cache.gridViewSetup(this.formModelPrice.formName, this.formModelPrice.gridViewName).subscribe(grv => {
+        let option = new DialogModel();
+        option.DataService = this.gridPrice.dataService;
+        option.FormModel = this.formModelPrice;
+        let obj = {
+          data: data,
+          action: 'copy',
+          headerText: '',
+          gridViewSetup: grv,
+          parent: this.itemSelected
+        };
+        let dialogPre = this.callfc.openForm(
+          PopupAddHistoryWaterClockComponent,
+          null,
+          600,
+          450,
+          '',
+          obj,
+          "",
+          option
+        );
+        dialogPre.closed.subscribe(res => {
+          if (res && res.event) {
+            this.gridPrice.addRow(data, 0, true);
+          }
+        })
+      })
+    });
   }
 
   viewDetailCost(data) {
