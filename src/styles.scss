@@ -4721,3 +4721,10 @@ codx-page-title{
 codx-tmmeetings .tm-meeting{
   height: calc(100vh - 140px);
 }
+lib-process-release{
+  width: 100%;
+  overflow-x:auto ;
+  codx-view-kanban{
+    width: fit-content;
+  }
+}
