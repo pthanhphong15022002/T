@@ -1,5 +1,5 @@
 <div class="d-flex flex-column w-100 h-100 px-4 py-6">
-   <lib-property-default-title [data]="data" [isBack]="isBack" (dataChange)="changeValue($event)" (back)="backDefault()"></lib-property-default-title>
+   <lib-property-default-title [data]="data" [isBack]="isBack" [stepNo]="stepNo" (dataChange)="changeValue($event)" (back)="backDefault()"></lib-property-default-title>
     <div class="mt-4">
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'title'" default="Tên ô nhập liệu" class="fw-bold"></codx-label>
         <codx-input type="text" [disabled]="data?.refField" [crrValue]="data.title" field="title" (valueChange)="changeValue($event)"></codx-input>
@@ -26,6 +26,10 @@
         <div class="d-flex align-items-center mt-4">
             <codx-input type="switch" [crrValue]="data.isRequired" [disabled]="data?.refField" field="isRequired" label="Bắt buộc"  (valueChange)="changeValue($event)" class="mt-2"></codx-input>
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Bắt buộc" class="fw-bold ms-2"></codx-label>
+        </div>
+        <div class="d-flex align-items-center mt-2">
+            <codx-input type="switch" [crrValue]="data?.validateControl == 'AP'" [disabled]="data?.refField" field="validateControl" label="Bắt buộc"  (valueChange)="changeValueApprovalValidate($event)" class="mt-2"></codx-input>
+            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsValidateControl'" default="Xét duyệt" class="fw-bold ms-2"></codx-label>
         </div>
         <div class="d-flex align-items-center justify-content-between mt-2">
             <div class="d-flex align-items-center">
