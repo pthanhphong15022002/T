@@ -2587,9 +2587,10 @@
                         : { color: stepFail?.iconColor }
                     "
                   ></i>
-                  <span [ngStyle]="{ color: setColorTestStep(stepFail) }">{{
-                    stepFail?.stepName
-                  }}</span>
+                  <span [ngStyle]="{ color: setColorTestStep(stepFail) }">
+                    <!-- {{stepFail?.stepName}} -->
+                    Không thành công
+                  </span>
                 </div>
                 <div
                   class="fs-7 line-clamp line-clamp-1"

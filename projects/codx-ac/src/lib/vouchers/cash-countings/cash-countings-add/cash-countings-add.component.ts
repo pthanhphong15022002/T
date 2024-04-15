@@ -73,25 +73,25 @@ export class CashCountingsAddComponent extends UIComponent {
   fmIRVoucher:FormModel={
     formName:'InventoryReceipts',
     gridViewName:'grvInventoryReceipts',
-    entityName:'IV_InventoryReceipts',
+    entityName:'IV_Vouchers',
     funcID:'ACT511'
   }
   fmIIVoucher:FormModel={
     formName:'InventoryIssues',
     gridViewName:'grvInventoryIssues',
-    entityName:'IV_InventoryIssues',
+    entityName:'IV_Vouchers',
     funcID:'ACT521'
   }
   fmAssetAL:FormModel={
     formName:'AssetLiquidations',
     gridViewName:'grvAssetLiquidations',
-    entityName:'AM_AssetLiquidations',
+    entityName:'AM_AssetJournals',
     funcID:'ACT871'
   }
   fmAssetAA:FormModel={
     formName:'AssetAdjustments',
     gridViewName:'grvAssetAdjustments',
-    entityName:'AM_AssetAdjustments',
+    entityName:'AM_AssetJournals',
     funcID:'ACT823'
   }
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
@@ -890,24 +890,24 @@ export class CashCountingsAddComponent extends UIComponent {
           }
         }
         if(isError) return;
-        lstline = array;
+        let array2 = array.filter(x => x.lineStatus == '20');
+        if (array2.length == 0) {
+          this.notification.notify("Đã tạo phiếu ", "2");
+          return;
+        }
+        lstline = array2;
       }else{
         let array = this.eleGridAsset.dataSource.filter(x => x.diffQty < 0);
         if (array.length == 0) {
           this.notification.notify("Không có chênh lệch để tạo phiếu", "2");
           return;
         }
-        let isError = false;
-        for (let index = 0; index < array.length; index++) {
-          let item = array[index];
-          if (item?.processMethod == '' || item?.processMethod == null) {
-            this.notification.notify(item?.assetID + ' chưa có phương án xử lý', "2");
-            isError = true;
-            break;
-          }
+        let array2 = array.filter(x => x.lineStatus == '20');
+        if (array2.length == 0) {
+          this.notification.notify("Đã tạo phiếu ", "2");
+          return;
         }
-        if(isError) return;
-        lstline = array;
+        lstline = array2;
       }
       let data = {
         type: type,
@@ -965,9 +965,16 @@ export class CashCountingsAddComponent extends UIComponent {
                     );
                     dialog.closed.subscribe((res) => {
                       if (res && res?.event.data) {
-                        
+                        this.api.exec('AC','CountingAssetsBusiness','UpdateStatusLogicAsync',[this.master.data]).subscribe((res:any)=>{
+                          if (res) {
+                            this.master.setValue('status',res?.status,{});
+                            this.dialog.dataService.update(res,true).subscribe();
+                            this.detectorRef.detectChanges();
+                          }
+                        })
                       }
                     });
+                    this.eleGridAsset.refresh();
                   })
                 })
               }
