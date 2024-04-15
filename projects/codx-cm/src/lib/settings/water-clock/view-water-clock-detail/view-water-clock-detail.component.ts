@@ -47,10 +47,10 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
   };
   //Bảng giá => Đoi Khanh thiết lập
   formModelPrice: FormModel = {
-    formName: 'CMWaterClock',
-    gridViewName: 'grvCMWaterClock',
+    formName: 'CMWaterClockCost',
+    gridViewName: 'CMWaterClockCost',
     entityName: 'AM_Assets',
-    funcID: 'CMS0129'
+    funcID: 'CMS0130'
   };
   serviceAM = "AM"
   assemblyNameAM = "ERM.Business.AM"
