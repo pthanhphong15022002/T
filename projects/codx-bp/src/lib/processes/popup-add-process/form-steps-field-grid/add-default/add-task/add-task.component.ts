@@ -272,7 +272,7 @@ export class AddTaskComponent
             columnNo: 0,
           },
           {
-            recID: 'c3f6287e-3e7b-4395-99db-e72dc0479117',
+            recID: Util.uid(),
             fieldName: 'mo_ta_ngan_gon_' + this.data?.stepNo,
             title: 'Mô tả ngắn gọn',
             dataType: 'String',
@@ -592,7 +592,7 @@ export class AddTaskComponent
     option.zIndex = 1010;
 
     let listForm = this.process.steps.filter(x=>x.stepNo < this.data.stepNo && x.activityType == "Form");
-    
+
     let popupDialog = this.callFuc.openForm(
       ModeviewComponent,
       '',
@@ -607,7 +607,7 @@ export class AddTaskComponent
       if (res?.event) {
         this.isNewForm = false;
         this.data.extendInfo = res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
-       
+
         if(!this.process.documentControl) this.process.documentControl = [];
         if (this.data?.extendInfo) {
           this.data.extendInfo.forEach((element) => {

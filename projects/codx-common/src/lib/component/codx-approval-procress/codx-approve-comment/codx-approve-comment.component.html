@@ -1,0 +1,27 @@
+<codx-form #form [headerText]="'Nhập bình luận'" [lblHeader]="'lblAddComment'" [body]="body" [footer]="footer"
+  [dialog]="dialogRef">
+  <ng-template #body let-dialog>
+    <div>
+      <div class="form-group">
+        <codx-label name="lblApproveComment" default="Bình luận"
+          [formName]="'ApproverProcess'" [gridViewName]="'grvApproverProcess'"></codx-label>
+        
+        <codx-input type="textarea" field="comment" 
+        [crrValue]="comment" (valueChange)="valueChange($event)" format="ed2">
+      </codx-input>
+      </div>
+      
+    </div>
+  </ng-template>
+
+
+</codx-form>
+<ng-template #footer>
+  <div class="">
+    <div class="form-group d-flex justify-content-end flex-row">
+      <button type="button" class="btn btn-primary" (click)="onSaveForm()">
+        <codx-label name="lblSave" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </div>
+</ng-template>
