@@ -282,7 +282,7 @@ export class PopupBpTasksComponent implements OnInit {
         if (res) {
           if (this.data.activityType != 'Sign')
             this.notiService.notifyCode('SYS034');
-          this.dialog && this.dialog.close({ task: res });
+          this.dialog && this.dialog.close(res);
         }
       });
   }

@@ -278,7 +278,7 @@ export class AddTaskComponent
             dataType: 'String',
             fieldType: 'SubTitle',
             controlType: 'TextBox',
-            isRequired: true,
+            isRequired:  this.data?.stepNo == 1 ? true : false,
             defaultValue: 'Mô tả ngắn gọn',
             description: 'Câu trả lời',
             columnOrder: 1,
@@ -291,19 +291,8 @@ export class AddTaskComponent
         this.data.settings?.isTemplate == null
       )
         this.data.settings.isTemplate = false;
-      // if (this.data.stepNo == 1) {
-      //   this.hideOwner = true;
-      //   this.data.permissions = [
-      //     {
-      //       objectID: this.user?.userID,
-      //       objectName: this.user?.userName,
-      //       objectType: 'U',
-      //       roleType: 'O',
-      //     },
-      //   ];
-      //   this.dataChange.emit(this.data);
-      // }
-      if(!this.data.permissions || (this.data.permissions && this.data.permissions.length == 0))
+     
+      if((!this.data.permissions || (this.data.permissions && this.data.permissions.length == 0)) && this.data.stepNo <= 1)
       {
         this.data.permissions = [
           {

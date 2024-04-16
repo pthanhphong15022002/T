@@ -362,7 +362,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   isUseSuccessOld = true;
   isUseFailOld = true;
   tempEmailDeleted = []; //id cua email temp
-
+  moveProcessIDFail = [];
+  moveProcessIDSuccess = [];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -5023,12 +5024,26 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
   defaultCbxProccess() { }
 
-  cbxChange($event, view) {
-    if (view === this.viewStepReasonSuccess) {
-      this.stepSuccess.newProcessID = $event;
-    } else if (view === this.viewStepReasonFail) {
-      this.stepFail.newProcessID = $event;
+  cbxChange(event: any[], data, value) {
+    if(event?.length <= 1){
+      data.newProcessID = event[0] || "";
+      this[value] = event;
+    }else if(event?.length > 1){
+      if(event?.some(x => x == this.guidEmpty && event?.length > 1)){
+        this.notiService.notify("Vui lòng xóa các quy trình hiện có","3");
+        this.changeDetectorRef.markForCheck();
+        return;
+      }else{
+        data.newProcessID = event?.join(";");
+        this[value] = event;
+      }
     }
+  }
+
+
+
+  moveProccessIsNull(newProccessID: string) {
+    return newProccessID?.split(';') || [];
   }
 
   getListStepByProcessIDCopy(oldProccesID, newProccessID, valueListStr) {
@@ -5224,13 +5239,6 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       return false;
     }
     return true;
-  }
-  moveProccessIsNull(newProccessID, listCbxProccess) {
-    let index = listCbxProccess.findIndex((x) => x.recID == newProccessID);
-    if (index > -1) {
-      return newProccessID;
-    }
-    return this.guidEmpty;
   }
 
   getNameReasonControl(view: any) {
@@ -5523,6 +5531,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       this.stepFail.newProcessID = this.moveProccessFail;
       this.applyForFail = applyFor;
     }
+    this.moveProcessIDFail;
+    this.moveProcessIDSuccess;
     this.changeDetectorRef.markForCheck();
   }
 

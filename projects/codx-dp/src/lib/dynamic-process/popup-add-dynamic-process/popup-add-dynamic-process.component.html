@@ -2587,9 +2587,9 @@
                         : { color: stepFail?.iconColor }
                     "
                   ></i>
-                  <span [ngStyle]="{ color: setColorTestStep(stepFail) }">{{
-                    stepFail?.stepName
-                  }}</span>
+                  <span [ngStyle]="{ color: setColorTestStep(stepFail) }">
+                    {{stepNameFail}}
+                  </span>
                 </div>
                 <div
                   class="fs-7 line-clamp line-clamp-1"
@@ -3417,22 +3417,16 @@
             ></codx-label>
           </div>
           <div class="col-6">
-            <!-- Gán tạm chờ refvalue -->
-            <!-- <codx-input field="" type="valuelist" refValue="CRM009"> </codx-input> -->
-            <ejs-combobox
+            <ejs-multiselect
               id="recID"
+              [mode]="'Default'"
               [dataSource]="listCbxProccessSuccess"
               [fields]="fieldCbxProccess"
-              (valueChange)="cbxChange($event, viewStepReasonSuccess)"
-              [value]="
-                moveProccessIsNull(
-                  stepSuccess?.newProcessID,
-                  listCbxProccessSuccess
-                )
-              "
+              [showDropDownIcon]="true"
+              (valueChange)="cbxChange($event, stepSuccess, 'moveProcessIDSuccess')"
+              [value]="moveProcessIDSuccess"
               [readonly]="stepSuccess.isUsed && !viewOnly ? false : true"
-            >
-            </ejs-combobox>
+            ></ejs-multiselect>
             <codx-label
               class="text-danger fst-italic fs-7"
               default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại
@@ -3688,11 +3682,9 @@
               [dataSource]="listCbxProccessFail"
               [fields]="fieldCbxProccess"
               [placeholder]="gridViewSetupStep['NewProcessID']?.placeholder"
-              (valueChange)="cbxChange($event, viewStepReasonFail)"
+              (valueChange)="cbxChange($event, viewStepReasonFail, 'moveProcessIDFail')"
               [readonly]="stepFail?.isUsed && !viewOnly ? false : true"
-              [value]="
-                moveProccessIsNull(stepFail?.newProcessID, listCbxProccessFail)
-              "
+              [value]="moveProcessIDFail"
             ></ejs-combobox>
             <codx-label
               class="text-danger fst-italic fs-7"

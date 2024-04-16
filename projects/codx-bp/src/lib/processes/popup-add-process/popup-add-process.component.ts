@@ -1061,6 +1061,8 @@ export class PopupAddProcessComponent {
         result2[x].stepType = null;
       }
     }
+
+    debugger
     var fristFormIndex = result2.findIndex((x) => x.activityType == 'Form');
     var fristStageIndex = result2.findIndex((x) => x.activityType == 'Stage');
     var countStage = result2.filter((x) => x.activityType == 'Stage').length;
