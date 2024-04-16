@@ -28,6 +28,7 @@
           $implicit: 'Remove',
           color: '#17BB45',
           icon: 'icon-beach_access',
+          bgColor: '#E8FFF2'
         }"
       ></ng-container>
       <ng-container
@@ -37,6 +38,7 @@
           $implicit: 'Remove',
           color: '#EF6023',
           icon: 'icon-i-calendar3-fill',
+          bgColor: '#FFF7CC'
         }"
       ></ng-container>
       <ng-container
@@ -45,7 +47,8 @@
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
-          icon: 'icon-i-person'
+          icon: 'icon-i-person',
+          bgColor: '#E8FFF2'
         }"
       ></ng-container>
       <ng-container
@@ -54,7 +57,8 @@
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#FF00A8',
-          icon: 'icon-groups'
+          icon: 'icon-groups',
+          bgColor: '#FFE2E6'
         }"
       ></ng-container>
       <ng-container
@@ -63,7 +67,8 @@
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#2F80ED',
-          icon: 'icon-language'
+          icon: 'icon-language',
+          bgColor: '#EDF5FF'
         }"
       ></ng-container>
       <ng-container
@@ -72,7 +77,8 @@
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#9B51E0',
-          icon: 'icon-transfer_within_a_station'
+          icon: 'icon-transfer_within_a_station',
+          bgColor: '#F3E7FF'
         }"
       ></ng-container>
       <ng-container
@@ -81,7 +87,8 @@
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#FFA800',
-          icon: 'icon-i-calendar3-fill'
+          icon: 'icon-i-calendar3-fill',
+          bgColor: '#FFF7E8'
         }"
       ></ng-container>
       <ng-container
@@ -90,7 +97,8 @@
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#323232',
-          icon: 'icon-pending_actions'
+          icon: 'icon-pending_actions',
+          bgColor: '#F4F7FF'
         }"
       ></ng-container>
       <ng-container
@@ -107,6 +115,7 @@
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
+          bgColor: '#CEFFDC'
         }"
       ></ng-container>
       <ng-container
@@ -115,6 +124,8 @@
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
+          bgColor: '#CEFFDC'
+
         }"
       ></ng-container>
       <ng-container
@@ -123,6 +134,8 @@
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
+          bgColor: '#CEFFDC'
+
         }"
       ></ng-container>
       <ng-container
@@ -131,6 +144,8 @@
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
+          bgColor: '#CEFFDC'
+
         }"
       ></ng-container>
       <ng-container
@@ -139,6 +154,8 @@
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
+          bgColor: '#CEFFDC'
+
         }"
       ></ng-container>
       <ng-container
@@ -147,6 +164,8 @@
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
+          bgColor: '#CEFFDC'
+
         }"
       ></ng-container>
       <ng-container
@@ -155,6 +174,8 @@
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
+          bgColor: '#CEFFDC'
+
         }"
       ></ng-container>
       <ng-container
@@ -163,6 +184,8 @@
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
+          bgColor: '#CEFFDC'
+
         }"
       ></ng-container>
       <ng-container
@@ -171,6 +194,8 @@
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
+          bgColor: '#CEFFDC'
+
         }"
       ></ng-container>
       <ng-container
@@ -179,6 +204,8 @@
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
+          bgColor: '#CEFFDC'
+
         }"
       ></ng-container>
       <ng-container
@@ -187,6 +214,8 @@
         [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
+          bgColor: '#CEFFDC'
+
         }"
       ></ng-container>
     </div>
@@ -206,6 +235,7 @@
   #item
   let-icon="icon"
   let-color="color"
+  let-bgColor="bgColor"
   class="register-approve-item"
 >
   <div class="p-0 pointer">
@@ -223,6 +253,7 @@
           <div
             style="width: 35px; height: 35px"
             class="border rounded-circle d-flex justify-content-center text-white"
+            [ngStyle] = "{'background-color': bgColor}"
             
             >
             <span class="align-content-center fs-18" [ngClass]="icon" [ngStyle]="{'color': color}" ></span>

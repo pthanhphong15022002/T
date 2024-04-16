@@ -1061,6 +1061,8 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     super(inject);
     this.funcID = 'HRT03b';
     this.user = this.auth.get();
+
+    this.crrFuncTabNum = 1;
   }
 
   //#region Create dataservice
@@ -1069,7 +1071,16 @@ export class EmployeeInfoProfileComponent extends UIComponent {
   eExperiencesCRUD: CRUDService = null;
   //#endregion
 
+  crrFuncTabNum:number = 1;
+
+  override ngOnInit(): void {
+    //Fake
+    this.crrFuncTabNum = 1;
+
+  }
+
   onInit(): void {
+    
     //ẩn logo
     this.layout.setLogo(null);
     //ẩn số đếm tổng nhân viên
@@ -7172,7 +7183,7 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     {
       functionID: 1,
       customName: "Dashboard",
-      largeIcon: "icon-columns_gap" // Fake icon class
+      largeIcon: "icon-i-columns-gap" // Fake icon class
     },
     {
       functionID: 2,
@@ -7208,7 +7219,7 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     
   ];
 
-  crrFuncTabNum: number = 1;
+  // crrFuncTabNum: number = 1;
   heightList = '50';
 
   clickTab(item: any) {
@@ -7530,7 +7541,7 @@ export class EmployeeInfoProfileComponent extends UIComponent {
   registerApprove(event: any) {
     let options = new SidebarModel();
 
-    options.Width = 'Auto';
+    options.Width = '800px';
     // this.callfunc.openSide(DialogReviewLeaveApproveComponent, [], options);
     this.callfunc.openSide(DialogRegisterApproveComponent);
 
@@ -7555,6 +7566,6 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     let options = new SidebarModel();
 
     options.Width = 'Auto';
-    this.callfunc.openSide(DialogReviewLeaveApproveComponent, options);
+    this.callfunc.openSide(MyTemComponent, [], options);
   }
 }
