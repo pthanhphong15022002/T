@@ -17,5 +17,6 @@ export var count =
     email:0,
     address: 0,
     expression: 0,
-    userInfo: 0
+    userInfo: 0,
+    approvers: 0
 }
