@@ -304,6 +304,7 @@ export class DP_Steps_Fields {
   write: boolean = true;
   assign: boolean = true;
   delete: boolean = true;
+  dependences: string;
 }
 
 export class DP_Instances {
@@ -536,13 +537,13 @@ export class DP_Instances_Steps_Tasks_Roles {
   modifiedBy: string;
   full: boolean;
   read: boolean;
-  update: boolean; 
-  updateProgress: boolean; 
-  assign: boolean; 
-  share: boolean; 
-  upload: boolean; 
-  download: boolean; 
-  delete: boolean; 
+  update: boolean;
+  updateProgress: boolean;
+  assign: boolean;
+  share: boolean;
+  upload: boolean;
+  download: boolean;
+  delete: boolean;
 }
 
 export class DP_Instance_Steps_Fields {
@@ -569,6 +570,7 @@ export class DP_Instance_Steps_Fields {
   modifiedOn: Date;
   modifiedBy: string;
   versions: any[];
+  dependences: string;
 }
 
 export class DP_Instances_Steps_Reasons {
