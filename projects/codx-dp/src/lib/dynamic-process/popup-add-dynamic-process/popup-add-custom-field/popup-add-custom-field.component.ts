@@ -1428,5 +1428,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //----------------- Dependences------------------//
   changeDependences(e){
     this.field.isApplyDependences = e.data;
+    if(this.field.isApplyDependences) this.field.isApplyConditional = false;
   }
 }
