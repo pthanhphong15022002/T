@@ -52,6 +52,7 @@
     .user-left {
         border-radius: 10px 10px 0 0;
 
+
         a {
             color: #000;
         }
@@ -492,12 +493,24 @@ codx-page-title.page-title.d-flex.ms-0.align-items-center.flex-wrap.ms-3 {
 }
 
 .main-content {
-    position: sticky;
+    /* position: sticky;
     right: 0;
     top: 0;
     height: calc(100vh - 100px);
     overflow: scroll;
-    width: 100% !important;
+    width: 100% ; */
+        height: calc(100vh - 100px); 
+
+
+}
+
+#maincontent{
+    position: sticky;
+    right: 0;
+    top: 0;
+    /* height: calc(100vh - 100px);  */
+    overflow: auto;
+    width: 100% ;
     max-width: 830px;
 }
 
