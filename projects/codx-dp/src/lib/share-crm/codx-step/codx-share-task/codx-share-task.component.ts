@@ -131,25 +131,32 @@ export class CodxShareTaskComponent implements OnInit {
     this.changeDetectorRef.markForCheck();
   }
 
-  setRoleShareTypeU(datas: [any]){
-    datas.forEach(data => {
-      var role = new DP_Instances_Steps_Tasks_Roles();
-      role.recID = Util.uid();
-      role.taskID = this.taskCopy?.recID;
-      role.roleType = 'S';
-      role.objectName = data.text != null ? data.text : data.objectName;
-      role.objectID = data.id != null ? data.id : null;
-      role.roleType = 'S';
-      role.objectType = data.objectType;
-      role.read = true;
-      role.update = false;
-      role.assign = false;
-      role.delete = false;
-      role.upload = false;
-      role.download = false;
-      role.updateProgress = false;
-      role.share = false;
-      this.listRoleShare.push(role);
+  setRoleShareTypeU(datas: any[]){
+    let isSelect = true;
+    datas?.forEach((data, i) => {
+      if(!this.listRoleShare?.some(x => x.objectID == data.id)){
+        var role = new DP_Instances_Steps_Tasks_Roles();
+        role.recID = Util.uid();
+        role.taskID = this.taskCopy?.recID;
+        role.roleType = 'S';
+        role.objectName = data.text != null ? data.text : data.objectName;
+        role.objectID = data.id != null ? data.id : null;
+        role.roleType = 'S';
+        role.objectType = data.objectType;
+        role.read = true;
+        role.update = false;
+        role.assign = false;
+        role.delete = false;
+        role.upload = false;
+        role.download = false;
+        role.updateProgress = false;
+        role.share = false;
+        if(isSelect){
+          this.roleSelect = role;
+          isSelect = false;
+        } 
+        this.listRoleShare.push(role);
+      }
     });
   }
   setRoleShareTypeR(datas: [any]){
@@ -161,27 +168,34 @@ export class CodxShareTaskComponent implements OnInit {
       'GetListUserByRoleIDAsync',
       [listID]
     )
-    .subscribe((res) => {
+    .subscribe((res: any[]) => {
       if(res && res?.length > 0){
-        res.forEach(data => {
-          var role = new DP_Instances_Steps_Tasks_Roles();
-          role.recID = Util.uid();
-          role.taskID = this.taskCopy?.recID;
-          role.roleType = 'S';
-          role.objectName = data.userName;
-          role.objectID = data.userID;
-          role.roleType = 'S';
-          role.objectType = data.userType;
-          role.read = true;
-          role.update = false;
-          role.assign = false;
-          role.delete = false;
-          role.upload = false;
-          role.download = false;
-          role.updateProgress = false;
-          role.share = false;
-          this.listRoleShare.push(role);
-        });
+        let isSelect = true;
+        res.forEach((data,i) => {
+          if(!this.listRoleShare?.some(x => x.objectID == data.id)){
+            var role = new DP_Instances_Steps_Tasks_Roles();
+            role.recID = Util.uid();
+            role.taskID = this.taskCopy?.recID;
+            role.roleType = 'S';
+            role.objectName = data.userName;
+            role.objectID = data.userID;
+            role.roleType = 'S';
+            role.objectType = data.userType;
+            role.read = true;
+            role.update = false;
+            role.assign = false;
+            role.delete = false;
+            role.upload = false;
+            role.download = false;
+            role.updateProgress = false;
+            role.share = false;
+            if(isSelect){
+              this.roleSelect = role;
+              isSelect = false;
+            } 
+            this.listRoleShare.push(role);
+          }
+         });
       }else{
         this.notiService.notify("Vai trò này không có nhân viên","3")
       }
@@ -201,24 +215,31 @@ export class CodxShareTaskComponent implements OnInit {
     )
     .subscribe((res) => {
       if(res && res?.length > 0){
-        res.forEach(data => {
-          var role = new DP_Instances_Steps_Tasks_Roles();
-          role.recID = Util.uid();
-          role.taskID = this.taskCopy?.recID;
-          role.roleType = 'S';
-          role.objectName = data.userOrgName;
-          role.objectID = data.userOrgID;
-          role.roleType = 'S';
-          role.objectType = data.userOrgType;
-          role.read = true;
-          role.update = false;
-          role.assign = false;
-          role.delete = false;
-          role.upload = false;
-          role.download = false;
-          role.updateProgress = false;
-          role.share = false;
-          this.listRoleShare.push(role);
+        let isSelect = true;
+        res.forEach((data) => {
+          if(!this.listRoleShare?.some(x => x.objectID == data.id)){
+            var role = new DP_Instances_Steps_Tasks_Roles();
+            role.recID = Util.uid();
+            role.taskID = this.taskCopy?.recID;
+            role.roleType = 'S';
+            role.objectName = data.userOrgName;
+            role.objectID = data.userOrgID;
+            role.roleType = 'S';
+            role.objectType = data.userOrgType;
+            role.read = true;
+            role.update = false;
+            role.assign = false;
+            role.delete = false;
+            role.upload = false;
+            role.download = false;
+            role.updateProgress = false;
+            role.share = false;
+            if(isSelect){
+              this.roleSelect = role;
+              isSelect = false;
+            } 
+            this.listRoleShare.push(role);
+          }
         });
       }else{
         this.notiService.notify("Vai trò này không có nhân viên","3")
