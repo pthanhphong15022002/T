@@ -368,6 +368,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
   changeRequired(e) {
     this.field.isRequired = e.data;
   }
+  changeConditional(e) {
+    this.field.isApplyConditional = e.data;
+  }
   valueChangeIcon(e) {
     if (e && e?.data) this.field.rankIcon = e.data;
   }
@@ -1401,6 +1404,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   //-----------------Remind------------------//
   valueChangeChbx(e) {
+
+  }
+
+  clickSettingRef() {
 
   }
 }
