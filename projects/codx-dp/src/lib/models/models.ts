@@ -305,6 +305,8 @@ export class DP_Steps_Fields {
   assign: boolean = true;
   delete: boolean = true;
   dependences: string;
+  isApplyConditional: boolean;
+  conditionReference: any[]
 }
 
 export class DP_Instances {
@@ -571,6 +573,8 @@ export class DP_Instance_Steps_Fields {
   modifiedBy: string;
   versions: any[];
   dependences: string;
+  isApplyConditional: boolean;
+  conditionReference: any[]
 }
 
 export class DP_Instances_Steps_Reasons {
