@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnInit,
@@ -7,10 +6,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import {
-  SliderTickEventArgs,
-  SliderTickRenderedEventArgs,
-} from '@syncfusion/ej2-angular-inputs';
+
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
@@ -39,8 +35,6 @@ import {
   map,
   takeUntil,
 } from 'rxjs';
-import { X } from '@angular/cdk/keycodes';
-import test from 'node:test';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxDpService } from '../../../codx-dp.service';
 import { PopupAddVllCustomComponent } from './popup-add-vll-custom/popup-add-vll-custom.component';
@@ -1407,7 +1401,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   }
 
-  clickSettingRef() {
+  clickSettingConditional() {
 
   }
 }

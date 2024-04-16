@@ -524,7 +524,10 @@
         >
         </codx-input>
       </div>
-      <div class="d-flex align-items-center">
+      <div
+        class="d-flex align-items-center"
+        *ngIf="field.dataType == 'N' || field.dataType == 'D'"
+      >
         <codx-label
           class="me-3"
           fiedName="IsApplyConditional"
@@ -542,7 +545,7 @@
         <button
           type="button"
           class="btn btn-icon btn-sm btn-light-primary me-2"
-          (click)="clickSettingRef()"
+          (click)="clickSettingConditional()"
           [disabled]="viewOnly"
         >
           <i class="icon-settings icon-16"></i>
