@@ -110,7 +110,15 @@ export class CodxBpService {
       [autoNumberNo]
     );
   }
-
+  getViewInstance(recID) {
+    return this.api.execSv<any>(
+      "BP",
+      "ERM.Business.BP",
+      'ProcessesBusiness',
+      'ViewInstanceAsync',
+      [recID]
+    );
+  }
   updateStatusTask(recID,status,checkList) {
     return this.api.execSv<any>(
       "BP",
