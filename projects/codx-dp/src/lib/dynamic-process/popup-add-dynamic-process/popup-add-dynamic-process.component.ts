@@ -5469,7 +5469,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   checkViewReasonClick(step, isViewReason) {
     let applyFor = '';
     let processID = '';
-    if (step?.newProcessID === this.guidEmpty || !step?.newProcessID) {
+    if (step?.newProcessID?.includes(this.guidEmpty) || !step?.newProcessID) {
       applyFor = this.process.applyFor;
       if (isViewReason) {
         this.applyForSucess = applyFor;
@@ -5479,7 +5479,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     } else {
       processID = step?.newProcessID;
       if (isViewReason) {
-        applyFor = this.applyForSucess ? this.applyForSucess : '';
+        applyFor = this.applyForSucess ? this.applyForSucess : this.process?.applyFor;
         this.applyForSucess = applyFor;
       } else {
         applyFor = this.applyForFail ? this.applyForFail : '';
