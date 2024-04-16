@@ -74,11 +74,11 @@
     <div class="d-flex align-items-center pt-2">
 
       <codx-vll [showText]="true" [showBgColor]="true" [name]="'EP022'" [value]="data?.approveStatus"
-        class="badge badge-light badge-md fs-7">
+        class="badge badge-light badge-md fs-7 me-1">
       </codx-vll>
 
       <codx-vll *ngIf="resourceType=='6' || (resourceType=='2' && data?.issueControl)" [showText]="true" [showBgColor]="true" [name]="resourceType=='6'?'EP020':'EP027'"
-        [value]="data?.issueStatus ??'1'" class="badge badge-light badge-md ">
+        [value]="data?.issueStatus ??'1'" class="badge badge-light badge-md me-1">
       </codx-vll>
       <div [innerHTML]=" data?.createdOn | fmDT "></div>
     </div>
