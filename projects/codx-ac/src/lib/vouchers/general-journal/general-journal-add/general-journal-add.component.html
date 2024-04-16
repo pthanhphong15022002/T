@@ -27,7 +27,7 @@
                   [cssClass]="'rounded-pill border-1 mt-1'" cssPopup="h-350px w-400px" [isMulti]="false"
                   type="valuelist" field="subType" [refValue]="master?.gridviewSetup['SubType']?.referedValue"
                   [value]="master?.data?.subType" [emptyText]="master?.gridviewSetup['SubType']?.headerText"
-                ></codx-dropdown-select>
+                  (valueChange)="changeSubType($event)"></codx-dropdown-select>
               </div>
             </div>
           </ng-container>
