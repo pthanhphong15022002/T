@@ -17,7 +17,7 @@ export class PopupSettingConditionalComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-
+    this.dialog = dialog;
   }
   ngOnInit(): void {
 
