@@ -1,4 +1,3 @@
-import { update } from '@syncfusion/ej2-angular-inplace-editor';
 import { Util } from 'codx-core';
 
 export class DP_ProcessGroups {
@@ -304,8 +303,11 @@ export class DP_Steps_Fields {
   write: boolean = true;
   assign: boolean = true;
   delete: boolean = true;
+  isApplyDependences: boolean = false;;
+  dependences: string;
+  isApplyConditional: boolean = false;;
+  conditionReference: any[] ;
 }
-
 export class DP_Instances {
   recID: string;
   processID: string;
@@ -536,13 +538,13 @@ export class DP_Instances_Steps_Tasks_Roles {
   modifiedBy: string;
   full: boolean;
   read: boolean;
-  update: boolean; 
-  updateProgress: boolean; 
-  assign: boolean; 
-  share: boolean; 
-  upload: boolean; 
-  download: boolean; 
-  delete: boolean; 
+  update: boolean;
+  updateProgress: boolean;
+  assign: boolean;
+  share: boolean;
+  upload: boolean;
+  download: boolean;
+  delete: boolean;
 }
 
 export class DP_Instance_Steps_Fields {
@@ -569,6 +571,10 @@ export class DP_Instance_Steps_Fields {
   modifiedOn: Date;
   modifiedBy: string;
   versions: any[];
+  isApplyDependences: boolean = false;
+  dependences: string;
+  isApplyConditional: boolean = false;
+  conditionReference: any[]
 }
 
 export class DP_Instances_Steps_Reasons {
@@ -714,4 +720,10 @@ export class ColumnTable {
   settingWidth: boolean = true;
   settingCount: boolean = true;
   totalColumns: boolean = false;
+}
+export class DP_Condition_Reference_Fields {
+  refID: string;
+  compareConditions: string; //Phep so sanh
+  messageType: string;  //Kieu canh bao 2 đo, vang 3
+  messageText: string;
 }

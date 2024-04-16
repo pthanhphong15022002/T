@@ -2588,8 +2588,7 @@
                     "
                   ></i>
                   <span [ngStyle]="{ color: setColorTestStep(stepFail) }">
-                    <!-- {{stepFail?.stepName}} -->
-                    Không thành công
+                    {{stepNameFail}}
                   </span>
                 </div>
                 <div
@@ -3418,22 +3417,18 @@
             ></codx-label>
           </div>
           <div class="col-6">
-            <!-- Gán tạm chờ refvalue -->
-            <!-- <codx-input field="" type="valuelist" refValue="CRM009"> </codx-input> -->
-            <ejs-combobox
+            <ejs-multiselect
+              #multiselectRef
               id="recID"
+              [mode]="'Default'"
               [dataSource]="listCbxProccessSuccess"
               [fields]="fieldCbxProccess"
-              (valueChange)="cbxChange($event, viewStepReasonSuccess)"
-              [value]="
-                moveProccessIsNull(
-                  stepSuccess?.newProcessID,
-                  listCbxProccessSuccess
-                )
-              "
+              [showDropDownIcon]="true"
+              (valueChange)="cbxChange($event, stepSuccess, 'moveProcessIDSuccess')"
+              [value]="moveProcessIDSuccess"
               [readonly]="stepSuccess.isUsed && !viewOnly ? false : true"
-            >
-            </ejs-combobox>
+              [refreshDataBound]="refreshData"
+            ></ejs-multiselect>
             <codx-label
               class="text-danger fst-italic fs-7"
               default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại
@@ -3684,17 +3679,27 @@
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <ejs-combobox
+            <ejs-multiselect
+              #multiselectRef
+              id="recID"
+              [mode]="'Default'"
+              [dataSource]="listCbxProccessFail"
+              [fields]="fieldCbxProccess"
+              [showDropDownIcon]="true"
+              (valueChange)="cbxChange($event, stepFail, 'moveProcessIDFail')"
+              [value]="moveProcessIDFail"
+              [readonly]="stepFail?.isUsed && !viewOnly ? false : true"
+              [refreshDataBound]="refreshData"
+            ></ejs-multiselect>
+            <!-- <ejs-combobox
               id="recID"
               [dataSource]="listCbxProccessFail"
               [fields]="fieldCbxProccess"
               [placeholder]="gridViewSetupStep['NewProcessID']?.placeholder"
-              (valueChange)="cbxChange($event, viewStepReasonFail)"
+              (valueChange)="cbxChange($event, viewStepReasonFail, 'moveProcessIDFail')"
               [readonly]="stepFail?.isUsed && !viewOnly ? false : true"
-              [value]="
-                moveProccessIsNull(stepFail?.newProcessID, listCbxProccessFail)
-              "
-            ></ejs-combobox>
+              [value]="moveProcessIDFail"
+            ></ejs-combobox> -->
             <codx-label
               class="text-danger fst-italic fs-7"
               default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại

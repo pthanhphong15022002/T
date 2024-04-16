@@ -89,6 +89,12 @@
           view?.gridViewSetup["ObjectID"].headerText}}</span>
       </div>
     </div>
+    <div class="d-flex justify-content-between">
+      <div class="d-flex">
+        <i class="icon-i-tags me-2 icon-16"></i>
+        <span class="text-gray-600 line-clamp line-clamp-1">{{data?.subType | vll : view?.gridViewSetup["SubType"].referedValue : 'text' | async}}</span>
+      </div>
+    </div>
     <div style="height: 35px !important" class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-end codx-badge">
         <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true" [showBgColor]="true"

@@ -42,6 +42,7 @@ import { BPCONST } from 'projects/codx-bp/src/lib/models/BP_Const.model';
 import { CoDxAddApproversComponent } from 'projects/codx-common/src/lib/component/codx-approval-procress/codx-add-approvers/codx-add-approvers.component';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { AddCustomActionComponent } from '../../form-steps-field-grid/add-default/add-custom-action/add-custom-action.component';
+import { CoDxApproveCommentComponent } from 'projects/codx-common/src/lib/component/codx-approval-procress/codx-approve-comment/codx-approve-comment.component';
 
 @Component({
   selector: 'lib-process-release-detail',
@@ -84,94 +85,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   ];
   listMF = [];
   listButtonMF = [];
-  listButtonMF1 = [
-    //Task;Check;Approve;Sign;Release;Stamp;Email;
-    //Task: Thực hiện,Giao việc;
-    {
-      id: '1',
-      functionID: 'BP0701',
-      customName: 'Hoàn tất',
-      largeIcon: 'icon-person_add_alt_1',
-      color: '#005DC7',
-    },
-    {
-      id: '2',
-      functionID: 'BP0701',
-      customName: 'Giao việc',
-      largeIcon: 'icon-person_add_alt_1',
-      color: '#005DC7',
-    },
-
-    //Check: Kiểm tra
-    {
-      id: '3',
-      functionID: 'BP0705',
-      customName: 'Kiểm tra',
-      largeIcon: 'icon-check_circle',
-      color: '#1BC5BD',
-    },
-    //Release: Phát hành
-    {
-      id: '4',
-      functionID: 'BP0701',
-      customName: 'Phát hành',
-      largeIcon: 'icon-person_add_alt_1',
-      color: '#005DC7',
-    },
-    //Email: Soạn thư
-    {
-      id: '5',
-      functionID: 'BP0701',
-      customName: 'Soạn thư',
-      largeIcon: 'icon-email',
-      color: '#005DC7',
-    },
-    //Stamp: Đóng dấu
-    {
-      id: '6',
-      functionID: 'BP0701',
-      customName: 'Đóng dấu',
-      largeIcon: 'icon-person_add_alt_1',
-      color: '#005DC7',
-    },
-    //Approve/Sign: Duyệt/Ký,Từ chối,Trả về,Ủy quyền;
-
-    {
-      id: '7',
-      functionID: 'BP0702',
-      customName: 'Ủy quyền',
-      largeIcon: 'icon-i-people',
-      color: '#0078FF',
-    },
-    {
-      id: '8',
-      functionID: 'BP0703',
-      customName: 'Trả về',
-      largeIcon: 'icon-i-arrow-90deg-right',
-      color: '#FFA800',
-    },
-    {
-      id: '9',
-      functionID: 'BP0704',
-      customName: 'Từ chối',
-      largeIcon: 'icon-i-x-circle',
-      color: '#F64E60',
-    },
-    {
-      id: '10',
-      functionID: 'BP0705',
-      customName: 'Duyệt',
-      largeIcon: 'icon-i-pencil-square',
-      color: '#1BC5BD',
-    },
-    {
-      id: '11',
-      functionID: 'BP0705',
-      customName: 'Ký',
-      largeIcon: 'icon-check_circle',
-      color: '#1BC5BD',
-    },
-  ];
+  
   activeTask: any;
   permFormTask: any;
   constructor(
@@ -283,6 +197,10 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       switch (mfuncID) {
         case BPCONST.TASKMF.Task:
         case BPCONST.TASKMF.Check:
+          {
+            this.openForm(this.activeTask);
+            break;
+          }
         case BPCONST.TASKMF.Approve:
         case BPCONST.TASKMF.Redo:
         case BPCONST.TASKMF.Reject: {
@@ -292,7 +210,18 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
               : mfuncID == BPCONST.TASKMF.Reject
               ? '4'
               : '5';
-          this.updateTask(this.activeTask, status);
+            let dialogAPComment = this.callFc.openForm(
+              CoDxApproveCommentComponent,
+              '',
+              500,
+              250,
+              '',              
+            );
+            dialogAPComment.closed.subscribe(cmt=>{
+              if(cmt?.event){
+                this.updateTask(this.activeTask, status);
+              }
+            })
           break;
         }
         case BPCONST.TASKMF.Email: {
@@ -332,7 +261,16 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     );
     if (this.activeTask != null) {
       switch (this.activeTask.activityType) {
-        //Task;Check;Approve;Sign;Release;Stamp;Email;
+        //Form;Task;Check;Approve;Sign;Release;Stamp;Email;
+        case 'Form':
+        case 'Check': {
+          this.listMF = this.listButtonMF.filter(
+            (x) =>
+              x?.functionID == BPCONST.TASKMF.Task ||
+              x?.functionID == BPCONST.TASKMF.Tranfer
+          );
+          break;
+        }
         case 'Task': {
           this.listMF = this.listButtonMF.filter(
             (x) =>
@@ -340,20 +278,15 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
               x?.functionID == BPCONST.TASKMF.Assign
           );
           break;
-        }
-        case 'Check': {
-          this.listMF = this.listButtonMF.filter(
-            (x) => x?.functionID == BPCONST.TASKMF.Check
-          );
-          break;
-        }
+        }        
         case 'Approve': {
           this.listMF = this.listButtonMF.filter(
             (x) =>
               x?.functionID == BPCONST.TASKMF.Approve ||
               x?.functionID == BPCONST.TASKMF.Reject ||
               x?.functionID == BPCONST.TASKMF.Redo ||
-              x?.functionID == BPCONST.TASKMF.Authority
+              x?.functionID == BPCONST.TASKMF.Authority||
+              x?.functionID == BPCONST.TASKMF.Assign
           );
           break;
         }
@@ -361,7 +294,8 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
           this.listMF = this.listButtonMF.filter(
             (x) =>
               x?.functionID == BPCONST.TASKMF.Sign ||
-              x?.functionID == BPCONST.TASKMF.Authority
+              x?.functionID == BPCONST.TASKMF.Authority||
+              x?.functionID == BPCONST.TASKMF.Assign
           );
           break;
         }
@@ -620,28 +554,6 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
   }
 
   openForm(dt: any) {
-    // if (dt?.activityType == 'Email') {
-    //   let data = {
-    //     dialog: this.dialog,
-    //     formGroup: null,
-    //     templateID: '',
-    //     showIsTemplate: true,
-    //     showIsPublish: true,
-    //     showSendLater: true,
-    //     files: null,
-    //     isAddNew: false,
-    //     notSendMail: true,
-    //   };
-
-    //   let popEmail = this.callFc.openForm(
-    //     CodxEmailComponent,
-    //     '',
-    //     800,
-    //     screen.height,
-    //     '',
-    //     data
-    //   );
-    // } else if (dt) {
     let privileged = true;
     if (dt?.permissions) {
       privileged = dt?.permissions.some(
@@ -668,8 +580,9 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     );
     popup.closed.subscribe((res) => {
       if (res && res?.event) {
-        this.formatDataTask(res);
-        //this.data = res?.event;
+        //this.bpSV.getViewInstance(dt?.instanceID).subscribe((ins:any)=>{
+          this.updateView(res?.event);
+        //})
       }
     });
   }
@@ -881,38 +794,10 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
     if (viewData?.length == 2) {
       let ins = viewData[0];
       if(ins!=null){
-        // this.data.status = ins?.status ?? this.data.status;
-        // this.data.currentStage = ins?.currentStage ?? this.data?.currentStage;
-        // this.data.currentStep = ins?.currentStep ?? this.data?.currentStep;
-        // this.data.actualStart = ins?.actualStart ?? this.data?.actualStart;
-        // this.data.actualEnd = ins?.actualEnd ?? this.data?.actualEnd;
-        // this.data.actualHours = ins?.actualHours ?? this.data?.actualHours;
         this.data = ins;
       }
       let task = viewData[1];
       if(task?.length>0){
-        // this.listStage?.forEach((stage) => {
-        //   let nStage = task?.find(x=>x?.stepID == stage?.recID);
-        //   stage.statusStage = nStage?.status ?? stage?.statusStage;
-        //   if (stage?.child?.length > 0) {
-        //     stage?.child?.forEach((child1) => {            
-        //       let nChild = task?.find(x=>x?.taskID == child1?.recID);
-        //       child1.status = nChild?.status ?? child1?.status;
-        //       child1.dataTask = nChild ??child1.dataTask;
-        //       if (child1?.child?.length > 0) {
-        //         child1?.child?.forEach((child2) => {
-        //           let nChild2 = task?.find(x=>x?.taskID == child2?.recID);
-        //           child2.status = nChild2?.status ?? child2?.status;
-        //           child2.dataTask = nChild ??child2.dataTask;
-        //         });
-        //       }
-        //     });
-        //   }
-        // });
-        // this.listTask?.forEach((t)=>{
-        //   let nTask = task?.find(x=>x?.recID==t?.recID);
-        //   t.status =nTask?.status ?? t.status;
-        // });
         this.listTask = task;
         this.formatData();
       }

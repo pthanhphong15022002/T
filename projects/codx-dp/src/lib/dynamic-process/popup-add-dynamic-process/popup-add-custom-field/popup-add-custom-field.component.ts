@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnInit,
@@ -7,10 +6,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import {
-  SliderTickEventArgs,
-  SliderTickRenderedEventArgs,
-} from '@syncfusion/ej2-angular-inputs';
+
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
@@ -39,8 +35,6 @@ import {
   map,
   takeUntil,
 } from 'rxjs';
-import { X } from '@angular/cdk/keycodes';
-import test from 'node:test';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxDpService } from '../../../codx-dp.service';
 import { PopupAddVllCustomComponent } from './popup-add-vll-custom/popup-add-vll-custom.component';
@@ -49,6 +43,7 @@ import { PopupSettingReferenceComponent } from './popup-setting-reference/popup-
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 import { CodxInputCustomFieldComponent } from '../../../share-crm/codx-input-custom-field/codx-input-custom-field.component';
 import { CodxFieldsFormatValueComponent } from '../../../share-crm/codx-input-custom-field/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
+import { PopupSettingConditionalComponent } from './popup-setting-conditional/popup-setting-conditional.component';
 
 @Component({
   selector: 'lib-popup-add-custom-field',
@@ -367,6 +362,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   changeRequired(e) {
     this.field.isRequired = e.data;
+  }
+  changeConditional(e) {
+    this.field.isApplyConditional = e.data;
   }
   valueChangeIcon(e) {
     if (e && e?.data) this.field.rankIcon = e.data;
@@ -1028,7 +1026,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.cache.gridViewSetup(formName, gridViewName).subscribe((grv) => {
       if (grv) {
         let option = new DialogModel();
-        console.log(grv);
         option.zIndex = 1050;
         let obj = {
           datas: grv,
@@ -1402,5 +1399,35 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //-----------------Remind------------------//
   valueChangeChbx(e) {
 
+  }
+//----------------- Conditons Ref------------------//
+  clickSettingConditional() {
+    let option = new DialogModel();
+    option.zIndex = 1050;
+    let obj = {
+      action: 'add',
+      titleAction: this.grvSetup['ConditionReference']?.headerText, //test
+    };
+    let dialogCon = this.callfc.openForm(
+      PopupSettingConditionalComponent,
+      '',
+      550,
+      400,
+      '',
+      obj,
+      '',
+      option
+    );
+    dialogCon.closed.subscribe(res => {
+      if (res && res.event) {
+
+      }
+    })
+  }
+
+  //----------------- Dependences------------------//
+  changeDependences(e){
+    this.field['isApplyDependences'] = e.data;
+    if(this.field.isApplyDependences) this.field.isApplyConditional = false;
   }
 }

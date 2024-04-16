@@ -627,7 +627,7 @@
         </div>
         <div class="col-6 d-flex align-items-center justify-content-end p-0 pe-3">
           <div class="border rounded bg-warning px-1 me-3 fs-7">{{data.data?.duration +' '+ getIntervalObject(data.data?.interval).text}}</div>
-          <i class="icon-i-three-dots icon-16 me-2"></i>
+          <i class="icon-i-three-dots icon-16 me-2" (click)="addEditStages(data,'edit')"></i>
           <i class="icon-close icon-16 text-danger"*ngIf="!viewOnly"
           (click)="deleteNode(data)"></i>
         </div>
