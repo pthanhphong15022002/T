@@ -69,6 +69,7 @@ import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-repo
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 import { DashboardInstancesComponent } from './instances/dashboard-instances/dashboard-instances.component';
 import { ShareCrmModule } from './share-crm/share-crm.module';
+import { PopupSettingConditionalComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-setting-conditional/popup-setting-conditional.component';
 
 export const routes: Routes = [
   {
@@ -175,6 +176,7 @@ const T_Component: Type<any>[] = [
   ProcessesPropertiesComponent,
   PropertiesFieldComponent,
   PopupMapContractComponent,
+  PopupSettingConditionalComponent
 ];
 
 @NgModule({
