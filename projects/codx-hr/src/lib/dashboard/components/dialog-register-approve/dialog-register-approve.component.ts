@@ -59,6 +59,7 @@ implements OnInit  {
     this.actionType = data?.data?.actionType;
     this.headerText = data?.data?.headerText;
     this.dialog = dialog;
+    console.log('dialog nè', this.dialog)
 
     
   }

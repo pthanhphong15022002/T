@@ -1,0 +1,38 @@
+.container-info{
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+    
+  }
+  .container-info::-webkit-scrollbar{
+    width: 0px;
+    height: 0px;
+  }
+  .tab-active{
+    border-bottom: 2px solid var(--hcs-primary);
+  }
+  .tab-container{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: center; /* Change to flex-start */
+    background-color: white;
+    position: sticky;
+    top: 0;
+    z-index: 997;
+    padding: 0 1rem;
+    border-radius: 8px;
+    /* border: 1px solid var(--Line-Line, #E2E3EE); */
+    height: 100%;
+
+    
+    .tab-container-items{
+        overflow: hidden;
+        white-space: nowrap;
+        width: 90%;
+        display: flex;
+        align-items: start;
+        gap:3.5rem;
+        margin: 0 0.5rem;
+    }
+}

@@ -172,6 +172,7 @@ import { DialogReviewLeaveApproveComponent } from './employee-list/employee-info
 import { DialogWaitingLeavingApproveComponent } from './employee-list/employee-info-profile/components/dialog-waiting-leaving-approve/dialog-waiting-leaving-approve.component';
 import { HrTableNewemployeeComponent } from './dashboard/widgets/hr-table-newemployee/hr-table-newemployee.component';
 import { SidebarTreeviewComponent } from './employee-list/employee-info-detail/component/sidebar-treeview/sidebar-treeview.component';
+import { SelectScrollBarComponent } from './codx-hr-common/components/select-scroll-bar/select-scroll-bar.component';
 export const routes: Routes = [
   {
     path: '',
@@ -524,7 +525,8 @@ const T_Component = [
   DialogReviewLeaveApproveComponent,
   DialogWaitingLeavingApproveComponent,
   HrTableNewemployeeComponent,
-  SidebarTreeviewComponent
+  SidebarTreeviewComponent,
+  SelectScrollBarComponent
 
 ];
 @NgModule({

@@ -4,7 +4,7 @@
   <div class="page-pw h-employee pb-0">
     <div class="page-profile w-100">
       <div class="d-flex justify-content-between">
-        <div class="user-left me-4 border bg-white" style="min-width: 273px;">
+        <div  class="user-left me-4 border bg-white" style="min-width: 273px;">
           <div class="profile-bg"></div>
           <div class="d-flex flex-column text-center mx-4 profile-info">
             <div class="mb-3 mt-4 d-flex justify-content-center align-items-top">
@@ -255,18 +255,22 @@
                 <span style="margin-top: 2px" #id placement="bottom" [title]="eInfoHeaderText?.EmployeeID">{{ employeeID
                   }}</span>
                 <span *ngIf="infoPersonal" class="icon-i-info-circle-fill icon-4 mx-3 text-gray-600"></span> -->
-                <span class="fw-bold" placement="bottom" [title]="eInfoHeaderText?.EmployeeName">{{
-                  infoPersonal?.employeeName }}</span>
+                <span class="fw-bold" placement="bottom" [title]="eInfoHeaderText?.EmployeeName">
+                  Võ Ngọc Kim Trang
+                </span>
               </div>
             </div>
-            <div placement="bottom" [title]="eInfoHeaderText?.PositionID" class="text-gray-500 mb-1"
+            <!-- <div placement="bottom" [title]="eInfoHeaderText?.PositionID" class="text-gray-500 mb-1"
               *ngIf="infoPersonal">
               {{ this.infoPersonal.PositionName }}
+            </div> -->
+            <div placement="bottom" [title]="eInfoHeaderText?.PositionID" class="text-gray-500 mb-1"
+              >
+              Phân tích nghiệp vụ
             </div>
             <div class="text-danger fw-bold">
               <span class="icon-qr_code_scanner icon-16 me-2"></span>
-              <span style="margin-top: 2px" #id placement="bottom" [title]="eInfoHeaderText?.EmployeeID">{{ employeeID
-                }}</span>
+              <span style="margin-top: 2px" #id placement="bottom" [title]="eInfoHeaderText?.EmployeeID">ELV02233</span>
             </div>
             <div>
               <span class=" icon-pin_drop icon-16 me-2"></span>
@@ -282,7 +286,7 @@
           </div>
           <div class="user-menu scroll-y w-100 border-top">
             <div class="d-flex flex-column ps-4 pt-3 pb-1 border-bottom fw-bold"
-              *ngIf="infoPersonal && LoadedEInfo == true">
+             >
               <div class="d-flex flex-wrap mb-1">
                 <div class="d-flex align-items-center text-gray-700 me-5">
                   <!-- <span
@@ -296,13 +300,14 @@
                         | async
                     "
                   ></span> -->
-                  <span class=""></span>
+                  <span class="icon-local_phone me-1"></span>
                   <span class="text-dark">
-                    <span placement="bottom" [title]="eInfoHeaderText?.Mobile" *ngIf="eInfoFormModel" [innerHTML]="
+                    <!-- <span placement="bottom" [title]="eInfoHeaderText?.Mobile" *ngIf="eInfoFormModel" [innerHTML]="
                         infoPersonal?.mobile
                           | formatvalue : eInfoFormModel : 'mobile'
                           | async
-                      "></span>
+                      "></span> -->
+                      <span placement="bottom" [title]="eInfoHeaderText?.Mobile">039 326 7994</span>
                   </span>
                 </div>
                 <!-- <div *ngIf="eInfoFormModel" placement="bottom" [title]="eInfoHeaderText?.Status">
@@ -311,40 +316,23 @@
                 </div> -->
               </div>
               <div class="d-flex align-items-center mb-1">
-                <span class=""></span>
+                <span class="icon-mail_outline"></span>
                 <span class="text-dark" placement="bottom" [title]="eInfoHeaderText?.Email">
-                  <span #email *ngIf="eInfoFormModel" [innerHTML]="
+                  <!-- <span #email *ngIf="eInfoFormModel" [innerHTML]="
                       infoPersonal?.email
                         | formatvalue : eInfoFormModel : 'email'
                         | async
-                    "></span>
+                    "></span> -->
+                    <span #email></span>
                 </span>
               </div>
               <div class="d-flex align-items-center mb-1">
                 <span class="icon-date_range icon-16 me-2"></span>
                 <span></span>
               </div>
-              <div class="d-flex align-items-center mb-1">
-                <!-- <span class=""></span>
-                <span placement="bottom" [title]="eInfoHeaderText?.Phone" class="text-dark me-3" [innerHTML]="
-                  infoPersonal?.phone
-                    | formatvalue : eInfoFormModel : 'phone'
-                    | async
-                "></span>
-                <span class=""></span>
-                <span class="text-dark">
-                  <span placement="bottom" [title]="eInfoHeaderText?.Mobile" *ngIf="eInfoFormModel" [innerHTML]="
-                    infoPersonal?.mobile
-                      | formatvalue : eInfoFormModel : 'mobile'
-                      | async
-                  "></span>
-                </span> -->
-
-                <span class=""></span>
-                <span placement="bottom" [title]="eInfoHeaderText?.Phone" class="text-dark me-3"></span>
-              </div>
+              
             </div>
-            <div class="d-flex flex-column ps-4 pt-3 pb-1 border-bottom" *ngIf="infoPersonal && LoadedEInfo == true">
+            <div class="d-flex flex-column ps-4 pt-3 pb-1 border-bottom">
               <div class="d-flex flex-wrap mb-1">
                 <div class="d-flex align-items-center text-gray-700 me-5">
                   <span>Quản lý trực tiếp:</span>
@@ -786,11 +774,11 @@
               <div class="w-25 p-3">
                 <div class="info-contact d-flex flex-column">
                   <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                    <span #emailField class="data-text-color text-primary"
+                    <!-- <span #emailField class="data-text-color text-primary"
                       [ngbTooltip]="emailTooltip">nnpvi@lacviet.com.vn
-                    </span>
+                    </span> -->
                     <ng-template #emailTooltip>
-                      <span>nnpvi@lacviet.com.vn</span>
+                      <!-- <span>nnpvi@lacviet.com.vn</span> -->
                     </ng-template>
                   </div>
                   <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
@@ -818,11 +806,11 @@
 
 <!-- Start Panel -->
 <ng-template #curriculumVitae>
-  <div class="tab-panel">
-    <div class="tab-scroll mb-4">
-      <i #prev id="pre-item-profile" class="hcs-icon vector-icon fs-13 text-black prev-item" libSwiperClicking type="previous"
+  <div class="tab-panel" >
+    <!-- <div class="tab-scroll tab-container mb-4">
+      <i #prev id="pre-item-profile" class="icon-i-chevron-right fs-13 text-black prev-item" libSwiperClicking type="previous"
         ContainerID="tab-container-id"></i>
-      <div class="tab-horizone bg-white h-od-tab">
+      <div class="tab-horizone tab-container-items bg-white h-od-tab" id="tab-container-id">
         <ul class="nav nav-tabs d-flex justify-content-between">
           <ng-container *ngFor="let item of lstFuncCurriculumVitaeFake">
             <li class="nav-item" (click)="navChange(item.functionID, 0, 0, $event.target)">
@@ -834,9 +822,10 @@
           </ng-container>
         </ul>
       </div>
-      <i #next id="next-item-profile" class="hcs-icon vector-icon fs-13 text-black next-item" libSwiperClicking type="next"
+      <i #next id="next-item-profile" class="icon-i-chevron-right fs-13 text-black next-item" libSwiperClicking type="next"
         ContainerID="tab-container-id"></i>
-    </div>
+    </div> -->
+    <select-scroll-bar [listTabs]="lstFuncCurriculumVitaeFake" [active]="active" [isClick]="isClick"></select-scroll-bar>
     <div class="pw-content w-100 scroll-y" data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto"
       data-kt-scroll-dependencies=".pw-profile,.pw-menu" data-kt-scroll-wrappers=".employee-container"
       data-kt-scroll-offset="0px" scrollSpy [spiedTags]="['DIV']" (sectionChange)="onSectionChange($event, 0)">
@@ -1067,7 +1056,7 @@
                       <codx-label name="PersonalEmail" [default]="'Email cá nhân'">
                       </codx-label>
                     </div>
-                    <div class="text-dar">vnktrang@lacviet.com.vn</div>
+                    <!-- <div class="text-dar">"vnktrang@lacviet.com.vn"</div> -->
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -1075,7 +1064,7 @@
                     <div class="text-gray-600 mb-1 d-flex">
                       <codx-label [default]="'Email'"> </codx-label>
                     </div>
-                    <div class="text-dark">kimtrang28122000@gmail.com</div>
+                    <!-- <div class="text-dark">"kimtrang28122000@gmail.com"</div> -->
                   </div>
                 </div>
               </div>
@@ -1484,7 +1473,7 @@
 
               <div>
                 <!-- Info -->
-                <div class="d-flex flex-row justify-content-between row custom-row">
+                <div class="custom-row d-flex flex-wrap justify-content-between">
                   <div class="d-flex flex-row align-items-center col-md-3">
                     <div class="point-circle color-blue"></div>
                     <div>

@@ -1,0 +1,62 @@
+<!-- <div class="tab-panel container-info" >
+    <div class="tab-scroll tab-container mb-4">
+      <i #prev id="pre-item-profile" class="icon-i-chevron-right fs-13 text-black prev-item" libSwiperClicking type="previous"
+        ContainerID="tab-container-id"></i>
+      <div class="tab-horizone tab-container-items bg-white h-od-tab" id="tab-container-id">
+        <ul class="nav nav-tabs d-flex justify-content-between">
+          <ng-container *ngFor="let item of listTabs">
+            <li class="nav-item" >
+              <a class="nav-link text-center">
+                <span [class]="item.largeIcon"></span>
+                <div class="text-uppercase fw-bold">{{ item.customName }}</div>
+              </a>
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+      <i #next id="next-item-profile" class="icon-i-chevron-right fs-13 text-black next-item" libSwiperClicking type="next"
+        ContainerID="tab-container-id"></i>
+    </div> -->
+
+<div #container class="container-info" (scroll)="onScroll($event)" [ngStyle]="{height:height}">
+  <div class="tab-container">
+
+    <i #prev id="pre-item-profile" class="icon-i-chevron-left  fs-13 text-black prev-item" libSwiperClicking
+      type="previous" ContainerID="tab-container-id"></i>
+
+    <div #tabContainer id="tab-container-id" class="tab-container-items">
+      <div *ngFor="let item of listTabs; let i = index" (click)="navChange(item.functionID, 0, 1, $event.target)"
+      [ngClass]="item.functionID == active[0] ? 'tab-active' : ''"
+        class="d-flex align-items-center flex-column py-3 gap-2 justify-content-center pointer">
+        <div class="hcs-icon {{item.icon}} hcs-text fs-22 hcs-text-primary"></div>
+        <div class="hcs-text fs-13 hcs-text-primary">{{item.customName}}</div>
+      </div>
+    </div>
+
+    <i #next id="next-item-profile" class="icon-i-chevron-right  fs-13 text-black next-item" libSwiperClicking
+      type="next" ContainerID="tab-container-id"></i>
+
+  </div>
+  <ng-content></ng-content>
+</div>
+
+<!-- <div #container class="container-info" (scroll)="onScroll($event)" [ngStyle]="{height:height}">
+  <div class="tab-scroll tab-container mb-4">
+    <i #prev id="pre-item-profile" class="icon-i-chevron-right  fs-13 text-black prev-item" libSwiperClicking
+    type="previous" ContainerID="tab-container-id"></i>
+      <div class="tab-horizone  bg-white h-od-tab" >
+        <ul #tabContainer class="nav nav-tabs tab-container-items d-flex justify-content-between" id="tab-container-id">
+          <ng-container *ngFor="let item of listTabs">
+            <li class="nav-item" (click)="navChange(item.functionID, 0, 0, $event.target)">
+              <a class="nav-link text-center" [ngClass]="item.functionID == active[0] ? 'active' : ''">
+                <span [class]="item.largeIcon"></span>
+                <div class="text-uppercase fw-bold">{{ item.customName }}</div>
+              </a>
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+      <i #next id="next-item-profile" class="icon-i-chevron-right  fs-13 text-black next-item" libSwiperClicking
+      type="next" ContainerID="tab-container-id"></i>
+    </div>
+</div> -->

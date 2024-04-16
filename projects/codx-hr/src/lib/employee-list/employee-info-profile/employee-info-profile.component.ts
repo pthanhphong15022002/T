@@ -1206,6 +1206,13 @@ export class EmployeeInfoProfileComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
+    /* Fake data */
+    // this.onCheckContainerOverflow();
+    // this.targetElements.push(...this.container.nativeElement.children);
+    // this.tabElements.push(...this.tabContainer.nativeElement.children);
+
+    // console.log(this.targetElements);
+
     this.views = [
       {
         type: ViewType.content,
@@ -7264,6 +7271,83 @@ export class EmployeeInfoProfileComponent extends UIComponent {
       largeIcon: "icon-family_restroom",
       isActive: false
 
+    },
+    {
+      functionID: 6,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 7,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 8,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 9,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 10,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 9,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 10,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 9,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 10,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 9,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 10,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
     }
   ]
 
@@ -7568,4 +7652,35 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     options.Width = 'Auto';
     this.callfunc.openSide(MyTemComponent, [], options);
   }
+
+
+  /*Sau này tách riêng*/
+
+
+  listTabs: any[] = [];
+  width :number
+  height :string='calc(100vh - 80px)'
+  @ViewChild('container') container!:ElementRef;
+  @ViewChild('tabContainer') tabContainer!:ElementRef;
+  @ViewChild('prev') prev!:ElementRef;
+  @ViewChild('next') next!:ElementRef;
+  @ViewChild('scrollele') scrollele!:ElementRef;
+  timeoutfn:any;
+  targetElements: any[] = [];
+  tabElements: any[] = [];
+  isShowSwiper:boolean = false;
+  protected onCheckContainerOverflow(){
+        // debugger;
+        var condition:boolean = this.tabContainer.nativeElement.scrollWidth - this.tabContainer.nativeElement.clientWidth > 0;
+        if(condition){
+            this.prev.nativeElement.style.visibility = 'visible'
+            this.next.nativeElement.style.visibility = 'visible'
+        }
+        else{
+          this.prev.nativeElement.style.visibility = 'hidden'
+          this.next.nativeElement.style.visibility = 'hidden'
+        }
+  }
+  hold:boolean = false;
+  protected selectd:any;
 }
