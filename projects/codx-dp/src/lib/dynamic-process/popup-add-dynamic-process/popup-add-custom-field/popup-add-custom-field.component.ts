@@ -43,6 +43,7 @@ import { PopupSettingReferenceComponent } from './popup-setting-reference/popup-
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 import { CodxInputCustomFieldComponent } from '../../../share-crm/codx-input-custom-field/codx-input-custom-field.component';
 import { CodxFieldsFormatValueComponent } from '../../../share-crm/codx-input-custom-field/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
+import { PopupSettingConditionalComponent } from './popup-setting-conditional/popup-setting-conditional.component';
 
 @Component({
   selector: 'lib-popup-add-custom-field',
@@ -1025,7 +1026,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.cache.gridViewSetup(formName, gridViewName).subscribe((grv) => {
       if (grv) {
         let option = new DialogModel();
-        console.log(grv);
         option.zIndex = 1050;
         let obj = {
           datas: grv,
@@ -1400,8 +1400,33 @@ export class PopupAddCustomFieldComponent implements OnInit {
   valueChangeChbx(e) {
 
   }
-
+//----------------- Conditons Ref------------------//
   clickSettingConditional() {
+    let option = new DialogModel();
+    option.zIndex = 1050;
+    let obj = {
+      action: 'add',
+      titleAction: this.grvSetup['ConditionReference']?.headerText, //test
+    };
+    let dialogCon = this.callfc.openForm(
+      PopupSettingConditionalComponent,
+      '',
+      550,
+      400,
+      '',
+      obj,
+      '',
+      option
+    );
+    dialogCon.closed.subscribe(res => {
+      if (res && res.event) {
 
+      }
+    })
+  }
+
+  //----------------- Dependences------------------//
+  changeDependences(e){
+    this.field.isApplyDependences = e.data;
   }
 }
