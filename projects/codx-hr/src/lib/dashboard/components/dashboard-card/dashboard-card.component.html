@@ -1,4 +1,4 @@
-<div class="card" [style.borderBottom]="borderBottom">
+<!-- <div class="card" [style.borderBottom]="borderBottom">
     <div class="card-body">
       <div class="icon-circle" [style.backgroundColor]="backgroundColor"><i [ngClass]="iconClass" [style.color]="iconColor"></i></div>
       <p class="card-title">{{ subtitle }}</p>
@@ -7,3 +7,32 @@
     </div>
   </div>
   
+
+   -->
+
+   <!-- Codx Card -->
+
+<div class="card" [style.borderBottom]="borderBottom">
+  <codx-card-img
+  [cardCss]="'height-144px width-173px'"
+  [titleTmp]="headerIconTemplate"
+  [contentTmp]="contentCardTemplate">
+</codx-card-img>
+</div>
+
+<ng-template #headerIconTemplate>
+  <div class="mt-3 mb-3">
+    <div class="align-items-center d-flex justify-content-center" [style.backgroundColor]="backgroundColor" 
+         style="width: 35px; height: 35px; border-radius: 50%;">
+      <i [ngClass]="iconClass" [style.color]="iconColor"></i>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #contentCardTemplate>
+  <div class="pb-4">
+    <div class="card-title">{{ subtitle }}</div>
+    <div class="card-number"><b>{{ number }}</b></div>
+    <div class="card-percent"><span [style.color]="percentColor">{{ percent }}</span></div>
+  </div>
+</ng-template>

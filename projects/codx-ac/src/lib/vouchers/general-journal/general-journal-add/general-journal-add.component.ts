@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, HostListener, Injector, Optional, ViewChild } from '@angular/core';
-import { CodxFormComponent, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, SubModel, UIComponent, Util } from 'codx-core';
+import { CodxDropdownSelectComponent, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, SubModel, UIComponent, Util } from 'codx-core';
 import { CodxAcService, fmGeneralJournalsLines, fmGeneralJournalsLinesOne, fmSettledInvoices, fmVATInvoices } from '../../../codx-ac.service';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
 import { RoundService } from '../../../round.service';
@@ -26,6 +26,7 @@ export class GeneralJournalAddComponent extends UIComponent {
   @ViewChild('elementTabDetail') elementTabDetail: any; //? element object các tab detail(chi tiết,hóa đơn công nợ,hóa đơn GTGT)
   @ViewChild('eleCbxReasonID') eleCbxReasonID: any; //? element codx-input cbx của lý do chi
   @ViewChild('eleCbxObjectID') eleCbxObjectID: any; //? element codx-input cbx của đối tượng
+  @ViewChild('eleCbxSubType') eleCbxSubType: CodxDropdownSelectComponent;
   headerText: string; //? tên tiêu đề
   dialog!: DialogRef; //? dialog truyền vào
   dialogData?: any; //? dialog hứng data truyền vào
@@ -236,6 +237,53 @@ export class GeneralJournalAddComponent extends UIComponent {
         this.deleteRow(event.data);
         break;
     }
+  }
+
+  changeSubType(event?: any) {
+    if (this.isPreventChange) {
+      this.isPreventChange = false;
+      return;
+    }
+    if (event && event.data[0] && ((this.eleGridGeneral && this.eleGridGeneral.dataSource.length > 0)
+      || (this.eleGridSettledInvoices && this.eleGridSettledInvoices.dataSource.length > 0)
+      || (this.eleGridVatInvoices && this.eleGridVatInvoices.dataSource.length > 0))) {
+      this.notification.alertCode('AC014', null).subscribe((res) => {
+        if (res.event.status === 'Y') {
+          let obj = {
+            SubType: event.data[0]
+          }
+          this.api.exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
+            'subType',
+            this.master.data,
+            JSON.stringify(obj)
+          ])
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res: any) => {
+              this.master.setValue('subType', event.data[0], {});
+              this.dialog.dataService.update(this.master.data).subscribe();
+              if (this.eleGridGeneral) this.eleGridGeneral.dataSource = [];
+              if (this.eleGridSettledInvoices) this.eleGridSettledInvoices.dataSource = [];
+              if (this.eleGridVatInvoices) this.eleGridVatInvoices.dataSource = [];
+              this.showHideTabDetail(
+                this.master?.data?.subType,
+                this.elementTabDetail
+              );
+              this.onDestroy();
+            });
+        } else {
+          this.isPreventChange = true;
+          this.eleCbxSubType.setValue(this.master.data.subType);
+        }
+      });
+    } else {
+      this.master.setValue('subType', event.data[0], {});
+      this.detectorRef.detectChanges();
+      if (this.elementTabDetail) {
+        this.showHideTabDetail(this.master?.data?.subType, this.elementTabDetail);
+      }
+    }
+    this.setValidateForm();
+    this.showHideColumn();
   }
 
   /**

@@ -31,7 +31,6 @@ import { DiagramAllModule } from '@syncfusion/ej2-angular-diagrams';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
-import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { EmployeeProfileComponent } from './employee-list/employee-profile/employee-profile.component';
 import { EmpContactsComponent } from './empcontacts/emp-contacts.component';
@@ -88,6 +87,7 @@ import { PopupJobGeneralInfoComponent } from './employee-profile/popup-job-gener
 import { EmployeeDetailComponent } from './employee-list/employee-detail/employee-detail.component';
 // import { LayoutComponent } from './_layout/layout.component';
 import { LayoutComponent } from 'projects/codx-hr/src/lib/_layout/layout.component';
+import { HRLayoutOnlyHeaderComponent } from 'projects/codx-hr/src/lib/_layout_onlyHeader/_layout_onlyHeader.component';
 import { ScrollSpyDirective } from './codx-hr-common/directives/scrollSpy/scroll-spy.directive';
 import { PopupEProcessContractComponent } from './employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 import { EmployeeBasicSalaryComponent } from './employee-basic-salary/employee-basic-salary.component';
@@ -185,7 +185,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: LayoutOnlyHeaderComponent,
+    component: HRLayoutOnlyHeaderComponent,
     children: [
       {
         path: 'empinfosub/:funcID',
@@ -389,6 +389,7 @@ const T_Pipe = [
 ]
 const T_Component = [
   LayoutComponent,
+  HRLayoutOnlyHeaderComponent,
   EmpContactsComponent,
   EmployeesComponent,
   PopupAddEmployeesComponent,
