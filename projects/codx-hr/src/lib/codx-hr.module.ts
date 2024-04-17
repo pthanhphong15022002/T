@@ -187,10 +187,10 @@ export const routes: Routes = [
       //   path: 'empinfosub/:funcID',
       //   component: EmployeeInfoDetailComponent,
       // },
-      // {
-      //   path: 'employeedetail/:funcID',
-      //   component: EmployeeInfoDetailComponent,
-      // },
+      {
+        path: 'employeedetail/:funcID',
+        component: EmployeeInfoDetailComponent,
+      },
       {
         path: 'employeeprofile/:funcID',
         component: EmployeeInfoProfileComponent
@@ -207,7 +207,8 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        component: DashboardComponent,
+        // loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
+        component: DashboardComponent
       },
       // {
       //   path: 'report/:funcID',
@@ -227,11 +228,11 @@ export const routes: Routes = [
         data: { noReuse: true },
         component: EmployeesComponent,
       },
-      // {
-      //   path: 'employeelist/:funcID',
-      //   data: { noReuse: true },
-      //   component: EmployeeListComponent,
-      // },
+      {
+        path: 'employeelist/:funcID',
+        data: { noReuse: true },
+        component: EmployeeListComponent,
+      },
       // {
       //   path: 'reportingline/:funcID',
       //   data: { noReuse: true },
@@ -454,17 +455,11 @@ const T_Component = [
   TableGripComponent,
   AgeStatisticComponent,
   MyTemComponent,
-  DashboardAgeChartComponent,
-  DashboardCardComponent,
-  DashboardGaugeChartComponent,
-  DashboardTotalemployeeChartComponent,
-  DashboardComponent,
   DialogRegisterApproveComponent,
   DialogReviewLeaveApproveComponent,
   DialogWaitingLeavingApproveComponent,
   HrTableNewemployeeComponent,
   SidebarTreeviewComponent
-
 ];
 
 const T_Module = [
@@ -485,7 +480,6 @@ const T_Module = [
   DashboardModule,
   DialogDetailRegisterApproveComponent,
   HistoryLevelComponent,
-  CircularGaugeModule,
   HrParametersModule,
   CodxHRCommonModule
 ]

@@ -72,6 +72,57 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   isClick: boolean = false;
   dataService: DataService = null;
 
+  // view imployee infor
+  grvSetup: any;
+  funcIDEmpInfor: string = 'HRT03b';
+  grv2DataChanged: any;
+  gridViewDataService: any;
+  clickViewEmpInfo(data: any) {
+    this.cache.functionList(this.funcIDEmpInfor).subscribe((func) => {
+      let queryParams = {
+        employeeID: data.employeeID,
+        page: this.view.dataService.page,
+        // totalPage: this.view.dataService.pageCount,
+        // totalCount: this.view.dataService.rowCount,
+        // from: 'listView'
+      };
+      let state = {
+        totalPage: this.view.dataService.pageCount,
+        totalCount: this.view.dataService.rowCount,
+        from: 'listView',
+        data: this.view.dataService.data.map(function (obj) {
+          return { EmployeeID: obj.employeeID };
+        }),
+        request: this.view.dataService.request,
+      };
+      this.codxService.navigate('', func?.url, queryParams, state, true);
+    });
+  }
+
+  //get function
+  getFunction(funcID: string) {
+    if (funcID) {
+      this.cache.functionList(funcID).subscribe((func: any) => {
+        if (func?.formName && func?.gridViewName) {
+          this.cache
+            .gridViewSetup(func.formName, func.gridViewName)
+            .subscribe((grd: any) => {
+              if (grd) {
+                this.grvSetup = grd;
+              }
+            });
+        }
+      });
+    }
+  }
+  dataChange(event) {
+    this.grv2DataChanged = event?.hasDataChanged ? true : false;
+  }
+  getGridViewDataService(event) {
+    this.gridViewDataService = event;
+  }
+  // End View Employee info
+
   active = [null, null, null, null, null, null, null];
 
   infoPersonal: any;
