@@ -3418,6 +3418,7 @@
           </div>
           <div class="col-6">
             <ejs-multiselect
+              #multiselectRef
               id="recID"
               [mode]="'Default'"
               [dataSource]="listCbxProccessSuccess"
@@ -3426,6 +3427,7 @@
               (valueChange)="cbxChange($event, stepSuccess, 'moveProcessIDSuccess')"
               [value]="moveProcessIDSuccess"
               [readonly]="stepSuccess.isUsed && !viewOnly ? false : true"
+              [refreshDataBound]="refreshData"
             ></ejs-multiselect>
             <codx-label
               class="text-danger fst-italic fs-7"
@@ -3677,7 +3679,19 @@
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <ejs-combobox
+            <ejs-multiselect
+              #multiselectRef
+              id="recID"
+              [mode]="'Default'"
+              [dataSource]="listCbxProccessFail"
+              [fields]="fieldCbxProccess"
+              [showDropDownIcon]="true"
+              (valueChange)="cbxChange($event, stepFail, 'moveProcessIDFail')"
+              [value]="moveProcessIDFail"
+              [readonly]="stepFail?.isUsed && !viewOnly ? false : true"
+              [refreshDataBound]="refreshData"
+            ></ejs-multiselect>
+            <!-- <ejs-combobox
               id="recID"
               [dataSource]="listCbxProccessFail"
               [fields]="fieldCbxProccess"
@@ -3685,7 +3699,7 @@
               (valueChange)="cbxChange($event, viewStepReasonFail, 'moveProcessIDFail')"
               [readonly]="stepFail?.isUsed && !viewOnly ? false : true"
               [value]="moveProcessIDFail"
-            ></ejs-combobox>
+            ></ejs-combobox> -->
             <codx-label
               class="text-danger fst-italic fs-7"
               default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại

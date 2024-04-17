@@ -410,7 +410,23 @@
         </div>
       </ng-container>
       <!-- view defaultvalue -->
-      <div class="form-group" *ngIf="fieldCus">
+      <div class="d-flex align-items-center form-group">
+        <codx-label
+          class="me-3"
+          fiedName="IsUseDefault"
+          [formModel]="form?.formModel"
+          default="Sử dụng giá trị mặc định"
+        ></codx-label>
+        <codx-input
+          type="switch"
+          field="isUseDefault"
+          [checked]="field?.isUseDefault"
+          (valueChange)="changeUseDeafaut($event)"
+          [disabled]="viewOnly"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="fieldCus && field?.isUseDefault">
         <codx-input-custom-field
           #tempInput
           [customField]="fieldCus"
@@ -508,7 +524,7 @@
           </div>
         </div>
       </div>
-      <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center form-group">
         <codx-label
           class="text-danger me-3"
           fiedName="IsRequired"
@@ -524,6 +540,62 @@
         >
         </codx-input>
       </div>
+      <div class="d-flex align-items-center form-group">
+        <codx-label
+          class="me-3"
+          fiedName="IsApplyDependences"
+          [formModel]="form?.formModel"
+          default="Sử dụng tham chiếu dữ liệu"
+        ></codx-label>
+        <codx-input
+          type="switch"
+          field="isApplyDependences"
+          [checked]="field?.isApplyDependences"
+          (valueChange)="changeDependences($event)"
+          [disabled]="viewOnly"
+        >
+        </codx-input>
+      </div>
+      <ng-container *ngIf="!field?.isApplyDependences">
+        <div
+          class="d-flex align-items-center form-group"
+          *ngIf="field.dataType == 'N' || field.dataType == 'D'"
+        >
+          <codx-label
+            class="me-3"
+            fiedName="IsApplyConditional"
+            [formModel]="form?.formModel"
+            default="Sử dụng tham chiếu điều kiện"
+          ></codx-label>
+          <codx-input
+            type="switch"
+            field="isApplyConditional"
+            [checked]="field?.isApplyConditional"
+            (valueChange)="changeConditional($event)"
+            [disabled]="viewOnly"
+          >
+          </codx-input>
+          <button
+            type="button"
+            class="btn btn-icon btn-sm btn-light-primary me-2"
+            (click)="clickSettingConditional()"
+            [disabled]="viewOnly"
+          >
+            <i class="icon-settings icon-16"></i>
+          </button>
+          <div *ngIf="field?.isApplyConditional">
+            <codx-label
+              class="me-3"
+              fiedName="ConditionReference"
+              [formModel]="form?.formModel"
+              default="Các điều kiện tham chiếu với các biến "
+            ></codx-label>
+            <!-- <div class="w-100 border border-gray-300 rounded-2 py-3 px-4 mb-4">
+            
+          </div> -->
+          </div>
+        </div>
+      </ng-container>
     </div>
   </ng-template>
   <ng-template #footer>
