@@ -18,18 +18,19 @@
         ContainerID="tab-container-id"></i>
     </div> -->
 
-<div #container class="container-info" (scroll)="onScroll($event)" [ngStyle]="{height:height}">
+<div #container class="container-info pb-4 " (scroll)="onScroll($event)" [ngStyle]="{height:height}">
   <div class="tab-container">
 
-    <i #prev id="pre-item-profile" class="icon-i-chevron-left  fs-13 text-black prev-item" libSwiperClicking
+    <i #prev id="pre-item-profile" class="icon-i-chevron-left tab-scroll prev-item" libSwiperClicking
       type="previous" ContainerID="tab-container-id"></i>
 
     <div #tabContainer id="tab-container-id" class="tab-container-items">
-      <div *ngFor="let item of listTabs; let i = index" (click)="navChange(item.functionID, 0, 1, $event.target)"
-      [ngClass]="item.functionID == active[0] ? 'tab-active' : ''"
-        class="d-flex align-items-center flex-column py-3 gap-2 justify-content-center pointer">
+      <div class="h-100" *ngFor="let item of listTabs; let i = index" (click)="navChange(item.functionID, 0, 1, $event.target)"
+      [ngClass]="item.functionID == active[0] ? 'active' : ''"
+        class="d-flex align-items-center flex-column pt-5 gap-2 justify-content-center pointer" style="
+        padding-bottom: 17px;">
         <div class="hcs-icon {{item.icon}} hcs-text fs-22 hcs-text-primary"></div>
-        <div class="hcs-text fs-13 hcs-text-primary">{{item.customName}}</div>
+        <div class="text-uppercase fw-bold">{{item.customName}}</div>
       </div>
     </div>
 
@@ -44,11 +45,11 @@
   <div class="tab-scroll tab-container mb-4">
     <i #prev id="pre-item-profile" class="icon-i-chevron-right  fs-13 text-black prev-item" libSwiperClicking
     type="previous" ContainerID="tab-container-id"></i>
-      <div class="tab-horizone  bg-white h-od-tab" >
-        <ul #tabContainer class="nav nav-tabs tab-container-items d-flex justify-content-between" id="tab-container-id">
+      <div  class="tab-horizone  bg-white h-od-tab " >
+        <ul  class="nav nav-tabs  d-flex justify-content-between" >
           <ng-container *ngFor="let item of listTabs">
-            <li class="nav-item" (click)="navChange(item.functionID, 0, 0, $event.target)">
-              <a class="nav-link text-center" [ngClass]="item.functionID == active[0] ? 'active' : ''">
+            <li  class="nav-item tab-container-items"  (click)="navChange(item.functionID, 0, 0, $event.target)">
+              <a #tabContainer class="nav-link text-center tab-container-items" id="tab-container-id" [ngClass]="item.functionID == active[0] ? 'active' : ''">
                 <span [class]="item.largeIcon"></span>
                 <div class="text-uppercase fw-bold">{{ item.customName }}</div>
               </a>

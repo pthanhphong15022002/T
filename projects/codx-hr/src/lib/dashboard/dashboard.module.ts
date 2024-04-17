@@ -13,7 +13,7 @@ const T_Component = [
 @NgModule({
   imports: [
     CommonModule,
-    DialogDetailRegisterApproveComponent, 
+    // DialogDetailRegisterApproveComponent, 
     HistoryLevelComponent
   ], 
   declarations: [T_Component]

@@ -221,6 +221,16 @@
     }
 }
 
+@media (max-width: 880px) {
+    .user-left{
+        display: none;
+    }
+
+    .fab-container.menu-sidebar-reponsive{
+        display: inline-flex;
+    }
+}
+
 /* reponsive  cụm 2 */
 @media (max-width: 1280px) {
 
@@ -431,6 +441,23 @@ p {
     display: none;
 }
 
+.fab-container.menu-sidebar-reponsive{
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: right 0.3s ease;
+    display: none;
+}
+
 .fab-open {
     right: calc(20px + 400px);
 }
@@ -471,6 +498,9 @@ codx-page-title.page-title.d-flex.ms-0.align-items-center.flex-wrap.ms-3 {
     .fab-container {
         display: inline-flex;
     }
+    /* .fab-container.menu-sidebar-reponsive{
+        display: inline-flex;
+    } */
 
     .icon-begin {
         display: none;

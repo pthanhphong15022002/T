@@ -203,6 +203,20 @@
   }
 }
 
+@media (max-width: 880px) {
+  .grid {
+    grid-template-columns: repeat(3, 35%);
+    grid-template-rows: repeat(2, 50%);
+    grid-auto-columns: 35%;
+    grid-auto-flow: column;
+    width: calc(100vw);
+    overflow-x: hidden;
+    padding: 10px;
+
+  }
+}
+
+
 // @media only screen and (max-width: 1000px) {
 //   .grid {
 //     grid-template-columns: repeat(1, 60%);
