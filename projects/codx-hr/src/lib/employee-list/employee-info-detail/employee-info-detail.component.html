@@ -296,7 +296,6 @@
             <div>
               <codx-listview
               entityName="HR_Employees"
-              [button]="button"
               idField="employeeID"
               service="HR"
               assemblyName="ERM.Business.HR"
@@ -304,7 +303,7 @@
               method="GetModelFormEmployAsync"
               [headerTemplate]="headerList"
               [itemTemplate]="itemTemplateList"
-              [selectedFirst]="true"
+              [selectFirst]="true"
                 >
               </codx-listview>
             </div>

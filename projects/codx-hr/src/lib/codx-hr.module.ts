@@ -141,7 +141,6 @@ import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
 import { LegalInfoComponent } from './employee-list/employee-info-detail/component/legal-info/legal-info.component';
 import { ForeignWorkersComponent } from './employee-list/employee-info-detail/component/foreign-workers/foreign-workers.component';
 import { PreviousExperienceComponent } from './employee-list/employee-info-detail/component/previous-experience/previous-experience.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { TableGripComponent } from './dashboard/components/table-grip/table-grip.component';
 import { AgeStatisticComponent } from './dashboard/widgets/age-statistic/age-statistic.component';
 import { DirectivesModule } from './codx-hr-common/directives/directives.module';
@@ -219,8 +218,8 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        // loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
-        component: DashboardComponent
+        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
+      //   component: DashboardComponent
       },
       // {
       //   path: 'report/:funcID',
@@ -460,11 +459,6 @@ const T_Component = [
   TableGripComponent,
   AgeStatisticComponent,
   
-  DashboardAgeChartComponent,
-  DashboardCardComponent,
-  DashboardGaugeChartComponent,
-  DashboardTotalemployeeChartComponent,
-  DashboardComponent,
   DialogRegisterApproveComponent,
   HrTableNewemployeeComponent,
 
