@@ -260,9 +260,20 @@
     <!-- Quản lý-->
     <div class="col-2 p-5">
       <div class="d-flex has-action-menu justify-content-between w-100">
-        <codx-img  [objectId]="data.projectManager" [objectName]="data.projectManager"
+        <!-- <codx-img  [objectId]="data.projectManager" [objectName]="data.projectManager"
             objectType="AD_Users" [width]="35">
-          </codx-img>
+          </codx-img> -->
+          <!-- <codx-img  [objectId]="data.projectManager" [objectName]="data.userName"
+            objectType="AD_Users" [width]="35">
+          </codx-img> -->
+          <codx-imgs
+          [width]="35"
+          [objectId]="data.projectManager"
+          [objectName]="data?.userName"
+          bjectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
       </div>
     </div>
   </div>

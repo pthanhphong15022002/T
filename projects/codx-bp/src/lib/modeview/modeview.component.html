@@ -166,6 +166,9 @@
                     <ng-container *ngSwitchCase="'User'">
                       <ng-container *ngTemplateOutlet="valueList ; context: { $implicit: subItem }"></ng-container>
                     </ng-container>
+                    <ng-container *ngSwitchCase="'Approvers'">
+                      <ng-container *ngTemplateOutlet="combobox ; context: { $implicit: subItem }"></ng-container>
+                    </ng-container>
                     <ng-container *ngSwitchCase="'Share'">
                       <ng-container *ngTemplateOutlet="share ; context: { $implicit: subItem }"></ng-container>
                     </ng-container>
@@ -210,6 +213,7 @@
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
+                      <ng-container  *ngTemplateOutlet="memo ; context: { $implicit: data }"></ng-container>
                       <div class="w-100 border mt-2 px-4 py-2 rd-3px" *ngIf="viewType == 1">
                         <span class="text-muted text-truncate">{{data.defaultValue || data.description}}</span>
                       </div>
@@ -223,11 +227,12 @@
                   <!-- Danh sách || User-->
                   <ng-template #valueList let-data>
                     <div class="d-flex flex-column w-100">
-                       <div class="d-flex align-items-center">
+                      <div class="d-flex align-items-center">
                         <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
+                      <ng-container  *ngTemplateOutlet="memo ; context: { $implicit: data }"></ng-container>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-2 rd-3px" *ngIf="viewType == 1">
                         <span class="text-muted text-truncate">{{data.defaultValue || data.description}}</span>
                         <i [ngClass]="data.refType == '3P' ? 'icon-person_add_alt_1 text-primary' :'icon-keyboard_arrow_down text-dark' "></i>
@@ -247,6 +252,7 @@
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
+                      <ng-container  *ngTemplateOutlet="memo ; context: { $implicit: data }"></ng-container>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-2 rd-3px" *ngIf="viewType == 1">
                         <span class="text-muted text-truncate">{{data.description}}</span>
                         <i class="icon-keyboard_arrow_down text-dark"></i>
@@ -266,6 +272,7 @@
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
+                      <ng-container  *ngTemplateOutlet="memo ; context: { $implicit: data }"></ng-container>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-2 rd-3px" *ngIf="viewType == 1">
                         <span class="text-muted text-truncate">{{data?.defaultValue && data?.defaultValue != 'Now' ? (data.defaultValue | date: 'dd/MM/yyyy HH:mm:ss') : (data?.defaultValue ? data?.defaultValue : data.description)}}</span>
                         <div class="d-flex align-items-center">
@@ -273,7 +280,6 @@
                           <i class="icon-i-clock ms-3 text-dark"></i>
                         </div>
                       </div>
-
                       <ng-container *ngIf="viewType == 2">
                         <ng-container  *ngTemplateOutlet="defaultInput ; context: { $implicit: data }"></ng-container>
                       </ng-container>
@@ -288,6 +294,7 @@
                         <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle *ngIf="viewType == 1"></i>
                         <span class="fw-bold">{{data.title}}</span>
                       </div>
+                      <ng-container  *ngTemplateOutlet="memo ; context: { $implicit: data }"></ng-container>
                       <ng-container *ngIf="!data.documentControl || data.documentControl.length == 0">
                         <div class="d-flex align-items-center justify-content-between w-100 border-dotted mt-2 px-4 py-8 rd-5px bd-w-2px bg-item-lightest bc-item-lighter">
                           <div class="d-flex flex-column">
@@ -328,6 +335,7 @@
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
+                      <ng-container  *ngTemplateOutlet="memo ; context: { $implicit: data }"></ng-container>
                       <ng-container *ngIf="viewType == 1">
                         <ng-container *ngIf="data.controlType == 'Switch'">
                           <div class="form-switch">
@@ -351,7 +359,6 @@
                           </div>
                         </ng-container>
                       </ng-container>
-
                       <ng-container *ngIf="viewType == 2">
                         <ng-container  *ngTemplateOutlet="defaultInput ; context: { $implicit: data }"></ng-container>
                       </ng-container>
@@ -366,6 +373,7 @@
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
+                      <ng-container  *ngTemplateOutlet="memo ; context: { $implicit: data }"></ng-container>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
                         <span class="text-muted text-truncate">{{data.defaultValue || data.description}}</span>
                         <i class="icon-person_add_alt_1 text-primary"></i>
@@ -381,6 +389,7 @@
                         <span class="fw-bold">{{data.text}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
+                      <ng-container  *ngTemplateOutlet="memo ; context: { $implicit: data }"></ng-container>
                       <div class="d-flex align-items-center justify-content-between w-100 mt-2 px-4 py-3 rd-3px">
                         <ng-container *ngFor="let item of [].constructor(data.rank.maxValue); let i = index">
                           <ng-container *ngIf="data.rank.type == '1'">
@@ -404,6 +413,7 @@
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
+                      <ng-container  *ngTemplateOutlet="memo ; context: { $implicit: data }"></ng-container>
                       <table class="table table-bordered mt-2">
                         <thead>
                           <tr>
@@ -429,6 +439,7 @@
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
+                      <ng-container  *ngTemplateOutlet="memo ; context: { $implicit: data }"></ng-container>
                       <div class="d-flex justify-content-between mt-2 px-1">
                         <div>
                           0%
@@ -451,6 +462,7 @@
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
+                      <ng-container  *ngTemplateOutlet="memo ; context: { $implicit: data }"></ng-container>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
                         <span class="text-muted text-truncate">{{data.defaultValue || data.description}}</span>
                         <i class="icon-email text-dark"></i>
@@ -466,6 +478,7 @@
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
+                      <ng-container  *ngTemplateOutlet="memo ; context: { $implicit: data }"></ng-container>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
                         <span class="text-muted text-truncate">{{data.defaultValue || data.description}}</span>
                         <i class="icon-location_on text-dark"></i>
@@ -481,6 +494,7 @@
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
+                      <ng-container  *ngTemplateOutlet="memo ; context: { $implicit: data }"></ng-container>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
                         <span class="text-muted text-truncate">{{data.defaultValue || data.description}}</span>
                         <i class="icon-calculate text-dark"></i>
@@ -496,6 +510,7 @@
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
+                      <ng-container  *ngTemplateOutlet="memo ; context: { $implicit: data }"></ng-container>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
                         <span class="text-muted text-truncate">{{data.defaultValue || data.description}}</span>
                         <i class="icon-settings_phone text-dark"></i>
@@ -523,6 +538,7 @@
                         <span class="fw-bold">{{data.title}}</span>
                         <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
+                      <ng-container  *ngTemplateOutlet="memo ; context: { $implicit: data }"></ng-container>
                       <div class="d-flex flex-column">
                         <div class="d-flex align-items-center justify-content-between">
                           <div class="d-flex flex-column w-100 p-2">
@@ -649,6 +665,9 @@
         <ng-container *ngSwitchCase="'User'">
           <lib-property-user [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)"></lib-property-user>
         </ng-container>
+        <ng-container *ngSwitchCase="'Approvers'">
+          <lib-property-combobox [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)"></lib-property-combobox>
+        </ng-container>
         <ng-container *ngSwitchCase="'Rank'">
           <lib-property-rank [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-rank>
         </ng-container>
@@ -665,7 +684,7 @@
           <lib-property-phone [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)"></lib-property-phone>
         </ng-container>
         <ng-container *ngSwitchCase="'Expression'">
-          <lib-property-expression [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-expression>
+          <lib-property-expression [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)"></lib-property-expression>
         </ng-container>
         <ng-container *ngSwitchCase="'Attachment'">
           <lib-property-attachment [data]="dataSelected" [formModel]="formModel" (dataChange)="dataChange($event)"></lib-property-attachment>
@@ -709,4 +728,10 @@
     [placeholder]="data?.description"
   >
   </codx-input>
+</ng-template>
+
+<ng-template #memo let-data>
+  <div class="d-flex align-items-center">
+    <span class="text-gray-500 fst-italic fs-7 ms-7" [class.ms-7]="viewType == 1">{{data.memo}}</span>
+  </div>
 </ng-template>

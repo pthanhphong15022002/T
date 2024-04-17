@@ -4,8 +4,9 @@ import { HierarchicalTreeService, MindMapService, RadialTreeService, ComplexHier
 import { shadowProperty } from "@syncfusion/ej2-angular-documenteditor";
 import { modulesList } from "@syncfusion/ej2-angular-inplace-editor";
 import { ExpandMode, MenuEventArgs } from "@syncfusion/ej2-angular-navigations";
-import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel, UrlUtil, Util } from "codx-core";
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService, SidebarModel, UrlUtil, Util } from "codx-core";
 import { BP_Processes_Steps } from "projects/codx-bp/src/lib/models/BP_Processes.model";
+import { AddDefaultComponent } from "projects/codx-bp/src/lib/processes/popup-add-process/form-steps-field-grid/add-default/add-default.component";
 import { FormEditConnectorComponent } from "projects/codx-share/src/lib/components/codx-diagram/form-edit-connector/form-edit-connector.component";
 import { Subscription } from "rxjs";
 
@@ -852,7 +853,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
     //model.offsetY = e.event.target.getBoundingClientRect().y - model.offsetY +  e.event.target.getBoundingClientRect().height;
     model.margin.left =
       model.offsetX - e.event.target.getBoundingClientRect().x ;
-    model.margin.top = model.offsetY - e.event.target.getBoundingClientRect().y;
+    model.margin.top = model.offsetY -e.event.target.getBoundingClientRect().top;
     switch (e.item?.element?.nativeElement?.id) {
       case 'start':
         model.shape = {
@@ -1012,7 +1013,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
         };
         model.width = 300;
         model.height = 150;
-        //model.margin.left =  model.margin.left + model.width/2;
+        model.margin.left =  model.margin.left + model.width/2;
         model.data = this.generateStep(e.item?.element?.nativeElement?.id,this.targetItem?.refID)
         if(this.process && this.process.steps)this.process.steps.push(model.data);
         // if(swimlane)this.diagram.addNodeToLane(model,swimlane,laneID)
@@ -1021,6 +1022,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
         if (this.targetItem && this.targetItem.isLane) {
           this.diagram.addChild(this.targetItem, model.id);
         }
+
         break;
     }
 
@@ -1954,6 +1956,108 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
 
     sizeChanged(e:any){
       debugger
+    }
+
+    addEditStages(
+      item:any=null,
+      type: any,
+      parent: any = null,
+      stage: any = null,
+      isCondistion = false,
+      hideDelete = false
+    ) {
+      let lstParent = JSON.parse(JSON.stringify(this.process?.steps?.filter((x:any)=>x.activityType=='Stage')));
+      lstParent.forEach((elm) => {
+        delete elm.child;
+      });
+      if(item.data && item.data.stageID){
+        parent = stage = this.process.steps.find((x:any)=>x.recID==item.data.stageID)
+      }
+      if(item.data.settings && typeof item.data.settings=='string'){
+        item.data.settings=JSON.parse(item.data.settings);
+      }
+      var obj = {
+        type: type,
+        activityType: item.data.activityType,
+        process: this.process,
+        data: item.data,
+        parent: parent,
+        stage: stage,
+        listStage: lstParent,
+        hideDelete: hideDelete,
+        formModel: new FormModel(),
+      };
+      let option = new SidebarModel();
+      option.Width = 'Auto';
+      option.FormModel = new FormModel();
+      let popup = this.callfc.openSide(AddDefaultComponent, obj, option);
+      popup.closed.subscribe((res) => {
+        if (res?.event) {
+          item.data = res.event.data;
+          this.detectorRef.detectChanges();
+          if (res?.event?.delete) {
+            this.data = res?.event?.process || this.data;
+            let deleteDt = res?.event?.delete;
+            if (deleteDt) {
+              //debugger
+              // if(indexDelete>=0)
+              // {
+              //   if(deleteDt?.child && deleteDt.child.length>0)
+              //   {
+              //     deleteDt.child.forEach(element => {
+              //       this.data.steps.splice(indexDelete,0,element)
+              //     });
+              //   }
+              // }
+
+              // let indexParent2 = this.listStage.findIndex(
+              //   (x) => x.recID == deleteDt.parentID
+              // );
+              // if (indexParent2 >= 0) {
+              //   var indexC = this.listStage[indexParent2].child.findIndex(
+              //     (x) => x.recID == deleteDt.recID
+              //   );
+
+              //   if (deleteDt.child && deleteDt.child.length > 0) {
+              //     deleteDt.child.forEach((element) => {
+              //       element.parentID = this.listStage[indexParent2].recID;
+              //       this.listStage[indexParent2].child.splice(indexC, 0, element);
+              //     });
+              //   }
+
+              //   this.listStage[indexParent2].child = this.listStage[
+              //     indexParent2
+              //   ].child.filter((x) => x.recID != deleteDt.recID);
+
+              //   let ind = 0;
+              //   this.listStage[indexParent2].child.forEach((element) => {
+              //     element.stepNo = ind;
+              //     ind++;
+              //   });
+              // }
+
+              // let indexParent = this.data.steps.findIndex(
+              //   (x) => x.recID == deleteDt.parentID
+              // );
+              // let indexDelete = this.data.steps.findIndex(
+              //   (x) => x.recID == deleteDt.recID
+              // );
+              // if (indexParent >= 0) {
+              //   this.data.steps[indexParent].child = this.data.steps[
+              //     indexParent
+              //   ].child.filter((x) => x.recID != deleteDt.recID);
+              // }
+
+              // this.data.steps = this.data.steps.filter(
+              //   (x) => x.recID != deleteDt.recID
+              // );
+            }
+
+          } else {
+
+          }
+        }
+      });
     }
   //===========
 }
