@@ -177,6 +177,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //Conditional
   listCbx = [];
   fieldsDependence = { text: 'fieldName', value: 'recID' };
+  listValueField = [];
+  valueDependence = { text: 'text', value: 'value' };
 
   constructor(
     private cache: CacheService,
@@ -214,7 +216,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
           if (objStep?.fields?.length > 0) {
             if (objStep.recID == this.field.stepID) {
-              this.listCbx = objStep.fields.find(x => x.referType == "3");
+              this.listCbx = objStep.fields.filter(x => x.refType == "3");
             }
             let arrFn = objStep?.fields.map((x) => {
               let obj = {
@@ -1443,6 +1445,24 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
   }
   cbxChangeDependence(e) {
+    if (e) {
+      let field = this.listCbx.find(x => x.recID == e);
+      if (field && field.refValue) {
+        this.cache.combobox(field.refValue).subscribe(res => {
+          if (res) {
+            this.listValueField = res.tableFields?.split(";").map(x => {
+              let obj = {
+                text: x,
+                value: x
+              }
+              return obj;
+            })
+          }
+        })
+      }
+    }
+  }
+  cbxChangeValueDependence(e) {
 
   }
   //-------------Default ------------//

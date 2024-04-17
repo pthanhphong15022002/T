@@ -595,12 +595,12 @@
               default="Giá trị muốn tham chiếu"
             ></codx-label>
             <ejs-combobox
-              [dataSource]="listCbx"
-              [fields]="fieldsDependence"
+              [dataSource]="listValueField"
+              [fields]="valueDependence"
               [value]=""
               [allowFiltering]="false"
               [placeholder]=""
-              (valueChange)="cbxChangeDependence($event)"
+              (valueChange)="cbxChangeValueDependence($event)"
             ></ejs-combobox>
           </div>
         </div>
