@@ -1,5 +1,4 @@
-import { Injector, ChangeDetectorRef } from '@angular/core';
-import { Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
   DataRequest,
@@ -13,12 +12,13 @@ import moment from 'moment';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxHrService } from 'projects/codx-hr/src/public-api';
 
+
 @Component({
-  selector: 'lib-dialog-register-approve',
-  templateUrl: './dialog-register-approve.component.html',
-  styleUrls: ['./dialog-register-approve.component.scss']
+  selector: 'lib-popup-myteam-reponsive',
+  templateUrl: './popup-myteam-reponsive.component.html',
+  styleUrls: ['./popup-myteam-reponsive.component.css']
 })
-export class DialogRegisterApproveComponent extends UIComponent
+export class PopupMyteamReponsiveComponent extends UIComponent
 implements OnInit  {
   formModel: FormModel;
   dialog: DialogRef;
@@ -70,3 +70,4 @@ implements OnInit  {
 
   
 }
+

@@ -4,7 +4,7 @@
   <div class="page-pw h-employee pb-0">
     <div class="page-profile w-100">
       <div class="d-flex justify-content-between">
-        <div class="user-left me-4 border bg-white" style="min-width: 273px;">
+        <div  class="user-left me-4 border bg-white" style="min-width: 273px;">
           <div class="profile-bg"></div>
           <div class="d-flex flex-column text-center mx-4 profile-info">
             <div class="mb-3 mt-4 d-flex justify-content-center align-items-top">
@@ -255,18 +255,22 @@
                 <span style="margin-top: 2px" #id placement="bottom" [title]="eInfoHeaderText?.EmployeeID">{{ employeeID
                   }}</span>
                 <span *ngIf="infoPersonal" class="icon-i-info-circle-fill icon-4 mx-3 text-gray-600"></span> -->
-                <span class="fw-bold" placement="bottom" [title]="eInfoHeaderText?.EmployeeName">{{
-                  infoPersonal?.employeeName }}</span>
+                <span class="fw-bold" placement="bottom" [title]="eInfoHeaderText?.EmployeeName">
+                  Võ Ngọc Kim Trang
+                </span>
               </div>
             </div>
-            <div placement="bottom" [title]="eInfoHeaderText?.PositionID" class="text-gray-500 mb-1"
+            <!-- <div placement="bottom" [title]="eInfoHeaderText?.PositionID" class="text-gray-500 mb-1"
               *ngIf="infoPersonal">
               {{ this.infoPersonal.PositionName }}
+            </div> -->
+            <div placement="bottom" [title]="eInfoHeaderText?.PositionID" class="text-gray-500 mb-1"
+              >
+              Phân tích nghiệp vụ
             </div>
             <div class="text-danger fw-bold">
               <span class="icon-qr_code_scanner icon-16 me-2"></span>
-              <span style="margin-top: 2px" #id placement="bottom" [title]="eInfoHeaderText?.EmployeeID">{{ employeeID
-                }}</span>
+              <span style="margin-top: 2px" #id placement="bottom" [title]="eInfoHeaderText?.EmployeeID">ELV02233</span>
             </div>
             <div>
               <span class=" icon-pin_drop icon-16 me-2"></span>
@@ -282,7 +286,7 @@
           </div>
           <div class="user-menu scroll-y w-100 border-top">
             <div class="d-flex flex-column ps-4 pt-3 pb-1 border-bottom fw-bold"
-              *ngIf="infoPersonal && LoadedEInfo == true">
+             >
               <div class="d-flex flex-wrap mb-1">
                 <div class="d-flex align-items-center text-gray-700 me-5">
                   <!-- <span
@@ -296,13 +300,14 @@
                         | async
                     "
                   ></span> -->
-                  <span class=""></span>
+                  <span class="icon-local_phone me-1"></span>
                   <span class="text-dark">
-                    <span placement="bottom" [title]="eInfoHeaderText?.Mobile" *ngIf="eInfoFormModel" [innerHTML]="
+                    <!-- <span placement="bottom" [title]="eInfoHeaderText?.Mobile" *ngIf="eInfoFormModel" [innerHTML]="
                         infoPersonal?.mobile
                           | formatvalue : eInfoFormModel : 'mobile'
                           | async
-                      "></span>
+                      "></span> -->
+                      <span placement="bottom" [title]="eInfoHeaderText?.Mobile">039 326 7994</span>
                   </span>
                 </div>
                 <!-- <div *ngIf="eInfoFormModel" placement="bottom" [title]="eInfoHeaderText?.Status">
@@ -311,40 +316,23 @@
                 </div> -->
               </div>
               <div class="d-flex align-items-center mb-1">
-                <span class=""></span>
+                <span class="icon-mail_outline me-1"></span>
                 <span class="text-dark" placement="bottom" [title]="eInfoHeaderText?.Email">
-                  <span #email *ngIf="eInfoFormModel" [innerHTML]="
+                  <!-- <span #email *ngIf="eInfoFormModel" [innerHTML]="
                       infoPersonal?.email
                         | formatvalue : eInfoFormModel : 'email'
                         | async
-                    "></span>
+                    "></span> -->
+                    <span #email>nhtrungmail.com</span>
                 </span>
               </div>
               <div class="d-flex align-items-center mb-1">
                 <span class="icon-date_range icon-16 me-2"></span>
-                <span></span>
+                <span>2 năm 3 tháng 0 ngày</span>
               </div>
-              <div class="d-flex align-items-center mb-1">
-                <!-- <span class=""></span>
-                <span placement="bottom" [title]="eInfoHeaderText?.Phone" class="text-dark me-3" [innerHTML]="
-                  infoPersonal?.phone
-                    | formatvalue : eInfoFormModel : 'phone'
-                    | async
-                "></span>
-                <span class=""></span>
-                <span class="text-dark">
-                  <span placement="bottom" [title]="eInfoHeaderText?.Mobile" *ngIf="eInfoFormModel" [innerHTML]="
-                    infoPersonal?.mobile
-                      | formatvalue : eInfoFormModel : 'mobile'
-                      | async
-                  "></span>
-                </span> -->
-
-                <span class=""></span>
-                <span placement="bottom" [title]="eInfoHeaderText?.Phone" class="text-dark me-3"></span>
-              </div>
+              
             </div>
-            <div class="d-flex flex-column ps-4 pt-3 pb-1 border-bottom" *ngIf="infoPersonal && LoadedEInfo == true">
+            <div class="d-flex flex-column ps-4 pt-3 pb-1 border-bottom">
               <div class="d-flex flex-wrap mb-1">
                 <div class="d-flex align-items-center text-gray-700 me-5">
                   <span>Quản lý trực tiếp:</span>
@@ -461,12 +449,19 @@
             Menu
           </span>
         </div> -->
-        <div class="user-right ms-4" id="myteambar">
-          <lib-my-tem class="w-280px" id="sidebar"></lib-my-tem>
+        <div class="user-right ms-4 border rounded w-280px" id="myteambar">
+          <!-- <lib-my-team -->
+            <!-- <lib-my-team -->
+              <lib-my-tem></lib-my-tem>
         </div>
         <div class="fab-container" libSidebarToggle sidebarID="sidebar" mainContentID="mainContent"
           (click)="openMyReamSide()">
           <i class="icon-36 icon-group me-1 text-body"></i>
+        </div>
+
+        <div class="fab-container menu-sidebar-reponsive" libSidebarToggle
+          (click)="openMenuSideBar()">
+          <i class="icon-menu icon-group me-1 text-body"></i>
         </div>
       </div>
     </div>
@@ -786,11 +781,11 @@
               <div class="w-25 p-3">
                 <div class="info-contact d-flex flex-column">
                   <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                    <span #emailField class="data-text-color text-primary"
+                    <!-- <span #emailField class="data-text-color text-primary"
                       [ngbTooltip]="emailTooltip">nnpvi@lacviet.com.vn
-                    </span>
+                    </span> -->
                     <ng-template #emailTooltip>
-                      <span>nnpvi@lacviet.com.vn</span>
+                      <!-- <span>nnpvi@lacviet.com.vn</span> -->
                     </ng-template>
                   </div>
                   <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
@@ -809,7 +804,7 @@
         <lib-dialog-waiting-leaving-approve></lib-dialog-waiting-leaving-approve>
       </div> -->
       <div class="bg-white border flex-grow-1 h-175px mt-4 rounded w-80">
-        <lib-age-statistic></lib-age-statistic>
+        <!-- <lib-age-statistic></lib-age-statistic> -->
       </div>
     </div>
   </div>
@@ -818,11 +813,11 @@
 
 <!-- Start Panel -->
 <ng-template #curriculumVitae>
-  <div class="tab-panel">
-    <div class="tab-scroll mb-4">
-      <i #prev id="pre-item-profile" class="hcs-icon vector-icon fs-13 text-black prev-item" libSwiperClicking type="previous"
+  <div class="tab-panel" >
+    <!-- <div class="tab-scroll tab-container mb-4">
+      <i #prev id="pre-item-profile" class="icon-i-chevron-right fs-13 text-black prev-item" libSwiperClicking type="previous"
         ContainerID="tab-container-id"></i>
-      <div class="tab-horizone bg-white h-od-tab">
+      <div class="tab-horizone tab-container-items bg-white h-od-tab" id="tab-container-id">
         <ul class="nav nav-tabs d-flex justify-content-between">
           <ng-container *ngFor="let item of lstFuncCurriculumVitaeFake">
             <li class="nav-item" (click)="navChange(item.functionID, 0, 0, $event.target)">
@@ -834,9 +829,10 @@
           </ng-container>
         </ul>
       </div>
-      <i #next id="next-item-profile" class="hcs-icon vector-icon fs-13 text-black next-item" libSwiperClicking type="next"
+      <i #next id="next-item-profile" class="icon-i-chevron-right fs-13 text-black next-item" libSwiperClicking type="next"
         ContainerID="tab-container-id"></i>
-    </div>
+    </div> -->
+    <select-scroll-bar [listTabs]="lstFuncCurriculumVitaeFake" [active]="active" [isClick]="isClick"></select-scroll-bar>
     <div class="pw-content w-100 scroll-y" data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto"
       data-kt-scroll-dependencies=".pw-profile,.pw-menu" data-kt-scroll-wrappers=".employee-container"
       data-kt-scroll-offset="0px" scrollSpy [spiedTags]="['DIV']" (sectionChange)="onSectionChange($event, 0)">
@@ -864,8 +860,8 @@
               </div>
               <div class="row pb-4 custom-row">
                 <!-- Mã nhân viên -->
-                <div class="col-md-4">
-                  <div class="d-flex flex-column">
+                <div class="col-xs-6 col-sm-6 col-md-4">
+                  <div class="d-flex flex-column ">
                     <div class="text-gray-600 me-2 pb-1">
                       <codx-label name="" [setRequire]="false" [default]="'Mã nhân viên'"></codx-label>
                     </div>
@@ -874,7 +870,7 @@
                 </div>
 
                 <!-- Giới tính -->
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 me-2 pb-1">
                       <codx-label [setRequire]="false" [default]="'giới tính'"></codx-label>
@@ -884,7 +880,7 @@
                 </div>
 
                 <!-- Họ -->
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 me-2 pb-1">
                       <codx-label [setRequire]="false" [default]="'Họ'"></codx-label>
@@ -894,7 +890,7 @@
                 </div>
 
                 <!-- Tên -->
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 me-2 pb-1">
                       <codx-label [default]="'Tên'"> </codx-label>
@@ -903,7 +899,7 @@
                   </div>
                 </div>
                 <!-- Bí danh -->
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 me-2 pb-1">
                       <codx-label [default]="'Bí danh'"> </codx-label>
@@ -912,7 +908,7 @@
                   </div>
                 </div>
                 <!-- Tình trạng hôn nhân -->
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 fw-normal mb-1">
                       <codx-label [default]="'Tình trạng hôn nhân'"> </codx-label>
@@ -920,7 +916,7 @@
                     <div class="text-dark">Độc thân</div>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1 d-flex">
                       <codx-label [default]="'Ngày sinh'"> </codx-label>
@@ -928,7 +924,7 @@
                     <div class="text-dark">28/12/2000</div>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1 d-flex">
                       <codx-label [default]="'Nơi sinh'"> </codx-label>
@@ -936,7 +932,7 @@
                     <div class="text-dark">TPHCM</div>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1 d-flex">
                       <codx-label [default]="'Quốc tịch'"> </codx-label>
@@ -944,7 +940,7 @@
                     <div class="text-dark">Việt Nam</div>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Dân tộc'"> </codx-label>
@@ -952,7 +948,7 @@
                     <div class="text-dark">Kinh</div>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Tôn giáo'"> </codx-label>
@@ -960,7 +956,7 @@
                     <div class="text-dark">Phật giáo</div>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Hình thức đào tạo'"> </codx-label>
@@ -969,7 +965,7 @@
                   </div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1 d-flex">
                       <codx-label name="Education" [default]="'Trình độ văn hóa'">
@@ -988,7 +984,7 @@
                   </div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label name="DegreeName" [default]="'Trình độ chuyên môn'">
@@ -1067,7 +1063,7 @@
                       <codx-label name="PersonalEmail" [default]="'Email cá nhân'">
                       </codx-label>
                     </div>
-                    <div class="text-dar">vnktrang@lacviet.com.vn</div>
+                    <!-- <div class="text-dar">"vnktrang@lacviet.com.vn"</div> -->
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -1075,7 +1071,7 @@
                     <div class="text-gray-600 mb-1 d-flex">
                       <codx-label [default]="'Email'"> </codx-label>
                     </div>
-                    <div class="text-dark">kimtrang28122000@gmail.com</div>
+                    <!-- <div class="text-dark">"kimtrang28122000@gmail.com"</div> -->
                   </div>
                 </div>
               </div>
@@ -1099,13 +1095,13 @@
             </div>
             <div class="container">
               <div class="row pb-4 custom-row">
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="text-gray-600 pb-1 d-flex">
                     <codx-label [default]="'Ngày vào làm'"> </codx-label>
                   </div>
                   <div class="text-dark">12/12/2022</div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="text-gray-600 pb-1">
                     <codx-label [default]="'Ngày trở thành nhân viên chính thức'">
                     </codx-label>
@@ -1113,19 +1109,19 @@
                   <div class="text-dark">12/12/2022</div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="text-gray-600 pb-1">
                     <codx-label [default]="'Loại NV'"> </codx-label>
                   </div>
                   <div class="text-dark">Chính thức</div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="text-gray-600 pb-1">
                     <codx-label [default]="'Đối tượng tính phép'"> </codx-label>
                   </div>
                   <div class="text-dark">NV có TN dưới 3 năm</div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="text-gray-600 pb-1">
                     <codx-label [default]="'Nhóm ngày nghĩ cuối tuần'">
                     </codx-label>
@@ -1154,36 +1150,36 @@
             </div>
             <div class="container">
               <div class="row pb-4 custom-row">
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="text-gray-600 pb-1 d-flex">
                     <codx-label [default]="'Bộ phận'"> </codx-label>
                   </div>
                   <div class="text-dark">12/12/2022</div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="text-gray-600 pb-1">
                     <codx-label [default]="'Quản lý trực tiếp'"> </codx-label>
                   </div>
                   <div class="text-dark">12/12/2022</div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="text-gray-600 pb-1">
                     <codx-label [default]="'Quản lý gián tiếp'"> </codx-label>
                   </div>
                   <div class="text-dark">Chính thức</div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="text-gray-600 pb-1">
                     <codx-label [default]="'Chức vụ'"> </codx-label>
                   </div>
                   <div class="text-dark">NV có TN dưới 3 năm</div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-xs-6 col-sm-6 col-md-4">
                   <div class="text-gray-600 pb-1">
                     <codx-label [default]="'Chức danh'"> </codx-label>
-                  </div>
+                  </div>  
                   <div class="text-dark">Nghỉ chiều T7 & CN</div>
                 </div>
               </div>
@@ -1484,7 +1480,7 @@
 
               <div>
                 <!-- Info -->
-                <div class="d-flex flex-row justify-content-between row custom-row">
+                <div class="custom-row d-flex flex-wrap justify-content-between">
                   <div class="d-flex flex-row align-items-center col-md-3">
                     <div class="point-circle color-blue"></div>
                     <div>

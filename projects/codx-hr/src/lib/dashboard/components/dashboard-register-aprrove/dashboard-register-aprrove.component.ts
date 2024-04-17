@@ -58,11 +58,15 @@ export class DashboardRegisterAprroveComponent {
   }
 
   open2(){
-    this.handleReviewRegisterApprove.emit(null)
+    this.handleRegisterApprove.emit(null)
+
+    // this.handleReviewRegisterApprove.emit(null)
   }
 
   open3(){
-    this.handleWaitingRegisterApprove.emit(null)
+    this.handleRegisterApprove.emit(null)
+
+    // this.handleWaitingRegisterApprove.emit(null)
   }
 
 }

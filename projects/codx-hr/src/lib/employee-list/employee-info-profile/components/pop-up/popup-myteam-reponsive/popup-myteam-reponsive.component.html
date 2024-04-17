@@ -1,0 +1,37 @@
+<codx-form
+  #form
+  [headerText]="''"
+  [dialog]="dialog"
+  [body]="body"
+>
+</codx-form>
+
+<ng-template #body>
+  <!-- <div> -->
+    <lib-my-tem></lib-my-tem>
+  <!-- </div> -->
+</ng-template>
+
+<!-- <ng-template #footer>
+  <div class="d-flex justify-content-between" >
+    <button
+      class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
+    >
+      <span class="icon-cloud_upload btn-text-primary me-2"></span>
+      <codx-label
+        fiedName="lblUploadFile"
+        default="Đính kèm"
+        [formModel]="form.formModel"
+      ></codx-label>
+    </button>
+
+    <button class="btn btn-primary">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="form.formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template> -->

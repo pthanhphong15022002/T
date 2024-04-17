@@ -88,7 +88,6 @@ import { EmployeeDetailComponent } from './employee-list/employee-detail/employe
 // import { LayoutComponent } from './_layout/layout.component';
 import { LayoutComponent } from 'projects/codx-hr/src/lib/_layout/layout.component';
 import { HRLayoutOnlyHeaderComponent } from 'projects/codx-hr/src/lib/_layout_onlyHeader/_layout_onlyHeader.component';
-import { ScrollSpyDirective } from './codx-hr-common/directives/scrollSpy/scroll-spy.directive';
 import { PopupEProcessContractComponent } from './employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 import { EmployeeBasicSalaryComponent } from './employee-basic-salary/employee-basic-salary.component';
 import { EmployeeJobSalaryComponent } from './employee-job-salary/employee-job-salary.component';
@@ -138,16 +137,11 @@ import { ViewDetailEquitComponent } from './employee-quit/view-detail-equit/view
 import { HolidayComponent } from './holiday/holiday.component';
 import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
 
-import { GetHeaderTextPipe } from './codx-hr-common/pipes/get-header-text.pipe';
-import { PersonalInfoComponent } from './employee-list/employee-info-detail/component/personal-info/personal-info.component';
+// import { GetHeaderTextPipe } from './codx-hr-common/pipes/get-header-text.pipe';
 import { LegalInfoComponent } from './employee-list/employee-info-detail/component/legal-info/legal-info.component';
 import { ForeignWorkersComponent } from './employee-list/employee-info-detail/component/foreign-workers/foreign-workers.component';
 import { PreviousExperienceComponent } from './employee-list/employee-info-detail/component/previous-experience/previous-experience.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { EmployeeInfoProfileComponent } from './employee-list/employee-info-profile/employee-info-profile.component';
-import { ProfileDashboardLeaveComponent } from './dashboard/components/profile-dashboard-leave/profile-dashboard-leave.component';
-import { ProfileLast7dayComponent } from './dashboard/components/profile-last7day/profile-last7day.component';
-import { DashboardRegisterAprroveComponent } from './dashboard/components/dashboard-register-aprrove/dashboard-register-aprrove.component';
 import { TableGripComponent } from './dashboard/components/table-grip/table-grip.component';
 import { AgeStatisticComponent } from './dashboard/widgets/age-statistic/age-statistic.component';
 import { DirectivesModule } from './codx-hr-common/directives/directives.module';
@@ -161,39 +155,57 @@ import { DialogDetailRegisterApproveComponent } from './dashboard/components/dia
 import { DashboardModule } from './dashboard/dashboard.module';
 import { DialogRegisterApproveComponent } from './dashboard/components/dialog-register-approve/dialog-register-approve.component';
 import { HistoryLevelComponent } from './dashboard/components/dialog-detail-register-approve/components/history-level/history-level.component';
-import { DialogReviewLeaveApproveComponent } from './employee-list/employee-info-profile/components/dialog-review-leave-approve/dialog-review-leave-approve.component';
-import { DialogWaitingLeavingApproveComponent } from './employee-list/employee-info-profile/components/dialog-waiting-leaving-approve/dialog-waiting-leaving-approve.component';
+
+
 import { HrTableNewemployeeComponent } from './dashboard/widgets/hr-table-newemployee/hr-table-newemployee.component';
-import { SidebarTreeviewComponent } from './employee-list/employee-info-detail/component/sidebar-treeview/sidebar-treeview.component';
-import { EmployeeInfoDetailComponent } from './employee-list/employee-info-detail/employee-info-detail.component';
 import { HrParametersModule } from './hrparameters/hrparameters.module';
 import { CodxHRCommonModule } from './codx-hr-common/codx-hr-common.module';
+import { SelectScrollBarComponent } from './codx-hr-common/components/select-scroll-bar/select-scroll-bar.component';
+import { EmployeeListModule } from './employee-list/employee-list.module';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 export const routes: Routes = [
+  // {
+  //   path: '',
+  //   component: LayoutNoAsideComponent,
+  //   children: [
+  //     // {
+  //     //   path: 'contactbook/:funcID',
+  //     //   component: EmpContactsComponent,
+  //     // },
+  //   ],
+  // },
+  // {
+  //   path: '',
+  //   component: LayoutOnlyHeaderComponent,
+  //   children: [
+  //      {
+  //       path: 'employeeprofile/:funcID',
+  //       component: EmployeeInfoProfileComponent
+  //      }
+  //   ]
+  // },
   {
     path: '',
-    component: LayoutNoAsideComponent,
-    children: [
-      // {
-      //   path: 'contactbook/:funcID',
-      //   component: EmpContactsComponent,
-      // },
-    ],
-  },
-  {
-    path: '',
-    component: HRLayoutOnlyHeaderComponent,
     children: [
       // {
       //   path: 'empinfosub/:funcID',
       //   component: EmployeeInfoDetailComponent,
       // },
+      // {
+      //   path: 'employeedetail/:funcID',
+      //   component: EmployeeInfoDetailComponent,
+      // },
+        // {
+        //   path: 'employeeprofile/:funcID',
+        //   component: EmployeeInfoProfileComponent,
+        //   loadChildren: () => import('./employee-list/employee-list.module').then(m => m.EmployeeListModule)
+
+        // },
       {
-        path: 'employeedetail/:funcID',
-        component: EmployeeInfoDetailComponent,
-      },
-      {
-        path: 'employeeprofile/:funcID',
-        component: EmployeeInfoProfileComponent
+        path: 'employeelist',
+        component: HRLayoutOnlyHeaderComponent,
+        loadChildren: () => import('./employee-list/employee-list.module').then(m => m.EmployeeListModule)
+
       },
       // {
       //   path: 'test/:funcID',
@@ -334,7 +346,7 @@ export const routes: Routes = [
 ];
 const T_Pipe = [
   DatePipe,
-  GetHeaderTextPipe,
+  // GetHeaderTextPipe,
   FilterPipe,
   TimeAgoPipe
 ]
@@ -397,7 +409,6 @@ const T_Component = [
   PopupJobGeneralInfoComponent,
   EmployeeDetailComponent,
   EmployeeContractComponent,
-  ScrollSpyDirective,
   PopupEProcessContractComponent,
   PopupEmployeeJobsalaryComponent,
   EmployeeBasicSalaryComponent,
@@ -416,7 +427,6 @@ const T_Component = [
   EmployeeDayOffComponent,
   ViewDayOffDetailComponent,
   ViewDetailEmployeeBusinessComponent,
-  EmployeeInfoDetailComponent,
   PopupForeignWorkerComponent,
   PopupViewAllComponent,
   EmployeeAppointionsComponent,
@@ -444,22 +454,20 @@ const T_Component = [
   EmployeeQuitComponent,
   ViewDetailEquitComponent,
   HolidayComponent,
-  PersonalInfoComponent,
   LegalInfoComponent,
   ForeignWorkersComponent,
   PreviousExperienceComponent,
-  EmployeeInfoProfileComponent,
-  ProfileLast7dayComponent,
-  ProfileDashboardLeaveComponent,
-  DashboardRegisterAprroveComponent,
   TableGripComponent,
   AgeStatisticComponent,
-  MyTemComponent,
+  
+  DashboardAgeChartComponent,
+  DashboardCardComponent,
+  DashboardGaugeChartComponent,
+  DashboardTotalemployeeChartComponent,
+  DashboardComponent,
   DialogRegisterApproveComponent,
-  DialogReviewLeaveApproveComponent,
-  DialogWaitingLeavingApproveComponent,
   HrTableNewemployeeComponent,
-  SidebarTreeviewComponent
+
 ];
 
 const T_Module = [
@@ -481,7 +489,8 @@ const T_Module = [
   DialogDetailRegisterApproveComponent,
   HistoryLevelComponent,
   HrParametersModule,
-  CodxHRCommonModule
+  CodxHRCommonModule,
+  EmployeeListModule
 ]
 
 @NgModule({

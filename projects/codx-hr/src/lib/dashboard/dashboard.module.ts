@@ -29,11 +29,8 @@ const T_Component = [
 @NgModule({
   imports: [
     CommonModule,
-    DialogDetailRegisterApproveComponent, 
-    HistoryLevelComponent,
-    ChartAllModule,
-    CircularGaugeModule,
-    CodxCoreModule
+    // DialogDetailRegisterApproveComponent, 
+    HistoryLevelComponent
   ], 
   declarations: [T_Component]
 

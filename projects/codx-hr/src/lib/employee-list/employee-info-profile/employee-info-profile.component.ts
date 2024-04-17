@@ -58,15 +58,16 @@ import { MyTeamComponent } from 'projects/codx-wp/src/lib/dashboard/home/my-team
 import { MyTemComponent } from '../../dashboard/widgets/my-tem/my-tem.component';
 import { DialogDetailRegisterApproveComponent } from '../../dashboard/components/dialog-detail-register-approve/dialog-detail-register-approve.component';
 import { DialogRegisterApproveComponent } from '../../dashboard/components/dialog-register-approve/dialog-register-approve.component';
-import { DialogReviewLeaveApproveComponent } from './components/dialog-review-leave-approve/dialog-review-leave-approve.component';
-import { DialogWaitingLeavingApproveComponent } from './components/dialog-waiting-leaving-approve/dialog-waiting-leaving-approve.component';
+import { DialogReviewLeaveApproveComponent } from './components/pop-up/dialog-review-leave-approve/dialog-review-leave-approve.component';
+import { DialogWaitingLeavingApproveComponent } from './components/pop-up/dialog-waiting-leaving-approve/dialog-waiting-leaving-approve.component';
+import { PopupMyteamReponsiveComponent } from './components/pop-up/popup-myteam-reponsive/popup-myteam-reponsive.component';
 
 @Component({
   selector: 'lib-employee-info-profile',
   templateUrl: './employee-info-profile.component.html',
   styleUrls: ['./employee-info-profile.component.css'],
 })
-export class EmployeeInfoProfileComponent extends UIComponent {
+export class  EmployeeInfoProfileComponent extends UIComponent {
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
   @ViewChild('button') button: TemplateRef<any>;
   @ViewChild('itemTemplate') template: TemplateRef<any>;
@@ -1206,6 +1207,13 @@ export class EmployeeInfoProfileComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
+    /* Fake data */
+    // this.onCheckContainerOverflow();
+    // this.targetElements.push(...this.container.nativeElement.children);
+    // this.tabElements.push(...this.tabContainer.nativeElement.children);
+
+    // console.log(this.targetElements);
+
     this.views = [
       {
         type: ViewType.content,
@@ -7264,6 +7272,83 @@ export class EmployeeInfoProfileComponent extends UIComponent {
       largeIcon: "icon-family_restroom",
       isActive: false
 
+    },
+    {
+      functionID: 6,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 7,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 8,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 9,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 10,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 9,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 10,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 9,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 10,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 9,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
+    },
+    {
+      functionID: 10,
+      customName: "Thân nhân",
+      largeIcon: "icon-family_restroom",
+      isActive: false
+
     }
   ]
 
@@ -7566,6 +7651,45 @@ export class EmployeeInfoProfileComponent extends UIComponent {
     let options = new SidebarModel();
 
     options.Width = 'Auto';
-    this.callfunc.openSide(MyTemComponent, [], options);
+    this.callfunc.openSide(PopupMyteamReponsiveComponent, [], options);
   }
+
+  openMenuSideBar() {
+    let options = new SidebarModel();
+
+    options.Width = 'Auto';
+    options.Position = "Left";
+    this.callfunc.openSide(PopupMyteamReponsiveComponent, [], options);
+  }
+
+
+  /*Sau này tách riêng*/
+
+
+  listTabs: any[] = [];
+  width :number
+  height :string='calc(100vh - 80px)'
+  @ViewChild('container') container!:ElementRef;
+  @ViewChild('tabContainer') tabContainer!:ElementRef;
+  @ViewChild('prev') prev!:ElementRef;
+  @ViewChild('next') next!:ElementRef;
+  @ViewChild('scrollele') scrollele!:ElementRef;
+  timeoutfn:any;
+  targetElements: any[] = [];
+  tabElements: any[] = [];
+  isShowSwiper:boolean = false;
+  protected onCheckContainerOverflow(){
+        // debugger;
+        var condition:boolean = this.tabContainer.nativeElement.scrollWidth - this.tabContainer.nativeElement.clientWidth > 0;
+        if(condition){
+            this.prev.nativeElement.style.visibility = 'visible'
+            this.next.nativeElement.style.visibility = 'visible'
+        }
+        else{
+          this.prev.nativeElement.style.visibility = 'hidden'
+          this.next.nativeElement.style.visibility = 'hidden'
+        }
+  }
+  hold:boolean = false;
+  protected selectd:any;
 }

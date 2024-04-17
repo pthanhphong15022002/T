@@ -221,6 +221,16 @@
     }
 }
 
+@media (max-width: 880px) {
+    .user-left{
+        display: none;
+    }
+
+    .fab-container.menu-sidebar-reponsive{
+        display: inline-flex;
+    }
+}
+
 /* reponsive  cụm 2 */
 @media (max-width: 1280px) {
 
@@ -431,6 +441,23 @@ p {
     display: none;
 }
 
+.fab-container.menu-sidebar-reponsive{
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: right 0.3s ease;
+    display: none;
+}
+
 .fab-open {
     right: calc(20px + 400px);
 }
@@ -471,6 +498,9 @@ codx-page-title.page-title.d-flex.ms-0.align-items-center.flex-wrap.ms-3 {
     .fab-container {
         display: inline-flex;
     }
+    /* .fab-container.menu-sidebar-reponsive{
+        display: inline-flex;
+    } */
 
     .icon-begin {
         display: none;
@@ -670,5 +700,52 @@ codx-listview .card .card-header.m-h-auto.p-0 {
     height: calc(100vh - 100px);
     overflow: scroll;
     /* max-width: 830px !important; */
+    height: calc(100vh - 169px)
     
+}
+
+/* header tab */
+.container-info{
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+    height: calc(100vh - 80px);
+    
+  }
+  .container-info::-webkit-scrollbar{
+    width: 0px;
+    height: 0px;
+  }
+  .tab-active{
+    border-bottom: 2px solid var(--hcs-primary);
+  }
+  .tab-container{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: center; /* Change to flex-start */
+    background-color: white;
+    position: sticky;
+    top: 0;
+    z-index: 997;
+    padding: 0 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--Line-Line, #E2E3EE);
+    .prev-item{
+        transform: rotate(90deg);
+        cursor: pointer;
+    }
+    .next-item{
+        transform: rotate(-90deg);
+        cursor: pointer;
+    }
+    .tab-container-items{
+        overflow: hidden;
+        white-space: nowrap;
+        width: 90%;
+        display: flex;
+        align-items: start;
+        gap:3.5rem;
+        margin: 0 0.5rem;
+    }
 }
