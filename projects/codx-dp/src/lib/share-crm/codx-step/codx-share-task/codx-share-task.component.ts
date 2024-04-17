@@ -61,6 +61,7 @@ export class CodxShareTaskComponent implements OnInit {
   listRoleShare: DP_Instances_Steps_Tasks_Roles[];
   roleSelect = new DP_Instances_Steps_Tasks_Roles();
   typeChange = '';
+  objectID = '';
   constructor(
     private cache: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -78,6 +79,7 @@ export class CodxShareTaskComponent implements OnInit {
     this.user = this.auth.get();
     this.entityName = dt?.data?.entityName;
     this.vllData = dt?.data?.vllData;
+    this.objectID = dt?.data?.objectID;
   }
 
   async ngOnInit(): Promise<void> {
@@ -300,18 +302,13 @@ export class CodxShareTaskComponent implements OnInit {
 
   //#region save
   onSave() {
-    const service = this.entityName == 'DP_Instances' ? 'DP' : 'CM';
-    const assemply =
-      this.entityName == 'DP_Instances' ? 'ERM.Business.DP' : 'ERM.Business.CM';
-    const className =
-      this.entityName == 'DP_Instances' ? 'InstancesBusiness' : 'LeadsBusiness';
     this.api
       .execSv<any>(
         'DP',
         'ERM.Business.DP',
         'InstancesStepsTasksBusiness',
         'UpdataRoleShareAsync',
-        [this.taskCopy.stepID, this.taskCopy.recID, this.listRoleShare]
+        [this.taskCopy.stepID, this.taskCopy.recID, this.listRoleShare,this.entityName, this.objectID]
       )
       .subscribe((res) => {
         if (res) {
