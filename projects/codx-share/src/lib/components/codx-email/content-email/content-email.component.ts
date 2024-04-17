@@ -106,11 +106,22 @@ export class ContentEmailComponent {
             //   this.formModel.gridViewName,
             //   gridViewSetup
             // );
-            this.dialogETemplate = this.mainService.buildFormGroup(
-              this.formModel.formName,
-              this.formModel.gridViewName,
-              ''
-            );
+            if (gridViewSetup) {
+              this.dialogETemplate = this.mainService.buildFormGroup(
+                this.formModel.formName,
+                this.formModel.gridViewName,
+                ''
+              );
+            } else {
+              var group: any = {};
+              group['subject'] = new FormControl('');
+              group['templateName'] = new FormControl('');
+              group['sendTime'] = new FormControl('');
+              group['message'] = new FormControl('');
+              group['updateColumn'] = new FormControl('');
+              group['updateColumns'] = new FormControl('');
+              this.dialogETemplate = new FormGroup(group);
+            }
 
             if (this.data.templateName) {
               this.dialogETemplate.patchValue(this.data);
