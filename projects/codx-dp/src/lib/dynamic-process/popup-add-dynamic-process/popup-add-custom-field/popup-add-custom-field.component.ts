@@ -174,6 +174,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
     emailTemplate: '',
     dateRemind: ''
   }
+  //Conditional
+  listCbx = [];
+  fieldsCondition = { text: 'fieldName', value: 'recID' };
 
   constructor(
     private cache: CacheService,
@@ -208,7 +211,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.field.recID = Util.uid();
       if (this.stepList?.length > 0) {
         this.stepList.forEach((objStep) => {
+
           if (objStep?.fields?.length > 0) {
+            if (objStep.recID == this.field.stepID) {
+              this.listCbx = objStep.fields.find(x => x.referType == "3");
+            }
             let arrFn = objStep?.fields.map((x) => {
               let obj = {
                 fieldName: x.fieldName,
@@ -344,7 +351,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         (this.field.dataType == 'N' ||
           this.field.dataType == 'P' ||
           this.field.dataType == 'T')) ||
-      ((this.field.dataType == 'L' || this.field.dataType == 'PA') &&
+      (((this.field.dataType == 'L' && this.field.dataFormat != 'B') || this.field.dataType == 'PA') &&
         this.field.refValue) ||
       (this.field.dataType == 'L' && this.field.dataFormat == 'B')
     ) {
@@ -1428,7 +1435,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //----------------- Dependences------------------//
   changeDependences(e) {
     this.field['isApplyDependences'] = e.data;
-    if (this.field.isApplyDependences) this.field.isApplyConditional = false;
+    if (this.field.isApplyDependences) {
+      this.field.isApplyConditional = false;
+      if (this.listCbx?.length > 0) {
+
+      }
+    }
   }
   //-------------Default ------------//
   changeUseDeafaut(e) {
