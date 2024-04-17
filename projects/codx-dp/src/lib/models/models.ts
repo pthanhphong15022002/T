@@ -291,6 +291,7 @@ export class DP_Steps_Fields {
   rank: number = 0;
   rankIcon: string;
   isRequired: boolean = false;
+  isUseDefault: boolean = false;
   defaultValue: string;
   note: string;
   sorting: number;
@@ -306,7 +307,7 @@ export class DP_Steps_Fields {
   isApplyDependences: boolean = false;;
   dependences: string;
   isApplyConditional: boolean = false;;
-  conditionReference: any[] ;
+  conditionReference: any[];
 }
 export class DP_Instances {
   recID: string;
@@ -563,6 +564,7 @@ export class DP_Instance_Steps_Fields {
   rank: number;
   rankIcon: string;
   isRequired: boolean;
+  isUseDefault: boolean = false;
   defaultValue: string;
   note: string;
   sorting: number;
