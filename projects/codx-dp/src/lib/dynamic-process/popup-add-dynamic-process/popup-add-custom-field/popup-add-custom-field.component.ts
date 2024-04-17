@@ -176,7 +176,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
   //Conditional
   listCbx = [];
-  fieldsCondition = { text: 'fieldName', value: 'recID' };
+  fieldsDependence = { text: 'fieldName', value: 'recID' };
 
   constructor(
     private cache: CacheService,
@@ -1441,6 +1441,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
       }
     }
+  }
+  cbxChangeDependence(e) {
+
   }
   //-------------Default ------------//
   changeUseDeafaut(e) {

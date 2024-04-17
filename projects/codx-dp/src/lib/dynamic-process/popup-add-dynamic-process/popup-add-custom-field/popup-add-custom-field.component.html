@@ -569,15 +569,40 @@
         >
         </codx-input>
       </div>
-      <div class="form-group" *gIf="field?.isApplyDependences">
+      <div class="form-group" *ngIf="field?.isApplyDependences">
         <div class="w-100 border border-gray-300 rounded-2 py-3 px-4 mb-4">
-          <ejs-combobox
-            [dataSource]="listCbx"
-            [fields]="fieldsCondition"
-            [value]=""
-            [allowFiltering]="false"
-            [placeholder]=""
-          ></ejs-combobox>
+          <div class="form-group">
+            <codx-label
+              class="me-3"
+              name="fieldDependences"
+              [formModel]="form?.formModel"
+              default="Trường dữ liệu muốn tham chiếu"
+            ></codx-label>
+            <ejs-combobox
+              [dataSource]="listCbx"
+              [fields]="fieldsDependence"
+              [value]=""
+              [allowFiltering]="false"
+              [placeholder]=""
+              (valueChange)="cbxChangeDependence($event)"
+            ></ejs-combobox>
+          </div>
+          <div class="form-group">
+            <codx-label
+              class="me-3"
+              name="valueDependences"
+              [formModel]="form?.formModel"
+              default="Giá trị muốn tham chiếu"
+            ></codx-label>
+            <ejs-combobox
+              [dataSource]="listCbx"
+              [fields]="fieldsDependence"
+              [value]=""
+              [allowFiltering]="false"
+              [placeholder]=""
+              (valueChange)="cbxChangeDependence($event)"
+            ></ejs-combobox>
+          </div>
         </div>
       </div>
       <ng-container *ngIf="!field?.isApplyDependences">
