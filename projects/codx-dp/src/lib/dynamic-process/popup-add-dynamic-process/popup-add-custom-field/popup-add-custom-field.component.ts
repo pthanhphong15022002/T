@@ -1400,7 +1400,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   valueChangeChbx(e) {
 
   }
-//----------------- Conditons Ref------------------//
+  //----------------- Conditons Ref------------------//
   clickSettingConditional() {
     let option = new DialogModel();
     option.zIndex = 1050;
@@ -1426,8 +1426,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   //----------------- Dependences------------------//
-  changeDependences(e){
+  changeDependences(e) {
     this.field['isApplyDependences'] = e.data;
-    if(this.field.isApplyDependences) this.field.isApplyConditional = false;
+    if (this.field.isApplyDependences) this.field.isApplyConditional = false;
+  }
+  //-------------Default ------------//
+  changeUseDeafaut(e) {
+    this.field['isUseDefault'] = e.data;
   }
 }
