@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BasePropertyComponent } from '../base.component';
 import { PropertyExpressionSettingsComponent } from './property-expression-settings/property-expression-settings.component';
 
@@ -7,7 +7,14 @@ import { PropertyExpressionSettingsComponent } from './property-expression-setti
   templateUrl: './property-expression.component.html',
   styleUrls: ['./property-expression.component.css']
 })
-export class PropertyExpressionComponent extends BasePropertyComponent{
+export class PropertyExpressionComponent extends BasePropertyComponent implements OnInit{
+
+  formula:string = "";
+
+  ngOnInit(): void {
+    this.data.refValue = this.data.refValue && typeof this.data.refValue == 'string' ? JSON.parse(this.data.refValue) : this.data.refValue;
+    this.convertReferedValue();
+  }
   
   setting()
   {
@@ -24,6 +31,23 @@ export class PropertyExpressionComponent extends BasePropertyComponent{
         })
       }
     })
-    this.callFuc.openForm(PropertyExpressionSettingsComponent,"",900,700,"",{listField:data});
+    let popup = this.callFuc.openForm(PropertyExpressionSettingsComponent,"",900,700,"",{listField:data,referedValue:this.data.refValue});
+    popup.closed.subscribe(res=>{
+      this.data.refValue = res?.event || '';
+      this.dataChange.emit(this.data);
+      this.convertReferedValue();
+    })
+  }
+
+  convertReferedValue()
+  {
+    this.formula = "";
+    if(this.data.refValue)
+    {
+      this.data.refValue.forEach((elm,i)=>{
+        this.formula += elm.join("");
+        if(i < this.data.refValue.length - 1) this.formula += "&";
+      })
+    }
   }
 }

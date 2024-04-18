@@ -506,7 +506,7 @@ export class ModeviewComponent implements OnInit {
         data.title += " " + this.count.expression;
         data.dataFormat = "Expression";
         data.controlType = "TextBox";
-        data.referedType = "E";
+        data.refType = "E";
         break;
       }
       case "Phone":
