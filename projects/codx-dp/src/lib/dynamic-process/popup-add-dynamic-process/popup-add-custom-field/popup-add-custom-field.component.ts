@@ -174,6 +174,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
     emailTemplate: '',
     dateRemind: ''
   }
+  //Conditional
+  listCbx = [];
+  fieldsDependence = { text: 'fieldName', value: 'recID' };
+  listValueField = [];
+  valueDependence = { text: 'text', value: 'value' };
 
   constructor(
     private cache: CacheService,
@@ -208,7 +213,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.field.recID = Util.uid();
       if (this.stepList?.length > 0) {
         this.stepList.forEach((objStep) => {
+
           if (objStep?.fields?.length > 0) {
+            if (objStep.recID == this.field.stepID) {
+              this.listCbx = objStep.fields.filter(x => x.refType == "3");
+            }
             let arrFn = objStep?.fields.map((x) => {
               let obj = {
                 fieldName: x.fieldName,
@@ -344,7 +353,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         (this.field.dataType == 'N' ||
           this.field.dataType == 'P' ||
           this.field.dataType == 'T')) ||
-      ((this.field.dataType == 'L' || this.field.dataType == 'PA') &&
+      (((this.field.dataType == 'L' && this.field.dataFormat != 'B') || this.field.dataType == 'PA') &&
         this.field.refValue) ||
       (this.field.dataType == 'L' && this.field.dataFormat == 'B')
     ) {
@@ -1400,7 +1409,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   valueChangeChbx(e) {
 
   }
-//----------------- Conditons Ref------------------//
+  //----------------- Conditons Ref------------------//
   clickSettingConditional() {
     let option = new DialogModel();
     option.zIndex = 1050;
@@ -1426,8 +1435,38 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   //----------------- Dependences------------------//
-  changeDependences(e){
+  changeDependences(e) {
     this.field['isApplyDependences'] = e.data;
-    if(this.field.isApplyDependences) this.field.isApplyConditional = false;
+    if (this.field.isApplyDependences) {
+      this.field.isApplyConditional = false;
+      if (this.listCbx?.length > 0) {
+
+      }
+    }
+  }
+  cbxChangeDependence(e) {
+    if (e) {
+      let field = this.listCbx.find(x => x.recID == e);
+      if (field && field.refValue) {
+        this.cache.combobox(field.refValue).subscribe(res => {
+          if (res) {
+            this.listValueField = res.tableFields?.split(";").map(x => {
+              let obj = {
+                text: x,
+                value: x
+              }
+              return obj;
+            })
+          }
+        })
+      }
+    }
+  }
+  cbxChangeValueDependence(e) {
+
+  }
+  //-------------Default ------------//
+  changeUseDeafaut(e) {
+    this.field['isUseDefault'] = e.data;
   }
 }

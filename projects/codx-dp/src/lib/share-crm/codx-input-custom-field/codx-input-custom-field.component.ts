@@ -212,7 +212,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
         this.customField.dataValue = this.customField.versions[idx].dataValue;
     }
     //gia tri mặc dinh khi them moi
-    if (this.isAdd && !this.customField.dataValue) {
+    if (this.isAdd && !this.customField.dataValue && this.customField?.isUseDefault) {
       if (this.customField.defaultValue) {
         this.dataValueRef = this.customField.defaultValue;
         this.isChange = true

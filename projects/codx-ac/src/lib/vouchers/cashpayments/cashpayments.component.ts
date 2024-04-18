@@ -94,6 +94,16 @@ export class CashPaymentsComponent extends UIComponent {
       this.fmJournal,
       'AC'
     );
+    this.router.params.subscribe((params) => {
+      this.journalNo = params?.journalNo;
+    });
+    this.router.data.subscribe((res: any) => {
+      if (res && res['runMode'] && res['runMode'] == '1') {
+        this.predicate = '';
+        this.runmode = res.runMode;
+      }
+      this.onDestroy();
+    });
   }
   //#endregion Constructor
 
@@ -112,18 +122,6 @@ export class CashPaymentsComponent extends UIComponent {
         let dataValue = JSON.parse(res.dataValue);
         this.baseCurr = dataValue?.BaseCurr || '';
       });
-
-    this.router.params.subscribe((params) => {
-      this.journalNo = params?.journalNo;
-    });
-
-    this.router.data.subscribe((res: any) => {
-      if (res && res['runMode'] && res['runMode'] == '1') {
-        this.predicate = '';
-        this.runmode = res.runMode;
-      }
-      this.onDestroy();
-    });
 
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) {
@@ -148,7 +146,7 @@ export class CashPaymentsComponent extends UIComponent {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
           collapsed: true,
-          widthLeft: '23%',
+          widthLeft: '350px',
           //separatorSize:3
         },
       },

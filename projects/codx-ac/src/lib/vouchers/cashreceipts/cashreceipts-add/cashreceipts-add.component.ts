@@ -666,7 +666,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @param obj 
    */
   cashBookIDChange(field:any,preValue:any){
-    this.api.exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
+    this.api.exec('AC', 'CashReceiptsBusiness', 'ValueChangedAsync', [
       field,
       this.master.data,
       preValue
@@ -703,7 +703,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   reasonIDChange(field:any,obj:any){
     let memo = this.getMemoMaster();
     this.master.setValue('memo',memo,{});
-    this.api.exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
+    this.api.exec('AC', 'CashReceiptsBusiness', 'ValueChangedAsync', [
       field,
       this.master.data,
       JSON.stringify(obj)
@@ -768,7 +768,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @param field 
    */
   currencyIDChange(field:any,preValue:any){
-    this.api.exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
+    this.api.exec('AC', 'CashReceiptsBusiness', 'ValueChangedAsync', [
       field,
       this.master.data,
       preValue
@@ -801,7 +801,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    */
   exchangeRateChange(field:any){
     this.api
-        .exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
+        .exec('AC', 'CashReceiptsBusiness', 'ValueChangedAsync', [
           field,
           this.master.data,
           ''
@@ -826,7 +826,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @param field 
    */
   voucherDateChange(field:any){
-    this.api.exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
+    this.api.exec('AC', 'CashReceiptsBusiness', 'ValueChangedAsync', [
       field,
       this.master.data,
       ''
