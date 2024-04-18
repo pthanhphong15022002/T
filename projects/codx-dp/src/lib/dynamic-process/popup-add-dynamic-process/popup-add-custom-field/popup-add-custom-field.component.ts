@@ -24,6 +24,7 @@ import {
 } from 'codx-core';
 import {
   ColumnTable,
+  DP_Condition_Reference_Fields,
   DP_Steps_Fields,
   tempVllDP,
 } from '../../../models/models';
@@ -179,7 +180,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   fieldsDependence = { text: 'fieldName', value: 'recID' };
   listValueField = [];
   valueDependence = { text: 'text', value: 'value' };
-
+  fieldInStep : any[]
   constructor(
     private cache: CacheService,
     private notiService: NotificationsService,
@@ -216,7 +217,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
           if (objStep?.fields?.length > 0) {
             if (objStep.recID == this.field.stepID) {
-              this.listCbx = objStep.fields.filter(x => x.refType == "3");
+              this.fieldInStep = objStep.fields ;
+              this.listCbx =  this.fieldInStep.filter(x => x.refType == "3");
             }
             let arrFn = objStep?.fields.map((x) => {
               let obj = {
@@ -1411,11 +1413,20 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
   //----------------- Conditons Ref------------------//
   clickSettingConditional() {
+    let fieldsCondition = this.fieldInStep.filter(x=>x.dataType == this.field.dataType && x.dataFormat == this.field.dataFormat)
+    if(!fieldsCondition || fieldsCondition?.length == 0){
+     this.notiService.notify('Chưa có trường giữ liệu phù hợp để tham chiếu điều kiện với kiểu dữ liệu vừa tạo ra !' ,"2")
+     return;
+    }
     let option = new DialogModel();
     option.zIndex = 1050;
+    let data = new DP_Condition_Reference_Fields();
+    data.messageType ='2'
     let obj = {
+      data : data,
       action: 'add',
       titleAction: this.grvSetup['ConditionReference']?.headerText, //test
+      fieldsCondition : fieldsCondition
     };
     let dialogCon = this.callfc.openForm(
       PopupSettingConditionalComponent,
@@ -1429,7 +1440,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
     );
     dialogCon.closed.subscribe(res => {
       if (res && res.event) {
-
+        let cons = this.field.conditionReference ?? [] ;
+        cons.push(res.event)
+        this.field.conditionReference = cons
       }
     })
   }

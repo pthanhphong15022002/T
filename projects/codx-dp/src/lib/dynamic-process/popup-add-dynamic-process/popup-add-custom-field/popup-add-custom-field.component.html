@@ -628,21 +628,57 @@
             type="button"
             class="btn btn-icon btn-sm btn-light-primary me-5"
             (click)="clickSettingConditional()"
-            [disabled]="viewOnly"
+            [disabled]="viewOnly || !field?.isApplyConditional"
           >
             <i class="icon-settings icon-16"></i>
           </button>
         </div>
-        <div *ngIf="field?.isApplyConditional">
+        <div
+          *ngIf="
+            field?.isApplyConditional && field?.conditionReference?.length > 0
+          "
+        >
           <codx-label
             class="me-3"
             fiedName="ConditionReference"
             [formModel]="form?.formModel"
             default="Các điều kiện tham chiếu với các biến "
           ></codx-label>
-          <!-- <div class="w-100 border border-gray-300 rounded-2 py-3 px-4 mb-4">
-          
-        </div> -->
+          <div *ngFor="let conRef of field?.conditionReference">
+            <div class="w-100 border border-gray-300 rounded-2 px-4 mb-4">
+            <div class="d-flex align-items-center form-group">
+              <span class="me-3">{{ conRef?.refID }}</span>
+              <span class="me-3">
+                <codx-vll
+                  [name]="'CRM101'"
+                  [value]="conRef?.compareConditions"
+                  [showText]="true"
+                  [showBgColor]="true"
+                  class="badge badge-light badge-square badge-sm"
+                >
+                </codx-vll
+              ></span>
+              <span class="me-3">
+                <codx-vll
+                  [name]="'CRM102'"
+                  [value]="conRef?.messageType"
+                  [showText]="true"
+                  [showBgColor]="true"
+                  class="badge badge-light badge-square badge-sm"
+                >
+                </codx-vll
+              ></span>
+              <span class="me-3">
+                <button
+                  type="button"
+                  class="btn btn-icon btn-sm btn-light-primary me-5"
+                  [ngbTooltip]="conRef?.messageText"
+                >
+                  <i class="icon-sms_failed icon-16"></i>
+                </button>
+              </span>
+            </div></div>
+          </div>
         </div>
       </ng-container>
     </div>
