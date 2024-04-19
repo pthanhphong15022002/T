@@ -331,10 +331,12 @@ export class PopupAddAdvanceComponent
   }
 
   onSave(isRelease: boolean = false) {
+    this.data.remainAmount = this.data.requestAmt;
     if (this.actionType == 'edit') {
       this.data._isEdit = true;
       this.dialog.dataService.dataSelected = this.data;
     }
+    this.form.data.remainAmount = this.form.data.requestAmt;
     this.form
       .save(null, 0, '', '', true, { allowCompare: false })
       .subscribe((res: any) => {
