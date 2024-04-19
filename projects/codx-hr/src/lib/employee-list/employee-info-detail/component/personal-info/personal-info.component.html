@@ -1,10 +1,10 @@
-<div class="container mb-4 bg-body">
+<div class="container-border container mb-4 bg-body">
     <!-- -----------------------------------THÔNG TIN BẢN THÂN------------------------------------------------ -->
     <div class="row mt-2">
         <div class="d-flex align-items-center justify-content-between py-4">
             <div class="text-left text-primary">
                 <span class="icon-assignment_ind icon-20 me-2"></span>
-                <codx-label name="lblPersonalInfo" [formModel]="formModel" [default]="'Thông tin bản thân'" class="fs-5-sm fw-bold text-primary text-uppercase">
+                <codx-label name="lblPersonalInfo" [formModel]="formModel" [default]="'Lý lịch cá nhân'" class="fs-5-sm fw-bold text-primary text-uppercase">
                 </codx-label>
             </div>
             <!-- <ng-contaniner *ngIf="function && function?.write == true">
@@ -28,18 +28,8 @@
             </div>
         </div>
 
-         <!-- Mã nhân viên -->
+         <!-- Họ -->
          <div class="col-4">
-            <div class="d-flex flex-column">
-                <div class="text-gray-600 me-2 pb-1">
-                    <codx-label  [formModel]="formModel" [setRequire]="false" [default]="'giới tính'"></codx-label>
-                </div>
-                <div class="fw-bold text-dark">Nữ</div>
-            </div>
-        </div>
-
-        <!-- Mã nhân viên -->
-        <div class="col-4">
             <div class="d-flex flex-column">
                 <div class="text-gray-600 me-2 pb-1">
                     <codx-label  [formModel]="formModel" [setRequire]="false" [default]="'Họ'"></codx-label>
@@ -48,11 +38,8 @@
             </div>
         </div>
 
-    
-    </div>
-    <div class="row mb-3 py-4">
-         <!-- Tên -->
-         <div class="col-4">
+        <!-- Tên -->
+        <div class="col-4">
             <div class="d-flex flex-column">
               <div class="text-gray-600 me-2 pb-1">
                   <codx-label  [formModel]="formModel" [default]="'Tên'">
@@ -61,6 +48,9 @@
                 <div class="fw-bold text-dark">Kim trang</div>
             </div>
           </div>
+    
+    </div>
+    <div class="row mb-3 py-4">
          <!-- Bí danh -->
          <div class="col-4">
             <div class="d-flex flex-column">
@@ -71,6 +61,15 @@
                 <div class="fw-bold text-dark">Kim dễ thương</div>
             </div>
           </div>
+          <!-- Giới tính -->
+          <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 me-2 pb-1">
+                    <codx-label  [formModel]="formModel" [setRequire]="false" [default]="'Giới tính'"></codx-label>
+                </div>
+                <div class="fw-bold text-dark">Nữ</div>
+            </div>
+        </div>
           <!-- Tình trạng hôn nhân -->
           <div class="col-4">
             <div class="d-flex flex-column">
@@ -125,26 +124,8 @@
             </div>
         </div>
     </div> -->
-    <!-- Ngày sinh/ Nơi Sinh / Quốc tịch -->
+    <!-- Quốc tịch / Quốc tịch / Dân tộc-->
     <div class="row bm-3 py-4">
-        <div class="col">
-            <div class="d-flex flex-column">
-                <div class="text-gray-600 pb-1 d-flex">
-                    <codx-label [formModel]="formModel" [default]="'Ngày sinh'">
-                    </codx-label>
-                </div>
-                    <div class="fw-bold text-dark" >28/12/2000</div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="d-flex flex-column">
-                <div class="text-gray-600 pb-1 d-flex">
-                    <codx-label [formModel]="formModel" [default]="'Nơi sinh'">
-                    </codx-label>
-                </div>
-                    <div class="fw-bold text-dark" >TPHCM</div>
-            </div>
-        </div>
         <div class="col">
             <div class="d-flex flex-column">
                 <div class="text-gray-600 pb-1 d-flex">
@@ -154,34 +135,52 @@
                     <div class="fw-bold text-dark" >Việt Nam</div>
             </div>
         </div>
-    </div>
-    <!-- Quốc tịch/ Dân tộc/ Tôn giáo -->
-    <div class="row mb-3 py-4">
         <div class="col">
             <div class="d-flex flex-column">
-                <div class="text-gray-600 pb-1">
+                <div class="text-gray-600 pb-1 d-flex">
+                    <codx-label [formModel]="formModel" [default]="'Quốc tịch khác'">
+                    </codx-label>
+                </div>
+                    <div class="fw-bold text-dark" >Afghanistan</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 pb-1 d-flex">
                     <codx-label [formModel]="formModel" [default]="'Dân tộc'">
                     </codx-label>
                 </div>
-                <div class="fw-bold text-dark" >Kinh</div>
+                    <div class="fw-bold text-dark" >Kinh</div>
             </div>
         </div>
+    </div>
+    <!-- Tôn giáo / Trình độ văn hóa / Hệ đào tạo phổ thông-->
+    <div class="row mb-3 py-4">
         <div class="col">
             <div class="d-flex flex-column">
                 <div class="text-gray-600 pb-1">
                     <codx-label [formModel]="formModel" [default]="'Tôn giáo'">
                     </codx-label>
                 </div>
-                <div class="fw-bold text-dark">Phật giáo</div>
+                <div class="fw-bold text-dark" >Công giáo</div>
             </div>
         </div>
         <div class="col">
             <div class="d-flex flex-column">
                 <div class="text-gray-600 pb-1">
-                    <codx-label [formModel]="formModel" [default]="'Hình thức đào tạo'">
+                    <codx-label [formModel]="formModel" [default]="'Trình độ văn hóa'">
                     </codx-label>
                 </div>
-                <div class="fw-bold text-dark">Phổ thông </div>
+                <div class="fw-bold text-dark">12/12</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 pb-1">
+                    <codx-label [formModel]="formModel" [default]="'Hệ đào tạo phổ thông'">
+                    </codx-label>
+                </div>
+                <div class="fw-bold text-dark">Chính quy </div>
             </div>
         </div>
     </div>
@@ -218,12 +217,12 @@
             </div>
         </div>
     </div> -->
-    <!-- Trình độ văn hóa/ Trình độ chuyên môn -->
+    <!-- Trình độ học vấn / Học hàm / Chuyên ngành -->
     <div class="row mb-3 py-4">
         <div class="col-4">
             <div class="d-flex flex-column">
                 <div class="text-gray-600 pb-1 d-flex">
-                    <codx-label name="Education" [formModel]="formModel" [default]="'Trình độ văn hóa'">
+                    <codx-label name="Education" [formModel]="formModel" [default]="'Trình độ học vấn'">
                     </codx-label>
                 </div>
                 <!-- <div class="fw-bold text-dark ms-7">
@@ -235,17 +234,27 @@
                     [value]="data?.education">
                     </codx-vll>
                 </div> -->
-                <div class="fw-bold"> 12/12
+                <div class="fw-bold"> Đại học
                 </div>
             </div>
         </div>
-        <div class="col-8">
+        <div class="col-4">
             <div class="d-flex flex-column">
                 <div class="text-gray-600 pb-1">
-                    <codx-label name="DegreeName" [formModel]="formModel" [default]="'Trình độ chuyên môn'">
+                    <codx-label name="DegreeName" [formModel]="formModel" [default]="'Học hàm'">
                     </codx-label>
                 </div>
-                <div class="fw-bold"> Đại học
+                <div class="fw-bold"> Phó giáo sư
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 pb-1">
+                    <codx-label name="DegreeName" [formModel]="formModel" [default]="'Chuyên ngành'">
+                    </codx-label>
+                </div>
+                <div class="fw-bold"> Công nghệ thông tin
                 </div>
             </div>
         </div>
@@ -287,3 +296,628 @@
         </div>
     </div> -->
   </div>
+
+
+  <div class="container-border container mb-4 bg-body">
+    <!-- -----------------------------------CMND------------------------------------------------ -->
+    <div class="row mt-2">
+        <div class="d-flex align-items-center justify-content-between py-4">
+            <div class="text-left text-primary">
+                <span class="icon-attach_money icon-20 me-2"></span>
+                <codx-label name="lblPersonalInfo" [formModel]="formModel" [default]="'CMND'" class="fs-5-sm fw-bold text-primary text-uppercase">
+                </codx-label>
+            </div>
+            <ng-container *ngIf="function && function?.write == true">
+                <div>
+                    <button type="button" class="btn btn-icon btn-white" (click)="openPopupEdit()">
+                        <span class="icon-edit icon-18"></span>
+                    </button>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <!-- Là CMND / Số / Ngày cấp -->
+    <div class="row mt-5 mb-3 pb-4">
+        <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 me-2 pb-1">
+                    <!-- <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span> -->
+                    <codx-label name="" [formModel]="formModel" [setRequire]="false" [default]="'Là CMND'"></codx-label>
+                </div>
+                <div class="fw-bold text-dark">ELV02233</div>
+            </div>
+        </div>
+
+         <!-- Họ -->
+         <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 me-2 pb-1">
+                    <codx-label  [formModel]="formModel" [setRequire]="false" [default]="'Số'"></codx-label>
+                </div>
+                <div class="fw-bold text-dark">0123456789</div>
+            </div>
+        </div>
+
+        <!-- Tên -->
+        <div class="col-4">
+            <div class="d-flex flex-column">
+              <div class="text-gray-600 me-2 pb-1">
+                  <codx-label  [formModel]="formModel" [default]="'Ngày cấp'">
+                  </codx-label>
+                </div>
+                <div class="fw-bold text-dark">02/11/2021</div>
+            </div>
+        </div>
+    </div>
+    <!-- Ngày hết hạn / Nơi cấp / Dấu vết đặc biệt -->
+    <div class="row bm-3 py-4">
+        <div class="col">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 pb-1 d-flex">
+                    <codx-label [formModel]="formModel" [default]="'Ngày hết hạn'">
+                    </codx-label>
+                </div>
+                    <div class="fw-bold text-dark" >02/11/2025</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 pb-1 d-flex">
+                    <codx-label [formModel]="formModel" [default]="'Nơi cấp'">
+                    </codx-label>
+                </div>
+                    <div class="fw-bold text-dark" >Cục CSQL & TTXH</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 pb-1 d-flex">
+                    <codx-label [formModel]="formModel" [default]="'Dấu vết đặc biệt'">
+                    </codx-label>
+                </div>
+                    <div class="fw-bold text-dark" >Nốt ruồi trên trán</div>
+            </div>
+        </div>
+    </div>
+    <!-- Địa chỉ trong CMND -->
+    <div class="row mb-3 py-4">
+        <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 pb-1">
+                    <codx-label [formModel]="formModel" [default]="'Địa chỉ trong CMND'">
+                    </codx-label>
+                </div>
+                <div class="fw-bold text-dark" >22/23/8 Đường số 2 Phường 3 Quận Gò Vấp TPHCM</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-border container mb-4 bg-body">
+    <!-- -----------------------------------Hộ chiếu------------------------------------------------ -->
+    <div class="row mt-2">
+        <div class="d-flex align-items-center justify-content-between py-4">
+            <div class="text-left text-primary">
+                <span class="icon-attach_money icon-20 me-2"></span>
+                <codx-label name="lblPersonalInfo" [formModel]="formModel" [default]="'Hộ chiếu'" class="fs-5-sm fw-bold text-primary text-uppercase">
+                </codx-label>
+            </div>
+            <ng-container *ngIf="function && function?.write == true">
+                <div>
+                    <button type="button" class="btn btn-icon btn-white" (click)="openPopupEdit()">
+                        <span class="icon-edit icon-18"></span>
+                    </button>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <!-- SỐ hộ chiếu / Loại hộ chiếu / Ngày cấp -->
+    <div class="row mt-5 mb-3 pb-4">
+        <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 me-2 pb-1">
+                    <!-- <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span> -->
+                    <codx-label name="" [formModel]="formModel" [setRequire]="false" [default]="'Số hộ chiếu'"></codx-label>
+                </div>
+                <div class="fw-bold text-dark">0123456789</div>
+            </div>
+        </div>
+
+         <!-- Họ -->
+         <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 me-2 pb-1">
+                    <codx-label  [formModel]="formModel" [setRequire]="false" [default]="'Loại hộ chiếu'"></codx-label>
+                </div>
+                <div class="fw-bold text-dark">VISA</div>
+            </div>
+        </div>
+
+        <!-- Tên -->
+        <div class="col-4">
+            <div class="d-flex flex-column">
+              <div class="text-gray-600 me-2 pb-1">
+                  <codx-label  [formModel]="formModel" [default]="'Ngày cấp'">
+                  </codx-label>
+                </div>
+                <div class="fw-bold text-dark">02/11/2021</div>
+            </div>
+        </div>
+    </div>
+    <!-- Ngày hết hạn / Nơi cấp  -->
+    <div class="row bm-3 py-4">
+        <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 pb-1 d-flex">
+                    <codx-label [formModel]="formModel" [default]="'Ngày hết hạn'">
+                    </codx-label>
+                </div>
+                    <div class="fw-bold text-dark" >02/11/2025</div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 pb-1 d-flex">
+                    <codx-label [formModel]="formModel" [default]="'Nơi cấp'">
+                    </codx-label>
+                </div>
+                    <div class="fw-bold text-dark" >Cục CSQL & TTXH</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-border container mb-4 bg-body">
+    <!-- -----------------------------------Mã số thuế------------------------------------------------ -->
+    <div class="row mt-2">
+        <div class="d-flex align-items-center justify-content-between py-4">
+            <div class="text-left text-primary">
+                <span class="icon-attach_money icon-20 me-2"></span>
+                <codx-label name="lblPersonalInfo" [formModel]="formModel" [default]="'Mã số thuế'" class="fs-5-sm fw-bold text-primary text-uppercase">
+                </codx-label>
+            </div>
+            <ng-container *ngIf="function && function?.write == true">
+                <div>
+                    <button type="button" class="btn btn-icon btn-white" (click)="openPopupEdit()">
+                        <span class="icon-edit icon-18"></span>
+                    </button>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <!-- Mã số thuế / Ngày cấp MST / Nơi cấp MST -->
+    <div class="row mt-5 mb-3 pb-4">
+        <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 me-2 pb-1">
+                    <!-- <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span> -->
+                    <codx-label name="" [formModel]="formModel" [setRequire]="false" [default]="'Mã số thuế'"></codx-label>
+                </div>
+                <div class="fw-bold text-dark">0123456789</div>
+            </div>
+        </div>
+
+         <!-- Họ -->
+         <div class="col-4">
+            <div class="d-flex flex-column">
+              <div class="text-gray-600 me-2 pb-1">
+                  <codx-label  [formModel]="formModel" [default]="'Ngày cấp mã số thuế'">
+                  </codx-label>
+                </div>
+                <div class="fw-bold text-dark">02/11/2021</div>
+            </div>
+        </div>
+
+        <!-- Tên -->
+        <div class="col-4">
+            <div class="d-flex flex-column">
+              <div class="text-gray-600 me-2 pb-1">
+                  <codx-label  [formModel]="formModel" [default]="'Nơi cấp mã số thuế'">
+                  </codx-label>
+                </div>
+                <div class="fw-bold text-dark">Cục CSQL & TTXH</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-border container mb-4 bg-body">
+    <!-- -----------------------------------Giấy khai sinh------------------------------------------------ -->
+    <div class="row mt-2">
+        <div class="d-flex align-items-center justify-content-between py-4">
+            <div class="text-left text-primary">
+                <span class="icon-attach_money icon-20 me-2"></span>
+                <codx-label name="lblPersonalInfo" [formModel]="formModel" [default]="'Giấy khai sinh'" class="fs-5-sm fw-bold text-primary text-uppercase">
+                </codx-label>
+            </div>
+            <ng-container *ngIf="function && function?.write == true">
+                <div>
+                    <button type="button" class="btn btn-icon btn-white" (click)="openPopupEdit()">
+                        <span class="icon-edit icon-18"></span>
+                    </button>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <!-- SỐ hộ chiếu / Loại hộ chiếu / Ngày cấp -->
+    <div class="row mt-5 mb-3 pb-4">
+        <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 me-2 pb-1">
+                    <!-- <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span> -->
+                    <codx-label name="" [formModel]="formModel" [setRequire]="false" [default]="'Ngày sinh'"></codx-label>
+                </div>
+                <div class="fw-bold text-dark">02/11/2021</div>
+            </div>
+        </div>
+
+         <!-- Họ -->
+         <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 me-2 pb-1">
+                    <codx-label  [formModel]="formModel" [setRequire]="false" [default]="'Ngày đăng ký'"></codx-label>
+                </div>
+                <div class="fw-bold text-dark">02/11/2021</div>
+            </div>
+        </div>
+
+        <!-- Tên -->
+        <div class="col-4">
+            <div class="d-flex flex-column">
+              <div class="text-gray-600 me-2 pb-1">
+                  <codx-label  [formModel]="formModel" [default]="'Nơi đăng ký'">
+                  </codx-label>
+                </div>
+                <div class="fw-bold text-dark">Bệnh viện Từ Dũ</div>
+            </div>
+        </div>
+    </div>
+    <!-- Ngày hết hạn / Nơi cấp  -->
+    <div class="row bm-3 py-4">
+        <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 pb-1 d-flex">
+                    <codx-label [formModel]="formModel" [default]="'Quận/Huyện'">
+                    </codx-label>
+                </div>
+                    <div class="fw-bold text-dark" >1</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 pb-1 d-flex">
+                    <codx-label [formModel]="formModel" [default]="'Xã/Phường'">
+                    </codx-label>
+                </div>
+                    <div class="fw-bold text-dark" >Phạm Ngũ Lão</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 pb-1 d-flex">
+                    <codx-label [formModel]="formModel" [default]="'Thôn xóm'">
+                    </codx-label>
+                </div>
+                    <div class="fw-bold text-dark" >Đường Cổng Quỳnh</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-border container mb-4 bg-body">
+    <!-- -----------------------------------TẠM TRÚ------------------------------------------------ -->
+    <div class="row mt-2">
+        <div class="d-flex align-items-center justify-content-between py-4">
+            <div class="text-left text-primary">
+                <span class="icon-assignment_ind icon-20 me-2"></span>
+                <codx-label name="lblPersonalInfo" [formModel]="formModel" [default]="'Tạm trú'" class="fs-5-sm fw-bold text-primary text-uppercase">
+                </codx-label>
+            </div>
+            <!-- <ng-contaniner *ngIf="function && function?.write == true">
+                <div>
+                    <button type="button" class="btn btn-icon btn-white" (click)="openPopupEdit()">
+                        <span class="icon-edit icon-18"></span>
+                    </button>
+                </div>
+            </ng-contaniner> -->
+        </div>
+    </div>
+    <div class="row mt-5 mb-3 pb-4">
+        <!-- Mã nhân viên -->
+        <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 me-2 pb-1">
+                    <!-- <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span> -->
+                    <codx-label name="" [formModel]="formModel" [setRequire]="false" [default]="'Địa chỉ'"></codx-label>
+                </div>
+                <div class="fw-bold text-dark">22/23/8 Đường số 2 Phường 3 Quận Gò Vấp TPHCM</div>
+            </div>
+        </div>
+
+         <!-- Họ -->
+         <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 me-2 pb-1">
+                    <codx-label  [formModel]="formModel" [setRequire]="false" [default]="'Địa chỉ khác'"></codx-label>
+                </div>
+                <div class="fw-bold text-dark">22/23/8 Đường số 2 Phường 3 Quận Gò Vấp TPHCM</div>
+            </div>
+        </div>
+
+        <!-- Tên -->
+        <div class="col-4">
+            <div class="d-flex flex-column">
+              <div class="text-gray-600 me-2 pb-1">
+                  <codx-label  [formModel]="formModel" [default]="'Email'">
+                  </codx-label>
+                </div>
+                <div class="fw-bold text-dark">ttvinh@lacviet.com.vn</div>
+            </div>
+          </div>
+    
+    </div>
+    <div class="row mb-3 py-4">
+         <!-- Bí danh -->
+         <div class="col-4">
+            <div class="d-flex flex-column">
+              <div class="text-gray-600 me-2 pb-1">
+                  <codx-label [formModel]="formModel" [default]="'Email cá nhân'">
+                  </codx-label>
+                </div>
+                <div class="fw-bold text-dark">ttvinh@gmail.com</div>
+            </div>
+          </div>
+          <!-- Giới tính -->
+          <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 me-2 pb-1">
+                    <codx-label  [formModel]="formModel" [setRequire]="false" [default]="'Tỉnh/Thành phố'"></codx-label>
+                </div>
+                <div class="fw-bold text-dark">TP.HCM</div>
+            </div>
+        </div>
+          <!-- Tình trạng hôn nhân -->
+          <div class="col-4">
+            <div class="d-flex flex-column">
+              <div class="text-gray-600 fw-normal mb-1">
+                  <codx-label [formModel]="formModel" [default]="'Quận/Huyện'">
+                  </codx-label>
+                </div>
+                <div class="fw-bold text-dark">Quận Gò Vấp</div>
+            </div>
+          </div>
+    </div>
+    <!-- Quốc tịch / Quốc tịch / Dân tộc-->
+    <div class="row bm-3 py-4">
+        <div class="col">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 pb-1 d-flex">
+                    <codx-label [formModel]="formModel" [default]="'Xã/Phường'">
+                    </codx-label>
+                </div>
+                    <div class="fw-bold text-dark" >3</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 pb-1 d-flex">
+                    <codx-label [formModel]="formModel" [default]="'Thôn xóm'">
+                    </codx-label>
+                </div>
+                    <div class="fw-bold text-dark" >88</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 pb-1 d-flex">
+                    <codx-label [formModel]="formModel" [default]="'Điện thoại'">
+                    </codx-label>
+                </div>
+                    <div class="fw-bold text-dark" >028 2894 6187</div>
+            </div>
+        </div>
+    </div>
+    <!-- Tôn giáo / Trình độ văn hóa / Hệ đào tạo phổ thông-->
+    <div class="row mb-3 py-4">
+        <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 pb-1">
+                    <codx-label [formModel]="formModel" [default]="'Điện thoại di động'">
+                    </codx-label>
+                </div>
+                <div class="fw-bold text-dark" >039 326 7994</div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 pb-1">
+                    <codx-label [formModel]="formModel" [default]="'Bản số xe'">
+                    </codx-label>
+                </div>
+                <div class="fw-bold text-dark">59C1 - 37454</div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="container-border container mb-4 bg-body">
+    <!-- -----------------------------------THƯỜNG TRÚ------------------------------------------------ -->
+    <div class="row mt-2">
+        <div class="d-flex align-items-center justify-content-between py-4">
+            <div class="text-left text-primary">
+                <span class="icon-assignment_ind icon-20 me-2"></span>
+                <codx-label name="lblPersonalInfo" [formModel]="formModel" [default]="'Thường trú'" class="fs-5-sm fw-bold text-primary text-uppercase">
+                </codx-label>
+            </div>
+            <ng-container *ngIf="function && function?.write == true">
+                <div>
+                    <button type="button" class="btn btn-icon btn-white" (click)="openPopupEdit()">
+                        <span class="icon-edit icon-18"></span>
+                    </button>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <div class="row mt-5 mb-3 pb-4">
+        <!-- Mã nhân viên -->
+        <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 me-2 pb-1">
+                    <!-- <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span> -->
+                    <codx-label name="" [formModel]="formModel" [setRequire]="false" [default]="'Địa chỉ'"></codx-label>
+                </div>
+                <div class="fw-bold text-dark">22/23/8 Đường số 2 Phường 3 Quận Gò Vấp TPHCM</div>
+            </div>
+        </div>
+
+         <!-- Họ -->
+         <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 me-2 pb-1">
+                    <codx-label  [formModel]="formModel" [setRequire]="false" [default]="'Địa chỉ khác'"></codx-label>
+                </div>
+                <div class="fw-bold text-dark">22/23/8 Đường số 2 Phường 3 Quận Gò Vấp TPHCM</div>
+            </div>
+        </div>
+
+        <!-- Tên -->
+        <div class="col-4">
+            <div class="d-flex flex-column">
+              <div class="text-gray-600 me-2 pb-1">
+                  <codx-label  [formModel]="formModel" [default]="'Tỉnh/Thành phố'">
+                  </codx-label>
+                </div>
+                <div class="fw-bold text-dark">TP.HCM</div>
+            </div>
+          </div>
+    
+    </div>
+    <div class="row mb-3 py-4">
+         <!-- Bí danh -->
+         <div class="col-4">
+            <div class="d-flex flex-column">
+              <div class="text-gray-600 me-2 pb-1">
+                  <codx-label [formModel]="formModel" [default]="'Quận/Huyện'">
+                  </codx-label>
+                </div>
+                <div class="fw-bold text-dark">1</div>
+            </div>
+          </div>
+          <!-- Giới tính -->
+          <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 me-2 pb-1">
+                    <codx-label  [formModel]="formModel" [setRequire]="false" [default]="'Xã/Phường'"></codx-label>
+                </div>
+                <div class="fw-bold text-dark">3</div>
+            </div>
+        </div>
+          <!-- Tình trạng hôn nhân -->
+          <div class="col-4">
+            <div class="d-flex flex-column">
+              <div class="text-gray-600 fw-normal mb-1">
+                  <codx-label [formModel]="formModel" [default]="'Thôn xóm'">
+                  </codx-label>
+                </div>
+                <div class="fw-bold text-dark">88</div>
+            </div>
+          </div>
+    </div>
+    <!-- Quốc tịch / Quốc tịch / Dân tộc-->
+    <div class="row bm-3 py-4">
+        <div class="col">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 pb-1 d-flex">
+                    <codx-label [formModel]="formModel" [default]="'Điện thoại'">
+                    </codx-label>
+                </div>
+                <div class="fw-bold text-dark" >028 2894 6187</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-border container mb-4 bg-body">
+    <!-- ----------------------------------- NGUYÊN QUÁN------------------------------------------------ -->
+    <div class="row mt-2">
+        <div class="d-flex align-items-center justify-content-between py-4">
+            <div class="text-left text-primary">
+                <span class="icon-assignment_ind icon-20 me-2"></span>
+                <codx-label name="lblPersonalInfo" [formModel]="formModel" [default]="'Nguyên quán'" class="fs-5-sm fw-bold text-primary text-uppercase">
+                </codx-label>
+            </div>
+            <!-- <ng-contaniner *ngIf="function && function?.write == true">
+                <div>
+                    <button type="button" class="btn btn-icon btn-white" (click)="openPopupEdit()">
+                        <span class="icon-edit icon-18"></span>
+                    </button>
+                </div>
+            </ng-contaniner> -->
+        </div>
+    </div>
+    <div class="row mt-5 mb-3 pb-4">
+        <!-- Mã nhân viên -->
+        <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 me-2 pb-1">
+                    <!-- <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span> -->
+                    <codx-label name="" [formModel]="formModel" [setRequire]="false" [default]="'Địa chỉ'"></codx-label>
+                </div>
+                <div class="fw-bold text-dark">22/23/8 Đường số 2 Phường 3 Quận Gò Vấp TPHCM</div>
+            </div>
+        </div>
+
+         <!-- Họ -->
+         <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 me-2 pb-1">
+                    <codx-label  [formModel]="formModel" [setRequire]="false" [default]="'Địa chỉ khác'"></codx-label>
+                </div>
+                <div class="fw-bold text-dark">22/23/8 Đường số 2 Phường 3 Quận Gò Vấp TPHCM</div>
+            </div>
+        </div>
+
+        <!-- Tên -->
+        <div class="col-4">
+            <div class="d-flex flex-column">
+              <div class="text-gray-600 me-2 pb-1">
+                  <codx-label  [formModel]="formModel" [default]="'Tỉnh/Thành phố'">
+                  </codx-label>
+                </div>
+                <div class="fw-bold text-dark">TP.HCM</div>
+            </div>
+          </div>
+    
+    </div>
+    <div class="row mb-3 py-4">
+         <!-- Bí danh -->
+         <div class="col-4">
+            <div class="d-flex flex-column">
+              <div class="text-gray-600 me-2 pb-1">
+                  <codx-label [formModel]="formModel" [default]="'Quận/Huyện'">
+                  </codx-label>
+                </div>
+                <div class="fw-bold text-dark">1</div>
+            </div>
+          </div>
+          <!-- Giới tính -->
+          <div class="col-4">
+            <div class="d-flex flex-column">
+                <div class="text-gray-600 me-2 pb-1">
+                    <codx-label  [formModel]="formModel" [setRequire]="false" [default]="'Xã/Phường'"></codx-label>
+                </div>
+                <div class="fw-bold text-dark">3</div>
+            </div>
+        </div>
+          <!-- Tình trạng hôn nhân -->
+          <div class="col-4">
+            <div class="d-flex flex-column">
+              <div class="text-gray-600 fw-normal mb-1">
+                  <codx-label [formModel]="formModel" [default]="'Thôn xóm'">
+                  </codx-label>
+                </div>
+                <div class="fw-bold text-dark">88</div>
+            </div>
+          </div>
+    </div>
+</div>

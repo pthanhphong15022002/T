@@ -65,13 +65,15 @@
     font-size: 5px !important;
   }
 
-  .h-od-tab {
-    padding-top: 9px;
-    border-radius: 3px 3px 0 0!important;
+  .h-od-tab, 
+  .tree-bar {
+    border-radius: 8px !important;
+    border: 1px solid var(--Line-Line, #E2E3EE);
   }
 
   .h-od-tab .nav-item {
     .nav-link {
+      text-align: center;
       padding: 10px 4px 2px;
       margin-right: 10px;
       display: inline-block;
@@ -137,4 +139,8 @@
 .info-card-header {
   border-radius: 10px;
   background: var(--Linear-Linear-4, linear-gradient(104deg, #006FED 6.02%, #07F 23.58%, #00F0FF 99.68%));
+}
+
+.tab-height {
+  height: 77px;
 }

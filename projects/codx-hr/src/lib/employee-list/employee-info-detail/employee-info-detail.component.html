@@ -5,7 +5,7 @@
     <div class="page-profile">
       <div class="d-flex" style="margin-top: 20px">
         <!-- Side Bar -->
-        <div class="me-4" style="min-width: 345px !important">
+        <div class="me-4" style="min-width: fit-content !important; max-width: 370px !important">
           <!-- Card Info -->
           <div class="d-flex flex-column">
             <div class="info-card-header d-flex align-items-center">
@@ -237,7 +237,7 @@
               </div>
               <!-- End Image -->
               <!-- Content -->
-              <div class="mx-2" style="max-width: 170px">
+              <div class="mx-2">
                 <div class="d-flex flex-wrap">
                   <div class="fs-7 d-flex flex-wrap align-items-center fw-boldest">
                     <span class="fw-bold" placement="bottom" [title]="eInfoHeaderText?.EmployeeName"
@@ -259,14 +259,14 @@
                   <div [title]="eInfoHeaderText?.OrgUnitID" *ngIf="infoPersonal">{{orgUnitStr}}
                   </div>
 
-                  <div [title]="eInfoHeaderText?.DepartmentID" *ngIf="infoPersonal && orgUnitStr != DepartmentStr">
-                    {{DepartmentStr}}</div>
+                  <!-- <div [title]="eInfoHeaderText?.DepartmentID" *ngIf="infoPersonal && orgUnitStr != DepartmentStr">
+                    {{DepartmentStr}}</div> -->
                 </div>
               </div>
               <!-- End Content -->
               <!-- QR -->
               <div>
-                <img src="..\src\assets\img\feedback\gift 1.png">
+                <img class="w-50px" src="..\src\assets\img\feedback\gift 1.png">
               </div>
               <!-- End QR -->
             </div>
@@ -276,7 +276,7 @@
 
           <!-- Tree View -->
 
-          <div class="bg-white border-bottom d-flex flex-column mt-5 rounded" *ngIf="infoPersonal && LoadedEInfo == true">
+          <div class="tree-bar bg-white border-bottom d-flex flex-column mt-5" *ngIf="infoPersonal && LoadedEInfo == true">
             <div class="d-flex flex-column flex-wrap justify-content-center mb-1">
               <div class="w-100" style="border-bottom: 1px lightgray solid">
                 <lib-sidebar-treeview></lib-sidebar-treeview>
@@ -294,9 +294,49 @@
           <!-- Employee -->
           <div class="bg-white border mt-5 user-left">
             <div>
-              List
+              <!-- <codx-listview
+              entityName="HR_Employees"
+              idField="employeeID"
+              service="HR"
+              assemblyName="ERM.Business.HR"
+              className="EmployeesBusiness_Old"
+              method="GetModelFormEmployAsync"
+              [headerTemplate]="headerList"
+              [itemTemplate]="itemTemplateList"
+              [selectFirst]="true"
+                >
+              </codx-listview> -->
+              <div>
+                <div class="align-items-center d-flex justify-content-between mb-5 mt-5 px-4">
+                  <span>Nhân viên</span>
+                  <div>
+                    <button class="btn-add"><i class="icon-add"></i><span>Thêm</span></button>
+                    <button><i class="icon-i-chevron-down"></i></button>
+                  </div>
+                </div>
+                <div class="px-3">
+                  <codx-searchbar></codx-searchbar>
+                </div>
+              </div>
+              <!-- List Employee -->
+              <ng-container *ngFor="let person of dataMyTeam; index as i;">
+                <div class="d-flex flex-row gap-3 align-items-center pointer py-3 px-3">
+                  <div class="user-avatar">
+                    <codx-img [funcId]="'HRT03b'" [objectId]="'2308070001'" [objectName]="'Nguyễn Công Phượng'"
+                      [objectType]="'HR_Employees'" [imageType]="'circle'" class="user-img" [width]="40">
+                    </codx-img>
+                    <div class="user-status " [ngClass]="{}"></div>
+                  </div>
+                  <div class="d-flex flex-column align-items-start gap-1">
+                    <div class="name fs-6 fw-bold">{{person.name}}</div>
+                    <div class="text-gray-500">{{person.job}}</div>
+                    <div class="YOW fw-bold">{{person.YOW}}</div>
+                  </div>
+                </div>
+              </ng-container>
             </div>
-            <div class="user-menu scroll-y w-100 border-top">
+
+            <!-- <div class="user-menu scroll-y w-100 border-top">
               
               <ul class="nav nav-tabs nav-pills flex-column border-0 p-3 pb-0 w-100">
                 <ng-container *ngFor="let item of lstTab; let index = index">
@@ -315,9 +355,8 @@
                   </li>
                 </ng-container>
               </ul>
-            </div>
+            </div> -->
           </div>
-
           <!-- End Employee -->
         </div>
 
@@ -369,10 +408,11 @@
 <ng-template #curriculumVitae>
   <div class="tab-scroll mb-4">
     <div class="tab-horizone bg-white h-od-tab">
-      <ul class="nav nav-tabs px-4">
+      <ul class="align-items-end justify-content-between nav nav-tabs px-4 tab-height">
         <ng-container *ngFor="let item of lstFuncCurriculumVitae">
           <li class="nav-item" (click)="navChange(item.functionID, 0, $event.target)">
             <a class="nav-link" [ngClass]="item.functionID == active[0] ? 'active' : ''">
+              <i class="icon-attach_money" style="color: #005DC7"></i>
               <div class="text-uppercase fw-bold">{{ item.customName }}</div>
             </a>
           </li>

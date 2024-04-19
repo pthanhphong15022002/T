@@ -1,0 +1,54 @@
+<codx-form
+    [headerText]="'Thiết lập công thức'"
+    [dialog]="dialog"
+    [body]="body"
+    [footer]="footer"
+>
+</codx-form>
+<ng-template #body>
+    <div cdkDropListGroup class="d-flex align-items-start justify-content-between">
+        <div class="d-flex flex-column w-100 pe-4">
+            <div class="d-flex align-items-center justify-content-between">
+                <codx-label default="Công thức dữ liệu" class="fw-bold fs-5-sm mb-2"></codx-label>
+                <div class="example-list d-flex align-items-center"   
+                    cdkDropList
+                    [cdkDropListData]="vllCalculation"
+                >
+                    <div class="px-4 py-2 cursor-move fs-5-sm fw-bold" cdkDrag *ngFor="let item of vllCalculation">
+                        {{item.value}}
+                    </div>
+                </div>
+            </div>
+            <div
+                cdkDropList
+                [cdkDropListData]="data"
+                class="example-list d-flex align-items-start drag-h-left overflow-auto border p-4"
+                (cdkDropListDropped)="drop($event)"
+                cdkDropListOrientation="horizontal"
+                >
+                <div *ngFor="let item of data" cdkDrag>
+                    {{item}}
+                </div>
+            </div>
+        </div>
+      
+        <div class="d-flex flex-column w-30 pt-7">
+            <codx-label default="Danh sách dữ liệu" class="fw-bold fs-5-sm mb-2"></codx-label>
+            <div
+                cdkDropList
+                [cdkDropListData]="listField"
+                class="example-list drag-h-right overflow-auto"
+                >
+                <div class="w-100 py-2 px-4 mb-2 bg-item-lightest rd-3px cursor-move mw-300px d-flex align-items-center" cdkDrag  *ngFor="let item of listField">
+                    <i [ngClass]="item.icon" class="icon-22"></i>
+                    <span class="fw-bold ms-4 mt-1">{{item.title}}</span>
+                  </div>
+            </div>
+    </div>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" ><codx-label fiedName="lblSave" default="Lưu"></codx-label></button>
+    </div>
+</ng-template>

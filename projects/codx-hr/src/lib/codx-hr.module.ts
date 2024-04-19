@@ -141,7 +141,6 @@ import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
 import { LegalInfoComponent } from './employee-list/employee-info-detail/component/legal-info/legal-info.component';
 import { ForeignWorkersComponent } from './employee-list/employee-info-detail/component/foreign-workers/foreign-workers.component';
 import { PreviousExperienceComponent } from './employee-list/employee-info-detail/component/previous-experience/previous-experience.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { TableGripComponent } from './dashboard/components/table-grip/table-grip.component';
 import { DirectivesModule } from './codx-hr-common/directives/directives.module';
 import { MyTemComponent } from './dashboard/widgets/my-tem/my-tem.component';
@@ -186,6 +185,12 @@ export const routes: Routes = [
   {
     path: '',
     children: [
+      {
+        path: 'employeelist',
+        component: HRLayoutOnlyHeaderComponent,
+        loadChildren: () => import('./employee-list/employee-list.module').then(m => m.EmployeeListModule)
+
+      },
       // {
       //   path: 'empinfosub/:funcID',
       //   component: EmployeeInfoDetailComponent,
@@ -200,12 +205,12 @@ export const routes: Routes = [
         //   loadChildren: () => import('./employee-list/employee-list.module').then(m => m.EmployeeListModule)
 
         // },
-      {
-        path: 'employeelist',
-        component: HRLayoutOnlyHeaderComponent,
-        loadChildren: () => import('./employee-list/employee-list.module').then(m => m.EmployeeListModule)
+      // {
+      //   path: '',
+      //   component: HRLayoutOnlyHeaderComponent,
+      //   loadChildren: () => import('./employee-list/employee-list.module').then(m => m.EmployeeListModule)
 
-      },
+      // },
       // {
       //   path: 'test/:funcID',
       //   component: DialogWaitingLeavingApproveComponent
@@ -217,8 +222,9 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'dashboard',
-        component: DashboardComponent,
+        path: '',
+        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
+      //   component: DashboardComponent
       },
       // {
       //   path: 'report/:funcID',
@@ -239,9 +245,9 @@ export const routes: Routes = [
         component: EmployeesComponent,
       },
       // {
-      //   path: 'employeelist/:funcID',
+      //   path: '',
       //   data: { noReuse: true },
-      //   component: EmployeeListComponent,
+      //   loadChildren: () => import('./employee-list/employee-list.module').then(m => m.EmployeeListModule)
       // },
       // {
       //   path: 'reportingline/:funcID',
@@ -457,11 +463,6 @@ const T_Component = [
   PreviousExperienceComponent,
   TableGripComponent,
   
-  DashboardAgeChartComponent,
-  DashboardCardComponent,
-  DashboardGaugeChartComponent,
-  DashboardTotalemployeeChartComponent,
-  DashboardComponent,
   DialogRegisterApproveComponent,
   HrTableNewemployeeComponent,
 
@@ -485,7 +486,6 @@ const T_Module = [
   DashboardModule,
   DialogDetailRegisterApproveComponent,
   HistoryLevelComponent,
-  CircularGaugeModule,
   HrParametersModule,
   CodxHRCommonModule,
   EmployeeListModule

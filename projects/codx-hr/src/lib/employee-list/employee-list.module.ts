@@ -35,52 +35,14 @@ import { PopupMenusidebarReponsiveComponent } from './employee-info-profile/comp
 import { PopupReviewRegisterApproveComponent } from './employee-info-profile/components/pop-up/popup-review-register-approve/popup-review-register-approve.component';
 
 export const routes: Routes = [
-  // {
-    // path: '',
-  //   component: EmployeeInfoProfileComponent
-  //   //component: HRLayoutOnlyHeaderComponent,
-    // children: [
-  //   //   {
-  //   //     path: 'employeeprofile/:funcID',
-  //   //     component: EmployeeInfoProfileComponent
-  //   //   },
-  //   // ],
-  // },
   {
-        path: 'employeeprofile/:funcID',
-        component: EmployeeInfoProfileComponent,
-
+    path: 'employeeprofile/:funcID',
+    component: EmployeeInfoProfileComponent
   },
   {
-        path: 'employeedetail/:funcID',
-        component: EmployeeInfoDetailComponent,
+    path: 'employeedetail/:funcID',
+    component: EmployeeInfoDetailComponent,
   }
-// ]
-
-
-  // {
-  //   path: '**',
-  //   component: EmployeeInfoProfileComponent
-  //   component: HRLayoutOnlyHeaderComponent,
-  //   children: [
-  //     {
-  //       path: 'employeeprofile/:funcID',
-  //       component: EmployeeInfoProfileComponent
-  //     },
-  //   ],
-  // },
-  // {
-  //   path: '**',
-  //   component: EmployeeInfoProfileComponent
-  //   component: HRLayoutOnlyHeaderComponent,
-  //   children: [
-  //     {
-  //       path: 'employeeprofile/:funcID',
-  //       component: EmployeeInfoProfileComponent
-  //     },
-  //   ],
-  // },
-// }
 ];
 const T_Pipe = [
   // DatePipe,

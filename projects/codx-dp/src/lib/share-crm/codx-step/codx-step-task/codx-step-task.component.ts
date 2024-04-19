@@ -3488,7 +3488,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let obj = {
       data: data,
       title: "Chia sẻ",
-      entityName: "DP_Instances_Steps_Tasks_Roles",
+      entityName: this.entityName,
+      objectID: this.recIDParent
     };
     this.callfc
       .openForm(
