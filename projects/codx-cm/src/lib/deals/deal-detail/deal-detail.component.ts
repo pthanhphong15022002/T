@@ -123,6 +123,8 @@ export class DealDetailComponent implements OnInit {
   isHaveField: boolean = false;
   customerName;
   idTabShow = "";
+  isViewStep = false;
+  isUpdateTask = false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
@@ -216,6 +218,7 @@ export class DealDetailComponent implements OnInit {
             });
       }
       this.setTaskBar();
+      this.getConfigurationProcess();
     }
   }
 
@@ -757,6 +760,17 @@ export class DealDetailComponent implements OnInit {
       return;
     } else {
       this.notificationsService.notify('Không tìm thấy dữ liệu', '3');
+    }
+  }
+  async getConfigurationProcess(){
+    if(this.dataSelected?.processID){
+      this.isViewStep = !['1', '2', '15',].includes(this.dataSelected?.status) || this.dataSelected?.closed || this.dataSelected?.approveStatus == '3';
+      const res = await firstValueFrom(this.codxCmService.getConfigurationProcess(this.dataSelected?.processID));
+      if(res && res[0] && res[0]?.allowTask){
+        this.isUpdateTask = (res[0]?.allowTask && this.dataSelected?.approveStatus != '3' && (['3', '4', '5', '6',].includes(this.dataSelected?.status) || 
+        this.dataSelected.closed)) ;
+        this.changeDetectorRef.markForCheck();
+      }
     }
   }
 }

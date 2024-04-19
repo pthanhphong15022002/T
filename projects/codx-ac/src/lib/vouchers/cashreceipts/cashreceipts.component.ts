@@ -141,7 +141,7 @@ export class CashreceiptsComponent extends UIComponent {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
           collapsed: true,
-          widthLeft: '23%',
+          widthLeft: '350px',
         },
       },
       {

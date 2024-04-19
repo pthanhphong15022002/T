@@ -32,7 +32,6 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { asapScheduler } from 'rxjs';
-import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 import { ModeviewComponent } from '../../../modeview/modeview.component';
 
 @Component({
@@ -506,6 +505,11 @@ export class FormStepsFieldGridComponent
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 1056;
+
+    let listForm = this.data.steps.filter(
+      (x) => x.stepNo < data.stepNo && x.activityType == 'Form'
+    );
+
     let popupDialog = this.callFunc.openForm(
       ModeviewComponent,
       '',
@@ -516,6 +520,7 @@ export class FormStepsFieldGridComponent
         extendInfo: data.extendInfo,
         stepNo: data.stepNo,
         formModel: this.formModel,
+        listForm: listForm
       },
       '',
       option
@@ -527,7 +532,7 @@ export class FormStepsFieldGridComponent
           this.data.steps[indexP].extendInfo = res?.event;
           if (this.data?.steps[indexP]?.extendInfo) {
             this.data?.steps[indexP]?.extendInfo.forEach((element) => {
-              if (element.controlType == 'Attachment') {
+              if (element.controlType == 'Attachment' && !element?.refField) {
                 if (
                   !element?.documentControl ||
                   element?.documentControl.length == 0
@@ -582,24 +587,31 @@ export class FormStepsFieldGridComponent
                   this.data.documentControl = doc;
                 }
               }
+    
+              if(element.fieldType == "Expression" && element?.refValue && typeof element?.refValue != 'string')
+              {
+                element.refValue = JSON.stringify(element.refValue);
+              }
 
-              if (typeof element.documentControl != 'string') {
-                element.documentControl =
-                  element.documentControl?.length > 0
-                    ? JSON.stringify(element.documentControl)
-                    : null;
-              }
-              if (typeof element.visibleControl != 'string') {
-                element.visibleControl = JSON.stringify(element.visibleControl);
-              }
-              if (typeof element.dataFormat != 'string') {
-                element.dataFormat = JSON.stringify(element.dataFormat);
-              }
-              if (typeof element.tableFormat != 'string') {
-                element.tableFormat = JSON.stringify(element.tableFormat);
-              }
-              if (typeof element.validateControl != 'string') {
+              if (element?.validateControl && typeof element.validateControl != 'string') {
                 element.validateControl = JSON.stringify(element.validateControl);
+              }
+
+              if (element?.documentControl && typeof element.documentControl != 'string') {
+                element.documentControl = JSON.stringify(element.documentControl)
+              }
+              if (element?.visibleControl && typeof element.visibleControl != 'string') {
+                element.visibleControl = JSON.stringify(element.visibleControl)
+              }
+              if (element?.dataFormat && typeof element.dataFormat != 'string') {
+                element.dataFormat = JSON.stringify(element.dataFormat)
+              }
+
+              if ( element?.tableFormat && typeof element.tableFormat != 'string') {
+                element.tableFormat = JSON.stringify(element.tableFormat)
+              }
+              if (element?.refField && typeof element.refField != 'string') {
+                element.refField = JSON.stringify(element.refField);
               }
             });
           }

@@ -1,0 +1,63 @@
+.cdk-drag.active , .mw-form.active
+{
+  background-color: #fbfbfb;
+  border-radius: 3px;
+  border: solid 1px var(--text-primary)
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  max-width: 350px;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.drag-h-left
+{
+  height: 555px;
+}
+.drag-h-right
+{
+  height: 535px;
+}
+.bg-item-lightest
+{
+  background-color: var(--primary-lightest); 
+}
+.mw-300px
+{
+  max-width: 300px;
+}
+.rd-3px
+{
+  border-radius: 3px;
+}
+
+.pe-settings
+{
+  i
+  {
+    top: 2px;
+    right: 4px;
+  }
+
+  &:not(:hover) > i
+  {
+    
+    visibility: hidden;
+  }
+  &:hover > i
+  {
+    visibility: visible;
+  }
+}

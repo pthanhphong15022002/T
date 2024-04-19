@@ -108,7 +108,7 @@
           "
         ></span>
       </div>
-      <div>
+      <!-- <div>
         <codx-label
           class="label-colon"
           fiedName="Manufacturer"
@@ -124,7 +124,7 @@
               | async
           "
         ></span>
-      </div>
+      </div> -->
       <div>
         <codx-label
           class="label-colon"
@@ -181,10 +181,10 @@
                         [formName]="formModelHistory.formName"
                         [gridViewName]="formModelHistory.gridViewName"
                         [entityName]="formModelHistory.entityName"
-                        [service]="serviceHistory"
-                        [assemblyName]="assemblyNameHisttory"
-                        [className]="classNameHisttory"
-                        [method]="methodHisttory"
+                        [service]="serviceAM"
+                        [assemblyName]="assemblyNameAM"
+                        [className]="classNameAM"
+                        [method]="methodAM"
                         [predicates]="predicatesHis"
                         [dataValues]="itemSelected.assetID"
                         rowHeight="40"
@@ -196,7 +196,7 @@
                       <div class="d-flex float-end" style="height: 30px">
                         <codx-mfunc
                           [dataItem]="data"
-                          [formModel]="templateMoreHis"
+                          [formModel]="formModelHistory"
                           (clickMF)="clickMFHis($event, data)"
                           (changeDataMF)="changeDataMFHis($event, data)"
                           type="grid"
@@ -226,8 +226,38 @@
                     [ngClass]="isShow ? '' : 'croll-m-5'"
                     style="overflow-x: hidden !important"
                   >
-                    Bảng giá cấp nuoc
+                    <codx-gridview-v2
+                      #gridPrice
+                      [showEmptyRecord]="false"
+                      [autoFitColumns]="false"
+                      [formName]="formModelPrice"
+                      [templateMore]="templateMoreCost"
+                      [formName]="formModelPrice.formName"
+                      [gridViewName]="formModelPrice.gridViewName"
+                      [entityName]="formModelPrice.entityName"
+                      [service]="serviceAM"
+                      [assemblyName]="assemblyNameAM"
+                      [className]="classNameAM"
+                      [method]="methodAM"
+                      [predicates]="predicatesPrice"
+                      [dataValues]="itemSelected.assetID"
+                      rowHeight="40"
+                      [height]="'100%'"
+                      [autoLoad]="true"
+                    ></codx-gridview-v2>
                   </div>
+                  <ng-template #templateMoreCost let-data>
+                    <div class="d-flex float-end" style="height: 30px">
+                      <codx-mfunc
+                        [dataItem]="data"
+                        [formModel]="formModelPrice"
+                        (clickMF)="clickMFCost($event, data)"
+                        (changeDataMF)="changeDataMFCost($event, data)"
+                        type="grid"
+                      >
+                      </codx-mfunc>
+                    </div>
+                  </ng-template>
                 </ng-template>
               </e-tabitem>
             </e-tabitems>

@@ -823,7 +823,6 @@ lib-layoutonlyheader codx-page-title.page-title{
   width: 100%;
   max-width: 1100px;
   margin: 0 auto!important;
-  padding-top: 12px;
 }
 lib-company-setting {
   width: 100%;
@@ -2135,7 +2134,7 @@ codx-tabs {
 
 codx-share .role-group .user-nav-item.p-1 {
   padding: 0 !important;
-  margin-bottom: 5px !important;
+  margin-bottom: 8px !important;
 }
 
 codx-share .role-group div.user-mini-nav {
@@ -4720,4 +4719,20 @@ codx-page-title{
 }
 codx-tmmeetings .tm-meeting{
   height: calc(100vh - 140px);
+}
+lib-process-release{
+  width: 100%;
+  overflow-x:auto ;
+  codx-view-kanban{
+    width: fit-content;
+  }
+}
+.scroll-hover {
+  overflow-y: scroll!important;
+}
+.e-dashboardlayout.e-control .e-panel .e-panel-header {
+  padding: 8px 8px;
+}
+.employee-grid.hr-org thead th{
+  padding: 0!important;
 }

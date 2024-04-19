@@ -105,6 +105,7 @@ export class PopupAddInstanceComponent implements OnInit {
   isShowMore = false;
   widthDefault: string;
   templetCreated = [];
+  conRef: any[] = []//mang ref error
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -326,6 +327,20 @@ export class PopupAddInstanceComponent implements OnInit {
             let valueOld = this.listStep[index].fields[idxField].dataValue;
             this.listStep[index].fields[idxField].dataValue = result;
 
+            // //Tham chieu rang buoc
+            // let crrField = this.listStep[index].fields[idxField];
+            // if (crrField.isApplyConditional && crrField?.conditionReference?.length > 0) {
+            //   let check = this.customFieldSV.checkConditionalRef(this.listStep[index].fields, crrField)
+            //   this.conRef = this.conRef.filter(f => f?.id != crrField.recID);
+            //   if (!check?.check && check.conditionRef?.length > 0) {
+            //     let arrRef = check.conditionRef.map(x => {
+            //       let obj = { ...x, id: crrField.recID }
+            //       return obj
+            //     })
+            //     this.conRef = this.conRef.concat(arrRef)
+            //   }
+            // }
+
             let idxEdit = this.listCustomFile.findIndex(
               (x) => x.recID == this.listStep[index].fields[idxField].recID
             );
@@ -346,11 +361,6 @@ export class PopupAddInstanceComponent implements OnInit {
     this.instance.stepID = e;
   }
 
-  // valueChangeUser(event) {
-  //   if (event.data) {
-  //     this.instance.owner = event?.data;
-  //   }
-  // }
 
   beforeSave(option: RequestOption) {
     if (this.action === 'add' || this.action === 'copy') {
@@ -392,31 +402,15 @@ export class PopupAddInstanceComponent implements OnInit {
       );
       return;
     }
-    //khong check custom field nua - nhung ko xóa
-    // if (this.listStep?.length > 0) {
-    //   let check = true;
-    //   let checkFormat = true;
-    //   this.listStep.forEach((obj) => {
-    //     if (obj?.fields?.length > 0 && obj.stepID==this.instance.stepID) {
-    //       let arrField = obj.fields;
-    //       arrField.forEach((f) => {
-    //           if (
-    //             f.isRequired &&
-    //             (!f.dataValue || f.dataValue?.toString().trim() == '')
-    //           ) {
-    //             this.notificationsService.notifyCode(
-    //               'SYS009',
-    //               0,
-    //               '"' + f.title + '"'
-    //             );
-    //             check = false;
-    //           }
-    //           checkFormat = this.checkFormat(f);
-    //       });
-    //     }
-    //   });
-    //   if (!check || !checkFormat) return;
+    // //Kieerm tra dk
+    // if (this.conRef?.length > 0) {
+    //   this.conRef.forEach(x => {
+    //     this.notificationsService.notify(x.messageText, x.messageType)
+    //   })
+    //   return
     // }
+    if (!this.conditionRefValidate()) return;
+
     if (this.action === 'add' || this.action === 'copy') {
       this.onAdd();
     } else if (this.action === 'edit') {
@@ -742,5 +736,32 @@ export class PopupAddInstanceComponent implements OnInit {
   createdTempletMail(e) {
     if (e && !this.templetCreated.includes(e))
       this.templetCreated.push(e)
+  }
+
+  conditionRefValidate() {
+    //Tham chieu rafng buoc
+    var checkAll = true;
+    // this.listFields.forEach(x => {
+    //   let fields = this.listStep.find(f => f.recID == x.stepID)?.fields;
+    //   if (fields?.length > 0) {
+    //     let fieldsApplyCondition = x.fields.filter(x => x.isApplyConditional && x.conditionReference?.length > 0);
+    //     if (fieldsApplyCondition?.length > 0) {
+    //       let checkOne = true
+    //       fieldsApplyCondition.forEach(x => {
+    //         let check = this.customFieldSV.checkConditionalRef(fields, x);
+    //         if (checkOne && !check.check) checkOne = check.check;
+    //       })
+    //       if (!checkOne && checkAll) checkAll = checkOne;
+    //     }
+    //   }
+    // })
+    let fieldsApplyCondition = this.listFields.filter(x => x.isApplyConditional && x.conditionReference?.length > 0);
+    if (fieldsApplyCondition?.length > 0) {
+      fieldsApplyCondition.forEach(x => {
+        let check = this.customFieldSV.checkConditionalRef(this.listFields, x);
+        if (checkAll && !check.check) checkAll = check.check;
+      })
+    }
+    return checkAll;
   }
 }

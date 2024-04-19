@@ -39,6 +39,7 @@ export class PropertyAttachmentComponent extends BasePropertyComponent implement
   
   formatFile()
   {
+    this.data.documentControl = typeof this.data.documentControl == 'string' ? JSON.parse(this.data.documentControl) :  this.data.documentControl;
     if(this.data.documentControl && this.data.documentControl.length>0)
     {
       let ids = [];

@@ -71,6 +71,8 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { CodxTypeTaskComponent } from '../../share-crm/codx-step/codx-step-common/codx-type-task/codx-type-task.component';
 import { CodxViewApproveComponent } from '../../share-crm/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
+import { BeforeOpenEventArgs } from '@syncfusion/ej2-angular-popups';
+import { MultiSelectComponent } from '@syncfusion/ej2-angular-dropdowns';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -89,6 +91,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   @ViewChild('emptyTemplate') emptyTemplate: TemplateRef<any>;
   @ViewChild('autoNumberSetting') autoNumberSetting: any;
   @ViewChild('inputUser') inputUser: CodxInputComponent;
+  @ViewChild('multiselectRef', { static: true }) multiselectRef: MultiSelectComponent;
   process = new DP_Processes();
   permissions = [];
   dialog: any;
@@ -346,8 +349,6 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   applyForSucess: any;
   applyForFail: any;
   processNameEmpty: any;
-  moveProccessSuccess: any;
-  moveProccessFail: any;
   listCbxProccessSuccess: any[] = [];
   listCbxProccessFail: any[] = [];
   isCreatedDuplicate = false;
@@ -362,7 +363,9 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   isUseSuccessOld = true;
   isUseFailOld = true;
   tempEmailDeleted = []; //id cua email temp
-
+  moveProcessIDFail = [];
+  moveProcessIDSuccess = [];
+  refreshData = false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -1898,7 +1901,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       } else if ($event.field === 'no' && $event.component.checked === true) {
         this.process.closeInstanceOverdue = false;
       }
-    }else if (view == 'allowEditTaskControl') {
+    } else if (view == 'allowEditTaskControl') {
       if ($event.field === 'yes' && $event.component.checked === true) {
         this.process.allowEditTaskControl = true;
       } else if ($event.field === 'no' && $event.component.checked === true) {
@@ -2570,6 +2573,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                 if (e.event[1] && !this.process.processNo) {
                   this.process.processNo = e.event[1];
                 }
+                let dependence = e.event[3];
                 this.fieldCrr.sorting = (this.step?.fields?.length ?? 0) + 1;
                 this.stepList.forEach((x) => {
                   if (x.recID == this.fieldCrr.stepID) {
@@ -2582,6 +2586,15 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                         this.listStepEdit.push(x?.recID);
                       }
                     }
+                    //edit truong tham chiếu
+                    // if (this.fieldCrr.isApplyDependences && dependence.refID && dependence.strDependence) {
+                    //   let idxFieldDep = x.fields.findIndex(x => x.recID == dependence.refID);
+                    //   if (idxFieldDep != -1) {
+                    //     let depedence = x.fields[idxFieldDep].dependences;
+                    //     if (depedence) depedence += "," + dependence.strDependence; else depedence = dependence.strDependence
+                    //     x.fields[idxFieldDep].dependences = depedence
+                    //   }
+                    // }
                   }
                   //edit field truosc do neu edit
                   if (isEditFieldDuplicate && x.fields?.length > 0) {
@@ -5023,12 +5036,32 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
   defaultCbxProccess() { }
 
-  cbxChange($event, view) {
-    if (view === this.viewStepReasonSuccess) {
-      this.stepSuccess.newProcessID = $event;
-    } else if (view === this.viewStepReasonFail) {
-      this.stepFail.newProcessID = $event;
+  cbxChange(event: any[], data, value) {
+    if (event?.length <= 1) {
+      data.newProcessID = event[0] || "";
+      this[value] = event;
+    } else if (event?.length > 1) {
+      if (event?.some(x => x == this.guidEmpty && event?.length > 1)) {
+        this.notiService.notify("Vui lòng xóa các quy trình hiện có", "3");
+        this[value] = JSON.parse(JSON.stringify(this[value]));
+        this.listCbxProccessSuccess = JSON.parse(JSON.stringify(this.listCbxProccessSuccess));
+        this.multiselectRef.refresh();
+      } else {
+        data.newProcessID = event?.join(";");
+        this[value] = event;
+      }
     }
+    this.changeDetectorRef.detectChanges();
+  }
+
+  onBeforeOpen(args: BeforeOpenEventArgs): void {
+    if (!this.moveProcessIDSuccess) {
+      args.cancel = true; // Ngăn chặn mở dropdown
+    }
+  }
+
+  moveProccessIsNull(newProccessID: string) {
+    return newProccessID?.split(';') || [];
   }
 
   getListStepByProcessIDCopy(oldProccesID, newProccessID, valueListStr) {
@@ -5224,13 +5257,6 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       return false;
     }
     return true;
-  }
-  moveProccessIsNull(newProccessID, listCbxProccess) {
-    let index = listCbxProccess.findIndex((x) => x.recID == newProccessID);
-    if (index > -1) {
-      return newProccessID;
-    }
-    return this.guidEmpty;
   }
 
   getNameReasonControl(view: any) {
@@ -5453,7 +5479,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   checkViewReasonClick(step, isViewReason) {
     let applyFor = '';
     let processID = '';
-    if (step?.newProcessID === this.guidEmpty || !step?.newProcessID) {
+    if (step?.newProcessID?.includes(this.guidEmpty) || !step?.newProcessID) {
       applyFor = this.process.applyFor;
       if (isViewReason) {
         this.applyForSucess = applyFor;
@@ -5463,7 +5489,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     } else {
       processID = step?.newProcessID;
       if (isViewReason) {
-        applyFor = this.applyForSucess ? this.applyForSucess : '';
+        applyFor = this.applyForSucess ? this.applyForSucess : this.process?.applyFor;
         this.applyForSucess = applyFor;
       } else {
         applyFor = this.applyForFail ? this.applyForFail : '';
@@ -5472,7 +5498,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     }
 
     // let applyFor = applyReason? applyReason: this.process.applyFor;
-    this.getListProcesByApplyFor(isViewReason, step, applyFor, processID);
+    this.getListProcesByApplyFor(isViewReason, step, applyFor, "");
   }
   getListProcesByApplyFor(isViewReason, stepReason, applyFor, processID) {
     let data = [applyFor, processID, ''];
@@ -5514,15 +5540,17 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
     if (isViewReason) {
       this.listCbxProccessSuccess = listProcessCbx;
-      this.moveProccessSuccess = moveProcess;
-      this.stepSuccess.newProcessID = this.moveProccessSuccess;
+      this.stepSuccess.newProcessID = moveProcess;
       this.applyForSucess = applyFor;
+      this.moveProcessIDSuccess = this.stepSuccess.newProcessID?.split(';');
     } else {
       this.listCbxProccessFail = listProcessCbx;
-      this.moveProccessFail = moveProcess;
-      this.stepFail.newProcessID = this.moveProccessFail;
+      this.stepFail.newProcessID = moveProcess;
       this.applyForFail = applyFor;
+      this.moveProcessIDFail = this.stepFail.newProcessID?.split(';');
     }
+    this.moveProcessIDFail;
+    this.moveProcessIDSuccess;
     this.changeDetectorRef.markForCheck();
   }
 

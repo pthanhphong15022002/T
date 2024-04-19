@@ -241,7 +241,50 @@ export class CustomFieldService {
     return true;
   }
   //--------------------------------------------------//
+  //----------------Check conditional Ref----------------------// 
+  checkConditionalRef(listField, fieldCrr) {
+    if (!fieldCrr?.isApplyConditional || !fieldCrr?.conditionReference || fieldCrr?.conditionReference?.length == 0) return { check: true, conditionRef: [] };
 
+    let arrMess = [];
+    (fieldCrr.conditionReference as Array<any>).forEach(x => {
+      let result = true;
+      let fielRefCon = listField.find(f => f.refID == x.refID);
+      if (fielRefCon) {
+        if (!fielRefCon.dataValue) {
+          arrMess.push(x);
+        } else {
+          switch (x.compareConditions) {
+            case ">=":
+              result = fieldCrr.dataValue >= fielRefCon.dataValue;
+              break;
+            case "<=":
+              result = fieldCrr.dataValue <= fielRefCon.dataValue;
+              break;
+            case ">":
+              result = fieldCrr.dataValue > fielRefCon.dataValue;
+              break;
+            case "<":
+              result = fieldCrr.dataValue < fielRefCon.dataValue;
+              break;
+            case "=":
+              result = fieldCrr.dataValue == fielRefCon.dataValue;
+              break;
+          }
+        }
+
+        if (!result) arrMess.push(x);
+      }
+    })
+    let check = true;
+    if (arrMess?.length > 0) {
+      arrMess.forEach(x => {
+        if (x.messageType == '2') check = false;
+        this.notiService.notify(x.messageText, x.messageType)
+      })
+    }
+    return { check: check, conditionRef: arrMess };
+  }
+  //----------------------------------------------------------//
   //---------------Tempmail---------------//
   deletedTempmail(recID) {
     return this.api.execSv<any>("SYS", "AD", "EmailTemplatesBusiness", "DeleteEmailTemplateByRecIDAsync", recID)

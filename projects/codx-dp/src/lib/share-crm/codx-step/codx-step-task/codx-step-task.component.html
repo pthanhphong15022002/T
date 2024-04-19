@@ -114,7 +114,7 @@
             placement="top bottom"
           ></codx-progressbar>
         </div>
-        <div class="model-func"  *ngIf="!isMoveStage && !isView">
+        <div class="model-func"  *ngIf="(!isMoveStage && !isView) || isUpdateTask">
           <codx-mfunc
             [formModel]="grvMoreFunction"
             [isBookMark]="true"
@@ -214,7 +214,7 @@
                 </ng-container>
                 <div class="model-func">
                   <codx-mfunc
-                    *ngIf="!isMoveStage && !isView"
+                    *ngIf="(!isMoveStage && !isView) || isUpdateTask"
                     [formModel]="grvMoreFunction"
                     [isBookMark]="false"
                     [dataItem]="moreDefaut"
@@ -325,10 +325,9 @@
                               }
                             }"
                           ></ng-container>
-                          <div class="model-func"  
-                            *ngIf="
-                              (!isMoveStage && !isView) ||(!task?.isTaskDefault)"
-                          >
+                          <div 
+                            class="model-func"  
+                            *ngIf="(!isMoveStage && !isView) ||(!task?.isTaskDefault) || isUpdateTask">
                             <codx-mfunc
                               [formModel]="grvMoreFunction"
                               [isBookMark]="true"
@@ -338,8 +337,7 @@
                               (changeDataMF)="
                                 changeDataMFTask($event, task, groupTask)
                               "
-                            >
-                            </codx-mfunc>
+                            ></codx-mfunc>
                           </div>
                         </div>
                       </div>
@@ -555,19 +553,27 @@
       >
         <span class="icon-assignment_turned_in assign icon-12"></span>
       </div>
-      <codx-progressbar
-        [progress]="data?.value?.progress"
-        [stype]="3"
-        [isStep]="false"
-        [vllData]="vllDataTask"
-        [status]="
-          data?.group ? data?.value?.status : setStatusGroup(data?.value)
-        "
-        #p="ngbPopover"
-        [ngbPopover]="isView ? 'Tiến độ công việc' : 'Cập nhật tiến độ'"
-        (mouseenter)="p.open()"
-        (mouseleave)="p.close()"
-      ></codx-progressbar>
+      <div style="position: relative;">
+        <codx-progressbar
+          [progress]="data?.value?.progress"
+          [stype]="3"
+          [isStep]="false"
+          [vllData]="vllDataTask"
+          [status]="
+            data?.group ? data?.value?.status : setStatusGroup(data?.value)
+          "
+          #p="ngbPopover"
+          [ngbPopover]="isView ? 'Tiến độ công việc' : 'Cập nhật tiến độ'"
+          (mouseenter)="p.open()"
+          (mouseleave)="p.close()"
+        ></codx-progressbar>
+        <span 
+          *ngIf="data?.value | checkTaskLate"
+          class="icon-notifications" 
+          style="position: absolute; top: -5px; right: -12px; color: red;"
+          [ngbTooltip]="'Công việc trễ hạn'"
+        ></span>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -810,14 +816,14 @@
       (click)="openFormField(data?.task)"
     >
       <codx-label
-        *ngIf="!isView"
+        *ngIf="!isView || isUpdateTask"
         class="text-nowrap"
         name="Save"
         formName="Sprints"
         default="Nhập Form"
       ></codx-label>
       <codx-label
-        *ngIf="isView"
+        *ngIf="isView && !isUpdateTask"
         class="text-nowrap"
         name="Save"
         formName="Sprints"

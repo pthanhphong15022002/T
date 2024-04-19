@@ -226,7 +226,7 @@ export class AddTaskComponent
     this.data.stageID = this.stage?.recID;
     this.data.parentID = this.parent?.recID;
     this.data.activityType = 'Task';
-    this.data.stepName = vllStage?.text + ' ' + (this.parent?.child?.length + 1);
+    this.data.stepName = (vllStage?.text || '') + ' ' + (this.parent?.child?.length + 1);
     this.data.reminder = this.process?.reminder;
     this.data.eventControl = null;
     this.data.interval = '1';
@@ -272,13 +272,13 @@ export class AddTaskComponent
             columnNo: 0,
           },
           {
-            recID: 'c3f6287e-3e7b-4395-99db-e72dc0479117',
+            recID: Util.uid(),
             fieldName: 'mo_ta_ngan_gon_' + this.data?.stepNo,
             title: 'Mô tả ngắn gọn',
             dataType: 'String',
             fieldType: 'SubTitle',
             controlType: 'TextBox',
-            isRequired: true,
+            isRequired:  this.data?.stepNo == 1 ? true : false,
             defaultValue: 'Mô tả ngắn gọn',
             description: 'Câu trả lời',
             columnOrder: 1,
@@ -291,19 +291,8 @@ export class AddTaskComponent
         this.data.settings?.isTemplate == null
       )
         this.data.settings.isTemplate = false;
-      // if (this.data.stepNo == 1) {
-      //   this.hideOwner = true;
-      //   this.data.permissions = [
-      //     {
-      //       objectID: this.user?.userID,
-      //       objectName: this.user?.userName,
-      //       objectType: 'U',
-      //       roleType: 'O',
-      //     },
-      //   ];
-      //   this.dataChange.emit(this.data);
-      // }
-      if(!this.data.permissions || (this.data.permissions && this.data.permissions.length == 0))
+     
+      if((!this.data.permissions || (this.data.permissions && this.data.permissions.length == 0)) && this.data.stepNo <= 1)
       {
         this.data.permissions = [
           {
@@ -603,7 +592,7 @@ export class AddTaskComponent
     option.zIndex = 1010;
 
     let listForm = this.process.steps.filter(x=>x.stepNo < this.data.stepNo && x.activityType == "Form");
-    
+
     let popupDialog = this.callFuc.openForm(
       ModeviewComponent,
       '',
@@ -617,85 +606,94 @@ export class AddTaskComponent
     popupDialog.closed.subscribe((res) => {
       if (res?.event) {
         this.isNewForm = false;
-        this.data.extendInfo =
-          res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
+        this.data.extendInfo = res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
 
-        var index = this.process?.steps.findIndex(x=>x.recID == this.data.recID);
-        if(index >=0)
-        {
-          if (this.data?.extendInfo) {
-            this.data.extendInfo.forEach((element) => {
-              if (element.controlType == 'Attachment') {
-                if (!element?.documentControl || element?.documentControl.length == 0) {
-                  var obj =
-                  {
-                    recID: Util.uid(),
-                    title: element.title,
-                    isRequired: false,
-                    count: 0,
-                    isList: '1',
-                    stepID: this.data?.steps[1].recID,
-                    stepNo: this.data?.steps[1].stepNo,
-                    fieldID: element.recID,
-                    memo: this.data?.steps[1].memo,
-                    permissions:
-                    [
-                      {
-                        objectID: this.user?.userID,
-                        objectType: "U",
-                        read: true,
-                        update: true,
-                        delete: true
-                      }
-                    ]
-                  };
-                  this.data.documentControl = [obj];
-                } else if (
-                  element.documentControl &&
-                  element.documentControl.length > 0
-                ) {
-                  var doc = JSON.parse(JSON.stringify(this.data.documentControl));
-                  if (!doc) doc = [];
-                  element.documentControl.forEach((docu) => {
-                    docu.stepID = this.data?.steps[index].recID;
-                    docu.stepNo = this.data?.steps[index].stepNo;
-                    docu.fieldID = element.recID;
-                    docu.memo = this.data?.steps[index].memo;
-                    docu.permissions =
-                    [
-                      {
-                        objectID: this.user?.userID,
-                        objectType: "U",
-                        read: true,
-                        update: true,
-                        delete: true
-                      }
-                    ]
-                    var index = doc.findIndex((x) => x.recID == docu.recID);
-                    if (index >= 0) doc[index] = docu;
-                    else doc.push(docu);
-                  });
-                  this.data.documentControl = doc;
-                }
-              }
+        if(!this.process.documentControl) this.process.documentControl = [];
+        if (this.data?.extendInfo) {
+          this.data.extendInfo.forEach((element) => {
+            if (element.controlType == 'Attachment' && !element?.refField) {
+              if (!element?.documentControl || element?.documentControl.length == 0) {
+                var obj =
+                {
+                  recID: Util.uid(),
+                  title: element.title,
+                  isRequired: false,
+                  count: 0,
+                  isList: '1',
+                  stepID: this.data.recID,
+                  stepNo: this.data.stepNo,
+                  fieldID: element.recID,
+                  memo: this.data.memo,
+                  permissions:
+                  [
+                    {
+                      objectID: this.user?.userID,
+                      objectType: "U",
+                      read: true,
+                      update: true,
+                      delete: true
+                    }
+                  ]
+                };
+                this.process.documentControl.push(obj);
 
-              if (typeof element.documentControl != 'string') {
-                element.documentControl = JSON.stringify(element.documentControl)
+              } else if (
+                element.documentControl &&
+                element.documentControl.length > 0
+              ) {
+                var doc = JSON.parse(JSON.stringify(this.process.documentControl)) || [];
+                element.documentControl.forEach((docu) => {
+                  docu.stepID = this.data.recID;
+                  docu.stepNo = this.data.stepNo;
+                  docu.fieldID = element.recID;
+                  docu.memo = this.data.memo;
+                  docu.permissions =
+                  [
+                    {
+                      objectID: this.user?.userID,
+                      objectType: "U",
+                      read: true,
+                      update: true,
+                      delete: true
+                    }
+                  ]
+                  var index = doc.findIndex((x) => x.recID == docu.recID);
+                  if (index >= 0) doc[index] = docu;
+                  else doc.push(docu);
+                });
+                this.process.documentControl = doc;
               }
-              if (typeof element.visibleControl != 'string') {
-                element.visibleControl = JSON.stringify(element.visibleControl)
-              }
-              if (typeof element.dataFormat != 'string') {
-                element.dataFormat = JSON.stringify(element.dataFormat)
-              }
+            }
 
-              if (typeof element.tableFormat != 'string') {
-                element.tableFormat = JSON.stringify(element.tableFormat)
-              }
-            });
-          }
-          this.process.steps[index].extendInfo = this.data.extendInfo;
+            if(element.fieldType == "Expression" && element?.refValue && typeof element?.refValue != 'string')
+            {
+              element.refValue = JSON.stringify(element.refValue);
+            }
+
+            if (element?.validateControl && typeof element.validateControl != 'string') {
+              element.validateControl = JSON.stringify(element.validateControl);
+            }
+
+            if (element?.documentControl && typeof element.documentControl != 'string') {
+              element.documentControl = JSON.stringify(element.documentControl);
+            }
+            if (element?.visibleControl && typeof element.visibleControl != 'string') {
+              element.visibleControl = JSON.stringify(element.visibleControl)
+            }
+            if (element?.dataFormat && typeof element.dataFormat != 'string') {
+              element.dataFormat = JSON.stringify(element.dataFormat)
+            }
+
+            if ( element?.tableFormat && typeof element.tableFormat != 'string') {
+              element.tableFormat = JSON.stringify(element.tableFormat)
+            }
+            if (element?.refField && typeof element.refField != 'string') {
+              element.refField = JSON.stringify(element.refField);
+            }
+          });
         }
+        var index = this.process?.steps.findIndex(x=>x.recID == this.data.recID);
+        if(index >=0) this.process.steps[index].extendInfo = this.data.extendInfo;
         this.dataChange.emit(this.data);
         this.dataChangeProcess.emit(this.process);
       }

@@ -102,6 +102,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() ownerInstance; // lưu progress vào db
 
   @Input() isView = false; // chỉ xem
+  @Input() isUpdateTask = false; // chỉ xem
   @Input() isMoveStage = false; // chuyển giai đoạn
   @Input() isLockSuccess = false; // lọc cái task 100%
 
@@ -573,11 +574,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   async changeDataMFTask(event, task, groupTask) {
     if (event != null) {
       let isGroup = false;
-      let isTask = false;
+      let isTask:DP_Instances_Steps_Tasks_Roles;
       if (!this.isRoleAll) {
         isGroup = this.checRoleOwner(groupTask);
         if (!isGroup) {
-          isTask = this.checRoleOwner(task);
+          isTask = this.checkRoleShare(task);
         }
       }
       event.forEach((res) => {
@@ -596,7 +597,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             break;
           case 'SYS03': //sửa
             this.titleLanguageEdit;
-            if (!(this.isRoleAll || isGroup || isTask)) {
+            if (!(this.isRoleAll || isGroup || (isTask && (isTask?.full || isTask?.update )))) {
               res.disabled = true;
             } else {
               if (task?.isTaskDefault && !this.isEditTimeDefault) {
@@ -622,7 +623,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             res.isblur = this.isOnlyView
               ? !(
-                  (this.isRoleAll || isGroup || isTask) &&
+                  (this.isRoleAll || isGroup || (isTask && (isTask?.full || isTask?.updateProgress ))) &&
                   task?.startDate &&
                   task?.endDate
                 )
@@ -635,7 +636,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               !(
                 task?.createTask &&
                 this.isOnlyView &&
-                (this.isRoleAll || isGroup || isTask)
+                (this.isRoleAll || isGroup || (isTask && (isTask?.full || isTask?.assign )))
               )
             ) {
               res.isblur = true;
@@ -695,7 +696,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               res.disabled = true;
             } else if (
               !(
-                (this.isRoleAll || isGroup || isTask) &&
+                (this.isRoleAll || isGroup || (isTask && (isTask?.full))) &&
                 (this.isOnlyView || this.isTaskFirst)
               )
             ) {
@@ -1849,10 +1850,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (this.isMoveStage) {
       return type !== 'G';
     }
+    if(this.isUpdateTask){
+      return true;
+    }
     if (this.isView) {
       return false;
     }
-    if (this.isOnlyView && this.isStart) {
+    if ((this.isOnlyView && this.isStart) || this.isUpdateTask) {
       if (!(data?.startDate && data?.endDate)) {
         return false;
       } else {
@@ -2244,6 +2248,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   //#region cheack
   checRoleOwner(data) {
     return this.user.userID == data?.owner;
+  }
+  checkRoleShare(data:DP_Instances_Steps_Tasks): DP_Instances_Steps_Tasks_Roles {
+    var role = data?.roles?.find(x => x.objectID == this.user?.userID);
+    return role;
   }
 
   checkTaskLink(task) {
@@ -3480,7 +3488,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let obj = {
       data: data,
       title: "Chia sẻ",
-      entityName: "DP_Instances_Steps_Tasks_Roles",
+      entityName: this.entityName,
+      objectID: this.recIDParent
     };
     this.callfc
       .openForm(

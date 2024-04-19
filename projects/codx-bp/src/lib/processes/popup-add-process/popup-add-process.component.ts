@@ -120,14 +120,19 @@ export class PopupAddProcessComponent {
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
-    if (dialog.dataService.dataSelected)
-      this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    if (dialog.dataService.dataSelected) this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.action = dt?.data?.action;
     this.title = dt?.data?.title;
     this.user = this.authStore.get();
     this.gridViewSetup = dt?.data?.gridViewSetup;
+    this.loadVllDefault();
   }
 
+  loadVllDefault()
+  {
+    let vll = this.shareService.loadValueList('BP001');
+    if(isObservable(vll)) vll.subscribe();
+  }
   ngOnInit(): void {
     this.genData();
     // this.bpSv.getEndDate(new Date(), '1', 4, 'STD').subscribe((res) => {});
@@ -182,7 +187,6 @@ export class PopupAddProcessComponent {
     } else {
     }
     this.getCacheCbxOrVll();
-    this.getVll();
     this.detectorRef.detectChanges();
   }
 
@@ -218,11 +222,19 @@ export class PopupAddProcessComponent {
     if (isObservable(vll)) {
       vll.subscribe((item) => {
         this.vllBP001 = item;
-        if (this.action == 'add') this.defaultStep();
+        if (this.action == 'add') {
+          this.setDefaultTitle();
+          this.setLstExtends();
+          this.defaultStep();
+        }
       });
     } else {
       this.vllBP001 = vll;
-      if (this.action == 'add') this.defaultStep();
+      if (this.action == 'add') {
+        this.setDefaultTitle();
+        this.setLstExtends();
+        this.defaultStep();
+      }
     }
   }
   //#region get or set default form
@@ -234,8 +246,7 @@ export class PopupAddProcessComponent {
         if (item) {
           this.vllBP002 = item;
           if (this.action == 'add') {
-            this.setDefaultTitle();
-            this.setLstExtends();
+            this.getVll();
           }
         }
       });
@@ -871,6 +882,10 @@ export class PopupAddProcessComponent {
             if (typeof element.validateControl != 'string') {
               element.validateControl = JSON.stringify(element.validateControl);
             }
+
+            if (element?.refField && typeof element.refField != 'string') {
+              element.refField = JSON.stringify(element.refField);
+            }
           });
 
           this.data.steps[index].extendInfo = this.extendInfos;
@@ -1046,6 +1061,7 @@ export class PopupAddProcessComponent {
         result2[x].stepType = null;
       }
     }
+
     var fristFormIndex = result2.findIndex((x) => x.activityType == 'Form');
     var fristStageIndex = result2.findIndex((x) => x.activityType == 'Stage');
     var countStage = result2.filter((x) => x.activityType == 'Stage').length;

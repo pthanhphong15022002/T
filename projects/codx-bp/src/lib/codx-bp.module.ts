@@ -74,7 +74,6 @@ import { ViewListBpTasksComponent } from './bp-tasks/view-list-bp-tasks/view-lis
 import { PopupBpTasksComponent } from './bp-tasks/popup-bp-tasks/popup-bp-tasks.component';
 import { AddFileFromProcessDefaultComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-task/add-file-from-process/add-file-from-process-default/add-file-from-process-default.component';
 import { ImgSvgVllPipe } from './pipes/img-svg-vll.pipe';
-import { AddTableRowComponent } from './processes/popup-add-process/process-release/add-process-default/add-table-row/add-table-row.component';
 import { PropertyUserinfoComponent } from './modeview/properties/property-userinfo/property-userinfo.component';
 import { BpSignPDFComponent } from './sign-pdf/bp-sign-pdf.component';
 import { FormSettingAdvancedTasksComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/form-setting-advanced-tasks/form-setting-advanced-tasks.component';
@@ -94,6 +93,8 @@ import { FormSettingValueListComponent } from './processes/popup-add-process/for
 import { FormatValueComboboxPipe } from './pipes/format-value-combobox.pipe';
 import { PropertyBorderComponent } from './modeview/properties/property-border/property-border.component';
 import { AddCustomActionComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-custom-action/add-custom-action.component';
+import { ProcessTableExpandComponent } from './processes/popup-add-process/process-release/add-process-default/process-table-expand/process-table-expand.component';
+import { PropertyExpressionSettingsComponent } from './modeview/properties/property-expression/property-expression-settings/property-expression-settings.component';
 
 export const routes: Routes = [
   {
@@ -189,6 +190,7 @@ export const routes: Routes = [
     PropertyAttachmentAddRowComponent,
     PropertyNoteComponent,
     PropertyBorderComponent,
+    PropertyExpressionSettingsComponent,
     
     FormSettingComboboxComponent,
     FormAdvancedSettingsComponent,
@@ -197,8 +199,8 @@ export const routes: Routes = [
     FormTestDiagramComponent,
     AddDefaultComponent,
     AddProcessDefaultComponent,
-    AddTableRowComponent,
-
+    ProcessTableExpandComponent,
+    
     AddStageComponent,
     AddTaskComponent,    
     AddCustomActionComponent,

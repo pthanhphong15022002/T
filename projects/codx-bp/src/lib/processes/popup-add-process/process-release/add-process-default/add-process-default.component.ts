@@ -34,11 +34,10 @@ import {
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { Subject, elementAt, firstValueFrom, forkJoin, isObservable } from 'rxjs';
-import { AddTableRowComponent } from './add-table-row/add-table-row.component';
-import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 import { environment } from 'src/environments/environment';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
+import { ProcessTableExpandComponent } from './process-table-expand/process-table-expand.component';
 
 @Component({
   selector: 'lib-add-process-default',
@@ -88,6 +87,7 @@ export class AddProcessDefaultComponent implements OnInit {
   listFieldDecimal = [];
   f_Visible = {};
   f_ParaVisible = [];
+  formula = [];
   editSettings: EditSettingsModel = {
     allowEditing: true,
     allowAdding: true,
@@ -164,6 +164,7 @@ export class AddProcessDefaultComponent implements OnInit {
     );
     extendInfo.forEach((element) => {
       let field = element.fieldName.toLowerCase();
+
       this.gridViewSetup[field] = element;
       if (element.fieldType == 'Attachment') {
         element.documentControl =
@@ -249,7 +250,6 @@ export class AddProcessDefaultComponent implements OnInit {
             allowEdit: true,
             width: this.get_tex_width(elm2.title)
           };
-          debugger
           element.columnsGrid.push(obj);
 
           if (elm2.dataType == 'Decimal') {
@@ -314,7 +314,15 @@ export class AddProcessDefaultComponent implements OnInit {
         };
         this.listFieldAuto.push(objAuto);
       }
-
+      if(element.fieldType == "Expression" && element.refValue)
+      {
+        var objExpress = 
+        {
+          field: field,
+          refValue: typeof element.refValue == 'string' ? JSON.parse(element.refValue) : element.refValue
+        }
+        this.formula.push(objExpress);
+      }
       //Kiem tra xem field co visiable khong?
       if (element.visibleControl) {
         element.visibleControl =
@@ -924,51 +932,12 @@ export class AddProcessDefaultComponent implements OnInit {
     this.dChange.detectChanges();
   }
 
-  addRow(
-    data: any,
-    fieldName: any,
-    index = 0,
-    result: any = null,
-    hasIndexNo = false
-  ) {
-    if (!this.dataTable[fieldName.toLowerCase()])
-      this.dataTable[fieldName.toLowerCase()] = [];
-    var option = new DialogModel();
-    option.FormModel = this.formModel;
-    option.zIndex = 1000;
-    let popup = this.callFuc.openForm(
-      AddTableRowComponent,
-      '',
-      600,
-      750,
-      '',
-      { dataTable: data, result: result },
-      '',
-      option
-    );
-
-    popup.closed.subscribe((res) => {
-      if (res?.event) {
-        if (!result) {
-          if (hasIndexNo)
-            res.event.indexNo =
-              this.dataTable[fieldName.toLowerCase()].length + 1;
-          this.dataTable[fieldName.toLowerCase()].push(res?.event);
-        } else
-          this.dataTable[fieldName.toLowerCase()][result.index] = res.event;
-        var grid = this.gridView.find((_, i) => i == index);
-        grid.refresh();
-      }
-    });
-  }
 
   gridDs: any = [];
   addRow2(index = 0) {
     var grid = this.gridView.find((_, i) => i == index);
     var data = {
-      cot_1: '',
-      cot_2: '',
-      cot_3: '',
+      delete : true
     };
     //if(!grid.dataSource) grid.dataSource = [];
     grid.addRow(data, grid.dataSource.length);
@@ -990,11 +959,11 @@ export class AddProcessDefaultComponent implements OnInit {
   clickMFGrid(e: any, data: any) {
     let funcID = e?.event?.functionID;
     switch (funcID) {
-      //Chỉnh sửa
-      case 'SYS03': {
-        this.addRow(data.dataFormat, data.fieldName, data.indexTable, e.data);
-        break;
-      }
+      // //Chỉnh sửa
+      // case 'SYS03': {
+      //   this.addRow(data.dataFormat, data.fieldName, data.indexTable, e.data);
+      //   break;
+      // }
       //Xóa
       case 'SYS02': {
         var config = new AlertConfirmInputConfig();
@@ -1055,6 +1024,7 @@ export class AddProcessDefaultComponent implements OnInit {
     else this.dynamicFormsForm.value[e?.field] = e?.data;
 
     this.checkVisisable(e);
+    this.expression(e);
   }
 
   getUrl(field: any, index: any) {
@@ -1093,6 +1063,7 @@ export class AddProcessDefaultComponent implements OnInit {
 
   valueChangeInput(e: any) {
     this.checkVisisable(e);
+    this.expression(e);
   }
 
   afterRender(evt: any, input: any, refersouce: any) {
@@ -1229,9 +1200,89 @@ export class AddProcessDefaultComponent implements OnInit {
     }
   }
 
+  expression(e:any)
+  {
+    for(var x=0; x< this.formula.length ; x++)
+    {
+      if(e?.field == this.formula[x].field) break;
+      let data = "";
+      for(var i=0; i < this.formula[x].refValue.length ; i++)
+      {
+        let result = this.caculator(this.formula[x].refValue[i],e);
+        if(result) 
+        {
+          if(this.isExpression(result))
+          {
+            let a =  eval(result);
+            data += a;
+          }
+          else
+          {
+            data += result;
+          }
+        }
+        else
+        {
+          data = "";
+          break;
+        }
+      }
+
+      this.dynamicFormsForm.controls[this.formula[x]?.field].setValue(data);
+    }
+  }
+ 
+  isExpression(s) {
+    const re = /(?:(?:^|[-+_*/])(?:\s*-?\d+(\.\d+)?(?:[eE][+-]?\d+)?\s*))+$/;
+    return re.test(s);
+  }
+  caculator(dt:any,e:any)
+  {
+    let result = "";
+    for (var i = 0; i < dt.length; i++) {
+      if(dt[i].startsWith("["))
+      {
+        let f = dt[i].slice(1,-1);
+        let comp = this.dynamicFormsForm.value[f];
+        if(f == e?.field) comp = e?.data;
+
+        if(!comp) {
+          result = "";
+          break;
+        }
+        result += comp;
+      }
+      else result += dt[i];
+    }
+    
+    return result;
+  }
+
   get_tex_width(txt) {
     var l = txt.length * 10;
     if(l < 100)  l = 100;
     return l ;
+  }
+
+  //Mở rộng table nhập liệu
+  expandTable(dt:any)
+  {
+    let data = 
+    {
+      headerText: dt?.title,
+      columnsGrid: dt?.columnsGrid,
+      dataSource: this.dataTable[dt?.fieldName],
+      editSettings: this.editSettings,
+      indexTable: dt?.indexTable,
+      hasIndexNo: dt?.tableFormat?.hasIndexNo
+    }
+    let popup = this.callFuc.openForm(ProcessTableExpandComponent,"",1200,900,"",data);
+    popup.closed.subscribe(res=>{
+      if(res?.event) {
+        this.dataTable[dt?.fieldName] = res?.event;
+        var grid = this.gridView.find((_, i) => i == dt?.indexTable);
+        grid.refresh();
+      }
+    })
   }
 }

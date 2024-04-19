@@ -95,6 +95,7 @@ import { AutoFocusDirective } from './_layout/drawers/chat/directives/auto-focus
 import { CodxMessageComponent } from './_layout/drawers/chat/codx-message/codx-message.component';
 import { CodxHelpComponent } from './_layout/drawers/help/codx-help/codx-help.component';
 import { DisctintPipe } from './_layout/drawers/chat/pipes/disctint.pipe';
+import { CoDxApproveCommentComponent } from './component/codx-approval-procress/codx-approve-comment/codx-approve-comment.component';
 //#endregion
 
 const T_Component: Type<any>[] = [
@@ -141,6 +142,7 @@ const T_Component: Type<any>[] = [
   CoDxViewReleaseSignFileComponent,
   CoDxGetTemplateSignFileComponent,
   SelectViettelCertificateComponent,
+  CoDxApproveCommentComponent,
 
   //Ai Tool
   CodxAiComponent,
@@ -155,6 +157,7 @@ const T_Component: Type<any>[] = [
   CodxChatListComponent,
   CodxChatBoxComponent,
   AddGroupChatComponent,
+
 ];
 
 const T_Pipe: Type<any>[] = [

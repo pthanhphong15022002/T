@@ -23,7 +23,7 @@
               <i class="icon-arrow_drop_down_circle icon-16 mt-1"></i>
               <div style="margin-left: -5px;" class="input-circle h-20px input-border-0 w-400px mb-1">
                 <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
-                  [cssClass]="'rounded-pill border-1 mt-1'" cssPopup="h-350px w-400px" [isMulti]="false"
+                  [cssClass]="'rounded-pill border-1 mt-1 dropdown-ac'" cssPopup="h-350px w-400px" [isMulti]="false"
                   type="valuelist" field="subType" [refValue]="master?.gridviewSetup['SubType']?.referedValue"
                   [value]="master?.data?.subType" [emptyText]="master?.gridviewSetup['SubType']?.headerText"
                   (valueChange)="changeSubType($event)"></codx-dropdown-select>
@@ -311,7 +311,7 @@
             </div>
           </div>
           <div class="row" style="max-width: 1000px">
-            <div class="col-12">
+            <div class="col-10">
               <div class="form-group mb-0">
                 <codx-label style="white-space: nowrap !important" fiedName="Memo" [formModel]="dialog.formModel">
                 </codx-label>
