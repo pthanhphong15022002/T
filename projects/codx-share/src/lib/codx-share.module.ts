@@ -311,6 +311,7 @@ const T_Component: Type<any>[] = [
   PopupRescheduleMeetingComponent,
   PopupAddResourcesComponent,
   MeetingDetailComponent,
+  ViewContentScheduleMeetingsComponent,
 
   // chatting
   // CodxChatComponent,
@@ -389,7 +390,6 @@ const T_Pipe: Type<any>[] = [
     CodxDateComponent,
     LayoutComponent,
     T_Pipe,
-    ViewContentScheduleMeetingsComponent,
   ],
   exports: [T_Component, T_Pipe, CodxCommonModule],
   imports: [

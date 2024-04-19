@@ -13,15 +13,15 @@ export class PopupSettingConditionalComponent implements OnInit, AfterViewInit {
   v: string = ''
   dialog: DialogRef
   titleAction = '';
-  fieldsCondition : any[];
-  fields = {text:'fieldName' , value : 'recID'};
- 
+  fieldsCondition: any[];
+  fields = { text: 'fieldName', value: 'recID' };
+
   data: DP_Condition_Reference_Fields;
-  placeholder ='Chọn điều kiện tham chiếu'
-  placeholderType ='Chọn kiểu tham chiếu'
-  vllCompare = 'CRM101';  //them sau; vll kieu so sanh
-  vllTypeMess ='CRM102' ;//vll kieu canh bao - bắt buộc hay canh báo
-  action ='';
+  placeholder = 'Chọn điều kiện tham chiếu'
+  placeholderType = 'Chọn kiểu tham chiếu'
+  vllCompare = 'DP054';  //them sau; vll kieu so sanh
+  vllTypeMess = 'DP055';//vll kieu canh bao - bắt buộc hay canh báo
+  action = '';
   viewOnly = false
   constructor(
 
@@ -41,19 +41,19 @@ export class PopupSettingConditionalComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
 
   }
-  cbxChangeCondition(e){
-   this.data.refID = e
+  cbxChangeCondition(e) {
+    this.data.refID = e
   }
 
-  saveData(){
+  saveData() {
     this.dialog.close(this.data)
   }
 
-  changeVll(e){
+  changeVll(e) {
     this.data[e.field] = e.data
   }
 
-  valueChange(e){
+  valueChange(e) {
     this.data.messageText = e.data
   }
 }
