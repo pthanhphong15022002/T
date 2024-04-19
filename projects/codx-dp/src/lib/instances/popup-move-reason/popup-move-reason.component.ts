@@ -100,37 +100,40 @@ export class PopupMoveReasonComponent implements OnInit {
     this.user = this.authStore.get();
     this.userId = this.user?.userID;
     this.reasonStep = dt?.data?.objReason;
-    if (this.applyFor == '0') {
-      this.listReason = this.reasonStep?.reasons;
-      this.instances = JSON.parse(JSON.stringify(dt?.data?.instance));
-  //    this.listCbxProccess = dt?.data?.listProccessCbx;
-   //   this.listParticipantReason = dt?.data?.listParticipantReason;
-      this.moveProccess =
-        this?.listCbxProccess?.filter(
-          (x) => x.recID === this.reasonStep?.newProcessID
-        )[0]?.recID ?? this.guidEmpty;
-      this.executeApiCallInstance();
-      this.titleReasonClick = dt?.data?.headerTitle;
-    }
-    this.dataCM = dt?.data?.dataCM;
-    this.recID = this.dataCM ? this.dataCM?.refID : dt?.data?.instance?.recID;
-    this.applyFor != '0' && this.executeApiCalls();
-    this.getValueListReason();
-   if( this.isMoveProcess && this.reasonStep) {
-    if (this.reasonStep?.newProcessID === this.guidEmpty || !this.reasonStep.newProcessID) {
-              this.getValueListMoveProcess();
-              this.moveProccess = this.reasonStep.newProcessID;
-    };
-    if(this.reasonStep?.newProcessID !== this.guidEmpty && this.reasonStep.newProcessID ){
-      var listNewProcessID = this.reasonStep.newProcessID?.split(";");
-      if(listNewProcessID?.length > 0){
-        this.getListProcesByMoveProcess(listNewProcessID[0]); 
-      }
-    }
-   }
-   else {
-      this.getListMoveReason();
-   }
+  //   if (this.applyFor == '0') {
+  //     this.listReason = this.reasonStep?.reasons;
+  //     this.instances = JSON.parse(JSON.stringify(dt?.data?.instance));
+  // //    this.listCbxProccess = dt?.data?.listProccessCbx;
+  //  //   this.listParticipantReason = dt?.data?.listParticipantReason;
+  //     this.moveProccess =
+  //       this?.listCbxProccess?.filter(
+  //         (x) => x.recID === this.reasonStep?.newProcessID
+  //       )[0]?.recID ?? this.guidEmpty;
+  //     this.executeApiCallInstance();
+  //     this.titleReasonClick = dt?.data?.headerTitle;
+  //   }
+  //   this.dataCM = dt?.data?.dataCM;
+  //   this.recID = this.dataCM ? this.dataCM?.refID : dt?.data?.instance?.recID;
+  //   this.applyFor != '0' && this.executeApiCalls();
+  //   this.getValueListReason();
+  //  if( this.isMoveProcess && this.reasonStep) {
+  //   if (this.reasonStep?.newProcessID === this.guidEmpty || !this.reasonStep.newProcessID) {
+  //             this.getValueListMoveProcess();
+  //             this.moveProccess = this.reasonStep.newProcessID;
+  //   };
+  //   if(this.reasonStep?.newProcessID !== this.guidEmpty && this.reasonStep.newProcessID ){
+  //     var listNewProcessID = this.reasonStep.newProcessID?.split(";");
+  //     if(listNewProcessID?.length > 0){
+  //       this.getListProcesByMoveProcess(listNewProcessID[0]); 
+  //     }
+  //   }
+  //  }
+  //  else {
+      
+  //  }
+  this.dataCM = dt?.data?.dataCM;
+  this.recID = this.dataCM ? this.dataCM?.refID : dt?.data?.instance?.recID;
+   this.getListMoveReason();
   }
 
   ngOnInit(): void {}
