@@ -16,7 +16,11 @@
     <div class="border-top mt-8 pt-4">
         <div class="d-flex align-items-center justify-content-between">
             <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'recipe'" default="Công thức" class="fw-bold"></codx-label>
-            <i class="icon-edit_square" (click)="setting()"></i>
+            <i class="icon-edit_square cursor-pointer" (click)="setting()"></i>
+        </div>
+
+        <div class="d-flex p-4 border mt-4 w-100 h-100px">
+            {{formula}}
         </div>
     </div>
     <div class="border-top mt-8">

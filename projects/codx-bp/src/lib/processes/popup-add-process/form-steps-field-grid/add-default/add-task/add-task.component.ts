@@ -665,6 +665,11 @@ export class AddTaskComponent
               }
             }
 
+            if(element.fieldType == "Expression" && element?.refValue && typeof element?.refValue != 'string')
+            {
+              element.refValue = JSON.stringify(element.refValue);
+            }
+
             if (element?.validateControl && typeof element.validateControl != 'string') {
               element.validateControl = JSON.stringify(element.validateControl);
             }

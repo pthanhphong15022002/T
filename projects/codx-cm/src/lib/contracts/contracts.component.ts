@@ -1464,7 +1464,7 @@ export class ContractsComponent extends UIComponent {
       processID: data?.processID,
       dataCM: dataCM,
       stepName: data.currentStepName,
-      isMoveProcess: false,
+      isMoveProcess: true,
     };
 
     let dialogReason = this.callfc.openForm(

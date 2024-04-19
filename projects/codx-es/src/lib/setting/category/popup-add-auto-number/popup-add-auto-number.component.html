@@ -186,7 +186,7 @@
             </div>
           </div>
           <div class="col-3">
-            <div class="form-group  mt-5 pt-5">
+            <div class="form-group  mt-5 pt-3">
               <codx-input
                 type="checkbox"
                 labelPosition="after"
@@ -201,7 +201,7 @@
               </codx-label>
             </div>
           </div>
-          <div class="col-3">
+          <div class="col-3 d-flex">
             <div class="form-group pt-5 w-50">
               <codx-input
                 field="interval"
@@ -210,7 +210,22 @@
                 [disabled]="!data.autoReset"
               ></codx-input>
             </div>
+            <div class="form-group  ms-5 mt-5 pt-3">
+              <codx-input
+                type="checkbox"
+                labelPosition="after"
+                field="autoFillZero"
+                class="test-check"
+                (valueChange)="valueChange($event)"
+                (controlBlur)="blur($event)"
+                [crrValue]="data.autoFillZero"
+              >
+              </codx-input>
+              <codx-label class="ms-2" fiedName="autoFillZero" [formModel]="formModel">
+              </codx-label>
+            </div>
           </div>
+
         </div>
       </div>
 
@@ -410,7 +425,7 @@
             </div>
           </div>
           <div class="col-3">
-            <div class="form-group  mt-5 pt-5">
+            <div class="form-group  mt-5 pt-3">
               <codx-input
                 type="checkbox"
                 labelPosition="after"
