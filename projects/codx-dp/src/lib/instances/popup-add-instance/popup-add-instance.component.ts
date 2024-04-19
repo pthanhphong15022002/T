@@ -105,6 +105,7 @@ export class PopupAddInstanceComponent implements OnInit {
   isShowMore = false;
   widthDefault: string;
   templetCreated = [];
+  conRef: any[] = []//mang ref error
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -326,6 +327,20 @@ export class PopupAddInstanceComponent implements OnInit {
             let valueOld = this.listStep[index].fields[idxField].dataValue;
             this.listStep[index].fields[idxField].dataValue = result;
 
+            //Tham chieu rang buoc
+            let crrField = this.listStep[index].fields[idxField];
+            if (crrField.isApplyConditional && crrField?.conditionReference?.length > 0) {
+              let check = this.customFieldSV.checkConditionalRef(this.listStep[index].fields, crrField)
+              this.conRef = this.conRef.filter(f => f?.id != crrField.recID);
+              if (!check?.check && check.conditionRef?.length > 0) {
+                let arrRef = check.conditionRef.map(x => {
+                  let obj = { ...x, id: crrField.recID }
+                  return obj
+                })
+                this.conRef = this.conRef.concat(arrRef)
+              }
+            }
+
             let idxEdit = this.listCustomFile.findIndex(
               (x) => x.recID == this.listStep[index].fields[idxField].recID
             );
@@ -392,6 +407,15 @@ export class PopupAddInstanceComponent implements OnInit {
       );
       return;
     }
+    //Kieerm tra dk
+    if (this.conRef?.length > 0) {
+      this.conRef.forEach(x => {
+        this.notificationsService.notify(x.messageText, x.messageType)
+      })
+      return
+    }
+
+
     //khong check custom field nua - nhung ko xóa
     // if (this.listStep?.length > 0) {
     //   let check = true;

@@ -84,57 +84,33 @@ export class PopupCustomFieldComponent implements OnInit {
       let result = event.e;
       let field = event.data;
 
-      // var result = event.e?.data;
-      // var field = event.data;
-      // switch (field.dataType) {
-      //   case 'D':
-      //     result = event.e?.data.fromDate;
-      //     break;
-      //   case 'P':
-      //   case 'R':
-      //   case 'A':
-      //   case 'C':
-      //   case 'L':
-      //   case 'TA':
-      //   case 'PA':
-      //     result = event.e;
-      //     break;
-      // }
-
-      // this.fields.forEach((x) => {
-      //   if (x.recID == field.recID) x.dataValue = result;
-      // });
-      //no bij map nguoc dataa
       let index = this.fields.findIndex((x) => x.recID == field.recID);
       if (index != -1) {
         this.fields[index] = this.upDataVersion(this.fields[index], result);
-        if (field.isApplyConditional) {
-          let check = this.customFieldSV.checkConditionalRef(this.fields, this.fields[index])
-          if (!check?.check) {
-            check.conditionRef.forEach(x => {
-              if (!this.conRef.some(f => f.refID == x.refID)) this.conRef.push(x)
+        //Tham chieu rafng buoc
+        let crrField = this.fields[index];
+        if (crrField.isApplyConditional && crrField?.conditionReference?.length > 0) {
+          let check = this.customFieldSV.checkConditionalRef(this.fields, crrField)
+          this.conRef = this.conRef.filter(f => f?.id != crrField.recID);
+          if (!check?.check && check.conditionRef?.length > 0) {
+            let arrRef = check.conditionRef.map(x => {
+              let obj = { ...x, id: crrField.recID }
+              return obj
             })
-          } else if (check.conditionRef?.length > 0) {
-            check.conditionRef.forEach(x => {
-              this.conRef = this.conRef.filter(f => f.refID != x.refID);
-            })
+            this.conRef = this.conRef.concat(arrRef)
           }
         }
-        // this.fields[index].dataValue = result;
         if (field.dataType == 'N') this.caculateField();
       }
     }
   }
-  // partValue(item) {
-  //   return JSON.parse(JSON.stringify(item));
-  // }
 
   checkFormat(field) {
     if (field.dataType == 'T') {
       if (field.dataFormat == 'E') {
         var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         if (!field.dataValue.toLowerCase().match(validEmail)) {
-          //this.notiService.notifyCode('SYS037');
+
           this.cache.message('SYS037').subscribe((res) => {
             if (res) {
               let errorMessage = res.customName || res.defaultName;
@@ -163,13 +139,7 @@ export class PopupCustomFieldComponent implements OnInit {
 
   onSave() {
     if (this.fields?.length == 0 || !this.isAddComplete) return;
-    //Kieerm tra dk
-    if (this.conRef?.length > 0) {
-      this.conRef.forEach(x => {
-        this.notiService.notify(x.messageText, x.messageType)
-      })
-      return
-    }
+
     let check = true;
     let checkFormat = true;
     this.fields.forEach((f) => {
@@ -181,6 +151,13 @@ export class PopupCustomFieldComponent implements OnInit {
       } else checkFormat = this.checkFormat(f);
     });
     if (!check || !checkFormat) return;
+    //Kieerm tra dk
+    if (this.conRef?.length > 0) {
+      this.conRef.forEach(x => {
+        this.notiService.notify(x.messageText, x.messageType)
+      })
+      return
+    }
     if (this.isSaving) return;
     this.isSaving = true;
     let data = [this.fields[0]?.stepID, this.fields, this.taskID];

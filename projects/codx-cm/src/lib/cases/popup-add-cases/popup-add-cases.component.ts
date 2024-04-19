@@ -142,6 +142,8 @@ export class PopupAddCasesComponent
   recIdMove: any;
   isShowReasonDP: boolean = false;
   isViewAll: boolean = false;
+  conRef: any[] = []
+
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -303,8 +305,16 @@ export class PopupAddCasesComponent
     // } else {
     //   this.editInstance();
     // }
+    //Kieerm tra dk ref cua truong tuy chinh
+    if (this.conRef?.length > 0) {
+      this.conRef.forEach(x => {
+        this.notificationsService.notify(x.messageText, x.messageType)
+      })
+      return
+    }
     this.actionSaveBeforeSaveAttachment();
   }
+
   async actionSaveBeforeSaveAttachment() {
     if (this.attachment?.fileUploadList?.length > 0) {
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
@@ -364,22 +374,7 @@ export class PopupAddCasesComponent
     if (event && event.data) {
       var result = event.e;
       var field = event.data;
-      // cũ
-      // var result = event.e?.data;
-      // switch (field.dataType) {
-      //   case 'D':
-      //     result = event.e?.data.fromDate;
-      //     break;
-      //   case 'P':
-      //   case 'R':
-      //   case 'A':
-      //   // case 'C':case ko có
-      //   case 'L':
-      //   case 'TA':
-      //   case 'PA':
-      //     result = event.e;
-      //     break;
-      // }
+
       var index = this.listInstanceSteps.findIndex(
         (x) => x.recID == field.stepID
       );
@@ -392,6 +387,19 @@ export class PopupAddCasesComponent
             let valueOld =
               this.listInstanceSteps[index].fields[idxField].dataValue;
             this.listInstanceSteps[index].fields[idxField].dataValue = result;
+            //Tham chieu rang buoc
+            let crrField = this.listInstanceSteps[index].fields[idxField];
+            if (crrField.isApplyConditional && crrField?.conditionReference?.length > 0) {
+              let check = this.customFieldSV.checkConditionalRef(this.listInstanceSteps[index].fields, crrField)
+              this.conRef = this.conRef.filter(f => f?.id != crrField.recID);
+              if (!check?.check && check.conditionRef?.length > 0) {
+                let arrRef = check.conditionRef.map(x => {
+                  let obj = { ...x, id: crrField.recID }
+                  return obj
+                })
+                this.conRef = this.conRef.concat(arrRef)
+              }
+            }
             let idxEdit = this.listCustomFile.findIndex(
               (x) =>
                 x.recID == this.listInstanceSteps[index].fields[idxField].recID
