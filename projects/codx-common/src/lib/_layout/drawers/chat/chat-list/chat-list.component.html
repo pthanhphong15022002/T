@@ -34,7 +34,7 @@
                             <div class="d-flex justify-content-between align-items-top w-100">
                                 <div class="w-50 overflow-hidden text-overflow-ellipsis" [class.text-primary]="item.lastMssg.isRead == false">
                                     <ng-container *ngIf="item.lastMssg.messageType == '1' || item.lastMssg.messageType == '4'">
-                                        <span>{{item.lastMssg.message}}</span>
+                                        <div [innerHTML]="item.lastMssg.message"></div>
                                     </ng-container>
                                     <ng-container *ngIf="item.lastMssg.messageType == '3'">
                                         <span [innerHTML]="item.lastMssg | mssgSYS | async"></span>
