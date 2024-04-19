@@ -1,6 +1,7 @@
 <codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
-  (buttonClick)="toolbarClick($event)" [predicates]="predicate" [hideMoreFuncs]="!itemSelected" [titleToolBarTmp]="titleToolBarTmp"
-  (changeDataMF)="changeMFDetail($event,'viewdetail',itemSelected)" (clickMF)="clickMoreFunction($event, itemSelected)"
+  (buttonClick)="toolbarClick($event)" [predicates]="predicate" assemblyName="AM" className="AssetJournalsBusiness"
+  service="AM" method="GetDataAsync" [hideMoreFuncs]="!itemSelected" [titleToolBarTmp]="titleToolBarTmp"
+  (changeDataMF)="changeMFDetail($event,'viewdetail')" (clickMF)="clickMoreFunction($event, itemSelected)"
   [dataValues]="journalNo" (selectedChange)="onSelectedItem($event)" [isSubView]="true"
   (viewChanged)="viewChanged($event)" [funcID]="funcID">
 </codx-views>
@@ -21,7 +22,7 @@
 
 <!-- Start: templateGrid -->
 <ng-template #templateGrid let-data>
-  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFDetail($event, 'viewgrid',data)" [formModel]="view.formModel"
+  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFGrid($event, 'viewgrid',data)" [formModel]="view.formModel"
     (clickMF)="clickMoreFunction($event, data)" type="view"></codx-mfunc>
 </ng-template>
 <!-- End: templateGrid -->
@@ -54,10 +55,6 @@
           {{ view?.gridViewSetup["VoucherNo"].headerText }}
         </span>
       </div>
-      <div>
-        <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase"
-          [innerHTML]="(data?.totalDR | tranformValueNumber : (data?.currencyID !=  baseCurr ? 'S' : 'B') | async)+' '+data?.currencyID"></span>
-      </div>
     </div>
     <div class="d-flex justify-content-between">
       <div class="d-flex align-items-center">
@@ -83,7 +80,7 @@
         <span class="text-gray-600 line-clamp line-clamp-1">{{data?.subType | vll : view?.gridViewSetup["SubType"].referedValue : 'text' | async}}</span>
       </div>
     </div>
-    <div class="d-flex justify-content-between align-items-center">
+    <div style="height: 35px !important;" class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-end codx-badge">
         <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true" [showBgColor]="true"
           class="badge badge-light badge-sm">
