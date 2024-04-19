@@ -240,7 +240,9 @@ export class AddTemplateComponent implements OnInit{
   openFormAddImportDetail(data:any , type = 'new')
   {
     if(type == 'edit' && !data?.mappingTemplate) return;
-    let sourceField = XLSX.utils.sheet_to_json(this.wb.Sheets[this.sheet[0]], {
+
+    let index = this.sheet.findIndex(x=>x == this.selectedSheet);
+    let sourceField = XLSX.utils.sheet_to_json(this.wb.Sheets[this.sheet[index]], {
       header: this.importAddTmpGroup.value.firstCell,
     });
     this.dataIETables.sourceTable = this.importAddTmpGroup.value.sheetImport;
