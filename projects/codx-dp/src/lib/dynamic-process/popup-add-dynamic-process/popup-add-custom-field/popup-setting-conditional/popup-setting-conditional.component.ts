@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { CodxFormComponent, DialogData, DialogRef } from 'codx-core';
+import { CodxFormComponent, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { DP_Condition_Reference_Fields } from 'projects/codx-dp/src/lib/models/models';
 
 @Component({
@@ -14,7 +14,7 @@ export class PopupSettingConditionalComponent implements OnInit, AfterViewInit {
   dialog: DialogRef
   titleAction = '';
   fieldsCondition: any[];
-  fields = { text: 'fieldName', value: 'recID' };
+  fields = { text: 'title', value: 'recID' };
 
   data: DP_Condition_Reference_Fields;
   placeholder = 'Chọn điều kiện tham chiếu'
@@ -24,7 +24,7 @@ export class PopupSettingConditionalComponent implements OnInit, AfterViewInit {
   action = '';
   viewOnly = false
   constructor(
-
+    private notiService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -46,6 +46,22 @@ export class PopupSettingConditionalComponent implements OnInit, AfterViewInit {
   }
 
   saveData() {
+    if (!this.data.refID || this.data.refID.trim() == '') {
+      this.notiService.notify('Trường tham chiếu điều kiện chưa được thiết lập ! Vui lòng thiết lập đầy đủ !', "2")
+      return;
+    }
+    if (!this.data.compareConditions || this.data.compareConditions.trim() == '') {
+      this.notiService.notify('Điều kiện tham chiếu chưa được thiết lập ! Vui lòng thiết lập đầy đủ !', "2")
+      return;
+    }
+    if (!this.data.messageType || this.data.messageType.trim() == '') {
+      this.notiService.notify('Mức độ ràng buộc chưa được thiết lập ! Vui lòng thiết lập đầy đủ !', "2")
+      return;
+    }
+    if (!this.data.messageText || this.data.messageText.trim() == '') {
+      this.notiService.notify('Nội dung cảnh báo chưa được thiết lập ! Vui lòng thiết lập đầy đủ !', "2")
+      return;
+    }
     this.dialog.close(this.data)
   }
 

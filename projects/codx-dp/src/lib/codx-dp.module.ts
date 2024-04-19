@@ -70,6 +70,8 @@ import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx
 import { DashboardInstancesComponent } from './instances/dashboard-instances/dashboard-instances.component';
 import { ShareCrmModule } from './share-crm/share-crm.module';
 import { PopupSettingConditionalComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-setting-conditional/popup-setting-conditional.component';
+import { FieldReferenceFormatPipe } from './pipes/field-reference-format.pipe';
+
 
 export const routes: Routes = [
   {
@@ -170,17 +172,17 @@ const T_Component: Type<any>[] = [
   PopupSettingTableComponent,
   PopupSettingReferenceComponent,
   ViewInstancesComponent,
-  ReplaceProgressPipe,
   StepTaskInstanceComponent,
   PopupReleaseProcessComponent,
   ProcessesPropertiesComponent,
   PropertiesFieldComponent,
   PopupMapContractComponent,
-  PopupSettingConditionalComponent
+  PopupSettingConditionalComponent,
 ];
+const T_Pipe: Type<any>[] = [FieldReferenceFormatPipe, ReplaceProgressPipe]
 
 @NgModule({
-  declarations: [T_Component],
+  declarations: [T_Component, T_Pipe],
   imports: [
     CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),

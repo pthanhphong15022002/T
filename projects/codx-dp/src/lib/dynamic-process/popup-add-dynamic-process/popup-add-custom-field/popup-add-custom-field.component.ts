@@ -177,7 +177,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
   //Conditional
   listCbx = [];
-  fieldsDependence = { text: 'fieldName', value: 'recID' };
+  fieldsDependence = { text: 'title', value: 'recID' };
   listValueField = [];
   valueDependence = { text: 'text', value: 'value' };
   fieldInStep: any[]
@@ -1428,6 +1428,16 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.notiService.notify('Chưa có trường dữ liệu phù hợp để tham chiếu điều kiện với kiểu dữ liệu vừa tạo ra !', "2")
       return;
     }
+    let cons = this.field.conditionReference ?? [];
+    if (cons?.length > 0) {
+      let idCon = cons.map(x => x.refID);
+      fieldsCondition = fieldsCondition.filter(x => !idCon.includes(x.recID));
+      if (!fieldsCondition || fieldsCondition?.length == 0) {
+        this.notiService.notify('Các trường dữ liệu cùng kiểu đã thực hiện tham chiếu, vui lòng chỉnh sửa dữ liệu trước đó !', "2")
+        return;
+      }
+    }
+
     let option = new DialogModel();
     option.zIndex = 1050;
     let data = new DP_Condition_Reference_Fields();
@@ -1450,9 +1460,49 @@ export class PopupAddCustomFieldComponent implements OnInit {
     );
     dialogCon.closed.subscribe(res => {
       if (res && res.event) {
-        let cons = this.field.conditionReference ?? [];
         cons.push(res.event)
         this.field.conditionReference = cons
+      }
+    })
+  }
+
+  editCondition(con, idx) {
+    let fieldsCondition = this.fieldInStep.filter(x => x.dataType == this.field.dataType && x.dataFormat == this.field.dataFormat);
+    let cons = this.field.conditionReference ?? [];
+    if (cons?.length > 0) {
+      let idCon = cons.map(x => x.refID);
+      fieldsCondition = fieldsCondition.filter(x => !idCon.includes(x.recID) || con.refID == x.recID);
+    }
+    let option = new DialogModel();
+    option.zIndex = 1050;
+    let data = new DP_Condition_Reference_Fields();
+    data.messageType = '2'
+    let obj = {
+      data: con,
+      action: 'edit',
+      titleAction: this.grvSetup['ConditionReference']?.headerText, //test
+      fieldsCondition: fieldsCondition
+    };
+    let dialogCon = this.callfc.openForm(
+      PopupSettingConditionalComponent,
+      '',
+      550,
+      400,
+      '',
+      obj,
+      '',
+      option
+    );
+    dialogCon.closed.subscribe(res => {
+      if (res && res.event) {
+        this.field.conditionReference[idx] = res.event
+      }
+    })
+  }
+  deleteCondition(idx) {
+    this.notiService.alertCode('TM003').subscribe((confirm) => {
+      if (confirm?.event && confirm?.event?.status == 'Y') {
+        this.field.conditionReference.splice(idx, 1)
       }
     })
   }
