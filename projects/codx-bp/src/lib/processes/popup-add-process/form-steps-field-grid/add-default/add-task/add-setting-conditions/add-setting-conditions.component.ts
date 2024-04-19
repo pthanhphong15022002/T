@@ -82,9 +82,9 @@ export class AddSettingConditionsComponent {
     this.filters.filters.push(initFilter);
     if(dt?.data?.listSteps) this.listSteps = dt?.data?.listSteps;
     if (dt?.data) {
-      if (dt?.data?.dataStep?.paraValues) {
+      if (dt?.data?.dataStep) {
         this.filters = new Filters();
-        this.filters = dt.data?.dataStep?.paraValues;
+        if (dt?.data?.dataStep.paraValues) this.filters = dt.data?.dataStep?.paraValues;
         this.predicateName = dt.data?.dataStep?.predicateName;
         this.nextStepDefault = this.listSteps.filter(x=>x.recID == dt?.data?.dataStep?.nextStepID)[0];
         //this.isAdvance = dt.data[1];
@@ -107,7 +107,7 @@ export class AddSettingConditionsComponent {
     this.listForm = dt?.data?.forms;
     this.listExtendInfo = dt?.data?.extendInfo;
   }
-  
+
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['isPopup'] && !changes['isPopup'].currentValue){
       this.isPopup = false;
@@ -390,7 +390,7 @@ export class AddSettingConditionsComponent {
     });
     //this.isPopup && this.dialog.close(this.advFilters);
     this.genPerdicate();
-    var obj = 
+    var obj =
     {
       predicateName: this.predicateName,
       paraValues: this.advFilters,
@@ -457,7 +457,7 @@ export class AddSettingConditionsComponent {
     if (evt && evt) {
       filter.field = evt?.fieldName;
       filter.item = evt;
-    } 
+    }
   }
 
   itemSelect(evt: MenuEventArgs, filter?: FilterModel, index?: any) {
@@ -586,7 +586,7 @@ export class AddSettingConditionsComponent {
       {
         let p2 = p.filters[y];
         this.predicateV += this.convertOperator(p2,number);
-        if(p2?.operator && !p2.operator.includes("EMPTY")) 
+        if(p2?.operator && !p2.operator.includes("EMPTY"))
         {
           number ++;
           this.dataValueV.push(p2.value);

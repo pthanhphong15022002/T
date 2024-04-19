@@ -24,6 +24,7 @@ import {
 } from 'codx-core';
 import {
   ColumnTable,
+  DP_Condition_Reference_Fields,
   DP_Steps_Fields,
   tempVllDP,
 } from '../../../models/models';
@@ -174,7 +175,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
     emailTemplate: '',
     dateRemind: ''
   }
-
+  //Conditional
+  listCbx = [];
+  fieldsDependence = { text: 'fieldName', value: 'recID' };
+  listValueField = [];
+  valueDependence = { text: 'text', value: 'value' };
+  fieldInStep : any[]
   constructor(
     private cache: CacheService,
     private notiService: NotificationsService,
@@ -208,7 +214,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.field.recID = Util.uid();
       if (this.stepList?.length > 0) {
         this.stepList.forEach((objStep) => {
+
           if (objStep?.fields?.length > 0) {
+            if (objStep.recID == this.field.stepID) {
+              this.fieldInStep = objStep.fields ;
+              this.listCbx =  this.fieldInStep.filter(x => x.refType == "3");
+            }
             let arrFn = objStep?.fields.map((x) => {
               let obj = {
                 fieldName: x.fieldName,
@@ -344,7 +355,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         (this.field.dataType == 'N' ||
           this.field.dataType == 'P' ||
           this.field.dataType == 'T')) ||
-      ((this.field.dataType == 'L' || this.field.dataType == 'PA') &&
+      (((this.field.dataType == 'L' && this.field.dataFormat != 'B') || this.field.dataType == 'PA') &&
         this.field.refValue) ||
       (this.field.dataType == 'L' && this.field.dataFormat == 'B')
     ) {
@@ -1402,11 +1413,20 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
   //----------------- Conditons Ref------------------//
   clickSettingConditional() {
+    let fieldsCondition = this.fieldInStep.filter(x=>x.dataType == this.field.dataType && x.dataFormat == this.field.dataFormat)
+    if(!fieldsCondition || fieldsCondition?.length == 0){
+     this.notiService.notify('Chưa có trường giữ liệu phù hợp để tham chiếu điều kiện với kiểu dữ liệu vừa tạo ra !' ,"2")
+     return;
+    }
     let option = new DialogModel();
     option.zIndex = 1050;
+    let data = new DP_Condition_Reference_Fields();
+    data.messageType ='2'
     let obj = {
+      data : data,
       action: 'add',
       titleAction: this.grvSetup['ConditionReference']?.headerText, //test
+      fieldsCondition : fieldsCondition
     };
     let dialogCon = this.callfc.openForm(
       PopupSettingConditionalComponent,
@@ -1420,7 +1440,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
     );
     dialogCon.closed.subscribe(res => {
       if (res && res.event) {
-
+        let cons = this.field.conditionReference ?? [] ;
+        cons.push(res.event)
+        this.field.conditionReference = cons
       }
     })
   }
@@ -1428,7 +1450,33 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //----------------- Dependences------------------//
   changeDependences(e) {
     this.field['isApplyDependences'] = e.data;
-    if (this.field.isApplyDependences) this.field.isApplyConditional = false;
+    if (this.field.isApplyDependences) {
+      this.field.isApplyConditional = false;
+      if (this.listCbx?.length > 0) {
+
+      }
+    }
+  }
+  cbxChangeDependence(e) {
+    if (e) {
+      let field = this.listCbx.find(x => x.recID == e);
+      if (field && field.refValue) {
+        this.cache.combobox(field.refValue).subscribe(res => {
+          if (res) {
+            this.listValueField = res.tableFields?.split(";").map(x => {
+              let obj = {
+                text: x,
+                value: x
+              }
+              return obj;
+            })
+          }
+        })
+      }
+    }
+  }
+  cbxChangeValueDependence(e) {
+
   }
   //-------------Default ------------//
   changeUseDeafaut(e) {
