@@ -183,6 +183,15 @@ export class CodxDpService {
     );
   }
 
+  getDataProccessMove(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetProcessMoveAsync',
+      data
+    );
+  }
+
   updatePermissionProcess(process) {
     return this.api.exec<any>(
       'DP',
