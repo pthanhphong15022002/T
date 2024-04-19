@@ -37,6 +37,7 @@ export class PopupCustomFieldComponent implements OnInit {
   widthDefault = '550';
   fieldOther = []; //Là form công việc
   isView = false; // nvthuan them để chỉ được xem
+  conRef: any[] = []//mang ref error
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -80,8 +81,8 @@ export class PopupCustomFieldComponent implements OnInit {
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
-      var result = event.e;
-      var field = event.data;
+      let result = event.e;
+      let field = event.data;
 
       // var result = event.e?.data;
       // var field = event.data;
@@ -107,6 +108,18 @@ export class PopupCustomFieldComponent implements OnInit {
       let index = this.fields.findIndex((x) => x.recID == field.recID);
       if (index != -1) {
         this.fields[index] = this.upDataVersion(this.fields[index], result);
+        if (field.isApplyConditional) {
+          let check = this.customFieldSV.checkConditionalRef(this.fields, this.fields[index])
+          if (!check?.check) {
+            check.conditionRef.forEach(x => {
+              if (!this.conRef.some(f => f.refID == x.refID)) this.conRef.push(x)
+            })
+          } else if (check.conditionRef?.length > 0) {
+            check.conditionRef.forEach(x => {
+              this.conRef = this.conRef.filter(f => f.refID != x.refID);
+            })
+          }
+        }
         // this.fields[index].dataValue = result;
         if (field.dataType == 'N') this.caculateField();
       }
@@ -150,7 +163,13 @@ export class PopupCustomFieldComponent implements OnInit {
 
   onSave() {
     if (this.fields?.length == 0 || !this.isAddComplete) return;
-
+    //Kieerm tra dk
+    if (this.conRef?.length > 0) {
+      this.conRef.forEach(x => {
+        this.notiService.notify(x.messageText, x.messageType)
+      })
+      return
+    }
     let check = true;
     let checkFormat = true;
     this.fields.forEach((f) => {
