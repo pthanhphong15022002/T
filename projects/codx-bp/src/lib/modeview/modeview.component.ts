@@ -23,7 +23,7 @@ export class ModeviewComponent implements OnInit {
   @Input() stepNo:any;
   vllBP002:any;
   table: Array<any> = [];
-  basic = ["Text","ValueList","ComboBox","DateTime","Attachment","Number","YesNo","User","Share","UserInfo"];
+  basic = ["Text","ValueList","ComboBox","DateTime","Attachment","Number","YesNo","User","Share","UserInfo","Approvers"];
   lstDataAdd = [];
   count = count;
   dataSelected: any;
@@ -71,6 +71,7 @@ export class ModeviewComponent implements OnInit {
     this.count.address = 0,
     this.count.expression = 0;
     this.count.userInfo = 0;
+    this.count.approvers = 0;
   }
 
   btnClick()
@@ -204,6 +205,8 @@ export class ModeviewComponent implements OnInit {
         this.vllBP002.datas = this.vllBP002.datas.concat(elm.extendInfo);
       }
     }) 
+
+    this.vllBP002 = JSON.parse(JSON.stringify(this.vllBP002));
   }
 
   default()
@@ -241,7 +244,7 @@ export class ModeviewComponent implements OnInit {
 
   drop(event: any) {
     if (event.previousContainer !== event.container) {
-      let data = event?.item?.data
+      let data = JSON.parse(JSON.stringify(event?.item?.data));
       if(!data?.recID) data = this.genData(data);
       else
       {
@@ -400,6 +403,17 @@ export class ModeviewComponent implements OnInit {
         data.dataType = "String"
         break;
       }
+      case "Approvers":
+      {
+        this.count.approvers ++;
+        data.title += " " + this.count.approvers;
+        data.controlType = "ComboBox";
+        data.defaultValue = false;
+        data.refType = "3";
+        data.refValue = "BPApprovers";
+        data.dataType = "String"
+        break;
+      }
       case "Share":
       {
         this.count.share ++;
@@ -492,7 +506,7 @@ export class ModeviewComponent implements OnInit {
         data.title += " " + this.count.expression;
         data.dataFormat = "Expression";
         data.controlType = "TextBox";
-        data.referedType = "E";
+        data.refType = "E";
         break;
       }
       case "Phone":

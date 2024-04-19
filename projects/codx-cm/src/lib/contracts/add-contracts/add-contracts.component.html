@@ -260,22 +260,22 @@
         ></codx-input>
       </div>
     </div>
-
     <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          [formModel]="form?.formModel"
-          fiedName="contractDate"
-          default="Ngày tạo hợp đồng"
-        ></codx-label>
-        <codx-input
-          field="contractDate"
-          [formModel]="form.formModel"
-          [crrValue]="contracts?.contractDate"
-          (valueChange)="changeValueDate($event)"
-          [disabled]="action == 'view'"
-        ></codx-input>
-      </div>
+      <codx-label
+        [formModel]="form?.formModel"
+        fiedName="contractNoRef"
+        default="Số hợp đồng"
+      ></codx-label>
+      <codx-input
+        #comboboxContractType
+        field="contractNoRef"
+        [formModel]="form?.formModel"
+        [Group]="form.formGroup"
+        [crrValue]="contracts?.contractNoRef"
+        (valueChange)="valueChangeText($event)"
+        [disabled]="action == 'view'"
+      >
+      </codx-input>
     </div>
   </div>
 
@@ -305,21 +305,20 @@
 
   <div class="row form-group">
     <div class="col-6">
-      <codx-label
-        [formModel]="form?.formModel"
-        fiedName="contractNoRef"
-        default="Số hợp đồng"
-      ></codx-label>
-      <codx-input
-        #comboboxContractType
-        field="contractNoRef"
-        [formModel]="form?.formModel"
-        [Group]="form.formGroup"
-        [crrValue]="contracts?.contractNoRef"
-        (valueChange)="valueChangeText($event)"
-        [disabled]="action == 'view'"
-      >
-      </codx-input>
+      <div class="form-group">
+        <codx-label
+          [formModel]="form?.formModel"
+          fiedName="contractDate"
+          default="Ngày tạo hợp đồng"
+        ></codx-label>
+        <codx-input
+          field="contractDate"
+          [formModel]="form.formModel"
+          [crrValue]="contracts?.contractDate"
+          (valueChange)="changeValueDate($event)"
+          [disabled]="action == 'view'"
+        ></codx-input>
+      </div>
     </div>
     <div class="col-6">
       <codx-label
@@ -763,6 +762,7 @@
       field="dealID"
       [formModel]="form.formModel"
       [Group]="form.formGroup"
+      [crrValue]="contracts?.dealID"
       (valueChange)="valueChangeCombobox($event)"
       [disabled]="type == 'deal' || action === 'view'"
     >

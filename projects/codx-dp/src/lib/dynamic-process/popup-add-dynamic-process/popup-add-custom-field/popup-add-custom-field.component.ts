@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnInit,
@@ -7,10 +6,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import {
-  SliderTickEventArgs,
-  SliderTickRenderedEventArgs,
-} from '@syncfusion/ej2-angular-inputs';
+
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
@@ -28,6 +24,7 @@ import {
 } from 'codx-core';
 import {
   ColumnTable,
+  DP_Condition_Reference_Fields,
   DP_Steps_Fields,
   tempVllDP,
 } from '../../../models/models';
@@ -39,8 +36,6 @@ import {
   map,
   takeUntil,
 } from 'rxjs';
-import { X } from '@angular/cdk/keycodes';
-import test from 'node:test';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxDpService } from '../../../codx-dp.service';
 import { PopupAddVllCustomComponent } from './popup-add-vll-custom/popup-add-vll-custom.component';
@@ -49,6 +44,7 @@ import { PopupSettingReferenceComponent } from './popup-setting-reference/popup-
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 import { CodxInputCustomFieldComponent } from '../../../share-crm/codx-input-custom-field/codx-input-custom-field.component';
 import { CodxFieldsFormatValueComponent } from '../../../share-crm/codx-input-custom-field/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
+import { PopupSettingConditionalComponent } from './popup-setting-conditional/popup-setting-conditional.component';
 
 @Component({
   selector: 'lib-popup-add-custom-field',
@@ -179,7 +175,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
     emailTemplate: '',
     dateRemind: ''
   }
-
+  //Conditional
+  listCbx = [];
+  fieldsDependence = { text: 'fieldName', value: 'recID' };
+  listValueField = [];
+  valueDependence = { text: 'text', value: 'value' };
+  fieldInStep : any[]
   constructor(
     private cache: CacheService,
     private notiService: NotificationsService,
@@ -213,7 +214,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.field.recID = Util.uid();
       if (this.stepList?.length > 0) {
         this.stepList.forEach((objStep) => {
+
           if (objStep?.fields?.length > 0) {
+            if (objStep.recID == this.field.stepID) {
+              this.fieldInStep = objStep.fields ;
+              this.listCbx =  this.fieldInStep.filter(x => x.refType == "3");
+            }
             let arrFn = objStep?.fields.map((x) => {
               let obj = {
                 fieldName: x.fieldName,
@@ -349,7 +355,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         (this.field.dataType == 'N' ||
           this.field.dataType == 'P' ||
           this.field.dataType == 'T')) ||
-      ((this.field.dataType == 'L' || this.field.dataType == 'PA') &&
+      (((this.field.dataType == 'L' && this.field.dataFormat != 'B') || this.field.dataType == 'PA') &&
         this.field.refValue) ||
       (this.field.dataType == 'L' && this.field.dataFormat == 'B')
     ) {
@@ -367,6 +373,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   changeRequired(e) {
     this.field.isRequired = e.data;
+  }
+  changeConditional(e) {
+    this.field.isApplyConditional = e.data;
   }
   valueChangeIcon(e) {
     if (e && e?.data) this.field.rankIcon = e.data;
@@ -1028,7 +1037,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.cache.gridViewSetup(formName, gridViewName).subscribe((grv) => {
       if (grv) {
         let option = new DialogModel();
-        console.log(grv);
         option.zIndex = 1050;
         let obj = {
           datas: grv,
@@ -1402,5 +1410,76 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //-----------------Remind------------------//
   valueChangeChbx(e) {
 
+  }
+  //----------------- Conditons Ref------------------//
+  clickSettingConditional() {
+    let fieldsCondition = this.fieldInStep.filter(x=>x.dataType == this.field.dataType && x.dataFormat == this.field.dataFormat)
+    if(!fieldsCondition || fieldsCondition?.length == 0){
+     this.notiService.notify('Chưa có trường giữ liệu phù hợp để tham chiếu điều kiện với kiểu dữ liệu vừa tạo ra !' ,"2")
+     return;
+    }
+    let option = new DialogModel();
+    option.zIndex = 1050;
+    let data = new DP_Condition_Reference_Fields();
+    data.messageType ='2'
+    let obj = {
+      data : data,
+      action: 'add',
+      titleAction: this.grvSetup['ConditionReference']?.headerText, //test
+      fieldsCondition : fieldsCondition
+    };
+    let dialogCon = this.callfc.openForm(
+      PopupSettingConditionalComponent,
+      '',
+      550,
+      400,
+      '',
+      obj,
+      '',
+      option
+    );
+    dialogCon.closed.subscribe(res => {
+      if (res && res.event) {
+        let cons = this.field.conditionReference ?? [] ;
+        cons.push(res.event)
+        this.field.conditionReference = cons
+      }
+    })
+  }
+
+  //----------------- Dependences------------------//
+  changeDependences(e) {
+    this.field['isApplyDependences'] = e.data;
+    if (this.field.isApplyDependences) {
+      this.field.isApplyConditional = false;
+      if (this.listCbx?.length > 0) {
+
+      }
+    }
+  }
+  cbxChangeDependence(e) {
+    if (e) {
+      let field = this.listCbx.find(x => x.recID == e);
+      if (field && field.refValue) {
+        this.cache.combobox(field.refValue).subscribe(res => {
+          if (res) {
+            this.listValueField = res.tableFields?.split(";").map(x => {
+              let obj = {
+                text: x,
+                value: x
+              }
+              return obj;
+            })
+          }
+        })
+      }
+    }
+  }
+  cbxChangeValueDependence(e) {
+
+  }
+  //-------------Default ------------//
+  changeUseDeafaut(e) {
+    this.field['isUseDefault'] = e.data;
   }
 }

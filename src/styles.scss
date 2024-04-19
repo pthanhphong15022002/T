@@ -2135,7 +2135,7 @@ codx-tabs {
 
 codx-share .role-group .user-nav-item.p-1 {
   padding: 0 !important;
-  margin-bottom: 5px !important;
+  margin-bottom: 8px !important;
 }
 
 codx-share .role-group div.user-mini-nav {
@@ -4727,4 +4727,10 @@ lib-process-release{
   codx-view-kanban{
     width: fit-content;
   }
+}
+.scroll-hover {
+  overflow-y: scroll!important;
+}
+.e-dashboardlayout.e-control .e-panel .e-panel-header {
+  padding: 8px 8px;
 }

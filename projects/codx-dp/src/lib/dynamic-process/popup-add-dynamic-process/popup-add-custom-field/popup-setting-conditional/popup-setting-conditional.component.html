@@ -1,0 +1,97 @@
+<codx-form
+  #form
+  [headerText]="titleAction"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+>
+  <ng-template #body>
+    <div class="form-group">
+      <codx-label
+        class="me-3"
+        fieldName="refID"
+        formName="DPConditionReferenceFields"
+        gridViewName="grvDPConditionReferenceFields"
+        default="Trường tham chiếu điều kiện"
+      ></codx-label>
+      <ejs-combobox
+        [dataSource]="fieldsCondition"
+        [fields]="fields"
+        [value]=""
+        [allowFiltering]="false"
+        [placeholder]=""
+        (valueChange)="cbxChangeCondition($event)"
+      ></ejs-combobox>
+    </div>
+    <div class="form-group">
+      <codx-label
+        class="me-3"
+        fieldName="compareConditions"
+        formName="DPConditionReferenceFields"
+        gridViewName="grvDPConditionReferenceFields"
+        default="Trường tham chiếu điều kiện"
+      ></codx-label>
+      <codx-input
+        type="valuelist"
+        field="compareConditions"
+        [crrValue]="data?.compareConditions"
+        [refValue]="vllCompare"
+        [placeholder]="placeholder"
+        (valueChange)="changeVll($event)"
+      >
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label
+        class="me-3"
+        fieldName="messageType"
+        formName="DPConditionReferenceFields"
+        gridViewName="grvDPConditionReferenceFields"
+        default="Điều kiện ràng buộc"
+      ></codx-label>
+      <codx-input
+        type="valuelist"
+        field="messageType"
+        [crrValue]="data?.messageType"
+        [refValue]="vllTypeMess"
+        [placeholder]="placeholderType"
+        (valueChange)="changeVll($event)"
+      >
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label
+        class="me-3"
+        fieldName="messageText"
+        formName="DPConditionReferenceFields"
+        gridViewName="grvDPConditionReferenceFields"
+        default="Nội dung cảnh báo"
+      ></codx-label>
+      <codx-input
+        type="text"
+        field="messageText"
+        [crrValue]="data?.messageText"
+        [refValue]="vllTypeMess"
+        [placeholder]="placeholder"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="saveData()"
+        [disabled]="viewOnly"
+      >
+        <codx-label
+          name="Save"
+          formName="StepsFields"
+          default="Lưu"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>
