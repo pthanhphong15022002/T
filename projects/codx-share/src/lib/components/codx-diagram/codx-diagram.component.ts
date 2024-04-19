@@ -1013,8 +1013,38 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
         };
         model.width = 300;
         model.height = 150;
-        model.margin.left =  model.margin.left + model.width/2;
+        model.margin.left =  model.margin.left ;
         model.data = this.generateStep(e.item?.element?.nativeElement?.id,this.targetItem?.refID)
+        if(model.data.activityType == 'Form' && !model.data.extendInfo?.length){
+          model.data.extendInfo =[
+            {
+              recID: Util.uid(),
+              fieldName: 'ten_bieu_mau_' + this.data?.stepNo,
+              title: 'Tên biểu mẫu',
+              dataType: 'String',
+              fieldType: 'Title',
+              controlType: 'TextBox',
+              isRequired: true,
+              defaultValue: null,
+              description: '',
+              columnOrder: 0,
+              columnNo: 0,
+            },
+            {
+              recID: Util.uid(),
+              fieldName: 'mo_ta_ngan_gon_' + this.data?.stepNo,
+              title: 'Mô tả ngắn gọn',
+              dataType: 'String',
+              fieldType: 'SubTitle',
+              controlType: 'TextBox',
+              isRequired:  this.data?.stepNo == 1 ? true : false,
+              defaultValue: 'Mô tả ngắn gọn',
+              description: 'Câu trả lời',
+              columnOrder: 1,
+              columnNo: 0,
+            },
+          ];
+        }
         if(this.process && this.process.steps)this.process.steps.push(model.data);
         // if(swimlane)this.diagram.addNodeToLane(model,swimlane,laneID)
         // else this.diagram.add(model);
@@ -1658,7 +1688,15 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
           }
           (source as any).settings = JSON.stringify(sourceSetting);
           let step = this.process.steps.find((x:any)=>x.recID== (source as any).recID);
+
+
           if(step) step.settings = JSON.stringify(sourceSetting);
+          if(step.activityType=='Conditions'){
+            let condition = this.diagram.nodes.find((x:any)=>x.id==e.source.sourceID);
+            (condition.data as any).settings = JSON.stringify(sourceSetting);
+            this.addEditStages(condition,'edit');
+
+          }
           console.log(this.process);
 
         }
@@ -1964,7 +2002,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
       parent: any = null,
       stage: any = null,
       isCondistion = false,
-      hideDelete = false
+      hideDelete = true
     ) {
       let lstParent = JSON.parse(JSON.stringify(this.process?.steps?.filter((x:any)=>x.activityType=='Stage')));
       lstParent.forEach((elm) => {
@@ -1976,7 +2014,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
       if(item.data.settings && typeof item.data.settings=='string'){
         item.data.settings=JSON.parse(item.data.settings);
       }
-      var obj = {
+      let obj = {
         type: type,
         activityType: item.data.activityType,
         process: this.process,
@@ -1985,6 +2023,8 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
         stage: stage,
         listStage: lstParent,
         hideDelete: hideDelete,
+        listSteps: this.process?.steps,
+        dataStep: item.data.settings,
         formModel: new FormModel(),
       };
       let option = new SidebarModel();
@@ -1994,6 +2034,11 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
       popup.closed.subscribe((res) => {
         if (res?.event) {
           item.data = res.event.data;
+          let idx = this.process.steps?.findIndex((x:any)=>x.recID==item.data.recID)
+          if(idx>-1){
+            this.process.steps[idx] = res.event.data;
+          }
+
           this.detectorRef.detectChanges();
           if (res?.event?.delete) {
             this.data = res?.event?.process || this.data;
