@@ -12,6 +12,7 @@ export class AcctrantsTableComponent extends UIComponent {
   //#region Constructor
   @Input() itemSelected: any;
   @Input() baseCurr: any;
+  @Input() noCheckCurrID: any = false;
 
   totalAcctDR: any = 0; //? tổng tiền nợ tab hạch toán
   totalAcctCR: any = 0; //? tông tiền có tab hạch toán

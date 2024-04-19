@@ -23,6 +23,7 @@ import {
 } from '@syncfusion/ej2-angular-grids';
 import { Subject, pipe, takeUntil } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'lib-suggestion-add',
@@ -58,7 +59,7 @@ export class SuggestionAdd  extends UIComponent implements OnInit {
     private acService: CodxAcService,
     private dt: ChangeDetectorRef,
     private notification: NotificationsService,
-    private auth: AuthService,
+    private ngxLoader: NgxUiLoaderService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -133,6 +134,7 @@ export class SuggestionAdd  extends UIComponent implements OnInit {
         this.dateSuggestion,
         this.type,
         this.master.objectID,
+        (this.master.journalType.toLowerCase() === 'cp' || this.master.journalType.toLowerCase() === 'bp') ? 'PC' : 'PT'
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
@@ -142,12 +144,14 @@ export class SuggestionAdd  extends UIComponent implements OnInit {
         }else{
           if(showArlert) this.notification.notifyCode('AC0027');
         }
+        this.onDestroy();
       });
   }
   //#endregion Function
 
   //#region Method
   onApply() {
+    this.ngxLoader.start();
     let classname = (this.master.journalType.toLowerCase() === 'cp' || this.master.journalType.toLowerCase() === 'bp') ? 'CashPaymentsLinesBusiness' : 'CashReceiptsLinesBusiness'
     this.api
       .exec('AC', classname, 'SaveRequestAsync', [
@@ -155,9 +159,15 @@ export class SuggestionAdd  extends UIComponent implements OnInit {
         this.grid.arrSelectedRows
       ])
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res) {
-          this.dialog.close(res);
+      .subscribe({
+        next:(res: any) => {
+          if (res) {
+            this.dialog.close(res);
+          }
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          this.onDestroy();
         }
       });
   }

@@ -37,6 +37,7 @@ import { AssetJournalsAddComponent } from './asset-journals-add/asset-journals-a
 import { NewvoucherComponent } from '../../share/add-newvoucher/newvoucher.component';
 import { JournalsAddComponent } from '../../journals/journals-add/journals-add.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'lib-asset-journals',
@@ -78,7 +79,8 @@ export class AssetJournalsComponent extends UIComponent {
     private acService: CodxAcService,
     private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
-    private notification: NotificationsService
+    private notification: NotificationsService,
+    private ngxLoader: NgxUiLoaderService,
   ) {
     super(inject);
     if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
@@ -109,7 +111,6 @@ export class AssetJournalsComponent extends UIComponent {
         this.predicate = '';
         this.runmode = res.runMode;
       }
-      this.onDestroy();
     });
 
     this.cache.functionList(this.funcID).subscribe((res) => {
@@ -134,7 +135,7 @@ export class AssetJournalsComponent extends UIComponent {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
           collapsed: true,
-          widthLeft: '23%',
+          widthLeft: '350px',
           //separatorSize:3
         },
       },
@@ -282,17 +283,21 @@ export class AssetJournalsComponent extends UIComponent {
    * @param data
    * @returns
    */
-  changeMFDetail(event: any, type: any = '',data:any) {
+  changeMFDetail(event: any, type: any) {
+    let data = this.view.dataService.dataSelected;
     if (this.runmode == '1') {
       this.shareService.changeMFApproval(event, data.unbounds);
     } else {
-      this.acService.changeMFAsset(
-        event,
-        data,
-        type,
-        this.journal,
-        this.view.formModel
-      );
+      this.acService.changeMFAsset(event,data,type,this.journal,this.view.formModel);
+    }
+  }
+
+  changeMFGrid(event: any, type: any,data:any) {
+    if (this.runmode == '1') {
+      this.shareService.changeMFApproval(event, data.unbounds);
+    } else {
+      this.acService.changeMFAsset(event,data,type,this.journal,this.view.formModel);
+      this.detectorRef.detectChanges();
     }
   }
   /**
@@ -317,40 +322,46 @@ export class AssetJournalsComponent extends UIComponent {
    * *Hàm thêm mới chứng từ
    */
   addNewVoucher() {
+    this.ngxLoader.start();
     this.view.dataService
       .addNew((o) => this.setDefault(this.dataDefault))
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res != null) {
-          res.isAdd = true;
-          if (this.dataDefault == null) this.dataDefault = { ...res };
-          let data = {
-            headerText: this.headerText,
-            journal: { ...this.journal },
-            oData: { ...res },
-            baseCurr: this.baseCurr,
-          };
-          let optionSidebar = new SidebarModel();
-          optionSidebar.DataService = this.view?.dataService;
-          optionSidebar.FormModel = this.view?.formModel;
-          let dialog = this.callfc.openSide(
-            AssetJournalsAddComponent,
-            data,
-            optionSidebar,
-            this.view.funcID
-          );
-          dialog.closed.subscribe((res) => {
-            if (res && res?.event) {
-              if (res?.event?.type === 'discard') {
-                if (this.view.dataService.data.length == 0) {
-                  this.itemSelected = undefined;
-                  this.detectorRef.detectChanges();
+      .subscribe({
+        next:(res:any)=>{
+          if (res != null) {
+            res.isAdd = true;
+            if (this.dataDefault == null) this.dataDefault = { ...res };
+            let data = {
+              headerText: this.headerText,
+              journal: { ...this.journal },
+              oData: { ...res },
+              baseCurr: this.baseCurr,
+            };
+            let optionSidebar = new SidebarModel();
+            optionSidebar.DataService = this.view?.dataService;
+            optionSidebar.FormModel = this.view?.formModel;
+            let dialog = this.callfc.openSide(
+              AssetJournalsAddComponent,
+              data,
+              optionSidebar,
+              this.view.funcID
+            );
+            dialog.closed.subscribe((res) => {
+              if (res && res?.event) {
+                if (res?.event?.type === 'discard') {
+                  if (this.view.dataService.data.length == 0) {
+                    this.itemSelected = undefined;
+                    this.detectorRef.detectChanges();
+                  }
                 }
               }
-            }
-          });
+            });
+          }
+        },
+        complete:()=>{
+          this.ngxLoader.stop();
+          this.onDestroy();
         }
-        this.onDestroy();
       });
   }
 
