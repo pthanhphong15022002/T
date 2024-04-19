@@ -220,12 +220,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.field.recID = Util.uid();
       if (this.stepList?.length > 0) {
         this.stepList.forEach((objStep) => {
-
           if (objStep?.fields?.length > 0) {
-            if (objStep.recID == this.field.stepID) {
-              this.fieldInStep = objStep.fields;
-              this.listCbx = this.fieldInStep.filter(x => x.refType == "3");
-            }
             let arrFn = objStep?.fields.map((x) => {
               let obj = {
                 fieldName: x.fieldName,
@@ -246,6 +241,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    let objStep = this.stepList.find(x => x.recID == this.field.stepID);
+    if (objStep) {
+      this.fieldInStep = objStep.fields;
+      this.listCbx = this.fieldInStep.filter(x => x.refType == "3");
+    }
     if (
       this.field.dataType == 'L' &&
       (this.field.dataFormat == 'V' || this.field.dataFormat == 'S')
