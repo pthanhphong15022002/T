@@ -113,21 +113,21 @@
     <div class="wp-contents mt-3">
       <div class="wp-contents-text">
         <div *ngIf="item.contents" [innerHTML]="item.contents | safe: 'html'"></div>
-        <ng-container *ngIf="item.isShortContent">
-          <div>
-            <a href="javascript:void(0)" (click)="clickReadMore(item)">
-              <codx-label [formModel]="formModel" name="lblViewMore" default="Xem thêm"></codx-label>
-            </a>
+          <ng-container *ngIf="item.isShortContent">
+            <div>
+              <a href="javascript:void(0)" (click)="clickReadMore(item)">
+                <codx-label [formModel]="formModel" name="lblViewMore" default="Xem thêm"></codx-label>
+              </a>
+            </div>
+          </ng-container>
+        </div>
+        <ng-container *ngIf="item.attachments > 0">
+          <div class="wp-contents-files mt-3 mb-3">
+            <codx-view-files [objectID]="item.recID" [objectType]="'WP_Comments'" [formModel]="formModel"
+              [medias]="item.medias" (selectFile)="clickViewDetail($event)">
+            </codx-view-files>
           </div>
         </ng-container>
-      </div>
-      <ng-container *ngIf="item.attachments > 0">
-        <div class="wp-contents-files mt-3 mb-3">
-          <codx-view-files [objectID]="item.recID" [objectType]="'WP_Comments'" [formModel]="formModel"
-            [medias]="item.medias" (selectFile)="clickViewDetail($event)">
-          </codx-view-files>
-        </div>
-      </ng-container>
     </div>
     <!-- template share -->
     <ng-container *ngIf="item.category == CATEGORY.SHARE || item.category == CATEGORY.FEEDBACK">
@@ -267,7 +267,7 @@
 <ng-template #templateTags let-data>
   <div ngbDropdown class="symbol-more" [container]="'body'">
     <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <span class="listpost-share" [innerHTML]="data.tagName"> </span>
+      <span [innerHTML]="data.tagName"></span>
     </div>
     <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
       <div class="py-2">

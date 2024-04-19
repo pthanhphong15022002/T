@@ -316,6 +316,23 @@
           </div>
         </div>
       </div>
+      <div class="row" *ngIf="grvSetup && !grvSetup['LineManager']['allowPopup']">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              name="LineManager"
+              [default]="'Quản lí trực tiếp'">
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="lineManager"
+              (valueChange)="dataChange($event)">
+            </codx-input>
+          </div>
+        </div>
+      </div>
     </div>
   </ng-container>
 </ng-template>

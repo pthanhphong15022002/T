@@ -1453,19 +1453,19 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             let valueOld =
               this.listInstanceSteps[index].fields[idxField].dataValue;
             this.listInstanceSteps[index].fields[idxField].dataValue = result;
-            //Tham chieu rang buoc
-            let crrField = this.listInstanceSteps[index].fields[idxField];
-            if (crrField.isApplyConditional && crrField?.conditionReference?.length > 0) {
-              let check = this.customFieldSV.checkConditionalRef(this.listInstanceSteps[index].fields, crrField)
-              this.conRef = this.conRef.filter(f => f?.id != crrField.recID);
-              if (!check?.check && check.conditionRef?.length > 0) {
-                let arrRef = check.conditionRef.map(x => {
-                  let obj = { ...x, id: crrField.recID }
-                  return obj
-                })
-                this.conRef = this.conRef.concat(arrRef)
-              }
-            }
+            // //Tham chieu rang buoc
+            // let crrField = this.listInstanceSteps[index].fields[idxField];
+            // if (crrField.isApplyConditional && crrField?.conditionReference?.length > 0) {
+            //   let check = this.customFieldSV.checkConditionalRef(this.listInstanceSteps[index].fields, crrField)
+            //   this.conRef = this.conRef.filter(f => f?.id != crrField.recID);
+            //   if (!check?.check && check.conditionRef?.length > 0) {
+            //     let arrRef = check.conditionRef.map(x => {
+            //       let obj = { ...x, id: crrField.recID }
+            //       return obj
+            //     })
+            //     this.conRef = this.conRef.concat(arrRef)
+            //   }
+            // }
 
             let idxEdit = this.listCustomFile.findIndex(
               (x) =>
@@ -1773,17 +1773,17 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
   //#region CRUD
   async save() {
-    if (!this.checkRequiredTask() || !this.checkRequiredContract()) return;
+    if (!this.checkRequiredTask() || !this.checkRequiredContract() || !this.conditionRefValidate()) return;
     if (this.contracts?.applyProcess) {
       this.convertData(this.contracts, this.instance);
     }
-    //Kieerm tra dk ref cua truong tuy chinh
-    if (this.conRef?.length > 0) {
-      this.conRef.forEach(x => {
-        this.notiService.notify(x.messageText, x.messageType)
-      })
-      return
-    }
+    // //Kieerm tra dk ref cua truong tuy chinh
+    // if (this.conRef?.length > 0) {
+    //   this.conRef.forEach(x => {
+    //     this.notiService.notify(x.messageText, x.messageType)
+    //   })
+    //   return
+    // }
 
     if (this.attachment && this.attachment.fileUploadList.length) {
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
@@ -2023,5 +2023,18 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     width = Util.getViewPort().width.toString();
     this.dialog.setWidth(this.isShowMore ? width : this.widthDefault);
     this.changeDetectorRef.detectChanges();
+  }
+
+  conditionRefValidate() {
+    //Tham chieu rafng buoc
+    var checkAll = true;
+    let fieldsApplyCondition = this.listField.filter(x => x.isApplyConditional && x.conditionReference?.length > 0);
+    if (fieldsApplyCondition?.length > 0) {
+      fieldsApplyCondition.forEach(x => {
+        let check = this.customFieldSV.checkConditionalRef(this.listField, x);
+        if (checkAll && !check.check) checkAll = check.check;
+      })
+    }
+    return checkAll;
   }
 }
