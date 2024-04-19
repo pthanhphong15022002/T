@@ -68,6 +68,10 @@ implements OnInit  {
     
   }
 
+  closeMyTeamPopUp(){
+    this.dialog.close();
+  }
+
   
 }
 

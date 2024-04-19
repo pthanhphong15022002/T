@@ -1,0 +1,40 @@
+<div>
+    <!-- header -->
+    <div></div>
+    <!-- content -->
+    <div>
+        <!-- content left -->
+        <div>
+            <!-- sub header -->
+            <div>
+                <codx-searchbar></codx-searchbar>
+                <div>
+                    <codx-dropdown-calendar></codx-dropdown-calendar>
+                    <codx-dropdown-calendar></codx-dropdown-calendar>
+                </div>
+            </div>
+            <!-- Main content -->
+            <div>
+                <codx-listview entityName="DM_FileInfo" gridViewName="grvFileInfo" formName="FileInfo"
+                [itemTemplate]="templateNewEmployee"  service="DM"
+                height="50px"  class="newemployee-listview">
+              </codx-listview>
+              <ng-template #templateNewEmployee>
+                <div>HIHI</div>
+              </ng-template>
+    
+            </div>
+        </div>
+        <!-- content right -->
+        <div>
+            <!-- sub header -->
+            <div>
+
+            </div>
+            <!-- Main content -->
+            <div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -30,6 +30,9 @@ import { ShareCrmModule } from 'projects/codx-dp/src/lib/share-crm/share-crm.mod
 import { SharedModule } from '@shared/shared.module';
 import { ProfileLast7dayComponent } from '../dashboard/components/profile-last7day/profile-last7day.component';
 import { ProfileDashboardLeaveComponent } from '../dashboard/components/profile-dashboard-leave/profile-dashboard-leave.component';
+import { AgeStatisticComponent } from '../dashboard/widgets/age-statistic/age-statistic.component';
+import { PopupMenusidebarReponsiveComponent } from './employee-info-profile/components/pop-up/popup-menusidebar-reponsive/popup-menusidebar-reponsive.component';
+import { PopupReviewRegisterApproveComponent } from './employee-info-profile/components/pop-up/popup-review-register-approve/popup-review-register-approve.component';
 
 export const routes: Routes = [
   // {
@@ -95,11 +98,14 @@ const T_Component = [
   DashboardRegisterAprroveComponent,
   SidebarTreeviewComponent,
   PersonalInfoComponent,
+  PopupMenusidebarReponsiveComponent,
 
 
   ProfileLast7dayComponent,
   ProfileDashboardLeaveComponent,
   MyTemComponent,
+  AgeStatisticComponent,
+  PopupReviewRegisterApproveComponent
 
   
   // DialogRegisterApproveComponent

@@ -25,11 +25,11 @@
       type="previous" ContainerID="tab-container-id"></i>
 
     <div #tabContainer id="tab-container-id" class="tab-container-items">
-      <div class="h-100" *ngFor="let item of listTabs; let i = index" (click)="navChange(item.functionID, 0, 1, $event.target)"
-      [ngClass]="item.functionID == active[0] ? 'active' : ''"
-        class="d-flex align-items-center flex-column pt-5 gap-2 justify-content-center pointer" style="
+      <div *ngFor="let item of listTabs; let i = index" (click)="navChange(item.functionID, 0, index, $event.target)"
+      [ngClass]="item.functionID == active[index] ? 'active' : ''"
+        class="align-items-center d-flex flex-column gap-2 justify-content-center pb-1 pointer pt-3 tab-container-item" style="
         padding-bottom: 17px;">
-        <div class="hcs-icon {{item.icon}} hcs-text fs-22 hcs-text-primary"></div>
+        <span [class]="item.largeIcon"></span>
         <div class="text-uppercase fw-bold">{{item.customName}}</div>
       </div>
     </div>

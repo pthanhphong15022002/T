@@ -1,13 +1,18 @@
 <codx-form
   #form
-  [headerText]="''"
+  is
   [dialog]="dialog"
   [body]="body"
+  [bodyCss]="'w-100 p-1'"
+  [showHeader]="false"
 >
 </codx-form>
 
 <ng-template #body>
   <!-- <div> -->
+    <div>
+      <span class="icon-close icon" (click)="closeMyTeamPopUp()"></span>
+    </div>
     <lib-my-tem></lib-my-tem>
   <!-- </div> -->
 </ng-template>

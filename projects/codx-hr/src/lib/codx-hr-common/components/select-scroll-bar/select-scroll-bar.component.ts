@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ContentChildren, ElementRef, EventEmitter, Input, OnInit, Output, QueryList, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ContentChildren, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, QueryList, ViewChild } from '@angular/core';
 import { UIComponent } from 'codx-core';
 
 @Component({
@@ -15,7 +15,7 @@ export class SelectScrollBarComponent extends UIComponent{
   @Input() listTabs: any[] = [];
   @Input() width :number
   @Input() height :string='72px'
-  @Input() index:Number;
+  @Input() index:number;
   @Input() active: any[];
   @Input() isClick: boolean;
   @ViewChild('container') container!:ElementRef;
@@ -36,16 +36,21 @@ export class SelectScrollBarComponent extends UIComponent{
 
       console.log(this.targetElements);
   }
+  @HostListener('window:resize', ['$event'])
+  onResize(event:any) {
+    const currentWidth = window.innerWidth;
+    this.onCheckContainerOverflow()
+  }
   protected onCheckContainerOverflow(){
         // debugger;
         var condition:boolean = this.tabContainer.nativeElement.scrollWidth - this.tabContainer.nativeElement.clientWidth > 0;
         if(condition){
-            this.prev.nativeElement.style.visibility = 'visible'
-            this.next.nativeElement.style.visibility = 'visible'
+            this.prev.nativeElement.style.display = 'block'; 
+            this.next.nativeElement.style.display = 'block';
         }
         else{
-          this.prev.nativeElement.style.visibility = 'hidden'
-          this.next.nativeElement.style.visibility = 'hidden'
+          this.prev.nativeElement.style.display = 'none';
+          this.next.nativeElement.style.display = 'none';
         }
   }
   hold:boolean = false;
@@ -118,7 +123,7 @@ export class SelectScrollBarComponent extends UIComponent{
   }
 
   navChange(evt: any, index: number = -1, functionID:number = -1, btnClick:any) {
-    console.log("clicked")
+    console.log(functionID)
     let containerList = document.querySelectorAll('.pw-content');
     let lastDivList = document.querySelectorAll('.div_final');
     console.log(containerList)

@@ -225,9 +225,8 @@
     .user-left{
         display: none;
     }
-
     .fab-container.menu-sidebar-reponsive{
-        display: inline-flex;
+        display: inline-flex !important;
     }
 }
 
@@ -439,6 +438,10 @@ p {
     cursor: pointer;
     transition: right 0.3s ease;
     display: none;
+
+    i{
+        color: #FFFFFF
+    }
 }
 
 .fab-container.menu-sidebar-reponsive{
@@ -456,6 +459,7 @@ p {
     cursor: pointer;
     transition: right 0.3s ease;
     display: none;
+    z-index: 1002;
 }
 
 .fab-open {
@@ -480,6 +484,38 @@ codx-page-title.page-title.d-flex.ms-0.align-items-center.flex-wrap.ms-3 {
     margin: 0 !important;
 }
 
+/* listview custom */
+codx-listview.card.card-stretch.border-0.bg-transparent.shadow-none.newemployee-listview {
+    height: 240px ;
+}
+
+codx-listview.card.card-stretch.border-0.bg-transparent.shadow-none.hr-PromoTable {
+    height: 200px;
+
+}
+
+codx-listview.card.card-stretch.border-0.bg-transparent.shadow-none.hr-LeaveTable {
+   height: 400px;
+}
+
+
+codx-listview.card.card-stretch.border-0.bg-transparent.shadow-none.hr-awardTable {
+    height: 200px;
+}
+
+codx-listview.card.card-stretch.border-0.bg-transparent.shadow-none.hr-awardTable {
+    height: 200px;
+}
+
+
+codx-listview.card.card-stretch.border-0.bg-transparent.shadow-none.hr-disciplinaryTable {
+    height: 200px;
+}
+
+
+codx-listview.card.card-stretch.border-0.bg-transparent.shadow-none.hr-family {
+    height: 400px;
+}
 
 /* reponsive */
 
@@ -519,6 +555,8 @@ codx-page-title.page-title.d-flex.ms-0.align-items-center.flex-wrap.ms-3 {
     overflow: scroll;
     min-width: 300px; */
     min-width: 300px;
+    max-width: 300px;
+    width: 300px;
 
 }
 
@@ -637,6 +675,10 @@ codx-page-title.page-title.d-flex.ms-0.align-items-center.flex-wrap.ms-3 {
   background: #f5f8fa;
 }
 
+.itemlist-custom{
+    padding: 6px 0;
+}
+
 codx-listview .card .card-header.m-h-auto.p-0 {
   border-bottom: 0px solid #ebf0f1;
 }
@@ -748,4 +790,8 @@ codx-listview .card .card-header.m-h-auto.p-0 {
         gap:3.5rem;
         margin: 0 0.5rem;
     }
+}
+
+codx-input span.e-icons.e-frame {
+    border-radius: 50%;
 }

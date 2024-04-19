@@ -61,6 +61,7 @@ import { DialogRegisterApproveComponent } from '../../dashboard/components/dialo
 import { DialogReviewLeaveApproveComponent } from './components/pop-up/dialog-review-leave-approve/dialog-review-leave-approve.component';
 import { DialogWaitingLeavingApproveComponent } from './components/pop-up/dialog-waiting-leaving-approve/dialog-waiting-leaving-approve.component';
 import { PopupMyteamReponsiveComponent } from './components/pop-up/popup-myteam-reponsive/popup-myteam-reponsive.component';
+import { PopupMenusidebarReponsiveComponent } from './components/pop-up/popup-menusidebar-reponsive/popup-menusidebar-reponsive.component';
 
 @Component({
   selector: 'lib-employee-info-profile',
@@ -7241,7 +7242,7 @@ export class  EmployeeInfoProfileComponent extends UIComponent {
   lstFuncCurriculumVitaeFake: any[]= [
     {
       functionID: 1,
-      customName: "Lý lịch cá nhân",
+      customName: "Thông tin cá nhân",
       largeIcon: "icon-assignment_ind",
       isActive: true
     },
@@ -7273,83 +7274,83 @@ export class  EmployeeInfoProfileComponent extends UIComponent {
       isActive: false
 
     },
-    {
-      functionID: 6,
-      customName: "Thân nhân",
-      largeIcon: "icon-family_restroom",
-      isActive: false
+    // {
+    //   functionID: 6,
+    //   customName: "Thân nhân",
+    //   largeIcon: "icon-family_restroom",
+    //   isActive: false
 
-    },
-    {
-      functionID: 7,
-      customName: "Thân nhân",
-      largeIcon: "icon-family_restroom",
-      isActive: false
+    // },
+    // {
+    //   functionID: 7,
+    //   customName: "Thân nhân",
+    //   largeIcon: "icon-family_restroom",
+    //   isActive: false
 
-    },
-    {
-      functionID: 8,
-      customName: "Thân nhân",
-      largeIcon: "icon-family_restroom",
-      isActive: false
+    // },
+    // {
+    //   functionID: 8,
+    //   customName: "Thân nhân",
+    //   largeIcon: "icon-family_restroom",
+    //   isActive: false
 
-    },
-    {
-      functionID: 9,
-      customName: "Thân nhân",
-      largeIcon: "icon-family_restroom",
-      isActive: false
+    // },
+    // {
+    //   functionID: 9,
+    //   customName: "Thân nhân",
+    //   largeIcon: "icon-family_restroom",
+    //   isActive: false
 
-    },
-    {
-      functionID: 10,
-      customName: "Thân nhân",
-      largeIcon: "icon-family_restroom",
-      isActive: false
+    // },
+    // {
+    //   functionID: 10,
+    //   customName: "Thân nhân",
+    //   largeIcon: "icon-family_restroom",
+    //   isActive: false
 
-    },
-    {
-      functionID: 9,
-      customName: "Thân nhân",
-      largeIcon: "icon-family_restroom",
-      isActive: false
+    // },
+    // {
+    //   functionID: 9,
+    //   customName: "Thân nhân",
+    //   largeIcon: "icon-family_restroom",
+    //   isActive: false
 
-    },
-    {
-      functionID: 10,
-      customName: "Thân nhân",
-      largeIcon: "icon-family_restroom",
-      isActive: false
+    // },
+    // {
+    //   functionID: 10,
+    //   customName: "Thân nhân",
+    //   largeIcon: "icon-family_restroom",
+    //   isActive: false
 
-    },
-    {
-      functionID: 9,
-      customName: "Thân nhân",
-      largeIcon: "icon-family_restroom",
-      isActive: false
+    // },
+    // {
+    //   functionID: 9,
+    //   customName: "Thân nhân",
+    //   largeIcon: "icon-family_restroom",
+    //   isActive: false
 
-    },
-    {
-      functionID: 10,
-      customName: "Thân nhân",
-      largeIcon: "icon-family_restroom",
-      isActive: false
+    // },
+    // {
+    //   functionID: 10,
+    //   customName: "Thân nhân",
+    //   largeIcon: "icon-family_restroom",
+    //   isActive: false
 
-    },
-    {
-      functionID: 9,
-      customName: "Thân nhân",
-      largeIcon: "icon-family_restroom",
-      isActive: false
+    // },
+    // {
+    //   functionID: 9,
+    //   customName: "Thân nhân",
+    //   largeIcon: "icon-family_restroom",
+    //   isActive: false
 
-    },
-    {
-      functionID: 10,
-      customName: "Thân nhân",
-      largeIcon: "icon-family_restroom",
-      isActive: false
+    // },
+    // {
+    //   functionID: 10,
+    //   customName: "Thân nhân",
+    //   largeIcon: "icon-family_restroom",
+    //   isActive: false
 
-    }
+    // }
   ]
 
   lstrewardCatalog: any[]= [
@@ -7391,11 +7392,11 @@ export class  EmployeeInfoProfileComponent extends UIComponent {
       customName: "Thu nhập khác",
       largeIcon: "icon-attach_money" // Fake icon class
     },
-    {
-      functionID: 6,
-      customName: "Khấu trừ khác",
-      largeIcon: "icon-attach_money" // Fake icon class
-    }
+    // {
+    //   functionID: 6,
+    //   customName: "Khấu trừ khác",
+    //   largeIcon: "icon-attach_money" // Fake icon class
+    // }
   ]
 
   lstFuncLegalFakeInfo: any[]= [
@@ -7658,8 +7659,8 @@ export class  EmployeeInfoProfileComponent extends UIComponent {
     let options = new SidebarModel();
 
     options.Width = 'Auto';
-    options.Position = "Left";
-    this.callfunc.openSide(PopupMyteamReponsiveComponent, [], options);
+    options.Position = 'Left'
+    this.callfunc.openSide(PopupMenusidebarReponsiveComponent, [], options);
   }
 
 

@@ -129,6 +129,10 @@ div#e-item-element_2 {
     margin-right: 0px !important;
 }
 
+.e-tab .e-tab-header .e-scroll-nav, .e-tab .e-tab-header .e-hscroll:not(.e-scroll-device) .e-scroll-nav {
+    display: none !important;
+}
+
 // .e-tab .e-tab-header .e-toolbar-items{
 //     display: none;
 // }

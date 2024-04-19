@@ -2,6 +2,7 @@ import { NgModule, Type } from "@angular/core";
 import { SelectScrollBarComponent } from "./components/select-scroll-bar/select-scroll-bar.component";
 import { ScrollSpyDirective } from "./directives/scrollSpy/scroll-spy.directive";
 import { CommonModule } from "@angular/common";
+import { DirectivesModule } from "./directives/directives.module";
 
 const COMPONENT: Type<any>[] = [
   SelectScrollBarComponent,
@@ -9,7 +10,8 @@ const COMPONENT: Type<any>[] = [
 ];
 
 const MODULES: Type<any>[] = [
-  CommonModule
+  CommonModule,
+  DirectivesModule
 ];
 @NgModule({
   declarations: [COMPONENT],

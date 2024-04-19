@@ -143,7 +143,6 @@ import { ForeignWorkersComponent } from './employee-list/employee-info-detail/co
 import { PreviousExperienceComponent } from './employee-list/employee-info-detail/component/previous-experience/previous-experience.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { TableGripComponent } from './dashboard/components/table-grip/table-grip.component';
-import { AgeStatisticComponent } from './dashboard/widgets/age-statistic/age-statistic.component';
 import { DirectivesModule } from './codx-hr-common/directives/directives.module';
 import { MyTemComponent } from './dashboard/widgets/my-tem/my-tem.component';
 import { DashboardAgeChartComponent } from './dashboard/components/dashboard-age-chart/dashboard-age-chart.component';
@@ -457,7 +456,6 @@ const T_Component = [
   ForeignWorkersComponent,
   PreviousExperienceComponent,
   TableGripComponent,
-  AgeStatisticComponent,
   
   DashboardAgeChartComponent,
   DashboardCardComponent,
