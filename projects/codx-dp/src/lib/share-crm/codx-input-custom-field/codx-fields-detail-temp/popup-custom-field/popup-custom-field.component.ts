@@ -87,19 +87,19 @@ export class PopupCustomFieldComponent implements OnInit {
       let index = this.fields.findIndex((x) => x.recID == field.recID);
       if (index != -1) {
         this.fields[index] = this.upDataVersion(this.fields[index], result);
-        //Tham chieu rafng buoc
-        let crrField = this.fields[index];
-        if (crrField.isApplyConditional && crrField?.conditionReference?.length > 0) {
-          let check = this.customFieldSV.checkConditionalRef(this.fields, crrField)
-          this.conRef = this.conRef.filter(f => f?.id != crrField.recID);
-          if (!check?.check && check.conditionRef?.length > 0) {
-            let arrRef = check.conditionRef.map(x => {
-              let obj = { ...x, id: crrField.recID }
-              return obj
-            })
-            this.conRef = this.conRef.concat(arrRef)
-          }
-        }
+        // //Tham chieu rafng buoc
+        // let crrField = this.fields[index];
+        // if (crrField.isApplyConditional && crrField?.conditionReference?.length > 0) {
+        //   let check = this.customFieldSV.checkConditionalRef(this.fields, crrField)
+        //   this.conRef = this.conRef.filter(f => f?.id != crrField.recID);
+        //   if (!check?.check && check.conditionRef?.length > 0) {
+        //     let arrRef = check.conditionRef.map(x => {
+        //       let obj = { ...x, id: crrField.recID }
+        //       return obj
+        //     })
+        //     this.conRef = this.conRef.concat(arrRef)
+        //   }
+        // }
         if (field.dataType == 'N') this.caculateField();
       }
     }
@@ -151,13 +151,24 @@ export class PopupCustomFieldComponent implements OnInit {
       } else checkFormat = this.checkFormat(f);
     });
     if (!check || !checkFormat) return;
-    //Kieerm tra dk
-    if (this.conRef?.length > 0) {
-      this.conRef.forEach(x => {
-        this.notiService.notify(x.messageText, x.messageType)
+    // //Kieerm tra dk
+    // if (this.conRef?.length > 0) {
+    //   this.conRef.forEach(x => {
+    //     this.notiService.notify(x.messageText, x.messageType)
+    //   })
+    //   return
+    // }
+    //Tham chieu rafng buoc
+    let fieldsApplyCondition = this.fields.filter(x => x.isApplyConditional && x.conditionReference?.length > 0);
+    if (fieldsApplyCondition?.length > 0) {
+      var checkAll = true;
+      fieldsApplyCondition.forEach(x => {
+        let check = this.customFieldSV.checkConditionalRef(this.fields, x);
+        if (checkAll && !check.check) checkAll = check.check;
       })
-      return
+      if (!checkAll) return;
     }
+
     if (this.isSaving) return;
     this.isSaving = true;
     let data = [this.fields[0]?.stepID, this.fields, this.taskID];

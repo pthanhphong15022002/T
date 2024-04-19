@@ -305,15 +305,17 @@ export class PopupAddCasesComponent
     // } else {
     //   this.editInstance();
     // }
-    //Kieerm tra dk ref cua truong tuy chinh
-    if (this.conRef?.length > 0) {
-      this.conRef.forEach(x => {
-        this.notificationsService.notify(x.messageText, x.messageType)
-      })
-      return
-    }
+    // //Kieerm tra dk ref cua truong tuy chinh
+    // if (this.conRef?.length > 0) {
+    //   this.conRef.forEach(x => {
+    //     this.notificationsService.notify(x.messageText, x.messageType)
+    //   })
+    //   return
+    // }
+    if (!this.conditionRefValidate()) return;
     this.actionSaveBeforeSaveAttachment();
   }
+
 
   async actionSaveBeforeSaveAttachment() {
     if (this.attachment?.fileUploadList?.length > 0) {
@@ -387,19 +389,19 @@ export class PopupAddCasesComponent
             let valueOld =
               this.listInstanceSteps[index].fields[idxField].dataValue;
             this.listInstanceSteps[index].fields[idxField].dataValue = result;
-            //Tham chieu rang buoc
-            let crrField = this.listInstanceSteps[index].fields[idxField];
-            if (crrField.isApplyConditional && crrField?.conditionReference?.length > 0) {
-              let check = this.customFieldSV.checkConditionalRef(this.listInstanceSteps[index].fields, crrField)
-              this.conRef = this.conRef.filter(f => f?.id != crrField.recID);
-              if (!check?.check && check.conditionRef?.length > 0) {
-                let arrRef = check.conditionRef.map(x => {
-                  let obj = { ...x, id: crrField.recID }
-                  return obj
-                })
-                this.conRef = this.conRef.concat(arrRef)
-              }
-            }
+            // //Tham chieu rang buoc
+            // let crrField = this.listInstanceSteps[index].fields[idxField];
+            // if (crrField.isApplyConditional && crrField?.conditionReference?.length > 0) {
+            //   let check = this.customFieldSV.checkConditionalRef(this.listInstanceSteps[index].fields, crrField)
+            //   this.conRef = this.conRef.filter(f => f?.id != crrField.recID);
+            //   if (!check?.check && check.conditionRef?.length > 0) {
+            //     let arrRef = check.conditionRef.map(x => {
+            //       let obj = { ...x, id: crrField.recID }
+            //       return obj
+            //     })
+            //     this.conRef = this.conRef.concat(arrRef)
+            //   }
+            // }
             let idxEdit = this.listCustomFile.findIndex(
               (x) =>
                 x.recID == this.listInstanceSteps[index].fields[idxField].recID
@@ -1339,4 +1341,31 @@ export class PopupAddCasesComponent
     }
   }
   //------------------END_CACULATE--------------------//
+
+  conditionRefValidate() {
+    //Tham chieu rafng buoc
+    var checkAll = true;
+    // this.listFields.forEach(x => {
+    //   let fields = this.listInstanceSteps.find(f => f.recID == x.stepID)?.fields;
+    //   if (fields?.length > 0) {
+    //     let fieldsApplyCondition = x.fields.filter(x => x.isApplyConditional && x.conditionReference?.length > 0);
+    //     if (fieldsApplyCondition?.length > 0) {
+    //       let checkOne = true
+    //       fieldsApplyCondition.forEach(x => {
+    //         let check = this.customFieldSV.checkConditionalRef(fields, x);
+    //         if (checkOne && !check.check) checkOne = check.check;
+    //       })
+    //       if (!checkOne && checkAll) checkAll = checkOne;
+    //     }
+    //   }
+    // })
+    let fieldsApplyCondition = this.listFields.filter(x => x.isApplyConditional && x.conditionReference?.length > 0);
+    if (fieldsApplyCondition?.length > 0) {
+      fieldsApplyCondition.forEach(x => {
+        let check = this.customFieldSV.checkConditionalRef(this.listFields, x);
+        if (checkAll && !check.check) checkAll = check.check;
+      })
+    }
+    return checkAll;
+  }
 }
