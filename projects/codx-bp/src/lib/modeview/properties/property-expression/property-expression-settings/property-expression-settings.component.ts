@@ -145,7 +145,7 @@ export class PropertyExpressionSettingsComponent implements OnInit{
   checkValide()
   {
     let mss = "";
-    let str= "+-*/";
+    let str= "+-*/&";
     for(var i = 0 ; i < this.data.length ; i++)
     {
       if(this.data[i].startsWith('['))
@@ -154,7 +154,14 @@ export class PropertyExpressionSettingsComponent implements OnInit{
         let index = this.listField.findIndex(x=>x.fieldName == field);
         if(index>=0 && this.data[i - 1])
         {
-          if(this.data[i-2])
+          if(!str.includes(this.data[i - 1]))
+          {
+            let field3 = this.data[i-1].slice(1,-1);
+            let index3 = this.listField.findIndex(x=>x.fieldName == field3);
+            mss = this.listField[index3].title + " và " +this.listField[index].title + " không thực hiện được phép tính";
+            break;
+          }
+          else if(this.data[i-2])
           {
             let field2 = this.data[i-2].slice(1,-1);
             let index2 = this.listField.findIndex(x=>x.fieldName == field2);
@@ -164,7 +171,7 @@ export class PropertyExpressionSettingsComponent implements OnInit{
               {
                 if(this.data[i - 1] != '&')
                 {
-                  mss = this.data[i - 2] + " và " + this.data[i] + " không thực hiện được phép tính";
+                  mss = this.listField[index2].title + " và " + this.listField[index].title + " không thực hiện được phép tính";
                   break;
                 }
               }
@@ -172,16 +179,29 @@ export class PropertyExpressionSettingsComponent implements OnInit{
               {
                 if((this.data[i - 1] != '&' && this.listField[index].dataType != 'Decimal'))
                 {
-                  mss = this.data[i - 2] + " và " + this.data[i] + " không thực hiện được phép tính";
+                  mss = this.listField[index2].title + " và " + this.listField[index].title + " không thực hiện được phép tính";
                   break;
                 }
               }
             }
             else 
             {
-              mss = this.data[i - 2] + " và " + this.data[i] + " không thực hiện được phép tính";
+              mss = this.listField[index2].title + " và " + this.listField[index].title + " không thực hiện được phép tính";
               break;
             }
+          }
+          else if(!this.data[i-2])
+          {
+            let title = this.data[i-1];
+            if(!str.includes(this.data[i-1]))
+            {
+              let field3 = this.data[i-1].slice(1,-1);
+              let index3 = this.listField.findIndex(x=>x.fieldName == field3);
+              title = this.listField[index3].title
+            }
+          
+            mss = title + " và " + this.listField[index].title + " không thực hiện được phép tính";
+            break;
           }
         }
       }
@@ -191,5 +211,16 @@ export class PropertyExpressionSettingsComponent implements OnInit{
     }
 
     return mss;
+  }
+
+  getTitle(id:any)
+  {
+    let str= "+-*/&";
+    
+    if(!id) return "";
+    if(str.includes(id)) return id;
+    
+    let field = id.slice(1,-1);
+    return this.listField.filter(x=>x.fieldName == field)[0].title;
   }
 }
