@@ -18,6 +18,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
+  Input,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -71,6 +72,66 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   user;
   isClick: boolean = false;
   dataService: DataService = null;
+
+  // Fake data
+  @Input() dataMyTeam = [
+    {
+      id: '1',
+      name: 'Huỳnh Phước Hòa',
+      job: 'Phát triển phần mềm',
+      YOW: '15 năm 9 tháng 0 ngày',
+      status: '1',
+    },
+    {
+      id: '1',
+      name: 'Huỳnh Phước Hòa',
+      job: 'Phát triển phần mềm',
+      YOW: '15 năm 9 tháng 0 ngày',
+      status: '1',
+    },
+    {
+      id: '1',
+      name: 'Huỳnh Phước Hòa',
+      job: 'Phát triển phần mềm',
+      YOW: '15 năm 9 tháng 0 ngày',
+      status: '1',
+    },
+    {
+      id: '1',
+      name: 'Huỳnh Phước Hòa',
+      job: 'Phát triển phần mềm',
+      YOW: '15 năm 9 tháng 0 ngày',
+      status: '1',
+    },
+    {
+      id: '1',
+      name: 'Huỳnh Phước Hòa',
+      job: 'Phát triển phần mềm',
+      YOW: '15 năm 9 tháng 0 ngày',
+      status: '1',
+    },
+    {
+      id: '1',
+      name: 'Huỳnh Phước Hòa',
+      job: 'Phát triển phần mềm',
+      YOW: '15 năm 9 tháng 0 ngày',
+      status: '1',
+    },
+    {
+      id: '1',
+      name: 'Huỳnh Phước Hòa',
+      job: 'Phát triển phần mềm',
+      YOW: '15 năm 9 tháng 0 ngày',
+      status: '1',
+    },
+    {
+      id: '1',
+      name: 'Huỳnh Phước Hòa',
+      job: 'Phát triển phần mềm',
+      YOW: '15 năm 9 tháng 0 ngày',
+      status: '1',
+    },
+  ];
 
   // view imployee infor
   grvSetup: any;

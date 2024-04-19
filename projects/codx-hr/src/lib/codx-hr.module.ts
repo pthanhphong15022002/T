@@ -186,6 +186,12 @@ export const routes: Routes = [
   {
     path: '',
     children: [
+      {
+        path: 'employeelist',
+        component: HRLayoutOnlyHeaderComponent,
+        loadChildren: () => import('./employee-list/employee-list.module').then(m => m.EmployeeListModule)
+
+      },
       // {
       //   path: 'empinfosub/:funcID',
       //   component: EmployeeInfoDetailComponent,
@@ -200,12 +206,12 @@ export const routes: Routes = [
         //   loadChildren: () => import('./employee-list/employee-list.module').then(m => m.EmployeeListModule)
 
         // },
-      {
-        path: 'employeelist',
-        component: HRLayoutOnlyHeaderComponent,
-        loadChildren: () => import('./employee-list/employee-list.module').then(m => m.EmployeeListModule)
+      // {
+      //   path: '',
+      //   component: HRLayoutOnlyHeaderComponent,
+      //   loadChildren: () => import('./employee-list/employee-list.module').then(m => m.EmployeeListModule)
 
-      },
+      // },
       // {
       //   path: 'test/:funcID',
       //   component: DialogWaitingLeavingApproveComponent
@@ -217,7 +223,7 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'dashboard',
+        path: '',
         loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
       //   component: DashboardComponent
       },
@@ -239,11 +245,11 @@ export const routes: Routes = [
         data: { noReuse: true },
         component: EmployeesComponent,
       },
-      {
-        path: 'employeelist/:funcID',
-        data: { noReuse: true },
-        component: EmployeeListComponent,
-      },
+      // {
+      //   path: '',
+      //   data: { noReuse: true },
+      //   loadChildren: () => import('./employee-list/employee-list.module').then(m => m.EmployeeListModule)
+      // },
       // {
       //   path: 'reportingline/:funcID',
       //   data: { noReuse: true },

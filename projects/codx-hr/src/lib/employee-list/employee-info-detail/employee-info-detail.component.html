@@ -294,7 +294,7 @@
           <!-- Employee -->
           <div class="bg-white border mt-5 user-left">
             <div>
-              <codx-listview
+              <!-- <codx-listview
               entityName="HR_Employees"
               idField="employeeID"
               service="HR"
@@ -305,9 +305,38 @@
               [itemTemplate]="itemTemplateList"
               [selectFirst]="true"
                 >
-              </codx-listview>
+              </codx-listview> -->
+              <div>
+                <div class="align-items-center d-flex justify-content-between mb-5 mt-5 px-4">
+                  <span>Nhân viên</span>
+                  <div>
+                    <button class="btn-add"><i class="icon-add"></i><span>Thêm</span></button>
+                    <button><i class="icon-i-chevron-down"></i></button>
+                  </div>
+                </div>
+                <div class="px-3">
+                  <codx-searchbar></codx-searchbar>
+                </div>
+              </div>
+              <!-- List Employee -->
+              <ng-container *ngFor="let person of dataMyTeam; index as i;">
+                <div class="d-flex flex-row gap-3 align-items-center pointer py-3 px-3">
+                  <div class="user-avatar">
+                    <codx-img [funcId]="'HRT03b'" [objectId]="'2308070001'" [objectName]="'Nguyễn Công Phượng'"
+                      [objectType]="'HR_Employees'" [imageType]="'circle'" class="user-img" [width]="40">
+                    </codx-img>
+                    <div class="user-status " [ngClass]="{}"></div>
+                  </div>
+                  <div class="d-flex flex-column align-items-start gap-1">
+                    <div class="name fs-6 fw-bold">{{person.name}}</div>
+                    <div class="text-gray-500">{{person.job}}</div>
+                    <div class="YOW fw-bold">{{person.YOW}}</div>
+                  </div>
+                </div>
+              </ng-container>
             </div>
-            <div class="user-menu scroll-y w-100 border-top">
+
+            <!-- <div class="user-menu scroll-y w-100 border-top">
               
               <ul class="nav nav-tabs nav-pills flex-column border-0 p-3 pb-0 w-100">
                 <ng-container *ngFor="let item of lstTab; let index = index">
@@ -326,91 +355,8 @@
                   </li>
                 </ng-container>
               </ul>
-            </div>
+            </div> -->
           </div>
-
-
-          <!-- Header List -->
-          <ng-template #headerList let-data>
-            <div class="w-40 text-dark fw-bold p-3 fw-500">
-              <codx-label 
-                fiedName="lblEmployeeName" 
-                [setRequire]="false" 
-                [formModel]="view.formModel"
-                [default]="'Nhân viên'">
-              </codx-label>
-          </div>
-          </ng-template>
-          <!-- End Header List -->
-
-          <!-- Content List -->
-          <ng-template #itemTemplateList let-data>
-            <div class="w-40 p-3 ps-5">
-              <div class="d-flex align-items-center cursor-pointer hover-active" (dblclick)="clickViewEmpInfo(data)">
-                <div class="d-flex flex-column me-4">
-                  <codx-img [funcId]="funcID" [objectId]="data.employeeID" [objectName]="data.employeeName"
-                    objectType="HR_Employees" [width]="40">
-                  </codx-img>
-                </div>
-                <div class="d-flex flex-column">
-                  <div #nameField [ngbTooltip]="nameField.scrollHeight > nameField.clientHeight? nameTooltip :null"
-                    class="align-items-center line-clamp line-clamp-1 mb-1">
-                    <span class="fw-bold fs-6 me-3 text-nowrap item-active" (click)="clickViewEmpInfo(data)">
-                      {{data.employeeName}}</span>
-                    <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
-                    <span class="text-danger">{{ data.employeeID }}</span>
-                    <ng-template #nameTooltip>
-                      <div class="inline-tooltip">
-                        <span class="fw-bold fs-6 me-3 text-nowrap">
-                          {{data.employeeName}}</span>
-                        <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
-                        <span class="text-danger">{{ data.employeeID }}</span>
-                      </div>
-                    </ng-template>
-                  </div>
-                  <div #positionField *ngIf="data.positionID" class="text-gray-600 mb-1 fs-7 line-clamp line-clamp-1">
-                    <span [ngbTooltip]="positionTooltip">{{data.positionName? data.positionName : data.positionID}}</span>
-                    <ng-template #positionTooltip>
-                      <div class="d-flex flex-column">
-                        <span class="label-text-color">{{grvSetup['PositionID']?.headerText}}</span>
-                        <span *ngIf="positionField.scrollHeight > positionField.clientHeight"
-                          class="text-gray-600">{{data.positionName? data.positionName : data.positionID}}</span>
-                      </div>
-                    </ng-template>
-                  </div>
-                  <div #orgUnitField *ngIf="data.orgUnitID" class="text-gray-700 mb-1 line-clamp line-clamp-1">
-                    <span [ngbTooltip]="orgUnitTooltip">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
-                    <ng-template #orgUnitTooltip>
-                      <div class="d-flex flex-column">
-                        <span class="label-text-color">{{grvSetup['OrgUnitID']?.headerText}}</span>
-                        <span *ngIf="orgUnitField.scrollHeight > orgUnitField.clientHeight"
-                          class="text-gray-600">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
-                      </div>
-                    </ng-template>
-                  </div>
-                  <div #departmentField [ngbTooltip]="departmentTooltip"
-                    class="text-gray-600 align-items-center line-clamp line-clamp-1">
-                    <span *ngIf="data.departmentID != data.orgUnitID">
-                      {{data.departmentName? data.departmentName :data.departmentID}}</span>
-                    <span *ngIf="data?.departmentID && data.divisionID" class="text-gray-400 mx-1">,</span>
-                    <span *ngIf="data.divisionID">{{data.divisionName? data.divisionName: data.divisionID }}</span>
-                    <ng-template #departmentTooltip>
-                      <div class="d-flex flex-column">
-                        <span class="label-text-color">{{grvSetup['DepartmentID']?.headerText}}</span>
-                        <span *ngIf="data.departmentID != data.orgUnitID 
-                          && departmentField.scrollHeight > departmentField.clientHeight">
-                          {{data.departmentName? data.departmentName :
-                          data.departmentID}}</span>
-                        <span *ngIf="data.divisionID && departmentField.scrollHeight > departmentField.clientHeight">
-                          {{data.divisionName? data.divisionName: data.divisionID }}</span>
-                      </div>
-                    </ng-template>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ng-template>
-          <!-- End Content List -->
           <!-- End Employee -->
         </div>
 

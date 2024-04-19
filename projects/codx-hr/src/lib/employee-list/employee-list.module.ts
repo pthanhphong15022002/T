@@ -30,54 +30,17 @@ import { ShareCrmModule } from 'projects/codx-dp/src/lib/share-crm/share-crm.mod
 import { SharedModule } from '@shared/shared.module';
 import { ProfileLast7dayComponent } from '../dashboard/components/profile-last7day/profile-last7day.component';
 import { ProfileDashboardLeaveComponent } from '../dashboard/components/profile-dashboard-leave/profile-dashboard-leave.component';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 
 export const routes: Routes = [
-  // {
-    // path: '',
-  //   component: EmployeeInfoProfileComponent
-  //   //component: HRLayoutOnlyHeaderComponent,
-    // children: [
-  //   //   {
-  //   //     path: 'employeeprofile/:funcID',
-  //   //     component: EmployeeInfoProfileComponent
-  //   //   },
-  //   // ],
-  // },
   {
-        path: 'employeeprofile/:funcID',
-        component: EmployeeInfoProfileComponent,
-
+    path: 'employeeprofile/:funcID',
+    component: EmployeeInfoProfileComponent
   },
   {
-        path: 'employeedetail/:funcID',
-        component: EmployeeInfoDetailComponent,
+    path: 'employeedetail/:funcID',
+    component: EmployeeInfoDetailComponent,
   }
-// ]
-
-
-  // {
-  //   path: '**',
-  //   component: EmployeeInfoProfileComponent
-  //   component: HRLayoutOnlyHeaderComponent,
-  //   children: [
-  //     {
-  //       path: 'employeeprofile/:funcID',
-  //       component: EmployeeInfoProfileComponent
-  //     },
-  //   ],
-  // },
-  // {
-  //   path: '**',
-  //   component: EmployeeInfoProfileComponent
-  //   component: HRLayoutOnlyHeaderComponent,
-  //   children: [
-  //     {
-  //       path: 'employeeprofile/:funcID',
-  //       component: EmployeeInfoProfileComponent
-  //     },
-  //   ],
-  // },
-// }
 ];
 const T_Pipe = [
   // DatePipe,

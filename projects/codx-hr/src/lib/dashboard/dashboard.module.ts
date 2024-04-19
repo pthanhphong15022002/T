@@ -11,20 +11,27 @@ import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { CoreModule } from '@core/core.module';
 import { CodxCoreModule } from 'codx-core';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
+import { LayoutComponent } from '../_layout/layout.component';
 
 export const routes: Routes = [
   {
-    path: '',
-    component: DashboardComponent
+    path: 'dashboard',
+    component: LayoutComponent,
+    children: [
+      {
+        path: '',
+        component: DashboardComponent,
+      },
+    ],
   },
-]
+];
 const T_Component = [
   DashboardAgeChartComponent,
   DashboardCardComponent,
   DashboardGaugeChartComponent,
   DashboardTotalemployeeChartComponent,
   DashboardComponent,
-]
+];
 
 @NgModule({
   imports: [
@@ -34,9 +41,8 @@ const T_Component = [
     HistoryLevelComponent,
     CircularGaugeModule,
     ChartAllModule,
-    RouterModule.forChild(routes)
-  ], 
+    RouterModule.forChild(routes),
+  ],
   declarations: [T_Component],
-  
 })
-export class DashboardModule { }
+export class DashboardModule {}

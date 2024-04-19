@@ -3,6 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AuthStore, ButtonModel, CRUDService, CodxGridviewV2Component, CodxService, NotificationsService, RequestOption, ResourceModel, SidebarModel, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { Observable, catchError, finalize, map, of } from 'rxjs';
 
 @Component({
   selector: 'lib-sidebar-treeview',
@@ -21,6 +22,7 @@ export class SidebarTreeviewComponent extends UIComponent implements AfterViewIn
   loading:boolean = false;
   userPermission:any;
   mssgConfirm:string = "";
+  itemSelected: any;
   @ViewChild("tmpLeft") tmpLeft:TemplateRef<any>;
   @ViewChild("tmpRight") tmpRight:TemplateRef<any>;
   @ViewChild("codxGridViewV2") codxGridViewV2 : CodxGridviewV2Component;
@@ -141,6 +143,10 @@ export class SidebarTreeviewComponent extends UIComponent implements AfterViewIn
       this.detectorRef.detectChanges();
     }
   }
+  selectedChange(val: any) {
+    this.itemSelected = val.data;
+    this.detectorRef.detectChanges();
+  }
 
   //valueChange
   valueChange(event){
@@ -158,5 +164,51 @@ export class SidebarTreeviewComponent extends UIComponent implements AfterViewIn
     this.view.dataService.rowCount = this.codxGridViewV2?.dataService.rowCount ?? 0;
     this.view.setBreadcrumbs();
     this.detectorRef.detectChanges();
+  }
+
+  async onSelectionChanged($event) {
+    await this.setEmployeePredicate($event.dataItem.orgUnitID);
+    // this.employList.onChangeSearch();
+  }
+  setEmployeePredicate(orgUnitID): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.loadEOrgChartListChild(orgUnitID)
+        .pipe()
+        .subscribe((response) => {
+          if (response) {
+            var v = '';
+            var p = '';
+            for (let index = 0; index < response.length; index++) {
+              const element = response[index];
+              if (v != '') v = v + ';';
+              if (p != '') p = p + '||';
+              v = v + element;
+              p = p + 'OrgUnitID==@' + index.toString();
+            }
+            // this.employList.predicate = p;
+            // this.employList.dataValue = v;
+          }
+          resolve('');
+        });
+    });
+  }
+  loadEOrgChartListChild(orgUnitID): Observable<any> {
+    return this.api
+      .call(
+        'ERM.Business.HR',
+        'OrganizationUnitsBusiness_Old',
+        'GetOrgChartListChildAsync',
+        orgUnitID
+      )
+      .pipe(
+        map((data: any) => {
+          if (data.error) return;
+          return data.msgBodyData[0];
+        }),
+        catchError((err) => {
+          return of(undefined);
+        }),
+        finalize(() => null)
+      );
   }
 }

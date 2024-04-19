@@ -1,3 +1,7 @@
-a.C01.item-tree.w-100C01.item-tree.w-100.item-selected {
+/* a.C01.item-tree.w-100C01.item-tree.w-100.item-selected {
     color: red !important;
+} */
+
+.selected {
+    color: blue;
 }
