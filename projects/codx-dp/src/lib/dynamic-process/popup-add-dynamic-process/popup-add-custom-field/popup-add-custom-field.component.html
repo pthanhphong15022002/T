@@ -421,7 +421,8 @@
             this.field.dataType == 'PA') &&
             this.field.refValue) ||
           (this.field.dataType == 'L' && this.field.dataFormat == 'B') ||
-          this.field.dataType == 'D'
+          this.field.dataType == 'D' ||
+          field.dataType == 'RM'
         "
       >
         <codx-label
@@ -435,7 +436,7 @@
           field="isUseDefault"
           [checked]="field?.isUseDefault"
           (valueChange)="changeUseDeafaut($event)"
-          [disabled]="viewOnly"
+          [disabled]="viewOnly || field.dataType == 'RM'"
         >
         </codx-input>
       </div>
@@ -644,12 +645,21 @@
             [formModel]="form?.formModel"
             default="Các điều kiện tham chiếu với các biến "
           ></codx-label>
-          <div *ngFor="let conRef of field?.conditionReference">
+          <div
+            *ngFor="let conRef of field?.conditionReference; let idx; as: index"
+          >
             <div
               class="w-100 border border-gray-300 rounded-2 py-3 px-4 me-3 mb-4"
             >
               <div class="d-flex align-items-center">
-                <span class="me-3">{{ conRef?.refID }}</span>
+                <span
+                  class="me-3"
+                  [innerHTML]="
+                    conRef.refID
+                      | fieldReferenceFormat : fieldInStep : 'title'
+                      | async
+                  "
+                ></span>
                 <span class="me-3">
                   <codx-vll
                     [name]="'DP054'"
@@ -678,6 +688,24 @@
                   >
                     <i class="icon-sms_failed icon-16"></i>
                   </button>
+                </span>
+                <span class="me-3">
+                  <div class="action-menu-column d-flex">
+                    <div class="d-flex justify-content-end align-items-center">
+                      <button
+                        class="btn btn-sm btn-icon btn-light-warning"
+                        (click)="editCondition(conRef, idx)"
+                      >
+                        <i class="icon icon-14 icon-edit"></i>
+                      </button>
+                      <button
+                        class="btn btn-sm btn-icon btn-light-danger ms-2"
+                        (click)="deleteCondition(idx)"
+                      >
+                        <i class="icon icon-14 icon-close"></i>
+                      </button>
+                    </div>
+                  </div>
                 </span>
               </div>
             </div>

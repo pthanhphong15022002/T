@@ -104,18 +104,16 @@
             </div>
             <div class="footer-message">
                 <div class="footer-message-text">
-                    <codx-input 
-                    [formModel]="formModel"
-                    field="message"
-                    type="textarea"
-                    format="ed2"
-                    rows="1"
-                    [crrValue]="message"
-                    (keyUp)="keyUp($event)"
-                    (valueChange)="valueChange($event)"></codx-input>
-                    <!-- <input codxAutoFocus id="inputChat" type="textarea" class="input" (keyup.enter)="sendMessage()" [(ngModel)]="message" > -->
+                    <div class="inputChat" id="inputChat" (keydown.enter)="onEnter($event)"></div>
                 </div>
-                <!-- <codx-mention [targetId]="'#inputChat'"></codx-mention> -->
+                <codx-mention 
+                    *ngIf="dataMentions" 
+                    [targetId]="'#inputChat'" 
+                    [dataSource]="dataMentions" 
+                    [autoLoad]="false" 
+                    [fields]="mentionFields"
+                    (selectedChange)="selectedChange($event)">
+                </codx-mention>
             </div>
             <button type="button" class="footer-button btn btn-icon btn-light-primary" (click)="sendMessage()">
                 <span class="icon-send icon-16"></span>
@@ -211,8 +209,6 @@
     </div>
 </ng-template>
 
-
-<!-- template view member -->
 <ng-template #tmpViewMember let-dialog let-member="data">
     <div class="popup-view">
         <div class="popup-view-header">
@@ -263,9 +259,6 @@
     </div>
 </ng-template>
 
-
-
-<!-- Message template -->
 <ng-template #tmpMessage let-data>
     <ng-container [ngSwitch]="data.messageType">
         <ng-container *ngSwitchCase="'3'">
@@ -276,4 +269,5 @@
         </ng-container>        
     </ng-container>
 </ng-template>
+
 

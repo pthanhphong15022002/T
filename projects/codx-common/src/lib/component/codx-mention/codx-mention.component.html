@@ -1,28 +1,33 @@
 <ejs-mention
   #ej2Mention
   [dataSource]="dataSource"
-  [fields]="{text:'UserName'}"
+  [fields]="fields" 
   [target]="targetId"
   [popupWidth]="300"
-  [ignoreCase]="false"
+  [suggestionCount]="10"
+  [ignoreCase]="true"
   [showMentionChar]="true"
   [highlight]="true"
+  [suffixText]="' '"
+  [locale]="'vi-VN'"
   [itemTemplate]="itemTemplate"
+  [displayTemplate]="tmpDisplayTemplate"
   [noRecordsTemplate]="'Không có thấy dữ liệu'"
-  (filtering)="filtering($event)"
-  (opened)="open()"
-  (select)="select($event)"
-></ejs-mention>
+  (change)="change($event)">
+</ejs-mention>
 <ng-template #itemTemplate let-data>
-  <div class="p-2">
+  <div class="d-flex flex-column p-2 w-100">
     <codx-temp-full 
       [dataItem]="data" 
-      [title]="data.UserName" 
-      [subTitle]="data.PositionName" 
-      [imageId]="data.UserID" 
+      [title]="data.userName" 
+      [subTitle]="data.positionName" 
+      [imageId]="data.userID" 
       [imageObjType]="'AD_Users'" 
       [imageWidth]="30"
       [hideMF]="true">
     </codx-temp-full>
   </div>
+</ng-template>
+<ng-template #tmpDisplayTemplate let-data>
+  <b>{{data?.userName}}</b>
 </ng-template>

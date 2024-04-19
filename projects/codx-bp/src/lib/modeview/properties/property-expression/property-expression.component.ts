@@ -9,6 +9,7 @@ import { PropertyExpressionSettingsComponent } from './property-expression-setti
 })
 export class PropertyExpressionComponent extends BasePropertyComponent implements OnInit{
 
+  listField = [];
   formula:string = "";
 
   ngOnInit(): void {
@@ -18,20 +19,20 @@ export class PropertyExpressionComponent extends BasePropertyComponent implement
   
   setting()
   {
-    let data = [];
+    this.listField = [];
     this.dataTable.forEach(elm=>{
-      if(elm.columnOrder < this.data.columnOrder) data = data.concat(elm.children)
+      if(elm.columnOrder < this.data.columnOrder) this.listField = this.listField.concat(elm.children)
       else if(elm.columnOrder == this.data.columnOrder)
       {
         elm.children.forEach(elm2=>{
           if(elm2.columnNo < this.data.columnNo)
           {
-            data.push(elm2);
+            this.listField.push(elm2);
           }
         })
       }
     })
-    let popup = this.callFuc.openForm(PropertyExpressionSettingsComponent,"",900,700,"",{listField:data,referedValue:this.data.refValue});
+    let popup = this.callFuc.openForm(PropertyExpressionSettingsComponent,"",900,700,"",{listField:this.listField,referedValue:this.data.refValue});
     popup.closed.subscribe(res=>{
       this.data.refValue = res?.event || '';
       this.dataChange.emit(this.data);
@@ -45,7 +46,13 @@ export class PropertyExpressionComponent extends BasePropertyComponent implement
     if(this.data.refValue)
     {
       this.data.refValue.forEach((elm,i)=>{
-        this.formula += elm.join("");
+        elm.forEach(elm2=>{
+          let field = elm2.slice(1,-1);
+          let index = this.listField.findIndex(x=>x.fieldName == field);
+          if(index>=0) this.formula += this.listField[index].title;
+          else this.formula += elm2;
+        })
+        //this.formula += elm.join("");
         if(i < this.data.refValue.length - 1) this.formula += "&";
       })
     }
