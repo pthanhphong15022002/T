@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ApiHttpService } from 'codx-core';
+import { ApiHttpService, FormModel } from 'codx-core';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-view-content-schedule-meetings',
@@ -10,12 +11,31 @@ export class ViewContentScheduleMeetingsComponent {
   @Input() data: any;
   @Input() formModel: any;
   @Output() openLink = new EventEmitter<any>();
-
+  @Input() recID: any;
   haveFile = false;
   locationName = '';
   constructor(private api: ApiHttpService) {}
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    if(this.formModel){
+      let formModel = new FormModel();
+      formModel.entityName = 'CO_TMMeetings';
+      formModel.formName = 'TMMeetings';
+      formModel.gridViewName = 'grvTMMeetings';
+      formModel.funcID = 'TMT0501';
+      this.formModel = formModel;
+    }
+    if (this.recID) {
+      this.data = await firstValueFrom(
+        this.api.execSv<any>(
+          'CO',
+          'CO',
+          'MeetingsBusiness',
+          'GetOneByRecIDAsync',
+          [this.recID]
+        )
+      );
+    }
     this.api
       .execSv(
         'DM',
@@ -29,7 +49,8 @@ export class ViewContentScheduleMeetingsComponent {
           this.haveFile = true;
         }
       });
-
+    if (this.data) {
+    }
     if (this.data.location) {
       this.api
         .execSv(
@@ -88,6 +109,8 @@ export class ViewContentScheduleMeetingsComponent {
     return i;
   }
   openLinkMeeting(data) {
-    this.openLink.emit(data);
+    if (data?.link) {
+      window.open(data?.link, '_blank');
+    }
   }
 }

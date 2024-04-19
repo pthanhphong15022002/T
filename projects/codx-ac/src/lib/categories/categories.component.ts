@@ -61,8 +61,19 @@ export class CategoriesComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res) {
           this.lstGroup = res;
-          this.datas = this.lstGroup[0].childs;
-          this.selectedToolBar = this.lstGroup[0].functionID;
+          let session = window.sessionStorage.getItem('category');
+          if(session){
+            this.selectedToolBar = session;
+            let index = this.lstGroup.findIndex(x => x.functionID === session);
+            if(index > -1){
+              this.datas = this.lstGroup[index].childs;
+            }else{
+              this.datas = this.lstGroup[0].childs;
+            }
+          }else{
+            this.selectedToolBar = this.lstGroup[0].functionID;
+            this.datas = this.lstGroup[0].childs;
+          }
         }else{
           this.lstGroup = [];
         }
@@ -83,6 +94,7 @@ export class CategoriesComponent extends UIComponent {
   selectedChangeToolBar(data: any) {
     this.selectedToolBar = data?.functionID;
     this.datas = JSON.parse(JSON.stringify(data.childs));
+    window.sessionStorage.setItem('category',data?.functionID);
   }
   //#endregion
 }

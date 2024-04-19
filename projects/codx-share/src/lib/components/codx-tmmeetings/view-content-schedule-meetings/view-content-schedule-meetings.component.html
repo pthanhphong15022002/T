@@ -8,8 +8,11 @@
   </div>
   <div class="d-flex mt-1 w-100 fs-7 text-gray-600">
     <i class="icon-person icon-16 me-1"></i>
-    <span class="text-break" [ngbTooltip]="tempCreatedBy"
-      >{{ data.userName }}
+    <span
+      class="text-break"
+      [ngbTooltip]="tempCreatedBy"
+      [innerHTML]="data?.createdBy | formatCombobox : 'Users' | async"
+    >
     </span>
     <ng-template #tempCreatedBy>
       <codx-label
@@ -38,10 +41,8 @@
     <span class="me-2 fw-bold">
       <span
         class="text-gray-700"
-        [innerHTML]="
-          data.startDate | formatvalue : formModel : 'StartDate' | async
-        "
-      >
+
+      > {{data.startDate | fmDT: "dmy"}}
       </span>
     </span>
     <div class="d-flex align-items-center">
@@ -119,7 +120,7 @@
       <span *ngIf="item?.roleType == 'A'">{{ item.objectName }}</span>
     </span>
   </div>
-  <div class="d-flex mb-2"  *ngIf="data.permissions?.length > 0">
+  <div class="d-flex mb-2" *ngIf="data.permissions?.length > 0">
     <div class="d-flex text-dark me-6">
       <codx-label
         name="lblPermissions"
