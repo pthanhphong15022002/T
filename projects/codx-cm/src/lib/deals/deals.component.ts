@@ -1261,7 +1261,7 @@ export class DealsComponent
       dataCM: dataCM,
       processID: data?.processID,
       stepName: data.currentStepName,
-      isMoveProcess: false,
+      isMoveProcess: true,
     };
 
     let dialogRevision = this.callfc.openForm(

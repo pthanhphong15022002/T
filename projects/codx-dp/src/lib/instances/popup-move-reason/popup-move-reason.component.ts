@@ -92,8 +92,8 @@ export class PopupMoveReasonComponent implements OnInit {
     this.formModel = dt?.data.formModel;
     this.applyFor = dt?.data?.applyFor;
     this.stepName = dt?.data?.stepName;
-    this.isReason = dt?.data?.isReason;
     this.headerText = dt?.data?.headerTitle;
+    this.isReason = dt?.data?.isReason;
     this.processID =  dt?.data?.processID;
     this.isMoveProcess = dt?.data?.isMoveProcess;
     this.isCallInstance = dt?.data?.isCallInstance;
@@ -101,7 +101,6 @@ export class PopupMoveReasonComponent implements OnInit {
     this.userId = this.user?.userID;
     this.reasonStep = dt?.data?.objReason;
     if (this.applyFor == '0') {
-      this.viewClick = this.viewKanban;
       this.listReason = this.reasonStep?.reasons;
       this.instances = JSON.parse(JSON.stringify(dt?.data?.instance));
   //    this.listCbxProccess = dt?.data?.listProccessCbx;
@@ -122,7 +121,12 @@ export class PopupMoveReasonComponent implements OnInit {
               this.getValueListMoveProcess();
               this.moveProccess = this.reasonStep.newProcessID;
     };
-    (this.reasonStep?.newProcessID !== this.guidEmpty && this.reasonStep.newProcessID ) && this.getListProcesByMoveProcess();
+    if(this.reasonStep?.newProcessID !== this.guidEmpty && this.reasonStep.newProcessID ){
+      var listNewProcessID = this.reasonStep.newProcessID?.split(";");
+      if(listNewProcessID?.length > 0){
+        this.getListProcesByMoveProcess(listNewProcessID[0]); 
+      }
+    }
    }
    else {
       this.getListMoveReason();
@@ -130,6 +134,10 @@ export class PopupMoveReasonComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  getDataMove(){
+    
+  }
 
   onSave() {
     if(this.isLockStep) return;
@@ -241,13 +249,13 @@ export class PopupMoveReasonComponent implements OnInit {
   async getListMoveReason() {
     var datas = [this.processID, this.isReason];
     this.codxDpService
-      .getInstanceStepsMoveReason(datas)
+      .getDataProccessMove(datas)
       .subscribe(async (res) => {
-        if (res && res.length > 0) {
-          // this.listReason = res[0];
-          this.reasonStep = res[0];
+        if (res) {
+          this.reasonStep = res?.step;
           this.listReason = this.reasonStep.reasons
-          this.stepName = res[1];
+          this.stepName = this.reasonStep?.stepName;
+          this.listCbxProccess = res?.listProcess;
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -281,11 +289,11 @@ export class PopupMoveReasonComponent implements OnInit {
       this.memo = $event.data;
     }
   }
-    getListProcesByMoveProcess() {
-    this.moveProccess = this.reasonStep.newProcessID;
-    let data=['',this.moveProccess,'1'];
+    getListProcesByMoveProcess(moveProccess) {
+    // this.moveProccess = this.reasonStep.newProcessID;
+    let data=[this.applyFor,this.moveProccess,'1'];
     this.codxDpService.getlistCbxProccessMove(data).subscribe((res) => {
-      if( res != null &&res.length > 0) {
+      if( res != null && res.length > 0) {
         this.getListProceseEmpty(res[0]);
         this.listParticipantReason = res[1];
         let indexOwner = this.listParticipantReason.findIndex(x=> x.userID === this.userId);
@@ -296,9 +304,9 @@ export class PopupMoveReasonComponent implements OnInit {
           this.ownerMove = null;
         }
       }
-      else {
-      this.getListProceseEmpty([]);
-      }
+      // else {
+      // this.getListProceseEmpty([]);
+      // }
     });
   }
 
@@ -318,6 +326,7 @@ export class PopupMoveReasonComponent implements OnInit {
   async cbxChange($event) {
     if ($event) {
       this.moveProccess = $event;
+      this.getListProcesByMoveProcess(event);
     }
   }
 

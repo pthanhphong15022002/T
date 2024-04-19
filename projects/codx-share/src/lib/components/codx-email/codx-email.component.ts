@@ -194,7 +194,7 @@ export class CodxEmailComponent implements OnInit {
     this.formModel = new FormModel();
     this.formModel.entityName = 'AD_EmailTemplates';
     this.formModel.formName = 'EmailTemplates';
-    this.formModel.gridViewName = 'grvEmailTe7mplates';
+    this.formModel.gridViewName = 'grvEmailTemplates';
     this.formModel.funcID = '';
     this.cache.gridView(this.formModel.gridViewName).subscribe((gridView) => {
       // this.cache.setGridView(this.formModel.gridViewName, gridView);
@@ -206,11 +206,22 @@ export class CodxEmailComponent implements OnInit {
           //   this.formModel.gridViewName,
           //   gridViewSetup
           // );
-          this.dialogETemplate = this.mainService.buildFormGroup(
-            this.formModel.formName,
-            this.formModel.gridViewName,
-            ''
-          );
+          if (gridViewSetup) {
+            this.dialogETemplate = this.mainService.buildFormGroup(
+              this.formModel.formName,
+              this.formModel.gridViewName,
+              ''
+            );
+          } else {
+            var group: any = {};
+            group['subject'] = new FormControl('');
+            group['templateName'] = new FormControl('');
+            group['sendTime'] = new FormControl('');
+            group['message'] = new FormControl('');
+            group['updateColumn'] = new FormControl('');
+            group['updateColumns'] = new FormControl('');
+            this.dialogETemplate = new FormGroup(group);
+          }
 
           if (this.dataMailBG) {
             this.data = JSON.parse(JSON.stringify(this.dataMailBG));

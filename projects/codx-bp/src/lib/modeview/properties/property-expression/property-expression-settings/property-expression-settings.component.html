@@ -26,8 +26,9 @@
                 (cdkDropListDropped)="drop($event)"
                 cdkDropListOrientation="horizontal"
                 >
-                <div *ngFor="let item of data" cdkDrag>
-                    {{item}}
+                <div class="cursor-move position-relative me-6" *ngFor="let item of data ; let i = index" cdkDrag>
+                    <span>{{item}}</span>
+                    <i class="icon-close text-danger position-absolute icon-12 cursor-pointer" (click)="del(i)"></i>
                 </div>
             </div>
         </div>
@@ -49,6 +50,6 @@
 </ng-template>
 <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button class="btn btn-primary" ><codx-label fiedName="lblSave" default="Lưu"></codx-label></button>
+      <button class="btn btn-primary" (click)="close()"><codx-label fiedName="lblSave" default="Lưu"></codx-label></button>
     </div>
 </ng-template>
