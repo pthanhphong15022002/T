@@ -24,6 +24,7 @@ import {
   UIComponent,
   ViewModel,
   ViewType,
+  AuthStore
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupAddProjectComponent } from './popup-add-project/popup-add-project.component';
@@ -75,7 +76,8 @@ export class ProjectsComponent
     private routerActive: ActivatedRoute,
     private shareService: CodxShareService,
     private notificationSv: NotificationsService,
-    public override codxService: CodxService
+    public override codxService: CodxService,
+    private authStore:AuthStore
   ) {
     super(injector);
     this.button = [{ id: 'btnAdd' }];
@@ -171,7 +173,7 @@ export class ProjectsComponent
     }
   }
 
-  viewProject(){
+  viewProject(title: string){
     if(this.view.dataService.dataSelected){
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
@@ -179,7 +181,7 @@ export class ProjectsComponent
       option.Width = '800px';
       let dialog = this.callfc.openSide(
         PopupAddProjectComponent,
-        [this.view?.dataService.dataSelected, 'edit', this.grvSetup,true],
+        [this.view?.dataService.dataSelected, 'edit', this.grvSetup,true,title],
         option
       );
       dialog.closed.subscribe((returnData) => {
@@ -192,7 +194,9 @@ export class ProjectsComponent
     }
   }
 
-  edit() {
+  edit(title: string) {
+    var en = this.authStore.get()?.userID == this.view?.dataService.dataSelected.projectManager? false: true;
+
     this.view.dataService
       .edit(this.view?.dataService.dataSelected)
       .subscribe(() => {
@@ -202,7 +206,7 @@ export class ProjectsComponent
         option.Width = '800px';
         let dialog = this.callfc.openSide(
           PopupAddProjectComponent,
-          [this.view?.dataService.dataSelected, 'edit', this.grvSetup],
+          [this.view?.dataService.dataSelected, 'edit', this.grvSetup, en, title],
           option
         );
         dialog.closed.subscribe((returnData) => {
@@ -255,7 +259,7 @@ export class ProjectsComponent
   clickMF(e: any, data: any) {
     switch (e.functionID) {
       case 'SYS03':
-        this.edit();
+        this.edit(e.data.customName);
         break;
       case 'SYS02':
         this.delete();
@@ -270,7 +274,7 @@ export class ProjectsComponent
         this.copy();
         break;
         case "SYS05":
-          this.viewProject()
+          this.viewProject(e.data.customName)
           break;
     }
   }
