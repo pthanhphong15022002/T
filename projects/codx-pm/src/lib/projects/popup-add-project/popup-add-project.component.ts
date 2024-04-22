@@ -81,6 +81,7 @@ export class PopupAddProjectComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
+    this.title = dialogData.data[1] == "edit" ? dialogData.data[4] : this.title;
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef?.formModel;
     this.funcID = this.formModel?.funcID;
