@@ -188,7 +188,9 @@ export class EmployeesComponent extends UIComponent {
 
   btnClick(event: any) {
     if (event?.text) {
-      this.view.dataService.addNew().subscribe((res: any) => {
+      this.view.dataService
+      .addNew()
+      .subscribe((res: any) => {
         if (res) {
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -200,11 +202,7 @@ export class EmployeesComponent extends UIComponent {
             funcID: this.view.funcID,
             action: event.text,
           };
-          let popup = this.callfc.openSide(
-            PopupAddEmployeesComponent,
-            object,
-            option
-          );
+          let popup = this.callfc.openSide(PopupAddEmployeesComponent,object,option);
           popup.closed.subscribe((res: any) => {
             if (res?.event) {
               let data = res.event;
@@ -229,7 +227,7 @@ export class EmployeesComponent extends UIComponent {
         this.view?.dataService?.data?.length > 0
           ? this.view?.dataService?.data[0]
           : null;
-    if (event && data) {
+    if (event) {
       this.view.dataService.dataSelected = data;
       switch (event.functionID) {
         case 'SYS02': // xóa
@@ -331,6 +329,7 @@ export class EmployeesComponent extends UIComponent {
   }
 
   delete(data: any) {
+    if(!data) return;
     this.view.dataService
       .delete([data], true, (option: any) => this.beforeDel(option))
       .subscribe();
@@ -400,6 +399,7 @@ export class EmployeesComponent extends UIComponent {
 
   // cập nhật tình trạng nhân viên
   updateStatus(data: any, funcID: string) {
+    if(!data) return;
     let popup = this.callfc.openForm(
       UpdateStatusComponent,
       'Cập nhật tình trạng',

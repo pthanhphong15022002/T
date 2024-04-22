@@ -1,0 +1,5 @@
+.online-url {
+  text-decoration: underline;
+  font-style: italic;
+  cursor: pointer;
+}

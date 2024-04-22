@@ -1121,7 +1121,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     booking.link = data.link;
     // booking.link2 = data.link2;
     booking.memo = data.memo;
-    booking.online = data.online;
+    booking.online = data.isOnline;
     booking.bookingOn = data.startDate;
     // booking.approveStatus = '1';
     booking.resourceType = '1';

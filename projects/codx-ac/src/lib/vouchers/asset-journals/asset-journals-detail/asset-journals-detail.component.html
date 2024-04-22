@@ -47,12 +47,6 @@
         <span *ngIf="(itemSelected?.objectName == '' || itemSelected?.objectName == null) && gridViewSetup"
           class="place-holder line-clamp line-clamp-1 fs-5 text-uppercase me-5">{{gridViewSetup['ObjectID'].headerText}}</span>
       </div>
-      <div class="d-flex align-self-center">
-        <span class="badge badge-pill badge-primary me-3">
-          <span class="fw-bold"
-            [innerHTML]="(itemSelected?.totalDR | tranformValueNumber : (itemSelected?.currencyID !=  baseCurr ? 'S' : 'B') | async)+' '+itemSelected?.currencyID"></span>
-        </span>
-      </div>
     </div>
   </ng-container>
 </ng-template>
@@ -178,7 +172,7 @@
 <!-- Start: template Tab SettledInvoices-->
 <ng-template #tabAssetline>
   <ng-container *ngIf="itemSelected">
-    <assets-line-table [itemSelected]="itemSelected" [baseCurr]="baseCurr">
+    <assets-line-table [itemSelected]="itemSelected" [baseCurr]="baseCurr" [noCheckCurrID]="true">
     </assets-line-table>
   </ng-container>
 </ng-template>
