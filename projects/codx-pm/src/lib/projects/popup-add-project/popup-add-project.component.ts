@@ -3,6 +3,7 @@ import { AuthService, AuthStore, CacheService, DialogData, DialogModel, DialogRe
 import { CodxCommonService } from "projects/codx-common/src/lib/codx-common.service";
 import { DynamicSettingControlComponent } from "projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component";
 import { CodxShareService } from "projects/codx-share/src/public-api";
+import moment from "moment";
 
 @Component({
   selector: 'popup-add-project',
@@ -413,8 +414,14 @@ export class PopupAddProjectComponent extends UIComponent {
   }
 
   saveForm(){
-
+    //console.log(this.data);
     let returnData:any;
+    if(this.data.startDate && this.data.finishDate){
+      if(moment(this.data.startDate).isAfter(this.data.finishDate)){
+        this.notificationsService.notify('Thời gian bắt đầu không được lớn hơn thời gian kết thúc!', '2');
+        return;
+      }
+    }
     if(this.dynamic){
       this.newSetting.forEach((x:any)=>{
         x.fieldValue = this.dynamic.dataValue[x.fieldName];

@@ -331,6 +331,12 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit {
                 return;
               }
             }
+            if(this.data.startDate && this.data.endDate){
+              if(moment(this.data.startDate).isAfter(this.data.endDate)){
+                this.notificationsService.notify('Thời gian bắt đầu không được lớn hơn thời gian kết thúc!', '2');
+                return;
+              }
+            }
             break;
           case '2':
             if (this.parentTask) {
@@ -343,6 +349,12 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit {
               if (this.parentTask.endDate && this.data.endDate) {
                 if (moment(this.parentTask.endDate).isBefore(this.data.endDate)) {
                   this.notificationsService.notify('Thời gian kết thúc phải nằm trong thời gian của công việc cha!', '2');
+                  return;
+                }
+              }
+              if(this.data.startDate && this.data.endDate){
+                if(moment(this.data.startDate).isAfter(this.data.endDate)){
+                  this.notificationsService.notify('Thời gian bắt đầu không được lớn hơn thời gian kết thúc!', '2');
                   return;
                 }
               }

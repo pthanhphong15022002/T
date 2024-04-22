@@ -85,7 +85,7 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
     this.funcName = dialogData.data?.funcName;
     if (!dialogData?.data?.dataDefault?.calculation && !dialogData?.data?.dataDefault?._isEdit){
       dialogData.data.dataDefault.calculation = '2';
-    }   
+    }
 
     this.dataDefault = {...dialogData?.data?.dataDefault};
     this.dialogData = {...dialogData};
@@ -123,7 +123,7 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
         this.lblExChangeRateSetting = res?.customName;
       }
     });
-    
+
     //? get data exchangerate by currencyID
     if (this.dataDefault._isEdit) {
       let options2 = new DataRequest();
@@ -159,7 +159,7 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
 
   /**
    * *Hàm xử lí thay đổi value
-   * @param event 
+   * @param event
    */
   valueChange(event){
     let field = event?.field || event?.ControlName;
@@ -218,7 +218,7 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
   }
 
   /**
-   * *Hàm thêm mới tỷ giá 
+   * *Hàm thêm mới tỷ giá
    */
   addNewExchangeRate() {
     this.exchangeRatesService.addNew().subscribe((res: any) => {
@@ -255,7 +255,7 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
 
   /**
    * *Hàm chỉnh sửa tỷ giá
-   * @param dataEdit 
+   * @param dataEdit
    */
   editExchangeRate(dataEdit: any) {
     dataEdit.isEdit = true;
@@ -292,7 +292,7 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
 
   /**
    * *Hàm xóa tỷ giá
-   * @param data 
+   * @param data
    */
   deleteExchangeRate(data: any) {
     this.exchangeRatesService.delete([data], true,null,null,null,null,null,false).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
@@ -318,8 +318,8 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
   //#region Method
 
   /**
-   * *Hàm lưu tiền tệ 
-   * @param type 
+   * *Hàm lưu tiền tệ
+   * @param type
    */
   onSave(type) {
     this.form.save((opt: RequestOption) => {
@@ -329,19 +329,19 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
       opt.service = 'BS';
       opt.data = [this.form.data,this.lstExchangeRate];
       return true;
-    }, 0, '', '', false).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+    }, 0, '', '', true).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
       if (!res) return;
-      if (res.hasOwnProperty('save')) {
-        if (res.save.hasOwnProperty('data') && !res.save.data) return;
-      }
-      if (res.hasOwnProperty('update')) {
-        if (res.update.hasOwnProperty('data') && !res.update.data) return;
-      }
-      if (this.form.data.isAdd || this.form.data.isCopy)
-        this.notification.notifyCode('SYS006');
-      else
-        this.notification.notifyCode('SYS007');
-      this.dialog.close();
+      // if (res.hasOwnProperty('save')) {
+      //   if (res.save.hasOwnProperty('data') && !res.save.data) return;
+      // }
+      // if (res.hasOwnProperty('update')) {
+      //   if (res.update.hasOwnProperty('data') && !res.update.data) return;
+      // }
+      // if (this.form.data.isAdd || this.form.data.isCopy)
+      //   this.notification.notifyCode('SYS006');
+      // else
+      //   this.notification.notifyCode('SYS007');
+      if(res.save || res.update) this.dialog.close();
     })
     // this.form.save(null, 0, '', '', false).pipe(takeUntil(this.destroy$))
     // .subscribe((res: any) => {
@@ -349,7 +349,7 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
     //   if (res || res.save || res.update) {
     //     if (res || !res.save.error || !res.update.error) {
     //       if (type == 'save') {
-    //         this.dialog.close(); 
+    //         this.dialog.close();
     //       }else{
     //         this.dialog.dataService.clear();
     //         this.dialog.dataService.addNew().subscribe((res: any) => {
@@ -364,13 +364,13 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
     //       }
     //       if (this.form.data.isAdd || this.form.data.isCopy)
     //         this.notification.notifyCode('SYS006');
-    //       else 
+    //       else
     //         this.notification.notifyCode('SYS007');
     //     }
     //   }
     // });
 
   }
- 
+
   //#endregion
 }
