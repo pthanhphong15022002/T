@@ -251,6 +251,7 @@ export class DynamicFormComponent extends UIComponent {
         this.updateStatus(data);
         break;
       default:
+        this.shareService.defaultMoreFunc(evt, data);
         break;
     }
   }

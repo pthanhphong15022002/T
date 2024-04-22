@@ -31,7 +31,7 @@ import { Subject, takeUntil } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountsAddComponent extends UIComponent {
-  
+
   //#region Contructor
   @ViewChild('form') form: LayoutAddComponent; //? element form layoutadd
   dialog!: DialogRef;
@@ -114,22 +114,22 @@ export class AccountsAddComponent extends UIComponent {
       }
       if((res.save && !res.save.error) || (res.update && !res.update.error)){
         if (type === 'save') {
-          this.dialog.close(); 
+          this.dialog.close();
         }else{
           this.dialog.dataService.addNew().subscribe((res: any) => {
             if (res) {
               if(res.loanControl)
                 res.loanControl = '1';
-              else  
+              else
                 res.loanControl = '0';
-              
+
               if(res.postDetail == '1')
                 res.postDetail = true;
               else
                 res.postDetail = false;
               res.isAdd = true;
               if(this.form.form.data.isEdit || this.form.form.data.isCopy) this.headerText = (this.lblAdd + ' ' + this.funcName).toUpperCase();
-              (this.form.form as CodxFormComponent).refreshData({...res}); 
+              (this.form.form as CodxFormComponent).refreshData({...res});
               this.dialog.dataService.clear();
               this.detectorRef.detectChanges();
             }
@@ -137,21 +137,21 @@ export class AccountsAddComponent extends UIComponent {
         }
         if (this.form.data.isAdd || this.form.data.isCopy)
             this.notification.notifyCode('SYS006');
-        else 
+        else
             this.notification.notifyCode('SYS007');
 
         this.acService.clearCache('account');
       }
     });
   }
-  
+
   //#endregion CRUD
 
   //#region Function
 
   /**
    * *Hàm thay đổi title cho form
-   * @param event 
+   * @param event
    */
   setTitle(event) {
     this.headerText = this.dialogData?.data?.headerText;
@@ -162,14 +162,18 @@ export class AccountsAddComponent extends UIComponent {
    */
   formatData() {
     if (this.form.form.data.loanControl == '0') {
-      this.form.form.setValue('loanControl',false,{},false);
+      //this.form.form.setValue('loanControl',false,{},true);
+      this.form.form.data.loanControl = false
     } else {
-      this.form.form.setValue('loanControl',true,{},false);
+      //this.form.form.setValue('loanControl',true,{},true);
+      this.form.form.data.loanControl = true
     }
     if (this.form.form.data.postDetail == true) {
-      this.form.form.setValue('postDetail','1',{},false);
+      //this.form.form.setValue('postDetail','1',{},true);
+      this.form.form.data.postDetail = '1'
     }else{
-      this.form.form.setValue('postDetail','0',{},false);
+      //this.form.form.setValue('postDetail','0',{},true);
+      this.form.form.data.postDetail = '0'
     }
   }
 

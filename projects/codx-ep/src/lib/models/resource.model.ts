@@ -3,6 +3,8 @@ export class Resource {
   resourceName: string;
   capacity: number;
   equipments: Array<object>;
+  useCard: boolean;
+  owner: string;
 }
 
 export class ResourceTrans {
@@ -20,7 +22,17 @@ export class ResourceTrans {
   companyID:string;
   createdBy:string;
 }
-
+export class GridModels {
+  pageSize?: number;
+  entityName?: string;
+  entityPermission?: string;
+  formName?: string;
+  gridViewName?: string;
+  funcID?: string;
+  dataValues?: string;
+  predicates?: string;
+  comboboxName?: string;
+}
 export class Warehouses {
   warehouseID: string;
   owner: string;

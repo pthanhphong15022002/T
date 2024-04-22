@@ -270,6 +270,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         }
       });
     }
+    if (this.field.dataType == 'RM') this.field.isUseDefault = true; //tạm gán cứng
   }
 
   async valueChange(e) {
