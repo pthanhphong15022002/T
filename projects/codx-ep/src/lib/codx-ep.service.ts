@@ -15,6 +15,8 @@ import {
 } from 'codx-core';
 import { map, mergeMap, of } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
+import { EPCONST } from './codx-ep.constant';
+import { EP_Setting } from './models/ep.model';
 // import { this.environment } from 'src/this.environments/this.environment';
 
 export class ModelPage {
@@ -913,7 +915,182 @@ export class CodxEpService {
       .catch((err: any) => {});
     return null;
   }
+  getCostInfo(recID: string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingCostBusiness',
+      'GetListByTranIDAsync',
+      [recID]
+    );
+  }
+  addEditBooking(data: any, isAdd:boolean, listAttendees:any, listStationery:any) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'SaveAsync',
+      [data,isAdd,listAttendees,listStationery]
+    );
+  }
+  //Cache
+  getCacheSettingValue(settingValues:Array<any>,transType:string,category:string,fieldName:string=null):any{
+    if(settingValues==null || settingValues?.length==0) return null;  
 
+    let setting = settingValues.filter(x=>x?.transType == transType && x?.category==category)    
+    if(setting?.length>0){
+      if(category=='1'){
+        return Util.camelizekeyObj(JSON.parse(setting[0]?.dataValue));
+      }
+      if(category== '4'){
+        let arrSettingValue = JSON.parse(setting[0]?.dataValue);
+        if(arrSettingValue!=null && arrSettingValue?.length>0){
+          if(fieldName!=null){
+            let crrSetting = arrSettingValue.filter(x=>x?.FieldName == fieldName);
+            if(crrSetting!=null){
+              return Util.camelizekeyObj(crrSetting[0]);
+            }
+          }
+          else{            
+            return Util.camelizekeyObj(arrSettingValue[0]);
+          }
+        }
+        else{
+          return null;
+        }
+      }
+    }
+    else{
+      return null;
+    }  
+  }
+  getEpSettingValue():any{
+    return new Promise<any>((resolve, rejects) => {
+      let epSetting= new EP_Setting();
+      this.api.execSv<any>(
+        'SYS',
+        'SYS',
+        'SettingValuesBusiness',
+        'GetListAsync',
+        ['F', EPCONST.PARAM.EPParameters]
+      )
+      .subscribe((res) => {
+        if (res) {
+          res?.forEach((item) => {
+            if (item?.dataValue?.length > 0) {
+              switch (item?.transType) {
+                case EPCONST.PARAM.EPRoomParameters:
+                  epSetting.epRoomParameters = {
+                    ...(epSetting.epRoomParameters ?? {}),
+                    ...Util.camelizekeyObj(
+                      JSON?.parse(item?.dataValue ?? '') ?? {}
+                    ),
+                  };
+
+                  break;
+                case EPCONST.PARAM.EPCarParameters:
+                  epSetting.epCarParameters = {
+                    ...(epSetting.epCarParameters ?? {}),
+                    ...Util.camelizekeyObj(
+                      JSON?.parse(item?.dataValue ?? '') ?? {}
+                    ),
+                  };
+
+                  break;
+                case EPCONST.PARAM.EPStationeryParameters:
+                  epSetting.epStationeryParameters = {
+                    ...(epSetting.epStationeryParameters ?? {}),
+                    ...Util.camelizekeyObj(
+                      JSON?.parse(item?.dataValue ?? '') ?? {}
+                    ),
+                  };
+                  break;
+                default:
+                  if (item?.category == '4') {
+                    let settings = JSON?.parse(item?.dataValue ?? '');
+                    if (settings?.length > 0) {
+                      settings?.forEach((setting) => {
+                        setting = Util.camelizekeyObj(setting ?? {});
+                        switch (setting?.category) {
+                          case EPCONST.ENTITY.R_Bookings:
+                            epSetting.epRoomParameters = {
+                              ...(epSetting.epRoomParameters ?? {}),
+                              ...(setting ?? {}),
+                            };
+                            break;
+                          case EPCONST.ENTITY.C_Bookings:
+                            epSetting.epCarParameters = {
+                              ...(epSetting.epCarParameters ?? {}),
+                              ...(setting ?? {}),
+                            };
+                            break;
+                          case EPCONST.ENTITY.S_Bookings:
+                            epSetting.epStationeryParameters = {
+                              ...(epSetting.epStationeryParameters ?? {}),
+                              ...(setting ?? {}),
+                            };
+                            break;
+                        }
+                      });
+                    }
+                  } else {
+                    epSetting.epParameters = Util.camelizekeyObj(
+                      JSON?.parse(item?.dataValue ?? '') ?? {}
+                    );
+                  }
+                  break;
+              }
+            }
+          });
+          resolve(epSetting);
+        }
+      });
+    });
+  }
+  getListRO() {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourcesBusiness',
+      'GetListOwnerAsync',
+      []
+    );
+  }
+  checkAdminRole(curUser: any, isAdmin: boolean) {
+    return (
+      curUser?.systemAdmin ||
+      curUser?.functionAdmin ||
+      curUser?.administrator ||
+      isAdmin == true
+    );
+  }
+  getListWarehouse() {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'WarehousesBusiness',
+      'GetListAsync',
+      []
+    );
+  }
+  autoApproveStationery(recID:string, refID:string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'AutoApproveStationeryAsync',
+      [recID,refID]
+    );
+  }
+  releaseStationeryOfRoom(recID:string, refID:string, processID :string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'ReleaseStationeryAsync',
+      [recID,refID,processID]
+    );
+  }
   async connectMeetingNow(
     meetingTitle: string,
     meetingDescription: string,

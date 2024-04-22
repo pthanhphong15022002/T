@@ -66,7 +66,6 @@ export class VATCodesComponent extends UIComponent {
         sameData: true,
         model: {
           template2: this.templateMore,
-          frozenColumns: 1,
         },
       },
     ];
@@ -178,6 +177,7 @@ export class VATCodesComponent extends UIComponent {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService.delete([data], true).subscribe((res: any) => {
+      debugger
       if (res) {
         this.api
           .exec('ERM.Business.AC', 'VATPostingBusiness', 'DeleteAsync', [

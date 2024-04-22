@@ -236,7 +236,7 @@
         (positionChange)="onDrop($event)"
         [selectedItems]="selectedItems"
         (collectionChange)="collectionChange($event)"
-        [drawingObject]=" { type: 'Orthogonal' }"
+        [drawingObject]="drawingObject"
         [serializationSettings]="{preventDefaults: true}"
         (mouseEnter)="mouseEnter($event)"
         (textEdit)="textEdit($event)"

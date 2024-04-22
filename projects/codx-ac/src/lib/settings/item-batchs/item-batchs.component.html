@@ -1,5 +1,5 @@
 <codx-views #view idField="recID" [views]="views" [button]="buttons" [isSubView]="isSubView" service="IV"
-  entityName="IV_ItemBatchs" (buttonClick)="toolBarClick($event)">
+  entityName="IV_ItemBatchs" (buttonClick)="toolBarClick($event)" (clickMF)="clickMF($event, view.dataService.dataSelected)">
 </codx-views>
 <ng-template #templateMore let-data>
   <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
