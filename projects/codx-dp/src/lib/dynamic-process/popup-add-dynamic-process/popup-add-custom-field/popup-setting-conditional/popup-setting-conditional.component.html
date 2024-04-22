@@ -17,7 +17,7 @@
       <ejs-combobox
         [dataSource]="fieldsCondition"
         [fields]="fields"
-        [value]=""
+        [value]="data?.refID"
         [allowFiltering]="false"
         [placeholder]=""
         (valueChange)="cbxChangeCondition($event)"
@@ -29,7 +29,7 @@
         fieldName="compareConditions"
         formName="DPConditionReferenceFields"
         gridViewName="grvDPConditionReferenceFields"
-        default="Trường tham chiếu điều kiện"
+        default="Điều kiện tham chiếu"
       ></codx-label>
       <codx-input
         type="valuelist"
@@ -47,7 +47,7 @@
         fieldName="messageType"
         formName="DPConditionReferenceFields"
         gridViewName="grvDPConditionReferenceFields"
-        default="Điều kiện ràng buộc"
+        default="Mức độ ràng buộc"
       ></codx-label>
       <codx-input
         type="valuelist"

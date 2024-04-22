@@ -1,24 +1,24 @@
-<div class="popup-search">
-    <div class="d-flex align-items-center justify-content-between p-3">
-        <div class="d-flex align-items-center ps-4">
-            <codx-label class="fw-bolder fs-1" 
-                [formModel]="dialogRef.formModel" 
-                name="lblSearch"
-                default="Tìm kiếm">
-            </codx-label>
-        </div>
-        <div class="">
-            <button class="btn" (click)="clickClosePopup()">
-                <i class="icon-close"></i>
-            </button>
+<div class="container w-100 h-100">
+    <div class="row mb-4">
+        <div class="d-flex align-items-center justify-content-between p-3">
+            <div class="d-flex align-items-center ps-4">
+                <codx-label class="fw-bolder fs-1" [formModel]="dialogRef.formModel" name="lblSearch" [default]="'Tìm kiếm'"></codx-label>
+            </div>
+            <div>
+                <button class="btn" (click)="clickClosePopup()">
+                    <i class="icon-close text-danger"></i>
+                </button>
+            </div>
         </div>
     </div>
-    <div class="row mt-2 mw-1000px h-100 news-search-content">
-        <codx-fulltextsearch #view 
+    <div class="row news-search-content">
+        <codx-fulltextsearch 
             [centerTmp]="itemTemplate"  
             [funcID]="funcID" 
             [service]="services" 
             [entityName]="entityName" 
+            [pageSize]="4"
+            [lazyLoad]=""
             (selectedChange)="onSelected($event)">
         </codx-fulltextsearch>
     </div>
@@ -27,44 +27,45 @@
 <ng-template #itemTemplate let-data>  
     <div (click)="clickViewDetail(data)" class="row my-4">
         <codx-temp-full 
+            [formModel]="dialogRef.formModel" 
             [dataItem]="data"
-            [titleTmp]="tmpTitle"
-            [subTitleTmp]="tmpContent"
+            [contentTmp]="tmpContent"
             [imageId]="data.recID"
             [imageObjType]="'WP_News'"
             [imageReferType]="'image'"
             [imageType]="'square'"
             [imageWidth]="150"
-            [formModel]="dialogRef.formModel" 
             [height]="150"
             [hideMF]="true"
             [bookmark]="false">
         </codx-temp-full>
     </div>
 </ng-template>
-
 <ng-template #tmpTitle let-data>
-    <div class="fw-bolder fs-3">
-        <span>{{data.subject}}</span>
+    <div class="f-flex fs-4 flex-column line-clamp line-clamp-2">
+        <span class="fw-bold fs-4" *ngIf="data?.subject">{{data.subject}}</span>
     </div>
 </ng-template>
 <ng-template #tmpContent let-data>
-    <div class="d-flex flex-column align-items-stretch">
-        <div>
-            <span *ngIf="data.subContent">{{data.subContent | maxlenght: 200}}</span>
+    <div class="d-flex flex-column w-100 h-150 position-relative">
+        <div class="f-flex fs-4 flex-column line-clamp line-clamp-2">
+            <span class="fw-bold fs-4" *ngIf="data?.subject">{{data.subject}}</span>
         </div>
-        <div class="w-100 my-2 d-flex align-items-center">
-            <div class="d-flex align-items-center me-4">
+        <div class="f-flex flex-column line-clamp line-clamp-4">
+            <span class="text-gray-600" *ngIf="data?.subContent">{{data.subContent}}</span>
+        </div>
+        <div class="d-flex align-items-center w-100 position-absolute bottom-0">
+            <!-- <div class="d-flex align-items-center me-4" *ngIf="data?.createdName">
                 <span class="icon-account_circle me-2"></span>
-                <span *ngIf="data.createdName">{{data.createdName}}</span>
-            </div>
-            <div class="d-flex align-items-center me-4">
+                <span class="line-clamp line-clamp-1">{{data.createdName}}</span>
+            </div> -->
+            <div class="d-flex align-items-center me-4" *ngIf="data?.createdOn">
                 <span class="icon-calendar_today me-2"></span>
-                <span *ngIf="data.createdOn" [innerHTML]="data.createdOn | formatvalue:dialogRef.formModel:'CreatedOn' | async"></span>
+                <span class="line-clamp line-clamp-1">{{data.createdOn | date : 'dd/MM/yyyy'}}</span>
             </div>
             <div class="d-flex align-items-center me-4">
                 <span class="icon-visibility me-2"></span>
-                <span>{{data.views || 0}}</span>
+                <span class="line-clamp line-clamp-1">{{data?.views || 0}}</span>
             </div>
         </div>
     </div>

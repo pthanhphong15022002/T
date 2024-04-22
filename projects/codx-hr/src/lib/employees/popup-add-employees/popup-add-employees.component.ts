@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit,
   Optional,
   ViewChild,
@@ -18,13 +19,31 @@ import {
 } from 'codx-core';
 import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { HR_Employees } from '../../model/HR_Employees.model';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-popup-add-employees',
   templateUrl: './popup-add-employees.component.html',
   styleUrls: ['./popup-add-employees.component.css'],
 })
-export class PopupAddEmployeesComponent implements OnInit {
+export class PopupAddEmployeesComponent implements OnInit, OnDestroy {
+  
+  isCorporation = false;
+  dialogRef: any;
+  dialogData: any = null;
+  employee: HR_Employees;
+  isAdd: boolean = true;
+  currentSection = 'InfoPersonal';
+  user: any;
+  action = '';
+  funcID: string;
+  isAfterRender = false;
+  gridViewSetup: any;
+  paramaterHR: any = null;
+  grvSetup: any = {};
+  arrFieldRequire: any[] = [];
+  mssgCode: string = 'SYS009';
+  functionName: string = '';
   tabInfo: any[] = [
     {
       icon: 'icon-info',
@@ -47,23 +66,9 @@ export class PopupAddEmployeesComponent implements OnInit {
     //   name: 'tabInfoLaw',
     // },
   ];
-  isCorporation = false;
-  dialogRef: any;
-  dialogData: any = null;
-  employee: HR_Employees;
-  isAdd: boolean = true;
-  currentSection = 'InfoPersonal';
-  user: any;
-  action = '';
-  funcID: string;
-  isAfterRender = false;
-  gridViewSetup: any;
-  paramaterHR: any = null;
-  grvSetup: any = {};
-  arrFieldRequire: any[] = [];
-  mssgCode: string = 'SYS009';
-  functionName: string = '';
   @ViewChild('form') form: LayoutAddComponent;
+  destroy$ = new Subject<void>();
+  function:any;
   constructor(
     private auth: AuthService,
     private notifiSV: NotificationsService,
@@ -71,23 +76,42 @@ export class PopupAddEmployeesComponent implements OnInit {
     private cache: CacheService,
     private api: ApiHttpService,
     private adService: CodxAdService,
-
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
     this.user = this.auth.userValue;
     this.dialogData = dialogData.data;
     this.dialogRef = dialogRef;
-    if (this.dialogData.employee) {
-      this.employee = JSON.parse(JSON.stringify(this.dialogData.employee));
+    if(this.dialogData)
+    {
+      this.isAdd = this.dialogData.isAdd;
+      this.action = this.dialogData.action;
+      this.funcID = this.dialogData.funcID;
+      this.cache.functionList(this.funcID)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((func: any) => {
+        if (func) 
+        {
+          this.function = func;
+          this.cache.gridViewSetup(func.formName, func.gridViewName)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((grd: any) => {
+            if (grd) {
+              this.grvSetup = grd;
+              let arrField = Object.values(grd).filter((x: any) => x.isRequire);
+              if(arrField)
+                this.arrFieldRequire = arrField.map((x: any) => x.fieldName);
+            }
+          });
+        }
+      });
+      if(this.dialogData.employee) 
+        this.employee = JSON.parse(JSON.stringify(this.dialogData.employee));
     }
+    
   }
-
+  
   ngOnInit(): void {
-    this.isAdd = this.dialogData.isAdd;
-    this.action = this.dialogData.action;
-    this.funcID = this.dialogData.funcID;
-    this.getFunction(this.funcID);
     // this.adService.getListCompanySettings()
     // .subscribe((res) => {
     //   if (res) {
@@ -95,31 +119,11 @@ export class PopupAddEmployeesComponent implements OnInit {
     //   }
     // });
   }
-  //get function
-  getFunction(functionID: string) {
-    if (functionID) {
-      this.cache.functionList(functionID).subscribe((func: any) => {
-        if (func) {
-          this.functionName = func.description;
-          this.getGridViewSetup(func.formName, func.gridViewName);
-        }
-      });
-    }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
-  // get grvsetup
-  getGridViewSetup(formName: string, gridViewName: string) {
-    if (formName && gridViewName) {
-      this.cache.gridViewSetup(formName, gridViewName).subscribe((grd: any) => {
-        if (grd) {
-          this.grvSetup = grd;
-          let arrField = Object.values(grd).filter((x: any) => x.isRequire);
-          if (arrField) {
-            this.arrFieldRequire = arrField.map((x: any) => x.fieldName);
-          }
-        }
-      });
-    }
-  }
+  
   // set title popup
   setTile(form) {
     form.title = this.action;
@@ -170,15 +174,13 @@ export class PopupAddEmployeesComponent implements OnInit {
   // update employee
   updateEmployeeAsync(employee: any) {
     if (employee) {
-      console.log('data chuan bi update', employee);
-      
       this.api
         .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness_Old', 'UpdateAsync', [
           employee,
           this.funcID,
         ])
+        .pipe(takeUntil(this.destroy$))
         .subscribe((res: any) => {
-        console.log('data sau khi update du lieu', res);
           let _mssgCode = res ? 'SYS007' : 'SYS021';
           this.notifiSV.notifyCode(_mssgCode);
           this.dialogRef.close(res? res : false);
@@ -192,6 +194,7 @@ export class PopupAddEmployeesComponent implements OnInit {
         employee,
         funcID,
       ])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         let _mssgCode = res ? 'SYS006' : 'SYS023';
         this.notifiSV.notifyCode(_mssgCode);

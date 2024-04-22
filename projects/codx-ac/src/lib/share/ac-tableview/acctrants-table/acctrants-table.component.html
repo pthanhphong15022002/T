@@ -5,19 +5,19 @@
                 <th class="border-bottom" style="width: 30em;min-width: 25em;">               
                     <span class="fw-bold">Tài khoản</span>
                 </th>
-                <th *ngIf="baseCurr && itemSelected?.currencyID == baseCurr" class="border-bottom text-end" style="width: 15em;min-width: 10em;">
+                <th *ngIf="baseCurr && (itemSelected?.currencyID == baseCurr || !noCheckCurrID)" class="border-bottom text-end" style="width: 15em;min-width: 10em;">
                     <span class="fw-bold">Nợ</span>
                 </th>
-                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="border-bottom text-end" style="width: 15em;min-width: 10em;">
+                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr && noCheckCurrID" class="border-bottom text-end" style="width: 15em;min-width: 10em;">
                   <span class="fw-bold">Nợ, HT</span>
                 </th>
-                <th *ngIf="baseCurr && itemSelected?.currencyID == baseCurr" class="border-bottom text-end" style="width: 15em;min-width: 10em;">
+                <th *ngIf="baseCurr && (itemSelected?.currencyID == baseCurr || !noCheckCurrID)" class="border-bottom text-end" style="width: 15em;min-width: 10em;">
                     <span class="fw-bold">Có</span>
                 </th>
-                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="border-bottom text-end" style="width: 15em;min-width: 10em;">
+                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr && noCheckCurrID" class="border-bottom text-end" style="width: 15em;min-width: 10em;">
                     <span class="fw-bold">Có, HT</span>
                 </th>
-                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="border-bottom text-end" style="width: 15em;min-width: 10em;">
+                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr && noCheckCurrID" class="border-bottom text-end" style="width: 15em;min-width: 10em;">
                     <span class="fw-bold">Số tiền, NT</span>
                 </th>
                 <th class="border-bottom" style="width: 30em;min-width: 25em;">
@@ -112,7 +112,7 @@
                         <span *ngIf="item.crediting" class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt2
                   | tranformValueNumber : 'B' | async"></span>
                     </td>
-                    <td style="width: 15em;min-width: 10em;" *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="text-end">
+                    <td style="width: 15em;min-width: 10em;" *ngIf="baseCurr && itemSelected?.currencyID != baseCurr && noCheckCurrID" class="text-end">
                         <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt
                 | tranformValueNumber : 'S' | async"></span>
                     </td>
@@ -145,7 +145,7 @@
                     <span *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" [innerHTML]="totalAcctCR
                         | tranformValueNumber : 'B' | async"></span>
                 </th>
-                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="text-end" style="width: 15em;min-width: 10em;">
+                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr && noCheckCurrID" class="text-end" style="width: 15em;min-width: 10em;">
                     <span *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" [innerHTML]="totalTransAmt
                         | tranformValueNumber : 'S' | async"></span>
                 </th>

@@ -1901,7 +1901,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       } else if ($event.field === 'no' && $event.component.checked === true) {
         this.process.closeInstanceOverdue = false;
       }
-    }else if (view == 'allowEditTaskControl') {
+    } else if (view == 'allowEditTaskControl') {
       if ($event.field === 'yes' && $event.component.checked === true) {
         this.process.allowEditTaskControl = true;
       } else if ($event.field === 'no' && $event.component.checked === true) {
@@ -2573,6 +2573,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                 if (e.event[1] && !this.process.processNo) {
                   this.process.processNo = e.event[1];
                 }
+                let dependence = e.event[3];
                 this.fieldCrr.sorting = (this.step?.fields?.length ?? 0) + 1;
                 this.stepList.forEach((x) => {
                   if (x.recID == this.fieldCrr.stepID) {
@@ -2585,6 +2586,15 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                         this.listStepEdit.push(x?.recID);
                       }
                     }
+                    //edit truong tham chiếu
+                    // if (this.fieldCrr.isApplyDependences && dependence.refID && dependence.strDependence) {
+                    //   let idxFieldDep = x.fields.findIndex(x => x.recID == dependence.refID);
+                    //   if (idxFieldDep != -1) {
+                    //     let depedence = x.fields[idxFieldDep].dependences;
+                    //     if (depedence) depedence += "," + dependence.strDependence; else depedence = dependence.strDependence
+                    //     x.fields[idxFieldDep].dependences = depedence
+                    //   }
+                    // }
                   }
                   //edit field truosc do neu edit
                   if (isEditFieldDuplicate && x.fields?.length > 0) {
@@ -5027,28 +5037,28 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   defaultCbxProccess() { }
 
   cbxChange(event: any[], data, value) {
-    if(event?.length <= 1){
+    if (event?.length <= 1) {
       data.newProcessID = event[0] || "";
       this[value] = event;
-    }else if(event?.length > 1){
-      if(event?.some(x => x == this.guidEmpty && event?.length > 1)){
-        this.notiService.notify("Vui lòng xóa các quy trình hiện có","3");
+    } else if (event?.length > 1) {
+      if (event?.some(x => x == this.guidEmpty && event?.length > 1)) {
+        this.notiService.notify("Vui lòng xóa các quy trình hiện có", "3");
         this[value] = JSON.parse(JSON.stringify(this[value]));
         this.listCbxProccessSuccess = JSON.parse(JSON.stringify(this.listCbxProccessSuccess));
-        this.multiselectRef.refresh(); 
-      }else{
+        this.multiselectRef.refresh();
+      } else {
         data.newProcessID = event?.join(";");
         this[value] = event;
       }
     }
     this.changeDetectorRef.detectChanges();
   }
- 
+
   onBeforeOpen(args: BeforeOpenEventArgs): void {
     if (!this.moveProcessIDSuccess) {
-        args.cancel = true; // Ngăn chặn mở dropdown
+      args.cancel = true; // Ngăn chặn mở dropdown
     }
-}
+  }
 
   moveProccessIsNull(newProccessID: string) {
     return newProccessID?.split(';') || [];

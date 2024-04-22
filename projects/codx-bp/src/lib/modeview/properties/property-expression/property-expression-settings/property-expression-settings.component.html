@@ -26,8 +26,8 @@
                 (cdkDropListDropped)="drop($event)"
                 cdkDropListOrientation="horizontal"
                 >
-                <div class="cursor-move position-relative me-6" *ngFor="let item of data ; let i = index" cdkDrag>
-                    <span>{{item}}</span>
+                <div class="cursor-move position-relative me-2 pe-settings" *ngFor="let item of data ; let i = index" cdkDrag>
+                    <div class="bg-item-lightest rd-3px px-8 py-2"><span>{{getTitle(item)}}</span></div>
                     <i class="icon-close text-danger position-absolute icon-12 cursor-pointer" (click)="del(i)"></i>
                 </div>
             </div>

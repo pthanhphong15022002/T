@@ -15,11 +15,11 @@
                   </codx-label>
                 </div>
                 <div class="h-100 px-0">
-                  <codx-listview 
-                    [dataService]="HRRequest" 
-                    [itemTemplate]="orgUnitTemplate" 
+                  <codx-listview
+                    [dataService]="HRRequest"
+                    [itemTemplate]="orgUnitTemplate"
                     [emptyTemplate]="dataEmpty"
-                    funcID="HRT01" 
+                    funcID="HRT01"
                     [entityName]="'HR_OrganizationUnits'"
                     [selectFirst]="true"
                     [type]="'treeView'"
@@ -163,9 +163,9 @@
                 class="fw-bold">
               </codx-label>
             </div>
-          </div> 
+          </div>
           <!-- chờ có chức năng thì mở cmt -->
-          <!-- <div 
+          <!-- <div
             class="d-flex flex-column justify-content-between nav-item disabled"
           >
             <span class="text-center">
@@ -187,7 +187,7 @@
               <p>{{func.customName}}</p>
             </div>
           </ng-container>
-          
+
           <div class="col disabled">
             <p class="text-center">
               <i class="icon-i-gear icon-24"></i>
@@ -196,17 +196,17 @@
           </div> -->
         </div>
       </div>
-      
+
     </div>
     <!-- template right -->
     <div class="bg-white h-100 calender-viewmain">
-      <co-calendar-center 
-        #calendarCenter 
+      <co-calendar-center
+        #calendarCenter
         [selectedDate]="selectedDate"
         [statusColor]="statusColor"
-        [isOutSource]="true" 
+        [isOutSource]="true"
         [currentView]="'TimelineMonth'"
-        [events]="lstEvents" 
+        [events]="lstEvents"
         [eventModel]="eventModel"
         [eventTemplate]="eventTemplate"
         [popupEventTemplate]="popupEventTemplate"
@@ -276,7 +276,8 @@
       </ng-container>
       <!-- CO_Meetings -->
       <ng-container *ngSwitchCase="'CO_Meetings'">
-        <ng-container [ngTemplateOutlet]="tmpDefault" [ngTemplateOutletContext]="{data:data}"></ng-container>
+        <!-- <ng-container [ngTemplateOutlet]="tmpDefault" [ngTemplateOutletContext]="{data:data}"></ng-container> -->
+        <lib-view-content-schedule-meetings [recID]="data.transID"></lib-view-content-schedule-meetings>
       </ng-container>
       <!-- TM_MyTask -->
       <ng-container *ngSwitchCase="'TM_MyTasks'">

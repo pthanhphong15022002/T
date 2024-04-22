@@ -12,7 +12,6 @@
               0 8px 10px 1px rgba(0, 0, 0, 0.14),
               0 3px 14px 2px rgba(0, 0, 0, 0.12);
   max-width: 350px;
-  padding: 20px;
 }
 
 .cdk-drag-placeholder {
@@ -22,13 +21,14 @@
 .cdk-drag-animating {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+
 .drag-h-left
 {
-  height: calc(100vh - 215px);
+  height: 555px;
 }
 .drag-h-right
 {
-  height: calc(100vh - 240px);
+  height: 535px;
 }
 .bg-item-lightest
 {
@@ -41,4 +41,23 @@
 .rd-3px
 {
   border-radius: 3px;
+}
+
+.pe-settings
+{
+  i
+  {
+    top: 2px;
+    right: 4px;
+  }
+
+  &:not(:hover) > i
+  {
+    
+    visibility: hidden;
+  }
+  &:hover > i
+  {
+    visibility: visible;
+  }
 }
