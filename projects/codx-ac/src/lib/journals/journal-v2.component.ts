@@ -83,7 +83,12 @@ export class JournalV2Component extends UIComponent {
     this.cache.valueList('AC177').subscribe((func) => {
       if(func){
         this.lstGroup = func.datas;
-        this.selectedToolBar = this.lstGroup[0].value;
+        let session = window.sessionStorage.getItem('journalCategory');
+        if(session){
+          this.selectedToolBar = session;
+        }else{
+          this.selectedToolBar = this.lstGroup[0].value;
+        }
       }else{
         this.lstGroup = [];
       }
@@ -164,6 +169,7 @@ export class JournalV2Component extends UIComponent {
   selectedChangeToolBar(data:any){
     this.selectedToolBar = data.value;
     this.view.dataService.setPredicates(['Category=@0'],[data.value]);
+    window.sessionStorage.setItem('journalCategory',data.value);
     this.detectorRef.detectChanges();
   }
 

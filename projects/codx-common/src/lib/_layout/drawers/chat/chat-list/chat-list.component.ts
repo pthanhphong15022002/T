@@ -42,9 +42,9 @@ export class CodxChatListComponent implements OnInit, AfterViewInit, OnDestroy {
   isSearching: boolean = false;
   constructor(
     private api: ApiHttpService,
-    private signalRSV: SignalRService,
     private cache: CacheService,
     private dt: ChangeDetectorRef,
+    private signalRSV: SignalRService,
     private auth: AuthStore
   ) 
   {
@@ -79,6 +79,7 @@ export class CodxChatListComponent implements OnInit, AfterViewInit, OnDestroy {
             if(res) this.addGroup(res);
           });
         }
+        
       }
     });
 

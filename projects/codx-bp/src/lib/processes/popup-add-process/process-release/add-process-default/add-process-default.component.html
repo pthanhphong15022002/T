@@ -121,7 +121,7 @@
                                         [Group]="dynamicFormsForm"
                                         [ControlName]="child?.fieldName"
                                         [min]="(child.dataType == 'Decimal' && child.validateControl != '1')? 0 : undefined"
-                                        [disabled]="child?.autoNumber?.autoNumberControl || child.refField"
+                                        [disabled]="child?.autoNumber?.autoNumberControl || child.refField || child.fieldType == 'Expression'"
                                         [gridViewSetup]="gridViewSetup"
                                         (valueChange)="valueChangeInput($event)"
                                         (beforeOpen)="afterRender($event, input, child?.validateControl?.refersouce)"

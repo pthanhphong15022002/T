@@ -24,6 +24,7 @@ import {
 } from 'codx-core';
 import {
   ColumnTable,
+  DP_Condition_Reference_Fields,
   DP_Steps_Fields,
   tempVllDP,
 } from '../../../models/models';
@@ -174,6 +175,17 @@ export class PopupAddCustomFieldComponent implements OnInit {
     emailTemplate: '',
     dateRemind: ''
   }
+  //Conditional
+  listCbx = [];
+  fieldsDependence = { text: 'title', value: 'recID' };
+  listValueField = [];
+  valueDependence = { text: 'text', value: 'value' };
+  fieldInStep: any[]
+
+  dependence = {
+    refID: '',
+    strDependence: ''
+  }
 
   constructor(
     private cache: CacheService,
@@ -229,6 +241,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    let objStep = this.stepList.find(x => x.recID == this.field.stepID);
+    if (objStep) {
+      this.fieldInStep = objStep.fields;
+      this.listCbx = this.fieldInStep.filter(x => x.refType == "3");
+    }
     if (
       this.field.dataType == 'L' &&
       (this.field.dataFormat == 'V' || this.field.dataFormat == 'S')
@@ -253,6 +270,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         }
       });
     }
+    if (this.field.dataType == 'RM') this.field.isUseDefault = true; //tạm gán cứng
   }
 
   async valueChange(e) {
@@ -312,8 +330,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
         }
       });
     }
-    if (e.field == 'dataFormat' || e.field == 'refValue' || (e.field == 'dataType' && e.data == 'RM'))
+    if (e.field == 'dataFormat' || e.field == 'refValue' || (e.field == 'dataType' && e.data == 'RM')) {
+      if (this.field.dataType == 'RM') this.field.isUseDefault = true;
       this.creatFieldCustom();
+    }
+
     if (e.field == 'dataType' && e.data == 'CF') this.selectFieldNum();
   }
   //chang title va change field name
@@ -344,7 +365,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         (this.field.dataType == 'N' ||
           this.field.dataType == 'P' ||
           this.field.dataType == 'T')) ||
-      ((this.field.dataType == 'L' || this.field.dataType == 'PA') &&
+      (((this.field.dataType == 'L' && this.field.dataFormat != 'B') || this.field.dataType == 'PA') &&
         this.field.refValue) ||
       (this.field.dataType == 'L' && this.field.dataFormat == 'B')
     ) {
@@ -505,8 +526,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
       return;
     }
+    if (this.field.isApplyDependences && (!this.dependence.refID || !this.dependence.strDependence)) {
+      this.notiService.notify('Tham chiếu giá trị chưa hoàn thành, hãy hoàn thiện thiết lập để tiếp tục !', '2');
+      return
+    }
 
-    this.dialog.close([this.field, this.processNo, this.isEditFieldDuplicate]);
+    this.dialog.close([this.field, this.processNo, this.isEditFieldDuplicate, this.dependence]);
 
     this.field = new DP_Steps_Fields();
     this.isDuplicateField = false;
@@ -1402,11 +1427,30 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
   //----------------- Conditons Ref------------------//
   clickSettingConditional() {
+    let fieldsCondition = this.fieldInStep.filter(x => x.dataType == this.field.dataType && x.dataFormat == this.field.dataFormat)
+    if (!fieldsCondition || fieldsCondition?.length == 0) {
+      this.notiService.notify('Chưa có trường dữ liệu phù hợp để tham chiếu điều kiện với kiểu dữ liệu vừa tạo ra !', "2")
+      return;
+    }
+    let cons = this.field.conditionReference ?? [];
+    if (cons?.length > 0) {
+      let idCon = cons.map(x => x.refID);
+      fieldsCondition = fieldsCondition.filter(x => !idCon.includes(x.recID));
+      if (!fieldsCondition || fieldsCondition?.length == 0) {
+        this.notiService.notify('Các trường dữ liệu cùng kiểu đã thực hiện tham chiếu, vui lòng chỉnh sửa dữ liệu trước đó !', "2")
+        return;
+      }
+    }
+
     let option = new DialogModel();
     option.zIndex = 1050;
+    let data = new DP_Condition_Reference_Fields();
+    data.messageType = '2'
     let obj = {
+      data: data,
       action: 'add',
       titleAction: this.grvSetup['ConditionReference']?.headerText, //test
+      fieldsCondition: fieldsCondition
     };
     let dialogCon = this.callfc.openForm(
       PopupSettingConditionalComponent,
@@ -1420,15 +1464,88 @@ export class PopupAddCustomFieldComponent implements OnInit {
     );
     dialogCon.closed.subscribe(res => {
       if (res && res.event) {
+        cons.push(res.event)
+        this.field.conditionReference = cons
+      }
+    })
+  }
 
+  editCondition(con, idx) {
+    let fieldsCondition = this.fieldInStep.filter(x => x.dataType == this.field.dataType && x.dataFormat == this.field.dataFormat);
+    let cons = this.field.conditionReference ?? [];
+    if (cons?.length > 0) {
+      let idCon = cons.map(x => x.refID);
+      fieldsCondition = fieldsCondition.filter(x => !idCon.includes(x.recID) || con.refID == x.recID);
+    }
+    let option = new DialogModel();
+    option.zIndex = 1050;
+    let data = new DP_Condition_Reference_Fields();
+    data.messageType = '2'
+    let obj = {
+      data: con,
+      action: 'edit',
+      titleAction: this.grvSetup['ConditionReference']?.headerText, //test
+      fieldsCondition: fieldsCondition
+    };
+    let dialogCon = this.callfc.openForm(
+      PopupSettingConditionalComponent,
+      '',
+      550,
+      400,
+      '',
+      obj,
+      '',
+      option
+    );
+    dialogCon.closed.subscribe(res => {
+      if (res && res.event) {
+        this.field.conditionReference[idx] = res.event
+      }
+    })
+  }
+  deleteCondition(idx) {
+    this.notiService.alertCode('TM003').subscribe((confirm) => {
+      if (confirm?.event && confirm?.event?.status == 'Y') {
+        this.field.conditionReference.splice(idx, 1)
       }
     })
   }
 
   //----------------- Dependences------------------//
   changeDependences(e) {
+    if (!this.listCbx || this.listCbx.length == 0) {
+      this.notiService.notify('Chưa có trường dữ liệu phù hợp để tham chiếu giá trị với kiểu dữ liệu vừa tạo ra !', "2")
+      return;
+    }
     this.field['isApplyDependences'] = e.data;
-    if (this.field.isApplyDependences) this.field.isApplyConditional = false;
+    if (this.field.isApplyDependences) {
+      this.field.isApplyConditional = false;
+      if (this.listCbx?.length > 0) {
+
+      }
+    }
+  }
+  cbxChangeDependence(e) {
+    if (e) {
+      let field = this.listCbx.find(x => x.recID == e);
+      this.dependence.refID = e
+      if (field && field.refValue) {
+        this.cache.combobox(field.refValue).subscribe(res => {
+          if (res) {
+            this.listValueField = res.tableFields?.split(";").map((x, idx) => {
+              let obj = {
+                text: x,
+                value: idx
+              }
+              return obj;
+            })
+          }
+        })
+      }
+    }
+  }
+  cbxChangeValueDependence(e) {
+    this.dependence.strDependence = this.field.fieldName + '={' + e + '}'
   }
   //-------------Default ------------//
   changeUseDeafaut(e) {

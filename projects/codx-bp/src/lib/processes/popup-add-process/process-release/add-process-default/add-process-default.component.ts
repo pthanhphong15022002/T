@@ -87,6 +87,7 @@ export class AddProcessDefaultComponent implements OnInit {
   listFieldDecimal = [];
   f_Visible = {};
   f_ParaVisible = [];
+  formula = [];
   editSettings: EditSettingsModel = {
     allowEditing: true,
     allowAdding: true,
@@ -313,7 +314,15 @@ export class AddProcessDefaultComponent implements OnInit {
         };
         this.listFieldAuto.push(objAuto);
       }
-
+      if(element.fieldType == "Expression" && element.refValue)
+      {
+        var objExpress = 
+        {
+          field: field,
+          refValue: typeof element.refValue == 'string' ? JSON.parse(element.refValue) : element.refValue
+        }
+        this.formula.push(objExpress);
+      }
       //Kiem tra xem field co visiable khong?
       if (element.visibleControl) {
         element.visibleControl =
@@ -1015,6 +1024,7 @@ export class AddProcessDefaultComponent implements OnInit {
     else this.dynamicFormsForm.value[e?.field] = e?.data;
 
     this.checkVisisable(e);
+    this.expression(e);
   }
 
   getUrl(field: any, index: any) {
@@ -1053,6 +1063,7 @@ export class AddProcessDefaultComponent implements OnInit {
 
   valueChangeInput(e: any) {
     this.checkVisisable(e);
+    this.expression(e);
   }
 
   afterRender(evt: any, input: any, refersouce: any) {
@@ -1187,6 +1198,64 @@ export class AddProcessDefaultComponent implements OnInit {
         this.hideVisiableChild(elm);
       });
     }
+  }
+
+  expression(e:any)
+  {
+    for(var x=0; x< this.formula.length ; x++)
+    {
+      if(e?.field == this.formula[x].field) break;
+      let data = "";
+      for(var i=0; i < this.formula[x].refValue.length ; i++)
+      {
+        let result = this.caculator(this.formula[x].refValue[i],e);
+        if(result) 
+        {
+          if(this.isExpression(result))
+          {
+            let a =  eval(result);
+            data += a;
+          }
+          else
+          {
+            data += result;
+          }
+        }
+        else
+        {
+          data = "";
+          break;
+        }
+      }
+
+      this.dynamicFormsForm.controls[this.formula[x]?.field].setValue(data);
+    }
+  }
+ 
+  isExpression(s) {
+    const re = /(?:(?:^|[-+_*/])(?:\s*-?\d+(\.\d+)?(?:[eE][+-]?\d+)?\s*))+$/;
+    return re.test(s);
+  }
+  caculator(dt:any,e:any)
+  {
+    let result = "";
+    for (var i = 0; i < dt.length; i++) {
+      if(dt[i].startsWith("["))
+      {
+        let f = dt[i].slice(1,-1);
+        let comp = this.dynamicFormsForm.value[f];
+        if(f == e?.field) comp = e?.data;
+
+        if(!comp) {
+          result = "";
+          break;
+        }
+        result += comp;
+      }
+      else result += dt[i];
+    }
+    
+    return result;
   }
 
   get_tex_width(txt) {
