@@ -251,6 +251,22 @@ export class AddTemplateComponent implements OnInit{
   {
     if(type == 'edit' && !data?.mappingTemplate) return;
 
+    let formModel =
+    {
+      formName: this.formModel?.formName,
+      gridViewName: this.formModel?.gridViewName
+    }
+
+    let entityName = data?.destinationTable;
+    if(entityName)
+    {
+      let formName = entityName.split("_")[1];
+      let gridViewName = 'grv' + formName;
+  
+      if(formName) formModel.formName = formName;
+      if(gridViewName) formModel.gridViewName = gridViewName;
+    }
+
     let index = this.sheet.findIndex(x=>x == this.selectedSheet);
     let sourceField = XLSX.utils.sheet_to_json(this.wb.Sheets[this.sheet[index]], {
       header: this.importAddTmpGroup.value.firstCell,
@@ -263,7 +279,7 @@ export class AddTemplateComponent implements OnInit{
       800,
       '',
       [
-        this.formModel,
+        formModel,
         this.dataIETables,
         sourceField[0],
         data?.mappingTemplate,

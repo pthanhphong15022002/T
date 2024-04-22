@@ -49,6 +49,7 @@ export class PopupAddPaymentComponent
   hideFooter = false;
   columnsGrid = [];
   requester = '';
+  isAdvance = false;
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -71,7 +72,10 @@ export class PopupAddPaymentComponent
             })
           );
         }
-        if (this.data.refID) this.getAdvanceRequest(this.data.refID, 'AD');
+        if (this.data.refID) {
+          this.isAdvance = true;
+          this.getAdvanceRequest(this.data.refID, 'AD');
+        }
 
         this.subcriptions.add(
           this.api
@@ -139,7 +143,7 @@ export class PopupAddPaymentComponent
               0
             );
             this.data.totalAmount = total;
-            this.data.requestAmt = total;
+            //this.data.requestAmt = total;
           }
           if (res.refID) this.getRefRequest(this.data.refID);
           this.detectorChange.detectChanges();
@@ -184,7 +188,7 @@ export class PopupAddPaymentComponent
 
   getRefRequest(recID: string) {
     let subcribe = this.api
-      .execSv('EP', 'EP', 'RequestsBusiness', 'GetByIDAsync', [recID, 'AD'])
+      .execSv('EP', 'EP', 'RequestsBusiness', 'GetByIDAsync', [recID, ''])
       .subscribe((res: any) => {
         if (res) {
           this.RefEPRequest = res;

@@ -24,6 +24,7 @@ import {
   UIComponent,
   ViewModel,
   ViewType,
+  AuthStore
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupAddProjectComponent } from './popup-add-project/popup-add-project.component';
@@ -75,7 +76,8 @@ export class ProjectsComponent
     private routerActive: ActivatedRoute,
     private shareService: CodxShareService,
     private notificationSv: NotificationsService,
-    public override codxService: CodxService
+    public override codxService: CodxService,
+    private authStore:AuthStore
   ) {
     super(injector);
     this.button = [{ id: 'btnAdd' }];
@@ -193,6 +195,8 @@ export class ProjectsComponent
   }
 
   edit() {
+    var en = this.authStore.get()?.userID == this.view?.dataService.dataSelected.projectManager? false: true;
+
     this.view.dataService
       .edit(this.view?.dataService.dataSelected)
       .subscribe(() => {
@@ -202,7 +206,7 @@ export class ProjectsComponent
         option.Width = '800px';
         let dialog = this.callfc.openSide(
           PopupAddProjectComponent,
-          [this.view?.dataService.dataSelected, 'edit', this.grvSetup],
+          [this.view?.dataService.dataSelected, 'edit', this.grvSetup, en],
           option
         );
         dialog.closed.subscribe((returnData) => {
