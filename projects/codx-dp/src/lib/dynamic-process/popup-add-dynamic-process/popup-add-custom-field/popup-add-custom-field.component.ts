@@ -270,6 +270,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         }
       });
     }
+    if (this.field.dataType == 'RM') this.field.isUseDefault = true; //tạm gán cứng
   }
 
   async valueChange(e) {
@@ -329,8 +330,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
         }
       });
     }
-    if (e.field == 'dataFormat' || e.field == 'refValue' || (e.field == 'dataType' && e.data == 'RM'))
+    if (e.field == 'dataFormat' || e.field == 'refValue' || (e.field == 'dataType' && e.data == 'RM')) {
+      if (this.field.dataType == 'RM') this.field.isUseDefault = true;
       this.creatFieldCustom();
+    }
+
     if (e.field == 'dataType' && e.data == 'CF') this.selectFieldNum();
   }
   //chang title va change field name

@@ -172,13 +172,18 @@ export class AddTemplateComponent implements OnInit{
     .execSv<any>("SYS",'AD', 'IETablesBusiness', 'GetListAsync', this.dataIEConnection.recID)
     .subscribe((item) => {
       if(item && item.length > 0)
+      {
         this.listIETables = item;
+      }
     })
   }
 
   //Chọn lại sheet import
   changeSheetImport(e: any) {
-    this.importAddTmpGroup.controls['sheetImport'].setValue(e);
+    let sheet = e.value.split(":")[1];
+    sheet = sheet.trim();
+    this.importAddTmpGroup.controls['sheetImport'].setValue(sheet);
+    this.selectedSheet = sheet;
   }
 
   getfilePrimitive(e: any) {
@@ -223,6 +228,11 @@ export class AddTemplateComponent implements OnInit{
                 this.sheet = this.wb.SheetNames;
                 this.importAddTmpGroup.controls['sheetImport'].setValue(this.sheet[0]);
                 this.selectedSheet = this.sheet[0];
+
+                if(this.listIETables && this.listIETables.length>0)
+                {
+                  this.selectedSheet = this.listIETables[0].sourceTable
+                }
                 // this.selectedSheet =
                 //   this.gridView.dataService.data[0].sourceTable;
               };

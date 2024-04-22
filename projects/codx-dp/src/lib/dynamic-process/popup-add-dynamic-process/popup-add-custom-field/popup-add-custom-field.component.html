@@ -421,7 +421,8 @@
             this.field.dataType == 'PA') &&
             this.field.refValue) ||
           (this.field.dataType == 'L' && this.field.dataFormat == 'B') ||
-          this.field.dataType == 'D'
+          this.field.dataType == 'D' ||
+          field.dataType == 'RM'
         "
       >
         <codx-label
@@ -435,7 +436,7 @@
           field="isUseDefault"
           [checked]="field?.isUseDefault"
           (valueChange)="changeUseDeafaut($event)"
-          [disabled]="viewOnly"
+          [disabled]="viewOnly || field.dataType == 'RM'"
         >
         </codx-input>
       </div>
