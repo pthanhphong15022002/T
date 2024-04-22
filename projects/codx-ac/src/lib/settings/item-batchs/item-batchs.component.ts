@@ -65,7 +65,6 @@ export class ItemBatchsComponent extends UIComponent {
         sameData: true,
         model: {
           template2: this.templateMore,
-          frozenColumns: 1,
         },
       },
     ];
@@ -92,12 +91,15 @@ export class ItemBatchsComponent extends UIComponent {
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
+      case 'SYS102':
         this.delete(data);
         break;
       case 'SYS03':
+      case 'SYS103':
         this.edit(e, data);
         break;
       case 'SYS04':
+      case 'SYS104':
         this.copy(e, data);
         break;
     }
