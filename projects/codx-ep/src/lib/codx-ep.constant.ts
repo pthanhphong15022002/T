@@ -2,6 +2,7 @@ export const EPCONST = {
   EPPARAM: 'EPParameters',
   SERVICES: 'EP',
   ASSEMBLY: 'ERM.Business.EP',
+  CALENDARID: 'STD',
   ENTITY:{
     Bookings:'EP_Bookings',
     R_Bookings:'EP_BookingRooms',
