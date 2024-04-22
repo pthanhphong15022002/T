@@ -55,8 +55,8 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
     this.getArrFields();
   }
 
-  ngAfterViewInit(): void {}
-  ngOnInit(): void {}
+  ngAfterViewInit(): void { }
+  ngOnInit(): void { }
 
   getArrFields() {
     this.listField = [];
@@ -94,7 +94,7 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
 
     return field;
   }
-  convertDataTypeAndFormat(data, field): any[] {
+  convertDataTypeAndFormat(data, field) {
     let type = 'T';
     let format = 'S';
     let refType = data.referedType;
