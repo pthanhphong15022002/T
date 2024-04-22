@@ -255,23 +255,44 @@
                       | async
                   "
                 ></div>
-                <div
-                  class="mb-2"
-                  [innerHTML]="
-                    RefEPRequest?.requestAmt
-                      | formatvalue : dialog.formModel : 'requestAmt'
-                      | async
-                  "
-                ></div>
-                <div
-                  class="mb-2"
-                  [innerHTML]="
-                    data.totalAmount -
-                      (RefEPRequest ? RefEPRequest.requestAmt : 0)
-                      | formatvalue : dialog.formModel : 'requestAmt'
-                      | async
-                  "
-                ></div>
+                <ng-container *ngIf="isAdvance">
+                  <div
+                    class="mb-2"
+                    [innerHTML]="
+                      RefEPRequest?.requestAmt
+                        | formatvalue : dialog.formModel : 'requestAmt'
+                        | async
+                    "
+                  ></div>
+                  <div
+                    class="mb-2"
+                    [innerHTML]="
+                      data.totalAmount -
+                        (RefEPRequest ? RefEPRequest.requestAmt : 0)
+                        | formatvalue : dialog.formModel : 'requestAmt'
+                        | async
+                    "
+                  ></div>
+                </ng-container>
+                <ng-container *ngIf="!isAdvance">
+                  <div
+                    class="mb-2"
+                    [innerHTML]="
+                      data?.totalAmount - data?.requestAmt
+                        | formatvalue : dialog.formModel : 'requestAmt'
+                        | async
+                    "
+                  ></div>
+                  <div
+                    class="mb-2"
+                    [innerHTML]="
+                      data.requestAmt
+                        | formatvalue : dialog.formModel : 'requestAmt'
+                        | async
+                    "
+                  ></div>
+                </ng-container>
+
                 <div
                   class="mb-2"
                   [innerHTML]="
