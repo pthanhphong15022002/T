@@ -105,6 +105,7 @@ export class AddImportDetailsComponent implements OnInit, AfterViewInit{
     this.formatSourceField();
   }
   formatSourceField() {
+    debugger
     var cbb = [];
     if (this.sourceField && Array.isArray(this.sourceField)) {
       var cbb = [];
@@ -129,9 +130,18 @@ export class AddImportDetailsComponent implements OnInit, AfterViewInit{
     {
       var key = Object.keys(this.sourceField);
       for (var i = 0; i < key.length; i++) {
+
+        var textStr2 = key[i].normalize("NFD").replace(/[\u0300-\u036f]/g, "") as any;
+        //Xóa dấu
+        textStr2 = this.deleteMark(textStr2);
+        //In hoa
+        textStr2 = textStr2.toUpperCase();
+        //Thay ký tự rỗng thành _
+        textStr2 = textStr2.replaceAll(" ","_");
+
         var objs = {
-          text: key[i],
-          value: key[i],
+          text: textStr2,
+          value: textStr2,
         };
         cbb.push(objs);
       }
@@ -457,7 +467,7 @@ export class AddImportDetailsComponent implements OnInit, AfterViewInit{
   mapField()
   {
     this.dataCbb['SourceField'].forEach(elm => {
-      var index = this.dataImport2.findIndex(x=>x.destinationField == elm.value || x.sourcefield == elm.value);
+      var index = this.dataImport2.findIndex(x=> x.sourcefield == elm.value || x.destinationField.toUpperCase() == elm.value.toUpperCase());
       if(index >= 0) {
         this.dataImport2[index].sourceField = elm.value;
         this.dataImport2[index].sourceType = "0";
