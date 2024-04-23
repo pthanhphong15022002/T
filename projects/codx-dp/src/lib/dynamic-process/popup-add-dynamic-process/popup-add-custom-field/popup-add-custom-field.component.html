@@ -94,10 +94,10 @@
             <ejs-combobox
               [dataSource]="listCbx"
               [fields]="fieldsDependence"
-              [value]=""
+              [value]="dependence.refID"
               [allowFiltering]="false"
               [placeholder]=""
-              [enabled]="!viewOnly"
+              [enabled]="!viewOnly && action != 'edit'"
               (valueChange)="cbxChangeDependence($event)"
             ></ejs-combobox>
           </div>
@@ -109,11 +109,12 @@
               default="Giá trị muốn tham chiếu"
             ></codx-label>
             <ejs-combobox
+              #selectValueDep
               [dataSource]="listValueField"
               [fields]="valueDependence"
-              [value]=""
               [allowFiltering]="false"
               [placeholder]=""
+              [enabled]="!viewOnly && action != 'edit'"
               (valueChange)="cbxChangeValueDependence($event)"
             ></ejs-combobox>
           </div>
