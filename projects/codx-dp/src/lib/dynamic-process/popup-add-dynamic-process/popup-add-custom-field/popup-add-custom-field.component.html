@@ -79,7 +79,6 @@
           field="isApplyDependences"
           [checked]="field?.isApplyDependences"
           (valueChange)="changeDependences($event)"
-          [disabled]="viewOnly"
         >
         </codx-input>
       </div>
@@ -487,16 +486,17 @@
       <div
         class="d-flex align-items-center form-group"
         *ngIf="
-          (this.field.dataFormat &&
-            (this.field.dataType == 'N' ||
-              this.field.dataType == 'P' ||
-              this.field.dataType == 'T')) ||
-          (((this.field.dataType == 'L' && this.field.dataFormat != 'B') ||
-            this.field.dataType == 'PA') &&
-            this.field.refValue) ||
-          (this.field.dataType == 'L' && this.field.dataFormat == 'B') ||
-          this.field.dataType == 'D' ||
-          field.dataType == 'RM'
+          !field?.isApplyDependences &&
+          ((field.dataFormat &&
+            (field.dataType == 'N' ||
+              field.dataType == 'P' ||
+              field.dataType == 'T')) ||
+            (((field.dataType == 'L' && field.dataFormat != 'B') ||
+              field.dataType == 'PA') &&
+              field.refValue) ||
+            (field.dataType == 'L' && field.dataFormat == 'B') ||
+            field.dataType == 'D' ||
+            field.dataType == 'RM')
         "
       >
         <codx-label
@@ -510,9 +510,7 @@
           field="isUseDefault"
           [checked]="field?.isUseDefault"
           (valueChange)="changeUseDeafaut($event)"
-          [disabled]="
-            viewOnly || field.dataType == 'RM' || !field?.isApplyDependences
-          "
+          [disabled]="viewOnly || field.dataType == 'RM'"
         >
         </codx-input>
       </div>
