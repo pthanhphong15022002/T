@@ -91,7 +91,7 @@ export class ViewListInstancesComponent {
                 'Timer',
                 'AI',
                 'SubProcess',
-              ].includes(x.activityType)
+              ].includes(x.activityType) && !x.canceled
           );
           this.countTask = tasks?.length ?? 0; //Tổng task của nhiệm vụ
 
@@ -123,24 +123,28 @@ export class ViewListInstancesComponent {
   getColor(data) {
     let color = 'step'; // Mặc định là 'step'
     const lst = this.lstStages;
+    if(this.dataSelected.status == '5'){
+      color = 'step old';
+    }else{
+      if (lst.some((x) => x.recID == data.recID)) {
+        let currentIdx = lst.findIndex((x) => x.recID == data?.recID);
 
-    if (lst.some((x) => x.recID == data.recID)) {
-      let currentIdx = lst.findIndex((x) => x.recID == data?.recID);
-
-      if (
-        currentIdx <
-        lst.findIndex((x) => x.recID == this.dataSelected?.currentStage)
-      ) {
-        // Nếu index của item hiện tại nhỏ hơn index của '3'
-        color = 'step old'; // Gán lớp 'step old'
-      } else if (
-        currentIdx ===
-        lst.findIndex((x) => x.recID == this.dataSelected?.currentStage)
-      ) {
-        // Nếu index của item hiện tại bằng index của '3'
-        color = 'step current'; // Gán lớp 'step current'
+        if (
+          currentIdx <
+          lst.findIndex((x) => x.recID == this.dataSelected?.currentStage)
+        ) {
+          // Nếu index của item hiện tại nhỏ hơn index của '3'
+          color = 'step old'; // Gán lớp 'step old'
+        } else if (
+          currentIdx ===
+          lst.findIndex((x) => x.recID == this.dataSelected?.currentStage)
+        ) {
+          // Nếu index của item hiện tại bằng index của '3'
+          color = 'step current'; // Gán lớp 'step current'
+        }
       }
     }
+
     return color; // Trả về lớp CSS
   }
 

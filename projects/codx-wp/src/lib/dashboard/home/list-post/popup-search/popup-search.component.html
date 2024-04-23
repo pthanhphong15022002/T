@@ -1,398 +1,235 @@
-<div class="p-6">
-  <!-- header -->
-  <div>
-    <div class="d-flex align-items-center justify-content-between w-100">
-      <div class="me-4">
-        <!-- title -->
-        <codx-label class="fw-bold fs-1" [formModel]="dialogRef.formModel" name="" default="Tìm kiếm bài viết">
-        </codx-label>
-      </div>
-      <div>
-        <!-- search -->
-        <div>
-          <codx-searchbar [width]="300" (searchEvent)="searchEvent($event)" [iconPos]="'left'">
-          </codx-searchbar>
-        </div>
-        <div class="py-2 ps-5">
-          <span class="fs-6 text-muted">{{strData}}</span>
-        </div>
-      </div>
-      <div>
-        <!-- btn close -->
-        <button class="btn" (click)="clickClosePopup()">
-          <i class="icon-close"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-  <!-- body -->
-  <div class="row mt-6">
-    <div class="col-3">
-      <div class="mb-3">
-        <codx-label class="fw-bold fs-5 text-dark" [formModel]="dialogRef.formModel" name="" default="Ngày tin tức">
-        </codx-label>
-      </div>
-      <div class="row">
-        <div class="col-6">
-          <codx-input type="datetime" class="test-datetime" field="createdOn" format="F"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-        <div class="col-6">
-          <codx-input type="datetime" class="test-datetime" format="F" (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div class="mt-6">
-        <codx-label class="fw-bold fs-5 text-dark" [formModel]="dialogRef.formModel" name="" default="Bộ lọc">
-        </codx-label>
-        <div class="ps-4">
-          <div class="d-flex algin-items-center mt-2">
-            <span class="me-2"><i class="icon-border_all"></i></span>
-            <codx-label class="fw-bold fs-6 text-dark" [formModel]="dialogRef.formModel" name="" default="Tất cả">
+<div class="container-fluid w-100 h-100">
+  <div class="row"  [style]="'height: 80px'">
+      <div class="col-12">
+        <div class="d-flex align-items-top justify-content-between w-100 py-2">
+          <div>
+            <codx-label class="fw-bold fs-1" [formModel]="dialogRef.formModel" name="lblLabel1" default="Tìm kiếm bài viết">
             </codx-label>
           </div>
-          <div class="mt-2">
-            <div class="d-flex algin-items-center">
-              <span class="me-2"><i class="icon-developer_board"></i></span>
-              <codx-label class="fw-bold fs-6 text-dark" [formModel]="dialogRef.formModel" name="" default="Bài viết">
-              </codx-label>
+          <div class="d-flex flex-column">
+            <codx-searchbar [width]="300" (searchEvent)="searchEvent($event)" [iconPos]="'left'"></codx-searchbar>
+            <div class="fs-6 text-muted p-2">
+              <span>{{'WP025' | mssg | async}}</span>
             </div>
-            <div class="ps-8">
-              <div class="d-flex justify-content-between">
-                <codx-label [formModel]="dialogRef.formModel" name="" default="Của tôi"></codx-label>
-                <codx-input type="switch" [checked]="false" [disabled]="false" field="WP_Comments.createdBy"
-                  class="test-switch" (valueChange)="valueChange($event)" ngDefaultControl>
-                </codx-input>
+          </div>
+          <div>
+            <button class="btn" (click)="clickClosePopup()">
+              <i class="icon-close text-danger"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div class="row" [style]="'height: calc(100% - 80px)'">
+    <div class="col-3">
+      <div class="form-group">
+        <codx-label class="fw-bold fs-5" [formModel]="dialogRef.formModel" name="lblLabel2" [default]="'Ngày tin tức'"></codx-label>
+        <div class="row">
+          <div class="col-6">
+            <codx-input type="datetime" field="fromDate" format="F" (valueChange)="valueChange($event)"></codx-input>
+          </div>
+          <div class="col-6">
+            <codx-input type="datetime" field="toDate" format="F" (valueChange)="valueChange($event)"></codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label class="fw-bold fs-5" [formModel]="dialogRef.formModel" name="lblLabel3" [default]="'Bộ lọc'"></codx-label>
+        <div class="d-flex flex-column w-100 ps-4">
+          <div class="d-flex algin-items-center justify-content-between mb-2">
+            <div>
+              <span class="me-2"><i class="icon-border_all"></i></span>
+              <codx-label class="fw-bold fs-6" [formModel]="dialogRef.formModel" name="lblLabel4" [default]="'Tất cả'"></codx-label>
+            </div>
+            <codx-input type="switch" [checked]="false" field="all" (valueChange)="valueChange($event)"></codx-input>
+          </div>
+          <div class="d-flex align-items-top mb-2">
+            <span class="me-2"><i class="icon-developer_board"></i></span>
+            <div class="d-flex flex-column w-100">
+              <codx-label class="fw-bold fs-6" [formModel]="dialogRef.formModel" name="lblLabel5" [default]="'Bài viết'"></codx-label>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <codx-label [formModel]="dialogRef.formModel" name="lblLabel6" [default]="'Của tôi'"></codx-label>
+                <codx-input type="switch" [checked]="false" field="owner" (valueChange)="valueChange($event)"></codx-input>
               </div>
-              <div class="d-flex justify-content-between">
-                <codx-label [formModel]="dialogRef.formModel" name="" default="Tôi được tag"></codx-label>
-                <codx-input type="switch" [checked]="false" [disabled]="false" field="WP_Comments.tag"
-                  class="test-switch" (valueChange)="valueChange($event)" ngDefaultControl>
-                </codx-input>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <codx-label [formModel]="dialogRef.formModel" name="lblLabel7" [default]="'Tôi được tag'"></codx-label>
+                <codx-input type="switch" [checked]="false" field="tag" (valueChange)="valueChange($event)"></codx-input>
               </div>
-              <div class="d-flex justify-content-between">
-                <codx-label [formModel]="dialogRef.formModel" name="" default="Tôi được chia sẻ"></codx-label>
-                <codx-input type="switch" [checked]="false" [disabled]="false" field="WP_Comments.share"
-                  class="test-switch" (valueChange)="valueChange($event)" ngDefaultControl>
-                </codx-input>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <codx-label [formModel]="dialogRef.formModel" name="lblLabel8" [default]="'Tôi được chia sẻ'"></codx-label>
+                <codx-input type="switch" [checked]="false" field="share" (valueChange)="valueChange($event)"></codx-input>
               </div>
-              <div class="d-flex justify-content-between">
-                <codx-label [formModel]="dialogRef.formModel" name="" default="Công khai"></codx-label>
-                <codx-input type="switch" [checked]="false" [disabled]="false" field="WP_Comment.everyone"
-                  class="test-switch" (valueChange)="valueChange($event)" ngDefaultControl>
-                </codx-input>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <codx-label [formModel]="dialogRef.formModel" name="lblLabel9" [default]="'Công khai'"></codx-label>
+                <codx-input type="switch" [checked]="false" field="publlic" (valueChange)="valueChange($event)"></codx-input>
               </div>
             </div>
           </div>
-          <div class="mt-2">
-            <div class="d-flex algin-items-center">
-              <span class="me-2"><i class="icon-campaign"></i></span>
-              <codx-label class="fw-bold fs-6 text-dark" [formModel]="dialogRef.formModel" name=""
-                default="Tin tức sự kiện">
-              </codx-label>
-            </div>
-            <div class="ps-8">
-              <div class="d-flex justify-content-between">
-                <codx-label [formModel]="dialogRef.formModel" name="" default="Của tôi"></codx-label>
-                <codx-input type="switch" [checked]="false" [disabled]="false" field="WP_News.createdBy"
-                  class="test-switch" (valueChange)="valueChange($event)" ngDefaultControl>
-                </codx-input>
+          <div class="d-flex align-items-top mb-2">
+            <span class="me-2"><i class="icon-campaign"></i></span>
+            <div class="d-flex flex-column w-100">
+              <codx-label class="fw-bold fs-6" [formModel]="dialogRef.formModel" name="lblLabel10" [default]="'Tin tức sự kiện'"></codx-label>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <codx-label [formModel]="dialogRef.formModel" name="lblLabel11" [default]="'Của tôi'"></codx-label>
+                <codx-input type="switch" [checked]="false" field="WP_News.Owner" (valueChange)="valueChange($event)"></codx-input>
               </div>
-              <div class="d-flex justify-content-between">
-                <codx-label [formModel]="dialogRef.formModel" name="" default="Tôi được tag"></codx-label>
-                <codx-input type="switch" [checked]="false" [disabled]="false" field="WP_News.tag" class="test-switch"
-                  (valueChange)="valueChange($event)" ngDefaultControl>
-                </codx-input>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <codx-label [formModel]="dialogRef.formModel" name="lblLabel12" [default]="'Tôi được tag'"></codx-label>
+                <codx-input type="switch" [checked]="false" field="WP_News.Tag" (valueChange)="valueChange($event)"></codx-input>
               </div>
-              <div class="d-flex justify-content-between">
-                <codx-label [formModel]="dialogRef.formModel" name="" default="Tôi được chia sẻ"></codx-label>
-                <codx-input type="switch" [checked]="false" [disabled]="false" field="WP_News.share" class="test-switch"
-                  (valueChange)="valueChange($event)" ngDefaultControl>
-                </codx-input>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <codx-label [formModel]="dialogRef.formModel" name="lblLabel13" [default]="'Tôi được chia sẻ'"></codx-label>
+                <codx-input type="switch" [checked]="false" field="WP_News.Share" (valueChange)="valueChange($event)"></codx-input>
               </div>
-              <div class="d-flex justify-content-between">
-                <codx-label [formModel]="dialogRef.formModel" name="" default="Công khai"></codx-label>
-                <codx-input type="switch" [checked]="false" [disabled]="false" field="WP_News.everyone"
-                  class="test-switch" (valueChange)="valueChange($event)" ngDefaultControl>
-                </codx-input>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <codx-label [formModel]="dialogRef.formModel" name="lblLabel14" [default]="'Công khai'"></codx-label>
+                <codx-input type="switch" [checked]="false" field="WP_News.Publlic"  (valueChange)="valueChange($event)"></codx-input>
               </div>
             </div>
           </div>
-          <div class="mt-2">
-            <div class="d-flex algin-items-center">
-              <span class="me-2">
-                <i class="icon-image"></i>
-              </span>
-              <codx-label class="fw-bold fs-6 text-dark" [formModel]="dialogRef.formModel" name="" default="Hình ảnh">
-              </codx-label>
+          <div class="d-flex algin-items-center justify-content-between mb-2">
+            <div>
+              <span class="me-2"><i class="icon-image"></i></span>
+              <codx-label class="fw-bold fs-6" [formModel]="dialogRef.formModel" name="lblLabel15" [default]="'Hình ảnh'"></codx-label>
             </div>
+            <codx-input type="switch" [checked]="false" field="image" (valueChange)="valueChange($event)"></codx-input>
           </div>
-          <div class="mt-2">
-            <div class="d-flex algin-items-center">
-              <span class="me-2">
-                <i class="icon-video_library"></i>
-              </span>
-              <codx-label class="fw-bold fs-6 text-dark" [formModel]="dialogRef.formModel" name="" default="Video">
-              </codx-label>
+          <div class="d-flex algin-items-center justify-content-between mb-2">
+            <div>
+              <span class="me-2"><i class="icon-video_library"></i></span>
+              <codx-label class="fw-bold fs-6" [formModel]="dialogRef.formModel" name="lblLabel15" [default]="'Video'"></codx-label>
             </div>
+            <codx-input type="switch" [checked]="false" field="video" (valueChange)="valueChange($event)"></codx-input>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-9">
-      <ng-container *ngIf="lstData;empty">
-        <ng-containr *ngFor="let item of lstData">
-          <ng-container *ngTemplateOutlet="itemTemplate;context{$implicit: item}"></ng-container>
-        </ng-containr>
+    <div class="col-9 h-100 overflow-auto">
+      <ng-container *ngIf="lstData?.length > 0;tmpEmpty">
+        <div class="row justify-content-center bg-body p-2" *ngFor="let item of lstData">
+          <div class="col-6">
+            <div class="d-flex flex-column w-100">
+              <div class="d-flex align-items-top justify-content-between mb-2 w-100">
+                <div class="d-flex align-items-center">
+                  <codx-img [objectId]="item?.createdBy" [objectType]="'AD_Users'" [width]="30" [cssClass]="'me-2'"></codx-img>
+                  <div class="d-flex flex-column">
+                    <div class="d-flex align-items-center mb-1">
+                      <div class="fw-bold me-2" *ngIf="item?.createdName">
+                        <span>{{item?.createdName}}</span>
+                      </div>
+                      <div ngbDropdown class="dropdown" *ngIf="item?.tagName">
+                        <button ngbDropdownToggle type="button" id="dropdown1">
+                          <span [innerHTML]="item?.tagName"></span>
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="dropdown1" class="d-flex flex-column">
+                          <div ngbDropdownItem class="d-flex flex-column mb-2">
+                            <span calss="text-dark">Danh sách người gắn thẻ</span>
+                          </div>
+                          <ng-container *ngFor="let perItem of item.permissions">
+                            <div ngbDropdownItem class="d-flex align-items-center p-2" *ngIf="perItem.memberType == '3'">
+                              <codx-img [objectId]="perItem.objectID" [objectName]="perItem.objectName" [objectType]="'AD_Users'" [width]="30" [imgClass]="'me-2'"></codx-img>
+                              <div class="d-flex flex-column">
+                                <span>{{perItem.objectName}}</span>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="d-flex alig-items-center">
+                      <codx-date [value]="item.createdOn" option="f" className="text-gray-700 me-4" *ngIf="item?.createdOn"></codx-date>
+                      <div  *ngIf="item?.approveControl == '1' && item?.approveStatus == '3'">
+                        <span [title]="'WP038' | mssg | async" class="icon-security text-primary icon-16 me-4"></span>
+                      </div>
+                      <div class="badge badge-md badge-light rounded-1 px-2 fs-7 me-2" *ngIf="item?.shareControl">
+                        <codx-vll [name]="'WP001'" [value]="item.shareControl" [showText]="true" [showIcon]="true"
+                          [className]="'text-gray-600 vll-post'" [icoCss]="'w-13px h-13px'"
+                          [path]="'assets/themes/sys/default/img/'" [showBgColor]="true">
+                        </codx-vll>
+                      </div>
+                      <div ngbDropdown class="dropdown" *ngIf="item?.shareName">
+                        <button ngbDropdownToggle type="button" id="dropdown2">
+                          <span [innerHTML]="item?.shareName"></span>
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="dropdown2" class="d-flex flex-column">
+                          <div ngbDropdownItem class="d-flex flex-column mb-2">
+                            <span calss="text-dark">Danh sách người chia sẻ</span>
+                          </div>
+                          <ng-container *ngFor="let perItem of item.permissions">
+                            <div ngbDropdownItem class="d-flex align-items-center p-2" *ngIf="perItem.memberType == '2'">
+                              <codx-img [objectId]="perItem.objectID" [objectName]="perItem.objectName" [objectType]="'AD_Users'" [width]="30" [imgClass]="'me-2'"></codx-img>
+                              <div class="d-flex flex-column">
+                                <span>{{perItem.objectName}}</span>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- <div ngbDropdown class="dropdown">
+                  <button ngbDropdownToggle type="button" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" id="dropdownMoreFC" >
+                    <i class="fas fa-ellipsis-h"></i>
+                  </button>
+                  <div ngbDropdownMenu aria-labelledby="dropdownMoreFC">
+                    <div ngbDropdownItem class="d-flex align-items-center cursor-pointer" *ngIf="item?.write">
+                      <span class="icon-edit icon-16 me-2 text-primary"></span>
+                      <codx-label [formModel]="dialogRef.formModel" name="lblEdit" default="Chỉnh sửa"></codx-label>
+                    </div>
+                    <div ngbDropdownItem class="d-flex align-items-center cursor-pointer" *ngIf="item?.delete">
+                      <span class="icon-close icon-16 me-2 text-danger"></span>
+                      <codx-label [formModel]="dialogRef.formModel" name="lblDelete" default="Xóa"></codx-label>
+                    </div>
+                    <div ngbDropdownItem class="d-flex align-items-center cursor-pointer" *ngIf="item?.share && item?.approveStatus != '3'">
+                      <span class="icon-share icon-16 me-2"></span>
+                      <codx-label [formModel]="dialogRef.formModel" name="lblShare" default="Chia sẻ"></codx-label>
+                    </div>
+                    <div ngbDropdownItem class="d-flex align-items-center cursor-pointer">
+                      <span class="icon-save icon-save_alt icon-16 me-2"></span>
+                      <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Thêm vào kho lưu trữ">
+                      </codx-label>
+                    </div>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+            <div class="d-flex flex-column w-100">
+                <div class="text-dark mb-2" [innerHTML]="item.content | safe: 'html'" *ngIf="item?.content"></div>
+                <div class="text-start mb-2" *ngIf="item?.isShortContent">
+                  <codx-label [formModel]="dialogRef.formModel" name="lblViewMore" [default]="'Xem thêm'" [classList]="'text-primary'"></codx-label>
+                </div>
+                <div class="w-100 mb-2" *ngIf="item?.attachments > 0">
+                  <codx-view-files 
+                    [objectID]="item?.recID" 
+                    [objectType]="'WP_Comments'" 
+                    [formModel]="dialogRef.formModel"
+                    [medias]="item?.medias" 
+                    (selectFile)="clickViewDetail($event)">
+                  </codx-view-files>
+                </div>
+                <div class="w-100" *ngIf="item.category == CATEGORY.SHARE || item.category == CATEGORY.FEEDBACK">
+                  <wp-post-share [objectID]="item?.refID" [refType]="item?.refType" [formModel]="dialogRef.formModel"></wp-post-share>
+                </div>
+            </div>
+            <div class="d-flex flex-column w-100">
+              <treeview-comment 
+                [funcID]="dialogRef?.formModel?.funcID" 
+                [formModel]="dialogRef?.formModel"
+                [objectType]="'WP_Comments'" 
+                [data]="item" 
+                [objectID]="item.recID">
+              </treeview-comment>
+            </div>
+          </div>
+        </div>
       </ng-container>
     </div>
   </div>
 </div>
-<ng-template #itemTemplate let-item>
-  <div class="p-5 pb-0">
-    <div class="d-flex align-items-top">
-      <div class="me-3">
-        <codx-img [objectId]="item.createdBy" [objectName]="item.createdName" objectType="AD_Users" [width]="40">
-        </codx-img>
-      </div>
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="d-flex flex-wrap align-items-center mb-1">
-          <ng-container *ngIf="item.createdName">
-            <span class="text-dark fw-bold me-2">{{ item.createdName }}</span>
-          </ng-container>
-          <ng-container *ngIf="item.tagName">
-            <ng-container *ngTemplateOutlet="templateTags; context: { $implicit: item }">
-            </ng-container>
-          </ng-container>
-        </div>
-        <div class="d-flex align-items-center text-info-date mb-1">
-          <span class="d-flex algin-items-center me-2 mt-1">
-            <span class="text-gray-600 fs-7 me-2 mt-1">{{
-              item.createdOn | pTimeFrom
-              }}</span>
-            <span class="rounded-1 py-0 px-2 bg-gray-200 d-flex algin-items-center">
-              <codx-vll [name]="'WP001'" [value]="item.shareControl" [showText]="true" [showIcon]="true"
-                [className]="'fw-bold'" [icoCss]="'w-13px h-13px'" [path]="'assets/themes/sys/default/img/'"
-                [showBgColor]="true">
-              </codx-vll>
-            </span>
-          </span>
-          <span *ngIf="item.shareName">
-            <ng-container *ngTemplateOutlet="templateShares; context: { $implicit: item }">
-            </ng-container>
-          </span>
-        </div>
-      </div>
-      <div class="more">
-        <div ngbDropdown class="dropdown">
-          <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" ngbDropdownToggle
-            id="dropdownMenuButton1" aria-expanded="false">
-            <i class="fas fa-ellipsis-h"></i>
-          </a>
-          <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-            <li *ngIf="item.write">
-              <a (click)="openPopupEdit(item)" ngbDropdownItem href="javascript:void(0)">
-                <span class="icon-edit icon-16 me-2 icon-editPost"></span>
-                <codx-label [formModel]="formModel" name="lblEdit_comments" default="Chỉnh sửa">
-                </codx-label>
-              </a>
-            </li>
-            <li *ngIf="item.delete">
-              <a (click)="removePost(item)" ngbDropdownItem href="javascript:void(0)">
-                <span class="icon-close icon-16 me-2 icon-removePost"></span>
-                <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
-              </a>
-            </li>
-            <li *ngIf="item.share">
-              <a (click)="openPopupShare(item)" ngbDropdownItem href="javascript:void(0)">
-                <span class="icon-share icon-16 me-2"></span>
-                <codx-label [formModel]="formModel" name="lblShare_comments" default="Chia sẻ"></codx-label>
-              </a>
-            </li>
-            <li>
-              <a (click)="openPopupSave(item)" ngbDropdownItem href="javascript:void(0)">
-                <span class="icon-save icon-save_alt icon-16 me-2"></span>
-                <codx-label [formModel]="formModel" name="lblSave_comments" default="Thêm vào kho lưu trữ">
-                </codx-label>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <ng-container *ngIf="item.category == CATEGORY.SHARE; else shareTemplate">
-      <ng-container *ngIf="item.isContentTmp; else noContentTemp">
-        <ng-container *ngTemplateOutlet="item.contentTmp; context: { $implicit: item }"></ng-container>
-      </ng-container>
-      <ng-template #noContentTemp>
-        <div class="my-3">
-          <div [innerHTML]="item.content"></div>
-        </div>
-      </ng-template>
-      <div class="mt-2">
-        <codx-file [objectID]="item.recID" objectType="WP_Comments" (evtViewDetail)="clickViewDetail($event)">
-        </codx-file>
-      </div>
-      <ng-container *ngIf="item.refType == 'WP_News'; else tmpSharePost">
-        <ng-container *ngIf="item.news; else postShareDeleted">
-          <div class="post mt-3">
-            <div class="border-top border-bottom" (click)="naviagteWPNew(item.news)">
-              <div class="feed-1pic position-relative overflow-hidden h-250px">
-                <codx-img [width]="600" class="h-auto" cssClass="pic" [objectId]="item.news.recID"
-                  [objectType]="'WP_News'" [imageType]="'square'" [referType]="'image'">
-                </codx-img>
-              </div>
-              <div class="p-2" [style]="'background: #f0f8ff'">
-                <div class="fw-bolder">{{ item.news.subject }}</div>
-                <div>{{ item.news.subContent }}</div>
-                <div class="text-gray-600 fs-7 me-2">{{ item.news.createdOn | fmDT }}</div>
-              </div>
-            </div>
-          </div>
-        </ng-container>
-      </ng-container>
-      <ng-template #tmpSharePost>
-        <ng-container *ngIf="item.shares; else postShareDeleted">
-          <div class="card card-custom mt-3">
-            <div class="border border-1 rounded-3 p-3">
-              <ng-container *ngTemplateOutlet="
-                  containTemplate;
-                  context: { $implicit: item.shares }
-                ">
-              </ng-container>
-              <div [innerHTML]="item.shares.content" class="mb-2"></div>
-              <div class="d-flex">
-                <div class="me-3">
-                  <codx-img slot="start" [objectName]="item.shares.createdName" [objectId]="item.shares.createdBy"
-                    objectType="AD_Users" [width]="30">
-                  </codx-img>
-                </div>
-                <div class="d-flex flex-column flex-grow-1">
-                  <span class="text-dark fw-bold">{{
-                    item.shares.createdName
-                    }}</span>
-                  <span class="text-gray-500 fs-7 mt-1">{{
-                    item.shares.createdOn | fmDT
-                    }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ng-container>
-      </ng-template>
-      <!-- end share -->
-    </ng-container>
-    <ng-template #shareTemplate>
-      <ng-container *ngIf="item.isContentTmp; else noContentShareTemp">
-      </ng-container>
-      <ng-template #noContentShareTemp>
-        <div class="my-3">
-          <div [innerHTML]="item.content | safe: 'html'"></div>
-        </div>
-      </ng-template>
-      <ng-container *ngTemplateOutlet="containTemplate; context: { $implicit: item }"></ng-container>
-    </ng-template>
-    <!-- commemt -->
-    <treeview-comment [funcID]="dialogRef.formModel.funcID" [formModel]="dialogRef.formModel"
-      [objectType]="'WP_Comments'" [data]="item" [objectID]="item.recID">
-    </treeview-comment>
-    <!-- end comment -->
+<ng-template #tmpEmpty>
+  <div class="d-flex flex-column align-items-center justify-content-center w-100 h-100">
+    <img src="../assets/themes/sys/default/img/DataEmpty.svg" width="200px"/>
+    <div class="fw-bold mt-1 text-center">{{'SYS011' | mssg | async}}</div>
   </div>
-  <!-- content body -->
-  <ng-template #containTemplate let-item>
-    <ng-container *ngIf="item.isFeedBack; else WPComment">
-      <codx-view-card [card]="item.card"></codx-view-card>
-    </ng-container>
-    <ng-template #WPComment>
-      <div class="pic-feed mb-2">
-        <div class="pic-feed-img">
-          <codx-file [objectID]="item.recID" (evtGetFiles)="getFiles($event, item)"
-            (evtViewDetail)="clickViewDetail($event)">
-          </codx-file>
-        </div>
-      </div>
-    </ng-template>
-  </ng-template>
-  <!-- empty data -->
-  <ng-template #empty>
-    <div class="d-flex justify-content-between align-items-center p-6 bg-body">
-      <div [innerHTML]="strEmtyData">
-      </div>
-      <div>
-        <img src="assets/themes/wp/default/img/Portal_NoData.svg" />
-      </div>
-    </div>
-  </ng-template>
-  <!-- template FD card -->
-  <ng-template #card let-card>
-    <codx-view-card [card]="card"></codx-view-card>
-  </ng-template>
-  <!-- template post deleted -->
-  <ng-template #postShareDeleted>
-    <div class="card card-custom card-border border border-1 mt-3">
-      <div class="card-body p-5">
-        <div class="d-flex">
-          <div class="me-3">
-            <codx-img slot="start" objectId="" isDefaulImg="true" objectType="AD_Users" [width]="30">
-            </codx-img>
-          </div>
-          <div class="d-flex flex-column flex-grow-1">
-            <codx-label formModel="" name="lblPostDeleted" default="Bài viết không còn tồn tại">
-            </codx-label>
-          </div>
-        </div>
-      </div>
-    </div>
-  </ng-template>
-  <!-- template permissions share -->
-  <ng-template #templateShares let-data>
-    <div ngbDropdown class="symbol-more" [container]="'body'">
-      <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span [innerHTML]="data.shareName"> </span>
-      </div>
-      <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
-        <div class="py-2">
-          <codx-label [formModel]="" default="Danh sách người được chia sẻ" class="fw-bold"></codx-label>
-        </div>
-        <div class="hr-list-employee">
-          <ng-container *ngFor="let perrmisison of data.permissions">
-            <ng-container *ngIf="perrmisison.memberType == '2'">
-              <div class="d-flex align-items-center mt-3">
-                <codx-img [objectId]="perrmisison.objectID" [objectType]="'AD_Users'" [cssClass]="'me-3'"
-                  [objectName]="perrmisison.objectName" [width]="30">
-                </codx-img>
-                <span class="ms-2 fs-6">{{perrmisison.objectName}}</span>
-              </div>
-            </ng-container>
-          </ng-container>
-        </div>
-      </div>
-    </div>
-  </ng-template>
-  <!-- template permissions tag -->
-  <ng-template #templateTags let-data>
-    <div ngbDropdown class="symbol-more" [container]="'body'">
-      <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span [innerHTML]="data.tagName"> </span>
-      </div>
-      <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
-        <div class="py-2">
-          <codx-label [formModel]="" default="Danh sách người gắn thẻ" class="fw-bold"></codx-label>
-        </div>
-        <div class="hr-list-employee">
-          <ng-container *ngFor="let perrmisison of data.permissions">
-            <ng-container *ngIf="perrmisison.memberType == '3'">
-              <div class="d-flex align-items-center mt-3">
-                <codx-img [objectId]="perrmisison.objectID" [objectType]="'AD_Users'" [cssClass]="'me-3'"
-                  [objectName]="perrmisison.objectName" [width]="30">
-                </codx-img>
-                <span class="ms-2 fs-6">{{perrmisison.objectName}}</span>
-              </div>
-            </ng-container>
-          </ng-container>
-        </div>
-      </div>
-    </div>
-  </ng-template>
 </ng-template>

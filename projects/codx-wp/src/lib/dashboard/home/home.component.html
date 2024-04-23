@@ -1,8 +1,4 @@
-<!-- <div class="more-function">
-  <a (click)="clickShowPopupSearch()" class="btn btn-icon btn-primary">
-    <i class="icon-search"></i>
-  </a>
-</div> -->
+
 <codx-views #view 
   [views]="views" 
   funcID="WP"
@@ -11,7 +7,11 @@
 </codx-views>
 <ng-template #content>
   <div class="d-flex flex-column flex-row-fluid position-relative wp-home">
-    <!--begin::Content-->
+    <!-- <div class="more-function">
+      <a (click)="clickShowPopupSearch()" class="btn btn-icon btn-primary">
+        <i class="icon-search"></i>
+      </a>
+    </div> -->
     <div class="content d-flex flex-column flex-column-fluid py-0" id="kt_content">
       <div id="erm_content w-100">
         <div class="d-flex justify-content-between w-100">
@@ -23,10 +23,8 @@
           <div class="w-350px min-w-350px ms-4 home-right">
             <div class="card card-custom card-myteam gutter-b form-myTeam">
               <app-my-team></app-my-team>
-              <!--end::Body-->
             </div>
             <div class="card card-custom gutter-b sp-my-task">
-              <!--begin::Header-->
               <div class="card-header border-0">
                 <div class="card-title">
                   <codx-label class="mb-0 mt-2" formName="Notes" name="lblMyCalendar" default="Lịch cá nhân" fieldName="" gridViewName="">
@@ -36,7 +34,6 @@
               <div class="card-body p-5 pd-top-0 note">
                 <app-calendar-notes></app-calendar-notes>
               </div>
-              <!--end::Body-->
             </div>
           </div>
         </div>

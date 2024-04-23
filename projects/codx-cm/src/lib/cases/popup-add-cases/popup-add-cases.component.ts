@@ -142,6 +142,9 @@ export class PopupAddCasesComponent
   recIdMove: any;
   isShowReasonDP: boolean = false;
   isViewAll: boolean = false;
+  conRef: any[] = []
+  isHaveApplyDep = false;
+
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -303,8 +306,18 @@ export class PopupAddCasesComponent
     // } else {
     //   this.editInstance();
     // }
+    // //Kieerm tra dk ref cua truong tuy chinh
+    // if (this.conRef?.length > 0) {
+    //   this.conRef.forEach(x => {
+    //     this.notificationsService.notify(x.messageText, x.messageType)
+    //   })
+    //   return
+    // }
+    if (!this.conditionRefValidate()) return;
     this.actionSaveBeforeSaveAttachment();
   }
+
+
   async actionSaveBeforeSaveAttachment() {
     if (this.attachment?.fileUploadList?.length > 0) {
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
@@ -362,24 +375,10 @@ export class PopupAddCasesComponent
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
-      var result = event.e;
-      var field = event.data;
-      // cũ
-      // var result = event.e?.data;
-      // switch (field.dataType) {
-      //   case 'D':
-      //     result = event.e?.data.fromDate;
-      //     break;
-      //   case 'P':
-      //   case 'R':
-      //   case 'A':
-      //   // case 'C':case ko có
-      //   case 'L':
-      //   case 'TA':
-      //   case 'PA':
-      //     result = event.e;
-      //     break;
-      // }
+      let result = event.e;
+      let field = event.data;
+      let dependences = event?.dependences; //tham chieu dependece cua cbx
+
       var index = this.listInstanceSteps.findIndex(
         (x) => x.recID == field.stepID
       );
@@ -392,6 +391,22 @@ export class PopupAddCasesComponent
             let valueOld =
               this.listInstanceSteps[index].fields[idxField].dataValue;
             this.listInstanceSteps[index].fields[idxField].dataValue = result;
+            // //Tham chieu rang buoc
+            // let crrField = this.listInstanceSteps[index].fields[idxField];
+            // if (crrField.isApplyConditional && crrField?.conditionReference?.length > 0) {
+            //   let check = this.customFieldSV.checkConditionalRef(this.listInstanceSteps[index].fields, crrField)
+            //   this.conRef = this.conRef.filter(f => f?.id != crrField.recID);
+            //   if (!check?.check && check.conditionRef?.length > 0) {
+            //     let arrRef = check.conditionRef.map(x => {
+            //       let obj = { ...x, id: crrField.recID }
+            //       return obj
+            //     })
+            //     this.conRef = this.conRef.concat(arrRef)
+            //   }
+            // }
+
+            this.isHaveApplyDep = this.listInstanceSteps[index].fields.some(x => x.isApplyDependences)
+            if (this.isHaveApplyDep && dependences?.length > 0) this.listInstanceSteps[index].fields = this.changeRefData(dependences, this.listInstanceSteps[index].fields)
             let idxEdit = this.listCustomFile.findIndex(
               (x) =>
                 x.recID == this.listInstanceSteps[index].fields[idxField].recID
@@ -1309,18 +1324,63 @@ export class PopupAddCasesComponent
             }
           }
         }
-        this.setElement(obj.recID, obj.dataValue);
+        this.setElement(obj.recID, obj.dataValue, obj.dataType);
       }
     });
   }
-  setElement(recID, value) {
-    value =
-      value && value != '_'
-        ? Number.parseFloat(value)?.toFixed(2).toString()
-        : '';
+  //------------------END_CACULATE--------------------//
+
+  conditionRefValidate() {
+    //Tham chieu rafng buoc
+    var checkAll = true;
+    // this.listFields.forEach(x => {
+    //   let fields = this.listInstanceSteps.find(f => f.recID == x.stepID)?.fields;
+    //   if (fields?.length > 0) {
+    //     let fieldsApplyCondition = x.fields.filter(x => x.isApplyConditional && x.conditionReference?.length > 0);
+    //     if (fieldsApplyCondition?.length > 0) {
+    //       let checkOne = true
+    //       fieldsApplyCondition.forEach(x => {
+    //         let check = this.customFieldSV.checkConditionalRef(fields, x);
+    //         if (checkOne && !check.check) checkOne = check.check;
+    //       })
+    //       if (!checkOne && checkAll) checkAll = checkOne;
+    //     }
+    //   }
+    // })
+    let fieldsApplyCondition = this.listFields.filter(x => x.isApplyConditional && x.conditionReference?.length > 0);
+    if (fieldsApplyCondition?.length > 0) {
+      fieldsApplyCondition.forEach(x => {
+        let check = this.customFieldSV.checkConditionalRef(this.listFields, x);
+        if (checkAll && !check.check) checkAll = check.check;
+      })
+    }
+    return checkAll;
+  }
+
+  //-----------------Tham chiếu giá trị----------------------//
+  changeRefData(dependences, fields) {
+    dependences.forEach(fn => {
+      let idx = fields.findIndex(x => x.fieldName == fn.fieldName);
+      if (idx != -1) {
+        fields[idx].dataValue = fn.dataValue
+        this.setElement(fields[idx].recID, fn.dataValue, fields[idx].dataType)
+        if (fields[idx].dataType == 'N') this.caculateField()
+      }
+    })
+
+    return fields;
+  }
+
+  setElement(recID, value, dataType) {
     var codxinput = document.querySelectorAll(
       '.form-group codx-input[data-record="' + recID + '"]'
     );
+    if (dataType == 'N' || dataType == 'CF') {
+      value =
+        value && value != '_'
+          ? Number.parseFloat(value)?.toFixed(2).toString()
+          : '';
+    }
 
     if (codxinput?.length > 0) {
       let htmlE = codxinput[0] as HTMLElement;
@@ -1330,5 +1390,5 @@ export class PopupAddCasesComponent
       }
     }
   }
-  //------------------END_CACULATE--------------------//
+  //-------------------------------------------------------//
 }

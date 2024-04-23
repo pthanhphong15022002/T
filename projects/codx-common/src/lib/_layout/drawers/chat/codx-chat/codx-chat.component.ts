@@ -82,7 +82,6 @@ export class CodxChatComponent implements OnInit, AfterViewInit, OnDestroy {
           this.cache.gridViewSetup(this.formModel.formName,this.formModel.gridViewName)
           .subscribe((grd:any) => {
             this.grdViewSetUp = grd;
-            //this.dt.detectChanges();
           })
         }
       });
@@ -99,9 +98,13 @@ export class CodxChatComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.addContainerChat();
     let subscribe1 = this.signalRSV.incomingMessage
-    .subscribe((res: any) => {
-      if(res && this.user && res?.createdBy != this.user?.userID)
+    .subscribe((mssg: any) => {
+      if(mssg && this.user && mssg?.createdBy != this.user?.userID)
       {
+        if(mssg.message?.includes(`<span contenteditable="false" class="e-mention-chip">`))
+        {
+          this.notifySV.notify("Ai đó đã nhắc đến bạn","1",3000);
+        }
         this.count++;
         this.dt.detectChanges();
       }

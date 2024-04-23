@@ -65,6 +65,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
       {
         type: ViewType.content,
         active: true,
+        showFilter: false,
         sameData: false,
         model: {
           panelLeftRef: this.content,
@@ -77,6 +78,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
   
   clickShowPopupSearch() {
     let option = new DialogModel();
+    option.FormModel = this.view.formModel;
     option.IsFull = true;
     this.callfc.openForm(
       PopupSearchPostComponent,
@@ -88,5 +90,9 @@ export class HomeComponent extends UIComponent implements OnDestroy {
       '',
       option
     );
+
+    // this.api.execSv("HR","ERM.Business.HR","HRBusiness_Old","SeenEmployeeInfoAsync", ["SYNC_EOFFICE_EMPLOYEE",new Date(2024,3,15)])
+    // .subscribe()
+
   }
 }

@@ -37,7 +37,8 @@ export class PopupCustomFieldComponent implements OnInit {
   widthDefault = '550';
   fieldOther = []; //Là form công việc
   isView = false; // nvthuan them để chỉ được xem
-
+  conRef: any[] = []//mang ref error
+  isHaveApplyDep = false //danh sach fieldRef
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -58,6 +59,7 @@ export class PopupCustomFieldComponent implements OnInit {
 
     this.isAdd = dt?.data?.isAdd ?? false;
     this.arrCaculateField = this.fields.filter((x) => x.dataType == 'CF');
+    this.isHaveApplyDep = this.fields.some((x) => x.isApplyDependences);
     if (this.arrCaculateField?.length > 0)
       this.arrCaculateField.sort((a, b) => {
         if (a.dataFormat.includes('[' + b.fieldName + ']')) return 1;
@@ -80,48 +82,37 @@ export class PopupCustomFieldComponent implements OnInit {
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
-      var result = event.e;
-      var field = event.data;
-
-      // var result = event.e?.data;
-      // var field = event.data;
-      // switch (field.dataType) {
-      //   case 'D':
-      //     result = event.e?.data.fromDate;
-      //     break;
-      //   case 'P':
-      //   case 'R':
-      //   case 'A':
-      //   case 'C':
-      //   case 'L':
-      //   case 'TA':
-      //   case 'PA':
-      //     result = event.e;
-      //     break;
-      // }
-
-      // this.fields.forEach((x) => {
-      //   if (x.recID == field.recID) x.dataValue = result;
-      // });
-      //no bij map nguoc dataa
+      let result = event.e;
+      let field = event.data;
+      let dependences = event?.dependences; //tham chieu dependece cua cbx
       let index = this.fields.findIndex((x) => x.recID == field.recID);
       if (index != -1) {
         this.fields[index] = this.upDataVersion(this.fields[index], result);
-        // this.fields[index].dataValue = result;
+        // //Tham chieu rafng buoc
+        // let crrField = this.fields[index];
+        // if (crrField.isApplyConditional && crrField?.conditionReference?.length > 0) {
+        //   let check = this.customFieldSV.checkConditionalRef(this.fields, crrField)
+        //   this.conRef = this.conRef.filter(f => f?.id != crrField.recID);
+        //   if (!check?.check && check.conditionRef?.length > 0) {
+        //     let arrRef = check.conditionRef.map(x => {
+        //       let obj = { ...x, id: crrField.recID }
+        //       return obj
+        //     })
+        //     this.conRef = this.conRef.concat(arrRef)
+        //   }
+        // }
+        if (this.isHaveApplyDep && dependences?.length > 0) this.fields = this.changeRefData(dependences, this.fields)
         if (field.dataType == 'N') this.caculateField();
       }
     }
   }
-  // partValue(item) {
-  //   return JSON.parse(JSON.stringify(item));
-  // }
 
   checkFormat(field) {
     if (field.dataType == 'T') {
       if (field.dataFormat == 'E') {
         var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         if (!field.dataValue.toLowerCase().match(validEmail)) {
-          //this.notiService.notifyCode('SYS037');
+
           this.cache.message('SYS037').subscribe((res) => {
             if (res) {
               let errorMessage = res.customName || res.defaultName;
@@ -162,6 +153,24 @@ export class PopupCustomFieldComponent implements OnInit {
       } else checkFormat = this.checkFormat(f);
     });
     if (!check || !checkFormat) return;
+    // //Kieerm tra dk
+    // if (this.conRef?.length > 0) {
+    //   this.conRef.forEach(x => {
+    //     this.notiService.notify(x.messageText, x.messageType)
+    //   })
+    //   return
+    // }
+    //Tham chieu rafng buoc
+    let fieldsApplyCondition = this.fields.filter(x => x.isApplyConditional && x.conditionReference?.length > 0);
+    if (fieldsApplyCondition?.length > 0) {
+      var checkAll = true;
+      fieldsApplyCondition.forEach(x => {
+        let check = this.customFieldSV.checkConditionalRef(this.fields, x);
+        if (checkAll && !check.check) checkAll = check.check;
+      })
+      if (!checkAll) return;
+    }
+
     if (this.isSaving) return;
     this.isSaving = true;
     let data = [this.fields[0]?.stepID, this.fields, this.taskID];
@@ -245,7 +254,7 @@ export class PopupCustomFieldComponent implements OnInit {
           );
         }
 
-        this.setElement(obj.recID, obj.dataValue);
+        this.setElement(obj.recID, obj.dataValue, obj.dataType);
         this.changeDetectorRef.detectChanges();
       } else if (obj.dataValue) {
         //Chua xu ly
@@ -332,14 +341,16 @@ export class PopupCustomFieldComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  setElement(recID, value) {
-    value =
-      value && value != '_'
-        ? Number.parseFloat(value)?.toFixed(2).toString()
-        : '';
+  setElement(recID, value, dataType) {
     var codxinput = document.querySelectorAll(
       '.form-group codx-input[data-record="' + recID + '"]'
     );
+    if (dataType == 'N' || dataType == 'CF') {
+      value =
+        value && value != '_'
+          ? Number.parseFloat(value)?.toFixed(2).toString()
+          : '';
+    }
 
     if (codxinput?.length > 0) {
       let htmlE = codxinput[0] as HTMLElement;
@@ -348,5 +359,19 @@ export class PopupCustomFieldComponent implements OnInit {
         input.value = value;
       }
     }
+  }
+
+  //Tham chiếu giá trị
+  changeRefData(dependences, fields) {
+    dependences.forEach(fn => {
+      let idx = fields.findIndex(x => x.fieldName == fn.fieldName);
+      if (idx != -1) {
+        fields[idx].dataValue = fn.dataValue
+        this.setElement(fields[idx].recID, fn.dataValue, fields[idx].dataType)
+        if (this.fields[idx].dataType == 'N') this.caculateField()
+      }
+    })
+
+    return fields;
   }
 }

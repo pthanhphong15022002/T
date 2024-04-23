@@ -172,13 +172,18 @@ export class AddTemplateComponent implements OnInit{
     .execSv<any>("SYS",'AD', 'IETablesBusiness', 'GetListAsync', this.dataIEConnection.recID)
     .subscribe((item) => {
       if(item && item.length > 0)
+      {
         this.listIETables = item;
+      }
     })
   }
 
   //Chọn lại sheet import
   changeSheetImport(e: any) {
-    this.importAddTmpGroup.controls['sheetImport'].setValue(e);
+    let sheet = e.value.split(":")[1];
+    sheet = sheet.trim();
+    this.importAddTmpGroup.controls['sheetImport'].setValue(sheet);
+    this.selectedSheet = sheet;
   }
 
   getfilePrimitive(e: any) {
@@ -223,6 +228,11 @@ export class AddTemplateComponent implements OnInit{
                 this.sheet = this.wb.SheetNames;
                 this.importAddTmpGroup.controls['sheetImport'].setValue(this.sheet[0]);
                 this.selectedSheet = this.sheet[0];
+
+                if(this.listIETables && this.listIETables.length>0)
+                {
+                  this.selectedSheet = this.listIETables[0].sourceTable
+                }
                 // this.selectedSheet =
                 //   this.gridView.dataService.data[0].sourceTable;
               };
@@ -240,7 +250,25 @@ export class AddTemplateComponent implements OnInit{
   openFormAddImportDetail(data:any , type = 'new')
   {
     if(type == 'edit' && !data?.mappingTemplate) return;
-    let sourceField = XLSX.utils.sheet_to_json(this.wb.Sheets[this.sheet[0]], {
+
+    let formModel =
+    {
+      formName: this.formModel?.formName,
+      gridViewName: this.formModel?.gridViewName
+    }
+
+    let entityName = data?.destinationTable;
+    if(entityName)
+    {
+      let formName = entityName.split("_")[1];
+      let gridViewName = 'grv' + formName;
+  
+      if(formName) formModel.formName = formName;
+      if(gridViewName) formModel.gridViewName = gridViewName;
+    }
+
+    let index = this.sheet.findIndex(x=>x == this.selectedSheet);
+    let sourceField = XLSX.utils.sheet_to_json(this.wb.Sheets[this.sheet[index]], {
       header: this.importAddTmpGroup.value.firstCell,
     });
     this.dataIETables.sourceTable = this.importAddTmpGroup.value.sheetImport;
@@ -251,7 +279,7 @@ export class AddTemplateComponent implements OnInit{
       800,
       '',
       [
-        this.formModel,
+        formModel,
         this.dataIETables,
         sourceField[0],
         data?.mappingTemplate,

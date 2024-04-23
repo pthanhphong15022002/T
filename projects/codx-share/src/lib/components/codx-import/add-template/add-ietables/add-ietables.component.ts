@@ -52,6 +52,23 @@ export class AddIetablesComponent implements OnInit {
   openFormAddImportDetail(data:any , type = 'new')
   {
     if(type == 'edit' && !data?.mappingTemplate) return;
+
+    let formModel =
+    {
+      formName: this.formModel?.formName,
+      gridViewName: this.formModel?.gridViewName
+    }
+
+    let entityName = data?.destinationTable;
+    if(entityName)
+    {
+      let formName = entityName.split("_")[1];
+      let gridViewName = 'grv' + formName;
+  
+      if(formName) formModel.formName = formName;
+      if(gridViewName) formModel.gridViewName = gridViewName;
+    }
+
     this.callfunc.openForm(
       AddImportDetailsComponent,
       null,
@@ -59,7 +76,7 @@ export class AddIetablesComponent implements OnInit {
       800,
       '',
       [
-        this.formModel,
+        formModel,
         this.data,
         this.sourceField[0],
         data?.mappingTemplate,

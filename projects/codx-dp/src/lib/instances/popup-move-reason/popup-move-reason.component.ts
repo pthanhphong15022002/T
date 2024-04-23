@@ -39,7 +39,7 @@ export class PopupMoveReasonComponent implements OnInit {
   viewClick: string = '';
   titleReasonClick: string = '';
   stepName: string = '';
-  moveProccess: string = '';
+  moveProccessID: string = '';
   memoStep: string = '';
   processNameEmpty: string ='';
 
@@ -64,9 +64,10 @@ export class PopupMoveReasonComponent implements OnInit {
   applyFor: string = '0';
   applyForMove: string = '';
   dataCM: any;
-  recID: string = '';
+  instanceID: string = '';
   nextStep: string = '';
   memo:string = '';
+  entityName = "";
 
   readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
   readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
@@ -100,130 +101,47 @@ export class PopupMoveReasonComponent implements OnInit {
     this.user = this.authStore.get();
     this.userId = this.user?.userID;
     this.reasonStep = dt?.data?.objReason;
-    if (this.applyFor == '0') {
-      this.listReason = this.reasonStep?.reasons;
-      this.instances = JSON.parse(JSON.stringify(dt?.data?.instance));
-  //    this.listCbxProccess = dt?.data?.listProccessCbx;
-   //   this.listParticipantReason = dt?.data?.listParticipantReason;
-      this.moveProccess =
-        this?.listCbxProccess?.filter(
-          (x) => x.recID === this.reasonStep?.newProcessID
-        )[0]?.recID ?? this.guidEmpty;
-      this.executeApiCallInstance();
-      this.titleReasonClick = dt?.data?.headerTitle;
-    }
-    this.dataCM = dt?.data?.dataCM;
-    this.recID = this.dataCM ? this.dataCM?.refID : dt?.data?.instance?.recID;
-    this.applyFor != '0' && this.executeApiCalls();
-    this.getValueListReason();
-   if( this.isMoveProcess && this.reasonStep) {
-    if (this.reasonStep?.newProcessID === this.guidEmpty || !this.reasonStep.newProcessID) {
-              this.getValueListMoveProcess();
-              this.moveProccess = this.reasonStep.newProcessID;
-    };
-    if(this.reasonStep?.newProcessID !== this.guidEmpty && this.reasonStep.newProcessID ){
-      var listNewProcessID = this.reasonStep.newProcessID?.split(";");
-      if(listNewProcessID?.length > 0){
-        this.getListProcesByMoveProcess(listNewProcessID[0]); 
-      }
-    }
-   }
-   else {
-      this.getListMoveReason();
-   }
+    this.entityName = dt?.data?.entityName;
+  //   if (this.applyFor == '0') {
+  //     this.listReason = this.reasonStep?.reasons;
+  //     this.instances = JSON.parse(JSON.stringify(dt?.data?.instance));
+  // //    this.listCbxProccess = dt?.data?.listProccessCbx;
+  //  //   this.listParticipantReason = dt?.data?.listParticipantReason;
+  //     this.moveProccess =
+  //       this?.listCbxProccess?.filter(
+  //         (x) => x.recID === this.reasonStep?.newProcessID
+  //       )[0]?.recID ?? this.guidEmpty;
+  //     this.executeApiCallInstance();
+  //     this.titleReasonClick = dt?.data?.headerTitle;
+  //   }
+  //   this.dataCM = dt?.data?.dataCM;
+  //   this.recID = this.dataCM ? this.dataCM?.refID : dt?.data?.instance?.recID;
+  //   this.applyFor != '0' && this.executeApiCalls();
+  //   this.getValueListReason();
+  //  if( this.isMoveProcess && this.reasonStep) {
+  //   if (this.reasonStep?.newProcessID === this.guidEmpty || !this.reasonStep.newProcessID) {
+  //             this.getValueListMoveProcess();
+  //             this.moveProccess = this.reasonStep.newProcessID;
+  //   };
+  //   if(this.reasonStep?.newProcessID !== this.guidEmpty && this.reasonStep.newProcessID ){
+  //     var listNewProcessID = this.reasonStep.newProcessID?.split(";");
+  //     if(listNewProcessID?.length > 0){
+  //       this.getListProcesByMoveProcess(listNewProcessID[0]); 
+  //     }
+  //   }
+  //  }
+  //  else {
+      
+  //  }
+  this.dataCM = dt?.data?.dataCM;
+  this.instanceID = this.dataCM ? this.dataCM?.refID : dt?.data?.instance?.recID;
+   this.getListMoveReason();
   }
 
   ngOnInit(): void {}
 
   getDataMove(){
     
-  }
-
-  onSave() {
-    if(this.isLockStep) return;
-    if (
-      this.reasonStep.reasonControl === true &&
-      this.listReasonClick.length === 0
-    ) {
-      this.notiService.notifyCode('DP006');
-      return;
-    }
-    if (
-      !this.ownerMove &&
-      this.moveProccess &&
-      this.moveProccess !== this.guidEmpty
-    ) {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['Owner']?.headerText + '"'
-      );
-      return;
-    }
-    this.isLockStep  = true;
-    this.beforeSave();
-  }
-  beforeSave() {
-    this.reasonStep.reasons = this.listReasonClick;
-    let data = [
-      this.recID,
-      this.moveProccess,
-      this.reasonStep.reasons,
-      this.isReason,
-      this.ownerMove,
-      this.applyForMove,
-      this.memo
-    ];
-    // let obj = {
-    //           listStep: this.listStep,
-    //           instance: this.instances,
-    //           processMove: this.moveProcess,
-    //           applyForMove: this.applyFor,
-    //           ownerMove: this.ownerMove,
-    //           comment: this.reasonStep.memo,
-    //         };
-    //         this.dialog.close(obj);
-    let oldStepId = this.instances.stepID;
-    let oldStatus = this.instances.status;
-    this.codxDpService.moveReasonByIdInstance(data).subscribe((res) => {
-      if (res) {
-        this.instances = res[0];
-        this.listStep = res[1];
-
-        if(!this.isCallInstance) {
-          if(this.applyFor == '1') {
-            let datas = [null, oldStepId, oldStatus, this.reasonStep.memo,this.instances.recID,this.instances.status,this.instances.stepID];
-            if(this.applyFor == "1" ) {
-              this.codxDpService.moveDealReason(datas).subscribe((res) => {
-                if (res) {
-                }
-              });
-            }
-          }
-          else {
-            let datas = [null,this.instances.recID,this.instances.status,this.instances.stepID];
-            (this.applyFor == '2' || this.applyFor == '3') && this.codxDpService.moveCaseReason(datas).subscribe((res) => {  if (res) {} });
-            // (this.applyFor == '5' ) && this.codxDpService.moveLeadReason(datas).subscribe((res) => {  if (res) {} });
-             (this.applyFor == '4' ) && this.codxDpService.moveContractReason(datas).subscribe((res) => {  if (res) {} });
-          }
-
-        }
-        let obj = {
-          listStep: this.listStep,
-          instance: this.instances,
-          nextStep: this.nextStep,
-          processMove: this.moveProccess != this.guidEmpty ? this.moveProccess: null,
-          applyForMove: this.applyForMove,
-          ownerMove: this.ownerMove,
-          comment: this.reasonStep.memo,
-          title:this.instances.title,
-        };
-        this.dialog.close(obj);
-        this.isLockStep  = false;
-        this.notiService.notifyCode('SYS007');
-        this.changeDetectorRef.detectChanges();
-      }
-    });
   }
 
   async executeApiCalls() {
@@ -291,7 +209,7 @@ export class PopupMoveReasonComponent implements OnInit {
   }
     getListProcesByMoveProcess(moveProccess) {
     // this.moveProccess = this.reasonStep.newProcessID;
-    let data=[this.applyFor,this.moveProccess,'1'];
+    let data=[this.applyFor,this.moveProccessID,'1'];
     this.codxDpService.getlistCbxProccessMove(data).subscribe((res) => {
       if( res != null && res.length > 0) {
         this.getListProceseEmpty(res[0]);
@@ -325,7 +243,7 @@ export class PopupMoveReasonComponent implements OnInit {
 
   async cbxChange($event) {
     if ($event) {
-      this.moveProccess = $event;
+      this.moveProccessID = $event;
       this.getListProcesByMoveProcess(event);
     }
   }
@@ -381,5 +299,75 @@ export class PopupMoveReasonComponent implements OnInit {
     else if($event === null || $event === '') {
       this.ownerMove = null;
     }
+  }
+
+  onSave() {
+    if(this.isLockStep) return;
+    if (this.reasonStep.reasonControl === true && this.listReasonClick.length === 0) {
+      this.notiService.notifyCode('DP006');
+      return;
+    }
+    if (!this.ownerMove && this.moveProccessID && this.moveProccessID !== this.guidEmpty) {
+      this.notiService.notifyCode('SYS009',0,'"' + this.gridViewSetup['Owner']?.headerText + '"');
+      return;
+    }
+    this.isLockStep  = true;
+    this.beforeSave();
+  }
+
+  beforeSave() {
+    this.reasonStep.reasons = this.listReasonClick;
+    let data = [
+      this.instanceID,
+      this.moveProccessID,
+      this.reasonStep.reasons,
+      this.isReason,
+      this.ownerMove,
+      this.applyForMove,
+      this.memo
+    ];
+    let oldStepId = this.instances.stepID;
+    let oldStatus = this.instances.status;
+    
+
+    this.codxDpService.moveReasonByIdInstance(data).subscribe((res) => {
+      if (res) {
+        this.instances = res[0];
+        this.listStep = res[1];
+
+        if(!this.isCallInstance) {
+          if(this.applyFor == '1') {
+            let datas = [null, oldStepId, oldStatus, this.reasonStep.memo,this.instances.recID,this.instances.status,this.instances.stepID];
+            if(this.applyFor == "1" ) {
+              this.codxDpService.moveDealReason(datas).subscribe((res) => {
+                if (res) {
+                }
+              });
+            }
+          }
+          else {
+            let datas = [null,this.instances.recID,this.instances.status,this.instances.stepID];
+            (this.applyFor == '2' || this.applyFor == '3') && this.codxDpService.moveCaseReason(datas).subscribe((res) => {  if (res) {} });
+            // (this.applyFor == '5' ) && this.codxDpService.moveLeadReason(datas).subscribe((res) => {  if (res) {} });
+             (this.applyFor == '4' ) && this.codxDpService.moveContractReason(datas).subscribe((res) => {  if (res) {} });
+          }
+
+        }
+        let obj = {
+          listStep: this.listStep,
+          instance: this.instances,
+          nextStep: this.nextStep,
+          processMove: this.moveProccessID != this.guidEmpty ? this.moveProccessID: null,
+          applyForMove: this.applyForMove,
+          ownerMove: this.ownerMove,
+          comment: this.reasonStep.memo,
+          title:this.instances.title,
+        };
+        this.dialog.close(obj);
+        this.isLockStep  = false;
+        this.notiService.notifyCode('SYS007');
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 }

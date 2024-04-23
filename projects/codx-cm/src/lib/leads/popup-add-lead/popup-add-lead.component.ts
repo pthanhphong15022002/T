@@ -178,6 +178,9 @@ export class PopupAddLeadComponent
   arrCaculateField: any[] = [];
   isLoadedCF = false;
   isView: boolean = false;
+  conRef: any[] = [];
+  isHaveApplyDep = false;
+
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -464,6 +467,8 @@ export class PopupAddLeadComponent
     ) {
       return;
     }
+
+    if (!this.conditionRefValidate()) return
     this.promiseSaveFile();
   }
   cbxChange($event, field) {
@@ -1119,25 +1124,10 @@ export class PopupAddLeadComponent
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
-      var result = event.e;
-      var field = event.data;
+      let result = event.e;
+      let field = event.data;
+      let dependences = event?.dependences; //tham chieu dependece cua cbx
 
-      // let result = event.e?.data;
-      // let field = event.data;
-      // switch (field.dataType) {
-      //   case 'D':
-      //     result = event.e?.data.fromDate;
-      //     break;
-      //   case 'P':
-      //   case 'R':
-      //   case 'A':
-      //   case 'L':
-      //   case 'TA':
-      //   case 'PA':
-      //     // case 'C': lead ko co
-      //     result = event.e;
-      //     break;
-      // }
       var index = this.listInstanceSteps.findIndex(
         (x) => x.recID == field.stepID
       );
@@ -1150,6 +1140,21 @@ export class PopupAddLeadComponent
             let valueOld =
               this.listInstanceSteps[index].fields[idxField].dataValue;
             this.listInstanceSteps[index].fields[idxField].dataValue = result;
+            // //Tham chieu rang buoc
+            // let crrField = this.listInstanceSteps[index].fields[idxField];
+            // if (crrField.isApplyConditional && crrField?.conditionReference?.length > 0) {
+            //   let check = this.customFieldSV.checkConditionalRef(this.listInstanceSteps[index].fields, crrField)
+            //   this.conRef = this.conRef.filter(f => f?.id != crrField.recID);
+            //   if (!check?.check && check.conditionRef?.length > 0) {
+            //     let arrRef = check.conditionRef.map(x => {
+            //       let obj = { ...x, id: crrField.recID }
+            //       return obj
+            //     })
+            //     this.conRef = this.conRef.concat(arrRef)
+            //   }
+            // }
+            this.isHaveApplyDep = this.listInstanceSteps[index].fields.some(x => x.isApplyDependences)
+            if (this.isHaveApplyDep && dependences?.length > 0) this.listInstanceSteps[index].fields = this.changeRefData(dependences, this.listInstanceSteps[index].fields)
             let idxEdit = this.listCustomFile.findIndex(
               (x) =>
                 x.recID == this.listInstanceSteps[index].fields[idxField].recID
@@ -1306,18 +1311,49 @@ export class PopupAddLeadComponent
             }
           }
         }
-        this.setElement(obj.recID, obj.dataValue);
+        this.setElement(obj.recID, obj.dataValue, obj.dataType);
       }
     });
   }
-  setElement(recID, value) {
-    value =
-      value && value != '_'
-        ? Number.parseFloat(value)?.toFixed(2).toString()
-        : '';
+  //------------------END_CACULATE--------------------//
+
+  conditionRefValidate() {
+    //Tham chieu rafng buoc
+    var checkAll = true;
+    let fieldsApplyCondition = this.listFields.filter(x => x.isApplyConditional && x.conditionReference?.length > 0);
+    if (fieldsApplyCondition?.length > 0) {
+      fieldsApplyCondition.forEach(x => {
+        let check = this.customFieldSV.checkConditionalRef(this.listFields, x);
+        if (checkAll && !check.check) checkAll = check.check;
+      })
+    }
+    return checkAll;
+  }
+
+  //-----------------Tham chiếu giá trị----------------------//
+  changeRefData(dependences, fields) {
+    dependences.forEach(fn => {
+      let idx = fields.findIndex(x => x.fieldName == fn.fieldName);
+      if (idx != -1) {
+        fields[idx].dataValue = fn.dataValue
+        this.setElement(fields[idx].recID, fn.dataValue, fields[idx].dataType)
+        if (fields[idx].dataType == 'N') this.caculateField()
+      }
+    })
+
+    return fields;
+  }
+
+  setElement(recID, value, dataType) {
     var codxinput = document.querySelectorAll(
       '.form-group codx-input[data-record="' + recID + '"]'
     );
+    if (dataType == 'N' || dataType == 'CF') {
+      value =
+        value && value != '_'
+          ? Number.parseFloat(value)?.toFixed(2).toString()
+          : '';
+    }
 
     if (codxinput?.length > 0) {
       let htmlE = codxinput[0] as HTMLElement;
@@ -1327,5 +1363,5 @@ export class PopupAddLeadComponent
       }
     }
   }
-  //------------------END_CACULATE--------------------//
+  //-------------------------------------------------------//
 }

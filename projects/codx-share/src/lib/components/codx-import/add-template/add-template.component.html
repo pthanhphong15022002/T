@@ -41,7 +41,7 @@
                     <codx-label [formModel]="formModel" [fiedName]="'sheetimport'" default="Sheet import" class="fw-bold">
                     </codx-label>
                     <select class="sl-add-tmp-ip form-select select-sheet" aria-label="Sheet Import"  #mySelect
-                      (change)="changeSheetImport(mySelect.value)" [(ngModel)]="selectedSheet"
+                      (change)="changeSheetImport(mySelect)" [(ngModel)]="selectedSheet"
                     >
                       <ng-container *ngIf="sheet">
                         <option *ngFor="let item of sheet" [ngValue]="item">{{item}}</option>
@@ -134,7 +134,7 @@
                                         (valueChange)="valueChangeMappingTemplate($event , data)"
                                         >
                                         </codx-input>
-                                        <i class="icon-add_box cursor-pointer ms-2 text-primary" (click)="openFormAddImportDetail(null)"></i>
+                                        <i class="icon-add_box cursor-pointer ms-2 text-primary" (click)="openFormAddImportDetail(data)"></i>
                                         <i class="icon-open_in_new cursor-pointer ms-2"  (click)="openFormAddImportDetail(data,'edit')"></i>
                                     </td>
                                     <td class="w-15 p-3">

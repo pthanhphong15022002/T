@@ -143,6 +143,7 @@
 
   <ng-container *ngIf="customField.dataType == 'T'">
     <codx-input
+      [attr.data-record]="customField.recID"
       *ngIf="customField.dataFormat != 'L'"
       [field]="customField.fieldName"
       type="text"
@@ -166,6 +167,7 @@
   </ng-container>
   <ng-container *ngIf="customField.dataType == 'N'">
     <codx-input
+      [attr.data-record]="customField.recID"
       [field]="customField.fieldName"
       type="number"
       [showSpinButton]="false"
@@ -192,6 +194,7 @@
   <ng-container *ngIf="customField.dataType == 'L'">
     <ng-container *ngIf="customField.dataFormat == 'C'">
       <codx-input
+        [attr.data-record]="customField.recID"
         [field]="customField.fieldName"
         type="combobox"
         [refValue]="customField.refValue"
@@ -235,6 +238,7 @@
       <div class="d-flex align-items-center">
         <div class="me-5">
           <codx-input
+            [attr.data-record]="customField.recID"
             type="radio"
             field="no"
             [checked]="!this.checkedRadio"
@@ -246,6 +250,7 @@
         </div>
         <div class="me-5">
           <codx-input
+            [attr.data-record]="customField.recID"
             type="radio"
             field="yes"
             [label]="titleRadioYes"
@@ -275,7 +280,8 @@
               (change)="valueChangeCheckBox($event, val.value)"
               [disabled]="disable"
             ></ejs-checkbox>
-            <!-- <codx-input
+            <!--  <codx-input
+              [attr.data-record]="customField.recID"
               type="checkbox"
               [checked]="valCheckBox.includes(val.value)"
               [field]="val.value"
@@ -294,7 +300,8 @@
     <!-- <ng-container
       *ngIf="customField.dataFormat == 'C' || customField.dataFormat == 'V'"
     >
-      <codx-input
+       <codx-input
+       [attr.data-record]="customField.recID"
         service="SYS"
         type="combobox"
         name="combobox"
@@ -730,12 +737,13 @@
 
   <ng-container *ngIf="customField.dataType == 'PA'">
     <codx-input
+      [attr.data-record]="customField.recID"
       [field]="customField.fieldName"
       type="combobox"
       [refValue]="customField.refValue"
       [placeholder]="customField.note || ''"
       [crrValue]="customField.dataValue || ''"
-      (valueChange)="valueChangeCbxPA($event)"
+      (valueChange)="valueChangeCbx($event)"
       [disabled]="disable"
     >
     </codx-input>
@@ -783,6 +791,7 @@
 
   <ng-container *ngIf="customField.dataType == 'AT'">
     <codx-input
+      [attr.data-record]="customField.recID"
       [field]="customField.fieldName"
       type="text"
       [placeholder]="customField.note || customField.dataFormat"
@@ -815,6 +824,7 @@
         >
         </codx-label>
         <codx-input
+          [attr.data-record]="customField.recID"
           [field]="'dateRemind'"
           type="datetime"
           [format]="formatDate"
@@ -834,6 +844,7 @@
           </codx-label>
           <div class="col-2">
             <codx-input
+              [attr.data-record]="customField.recID"
               field="reminderTime"
               type="number"
               [min]="0"
@@ -846,7 +857,8 @@
           <div class="col-10">
             <div class="d-flex align-items-top me-3">
               <!-- <span class="me-2">
-          <codx-input
+            <codx-input
+           [attr.data-record]="customField.recID"
             type="checkbox"
             name="checkbox"
             class="check-circle"
@@ -862,6 +874,7 @@
         </codx-label>-->
               <span class="me-2 ms-6">
                 <codx-input
+                  [attr.data-record]="customField.recID"
                   type="checkbox"
                   name="checkbox"
                   placeholder=""
