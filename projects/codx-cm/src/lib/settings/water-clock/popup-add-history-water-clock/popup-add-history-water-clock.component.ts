@@ -33,6 +33,9 @@ export class PopupAddHistoryWaterClockComponent implements OnInit, AfterViewInit
   siteIDOld = '';
   isWaterClock = false;
   parent: any
+  dataLastMonth: any;
+  viewLastMonth: any
+
   constructor(
     private cache: CacheService,
     private notiService: NotificationsService,
@@ -46,8 +49,9 @@ export class PopupAddHistoryWaterClockComponent implements OnInit, AfterViewInit
     this.headerText = dt?.data?.headerText;
     this.action = dt?.data?.action;
     this.parent = dt?.data?.parent;
+    this.dataLastMonth = dt?.data?.dataLastMonth;
+    this.viewLastMonth = this.dataLastMonth ?? this.parent //xuwr ly am thoi
     this.gridViewSetup = dt?.data?.gridViewSetup;
-
     this.viewOnly = this.action == 'view';
   }
   ngAfterViewInit(): void {

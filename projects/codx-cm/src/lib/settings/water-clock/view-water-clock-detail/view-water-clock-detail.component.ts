@@ -135,6 +135,9 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
   addGridHis(data) {
     if (this.gridHistory) this.gridHistory.addRow(data, 0, true);
   }
+  updateGridHis(data) {
+    this.gridPrice.updateRow(this.gridHistory.rowIndex, data);
+  }
   addGridCost(data) {
     if (this.gridPrice) this.gridPrice.addRow(data, 0, true);
   }
