@@ -310,6 +310,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
             })
           }
         },complete:()=>{
+          this.ngxLoader.stop();
           this.onDestroy();
         }
       });
