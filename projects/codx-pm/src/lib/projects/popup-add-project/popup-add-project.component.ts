@@ -81,6 +81,7 @@ export class PopupAddProjectComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
+
     this.title = dialogData.data[1] == "edit" ? dialogData.data[4] : this.title;
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef?.formModel;
@@ -413,9 +414,17 @@ export class PopupAddProjectComponent extends UIComponent {
   filterArray(arr) {
     return [...new Map(arr.map((item) => [item['objectID'], item])).values()];
   }
-
+  beforeSave(op){
+    if (this.funcType == 'edit') {
+      op.methodName = 'UpdateProjectAsync';
+      
+    } else {
+      op.methodName = 'AddProjectAsync';
+    }
+    op.data = [this.data];
+    return true;
+  }
   saveForm(){
-    //console.log(this.data);
     let returnData:any;
     if(this.data.startDate && this.data.finishDate){
       if(moment(this.data.startDate).isAfter(this.data.finishDate)){
@@ -440,44 +449,104 @@ export class PopupAddProjectComponent extends UIComponent {
         return
       }
     }
+    
     this.dialogRef.dataService.dataSelected = this.data;
-
     this.dialogRef.dataService
-    .save()
+    .save((option:any)=>this.beforeSave(option))
     .subscribe((res) => {
       if (res?.save || res?.update) {
-        if (!res.save) {
-          returnData = res?.update;
-        } else {
-          returnData = res?.save;
-        }
-        if (!returnData?.error) {
-          returnData.data.taskStatus = this.data.taskStatus;
-          returnData.data.taskPriority=this.data.taskPriority;
-          if (this.imageUpload?.imageUpload?.item) {
-
+        if(res?.update){
+          if(this.imageUpload?.imageUpload?.item){
             this.imageUpload
-              .updateFileDirectReload(returnData.data.recID)
-              .subscribe((result) => {
-                if (result) {
-                  //xử lí nếu upload ảnh thất bại
-                  //...
-                  this.dialogRef && this.dialogRef.close(returnData.data);
-                }
-                else{
-
-                  this.dialogRef && this.dialogRef.close(returnData.data);
-                }
-              });
-          } else {
-            this.dialogRef && this.dialogRef.close(returnData.data);
+                .updateFileDirectReload(this.data.recID)
+                .subscribe((result) => {
+                  if (result) {
+                    //xử lí nếu upload ảnh thất bại
+                    //...
+                    this.dialogRef && this.dialogRef.close(res?.update);
+                  }
+                  else{
+  
+                    this.dialogRef && this.dialogRef.close(res?.update);
+                  }
+                });
+          }
+          else{
+            this.dialogRef && this.dialogRef.close(res?.data);
           }
         }
+        else{
+          this.dialogRef.close();
+        }
+        
+        // if (!res.save) {
+        //   returnData = res?.update;
+        // } else {
+        //   returnData = res?.save;
+        // }
+        // if (!returnData?.error) {
+        //   returnData.data.taskStatus = this.data.taskStatus;
+        //   returnData.data.taskPriority=this.data.taskPriority;
+        //   if (this.imageUpload?.imageUpload?.item) {
+
+        //     this.imageUpload
+        //       .updateFileDirectReload(returnData.data.recID)
+        //       .subscribe((result) => {
+        //         if (result) {
+        //           //xử lí nếu upload ảnh thất bại
+        //           //...
+        //           this.dialogRef && this.dialogRef.close(returnData.data);
+        //         }
+        //         else{
+
+        //           this.dialogRef && this.dialogRef.close(returnData.data);
+        //         }
+        //       });
+        //   } else {
+        //     this.dialogRef && this.dialogRef.close(returnData.data);
+        //   }
+        // }
       } else {
         //Trả lỗi từ backend.
         return;
       }
     });
+    // this.dialogRef.dataService
+    // .save()
+    // .subscribe((res) => {
+    //   if (res?.save || res?.update) {
+    //     if (!res.save) {
+    //       returnData = res?.update;
+    //     } else {
+    //       returnData = res?.save;
+    //     }
+    //     if (!returnData?.error) {
+    //       returnData.data.taskStatus = this.data.taskStatus;
+    //       returnData.data.taskPriority=this.data.taskPriority;
+    //       if (this.imageUpload?.imageUpload?.item) {
+
+    //         this.imageUpload
+    //           .updateFileDirectReload(returnData.data.recID)
+    //           .subscribe((result) => {
+    //             if (result) {
+    //               //xử lí nếu upload ảnh thất bại
+    //               //...
+    //               this.dialogRef && this.dialogRef.close(returnData.data);
+    //             }
+    //             else{
+
+    //               this.dialogRef && this.dialogRef.close(returnData.data);
+    //             }
+    //           });
+    //       } else {
+    //         this.dialogRef && this.dialogRef.close(returnData.data);
+    //       }
+    //     }
+    //   } else {
+    //     //Trả lỗi từ backend.
+    //     return;
+    //   }
+    // });
 
 
   }
