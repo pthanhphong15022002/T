@@ -666,7 +666,7 @@
           <lib-property-user [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)"></lib-property-user>
         </ng-container>
         <ng-container *ngSwitchCase="'Approvers'">
-          <lib-property-combobox [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)"></lib-property-combobox>
+          <lib-property-approver [data]="dataSelected" [dataTable]="table" (dataChange)="dataChange($event)"></lib-property-approver>
         </ng-container>
         <ng-container *ngSwitchCase="'Rank'">
           <lib-property-rank [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-rank>

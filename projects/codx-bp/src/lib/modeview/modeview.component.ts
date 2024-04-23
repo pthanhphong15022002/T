@@ -410,7 +410,7 @@ export class ModeviewComponent implements OnInit {
         data.controlType = "ComboBox";
         data.defaultValue = false;
         data.refType = "3";
-        data.refValue = "BPApprovers";
+        // data.refValue = "BPApprovers";
         data.dataType = "String"
         break;
       }
