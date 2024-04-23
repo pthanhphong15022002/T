@@ -468,9 +468,8 @@ export class PopupAddProjectComponent extends UIComponent implements OnDestroy{
     }
 
     this.dialogRef.dataService.dataSelected = this.data;
-
-    let sub = this.dialogRef.dataService
-    .save()
+   let sub =  this.dialogRef.dataService
+    .save((option:any)=>this.beforeSave(option))
     .subscribe((res) => {
       if (res?.save || res?.update) {
         if(res?.update){
@@ -529,7 +528,6 @@ export class PopupAddProjectComponent extends UIComponent implements OnDestroy{
         return;
       }
     });
-    this.subscription.add(sub)
     // this.dialogRef.dataService
     // .save()
     // .subscribe((res) => {
@@ -566,6 +564,7 @@ export class PopupAddProjectComponent extends UIComponent implements OnDestroy{
     //     return;
     //   }
     // });
+    this.subscription.add(sub)
 
 
   }
