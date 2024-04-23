@@ -3,9 +3,11 @@ import { SelectScrollBarComponent } from "./components/select-scroll-bar/select-
 import { ScrollSpyDirective } from "./directives/scrollSpy/scroll-spy.directive";
 import { CommonModule } from "@angular/common";
 import { DirectivesModule } from "./directives/directives.module";
+import { SeniorityPipe } from "./pipes/seniority-pipe.pipe";
 
 const COMPONENT: Type<any>[] = [
   SelectScrollBarComponent,
+  SeniorityPipe
   
 ];
 

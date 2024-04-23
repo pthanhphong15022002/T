@@ -24,8 +24,10 @@
 }
 
 .user-menu {
-    height: calc(100vh - 310px) !important;
+    height: calc(100vh - 327px) !important;
 }
+
+
 
 
 .h-employee {
@@ -51,11 +53,16 @@
 
     .user-left {
         border-radius: 10px 10px 0 0;
+        height: calc(100vh - 100px);
 
 
         a {
             color: #000;
         }
+    }
+
+    .user-right{
+        height: calc(100vh - 100px);
     }
 
 
@@ -74,7 +81,6 @@
 
     .h-od-tab .nav-item {
 
-        &.active {}
 
         .nav-link {
             padding: 10px 4px 2px;
@@ -82,18 +88,48 @@
             display: inline-block;
             border: 0;
             border-bottom: 2px transparent solid;
+            .icon-tab-color{
+                color: var(--primary) ;
+            }
 
             &.active {
                 border-color: var(--primary-dark);
                 color: var(--primary-dark);
+                
+
+                &:hover{
+                    border-color: var(--primary) !important;
+
+                    .icon-tab-color{
+                        color: #FFFFFF !important;
+                    }
+
+                }
+               
             }
         }
 
-        .nav-link:hover {
+
+
+        /* .nav-link.active{
+            .icon-tab-color{
+                color: #FFFFFF;
+            }
+        }
+
+        .nav-link.active{
+            .icon-tab-color{
+                color: #FFFFFF;
+            }
+        } */
+
+        /* .nav-link:hover {
             border-color: var(--primary) !important;
 
-        }
+        } */
     }
+
+    
 
 
 }
@@ -188,20 +224,42 @@
     display: flex;
     width: 22%;
     height: 83px;
-    padding: 0px 15px;
+    padding: 0px 10px;
     align-items: center;
     border-radius: 10px;
     /* gap: 31px; */
     flex-shrink: 0;
-
+  
     color: var(--primary-inverse);
     background-color: var(--primary-dark);
     /* box-shadow: 0px 4px 4px 0px rgba(16, 84, 204, 0.45); */
-}
-
-.icon-profile-info {
+    box-shadow: 0px 4px 4px 0px #1054CC73;
+  }
+  
+  .info-item:hover{
+    box-shadow: 0px 4px 4px 0px #04348773;
+  
+    .icon-profile-info{
+      transform: scale(1.2);
+  
+    }
+  }
+  
+  .icon-profile-info {
     font-size: 47px !important;
-}
+    font-weight: 900;
+    transition: transform 0.3s ease;
+  }
+  
+  .icon-profile-info.icon-small {
+    font-size: 20px !important; 
+    
+    padding: 10px;
+  
+    border: 2px solid #ffff; 
+    border-radius: 50%; 
+    box-sizing: border-box; 
+  }
 
 @media (max-width: 1370px) {
     .info-card-list {
@@ -211,6 +269,12 @@
     .icon-profile-info {
         display: none;
     }
+
+    .info-item{
+        justify-content: center !important;
+    }
+
+
 
     .content-profile-info {
         justify-content: center;
@@ -238,8 +302,8 @@
         display: inline !important;
     }
 
-    .profile-leave .bg-white.rounded.border.w-50,
-    .defaut-chart .bg-white.border.rounded.mt-4 {
+    .profile-leave .bg-white.rounded.w-50,
+    .defaut-chart .bg-white.rounded.mt-4 {
         width: 100% !important;
     }
 
@@ -429,7 +493,8 @@ p {
     right: 20px;
     width: 60px;
     height: 60px;
-    background-color: #007bff;
+    background: linear-gradient(99.78deg, #2C69D1 -5.85%, #0ABCF9 109.55%);
+    
     color: #fff;
     border-radius: 50%;
     display: flex;
@@ -440,7 +505,7 @@ p {
     display: none;
 
     i{
-        color: #FFFFFF
+        color: #FFFFFF !important;
     }
 }
 
@@ -517,6 +582,22 @@ codx-listview.card.card-stretch.border-0.bg-transparent.shadow-none.hr-family {
     height: 400px;
 }
 
+codx-listview.card.card-stretch.border-0.bg-transparent.shadow-none.basicSalaryTable {
+    height: 320px;
+}
+
+codx-listview.card.card-stretch.border-0.bg-transparent.shadow-none.SalaryScaleTable {
+    height: 320px;
+}
+
+codx-listview.card.card-stretch.border-0.bg-transparent.shadow-none.BonusTable {
+    height: 320px;
+}
+
+codx-listview.card.card-stretch.border-0.bg-transparent.shadow-none.AdditionalEarningsTable {
+    height: 320px;
+}
+
 /* reponsive */
 
 @media (max-width: 800px) {
@@ -567,7 +648,7 @@ codx-listview.card.card-stretch.border-0.bg-transparent.shadow-none.hr-family {
     height: calc(100vh - 100px);
     overflow: scroll;
     width: 100% ; */
-        height: calc(100vh - 100px); 
+    height: calc(100vh - 100px); 
 
 
 }
@@ -582,7 +663,7 @@ codx-listview.card.card-stretch.border-0.bg-transparent.shadow-none.hr-family {
     max-width: 830px;
 }
 
-@media (max-width: 1050px) {
+@media (max-width: 1130px) {
     .user-right {
         display: none !important;
     }
@@ -669,6 +750,10 @@ codx-listview.card.card-stretch.border-0.bg-transparent.shadow-none.hr-family {
 .table-custom {
   margin-top: 20px;
   margin-bottom: 20px;
+
+  .card-header {
+    border-bottom: 0;
+}
 }
 .table-header {
   border-radius: 10px 5px 5px 10px;
@@ -795,3 +880,16 @@ codx-listview .card .card-header.m-h-auto.p-0 {
 codx-input span.e-icons.e-frame {
     border-radius: 50%;
 }
+
+/* css for thành phần chứng chỉ  */
+
+.education-show{
+    .text-color{
+      color: #EF6023;
+    }
+  
+    .icon-color{
+      color: #FFA800;
+    }
+  }
+  

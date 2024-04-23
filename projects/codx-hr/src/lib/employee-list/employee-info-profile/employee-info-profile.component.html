@@ -1,4 +1,4 @@
-<codx-views #view idField="employeeID" [views]="views" [autoLoad]="false" class="w-100">
+<codx-views #view idField="employeeID" [views]="views" [autoLoad]="false" class="w-100" >
 </codx-views>
 
 <ng-template #panelContent>
@@ -241,14 +241,14 @@
                   </div>
                 </div>
               </div>
-              <div class="w-30px min-w-30px">
+              <!-- <div class="w-30px min-w-30px">
                 <span *ngIf="
                     crrIndex < totalCount - 1 ||
                     (pageNum <= maxPageNum && crrIndex < listEmp.length - 1)
                   " type="button" class="btn btn-icon btn-light-primary rounded-circle" (click)="nextEmp()">
                   <i class="icon-arrow_forward_ios icon-16"></i>
                 </span>
-              </div>
+              </div> -->
             </div>
             <div class="d-flex flex-center">
               <div class="fs-5-sm d-flex align-items-center mb-1">
@@ -256,22 +256,22 @@
                 <span style="margin-top: 2px" #id placement="bottom" [title]="eInfoHeaderText?.EmployeeID">{{ employeeID
                   }}</span>
                 <span *ngIf="infoPersonal" class="icon-i-info-circle-fill icon-4 mx-3 text-gray-600"></span> -->
-                <span class="fw-bold" placement="bottom" [title]="eInfoHeaderText?.EmployeeName">
-                  Võ Ngọc Kim Trang
+                <span class="fw-bold" placement="bottom" [title]="eInfoHeaderText?.employeeName">
+                  {{infoPersonal?.employeeName}}
                 </span>
               </div>
             </div>
-            <!-- <div placement="bottom" [title]="eInfoHeaderText?.PositionID" class="text-gray-500 mb-1"
+            <div placement="bottom" [title]="eInfoHeaderText?.PositionID" class="text-gray-500 mb-1"
               *ngIf="infoPersonal">
               {{ this.infoPersonal.PositionName }}
-            </div> -->
-            <div placement="bottom" [title]="eInfoHeaderText?.PositionID" class="text-gray-500 mb-1"
+            </div>
+            <!-- <div placement="bottom" [title]="eInfoHeaderText?.PositionID" class="text-gray-500 mb-1"
               >
               Phân tích nghiệp vụ
-            </div>
+            </div> -->
             <div class="text-danger fw-bold">
               <span class="icon-qr_code_scanner icon-16 me-2"></span>
-              <span style="margin-top: 2px" #id placement="bottom" [title]="eInfoHeaderText?.EmployeeID">ELV02233</span>
+              <span style="margin-top: 2px" #id placement="bottom" [title]="eInfoHeaderText?.EmployeeID">{{infoPersonal.employeeID}}</span>
             </div>
             <div>
               <span class=" icon-pin_drop icon-16 me-2"></span>
@@ -308,7 +308,7 @@
                           | formatvalue : eInfoFormModel : 'mobile'
                           | async
                       "></span> -->
-                      <span placement="bottom" [title]="eInfoHeaderText?.Mobile">039 326 7994</span>
+                      <span placement="bottom" [title]="eInfoHeaderText?.Mobile">{{infoPersonal.mobile}}</span>
                   </span>
                 </div>
                 <!-- <div *ngIf="eInfoFormModel" placement="bottom" [title]="eInfoHeaderText?.Status">
@@ -319,17 +319,17 @@
               <div class="d-flex align-items-center me-1">
                 <span class="icon-mail_outline me-3"></span>
                 <span class="text-dark" placement="bottom" [title]="eInfoHeaderText?.Email">
-                  <!-- <span #email *ngIf="eInfoFormModel" [innerHTML]="
+                  <span #email *ngIf="eInfoFormModel" [innerHTML]="
                       infoPersonal?.email
                         | formatvalue : eInfoFormModel : 'email'
                         | async
-                    "></span> -->
-                    <span #email>nhtrungmail.com</span>
+                    "></span>
+                    <span #email>{{infoPersonal.email}}</span>
                 </span>
               </div>
               <div class="d-flex align-items-center me-3">
                 <span class="icon-date_range icon-16 me-2"></span>
-                <span>2 năm 3 tháng 0 ngày</span>
+                <span> {{ infoPersonal?.joinedOn | seniorityPipe }}</span>
               </div>
               
             </div>
@@ -382,7 +382,7 @@
                     [class]="crrFuncTabNum == item.functionID ? 'active' : ''" (click)="clickTab(item)"
                     [id]="'tab_' + index">
                     <div class="d-flex align-items-center">
-                      <span class="icon-18 me-2" [ngClass]="
+                      <span class="icon-tab-color icon-18 me-2" [ngClass]="
                           item?.largeIcon ? item?.largeIcon : 'icon-person'
                         "></span>
                       <div class="fw-bold">
@@ -473,7 +473,7 @@
 <ng-template #dashboard>
   <div class="d-flex flex-column main-content">
     <div class="profile-wrapper w-100">
-      <div class="profile-filed w-100 p-3 bg-white rounded border">
+      <div class="profile-filed w-100 p-3 bg-white rounded">
         <!-- Header Content -->
         <div class="profile-filed-header d-flex justify-content-between">
           <div>
@@ -494,7 +494,10 @@
 
         <!-- Componet -->
         <div class="info-card-list d-flex align-items-center justify-content-center gap-9 w-100">
-          <ng-container [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
+          <ng-container *ngFor="let data of cardDataFake">
+            <ng-container [ngTemplateOutlet]="itemCard" [ngTemplateOutletContext]="{ item: data }"></ng-container>
+          </ng-container>
+          <!-- <ng-container [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
               $implicit: 'Remove',
               color: '#17BB45',
               icon: 'icon-bar_chart'
@@ -513,25 +516,25 @@
               $implicit: 'Remove',
               color: '#6C757D',
               icon: 'icon-trending_down'
-            }"></ng-container>
+            }"></ng-container> -->
         </div>
       </div>
     </div>
     <div class="profile-leave d-flex justify-content-between gap-4">
-      <div class="bg-white rounded border w-50 mt-4">
+      <div class="bg-white rounded  w-50 mt-4">
         <lib-profile-last7day></lib-profile-last7day>
       </div>
-      <div class="bg-white rounded border w-50 mt-4">
+      <div class="bg-white rounded  w-50 mt-4">
         <lib-profile-dashboard-leave></lib-profile-dashboard-leave>
       </div>
     </div>
-    <div class="bg-white border mt-3 rounded border ">
+    <div class="bg-white mt-3 rounded  ">
       <lib-dashboard-register-aprrove (handleRegisterApprove)="registerApprove($event)"
         (handleReviewRegisterApprove)="reviewRegisterApprove($event)"
         (handleWaitingRegisterApprove)="waitingRegisterApprove($event)"></lib-dashboard-register-aprrove>
     </div>
     <div class="defaut-chart d-flex justify-content-between w-100 gap-4">
-      <div class="newEmployee-table bg-white border mt-4 p-3 rounded">
+      <div class="newEmployee-table bg-white mt-4 p-3 rounded">
         <div class="d-flex flex-cloumn justify-content-between pb-4">
           <span class="fw-bold">Nhân viên mới vô làm trong tháng (4)</span>
           <div>
@@ -814,7 +817,7 @@
 
 <!-- Start Panel -->
 <ng-template #curriculumVitae>
-  <div class="tab-panel" >
+  <div class="tab-panel">
     <!-- <div class="tab-scroll tab-container mb-4">
       <i #prev id="pre-item-profile" class="icon-i-chevron-right fs-13 text-black prev-item" libSwiperClicking type="previous"
         ContainerID="tab-container-id"></i>
@@ -833,7 +836,8 @@
       <i #next id="next-item-profile" class="icon-i-chevron-right fs-13 text-black next-item" libSwiperClicking type="next"
         ContainerID="tab-container-id"></i>
     </div> -->
-    <select-scroll-bar [index]="0" [listTabs]="lstFuncCurriculumVitaeFake" [active]="active" [isClick]="isClick"></select-scroll-bar>
+    <select-scroll-bar [index]="0" [listTabs]="lstFuncCurriculumVitaeFake" [active]="active"
+      [isClick]="isClick"></select-scroll-bar>
     <div class="pw-content w-100 scroll-y" data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto"
       data-kt-scroll-dependencies=".pw-profile,.pw-menu" data-kt-scroll-wrappers=".employee-container"
       data-kt-scroll-offset="0px" scrollSpy [spiedTags]="['DIV']" (sectionChange)="onSectionChange($event, 0)">
@@ -853,7 +857,7 @@
                   <ng-container>
                     <div>
                       <button type="button" class="btn btn-icon btn-white">
-                        <span class="icon-edit icon-18"></span>
+                        <!-- <span class="icon-edit icon-18"></span> -->
                       </button>
                     </div>
                   </ng-container>
@@ -861,7 +865,7 @@
               </div>
               <div class="row pb-4 custom-row">
                 <!-- Mã nhân viên -->
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column ">
                     <div class="text-gray-600 me-2 pb-1">
                       <codx-label name="" [setRequire]="false" [default]="'Mã nhân viên'"></codx-label>
@@ -871,7 +875,7 @@
                 </div>
 
                 <!-- Giới tính -->
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 me-2 pb-1">
                       <codx-label [setRequire]="false" [default]="'giới tính'"></codx-label>
@@ -881,7 +885,7 @@
                 </div>
 
                 <!-- Họ -->
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 me-2 pb-1">
                       <codx-label [setRequire]="false" [default]="'Họ'"></codx-label>
@@ -891,7 +895,7 @@
                 </div>
 
                 <!-- Tên -->
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 me-2 pb-1">
                       <codx-label [default]="'Tên'"> </codx-label>
@@ -900,7 +904,7 @@
                   </div>
                 </div>
                 <!-- Bí danh -->
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 me-2 pb-1">
                       <codx-label [default]="'Bí danh'"> </codx-label>
@@ -909,7 +913,7 @@
                   </div>
                 </div>
                 <!-- Tình trạng hôn nhân -->
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 fw-normal mb-1">
                       <codx-label [default]="'Tình trạng hôn nhân'"> </codx-label>
@@ -917,7 +921,7 @@
                     <div class="text-dark">Độc thân</div>
                   </div>
                 </div>
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1 d-flex">
                       <codx-label [default]="'Ngày sinh'"> </codx-label>
@@ -925,7 +929,7 @@
                     <div class="text-dark">28/12/2000</div>
                   </div>
                 </div>
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1 d-flex">
                       <codx-label [default]="'Nơi sinh'"> </codx-label>
@@ -933,7 +937,7 @@
                     <div class="text-dark">TPHCM</div>
                   </div>
                 </div>
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1 d-flex">
                       <codx-label [default]="'Quốc tịch'"> </codx-label>
@@ -941,7 +945,7 @@
                     <div class="text-dark">Việt Nam</div>
                   </div>
                 </div>
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Dân tộc'"> </codx-label>
@@ -949,7 +953,7 @@
                     <div class="text-dark">Kinh</div>
                   </div>
                 </div>
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Tôn giáo'"> </codx-label>
@@ -957,7 +961,7 @@
                     <div class="text-dark">Phật giáo</div>
                   </div>
                 </div>
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Hình thức đào tạo'"> </codx-label>
@@ -966,7 +970,7 @@
                   </div>
                 </div>
 
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1 d-flex">
                       <codx-label name="Education" [default]="'Trình độ văn hóa'">
@@ -985,7 +989,7 @@
                   </div>
                 </div>
 
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label name="DegreeName" [default]="'Trình độ chuyên môn'">
@@ -1014,7 +1018,7 @@
                     <ng-container>
                       <div>
                         <button type="button" class="btn btn-icon btn-white">
-                          <span class="icon-edit icon-18"></span>
+                          <!-- <span class="icon-edit icon-18"></span> -->
                         </button>
                       </div>
                     </ng-container>
@@ -1048,7 +1052,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-4 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Điện thoại'"> </codx-label>
@@ -1058,21 +1062,21 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-4 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1 d-flex align-items-center">
                       <codx-label name="PersonalEmail" [default]="'Email cá nhân'">
                       </codx-label>
                     </div>
-                    <!-- <div class="text-dar">"vnktrang@lacviet.com.vn"</div> -->
+                    <div class="text-dar">vnktranglacviet.com.vn</div>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-4 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 mb-1 d-flex">
                       <codx-label [default]="'Email'"> </codx-label>
                     </div>
-                    <!-- <div class="text-dark">"kimtrang28122000@gmail.com"</div> -->
+                    <div class="text-dark">kimtrang28122000gmail.com</div>
                   </div>
                 </div>
               </div>
@@ -1090,19 +1094,19 @@
               </div>
               <div class="d-flex align-items-center ms-5">
                 <button type="button" class="btn btn-icon btn-white">
-                  <span class="icon-edit icon-18"></span>
+                  <!-- <span class="icon-edit icon-18"></span> -->
                 </button>
               </div>
             </div>
             <div class="container">
               <div class="row pb-4 custom-row">
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="text-gray-600 pb-1 d-flex">
                     <codx-label [default]="'Ngày vào làm'"> </codx-label>
                   </div>
                   <div class="text-dark">12/12/2022</div>
                 </div>
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="text-gray-600 pb-1">
                     <codx-label [default]="'Ngày trở thành nhân viên chính thức'">
                     </codx-label>
@@ -1110,19 +1114,19 @@
                   <div class="text-dark">12/12/2022</div>
                 </div>
 
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="text-gray-600 pb-1">
                     <codx-label [default]="'Loại NV'"> </codx-label>
                   </div>
                   <div class="text-dark">Chính thức</div>
                 </div>
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="text-gray-600 pb-1">
                     <codx-label [default]="'Đối tượng tính phép'"> </codx-label>
                   </div>
                   <div class="text-dark">NV có TN dưới 3 năm</div>
                 </div>
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="text-gray-600 pb-1">
                     <codx-label [default]="'Nhóm ngày nghĩ cuối tuần'">
                     </codx-label>
@@ -1145,42 +1149,42 @@
               </div>
               <div class="d-flex align-items-center ms-5">
                 <button type="button" class="btn btn-icon btn-white">
-                  <span class="icon-edit icon-18"></span>
+                  <!-- <span class="icon-edit icon-18"></span> -->
                 </button>
               </div>
             </div>
             <div class="container">
               <div class="row pb-4 custom-row">
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="text-gray-600 pb-1 d-flex">
                     <codx-label [default]="'Bộ phận'"> </codx-label>
                   </div>
                   <div class="text-dark">12/12/2022</div>
                 </div>
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="text-gray-600 pb-1">
                     <codx-label [default]="'Quản lý trực tiếp'"> </codx-label>
                   </div>
                   <div class="text-dark">12/12/2022</div>
                 </div>
 
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="text-gray-600 pb-1">
                     <codx-label [default]="'Quản lý gián tiếp'"> </codx-label>
                   </div>
                   <div class="text-dark">Chính thức</div>
                 </div>
 
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="text-gray-600 pb-1">
                     <codx-label [default]="'Chức vụ'"> </codx-label>
                   </div>
                   <div class="text-dark">NV có TN dưới 3 năm</div>
                 </div>
-                <div class="col-xs-6 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="text-gray-600 pb-1">
                     <codx-label [default]="'Chức danh'"> </codx-label>
-                  </div>  
+                  </div>
                   <div class="text-dark">Nghỉ chiều T7 & CN</div>
                 </div>
               </div>
@@ -1202,7 +1206,7 @@
                 </button>
               </div> -->
             </div>
-            <div class="container">
+            <div class="container table-custom">
               <div class="row pb-4 custom-row">
                 <!-- <hr-table-employee-family></hr-table-employee-family> -->
                 <!-- <codx-listview #listView [service]="'HR'" [assemblyName]="'HR_Employees'" [entityName]="'ERM.Business.HR'"
@@ -1332,9 +1336,10 @@
           </ng-container>
         </ul>
       </div> -->
-      <select-scroll-bar [index]="1" [listTabs]="lstFuncJobFakeInfo" [active]="active" [isClick]="isClick"></select-scroll-bar>
+      <select-scroll-bar [index]="1" [listTabs]="lstFuncJobFakeInfo" [active]="active"
+        [isClick]="isClick"></select-scroll-bar>
 
-      
+
       <div class="pw-content w-100 scroll-y" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
         data-kt-scroll-max-height="auto" data-kt-scroll-dependencies=".pw-profile,.pw-menu"
         data-kt-scroll-wrappers=".employee-container" data-kt-scroll-offset="0px" scrollSpy [spiedTags]="['DIV']"
@@ -1353,8 +1358,8 @@
 
               <div class="table-custom">
                 <codx-listview #listView entityName="DM_FileInfo" gridViewName="grvFileInfo" formName="FileInfo"
-                  [itemTemplate]="itemPromoTable" [headerTemplate]="headerPromoTable"
-                  [height]="heightList" [width]="'50%'" service="DM" class="hr-PromoTable">
+                  [itemTemplate]="itemPromoTable" [headerTemplate]="headerPromoTable" [height]="heightList"
+                  [width]="'50%'" service="DM" class="hr-PromoTable">
                 </codx-listview>
                 <!-- start header -->
                 <ng-template #headerPromoTable>
@@ -1530,8 +1535,8 @@
                   >
                   </codx-vll> -->
                   <codx-listview #listView entityName="DM_FileInfo" gridViewName="grvFileInfo" formName="FileInfo"
-                    [itemTemplate]="itemLeaveTable" [headerTemplate]="headerLeaveTable" 
-                    service="DM" class="hr-LeaveTable">
+                    [itemTemplate]="itemLeaveTable" [headerTemplate]="headerLeaveTable" service="DM"
+                    class="hr-LeaveTable">
                   </codx-listview>
                   <!-- start header -->
                   <ng-template #headerLeaveTable>
@@ -1660,11 +1665,12 @@
       </div>
     </div> -->
 
-    <select-scroll-bar [index]="3" [listTabs]="lstrewardCatalog" [active]="active" [isClick]="isClick"></select-scroll-bar>
+    <select-scroll-bar [index]="2" [listTabs]="lstrewardCatalog" [active]="active"
+      [isClick]="isClick"></select-scroll-bar>
 
     <div class="pw-content w-100 scroll-y" data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto"
       data-kt-scroll-dependencies=".pw-profile,.pw-menu" data-kt-scroll-wrappers=".employee-container"
-      data-kt-scroll-offset="0px" scrollSpy [spiedTags]="['DIV']" (sectionChange)="onSectionChange($event, 3)">
+      data-kt-scroll-offset="0px" scrollSpy [spiedTags]="['DIV']" (sectionChange)="onSectionChange($event, 2)">
       <ng-container>
         <!-- Khen thưởng -->
         <div class="overview d-block" [id]="1">
@@ -1743,10 +1749,10 @@
                   <div class="w-25 p-3">
                     <div class="d-flex flex-column">
                       <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                        
+
                         <codx-vll [name]="'HR003'" [value]="'10'" [showBgColor]="true" [showText]="true"
-                        [className]="'badge badge-sm badge-inline'">
-                      </codx-vll>
+                          [className]="'badge badge-sm badge-inline'">
+                        </codx-vll>
                       </div>
                     </div>
                   </div>
@@ -1777,7 +1783,8 @@
 
             <div class="table-custom">
               <codx-listview #listView entityName="DM_FileInfo" gridViewName="grvFileInfo" formName="FileInfo"
-                [itemTemplate]="itemdisciplinaryTable" [headerTemplate]="headerdisciplinaryTable" service="DM" class="hr-disciplinaryTable">
+                [itemTemplate]="itemdisciplinaryTable" [headerTemplate]="headerdisciplinaryTable" service="DM"
+                class="hr-disciplinaryTable">
               </codx-listview>
               <!-- start header -->
               <ng-template #headerdisciplinaryTable>
@@ -1842,8 +1849,8 @@
                     <div class="d-flex flex-column">
                       <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
                         <codx-vll [name]="'HR003'" [value]="'10'" [showBgColor]="true" [showText]="true"
-                        [className]="'badge badge-sm badge-inline'">
-                      </codx-vll>
+                          [className]="'badge badge-sm badge-inline'">
+                        </codx-vll>
                       </div>
                     </div>
                   </div>
@@ -1885,11 +1892,12 @@
       </div>
     </div> -->
 
-    <select-scroll-bar [index]="4" [listTabs]="lstFuncBenefits" [active]="active" [isClick]="isClick"></select-scroll-bar>
+    <select-scroll-bar [index]="3" [listTabs]="lstFuncBenefits" [active]="active"
+      [isClick]="isClick"></select-scroll-bar>
 
     <div class="pw-content w-100 scroll-y" data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto"
       data-kt-scroll-dependencies=".pw-profile,.pw-menu" data-kt-scroll-wrappers=".employee-container"
-      data-kt-scroll-offset="0px" scrollSpy [spiedTags]="['DIV']" (sectionChange)="onSectionChange($event, 2)">
+      data-kt-scroll-offset="0px" scrollSpy [spiedTags]="['DIV']" (sectionChange)="onSectionChange($event, 3)">
       <ng-container>
         <!-- Nhóm lương -->
         <div class="user-profile overview d-block" [id]="1">
@@ -2002,96 +2010,301 @@
                   >
                   </codx-vll> -->
                 <codx-listview #listView entityName="DM_FileInfo" gridViewName="grvFileInfo" formName="FileInfo"
-                  [itemTemplate]="itemLeaveTable" [headerTemplate]="headerLeaveTable" [emptyTemplate]="emptyTemplate"
-                  service="DM">
+                  [itemTemplate]="itemBasicSalaryTable" [headerTemplate]="headerBasicSalaryTable" 
+                  service="DM" class="basicSalaryTable" >
                 </codx-listview>
                 <!-- start header -->
-                <ng-template #headerLeaveTable>
+                <ng-template #headerBasicSalaryTable>
                   <div class="table-header d-flex w-100 ps-2 pe-4">
-                    <div class="w-15 text-gray-500 p-3 fw-500">
-                      <codx-label [default]="'Loại nghỉ'"></codx-label>
+                    <div class="w-40 text-gray-500 p-3 fw-500">
+                      <codx-label [default]="'Ngày hiệu lực'"></codx-label>
                     </div>
-                    <div class="w-15 text-gray-500 p-3 fw-500">
-                      <codx-label [default]="'Từ ngày'"></codx-label>
-                    </div>
-                    <div class="w-15 text-gray-500 p-3 fw-500">
-                      <codx-label [default]="'Đến ngày'"></codx-label>
-                    </div>
-                    <div class="w-15 text-gray-500 p-3 fw-500">
-                      <codx-label [default]="'Số ngày nghỉ'"></codx-label>
+                    <div class="w-40 text-gray-500 p-3 fw-500">
+                      <codx-label [default]="'Mức lương'"></codx-label>
                     </div>
                     <div class="w-20 text-gray-500 p-3 fw-500">
-                      <codx-label [default]="'Tổng ngày trừ'"></codx-label>
+                      <codx-label [default]="'Đang hiệu lực'"></codx-label>
                     </div>
-                    <div class="w-20 text-gray-500 p-3 fw-500">
-                      <codx-label [default]="'Lý do'"></codx-label>
-                    </div>
-                    <div class="w-20 text-gray-500 p-3 fw-500">
-                      <codx-label [default]="'Năm trừ phép'"></codx-label>
-                    </div>
+                    
                   </div>
                 </ng-template>
                 <!-- end header -->
                 <!-- template list -->
-                <ng-template #itemLeaveTable>
+                <ng-template #itemBasicSalaryTable>
                   <div class="d-flex align-items-center border-bottom py-4">
-                    <!-- Loại nghỉ -->
-                    <div class="w-15 p-3 ps-5">
-                      <div class="d-flex flex-column">
-                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                          Nghỉ phép
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Từ ngày -->
-                    <div class="w-15 p-3">
+                    <!-- Ngày hiệu lực -->
+                    <div class="w-40 p-3 ps-5">
                       <div class="d-flex flex-column">
                         <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
                           16/10/1964
                         </div>
                       </div>
                     </div>
-                    <!-- Đến ngày -->
-                    <div class="w-15 p-3">
+                    <!-- Lương -->
+                    <div class="w-40 p-3">
+                      <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                          9,000,000
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Đang hiệu lực -->
+                    <div class="w-20 p-3">
+                      <div class="d-flex flex-column">
+                        <codx-input type="checkbox" ></codx-input>
+                      </div>
+                    </div>
+
+                    
+                  </div>
+                </ng-template>
+                <!-- end template list -->
+                <!-- start emptyTemplate -->
+                
+                <!-- end emptyTemplate -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Lương chức danh -->
+        <div class="user-profile overview d-block" [id]="3">
+          <div class="rounded-2 ps-8 p-5 bg-white mb-4">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center text-primary">
+                <span class="icon-content_paste icon-20 me-2"></span>
+                <codx-label [default]="'Lương chức danh'" class="fw-bold text-uppercase fs-5-sm text-primary">
+                </codx-label>
+              </div>
+            </div>
+
+            <div>
+              <!-- Table -->
+              <div class="table-custom">
+                <!-- <codx-vll
+    
+                    [headerText]="Show"
+                    [showText]="true"
+                    [showHeaderText]="true"
+                    [showBgColor]="true"
+                    class="badge badge-light badge-sm border-0 me-2"
+                  >
+                  </codx-vll> -->
+                <codx-listview #listView entityName="DM_FileInfo" gridViewName="grvFileInfo" formName="FileInfo"
+                  [itemTemplate]="itemSalaryScaleTable" [headerTemplate]="headerSalaryScaleTable" 
+                  service="DM" class="SalaryScaleTable">
+                </codx-listview>
+                <!-- start header -->
+                <ng-template #headerSalaryScaleTable>
+                  <div class="table-header d-flex w-100 ps-2 pe-4">
+                    <div class="w-40 text-gray-500 p-3 fw-500">
+                      <codx-label [default]="'Ngày hiệu lực'"></codx-label>
+                    </div>
+                    <div class="w-40 text-gray-500 p-3 fw-500">
+                      <codx-label [default]="'Mức lương'"></codx-label>
+                    </div>
+                    <div class="w-20 text-gray-500 p-3 fw-500">
+                      <codx-label [default]="'Đang hiệu lực'"></codx-label>
+                    </div>
+                    
+                  </div>
+                </ng-template>
+                <!-- end header -->
+                <!-- template list -->
+                <ng-template #itemSalaryScaleTable>
+                  <div class="d-flex align-items-center border-bottom py-4">
+                    <!-- Ngày hiệu lực -->
+                    <div class="w-40 p-3 ps-5">
                       <div class="d-flex flex-column">
                         <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
                           16/10/1964
                         </div>
                       </div>
                     </div>
-
-                    <!-- Số ngày nghỉ -->
-                    <div class="w-20 p-3">
+                    <!-- Lương -->
+                    <div class="w-40 p-3">
                       <div class="d-flex flex-column">
                         <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                          1
+                          9,000,000
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Đang hiệu lực -->
+                    <div class="w-20 p-3">
+                      <div class="d-flex flex-column">
+                        <codx-input type="checkbox" ></codx-input>
+                      </div>
+                    </div>
+
+                    
+                  </div>
+                </ng-template>
+                <!-- end template list -->
+                <!-- start emptyTemplate -->
+                
+                <!-- end emptyTemplate -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Phụ cấp -->
+        <div class="user-profile overview d-block" [id]="4">
+          <div class="rounded-2 ps-8 p-5 bg-white mb-4">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center text-primary">
+                <span class="icon-i-heart icon-20 me-2"></span>
+                <codx-label [default]="'Phụ cấp'" class="fw-bold text-uppercase fs-5-sm text-primary">
+                </codx-label>
+              </div>
+            </div>
+
+            <div>
+              <!-- Table -->
+              <div class="table-custom">
+                <!-- <codx-vll
+    
+                    [headerText]="Show"
+                    [showText]="true"
+                    [showHeaderText]="true"
+                    [showBgColor]="true"
+                    class="badge badge-light badge-sm border-0 me-2"
+                  >
+                  </codx-vll> -->
+                <codx-listview #listView entityName="DM_FileInfo" gridViewName="grvFileInfo" formName="FileInfo"
+                  [itemTemplate]="itemBonusTable" [headerTemplate]="headerBonusTable"
+                  service="DM" class="BonusTable">
+                </codx-listview>
+                <!-- start header -->
+                <ng-template #headerBonusTable>
+                  <div class="table-header d-flex w-100 ps-2 pe-4">
+                    <div class="w-40 text-gray-500 p-3 fw-500">
+                      <codx-label [default]="'Ngày hiệu lực'"></codx-label>
+                    </div>
+                    <div class="w-40 text-gray-500 p-3 fw-500">
+                      <codx-label [default]="'Mức lương'"></codx-label>
+                    </div>
+                    <div class="w-20 text-gray-500 p-3 fw-500">
+                      <codx-label [default]="'Đang hiệu lực'"></codx-label>
+                    </div>
+                    
+                  </div>
+                </ng-template>
+                <!-- end header -->
+                <!-- template list -->
+                <ng-template #itemBonusTable>
+                  <div class="d-flex align-items-center border-bottom py-4">
+                    <!-- Ngày hiệu lực -->
+                    <div class="w-40 p-3 ps-5">
+                      <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                          16/10/1964
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Lương -->
+                    <div class="w-40 p-3">
+                      <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                          9,000,000
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Đang hiệu lực -->
+                    <div class="w-20 p-3">
+                      <div class="d-flex flex-column">
+                        <codx-input type="checkbox" ></codx-input>
+                      </div>
+                    </div>
+
+                    
+                  </div>
+                </ng-template>
+                <!-- end template list -->
+                <!-- start emptyTemplate -->
+                
+                <!-- end emptyTemplate -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Thu nhập khác -->
+        <div class="user-profile overview d-block" [id]="5">
+          <div class="rounded-2 ps-8 p-5 bg-white mb-4">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center text-primary">
+                <span class="icon-attach_money icon-20 me-2"></span>
+                <codx-label [default]="'Thu nhập khác'" class="fw-bold text-uppercase fs-5-sm text-primary">
+                </codx-label>
+              </div>
+            </div>
+
+            <div>
+              <!-- Table -->
+              <div class="table-custom">
+                <!-- <codx-vll
+    
+                    [headerText]="Show"
+                    [showText]="true"
+                    [showHeaderText]="true"
+                    [showBgColor]="true"
+                    class="badge badge-light badge-sm border-0 me-2"
+                  >
+                  </codx-vll> -->
+                <codx-listview #listView entityName="DM_FileInfo" gridViewName="grvFileInfo" formName="FileInfo"
+                  [itemTemplate]="itemAdditionalEarningsTable" [headerTemplate]="headerAdditionalEarningsTable" 
+                  service="DM" class="AdditionalEarningsTable">
+                </codx-listview>
+                <!-- start header -->
+                <ng-template #headerAdditionalEarningsTable>
+                  <div class="table-header d-flex w-100 ps-2 pe-4">
+                    <div class="w-25 text-gray-500 p-3 fw-500">
+                      <codx-label [default]="'Ngày pháp sinh'"></codx-label>
+                    </div>
+                    <div class="w-25 text-gray-500 p-3 fw-500">
+                      <codx-label [default]="'Loại thu nhập'"></codx-label>
+                    </div>
+                    <div class="w-25 text-gray-500 p-3 fw-500">
+                      <codx-label [default]="'Số tiền'"></codx-label>
+                    </div>
+                    <div class="w-25 text-gray-500 p-3 fw-500">
+                      <codx-label [default]="'Thuế thu nhập cá nhân'"></codx-label>
+                    </div>
+                    
+                  </div>
+                </ng-template>
+                <!-- end header -->
+                <!-- template list -->
+                <ng-template #itemAdditionalEarningsTable>
+                  <div class="d-flex align-items-center border-bottom py-4">
+                    <!-- Ngày pháp sinh -->
+                    <div class="w-25 p-3 ps-5">
+                      <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                          16/10/1964
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Loại thu nhập -->
+                    <div class="w-25 p-3">
+                      <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                          Thưởng T13
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Số tiền -->
+                    <div class="w-25 p-3">
+                      <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                          5,122,000
                         </div>
                       </div>
                     </div>
 
-                    <!-- Tổng ngày nghỉ -->
-                    <div class="w-20 p-3">
+                    <!-- Thuế thu nhập cá nhân -->
+                    <div class="w-25 p-3">
                       <div class="d-flex flex-column">
                         <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                          1
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Lý do -->
-                    <div class="w-20 p-3">
-                      <div class="d-flex flex-column">
-                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                          Bận việc gia đình
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Năm trừ phép -->
-                    <div class="w-20 p-3">
-                      <div class="d-flex flex-column">
-                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                          2024
+                          0
                         </div>
                       </div>
                     </div>
@@ -2099,9 +2312,99 @@
                 </ng-template>
                 <!-- end template list -->
                 <!-- start emptyTemplate -->
-                <ng-template #emptyTemplate>
-                  <div>HIHI</div>
+                
+                <!-- end emptyTemplate -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Khấu trừ khác -->
+        <div class="user-profile overview d-block" [id]="6">
+          <div class="rounded-2 ps-8 p-5 bg-white mb-4">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center text-primary">
+                <span class="icon-attach_money icon-20 me-2"></span>
+                <codx-label [default]="'Khấu trừ khác'" class="fw-bold text-uppercase fs-5-sm text-primary">
+                </codx-label>
+              </div>
+            </div>
+
+            <div>
+              <!-- Table -->
+              <div class="table-custom">
+                <!-- <codx-vll
+    
+                    [headerText]="Show"
+                    [showText]="true"
+                    [showHeaderText]="true"
+                    [showBgColor]="true"
+                    class="badge badge-light badge-sm border-0 me-2"
+                  >
+                  </codx-vll> -->
+                <codx-listview #listView entityName="DM_FileInfo" gridViewName="grvFileInfo" formName="FileInfo"
+                  [itemTemplate]="itemEductionTable" [headerTemplate]="headerEductionTable" 
+                  service="DM" class="EductionTable">
+                </codx-listview>
+                <!-- start header -->
+                <ng-template #headerEductionTable>
+                  <div class="table-header d-flex w-100 ps-2 pe-4">
+                    <div class="w-25 text-gray-500 p-3 fw-500">
+                      <codx-label [default]="'Ngày pháp sinh'"></codx-label>
+                    </div>
+                    <div class="w-25 text-gray-500 p-3 fw-500">
+                      <codx-label [default]="'Loại thu nhập'"></codx-label>
+                    </div>
+                    <div class="w-25 text-gray-500 p-3 fw-500">
+                      <codx-label [default]="'Số tiền'"></codx-label>
+                    </div>
+                    <div class="w-25 text-gray-500 p-3 fw-500">
+                      <codx-label [default]="'Thuế thu nhập cá nhân'"></codx-label>
+                    </div>
+                    
+                  </div>
                 </ng-template>
+                <!-- end header -->
+                <!-- template list -->
+                <ng-template #itemEductionTable>
+                  <div class="d-flex align-items-center border-bottom py-4">
+                    <!-- Ngày pháp sinh -->
+                    <div class="w-25 p-3 ps-5">
+                      <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                          16/10/1964
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Loại thu nhập -->
+                    <div class="w-25 p-3">
+                      <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                          Thưởng T13
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Số tiền -->
+                    <div class="w-25 p-3">
+                      <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                          5,122,000
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Thuế thu nhập cá nhân -->
+                    <div class="w-25 p-3">
+                      <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                          0
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+                <!-- end template list -->
+                <!-- start emptyTemplate -->
+               
                 <!-- end emptyTemplate -->
               </div>
             </div>
@@ -2131,9 +2434,10 @@
       </div>
     </div> -->
 
-    <select-scroll-bar [listTabs]="lstFuncLegalFakeInfo" [active]="active" [isClick]="isClick"></select-scroll-bar>
+    <select-scroll-bar [index]="4" [listTabs]="lstFuncLegalFakeInfo" [active]="active"
+      [isClick]="isClick"></select-scroll-bar>
 
-    
+
     <div class="pw-content w-100 scroll-y" data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto"
       data-kt-scroll-dependencies=".pw-profile,.pw-menu" data-kt-scroll-wrappers=".employee-container"
       data-kt-scroll-offset="0px" scrollSpy [spiedTags]="['DIV']" (sectionChange)="onSectionChange($event, 4)">
@@ -2155,7 +2459,7 @@
             <!-- Địa chỉ thường trú/Địa chỉ tạm chú/Địa thoại -->
             <div class="container">
               <div class="row custom-row">
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Số CMND'"></codx-label>
@@ -2163,7 +2467,7 @@
                     <div class="text-dark">079300033067</div>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Ngày cấp'"></codx-label>
@@ -2171,7 +2475,7 @@
                     <div class="text-dark">02/11/2021</div>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Mã số thuế'"></codx-label>
@@ -2179,7 +2483,7 @@
                     <div class="text-dark">8450354892</div>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Nơi cấp'"></codx-label>
@@ -2187,7 +2491,7 @@
                     <div class="text-dark">Cục trưởng cục CSQLHC & TTXH</div>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Dấu vết đặc biệt'"></codx-label>
@@ -2212,7 +2516,7 @@
 
             <div class="container">
               <div class="row custom-row">
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Bảo hiểm tham gia'"></codx-label>
@@ -2220,7 +2524,7 @@
                     <div class="text-dark">Bảo hiểm xã hội</div>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Số'"></codx-label>
@@ -2228,7 +2532,7 @@
                     <div class="text-dark">7930239691</div>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Ngày cấp'"></codx-label>
@@ -2236,7 +2540,7 @@
                     <div class="text-dark">28/12/2018</div>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Ngày tham gia'"></codx-label>
@@ -2262,7 +2566,7 @@
 
             <div class="container">
               <div class="row custom-row">
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Bảo hiểm tham gia'"></codx-label>
@@ -2270,7 +2574,7 @@
                     <div class="text-dark">Bảo hiểm xã hội</div>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Số'"></codx-label>
@@ -2278,7 +2582,7 @@
                     <div class="text-dark">7930239691</div>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Ngày cấp'"></codx-label>
@@ -2286,7 +2590,7 @@
                     <div class="text-dark">28/12/2018</div>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Ngày tham gia'"></codx-label>
@@ -2311,7 +2615,7 @@
             </div>
             <div class="container">
               <div class="row custom-row">
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Bảo hiểm tham gia'"></codx-label>
@@ -2319,7 +2623,7 @@
                     <div class="text-dark">Bảo hiểm xã hội</div>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Số'"></codx-label>
@@ -2327,7 +2631,7 @@
                     <div class="text-dark">7930239691</div>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Ngày cấp'"></codx-label>
@@ -2353,7 +2657,7 @@
 
             <div class="container">
               <div class="row custom-row">
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Bảo hiểm tham gia'"></codx-label>
@@ -2361,7 +2665,7 @@
                     <div class="text-dark">Số tài khoản</div>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Số'"></codx-label>
@@ -2369,7 +2673,7 @@
                     <div class="text-dark">7930239691</div>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Ngân hàng'"></codx-label>
@@ -2377,7 +2681,7 @@
                     <div class="text-dark">BIDV</div>
                   </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-6 col-md-4">
                   <div class="d-flex flex-column">
                     <div class="text-gray-600 pb-1">
                       <codx-label [default]="'Tên tài khoản'"></codx-label>
@@ -2474,7 +2778,8 @@
         </ul>
       </div> -->
 
-      <select-scroll-bar [index]="5" [listTabs]="lstFuncEducationInfo" [active]="active" [isClick]="isClick"></select-scroll-bar>
+      <select-scroll-bar [index]="5" [listTabs]="lstFuncEducationInfo" [active]="active"
+        [isClick]="isClick"></select-scroll-bar>
 
       <div class="pw-content w-100 scroll-y" data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto"
         data-kt-scroll-dependencies=".pw-profile,.pw-menu" data-kt-scroll-wrappers=".employee-container"
@@ -2492,10 +2797,15 @@
               </div>
 
               <div class="table-custom">
+                <!-- <ng-container [ngTemplateOutlet]="educationTemplate" [ngTemplateOutletContext]="{
+                  title: 'Giỏi',
+                  point: 8.0,
+                  secondPoint: 9.5,
+                }"></ng-container> -->
+
                 <codx-listview #listView entityName="DM_FileInfo" gridViewName="grvFileInfo" formName="FileInfo"
-                    [itemTemplate]="itemSpecializationTable" [headerTemplate]="headerSpecializationTable" 
-                    service="DM">
-                  </codx-listview>
+                  [itemTemplate]="itemSpecializationTable" [headerTemplate]="headerSpecializationTable" service="DM">
+                </codx-listview>
                 <!-- start header -->
                 <ng-template #headerSpecializationTable>
                   <div class="table-header d-flex w-100 ps-2 pe-4">
@@ -2532,41 +2842,58 @@
                       ></codx-label> -->
                       <span>Năm tốt nghiệp</span>
                     </div>
-                    
+
                   </div>
                 </ng-template>
                 <!-- end header -->
                 <!-- template list -->
                 <ng-template #itemSpecializationTable>
                   <div class="itemlist-custom d-flex align-items-center border-bottom">
-                    <!-- Loại quyết định -->
+                    <!-- Tên chuyên nghành -->
                     <div class="w-25 p-3 ps-5">
-                      <codx-vll [name]="1" [value]="'Nữ'" [showBgColor]="true" [showText]="true"
+                      <!-- <codx-vll [name]="1" [value]="'Nữ'" [showBgColor]="true" [showText]="true"
                         [className]="'badge badge-sm badge-inline'">
-                      </codx-vll>
+                      </codx-vll> -->
+                      <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                          Bằng cử nhân CNTT
+                        </div>
+                      </div>
                     </div>
                     <!-- Số quyết định -->
                     <div class="w-25 p-3">
                       <div class="d-flex flex-column">
                         <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                          98/QĐ-BN
+                          Trường Đại Học FPT
+                        </div>
+                        <div >
+                          <ng-container [ngTemplateOutlet]="educationTemplate" [ngTemplateOutletContext]="{
+                            title: 'Giỏi',
+                            point: 8.0,
+                            secondPoint: 9.5,
+                          }"></ng-container>
                         </div>
                       </div>
                     </div>
-                    <!-- Ngày hiệu lực -->
+                    <!-- Thời gian đào tạo -->
                     <div class="w-25 p-3">
                       <div class="d-flex flex-column">
                         <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                          16/10/1964
+                          08/2018 - 01/2022
+                        </div>
+                        <div>
+                          <codx-vll [name]="'HR003'" [value]="'10'" [showBgColor]="true" [showText]="true"
+                            [className]="'badge badge-sm badge-inline'">
+                          </codx-vll>
                         </div>
                       </div>
                     </div>
 
-                    <!-- Đến ngày -->
+                    <!-- Năm tốt nghiệp -->
                     <div class="w-25 p-3">
                       <div class="d-flex flex-column">
                         <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                          16/10/1964
+                          2022
                         </div>
                       </div>
                     </div>
@@ -2600,87 +2927,89 @@
                   >
                   </codx-vll> -->
                   <codx-listview #listView entityName="DM_FileInfo" gridViewName="grvFileInfo" formName="FileInfo"
-                    [itemTemplate]="itemcertificateTable" [headerTemplate]="headercertificateTable" 
-                    service="DM">
+                    [itemTemplate]="itemcertificateTable" [headerTemplate]="headercertificateTable" service="DM">
                   </codx-listview>
-                  
+
                   <!-- start header -->
-                <ng-template #headercertificateTable>
-                  <div class="table-header d-flex w-100 ps-2 pe-4">
-                    <div class="w-25 text-gray-500 p-3 fw-500">
-                      <!-- <codx-label
+                  <ng-template #headercertificateTable>
+                    <div class="table-header d-flex w-100 ps-2 pe-4">
+                      <div class="w-25 text-gray-500 p-3 fw-500">
+                        <!-- <codx-label
                         [default]="'Họ và tên'"
                       ></codx-label> -->
-                      <span>Tên chuyên nghành</span>
-                    </div>
-                    <div class="w-25 text-gray-500 p-3 fw-500">
-                      <!-- <codx-label
+                        <span>Tên chứng chỉ</span>
+                      </div>
+                      <div class="w-25 text-gray-500 p-3 fw-500">
+                        <!-- <codx-label
                         fiedName="lblEmployeeStatus"
                         [setRequire]="false"
                         [formModel]="view.formModel"
                         [default]="'Giới tính'"
                       ></codx-label> -->
-                      <span>Nơi đào tạo</span>
-                    </div>
-                    <div class="w-25 text-gray-500 p-3 fw-500">
-                      <!-- <codx-label
+                        <span>Nơi đào tạo | Xếp hạng</span>
+                      </div>
+                      <div class="w-25 text-gray-500 p-3 fw-500">
+                        <!-- <codx-label
                         fiedName="lblShiftWorking"
                         [setRequire]="false"
                         [formModel]="view.formModel"
                         [default]="'Ngày sinh'"
                       ></codx-label> -->
-                      <span>Thời gian đào tạo</span>
-                    </div>
-                    <div class="w-25 text-gray-500 p-3 fw-500">
-                      <!-- <codx-label
+                        <span>Thời gian đào tạo</span>
+                      </div>
+                      <div class="w-25 text-gray-500 p-3 fw-500">
+                        <!-- <codx-label
                         fiedName="lblEmployeeInfo"
                         [setRequire]="false"
                         [formModel]="view.formModel"
                         [default]="'Quan hệ gia đình'"
                       ></codx-label> -->
-                      <span>Năm tốt nghiệp</span>
-                    </div>
-                    
-                  </div>
-                </ng-template>
-                <!-- end header -->
-                <!-- template list -->
-                <ng-template #itemcertificateTable>
-                  <div class="itemlist-custom d-flex align-items-center border-bottom">
-                    <!-- Loại quyết định -->
-                    <div class="w-25 p-3 ps-5">
-                      <codx-vll [name]="1" [value]="'Nữ'" [showBgColor]="true" [showText]="true"
-                        [className]="'badge badge-sm badge-inline'">
-                      </codx-vll>
-                    </div>
-                    <!-- Số quyết định -->
-                    <div class="w-25 p-3">
-                      <div class="d-flex flex-column">
-                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                          98/QĐ-BN
-                        </div>
+                        <span>Ngày cấp</span>
                       </div>
-                    </div>
-                    <!-- Ngày hiệu lực -->
-                    <div class="w-25 p-3">
-                      <div class="d-flex flex-column">
-                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                          16/10/1964
-                        </div>
-                      </div>
-                    </div>
 
-                    <!-- Đến ngày -->
-                    <div class="w-25 p-3">
-                      <div class="d-flex flex-column">
-                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                          16/10/1964
+                    </div>
+                  </ng-template>
+                  <!-- end header -->
+                  <!-- template list -->
+                  <ng-template #itemcertificateTable>
+                    <div class="itemlist-custom d-flex align-items-center border-bottom">
+                      <!-- Tên chứng chỉ -->
+                      <div class="w-25 p-3 ps-5">
+                        <div class="d-flex flex-column">
+                          <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                            TOEIC
+                          </div>
+                          <span>Chứng chỉ ngoại ngữ</span>
+                        </div>
+                      </div>
+                      <!-- Nơi đào tạo -->
+                      <div class="w-25 p-3">
+                        <div class="d-flex flex-column">
+                          <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                            Trung tâm CSC
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Thời gian đào tạo -->
+                      <div class="w-25 p-3">
+                        <div class="d-flex flex-column">
+                          <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                            09/2022 - 12/2022
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Ngày Cấp -->
+                      <div class="w-25 p-3">
+                        <div class="d-flex flex-column">
+                          <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                            16/10/1964
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </ng-template>
-                <!-- end template list -->
+                  </ng-template>
+                  <!-- end template list -->
                   <!-- end emptyTemplate -->
                 </div>
               </div>
@@ -2699,86 +3028,95 @@
 
               <div class="table-custom">
                 <codx-listview #listView entityName="DM_FileInfo" gridViewName="grvFileInfo" formName="FileInfo"
-                    [itemTemplate]="itemTrainTable" [headerTemplate]="headerTrainTable" 
-                    service="DM">
-                  </codx-listview>
-               <!-- start header -->
-               <ng-template #headerTrainTable>
-                <div class="table-header d-flex w-100 ps-2 pe-4">
-                  <div class="w-25 text-gray-500 p-3 fw-500">
-                    <!-- <codx-label
-                      [default]="'Họ và tên'"
-                    ></codx-label> -->
-                    <span>Tên chuyên nghành</span>
-                  </div>
-                  <div class="w-25 text-gray-500 p-3 fw-500">
-                    <!-- <codx-label
-                      fiedName="lblEmployeeStatus"
-                      [setRequire]="false"
-                      [formModel]="view.formModel"
-                      [default]="'Giới tính'"
-                    ></codx-label> -->
-                    <span>Nơi đào tạo</span>
-                  </div>
-                  <div class="w-25 text-gray-500 p-3 fw-500">
-                    <!-- <codx-label
-                      fiedName="lblShiftWorking"
-                      [setRequire]="false"
-                      [formModel]="view.formModel"
-                      [default]="'Ngày sinh'"
-                    ></codx-label> -->
-                    <span>Thời gian đào tạo</span>
-                  </div>
-                  <div class="w-25 text-gray-500 p-3 fw-500">
-                    <!-- <codx-label
-                      fiedName="lblEmployeeInfo"
-                      [setRequire]="false"
-                      [formModel]="view.formModel"
-                      [default]="'Quan hệ gia đình'"
-                    ></codx-label> -->
-                    <span>Năm tốt nghiệp</span>
-                  </div>
-                  
-                </div>
-              </ng-template>
-              <!-- end header -->
-              <!-- template list -->
-              <ng-template #itemTrainTable>
-                <div class="itemlist-custom d-flex align-items-center border-bottom">
-                  <!-- Loại quyết định -->
-                  <div class="w-25 p-3 ps-5">
-                    <codx-vll [name]="1" [value]="'Nữ'" [showBgColor]="true" [showText]="true"
-                      [className]="'badge badge-sm badge-inline'">
-                    </codx-vll>
-                  </div>
-                  <!-- Số quyết định -->
-                  <div class="w-25 p-3">
-                    <div class="d-flex flex-column">
-                      <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                        98/QĐ-BN
-                      </div>
+                  [itemTemplate]="itemTrainTable" [headerTemplate]="headerTrainTable" service="DM">
+                </codx-listview>
+                <!-- start header -->
+                <ng-template #headerTrainTable>
+                  <div class="table-header d-flex w-100 ps-2 pe-4">
+                    <div class="w-25 text-gray-500 p-3 fw-500">
+                      <!-- <codx-label
+                    [default]="'Họ và tên'"
+                  ></codx-label> -->
+                      <span>Tên chứng chỉ</span>
                     </div>
-                  </div>
-                  <!-- Ngày hiệu lực -->
-                  <div class="w-25 p-3">
-                    <div class="d-flex flex-column">
-                      <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                        16/10/1964
-                      </div>
+                    <div class="w-25 text-gray-500 p-3 fw-500">
+                      <!-- <codx-label
+                    fiedName="lblEmployeeStatus"
+                    [setRequire]="false"
+                    [formModel]="view.formModel"
+                    [default]="'Giới tính'"
+                  ></codx-label> -->
+                      <span>Nơi đào tạo | Xếp hạng</span>
                     </div>
-                  </div>
+                    <div class="w-25 text-gray-500 p-3 fw-500">
+                      <!-- <codx-label
+                    fiedName="lblShiftWorking"
+                    [setRequire]="false"
+                    [formModel]="view.formModel"
+                    [default]="'Ngày sinh'"
+                  ></codx-label> -->
+                      <span>Thời gian đào tạo</span>
+                    </div>
+                    <div class="w-25 text-gray-500 p-3 fw-500">
+                      <!-- <codx-label
+                    fiedName="lblEmployeeInfo"
+                    [setRequire]="false"
+                    [formModel]="view.formModel"
+                    [default]="'Quan hệ gia đình'"
+                  ></codx-label> -->
+                      <span>Ngày hiệu lực</span>
+                    </div>
 
-                  <!-- Đến ngày -->
-                  <div class="w-25 p-3">
-                    <div class="d-flex flex-column">
-                      <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                        16/10/1964
+                  </div>
+                </ng-template>
+                <!-- end header -->
+                <!-- template list -->
+                <ng-template #itemTrainTable>
+                  <div class="itemlist-custom d-flex align-items-center border-bottom">
+                    <!-- Tên chứng chỉ -->
+                    <div class="w-25 p-3 ps-5">
+                      <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                          Phân tích nghiệp vụ
+                        </div>
+                        <span>000001/HCM-CCBA</span>
+                      </div>
+                    </div>
+                    <!-- Nơi đào tạo -->
+                    <div class="w-25 p-3">
+                      <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                          Trung tâm BAC
+                        </div>
+                        <div>
+                          <ng-container [ngTemplateOutlet]="educationTemplate" [ngTemplateOutletContext]="{
+                            title: 'Giỏi',
+                            point: 8.0,
+                            secondPoint: 9.5,
+                          }"></ng-container>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Thời gian đào tạo -->
+                    <div class="w-25 p-3">
+                      <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                          09/2022 - 12/2022
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Ngày hiệu lực -->
+                    <div class="w-25 p-3">
+                      <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                          16/10/1964
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </ng-template>
-              <!-- end template list -->
+                </ng-template>
+                <!-- end template list -->
               </div>
             </div>
           </div>
@@ -2807,66 +3145,73 @@
                   >
                   </codx-vll> -->
                   <codx-listview #listView entityName="DM_FileInfo" gridViewName="grvFileInfo" formName="FileInfo"
-                    [itemTemplate]="itemEvaluationTable" [headerTemplate]="headerEvaluationTable" [emptyTemplate]="emptyTemplate"
-                    service="DM">
+                    [itemTemplate]="itemEvaluationTable" [headerTemplate]="headerEvaluationTable"
+                    [emptyTemplate]="emptyTemplate" service="DM">
                   </codx-listview>
                   <!-- start header -->
                   <ng-template #headerEvaluationTable>
                     <div class="table-header d-flex w-100 ps-2 pe-4">
                       <div class="w-20 text-gray-500 p-3 fw-500">
-                        <codx-label [default]="'Loại nghỉ'"></codx-label>
+                        <codx-label [default]="'Năm đánh giá'"></codx-label>
                       </div>
                       <div class="w-20 text-gray-500 p-3 fw-500">
-                        <codx-label [default]="'Từ ngày'"></codx-label>
+                        <codx-label [default]="'Kỳ'"></codx-label>
                       </div>
                       <div class="w-20 text-gray-500 p-3 fw-500">
-                        <codx-label [default]="'Đến ngày'"></codx-label>
+                        <codx-label [default]="'Điểm | Xếp loại'"></codx-label>
                       </div>
                       <div class="w-40 text-gray-500 p-3 fw-500">
-                        <codx-label [default]="'Số ngày nghỉ'"></codx-label>
+                        <codx-label [default]="'Nhận xét'"></codx-label>
                       </div>
-                      
+
                     </div>
                   </ng-template>
                   <!-- end header -->
                   <!-- template list -->
                   <ng-template #itemEvaluationTable>
                     <div class="itemlist-custom d-flex align-items-center border-bottom">
-                      <!-- Loại nghỉ -->
+                      <!-- Năm đánh giá -->
                       <div class="w-20 p-3 ps-5">
                         <div class="d-flex flex-column">
                           <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                            Nghỉ phép
+                            2023
                           </div>
                         </div>
                       </div>
-                      <!-- Từ ngày -->
+                      <!-- Kỳ đánh giá -->
                       <div class="w-20 p-3">
-                        <div class="d-flex flex-column">
-                          <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                            16/10/1964
-                          </div>
-                        </div>
-                      </div>
-                      <!-- Đến ngày -->
-                      <div class="w-20 p-3">
-                        <div class="d-flex flex-column">
-                          <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
-                            16/10/1964
-                          </div>
-                        </div>
-                      </div>
-
-                      <!-- Số ngày nghỉ -->
-                      <div class="w-40 p-3">
                         <div class="d-flex flex-column">
                           <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
                             1
                           </div>
                         </div>
                       </div>
+                      <!-- Xếp loại -->
+                      <div class="w-20 p-3">
+                        <div class="d-flex flex-column">
+                          <!-- <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                            16/10/1964
+                          </div> -->
+                          <div>
+                            <ng-container [ngTemplateOutlet]="educationTemplate" [ngTemplateOutletContext]="{
+                              title: 'Giỏi',
+                              point: 8.0,
+                              secondPoint: 9.5,
+                            }"></ng-container>
+                          </div>
+                        </div>
+                      </div>
 
-                      
+                      <!-- Nhận xét -->
+                      <div class="w-40 p-3">
+                        <div class="d-flex flex-column">
+                          <div class="d-flex align-items-center text-nowrap line-clamp line-clamp-1 mb-1">
+                            Hoàn thành xuất sắc công việc được giao
+                          </div>
+                        </div>
+                      </div>
+
+
                     </div>
                   </ng-template>
                   <!-- end template list -->
@@ -2887,6 +3232,50 @@
   </div>
 </ng-template>
 
+<!-- End Panel -->
+
+
+
+
+
+<!-- Education Tab-->
+
+<ng-template #educationTemplate let-title="title" let-point="point" let-secondPoint="secondPoint">
+  <div class="education-show d-flex">
+    <div class="d-flex align-items-center me-2">
+      <span class="icon-insights me-2 icon-color"></span>
+      <span class="fw-bold text-color">{{ title }}</span>
+    </div>
+
+    <div *ngIf="point !== undefined" class="d-flex align-items-center me-2">
+      <div class="point-circle small color-orange me-2 icon-color"></div>
+      <span class="fw-bold text-color">{{ point }}</span>
+    </div>
+
+    <div *ngIf="secondPoint !== undefined" class="d-flex align-items-center">
+      <div class="point-circle small color-orange me-2 icon-color"></div>
+      <span class="fw-bold text-color">{{ secondPoint }}</span>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #itemCard let-item="item">
+  <div [ngStyle]="{ 'background-color': item.color }" class="info-item d-flex align-items-center justify-content-around p-3"
+  >
+    <div class="content-profile-info text-white d-flex flex-column p-3">
+      <div class="text fs-13 fw-400 pb-3">{{ item.title }}</div>
+      <div class="fs-5 fw-500 fw-bold text">
+        <span countUpAnimation [finalNumber]="item.content"></span>
+        <span>{{ item.subContent }}</span>
+      </div>
+    </div>
+    <div class="icon-container">
+      <span [ngClass]="[item.icon, item.typeIcon, 'icon-profile-info']"></span>
+      <div class="shimmer-line"></div> <!-- Hiệu ứng bóng loáng -->
+    </div>
+  </div>
+</ng-template>
 <!-- End Panel -->
 
 <ng-template #healthPeriodID let-data>

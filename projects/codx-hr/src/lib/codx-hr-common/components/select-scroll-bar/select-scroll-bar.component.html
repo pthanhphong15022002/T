@@ -18,28 +18,28 @@
         ContainerID="tab-container-id"></i>
     </div> -->
 
-<div #container class="container-info pb-4 " (scroll)="onScroll($event)" [ngStyle]="{height:height}">
-  <div class="tab-container">
-
-    <i #prev id="pre-item-profile" class="icon-i-chevron-left tab-scroll prev-item" libSwiperClicking
-      type="previous" ContainerID="tab-container-id"></i>
-
-    <div #tabContainer id="tab-container-id" class="tab-container-items">
-      <div *ngFor="let item of listTabs; let i = index" (click)="navChange(item.functionID, 0, index, $event.target)"
-      [ngClass]="item.functionID == active[index] ? 'active' : ''"
-        class="align-items-center d-flex flex-column gap-2 justify-content-center pb-1 pointer pt-3 tab-container-item" style="
-        padding-bottom: 17px;">
-        <span [class]="item.largeIcon"></span>
-        <div class="text-uppercase fw-bold">{{item.customName}}</div>
+    <div #container class="container-info pb-4 " [ngStyle]="{height:height}">
+      <div class="tab-container">
+    
+        <i #prev id="pre-item-profile" class="icon-i-chevron-left tab-scroll prev-item" libSwiperClicking
+          type="previous" ContainerID="tab-container-id"></i>
+    
+        <div #tabContainer id="tab-container-id" class="tab-container-items">
+          <div *ngFor="let item of listTabs; let i = index" (click)="navChange(item.functionID, 0, index, $event.target)"
+          [ngClass]="item.functionID == active[index] ? 'active' : ''"
+            class="align-items-center d-flex flex-column gap-2 justify-content-center pb-1 pointer pt-3 tab-container-item" style="
+            padding-bottom: 17px;">
+            <span [class]="item.largeIcon" class="icon-selectScroll"></span>
+            <div class="text-uppercase fw-bold">{{item.customName}}</div>
+          </div>
+        </div>
+    
+        <i #next id="next-item-profile" class="icon-i-chevron-right  fs-13 text-black next-item" libSwiperClicking
+          type="next" ContainerID="tab-container-id"></i>
+    
       </div>
+      <ng-content></ng-content>
     </div>
-
-    <i #next id="next-item-profile" class="icon-i-chevron-right  fs-13 text-black next-item" libSwiperClicking
-      type="next" ContainerID="tab-container-id"></i>
-
-  </div>
-  <ng-content></ng-content>
-</div>
 
 <!-- <div #container class="container-info" (scroll)="onScroll($event)" [ngStyle]="{height:height}">
   <div class="tab-scroll tab-container mb-4">

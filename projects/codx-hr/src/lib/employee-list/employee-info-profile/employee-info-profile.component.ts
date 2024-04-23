@@ -62,6 +62,7 @@ import { DialogReviewLeaveApproveComponent } from './components/pop-up/dialog-re
 import { DialogWaitingLeavingApproveComponent } from './components/pop-up/dialog-waiting-leaving-approve/dialog-waiting-leaving-approve.component';
 import { PopupMyteamReponsiveComponent } from './components/pop-up/popup-myteam-reponsive/popup-myteam-reponsive.component';
 import { PopupMenusidebarReponsiveComponent } from './components/pop-up/popup-menusidebar-reponsive/popup-menusidebar-reponsive.component';
+import { PopupReviewRegisterApproveComponent } from './components/pop-up/popup-review-register-approve/popup-review-register-approve.component';
 
 @Component({
   selector: 'lib-employee-info-profile',
@@ -83,7 +84,7 @@ export class  EmployeeInfoProfileComponent extends UIComponent {
   isClick: boolean = false;
   dataService: DataService = null;
 
-  active = [null, null, null, null, null, null, null];
+  active = [1, 1, 1, 1, 1, 1, 1];
 
   infoPersonal: any;
   lineManager: any;
@@ -1061,7 +1062,8 @@ export class  EmployeeInfoProfileComponent extends UIComponent {
     private notifySvr: NotificationsService
   ) {
     super(inject);
-    this.funcID = 'HRT03b';
+    // this.funcID = 'HRT03b';
+    this.funcID='WSHREM'
     this.user = this.auth.get();
 
     this.crrFuncTabNum = 1;
@@ -1075,21 +1077,27 @@ export class  EmployeeInfoProfileComponent extends UIComponent {
 
   crrFuncTabNum:number = 1;
 
-  override ngOnInit(): void {
-    //Fake
-    this.crrFuncTabNum = 1;
+  // override ngOnInit(): void {
+  //   //Fake
+  //   console.log('ngOnIt');
 
-  }
+  // }
 
   onInit(): void {
+
+    this.crrFuncTabNum = 1;
     
     //ẩn logo
     this.layout.setLogo(null);
     //ẩn số đếm tổng nhân viên
     this.pageTitle.setBreadcrumbs([]);
+    console.log('123');
     if (this.funcID) {
+      console.log('voo rooif');
+      console.log(this.funcID);
       this.hrService.getFunctionList(this.funcID).subscribe((res) => {
         this.lstTab = res;
+        console.log(res);
         console.log('lstTab', this.lstTab);
         for (let i = 0; i < res.length; i++) {
           switch (res[i].url) {
@@ -1149,6 +1157,7 @@ export class  EmployeeInfoProfileComponent extends UIComponent {
             this.orgUnitStr = res[2];
             this.DepartmentStr = res[3];
             this.LoadedEInfo = true;
+            console.log('info of employee', this.infoPersonal)
             this.df.detectChanges();
           }
         });
@@ -1225,6 +1234,8 @@ export class  EmployeeInfoProfileComponent extends UIComponent {
       },
     ];
     this.formModel = this.view.formModel;
+
+    console.log('infomation', this.infoPersonal);
   }
 
   handleShowHideMfWs(evt, func) {
@@ -7624,6 +7635,13 @@ export class  EmployeeInfoProfileComponent extends UIComponent {
     },
   ];
 
+  cardDataFake = [
+    { title: 'Công việc làm', content: '15', subContent: '/24', color: '#17BB45', icon: 'icon-bar_chart', typeIcon: '' },
+    { title: 'Tăng ca', content: '15', subContent: '/24', color: '#FFA800', icon: 'icon-bar_chart', typeIcon: '' },
+    { title: 'Tăng ca', content: '8', subContent: ' giờ', color: '#F64E60', icon: 'icon-trending_up', typeIcon: 'icon-small' },
+    { title: 'Tăng ca', content: '180', subContent: ' phút', color: '#6C757D', icon: 'icon-trending_down', typeIcon: 'icon-small' }
+  ];
+
   registerApprove(event: any) {
     let options = new SidebarModel();
 
@@ -7637,7 +7655,7 @@ export class  EmployeeInfoProfileComponent extends UIComponent {
     let options = new SidebarModel();
 
     options.Width = 'Auto';
-    this.callfunc.openSide(DialogReviewLeaveApproveComponent, options);
+    this.callfunc.openSide(DialogReviewLeaveApproveComponent, [], options);
 
   }
 
@@ -7645,7 +7663,7 @@ export class  EmployeeInfoProfileComponent extends UIComponent {
     let options = new SidebarModel();
 
     options.Width = 'Auto';
-    this.callfunc.openSide(DialogWaitingLeavingApproveComponent, options);
+    this.callfunc.openSide(DialogWaitingLeavingApproveComponent, [], options);
   }
 
   openMyReamSide() {
@@ -7655,12 +7673,37 @@ export class  EmployeeInfoProfileComponent extends UIComponent {
     this.callfunc.openSide(PopupMyteamReponsiveComponent, [], options);
   }
 
+  dialog?: DialogRef;
+
+
   openMenuSideBar() {
     let options = new SidebarModel();
 
+    // options.Width = 'Auto';
+    // options.Position = 'Left'
+    // this.callfunc.openSide(PopupMenusidebarReponsiveComponent, [], options);
+
+    // let options = new SidebarModel();
+
+    console.log("vô")
+
     options.Width = 'Auto';
-    options.Position = 'Left'
-    this.callfunc.openSide(PopupMenusidebarReponsiveComponent, [], options);
+    options.Position="Left";
+    var obj = {
+      currentTab: this.crrFuncTabNum 
+    };
+
+    // console.log(obj)
+    // this.callfunc.openSide(PopupReviewRegisterApproveComponent, [],  options);
+    // this.dialog = this.callfunc.openSide(PopuMenusidebarReponsiveComponent, [], options)
+    this.dialog = this.callfunc.openSide(PopupMenusidebarReponsiveComponent, obj, options);
+
+
+    this.dialog.componentRef.instance.tabChanged.subscribe((newTab: number) => {
+      console.log(newTab)
+      this.crrFuncTabNum = newTab;
+      this.dialog?.close(true);
+    });
   }
 
 

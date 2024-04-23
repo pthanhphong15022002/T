@@ -113,9 +113,9 @@
     padding-bottom: 12px;
 }
 
-.e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
-    margin-right: 12px!important;
-}
+// .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
+//     margin-right: 12px!important;
+// }
 
 .e-tab .e-tab-header:not(.e-vertical)::before{
     border-width: 0 !important;
@@ -131,6 +131,11 @@ div#e-item-element_2 {
 
 .e-tab .e-tab-header .e-scroll-nav, .e-tab .e-tab-header .e-hscroll:not(.e-scroll-device) .e-scroll-nav {
     display: none !important;
+}
+
+//ẩn scroll my team
+.e-tab .e-tab-header .e-scroll-nav .e-nav-arrow{
+    display: none;
 }
 
 // .e-tab .e-tab-header .e-toolbar-items{
@@ -201,6 +206,12 @@ div#hscroll_0_nav_right {
 .user-status.busy {
     color: #F64E60;
 }
+
+.e-content.e-lib.e-touch {
+    height: calc(100vh - 247px) !important;
+    overflow: scroll !important;
+}
+
 
 @media (max-width: 99px) {
     .fab-container {

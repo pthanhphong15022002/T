@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Injector, OnInit, Optional, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   ButtonModel,
   CodxFormComponent,
@@ -12,6 +12,7 @@ import {
 import moment from 'moment';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxHrService } from 'projects/codx-hr/src/public-api';
+import { Subject } from 'rxjs';
 
 
 @Component({
@@ -60,6 +61,8 @@ implements OnInit  {
     this.actionType = data?.data?.actionType;
     this.headerText = data?.data?.headerText;
     this.dialog = dialog;
+    this.crrFuncTabNum = data?.data?.currentTab;
+    console.log(this.crrFuncTabNum)
     console.log('dialog nè', this.dialog)
 
     
@@ -120,12 +123,13 @@ button2: ButtonModel = {
     
   ];
 
-  // crrFuncTabNum: number = 1;
+  crrFuncTabNum: number = 1;
   heightList = '50';
 
   clickTab(item: any) {
     console.log(item)
-    // this.crrFuncTabNum = item.functionID;
+    this.crrFuncTabNum = item.functionID;
+    this.tabChanged.next(item.functionID);
     this.detectorRef.detectChanges();
 
   }
@@ -441,6 +445,34 @@ button2: ButtonModel = {
   CloseMenuSideBar(){
     this.dialog.close();
   }
+
+  isFirstOpen = false;
+  tabChanged: Subject<number> = new Subject<number>();
+
+
+
+  @HostListener('document:click', ['$event'])
+onClickOutside(event: MouseEvent): void {
+  if (!this.isFirstOpen) {
+    // if (this.dialog.beforeOpen && !this.dialog.beforeOpen.closed) {
+    //   this.dialog.beforeOpen.subscribe(() => {
+    //     this.isFirstOpen = true;
+    //   });
+    // }
+    this.isFirstOpen = true;
+    return;
+
+  }
+
+  if (this.dialog.eleCurrent && !this.dialog.eleCurrent.contains(event.target)) {
+    console.log('Clicked outside dialog');
+    console.log(this.isFirstOpen)
+    
+    if (this.isFirstOpen) {
+      this.dialog.close();
+    }
+  }
+}
 
 
   

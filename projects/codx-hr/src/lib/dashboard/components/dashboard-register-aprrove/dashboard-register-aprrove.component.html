@@ -1,308 +1,192 @@
 <div class="p-2">
-  <div
-    class="w-100 d-flex flex-row justify-content-between pe-2 pt-2 ps-2 mb-4"
-  >
-    <div class="pt-2 mb-3 ps-1 fs-14 fw-bold fw-500">Đăng ký / Xét duyệt</div>
-    <codx-dropdown-calendar
-      cssPopup="h-350px w-550px"
-      [selectedType]="'y'"
-      cssClass="w-100"
-      yearLabel="Năm"
-    ></codx-dropdown-calendar>
+  <div class="w-100 d-flex flex-row justify-content-between pe-2 pt-2 ps-2 mb-4">
+      <div class="pt-2 mb-3 ps-1 fs-14 fw-bold fw-500">Đăng ký / Xét duyệt</div>
+      <codx-dropdown-calendar cssPopup="h-350px w-550px" [selectedType]="'y'" cssClass="w-100"
+          yearLabel="Năm"></codx-dropdown-calendar>
   </div>
   <div class="container-swiper d-flex flex-row">
-    <div
-      class="swiper-btn previous"
-      libSwiperClicking
-      type="previous"
-      [scrollSpeed]="300"
-      ContainerID="grid-element"
-    >
-      <i class="icon-arrow_back_ios icon-18 me-1"></i>
-    </div>
-    <div id="grid-element" class="grid">
-      <!-- <div style="width: 300px !important;" class="card-item me-5 mb-5">
+      <div class="swiper-btn previous" libSwiperClicking type="previous" [scrollSpeed]="300"
+          ContainerID="grid-element">
+          <i class="icon-arrow_back_ios icon-18 me-1"></i>
+      </div>
+      <div id="grid-element" class="grid">
+          <!-- <div style="width: 300px !important;" class="card-item me-5 mb-5">
         <codx-card-center cardCss="dp-card-process border rounded-3 h-100" 
            hideMF="true" [titleTmp]="titleTmp1" desc="Hóa đơn hủy"
           [baseHeaderRightTmp]="baseHeaderRightTmp">
         </codx-card-center>
       </div> -->
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
           icon: 'icon-beach_access',
           bgColor: '#E8FFF2'
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#EF6023',
           icon: 'icon-i-calendar3-fill',
           bgColor: '#FFF7CC'
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
           icon: 'icon-i-person',
           bgColor: '#E8FFF2'
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#FF00A8',
           icon: 'icon-groups',
           bgColor: '#FFE2E6'
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#2F80ED',
           icon: 'icon-language',
           bgColor: '#EDF5FF'
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#9B51E0',
           icon: 'icon-transfer_within_a_station',
           bgColor: '#F3E7FF'
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#FFA800',
           icon: 'icon-i-calendar3-fill',
           bgColor: '#FFF7E8'
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#323232',
           icon: 'icon-pending_actions',
           bgColor: '#F4F7FF'
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+          icon: 'icon-pending_actions',
+          bgColor: '#F4F7FF'
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
-          bgColor: '#CEFFDC'
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+          icon: 'icon-pending_actions',
+          bgColor: '#F4F7FF'
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
-          bgColor: '#CEFFDC'
+          icon: 'icon-pending_actions',
+          bgColor: '#F4F7FF'
 
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
-          bgColor: '#CEFFDC'
+          icon: 'icon-pending_actions',
+          bgColor: '#F4F7FF'
 
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
-          bgColor: '#CEFFDC'
+          icon: 'icon-pending_actions',
+          bgColor: '#F4F7FF'
 
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
-          bgColor: '#CEFFDC'
+          icon: 'icon-pending_actions',
+          bgColor: '#F4F7FF'
 
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
-          bgColor: '#CEFFDC'
+          icon: 'icon-pending_actions',
+          bgColor: '#F4F7FF'
 
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
-          bgColor: '#CEFFDC'
+          icon: 'icon-pending_actions',
+          bgColor: '#F4F7FF'
 
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
-          bgColor: '#CEFFDC'
+          icon: 'icon-pending_actions',
+          bgColor: '#F4F7FF'
 
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
-          bgColor: '#CEFFDC'
+          icon: 'icon-pending_actions',
+          bgColor: '#F4F7FF'
 
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
-          bgColor: '#CEFFDC'
+          icon: 'icon-pending_actions',
+          bgColor: '#F4F7FF'
 
-        }"
-      ></ng-container>
-      <ng-container
-        class="col"
-        [ngTemplateOutlet]="item"
-        [ngTemplateOutletContext]="{
+        }"></ng-container>
+          <ng-container class="col" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{
           $implicit: 'Remove',
           color: '#17BB45',
-          bgColor: '#CEFFDC'
+          icon: 'icon-pending_actions',
+          bgColor: '#F4F7FF'
 
-        }"
-      ></ng-container>
-    </div>
-    <div
-      class="swiper-btn next"
-      libSwiperClicking
-      type="next"
-      [scrollSpeed]="300"
-      ContainerID="grid-element"
-    >
-      <i class="icon-arrow_forward_ios icon-18 me-1"></i>
-    </div>
+        }"></ng-container>
+      </div>
+      <div class="swiper-btn next" libSwiperClicking type="next" [scrollSpeed]="300" ContainerID="grid-element">
+          <i class="icon-arrow_forward_ios icon-18 me-1"></i>
+      </div>
   </div>
 </div>
-<!-- col-xxl-3 col-lg-4 col-sm-4 col-md-4 -->
-<ng-template
-  #item
-  let-icon="icon"
-  let-color="color"
-  let-bgColor="bgColor"
-  class="register-approve-item"
->
-  <div class="p-0 pointer">
-    <div
-      class="d-flex flex-column border rounded container-item"
-      [ngStyle]="{
-        'box-shadow':
-          '0px 2px 4px 0px rgba(0, 0, 0, 0.1), 0 4px 0px 0px ' + color
-      }"
-    >
-      <div
-        class="d-flex gap-2 justify-content-between m-2 py-2 pb-3 border-bottom"
-      >
-        <div class="d-flex align-items-center justify-content-start">
-          <div
-            style="width: 35px; height: 35px"
-            class="border rounded-circle d-flex justify-content-center text-white"
-            [ngStyle] = "{'background-color': bgColor}"
-            
-            >
-            <span class="align-content-center fs-18" [ngClass]="icon" [ngStyle]="{'color': color}" ></span>
+
+
+<ng-template #item let-icon="icon" let-color="color" let-bgColor="bgColor" class="register-approve-item">
+  <div class="card-wrapper" [ngStyle]="{ 'border-bottom': '5px solid ' + color }">
+      <div class="mt-3 mb-3">
+          <div class="border-bottom d-flex gap-2 gap-5 justify-content-between pb-3 px-2">
+              <div class="d-flex  align-items-center justify-content-start">
+                  <div [ngStyle]="{'background-color': bgColor, 'width': '35px', 'height': '35px'}"
+                      class="border rounded-circle d-flex align-items-center justify-content-center text-white">
+                      <span [ngClass]="icon" [ngStyle]="{'color': color}"></span>
+                  </div>
+                  <div class="d-flex align-items-baseline gap-1 flex-column ms-3">
+                      <div class="fs-2 fw-bold">20</div>
+                      <div class="text-gray-400">Ngoài nước</div>
+                  </div>
+              </div>
+              <span class="icon-add" [ngStyle]="{'color': color}" (click)="open()"></span>
           </div>
-          <div class="d-flex align-items-baseline gap-1 flex-column ms-3">
-            <div class="fw-500 fs-2 fw-bold">20</div>
-            <div class="fs-12 fw-400 text-grey">Ngoài nước</div>
+      </div>
+
+      <div class="pb-4">
+          <div class="align-items-start d-flex gap-4 justify-content-around pt-1">
+              <div class="d-flex flex-column align-items-center gap-1" (click)="open2()">
+                  <div class="fw-500 fs-3 fw-bold">09</div>
+                  <div class="text-gray-400">Chờ xét duyệt</div>
+              </div>
+              <div class="d-flex flex-column align-items-center gap-1" (click)="open3()">
+                  <div class="fw-500 fs-3 fw-bold">11</div>
+                  <div class="text-gray-400">Chờ duyệt</div>
+              </div>
           </div>
-        </div>
-        <div (click)="open()">
-          <span
-            class="icon-22 icon-i-plus me-1"
-            [ngStyle]="{ color: color }"
-          ></span>
-        </div>
       </div>
-      <div
-        class="d-flex align-items-start justify-content-around gap-2 p-2 pt-1"
-      >
-        <div
-          class="d-flex flex-column align-items-center gap-1"
-          (click)="open2()"
-        >
-          <div class="fw-500 fs-3 fw-bold">09</div>
-          <div class="text-gray-400">Chờ xét duyệt</div>
-        </div>
-        <div
-          class="d-flex flex-column align-items-center gap-1"
-          (click)="open3()"
-        >
-          <div class="fw-500 fs-3 fw-bold">11</div>
-          <div class="text-gray-400">Chờ duyệt</div>
-        </div>
-      </div>
-      <div class="border-line"></div>
-      <div class="border-bottom-line"></div>
-    </div>
   </div>
 </ng-template>
 
-<lib-dialog-detail-register-approve
-  #dialog
-></lib-dialog-detail-register-approve>
 
 <!-- <ng-template #baseHeaderRightTmp>
   <div style="background-color: var(--primary-dark);
