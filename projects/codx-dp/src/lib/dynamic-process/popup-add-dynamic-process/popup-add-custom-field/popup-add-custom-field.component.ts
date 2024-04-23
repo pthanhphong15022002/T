@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   OnInit,
@@ -52,7 +53,7 @@ import { PopupSettingConditionalComponent } from './popup-setting-conditional/po
   styleUrls: ['./popup-add-custom-field.component.css'],
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PopupAddCustomFieldComponent implements OnInit {
+export class PopupAddCustomFieldComponent implements OnInit, AfterViewInit {
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('addVll') addVll: TemplateRef<any>;
   @ViewChild('bodyVll') bodyVll: TemplateRef<any>;
@@ -63,6 +64,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
   @ViewChild('toolDeleted') toolDeleted: TemplateRef<any>;
   @ViewChild('tempInput') tempInput: CodxInputCustomFieldComponent;
   @ViewChild('tempView') tempView: CodxFieldsFormatValueComponent;
+  @ViewChild('selectValueDep') selectValueDep: ComboBoxComponent;
+
 
   dialog: DialogRef;
   field: DP_Steps_Fields;
@@ -180,12 +183,13 @@ export class PopupAddCustomFieldComponent implements OnInit {
   fieldsDependence = { text: 'title', value: 'recID' };
   listValueField = [];
   valueDependence = { text: 'text', value: 'value' };
-  fieldInStep: any[]
+  fieldInStep: any[];
 
   dependence = {
     refID: '',
     strDependence: ''
   }
+  valueRef: any;
 
   constructor(
     private cache: CacheService,
@@ -239,12 +243,46 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.showCaculate = false;
     }
   }
+  ngAfterViewInit(): void {
+    if (this.field.isApplyDependences && this.listCbx?.length > 0) {
+      let crrCbx = this.listCbx.find(x => x.dependences.includes(this.field.fieldName));
+      if (crrCbx) {
+        this.dependence.refID = crrCbx.recID;
+        let arrField = crrCbx?.dependences?.split(",");
+        let index = arrField.find(x => x.includes(this.field.fieldName));
+        if (index) {
+          // this.valueRef = index.split("=")[0]
+          let valueRef = index.split("=")[1].slice(0, -1);
+          this.valueRef = valueRef.slice(1)
+          this.cache.combobox(crrCbx.refValue).subscribe(res => {
+            if (res) {
+              this.entityNamePA = res.tableName;
+              this.listValueField = res.tableFields?.split(";").map((x, idx) => {
+                let obj = {
+                  text: x,
+                  value: idx
+                }
+                return obj;
+              })
+              if (this.selectValueDep) {
+                this.selectValueDep.dataSource = this.listValueField
+                this.selectValueDep.value = Number.parseInt(this.valueRef)
+                this.selectValueDep.refresh();
+              }
+            }
+          })
+        }
+      }
+    }
+
+  }
 
   ngOnInit(): void {
     let objStep = this.stepList.find(x => x.recID == this.field.stepID);
     if (objStep) {
       this.fieldInStep = objStep.fields;
       this.listCbx = this.fieldInStep.filter(x => x.refType == "3");
+
     }
     if (
       this.field.dataType == 'L' &&
@@ -270,6 +308,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         }
       });
     }
+
     if (this.field.dataType == 'RM') this.field.isUseDefault = true; //tạm gán cứng
   }
 
@@ -1549,6 +1588,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
   }
   cbxChangeValueDependence(e) {
+    if (!this.dependence.refID || !this.listValueField || this.listValueField?.length == 0 || this.action == 'edit' || this.action == 'view') return
+
     this.api
       .exec<any>(
         'SYS',
@@ -1561,7 +1602,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
           this.field = this.convertDataTypeAndFormat(res, this.field)
           this.dependence.strDependence = this.field.fieldName + '={' + e + '}'
         } else {
-          this.notiService.notifyCode('SYS01')
+          this.notiService.notifyCode('SYS001')
         }
       })
 
