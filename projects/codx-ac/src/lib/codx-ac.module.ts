@@ -186,6 +186,11 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
+        path: 'assetadjustments/:funcID/:journalNo',
+        component: AssetJournalsComponent,
+        data: { noReuse: true },
+      },
+      {
         path: 'assetliquidations/:funcID/:journalNo',
         component: AssetJournalsComponent,
         data: { noReuse: true },
@@ -230,6 +235,7 @@ export const routes: Routes = [
         component: CashtransfersComponent,
         data: { noReuse: true },
       },
+      
       //Approval
       {
         path: 'cashpayments/:funcID',

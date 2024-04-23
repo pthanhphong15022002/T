@@ -173,7 +173,7 @@ export class AddProcessDefaultComponent implements OnInit {
             : element.documentControl;
       }
 
-      if (element.fieldType == 'ComboBox') {
+      if (element.controlType == 'ComboBox') {
         element.validateControl =
           typeof element.validateControl == 'string'
             ? JSON.parse(element.validateControl)
@@ -411,6 +411,11 @@ export class AddProcessDefaultComponent implements OnInit {
     return Util.camelize(key);
   }
 
+  getPerdicate(dt)
+  {
+
+  }
+
   getFileUserInfo(field: any) {
     let strID = this.listFileUserInfo[field].map((u) => u.fileID);
     this.api
@@ -469,7 +474,17 @@ export class AddProcessDefaultComponent implements OnInit {
 
       if (keysTable.length > 0) {
         keysTable.forEach((k) => {
+
+          this.dataTable[k].forEach(element => {
+            delete element.delete;
+            delete element.isAddNew;
+            delete element.updateColumns;
+            delete element._isSelect;
+            delete element._rowIndex;
+            delete element._rowNo;
+          });
           valueForm[k] = this.dataTable[k];
+
           let keysChildTable =
             this.dataTable[k] && this.dataTable[k][0]
               ? Object.keys(this.dataTable[k][0])
@@ -1066,17 +1081,27 @@ export class AddProcessDefaultComponent implements OnInit {
     this.expression(e);
   }
 
-  afterRender(evt: any, input: any, refersouce: any) {
-    if (!refersouce) return;
+  afterRender(evt: any, input: any, refersouce: any , predicates:any) {
+    if (!refersouce && !predicates) return;
     if (input.typecheck == 'combobox') {
       let predicate = this.buildReferedsource(refersouce);
+
+      if(predicates)
+      {
+        if(predicate) predicate += ' and (' + predicates + ')';
+        else predicate = predicates;
+      }
+
       if (evt.predicates) {
         evt.dataService.predicates += ' and ' + predicate;
-      } else evt.dataService.predicates = predicate;
+      } else {
+        evt.dataService.predicates = predicate;
+      }
     }
   }
 
   private buildReferedsource(referedSources: string): string {
+    if(!referedSources) return '';
     var refSources = referedSources.split(',');
     let pre = '';
     for (var i = 0; i < refSources.length; i++) {

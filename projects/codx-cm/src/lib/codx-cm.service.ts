@@ -42,7 +42,7 @@ export class CodxCmService {
     private callfc: CallFuncService,
     private cache: CacheService,
     private notification: NotificationsService
-  ) {}
+  ) { }
 
   openLoadding(): void {
     setTimeout(() => {
@@ -1701,12 +1701,12 @@ export class CodxCmService {
   getCustomerNameByrecID(id) {
     return id
       ? this.api.execSv<any>(
-          'CM',
-          'ERM.Business.CM',
-          'ContractsBusiness',
-          'GetCustomerNameByRecIDAsync',
-          [id]
-        )
+        'CM',
+        'ERM.Business.CM',
+        'ContractsBusiness',
+        'GetCustomerNameByRecIDAsync',
+        [id]
+      )
       : null;
   }
 
@@ -1855,16 +1855,25 @@ export class CodxCmService {
     if (res?.dataValue) {
       let dataValue = JSON.parse(res?.dataValue);
       return dataValue;
-    }else{
+    } else {
       return null;
     }
   }
   async getValueList(funtionID) {
     let res = await firstValueFrom(this.cache.valueList(funtionID))
-    if(res?.datas){
+    if (res?.datas) {
       return res.datas;
-    }else{
+    } else {
       return null;
     }
+  }
+  //lay gia tri thang truoc
+  getWaterClockLastMonth(parent, lastChangedDate) {
+    return this.api.exec<any>(
+      'AM',
+      'AssetsBusiness',
+      'GetWaterClockLastMonthAsync',
+      [parent, lastChangedDate]
+    );
   }
 }

@@ -617,10 +617,10 @@
       <div class="row h-30px">
         <div
           class="col-6 d-flex align-items-center p-1 ps-3"
-          (click)="clickAddForm(data)"
+
           [style.color]="getVllObject(data.data?.activityType).color"
         >
-        <span class="{{getVllObject(data.data?.activityType).icon}} icon-21 me-1"></span>
+        <span class="{{getVllObject(data.data?.activityType).icon}} icon-21 me-1"  (click)="clickAddForm(data)"></span>
           <span class="fw-bold fs-5"
             >{{getVllObject(data.data?.activityType).text}}
           </span>
