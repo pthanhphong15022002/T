@@ -5,6 +5,7 @@ import {
   EventEmitter,
   Injector,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   TemplateRef,
@@ -50,6 +51,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { CodxShareService } from '../../codx-share.service';
 import { TreeViewComponent } from './tree-view/tree-view.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -59,7 +61,7 @@ import { TreeViewComponent } from './tree-view/tree-view.component';
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
+  implements OnInit, AfterViewInit, OnDestroy
 {
   //#region Constructor
   @Input() dataObj?: any;
@@ -228,6 +230,12 @@ export class CodxTasksComponent
       }
     });
   }
+  subscription:Subscription = new Subscription;
+  ngOnDestroy(): void {
+    console.log(this.subscription);
+
+    this.subscription.unsubscribe();
+  }
 
   //#region Init
   onInit(): void {
@@ -289,16 +297,17 @@ export class CodxTasksComponent
 
   afterLoad() {
     this.queryParams = this.router.snapshot.queryParams;
-    this.cache.functionList(this.funcID).subscribe((f) => {
+      let sub = this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
         this.entityID = f.entityName;
         this.func = f;
-        this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
+        let sub0 = this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
           if (res) {
             this.moreFunction = res;
           }
         });
-        this.cache
+        this.subscription.add(sub0);
+        let sub1 = this.cache
           .gridViewSetup(f.formName, f.gridViewName)
           .subscribe((grv) => {
             if (grv) {
@@ -310,8 +319,10 @@ export class CodxTasksComponent
               this.vllPriority = grv?.Priority?.referedValue;
             }
           });
+        this.subscription.add(sub1)
       }
     });
+    this.subscription.add(sub);
 
     this.showButtonAdd =
       this.funcID != 'TMT0206' &&
@@ -518,7 +529,7 @@ export class CodxTasksComponent
     ];
 
     if (this.funcID == 'TMT03011') {
-      this.cache.viewSettings(this.funcID).subscribe((res) => {
+      let sub = this.cache.viewSettings(this.funcID).subscribe((res) => {
         if (res && res.length > 0) {
           var viewFunc = [];
           res.forEach((x) => {
@@ -533,6 +544,7 @@ export class CodxTasksComponent
           });
         }
       });
+      this.subscription.add(sub)
     } else this.views = this.viewsDefault;
 
     this.view.dataService.methodSave = 'AddTaskAsync';
@@ -545,7 +557,7 @@ export class CodxTasksComponent
 
   //#region CRUD
   add() {
-    this.view.dataService.addNew().subscribe((res: any) => {
+    let sub = this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
@@ -570,7 +582,7 @@ export class CodxTasksComponent
         disabledProject: this.disabledProject,
       };
       var dialog = this.callfc.openSide(PopupAddComponent, obj, option);
-      dialog.closed.subscribe((e) => {
+      let sub1 = dialog.closed.subscribe((e) => {
         if (!e?.event) {
           this.view.dataService.clear();
         }
@@ -586,7 +598,9 @@ export class CodxTasksComponent
         //     false
         //);
       });
+      this.subscription.add(sub1)
     });
+    this.subscription.add(sub)
   }
 
   edit(data?) {
@@ -605,7 +619,7 @@ export class CodxTasksComponent
       this.editConfirm(data);
     } else {
       var isCanEdit = true;
-      this.api
+      let sub = this.api
         .execSv<any>(
           'TM',
           'ERM.Business.TM',
@@ -629,12 +643,13 @@ export class CodxTasksComponent
             }
           }
         });
+      this.subscription.add(sub)
     }
   }
 
   copy(data) {
     if (data) this.view.dataService.dataSelected = data;
-    this.view.dataService.copy().subscribe((res: any) => {
+    let sub = this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
@@ -654,7 +669,7 @@ export class CodxTasksComponent
         disabledProject: this.disabledProject,
       };
       this.dialog = this.callfc.openSide(PopupAddComponent, obj, option);
-      this.dialog.closed.subscribe((e) => {
+      let sub1 = this.dialog.closed.subscribe((e) => {
         if (!e?.event) {
           this.view.dataService.clear();
         }
@@ -664,7 +679,9 @@ export class CodxTasksComponent
             this.resourceNew.emit(e?.event?.owner);
         }
       });
+      this.subscription.add(sub1)
     });
+    this.subscription.add(sub);
   }
 
   delete(data: any) {
@@ -685,7 +702,7 @@ export class CodxTasksComponent
       return;
     }
     var isCanDelete = true;
-    this.api
+    let sub = this.api
       .execSv<any>(
         'TM',
         'ERM.Business.TM',
@@ -708,6 +725,7 @@ export class CodxTasksComponent
           }
         }
       });
+      this.subscription.add(sub)
   }
 
   assignTask(moreFunc, data) {
@@ -728,7 +746,7 @@ export class CodxTasksComponent
       assignModel,
       option
     );
-    this.dialog.closed.subscribe((e) => {
+    let sub = this.dialog.closed.subscribe((e) => {
       if (!e.event) this.view.dataService.clear();
       // if (e?.event == null)
       //   this.view.dataService.delete(
@@ -744,6 +762,7 @@ export class CodxTasksComponent
         this.detectorRef.detectChanges();
       }
     });
+    this.subscription.add(sub)
   }
   //#endregion
 
@@ -752,7 +771,7 @@ export class CodxTasksComponent
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService
+    let sub = this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
         let option = new SidebarModel();
@@ -773,7 +792,7 @@ export class CodxTasksComponent
           disabledProject: this.disabledProject,
         };
         this.dialog = this.callfc.openSide(PopupAddComponent, obj, option);
-        this.dialog.closed.subscribe((e) => {
+       let sub1= this.dialog.closed.subscribe((e) => {
           if (!e.event) this.view.dataService.clear();
           // if (e?.event == null)
           //   this.view.dataService.delete(
@@ -788,13 +807,15 @@ export class CodxTasksComponent
           }
           this.detectorRef.detectChanges();
         });
+        this.subscription.add(sub1)
       });
+      this.subscription.add(sub)
   }
 
   deleteConfirm(data) {
-    this.notiService.alertCode('TM003').subscribe((confirm) => {
+    let sub =this.notiService.alertCode('TM003').subscribe((confirm) => {
       if (confirm?.event && confirm?.event?.status == 'Y') {
-        this.tmSv.deleteTask(data.taskID).subscribe((res) => {
+        let sub1= this.tmSv.deleteTask(data.taskID).subscribe((res) => {
           if (res) {
             var listTaskDelete = res[0];
             var parent = res[1];
@@ -804,14 +825,17 @@ export class CodxTasksComponent
             this.view.dataService.onAction.next({ type: 'delete', data: data });
             this.notiService.notifyCode('TM004');
             if (parent) {
-              this.view.dataService.update(parent).subscribe();
+              let sub2 =this.view.dataService.update(parent).subscribe();
+              this.subscription.add(sub2)
             }
             this.itemSelected = this.view.dataService.data[0];
             this.detectorRef.detectChanges();
           }
         });
+        this.subscription.add(sub1)
       }
     });
+    this.subscription.add(sub)
   }
 
   beforDelete(opt: RequestOption) {
@@ -861,18 +885,19 @@ export class CodxTasksComponent
           return;
         }
       }
-      this.notiService.alertCode('TM054').subscribe((confirm) => {
+      let sub = this.notiService.alertCode('TM054').subscribe((confirm) => {
         if (confirm?.event && confirm?.event?.status == 'Y') {
           this.confirmUpdateStatus(moreFunc, taskAction);
         }
       });
+      this.subscription.add(sub)
     } else this.confirmUpdateStatus(moreFunc, taskAction);
   }
 
   confirmUpdateStatus(moreFunc, taskAction) {
     // const fieldName = 'UpdateControl';
     if (taskAction.taskGroupID) {
-      this.api
+      let sub = this.api
         .execSv<any>(
           'TM',
           'ERM.Business.TM',
@@ -901,6 +926,7 @@ export class CodxTasksComponent
             );
           }
         });
+        this.subscription.add(sub)
     } else {
       this.actionUpdateStatus(
         moreFunc,
@@ -928,7 +954,7 @@ export class CodxTasksComponent
       taskAction.category == '3'
     ) {
       var isCheck = false;
-      this.api
+      let sub = this.api
         .execSv<any>(
           'TM',
           'ERM.Business.TM',
@@ -954,6 +980,7 @@ export class CodxTasksComponent
               );
           }
         });
+        this.subscription.add(sub)
     } else if (status == '80' && taskAction.category == '3') {
       this.updateStatusCancel(
         moreFunc,
@@ -980,7 +1007,7 @@ export class CodxTasksComponent
     maxHoursControl,
     maxHours
   ) {
-    this.api
+    let sub = this.api
       .execSv<any>(
         'TM',
         'ERM.Business.TM',
@@ -1006,6 +1033,7 @@ export class CodxTasksComponent
             );
         }
       });
+      this.subscription.add(sub)
   }
 
   updatStatusAfterCheck(
@@ -1046,7 +1074,7 @@ export class CodxTasksComponent
       }
       var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
 
-      this.tmSv
+      let sub = this.tmSv
         .setStatusTask(
           this.funcID,
           taskAction.taskID,
@@ -1070,6 +1098,7 @@ export class CodxTasksComponent
               this.detail.getDataHistoryProgress(this.itemSelected.recID);
           } else this.notiService.notifyCode('SYS021');
         });
+        this.subscription.add(sub)
     }
   }
 
@@ -1096,14 +1125,15 @@ export class CodxTasksComponent
       '',
       obj
     );
-    this.dialog.closed.subscribe((e) => {
+    let sub1 = this.dialog.closed.subscribe((e) => {
       let kanban = (this.view.currentView as any).kanban;
       if (e?.event && e?.event != null) {
         e?.event.forEach((obj) => {
           if (kanban) {
             kanban.updateCard(obj);
           }
-          this.view.dataService.update(obj).subscribe();
+          let sub = this.view.dataService.update(obj).subscribe();
+          this.subscription.add(sub)
         });
         this.itemSelected = e?.event[0];
         this.detail.taskID = this.itemSelected.taskID;
@@ -1115,6 +1145,7 @@ export class CodxTasksComponent
       }
       this.detectorRef.detectChanges();
     });
+    this.subscription.add(sub1)
   }
   //#endregion
   //#region Event đã có dùng clickChildrenMenu truyền về
@@ -1130,7 +1161,7 @@ export class CodxTasksComponent
     this.viewCrr = evt?.view?.type;
     if (this.crrFuncID != this.funcID) {
       this.afterLoad();
-      this.cache.viewSettings(this.funcID).subscribe((views) => {
+      let sub = this.cache.viewSettings(this.funcID).subscribe((views) => {
         if (views?.length > 0) {
           // this.afterLoad();
           this.crrFuncID = this.funcID;
@@ -1165,6 +1196,7 @@ export class CodxTasksComponent
           this.detectorRef.detectChanges();
         }
       });
+      this.subscription.add(sub)
     }
     return;
     // core Hảo sua roi nên không cân đoạn này nữa
@@ -1253,7 +1285,7 @@ export class CodxTasksComponent
   }
 
   getParam(callback = null) {
-    this.api
+    let sub = this.api
       .execSv<any>(
         'SYS',
         'ERM.Business.SYS',
@@ -1270,10 +1302,11 @@ export class CodxTasksComponent
           return callback && callback(true);
         }
       });
+      this.subscription.add(sub)
   }
 
   getTaskGroup(idTasKGroup, e, data) {
-    this.api
+    let sub = this.api
       .execSv<any>(
         'TM',
         'ERM.Business.TM',
@@ -1291,6 +1324,7 @@ export class CodxTasksComponent
           this.clickMFAfterParameter(e, data);
         }
       });
+      this.subscription.add(sub)
   }
 
   //#region Convert
@@ -1336,7 +1370,7 @@ export class CodxTasksComponent
         this.timeoutId = setTimeout(function () {
           if (t.isHoverPop) return;
           t.isHoverPop = true;
-          t.api
+          let sub = t.api
             .execSv<any>(
               'TM',
               'ERM.Business.TM',
@@ -1370,6 +1404,7 @@ export class CodxTasksComponent
               }
               t.isHoverPop = false;
             });
+            t.subscription.add(sub)
         }, 2000);
       }
     } else {
@@ -1444,10 +1479,11 @@ export class CodxTasksComponent
       '',
       obj
     );
-    this.dialogConfirmStatus.closed.subscribe((e) => {
+    let sub = this.dialogConfirmStatus.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
         e?.event.forEach((obj) => {
-          this.view.dataService.update(obj).subscribe();
+          let sub1 = this.view.dataService.update(obj).subscribe();
+          this.subscription.add(sub1)
         });
         this.itemSelected = e?.event[0];
         this.detail.taskID = this.itemSelected.taskID;
@@ -1455,6 +1491,7 @@ export class CodxTasksComponent
       }
       this.detectorRef.detectChanges();
     });
+    this.subscription.add(sub)
   }
 
   //#endregion
@@ -1476,16 +1513,17 @@ export class CodxTasksComponent
       '',
       obj
     );
-    this.dialogApproveStatus.closed.subscribe((e) => {
+    let sub = this.dialogApproveStatus.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
-        this.view.dataService.update(e?.event).subscribe();
-
+        let sub1= this.view.dataService.update(e?.event).subscribe();
+        this.subscription.add(sub1)
         this.itemSelected = e?.event;
         this.detail.taskID = this.itemSelected.taskID;
         this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
+    this.subscription.add(sub)
   }
   //#endregion
   //#region verifyStatus
@@ -1505,10 +1543,11 @@ export class CodxTasksComponent
       '',
       obj
     );
-    this.dialogVerifyStatus.closed.subscribe((e) => {
+    let sub = this.dialogVerifyStatus.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
         e?.event.forEach((obj) => {
-          this.view.dataService.update(obj).subscribe();
+          let sub1 = this.view.dataService.update(obj).subscribe();
+          this.subscription.add(sub1)
         });
         this.itemSelected = e?.event[0];
         this.detail.taskID = this.itemSelected.taskID;
@@ -1516,6 +1555,7 @@ export class CodxTasksComponent
       }
       this.detectorRef.detectChanges();
     });
+    this.subscription.add(sub)
   }
   //#endregion
 
@@ -1547,11 +1587,12 @@ export class CodxTasksComponent
       '',
       obj
     );
-    this.dialogProgess.closed.subscribe((e) => {
+    let sub = this.dialogProgess.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
         let kanban = (this.view.currentView as any).kanban;
         e?.event.forEach((obj) => {
-          this.view.dataService.update(obj).subscribe();
+          let sub1 = this.view.dataService.update(obj).subscribe();
+          this.subscription.add(sub1)
           if (kanban) {
             kanban.updateCard(obj);
           }
@@ -1564,6 +1605,7 @@ export class CodxTasksComponent
       }
       this.detectorRef.detectChanges();
     });
+    this.subscription.add(sub)
   }
   //#endregion
 
@@ -1586,7 +1628,7 @@ export class CodxTasksComponent
     // }
 
     if (data.extendStatus == '3') {
-      this.api
+      let sub = this.api
         .execSv<any>(
           'TM',
           'TM',
@@ -1596,12 +1638,13 @@ export class CodxTasksComponent
         )
         .subscribe((dt) => {
           if (dt) {
-            this.notiService.alertCode('TM055').subscribe((confirm) => {
+            let sub1= this.notiService.alertCode('TM055').subscribe((confirm) => {
               if (confirm?.event && confirm?.event?.status == 'Y') {
                 this.taskExtend = dt;
                 this.confirmExtend(data, moreFunc);
               }
             });
+            this.subscription.add(sub1)
           } else {
             if (data.createdBy != data.owner)
               this.taskExtend.extendApprover = data.createdBy;
@@ -1615,6 +1658,7 @@ export class CodxTasksComponent
             this.confirmExtend(data, moreFunc);
           }
         });
+        this.subscription.add(sub)
     } else {
       if (data.createdBy != data.owner)
         this.taskExtend.extendApprover = data.createdBy;
@@ -1627,7 +1671,7 @@ export class CodxTasksComponent
     }
   }
   confirmExtend(data, moreFunc) {
-    this.api
+    let sub = this.api
       .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
         this.taskExtend.extendApprover,
       ])
@@ -1648,14 +1692,15 @@ export class CodxTasksComponent
             '',
             obj
           );
-          this.dialogExtends.closed.subscribe((e) => {
+          let sub1 = this.dialogExtends.closed.subscribe((e) => {
             if (e?.event && e?.event != null) {
               //gửi mail FE
               // this.tmSv
               //   .sendAlertMail(data?.recID, 'TM_0015', this.funcID)
               //   .subscribe();
               e?.event.forEach((obj) => {
-                this.view.dataService.update(obj).subscribe();
+                let sub2 = this.view.dataService.update(obj).subscribe();
+                this.subscription.add(sub2)
               });
               this.itemSelected = e?.event[0];
               this.detail.taskID = this.itemSelected.taskID;
@@ -1663,8 +1708,10 @@ export class CodxTasksComponent
             }
             this.detectorRef.detectChanges();
           });
+          this.subscription.add(sub1)
         }
       });
+      this.subscription.add(sub)
   }
 
   //region
@@ -2213,7 +2260,7 @@ export class CodxTasksComponent
   }
 
   getParams() {
-    this.api
+    let sub = this.api
       .execSv<any>(
         'SYS',
         'ERM.Business.SYS',
@@ -2228,11 +2275,12 @@ export class CodxTasksComponent
           this.getDayOff(this.calendarID);
         }
       });
+      this.subscription.add(sub)
   }
 
   getDayOff(id = null) {
     if (id) this.calendarID = id;
-    this.api
+    let sub = this.api
       .execSv<any>(
         'BS',
         'ERM.Business.BS',
@@ -2248,12 +2296,13 @@ export class CodxTasksComponent
           // });
         }
       });
+      this.subscription.add(sub)
   }
   //#endregion schedule
 
   getDataAsync(pObjectID: string) {
     if (pObjectID) {
-      this.api
+      let sub = this.api
         .execSv(
           'DM',
           'ERM.Business.DM',
@@ -2266,6 +2315,7 @@ export class CodxTasksComponent
             return res.length;
           }
         });
+        this.subscription.add(sub)
     }
   }
 
@@ -2297,7 +2347,7 @@ export class CodxTasksComponent
   }
 
   openPopupTodoList(taskID) {
-    this.tmSv.getListTaskGoad(taskID).subscribe((res) => {
+    let sub = this.tmSv.getListTaskGoad(taskID).subscribe((res) => {
       if (res && res.length > 0) {
         this.listTaskGoals = res;
         let option = new DialogModel();
@@ -2314,6 +2364,7 @@ export class CodxTasksComponent
         );
       }
     });
+    this.subscription.add(sub)
   }
 
   //onLoading
@@ -2367,7 +2418,7 @@ export class CodxTasksComponent
   //menu 2
 
   getSearchFav() {
-    this.api
+   let sub =  this.api
       .execSv('SYS', 'SYS', 'SearchFavoriteBusiness', 'GetFavoriteAsync', [
         this.entityID,
         1,
@@ -2428,6 +2479,7 @@ export class CodxTasksComponent
         //     // this.setBreadCrumb(this.func);
         //   });
       });
+      this.subscription.add(sub)
   }
   setBreadCrumb(defaultName: any, deleteChild: boolean = false) {
     if (defaultName) {
