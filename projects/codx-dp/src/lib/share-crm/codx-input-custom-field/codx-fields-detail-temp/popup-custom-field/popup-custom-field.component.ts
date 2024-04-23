@@ -38,7 +38,7 @@ export class PopupCustomFieldComponent implements OnInit {
   fieldOther = []; //Là form công việc
   isView = false; // nvthuan them để chỉ được xem
   conRef: any[] = []//mang ref error
-
+  isHaveApplyDep = false //danh sach fieldRef
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -59,6 +59,7 @@ export class PopupCustomFieldComponent implements OnInit {
 
     this.isAdd = dt?.data?.isAdd ?? false;
     this.arrCaculateField = this.fields.filter((x) => x.dataType == 'CF');
+    this.isHaveApplyDep = this.fields.some((x) => x.isApplyDependences);
     if (this.arrCaculateField?.length > 0)
       this.arrCaculateField.sort((a, b) => {
         if (a.dataFormat.includes('[' + b.fieldName + ']')) return 1;
@@ -83,7 +84,7 @@ export class PopupCustomFieldComponent implements OnInit {
     if (event && event.data) {
       let result = event.e;
       let field = event.data;
-
+      let dependences = event?.dependences; //tham chieu dependece cua cbx
       let index = this.fields.findIndex((x) => x.recID == field.recID);
       if (index != -1) {
         this.fields[index] = this.upDataVersion(this.fields[index], result);
@@ -100,6 +101,7 @@ export class PopupCustomFieldComponent implements OnInit {
         //     this.conRef = this.conRef.concat(arrRef)
         //   }
         // }
+        if (this.isHaveApplyDep && dependences?.length > 0) this.fields = this.changeRefData(dependences, this.fields)
         if (field.dataType == 'N') this.caculateField();
       }
     }
@@ -252,7 +254,7 @@ export class PopupCustomFieldComponent implements OnInit {
           );
         }
 
-        this.setElement(obj.recID, obj.dataValue);
+        this.setElement(obj.recID, obj.dataValue, obj.dataType);
         this.changeDetectorRef.detectChanges();
       } else if (obj.dataValue) {
         //Chua xu ly
@@ -339,14 +341,16 @@ export class PopupCustomFieldComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  setElement(recID, value) {
-    value =
-      value && value != '_'
-        ? Number.parseFloat(value)?.toFixed(2).toString()
-        : '';
+  setElement(recID, value, dataType) {
     var codxinput = document.querySelectorAll(
       '.form-group codx-input[data-record="' + recID + '"]'
     );
+    if (dataType == 'N' || dataType == 'CF') {
+      value =
+        value && value != '_'
+          ? Number.parseFloat(value)?.toFixed(2).toString()
+          : '';
+    }
 
     if (codxinput?.length > 0) {
       let htmlE = codxinput[0] as HTMLElement;
@@ -355,5 +359,19 @@ export class PopupCustomFieldComponent implements OnInit {
         input.value = value;
       }
     }
+  }
+
+  //Tham chiếu giá trị
+  changeRefData(dependences, fields) {
+    dependences.forEach(fn => {
+      let idx = fields.findIndex(x => x.fieldName == fn.fieldName);
+      if (idx != -1) {
+        fields[idx].dataValue = fn.dataValue
+        this.setElement(fields[idx].recID, fn.dataValue, fields[idx].dataType)
+        if (this.fields[idx].dataType == 'N') this.caculateField()
+      }
+    })
+
+    return fields;
   }
 }

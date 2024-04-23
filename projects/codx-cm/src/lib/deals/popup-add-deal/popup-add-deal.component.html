@@ -335,6 +335,7 @@
             [isAdd]="action == actionAdd"
             (valueChangeCustom)="valueChangeCustom($event)"
             (addFileCompleted)="addFileCompleted($event)"
+            [disable]="viewOnly || item?.isApplyDependences"
           >
           </codx-input-custom-field>
         </div>
@@ -398,7 +399,7 @@
           [customerID]="deal?.customerID"
           [formModel]="dialog.formModel"
           [isAdd]="action == actionAdd"
-          [disable]="viewOnly"
+          [disable]="viewOnly || item?.isApplyDependences"
           (valueChangeCustom)="valueChangeCustom($event)"
           (addFileCompleted)="addFileCompleted($event)"
         >

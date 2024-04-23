@@ -66,6 +66,60 @@
           </codx-input>
         </div>
       </div>
+      <div class="d-flex align-items-center form-group">
+        <codx-label
+          class="me-3"
+          fiedName="IsApplyDependences"
+          [formModel]="form?.formModel"
+          default="Sử dụng tham chiếu dữ liệu"
+        ></codx-label>
+        <codx-input
+          type="switch"
+          [disabled]="viewOnly || action == 'edit'"
+          field="isApplyDependences"
+          [checked]="field?.isApplyDependences"
+          (valueChange)="changeDependences($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="field?.isApplyDependences">
+        <div class="w-100 border border-gray-300 rounded-2 py-3 px-4 mb-4">
+          <div class="form-group">
+            <codx-label
+              class="me-3"
+              name="fieldDependences"
+              [formModel]="form?.formModel"
+              default="Trường dữ liệu muốn tham chiếu"
+            ></codx-label>
+            <ejs-combobox
+              [dataSource]="listCbx"
+              [fields]="fieldsDependence"
+              [value]="dependence.refID"
+              [allowFiltering]="false"
+              [placeholder]=""
+              [enabled]="!viewOnly && action != 'edit'"
+              (valueChange)="cbxChangeDependence($event)"
+            ></ejs-combobox>
+          </div>
+          <div class="form-group">
+            <codx-label
+              class="me-3"
+              name="valueDependences"
+              [formModel]="form?.formModel"
+              default="Giá trị muốn tham chiếu"
+            ></codx-label>
+            <ejs-combobox
+              #selectValueDep
+              [dataSource]="listValueField"
+              [fields]="valueDependence"
+              [allowFiltering]="false"
+              [placeholder]=""
+              [enabled]="!viewOnly && action != 'edit'"
+              (valueChange)="cbxChangeValueDependence($event)"
+            ></ejs-combobox>
+          </div>
+        </div>
+      </div>
       <div class="form-group">
         <codx-label
           fiedName="DataType"
@@ -80,7 +134,12 @@
           [refValue]="refValueDataType"
           [placeholder]="grvSetup['DataType']['headerText']"
           (valueChange)="valueChange($event)"
-          [disabled]="action == 'edit' || this.isDuplicateField || viewOnly"
+          [disabled]="
+            action == 'edit' ||
+            this.isDuplicateField ||
+            viewOnly ||
+            field?.isApplyDependences
+          "
         >
         </codx-input>
       </div>
@@ -197,6 +256,7 @@
           field="dataFormat"
           [crrValue]="field?.dataFormat"
           refValue="DP0271"
+          [disabled]="viewOnly || field?.isApplyDependences"
           [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
         >
@@ -210,7 +270,12 @@
           refValue="DP0272"
           [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
-          [disabled]="action == 'edit' || this.isDuplicateField || viewOnly"
+          [disabled]="
+            action == 'edit' ||
+            this.isDuplicateField ||
+            viewOnly ||
+            field?.isApplyDependences
+          "
         >
         </codx-input>
         <codx-input
@@ -222,7 +287,7 @@
           refValue="DP0273"
           [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
-          [disabled]="viewOnly"
+          [disabled]="viewOnly || field?.isApplyDependences"
         >
         </codx-input>
         <codx-input
@@ -234,7 +299,7 @@
           refValue="DP0274"
           [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
-          [disabled]="viewOnly"
+          [disabled]="viewOnly || field?.isApplyDependences"
         >
         </codx-input>
         <codx-input
@@ -246,7 +311,7 @@
           refValue="DP0275"
           [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
-          [disabled]="viewOnly"
+          [disabled]="viewOnly || field?.isApplyDependences"
         >
         </codx-input>
       </div>
@@ -319,7 +384,12 @@
             [crrValue]="field.refValue"
             [refValue]="'DPComboboxList'"
             (valueChange)="valueChange($event)"
-            [disabled]="action == 'edit' || this.isDuplicateField || viewOnly"
+            [disabled]="
+              action == 'edit' ||
+              this.isDuplicateField ||
+              viewOnly ||
+              field?.isApplyDependences
+            "
           ></codx-input>
 
           <ng-container
@@ -333,7 +403,9 @@
               [allowFiltering]="true"
               [placeholder]="grvSetup['refValue']?.description"
               (valueChange)="cbxChangeVll($event)"
-              [enabled]="action != 'edit' && !viewOnly"
+              [enabled]="
+                action != 'edit' && !viewOnly && !field?.isApplyDependences
+              "
             ></ejs-combobox
           ></ng-container>
         </div>
@@ -372,6 +444,7 @@
                 [value]=""
                 [allowFiltering]="false"
                 [placeholder]="this.crrVll?.note"
+                [enabled]="!field?.isApplyDependences"
               ></ejs-combobox>
             </ng-container>
             <ng-container *ngIf="this.crrVll?.multiSelect">
@@ -382,6 +455,7 @@
                 [value]=""
                 [showDropDownIcon]="true"
                 [placeholder]="this.crrVll?.note"
+                [enabled]="!field?.isApplyDependences"
               ></ejs-multiselect>
             </ng-container>
           </ng-container>
@@ -413,16 +487,17 @@
       <div
         class="d-flex align-items-center form-group"
         *ngIf="
-          (this.field.dataFormat &&
-            (this.field.dataType == 'N' ||
-              this.field.dataType == 'P' ||
-              this.field.dataType == 'T')) ||
-          (((this.field.dataType == 'L' && this.field.dataFormat != 'B') ||
-            this.field.dataType == 'PA') &&
-            this.field.refValue) ||
-          (this.field.dataType == 'L' && this.field.dataFormat == 'B') ||
-          this.field.dataType == 'D' ||
-          field.dataType == 'RM'
+          !field?.isApplyDependences &&
+          ((field.dataFormat &&
+            (field.dataType == 'N' ||
+              field.dataType == 'P' ||
+              field.dataType == 'T')) ||
+            (((field.dataType == 'L' && field.dataFormat != 'B') ||
+              field.dataType == 'PA') &&
+              field.refValue) ||
+            (field.dataType == 'L' && field.dataFormat == 'B') ||
+            field.dataType == 'D' ||
+            field.dataType == 'RM')
         "
       >
         <codx-label
@@ -489,7 +564,7 @@
               [iconOnly]="true"
               [crrValue]="field?.rankIcon"
               (valueChange)="valueChangeIcon($event)"
-              [disabled]="viewOnly"
+              [disabled]="viewOnly || field?.isApplyDependences"
             >
             </codx-input>
           </div>
@@ -512,7 +587,7 @@
               [ticks]="ticks"
               [tooltip]="tooltip"
               (change)="sliderChange($event)"
-              [disabled]="viewOnly"
+              [disabled]="viewOnly || field?.isApplyDependences"
             ></ejs-slider>
           </div>
         </div>
@@ -550,62 +625,11 @@
           field="isRequired"
           [checked]="field?.isRequired"
           (valueChange)="changeRequired($event)"
-          [disabled]="viewOnly"
+          [disabled]="viewOnly || field?.isApplyDependences"
         >
         </codx-input>
       </div>
-      <div class="d-flex align-items-center form-group">
-        <codx-label
-          class="me-3"
-          fiedName="IsApplyDependences"
-          [formModel]="form?.formModel"
-          default="Sử dụng tham chiếu dữ liệu"
-        ></codx-label>
-        <codx-input
-          type="switch"
-          field="isApplyDependences"
-          [checked]="field?.isApplyDependences"
-          (valueChange)="changeDependences($event)"
-          [disabled]="viewOnly"
-        >
-        </codx-input>
-      </div>
-      <div class="form-group" *ngIf="field?.isApplyDependences">
-        <div class="w-100 border border-gray-300 rounded-2 py-3 px-4 mb-4">
-          <div class="form-group">
-            <codx-label
-              class="me-3"
-              name="fieldDependences"
-              [formModel]="form?.formModel"
-              default="Trường dữ liệu muốn tham chiếu"
-            ></codx-label>
-            <ejs-combobox
-              [dataSource]="listCbx"
-              [fields]="fieldsDependence"
-              [value]=""
-              [allowFiltering]="false"
-              [placeholder]=""
-              (valueChange)="cbxChangeDependence($event)"
-            ></ejs-combobox>
-          </div>
-          <div class="form-group">
-            <codx-label
-              class="me-3"
-              name="valueDependences"
-              [formModel]="form?.formModel"
-              default="Giá trị muốn tham chiếu"
-            ></codx-label>
-            <ejs-combobox
-              [dataSource]="listValueField"
-              [fields]="valueDependence"
-              [value]=""
-              [allowFiltering]="false"
-              [placeholder]=""
-              (valueChange)="cbxChangeValueDependence($event)"
-            ></ejs-combobox>
-          </div>
-        </div>
-      </div>
+
       <ng-container *ngIf="!field?.isApplyDependences">
         <div
           class="d-flex align-items-center form-group"

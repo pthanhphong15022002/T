@@ -782,9 +782,31 @@ export class CodxInputCustomFieldComponent implements OnInit {
   }
 
   valueChangeCbx(e) {
+    //tham chieu gias tri
+    let dataDependences = []
+    if (this.customField?.dependences) {
+      let model = e?.component?.itemsSelected[0];
+      let arrTableField = e?.component?.arrTableField
+      if (model) {
+        let arrField = this.customField?.dependences.split(",");
+        arrField.forEach(f => {
+          let arrRef = f.split("=");
+          let fieldName = arrRef[0];
+          let numArr = arrRef[1].slice(0, -1);
+          numArr = numArr.slice(1)
+          let obj = {
+            fieldName: fieldName,
+            dataValue: model[arrTableField[numArr]]
+          }
+          dataDependences.push(obj)
+        })
+      }
+    }
+
     this.valueChangeCustom.emit({
       e: e.data,
       data: this.customField,
+      dependences: dataDependences
     });
   }
 
@@ -1037,13 +1059,13 @@ export class CodxInputCustomFieldComponent implements OnInit {
   //-----------------------------------------------//
   //-------------- Data tham chiếu -PA ------------//
   //-----------------------------------------------//
-  valueChangeCbxPA(e) {
-    // if (!e.data) {
-    this.valueChangeCustom.emit({
-      e: e.data,
-      data: this.customField,
-    });
-  }
+  // valueChangeCbxPA(e) {
+  //   // if (!e.data) {
+  //   this.valueChangeCustom.emit({
+  //     e: e.data,
+  //     data: this.customField,
+  //   });
+  // }
 
   viewFieldRef() {
     this.dataRef = '';

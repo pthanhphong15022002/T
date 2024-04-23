@@ -1,128 +1,250 @@
-<codx-detail-tmp 
-    *ngIf="data"
-    [header]="header" 
-    [formModel]="view.formModel" 
-    [dataItem]="data" 
-    [body]="body"
-    [footer]="footer" 
-    [hideMF]="true">
+<codx-detail-tmp
+  *ngIf="data"
+  [header]="header"
+  [formModel]="view.formModel"
+  [dataItem]="data"
+  [body]="body"
+  [footer]="footer"
+  [hideMF]="true"
+>
 </codx-detail-tmp>
 
 <ng-template #header>
-    <div class="d-flex flex-column w-100 mb-2">
-        <div class="form-group">
-            <div class="d-flex justify-content-between w-100">
-                <div class="d-flex">
-                    <div class="me-2">
-                        <codx-img [objectId]="data?.employeeID" [objectType]="'HR_Employees'" [objectName]="data?.employeeName" [width]="50"></codx-img>
-                    </div>
-                    <div class="d-flex flex-column align-items-stretch">
-                        <div class="fw-bold" *ngIf="data?.employeeName"><span>{{data.employeeName}}</span></div>
-                        <div class="text-dark" *ngIf="data?.positionName"><i class="icon-location_on me-2"></i><span>{{data.positionName}}</span></div>
-                        <div class="d-flex align-items-center text-gray-600">
-                            <div *ngIf="data?.phone" class="d-flex me-3">
-                                <i class="icon-phone_android me-2"></i>
-                                <div [innerHTML]="data.phone | formatvalue : view.formModel : 'phone' | async"></div>
-                            </div>
-                            <div *ngIf="data?.mail" class="d-flex me-3">
-                                <i class="icon-email text-warning me-2"></i>
-                                <div [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div *ngIf="data?.status">
-                    <codx-vll [name]="'EP033'" [value]="data.status" [showText]="true" [showBgColor]="true" [classList]="'badge rounded-pill'"></codx-vll>
-                </div>
+  <div class="d-flex flex-column w-100 mb-2">
+    <div class="form-group">
+      <div class="d-flex justify-content-between w-100">
+        <div class="d-flex">
+          <div class="me-2">
+            <codx-img
+              [objectId]="data?.employeeID"
+              [objectType]="'HR_Employees'"
+              [objectName]="data?.employeeName"
+              [width]="50"
+            ></codx-img>
+          </div>
+          <div class="d-flex flex-column align-items-stretch">
+            <div class="fw-bold" *ngIf="data?.employeeName">
+              <span>{{ data.employeeName }}</span>
             </div>
+            <div class="text-dark" *ngIf="data?.positionName">
+              <i class="icon-location_on me-2"></i
+              ><span>{{ data.positionName }}</span>
+            </div>
+            <div class="d-flex align-items-center text-gray-600">
+              <div *ngIf="data?.phone" class="d-flex me-3">
+                <i class="icon-phone_android me-2"></i>
+                <div
+                  [innerHTML]="
+                    data.phone | formatvalue : view.formModel : 'phone' | async
+                  "
+                ></div>
+              </div>
+              <div *ngIf="data?.mail" class="d-flex me-3">
+                <i class="icon-email text-warning me-2"></i>
+                <div
+                  [innerHTML]="
+                    data.email | formatvalue : view.formModel : 'email' | async
+                  "
+                ></div>
+              </div>
+            </div>
+          </div>
         </div>
+        <div *ngIf="data?.status">
+          <codx-vll
+            [name]="'EP033'"
+            [value]="data.status"
+            [showText]="true"
+            [showBgColor]="true"
+            [classList]="'badge rounded-pill'"
+          ></codx-vll>
+        </div>
+      </div>
     </div>
+  </div>
 </ng-template>
 <ng-template #body>
-    <div class="w-100 h-100">
-        <div class="form-group">
-            <div class="d-flex align-items-center me-4">
-                <codx-label [formModel]="view.formModel" name="Memo" default="Lý do" class="text-dark"></codx-label>
-                <div class="me-2">:</div>
-                <div *ngIf="data?.memo">
-                    <span>{{data.memo}}</span>
-                </div>
-            </div>
+  <div class="w-100 h-100">
+    <div class="form-group">
+      <div class="d-flex align-items-center me-4">
+        <codx-label
+          [formModel]="view.formModel"
+          name="RequestNo"
+          default="Số yêu cầu"
+          class="text-dark"
+        ></codx-label>
+        <div class="me-2">:</div>
+        <div *ngIf="data?.requestNo">
+          <span>{{ data.requestNo }}</span>
         </div>
-        <div *ngIf="data?.refID" class="form-group">
-            <div class="d-flex align-items-center">
-                <codx-img [objectId]="data.refID" [objectName]="data?.refType" [objectType]="'EP_Requests'" [width]="30" class="me-4"></codx-img>
-                <div class="d-flex" *ngIf="data?.refRequestMemo">
-                    <span *ngIf="data.refRequestMemo" class="fw-bold">{{data.refRequestMemo}}</span>
-                    <span *ngIf="data.refRequestMemo && data.refRequestNo" class="mx-1">-</span>
-                    <span *ngIf="data.refRequestNo" class="text-gray-600">{{data.refRequestNo}}</span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="d-flex mb-2">
-                <div class="d-flex pb-1 pe-2 border-bottom border-primary border-2">
-                    <i class="icon-monetization_on me-2 fw-bold"></i>
-                    <codx-label [formModel]="view.formModel" name="lblLabel1" [default]="'Khoản mục chi phí'"></codx-label>
-                </div>
-            </div>
-            <div class="d-flex flex-column min-w-400" *ngIf="data?.lines">
-                <div class="w-content mb-2">
-                    <div *ngFor="let item of data.lines" class="d-flex align-items-start justify-content-between pt-2 w-100">
-                        <div class="d-flex align-items-center w-content me-10">
-                            <codx-img [objectId]="item.recID" [objectName]="item.itemName" [objectType]="'EP_Requests_Lines'" [width]="30" class="me-2"></codx-img>
-                            <div class="d-flex flex-column w-100">
-                                <p class="text-dark mb-0">{{item.itemName}}</p>
-                                <p class="text-gray-600 mb-0">{{item.note}}</p>
-                            </div>
-                        </div>
-                        <div class="text-dark" [innerHTML]="item.amount | formatvalue : view.formModel : 'requestAmt' | async">
-                        </div>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-end text-dark pt-1 ps-4 mb-2 border-top border-light border-2">
-                    <div class="text-left me-6">
-                        <div class="d-flex mb-2">
-                            <codx-label [formModel]="view.formModel" name="lblLabel2" [default]="'Tổng cộng'"></codx-label>
-                            <span>:</span>
-                        </div>
-                        <div class="d-flex text-warning mb-2">
-                            <codx-label [formModel]="view.formModel" name="lblLabel3" [default]="'Đã tạm ứng'"></codx-label>
-                            <span>:</span>
-                        </div>
-                        <div class="d-flex mb-2">
-                            <codx-label [formModel]="view.formModel" name="lblLabel4" [default]="'Còn phải chi'"></codx-label>
-                            <span>:</span>
-                        </div>
-                        <div class="d-flex mb-2">
-                            <codx-label [formModel]="view.formModel" name="lblLabel5" [default]="'Thanh toán bằng'"></codx-label>
-                            <span>:</span>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="mb-2" [innerHTML]="data?.totalAmount | formatvalue : view.formModel : 'requestAmt' | async"></div>
-                        <div class="mb-2" [innerHTML]="data?.refRequestAmt | formatvalue : view.formModel : 'requestAmt' | async"></div>
-                        <div class="mb-2" [innerHTML]="(data?.totalAmount - data?.requestAmt) | formatvalue : view.formModel : 'requestAmt' | async"></div>
-                        <div class="mb-2" [innerHTML]="data?.pmtMethodID | formatvalue : view.formModel : 'pmtMethodID' | async"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+    <div class="form-group">
+      <div class="d-flex align-items-center me-4">
+        <codx-label
+          [formModel]="view.formModel"
+          name="Memo"
+          default="Lý do"
+          class="text-dark"
+        ></codx-label>
+        <div class="me-2">:</div>
+        <div *ngIf="data?.memo">
+          <span>{{ data.memo }}</span>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="data?.refID" class="form-group">
+      <div class="d-flex align-items-center">
+        <codx-img
+          [objectId]="data.refID"
+          [objectName]="data?.refType"
+          [objectType]="'EP_Requests'"
+          [width]="30"
+          class="me-4"
+        ></codx-img>
+        <div class="d-flex" *ngIf="data?.refRequestMemo">
+          <span *ngIf="data.refRequestMemo" class="fw-bold">{{
+            data.refRequestMemo
+          }}</span>
+          <span *ngIf="data.refRequestMemo && data.refRequestNo" class="mx-1"
+            >-</span
+          >
+          <span *ngIf="data.refRequestNo" class="text-gray-600">{{
+            data.refRequestNo
+          }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="d-flex mb-2">
+        <div class="d-flex pb-1 pe-2 border-bottom border-primary border-2">
+          <i class="icon-monetization_on me-2 fw-bold"></i>
+          <codx-label
+            [formModel]="view.formModel"
+            name="lblLabel1"
+            [default]="'Khoản mục chi phí'"
+          ></codx-label>
+        </div>
+      </div>
+      <div class="d-flex flex-column min-w-400" *ngIf="data?.lines">
+        <div class="w-content mb-2">
+          <div
+            *ngFor="let item of data.lines"
+            class="d-flex align-items-start justify-content-between pt-2 w-100"
+          >
+            <div class="d-flex align-items-center w-content me-10">
+              <codx-img
+                [objectId]="item.recID"
+                [objectName]="item.itemName"
+                [objectType]="'EP_Requests_Lines'"
+                [width]="30"
+                class="me-2"
+              ></codx-img>
+              <div class="d-flex flex-column w-100">
+                <p class="text-dark mb-0">{{ item.itemName }}</p>
+                <p class="text-gray-600 mb-0">{{ item.note }}</p>
+              </div>
+            </div>
+            <div
+              class="text-dark"
+              [innerHTML]="
+                item.amount
+                  | formatvalue : view.formModel : 'requestAmt'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+        <div
+          class="d-flex justify-content-end text-dark pt-1 ps-4 mb-2 border-top border-light border-2"
+        >
+          <div class="text-left me-6">
+            <div class="d-flex mb-2">
+              <codx-label
+                [formModel]="view.formModel"
+                name="lblLabel2"
+                [default]="'Tổng cộng'"
+              ></codx-label>
+              <span>:</span>
+            </div>
+            <div class="d-flex text-warning mb-2">
+              <codx-label
+                [formModel]="view.formModel"
+                name="lblLabel3"
+                [default]="'Đã tạm ứng'"
+              ></codx-label>
+              <span>:</span>
+            </div>
+            <div class="d-flex mb-2">
+              <codx-label
+                [formModel]="view.formModel"
+                name="lblLabel4"
+                [default]="'Còn phải chi'"
+              ></codx-label>
+              <span>:</span>
+            </div>
+            <div class="d-flex mb-2">
+              <codx-label
+                [formModel]="view.formModel"
+                name="lblLabel5"
+                [default]="'Thanh toán bằng'"
+              ></codx-label>
+              <span>:</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <div
+              class="mb-2"
+              [innerHTML]="
+                data?.totalAmount
+                  | formatvalue : view.formModel : 'requestAmt'
+                  | async
+              "
+            ></div>
+            <div
+              class="mb-2"
+              [innerHTML]="
+                data?.totalAmount - data?.requestAmt
+                  | formatvalue : view.formModel : 'requestAmt'
+                  | async
+              "
+            ></div>
+            <div
+              class="mb-2"
+              [innerHTML]="
+                data?.requestAmt
+                  | formatvalue : view.formModel : 'requestAmt'
+                  | async
+              "
+            ></div>
+            <div
+              class="mb-2"
+              [innerHTML]="
+                data?.pmtMethodID
+                  | formatvalue : view.formModel : 'pmtMethodID'
+                  | async
+              "
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>
 <ng-template #footer>
-    <codx-tabs 
-        *ngIf="data"
-        [entityName]="view?.formModel.entityName" 
-        [objectID]="data?.recID"
-        [funcID]="view?.formModel.funcID" 
-        [refID]="data?.recID" 
-        [refType]="view?.formModel.entityName"
-        [transID]="data?.recID" 
-        [approveStatus]="data?.status"
-        [formModel]="view?.formModel" 
-        [dataSelected]="data"
-        [data]="data" 
-        [keyField]="'recID'">
-    </codx-tabs>
+  <codx-tabs
+    *ngIf="data"
+    [entityName]="view?.formModel.entityName"
+    [objectID]="data?.recID"
+    [funcID]="view?.formModel.funcID"
+    [refID]="data?.recID"
+    [refType]="view?.formModel.entityName"
+    [transID]="data?.recID"
+    [approveStatus]="data?.status"
+    [formModel]="view?.formModel"
+    [dataSelected]="data"
+    [data]="data"
+    [keyField]="'recID'"
+  >
+  </codx-tabs>
 </ng-template>

@@ -39,7 +39,7 @@
     </div>
     <div class="d-flex justify-content-between flex-grow-1 mb-2">
       <div class="d-flex">
-        <i class="icon-i-building me-2 icon-18"></i>
+        <i *ngIf="itemSelected?.objectType" [ngClass]="itemSelected?.objectType | vll : (gridViewSetup['ObjectType'].referedValue) : 'icon' | async" class='me-2 icon-18'></i>
         <span *ngIf="itemSelected?.objectName"
           class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5">{{itemSelected?.objectName}}</span>
         <span *ngIf="(itemSelected?.objectName == '' || itemSelected?.objectName == null) && gridViewSetup"
