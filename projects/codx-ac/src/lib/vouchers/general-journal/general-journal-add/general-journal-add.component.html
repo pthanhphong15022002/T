@@ -444,8 +444,8 @@
           <div>
             <button style="border: 1px solid !important;" tabindex="-1" tab-index="11" id="btnAddCash"
               class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="
-                    onAddLine(); $event.preventDefault()
-                    " (click)="onAddLine()">
+                    addLine(); $event.preventDefault()
+                    " (click)="addLine()">
               <i class="icon-playlist_add icon-16"></i>
               <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
             </button>
@@ -473,8 +473,8 @@
           <div class="d-flex align-items-center">
             <div>
               <button style="border: 1px solid !important" tab-index="12" id="btnAddSet" tabindex="-1"
-                class="btn btn-sm btn-light-primary" (keydown.enter)="onAddLine();$event.preventDefault()"
-                (click)="onAddLine()">
+                class="btn btn-sm btn-light-primary" (keydown.enter)="addSettledInvoices();$event.preventDefault()"
+                (click)="addSettledInvoices()">
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label [formModel]="dialog.formModel" fiedName="lblAddSettledInvoice1"
                   default="Thêm hóa đơn công nợ"></codx-label>
@@ -505,8 +505,8 @@
           <div class="d-flex align-items-center">
             <div class="ms-2">
               <button tabindex="-1" style="border: 1px solid !important" tab-index="12"
-                class="btn btn-sm btn-light-primary" (keydown.enter)="onAddLine(); $event.preventDefault()"
-                (click)="onAddLine()" id="btnAddVAT">
+                class="btn btn-sm btn-light-primary" (keydown.enter)="addLineVatInvoices(); $event.preventDefault()"
+                (click)="addLineVatInvoices()" id="btnAddVAT">
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label [formModel]="dialog.formModel" fiedName="lblAddVat" default="Thêm dòng"></codx-label>
               </button>

@@ -57,8 +57,7 @@
         </span>
       </div>
       <div>
-        <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase"
-          [innerHTML]="(data?.totalDR | tranformValueNumber : (data?.currencyID !=  baseCurr ? 'S' : 'B') | async)+' '+data?.currencyID"></span>
+        <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{(data?.totalDR | tranformValueNumber : (data?.currencyID !=  baseCurr ? 'S' : 'B') | async)+' '+data?.currencyID}}</span>
       </div>
     </div>
     <div class="d-flex justify-content-between">
@@ -72,10 +71,10 @@
     </div>
     <div class="d-flex justify-content-between">
       <div class="d-flex">
-        <i class="icon-i-building me-2 icon-16"></i>
+        <i *ngIf="data?.objectType" [ngClass]="data?.objectType | vll : (view?.gridViewSetup['ObjectType'].referedValue) : 'icon' | async" class='me-2 icon-16'></i>
         <span *ngIf="data?.objectName" class="text-gray-600 line-clamp line-clamp-1">{{data?.objectName}}</span>
         <span *ngIf="(data?.objectName == '' || data?.objectName == null) && view?.gridViewSetup"
-          class="place-holder text-gray-600 line-clamp line-clamp-1">{{
+          class="place-holder text-gray-600">{{
           view?.gridViewSetup["ObjectID"].headerText}}</span>
       </div>
     </div>

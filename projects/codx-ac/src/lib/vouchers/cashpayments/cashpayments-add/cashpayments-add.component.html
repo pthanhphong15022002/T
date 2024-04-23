@@ -517,23 +517,22 @@
       <ng-container *ngIf="!master.data?.isReadOnly">
         <div #btnRef class="btn-addline">
           <div class="d-flex align-items-center">
-            <div *ngIf="master.data?.subType != '3' && master.data?.subType != '4'">
+            <div *ngIf="master.data?.subType != (this.journal.journalType+'5')">
               <button style="border: 1px solid !important;" tab-index="15" id="btnAddCash" tabindex="-1"
                 class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="
-                onAddLine(); $event.preventDefault()
-                " (click)="onAddLine()">
+                addLine(); $event.preventDefault()
+                " (click)="addLine()">
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
               </button>
             </div>
-            <div *ngIf="master?.data?.subType == '3' || master?.data?.subType == '4'" class="ms-2">
-              <button style="border: 1px solid !important" class="btn btn-sm btn-light-primary"
-                (keydown.enter)="onAddLine(); $event.preventDefault()" (click)="onAddLine()">
-                <i class="icon-i-receipt icon-16"></i>
-                <codx-label *ngIf="master.data.subType == '3'" [formModel]="dialog.formModel" fiedName="lblAddVat"
-                  default="Thêm đề nghị tạm ứng"></codx-label>
-                <codx-label *ngIf="master.data.subType == '4'" [formModel]="dialog.formModel" fiedName="lblAddVat"
-                  default="Thêm đề nghị thanh toán"></codx-label>
+            <div *ngIf="master.data?.subType == (this.journal.journalType+'5')">
+              <button style="border: 1px solid !important;" tab-index="15" id="btnAddCash" tabindex="-1"
+                class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="
+                addRequest(); $event.preventDefault()
+                " (click)="addRequest()">
+                <i class="icon-playlist_add icon-16"></i>
+                <codx-label fiedName="lblSaveAndClear" default="Chọn hóa đơn"></codx-label>
               </button>
             </div>
           </div>
@@ -560,11 +559,11 @@
           <div class="d-flex align-items-center">
             <div>
               <button style="border: 1px solid !important" id="btnAddSet" tabindex="-1"
-                class="btn btn-sm btn-light-primary" (keydown.enter)="onAddLine(); $event.preventDefault()"
-                (click)="onAddLine()">
+                class="btn btn-sm btn-light-primary" (keydown.enter)="addSettledInvoices(); $event.preventDefault()"
+                (click)="addSettledInvoices()">
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label [formModel]="dialog.formModel" fiedName="lblAddSettledInvoice1"
-                  default="Thêm hóa đơn công nợ"></codx-label>
+                  default="Chọn hóa đơn công nợ"></codx-label>
               </button>
             </div>
             <!-- <div *ngIf="master.data?.subType == '3' || master.data?.subType == '4'" class="ms-2">
@@ -602,7 +601,7 @@
           <div class="d-flex align-items-center">
             <div class="ms-2">
               <button tabindex="-1" tab-index="15" style="border: 1px solid !important" class="btn btn-sm btn-light-primary"
-                (keydown.enter)="onAddLine(); $event.preventDefault()" (click)="onAddLine()" id="btnAddVAT">
+                (keydown.enter)="addLineVatInvoices(); $event.preventDefault()" (click)="addLineVatInvoices()" id="btnAddVAT">
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label [formModel]="dialog.formModel" fiedName="lblAddVat" default="Thêm dòng"></codx-label>
               </button>

@@ -134,7 +134,12 @@ export class FormSettingComboboxComponent {
     // }
     if (e?.field == 'title' && this.comboboxType != '3') {
       this.cbb.comboboxName = e?.data;
-    } else if (
+    } 
+    else if(e?.field == 'note')
+    {
+      this.cbb.note = e?.data;
+    }
+    else if (
       e?.field == 'tableName' &&
       e?.component?.itemsSelected &&
       e?.component?.itemsSelected[0]
