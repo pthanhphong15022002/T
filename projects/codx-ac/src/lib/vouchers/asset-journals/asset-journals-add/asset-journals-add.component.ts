@@ -281,7 +281,7 @@ export class AssetJournalsAddComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res) {
           this.isPreventChange = true;
-          this.master.setObjValue(res?.data,{});
+          //this.master.setObjValue(res?.data,{});
           this.isPreventChange = false;
         }
         this.master.setValue('updateColumns', '', {});
