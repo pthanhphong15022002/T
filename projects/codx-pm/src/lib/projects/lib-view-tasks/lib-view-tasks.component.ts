@@ -114,8 +114,8 @@ export class ProjectTasksViewComponent
         .subscribe((res: any) => {
           if (!this.projectData) this.projectData = res;
           setTimeout(() => {
-            this.pageTitle.setSubTitle(this.projectData.projectName);
-          }, 1000);
+            this.pageTitle.setSubTitle(res.projectName);
+          }, 2000);
         });
     }
   }

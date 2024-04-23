@@ -8,9 +8,11 @@
         [hasSecond]="false"
         (asideClick)="asideClick($event)"
         class="wp-portal"
-        [className]="codxService.asideMode == '2'?'FormSettingsBusiness':null"
-        [method]="codxService.asideMode == '2'?'GetFormSettingAsync':null"
-        [dataValue]="codxService.asideMode == '2'?'Comments':null"
+        [className]="
+          codxService.asideMode == '2' ? 'FormSettingsBusiness' : null
+        "
+        [method]="codxService.asideMode == '2' ? 'GetFormSettingAsync' : null"
+        [dataValue]="codxService.asideMode == '2' ? 'Comments' : null"
       >
       </codx-aside>
 
@@ -32,6 +34,7 @@
   <codx-scroll-top></codx-scroll-top>
   <codx-messenger-drawer></codx-messenger-drawer>
   <ng-template #headerRightBar>
+    <codx-help></codx-help>
     <codx-chat></codx-chat>
     <codx-notes></codx-notes>
     <codx-notify-drawer></codx-notify-drawer>
@@ -65,4 +68,3 @@
     </ng-container>
   </ng-template>
 </ng-container>
-

@@ -469,7 +469,17 @@ export class AddProcessDefaultComponent implements OnInit {
 
       if (keysTable.length > 0) {
         keysTable.forEach((k) => {
+
+          this.dataTable[k].forEach(element => {
+            delete element.delete;
+            delete element.isAddNew;
+            delete element.updateColumns;
+            delete element._isSelect;
+            delete element._rowIndex;
+            delete element._rowNo;
+          });
           valueForm[k] = this.dataTable[k];
+
           let keysChildTable =
             this.dataTable[k] && this.dataTable[k][0]
               ? Object.keys(this.dataTable[k][0])

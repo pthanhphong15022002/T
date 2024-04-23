@@ -273,39 +273,45 @@
                 <div ngbAccordionCollapse #accordion id="{{ item?.recID }}">
                   <div ngbAccordionBody>
                     <ng-template>
-                      <ul class="bp-tree mb-3 pe-6">
-                        <!-- Root node (Category) -->
-                        <ul>
-                          <!-- Sub category -->
-                          <li *ngFor="let item2 of item.child">
-                            <div class="d-flex flex-column ps-2">
-                              <div class="d-flex flex-column">
-                                <ng-container
-                                  *ngTemplateOutlet="
-                                    tmpRow;
-                                    context: { $implicit: item2 }
-                                  "
-                                ></ng-container>
-                                <ng-container
-                                  *ngIf="item2.activityType == 'Conditions'"
-                                >
-                                  <!-- Root node (Category) -->
-                                  <ul class="mt-1 ms-5">
-                                    <li *ngFor="let item3 of item2.child">
-                                      <ng-container
-                                        *ngTemplateOutlet="
-                                          tmpRow;
-                                          context: { $implicit: item3, b: true }
-                                        "
-                                      ></ng-container>
-                                    </li>
-                                  </ul>
-                                </ng-container>
+                      <div class=" d-flex flex-column">
+                        <ul class="bp-tree mb-3 pe-6">
+                          <!-- Root node (Category) -->
+                          <ul>
+                            <!-- Sub category -->
+                            <li *ngFor="let item2 of item.child">
+                              <div class="d-flex flex-column ps-2">
+                                <div class="d-flex flex-column">
+                                  <ng-container
+                                    *ngTemplateOutlet="
+                                      tmpRow;
+                                      context: { $implicit: item2 }
+                                    "
+                                  ></ng-container>
+                                  <ng-container
+                                    *ngIf="item2.activityType == 'Conditions'"
+                                  >
+                                    <!-- Root node (Category) -->
+                                    <ul class="mt-1 ms-5">
+                                      <li *ngFor="let item3 of item2.child">
+                                        <ng-container
+                                          *ngTemplateOutlet="
+                                            tmpRow;
+                                            context: { $implicit: item3, b: true }
+                                          "
+                                        ></ng-container>
+                                      </li>
+                                    </ul>
+                                  </ng-container>
+                                </div>
                               </div>
-                            </div>
-                          </li>
+                            </li>
+                          </ul>
                         </ul>
-                      </ul>
+                        <div class="d-flex align-items-center ms-12 cursor-pointer mb-4" (click)="addStep(item)">
+                          <i class="icon-i-plus text-gray-500"></i>
+                          <codx-label default="Thêm quy trình" class="ms-2 text-gray-500"></codx-label>
+                        </div>
+                      </div>
                     </ng-template>
                   </div>
                 </div>

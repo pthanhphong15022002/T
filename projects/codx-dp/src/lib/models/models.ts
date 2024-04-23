@@ -710,6 +710,7 @@ export class ColumnTable {
   rank: number = 0;
   rankIcon: string = '';
   isRequired: boolean = false;
+  isUseDefault: boolean = false;
   defaultValue: string;
   sorting: number;
   note: string = '';
@@ -722,6 +723,10 @@ export class ColumnTable {
   settingWidth: boolean = true;
   settingCount: boolean = true;
   totalColumns: boolean = false;
+  isApplyDependences: boolean = false;;
+  dependences: string;
+  isApplyConditional: boolean = false;;
+  conditionReference: any[];
 }
 export class DP_Condition_Reference_Fields {
   refID: string;
