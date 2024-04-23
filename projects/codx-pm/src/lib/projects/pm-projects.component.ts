@@ -221,34 +221,40 @@ export class ProjectsComponent
 
   delete() {
     let returnData: any;
-    this.notificationSv.alertCode('SYS030').subscribe((res: any) => {
-      if (res.event && res.event.status == 'Y') {
-        this.view.dataService.dataSelected.stop = true;
-        this.view.dataService
-          .edit(this.view?.dataService.dataSelected)
-          .subscribe(() => {
-            this.view.dataService.save().subscribe((res: any) => {
-              if (res?.save || res?.update) {
-                if (!res.save) {
-                  returnData = res?.update;
-                } else {
-                  returnData = res?.save;
-                }
-                if (!returnData?.error) {
-                  this.view.dataService.data =
-                    this.view.dataService.data.filter(
-                      (x: any) => x.recID != returnData?.data?.recID
-                    );
-                  this.detectorRef.detectChanges();
-                }
-              } else {
-                //Trả lỗi từ backend.
-                return;
-              }
-            });
-          });
+    let dataDelete = this.view?.dataService.dataSelected;
+    this.view.dataService.delete([dataDelete], true).subscribe((res: any) => {
+      if (res) {
+        this.detectorRef.detectChanges();
       }
     });
+    // this.notificationSv.alertCode('SYS030').subscribe((res: any) => {
+    //   if (res.event && res.event.status == 'Y') {
+    //     this.view.dataService.dataSelected.stop = true;
+    //     this.view.dataService
+    //       .edit(this.view?.dataService.dataSelected)
+    //       .subscribe(() => {
+    //         this.view.dataService.save().subscribe((res: any) => {
+    //           if (res?.save || res?.update) {
+    //             if (!res.save) {
+    //               returnData = res?.update;
+    //             } else {
+    //               returnData = res?.save;
+    //             }
+    //             if (!returnData?.error) {
+    //               this.view.dataService.data =
+    //                 this.view.dataService.data.filter(
+    //                   (x: any) => x.recID != returnData?.data?.recID
+    //                 );
+    //               this.detectorRef.detectChanges();
+    //             }
+    //           } else {
+    //             //Trả lỗi từ backend.
+    //             return;
+    //           }
+    //         });
+    //       });
+    //   }
+    // });
   }
 
   selectedChange(e: any) {
