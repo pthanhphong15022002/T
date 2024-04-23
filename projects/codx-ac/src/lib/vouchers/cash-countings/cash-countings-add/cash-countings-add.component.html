@@ -542,6 +542,7 @@
         [editSettings]="master.data?.isReadOnly ? editSettings : {}" [formName]="'CountingItems'" idField="recID"
         [hideMoreFunc]="true" [moreFcItems]="'SYS104;SYS102'" [moreFcModel]="dialog.formModel" (clickMF)="clickMF($event)"
         [gridViewName]="'grvCountingItems'" [entityName]="'AC_CountingItems'" predicates="TransID=@0"
+        (eventAction)="onActionGridCountingItems($event)" (actionCompleted)="onActionGridCountingItems($event)"
         [dataValues]="master?.data?.recID" service="AC" [editOnClick]="master.data?.isReadOnly ? false : true"
         rowNoField="rowNo" (cellChanged)="valueChangeLineItems($event)"></codx-gridview-v2>
       <ng-container *ngIf="!master.data?.isReadOnly">
@@ -575,7 +576,8 @@
         [hideMoreFunc]="true" [moreFcItems]="'SYS104;SYS102'" [moreFcModel]="dialog.formModel" (clickMF)="clickMF($event)"
         [gridViewName]="'grvCountingAssets'" [entityName]="'AC_CountingAssets'" predicates="TransID=@0" rowHeight="35"
         [dataValues]="master?.data?.recID" service="AC" [editOnClick]="master.data?.isReadOnly ? false : true"
-        (cellChanged)="valueChangeLineAsset($event)"></codx-gridview-v2>
+        (cellChanged)="valueChangeLineAsset($event)" (eventAction)="onActionGridAsset($event)"
+        (actionCompleted)="onActionGridAsset($event)"></codx-gridview-v2>
       <ng-container *ngIf="!master.data?.isReadOnly">
         <div #btnRef class="btn-addline">
           <div class="d-flex align-items-center">
