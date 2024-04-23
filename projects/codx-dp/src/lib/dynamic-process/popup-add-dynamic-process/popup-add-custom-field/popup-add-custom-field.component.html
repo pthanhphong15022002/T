@@ -353,6 +353,7 @@
                 </button>
 
                 <button
+                  [disabled]="!isLoadedVll"
                   type="button"
                   class="btn btn-icon btn-sm btn-light-primary me-2"
                   (click)="clickAddVll()"

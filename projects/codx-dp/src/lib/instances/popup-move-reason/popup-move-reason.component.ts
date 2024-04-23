@@ -302,7 +302,6 @@ export class PopupMoveReasonComponent implements OnInit {
   }
 
   onSave() {
-    if(this.isLockStep) return;
     if (this.reasonStep.reasonControl === true && this.listReasonClick.length === 0) {
       this.notiService.notifyCode('DP006');
       return;
@@ -328,46 +327,72 @@ export class PopupMoveReasonComponent implements OnInit {
     ];
     let oldStepId = this.instances.stepID;
     let oldStatus = this.instances.status;
-    
-
-    this.codxDpService.moveReasonByIdInstance(data).subscribe((res) => {
-      if (res) {
-        this.instances = res[0];
-        this.listStep = res[1];
-
-        if(!this.isCallInstance) {
-          if(this.applyFor == '1') {
-            let datas = [null, oldStepId, oldStatus, this.reasonStep.memo,this.instances.recID,this.instances.status,this.instances.stepID];
-            if(this.applyFor == "1" ) {
-              this.codxDpService.moveDealReason(datas).subscribe((res) => {
-                if (res) {
-                }
-              });
+    if(this.applyFor == '4'){
+      let status = this.isReason ? (this.moveProccessID ? "4" : "3") : (this.moveProccessID ? "5" : "6");
+      let dataMove = [
+        this.dataCM?.recID,
+        status,
+        this.reasonStep?.recID,
+        this.isReason,
+        this.reasonStep.reasons,
+        this.ownerMove,
+        this.moveProccessID,
+        this.memo
+      ];
+      this.codxDpService.moveContractReason(dataMove).subscribe((res) => {  
+        if (res) {
+          let listStep = JSON.parse(res);
+          let obj = {
+            listStep: listStep,
+            status,
+            stepID: this.reasonStep?.recID,
+          };
+          this.dialog.close(obj);
+          this.notiService.notifyCode('SYS007');
+          this.changeDetectorRef.detectChanges();
+          
+        } 
+      });
+    }else{
+      this.codxDpService.moveReasonByIdInstance(data).subscribe((res) => {
+        if (res) {
+          this.instances = res[0];
+          this.listStep = res[1];
+  
+          if(!this.isCallInstance) {
+            if(this.applyFor == '1') {
+              let datas = [null, oldStepId, oldStatus, this.reasonStep.memo,this.instances.recID,this.instances.status,this.instances.stepID];
+              if(this.applyFor == "1" ) {
+                this.codxDpService.moveDealReason(datas).subscribe((res) => {
+                  if (res) {
+                  }
+                });
+              }
             }
+            else {
+              let datas = [null,this.instances.recID,this.instances.status,this.instances.stepID];
+              (this.applyFor == '2' || this.applyFor == '3') && this.codxDpService.moveCaseReason(datas).subscribe((res) => {  if (res) {} });
+              // (this.applyFor == '5' ) && this.codxDpService.moveLeadReason(datas).subscribe((res) => {  if (res) {} });
+               (this.applyFor == '4' ) && this.codxDpService.moveContractReason(datas).subscribe((res) => {  if (res) {} });
+            }
+  
           }
-          else {
-            let datas = [null,this.instances.recID,this.instances.status,this.instances.stepID];
-            (this.applyFor == '2' || this.applyFor == '3') && this.codxDpService.moveCaseReason(datas).subscribe((res) => {  if (res) {} });
-            // (this.applyFor == '5' ) && this.codxDpService.moveLeadReason(datas).subscribe((res) => {  if (res) {} });
-             (this.applyFor == '4' ) && this.codxDpService.moveContractReason(datas).subscribe((res) => {  if (res) {} });
-          }
-
+          let obj = {
+            listStep: this.listStep,
+            instance: this.instances,
+            nextStep: this.nextStep,
+            processMove: this.moveProccessID != this.guidEmpty ? this.moveProccessID: null,
+            applyForMove: this.applyForMove,
+            ownerMove: this.ownerMove,
+            comment: this.reasonStep.memo,
+            title:this.instances.title,
+          };
+          this.dialog.close(obj);
+          this.isLockStep  = false;
+          this.notiService.notifyCode('SYS007');
+          this.changeDetectorRef.detectChanges();
         }
-        let obj = {
-          listStep: this.listStep,
-          instance: this.instances,
-          nextStep: this.nextStep,
-          processMove: this.moveProccessID != this.guidEmpty ? this.moveProccessID: null,
-          applyForMove: this.applyForMove,
-          ownerMove: this.ownerMove,
-          comment: this.reasonStep.memo,
-          title:this.instances.title,
-        };
-        this.dialog.close(obj);
-        this.isLockStep  = false;
-        this.notiService.notifyCode('SYS007');
-        this.changeDetectorRef.detectChanges();
-      }
-    });
+      });
+    }
   }
 }

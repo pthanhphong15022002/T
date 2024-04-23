@@ -1001,10 +1001,19 @@ export class CodxDpService {
       'CM',
       'ERM.Business.CM',
       'ContractsBusiness',
-      'MoveContractReasonAsync',
+      'MoveStatusContractAsync',
       data
     );
   }
+  // moveContractReason(data) {
+  //   return this.api.execSv<any>(
+  //     'CM',
+  //     'ERM.Business.CM',
+  //     'ContractsBusiness',
+  //     'MoveContractReasonAsync',
+  //     data
+  //   );
+  // }
   moveStageBackDataCM(data) {
     return this.api.execSv<any>(
       'CM',

@@ -321,6 +321,7 @@ export class CM_Customers {
   birthday: Date;
   idCardNo: string;
   issuedOn: Date;
+  evaluate: number;
 }
 
 export class CM_Contacts {

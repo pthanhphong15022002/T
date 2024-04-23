@@ -24,6 +24,7 @@ export class PopupAddLineTableComponent implements OnInit {
   //Tisnh
   point = ',';
   arrCaculateField = [];
+  isHaveApplyDep: boolean;
 
   constructor(
     private cache: CacheService,
@@ -41,6 +42,7 @@ export class PopupAddLineTableComponent implements OnInit {
     this.action = dt?.data?.action;
     this.titleHeader = dt?.data?.titleAction ?? '';
     this.arrCaculateField = this.listColumns.filter((x) => x.dataType == 'CF');
+    this.isHaveApplyDep = this.listColumns.some((x) => x?.isApplyDependences);
     if (this.arrCaculateField?.length > 0)
       this.arrCaculateField.sort((a, b) => {
         if (a.dataFormat.includes('[' + b.fieldName + ']')) return 1;
@@ -61,32 +63,16 @@ export class PopupAddLineTableComponent implements OnInit {
 
   valueChangeCustom(event) {
     if (event && event.data) {
-      var result = event.e;
-      var field = event.data;
-
-      // let result = event.e?.data;
-      // let field = event.data;
-
-      // switch (field.dataType) {
-      //   case 'D':
-      //     result = event.e?.data.fromDate;
-      //     break;
-      //   case 'P':
-      //   case 'R':
-      //   case 'A':
-      //   case 'C':
-      //   case 'L':
-      //   case 'TA':
-      //   case 'PA':
-      //     result = event?.e;
-      //     break;
-      // }
+      let result = event.e;
+      let field = event.data;
+      let dependences = event?.dependences; //tham chieu dependece cua cbx
 
       let idxUp = this.fieldFormat.findIndex((x) => x.recID == field.recID);
       if (idxUp != -1) {
         this.fieldFormat[idxUp]['dataValue'] = result;
         let fieldName = this.fieldFormat[idxUp]['fieldName'];
         this.line[fieldName] = result;
+        if (this.isHaveApplyDep && dependences?.length > 0) this.listColumns = this.changeRefData(dependences, this.listColumns)
         if (field.dataType == 'N') this.caculateField();
       }
     }
@@ -95,6 +81,16 @@ export class PopupAddLineTableComponent implements OnInit {
   onSave() {
     if (!this.checkRequire()) {
       return;
+    }
+    //Tham chieu rafng buoc
+    let fieldsApplyCondition = this.listColumns.filter(x => x?.isApplyConditional && x?.conditionReference?.length > 0);
+    if (fieldsApplyCondition?.length > 0) {
+      var checkAll = true;
+      fieldsApplyCondition.forEach(x => {
+        let check = this.customFieldSV.checkConditionalRef(this.listColumns, x, true);
+        if (checkAll && !check.check) checkAll = check.check;
+      })
+      if (!checkAll) return;
     }
     this.dialog.close(this.line);
     this.line = null;
@@ -207,6 +203,8 @@ export class PopupAddLineTableComponent implements OnInit {
   //   }
   // }
   //------------------END_CACULATE--------------------//
+
+
   setElement(recID, value, dataType) {
     var codxinput = document.querySelectorAll(
       '.form-group codx-input[data-record="' + recID + '"]'

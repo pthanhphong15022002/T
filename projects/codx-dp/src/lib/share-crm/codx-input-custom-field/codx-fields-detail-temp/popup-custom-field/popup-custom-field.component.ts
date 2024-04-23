@@ -85,6 +85,7 @@ export class PopupCustomFieldComponent implements OnInit {
       let result = event.e;
       let field = event.data;
       let dependences = event?.dependences; //tham chieu dependece cua cbx
+
       let index = this.fields.findIndex((x) => x.recID == field.recID);
       if (index != -1) {
         this.fields[index] = this.upDataVersion(this.fields[index], result);
@@ -161,7 +162,7 @@ export class PopupCustomFieldComponent implements OnInit {
     //   return
     // }
     //Tham chieu rafng buoc
-    let fieldsApplyCondition = this.fields.filter(x => x.isApplyConditional && x.conditionReference?.length > 0);
+    let fieldsApplyCondition = this.fields.filter(x => x?.isApplyConditional && x?.conditionReference?.length > 0);
     if (fieldsApplyCondition?.length > 0) {
       var checkAll = true;
       fieldsApplyCondition.forEach(x => {

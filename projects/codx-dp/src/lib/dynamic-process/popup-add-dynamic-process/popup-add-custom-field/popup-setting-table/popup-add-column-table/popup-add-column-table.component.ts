@@ -147,6 +147,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     strDependence: ''
   }
   valueRef: any;
+  isLoadedVll = false;
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -645,9 +646,10 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       let maxNum =
         max.value.lastIndexOf('-') != -1
           ? Number.parseInt(max.value.substring(max.value.lastIndexOf('-') + 1))
-          : 0;
-      return typeof maxNum == 'number' ? maxNum + 1 : this.listVll.length;
-    } else return 0;
+          : 1;
+      this.isLoadedVll = true;
+      return typeof maxNum == 'number' ? maxNum + 1 : this.listVll.length + 1;
+    } else return 1;
   }
 
   async getDefaultVll(timeOut = 500) {

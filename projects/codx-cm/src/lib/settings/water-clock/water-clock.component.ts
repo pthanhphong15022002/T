@@ -382,47 +382,85 @@ export class WaterClockComponent
       .subscribe((response: any) => {
         if (response) {
           let data = response.data;
-          data['_uuid'] = data['assetID'] ?? Util.uid();
-          data['idField'] = 'assetID';
-          data['parentID'] = parent.assetID;
-          data['refID'] = parent.refID;
-          data['siteID'] = parent.siteID;
+          let dataLastMonth = response.dataLastMonth;
+          if (!response.isEdit) {
+            data['_uuid'] = data['assetID'] ?? Util.uid();
+            data['idField'] = 'assetID';
+            data['parentID'] = parent.assetID;
+            data['refID'] = parent.refID;
+            data['siteID'] = parent.siteID;
 
-          let isClockHis = data['assetCategory'] == "WaterClock"
-          let formmodel = isClockHis ? this.formModelHistory : this.formModelPrice
-          this.cache.gridViewSetup(formmodel.formName, formmodel.gridViewName).subscribe(grv => {
-            let option = new DialogModel();
-            option.DataService = this.view.dataService;
-            option.FormModel = formmodel;
-            let obj = {
-              data: data,
-              action: 'add',
-              headerText: title,
-              gridViewSetup: grv,
-              parent: parent
-            };
-            let height = isClockHis ? 750 : 450
-            let dialogHis = this.callfc.openForm(
-              PopupAddHistoryWaterClockComponent,
-              null,
-              600,
-              height,
-              '',
-              obj,
-              "",
-              option
-            );
-            dialogHis.closed.subscribe(res => {
-              if (res && res.event) {
-                if (this.viewDetails) {
-                  if (isClockHis) this.viewDetails.addGridHis(res.event);
-                  else this.viewDetails.addGridCost(res.event);
+            let isClockHis = data['assetCategory'] == "WaterClock"
+            let formmodel = isClockHis ? this.formModelHistory : this.formModelPrice
+            this.cache.gridViewSetup(formmodel.formName, formmodel.gridViewName).subscribe(grv => {
+              let option = new DialogModel();
+              option.DataService = this.view.dataService;
+              option.FormModel = formmodel;
+              let obj = {
+                data: data,
+                action: 'add',
+                headerText: title,
+                gridViewSetup: grv,
+                parent: parent
+              };
+              let height = isClockHis ? 750 : 450
+              let dialogHis = this.callfc.openForm(
+                PopupAddHistoryWaterClockComponent,
+                null,
+                600,
+                height,
+                '',
+                obj,
+                "",
+                option
+              );
+              dialogHis.closed.subscribe(res => {
+                if (res && res.event) {
+                  if (this.viewDetails) {
+                    if (isClockHis) this.viewDetails.addGridHis(res.event);
+                    else this.viewDetails.addGridCost(res.event);
+                  }
                 }
-              }
+              })
             })
-          })
+          } else {
+            this.editHis(data, title, dataLastMonth)
+          }
         }
       });
+  }
+
+  editHis(data, title, dataLastMonth) {
+    this.cache.gridViewSetup(this.formModelHistory.formName, this.formModelHistory.gridViewName).subscribe(grv => {
+      let option = new DialogModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.formModelHistory;
+      let obj = {
+        data: data,
+        action: 'edit',
+        headerText: title,
+        gridViewSetup: grv,
+        parent: this.itemSelected,
+        dataLastMonth: dataLastMonth
+      };
+      let dialogHis = this.callfc.openForm(
+        PopupAddHistoryWaterClockComponent,
+        null,
+        600,
+        750,
+        '',
+        obj,
+        "",
+        option
+      );
+      dialogHis.closed.subscribe(res => {
+        if (res && res.event) {
+          if (this.viewDetails) {
+            this.viewDetails.updateGridHis(res.event);
+          }
+        }
+      })
+    });
   }
 
   updateParent(e) {
