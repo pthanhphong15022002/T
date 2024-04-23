@@ -366,3 +366,14 @@ codx-chat-box.active{
 .reply-span{
     border-left: 3px solid;
 }
+
+.inputChat{
+    width: 260px;
+    min-height: 30px;
+    max-height: 50px;
+    overflow: auto;
+    outline: none;
+    border: 1px solid gray;
+    border-radius: 4px;
+    padding:4px; 
+}

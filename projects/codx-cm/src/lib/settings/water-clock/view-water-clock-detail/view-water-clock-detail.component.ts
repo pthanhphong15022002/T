@@ -245,8 +245,10 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
             this.itemSelected.quantity = dataLast?.quantity;
             this.itemSelected.lastChangedDate = dataLast?.lastChangedDate;
             this.itemSelected.cumulatedDepr = dataLast?.cumulatedDepr;
+            this.itemSelected.purcAmount = dataLast?.purcAmount;
             this.itemSelected.costAmt = dataLast?.costAmt;
             this.itemSelected.estimatedCapacity = dataLast?.estimatedCapacity;
+            this.itemSelected.capacityUsed = dataLast?.capacityUsed;
             this.itemSelected.capacityPrice = dataLast?.capacityPrice;
             this.itemSelected.note = dataLast?.note;
             this.updateParent.emit(this.itemSelected);

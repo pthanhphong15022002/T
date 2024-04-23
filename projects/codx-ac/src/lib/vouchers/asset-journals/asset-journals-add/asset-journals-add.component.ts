@@ -91,6 +91,7 @@ export class AssetJournalsAddComponent extends UIComponent {
   isSaveAdd = false;
   assetSV: CRUDService;
   fmAsset = fmAsset;
+  isPreventChange:any = false;
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -241,7 +242,52 @@ export class AssetJournalsAddComponent extends UIComponent {
   }
 
   valueChangeMaster(event: any) {
-    
+    if (this.isPreventChange) {
+      return;
+    }
+    let field = event?.field || event?.ControlName;
+    let value = event?.data || event?.crrValue;
+    let preValue:any = '';
+    switch (field.toLowerCase()) {
+
+      case 'cashbookid':
+        preValue = event?.component?.dataService?.currentComponent?.previousItemData?.CashBookID  || '';
+        break;
+
+      case 'reasonid':
+        preValue = event?.component?.dataService?.currentComponent?.previousItemData?.ReasonID  || '';
+        break;
+
+      case 'totalamt':
+        if (value == null) {
+          this.isPreventChange = true;
+          setTimeout(() => {
+            this.master.setValue(field, this.preData?.totalAmt, {});
+            this.isPreventChange = false;
+          }, 50);
+          return;
+        }
+        break;
+
+      case 'currencyid':
+        preValue = event?.component?.dataService?.currentComponent?.previousItemData?.CurrencyID  || '';
+        break;
+    }
+    this.api.exec('AM', 'AssetJournalsBusiness', 'ValueChangedAsync', [
+      field,
+      this.master.data,
+    ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {
+          this.isPreventChange = true;
+          this.master.setObjValue(res?.data,{});
+          this.isPreventChange = false;
+        }
+        this.master.setValue('updateColumns', '', {});
+        this.master.setValue('updateColumn', '', {});
+        this.onDestroy();
+      });
   }
 
   valueChangeLine(event: any) {

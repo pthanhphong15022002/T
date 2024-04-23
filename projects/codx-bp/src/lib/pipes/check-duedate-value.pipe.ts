@@ -11,18 +11,30 @@ export class CheckDuedateValuePipe implements PipeTransform {
     let text = '';
     let date = '';
     if (endDate) {
-      //task quá hạn
-      if (actualEnDate != null && actualEnDate != '') {
-        if (new Date(endDate) < new Date(actualEnDate)) {
+      if (actualEnDate) {
+        if (new Date(endDate) < new Date(actualEnDate)){
           isDueDate = true;
           date = this.formatDate(new Date(endDate), new Date(actualEnDate));
         }
       } else {
-        if (new Date(endDate) < new Date() && !isDueDate) {
+        if (new Date(endDate) < new Date()){
           isDueDate = true;
           date = this.formatDate(new Date(endDate), new Date());
         }
       }
+      //task quá hạn
+      // if (actualEnDate != null && actualEnDate != '') {
+
+      //   if (new Date(endDate) < new Date(actualEnDate)) {
+      //     isDueDate = true;
+      //     date = this.formatDate(new Date(endDate), new Date(actualEnDate));
+      //   }
+      // } else {
+      //   if (new Date(endDate) < new Date() && !isDueDate) {
+      //     isDueDate = true;
+      //     date = this.formatDate(new Date(endDate), new Date());
+      //   }
+      // }
     }
 
     return type == 'text' ? date : isDueDate;

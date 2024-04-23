@@ -188,7 +188,7 @@
                 </codx-label>
                 <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxCashBook
                   [Group]="master?.formGroup" field="issueNo" [formModel]="dialog?.formModel"
-                  (valueChange)="valueChangeMaster($event)">
+                >
                 </codx-input>
               </div>
             </div>
@@ -199,7 +199,7 @@
                 </codx-label>
                 <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxCashBook
                   [Group]="master?.formGroup" field="issueOn" [formModel]="dialog?.formModel"
-                  (valueChange)="valueChangeMaster($event)">
+                >
                 </codx-input>
               </div>
             </div>
@@ -232,7 +232,7 @@
                 </codx-label>
                 <codx-input [disabled]="master.data?.isReadOnly ? true : false" #eleCbxObjectID
                   [Group]="master.formGroup" [formModel]="dialog.formModel" field="memo"
-                  (valueChange)="valueChangeMaster($event)">
+                >
                 </codx-input>
               </div>
             </div>
@@ -248,7 +248,7 @@
                   </codx-label>
                   <codx-input [disabled]="master.data?.isReadOnly ? true : false" #tVoucherDate
                     [Group]="master.formGroup" [formModel]="dialog.formModel" field="voucherDate"
-                    (valueChange)="valueChangeMaster($event)">
+                  >
                   </codx-input>
                 </div>
               </div>
@@ -258,7 +258,6 @@
                     [formModel]="dialog.formModel">
                   </codx-label>
                   <codx-input [Group]="master.formGroup" field="voucherNo" [formModel]="dialog.formModel"
-                    (valueChange)="valueChangeMaster($event)"
                     [disabled]="(journal?.assignRule != '0' || master.data?.isReadOnly)">
                   </codx-input>
                 </div>
@@ -272,7 +271,7 @@
                   </codx-label>
                   <codx-input [disabled]="(master.data?.isReadOnly || postDateControl != '1') ? true : false"
                     [Group]="master.formGroup" field="postedDate" [formModel]="dialog.formModel"
-                    (valueChange)="valueChangeMaster($event)">
+                    >
                   </codx-input>
                 </div>
               </div>

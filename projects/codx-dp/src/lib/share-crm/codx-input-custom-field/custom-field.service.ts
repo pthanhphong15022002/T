@@ -243,12 +243,12 @@ export class CustomFieldService {
   //--------------------------------------------------//
   //----------------Check conditional Ref----------------------// 
   checkConditionalRef(listField, fieldCrr) {
-    if (!fieldCrr?.isApplyConditional || !fieldCrr?.conditionReference || fieldCrr?.conditionReference?.length == 0) return true;
+    if (!fieldCrr?.isApplyConditional || !fieldCrr?.conditionReference || fieldCrr?.conditionReference?.length == 0) return { check: true, conditionRef: [] };
 
     let arrMess = [];
     (fieldCrr.conditionReference as Array<any>).forEach(x => {
       let result = true;
-      let fielRefCon = listField.find(x => x.refID == x.refID);
+      let fielRefCon = listField.find(f => f.refID == x.refID);
       if (fielRefCon) {
         if (!fielRefCon.dataValue) {
           arrMess.push(x);
@@ -282,7 +282,7 @@ export class CustomFieldService {
         this.notiService.notify(x.messageText, x.messageType)
       })
     }
-    return { check, arrMess };
+    return { check: check, conditionRef: arrMess };
   }
   //----------------------------------------------------------//
   //---------------Tempmail---------------//

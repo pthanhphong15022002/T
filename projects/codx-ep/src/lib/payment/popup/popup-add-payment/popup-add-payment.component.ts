@@ -184,12 +184,15 @@ export class PopupAddPaymentComponent
 
   getRefRequest(recID: string) {
     let subcribe = this.api
-      .execSv('EP', 'EP', 'RequestsBusiness', 'GetByIDAsync', recID)
+      .execSv('EP', 'EP', 'RequestsBusiness', 'GetByIDAsync', [recID, 'AD'])
       .subscribe((res: any) => {
         if (res) {
           this.RefEPRequest = res;
           this.data.pmtMethodID = res.pmtMethodID;
           if (this.RefEPRequest.status <= 5) this.RefEPRequest.requestAmt = 0;
+          else
+            this.RefEPRequest.requestAmt =
+              this.RefEPRequest.requestAmt - this.RefEPRequest.remainAmount;
           this.detectorChange.detectChanges();
         }
       });
@@ -332,6 +335,9 @@ export class PopupAddPaymentComponent
   }
 
   onSave(isRelease: boolean = false) {
+    this.data.remainAmount =
+      this.data.totalAmount -
+      (this.RefEPRequest ? this.RefEPRequest.requestAmt : 0);
     if (this.actionType == 'edit') {
       this.data._isEdit = true;
       this.dialog.dataService.dataSelected = this.data;

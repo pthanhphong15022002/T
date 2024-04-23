@@ -59,7 +59,7 @@
         </div>
     </ng-container>
 
-    <div *ngIf="columnsGrid" class="h-100 employee-grid" [ngClass]="showManager? 'manager-gridview': 'no-manager-gridview'">
+    <div *ngIf="columnsGrid" class="h-100 employee-grid hr-org" [ngClass]="showManager? 'manager-gridview': 'no-manager-gridview'">
         <codx-gridview-v2 #grid [columnsGrid]="columnsGrid" [service]="service"
             [entityName]="entityName" [assemblyName]="assemblyName" [className]="className" [method]="method"
             [dataValues]="orgUnitID" [autoLoad]="true" [showRowNumber]="showRowNumber" [idField]="idField"
@@ -153,7 +153,7 @@
 <!-- header template -->
 <!-- Header Nhân viên -->
 <ng-template #colEmployeeHeader>
-    <div class="text-dark fw-bold p-3 fw-500">
+    <div class="text-dark fw-bold px-3 fw-500">
         <codx-label fiedName="lblEmployeeName" [setRequire]="false" [formModel]="view.formModel" [default]="'Nhân viên'"></codx-label>
     </div>
 </ng-template>
@@ -174,7 +174,7 @@
 
 <!-- Header Thông tin cá nhân -->
 <ng-template #colPersonalHeader>
-    <div class="text-dark fw-bold p-3 fw-500">
+    <div class="text-dark fw-bold px-3 fw-500">
         <codx-label fiedName="lblEmployeeInfo" [setRequire]="false" [formModel]="view.formModel" [default]="'Thông tin cá nhân'"></codx-label>
     </div>
 </ng-template>
@@ -247,7 +247,7 @@
                 <ng-template #departmentTooltip>
                     <div class="d-flex flex-column">
                         <span class="label-text-color">{{grvSetup['DepartmentID']?.headerText}}</span>
-                        <span *ngIf="data.departmentID != data.orgUnitID 
+                        <span *ngIf="data.departmentID != data.orgUnitID
                   && departmentField.scrollHeight > departmentField.clientHeight">
                             {{data.departmentName? data.departmentName :
                             data.departmentID}}</span>

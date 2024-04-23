@@ -53,8 +53,7 @@ import { PopupReleaseProcessComponent } from './popup-release-process/popup-rele
 })
 export class DynamicProcessComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   // View
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -169,6 +168,13 @@ export class DynamicProcessComponent
     this.getValueFormCopy();
     this.getListProcessGroups();
     this.user = this.authStore.get();
+    // // Gán tạm để show data test
+    // this.api.exec<any>(
+    //   'DP',
+    //   'InstancesStepsBusiness',
+    //   'RPASendAlertMailFieldRemindAsync', ""
+    // ).subscribe();
+
   }
 
   onInit(): void {
@@ -210,7 +216,7 @@ export class DynamicProcessComponent
       //this.detectorRef.markForCheck();
     }
   }
-  onDragDrop(e: any) {}
+  onDragDrop(e: any) { }
 
   click(evt: ButtonModel) {
     this.titleAction = evt.text;

@@ -1,5 +1,5 @@
 import { detach } from '@syncfusion/ej2-base';
-import { Subscription, filter } from 'rxjs';
+import { Subject, Subscription, filter, takeUntil } from 'rxjs';
 import {
   ChangeDetectorRef,
   Component,
@@ -30,7 +30,6 @@ import moment from 'moment';
 import { Permission } from '@shared/models/file.model';
 import { SignalRService } from '../services/signalr.service';
 import { MessageItem, WP_Messages, tmpMessage } from '../models/WP_Messages.model';
-import { MessageSystemPipe } from 'projects/codx-common/src/lib/pipe/mssgSystem.pipe';
 import { CHAT } from '../models/chat-const.model';
 @Component({
   selector: 'codx-chat-box',
@@ -47,9 +46,6 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   @Input() group: any;
   @Output() close = new EventEmitter<any>();
   @Output() collapse = new EventEmitter<any>();
-
-  subscriptions = new Subscription();
-
   funcID: string = 'WPT11';
   formModel: FormModel = null;
   grdViewSetUp: any = null;
@@ -64,7 +60,10 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   isFull: boolean = false;
   blocked: boolean = false;
   isLoading: boolean = false;
-  messageSystemPipe: MessageSystemPipe = null;
+  mentionFields:object = {
+    text:"userName",
+    value: "userID"
+  }
   MESSAGETYPE = {
     TEXT: '1',
     ATTACHMENTS: '2',
@@ -77,9 +76,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   emojiPerLine: number = 7;
   emojiMaxFrequentRows: number = 4;
   emojiReview: boolean = false;
-
-
-  vllL1480: Array<any> = [];
+  vllL1480: any[] = [];
   FILE_REFERTYPE = {
     IMAGE: 'image',
     VIDEO: 'video',
@@ -87,15 +84,13 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   };
   mssgDeleted: string = '';
   sysMoreFunc: any = null;
+  destroy$ = new Subject<void>();
   @ViewChild('chatBoxBody') chatBoxBody: ElementRef<HTMLDivElement>;
   @ViewChild('codxATMImages') codxATMImages: AttachmentComponent;
   @ViewChild('codxATM') codxATM: AttachmentComponent;
   @ViewChild('codxViewFile') codxViewFile: AttachmentComponent;
-  @ViewChild('tmpMssgFunc') tmpMssgFunc: TemplateRef<any>;
   @ViewChild('templateVotes') popupVoted: TemplateRef<any>;
-  @ViewChild('mssgType5') mssgType5: TemplateRef<any>;
   @ViewChild('tmpViewMember') tmpViewMember: TemplateRef<any>;
-
   @ViewChild("inputElement") inputElement:ElementRef<HTMLInputElement>;
   constructor(
     private api: ApiHttpService,
@@ -127,16 +122,19 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    let subscripbe1 = this.signalR.incomingMessage
+    this.signalR.incomingMessage
+    .pipe(takeUntil(this.destroy$))
     .subscribe((mssg:any) => {
-      if(mssg && mssg.groupID == this.group.groupID) 
+      debugger
+      if(mssg && mssg?.groupID == this.group?.groupID) 
       {
         this.arrMessages.push(mssg);
         this.dt.detectChanges();
       }
     });
 
-    let subscripbe2 = this.signalR.groupChange
+    this.signalR.groupChange
+    .pipe(takeUntil(this.destroy$))
     .subscribe((group:any) => {
       if(group && this.group.groupID == group.groupID)
       {
@@ -151,19 +149,17 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
         this.dt.detectChanges();
       } 
     });
-
-    this.subscriptions.add(subscripbe1);
-    this.subscriptions.add(subscripbe2);
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   getSetting() {
-    // get function
     if (this.funcID) {
-      let subscribe1 = this.cache.functionList(this.funcID)
+      this.cache.functionList(this.funcID)
+      .pipe(takeUntil(this.destroy$))
       .subscribe((func: any) => {
         if (func) 
         {
@@ -172,41 +168,31 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
           this.formModel.entityName = func.entityName;
           this.formModel.formName = func.formName;
           this.formModel.gridViewName = func.gridViewName;
-          this.subscriptions.add(
-            this.cache
-            .gridViewSetup(func.formName, func.gridViewName)
-            .subscribe((grd: any) => {
-              if (grd) {
-                this.grdViewSetUp = JSON.parse(JSON.stringify(grd));
-                this.dt.detectChanges();
-              }
-          }));
-          this.subscriptions.add(
-            this.cache
-            .moreFunction(func.formName, func.gridViewName)
-            .subscribe((mFC: any) => {
-              if (mFC) {
-                this.moreFC = JSON.parse(JSON.stringify(mFC));
-              }
-          }));
+          this.cache
+          .gridViewSetup(func.formName, func.gridViewName)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((grd: any) => {
+            if(grd) 
+              this.grdViewSetUp = JSON.parse(JSON.stringify(grd));
+          });
         }
       });
-      this.subscriptions.add(subscribe1);
     }
     // get valuelist vote
-    let subscribe2 = this.cache.valueList('L1480')
+    this.cache.valueList('L1480')
+    .pipe(takeUntil(this.destroy$))
     .subscribe((vll: any) => {
       if (vll?.datas) {
         this.vllL1480 = vll.datas;
       }
     });
-
-    let subscribe3 = this.cache.message('CHAT002')
+    this.cache.message('CHAT002')
+    .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       this.mssgDeleted = res.defaultName;
     });
-
-    let subscribe4 = this.cache.moreFunction('CoDXSystem', '')
+    this.cache.moreFunction('CoDXSystem', '')
+    .pipe(takeUntil(this.destroy$))
     .subscribe((mFuc: any) => {
       if (mFuc) {
         this.sysMoreFunc = Array.from<any>(mFuc).filter(
@@ -214,34 +200,30 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
         );
       }
     });
-    this.subscriptions.add(subscribe2);
-    this.subscriptions.add(subscribe3);
-    this.subscriptions.add(subscribe4);
   }
 
+  dataMentions:any[] = null;
   getGroupInfo() {
     if (this.groupID) {
-      let subscribe = this.api.execSv
-      (
-        'WP',
-        'ERM.Business.WP',
-        'GroupBusiness',
-        'GetGroupByIDAsync',
-        this.groupID
-      ).subscribe((res: any) => {
+      this.api.execSv
+      ('WP',
+      'ERM.Business.WP',
+      'GroupBusiness',
+      'GetGroupByIDAsync',
+      this.groupID)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
         if(res) 
         {
           this.group = res;
-          if (this.group.members) 
+          if (this.group.members)
           {
-            this.crrMembers = Array.from<any>(this.group.members)
-              .map((x) => x.userID)
-              .join(';');
-          }
+            this.dataMentions = this.group.members.filter(x => x.userID != this.user.userID); 
+            this.crrMembers = this.group.members.map((x) => x.userID).join(';');
+          } 
           this.dt.detectChanges();
         }
       });
-      this.subscriptions.add(subscribe);
     }
   }
 
@@ -249,8 +231,9 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
     if (!this.isLoading && !this.isFull) {
       this.isLoading = true;
       this.page++;
-      let subscribe = this.api
+      this.api
       .execSv('WP', 'ERM.Business.WP', 'ChatBusiness', 'GetMessageAsync', [this.groupID,this.page])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any[]) => {
         if(res && res?.length > 0)
         {
@@ -272,7 +255,6 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
           this.dt.detectChanges();
         }
       });
-      this.subscriptions.add(subscribe);
     }
   }
 
@@ -282,15 +264,11 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
       this.getMessage(true);
     }
   }
-  
-
-
 
   closeChatBox() {
     this.close.emit();
   }
 
-  
  
   checkActive(id: string) {
     if (id) {
@@ -356,8 +334,9 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
         }
       });
       this.codxATM.objectId = message.recID;
-
-      let subscribe = this.codxATM.saveFilesMulObservable().subscribe((res: any) => {
+      this.codxATM.saveFilesMulObservable()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
         if (res) {
           message.message = '';
           message.messageType = '2';
@@ -373,7 +352,6 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
           });
         } else this.notifiSV.notify('SYS019');
       });
-      this.subscriptions.add(subscribe);
     }
   }
 
@@ -396,7 +374,9 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
         message.refType = 'm';
       }
       this.codxATMImages.objectId = message.recID;
-      let subscribe = this.codxATMImages.saveFilesMulObservable().subscribe((res: any) => {
+      this.codxATMImages.saveFilesMulObservable()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
         if (res)
           this.signalR.sendData(
             CHAT.BE_FUNC.SendMessage,
@@ -404,7 +384,6 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
           );
         else this.notifiSV.notify('SYS019');
       });
-      this.subscriptions.add(subscribe);
     }
   }
 
@@ -468,12 +447,12 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   clickShowVote(mssg: any) {
     if (this.popupVoted) 
     {
-      let subscribe = this.api.execSv('WP', 'ERM.Business.WP', 'ChatBusiness', 'GetVoteAsync', [mssg.recID])
+      this.api.execSv('WP', 'ERM.Business.WP', 'ChatBusiness', 'GetVoteAsync', [mssg.recID])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any[]) => {
         this.lstVoted = res;
         this.callFC.openForm(this.popupVoted, '', 500, 300);
       });
-      this.subscriptions.add(subscribe);
     }
   }
 
@@ -482,18 +461,18 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
     {
       this.group.isFavorite = !this.group.isFavorite; 
       this.dt.detectChanges();
-      let subscribe = this.api
+      this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
         'ContactFavoriteBusiness',
         'AddAndUpdateFavoriteAsync',
-        [this.group.groupID, this.group.groupType, this.group.isFavorite]
-      ).subscribe((res:any) => 
-      {
-        if(res) this.signalR.sendData(CHAT.BE_FUNC.FavoriteGroupAsync,this.group.groupID);
+        [this.group.groupID, this.group.groupType, this.group.isFavorite])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res:any) => {
+        if(res) 
+          this.signalR.sendData(CHAT.BE_FUNC.FavoriteGroupAsync,this.group.groupID);
       });  
-      this.subscriptions.add(subscribe);  
     }
   }
 
@@ -502,13 +481,15 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   clickViewMember(data: any) {
     let dialogModel = new DialogModel();
     dialogModel.FormModel = this.formModel;
-    let subscribe = this.api
+    this.api
     .execSv(
       'HR',
       'ERM.Business.HR',
       'EmployeesBusiness_Old',
       'GetEmpByUserIDAsync',
-      [data.UserID]).subscribe((member: any) => {
+      [data.UserID])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((member: any) => {
       this.callFC.openForm(
         this.tmpViewMember,
         'Thông tin người dùng',
@@ -520,27 +501,21 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
         dialogModel
       );
     });
-    this.subscriptions.add(subscribe);
   }
 
+  onEnter(event:any){
+    this.sendMessage();
+    event.preventDefault();
+  }
 
   message:string = "";
-  valueChange(event:any){
-    this.message = event.data;
-  }
-  keyUp(event:any){
-    debugger
-  }
-
-
-
   sendMessage() {
-    if(!this.message || !this.message.trim())
+    let eleInputChat = document.getElementById("inputChat"); 
+    if(eleInputChat)
     {
-      debugger 
-      return;
-    }
-    let mssg = new MessageItem(this.groupID);
+      this.message = eleInputChat.innerHTML;
+      if(!this.message || !this.message?.trim()) return;
+      let mssg = new MessageItem(this.groupID);
       mssg.message = this.message;
       mssg.messageType = '1';
       mssg.userID = this.user.userID;
@@ -556,10 +531,12 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
           createdName: this.replyMssg.createdName,
         };
       }
-      this.signalR.sendData(CHAT.BE_FUNC.SendMessage, mssg);
       this.message = "";
       this.replyMssg = null;
+      eleInputChat.innerHTML = "";
+      this.signalR.sendData(CHAT.BE_FUNC.SendMessage, mssg);
       this.dt.detectChanges();
+    }
   }
 
   
@@ -605,5 +582,8 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
       // }
       this.dt.detectChanges();
     }
+  }
+
+  selectedChange(event){
   }
 }

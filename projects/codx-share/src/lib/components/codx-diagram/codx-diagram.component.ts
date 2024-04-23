@@ -419,7 +419,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
   }
 
   clickRF() {
-    this.diagram && this.diagram.refresh();
+    this.diagram &&   this.diagram.dataBind();
   }
   // SymbolPalette Properties
   public expandMode: ExpandMode = 'Multiple';
@@ -950,14 +950,14 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
                   isStage:true
                 },
               ],
-              // phases: [
-              //   {
-              //     id: this.makeid(10),
-              //     offset: 170,
-              //     header: { annotation: { content: '' } },
-              //   },
-              // ],
-              // phaseSize: 0.5,
+              phases: [
+                {
+                  id: this.makeid(10),
+                  offset: 170,
+                  header: { annotation: { content: '' } },
+                },
+              ],
+              phaseSize: 0.5,
               isLane:true,
               orientation: 'Vertical',
 
@@ -1013,8 +1013,38 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
         };
         model.width = 300;
         model.height = 150;
-        model.margin.left =  model.margin.left + model.width/2;
+        model.margin.left =  model.margin.left ;
         model.data = this.generateStep(e.item?.element?.nativeElement?.id,this.targetItem?.refID)
+        if(model.data.activityType == 'Form' && !model.data.extendInfo?.length){
+          model.data.extendInfo =[
+            {
+              recID: Util.uid(),
+              fieldName: 'ten_bieu_mau_' + this.data?.stepNo,
+              title: 'Tên biểu mẫu',
+              dataType: 'String',
+              fieldType: 'Title',
+              controlType: 'TextBox',
+              isRequired: true,
+              defaultValue: null,
+              description: '',
+              columnOrder: 0,
+              columnNo: 0,
+            },
+            {
+              recID: Util.uid(),
+              fieldName: 'mo_ta_ngan_gon_' + this.data?.stepNo,
+              title: 'Mô tả ngắn gọn',
+              dataType: 'String',
+              fieldType: 'SubTitle',
+              controlType: 'TextBox',
+              isRequired:  this.data?.stepNo == 1 ? true : false,
+              defaultValue: 'Mô tả ngắn gọn',
+              description: 'Câu trả lời',
+              columnOrder: 1,
+              columnNo: 0,
+            },
+          ];
+        }
         if(this.process && this.process.steps)this.process.steps.push(model.data);
         // if(swimlane)this.diagram.addNodeToLane(model,swimlane,laneID)
         // else this.diagram.add(model);
@@ -1029,7 +1059,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
     // this.diagram.add(model);
     // this.diagram.addChild(this.targetItem,model.id)
     this.targetItem = undefined;
-    //this.diagram.dataBind()
+    this.diagram.dataBind()
   }
 
   clickForm() {
@@ -1145,6 +1175,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
     this.getTool(e.element.name);
   }
 
+  drawingObject:any = { type: 'Orthogonal' }
   public getTool(action: string) {
     if (action == 'delete') {
       this.diagram.remove();
@@ -1222,7 +1253,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
       console.log('thêm', this.nodeSelected);
     }
     if (action == 'connect') {
-      if(!this.diagram.drawingObject) this.diagram.drawingObject =  { type: 'Orthogonal' }
+      if(!this.diagram.drawingObject) this.diagram.drawingObject =this.drawingObject
       this.diagram.drawingObject.shape = {};
       (this.diagram.drawingObject as any).type = (
         this.diagram.drawingObject as any
@@ -1310,12 +1341,13 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
         newLane.data = this.generateStep('Stage');
         newLane.refID = newLane.data.recID;
         newLane.header.annotation.content = newLane.data.stepName;
+        newLane.header.annotation.style = { fontSize: 10,bold:true };
         this.process.steps.push(newLane.data);
         if (args.item.id === 'InsertLaneBefore') {
           //this.defaultStep(index)
           this.diagram.addLanes(swimlane, [newLane], index);
         } else {
-          this.defaultStep(index+1)
+          //this.defaultStep(index+1)
           this.diagram.addLanes(swimlane, [newLane], index + 1);
         }
         //this.diagram.refreshDiagramLayer();
@@ -1658,7 +1690,15 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
           }
           (source as any).settings = JSON.stringify(sourceSetting);
           let step = this.process.steps.find((x:any)=>x.recID== (source as any).recID);
+
+
           if(step) step.settings = JSON.stringify(sourceSetting);
+          if(step.activityType=='Conditions'){
+            let condition = this.diagram.nodes.find((x:any)=>x.id==e.source.sourceID);
+            (condition.data as any).settings = JSON.stringify(sourceSetting);
+            this.addEditStages(condition,'edit');
+
+          }
           console.log(this.process);
 
         }
@@ -1964,7 +2004,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
       parent: any = null,
       stage: any = null,
       isCondistion = false,
-      hideDelete = false
+      hideDelete = true
     ) {
       let lstParent = JSON.parse(JSON.stringify(this.process?.steps?.filter((x:any)=>x.activityType=='Stage')));
       lstParent.forEach((elm) => {
@@ -1976,7 +2016,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
       if(item.data.settings && typeof item.data.settings=='string'){
         item.data.settings=JSON.parse(item.data.settings);
       }
-      var obj = {
+      let obj = {
         type: type,
         activityType: item.data.activityType,
         process: this.process,
@@ -1985,6 +2025,8 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
         stage: stage,
         listStage: lstParent,
         hideDelete: hideDelete,
+        listSteps: this.process?.steps,
+        dataStep: item.data.settings,
         formModel: new FormModel(),
       };
       let option = new SidebarModel();
@@ -1994,6 +2036,35 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit,OnChanges,OnD
       popup.closed.subscribe((res) => {
         if (res?.event) {
           item.data = res.event.data;
+          let idx = this.process.steps?.findIndex((x:any)=>x.recID==item.data.recID)
+          if(idx>-1){
+            this.process.steps[idx] = res.event.data;
+          }
+          if(item.data.activityType == 'Conditions'){
+            let cnn = this.diagram.connectors.filter((x:any)=>x.sourceID == item.id);
+            if(cnn.length){
+              if(item.data.settings.nextSteps.length){
+                for(let i in item.data.settings.nextSteps){
+                  let next = item.data.settings.nextSteps[i];
+                  let targetNode = this.diagram.nodes.find((x:any)=>x.properties.data?.recID==next.nextStepID)
+                  if(targetNode){
+                    let connector = this.diagram.connectors.find((x:any)=>x.sourceID == item.id && x.targetID == targetNode.id);
+                    if(connector){
+                      this.diagram.addLabels(connector,[{content: next.predicateName || 'điều kiện ' + i,style:{fill:'white'}}])
+                    }
+                  }
+                }
+                this.diagram.dataBind();
+              }
+              // setTimeout(()=>{
+              //   for(let i in cnn){
+              //     this.diagram.addLabels(cnn[i],[{content:'DK '+i,style:{fill:'white'}}])
+              //   }
+              //   this.diagram.dataBind();
+              // },200)
+
+            }
+          }
           this.detectorRef.detectChanges();
           if (res?.event?.delete) {
             this.data = res?.event?.process || this.data;

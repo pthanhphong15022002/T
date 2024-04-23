@@ -186,6 +186,7 @@ export class PopupAddDealComponent
   cost: any;
   copyTransID: any; //copy transID cost
   tenant = '';
+  conRef: any[] = [];
 
   constructor(
     private inject: Injector,
@@ -718,6 +719,14 @@ export class PopupAddDealComponent
       this.convertDataInstance(this.deal, this.instance);
     this.deal.applyProcess && this.updateDateDeal(this.instance, this.deal);
     if (!this.isSave) return;
+    // //Kieerm tra dk ref cua truong tuy chinh
+    // if (this.conRef?.length > 0) {
+    //   this.conRef.forEach(x => {
+    //     this.notificationsService.notify(x.messageText, x.messageType)
+    //   })
+    //   return
+    // }
+    if (!this.conditionRefValidate()) return
     this.executeSaveData();
   }
 
@@ -755,27 +764,6 @@ export class PopupAddDealComponent
         this.convertToFieldDp(contact, type);
       }
 
-      // let result = event.e?.data;
-      // let field = event.data;
-      // switch (field.dataType) {
-      //   case 'D':
-      //     result = event.e?.data.fromDate;
-      //     break;
-      //   case 'P':
-      //   case 'R':
-      //   case 'A':
-      //   case 'L':
-      //   case 'TA':
-      //   case 'PA':
-      //     result = event?.e;
-      //     break;
-      //   case 'C':
-      //     result = event?.e;
-      //     let type = event?.type ?? '';
-      //     let contact = event?.result ?? '';
-      //     this.convertToFieldDp(contact, type);
-      //     break;
-      // }
       let index = this.listInstanceSteps.findIndex(
         (x) => x.recID == field.stepID
       );
@@ -788,6 +776,21 @@ export class PopupAddDealComponent
             let valueOld =
               this.listInstanceSteps[index].fields[idxField].dataValue;
             this.listInstanceSteps[index].fields[idxField].dataValue = result;
+            // //Tham chieu rang buoc
+            // let crrField = this.listInstanceSteps[index].fields[idxField];
+            // if (crrField.isApplyConditional && crrField?.conditionReference?.length > 0) {
+            //   let check = this.customFieldSV.checkConditionalRef(this.listInstanceSteps[index].fields, crrField)
+            //   this.conRef = this.conRef.filter(f => f?.id != crrField.recID);
+            //   if (!check?.check && check.conditionRef?.length > 0) {
+            //     let arrRef = check.conditionRef.map(x => {
+            //       let obj = { ...x, id: crrField.recID }
+            //       return obj
+            //     })
+            //     this.conRef = this.conRef.concat(arrRef)
+            //   }
+            // }
+
+
             let idxEdit = this.listCustomFile.findIndex(
               (x) =>
                 x.recID == this.listInstanceSteps[index].fields[idxField].recID
@@ -1926,4 +1929,17 @@ export class PopupAddDealComponent
     }
   }
   //---------------------------------------------//
+
+  conditionRefValidate() {
+    //Tham chieu rafng buoc
+    var checkAll = true;
+    let fieldsApplyCondition = this.listFields?.filter(x => x.isApplyConditional && x.conditionReference?.length > 0);
+    if (fieldsApplyCondition?.length > 0) {
+      fieldsApplyCondition.forEach(x => {
+        let check = this.customFieldSV.checkConditionalRef(this.listFields, x);
+        if (checkAll && !check.check) checkAll = check.check;
+      })
+    }
+    return checkAll;
+  }
 }

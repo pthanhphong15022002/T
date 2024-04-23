@@ -249,6 +249,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   isShowMore: boolean;
   widthDefault: string | number;
   isNewAutoNumber = false;
+  conRef: any[] = [];
   //#endregion
 
   constructor(
@@ -610,10 +611,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       .getFieldAutoNoDefault(funcID, this.dialog.formModel.entityName)
       .subscribe((res) => {
         if (res && !res.stop) {
-          if(res?.autoAssignRule == "1"){
+          if (res?.autoAssignRule == "1") {
             this.isNewAutoNumber = true;
             this.getAutoNumberSetting(funcID);
-          }else{
+          } else {
             this.cache.message('AD019').subscribe((mes) => {
               if (mes) {
                 this.planceHolderAutoNumber = mes?.customName || mes?.description;
@@ -641,11 +642,11 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         'ContractID'
       )
       .subscribe((autoNum) => {
-        if(autoNum){
+        if (autoNum) {
           this.contracts.contractID = autoNum;
           this.autoNumber = autoNum;
           this.disabledShowInput = true;
-        }else {
+        } else {
           this.disabledShowInput = false;
         }
       });
@@ -1440,28 +1441,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     if (event && event.data) {
       var result = event.e;
       var field = event.data;
-
-      // let result = event.e?.data;
-      // let field = event.data;
-      // switch (field.dataType) {
-      //   case 'D':
-      //     result = event.e?.data.fromDate;
-      //     break;
-      //   case 'P':
-      //   case 'R':
-      //   case 'A':
-      //   case 'L':
-      //   case 'TA':
-      //   case 'PA':
-      //     result = event?.e;
-      //     break;
-      //   case 'C':
-      //     result = event?.e;
-      //     let type = event?.type ?? '';
-      //     let contact = event?.result ?? '';
-      //     this.convertToFieldDp(contact, type);
-      //     break;
-      // }
       let index = this.listInstanceSteps.findIndex(
         (x) => x.recID == field.stepID
       );
@@ -1474,6 +1453,20 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             let valueOld =
               this.listInstanceSteps[index].fields[idxField].dataValue;
             this.listInstanceSteps[index].fields[idxField].dataValue = result;
+            // //Tham chieu rang buoc
+            // let crrField = this.listInstanceSteps[index].fields[idxField];
+            // if (crrField.isApplyConditional && crrField?.conditionReference?.length > 0) {
+            //   let check = this.customFieldSV.checkConditionalRef(this.listInstanceSteps[index].fields, crrField)
+            //   this.conRef = this.conRef.filter(f => f?.id != crrField.recID);
+            //   if (!check?.check && check.conditionRef?.length > 0) {
+            //     let arrRef = check.conditionRef.map(x => {
+            //       let obj = { ...x, id: crrField.recID }
+            //       return obj
+            //     })
+            //     this.conRef = this.conRef.concat(arrRef)
+            //   }
+            // }
+
             let idxEdit = this.listCustomFile.findIndex(
               (x) =>
                 x.recID == this.listInstanceSteps[index].fields[idxField].recID
@@ -1759,7 +1752,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('RS030');
       return false;
     }
-    if (this.contracts.contractID && this.contracts.contractID.includes(' ')&& this.isNewAutoNumber) {
+    if (this.contracts.contractID && this.contracts.contractID.includes(' ') && this.isNewAutoNumber) {
       this.notiService.notifyCode(
         'CM026',
         0,
@@ -1780,10 +1773,18 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
   //#region CRUD
   async save() {
-    if (!this.checkRequiredTask() || !this.checkRequiredContract()) return;
+    if (!this.checkRequiredTask() || !this.checkRequiredContract() || !this.conditionRefValidate()) return;
     if (this.contracts?.applyProcess) {
       this.convertData(this.contracts, this.instance);
     }
+    // //Kieerm tra dk ref cua truong tuy chinh
+    // if (this.conRef?.length > 0) {
+    //   this.conRef.forEach(x => {
+    //     this.notiService.notify(x.messageText, x.messageType)
+    //   })
+    //   return
+    // }
+
     if (this.attachment && this.attachment.fileUploadList.length) {
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -2022,5 +2023,18 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     width = Util.getViewPort().width.toString();
     this.dialog.setWidth(this.isShowMore ? width : this.widthDefault);
     this.changeDetectorRef.detectChanges();
+  }
+
+  conditionRefValidate() {
+    //Tham chieu rafng buoc
+    var checkAll = true;
+    let fieldsApplyCondition = this.listField.filter(x => x.isApplyConditional && x.conditionReference?.length > 0);
+    if (fieldsApplyCondition?.length > 0) {
+      fieldsApplyCondition.forEach(x => {
+        let check = this.customFieldSV.checkConditionalRef(this.listField, x);
+        if (checkAll && !check.check) checkAll = check.check;
+      })
+    }
+    return checkAll;
   }
 }

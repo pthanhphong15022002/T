@@ -131,7 +131,9 @@ export class CashPaymentAddComponent extends UIComponent {
     this.journal = { ...dialogData.data?.journal };
     this.baseCurr = dialogData.data?.baseCurr;
     this.legalName = this.dialogData.data?.legalName;
-    this.isActive = dialogData.data?.isActive; 
+    if (dialogData.data.hasOwnProperty('isActive')){
+      this.isActive = dialogData.data?.isActive; 
+    } 
   }
   //#endregion
 
@@ -1169,9 +1171,13 @@ export class CashPaymentAddComponent extends UIComponent {
     ) {
       if (this.eleGridCashPayment && this.eleGridCashPayment?.gridRef?.isEdit) {
         this.eleGridCashPayment.saveRow((res: any) => { //? save lưới trước
-          if (res) {
+          if (res && res.type != 'error') {
             this.eleGridCashPayment.isSaveOnClick = false;
-            if (this.nextTabIndex) this.elementTabDetail.select(this.nextTabIndex);
+            if (this.nextTabIndex){
+              setTimeout(() => {
+                this.elementTabDetail.select(this.nextTabIndex);
+              }, 100);
+            } 
             setTimeout(() => {
               if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
                 e.target.focus();
@@ -1183,9 +1189,13 @@ export class CashPaymentAddComponent extends UIComponent {
       }
       if (this.eleGridSettledInvoices && this.eleGridSettledInvoices?.gridRef?.isEdit) {
         this.eleGridSettledInvoices.saveRow((res: any) => { //? save lưới trước
-          if (res) {
+          if (res && res.type != 'error') {
             this.eleGridSettledInvoices.isSaveOnClick = false;
-            if (this.nextTabIndex) this.elementTabDetail.select(this.nextTabIndex);
+            if (this.nextTabIndex){
+              setTimeout(() => {
+                this.elementTabDetail.select(this.nextTabIndex);
+              }, 100);
+            } 
             setTimeout(() => {
               if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
                 e.target.focus();
@@ -1197,9 +1207,13 @@ export class CashPaymentAddComponent extends UIComponent {
       }
       if (this.eleGridVatInvoices && this.eleGridVatInvoices?.gridRef?.isEdit) {
         this.eleGridVatInvoices.saveRow((res: any) => { //? save lưới trước
-          if (res) {
+          if (res && res.type != 'error') {
             this.eleGridVatInvoices.isSaveOnClick = false;
-            if (this.nextTabIndex) this.elementTabDetail.select(this.nextTabIndex);
+            if (this.nextTabIndex){
+              setTimeout(() => {
+                this.elementTabDetail.select(this.nextTabIndex);
+              }, 100);
+            } 
             setTimeout(() => {
               if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
                 e.target.focus();

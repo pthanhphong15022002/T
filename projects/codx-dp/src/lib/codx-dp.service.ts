@@ -14,17 +14,9 @@ export class CodxDpService {
     private cache: CacheService,
     private auth: AuthStore,
     private fb: FormBuilder
-  ) {}
+  ) { }
 
-  // Gán tạm để show data test
-  getUserByProcessId(data) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessesBusiness',
-      'GetAllUserPermissionAsync',
-      data
-    );
-  }
+
 
   onAddProcess(data) {
     return this.api.exec<any>(
@@ -179,6 +171,15 @@ export class CodxDpService {
       'DP',
       'ProcessesBusiness',
       'GetListCbxProcessesMoveAsync',
+      data
+    );
+  }
+
+  getDataProccessMove(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetProcessMoveAsync',
       data
     );
   }
