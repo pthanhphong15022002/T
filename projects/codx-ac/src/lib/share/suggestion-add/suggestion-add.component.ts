@@ -15,6 +15,7 @@ import {
   AuthService,
   DialogData,
   CodxGridviewV2Component,
+  DatePipe,
 } from 'codx-core';
 import { DateTime } from '@syncfusion/ej2-angular-charts';
 import {
@@ -24,6 +25,7 @@ import {
 import { Subject, pipe, takeUntil } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'lib-suggestion-add',
@@ -60,6 +62,7 @@ export class SuggestionAdd  extends UIComponent implements OnInit {
     private dt: ChangeDetectorRef,
     private notification: NotificationsService,
     private ngxLoader: NgxUiLoaderService,
+    public datepipe: DatePipe,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
