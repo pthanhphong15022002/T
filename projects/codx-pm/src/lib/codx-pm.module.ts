@@ -60,7 +60,8 @@ export const routes: Routes = [
       },
       {
         path: 'tasks/:funcID',
-        component: TasksComponent,
+        component: ProjectTasksViewComponent,
+        data: { noReuse: true },
       },
     ],
   },

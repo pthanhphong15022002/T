@@ -186,7 +186,8 @@ export class PopupViewTaskComponent implements OnInit, AfterViewInit{
       if(this.data && this.data.status !="90"){
         if(this.todoList?.length){
 
-          if(this.todoList.filter((x:any)=>x.status=='90').length == this.todoList.length){
+          if(this.todoList.filter((x:any)=>x.status=='90').length == this.todoList.length && status!='90'){
+            this.data.percentage = 100;
             let dialogConfirm =  this.notificationsService.alert('PMT001','Danh sách công việc cần làm đã hoàn tất, bạn có muốn hoàn tất công việc này?',null,'6');
             dialogConfirm.closed.subscribe((res:any)=>{
             if(res.event.status=='Y'){
@@ -209,6 +210,10 @@ export class PopupViewTaskComponent implements OnInit, AfterViewInit{
   }
   updateTaskStatus(recID:any, status:any,comment:any){
     let hours="8";
+    let doneChecklist = this.todoList.filter((x: any) => x.status == '90').length;
+    if (doneChecklist > 0) {
+      this.data.percentage = parseInt((doneChecklist / this.todoList.length)*100 as any);
+    }
     this.api.execSv("TM","ERM.Business.TM","TasksBusiness","GetTaskAsync",recID).subscribe((res:any)=>{
       if(res){
         this.api.execSv<any>(

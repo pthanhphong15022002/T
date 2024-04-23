@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component, Injector, Optional, ViewChild, ViewEncapsulation } from "@angular/core";
+import { ChangeDetectorRef, Component, Injector, OnDestroy, Optional, ViewChild, ViewEncapsulation } from "@angular/core";
 import { AuthService, AuthStore, CacheService, DialogData, DialogModel, DialogRef, FormModel, ImageViewerComponent, NotificationsService, UIComponent } from "codx-core";
 import { CodxCommonService } from "projects/codx-common/src/lib/codx-common.service";
 import { DynamicSettingControlComponent } from "projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component";
 import { CodxShareService } from "projects/codx-share/src/public-api";
 import moment from "moment";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'popup-add-project',
@@ -11,7 +12,7 @@ import moment from "moment";
   styleUrls: ['./popup-add-project.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class PopupAddProjectComponent extends UIComponent {
+export class PopupAddProjectComponent extends UIComponent implements OnDestroy{
 
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @ViewChild('dynamic') dynamic: DynamicSettingControlComponent;
@@ -28,7 +29,7 @@ export class PopupAddProjectComponent extends UIComponent {
   endTime: string;
   listUM = [];
   listFilePermission: any[];
-  title:string = "Thêm";
+  title:string = "Thêm Dự án";
   imgRecID:any;
   viewOnly:boolean=false;
   tabControl = [
@@ -104,7 +105,7 @@ export class PopupAddProjectComponent extends UIComponent {
     }
     else{
 
-      this.api.execSv("SYS",'ERM.Business.SYS','SettingsBusiness','GetSettingByFormAsync',['PMParameters','1']).subscribe((res:any)=>{
+      let sub = this.api.execSv("SYS",'ERM.Business.SYS','SettingsBusiness','GetSettingByFormAsync',['PMParameters','1']).subscribe((res:any)=>{
         if(res ){
           this.defaultSettings = res['1'];
           this.data.settings = this.defaultSettings;
@@ -118,7 +119,13 @@ export class PopupAddProjectComponent extends UIComponent {
           this.paravalues = JSON.stringify(this.paravalues)
         }
       })
+      this.subscription.add(sub)
     }
+  }
+
+  subscription:Subscription = new Subscription;
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   override onInit(): void {
@@ -166,7 +173,7 @@ export class PopupAddProjectComponent extends UIComponent {
   }
 
   initForm(){
-    this.cache.valueList('PM003').subscribe((res) => {
+    let sub = this.cache.valueList('PM003').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         let tmpArr = [];
         tmpArr = res.datas;
@@ -196,7 +203,11 @@ export class PopupAddProjectComponent extends UIComponent {
           this.curUser = tmpResource;
           this.members.push(tmpResource);
           this.data.attendees =  this.members?.length;
+          this.data.permissions =  this.members;
           this.attendeesNumber = this.data.attendees;
+          let lstUserID = this.members.map((x:any)=>{if(x.objectType=='U'){return x.objectID}}).join(';');
+          this.getListUser(lstUserID);
+
           if(this.data && !this.data.projectManager) this.data.projectManager = this.user.userID;
           this.changeDetectorRef.detectChanges();
         } else if(this.funcType == 'edit') {
@@ -233,6 +244,7 @@ export class PopupAddProjectComponent extends UIComponent {
         }
       }
     });
+    this.subscription.add(sub)
   }
 
   shareInputChange(e) {
@@ -309,7 +321,7 @@ export class PopupAddProjectComponent extends UIComponent {
     }
     var arrUser = resource.split(';');
     this.listUserID = this.listUserID.concat(arrUser);
-    this.api
+    let sub = this.api
       .execSv<any>(
         'HR',
         'ERM.Business.HR',
@@ -408,6 +420,7 @@ export class PopupAddProjectComponent extends UIComponent {
           this.detectorRef.detectChanges();
         }
       });
+      this.subscription.add(sub)
   }
 
   filterArray(arr) {
@@ -429,6 +442,10 @@ export class PopupAddProjectComponent extends UIComponent {
       })
     }
     this.data.settings = this.newSetting;
+    if(!this.data.permissions || !this.data.permissions.length){
+      this.notificationsService.notify("Phải có thành viên dự án!",'2');
+      return
+    }
     if(this.data.permissions){
       let pm = this.data.permissions.find((x:any)=>x.roleType=='PM' && x.objectType=='U');
       if(pm){
@@ -440,9 +457,10 @@ export class PopupAddProjectComponent extends UIComponent {
         return
       }
     }
+
     this.dialogRef.dataService.dataSelected = this.data;
 
-    this.dialogRef.dataService
+    let sub = this.dialogRef.dataService
     .save()
     .subscribe((res) => {
       if (res?.save || res?.update) {
@@ -478,6 +496,7 @@ export class PopupAddProjectComponent extends UIComponent {
         return;
       }
     });
+    this.subscription.add(sub)
 
 
   }
