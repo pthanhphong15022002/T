@@ -244,7 +244,7 @@ export class PopupAddCustomFieldComponent implements OnInit, AfterViewInit {
     }
   }
   ngAfterViewInit(): void {
-    if (this.field.isApplyDependences && this.listCbx?.length > 0) {
+    if (this.field?.isApplyDependences && this.listCbx?.length > 0) {
       let crrCbx = this.listCbx.find(x => x.dependences.includes(this.field.fieldName));
       if (crrCbx) {
         this.dependence.refID = crrCbx.recID;
@@ -282,7 +282,6 @@ export class PopupAddCustomFieldComponent implements OnInit, AfterViewInit {
     if (objStep) {
       this.fieldInStep = objStep.fields;
       this.listCbx = this.fieldInStep.filter(x => x.refType == "3");
-
     }
     if (
       this.field.dataType == 'L' &&
@@ -433,21 +432,7 @@ export class PopupAddCustomFieldComponent implements OnInit, AfterViewInit {
   sliderChange(e) {
     this.field.rank = e?.value;
   }
-  // khong dc xoa
-  // renderingTicks(args: SliderTickEventArgs) {
-  //   if (args.tickElement.classList.contains('e-large')) {
-  //     args.tickElement.classList.add('e-custom');
-  //   }
-  // }
-  //thay doi view duoiw
-  // renderedTicks(args: SliderTickRenderedEventArgs) {
-  //   let li = args.ticksWrapper.getElementsByClassName('e-large');
-  //   let remarks: any = ['', '', '', '', '', '', '', '', '', '', '', ''];
-  //   for (let i = 0; i < li.length; ++i) {
-  //     (li[i].querySelectorAll('.e-tick-both')[1] as HTMLElement).innerText =
-  //       remarks[i];
-  //   }
-  // }
+
   cbxChange(value) {
     let oldStep = this.field['stepID'];
     if (value && value != oldStep) {

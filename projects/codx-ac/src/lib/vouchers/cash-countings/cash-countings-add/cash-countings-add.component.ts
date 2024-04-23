@@ -269,48 +269,6 @@ export class CashCountingsAddComponent extends UIComponent {
     })
   }
 
-  /**
-   * *Hàm thêm dòng cho các lưới
-   * @returns
-   */
-  onAddLine(type) {
-    this.master.save(null, 0, '', '', false, { allowCompare: false ,skipHasChange:true})
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (!res) return;
-        if (res.hasOwnProperty('save')) {
-          if (res.save.hasOwnProperty('data') && !res.save.data) return;
-        }
-        if (res.hasOwnProperty('update')) {
-          if (res.update.hasOwnProperty('data') && !res.update.data) return;
-        }
-        // if (this.eleGridMember && this.elementTabMaster?.selectingID == '1') {
-        //   this.eleGridMember.saveRow((res: any) => { //? save lưới trước
-        //     if (res && res.type != 'error') this.addRowDetail(type);
-        //   })
-        //   return;
-        // }
-        if (this.eleGridCounting && this.elementTabDetail?.selectingID == '0' && this.dialog.formModel.funcID === 'ACT281') {
-          this.eleGridCounting.saveRow((res: any) => { //? save lưới trước
-            if (res && res.type != 'error') this.addRowDetail(type);
-          })
-          return;
-        }
-        if (this.eleGridItems && this.elementTabDetail?.selectingID == '0' && this.dialog.formModel.funcID === 'ACT581') {
-          this.eleGridItems.saveRow((res: any) => { //? save lưới trước
-            if (res && res.type != 'error') this.addRowDetail(type);
-          })
-          return;
-        }
-        if (this.eleGridAsset && this.elementTabDetail?.selectingID == '0' && this.dialog.formModel.funcID === 'ACT881') {
-          this.eleGridAsset.saveRow((res: any) => { //? save lưới trước
-            if (res && res.type != 'error') this.addRowDetail(type);
-          })
-          return;
-        }
-      })
-  }
-
   addLineMember() {
     this.master.save(null, 0, '', '', false, { allowCompare: false ,skipHasChange:true})
     .pipe(takeUntil(this.destroy$))
@@ -336,26 +294,6 @@ export class CashCountingsAddComponent extends UIComponent {
         return;
       }
     })
-  }
-
-  addRowDetail(type) {
-    switch(type){
-      case '1':
-        this.addLineCounting();
-        break;
-      case '2':
-        this.addLineCountingItems();
-        break;
-      case '3':
-        this.addLineCountingAssets();
-        break;
-      case '4':
-        this.addLineItemsProposal();
-        break;
-      case '5':
-        this.addLineAssetProposal();
-        break;
-    }
   }
 
   addLineCounting() {
@@ -445,6 +383,8 @@ export class CashCountingsAddComponent extends UIComponent {
                   this.api.exec('AC','CountingItemsBusiness','SetDefaultProposalAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
                     if (res) {
                       this.eleGridItems.refresh();
+                      this.master.setObjValue(res,{});
+                      this.dialog.dataService.update(res,true).subscribe();
                     }
                     this.onDestroy();
                   })
@@ -454,6 +394,8 @@ export class CashCountingsAddComponent extends UIComponent {
               this.api.exec('AC','CountingItemsBusiness','SetDefaultProposalAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
                 if (res) {
                   this.eleGridItems.refresh();
+                  this.master.setObjValue(res,{});
+                  this.dialog.dataService.update(res,true).subscribe();
                 }
                 this.onDestroy();
               })
@@ -511,9 +453,9 @@ export class CashCountingsAddComponent extends UIComponent {
                 if (res.event.status === 'Y') {
                   this.api.exec('AC','CountingAssetsBusiness','SetDefaultProposalAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
                     if (res) {
+                      this.eleGridAsset.refresh();
                       this.master.setObjValue(res,{});
                       this.dialog.dataService.update(res,true).subscribe();
-                      this.eleGridAsset.refresh();
                     }
                     this.onDestroy();
                   })
@@ -522,9 +464,9 @@ export class CashCountingsAddComponent extends UIComponent {
             }else{
               this.api.exec('AC','CountingAssetsBusiness','SetDefaultProposalAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
                 if (res) {
+                  this.eleGridAsset.refresh();
                   this.master.setObjValue(res,{});
                   this.dialog.dataService.update(res,true).subscribe();
-                  this.eleGridAsset.refresh();
                 }
                 this.onDestroy();
               })
@@ -709,415 +651,472 @@ export class CashCountingsAddComponent extends UIComponent {
         if (isError) {
           return;
         }
-        if (this.master.data?.diffValue == 0) {
-          this.notification.notify('Không có chênh lệch để xử lý', '2');
+        if (this.eleGridCounting) {
+          this.eleGridCounting.saveRow((res: any) => { //? save lưới trước
+            if (res && res.type != 'error'){
+              if (this.master.data?.diffValue == 0) {
+                this.notification.notify('Không có chênh lệch để xử lý', '2');
+                return;
+              }
+              let type = '';
+              let totalAmt = 0;
+              if (this.master.data?.diffValue < 0) {
+                type = 'CR';
+                totalAmt = -(this.master.data?.diffValue);
+              }
+              if (this.master.data?.diffValue > 0) {
+                type = 'CP';
+                totalAmt = this.master.data?.diffValue;
+              }
+              let data = {
+                type: type,
+              };
+              let opt = new DialogModel();
+              let dialog = this.callfc.openForm(
+                ChooseJournalComponent,
+                '',
+                null,
+                null,
+                '',
+                data,
+                '',
+                opt
+              );
+              dialog.closed.subscribe((res) => {
+                if (res && res?.event?.journalNo) {
+                  this.ngxLoader.start();
+                  let journalNo = res?.event.journalNo;
+                  let headerText = '';
+                  let journal = res?.event?.journal;
+                  let funcID = type == 'CP' ? this.fmcashPayment.funcID : this.fmcashReciept.funcID;
+                  this.cache.functionList(funcID).subscribe((res) => {
+                    if (res) {
+                      headerText = res?.defaultName || res?.customName;
+                    }
+                    if (type == 'CR') {
+                      this.cashRecieptSV
+                        .addNew((o) => this.setDefault(type,journalNo))
+                        .pipe(takeUntil(this.destroy$))
+                        .subscribe({
+                          next: (result: any) => {
+                            if (result) {
+                              result.isAdd = true;
+                              result.totalAmt = totalAmt;
+                              result.refID = this.master.data.recID;
+                              result.refType = this.journal.journalType;
+                              result.refNo = this.master.data.voucherNo;
+                              let data = {
+                                headerText: headerText,
+                                journal: { ...journal },
+                                oData: { ...result },
+                                baseCurr: this.baseCurr,
+                                isActive: false
+                              };
+                              let opt = new DialogModel();
+                              opt.DataService = this.cashRecieptSV;
+                              opt.FormModel = this.fmcashReciept;
+                              opt.IsFull = true;
+                              this.cache.gridViewSetup(this.fmcashReciept.formName, this.fmcashReciept.gridViewName).subscribe((res: any) => {
+                                let dialog = this.callfc.openForm(
+                                  CashreceiptsAddComponent,
+                                  '',
+                                  null,
+                                  null,
+                                  this.fmcashReciept.funcID,
+                                  data,
+                                  '',
+                                  opt
+                                );
+                                dialog.closed.subscribe((res) => {
+                                  if (res && res?.event.data) {
+                                    this.api.exec('AC','CountingFundsBusiness','UpdateStatusLogicAsync',[this.master.data]).subscribe((res:any)=>{
+                                      if (res) {
+                                        this.master.setValue('status',res?.status,{});
+                                        this.dialog.dataService.update(res,true).subscribe();
+                                        this.detectorRef.detectChanges();
+                                      }
+                                    })
+                                  }
+                                });
+                              })
+                            }
+                          },
+                          complete:()=>{
+                            this.ngxLoader.stop();
+                          }
+                        })
+                    } else {
+                      this.cashPaymentSV
+                        .addNew((o) => this.setDefault(type,journalNo))
+                        .pipe(takeUntil(this.destroy$))
+                        .subscribe({
+                          next: (result: any) => {
+                            if (result) {
+                              result.isAdd = true;
+                              result.totalAmt = totalAmt;
+                              result.refID = this.master.data.recID;
+                              result.refType = this.journal.journalType;
+                              result.refNo = this.master.data.voucherNo;
+                              let data = {
+                                headerText: this.headerText,
+                                journal: { ...journal },
+                                oData: { ...result },
+                                baseCurr: this.baseCurr,
+                                isActive: false
+                              };
+                              let opt = new DialogModel();
+                              opt.DataService = this.cashPaymentSV;
+                              opt.FormModel = this.fmcashPayment;
+                              opt.IsFull = true;
+                              this.cache.gridViewSetup(this.fmcashPayment.formName, this.fmcashPayment.gridViewName).subscribe((res: any) => {
+                                let dialog = this.callfc.openForm(
+                                  CashPaymentAddComponent,
+                                  '',
+                                  null,
+                                  null,
+                                  this.fmcashPayment.funcID,
+                                  data,
+                                  '',
+                                  opt
+                                );
+                                dialog.closed.subscribe((res) => {
+                                  if (res && res?.event.data) {
+                                    this.api.exec('AC','CountingFundsBusiness','UpdateStatusLogicAsync',[this.master.data]).subscribe((res:any)=>{
+                                      if (res) {
+                                        this.master.setValue('status',res?.status,{});
+                                        this.dialog.dataService.update(res,true).subscribe();
+                                        this.detectorRef.detectChanges();
+                                      }
+                                    })
+                                  }
+                                });
+                              })
+                            }
+                          },
+                          complete:()=>{
+                            this.ngxLoader.stop();
+                          }
+                        })
+                    }
+                  });
+                }
+              });
+            }
+          })
           return;
         }
-        let type = '';
-        let totalAmt = 0;
-        if (this.master.data?.diffValue < 0) {
-          type = 'CR';
-          totalAmt = -(this.master.data?.diffValue);
-        }
-        if (this.master.data?.diffValue > 0) {
-          type = 'CP';
-          totalAmt = this.master.data?.diffValue;
-        }
-        let data = {
-          type: type,
-        };
-        let opt = new DialogModel();
-        let dialog = this.callfc.openForm(
-          ChooseJournalComponent,
-          '',
-          null,
-          null,
-          '',
-          data,
-          '',
-          opt
-        );
-        dialog.closed.subscribe((res) => {
-          if (res && res?.event?.journalNo) {
-            this.ngxLoader.start();
-            let journalNo = res?.event.journalNo;
-            let headerText = '';
-            let journal = res?.event?.journal;
-            let funcID = type == 'CP' ? this.fmcashPayment.funcID : this.fmcashReciept.funcID;
-            this.cache.functionList(funcID).subscribe((res) => {
-              if (res) {
-                headerText = res?.defaultName || res?.customName;
-              }
-              if (type == 'CR') {
-                this.cashRecieptSV
-                  .addNew((o) => this.setDefault(type,journalNo))
-                  .pipe(takeUntil(this.destroy$))
-                  .subscribe({
-                    next: (result: any) => {
-                      if (result) {
-                        result.isAdd = true;
-                        result.totalAmt = totalAmt;
-                        result.refID = this.master.data.recID;
-                        result.refType = this.journal.journalType;
-                        result.refNo = this.master.data.voucherNo;
-                        let data = {
-                          headerText: headerText,
-                          journal: { ...journal },
-                          oData: { ...result },
-                          baseCurr: this.baseCurr,
-                          isActive: false
-                        };
-                        let opt = new DialogModel();
-                        opt.DataService = this.cashRecieptSV;
-                        opt.FormModel = this.fmcashReciept;
-                        opt.IsFull = true;
-                        this.cache.gridViewSetup(this.fmcashReciept.formName, this.fmcashReciept.gridViewName).subscribe((res: any) => {
-                          let dialog = this.callfc.openForm(
-                            CashreceiptsAddComponent,
-                            '',
-                            null,
-                            null,
-                            this.fmcashReciept.funcID,
-                            data,
-                            '',
-                            opt
-                          );
-                          dialog.closed.subscribe((res) => {
-                            if (res && res?.event.data) {
-                              this.api.exec('AC','CountingFundsBusiness','UpdateStatusLogicAsync',[this.master.data]).subscribe((res:any)=>{
-                                if (res) {
-                                  this.master.setValue('status',res?.status,{});
-                                  this.dialog.dataService.update(res,true).subscribe();
-                                  this.detectorRef.detectChanges();
-                                }
-                              })
-                            }
-                          });
-                        })
-                      }
-                    },
-                    complete:()=>{
-                      this.ngxLoader.stop();
-                    }
-                  })
-              } else {
-                this.cashPaymentSV
-                  .addNew((o) => this.setDefault(type,journalNo))
-                  .pipe(takeUntil(this.destroy$))
-                  .subscribe({
-                    next: (result: any) => {
-                      if (result) {
-                        result.isAdd = true;
-                        result.totalAmt = totalAmt;
-                        result.refID = this.master.data.recID;
-                        result.refType = this.journal.journalType;
-                        result.refNo = this.master.data.voucherNo;
-                        let data = {
-                          headerText: this.headerText,
-                          journal: { ...journal },
-                          oData: { ...result },
-                          baseCurr: this.baseCurr,
-                          isActive: false
-                        };
-                        let opt = new DialogModel();
-                        opt.DataService = this.cashPaymentSV;
-                        opt.FormModel = this.fmcashPayment;
-                        opt.IsFull = true;
-                        this.cache.gridViewSetup(this.fmcashPayment.formName, this.fmcashPayment.gridViewName).subscribe((res: any) => {
-                          let dialog = this.callfc.openForm(
-                            CashPaymentAddComponent,
-                            '',
-                            null,
-                            null,
-                            this.fmcashPayment.funcID,
-                            data,
-                            '',
-                            opt
-                          );
-                          dialog.closed.subscribe((res) => {
-                            if (res && res?.event.data) {
-                              this.api.exec('AC','CountingFundsBusiness','UpdateStatusLogicAsync',[this.master.data]).subscribe((res:any)=>{
-                                if (res) {
-                                  this.master.setValue('status',res?.status,{});
-                                  this.dialog.dataService.update(res,true).subscribe();
-                                  this.detectorRef.detectChanges();
-                                }
-                              })
-                            }
-                          });
-                        })
-                      }
-                    },
-                    complete:()=>{
-                      this.ngxLoader.stop();
-                    }
-                  })
-              }
-            });
-          }
-        });
       })
   }
 
-  onCreateVoucher(type){
-    let lstline:any = [];
-    if (this.eleGridItems) {
-      if (type == 'IR') {
-        let array = this.eleGridItems.dataSource.filter(x => x.diffQty < 0);
-        if (array.length == 0) {
-          this.notification.notify("Không có chênh lệch để tạo phiếu nhập kho", "2");
+  onCreateVoucher(type) {
+    this.master.save(null, 0, '', '', false, { allowCompare: false })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        let isError = false;
+        if (!res) isError = true;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) isError = true;
+        }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) isError = true;
+        }
+        if (isError) {
           return;
         }
-        let array2 = array.filter(x => x.lineStatus == '20');
-        if (array2.length == 0) {
-          this.notification.notify("Đã tạo phiếu nhập kho ", "2");
-          return;
-        }
-        lstline = array2;
-      }else{
-        let array = this.eleGridItems.dataSource.filter(x => x.diffQty > 0);
-        if (array.length == 0) {
-          this.notification.notify("Không có chênh lệch để tạo phiếu xuất kho", "2");
-          return;
-        }
-        let array2 = array.filter(x => x.lineStatus == '20');
-        if (array2.length == 0) {
-          this.notification.notify("Đã tạo phiếu xuất kho ", "2");
-          return;
-        }
-        lstline = array2;
-      }
-      
-      let data = {
-        type: type,
-      };
-      let opt = new DialogModel();
-      let dialog = this.callfc.openForm(
-        ChooseJournalComponent,
-        '',
-        null,
-        null,
-        '',
-        data,
-        '',
-        opt
-      );
-      dialog.closed.subscribe((res) => {
-        if (res && res?.event?.journalNo) {
-          let journal = res?.event?.journal;
-          this.ngxLoader.start();
-          this.api.exec('AC','CountingsBusiness','CreateVoucherAsync',[res?.event?.journalNo,this.master.data,lstline]).subscribe({
-            next:(result:any)=>{
-              if (result) {
-                let headerText = '';
-                let oData = {...result};
-                oData.isAdd = true;
-                oData._isEdit = true;
-                let funcID = type == 'IR' ? this.fmIRVoucher.funcID : this.fmIIVoucher.funcID;
-                this.cache.functionList(funcID).subscribe((result2) => {
-                  if(result2){
-                    headerText = result2?.defaultName || result2?.customName;
+        if (this.eleGridItems) {
+          this.eleGridItems.saveRow((res: any) => {
+            if (res && res.type != 'error') {
+              let lstline: any = [];
+              if (this.eleGridItems) {
+                if (type == 'IR') {
+                  let array = this.eleGridItems.dataSource.filter(x => x.diffQty < 0);
+                  if (array.length == 0) {
+                    this.notification.notify("Không có chênh lệch để tạo phiếu nhập kho", "2");
+                    return;
                   }
-                  let data = {
-                    headerText: headerText,
-                    journal: { ...journal },
-                    oData: { ...oData },
-                    baseCurr: this.baseCurr,
-                    isActive: false
-                  };
-                  let opt = new DialogModel();
-                  opt.DataService = type == 'IR' ? this.IRVoucherSV : this.IIVoucherSV;
-                  opt.FormModel = type == 'IR' ? this.fmIRVoucher : this.fmIIVoucher;
-                  opt.IsFull = true;
-                  let formName = type == 'IR' ? this.fmIRVoucher.formName : this.fmIIVoucher.formName;
-                  let gridViewName = type == 'IR' ? this.fmIRVoucher.gridViewName : this.fmIIVoucher.gridViewName;
-                  this.cache.gridViewSetup(formName, gridViewName).subscribe((res: any) => {
-                    let dialog = this.callfc.openForm(
-                      InventoryAddComponent,
-                      '',
-                      null,
-                      null,
-                      type == 'IR' ? this.fmIRVoucher.funcID : this.fmIIVoucher.funcID,
-                      data,
-                      '',
-                      opt
-                    );
-                    dialog.closed.subscribe((res) => {
-                      if (res && res?.event.data) {
-                        this.api.exec('AC','CountingItemsBusiness','UpdateStatusLogicAsync',[this.master.data]).subscribe((res:any)=>{
-                          if (res) {
-                            this.master.setValue('status',res?.status,{});
-                            this.dialog.dataService.update(res,true).subscribe();
-                            this.detectorRef.detectChanges();
-                          }
-                        })
+                  let array2 = array.filter(x => x.lineStatus == '20');
+                  if (array2.length == 0) {
+                    this.notification.notify("Đã tạo phiếu nhập kho ", "2");
+                    return;
+                  }
+                  lstline = array2;
+                } else {
+                  let array = this.eleGridItems.dataSource.filter(x => x.diffQty > 0);
+                  if (array.length == 0) {
+                    this.notification.notify("Không có chênh lệch để tạo phiếu xuất kho", "2");
+                    return;
+                  }
+                  let array2 = array.filter(x => x.lineStatus == '20');
+                  if (array2.length == 0) {
+                    this.notification.notify("Đã tạo phiếu xuất kho ", "2");
+                    return;
+                  }
+                  lstline = array2;
+                }
+
+                let data = {
+                  type: type,
+                };
+                let opt = new DialogModel();
+                let dialog = this.callfc.openForm(
+                  ChooseJournalComponent,
+                  '',
+                  null,
+                  null,
+                  '',
+                  data,
+                  '',
+                  opt
+                );
+                dialog.closed.subscribe((res) => {
+                  if (res && res?.event?.journalNo) {
+                    let journal = res?.event?.journal;
+                    this.ngxLoader.start();
+                    this.api.exec('AC', 'CountingsBusiness', 'CreateVoucherAsync', [res?.event?.journalNo, this.master.data, lstline]).subscribe({
+                      next: (result: any) => {
+                        if (result) {
+                          let headerText = '';
+                          let oData = { ...result };
+                          oData.isAdd = true;
+                          oData._isEdit = true;
+                          let funcID = type == 'IR' ? this.fmIRVoucher.funcID : this.fmIIVoucher.funcID;
+                          this.cache.functionList(funcID).subscribe((result2) => {
+                            if (result2) {
+                              headerText = result2?.defaultName || result2?.customName;
+                            }
+                            let data = {
+                              headerText: headerText,
+                              journal: { ...journal },
+                              oData: { ...oData },
+                              baseCurr: this.baseCurr,
+                              isActive: false
+                            };
+                            let opt = new DialogModel();
+                            opt.DataService = type == 'IR' ? this.IRVoucherSV : this.IIVoucherSV;
+                            opt.FormModel = type == 'IR' ? this.fmIRVoucher : this.fmIIVoucher;
+                            opt.IsFull = true;
+                            let formName = type == 'IR' ? this.fmIRVoucher.formName : this.fmIIVoucher.formName;
+                            let gridViewName = type == 'IR' ? this.fmIRVoucher.gridViewName : this.fmIIVoucher.gridViewName;
+                            this.cache.gridViewSetup(formName, gridViewName).subscribe((res: any) => {
+                              let dialog = this.callfc.openForm(
+                                InventoryAddComponent,
+                                '',
+                                null,
+                                null,
+                                type == 'IR' ? this.fmIRVoucher.funcID : this.fmIIVoucher.funcID,
+                                data,
+                                '',
+                                opt
+                              );
+                              dialog.closed.subscribe((res) => {
+                                if (res && res?.event.data) {
+                                  this.api.exec('AC', 'CountingItemsBusiness', 'UpdateStatusLogicAsync', [this.master.data]).subscribe((res: any) => {
+                                    if (res) {
+                                      this.master.setValue('status', res?.status, {});
+                                      this.dialog.dataService.update(res, true).subscribe();
+                                      this.detectorRef.detectChanges();
+                                    }
+                                  })
+                                }
+                              });
+                              this.eleGridItems.refresh();
+                            })
+                          })
+                        }
+                      },
+                      complete: () => {
+                        this.ngxLoader.stop();
                       }
-                    });
-                    this.eleGridItems.refresh();
-                  })
+                    })
+                  }
                 })
               }
-            },
-            complete:()=>{
-              this.ngxLoader.stop();
             }
           })
         }
       })
-    }
   }
 
   onCreateAsset(type){
-    let lstline:any = [];
-    if (this.eleGridAsset) {
-      if (type === 'AL') {
-        let array = this.eleGridAsset.dataSource.filter(x => x.diffQty > 0);
-        if (array.length == 0) {
-          this.notification.notify("Không có chênh lệch để tạo phiếu", "2");
-          return;
-        }
+    this.master.save(null, 0, '', '', false, { allowCompare: false })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
         let isError = false;
-        for (let index = 0; index < array.length; index++) {
-          let item = array[index];
-          if (item?.processMethod == '' || item?.processMethod == null) {
-            this.notification.notify(item?.assetID + ' chưa có phương án xử lý', "2");
-            isError = true;
-            break;
-          }
+        if (!res) isError = true;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) isError = true;
         }
-        if(isError) return;
-        let array2 = array.filter(x => x.lineStatus == '20');
-        if (array2.length == 0) {
-          this.notification.notify("Đã tạo phiếu ", "2");
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) isError = true;
+        }
+        if (isError) {
           return;
         }
-        lstline = array2;
-      }else{
-        let array = this.eleGridAsset.dataSource.filter(x => x.diffQty < 0);
-        if (array.length == 0) {
-          this.notification.notify("Không có chênh lệch để tạo phiếu", "2");
-          return;
-        }
-        let array2 = array.filter(x => x.lineStatus == '20');
-        if (array2.length == 0) {
-          this.notification.notify("Đã tạo phiếu ", "2");
-          return;
-        }
-        lstline = array2;
-      }
-      let data = {
-        type: type,
-      };
-      let opt = new DialogModel();
-      let dialog = this.callfc.openForm(
-        ChooseJournalComponent,
-        '',
-        null,
-        null,
-        '',
-        data,
-        '',
-        opt
-      );
-      dialog.closed.subscribe((res) => {
-        if (res && res?.event?.journalNo) {
-          let journal = res?.event?.journal;
-          this.ngxLoader.start();
-          this.api.exec('AM','AssetJournalsBusiness','CreateAssetAsync',[res?.event?.journalNo,this.master.data.recID,this.master.data.journalType,this.master.data.voucherNo,lstline]).subscribe({
-            next:(result:any)=>{
-              if (result) {
-                let headerText = '';
-                let oData = {...result};
-                oData.isAdd = true;
-                oData._isEdit = true;
-                let funcID = type == 'AL' ? this.fmAssetAL.funcID : this.fmAssetAA.funcID;
-                this.cache.functionList(funcID).subscribe((result2) => {
-                  if(result2){
-                    headerText = result2?.defaultName || result2?.customName;
+        if (this.eleGridAsset) {
+          this.eleGridAsset.saveRow((res: any) => {
+            if (res && res.type != 'error') {
+              if (this.eleGridAsset) {
+                if (type === 'AL') {
+                  let array = this.eleGridAsset.dataSource.filter(x => x.diffQty > 0);
+                  if (array.length == 0) {
+                    this.notification.notify("Không có chênh lệch để tạo phiếu", "2");
+                    if(this.eleGridAsset && this.eleGridAsset.isSaveOnClick) this.eleGridAsset.isSaveOnClick = false;
+                    return;
                   }
-                  let data = {
-                    headerText: headerText,
-                    journal: { ...journal },
-                    oData: { ...oData },
-                    baseCurr: this.baseCurr,
-                    isActive: false
-                  };
-                  let opt = new DialogModel();
-                  opt.DataService = type == 'AL' ? this.AssetALSV : this.AssetAASV;
-                  opt.FormModel = type == 'AL' ? this.fmAssetAL : this.fmAssetAA;
-                  opt.IsFull = true;
-                  let formName = type == 'AL' ? this.fmAssetAL.formName : this.fmAssetAA.formName;
-                  let gridViewName = type == 'AL' ? this.fmAssetAL.gridViewName : this.fmAssetAA.gridViewName;
-                  this.cache.gridViewSetup(formName, gridViewName).subscribe((res: any) => {
-                    let dialog = this.callfc.openForm(
-                      AssetJournalsAddComponent,
-                      '',
-                      null,
-                      null,
-                      type == 'AL' ? this.fmAssetAL.funcID : this.fmAssetAA.funcID,
-                      data,
-                      '',
-                      opt
-                    );
-                    dialog.closed.subscribe((res) => {
-                      if (res && res?.event.data) {
-                        this.api.exec('AC','CountingAssetsBusiness','UpdateStatusLogicAsync',[this.master.data]).subscribe((res:any)=>{
-                          if (res) {
-                            this.master.setValue('status',res?.status,{});
-                            this.dialog.dataService.update(res,true).subscribe();
-                            this.detectorRef.detectChanges();
-                          }
-                        })
+                  let isError = false;
+                  for (let index = 0; index < array.length; index++) {
+                    let item = array[index];
+                    if (item?.processMethod == '' || item?.processMethod == null) {
+                      this.notification.notify(item?.assetID + ' chưa có phương án xử lý', "2");
+                      isError = true;
+                      break;
+                    }
+                  }
+                  if(isError){
+                    if(this.eleGridAsset && this.eleGridAsset.isSaveOnClick) this.eleGridAsset.isSaveOnClick = false;
+                    return;
+                  }
+                  let array2 = array.filter(x => x.lineStatus == '20');
+                  if (array2.length == 0) {
+                    this.notification.notify("Đã tạo phiếu ", "2");
+                    if(this.eleGridAsset && this.eleGridAsset.isSaveOnClick) this.eleGridAsset.isSaveOnClick = false;
+                    return;
+                  }
+                  lstline = array2;
+                }else{
+                  let array = this.eleGridAsset.dataSource.filter(x => x.diffQty < 0);
+                  if (array.length == 0) {
+                    this.notification.notify("Không có chênh lệch để tạo phiếu", "2");
+                    if(this.eleGridAsset && this.eleGridAsset.isSaveOnClick) this.eleGridAsset.isSaveOnClick = false;
+                    return;
+                  }
+                  let array2 = array.filter(x => x.lineStatus == '20');
+                  if (array2.length == 0) {
+                    this.notification.notify("Đã tạo phiếu ", "2");
+                    if(this.eleGridAsset && this.eleGridAsset.isSaveOnClick) this.eleGridAsset.isSaveOnClick = false;
+                    return;
+                  }
+                  lstline = array2;
+                }
+                let data = {
+                  type: type,
+                };
+                let opt = new DialogModel();
+                let dialog = this.callfc.openForm(
+                  ChooseJournalComponent,
+                  '',
+                  null,
+                  null,
+                  '',
+                  data,
+                  '',
+                  opt
+                );
+                dialog.closed.subscribe((res) => {
+                  if (res && res?.event?.journalNo) {
+                    let journal = res?.event?.journal;
+                    this.ngxLoader.start();
+                    this.api.exec('AM','AssetJournalsBusiness','CreateAssetAsync',[res?.event?.journalNo,this.master.data.recID,this.master.data.journalType,this.master.data.voucherNo,lstline]).subscribe({
+                      next:(result:any)=>{
+                        if (result) {
+                          let headerText = '';
+                          let oData = {...result};
+                          oData.isAdd = true;
+                          oData._isEdit = true;
+                          let funcID = type == 'AL' ? this.fmAssetAL.funcID : this.fmAssetAA.funcID;
+                          this.cache.functionList(funcID).subscribe((result2) => {
+                            if(result2){
+                              headerText = result2?.defaultName || result2?.customName;
+                            }
+                            let data = {
+                              headerText: headerText,
+                              journal: { ...journal },
+                              oData: { ...oData },
+                              baseCurr: this.baseCurr,
+                              isActive: false
+                            };
+                            let opt = new DialogModel();
+                            opt.DataService = type == 'AL' ? this.AssetALSV : this.AssetAASV;
+                            opt.FormModel = type == 'AL' ? this.fmAssetAL : this.fmAssetAA;
+                            opt.IsFull = true;
+                            let formName = type == 'AL' ? this.fmAssetAL.formName : this.fmAssetAA.formName;
+                            let gridViewName = type == 'AL' ? this.fmAssetAL.gridViewName : this.fmAssetAA.gridViewName;
+                            this.cache.gridViewSetup(formName, gridViewName).subscribe((res: any) => {
+                              let dialog = this.callfc.openForm(
+                                AssetJournalsAddComponent,
+                                '',
+                                null,
+                                null,
+                                type == 'AL' ? this.fmAssetAL.funcID : this.fmAssetAA.funcID,
+                                data,
+                                '',
+                                opt
+                              );
+                              dialog.closed.subscribe((res) => {
+                                if (res && res?.event.data) {
+                                  this.api.exec('AC','CountingAssetsBusiness','UpdateStatusLogicAsync',[this.master.data]).subscribe((res:any)=>{
+                                    if (res) {
+                                      this.master.setValue('status',res?.status,{});
+                                      this.dialog.dataService.update(res,true).subscribe();
+                                      this.detectorRef.detectChanges();
+                                    }
+                                  })
+                                }
+                              });
+                              this.eleGridAsset.refresh();
+                            })
+                          })
+                        }
+                      },
+                      complete:()=>{
+                        this.ngxLoader.stop();
                       }
-                    });
-                    this.eleGridAsset.refresh();
-                  })
+                    })
+                  }
                 })
+                // if (lstline.length == 0) {
+                //   this.notification.notify("Không có chênh lệch để tạo phiếu thanh lý", "2");
+                //   return;
+                // }
+                // if (lstline.length > 0) {
+                //   let isError = false;
+                //   for (let index = 0; index < lstline.length; index++) {
+                //     let item = lstline[index];
+                //     if (item?.processMethod == '' || item?.processMethod == null) {
+                //       this.notification.notify(item?.assetID+' chưa có phương án xử lý', "2");
+                //       isError = true;
+                //       break;
+                //     }
+                //   }
+                //   if(isError) return;
+                //   let lstline2 = lstline.filter(x => x.processMethod === '1');
+                //   if (lstline2.length == 0) {
+                //     this.notification.notify("Không có tài sản cần thanh lý", "2");
+                //     return;
+                //   }
+                //   let type = 'AL';
+                //   let data = {
+                //     type: type,
+                //   };
+                //   let opt = new DialogModel();
+                //   let dialog = this.callfc.openForm(
+                //     ChooseJournalComponent,
+                //     '',
+                //     null,
+                //     null,
+                //     '',
+                //     data,
+                //     '',
+                //     opt
+                //   );
+                // }
               }
-            },
-            complete:()=>{
-              this.ngxLoader.stop();
             }
           })
         }
       })
-      // if (lstline.length == 0) {
-      //   this.notification.notify("Không có chênh lệch để tạo phiếu thanh lý", "2");
-      //   return;
-      // }
-      // if (lstline.length > 0) {
-      //   let isError = false;
-      //   for (let index = 0; index < lstline.length; index++) {
-      //     let item = lstline[index];
-      //     if (item?.processMethod == '' || item?.processMethod == null) {
-      //       this.notification.notify(item?.assetID+' chưa có phương án xử lý', "2");
-      //       isError = true;
-      //       break;
-      //     }
-      //   }
-      //   if(isError) return;
-      //   let lstline2 = lstline.filter(x => x.processMethod === '1');
-      //   if (lstline2.length == 0) {
-      //     this.notification.notify("Không có tài sản cần thanh lý", "2");
-      //     return;
-      //   }
-      //   let type = 'AL';
-      //   let data = {
-      //     type: type,
-      //   };
-      //   let opt = new DialogModel();
-      //   let dialog = this.callfc.openForm(
-      //     ChooseJournalComponent,
-      //     '',
-      //     null,
-      //     null,
-      //     '',
-      //     data,
-      //     '',
-      //     opt
-      //   );
-      // }
-    }
+    let lstline:any = [];
+    
   }
   //#endregion
 
@@ -1125,7 +1124,7 @@ export class CashCountingsAddComponent extends UIComponent {
   onActionGridCounting(event: any) {
     switch (event.type) {
       case 'autoAdd':
-        this.onAddLine('1');
+        this.addLineCounting();
         break;
       case 'add':
       case 'update':
@@ -1142,6 +1141,62 @@ export class CashCountingsAddComponent extends UIComponent {
           this.eleGridCounting.rowDataSelected = null;
         }
         if (this.eleGridCounting.isSaveOnClick) this.eleGridCounting.isSaveOnClick = false;
+        setTimeout(() => {
+          let element = document.getElementById('btnAddCash');
+          element.focus();
+        }, 100);
+        break;
+    }
+  }
+
+  onActionGridCountingItems(event: any) {
+    switch (event.type) {
+      case 'autoAdd':
+        this.addLineCountingItems();
+        break;
+      case 'add':
+      case 'update':
+      case 'delete':
+        if(event.data.unbounds['master']){
+          this.master.setValue('countValue',event.data.unbounds['master']?.countValue,{});
+          this.master.setValue('diffValue',event.data.unbounds['master']?.diffValue,{});
+          this.dialog.dataService.update(event.data.unbounds['master'],true).subscribe();
+          this.detectorRef.detectChanges();
+        }
+        break;
+      case 'closeEdit':
+        if (this.eleGridItems && this.eleGridItems.rowDataSelected) {
+          this.eleGridItems.rowDataSelected = null;
+        }
+        if (this.eleGridItems.isSaveOnClick) this.eleGridItems.isSaveOnClick = false;
+        setTimeout(() => {
+          let element = document.getElementById('btnAddCash');
+          element.focus();
+        }, 100);
+        break;
+    }
+  }
+
+  onActionGridAsset(event: any) {
+    switch (event.type) {
+      case 'autoAdd':
+        this.addLineCountingAssets();
+        break;
+      case 'add':
+      case 'update':
+      case 'delete':
+        if(event.data.unbounds['master']){
+          this.master.setValue('countValue',event.data.unbounds['master']?.countValue,{});
+          this.master.setValue('diffValue',event.data.unbounds['master']?.diffValue,{});
+          this.dialog.dataService.update(event.data.unbounds['master'],true).subscribe();
+          this.detectorRef.detectChanges();
+        }
+        break;
+      case 'closeEdit':
+        if (this.eleGridAsset && this.eleGridAsset.rowDataSelected) {
+          this.eleGridAsset.rowDataSelected = null;
+        }
+        if (this.eleGridAsset.isSaveOnClick) this.eleGridAsset.isSaveOnClick = false;
         setTimeout(() => {
           let element = document.getElementById('btnAddCash');
           element.focus();
