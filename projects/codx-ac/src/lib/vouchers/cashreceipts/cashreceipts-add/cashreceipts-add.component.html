@@ -354,32 +354,32 @@
     <div id="gridcash" class="tabline-content header-table-ac position-relative">
       <codx-gridview-v2 #eleGridCashReceipt class="tabLine" [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="true"
         [editSettings]="master.data?.isReadOnly ? editSettings : {}" [hideMoreFunc]="true" [moreFcItems]="'SYS104;SYS102'"
-        [moreFcModel]="dialog.formModel" (clickMF)="clickMF($event)"
-        [formName]="journal.entryMode == '1'? 'CashReceiptsLines' : 'CashReceiptsLinesOneAccount'"
-        [gridViewName]="journal.entryMode == '1' ? 'grvCashReceiptsLines' : 'grvCashReceiptsLinesOneAccount'"
-        entityName="AC_CashReceiptsLines" predicates="TransID=@0" [dataValues]="master.data.recID"
+        [moreFcModel]="dialog.formModel" (clickMF)="clickMF($event)" service="AC"
+        [formName]="journal.entryMode == '1'? fmCashReceiptsLines.formName : fmCashReceiptsOneAccount.formName"
+        [gridViewName]="journal.entryMode == '1' ? fmCashReceiptsLines.gridViewName : fmCashReceiptsOneAccount.gridViewName"
+        [entityName]="fmCashReceiptsLines.entityName" predicates="TransID=@0" [dataValues]="master.data.recID"
         [editOnClick]="master.data?.isReadOnly ? false : true" (gridInit)="initGrid($event)" rowNoField="rowNo"
         (eventAction)="onActionGridCashReceipt($event)" (actionCompleted)="onActionGridCashReceipt($event)"
         (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
       <ng-container *ngIf="!master.data?.isReadOnly">
         <div #btnRef class="btn-addline">
           <div class="d-flex align-items-center">
-            <div *ngIf="master.data?.subType != '13'">
-              <button style="border: 1px solid !important;" tabindex="-1" tab-index="11" id="btnAddCash" class="btn btn-sm btn-light-primary btnAddCash"
-                (keydown.enter)="
-                  onAddLine(); $event.preventDefault()
-                  " (click)="onAddLine()">
+            <div *ngIf="master.data?.subType != (this.journal.journalType+'5')">
+              <button style="border: 1px solid !important;" tab-index="15" id="btnAddCash" tabindex="-1"
+                class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="
+                addLine(); $event.preventDefault()
+                " (click)="addLine()">
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
               </button>
             </div>
-            <div *ngIf="master.data?.subType == '13'" class="ms-2">
-              <button style="border: 1px solid !important" tab-index="12"
-                class="btn btn-sm btn-light-primary" (keydown.enter)="onAddLine(); $event.preventDefault()"
-                (click)="onAddLine()">
-                <i class="icon-library_add_check icon-16"></i>
-                <codx-label *ngIf="master.data.subType == '13'" [formModel]="dialog.formModel"
-                  fiedName="lblAddVat" default="Thêm đề nghị hoàn ứng"></codx-label>
+            <div *ngIf="master.data?.subType == (this.journal.journalType+'5')">
+              <button style="border: 1px solid !important;" tab-index="15" id="btnAddCash" tabindex="-1"
+                class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="
+                addRequest(); $event.preventDefault()
+                " (click)="addRequest()">
+                <i class="icon-playlist_add icon-16"></i>
+                <codx-label fiedName="lblSaveAndClear" default="Chọn hóa đơn"></codx-label>
               </button>
             </div>
           </div>
@@ -407,8 +407,8 @@
           <div class="d-flex align-items-center">
             <div>
               <button style="border: 1px solid !important" tab-index="12" id="btnAddSet"
-                class="btn btn-sm btn-light-primary" (keydown.enter)="onAddLine();$event.preventDefault()"
-                (click)="onAddLine()">
+                class="btn btn-sm btn-light-primary" (keydown.enter)="addSettledInvoices();$event.preventDefault()"
+                (click)="addSettledInvoices()">
                 <i class="icon-i-wallet2 icon-16"></i>
                 <codx-label [formModel]="dialog.formModel" fiedName="lblAddSettledInvoice1"
                   default="Thêm hóa đơn công nợ"></codx-label>

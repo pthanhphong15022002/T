@@ -38,7 +38,7 @@ export class PopupCustomFieldComponent implements OnInit {
   fieldOther = []; //Là form công việc
   isView = false; // nvthuan them để chỉ được xem
   conRef: any[] = []//mang ref error
-  arrFieldChangeRef = [] //danh sach fieldRef
+  isHaveApplyDep = false //danh sach fieldRef
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -59,7 +59,7 @@ export class PopupCustomFieldComponent implements OnInit {
 
     this.isAdd = dt?.data?.isAdd ?? false;
     this.arrCaculateField = this.fields.filter((x) => x.dataType == 'CF');
-    this.arrFieldChangeRef = this.fields.filter((x) => x.isApplyDependences);
+    this.isHaveApplyDep = this.fields.some((x) => x.isApplyDependences);
     if (this.arrCaculateField?.length > 0)
       this.arrCaculateField.sort((a, b) => {
         if (a.dataFormat.includes('[' + b.fieldName + ']')) return 1;
@@ -84,7 +84,7 @@ export class PopupCustomFieldComponent implements OnInit {
     if (event && event.data) {
       let result = event.e;
       let field = event.data;
-      let dependences = event.dependences; //thanl chieu dependece cua cbx
+      let dependences = event?.dependences; //tham chieu dependece cua cbx
       let index = this.fields.findIndex((x) => x.recID == field.recID);
       if (index != -1) {
         this.fields[index] = this.upDataVersion(this.fields[index], result);
@@ -101,7 +101,7 @@ export class PopupCustomFieldComponent implements OnInit {
         //     this.conRef = this.conRef.concat(arrRef)
         //   }
         // }
-        if (this.arrFieldChangeRef?.length > 0 && dependences?.length > 0) this.fields = this.changeRefData(dependences)
+        if (this.isHaveApplyDep && dependences?.length > 0) this.fields = this.changeRefData(dependences, this.fields)
         if (field.dataType == 'N') this.caculateField();
       }
     }
@@ -362,15 +362,16 @@ export class PopupCustomFieldComponent implements OnInit {
   }
 
   //Tham chiếu giá trị
-  changeRefData(dependences) {
+  changeRefData(dependences, fields) {
     dependences.forEach(fn => {
-      let idx = this.fields.findIndex(x => x.fieldName == fn.fieldName);
+      let idx = fields.findIndex(x => x.fieldName == fn.fieldName);
       if (idx != -1) {
-        this.fields[idx].dataValue = fn.dataValue
-        this.setElement(this.fields[idx].recID, fn.dataValue, this.fields[idx].dataType)
+        fields[idx].dataValue = fn.dataValue
+        this.setElement(fields[idx].recID, fn.dataValue, fields[idx].dataType)
+        if (this.fields[idx].dataType == 'N') this.caculateField()
       }
     })
 
-    return this.fields;
+    return fields;
   }
 }

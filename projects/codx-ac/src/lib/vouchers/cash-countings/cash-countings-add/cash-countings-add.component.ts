@@ -311,7 +311,7 @@ export class CashCountingsAddComponent extends UIComponent {
       })
   }
 
-  onAddLineMember() {
+  addLineMember() {
     this.master.save(null, 0, '', '', false, { allowCompare: false ,skipHasChange:true})
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
@@ -322,9 +322,16 @@ export class CashCountingsAddComponent extends UIComponent {
       if (res.hasOwnProperty('update')) {
         if (res.update.hasOwnProperty('data') && !res.update.data) return;
       }
-      if (this.eleGridMember && this.elementTabMaster?.selectingID == '1') {
+      if (this.eleGridMember) {
         this.eleGridMember.saveRow((res: any) => { //? save lưới trước
-          if (res && res.type != 'error') this.addLineMember();
+          if (res && res.type != 'error'){
+            this.api.exec('AC','CountingMembersBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+              if (res) {
+                this.eleGridMember.addRow(res, this.eleGridMember.dataSource.length);
+              }
+              this.onDestroy();
+            })
+          }
         })
         return;
       }
@@ -351,97 +358,182 @@ export class CashCountingsAddComponent extends UIComponent {
     }
   }
 
-  addLineMember() {
-    this.api.exec('AC','CountingMembersBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-      if (res) {
-        this.eleGridMember.addRow(res, this.eleGridMember.dataSource.length);
-      }
-      this.onDestroy();
-    })
-  }
-
   addLineCounting() {
-    if (this.eleGridCounting && this.eleGridCounting.dataSource.length) {
-      this.notification.alertCode('AC014', null).subscribe((res) => {
-        if (res.event.status === 'Y') {
-          this.api.exec('AC','CountingFundsBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-            if (res) {
-              this.eleGridCounting.refresh();
+    this.master.save(null, 0, '', '', false, { allowCompare: false ,skipHasChange:true})
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (!res) return;
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data') && !res.save.data) return;
+      }
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      if (this.eleGridCounting) {
+        this.eleGridCounting.saveRow((res: any) => { //? save lưới trước
+          if (res && res.type != 'error'){
+            if (this.eleGridCounting && this.eleGridCounting.dataSource.length) {
+              this.notification.alertCode('AC014', null).subscribe((res) => {
+                if (res.event.status === 'Y') {
+                  this.api.exec('AC','CountingFundsBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+                    if (res) {
+                      this.eleGridCounting.refresh();
+                    }
+                    this.onDestroy();
+                  })
+                }
+              })
+            }else{
+              this.api.exec('AC','CountingFundsBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+                if (res) {
+                  this.eleGridCounting.refresh();
+                }
+                this.onDestroy();
+              })
             }
-            this.onDestroy();
-          })
-        }
-      })
-    }else{
-      this.api.exec('AC','CountingFundsBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-        if (res) {
-          this.eleGridCounting.refresh();
-        }
-        this.onDestroy();
-      })
-    }
+          }
+        })
+        return;
+      }
+    })
   }
 
   addLineCountingItems() {
-    this.api.exec('AC','CountingItemsBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-      if (res) {
-        this.eleGridItems.addRow(res, this.eleGridItems.dataSource.length);
+    this.master.save(null, 0, '', '', false, { allowCompare: false ,skipHasChange:true})
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (!res) return;
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data') && !res.save.data) return;
       }
-      this.onDestroy();
-    })
-  }
-
-  addLineCountingAssets() {
-    this.api.exec('AC','CountingAssetsBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-      if (res) {
-        this.eleGridAsset.addRow(res, this.eleGridAsset.dataSource.length);
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data') && !res.update.data) return;
       }
-      this.onDestroy();
+      if (this.eleGridItems) {
+        this.eleGridItems.saveRow((res: any) => { //? save lưới trước
+          if (res && res.type != 'error'){
+            this.api.exec('AC','CountingItemsBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+              if (res) {
+                this.eleGridItems.addRow(res, this.eleGridItems.dataSource.length);
+              }
+              this.onDestroy();
+            })
+          }
+        })
+        return;
+      }
     })
   }
 
   addLineItemsProposal() {
-    if (this.eleGridItems && this.eleGridItems.dataSource.length) {
-      this.notification.alertCode('AC014', null).subscribe((res) => {
-        if (res.event.status === 'Y') {
-          this.api.exec('AC','CountingItemsBusiness','SetDefaultProposalAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-            if (res) {
-              this.eleGridItems.refresh();
+    this.master.save(null, 0, '', '', false, { allowCompare: false ,skipHasChange:true})
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (!res) return;
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data') && !res.save.data) return;
+      }
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      if (this.eleGridItems) {
+        this.eleGridItems.saveRow((res: any) => { //? save lưới trước
+          if (res && res.type != 'error'){
+            if (this.eleGridItems && this.eleGridItems.dataSource.length) {
+              this.notification.alertCode('AC014', null).subscribe((res) => {
+                if (res.event.status === 'Y') {
+                  this.api.exec('AC','CountingItemsBusiness','SetDefaultProposalAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+                    if (res) {
+                      this.eleGridItems.refresh();
+                    }
+                    this.onDestroy();
+                  })
+                }
+              })
+            }else{
+              this.api.exec('AC','CountingItemsBusiness','SetDefaultProposalAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+                if (res) {
+                  this.eleGridItems.refresh();
+                }
+                this.onDestroy();
+              })
             }
-            this.onDestroy();
-          })
-        }
-      })
-    }else{
-      this.api.exec('AC','CountingItemsBusiness','SetDefaultProposalAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-        if (res) {
-          this.eleGridItems.refresh();
-        }
-        this.onDestroy();
-      })
-    }
+          }
+        })
+        return;
+      }
+    })
+  }
+
+  addLineCountingAssets() {
+    this.master.save(null, 0, '', '', false, { allowCompare: false ,skipHasChange:true})
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (!res) return;
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data') && !res.save.data) return;
+      }
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      if (this.eleGridAsset) {
+        this.eleGridAsset.saveRow((res: any) => { //? save lưới trước
+          if (res && res.type != 'error'){
+            this.api.exec('AC','CountingAssetsBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+              if (res) {
+                this.eleGridAsset.addRow(res, this.eleGridAsset.dataSource.length);
+              }
+              this.onDestroy();
+            })
+          }
+        })
+        return;
+      }
+    })
   }
 
   addLineAssetProposal() {
-    if (this.eleGridAsset && this.eleGridAsset.dataSource.length) {
-      this.notification.alertCode('AC014', null).subscribe((res) => {
-        if (res.event.status === 'Y') {
-          this.api.exec('AC','CountingAssetsBusiness','SetDefaultProposalAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-            if (res) {
-              this.eleGridAsset.refresh();
+    this.master.save(null, 0, '', '', false, { allowCompare: false ,skipHasChange:true})
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (!res) return;
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data') && !res.save.data) return;
+      }
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      if (this.eleGridAsset) {
+        this.eleGridAsset.saveRow((res: any) => { //? save lưới trước
+          if (res && res.type != 'error'){
+            if (this.eleGridAsset && this.eleGridAsset.dataSource.length) {
+              this.notification.alertCode('AC014', null).subscribe((res) => {
+                if (res.event.status === 'Y') {
+                  this.api.exec('AC','CountingAssetsBusiness','SetDefaultProposalAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+                    if (res) {
+                      this.master.setObjValue(res,{});
+                      this.dialog.dataService.update(res,true).subscribe();
+                      this.eleGridAsset.refresh();
+                    }
+                    this.onDestroy();
+                  })
+                }
+              })
+            }else{
+              this.api.exec('AC','CountingAssetsBusiness','SetDefaultProposalAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+                if (res) {
+                  this.master.setObjValue(res,{});
+                  this.dialog.dataService.update(res,true).subscribe();
+                  this.eleGridAsset.refresh();
+                }
+                this.onDestroy();
+              })
             }
-            this.onDestroy();
-          })
-        }
-      })
-    }else{
-      this.api.exec('AC','CountingAssetsBusiness','SetDefaultProposalAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-        if (res) {
-          this.eleGridAsset.refresh();
-        }
-        this.onDestroy();
-      })
-    }
+          }
+        })
+        return;
+      }
+    })
   }
   //#endregion
 
@@ -661,17 +753,17 @@ export class CashCountingsAddComponent extends UIComponent {
                   .addNew((o) => this.setDefault(type,journalNo))
                   .pipe(takeUntil(this.destroy$))
                   .subscribe({
-                    next: (res: any) => {
-                      if (res) {
-                        res.isAdd = true;
-                        res.totalAmt = totalAmt;
-                        res.refID = this.master.data.recID;
-                        res.refType = this.journal.journalType;
-                        res.refNo = this.master.data.voucherNo;
+                    next: (result: any) => {
+                      if (result) {
+                        result.isAdd = true;
+                        result.totalAmt = totalAmt;
+                        result.refID = this.master.data.recID;
+                        result.refType = this.journal.journalType;
+                        result.refNo = this.master.data.voucherNo;
                         let data = {
                           headerText: headerText,
                           journal: { ...journal },
-                          oData: { ...res },
+                          oData: { ...result },
                           baseCurr: this.baseCurr,
                           isActive: false
                         };
@@ -691,12 +783,14 @@ export class CashCountingsAddComponent extends UIComponent {
                             opt
                           );
                           dialog.closed.subscribe((res) => {
-                            if (res && res?.event.data && res?.event.data?.unbounds) {
-                              if (res?.event.data?.unbounds['oCouting']) {
-                                this.master.setValue('status',res?.event.data?.unbounds['oCouting'].status,{});
-                                this.dialog.dataService.update(res?.event.data?.unbounds['oCouting'],true).subscribe();
-                                this.detectorRef.detectChanges();
-                              }
+                            if (res && res?.event.data) {
+                              this.api.exec('AC','CountingFundsBusiness','UpdateStatusLogicAsync',[this.master.data]).subscribe((res:any)=>{
+                                if (res) {
+                                  this.master.setValue('status',res?.status,{});
+                                  this.dialog.dataService.update(res,true).subscribe();
+                                  this.detectorRef.detectChanges();
+                                }
+                              })
                             }
                           });
                         })
@@ -711,17 +805,17 @@ export class CashCountingsAddComponent extends UIComponent {
                   .addNew((o) => this.setDefault(type,journalNo))
                   .pipe(takeUntil(this.destroy$))
                   .subscribe({
-                    next: (res: any) => {
-                      if (res) {
-                        res.isAdd = true;
-                        res.totalAmt = totalAmt;
-                        res.refID = this.master.data.recID;
-                        res.refType = this.journal.journalType;
-                        res.refNo = this.master.data.voucherNo;
+                    next: (result: any) => {
+                      if (result) {
+                        result.isAdd = true;
+                        result.totalAmt = totalAmt;
+                        result.refID = this.master.data.recID;
+                        result.refType = this.journal.journalType;
+                        result.refNo = this.master.data.voucherNo;
                         let data = {
                           headerText: this.headerText,
                           journal: { ...journal },
-                          oData: { ...res },
+                          oData: { ...result },
                           baseCurr: this.baseCurr,
                           isActive: false
                         };
@@ -741,12 +835,14 @@ export class CashCountingsAddComponent extends UIComponent {
                             opt
                           );
                           dialog.closed.subscribe((res) => {
-                            if (res && res?.event.data && res?.event.data?.unbounds) {
-                              if (res?.event.data?.unbounds['oCouting']) {
-                                this.master.setValue('status',res?.event.data?.unbounds['oCouting'].status,{});
-                                this.dialog.dataService.update(res?.event.data?.unbounds['oCouting'],true).subscribe();
-                                this.detectorRef.detectChanges();
-                              }
+                            if (res && res?.event.data) {
+                              this.api.exec('AC','CountingFundsBusiness','UpdateStatusLogicAsync',[this.master.data]).subscribe((res:any)=>{
+                                if (res) {
+                                  this.master.setValue('status',res?.status,{});
+                                  this.dialog.dataService.update(res,true).subscribe();
+                                  this.detectorRef.detectChanges();
+                                }
+                              })
                             }
                           });
                         })
