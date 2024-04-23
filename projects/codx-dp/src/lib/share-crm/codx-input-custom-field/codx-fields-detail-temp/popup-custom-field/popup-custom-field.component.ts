@@ -368,7 +368,7 @@ export class PopupCustomFieldComponent implements OnInit {
       if (idx != -1) {
         fields[idx].dataValue = fn.dataValue
         this.setElement(fields[idx].recID, fn.dataValue, fields[idx].dataType)
-        if (this.fields[idx].dataType == 'N') this.caculateField()
+        if (fields[idx].dataType == 'N') this.caculateField()
       }
     })
 
