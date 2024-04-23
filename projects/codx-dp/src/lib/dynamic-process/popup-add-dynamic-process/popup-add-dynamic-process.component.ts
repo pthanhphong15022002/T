@@ -2586,16 +2586,17 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                         this.listStepEdit.push(x?.recID);
                       }
                     }
-                    //edit truong tham chiếu
-                    // if (this.fieldCrr.isApplyDependences && dependence.refID && dependence.strDependence) {
-                    //   let idxFieldDep = x.fields.findIndex(x => x.recID == dependence.refID);
-                    //   if (idxFieldDep != -1) {
-                    //     let depedence = x.fields[idxFieldDep].dependences;
-                    //     if (depedence) depedence += "," + dependence.strDependence; else depedence = dependence.strDependence
-                    //     x.fields[idxFieldDep].dependences = depedence
-                    //   }
-                    // }
+                    //truong tham chiếu
+                    if (this.fieldCrr.isApplyDependences && dependence.refID && dependence.strDependence) {
+                      let idxFieldDep = x.fields.findIndex(x => x.recID == dependence.refID);
+                      if (idxFieldDep != -1) {
+                        let depedence = x.fields[idxFieldDep].dependences;
+                        if (depedence) depedence += "," + dependence.strDependence; else depedence = dependence.strDependence
+                        x.fields[idxFieldDep].dependences = depedence
+                      }
+                    }
                   }
+
                   //edit field truosc do neu edit
                   if (isEditFieldDuplicate && x.fields?.length > 0) {
                     let idx = x.fields.findIndex(

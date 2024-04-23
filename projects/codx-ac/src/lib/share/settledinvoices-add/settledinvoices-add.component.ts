@@ -60,6 +60,10 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   typePay:any;
   baseCurr:any;
   isPreventLoad:any = false;
+  mode:any;
+  service:any;
+  entityNameMaster:any;
+  entityNameLine:any;
   selectionOptions:SelectionSettingsModel = {checkboxOnly:true, type: 'Multiple' };
   private destroy$ = new Subject<void>();
   constructor(
@@ -73,6 +77,10 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.master = dialogData.data?.master;
     this.line = dialogData.data?.line;
+    this.mode = dialogData.data?.mode;
+    this.service = dialogData.data?.service;
+    this.entityNameMaster = dialogData.data?.entityNameMaster;
+    this.entityNameLine = dialogData.data?.entityNameLine;
     this.typePay = this.master.totalAmt == 0 ? 0 : 1;
     this.gridModel.page = 1;
     if (this.line) {
@@ -144,8 +152,15 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   setDefault(){
     this.mapPredicates.set('currencyID', 'CurrencyID = @0');
     this.mapDataValues.set('currencyID', this.master.currencyID);
-    this.mapPredicates.set('balAmt', 'BalAmt > @0');
-    this.mapDataValues.set('balAmt', '0');
+    
+    if(this.mode == '1'){
+      this.mapPredicates.set('balAmt', 'BalAmt > @0');
+      this.mapDataValues.set('balAmt', '0');
+    }else{
+      this.mapPredicates.set('balAmt', 'BalAmt != @0');
+      this.mapDataValues.set('balAmt', '0');
+    }
+    
     this.mapPredicates.set('objectID', 'ObjectID = @0');
     this.mapDataValues.set('objectID', this.objectID);
     this.mapPredicates.set('objectType', 'ObjectType = @0');
@@ -347,9 +362,20 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
    * *Hàm xử lí click chọn hóa đơn
    */
   apply() {
+    if (this.mode === '2') {
+      let total = this.grid.arrSelectedRows.reduce((sum, data:any) => sum + data?.balAmt,0);
+      if (total > 0) {
+        this.notification.notify('Tổng hóa đơn chưa bằng 0','2');
+        return;
+      }
+    }
     this.api
       .exec('AC', 'SettledInvoicesBusiness', 'SaveListAsync', [
+        'AC',
+        this.entityNameMaster,
+        this.entityNameLine,
         this.master,
+        this.line,
         this.grid.arrSelectedRows,
       ])
       .pipe(takeUntil(this.destroy$))

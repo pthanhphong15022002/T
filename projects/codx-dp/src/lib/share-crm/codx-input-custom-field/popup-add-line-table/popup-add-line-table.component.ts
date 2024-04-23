@@ -57,7 +57,7 @@ export class PopupAddLineTableComponent implements OnInit {
     });
   }
 
-  addFileCompleted(e) {}
+  addFileCompleted(e) { }
 
   valueChangeCustom(event) {
     if (event && event.data) {
@@ -184,19 +184,39 @@ export class PopupAddLineTableComponent implements OnInit {
           let fieldName = this.fieldFormat[index]['fieldName'];
           this.line[fieldName] = obj.dataValue;
         }
-        this.setElement(obj.recID, obj.dataValue);
+        this.setElement(obj.recID, obj.dataValue, obj.dataType);
       }
     });
   }
 
-  setElement(recID, value) {
-    value =
-      value && value != '_'
-        ? Number.parseFloat(value)?.toFixed(2).toString()
-        : '';
+  // setElement(recID, value) {
+  //   value =
+  //     value && value != '_'
+  //       ? Number.parseFloat(value)?.toFixed(2).toString()
+  //       : '';
+  //   var codxinput = document.querySelectorAll(
+  //     '.form-group codx-input[data-record="' + recID + '"]'
+  //   );
+
+  //   if (codxinput?.length > 0) {
+  //     let htmlE = codxinput[0] as HTMLElement;
+  //     let input = htmlE.querySelector('input') as HTMLInputElement;
+  //     if (input) {
+  //       input.value = value;
+  //     }
+  //   }
+  // }
+  //------------------END_CACULATE--------------------//
+  setElement(recID, value, dataType) {
     var codxinput = document.querySelectorAll(
       '.form-group codx-input[data-record="' + recID + '"]'
     );
+    if (dataType == 'N' || dataType == 'CF') {
+      value =
+        value && value != '_'
+          ? Number.parseFloat(value)?.toFixed(2).toString()
+          : '';
+    }
 
     if (codxinput?.length > 0) {
       let htmlE = codxinput[0] as HTMLElement;
@@ -206,5 +226,18 @@ export class PopupAddLineTableComponent implements OnInit {
       }
     }
   }
-  //------------------END_CACULATE--------------------//
+
+  //Tham chiếu giá trị
+  changeRefData(dependences, fields) {
+    dependences.forEach(fn => {
+      let idx = fields.findIndex(x => x.fieldName == fn.fieldName);
+      if (idx != -1) {
+        fields[idx].dataValue = fn.dataValue
+        this.setElement(fields[idx].recID, fn.dataValue, fields[idx].dataType)
+        if (fields[idx].dataType == 'N') this.caculateField()
+      }
+    })
+
+    return fields;
+  }
 }

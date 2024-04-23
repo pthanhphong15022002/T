@@ -173,7 +173,6 @@
           field="leadName"
           [formModel]="form.formModel"
           [disabled]="isView"
-
           [Group]="form.formGroup"
           (valueChange)="valueChange($event)"
         >
@@ -189,8 +188,8 @@
         <codx-input
           field="shortName"
           [formModel]="form.formModel"
-          [Group]="form.formGroup"             [disabled]="isView"
-
+          [Group]="form.formGroup"
+          [disabled]="isView"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -205,8 +204,8 @@
         <codx-input
           field="address"
           [formModel]="form.formModel"
-          [Group]="form.formGroup"            [disabled]="isView"
-
+          [Group]="form.formGroup"
+          [disabled]="isView"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -243,8 +242,8 @@
         <codx-input
           field="companyPhone"
           [formModel]="form.formModel"
-          [Group]="form.formGroup"            [disabled]="isView"
-
+          [Group]="form.formGroup"
+          [disabled]="isView"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -272,8 +271,8 @@
         <codx-input
           field="faxNo"
           [formModel]="form.formModel"
-          [Group]="form.formGroup"            [disabled]="isView"
-
+          [Group]="form.formGroup"
+          [disabled]="isView"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -288,8 +287,8 @@
         <codx-input
           field="webPage"
           [formModel]="form.formModel"
-          [Group]="form.formGroup"            [disabled]="isView"
-
+          [Group]="form.formGroup"
+          [disabled]="isView"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -309,8 +308,8 @@
         <codx-input
           field="annualRevenue"
           [formModel]="form.formModel"
-          [Group]="form.formGroup"            [disabled]="isView"
-
+          [Group]="form.formGroup"
+          [disabled]="isView"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -328,8 +327,8 @@
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="headcounts"            [disabled]="isView"
-
+          field="headcounts"
+          [disabled]="isView"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -348,8 +347,8 @@
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="industries"            [disabled]="isView"
-
+          field="industries"
+          [disabled]="isView"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -369,8 +368,8 @@
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="jobTitle"            [disabled]="isView"
-
+          field="jobTitle"
+          [disabled]="isView"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -390,8 +389,8 @@
         <codx-input
           [formModel]="form.formModel"
           field="businessLineID"
-          [crrValue]="lead?.businessLineID"            [disabled]="isView"
-
+          [crrValue]="lead?.businessLineID"
+          [disabled]="isView"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -408,8 +407,8 @@
         <codx-input
           field="dealValue"
           [formModel]="form.formModel"
-          [Group]="form.formGroup"            [disabled]="isView"
-
+          [Group]="form.formGroup"
+          [disabled]="isView"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -449,8 +448,8 @@
           <codx-input
             field="owner"
             [formModel]="form.formModel"
-            [crrValue]="owner"            [disabled]="isView"
-
+            [crrValue]="owner"
+            [disabled]="isView"
             (valueChange)="valueChangeOwner($event, viewOwnerDefault)"
           >
           </codx-input>
@@ -494,8 +493,8 @@
     <codx-label [formModel]="form.formModel" fiedName="Note"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
-      [Group]="form.formGroup"            [disabled]="isView"
-
+      [Group]="form.formGroup"
+      [disabled]="isView"
       field="note"
     >
     </codx-input>
@@ -504,8 +503,8 @@
     <codx-label [formModel]="form.formModel" fiedName="Memo"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
-      [Group]="form.formGroup"            [disabled]="isView"
-
+      [Group]="form.formGroup"
+      [disabled]="isView"
       field="memo"
     >
     </codx-input>
@@ -518,7 +517,7 @@
           <codx-input-custom-field
             [customField]="item"
             [checkValid]="false"
-            [disable]="isView"
+            [disable]="isView || item?.isApplyDependences"
             [objectId]="item.recID"
             [objectType]="'DP_Instances_Steps_Fields'"
             [formModel]="dialog.formModel"
@@ -537,7 +536,12 @@
 <ng-template #footer let-form>
   <div class="d-flex justify-content-between">
     <div></div>
-    <button [disabled]="isView" type="button" class="btn btn-primary ms-1" (click)="saveLead()">
+    <button
+      [disabled]="isView"
+      type="button"
+      class="btn btn-primary ms-1"
+      (click)="saveLead()"
+    >
       <codx-label default="Lưu"></codx-label>
     </button>
   </div>
@@ -604,7 +608,8 @@
         <codx-input
           field="salespersonID"
           [formModel]="form.formModel"
-          [Group]="form.formGroup" [disabled]="isView"
+          [Group]="form.formGroup"
+          [disabled]="isView"
           (valueChange)="valueChangePermission($event)"
         >
         </codx-input>
@@ -621,7 +626,8 @@
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="consultantID" [disabled]="isView"
+          field="consultantID"
+          [disabled]="isView"
           (valueChange)="valueChangePermission($event)"
         >
         </codx-input>
@@ -643,7 +649,8 @@
           </codx-label>
           <codx-input
             field="contactName"
-            [Group]="form.formGroup" [disabled]="isView"
+            [Group]="form.formGroup"
+            [disabled]="isView"
             [formModel]="form.formModel"
             (valueChange)="valueChange($event)"
           ></codx-input>
@@ -654,7 +661,8 @@
           <codx-input
             field="jobTitle"
             [formModel]="form.formModel"
-            [Group]="form.formGroup" [disabled]="isView"
+            [Group]="form.formGroup"
+            [disabled]="isView"
             (valueChange)="valueChange($event)"
           >
           </codx-input>
@@ -702,7 +710,8 @@
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="phone" [disabled]="isView"
+          field="phone"
+          [disabled]="isView"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -721,7 +730,8 @@
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="email" [disabled]="isView"
+          field="email"
+          [disabled]="isView"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -742,7 +752,7 @@
           [formModel]="dialog.formModel"
           [objectIdParent]="lead?.recID"
           [isAdd]="action == actionAdd"
-          [disable]="isView"
+          [disable]="isView || item?.isApplyDependences"
           (valueChangeCustom)="valueChangeCustom($event)"
           (addFileCompleted)="addFileCompleted($event)"
         >

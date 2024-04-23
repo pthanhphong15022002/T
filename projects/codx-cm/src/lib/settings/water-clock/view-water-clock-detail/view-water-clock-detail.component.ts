@@ -125,7 +125,7 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
           case 'SYS02':
           case 'SYS03':
           case 'SYS04':
-            x.disabled = data.lastChangedDate < this.firstDateOfMonth
+            x.disabled = moment(data.lastChangedDate).toDate() < this.firstDateOfMonth
             break;
         }
       })

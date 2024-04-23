@@ -51,14 +51,10 @@
         default="Danh sách giá trị"
         class="fw-bold"
       ></codx-label>
-      <i
-        class="icon-edit_square cursor-pointer"
-        (click)="!data?.refField ? openSettingCbx():undefined"
-        *ngIf="data?.refValue"
-      ></i>
+   
     </div>
     <div
-      class="d-flex align-items-center m-2"
+      class="d-flex flex-column m-2"
       *ngIf="!data?.refValue; else tmpData"
     >
       <button
@@ -66,7 +62,7 @@
         class="btn btn-light w-100"
         (click)="!data?.refField ? openSettingCbx() :undefined"
       >
-        <i class="icon-i-plus"></i>
+        <!-- <i class="icon-i-plus"></i> -->
         <codx-label
           formName="DynamicForms"
           fiedName="lblAddEditCbb"
@@ -75,99 +71,41 @@
       </button>
       <button
         type="button"
-        class="btn btn-light w-100"
+        class="btn btn-light w-100 mt-2"
         (click)="!data?.refField ? openSettingCbx('1') : undefined"
       >
-        <i class="icon-i-plus"></i>
+        <!-- <i class="icon-i-plus"></i> -->
         <codx-label
           formName="DynamicForms"
           fiedName="lblCustomType1"
-          default="Type 1"
+          default="Chọn từ danh sách có sẵn"
         ></codx-label>
       </button>
       <button
         type="button"
-        class="btn btn-light w-100"
+        class="btn btn-light w-100 mt-2"
         (click)="!data?.refField ? openSettingCbx('2') : undefined"
       >
-        <i class="icon-i-plus"></i>
+        <!-- <i class="icon-i-plus"></i> -->
         <codx-label
           formName="DynamicForms"
           fiedName="lblCustomType2"
-          default="Type 2"
+          default="Thêm mới từ dữ liệu động"
         ></codx-label>
       </button>
     </div>
     <ng-template #tmpData>
-      <table class="table cursor-pointer mt-2" >
-        <thead class="thead-light">
-          <tr class="fw-bold">
-            <th scope="col-4 d-flex justify-content-center align-items-center">
-              <codx-label
-                default="Tên trường dữ liệu"
-                name="lblFNameTable"
-                [formName]="'DynamicForms'"
-                [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
-              ></codx-label>
-            </th>
-            <th scope="col-2 d-flex justify-content-center align-items-center">
-              <codx-label
-                default="Hiển thị"
-                name="lblShowTable"
-                [formName]="'DynamicForms'"
-                [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
-              ></codx-label>
-            </th>
-            <th scope="col-2 d-flex justify-content-center align-items-center">
-              <codx-label
-                default="Lưu"
-                name="lblSaveTable"
-                [formName]="'DynamicForms'"
-                [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
-              ></codx-label>
-            </th>
-            <th scope="col-2 d-flex justify-content-center align-items-center">
-              <codx-label
-                default="Lọc"
-                name="lblFilterTable"
-                [formName]="'DynamicForms'"
-                [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
-              ></codx-label>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="border-top" *ngFor="let item of listCbx; index as i">
-            <td scope="row" style="border: none">
-              <span>{{ item }}</span>
-            </td>
-            <td>
-              <codx-input
-                field="allowShow"
-                type="checkbox"
-                [crrValue]="item?.allowShow ?? false"
-                [disabled]="true"
-              ></codx-input>
-            </td>
-            <td>
-              <codx-input
-                field="allowSave"
-                type="checkbox"
-                [crrValue]="item?.allowSave ?? false"
-                [disabled]="true"
-              ></codx-input>
-            </td>
-            <td>
-              <codx-input
-                field="allowFilter"
-                type="checkbox"
-                [crrValue]="item?.allowFilter ?? false"
-                [disabled]="true"
-              ></codx-input>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="d-flex align-items-center justify-content-between border p-4 mt-4">
+        <div class="d-flex align-items-center">
+          <i class="icon-i-shuffle"></i>
+          <span class="ms-4">{{nameCbb}}</span>
+        </div>
+        <i
+          class="icon-edit_square cursor-pointer"
+          (click)="!data?.refField ? openSettingCbx():undefined"
+          *ngIf="data?.refValue"
+      ></i>
+      </div>
     </ng-template>
   </div>
   <lib-property-cbb-dependence

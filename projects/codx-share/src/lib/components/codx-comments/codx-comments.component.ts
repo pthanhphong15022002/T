@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   SimpleChanges,
@@ -26,6 +27,7 @@ import { PopupVoteComponent } from '../treeview-comment/popup-vote/popup-vote.co
 import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { ViewFileDialogComponent } from 'projects/codx-common/src/lib/component/viewFileDialog/viewFileDialog.component';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'codx-comments',
@@ -33,7 +35,9 @@ import { ViewFileDialogComponent } from 'projects/codx-common/src/lib/component/
   styleUrls: ['./codx-comments.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CodxCommentsComponent implements OnInit, OnChanges {
+export class CodxCommentsComponent implements OnInit, OnDestroy {
+
+
   @Input() data: any = null;
   @Input() parent: any = null;
   @Input() refID: string = null;
@@ -44,7 +48,6 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
   @Output() evtSendComment = new EventEmitter();
   @Output() evtDeleteComment = new EventEmitter();
   @Output() evtViewDetail = new EventEmitter();
-  //
   @ViewChild('codxATM') codxATM: AttachmentComponent;
   user: any;
   file: any = null;
@@ -60,6 +63,7 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
     VIDEO: 'video',
     APPLICATION: 'application',
   };
+  destroy$ = new Subject<void>();
   constructor(
     private api: ApiHttpService,
     private auth: AuthStore,
@@ -71,14 +75,20 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
   ) {
     this.user = this.auth.get();
   }
-  ngOnChanges(changes: SimpleChanges): void {}
+  
   ngOnInit(): void {
     if (this.new) {
       this.data = new WP_Comments();
       this.data.refID = this.refID;
       this.data.parentID = this.parent.recID;
-    } else this.getFileByObjectID();
-    this.cache.valueList('L1480').subscribe((res) => {
+    } 
+    else 
+    {
+      this.getFileByObjectID();
+    }
+    this.cache.valueList('L1480')
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res) => {
       if (res) {
         this.vllL1480 = res.datas;
         this.defaulVote = this.vllL1480[0];
@@ -86,17 +96,24 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
     });
     this.getGrdSetup();
   }
-  // get gridview set up WP_Comments
+
+  
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  
   getGrdSetup() {
     this.cache
       .gridViewSetup('Comments', 'grvComments')
+      .pipe(takeUntil(this.destroy$))
       .subscribe((grv: any) => {
         if (grv) {
           this.grvWP = grv;
         }
       });
   }
-  // get file by objectID
+
   getFileByObjectID() {
     if (this.data.attachments > 0) {
       this.api
@@ -107,6 +124,7 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
           'GetFilesByIbjectIDAsync',
           [this.data.recID]
         )
+        .pipe(takeUntil(this.destroy$))
         .subscribe((res: any[]) => {
           if (res.length > 0) {
             this.file = res[0];
@@ -123,12 +141,12 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
         });
     }
   }
-  // value change
+
   valueChange(value: any) {
     this.data.contents = value.data;
   }
+
   loading: boolean = false;
-  // send comment
   sendComment() {
     if (!this.loading) {
       if (!this.data.contents.trim() && !this.file) {
@@ -140,9 +158,7 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
         return;
       }
       this.loading = true;
-      //update
       if (this.isEdit) this.updateComment(this.data);
-      //insert
       else this.insertComment(this.data);
     }
   }
@@ -157,7 +173,9 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
       this.codxATM.objectId = data.recID;
       this.codxATM.fileUploadList = JSON.parse(JSON.stringify(lstFile));
       this.codxATM.objectType = 'WP_Comments';
-      this.codxATM.saveFilesMulObservable().subscribe((res: any) => {
+      this.codxATM.saveFilesMulObservable()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
         if (res) {
           data.attachments = 1;
           this.api
@@ -168,6 +186,7 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
               'InsertCommentAsync',
               [this.parent, data]
             )
+            .pipe(takeUntil(this.destroy$))
             .subscribe((res: any) => {
               if (res) {
                 this.data.recID = Util.uid();
@@ -193,6 +212,7 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
           'InsertCommentAsync',
           [this.parent, data]
         )
+        .pipe(takeUntil(this.destroy$))
         .subscribe((res: any) => {
           if (res) {
             this.data.recID = Util.uid();
@@ -219,7 +239,9 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
       lstFile.push(this.file);
       this.codxATM.objectId = data.recID;
       this.codxATM.fileUploadList = JSON.parse(JSON.stringify(lstFile));
-      this.codxATM.saveFilesMulObservable().subscribe((res: any) => {
+      this.codxATM.saveFilesMulObservable()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
         if (res) {
           data.attachments = 1;
           this.api
@@ -230,6 +252,7 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
               'UpdateCommentAsync',
               [data]
             )
+            .pipe(takeUntil(this.destroy$))
             .subscribe((res: boolean) => {
               if (res) {
                 this.new = false;
@@ -253,6 +276,7 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
           'UpdateCommentAsync',
           [data]
         )
+        .pipe(takeUntil(this.destroy$))
         .subscribe((res: boolean) => {
           if (res) {
             this.new = false;
@@ -271,6 +295,7 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
         file.recID,
         true,
       ])
+      .pipe(takeUntil(this.destroy$))
       .subscribe();
   }
   //edit comment
@@ -290,6 +315,7 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
             'DeleteCommentAsync',
             [this.data.recID]
           )
+          .pipe(takeUntil(this.destroy$))
           .subscribe((res: boolean) => {
             if (res) {
               this.evtDeleteComment.emit(this.data);
@@ -299,11 +325,11 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
       }
     });
   }
-  // click upload
+
   uploadFile() {
     this.codxATM.uploadFile();
   }
-  // attachement return file
+
   selectFile(event: any) {
     if (Array.isArray(event.data)) {
       let file = event.data[0];
@@ -322,7 +348,7 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
       this.dt.detectChanges();
     }
   }
-  //remove file
+
   removeFile() {
     if (this.isEdit) {
       this.fileDelete = JSON.parse(JSON.stringify(this.file));
@@ -330,7 +356,7 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
     this.file = null;
     this.dt.detectChanges();
   }
-  //reply
+
   replyTo(data) {
     this.evtReplyTo.emit(data);
   }
@@ -339,8 +365,9 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
     this.api
       .execSv('WP', 'ERM.Business.WP', 'VotesBusiness', 'VotePostAsync', [
         data,
-        voteType,
+        voteType
       ])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
           data.votes = res[0];
@@ -384,13 +411,12 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
       option
     );
   }
-  // click cancel edit
+
   clickCancelEdit() {
     this.isEdit = false;
     this.new = false;
   }
 
-  // doubleclick votes
   dbLikePost(data) {
     if (data && this.defaulVote) {
       this.votePost(data, this.defaulVote.value);

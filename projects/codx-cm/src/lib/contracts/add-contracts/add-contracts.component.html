@@ -703,7 +703,7 @@
             [isLoadDataRef]="true"
             (valueChangeCustom)="valueChangeCustom($event)"
             (addFileCompleted)="addFileCompleted($event)"
-            [disable]="action == 'view'"
+            [disable]="action == 'view' || item?.isApplyDependences"
             [isRezisePopup]="true"
             (rezisePopup)="rezisePopup($event)"
           >
@@ -804,7 +804,7 @@
           [isLoadDataRef]="true"
           (valueChangeCustom)="valueChangeCustom($event)"
           (addFileCompleted)="addFileCompleted($event)"
-          [disable]="action == 'view'"
+          [disable]="action == 'view' || item?.isApplyDependences"
           [isRezisePopup]="true"
           (rezisePopup)="rezisePopup($event)"
         >

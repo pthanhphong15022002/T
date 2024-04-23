@@ -1242,6 +1242,11 @@ export class CodxShareService {
         var sys200 = data.filter((x) => x.functionID == 'SYS200');
         sys200[0].disabled = false;
       }
+      if(datas.statusApproval=="3"){
+        var author = data.filter((x) => x.functionID == 'SYS209');
+        author[0].disabled = false;
+      }
+      
       // this.listApproveMF = list.filter(
       //   (p) => p.data.functionID == 'SYS208' || p.disabled == false
       // );
@@ -1263,7 +1268,7 @@ export class CodxShareService {
     );
     if (bm && bm[0]) {
       bm[0].disabled = true;
-      if (datas?.statusApproval != '3') {
+      if (datas?.statusApproval != '3' && datas?.statusApproval!="7") {
         var check = this.checkStatusApproval(
           datas?.approvalRecID,
           datas?.statusApproval
@@ -1282,6 +1287,27 @@ export class CodxShareService {
           bm[0].disabled = !check;
         }
       }
+    }
+    if(datas?.statusApproval=="7"){
+      var listDisAuthor = data?.filter(
+        (x) =>
+          x.functionID == 'SYS200' ||
+          x.functionID == 'SYS201' ||
+          x.functionID == 'SYS202' ||
+          x.functionID == 'SYS203' ||
+          x.functionID == 'SYS204' ||
+          x.functionID == 'SYS205' ||
+          x.functionID == 'SYS206' ||
+          x.functionID == 'SYS207' ||
+          x.functionID == 'SYS208' ||
+          x.functionID == 'SYS209' 
+      );
+      if(listDisAuthor?.length>0){
+        for (var i = 0; i < listDisAuthor?.length; i++) {
+          listDisAuthor[i].disabled = true;
+        }
+      }
+      
     }
   }
 

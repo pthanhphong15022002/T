@@ -296,63 +296,43 @@ export class GeneralJournalAddComponent extends UIComponent {
     }
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
-    this.master.setValue('updateColumns','',{});
     let preValue:any;
     switch (field.toLowerCase()) {
       //* Li do chi
       case 'reasonid':
-        preValue = event?.component?.dataService?.currentComponent?.previousItemData?.ReasonID  || '',
-        this.reasonIDChange(field, preValue)
+        preValue = event?.component?.dataService?.currentComponent?.previousItemData?.ReasonID  || '';
         break;
-
-      case 'objectid':
-        this.objectIDChange(field);
-        break;
-
       //* Tien te
       case 'currencyid':
-        if(value == '' || value == null){
-          this.isPreventChange = true;
-          this.master.setValue(field, this.preData?.currencyID, {});
-          if (this.preData?.currencyID != null) {
-            let key = Util.camelize(field);
-            let $error = (this.master as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
-            if ($error) $error.classList.add('d-none');
-          }
-          this.isPreventChange = false;
-          this.detectorRef.detectChanges();
-          return;
-        }
-        preValue = event?.component?.dataService?.currentComponent?.previousItemData?.CurrencyID  || '',
-        this.currencyIDChange(field,preValue);
-        break;
-
-      //* Ty gia
-      case 'exchangerate':
-        if(value == null){
-          this.isPreventChange = true;
-          setTimeout(() => {
-            this.master.setValue(field,this.preData?.exchangeRate,{});
-            this.isPreventChange = false;
-            this.detectorRef.detectChanges();
-          }, 50);
-          if (this.preData?.exchangeRate != null) {
-            var key = Util.camelize(field);
-            var $error = (this.master as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
-            if ($error) $error.classList.add('d-none');
-          }
-          if(this.preData?.exchangeRate == this.master?.data?.exchangeRate) return;
-          return;
-        }
-        this.exchangeRateChange(field);
-        break;
-
-      //* Ngay chung tu
-      case 'voucherdate':
-        if(value == null) return;
-        this.voucherDateChange(field);
+        preValue = event?.component?.dataService?.currentComponent?.previousItemData?.CurrencyID  || '';
         break;
     }
+    this.api.exec('AC', 'GeneralJournalsBusiness', 'ValueChangedAsync', [
+      field,
+      this.master.data,
+      preValue
+    ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {
+          this.isPreventChange = true;
+          this.master.setObjValue(res?.data,{});
+          this.isPreventChange = false;
+          if (res?.isRefreshGrid) {
+            this.showHideColumn();
+            if (this.eleGridGeneral.dataSource.length) {
+              this.master.preData = { ...this.master.data };
+              this.dialog.dataService.update(this.master.data).subscribe();
+              setTimeout(() => {
+                this.eleGridGeneral.refresh();
+              }, 50);
+            }
+          }
+        }
+        this.master.setValue('updateColumns', '', {});
+        this.master.setValue('updateColumn', '', {});
+        this.onDestroy();
+      });
   }
 
   /**
@@ -433,43 +413,6 @@ export class GeneralJournalAddComponent extends UIComponent {
       }
     })
   }
-
-  /**
-   * *Hàm thêm dòng cho các lưới
-   * @returns
-   */
-  onAddLine() {
-    this.master.save(null, 0, '', '', false,{allowCompare:false})
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (!res) return;
-        if (res.hasOwnProperty('save')) {
-          if (res.save.hasOwnProperty('data') && !res.save.data) return;
-        }
-        if (res.hasOwnProperty('update')) {
-          if (res.update.hasOwnProperty('data') && !res.update.data) return;
-        }
-        if (this.eleGridGeneral && this.elementTabDetail?.selectingID == '0') { //? nếu lưới cashpayment có active hoặc đang edit
-          this.eleGridGeneral.saveRow((res:any)=>{ //? save lưới trước
-            if (res && res.type != 'error') this.addRowDetail();
-          })
-          return;
-        }
-        if (this.eleGridSettledInvoices && this.elementTabDetail?.selectingID == '1') { //? nếu lưới SettledInvoices có active hoặc đang edit
-          this.eleGridSettledInvoices.saveRow((res:any)=>{ //? save lưới trước
-            if (res && res.type != 'error') this.addRowDetail();
-          })
-          return;
-        }
-        if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '2') { //? nếu lưới VatInvoices có active hoặc đang edit
-          this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
-            if (res && res.type != 'error') this.addRowDetail();
-          })
-          return;
-        }
-      });
-  }
-
   /**
    * *Hàm xử lí các tab detail
    * @param event
@@ -489,6 +432,13 @@ export class GeneralJournalAddComponent extends UIComponent {
           this.nextTabIndex = event?.selectingIndex;
           return;
         }
+        let rObjectID = false;
+        let lstRequire: any = [];
+        if (this.eleGridGeneral && this.eleGridGeneral.rowDataSelected == null) {
+          rObjectID = true;
+        }
+        lstRequire.push({ field: 'ObjectID', isDisable: false, require: rObjectID });
+        this.master.setRequire(lstRequire);
         break;
       case 2:
         if (this.eleGridVatInvoices && this.eleGridVatInvoices.isEdit) {
@@ -501,7 +451,6 @@ export class GeneralJournalAddComponent extends UIComponent {
         }
         break;
     }
-    this.setValidateForm();
   }
 
   //#endregion Event
@@ -642,180 +591,70 @@ export class GeneralJournalAddComponent extends UIComponent {
   //#endregion Method
 
   //#region Function
-
   /**
-   * *Hàm thay đổi lí do chi
-   * @param field
-   * @param obj
-   */
-  reasonIDChange(field:any,preValue:any){
-    this.api.exec('AC', 'GeneralJournalsBusiness', 'ValueChangedAsync', [
-      field,
-      this.master.data,
-      preValue
-    ])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res) {
-          this.master.data.reasonName = res?.data?.reasonName;
-          this.master.setValue('memo', res?.data?.memo, {});
-          this.preData = { ...this.master?.data };
-          if (res?.isRefreshGrid) {
-            this.master.preData = { ...this.master.data };
-            this.dialog.dataService.update(this.master.data).subscribe();
-            this.eleGridGeneral.refresh();
-          }
-        }
-        this.onDestroy();
-      });
-  }
-
-  /**
-   * *Hàm thay đổi đối tượng
-   */
-  objectIDChange(field: any){
-    this.api.exec('AC', 'GeneralJournalsBusiness', 'ValueChangedAsync', [
-      field,
-      this.master.data,
-    ])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res) {
-          this.master.data.objectName = res?.data?.objectName;
-          this.master.setValue('memo', res?.data?.memo, {});
-          this.preData = { ...this.master?.data };
-        }
-        this.onDestroy();
-      });
-  }
-
-  /**
-   * *Hàm thay đổi tiền tệ
-   * @param field
-   */
-  currencyIDChange(field:any,preValue:any){
-    this.api.exec('AC', 'GeneralJournalsBusiness', 'ValueChangedAsync', [
-      field,
-      this.master.data,
-      preValue
-    ])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res) {
-          this.isPreventChange = true;
-          this.master.setValue('exchangeRate', res?.data?.exchangeRate, {});
-          this.preData = { ...this.master?.data };
-          if (this.eleGridGeneral.dataSource.length) {
-            this.master.preData = { ...this.master.data };
-            this.dialog.dataService.update(this.master.data).subscribe();
-          }
-          if (res?.isRefreshGrid) {
-            this.showHideColumn();
-            setTimeout(() => {
-              this.eleGridGeneral.refresh();
-            }, 100);
-          }
-          this.isPreventChange = false;
-        }
-        this.onDestroy();
-      });
-  }
-
-  /**
-   * *Hàm thay đổi tỷ giá
-   * @param field
-   */
-  exchangeRateChange(field:any){
-    this.api
-        .exec('AC', 'GeneralJournalsBusiness', 'ValueChangedAsync', [
-          field,
-          this.master.data,
-          ''
-        ])
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res:any) => {
-          if (res) {
-            this.preData = {...this.master?.data};
-            if (res?.isRefreshGrid) {
-              this.eleGridGeneral.refresh();
-              this.master.preData = { ...this.master.data };
-              this.dialog.dataService.update(this.master.data).subscribe();
-              this.detectorRef.detectChanges();
-            }
-          }
-          this.onDestroy();
-        });
-  }
-
-  /**
-   * *Hàm thay đổi ngày chứng từ
-   * @param field
-   */
-  voucherDateChange(field:any){
-    this.api.exec('AC', 'GeneralJournalsBusiness', 'ValueChangedAsync', [
-      field,
-      this.master.data,
-      ''
-    ])
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (res) {
-        this.master.setValue('exchangeRate',res?.data?.exchangeRate,{});
-        this.preData = {...this.master?.data};
-        if (res?.isRefreshGrid) {
-          this.eleGridGeneral.refresh();
-          this.master.preData = { ...this.master.data };
-          this.dialog.dataService.update(this.master.data).subscribe();
-          this.detectorRef.detectChanges();
-        }
-      }
-      this.onDestroy();
-    });
-  }
-
-   /**
-   * *Hàm thêm dòng theo loại
-   */
-  addRowDetail() {
-    if (this.elementTabDetail && this.elementTabDetail?.selectingID == '0') {
-      this.addLine();
-    }
-    if (this.elementTabDetail && this.elementTabDetail?.selectingID == '1') {
-      this.addSettledInvoices();
-    }
-    if (this.elementTabDetail && this.elementTabDetail?.selectingID == '2') {
-      this.addLineVatInvoices();
-    }
-  }
-
-  /**
-   * *Hàm thêm mới dòng cashpayments
+   * *Hàm thêm mới dòng
    */
   addLine() {
-    this.api.exec('AC','GeneralJournalsLinesBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-      if (res) {
-        this.eleGridGeneral.addRow(res, this.eleGridGeneral.dataSource.length);
-      }
-      this.onDestroy();
-    })
+    this.master.save(null, 0, '', '', false, { allowCompare: false })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (!res) return;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) return;
+        }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) return;
+        }
+        if (this.eleGridGeneral) {
+          this.eleGridGeneral.saveRow((res: any) => { //? save lưới trước
+            if (res && res.type != 'error'){
+              this.api.exec('AC','GeneralJournalsLinesBusiness','SetDefaultAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+                if (res) {
+                  this.eleGridGeneral.addRow(res, this.eleGridGeneral.dataSource.length);
+                }
+                this.onDestroy();
+              })
+            }
+          })
+          return;
+        }
+      });
   }
 
   /**
    * *Hàm thêm dòng hóa đơn GTGT
    */
   addLineVatInvoices() {
-    this.api.exec('AC','VATInvoicesBusiness','SetDefaultAsync',[
-      'AC',
-      'AC_GeneralJournals',
-      'AC_GeneralJournalsLines',
-      this.master.data,
-      this.eleGridGeneral.rowDataSelected,
-    ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-      if (res) {
-        this.eleGridVatInvoices.addRow(res, this.eleGridVatInvoices.dataSource.length);
-      }
-      this.onDestroy();
-    })
+    this.master.save(null, 0, '', '', false, { allowCompare: false })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (!res) return;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) return;
+        }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) return;
+        }
+        if (this.eleGridVatInvoices) {
+          this.eleGridVatInvoices.saveRow((res: any) => { //? save lưới trước
+            if (res && res.type != 'error'){
+              this.api.exec('AC','VATInvoicesBusiness','SetDefaultAsync',[
+                'AC',
+                'AC_GeneralJournals',
+                'AC_GeneralJournalsLines',
+                this.master.data,
+                this.eleGridGeneral.rowDataSelected,
+              ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+                if (res) {
+                  this.eleGridVatInvoices.addRow(res, this.eleGridVatInvoices.dataSource.length);
+                }
+                this.onDestroy();
+              })
+            }
+          })
+          return;
+        }
+      });
   }
 
   /**
@@ -823,37 +662,64 @@ export class GeneralJournalAddComponent extends UIComponent {
    * @param typeSettledInvoices
    */
   addSettledInvoices() {
-    let data = {};
-    data['master'] = this.master.data;
-    if (this.eleGridGeneral && this.eleGridGeneral.rowDataSelected && this.eleGridGeneral.rowDataSelected.objectID) {
-      data['line'] = this.eleGridGeneral.rowDataSelected;
-    }else{
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.master.gridviewSetup['ObjectID']?.headerText + '"'
-      );
-    }
-    let opt = new DialogModel();
-    let dataModel = new FormModel();
-    opt.FormModel = dataModel;
-    let dialog = this.callfc.openForm(
-      SettledInvoicesAdd,
-      '',
-      null,
-      null,
-      '',
-      data,
-      '',
-      opt
-    );
-    dialog.closed.subscribe((res) => {
-      if (res && res.event) {
-        this.eleGridSettledInvoices.refresh();
-        this.dialog.dataService.update(this.master.data).subscribe();
-        this.detectorRef.detectChanges();
-      }
-    });
+    this.master.save(null, 0, '', '', false, { allowCompare: false })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (!res) return;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) return;
+        }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) return;
+        }
+        if (this.eleGridSettledInvoices) {
+          this.eleGridSettledInvoices.saveRow((res: any) => { //? save lưới trước
+            if (res && res.type != 'error'){
+              let data = {
+                master: this.master.data,
+                line : null,
+                mode:'1',
+                service:'AC',
+                entityNameMaster:'AC_GeneralJournals',
+                entityNameLine:'AC_GeneralJournalsLines',
+              };
+              if((this.journal.journalType+'1') === this.master.data.subType) data['mode'] = '2';
+              if (this.eleGridGeneral && this.eleGridGeneral.rowDataSelected) {
+                if (this.eleGridGeneral?.rowDataSelected?.objectID == null || this.eleGridGeneral?.rowDataSelected?.objectID == '') {
+                  this.notification.notifyCode(
+                    'SYS009',
+                    0,
+                    '"' + this.master.gridviewSetup['ObjectID']?.headerText + '"'
+                  );
+                  return;
+                }
+                data['line'] = this.eleGridGeneral.rowDataSelected;
+              }
+              let opt = new DialogModel();
+              let dataModel = new FormModel();
+              opt.FormModel = dataModel;
+              let dialog = this.callfc.openForm(
+                SettledInvoicesAdd,
+                '',
+                null,
+                null,
+                '',
+                data,
+                '',
+                opt
+              );
+              dialog.closed.subscribe((res) => {
+                if (res && res.event) {
+                  this.eleGridSettledInvoices.refresh();
+                  this.dialog.dataService.update(this.master.data).subscribe();
+                  this.detectorRef.detectChanges();
+                }
+              });
+            }
+          })
+          return;
+        }
+      });
   }
 
   /**
@@ -863,7 +729,7 @@ export class GeneralJournalAddComponent extends UIComponent {
   onActionGridGeneral(event: any) {
     switch (event.type) {
       case 'autoAdd': //? tự động thêm dòng
-        this.onAddLine();
+        this.addLine();
         break;
       case 'add':
       case 'update': //? sau khi thêm dòng thành công
@@ -896,7 +762,7 @@ export class GeneralJournalAddComponent extends UIComponent {
   onActionGridVatInvoice(event: any) {
     switch (event.type) {
       case 'autoAdd':
-        this.onAddLine();
+        this.addLineVatInvoices();
         break;
       case 'closeEdit': //? khi thoát dòng
       if (this.eleGridVatInvoices && this.eleGridVatInvoices.rowDataSelected) {
@@ -1007,10 +873,10 @@ export class GeneralJournalAddComponent extends UIComponent {
   setValidateForm(){
     let rObjectID = false;
     let lstRequire :any = [];
-    if (this.elementTabDetail?.selectingID == '1') {
+    if (this.master.data.subType == (this.journal.journalType+'1')) {
       rObjectID = true;
     }
-    lstRequire.push({field : 'ObjectID',isDisable : false,require:rObjectID});
+    lstRequire.push({ field: 'ObjectID', isDisable: false, require: rObjectID });
     if (this.journal.assignRule == '2') {
       lstRequire.push({field : 'VoucherNo',isDisable : false,require:false});
     }
@@ -1026,10 +892,10 @@ export class GeneralJournalAddComponent extends UIComponent {
     if (eleTab) {
       switch (type) {
         case `${this.journal.journalType+'1'}`:
-          eleTab.hideTab(0, false);
+          eleTab.hideTab(0, true);
           eleTab.hideTab(1, false);
           eleTab.hideTab(2, true);
-          eleTab.select(1);
+          eleTab.select(0);
           break;
 
         case `${this.journal.journalType+'9'}`:
