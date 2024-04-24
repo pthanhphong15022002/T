@@ -35,6 +35,7 @@ export class ViewListComponent implements OnInit {
   @Input() user: any;
   @Input() popoverSelected: any;
   @Input() isTreeView: boolean=false;
+  @Input() showDueDate: boolean=true;
   @Input() treeCmp:any;
   listTaskResousceSearch = [];
   listTaskResousce = [];

@@ -170,7 +170,7 @@
     </div> -->
         </div>
       </div>
-      <div class="w-100px min-w-100px">
+      <div class="w-100px min-w-100px" *ngIf="showDueDate">
         <div class="text-gray-600 fs-7">
           <codx-label
             name="DueDate"
@@ -192,6 +192,21 @@
               | async
           "
         ></div>
+      </div>
+      <div class="w-175px min-w-175px" *ngIf="!showDueDate">
+        <div class="d-flex flex-column fs-8">
+          <div class="d-flex w-100 align-items-center">
+            <div class="fw-bold"> <codx-label fiedName="StartDate" [formModel]="formModel" default="Ngày bắt đầu">
+            </codx-label>: </div> &nbsp;{{data.startDate | fmDT : "dmy" :false : 'dd/MM/yyyy'}}
+          </div>
+          <div class="d-flex w-100 align-items-center mt-1">
+            <div class="fw-bold"> <codx-label fiedName="EndDate" [formModel]="formModel" default="Ngày kết thúc">
+            </codx-label>: </div>&nbsp; {{
+              data.endDate | fmDT: "dmy" :false : 'dd/MM/yyyy'
+            }}
+          </div>
+
+        </div>
       </div>
       <div class="w-150px min-w-150px">
         <div class="d-flex align-items-center">
@@ -335,6 +350,7 @@
             >
             </codx-vll>
             <span
+            *ngIf="showDueDate"
               class="text-gray-700"
               #dueDate
               [innerHTML]="
