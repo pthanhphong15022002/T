@@ -241,6 +241,10 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     }
     if (e.field == 'title' || e.field == 'fieldName') {
       this.removeAccents(e.data);
+      if (this.dependence.strDependence && this.column.fieldName) {
+        let splitStr = this.dependence.strDependence.split("=");
+        this.dependence.strDependence = this.column.fieldName + "=" + splitStr[1]
+      }
       this.changdef.detectChanges();
       return;
     }
@@ -793,7 +797,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     }
 
     if (!this.checkValidate()) return;
-    this.dialog.close([this.column, this.processNo]);
+    this.dialog.close([this.column, this.processNo, this.dependence]);
   }
 
   async openAutoNumPopup() {
@@ -1258,7 +1262,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     }
   }
   cbxChangeValueDependence(e) {
-    if (!this.dependence.refID || !this.listValueField || this.listValueField?.length == 0 || this.action == 'edit' || this.action == 'view') return
+    if (!this.dependence?.refID || !this.listValueField || this.listValueField?.length == 0 || this.action == 'edit' || this.action == 'view') return
 
     this.api
       .exec<any>(

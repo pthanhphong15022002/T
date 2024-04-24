@@ -187,7 +187,8 @@ export class PopupAddCustomFieldComponent implements OnInit, AfterViewInit {
 
   dependence = {
     refID: '',
-    strDependence: ''
+    strDependence: '',
+    oldFieldName: '' ////luu tên field trước đó
   }
   valueRef: any;
   isLoadedVll = false;
@@ -216,7 +217,7 @@ export class PopupAddCustomFieldComponent implements OnInit, AfterViewInit {
     this.stepList = dt?.data?.stepList;
     this.grvSetup = dt.data?.grvSetup;
     this.viewOnly = this.action == 'view';
-
+    this.dependence.oldFieldName = this.field.fieldName
     this.creatFieldCustom();
     this.widthDefault = this.dialog.dialog.width
       ? this.dialog.dialog.width.toString()
@@ -246,7 +247,7 @@ export class PopupAddCustomFieldComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit(): void {
     if (this.field?.isApplyDependences && this.listCbx?.length > 0) {
-      let crrCbx = this.listCbx.find(x => x.dependences.includes(this.field.fieldName));
+      let crrCbx = this.listCbx.find(x => x?.dependences?.includes(this.field.fieldName));
       if (crrCbx) {
         this.dependence.refID = crrCbx.recID;
         let arrField = crrCbx?.dependences?.split(",");
@@ -333,8 +334,14 @@ export class PopupAddCustomFieldComponent implements OnInit, AfterViewInit {
 
     if (e && e.field) this.field[e.field] = e?.data;
 
-    if (e.field == 'title' || e.field == 'fieldName')
+    if (e.field == 'title' || e.field == 'fieldName') {
       this.removeAccents(e.data);
+      if (this.dependence.strDependence && this.field.fieldName) {
+        let splitStr = this.dependence.strDependence.split("=");
+        this.dependence.strDependence = this.field.fieldName + "=" + splitStr[1]
+      }
+    }
+
     if (
       e.field == 'dataFormat' &&
       (e.data == 'V' || e.data == 'C' || e.data == 'S')
@@ -551,7 +558,7 @@ export class PopupAddCustomFieldComponent implements OnInit, AfterViewInit {
       );
       return;
     }
-    if (this.field.isApplyDependences && (!this.dependence.refID || !this.dependence.strDependence)) {
+    if (this.field?.isApplyDependences && (!this.dependence?.refID || !this.dependence?.strDependence)) {
       this.notiService.notify('Tham chiếu giá trị chưa hoàn thành, hãy hoàn thiện thiết lập để tiếp tục !', '2');
       return
     }
