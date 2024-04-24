@@ -1048,23 +1048,26 @@ export class OrganizationOrgchartComponent {
     this.hrService
       .GetParameterByHRAsync('HRParameters', '1')
       .subscribe((res: any) => {
-        this.dataTree = JSON.parse(res);
-
-        this.selectedTeam = this.dataTree.isGetManager;
-        this.level = this.dataTree.level;
-
-        this.dataTree.isOrgUnitID = JSON.parse(this.dataTree.isOrgUnitID);
-
-        this.firstOrgLoaded = this.orgUnitID;
-        //Load data depend orgunit check
-        if (this.dataTree.isOrgUnitID === true) {
-          this.getEmployeeInfoById(this.user.userID);
-        } else {
-          this.isGetManager();
-        }
-
-        for (const [key, value] of Object.entries(this.dataTree)) {
-          this.changeMode(value);
+        if(res)
+        {
+          this.dataTree = JSON.parse(res);
+          if(this.dataTree.isGetManager)
+            this.selectedTeam = this.dataTree.isGetManager;
+          this.level = this.dataTree.level;
+  
+          this.dataTree.isOrgUnitID = JSON.parse(this.dataTree.isOrgUnitID);
+  
+          this.firstOrgLoaded = this.orgUnitID;
+          //Load data depend orgunit check
+          if (this.dataTree.isOrgUnitID === true) {
+            this.getEmployeeInfoById(this.user.userID);
+          } else {
+            this.isGetManager();
+          }
+  
+          for (const [key, value] of Object.entries(this.dataTree)) {
+            this.changeMode(value);
+          }
         }
       });
 

@@ -74,11 +74,11 @@ export class PopupSelectUserComponent implements OnInit, AfterViewInit{
         this.predicate = 'ProjectID=="'+this.projectData.projectID+'"'
         break;
       case '2':
-        this.comboboxName = 'Users';
+        this.comboboxName = 'Share_Users';
         this.predicate = 'CompanyName=="'+this.crrUser.employee?.companyName+'"'
         break;
       case '3':
-        this.comboboxName = 'Users';
+        this.comboboxName = 'Share_Users';
         this.predicate = undefined;
         break;
 
@@ -303,7 +303,7 @@ export class PopupSelectUserComponent implements OnInit, AfterViewInit{
         if (response.avtControl == '1') this.showAvatar = true;
         this.arrDisplay = response.displayMembers.split(';');
         this.arrTableField = response.tableFields.split(';');
-        if (!this.multiple) this.multiple = response.multiSelect;
+        //if (!this.multiple) this.multiple = response.multiSelect;
         if (response.columnParent) {
           this.parentIdField = response.columnParent;
           this.type = 'treeView';

@@ -14,7 +14,7 @@ export class TranformValueNumberPipe implements PipeTransform {
        
   }
   transform(value: any, format: any): any {
-    let html = '<span class="{0}">{1}</span>';
+    let html = '';
     let intl = new Internationalization();
     let zeroAfterPoint:any;
     let formatStr:any;
@@ -36,7 +36,8 @@ export class TranformValueNumberPipe implements PipeTransform {
           });
           value = nFormatter(value);
       }
-      return Util.stringFormat(html, '', value || '');
+      //return Util.stringFormat(html, '', value || '');
+      return value;
     }));
   }
   createString(preFormatString, zeroAfterPoint = 6) {

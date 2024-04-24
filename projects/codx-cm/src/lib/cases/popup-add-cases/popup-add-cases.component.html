@@ -294,14 +294,14 @@
         </div>
         <ng-template #ownerProcess>
           <ejs-combobox
-          [dataSource]="listParticipants"
-          (valueChange)="valueChangeOwner($event,viewOwnerProcess)"
-          [fields]="fieldCbxParticipants"
-          [placeholder]="gridViewSetup?.Owner?.description"
-          [allowFiltering]="true"
-          [filterType]="'Contains'"
-          [value]="owner"
-        ></ejs-combobox>
+            [dataSource]="listParticipants"
+            (valueChange)="valueChangeOwner($event, viewOwnerProcess)"
+            [fields]="fieldCbxParticipants"
+            [placeholder]="gridViewSetup?.Owner?.description"
+            [allowFiltering]="true"
+            [filterType]="'Contains'"
+            [value]="owner"
+          ></ejs-combobox>
         </ng-template>
       </div>
     </div>
@@ -347,7 +347,7 @@
         <ng-template #ownerProcess>
           <ejs-combobox
             [dataSource]="listParticipants"
-            (valueChange)="valueChangeOwner($event,viewOwnerProcess)"
+            (valueChange)="valueChangeOwner($event, viewOwnerProcess)"
             [fields]="fieldCbxParticipants"
             [allowFiltering]="true"
             [value]="owner"
@@ -519,6 +519,7 @@
               [objectType]="'DP_Instances_Steps_Fields'"
               [formModel]="dialog.formModel"
               (valueChangeCustom)="valueChangeCustom($event)"
+                [disable]="action == 'view' || item?.isApplyDependences"
             >
             </codx-input-custom-field>
           </div>
@@ -539,6 +540,7 @@
           [isAdd]="action == actionAdd"
           (valueChangeCustom)="valueChangeCustom($event)"
           (addFileCompleted)="addFileCompleted($event)"
+          [disable]="action == 'view' || item?.isApplyDependences"
         >
         </codx-input-custom-field>
       </div>

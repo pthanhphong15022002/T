@@ -239,12 +239,12 @@
               <!-- Content -->
               <div class="mx-2">
                 <div class="d-flex flex-wrap">
-                  <div class="fs-7 d-flex flex-wrap align-items-center fw-boldest">
+                  <div class="align-items-center d-flex fs-6 fw-bold">
                     <span class="fw-bold" placement="bottom" [title]="eInfoHeaderText?.EmployeeName"
                       style="color: white">
                       {{ infoPersonal?.employeeName }}</span>
-                      <div class="d-flex">
-                        <span class="icon-16 icon-qr_code_scanner mx-1"></span>
+                      <div class="align-items-center d-flex">
+                        <span class="icon-14 icon-qr_code_scanner mx-1"></span>
                         <span style="margin-top: 2px; color: #FF001B" #id placement="bottom"
                           [title]="eInfoHeaderText?.EmployeeID">
                           {{ employeeID}}</span>
@@ -278,13 +278,13 @@
 
           <div class="tree-bar bg-white border-bottom d-flex flex-column mt-5" *ngIf="infoPersonal && LoadedEInfo == true">
             <div class="d-flex flex-column flex-wrap justify-content-center mb-1">
-              <div class="w-100" style="border-bottom: 1px lightgray solid">
+              <div [style.height.px]="expanded ? 298 : 40" class="scroll-y w-100" style="border-bottom: 1px lightgray solid">
                 <lib-sidebar-treeview></lib-sidebar-treeview>
               </div>
               <div style="text-align: center;">
-                <button class="border-0 bg-white pt-3" style="font-size: 13px; display: inline-flex; align-items: center; color: #005DC7;">
-                    <i class="icon-i-chevron-double-down" style="margin-right: 5px; color: #005DC7;"></i>
-                    Mở rộng
+                <button class="border-0 bg-white pt-3" style="font-size: 13px; display: inline-flex; align-items: center; color: #005DC7;" (click)="toggleExpand()">
+                    <i [class]="iconName" style="margin-right: 5px; color: #005DC7;"></i>
+                    {{ buttonText }}
                 </button>
             </div>
             </div>
@@ -292,7 +292,7 @@
           
           <!-- End TreeView -->
           <!-- Employee -->
-          <div class="bg-white border mt-5 user-left">
+          <div class="bg-white border mt-5 user-left mb-20">
             <div>
               <!-- <codx-listview
               entityName="HR_Employees"
@@ -308,10 +308,10 @@
               </codx-listview> -->
               <div>
                 <div class="align-items-center d-flex justify-content-between mb-5 mt-5 px-4">
-                  <span>Nhân viên</span>
-                  <div>
-                    <button class="btn-add"><i class="icon-add"></i><span>Thêm</span></button>
-                    <button><i class="icon-i-chevron-down"></i></button>
+                  <span class="fs-3 fw-bolder">Nhân viên</span>
+                  <div class="d-flex gap-1">
+                    <button class="btn-add btn-add d-flex justify-content-center"><i class="icon-add icon-add-css"></i><span>Thêm</span></button>
+                    <button class="btn-more d-flex"><i class="icon-i-chevron-down icon-css"></i></button>
                   </div>
                 </div>
                 <div class="px-3">
@@ -319,21 +319,28 @@
                 </div>
               </div>
               <!-- List Employee -->
-              <ng-container *ngFor="let person of dataMyTeam; index as i;">
-                <div class="d-flex flex-row gap-3 align-items-center pointer py-3 px-3">
-                  <div class="user-avatar">
-                    <codx-img [funcId]="'HRT03b'" [objectId]="'2308070001'" [objectName]="'Nguyễn Công Phượng'"
-                      [objectType]="'HR_Employees'" [imageType]="'circle'" class="user-img" [width]="40">
-                    </codx-img>
-                    <div class="user-status " [ngClass]="{}"></div>
+              <div class="scroll-y" style="max-height: 460px">
+                <ng-container *ngFor="let person of dataMyTeam; index as i;">
+                  <div class="d-flex flex-row gap-3 align-items-center pointer py-3 px-3">
+                    <div class="user-avatar">
+                      <codx-img [funcId]="'HRT03b'" [objectId]="'2308070001'" [objectName]="'Nguyễn Công Phượng'"
+                        [objectType]="'HR_Employees'" [imageType]="'circle'" class="user-img" [width]="40">
+                      </codx-img>
+                      <div class="user-status " [ngClass]="{}"></div>
+                    </div>
+                    <div class="d-flex flex-column align-items-start gap-1">
+                      <div class="d-flex fs-6 fw-bold gap-2 name">
+                        <div>{{person.name}}</div>
+                        <div><i class="icon-qr_code_scanner"></i></div>
+                        <div class="personid"> {{ person.id }} </div>
+                      </div>
+                      <div class="text-gray-500">{{person.job}}</div>
+                      <div>{{person.room}}</div>
+                      <div class="date fw-bold px-2">{{person.YOW}}</div>
+                    </div>
                   </div>
-                  <div class="d-flex flex-column align-items-start gap-1">
-                    <div class="name fs-6 fw-bold">{{person.name}}</div>
-                    <div class="text-gray-500">{{person.job}}</div>
-                    <div class="YOW fw-bold">{{person.YOW}}</div>
-                  </div>
-                </div>
-              </ng-container>
+                </ng-container>
+              </div>
             </div>
 
             <!-- <div class="user-menu scroll-y w-100 border-top">
@@ -358,8 +365,50 @@
             </div> -->
           </div>
           <!-- End Employee -->
+
+          <!-- Test Dropdown -->
+          <!-- <div>
+            <div ngbDropdown class="position-absolute" style="top: 37px; right: 45px">
+              <span type="button" class="btn btn-icon btn-sm rounded-circle" style="background-color: #0BB51C"
+                    ngbDropdownToggle>
+                <i class="icon-keyboard_arrow_down" style="color: white"></i>
+              </span>
+              <div ngbDropdownMenu class="" style="min-width: 200px; height: fit-content">
+                <div>
+                  <div>
+                    <span><i class="icon-keyboard_arrow_down"></i></span>
+                    <span>ALL</span>
+                  </div>
+                  <div class="px-3">
+                    <codx-searchbar></codx-searchbar>
+                  </div>
+                </div>
+                <div class="w-100">
+                  <ul class="nav nav-tabs nav-pills flex-column border-0 p-3 pb-0 w-100">
+                    <ng-container *ngFor="let item of lstTab; let index = index">
+                      <li class="nav-item w-100 mb-1">
+                        <a class="nav-link w-100 btn btn-lg btn-clean" data-bs-toggle="tab" [id]="'tab_' + index"
+                            [class]="crrFuncTab == item.functionID ? 'active' : ''" (click)="clickTab(item)">
+                          <div class="d-flex align-items-center">
+                            <span class="icon-18 me-2" [ngClass]="
+                              item?.largeIcon ? item?.largeIcon : 'icon-person'
+                            "></span>
+                            <div class="fw-bold">
+                              {{ item.customName }}
+                            </div>
+                          </div>
+                        </a>
+                      </li>
+                    </ng-container>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+          </div> -->
         </div>
 
+        <!-- Content Cũ -->
         <div class="w-100 user-right overflow-hidden">
           <div class="tab-content">
             <!-- Pane 1: Sơ yếu lí lịch -->
@@ -404,8 +453,38 @@
   </div>
 </ng-template>
 
+<!-- New -->
+<ng-template #headerContent>
+  <ng-container>
+    <div class="mt-5">
+        <div class="form-group">
+            Tab1
+        </div>
+        <div #noteRef class="form-group">
+            Tab2
+        </div>
+    </div>
+  </ng-container>
+</ng-template>
+<!-- End: Tab Setting -->
+
+<!-- Start:Tab Parameters -->
+<ng-template #tabParameters>
+  <ng-container>
+    <div class="mt-5">
+        <div #noteRef class="form-group">
+            Tab3
+        </div>
+        <div #noteRef class="form-group">
+          Tab4
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+<!-- End New -->
+
 <!-- panel Sơ yếu lí lịch -->
-<ng-template #curriculumVitae>
+<!-- <ng-template #curriculumVitae>
   <div class="tab-scroll mb-4">
     <div class="tab-horizone bg-white h-od-tab">
       <ul class="align-items-end justify-content-between nav nav-tabs px-4 tab-height">
@@ -417,9 +496,127 @@
             </a>
           </li>
         </ng-container>
+        <div class="mb-1">
+          <div ngbDropdown [placement]="'top-start'">
+            <span type="button" class="btn btn-icon btn-sm" style="background-color: #C9F7F5; border-radius: 5px"
+                  ngbDropdownToggle>
+              <i class="icon-keyboard_arrow_down" style="color: #005DC7"></i>
+            </span>
+            <div class="text-uppercase fw-bold">All</div>
+            <div ngbDropdownMenu style="min-width: 200px; height: fit-content">
+              <div>
+                <div>
+                  <span><i class="icon-keyboard_arrow_down"></i></span>
+                  <span>ALL</span>
+                </div>
+                <div class="px-3">
+                  <codx-searchbar></codx-searchbar>
+                </div>
+              </div>
+              <div class="w-100">
+                <ul class="nav nav-tabs nav-pills flex-column border-0 p-3 pb-0 w-100">
+                  <ng-container *ngFor="let item of lstTab; let index = index">
+                    <li class="nav-item w-100 mb-1">
+                      <a class="nav-link w-100 btn btn-lg btn-clean" data-bs-toggle="tab" [id]="'tab_' + index"
+                          [class]="crrFuncTab == item.functionID ? 'active' : ''" (click)="clickTab(item)">
+                        <div class="d-flex align-items-center">
+                          <span class="icon-18 me-2" [ngClass]="
+                            item?.largeIcon ? item?.largeIcon : 'icon-person'
+                          "></span>
+                          <div class="fw-bold">
+                            {{ item.customName }}
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                  </ng-container>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+        </div>
       </ul>
     </div>
-  </div>
+  </div> -->
+
+  <!-- Test -->
+  <ng-template #curriculumVitae>
+    <div class="tab-scroll mb-4">
+      <div class="tab-horizone bg-white h-od-tab">
+        <ul class="align-items-end justify-content-between nav nav-tabs px-4 tab-height">
+
+
+          <ejs-tab>
+            <e-tabitems>
+                <ng-container *ngFor="let item of lstFuncCurriculumVitae; let i = index">
+                    <div class="nav-item" (click)="navChange(item.functionID, i, $event.target)">
+                        <a class="nav-link" [ngClass]="item.functionID == active[i] ? 'active' : ''">
+                            <i class="icon-attach_money" style="color: #005DC7"></i>
+                            <div class="text-uppercase fw-bold">{{ item.customName }}</div>
+                        </a>
+                    </div>
+                </ng-container>
+            </e-tabitems>
+            <ng-template #content> 
+                <ng-container *ngFor="let item of lstFuncCurriculumVitae; let i = index">
+                    <div *ngIf="active[i] == item.functionID">
+                        <div class="user-profile overview d-block" [id]="eInfoFuncID"
+                          *ngIf="curriculumVitaePermission.eInfoFuncID.view == true">
+                          <hr-personal-info *ngIf="eInfoFunc" [employeeID]="employeeID" [function]="eInfoFunc"></hr-personal-info>
+                        </div>
+                    </div>
+                </ng-container>
+              </ng-template>
+        </ejs-tab>
+        
+
+
+
+          <div class="mb-1">
+            <div ngbDropdown [placement]="'bottom-left'">
+              <span type="button" class="btn btn-icon btn-sm" style="background-color: #C9F7F5; border-radius: 5px"
+                    ngbDropdownToggle>
+                <i class="icon-keyboard_arrow_down" style="color: #005DC7"></i>
+              </span>
+              <div class="text-uppercase fw-bold">All</div>
+              <div ngbDropdownMenu style="min-width: 200px; height: fit-content">
+                <div>
+                  <div class="mb-4 d-flex gap-5">
+                    <span style="background-color: #C9F7F5; border-radius: 5px"><i class="icon-keyboard_arrow_down" style="color: #005DC7"></i></span>
+                    <span class="fw-bolder">ALL</span>
+                  </div>
+                  <div class="mb-5 px-1">
+                    <codx-searchbar></codx-searchbar>
+                  </div>
+                </div>
+                <div class="w-100">
+                  <ul class="nav nav-tabs nav-pills flex-column border-0 pb-0 w-100">
+                    <ng-container *ngFor="let item of lstTab; let index = index">
+                      <li class="nav-item w-100 mb-1">
+                        <a class="nav-link w-100 btn btn-lg btn-clean" data-bs-toggle="tab" [id]="'tab_' + index"
+                            [class]="crrFuncTab == item.functionID ? 'active' : ''" (click)="clickTab(item)">
+                          <div class="d-flex align-items-center">
+                            <span class="icon-tab-parent icon-18 me-2" [ngClass]="
+                              item?.largeIcon ? item?.largeIcon : 'icon-person'
+                            "></span>
+                            <div class="fw-bold">
+                              {{ item.customName }}
+                            </div>
+                          </div>
+                        </a>
+                      </li>
+                    </ng-container>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </ul>
+      </div>
+    </div>
+  <!-- End Test -->
 
   <div class="pw-content w-100 scroll-y" data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto"
     data-kt-scroll-dependencies=".pw-profile,.pw-menu" data-kt-scroll-wrappers=".employee-container"
@@ -1312,6 +1509,46 @@
           </a>
         </li>
       </ng-container>
+      <div class="mb-1">
+        <div ngbDropdown [placement]="'bottom-left'">
+          <span type="button" class="btn btn-icon btn-sm" style="background-color: #C9F7F5; border-radius: 5px"
+                ngbDropdownToggle>
+            <i class="icon-keyboard_arrow_down" style="color: #005DC7"></i>
+          </span>
+          <div class="text-uppercase fw-bold">All</div>
+          <div ngbDropdownMenu style="min-width: 200px; height: fit-content">
+            <div>
+              <div class="mb-4 d-flex gap-5">
+                <span style="background-color: #C9F7F5; border-radius: 5px"><i class="icon-keyboard_arrow_down" style="color: #005DC7"></i></span>
+                <span class="fw-bolder">ALL</span>
+              </div>
+              <div class="mb-5 px-1">
+                <codx-searchbar></codx-searchbar>
+              </div>
+            </div>
+            <div class="w-100">
+              <ul class="nav nav-tabs nav-pills flex-column border-0 pb-0 w-100">
+                <ng-container *ngFor="let item of lstTab; let index = index">
+                  <li class="nav-item w-100 mb-1">
+                    <a class="nav-link w-100 btn btn-lg btn-clean" data-bs-toggle="tab" [id]="'tab_' + index"
+                        [class]="crrFuncTab == item.functionID ? 'active' : ''" (click)="clickTab(item)">
+                      <div class="d-flex align-items-center">
+                        <span class="icon-tab icon-18 me-2" [ngClass]="
+                          item?.largeIcon ? item?.largeIcon : 'icon-person'
+                        "></span>
+                        <div class="fw-bold">
+                          {{ item.customName }}
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+                </ng-container>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+      </div>
     </ul>
   </div>
 

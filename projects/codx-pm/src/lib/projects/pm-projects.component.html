@@ -22,8 +22,8 @@
 
 <!-- header -->
 <ng-template #headerTemplate let-data>
-  <div class="d-flex w-100 ps-2 pe-4 border-bottom row">
-    <div class="col-3 text-dark fw-bold p-3 fw-500">
+  <div class="d-flex w-100 ps-2 pe-4 border-bottom row text-center">
+    <div class="col-3 text-dark fw-bold py-3 px-0 fw-500 ">
       <codx-label
         fiedName="lblProjectName"
         [setRequire]="false"
@@ -31,7 +31,7 @@
         [default]="'Tên dự án'"
       ></codx-label>
     </div>
-    <div class="col-1 text-dark fw-bold p-3 fw-500">
+    <div class="col-1 text-dark fw-bold py-3 px-0 fw-500">
       <codx-label
         fiedName="lblProjectCategory"
         [setRequire]="false"
@@ -39,7 +39,7 @@
         [default]="'Phân loại'"
       ></codx-label>
     </div>
-    <div class="col-2 text-dark fw-bold p-3 fw-500">
+    <div class="col-2 text-dark fw-bold py-3 px-0 fw-500">
       <codx-label
         fiedName="lblScheduleFinishDate"
         [setRequire]="false"
@@ -47,7 +47,7 @@
         [default]="'Ngày hết hạn'"
       ></codx-label>
     </div>
-    <div class="col-2 text-dark fw-bold p-3 fw-500">
+    <div class="col-2 text-dark fw-bold py-3 px-0 fw-500">
       <codx-label
         fiedName="lblStatus"
         [setRequire]="false"
@@ -55,7 +55,7 @@
         [default]="'Tình Trạng'"
       ></codx-label>
     </div>
-    <div class="col-2 text-dark fw-bold p-3 fw-500">
+    <div class="col-2 text-dark fw-bold py-3 px-0 fw-500">
       <codx-label
         fiedName="lblMembers"
         [setRequire]="false"
@@ -63,7 +63,7 @@
         [default]="'Thành viên'"
       ></codx-label>
     </div>
-    <div class="col-2 text-dark fw-bold p-3 fw-500">
+    <div class="col-2 text-dark fw-bold py-3 px-0 fw-500">
       <codx-label
         fiedName="lblProjectManeger"
         [setRequire]="false"
@@ -138,7 +138,7 @@
     <!-- Phân loại-->
     <div class="col-1 p-5">
       <div class="d-flex flex-column">
-        <div class="d-flex mb-1">
+        <div class="d-flex mb-1 w-100 justify-content-center">
           <codx-vll
             [name]="grvSetup['ProjectType']?.referedValue"
             [value]="data.projectType"
@@ -251,7 +251,7 @@
     </div>
     <!-- Thành viên-->
     <div class="col-2 p-5">
-      <div class="d-flex has-action-menu justify-content-between w-100">
+      <div class="d-flex has-action-menu justify-content-center w-100">
         <codx-imgs  [objectId]="getMembers(data,'objectID')"
             objectType="AD_Users" [width]="35"  [numberImages]="4" *ngIf="data.permissions">
           </codx-imgs>
@@ -259,7 +259,7 @@
     </div>
     <!-- Quản lý-->
     <div class="col-2 p-5">
-      <div class="d-flex has-action-menu justify-content-between w-100">
+      <div class="d-flex has-action-menu justify-content-center w-100">
         <!-- <codx-img  [objectId]="data.projectManager" [objectName]="data.projectManager"
             objectType="AD_Users" [width]="35">
           </codx-img> -->

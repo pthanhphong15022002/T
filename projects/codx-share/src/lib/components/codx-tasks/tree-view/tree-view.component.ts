@@ -47,6 +47,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   @Input() user: any;
   @Input() filter: any;
   @Input() favoriteID = '00000000-0000-0000-0000-000000000009';
+  @Input() className = 'TaskBusiness';
   @Input() favoriteName = '';
   @Input() predicate = '';
   @Input() predicateChild = '';
@@ -74,7 +75,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   service = 'TM';
   assemblyName = 'ERM.Business.TM';
   entityName = 'TM_Tasks';
-  className = 'TaskBusiness';
+
   methodLoadData = 'GetTasksAsync';
   loadedTree: boolean = true; // load clcik tree
   isAllDatas: any = false;
@@ -245,7 +246,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
         .execSv<any>(
           'TM',
           'ERM.Business.TM',
-          'TaskBusiness',
+          this.className,
           'GetListTasksChildrenDeTailsTreeOneStepAsync',
           [parent.data.taskID, predicate, datavalue]
         )
@@ -260,7 +261,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
         .execSv<any>(
           'TM',
           'ERM.Business.TM',
-          'TaskBusiness',
+          this.className,
           'GetListTasksChildrenDeTailsTreeOneStepAsync',
           [parent.data.taskID]
         )

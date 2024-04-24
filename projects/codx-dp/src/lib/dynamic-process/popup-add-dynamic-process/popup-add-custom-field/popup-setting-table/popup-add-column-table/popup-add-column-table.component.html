@@ -60,6 +60,60 @@
         >
         </codx-input>
       </div>
+      <div class="d-flex align-items-center form-group">
+        <codx-label
+          class="me-3"
+          fiedName="IsApplyDependences"
+          [formModel]="form?.formModel"
+          default="Sử dụng tham chiếu dữ liệu"
+        ></codx-label>
+        <codx-input
+          type="switch"
+          [disabled]="viewOnly || action == 'edit'"
+          field="isApplyDependences"
+          [checked]="column?.isApplyDependences"
+          (valueChange)="changeDependences($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="column?.isApplyDependences">
+        <div class="w-100 border border-gray-300 rounded-2 py-3 px-4 mb-4">
+          <div class="form-group">
+            <codx-label
+              class="me-3"
+              name="fieldDependences"
+              [formModel]="form?.formModel"
+              default="Trường dữ liệu muốn tham chiếu"
+            ></codx-label>
+            <ejs-combobox
+              [dataSource]="listCbx"
+              [fields]="fieldsDependence"
+              [value]="dependence?.refID"
+              [allowFiltering]="false"
+              [placeholder]=""
+              [enabled]="!viewOnly && action != 'edit'"
+              (valueChange)="cbxChangeDependence($event)"
+            ></ejs-combobox>
+          </div>
+          <div class="form-group">
+            <codx-label
+              class="me-3"
+              name="valueDependences"
+              [formModel]="form?.formModel"
+              default="Giá trị muốn tham chiếu"
+            ></codx-label>
+            <ejs-combobox
+              #selectValueDep
+              [dataSource]="listValueField"
+              [fields]="valueDependence"
+              [allowFiltering]="false"
+              [placeholder]=""
+              [enabled]="!viewOnly && action != 'edit'"
+              (valueChange)="cbxChangeValueDependence($event)"
+            ></ejs-combobox>
+          </div>
+        </div>
+      </div>
       <div class="form-group">
         <codx-label
           fiedName="DataType"
@@ -75,7 +129,7 @@
           [refValue]="refValueDataType"
           [placeholder]="grvSetup['DataType']['headerText']"
           (valueChange)="valueChange($event)"
-          [disabled]="disable && action == 'edit'"
+          [disabled]="disable || action == 'edit' || column?.isApplyDependences"
         >
         </codx-input>
       </div>
@@ -153,6 +207,7 @@
           refValue="DP0271"
           [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
+          [disabled]="column?.isApplyDependences"
         >
         </codx-input>
         <codx-input
@@ -164,7 +219,7 @@
           refValue="DP0272"
           [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
-          [disabled]="disable && action == 'edit'"
+          [disabled]="disable || action == 'edit' || column?.isApplyDependences"
         >
         </codx-input>
         <codx-input
@@ -176,6 +231,7 @@
           refValue="DP0273"
           [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
+          [disabled]="column?.isApplyDependences"
         >
         </codx-input>
         <codx-input
@@ -187,6 +243,7 @@
           refValue="DP0274"
           [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
+          [disabled]="column?.isApplyDependences"
         >
         </codx-input>
         <codx-input
@@ -198,6 +255,7 @@
           refValue="DP0275"
           [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
+          [disabled]="column?.isApplyDependences"
         >
         </codx-input>
       </div>
@@ -239,6 +297,7 @@
                 </button>
 
                 <button
+                  [disabled]="!isLoadedVll"
                   type="button"
                   class="btn btn-icon btn-sm btn-light-primary me-2"
                   (click)="clickAddVll()"
@@ -269,7 +328,9 @@
             [crrValue]="column.refValue"
             [refValue]="'DPComboboxList'"
             (valueChange)="valueChange($event)"
-            [disabled]="disable && action == 'edit'"
+            [disabled]="
+              disable || action == 'edit' || column?.isApplyDependences
+            "
           ></codx-input>
 
           <ng-container
@@ -283,7 +344,9 @@
               [allowFiltering]="true"
               [placeholder]="grvSetup['refValue']?.description"
               (valueChange)="cbxChangeVll($event)"
-              [enabled]="!(disable && action == 'edit')"
+              [enabled]="
+                !(disable && action == 'edit' && column?.isApplyDependences)
+              "
             ></ejs-combobox
           ></ng-container>
         </div>
@@ -463,6 +526,116 @@
         >
         </codx-input>
       </div>
+      <ng-container *ngIf="!column?.isApplyDependences">
+        <div
+          class="d-flex align-items-center form-group"
+          *ngIf="column.dataType == 'N' || column.dataType == 'D'"
+        >
+          <codx-label
+            class="me-3"
+            fiedName="IsApplyConditional"
+            [formModel]="form?.formModel"
+            default="Sử dụng tham chiếu điều kiện"
+          ></codx-label>
+          <codx-input
+            type="switch"
+            field="isApplyConditional"
+            [checked]="column?.isApplyConditional"
+            (valueChange)="changeConditional($event)"
+            [disabled]="viewOnly"
+          >
+          </codx-input>
+          <button
+            type="button"
+            class="btn btn-icon btn-sm btn-light-primary me-5"
+            (click)="clickSettingConditional()"
+            [disabled]="viewOnly || !column?.isApplyConditional"
+          >
+            <i class="icon-settings icon-16"></i>
+          </button>
+        </div>
+        <div
+          *ngIf="
+            column?.isApplyConditional && column?.conditionReference?.length > 0
+          "
+        >
+          <codx-label
+            class="me-3"
+            fiedName="ConditionReference"
+            [formModel]="form?.formModel"
+            default="Các điều kiện tham chiếu với các biến "
+          ></codx-label>
+          <div
+            *ngFor="
+              let conRef of column?.conditionReference;
+              let idx;
+              as: index
+            "
+          >
+            <div
+              class="w-100 border border-gray-300 rounded-2 py-3 px-4 me-3 mb-4"
+            >
+              <div class="d-flex align-items-center">
+                <span
+                  class="me-3"
+                  [innerHTML]="
+                    conRef.refID
+                      | fieldReferenceFormat : listColumns : 'title'
+                      | async
+                  "
+                ></span>
+                <span class="me-3">
+                  <codx-vll
+                    [name]="'DP054'"
+                    [value]="conRef?.compareConditions"
+                    [showText]="true"
+                    [showBgColor]="true"
+                    class="badge badge-light badge-square badge-sm"
+                  >
+                  </codx-vll
+                ></span>
+                <span class="me-3">
+                  <codx-vll
+                    [name]="'DP055'"
+                    [value]="conRef?.messageType"
+                    [showText]="true"
+                    [showBgColor]="true"
+                    class="badge badge-light badge-square badge-sm"
+                  >
+                  </codx-vll
+                ></span>
+                <span class="me-3">
+                  <button
+                    type="button"
+                    class="btn btn-icon btn-sm btn-light-primary me-5"
+                    [ngbTooltip]="conRef?.messageText"
+                  >
+                    <i class="icon-sms_failed icon-16"></i>
+                  </button>
+                </span>
+                <span class="me-3">
+                  <div class="action-menu-column d-flex">
+                    <div class="d-flex justify-content-end align-items-center">
+                      <button
+                        class="btn btn-sm btn-icon btn-light-warning"
+                        (click)="editCondition(conRef, idx)"
+                      >
+                        <i class="icon icon-14 icon-edit"></i>
+                      </button>
+                      <button
+                        class="btn btn-sm btn-icon btn-light-danger ms-2"
+                        (click)="deleteCondition(idx)"
+                      >
+                        <i class="icon icon-14 icon-close"></i>
+                      </button>
+                    </div>
+                  </div>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
     </div>
   </ng-template>
 

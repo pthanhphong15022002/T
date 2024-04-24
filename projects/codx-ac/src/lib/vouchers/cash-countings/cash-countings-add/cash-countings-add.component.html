@@ -95,7 +95,7 @@
   </div>
   <!-- End: Tab Detail -->
   <div class="row ac-empty-record mb-5"></div>
-  <div *ngIf="dialog.formModel.funcID === 'ACT281'" class="row">
+  <div class="row">
     <div class="col-2">
       <div class="form-group">
         <codx-label style="white-space: nowrap !important" fiedName="ActualValue" [formModel]="dialog?.formModel">
@@ -441,8 +441,8 @@
         <div class="d-flex align-items-center">
           <div>
             <button style="border: 1px solid !important" tab-index="11" id="btnAddCash"
-              class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="onAddLineMember(); $event.preventDefault()"
-              (click)="onAddLineMember()">
+              class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="addLineMember(); $event.preventDefault()"
+              (click)="addLineMember()">
               <i class="icon-playlist_add icon-16"></i>
               <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
             </button>
@@ -525,8 +525,8 @@
           <div class="d-flex align-items-center">
             <div>
               <button style="border: 1px solid !important" tab-index="11" id="btnAddCash"
-                class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="onAddLine('1'); $event.preventDefault()"
-                (click)="onAddLine('1')">
+                class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="addLineCounting(); $event.preventDefault()"
+                (click)="addLineCounting()">
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label fiedName="lblSaveAndClear" default="Đề xuất kiểm kê"></codx-label>
               </button>
@@ -542,6 +542,7 @@
         [editSettings]="master.data?.isReadOnly ? editSettings : {}" [formName]="'CountingItems'" idField="recID"
         [hideMoreFunc]="true" [moreFcItems]="'SYS104;SYS102'" [moreFcModel]="dialog.formModel" (clickMF)="clickMF($event)"
         [gridViewName]="'grvCountingItems'" [entityName]="'AC_CountingItems'" predicates="TransID=@0"
+        (eventAction)="onActionGridCountingItems($event)" (actionCompleted)="onActionGridCountingItems($event)"
         [dataValues]="master?.data?.recID" service="AC" [editOnClick]="master.data?.isReadOnly ? false : true"
         rowNoField="rowNo" (cellChanged)="valueChangeLineItems($event)"></codx-gridview-v2>
       <ng-container *ngIf="!master.data?.isReadOnly">
@@ -549,16 +550,16 @@
           <div class="d-flex align-items-center">
             <div class="me-2">
               <button style="border: 1px solid !important" tab-index="11" id="btnAddCash"
-                class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="onAddLine('2'); $event.preventDefault()"
-                (click)="onAddLine('2')">
+                class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="addLineCountingItems(); $event.preventDefault()"
+                (click)="addLineCountingItems()">
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
               </button>
             </div>
             <div>
               <button style="border: 1px solid !important" tab-index="11" id="btnAddCash"
-                class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="onAddLine('4'); $event.preventDefault()"
-                (click)="onAddLine('4')">
+                class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="addLineItemsProposal(); $event.preventDefault()"
+                (click)="addLineItemsProposal()">
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label fiedName="lblSaveAndClear" default="Đề xuất kiểm kê kho"></codx-label>
               </button>
@@ -575,22 +576,23 @@
         [hideMoreFunc]="true" [moreFcItems]="'SYS104;SYS102'" [moreFcModel]="dialog.formModel" (clickMF)="clickMF($event)"
         [gridViewName]="'grvCountingAssets'" [entityName]="'AC_CountingAssets'" predicates="TransID=@0" rowHeight="35"
         [dataValues]="master?.data?.recID" service="AC" [editOnClick]="master.data?.isReadOnly ? false : true"
-        (cellChanged)="valueChangeLineAsset($event)"></codx-gridview-v2>
+        (cellChanged)="valueChangeLineAsset($event)" (eventAction)="onActionGridAsset($event)"
+        (actionCompleted)="onActionGridAsset($event)"></codx-gridview-v2>
       <ng-container *ngIf="!master.data?.isReadOnly">
         <div #btnRef class="btn-addline">
           <div class="d-flex align-items-center">
             <div class="me-2">
               <button style="border: 1px solid !important" tab-index="11" id="btnAddCash"
-                class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="onAddLine('3'); $event.preventDefault()"
-                (click)="onAddLine('3')">
+                class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="addLineCountingAssets(); $event.preventDefault()"
+                (click)="addLineCountingAssets()">
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
               </button>
             </div>
             <div>
               <button style="border: 1px solid !important" tab-index="11" id="btnAddCash"
-                class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="onAddLine('4'); $event.preventDefault()"
-                (click)="onAddLine('5')">
+                class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="addLineAssetProposal(); $event.preventDefault()"
+                (click)="addLineAssetProposal()">
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label fiedName="lblSaveAndClear" default="Đề xuất kiểm kê tài sản"></codx-label>
               </button>

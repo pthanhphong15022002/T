@@ -3,6 +3,7 @@ import { ApiHttpService, CRUDService, CacheService, CallFuncService, CodxGridvie
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupAddHistoryWaterClockComponent } from '../popup-add-history-water-clock/popup-add-history-water-clock.component';
 import moment from 'moment';
+import { CodxCmService } from '../../../codx-cm.service';
 
 @Component({
   selector: 'lib-view-water-clock-detail',
@@ -67,6 +68,7 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
   constructor(
     private detectorRef: ChangeDetectorRef,
     private shareService: CodxShareService,
+    private cmService: CodxCmService,
     private cache: CacheService,
     private api: ApiHttpService,
     private callfc: CallFuncService,
@@ -125,7 +127,7 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
           case 'SYS02':
           case 'SYS03':
           case 'SYS04':
-            x.disabled = data.lastChangedDate < this.firstDateOfMonth
+            x.disabled = moment(data.lastChangedDate).toDate() < this.firstDateOfMonth
             break;
         }
       })
@@ -134,6 +136,9 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
 
   addGridHis(data) {
     if (this.gridHistory) this.gridHistory.addRow(data, 0, true);
+  }
+  updateGridHis(data) {
+    this.gridPrice.updateRow(this.gridHistory.rowIndex, data);
   }
   addGridCost(data) {
     if (this.gridPrice) this.gridPrice.addRow(data, 0, true);
@@ -168,35 +173,38 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
 
   edit(data) {
     (this.gridHistory.dataService as CRUDService).addNew().subscribe((res) => {
-      this.cache.gridViewSetup(this.formModelHistory.formName, this.formModelHistory.gridViewName).subscribe(grv => {
-        let option = new DialogModel();
-        option.DataService = this.gridHistory.dataService;
-        option.FormModel = this.formModelHistory;
-        let obj = {
-          data: data,
-          action: 'edit',
-          headerText: '',
-          gridViewSetup: grv,
-          parent: this.itemSelected
-        };
-        let dialogHis = this.callfc.openForm(
-          PopupAddHistoryWaterClockComponent,
-          null,
-          600,
-          750,
-          '',
-          obj,
-          "",
-          option
-        );
-        dialogHis.closed.subscribe(res => {
-          if (res && res.event) {
+      this.cmService.getWaterClockLastMonth(data.parentID, data.lastChangedDate).subscribe(res2 => {
+        this.cache.gridViewSetup(this.formModelHistory.formName, this.formModelHistory.gridViewName).subscribe(grv => {
+          let option = new DialogModel();
+          option.DataService = this.gridHistory.dataService;
+          option.FormModel = this.formModelHistory;
+          let obj = {
+            data: data,
+            action: 'edit',
+            headerText: '',
+            gridViewSetup: grv,
+            parent: this.itemSelected,
+            dataLastMonth: res2
+          };
+          let dialogHis = this.callfc.openForm(
+            PopupAddHistoryWaterClockComponent,
+            null,
+            600,
+            750,
+            '',
+            obj,
+            "",
+            option
+          );
+          dialogHis.closed.subscribe(res => {
+            if (res && res.event) {
 
-            this.gridHistory.updateRow(this.gridHistory.rowIndex, res.event);
+              this.gridHistory.updateRow(this.gridHistory.rowIndex, res.event);
 
-          }
-        })
-      });
+            }
+          })
+        });
+      })
     })
   }
 
@@ -261,26 +269,29 @@ export class ViewWaterClockDetailComponent implements OnInit, AfterViewInit, OnC
 
   viewDetail(data) {
     this.cache.gridViewSetup(this.formModelHistory.formName, this.formModelHistory.gridViewName).subscribe(grv => {
-      let option = new DialogModel();
-      option.DataService = this.gridHistory.dataService;
-      option.FormModel = this.formModelHistory;
-      let obj = {
-        data: data,
-        action: 'view',
-        headerText: '',
-        gridViewSetup: grv,
-        parent: this.itemSelected
-      };
-      let dialogHis = this.callfc.openForm(
-        PopupAddHistoryWaterClockComponent,
-        null,
-        600,
-        750,
-        '',
-        obj,
-        "",
-        option
-      );
+      this.cmService.getWaterClockLastMonth(data.parentID, data.lastChangedDate).subscribe(res2 => {
+        let option = new DialogModel();
+        option.DataService = this.gridHistory.dataService;
+        option.FormModel = this.formModelHistory;
+        let obj = {
+          data: data,
+          action: 'view',
+          headerText: '',
+          gridViewSetup: grv,
+          parent: this.itemSelected,
+          dataLastMonth: res2
+        };
+        let dialogHis = this.callfc.openForm(
+          PopupAddHistoryWaterClockComponent,
+          null,
+          600,
+          750,
+          '',
+          obj,
+          "",
+          option
+        );
+      })
     })
   }
   /**

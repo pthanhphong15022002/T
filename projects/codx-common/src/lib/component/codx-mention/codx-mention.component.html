@@ -12,7 +12,7 @@
   [locale]="'vi-VN'"
   [itemTemplate]="itemTemplate"
   [displayTemplate]="tmpDisplayTemplate"
-  [noRecordsTemplate]="'Không có thấy dữ liệu'"
+  [noRecordsTemplate]="tmpNoRecord"
   (change)="change($event)">
 </ejs-mention>
 <ng-template #itemTemplate let-data>
@@ -30,4 +30,7 @@
 </ng-template>
 <ng-template #tmpDisplayTemplate let-data>
   <b>{{data?.userName}}</b>
+</ng-template>
+<ng-template #tmpNoRecord>
+  <span class="norecord">Không có dữ liệu</span>
 </ng-template>

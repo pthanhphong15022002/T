@@ -1257,20 +1257,13 @@ export class ContractsComponent extends UIComponent {
         isUseFail: false,
         isUseSuccess: false,
       };
-      let dataCM = {
-        refID: data?.refID,
-        processID: data?.processID,
-        stepID: data?.stepID,
-        nextStep: '',
-        isCallInstance: true,
-      };
       let obj = {
         formModel: this.view.formModel,
         deal: data,
         stepReason: stepReason,
         headerTitle: this.actionName,
         applyFor: '4',
-        dataCM: dataCM,
+        dataCM: data,
       };
       let dialogMoveStage = this.callfc.openForm(
         PopupMoveStageComponent,
@@ -1281,41 +1274,52 @@ export class ContractsComponent extends UIComponent {
         obj
       );
       dialogMoveStage.closed.subscribe((e) => {
-        if (e && e.event != null) {
-          let instance = e.event?.instance;
-          let listSteps = e.event?.listStep;
-          let isMoveBackStage = e.event?.isMoveBackStage;
-          let tmpInstaceDTO = e.event?.tmpInstaceDTO;
-          if (isMoveBackStage) {
-            let dataUpdate = [tmpInstaceDTO];
-            this.cmService
-              .moveStageBackContract(dataUpdate)
-              .subscribe((res) => {
-                if (res) {
-                  this.view.dataService.update(res, true).subscribe();
-                  if (this.detailViewContract) {
-                    this.detailViewContract.contract = this.dataSelected;
-                  }
-                  this.detailViewContract?.reloadListStep(listSteps);
-                  this.detectorRef.detectChanges();
-                }
-              });
-          } else {
-            let dataUpdate = [data.recID, instance.stepID];
-            this.cmService.moveStageContract(dataUpdate).subscribe((res) => {
-              if (res) {
-                this.view.dataService.update(res, true).subscribe();
-                if (this.detailViewContract)
-                  this.detailViewContract.contract = res;
-                if (e.event.isReason != null) {
-                  this.moveReason(res, e.event.isReason);
-                }
-                this.detailViewContract?.reloadListStep(listSteps);
-                this.detectorRef.detectChanges();
-              }
-            });
+        if(e && e.event != null){
+          data.status = e.event?.status;
+          data.stepID = e.event?.stepID;
+
+          this.view.dataService.update(data, true).subscribe();
+          if (this.detailViewContract) {
+            this.detailViewContract.contract = this.dataSelected;
           }
+          this.detailViewContract?.reloadListStep(e.listStep);
+          this.detectorRef.detectChanges();
         }
+        // if (e && e.event != null) {
+        //   let instance = e.event?.instance;
+        //   let listSteps = e.event?.listStep;
+        //   let isMoveBackStage = e.event?.isMoveBackStage;
+        //   let tmpInstaceDTO = e.event?.tmpInstaceDTO;
+        //   if (isMoveBackStage) {
+        //     let dataUpdate = [tmpInstaceDTO];
+        //     this.cmService
+        //       .moveStageBackContract(dataUpdate)
+        //       .subscribe((res) => {
+        //         if (res) {
+        //           this.view.dataService.update(res, true).subscribe();
+        //           if (this.detailViewContract) {
+        //             this.detailViewContract.contract = this.dataSelected;
+        //           }
+        //           this.detailViewContract?.reloadListStep(listSteps);
+        //           this.detectorRef.detectChanges();
+        //         }
+        //       });
+        //   } else {
+        //     let dataUpdate = [data.recID, instance.stepID];
+        //     this.cmService.moveStageContract(dataUpdate).subscribe((res) => {
+        //       if (res) {
+        //         this.view.dataService.update(res, true).subscribe();
+        //         if (this.detailViewContract)
+        //           this.detailViewContract.contract = res;
+        //         if (e.event.isReason != null) {
+        //           this.moveReason(res, e.event.isReason);
+        //         }
+        //         this.detailViewContract?.reloadListStep(listSteps);
+        //         this.detectorRef.detectChanges();
+        //       }
+        //     });
+        //   }
+        // }
       });
     });
   }
@@ -1451,11 +1455,7 @@ export class ContractsComponent extends UIComponent {
     formMD.entityName = fun.entityName;
     formMD.formName = fun.formName;
     formMD.gridViewName = fun.gridViewName;
-    let dataCM = {
-      refID: data?.refID,
-      stepID: data?.stepID,
-      nextStep: data?.nextStep,
-    };
+    let dataCM = data;
     let obj = {
       headerTitle: fun.defaultName,
       formModel: formMD,

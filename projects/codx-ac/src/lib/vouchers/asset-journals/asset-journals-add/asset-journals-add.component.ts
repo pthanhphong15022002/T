@@ -92,6 +92,8 @@ export class AssetJournalsAddComponent extends UIComponent {
   assetSV: CRUDService;
   fmAsset = fmAsset;
   isPreventChange:any = false;
+  isPopup:any = false;
+  arrAsset:any;
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -513,6 +515,9 @@ export class AssetJournalsAddComponent extends UIComponent {
       case '3':
         this.addFixAsset();
         break;
+      case '4':
+        this.openListAsset();
+        break;
     }
   }
 
@@ -591,6 +596,31 @@ export class AssetJournalsAddComponent extends UIComponent {
           });
       }
     })
+  }
+
+  openListAsset(){
+    this.isPopup = true;
+    this.detectorRef.detectChanges();
+  }
+
+  onSelectedCombobox(event:any){
+    if (event) {
+      this.arrAsset = event.text.split(';');
+      this.api.exec('AM','AssetJournalsLinesBusiness','AddListAsync',[
+        this.master.data,
+        this.arrAsset,
+      ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+        if (res) {
+          setTimeout(() => {
+            this.eleGridAsset.refresh();
+          }, 100);
+        }
+        this.onDestroy();
+      })
+    }
+    this.arrAsset = null;
+    this.isPopup = false;
+    this.detectorRef.detectChanges();
   }
 
   setFormModel(){

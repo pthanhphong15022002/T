@@ -43,6 +43,20 @@ export const fmCashPaymentsLinesOneAccount: FormModel = {
   entityPer: 'AC_CashPaymentsLines',
 };
 
+export const fmCashReceiptsLines: FormModel = {
+  formName: 'CashReceiptsLines',
+  gridViewName: 'grvCashReceiptsLines',
+  entityName: 'AC_CashReceiptsLines',
+  entityPer: 'AC_CashReceiptsLines',
+};
+
+export const fmCashReceiptsOneAccount: FormModel = {
+  formName: 'CashReceiptsLinesOneAccount',
+  gridViewName: 'grvCashReceiptsLinesOneAccount',
+  entityName: 'AC_CashReceiptsLines',
+  entityPer: 'AC_CashReceiptsLines',
+};
+
 export const fmAdvancePayment: FormModel = {
   formName: 'AdvancedPaymentLines',
   gridViewName: 'grvAdvancedPaymentLines',

@@ -124,7 +124,7 @@
                                         [disabled]="child?.autoNumber?.autoNumberControl || child.refField || child.fieldType == 'Expression'"
                                         [gridViewSetup]="gridViewSetup"
                                         (valueChange)="valueChangeInput($event)"
-                                        (beforeOpen)="afterRender($event, input, child?.validateControl?.refersouce)"
+                                        (beforeOpen)="afterRender($event, input, child?.validateControl?.refersouce , child?.validateControl?.predicate)"
                                         >
                                     </codx-input>
                                 </ng-container>

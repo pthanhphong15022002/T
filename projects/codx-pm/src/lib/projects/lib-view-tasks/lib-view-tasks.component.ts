@@ -29,6 +29,7 @@ export class ProjectTasksViewComponent
   service:string='TM';
   assemblyName:string='ERM.Business.TM';
   className:string="TaskBusiness";
+  classTreeName:string="TasksBusiness";
   method:string="GetTasksAsync";
   predicate:string = 'ProjectID=@0&&Category=@1'
   datavalue:string=''
@@ -65,28 +66,30 @@ export class ProjectTasksViewComponent
     super(injector);
     this.funcID = 'PMT0101';
     this.button = [{ id: 'btnAdd' }];
-    this.cache.functionList(this.funcID).subscribe((res: any) => {
-      this.formModel = res;
-      if(this.formModel){
-        this.datavalue = this.formModel.dataValue;
-        this.predicate = this.formModel.predicate;
-        this.predicate = '('+this.predicate+')&&ProjectID=@2'
+    this.router.params.subscribe((res: any) => {
+
+
+      if(res['funcID']){
+        this.funcID = res['funcID'];
       }
-      this.router.params.subscribe((res: any) => {
+      if(res['projectID']) this.funcID = 'PMT0101'
+      this.cache.functionList(this.funcID).subscribe((res2: any) => {
+        this.formModel = res2;
+        if(this.formModel){
+          this.datavalue = this.formModel.dataValue;
+          this.predicate = this.formModel.predicate;
+
+        }
         if (res['projectID']) {
           this.projectID = res['projectID'];
+          this.predicate = '('+this.predicate+')&&ProjectID=@2'
           this.datavalue = this.datavalue+';'+this.projectID ;
           this.getProject(this.projectID);
         }
-      });
-      this.router.queryParams.subscribe((res: any) => {
-        if (res['ProjectID']) {
-          this.projectID = res['ProjectID'];
-          this.datavalue = this.datavalue+';'+this.projectID ;;
-          this.getProject(this.projectID);
-        }
+
       });
     });
+
 
     this.cache.valueList('PM013').subscribe((res) => {
       if (res && res?.datas.length > 0) {
@@ -114,8 +117,8 @@ export class ProjectTasksViewComponent
         .subscribe((res: any) => {
           if (!this.projectData) this.projectData = res;
           setTimeout(() => {
-            this.pageTitle.setSubTitle(this.projectData.projectName);
-          }, 1000);
+            this.projectID && this.pageTitle.setSubTitle(res.projectName);
+          }, 2000);
         });
     }
   }
@@ -186,7 +189,7 @@ export class ProjectTasksViewComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      res.projectID = this.projectData.projectID;
+      if(this.projectData) res.projectID = this.projectData.projectID;
       if (parentID) res.parentID = parentID;
       let dialogAdd = this.callfc.openSide(
         PopupAddTaskComponent,
@@ -231,7 +234,11 @@ export class ProjectTasksViewComponent
                 this.addTask(this.view.dataService.dataSelected?.recID);
               }, 100);
             }
+            if(this.viewTree && this.viewTree.dataTree){
             this.viewTree.treeView.setNodeTree(returnData?.event);
+            //this.viewTree.dataTree = this.viewTree.dataTree;
+            this.detectorRef.detectChanges();
+          }
             //this.view?.dataService?.update(returnData?.event);
           } else {
             this.view.dataService.clear();
@@ -373,7 +380,11 @@ export class ProjectTasksViewComponent
       dialogAdd.closed.subscribe((returnData) => {
         if (returnData?.event) {
 
-          //this.view?.dataService?.update(returnData?.event);
+          if(this.viewTree && this.viewTree.dataTree){
+            this.viewTree.treeView.setNodeTree(returnData?.event);
+            //this.viewTree.dataTree = this.viewTree.dataTree;
+            this.detectorRef.detectChanges();
+          }
         } else {
           this.view.dataService.clear();
         }
@@ -447,6 +458,9 @@ export class ProjectTasksViewComponent
   }
 
   treeSelect(e:any){
+    if(e.projectID && !this.projectID){
+      this.getProject(e.projectID)
+    }
     this.view.dataService.dataSelected = e;
   }
 }

@@ -5,7 +5,8 @@ import { PopupAnnualLeaveMonthComponent } from '../popup-annual-leave-month/popu
 
 @Component({
   selector: 'lib-employee-annual-leave-by-org',
-  templateUrl: './employee-annual-leave-by-org.component.html',
+  template:'',
+  //templateUrl: './employee-annual-leave-by-org.component.html',
   styleUrls: ['./employee-annual-leave-by-org.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
@@ -87,7 +88,7 @@ export class EmployeeAnnualLeaveByOrgComponent {
         clearInterval(ins);
         this.grid.refresh();
       }
-    }, 500);    
+    }, 500);
     this.detectorRef.detectChanges();
     if (this.inputTimes < 2) this.inputTimes++;
   }

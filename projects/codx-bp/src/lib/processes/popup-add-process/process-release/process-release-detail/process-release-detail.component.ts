@@ -708,6 +708,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       this.circular1.refresh();
     }
   }
+  
   addNewTask(oldTask) {
     let lstParent = JSON.parse(JSON.stringify(this.listStage));
     lstParent.forEach((elm) => {
@@ -733,6 +734,7 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       }
     });
   }
+
   changePer(data) {
     var option = new SidebarModel();
     let dialogAP = this.callFc.openForm(
@@ -896,5 +898,41 @@ export class ProcessReleaseDetailComponent implements OnInit, OnChanges {
       }
       this.dtc.detectChanges();
     }
+  }
+
+  addStep(stage:any)
+  {
+    let lstParent = JSON.parse(JSON.stringify(this.listStage));
+    lstParent.forEach((elm) => {
+      delete elm.child;
+    });
+    var obj = {
+      type: 'add',
+      activityType: 'Task',
+      process: this.process,
+      data: null,
+      parent: stage,
+      stage: stage,
+      listStage: lstParent,
+      hideDelete: true,
+    };
+    let option = new SidebarModel();
+    option.Width = 'Auto';
+    option.FormModel = this.formModel;
+    let popup = this.callFc.openSide(AddDefaultComponent, obj, option);
+    popup.closed.subscribe((res) => {
+      debugger
+      if (res && res?.event) {
+        if(res?.event?.data)
+        {
+          let stageIndex = this.listStage.findIndex(x=>x.recID == res?.event?.data.stageID)
+          if(stageIndex >= 0)
+          {
+            this.listStage[stageIndex].child.push(res?.event?.data);
+          }
+        }
+        //this.data = res?.event;
+      }
+    });
   }
 }

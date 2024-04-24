@@ -161,210 +161,62 @@ import { CodxHRCommonModule } from './codx-hr-common/codx-hr-common.module';
 import { SelectScrollBarComponent } from './codx-hr-common/components/select-scroll-bar/select-scroll-bar.component';
 import { EmployeeListModule } from './employee-list/employee-list.module';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
+import { CodxCommonModule } from 'projects/codx-common/src/public-api';
+import { EmployeesModule } from './employees/employees.module';
 export const routes: Routes = [
-  // {
-  //   path: '',
-  //   component: LayoutNoAsideComponent,
-  //   children: [
-  //     // {
-  //     //   path: 'contactbook/:funcID',
-  //     //   component: EmpContactsComponent,
-  //     // },
-  //   ],
-  // },
-  // {
-  //   path: '',
-  //   component: LayoutOnlyHeaderComponent,
-  //   children: [
-  //      {
-  //       path: 'employeeprofile/:funcID',
-  //       component: EmployeeInfoProfileComponent
-  //      }
-  //   ]
-  // },
   {
     path: '',
+    component: LayoutNoAsideComponent,
+  },
+  {
+    path: '',
+    component: HRLayoutOnlyHeaderComponent,
     children: [
       {
-        path: 'employeelist',
-        component: HRLayoutOnlyHeaderComponent,
+        path: '',
         loadChildren: () => import('./employee-list/employee-list.module').then(m => m.EmployeeListModule)
-
       },
-      // {
-      //   path: 'empinfosub/:funcID',
-      //   component: EmployeeInfoDetailComponent,
-      // },
-      // {
-      //   path: 'employeedetail/:funcID',
-      //   component: EmployeeInfoDetailComponent,
-      // },
-        // {
-        //   path: 'employeeprofile/:funcID',
-        //   component: EmployeeInfoProfileComponent,
-        //   loadChildren: () => import('./employee-list/employee-list.module').then(m => m.EmployeeListModule)
-
-        // },
-      // {
-      //   path: '',
-      //   component: HRLayoutOnlyHeaderComponent,
-      //   loadChildren: () => import('./employee-list/employee-list.module').then(m => m.EmployeeListModule)
-
-      // },
-      // {
-      //   path: 'test/:funcID',
-      //   component: DialogWaitingLeavingApproveComponent
-      // }
+      {
+        path: '**',
+        redirectTo: 'error/404',
+      },
     ],
   },
   {
     path: '',
-    component: LayoutComponent,
+    component:LayoutComponent,
     children: [
       {
         path: '',
         loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
-      //   component: DashboardComponent
       },
-      // {
-      //   path: 'report/:funcID',
-      //   component: CodxReportViewsComponent,
-      // },
-      // {
-      //   path: 'report/detail/:funcID',
-      //   component: CodxReportViewDetailComponent,
-      // },
-      // {
-      //   path: 'orgchart/:funcID',
-      //   data: { noReuse: true },
-      //   component: OrgorganizationComponent,
-      // },
       {
-        path: 'employee/:funcID',
-        data: { noReuse: true },
-        component: EmployeesComponent,
+        path: '',
+        loadChildren: () => import('./employees/employees.module').then(m => m.EmployeesModule)
       },
-      // {
-      //   path: '',
-      //   data: { noReuse: true },
-      //   loadChildren: () => import('./employee-list/employee-list.module').then(m => m.EmployeeListModule)
-      // },
-      // {
-      //   path: 'reportingline/:funcID',
-      //   data: { noReuse: true },
-      //   component: ReportinglineComponent,
-      // },
-      // {
-      //   path: 'econtracts/:funcID',
-      //   component: EmployeeContractComponent,
-      // },
-      // {
-      //   path: 'ebasicsalaries/:funcID',
-      //   component: EmployeeBasicSalaryComponent,
-      // },
-      // {
-      //   path: 'ejobsalaries/:funcID',
-      //   component: EmployeeJobSalaryComponent,
-      // },
-      // {
-      //   path: 'eawards/:funcID',
-      //   component: EmployeeAwardsComponent,
-      // },
-      // {
-      //   path: 'edisciplines/:funcID',
-      //   component: EmployeeDisciplineComponent,
-      // },
-      // {
-      //   path: 'ebenefits/:funcID',
-      //   component: EmployeeBenefitComponent,
-      // },
-      // {
-      //   path: 'ebusinesstravels/:funcID',
-      //   component: EmployeeBusinessTravelComponent,
-      // },
-      // {
-      //   path: 'edayoffs/:funcID',
-      //   component: EmployeeDayOffComponent,
-      // },
-      // {
-      //   path: 'eappointions/:funcID',
-      //   component: EmployeeAppointionsComponent,
-      // },
-      // {
-      //   path: 'policygeneral/:funcID',
-      //   component: EmployeePolicygenernalComponent,
-      // },
-      // {
-      //   path: 'policyal/:funcID',
-      //   component: EmployeePolicyalComponent,
-      // },
-      // {
-      //   path: 'policybenefits/:funcID',
-      //   component: EmployeePolicybenefitsComponent,
-      // },
-      // {
-      //   path: 'eannualleave/:funcID',
-      //   component: EmployeeAnnualLeaveComponent,
-      // },
-      // {
-      //   path: 'equit/:funcID',
-      //   component: EmployeeQuitComponent,
-      // },
-      // {
-      //   path: 'sysholidaytype/:funcID',
-      //   component: HolidayComponent,
-      // },
       {
         path: 'setting',
         loadChildren: () => import('./hrparameters/hrparameters.module').then(m => m.HrParametersModule)
       },
-      //----phát hành quy trình DP-CRM----//
-      // {
-      //   path: 'deals/:funcID',
-      //   component: DealsComponent,
-      //   data: { noReuse: true },
-      // },
-      // {
-      //   path: 'cases/:funcID',
-      //   component: CasesComponent,
-      //   data: { noReuse: true },
-      // },
-      // {
-      //   path: 'leads/:funcID',
-      //   component: LeadsComponent,
-      //   data: { noReuse: true },
-      // },
-      // {
-      //   path: 'contracts/:funcID',
-      //   component: ContractsComponent,
-      //   data: { noReuse: true },
-      // },
-      // {
-      //   path: 'instances/:funcID/:processID',
-      //   component: ViewInstancesComponent,
-      //   data: { noReuse: true },
-      // },
-      //-----------end--------------//
     ],
   },
+  {
+    path: '**',
+    redirectTo: 'error/404',
+  },
+
 ];
-const T_Pipe = [
-  DatePipe,
-  // GetHeaderTextPipe,
-  FilterPipe,
-  TimeAgoPipe
-]
+
 const T_Component = [
   LayoutComponent,
   HRLayoutOnlyHeaderComponent,
   //EmpContactsComponent,
-  EmployeesComponent,
-  PopupAddEmployeesComponent,
-  ReportinglineComponent,
-  PopupAddPositionsComponent,
-  EmployeesLeaveComponent,
 
-  UpdateStatusComponent,
+
+
+
+  ReportinglineComponent,
+  EmployeesLeaveComponent,
   NoSubAsideComponent,
   OrgorganizationComponent,
   OrganizeDetailComponent,
@@ -447,8 +299,8 @@ const T_Component = [
   EmployeeListByOrgComponent,
   PopupUpdateStatusComponent,
   PopupMultiselectvllComponent,
-  EmployeeAnnualLeaveComponent,
-  EmployeeAnnualLeaveByOrgComponent,
+  //EmployeeAnnualLeaveComponent,
+  //EmployeeAnnualLeaveByOrgComponent,
   PopupCalculateAnnualLeaveComponent,
   PopupAnnualLeaveMonthComponent,
   PopupIncludeExcludeObjComponent,
@@ -462,33 +314,32 @@ const T_Component = [
   ForeignWorkersComponent,
   PreviousExperienceComponent,
   TableGripComponent,
-  
+
   DialogRegisterApproveComponent,
   HrTableNewemployeeComponent,
 
 ];
-
 const T_Module = [
   CommonModule,
   FormsModule,
   OverlayModule,
   HttpClientModule,
-  CodxCoreModule,
   CoreModule,
   SliderModule,
-  CodxShareModule,
+ // CodxShareModule,
   ChartAllModule,
   DiagramAllModule,
   NgbModule,
   BasicPrimitivesModule,
   SpeedDialModule,
   DirectivesModule,
-  DashboardModule,
-  DialogDetailRegisterApproveComponent,
-  HistoryLevelComponent,
-  HrParametersModule,
   CodxHRCommonModule,
-  EmployeeListModule
+  //module lazyLoading
+  HrParametersModule,
+  EmployeeListModule,
+  DashboardModule,
+  EmployeesModule
+
 ]
 
 @NgModule({
@@ -497,7 +348,7 @@ const T_Module = [
     RouterModule.forChild(routes),
   ],
   exports: [T_Component],
-  declarations: [T_Component,T_Pipe],
+  declarations: [T_Component],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxHRModule {
