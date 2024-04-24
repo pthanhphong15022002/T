@@ -18,15 +18,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PopupMyteamReponsiveComponent } from './employee-info-profile/components/pop-up/popup-myteam-reponsive/popup-myteam-reponsive.component';
 import { MyTemComponent } from '../dashboard/widgets/my-tem/my-tem.component';
 import { EmployeeInfoDetailComponent } from './employee-info-detail/employee-info-detail.component';
-import { SelectScrollBarComponent } from '../codx-hr-common/components/select-scroll-bar/select-scroll-bar.component';
 import { DashboardRegisterAprroveComponent } from '../dashboard/components/dashboard-register-aprrove/dashboard-register-aprrove.component';
 import { DirectivesModule } from '../codx-hr-common/directives/directives.module';
 import { CodxHRCommonModule } from '../codx-hr-common/codx-hr-common.module';
 import { SidebarTreeviewComponent } from './employee-info-detail/component/sidebar-treeview/sidebar-treeview.component';
 import { PersonalInfoComponent } from './employee-info-detail/component/personal-info/personal-info.component';
-import { GetHeaderTextPipe } from '../codx-hr-common/pipes/get-header-text.pipe';
 import { CodxCommonModule } from 'projects/codx-common/src/public-api';
-import { ShareCrmModule } from 'projects/codx-dp/src/lib/share-crm/share-crm.module';
 import { SharedModule } from '@shared/shared.module';
 import { ProfileLast7dayComponent } from '../dashboard/components/profile-last7day/profile-last7day.component';
 import { ProfileDashboardLeaveComponent } from '../dashboard/components/profile-dashboard-leave/profile-dashboard-leave.component';
@@ -34,23 +31,26 @@ import { AgeStatisticComponent } from '../dashboard/widgets/age-statistic/age-st
 import { PopupMenusidebarReponsiveComponent } from './employee-info-profile/components/pop-up/popup-menusidebar-reponsive/popup-menusidebar-reponsive.component';
 import { PopupReviewRegisterApproveComponent } from './employee-info-profile/components/pop-up/popup-review-register-approve/popup-review-register-approve.component';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { PopupViewAllComponent } from './employee-info-detail/pop-up/popup-view-all/popup-view-all.component';
 
 export const routes: Routes = [
   {
-    path: 'employeeprofile/:funcID',
-    component: EmployeeInfoProfileComponent
-  },
-  {
-    path: 'employeedetail/:funcID',
-    component: EmployeeInfoDetailComponent,
+    path:'',
+    component: HRLayoutOnlyHeaderComponent,
+    children:[
+      {
+        path: 'employeeprofile/:funcID',
+        component: EmployeeInfoProfileComponent
+      },
+      {
+        path: 'employeedetail/:funcID',
+        component: EmployeeInfoDetailComponent,
+      },
+    ]
   }
+
 ];
-const T_Pipe = [
-  // DatePipe,
-  GetHeaderTextPipe,
-  // FilterPipe,
-  // TimeAgoPipe
-]
+
 const T_Component = [
   DialogReviewLeaveApproveComponent,
   DialogWaitingLeavingApproveComponent,
@@ -68,32 +68,26 @@ const T_Component = [
   ProfileDashboardLeaveComponent,
   MyTemComponent,
   AgeStatisticComponent,
-  PopupReviewRegisterApproveComponent
-
-  
-  // DialogRegisterApproveComponent
+  PopupReviewRegisterApproveComponent,
 ]
 
+
 @NgModule({
-  declarations: [T_Component, T_Pipe],
+  declarations: [T_Component],
   imports: [
     RouterModule.forChild(routes),
-    CommonModule, 
+    CommonModule,
     CoreModule,
-    CodxCoreModule,
-    CodxShareModule,
-    CodxCommonModule,
+
     NgbModule,
     FormsModule,
+    SharedModule,
     OverlayModule,
     HttpClientModule,
     DirectivesModule,
     DialogDetailRegisterApproveComponent,
     CodxHRCommonModule,
-    SharedModule,
-    TabModule,  
-    
-
+    TabModule,
   ]
 })
 export class EmployeeListModule { }

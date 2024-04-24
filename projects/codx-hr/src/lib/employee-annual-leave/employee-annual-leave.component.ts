@@ -11,7 +11,8 @@ import { CodxHrService } from 'projects/codx-hr/src/public-api';
 
 @Component({
   selector: 'lib-employee-annual-leave',
-  templateUrl: './employee-annual-leave.component.html',
+  template:'',
+  //templateUrl: './employee-annual-leave.component.html',
   styleUrls: ['./employee-annual-leave.component.scss'],
 })
 export class EmployeeAnnualLeaveComponent extends UIComponent {
@@ -277,7 +278,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     //     }
     //     this.openAnnualLeaveMonthPopup(res);
     //   })
-    // } 
+    // }
   }
   openAnnualLeaveMonthPopup(data: any) {
     let popupData = {

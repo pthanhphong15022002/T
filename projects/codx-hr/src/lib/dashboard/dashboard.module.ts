@@ -15,15 +15,19 @@ import { LayoutComponent } from '../_layout/layout.component';
 
 export const routes: Routes = [
   {
-    path: 'dashboard',
+    path:'dashboard/:funcID',
     component: LayoutComponent,
-    children: [
+    children:[
       {
-        path: '',
+        path:'',
         component: DashboardComponent,
       },
-    ],
-  },
+      {
+        path: '**',
+        redirectTo: 'error/404',
+      },
+    ]
+  }
 ];
 const T_Component = [
   DashboardAgeChartComponent,
