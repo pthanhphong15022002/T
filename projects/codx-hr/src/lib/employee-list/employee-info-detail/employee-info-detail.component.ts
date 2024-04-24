@@ -73,61 +73,93 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   isClick: boolean = false;
   dataService: DataService = null;
 
+  // click nút Mở rộng
+  expanded: boolean = false;
+  buttonText: string = "Mở rộng";
+  iconName: string = "icon-i-chevron-double-down";
+
+  toggleExpand() {
+    this.expanded = !this.expanded;
+    this.buttonText = this.expanded ? "Thu gọn" : "Mở rộng";
+    this.iconName = this.expanded ? "icon-i-chevron-double-up" : "icon-i-chevron-double-down";
+  }
+
+  // Show tab
+  showMenu: boolean = false;
+
+  toggleMenu() {
+    this.showMenu = !this.showMenu;
+  }
+
+  // Tab
+  activeTab: string;
+  onTabClick(functionID: string) {
+    this.activeTab = functionID; // Cập nhật tab được chọn
+  }
+
   // Fake data
   @Input() dataMyTeam = [
     {
-      id: '1',
+      id: 'ELV2308070001',
       name: 'Huỳnh Phước Hòa',
       job: 'Phát triển phần mềm',
+      room: 'Phòng triển khai chuyển đổi số',
       YOW: '15 năm 9 tháng 0 ngày',
       status: '1',
     },
     {
-      id: '1',
+      id: 'ELV2308070001',
       name: 'Huỳnh Phước Hòa',
       job: 'Phát triển phần mềm',
+      room: 'Phòng triển khai chuyển đổi số',
       YOW: '15 năm 9 tháng 0 ngày',
       status: '1',
     },
     {
-      id: '1',
+      id: 'ELV2308070001',
       name: 'Huỳnh Phước Hòa',
       job: 'Phát triển phần mềm',
+      room: 'Phòng triển khai chuyển đổi số',
       YOW: '15 năm 9 tháng 0 ngày',
       status: '1',
     },
     {
-      id: '1',
+      id: 'ELV2308070001',
       name: 'Huỳnh Phước Hòa',
       job: 'Phát triển phần mềm',
+      room: 'Phòng triển khai chuyển đổi số',
       YOW: '15 năm 9 tháng 0 ngày',
       status: '1',
     },
     {
-      id: '1',
+      id: 'ELV2308070001',
       name: 'Huỳnh Phước Hòa',
       job: 'Phát triển phần mềm',
+      room: 'Phòng triển khai chuyển đổi số',
       YOW: '15 năm 9 tháng 0 ngày',
       status: '1',
     },
     {
-      id: '1',
+      id: 'ELV2308070001',
       name: 'Huỳnh Phước Hòa',
       job: 'Phát triển phần mềm',
+      room: 'Phòng triển khai chuyển đổi số',
       YOW: '15 năm 9 tháng 0 ngày',
       status: '1',
     },
     {
-      id: '1',
+      id: 'ELV2308070001',
       name: 'Huỳnh Phước Hòa',
       job: 'Phát triển phần mềm',
+      room: 'Phòng triển khai chuyển đổi số',
       YOW: '15 năm 9 tháng 0 ngày',
       status: '1',
     },
     {
-      id: '1',
+      id: 'ELV2308070001',
       name: 'Huỳnh Phước Hòa',
       job: 'Phát triển phần mềm',
+      room: 'Phòng triển khai chuyển đổi số',
       YOW: '15 năm 9 tháng 0 ngày',
       status: '1',
     },

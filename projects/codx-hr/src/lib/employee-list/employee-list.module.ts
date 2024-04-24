@@ -33,6 +33,7 @@ import { ProfileDashboardLeaveComponent } from '../dashboard/components/profile-
 import { AgeStatisticComponent } from '../dashboard/widgets/age-statistic/age-statistic.component';
 import { PopupMenusidebarReponsiveComponent } from './employee-info-profile/components/pop-up/popup-menusidebar-reponsive/popup-menusidebar-reponsive.component';
 import { PopupReviewRegisterApproveComponent } from './employee-info-profile/components/pop-up/popup-review-register-approve/popup-review-register-approve.component';
+import { TabModule } from '@syncfusion/ej2-angular-navigations';
 
 export const routes: Routes = [
   {
@@ -76,6 +77,7 @@ const T_Component = [
 @NgModule({
   declarations: [T_Component, T_Pipe],
   imports: [
+    RouterModule.forChild(routes),
     CommonModule, 
     CoreModule,
     CodxCoreModule,
@@ -89,7 +91,8 @@ const T_Component = [
     DialogDetailRegisterApproveComponent,
     CodxHRCommonModule,
     SharedModule,
-    RouterModule.forChild(routes)
+    TabModule,  
+    
 
   ]
 })

@@ -78,17 +78,20 @@
       margin-right: 10px;
       display: inline-block;
       border: 0;
-      border-bottom: 2px transparent solid;
+      // border-bottom: 2px transparent solid;
 
       &.active {
-        border-color: var(--primary-dark);
-        color: var(--primary-dark);
+        // border-color: var(--primary-dark);
+        background-color: #0078FF;
+        // color: var(--primary-dark);
+        color: #FFFFFF !important;
       }
     }
 
     .nav-link:hover {
       border-color: var(--primary) !important;
-
+      background-color: #0078FF !important;
+      color: #FFFFFF !important;
     }
   }
   
@@ -132,7 +135,7 @@
   }
 }
 
-.icon-qr_code_scanner {
+.icon-qr_code_scanner, .personid{
   color: #FF001B;
 }
 
@@ -143,4 +146,56 @@
 
 .tab-height {
   height: 77px;
+}
+
+.date {
+  color: #3A9679;
+  background-color: #DEFFFE;
+  border-radius: 20px;
+  padding: 5px;
+}
+
+.btn-add, .btn-more {
+  border: none;
+  font-weight: 400;
+  border-radius: 5px;
+  font-size: 14px;
+  text-align: center;
+  padding: 5px;
+}
+
+.btn-add {
+  background-color: #056DFA;
+}
+
+.icon-add-css, .btn-add {
+  color: white;
+}
+
+.btn-more {
+  background-color: #F8F8F9;
+}
+
+.icon-css {
+  color: #91919F;
+}
+
+.tree-bar .scroll-y {
+  transition: height 0.5s ease;
+}
+
+.user-right .e-tab-header {
+  margin-bottom: 1.25rem !important; /* Khoảng cách giữa phần header và nội dung */
+}
+
+.icon-tab-parent {
+  color: #0078FF;
+}
+
+.icon-tab-parent:hover {
+  color: white !important;
+}
+
+.icon-tab-parent:active {
+  color: white !important;
 }
