@@ -23,7 +23,7 @@ import {
   NotificationsService,
   Util,
 } from 'codx-core';
-import { ColumnTable, tempVllDP } from 'projects/codx-dp/src/lib/models/models';
+import { ColumnTable, DP_Condition_Reference_Fields, tempVllDP } from 'projects/codx-dp/src/lib/models/models';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 
 import { PopupAddVllCustomComponent } from '../../popup-add-vll-custom/popup-add-vll-custom.component';
@@ -32,6 +32,7 @@ import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/ca
 import { PopupSettingReferenceComponent } from '../../popup-setting-reference/popup-setting-reference.component';
 import { CodxInputCustomFieldComponent } from 'projects/codx-dp/src/lib/share-crm/codx-input-custom-field/codx-input-custom-field.component';
 import { CodxFieldsFormatValueComponent } from 'projects/codx-dp/src/lib/share-crm/codx-input-custom-field/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
+import { PopupSettingConditionalComponent } from '../../popup-setting-conditional/popup-setting-conditional.component';
 
 @Component({
   selector: 'lib-popup-add-column-table',
@@ -46,6 +47,8 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('tempInput') tempInput: CodxInputCustomFieldComponent;
   @ViewChild('tempView') tempView: CodxFieldsFormatValueComponent;
+  @ViewChild('selectValueDep') selectValueDep: ComboBoxComponent;
+
 
   column: ColumnTable;
   dialog: DialogRef;
@@ -133,6 +136,18 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   titleField: any;
   fieldCus: any;
   servicePA: any;
+  //Conditional
+  listCbx = [];
+  fieldsDependence = { text: 'title', value: 'recID' };
+  listValueField = [];
+  valueDependence = { text: 'text', value: 'value' };
+
+  dependence = {
+    refID: '',
+    strDependence: ''
+  }
+  valueRef: any;
+  isLoadedVll = false;
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -157,9 +172,11 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     this.processNo = dt?.data?.processNo; //de sinh vll
     this.listColumns = dt?.data?.listColumns;
     this.showCaculate = this.action != 'edit';
+    this.listCbx = this.listColumns.filter(x => x.refType == "3");
   }
 
   ngOnInit(): void {
+
     if (this.column?.dataType == 'L' && this.column?.dataFormat == 'V')
       this.loadDataVll();
 
@@ -168,7 +185,38 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       this.caculateField = this.column?.dataFormat ?? '';
     }
   }
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    if (this.column?.isApplyDependences && this.listCbx?.length > 0) {
+      let crrCbx = this.listCbx.find(x => x.dependences.includes(this.column.fieldName));
+      if (crrCbx) {
+        this.dependence.refID = crrCbx.recID;
+        let arrField = crrCbx?.dependences?.split(",");
+        let index = arrField.find(x => x.includes(this.column.fieldName));
+        if (index) {
+          // this.valueRef = index.split("=")[0]
+          let valueRef = index.split("=")[1].slice(0, -1);
+          this.valueRef = valueRef.slice(1)
+          this.cache.combobox(crrCbx.refValue).subscribe(res => {
+            if (res) {
+              this.entityNamePA = res.tableName;
+              this.listValueField = res.tableFields?.split(";").map((x, idx) => {
+                let obj = {
+                  text: x,
+                  value: idx
+                }
+                return obj;
+              })
+              if (this.selectValueDep) {
+                this.selectValueDep.dataSource = this.listValueField
+                this.selectValueDep.value = Number.parseInt(this.valueRef)
+                this.selectValueDep.refresh();
+              }
+            }
+          })
+        }
+      }
+    }
+  }
 
   async valueChange(e) {
     if (e.field == 'multiselect' || e.field == 'columnWidth') {
@@ -193,6 +241,10 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     }
     if (e.field == 'title' || e.field == 'fieldName') {
       this.removeAccents(e.data);
+      if (this.dependence.strDependence && this.column.fieldName) {
+        let splitStr = this.dependence.strDependence.split("=");
+        this.dependence.strDependence = this.column.fieldName + "=" + splitStr[1]
+      }
       this.changdef.detectChanges();
       return;
     }
@@ -348,7 +400,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  closeDialog() {}
+  closeDialog() { }
 
   getNameForm() {
     //tisnh sau
@@ -513,7 +565,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
           this.element.selectData =
           this.element.sortedData =
           this.element.actionData.list =
-            this.listVll;
+          this.listVll;
       }
     }
     if (this.datasVllCbx) this.datasVllCbx.refresh();
@@ -598,9 +650,10 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       let maxNum =
         max.value.lastIndexOf('-') != -1
           ? Number.parseInt(max.value.substring(max.value.lastIndexOf('-') + 1))
-          : 0;
-      return typeof maxNum == 'number' ? maxNum + 1 : this.listVll.length;
-    } else return 0;
+          : 1;
+      this.isLoadedVll = true;
+      return typeof maxNum == 'number' ? maxNum + 1 : this.listVll.length + 1;
+    } else return 1;
   }
 
   async getDefaultVll(timeOut = 500) {
@@ -744,7 +797,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     }
 
     if (!this.checkValidate()) return;
-    this.dialog.close([this.column, this.processNo]);
+    this.dialog.close([this.column, this.processNo, this.dependence]);
   }
 
   async openAutoNumPopup() {
@@ -1047,7 +1100,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   //-----------------end CACULATE FIELD------------------//
 
   //-----L-S- Checkbox---//
-  valueChangeCheckBox(e, idx) {}
+  valueChangeCheckBox(e, idx) { }
   //-----L-S- Checkbox---//
 
   //----------------Data Referent - PA-------------------------//
@@ -1170,5 +1223,235 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
         this.fieldCus.defaultValue = this.fieldCus.dataValue = result;
       }
     }
+  }
+  //----------------- Dependences------------------//
+  changeDependences(e) {
+    if (!this.listCbx || this.listCbx.length == 0) {
+      this.notiService.notify('Chưa có trường dữ liệu phù hợp để tham chiếu giá trị với kiểu dữ liệu vừa tạo ra !', "2")
+      return;
+    }
+    this.column['isApplyDependences'] = e.data;
+
+    if (this.column.isApplyDependences) {
+      this.column.dataType = '';
+      this.column.dataFormat = '';
+      this.column.isApplyConditional = false;
+      if (this.listCbx?.length > 0) {
+
+      }
+    }
+  }
+  cbxChangeDependence(e) {
+    if (e) {
+      let field = this.listCbx.find(x => x.recID == e);
+      this.dependence.refID = e
+      if (field && field.refValue) {
+        this.cache.combobox(field.refValue).subscribe(res => {
+          if (res) {
+            this.entityNamePA = res.tableName;
+            this.listValueField = res.tableFields?.split(";").map((x, idx) => {
+              let obj = {
+                text: x,
+                value: idx
+              }
+              return obj;
+            })
+          }
+        })
+      }
+    }
+  }
+  cbxChangeValueDependence(e) {
+    if (!this.dependence?.refID || !this.listValueField || this.listValueField?.length == 0 || this.action == 'edit' || this.action == 'view') return
+
+    this.api
+      .exec<any>(
+        'SYS',
+        'GridViewSetupBusiness',
+        'GetFieldByEntityNameAndFieldNameAsync',
+        [this.entityNamePA, this.listValueField[e]?.text]
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.column = this.convertDataTypeAndFormat(res, this.column)
+          this.dependence.strDependence = this.column.fieldName + '={' + e + '}'
+        } else {
+          this.notiService.notifyCode('SYS001')
+        }
+      })
+
+  }
+  //converType
+  convertDataTypeAndFormat(data, field) {
+    let type = 'T';
+    let format = 'S';
+    let refType = data.referedType;
+    let refValue = data.referedValue;
+    switch (data.dataType.toLocaleLowerCase()) {
+      case 'string':
+      case 'guild':
+        if (refType && refValue) {
+          type = 'L';
+          format = refType == '3' ? 'C' : 'V';
+        } else {
+          let fiedname = data.fieldName.toLocaleLowerCase();
+          let convert = this.defaultConvertData(fiedname, data.dataFormat);
+          type = convert[0];
+          format = convert[1];
+          refType = convert[2];
+          refValue = convert[3];
+        }
+        break;
+      case 'bool':
+        type = 'L';
+        format = 'B';
+        break;
+      case 'datetime':
+        type = 'D';
+        format = data.dataFormat == 'g' ? '3' : '2'; //DD/MM/YYYY
+        break;
+      case 'int':
+      case 'short':
+        type = 'N';
+        format = 'I';
+        break;
+      case 'decimal':
+        type = 'N';
+        format = 'D';
+        break;
+    }
+    field.dataType = type;
+    field.dataFormat = format;
+    field.refType = refType;
+    field.refValue = refValue;
+
+    return field;
+  }
+  defaultConvertData(fiedname, dataFormatGrv) {
+    let type = 'L';
+    let format = 'C';
+    let refType = '3';
+    let refValue = '';
+    switch (fiedname) {
+      case 'createdby':
+      case 'owner':
+      case 'modifiedby':
+        refValue = 'Users';
+        break;
+      case 'deepartmentid':
+        refValue = 'Share_Departments';
+        break;
+      case 'divisionid':
+        refValue = 'Divisions';
+        break;
+      case 'employeeid':
+        refValue = 'EmployeeUser';
+        break;
+      case 'orgunitid':
+        refValue = 'Share_OrgUnits';
+        break;
+      case 'positionid':
+        refValue = 'Share_Positions';
+        break;
+      case 'buid':
+        refValue = 'BusinessUnits';
+        break;
+      default:
+        type = 'T';
+        format = dataFormatGrv.includes('ed') ? 'L' : 'S';
+        refType = '';
+        refValue = '';
+        break;
+    }
+    return [type, format, refType, refValue];
+  }
+
+  //----------------- Conditons Ref------------------//
+  clickSettingConditional() {
+    let fieldsCondition = this.listColumns.filter(x => x.dataType == this.column.dataType && x.dataFormat == this.column.dataFormat)
+    if (!fieldsCondition || fieldsCondition?.length == 0) {
+      this.notiService.notify('Chưa có trường dữ liệu phù hợp để tham chiếu điều kiện với kiểu dữ liệu vừa tạo ra !', "2")
+      return;
+    }
+    let cons = this.column.conditionReference ?? [];
+    if (cons?.length > 0) {
+      let idCon = cons.map(x => x.refID);
+      fieldsCondition = fieldsCondition.filter(x => !idCon.includes(x.recID));
+      if (!fieldsCondition || fieldsCondition?.length == 0) {
+        this.notiService.notify('Các trường dữ liệu cùng kiểu đã thực hiện tham chiếu, vui lòng chỉnh sửa dữ liệu trước đó !', "2")
+        return;
+      }
+    }
+
+    let option = new DialogModel();
+    option.zIndex = 1050;
+    let data = new DP_Condition_Reference_Fields();
+    data.messageType = '2'
+    let obj = {
+      data: data,
+      action: 'add',
+      titleAction: this.grvSetup['ConditionReference']?.headerText, //test
+      fieldsCondition: fieldsCondition
+    };
+    let dialogCon = this.callfc.openForm(
+      PopupSettingConditionalComponent,
+      '',
+      550,
+      400,
+      '',
+      obj,
+      '',
+      option
+    );
+    dialogCon.closed.subscribe(res => {
+      if (res && res.event) {
+        cons.push(res.event)
+        this.column.conditionReference = cons
+      }
+    })
+  }
+
+  editCondition(con, idx) {
+    let fieldsCondition = this.listColumns.filter(x => x.dataType == this.column.dataType && x.dataFormat == this.column.dataFormat);
+    let cons = this.column?.conditionReference ?? [];
+    if (cons?.length > 0) {
+      let idCon = cons.map(x => x.refID);
+      fieldsCondition = fieldsCondition.filter(x => !idCon.includes(x.recID) || con.refID == x.recID);
+    }
+    let option = new DialogModel();
+    option.zIndex = 1050;
+    let data = new DP_Condition_Reference_Fields();
+    data.messageType = '2'
+    let obj = {
+      data: con,
+      action: 'edit',
+      titleAction: this.grvSetup['ConditionReference']?.headerText, //test
+      fieldsCondition: fieldsCondition
+    };
+    let dialogCon = this.callfc.openForm(
+      PopupSettingConditionalComponent,
+      '',
+      550,
+      400,
+      '',
+      obj,
+      '',
+      option
+    );
+    dialogCon.closed.subscribe(res => {
+      if (res && res.event) {
+        this.column.conditionReference[idx] = res.event
+      }
+    })
+  }
+  deleteCondition(idx) {
+    this.notiService.alertCode('TM003').subscribe((confirm) => {
+      if (confirm?.event && confirm?.event?.status == 'Y') {
+        this.column.conditionReference.splice(idx, 1)
+      }
+    })
+  }
+  changeConditional(e) {
+    this.column.isApplyConditional = e.data;
   }
 }

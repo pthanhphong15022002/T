@@ -352,6 +352,15 @@
                 <codx-label fiedName="lblSaveAndClear" default="Thêm dòng từ TSCD"></codx-label>
               </button>
             </div>
+            <div *ngIf="dialog.formModel.funcID == 'ACT831'">
+              <button style="border: 1px solid !important;" tab-index="15" id="btnAddCash" tabindex="-1"
+                class="btn btn-sm btn-light-primary btnAddCash" (keydown.enter)="
+                onAddLine('3'); $event.preventDefault()
+                " (click)="onAddLine('4')">
+                <i class="icon-playlist_add icon-16"></i>
+                <codx-label fiedName="lblSaveAndClear" default="Thêm dòng từ danh sách TSCD"></codx-label>
+              </button>
+            </div>
           </div>
         </div>
       </ng-container>
@@ -389,3 +398,8 @@
   </ng-container>
 </ng-template>
 <!-- End: Grid VATInvoices -->
+<ng-container *ngIf="isPopup">
+  <codx-combobox-popup comboboxName="Assets" [multiple]="true" [width]="600" [height]="500"
+    [value]="arrAsset" (clickSave)="onSelectedCombobox($event)">
+  </codx-combobox-popup>
+</ng-container>

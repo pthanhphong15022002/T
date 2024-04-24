@@ -2586,16 +2586,19 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                         this.listStepEdit.push(x?.recID);
                       }
                     }
-                    //edit truong tham chiếu
-                    // if (this.fieldCrr.isApplyDependences && dependence.refID && dependence.strDependence) {
-                    //   let idxFieldDep = x.fields.findIndex(x => x.recID == dependence.refID);
-                    //   if (idxFieldDep != -1) {
-                    //     let depedence = x.fields[idxFieldDep].dependences;
-                    //     if (depedence) depedence += "," + dependence.strDependence; else depedence = dependence.strDependence
-                    //     x.fields[idxFieldDep].dependences = depedence
-                    //   }
-                    // }
+                    //truong tham chiếu
+                    if (this.fieldCrr?.isApplyDependences && dependence?.refID && dependence?.strDependence) {
+                      let idxFieldDep = x.fields.findIndex(x => x.recID == dependence.refID);
+                      if (idxFieldDep != -1) {
+                        let depedence = x.fields[idxFieldDep].dependences;
+                        if (depedence) {
+                          depedence += "," + dependence.strDependence
+                        } else depedence = dependence.strDependence
+                        x.fields[idxFieldDep].dependences = depedence
+                      }
+                    }
                   }
+
                   //edit field truosc do neu edit
                   if (isEditFieldDuplicate && x.fields?.length > 0) {
                     let idx = x.fields.findIndex(
@@ -2653,6 +2656,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             if (e && e.event != null) {
               //xu ly data đổ về
               this.fieldCrr = e.event[0];
+              let dependence = e.event[3];
               if (e.event[1] && !this.process.processNo) {
                 this.process.processNo = e.event[1];
               }
@@ -2660,6 +2664,22 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
               this.stepList.forEach((x) => {
                 if (x.recID == this.fieldCrr.stepID) {
                   x.fields.push(this.fieldCrr);
+                  //truong tham chiếu
+                  if (this.fieldCrr?.isApplyDependences && dependence?.refID && dependence?.strDependence) {
+                    let idxFieldDep = x.fields.findIndex(x => x.recID == dependence.refID);
+                    if (idxFieldDep != -1) {
+                      let depedence = x.fields[idxFieldDep].dependences;
+                      if (depedence) {
+                        depedence += "," + dependence.strDependence
+                        // if (dependence?.oldFieldName && dependence?.oldFieldName != this.fieldCrr.fieldName) {
+                        //   let arrField = dependence.strDependence.split(",")
+                        //   arrField = arrField.filter(fn => fn.split("=")[0] !== dependence.oldFieldName)
+                        //   dependence.strDependence = arrField.join(",")
+                        // }
+                      } else depedence = dependence.strDependence
+                      x.fields[idxFieldDep].dependences = depedence
+                    }
+                  }
                   if (this.action == 'edit') {
                     let check = this.listStepEdit.some((id) => id == x?.recID);
                     if (!check) {
@@ -2742,6 +2762,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
               //xu ly data đổ về
 
               this.fieldCrr = e.event[0];
+              let dependence = e.event[3];
               let newFieldName = '';
               if (
                 (this.fieldCrr?.dataType == 'N' ||
@@ -2777,6 +2798,22 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                     let index = obj.fields.findIndex((x) => x.recID == recIDF);
                     if (index != -1) {
                       obj.fields[index] = fieldCrr;
+                    }
+                    //truong tham chiếu
+                    if (this.fieldCrr?.isApplyDependences && dependence?.refID && dependence?.strDependence) {
+                      let idxFieldDep = obj.fields.findIndex(x => x.recID == dependence.refID);
+                      if (idxFieldDep != -1) {
+                        let depedence = obj.fields[idxFieldDep].dependences;
+                        if (depedence) {
+                          depedence += "," + dependence.strDependence
+                          if (dependence?.oldFieldName && dependence?.oldFieldName != this.fieldCrr.fieldName) {
+                            let arrField = dependence.strDependence.split(",")
+                            arrField = arrField.filter(fn => fn.split("=")[0] !== dependence.oldFieldName)
+                            dependence.strDependence = arrField.join(",")
+                          }
+                        } else depedence = dependence.strDependence
+                        obj.fields[idxFieldDep].dependences = depedence
+                      }
                     }
 
                     if (newFieldName)
@@ -2914,6 +2951,16 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
           var idx = fields.findIndex((x) => x.recID == field.recID);
           if (idx != -1) {
             fields.splice(idx, 1);
+            //xoa dependence
+            if (this.fieldCrr.isApplyDependences) {
+              fields.forEach(x => {
+                if (x.refType == '3' && x.dependences) {
+                  let arrField = x.dependences.split(",")
+                  arrField = arrField.filter(fn => fn.split("=")[0] !== this.fieldCrr.fieldName)
+                  x.dependences = arrField.join(",")
+                }
+              })
+            }
             this.stepList[idxStep].fields = fields;
             this.updateSorting(step.recID);
 

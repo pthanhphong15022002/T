@@ -250,6 +250,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   widthDefault: string | number;
   isNewAutoNumber = false;
   conRef: any[] = [];
+  isHaveApplyDep = false;
   //#endregion
 
   constructor(
@@ -1439,8 +1440,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
-      var result = event.e;
-      var field = event.data;
+      let result = event.e;
+      let field = event.data;
+      let dependences = event?.dependences; //tham chieu dependece cua cbx
+
       let index = this.listInstanceSteps.findIndex(
         (x) => x.recID == field.stepID
       );
@@ -1466,7 +1469,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             //     this.conRef = this.conRef.concat(arrRef)
             //   }
             // }
-
+            this.isHaveApplyDep = this.listInstanceSteps[index].fields.some(x => x.isApplyDependences)
+            if (this.isHaveApplyDep && dependences?.length > 0) this.listInstanceSteps[index].fields = this.changeRefData(dependences, this.listInstanceSteps[index].fields)
             let idxEdit = this.listCustomFile.findIndex(
               (x) =>
                 x.recID == this.listInstanceSteps[index].fields[idxField].recID
@@ -1676,28 +1680,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
                 );
             }
           }
-          this.setElement(obj.recID, obj.dataValue);
+          this.setElement(obj.recID, obj.dataValue, obj.dataType);
         }
       }
     });
-  }
-
-  setElement(recID, value) {
-    value =
-      value && value != '_'
-        ? Number.parseFloat(value)?.toFixed(2).toString()
-        : '';
-    var codxinput = document.querySelectorAll(
-      '.form-group codx-input[data-record="' + recID + '"]'
-    );
-
-    if (codxinput?.length > 0) {
-      let htmlE = codxinput[0] as HTMLElement;
-      let input = htmlE.querySelector('input') as HTMLInputElement;
-      if (input) {
-        input.value = value;
-      }
-    }
   }
   //#endregion
   addFile(evt: any) {
@@ -2037,4 +2023,38 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     }
     return checkAll;
   }
+  //-----------------Tham chiếu giá trị----------------------//
+  changeRefData(dependences, fields) {
+    dependences.forEach(fn => {
+      let idx = fields.findIndex(x => x.fieldName == fn.fieldName);
+      if (idx != -1) {
+        fields[idx].dataValue = fn.dataValue
+        this.setElement(fields[idx].recID, fn.dataValue, fields[idx].dataType)
+        if (fields[idx].dataType == 'N') this.caculateField()
+      }
+    })
+
+    return fields;
+  }
+
+  setElement(recID, value, dataType) {
+    var codxinput = document.querySelectorAll(
+      '.form-group codx-input[data-record="' + recID + '"]'
+    );
+    if (dataType == 'N' || dataType == 'CF') {
+      value =
+        value && value != '_'
+          ? Number.parseFloat(value)?.toFixed(2).toString()
+          : '';
+    }
+
+    if (codxinput?.length > 0) {
+      let htmlE = codxinput[0] as HTMLElement;
+      let input = htmlE.querySelector('input') as HTMLInputElement;
+      if (input) {
+        input.value = value;
+      }
+    }
+  }
+  //-------------------------------------------------------//
 }

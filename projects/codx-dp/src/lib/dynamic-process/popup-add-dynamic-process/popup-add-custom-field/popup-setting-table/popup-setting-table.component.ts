@@ -98,9 +98,9 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   valueChange(e) {
     if (
@@ -178,7 +178,19 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
     dialogAddColumn.closed.subscribe((res) => {
       if (res && res?.event?.length > 0) {
         let data = JSON.parse(JSON.stringify(res?.event[0]));
+        let dependence = res?.event[2];
         if (data.dataType == 'N') data.totalColumns = this.totalColumns;
+        //truong tham chiếu
+        if (data?.isApplyDependences && dependence?.refID && dependence?.strDependence) {
+          let idxFieldDep = this.listColumns.findIndex(x => x.recID == dependence.refID);
+          if (idxFieldDep != -1) {
+            let depedence = this.listColumns[idxFieldDep].dependences;
+            if (depedence) {
+              depedence += "," + dependence.strDependence
+            } else depedence = dependence.strDependence
+            this.listColumns[idxFieldDep].dependences = depedence
+          }
+        }
         this.listColumns.push(data);
         if (!this.processNo && res?.event[1]) this.processNo = res?.event[1];
       }
@@ -215,12 +227,30 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
 
     dialogAddColumn.closed.subscribe((res) => {
       if (res && res?.event?.length > 0) {
+        let data = JSON.parse(JSON.stringify(res?.event[0]));
+        let dependence = res?.event[2];
         let idx = this.listColumns.findIndex(
           (x) => x.recID == this.column.recID
         );
         if (idx != -1) {
-          this.listColumns[idx] = JSON.parse(JSON.stringify(res?.event[0]));
+          this.listColumns[idx] = JSON.parse(JSON.stringify(data));
           this.idxEdit = -1;
+          //truong tham chiếu
+          if (data?.isApplyDependences && dependence?.refID && dependence?.strDependence) {
+            let idxFieldDep = this.listColumns.findIndex(x => x.recID == dependence.refID);
+            if (idxFieldDep != -1) {
+              let depedence = this.listColumns[idxFieldDep].dependences;
+              if (depedence) {
+                depedence += "," + dependence.strDependence
+                if (dependence?.oldFieldName && dependence?.oldFieldName != data.fieldName) {
+                  let arrField = dependence.strDependence.split(",")
+                  arrField = arrField.filter(fn => fn.split("=")[0] !== dependence.oldFieldName)
+                  dependence.strDependence = arrField.join(",")
+                }
+              } else depedence = dependence.strDependence
+              this.listColumns[idxFieldDep].dependences = depedence
+            }
+          }
         }
 
         if (!this.processNo && res?.event[1]) this.processNo = res?.event[1];
@@ -232,7 +262,18 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
   deleteColumn(idx) {
     this.notiService.alertCode('SYS030').subscribe((res) => {
       if (res?.event && res?.event?.status == 'Y') {
+        let fieldOld = this.listColumns[idx]
         this.listColumns.splice(idx, 1);
+        //xoa dependence
+        if (fieldOld.isApplyDependences) {
+          this.listColumns.forEach(x => {
+            if (x.refType == '3' && x.dependences) {
+              let arrField = x.dependences.split(",")
+              arrField = arrField.filter(fn => fn.split("=")[0] !== fieldOld.fieldName)
+              x.dependences = arrField.join(",")
+            }
+          })
+        }
         this.changeRef.detectChanges();
       }
     });

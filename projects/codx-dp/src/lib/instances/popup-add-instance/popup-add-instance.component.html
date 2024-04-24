@@ -336,6 +336,7 @@
           [isRezisePopup]="true"
           (rezisePopup)="rezisePopup($event)"
           (createdTempletMail)="createdTempletMail($event)"
+          [disable]="item?.isApplyDependences"
         >
         </codx-input-custom-field>
       </div>

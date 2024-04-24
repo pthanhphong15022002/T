@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   OnInit,
@@ -52,7 +53,7 @@ import { PopupSettingConditionalComponent } from './popup-setting-conditional/po
   styleUrls: ['./popup-add-custom-field.component.css'],
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PopupAddCustomFieldComponent implements OnInit {
+export class PopupAddCustomFieldComponent implements OnInit, AfterViewInit {
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('addVll') addVll: TemplateRef<any>;
   @ViewChild('bodyVll') bodyVll: TemplateRef<any>;
@@ -63,6 +64,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
   @ViewChild('toolDeleted') toolDeleted: TemplateRef<any>;
   @ViewChild('tempInput') tempInput: CodxInputCustomFieldComponent;
   @ViewChild('tempView') tempView: CodxFieldsFormatValueComponent;
+  @ViewChild('selectValueDep') selectValueDep: ComboBoxComponent;
+
 
   dialog: DialogRef;
   field: DP_Steps_Fields;
@@ -180,12 +183,15 @@ export class PopupAddCustomFieldComponent implements OnInit {
   fieldsDependence = { text: 'title', value: 'recID' };
   listValueField = [];
   valueDependence = { text: 'text', value: 'value' };
-  fieldInStep: any[]
+  fieldInStep: any[];
 
   dependence = {
     refID: '',
-    strDependence: ''
+    strDependence: '',
+    oldFieldName: '' ////luu tên field trước đó
   }
+  valueRef: any;
+  isLoadedVll = false;
 
   constructor(
     private cache: CacheService,
@@ -211,7 +217,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.stepList = dt?.data?.stepList;
     this.grvSetup = dt.data?.grvSetup;
     this.viewOnly = this.action == 'view';
-
+    this.dependence.oldFieldName = this.field.fieldName
     this.creatFieldCustom();
     this.widthDefault = this.dialog.dialog.width
       ? this.dialog.dialog.width.toString()
@@ -238,6 +244,39 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.fieldNameOld = this.field.fieldName;
       this.showCaculate = false;
     }
+  }
+  ngAfterViewInit(): void {
+    if (this.field?.isApplyDependences && this.listCbx?.length > 0) {
+      let crrCbx = this.listCbx.find(x => x?.dependences?.includes(this.field.fieldName));
+      if (crrCbx) {
+        this.dependence.refID = crrCbx.recID;
+        let arrField = crrCbx?.dependences?.split(",");
+        let index = arrField.find(x => x.includes(this.field.fieldName));
+        if (index) {
+          // this.valueRef = index.split("=")[0]
+          let valueRef = index.split("=")[1].slice(0, -1);
+          this.valueRef = valueRef.slice(1)
+          this.cache.combobox(crrCbx.refValue).subscribe(res => {
+            if (res) {
+              this.entityNamePA = res.tableName;
+              this.listValueField = res.tableFields?.split(";").map((x, idx) => {
+                let obj = {
+                  text: x,
+                  value: idx
+                }
+                return obj;
+              })
+              if (this.selectValueDep) {
+                this.selectValueDep.dataSource = this.listValueField
+                this.selectValueDep.value = Number.parseInt(this.valueRef)
+                this.selectValueDep.refresh();
+              }
+            }
+          })
+        }
+      }
+    }
+
   }
 
   ngOnInit(): void {
@@ -270,6 +309,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         }
       });
     }
+
     if (this.field.dataType == 'RM') this.field.isUseDefault = true; //tạm gán cứng
   }
 
@@ -294,8 +334,14 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
     if (e && e.field) this.field[e.field] = e?.data;
 
-    if (e.field == 'title' || e.field == 'fieldName')
+    if (e.field == 'title' || e.field == 'fieldName') {
       this.removeAccents(e.data);
+      if (this.dependence.strDependence && this.field.fieldName) {
+        let splitStr = this.dependence.strDependence.split("=");
+        this.dependence.strDependence = this.field.fieldName + "=" + splitStr[1]
+      }
+    }
+
     if (
       e.field == 'dataFormat' &&
       (e.data == 'V' || e.data == 'C' || e.data == 'S')
@@ -394,21 +440,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   sliderChange(e) {
     this.field.rank = e?.value;
   }
-  // khong dc xoa
-  // renderingTicks(args: SliderTickEventArgs) {
-  //   if (args.tickElement.classList.contains('e-large')) {
-  //     args.tickElement.classList.add('e-custom');
-  //   }
-  // }
-  //thay doi view duoiw
-  // renderedTicks(args: SliderTickRenderedEventArgs) {
-  //   let li = args.ticksWrapper.getElementsByClassName('e-large');
-  //   let remarks: any = ['', '', '', '', '', '', '', '', '', '', '', ''];
-  //   for (let i = 0; i < li.length; ++i) {
-  //     (li[i].querySelectorAll('.e-tick-both')[1] as HTMLElement).innerText =
-  //       remarks[i];
-  //   }
-  // }
+
   cbxChange(value) {
     let oldStep = this.field['stepID'];
     if (value && value != oldStep) {
@@ -526,7 +558,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
       return;
     }
-    if (this.field.isApplyDependences && (!this.dependence.refID || !this.dependence.strDependence)) {
+    if (this.field?.isApplyDependences && (!this.dependence?.refID || !this.dependence?.strDependence)) {
       this.notiService.notify('Tham chiếu giá trị chưa hoàn thành, hãy hoàn thiện thiết lập để tiếp tục !', '2');
       return
     }
@@ -890,9 +922,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
       let maxNum =
         max.value.lastIndexOf('-') != -1
           ? Number.parseInt(max.value.substring(max.value.lastIndexOf('-') + 1))
-          : 0;
-      return typeof maxNum == 'number' ? maxNum + 1 : this.listVll.length;
-    } else return 0;
+          : 1;
+      this.isLoadedVll = true;
+      return typeof maxNum == 'number' ? maxNum + 1 : this.listVll.length + 1;
+    } else return 1;
   }
 
   async getDefaultVll(timeOut = 500) {
@@ -1518,7 +1551,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
       return;
     }
     this.field['isApplyDependences'] = e.data;
+
     if (this.field.isApplyDependences) {
+      this.field.dataType = '';
+      this.field.dataFormat = '';
       this.field.isApplyConditional = false;
       if (this.listCbx?.length > 0) {
 
@@ -1532,6 +1568,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       if (field && field.refValue) {
         this.cache.combobox(field.refValue).subscribe(res => {
           if (res) {
+            this.entityNamePA = res.tableName;
             this.listValueField = res.tableFields?.split(";").map((x, idx) => {
               let obj = {
                 text: x,
@@ -1545,8 +1582,111 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
   }
   cbxChangeValueDependence(e) {
-    this.dependence.strDependence = this.field.fieldName + '={' + e + '}'
+    if (!this.dependence.refID || !this.listValueField || this.listValueField?.length == 0 || this.action == 'edit' || this.action == 'view') return
+
+    this.api
+      .exec<any>(
+        'SYS',
+        'GridViewSetupBusiness',
+        'GetFieldByEntityNameAndFieldNameAsync',
+        [this.entityNamePA, this.listValueField[e]?.text]
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.field = this.convertDataTypeAndFormat(res, this.field)
+          this.dependence.strDependence = this.field.fieldName + '={' + e + '}'
+        } else {
+          this.notiService.notifyCode('SYS001')
+        }
+      })
+
   }
+  //converType
+  convertDataTypeAndFormat(data, field) {
+    let type = 'T';
+    let format = 'S';
+    let refType = data.referedType;
+    let refValue = data.referedValue;
+    switch (data.dataType.toLocaleLowerCase()) {
+      case 'string':
+      case 'guild':
+        if (refType && refValue) {
+          type = 'L';
+          format = refType == '3' ? 'C' : 'V';
+        } else {
+          let fiedname = data.fieldName.toLocaleLowerCase();
+          let convert = this.defaultConvertData(fiedname, data.dataFormat);
+          type = convert[0];
+          format = convert[1];
+          refType = convert[2];
+          refValue = convert[3];
+        }
+        break;
+      case 'bool':
+        type = 'L';
+        format = 'B';
+        break;
+      case 'datetime':
+        type = 'D';
+        format = data.dataFormat == 'g' ? '3' : '2'; //DD/MM/YYYY
+        break;
+      case 'int':
+      case 'short':
+        type = 'N';
+        format = 'I';
+        break;
+      case 'decimal':
+        type = 'N';
+        format = 'D';
+        break;
+    }
+    field.dataType = type;
+    field.dataFormat = format;
+    field.refType = refType;
+    field.refValue = refValue;
+
+    return field;
+  }
+  defaultConvertData(fiedname, dataFormatGrv) {
+    let type = 'L';
+    let format = 'C';
+    let refType = '3';
+    let refValue = '';
+    switch (fiedname) {
+      case 'createdby':
+      case 'owner':
+      case 'modifiedby':
+        refValue = 'Users';
+        break;
+      case 'deepartmentid':
+        refValue = 'Share_Departments';
+        break;
+      case 'divisionid':
+        refValue = 'Divisions';
+        break;
+      case 'employeeid':
+        refValue = 'EmployeeUser';
+        break;
+      case 'orgunitid':
+        refValue = 'Share_OrgUnits';
+        break;
+      case 'positionid':
+        refValue = 'Share_Positions';
+        break;
+      case 'buid':
+        refValue = 'BusinessUnits';
+        break;
+      default:
+        type = 'T';
+        format = dataFormatGrv.includes('ed') ? 'L' : 'S';
+        refType = '';
+        refValue = '';
+        break;
+    }
+    return [type, format, refType, refValue];
+  }
+
+
   //-------------Default ------------//
   changeUseDeafaut(e) {
     this.field['isUseDefault'] = e.data;

@@ -95,6 +95,7 @@ import { PropertyBorderComponent } from './modeview/properties/property-border/p
 import { AddCustomActionComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-custom-action/add-custom-action.component';
 import { ProcessTableExpandComponent } from './processes/popup-add-process/process-release/add-process-default/process-table-expand/process-table-expand.component';
 import { PropertyExpressionSettingsComponent } from './modeview/properties/property-expression/property-expression-settings/property-expression-settings.component';
+import { PropertyApproverComponent } from './modeview/properties/property-approver/property-approver.component';
 
 export const routes: Routes = [
   {
@@ -191,6 +192,7 @@ export const routes: Routes = [
     PropertyNoteComponent,
     PropertyBorderComponent,
     PropertyExpressionSettingsComponent,
+    PropertyApproverComponent,
     
     FormSettingComboboxComponent,
     FormAdvancedSettingsComponent,

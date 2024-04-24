@@ -15,6 +15,7 @@ export class PropertyComboboxComponent
   dropdown = false;
   popup = false;
   listCbx: any;
+  nameCbb: any;
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes['data'] &&
@@ -31,6 +32,7 @@ export class PropertyComboboxComponent
       if (item) {
         this.listCbx = item.entityAttributes.split(';');
         this.listCbx = this.listCbx.filter((x) => x != '');
+        this.nameCbb = item?.note || item?.comboboxName;
       }
     });
   }

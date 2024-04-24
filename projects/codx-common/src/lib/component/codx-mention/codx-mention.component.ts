@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FieldSettings, MentionComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { ApiHttpService, CacheService, DataRequest } from 'codx-core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'codx-mention',
@@ -40,58 +40,69 @@ export class CodxMentionComponent implements OnInit, AfterViewInit,OnDestroy{
     this.request.pageLoading = true;
     this.request.page = 1;
     this.request.pageSize = 20;
+    if(this.autoLoad)
+    {
+      this.load();
+    }
   }
 
-  ngAfterViewInit(): void {
-  }
+ 
   
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  // load(){
-  //   if(!this.autoLoad) return;
-  //   this.api.execSv("SYS","Core","DataBusiness","LoadDataCbxAsync",this.request)
-  //   .pipe(takeUntil(this.destroy$))
-  //   .subscribe((res:any) => {
-  //     if(res)
-  //     {
-  //       let datas = JSON.parse(res[0]);
-  //       if(datas.length > 0)
-  //       {
-  //         this.dataSource = this.dataSource.concat(datas);
-  //         datas.forEach(item => {
-  //           this.ej2Mention.addItem(item);
-  //         });
-  //         this.detectorRef.detectChanges();
-  //       }
-  //     }
-  //   });
-  // }
+  ngAfterViewInit(): void {
+    if(this.ej2Mention)
+    {
+      let t = this;
+      this.ej2Mention.element
+      .querySelector('.e-content')
+      .addEventListener('scroll',(e) => {
+        this.onscroll(e,t);
+      }); 
+    }
+  }
 
-  // open(){
-  //   let t = this;
-  //   this.ej2Mention.element.querySelector('.e-content')
-  //   .addEventListener('scroll',(e) => {
-  //     this.onscroll(e,t);
-  //   });
-  // }
+  load(){
+    this.api.execSv("SYS","Core","DataBusiness","LoadDataCbxAsync",this.request)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res:any) => {
+      if(res)
+      {
+        let datas = JSON.parse(res[0]);
+        if(datas?.length > 0)
+        {
+          if(!this.dataSource)
+          {
+            this.dataSource = [...datas];
+          }
+          else
+          {
+            // datas.forEach((item:any) => this.ej2Mention.addItem(item));
+            this.dataSource = this.dataSource.concat(datas);
+          }
+          this.detectorRef.detectChanges();
+        }
+      }
+    });
+  }
 
-  // onscroll(ele:any,t:any){
-  //   if (!t.loaded && ((ele.srcElement.scrollHeight -  ele.srcElement.scrollTop) < 350)) 
-  //   {
-  //     t.load();
-  //   }
-  // }
+  onscroll(ele:any,t:any){
+    if (!t.loaded && ((ele.srcElement.scrollHeight -  ele.srcElement.scrollTop) < 350)) 
+    {
+      debugger
+    }
+  }
   
-  // h = null;
-  // filtering(event:any){
-  //   this.request.searchText = event.text;
-  //   if(this.h)
-  //     clearTimeout(this.h);
-  //   this.h = setTimeout(() => this.load() ,200);
-  // }
+  h = null;
+  filtering(event:any){
+    this.request.searchText = event.text;
+    if(this.h)
+      clearTimeout(this.h);
+    this.h = setTimeout(() => this.load() ,200);
+  }
 
 
   dataSelected:any[] = [];

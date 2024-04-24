@@ -17,7 +17,7 @@
   [isSubView]="true"
   (buttonClick)="click($event)"
   (clickMF)="clickMF($event)"
-  *ngIf="projectID && datavalue"
+  *ngIf=" funcID || projectID"
 >
 </codx-views>
 <ng-template #itemViewList let-data>
@@ -30,6 +30,7 @@
     [showMoreFunc]="true"
     [user]="user"
     [isTreeView]="true"
+    [showDueDate]="false"
     (nodeSelected)="treeSelect($event)"
     [treeCmp]="viewTree"
     (addChild)="addChild($event)"
@@ -57,6 +58,7 @@
     (nodeSelect)="treeSelect($event)"
     [user]="user"
     [itemTemplate]="itemViewList"
+    [className]="classTreeName"
   >
   </share-tree-view>
 </ng-template>

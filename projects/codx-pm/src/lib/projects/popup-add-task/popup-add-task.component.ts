@@ -97,12 +97,12 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit {
     }
     if (dialogData.data[2]) {
       this.projectData = dialogData.data[2];
-      if (this.projectData.settings) {
+      if (this.projectData?.settings) {
         let memberType = this.projectData.settings.find((x: any) => x.fieldName == "MemberType");
         if (memberType) {
           this.projectMemberType = memberType.fieldValue;
         }
-        if (this.projectData.settings.find((x: any) => x.fieldName == 'ApproveControl')) {
+        if (this.projectData && this.projectData?.settings.find((x: any) => x.fieldName == 'ApproveControl')) {
           if (!this.data.approveControl) this.data.approveControl = this.projectData.settings.find((x: any) => x.fieldName == 'ApproveControl').fieldValue;
           this.approveControl = this.projectData.settings.find((x: any) => x.fieldName == 'ApproveControl').fieldValue;
         }
@@ -157,7 +157,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit {
       if (res.event) {
         for (let i = 0; i < res.event.length; i++) {
           let member: any = {};
-          if (this.projectData.settings.memberType == "1") {
+          if (this.projectData && this.projectData.settings.memberType == "1") {
             let item = this.projectData.permissions.find((x: any) => x.objectID == res.event[i])
             if (item) {
               let roleType = 'A';
@@ -309,9 +309,9 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit {
     if (this.action == 'add' || this.action == 'copy') {
       this.data.status = '10';
       this.data.category = '4';
-      if (!this.data.projectID) this.data.projectID = this.projectData.projectID;
+      if (!this.data.projectID) this.data.projectID = this.projectData?.projectID;
     }
-    if (this.projectData.settings) {
+    if (this.projectData?.settings) {
       let deadlineControl = this.projectData.settings.find((x: any) => x.fieldName == "DeadlineControl");
       if (deadlineControl) {
         switch (deadlineControl.fieldValue) {
@@ -331,6 +331,12 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit {
                 return;
               }
             }
+            if(this.data.startDate && this.data.endDate){
+              if(moment(this.data.startDate).isAfter(this.data.endDate)){
+                this.notificationsService.notify('Thời gian bắt đầu không được lớn hơn thời gian kết thúc!', '2');
+                return;
+              }
+            }
             break;
           case '2':
             if (this.parentTask) {
@@ -343,6 +349,12 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit {
               if (this.parentTask.endDate && this.data.endDate) {
                 if (moment(this.parentTask.endDate).isBefore(this.data.endDate)) {
                   this.notificationsService.notify('Thời gian kết thúc phải nằm trong thời gian của công việc cha!', '2');
+                  return;
+                }
+              }
+              if(this.data.startDate && this.data.endDate){
+                if(moment(this.data.startDate).isAfter(this.data.endDate)){
+                  this.notificationsService.notify('Thời gian bắt đầu không được lớn hơn thời gian kết thúc!', '2');
                   return;
                 }
               }
@@ -591,6 +603,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit {
   updateTask() {
     if (this.action == 'edit') {
       this.data.assignTo = this.members.map((x: any) => x.resourceID).join(';');
+      this.data.todo = this.todoList.length || 0;
       if (this.todoList?.length) {
         if (this.todoList.filter((x: any) => x.status == '90').length == this.todoList.length) {
           let abc = this.notificationsService.alert('PMT001', 'Danh sách công việc cần làm đã hoàn tất, bạn có muốn hoàn tất công việc này?', null, '6');
@@ -622,7 +635,7 @@ export class PopupAddTaskComponent implements OnInit, AfterViewInit {
           let doneChecklist = this.todoList.filter((x: any) => x.status == '90').length;
           if (doneChecklist > 0) {
             this.data.status = '20';
-            this.data.percentage = parseInt((doneChecklist / this.todoList.length) as any);
+            this.data.percentage = parseInt((doneChecklist / this.todoList.length)*100 as any);
           }
           //this.data.status='20';
           this.api

@@ -54,6 +54,15 @@ import { PopupAddAdvanceComponent } from './advance/popup-add-advance/popup-add-
 import { PaymentDetailComponent } from './payment/payment-detail/payment-detail.component';
 import { PaymentComponent } from './payment/payment.component';
 import { PopupAddPaymentComponent } from './payment/popup/popup-add-payment/popup-add-payment.component';
+import { EpBookingsComponent } from './ep-booking/ep-bookings.component';
+import { EpAddBookingRoomComponent } from './ep-booking/ep-add-booking-room/ep-add-booking-room.component';
+import { EpAddBookingCarComponent } from './ep-booking/ep-add-booking-car/ep-add-booking-car.component';
+import { EpAddBookingStationeryComponent } from './ep-booking/ep-add-booking-stationery/ep-add-booking-stationery.component';
+import { EpInviteRoomAttendeesComponent } from './ep-booking/ep-invite-room-attendees/ep-invite-room-attendees.component';
+import { EpRescheduleBookingRoomComponent } from './ep-booking/ep-reschedule-booking-room/ep-reschedule-booking-room.component';
+import { EpBookingCarScheduleContentComponent } from './ep-booking/ep-booking-car-schedule-content/ep-booking-car-schedule-content.component';
+import { EpBookingRoomScheduleContentComponent } from './ep-booking/ep-booking-room-schedule-content/ep-booking-room-schedule-content.component';
+import { EpBookingViewDetailComponent } from './ep-booking/ep-booking-view-detail/ep-booking-view-detail.component';
 
 export const routes: Routes = [
   {
@@ -96,6 +105,7 @@ export const routes: Routes = [
       {
         path: 'bookingrooms/:funcID',
         data: { noReuse: true },
+        //component: EpBookingsComponent,
         component: EPBookingComponent,
       },
       {
@@ -238,7 +248,17 @@ export const routes: Routes = [
     PopupAddAdvanceComponent,
     PaymentComponent,
     PaymentDetailComponent,
-    PopupAddPaymentComponent
+    PopupAddPaymentComponent,
+    //booking
+    EpBookingsComponent,
+    EpAddBookingCarComponent,
+    EpAddBookingRoomComponent,
+    EpAddBookingStationeryComponent,
+    EpInviteRoomAttendeesComponent,
+    EpRescheduleBookingRoomComponent,
+    EpBookingCarScheduleContentComponent,
+    EpBookingRoomScheduleContentComponent,
+    EpBookingViewDetailComponent,
   ],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
