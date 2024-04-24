@@ -38,6 +38,14 @@
 
 }
 
+codx-listview.approveList{
+  height: calc(100vh - 122px);
+}
+
+.item-list-approve{
+  padding-right: -10px;
+}
+
 @media screen and (max-width: 1300px) {
   .pop-up-wrapper {
       width: 900px !important;

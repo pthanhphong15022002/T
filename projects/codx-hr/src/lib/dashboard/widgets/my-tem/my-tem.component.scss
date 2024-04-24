@@ -64,7 +64,7 @@
 }
 
 .my-team-searchbar{
-    padding: 17px 0;
+    padding-bottom: 10px;
 }
 
 .e-tab .e-tab-header .e-indicator {
@@ -207,10 +207,10 @@ div#hscroll_0_nav_right {
     color: #F64E60;
 }
 
-.e-content.e-lib.e-touch {
-    height: calc(100vh - 247px) !important;
-    overflow: scroll !important;
-}
+// .e-content.e-lib.e-touch {
+//     height: calc(100vh - 247px) !important;
+//     overflow: scroll !important;
+// }
 
 
 @media (max-width: 99px) {

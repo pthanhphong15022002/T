@@ -8,7 +8,7 @@ import {
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'lib-my-tem',
+  selector: 'my-team',
   templateUrl: './my-tem.component.html',
   styleUrls: ['./my-tem.component.scss'],
 })

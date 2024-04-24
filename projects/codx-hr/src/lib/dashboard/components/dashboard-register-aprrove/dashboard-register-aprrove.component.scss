@@ -66,11 +66,11 @@
   display: grid;
   height: 350px;
 
-  grid-template-columns: repeat(4, 25%);
+  grid-template-columns: repeat(5, 20%);
   grid-template-rows: repeat(2, 50%);
-  grid-auto-columns: 25%;
+  grid-auto-columns: 20%;
   grid-auto-flow: column;
-  width: calc(100vw - 273px - 290px);
+  width: calc(100vw - 345px);
   overflow-x: hidden;
   padding: 10px;
   // min-width: 100%;
@@ -145,28 +145,28 @@
   box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.3);
 }
 
-@media only screen and (max-width: 1536px) and (min-width: 1350px) {
+// @media only screen and (max-width: 1536px) and (min-width: 1350px) {
+//   .grid {
+//     grid-template-columns: repeat(4, 25%);
+//     grid-template-rows: repeat(2, 50%);
+//     grid-auto-columns: 25%;
+//     grid-auto-flow: column;
+//     width: calc(100vw - 345px);
+
+//     overflow-x: hidden;
+//     padding: 10px;
+
+//   }
+// }
+
+
+@media only screen and (max-width: 1350px) {
   .grid {
     grid-template-columns: repeat(4, 25%);
     grid-template-rows: repeat(2, 50%);
     grid-auto-columns: 25%;
     grid-auto-flow: column;
-    width: calc(100vw - 273px - 290px);
-
-    overflow-x: hidden;
-    padding: 10px;
-
-  }
-}
-
-
-@media only screen and (max-width: 1350px) {
-  .grid {
-    grid-template-columns: repeat(3, 33%);
-    grid-template-rows: repeat(2, 50%);
-    grid-auto-columns: 33%;
-    grid-auto-flow: column;
-    width: calc(100vw - 273px - 290px);
+    width: calc(100vw - 345px);
 
     overflow-x: hidden;
     padding: 10px;
@@ -176,11 +176,11 @@
 
 @media only screen and (max-width: 1230px) {
   .grid {
-    grid-template-columns: repeat(2, 40%);
+    grid-template-columns: repeat(3, 33%);
     grid-template-rows: repeat(2, 50%);
-    grid-auto-columns: 40%;
+    grid-auto-columns: 33%;
     grid-auto-flow: column;
-    width: calc(100vw - 273px - 290px);
+    width: calc(100vw - 345px);
 
     overflow-x: hidden;
     padding: 10px;
@@ -194,7 +194,7 @@
     grid-template-rows: repeat(2, 50%);
     grid-auto-columns: 50%;
     grid-auto-flow: column;
-    width: calc(100vw - 273px - 290px);
+    width: calc(100vw - 345px);
 
     overflow-x: hidden;
     padding: 10px;
@@ -203,13 +203,13 @@
 }
 
 
-@media only screen and (max-width: 1130px) {
+@media only screen and (max-width: 1010px) {
   .grid {
-    grid-template-columns: repeat(3, 35%);
+    grid-template-columns: repeat(4, 25%);
     grid-template-rows: repeat(2, 50%);
-    grid-auto-columns: 35%;
+    grid-auto-columns: 25%;
     grid-auto-flow: column;
-    width: calc(100vw - 273px);
+    width: calc(100vw);
     overflow-x: hidden;
     padding: 10px;
 
@@ -221,6 +221,32 @@
     grid-template-columns: repeat(3, 35%);
     grid-template-rows: repeat(2, 50%);
     grid-auto-columns: 35%;
+    grid-auto-flow: column;
+    width: calc(100vw);
+    overflow-x: hidden;
+    padding: 10px;
+
+  }
+}
+
+@media (max-width: 580px) {
+  .grid {
+    grid-template-columns: repeat(2, 45%);
+    grid-template-rows: repeat(2, 50%);
+    grid-auto-columns: 45%;
+    grid-auto-flow: column;
+    width: calc(100vw);
+    overflow-x: hidden;
+    padding: 10px;
+
+  }
+}
+
+@media (max-width: 500px) {
+  .grid {
+    grid-template-columns: repeat(2, 50%);
+    grid-template-rows: repeat(2, 50%);
+    grid-auto-columns: 50%;
     grid-auto-flow: column;
     width: calc(100vw);
     overflow-x: hidden;

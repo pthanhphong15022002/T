@@ -184,5 +184,6 @@ export class DialogReviewLeaveApproveComponent  extends UIComponent {
   onClosePopUp(){
     this.dialog?.close();
   }
+  heighttest: string = '100'
 
 }

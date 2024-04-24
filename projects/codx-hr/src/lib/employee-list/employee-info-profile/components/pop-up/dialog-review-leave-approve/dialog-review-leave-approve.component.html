@@ -26,23 +26,78 @@
           </div>
           <!-- Main content -->
           <div>
-              <!-- <codx-listview entityName="DM_FileInfo" gridViewName="grvFileInfo" formName="FileInfo"
-                  [itemTemplate]="templateNewEmployee" service="DM" height="50px" class="newemployee-listview">
-              </codx-listview> -->
-              <!-- <ng-template #templateNewEmployee> -->
-              
-              <!-- </ng-template> -->
-              <ng-container *ngFor="let item of fakeData ; let i = index">
+              <codx-listview entityName="DM_FileInfo" gridViewName="grvFileInfo" formName="FileInfo"
+                  [itemTemplate]="itemApprove" service="DM" [height]="heighttest" class="approveList" [emptyTemplate]="approveListEmpty">
+              </codx-listview>
+              <codx-gridview></codx-gridview>
+              <ng-template #itemApprove>
+                <div class="item-list-approve d-flex fs-6 fw-500 border-bottom py-4" >
+                    <div class="pe-2 pt-1">
+                        <input type="checkbox" name="" id="" class="checkbox-item">
+                        <!-- <codx-input type="checkbox" class="checkbox-item" ></codx-input> -->
+                    </div>
+                    <!-- <codx-searchbar></codx-searchbar> -->
+                    <div class="d-flex gap-2">
+                        <!-- <codx-imgs [isToolTip]="true" [objectId]="" [objectName]=""
+                          [objectType]="'AD_Users'" [width]="30" [numberImages]="1">
+                        </codx-imgs> -->
+                        <div class="d-flex flex-column gap-2">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="fw-bold line-clamp fs-5 line-clamp-1">HIHI</div>
+                                <div class="fs-7 fw-500 text-gray-600">21/01/2024 - 22/01/2024</div>
+                            </div>
+                            <div class="fs-6 fw-bold">Nghỉ chế độ</div>
+                            <div class="d-flex justify-content-between align-items-end">
+                                <div class="fs-6 text-gray-600" style="
+                                    width: 80%;
+                                ">
+                                    Bận việc gia đình nên xin nghỉ phép 1 ngày, sẽ cố gắng hoàn thành
+                                    task đầy đủ
+                                </div>
+                                <div class="status status1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </ng-template>
+
+              <ng-template #approveListEmpty>
+                <div class="item-list-approve d-flex fs-6 fw-500 border-bottom py-4" >
+                    <div class="pe-2 pt-1">
+                        <input type="checkbox" name="" id="" class="checkbox-item">
+                        <!-- <codx-input type="checkbox" class="checkbox-item" ></codx-input> -->
+                    </div>
+                    <!-- <codx-searchbar></codx-searchbar> -->
+                    <div class="d-flex gap-2">
+                        <!-- <codx-imgs [isToolTip]="true" [objectId]="" [objectName]=""
+                          [objectType]="'AD_Users'" [width]="30" [numberImages]="1">
+                        </codx-imgs> -->
+                        <div class="d-flex flex-column gap-2">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="fw-bold line-clamp fs-5 line-clamp-1">HIHI</div>
+                                <div class="fs-7 fw-500 text-gray-600">21/01/2024 - 22/01/2024</div>
+                            </div>
+                            <div class="fs-6 fw-bold">Nghỉ chế độ</div>
+                            <div class="d-flex justify-content-between align-items-end">
+                                <div class="fs-6 text-gray-600" style="
+                                    width: 80%;
+                                ">
+                                    Bận việc gia đình nên xin nghỉ phép 1 ngày, sẽ cố gắng hoàn thành
+                                    task đầy đủ
+                                </div>
+                                <div class="status status1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </ng-template>
+              <!-- <ng-container *ngFor="let item of fakeData ; let i = index">
                   <div class="d-flex fs-6 fw-500 border-bottom py-4" (click)="onItemSelected(item)">
                       <div class="pe-2 pt-1">
                           <input type="checkbox" name="" id="" class="checkbox-item">
-                          <!-- <codx-input type="checkbox" class="checkbox-item" ></codx-input> -->
                       </div>
-                      <!-- <codx-searchbar></codx-searchbar> -->
                       <div class="d-flex gap-2">
-                          <!-- <codx-imgs [isToolTip]="true" [objectId]="" [objectName]=""
-                            [objectType]="'AD_Users'" [width]="30" [numberImages]="1">
-                          </codx-imgs> -->
+                          
                           <div class="d-flex flex-column gap-2">
                               <div class="d-flex align-items-center justify-content-between">
                                   <div class="fw-bold line-clamp fs-5 line-clamp-1">{{item.name}}</div>
@@ -61,7 +116,7 @@
                           </div>
                       </div>
                   </div>
-              </ng-container>
+              </ng-container> -->
           </div>
       </div>
       <!-- content right -->
