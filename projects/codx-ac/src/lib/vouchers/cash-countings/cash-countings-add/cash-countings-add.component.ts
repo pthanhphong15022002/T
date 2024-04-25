@@ -383,7 +383,7 @@ export class CashCountingsAddComponent extends UIComponent {
                   this.api.exec('AC','CountingItemsBusiness','SetDefaultProposalAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
                     if (res) {
                       this.eleGridItems.refresh();
-                      this.master.setObjValue(res,{});
+                      // this.master.setObjValue(res,{});
                       this.dialog.dataService.update(res,true).subscribe();
                     }
                     this.onDestroy();
@@ -394,7 +394,7 @@ export class CashCountingsAddComponent extends UIComponent {
               this.api.exec('AC','CountingItemsBusiness','SetDefaultProposalAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
                 if (res) {
                   this.eleGridItems.refresh();
-                  this.master.setObjValue(res,{});
+                  // this.master.setObjValue(res,{});
                   this.dialog.dataService.update(res,true).subscribe();
                 }
                 this.onDestroy();
@@ -454,7 +454,7 @@ export class CashCountingsAddComponent extends UIComponent {
                   this.api.exec('AC','CountingAssetsBusiness','SetDefaultProposalAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
                     if (res) {
                       this.eleGridAsset.refresh();
-                      this.master.setObjValue(res,{});
+                      // this.master.setObjValue(res,{});
                       this.dialog.dataService.update(res,true).subscribe();
                     }
                     this.onDestroy();
@@ -465,7 +465,7 @@ export class CashCountingsAddComponent extends UIComponent {
               this.api.exec('AC','CountingAssetsBusiness','SetDefaultProposalAsync',[this.master.data]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
                 if (res) {
                   this.eleGridAsset.refresh();
-                  this.master.setObjValue(res,{});
+                  // this.master.setObjValue(res,{});
                   this.dialog.dataService.update(res,true).subscribe();
                 }
                 this.onDestroy();

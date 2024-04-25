@@ -316,7 +316,7 @@ export class GeneralJournalAddComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res) {
           this.isPreventChange = true;
-          this.master.setObjValue(res?.data,{});
+          // this.master.setObjValue(res?.data,{});
           this.isPreventChange = false;
           if (res?.isRefreshGrid) {
             this.showHideColumn();
